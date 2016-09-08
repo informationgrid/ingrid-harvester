@@ -1,76 +1,68 @@
 'use strict';
 
 let elasticsearch = require( 'elasticsearch' ),
-    log = require( 'log4js' ).getLogger(__filename),
-    config = require( '../config' );
+    log = require( 'log4js' ).getLogger( __filename );
 
 class ElasticSearchUtils {
 
-    // the elasticsearch client for access the cluster
-    /*client;
-    bulkData;
-    maxBulkSize;*/
 
-    constructor() {
+    constructor(settings) {
+        this.settings = settings;
+
+        // the elasticsearch client for access the cluster
         this.client = new elasticsearch.Client( {
-            host: config.elasticSearchUrl
+            host: this.settings.elasticSearchUrl
             //log: 'trace'
         } );
-        this.bulkData = [];
+        this._bulkData = [];
         this.maxBulkSize = 200;
     }
 
     /**
      *
-     * @param index
-     * @param type
      * @param mapping
      */
-    prepareIndex(index, type, mapping) {
-        this.client.indices.create({
-            index: index
+    prepareIndex(mapping) {
+        this.client.indices.create( {
+            index: this.settings.index
         }, err => {
-            if (err) log.error( 'Error occurred creating index', err );
-            else this.addMapping(index, type, mapping);
-        });
-
+            if (err) {
+                if (err.message.indexOf( 'index_already_exists_exception' ) !== -1) {
+                    log.info( 'Index ' + this.settings.index + ' not created, since it already exists.' );
+                } else {
+                    log.error( 'Error occurred creating index', err );
+                }
+            }
+            else this.addMapping( this.settings.index, this.settings.indexType, mapping );
+        } );
     }
 
     /**
+     * Add the specified mapping to an index and type.
      *
-     * @param index
-     * @param type
-     * @param mapping
+     * @param {string} index
+     * @param {string} type
+     * @param {object} mapping
      */
     addMapping(index, type, mapping) {
-        this.client.indices.putMapping({
+        this.client.indices.putMapping( {
             index: index,
             type: type,
             body: mapping
         }, err => {
             if (err) log.error( 'Error occurred adding mapping', err );
-        });
+        } );
     }
-
-    /*createIndex(index) {
-
-    }
-
-    post(index, type, data) {
-        console.log( 'posting' );
-    }*/
 
     /**
      * Index data in batches
-     * @param {string} index
-     * @param {string} type
      * @param {object} data
      * @param {boolean} closeAfterBulk
      */
-    bulk(index, type, data, closeAfterBulk) {
+    bulk(data, closeAfterBulk) {
         this.client.bulk( {
-            index: index,
-            type: type,
+            index: this.settings.index,
+            type: this.settings.indexType,
             body: data
         }, (err) => {
             if (err) {
@@ -85,34 +77,30 @@ class ElasticSearchUtils {
      * if a certain limit {{maxBulkSize}} is reached.
      * @param doc
      * @param {string|number} id
-     * @param {string} index
-     * @param {string} type
      */
-    addDocToBulk(doc, id, index, type) {
-        this.bulkData.push( {index: {_id: id}} );
-        this.bulkData.push( doc );
+    addDocToBulk(doc, id) {
+        this._bulkData.push( {index: {_id: id}} );
+        this._bulkData.push( doc );
 
         // send data to elasticsearch if limit is reached
         // TODO: don't use document size but bytes instead
-        if (this.bulkData.length > this.maxBulkSize) {
-            this.sendBulkData( index, type );
+        if (this._bulkData.length > this.maxBulkSize) {
+            this.sendBulkData();
         }
     }
 
     /**
      * Send all collected bulk data if any.
      *
-     * @param {string} index
-     * @param {string} type
      * @param {boolean=} closeAfterBulk
      */
-    sendBulkData(index, type, closeAfterBulk) {
-        if (this.bulkData.length > 0) {
-            log.debug('Sending BULK message');
-            this.bulk( index, type, this.bulkData, closeAfterBulk );
-            this.bulkData = [];
+    sendBulkData(closeAfterBulk) {
+        if (this._bulkData.length > 0) {
+            log.debug( 'Sending BULK message' );
+            this.bulk( this._bulkData, closeAfterBulk );
+            this._bulkData = [];
         }
     }
 }
 
-module.exports = new ElasticSearchUtils();
+module.exports = ElasticSearchUtils;
