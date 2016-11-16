@@ -3,7 +3,8 @@
 var // findPort = require( 'find-port' ),
     log = require( 'log4js' ).getLogger( __filename ),
     config = require( '../config' ),
-    GovDataImporter = require( './ckan/importer' );
+    GovDataImporter = require( './ckan/importer' ),
+    ExcelImporter = require( './excel/importer' );
 
 // create a server which finds a random free port
 // scan a range
@@ -17,6 +18,7 @@ var // findPort = require( 'find-port' ),
 
 function getImporter(type) {
     if (type === 'CKAN') return GovDataImporter;
+    if (type === 'EXCEL') return ExcelImporter;
 }
 
 config.indexer.forEach( settings => {
