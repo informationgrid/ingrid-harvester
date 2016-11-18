@@ -16,6 +16,10 @@ module.exports = {
             "type": "string",
             "index": "not_analyzed"
         },
+        "license_id": {
+            "type": "string",
+            "index": "not_analyzed"
+        },
         "license": {
             "type": "string",
             "index": "not_analyzed"
