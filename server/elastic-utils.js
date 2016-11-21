@@ -2,7 +2,6 @@
 
 let elasticsearch = require('elasticsearch'),
     log = require('log4js').getLogger(__filename),
-    async = require('async'),
     Promise = require('promise');
 
 class ElasticSearchUtils {
@@ -59,7 +58,7 @@ class ElasticSearchUtils {
      */
     addAlias(index, alias) {
         return new Promise((resolve, reject) => {
-            log.debug("adding alias");
+            // log.debug('adding alias');
             this.client.indices.putAlias({
                 index: index,
                 name: alias
@@ -83,7 +82,7 @@ class ElasticSearchUtils {
      */
     deleteOldIndeces(indexBaseName, indexName) {
         return new Promise((resolve, reject) => {
-            log.debug("deleting index");
+            // log.debug('deleting index');
             this.client.cat.indices({
                 h: ['index']
             }, (err, body) => {
@@ -103,19 +102,19 @@ class ElasticSearchUtils {
                     }
                 });
                 if (lines.length) {
-                  this.client.indices.delete({
-                    index: lines
-                }, err => {
-                    if (err) {
-                        log.error('Error occurred deleting indeces', err);
-                        reject();
-                        return;
-                    }
+                    this.client.indices.delete({
+                        index: lines
+                    }, err => {
+                        if (err) {
+                            log.error('Error occurred deleting indeces', err);
+                            reject();
+                            return;
+                        }
+                        resolve();
+                    });
+                } else {
                     resolve();
-                });
-              }else{
-                resolve();
-              }
+                }
             });
         });
     }
@@ -145,7 +144,6 @@ class ElasticSearchUtils {
      */
     bulk(data, closeAfterBulk) {
         return new Promise((resolve, reject) => {
-            log.debug("bulking");
             this.client.bulk({
                 index: this.indexName,
                 type: this.settings.indexType,
@@ -159,7 +157,6 @@ class ElasticSearchUtils {
                 if (closeAfterBulk) {
                     this.client.close();
                 }
-                log.debug("bulking finished");
                 resolve();
             });
         });
@@ -207,12 +204,12 @@ class ElasticSearchUtils {
     getTimeStamp() {
         let d = new Date();
         let stamp = String(d.getFullYear());
-        stamp += ("0" + d.getMonth()).slice(-2);
-        stamp += ("0" + d.getDate()).slice(-2);
-        stamp += ("0" + d.getHours()).slice(-2);
-        stamp += ("0" + d.getMinutes()).slice(-2);
-        stamp += ("0" + d.getSeconds()).slice(-2);
-        stamp += ("00" + d.getMilliseconds()).slice(-3);
+        stamp += ('0' + d.getMonth()).slice(-2);
+        stamp += ('0' + d.getDate()).slice(-2);
+        stamp += ('0' + d.getHours()).slice(-2);
+        stamp += ('0' + d.getMinutes()).slice(-2);
+        stamp += ('0' + d.getSeconds()).slice(-2);
+        stamp += ('00' + d.getMilliseconds()).slice(-3);
         return stamp;
     }
 }

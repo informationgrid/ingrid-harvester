@@ -1,7 +1,9 @@
-var ckanDefaultMapper = require( './server/ckan/ckan.mapper' );
-var ckanIdfMapper = require( './server/ckan/ckan.idf.mapper' );
-var excelDefaultMapper = require( './server/excel/excel.mapper' );
-var excelIdfMapper = require( './server/excel/excel.idf.mapper' );
+'use strict';
+
+// let ckanDefaultMapper = require( './server/ckan/ckan.mapper' );
+// let ckanIdfMapper = require( './server/ckan/ckan.idf.mapper' );
+let excelDefaultMapper = require( './server/excel/excel.mapper' );
+let excelIdfMapper = require( './server/excel/excel.idf.mapper' );
 
 module.exports = {
     indexer: [
@@ -20,9 +22,9 @@ module.exports = {
             importer: 'EXCEL',
             elasticSearchUrl: 'http://localhost:9200',
             index: 'excel',
-            indexType: 'transport_verkehr',
+            indexType: 'base',
             alias: 'mcloud',
-            filePath: 'C:\\Users\\ingrid\\Desktop\\FinaleImportExcel_v8.xlsx',
+            filePath: '', // xlsx-file for import
             mapper: [ excelDefaultMapper, excelIdfMapper ],
             includeTimestamp: true
         }
