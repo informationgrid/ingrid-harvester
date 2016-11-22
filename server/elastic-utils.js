@@ -6,7 +6,6 @@ let elasticsearch = require('elasticsearch'),
 
 class ElasticSearchUtils {
 
-
     constructor(settings) {
         this.settings = settings;
 
@@ -25,7 +24,7 @@ class ElasticSearchUtils {
      * @param mapping
      */
     prepareIndex(mapping) {
-        if (this.settings.includeTimestamp) this.indexName += this.getTimeStamp();
+        if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
         this.client.indices.create({
             index: this.indexName
         }, err => {
@@ -41,11 +40,12 @@ class ElasticSearchUtils {
 
     finishIndex() {
         if (this.settings.alias) {
-            this.deleteOldIndeces(this.settings.index, this.indexName).then(
-              () => this.addAlias(this.indexName, this.settings.alias)).then(
-                () => {
-                    this.client.close();
-                });
+            this.deleteOldIndices(this.settings.index, this.indexName)
+              .then(() => this.addAlias(this.indexName, this.settings.alias))
+              .then(() => {
+                  this.client.close();
+                  log.info('Successfully added data into new index: ' + this.indexName);
+              });
         }
     }
 
@@ -80,7 +80,7 @@ class ElasticSearchUtils {
      * @param {string} indexBaseName
      * @param {string} indexName
      */
-    deleteOldIndeces(indexBaseName, indexName) {
+    deleteOldIndices(indexBaseName, indexName) {
         return new Promise((resolve, reject) => {
             // log.debug('deleting index');
             this.client.cat.indices({
@@ -201,15 +201,14 @@ class ElasticSearchUtils {
     /**
      * Returns a new Timestamp string
      */
-    getTimeStamp() {
-        let d = new Date();
-        let stamp = String(d.getFullYear());
-        stamp += ('0' + d.getMonth()).slice(-2);
-        stamp += ('0' + d.getDate()).slice(-2);
-        stamp += ('0' + d.getHours()).slice(-2);
-        stamp += ('0' + d.getMinutes()).slice(-2);
-        stamp += ('0' + d.getSeconds()).slice(-2);
-        stamp += ('00' + d.getMilliseconds()).slice(-3);
+    getTimeStamp(date) {
+        let stamp = String(date.getFullYear());
+        stamp += ('0' + (date.getMonth()+1)).slice(-2);
+        stamp += ('0' + date.getDate()).slice(-2);
+        stamp += ('0' + date.getHours()).slice(-2);
+        stamp += ('0' + date.getMinutes()).slice(-2);
+        stamp += ('0' + date.getSeconds()).slice(-2);
+        stamp += ('00' + date.getMilliseconds()).slice(-3);
         return stamp;
     }
 }

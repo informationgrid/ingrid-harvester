@@ -7,7 +7,8 @@
     "start": "./node_modules/.bin/babel-node server/server.js --presets=es2017",
     "runFull": "npm run build && node --harmony_array_includes ./dist/server.js",
     "build": "gulp",
-    "lint": "./node_modules/.bin/eslint *.js"
+    "lint": "./node_modules/.bin/eslint *.js",
+    "test": "mocha --compilers js:babel-register test/*.spec.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,17 +18,20 @@
     "exceljs": "^0.2.36",
     "find-port": "^2.0.1",
     "log4js": "^0.6.38",
-    "promise": "^7.1.1"
+    "promise": "^7.1.1",
+    "request": "^2.79.0"
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",
     "babel-eslint": "^6.1.2",
     "babel-preset-es2017": "^6.14.0",
+    "chai": "^3.5.0",
     "eslint": "^3.4.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.0",
     "gulp-sourcemaps": "^1.6.0",
+    "mocha": "^3.1.2",
     "request-promise": "^4.1.1"
   },
   "eslintConfig": {
@@ -56,6 +60,23 @@
         "error",
         "always"
       ],
+      "globals": {
+        "afterEach": false,
+        "beforeEach": false,
+        "describe": false,
+        "expect": false,
+        "it": false,
+        "jasmine": false,
+        "pending": false,
+        "spyOn": false,
+        "waits": false,
+        "waitsFor": false,
+        "xdescribe": false,
+        "xit": false,
+        "beforeAll": false,
+        "afterAll": false,
+        "runs": false
+      },
       "no-console": 1
     }
   }
