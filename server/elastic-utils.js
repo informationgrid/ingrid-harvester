@@ -2,11 +2,9 @@
 
 let elasticsearch = require('elasticsearch'),
     log = require('log4js').getLogger(__filename),
-    async = require('async'),
     Promise = require('promise');
 
 class ElasticSearchUtils {
-
 
     constructor(settings) {
         this.settings = settings;
@@ -26,7 +24,7 @@ class ElasticSearchUtils {
      * @param mapping
      */
     prepareIndex(mapping) {
-        if (this.settings.includeTimestamp) this.indexName += this.getTimeStamp();
+        if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
         this.client.indices.create({
             index: this.indexName
         }, err => {
@@ -42,11 +40,12 @@ class ElasticSearchUtils {
 
     finishIndex() {
         if (this.settings.alias) {
-            this.deleteOldIndeces(this.settings.index, this.indexName).then(
-              () => this.addAlias(this.indexName, this.settings.alias)).then(
-                () => {
-                    this.client.close();
-                });
+            this.deleteOldIndices(this.settings.index, this.indexName)
+              .then(() => this.addAlias(this.indexName, this.settings.alias))
+              .then(() => {
+                  this.client.close();
+                  log.info('Successfully added data into new index: ' + this.indexName);
+              });
         }
     }
 
@@ -59,7 +58,7 @@ class ElasticSearchUtils {
      */
     addAlias(index, alias) {
         return new Promise((resolve, reject) => {
-            log.debug("adding alias");
+            // log.debug('adding alias');
             this.client.indices.putAlias({
                 index: index,
                 name: alias
@@ -81,9 +80,9 @@ class ElasticSearchUtils {
      * @param {string} indexBaseName
      * @param {string} indexName
      */
-    deleteOldIndeces(indexBaseName, indexName) {
+    deleteOldIndices(indexBaseName, indexName) {
         return new Promise((resolve, reject) => {
-            log.debug("deleting index");
+            // log.debug('deleting index');
             this.client.cat.indices({
                 h: ['index']
             }, (err, body) => {
@@ -103,19 +102,19 @@ class ElasticSearchUtils {
                     }
                 });
                 if (lines.length) {
-                  this.client.indices.delete({
-                    index: lines
-                }, err => {
-                    if (err) {
-                        log.error('Error occurred deleting indeces', err);
-                        reject();
-                        return;
-                    }
+                    this.client.indices.delete({
+                        index: lines
+                    }, err => {
+                        if (err) {
+                            log.error('Error occurred deleting indeces', err);
+                            reject();
+                            return;
+                        }
+                        resolve();
+                    });
+                } else {
                     resolve();
-                });
-              }else{
-                resolve();
-              }
+                }
             });
         });
     }
@@ -145,7 +144,6 @@ class ElasticSearchUtils {
      */
     bulk(data, closeAfterBulk) {
         return new Promise((resolve, reject) => {
-            log.debug("bulking");
             this.client.bulk({
                 index: this.indexName,
                 type: this.settings.indexType,
@@ -159,7 +157,6 @@ class ElasticSearchUtils {
                 if (closeAfterBulk) {
                     this.client.close();
                 }
-                log.debug("bulking finished");
                 resolve();
             });
         });
@@ -204,15 +201,14 @@ class ElasticSearchUtils {
     /**
      * Returns a new Timestamp string
      */
-    getTimeStamp() {
-        let d = new Date();
-        let stamp = String(d.getFullYear());
-        stamp += ("0" + d.getMonth()).slice(-2);
-        stamp += ("0" + d.getDate()).slice(-2);
-        stamp += ("0" + d.getHours()).slice(-2);
-        stamp += ("0" + d.getMinutes()).slice(-2);
-        stamp += ("0" + d.getSeconds()).slice(-2);
-        stamp += ("00" + d.getMilliseconds()).slice(-3);
+    getTimeStamp(date) {
+        let stamp = String(date.getFullYear());
+        stamp += ('0' + (date.getMonth()+1)).slice(-2);
+        stamp += ('0' + date.getDate()).slice(-2);
+        stamp += ('0' + date.getHours()).slice(-2);
+        stamp += ('0' + date.getMinutes()).slice(-2);
+        stamp += ('0' + date.getSeconds()).slice(-2);
+        stamp += ('00' + date.getMilliseconds()).slice(-3);
         return stamp;
     }
 }

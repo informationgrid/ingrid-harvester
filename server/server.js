@@ -1,6 +1,6 @@
 'use strict';
 
-var // findPort = require( 'find-port' ),
+let // findPort = require( 'find-port' ),
     log = require( 'log4js' ).getLogger( __filename ),
     config = require( '../config' ),
     GovDataImporter = require( './ckan/importer' ),
