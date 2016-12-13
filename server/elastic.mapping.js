@@ -12,6 +12,15 @@ module.exports = {
             'type': 'string',
             'index': 'not_analyzed'
         },
+        "author": {
+            "type": "string",
+            "fields": {
+                "raw" : {
+                    "type": "string",
+                    "index": "not_analyzed"
+                }
+            }
+        },
         'license_title': {
             'type': 'string',
             'index': 'not_analyzed'
