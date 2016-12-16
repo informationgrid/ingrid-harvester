@@ -45,6 +45,10 @@ class ExcelImporter {
             'Verfuegbarkeit': 19,
             'Datenformat': 20,
             'Zeitraum': 21,
+            'Lizenzbeschreibung': 22,
+            'Lizenzlink': 23,
+            'DatenhaltendeStelleLang': 24,
+            'DatenhaltendeStelleLink': 25
         };
 
         let workbook = new Excel.Workbook();
@@ -87,10 +91,11 @@ class ExcelImporter {
                         let uniqueName = this.getUniqueName(v[c.Daten]);
                         ogdObject.name = uniqueName;
                         ogdObject.title = v[c.Daten];
-                        ogdObject.author = v[c.DatenhaltendeStelle];
+                        ogdObject.author = v[c.DatenhaltendeStelleLang].result;
                         ogdObject.type = 'dokument';
                         ogdObject.notes = v[c.Kurzbeschreibung];
-                        ogdObject.license_id = licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
+                        ogdObject.license_id = v[c.Lizenzbeschreibung].result; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
+                        ogdObject.license_url = v[c.Lizenzlink].result;
                         ogdObject.groups = 'transport_verkehr';
 
                         ogdObject.extras = {};
@@ -104,6 +109,8 @@ class ExcelImporter {
 
                         ogdObject.extras.terms_of_use = {};
                         ogdObject.extras.terms_of_use.other = v[c.Nutzungshinweise];
+
+                        ogdObject.extras.metadata_original_portal = v[c.DatenhaltendeStelleLink].result;
 
 
                         ogdObject.resources = [];
