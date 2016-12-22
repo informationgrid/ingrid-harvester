@@ -11,7 +11,7 @@ module.exports = {
             index: 'excel',
             indexType: 'base',
             alias: 'mcloud',
-            filePath: '', // xlsx-file for import
+            filePath: './data.xslx', // xlsx-file for import
             mapper: [ excelDefaultMapper, excelIdfMapper ],
             includeTimestamp: true
         }
