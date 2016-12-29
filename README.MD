@@ -14,6 +14,7 @@ Run the following command to install all necessary dependencies:
 
 > npm install
 
+
 # Configuration
 
 Edit the file config.js to define the location of the excel file to be imported ('filePath'). You can also
