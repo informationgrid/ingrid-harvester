@@ -116,58 +116,31 @@ class ExcelImporter {
                         ogdObject.resources = [];
 
                         if (v[c.Dateidownload]) {
-                            ogdObject.resources.push({
-                                format: 'Dateidownload',
-                                url: v[c.Dateidownload]
-                            });
+                            this.addDownloadUrls(ogdObject, 'Dateidownload', v[c.Dateidownload]);
                         }
                         if (v[c.WMS]) {
-                            ogdObject.resources.push({
-                                format: 'WMS',
-                                url: v[c.WMS]
-                            });
+                            this.addDownloadUrls(ogdObject, 'WMS', v[c.WMS]);
                         }
                         if (v[c.FTP]) {
-                            ogdObject.resources.push({
-                                format: 'FTP',
-                                url: v[c.FTP]
-                            });
+                            this.addDownloadUrls(ogdObject, 'FTP', v[c.FTP]);
                         }
                         if (v[c.AtomFeed]) {
-                            ogdObject.resources.push({
-                                format: 'AtomFeed',
-                                url: v[c.AtomFeed]
-                            });
+                            this.addDownloadUrls(ogdObject, 'AtomFeed', v[c.AtomFeed]);
                         }
                         if (v[c.Portal]) {
-                            ogdObject.resources.push({
-                                format: 'Portal',
-                                url: v[c.Portal]
-                            });
+                            this.addDownloadUrls(ogdObject, 'Portal', v[c.Portal]);
                         }
                         if (v[c.SOS]) {
-                            ogdObject.resources.push({
-                                format: 'SOS',
-                                url: v[c.SOS]
-                            });
+                            this.addDownloadUrls(ogdObject, 'SOS', v[c.SOS]);
                         }
                         if (v[c.WFS]) {
-                            ogdObject.resources.push({
-                                format: 'WFS',
-                                url: v[c.WFS]
-                            });
+                            this.addDownloadUrls(ogdObject, 'WFS', v[c.WFS]);
                         }
                         if (v[c.WMTS]) {
-                            ogdObject.resources.push({
-                                format: 'WMTS',
-                                url: v[c.WMTS]
-                            });
+                            this.addDownloadUrls(ogdObject, 'WMTS', v[c.WMTS]);
                         }
                         if (v[c.API]) {
-                            ogdObject.resources.push({
-                                format: 'API',
-                                url: v[c.API]
-                            });
+                            this.addDownloadUrls(ogdObject, 'API', v[c.API]);
                         }
 
                         mapper.forEach(mapper => mapper.run(ogdObject, doc));
@@ -197,6 +170,22 @@ class ExcelImporter {
             case 'Straßen': return 'roads';
             case 'Luftfahrt': return 'aviation';
             }
+        });
+    }
+
+    /**
+     * Split download urls and add each one to the resource.
+     * @param ogdObject
+     * @param type
+     * @param urlsString
+     */
+    addDownloadUrls(ogdObject, type, urlsString) {
+        let downloads = urlsString.split(',');
+        downloads.forEach( downloadUrl => {
+            ogdObject.resources.push({
+                format: type,
+                url: downloadUrl.trim()
+            });
         });
     }
 
