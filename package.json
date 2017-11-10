@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "./node_modules/.bin/babel-node server/server.js --presets=es2017",
-    "runFull": "npm run build && node --harmony_array_includes ./dist/server.js",
+    "runFull": "npm run build && node ./dist/server.js",
     "build": "gulp",
     "lint": "./node_modules/.bin/eslint *.js",
     "test": "mocha --compilers js:babel-register test/*.spec.js"
@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.0.1",
-    "elasticsearch": "^11.0.1",
+    "elasticsearch": "^13.3.1",
     "exceljs": "^0.2.36",
     "find-port": "^2.0.1",
     "log4js": "^0.6.38",
@@ -50,7 +50,7 @@
       ],
       "linebreak-style": [
         "error",
-        "unix"
+        "windows"
       ],
       "quotes": [
         "error",
@@ -60,24 +60,24 @@
         "error",
         "always"
       ],
-      "globals": {
-        "afterEach": false,
-        "beforeEach": false,
-        "describe": false,
-        "expect": false,
-        "it": false,
-        "jasmine": false,
-        "pending": false,
-        "spyOn": false,
-        "waits": false,
-        "waitsFor": false,
-        "xdescribe": false,
-        "xit": false,
-        "beforeAll": false,
-        "afterAll": false,
-        "runs": false
-      },
       "no-console": 1
+    },
+    "globals": {
+      "afterEach": false,
+      "beforeEach": false,
+      "describe": false,
+      "expect": false,
+      "it": false,
+      "jasmine": false,
+      "pending": false,
+      "spyOn": false,
+      "waits": false,
+      "waitsFor": false,
+      "xdescribe": false,
+      "xit": false,
+      "beforeAll": false,
+      "afterAll": false,
+      "runs": false
     }
   }
 }

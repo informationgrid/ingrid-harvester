@@ -2,22 +2,25 @@ module.exports = {
     properties: {
         'title': {
             'type': 'string',
-            'analyzer': 'german'
+            'analyzer': 'decomp'
         },
         'notes': {
             'type': 'string',
-            'analyzer': 'german'
+            'analyzer': 'decomp'
+        },
+        'metadata_modified': {
+            'type': 'date'
         },
         'id': {
             'type': 'string',
             'index': 'not_analyzed'
         },
-        "author": {
-            "type": "string",
-            "fields": {
-                "raw" : {
-                    "type": "string",
-                    "index": "not_analyzed"
+        'author': {
+            'type': 'string',
+            'fields': {
+                'raw' : {
+                    'type': 'string',
+                    'index': 'not_analyzed'
                 }
             }
         },

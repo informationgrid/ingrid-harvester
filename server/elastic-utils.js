@@ -22,8 +22,9 @@ class ElasticSearchUtils {
     /**
      *
      * @param mapping
+     * @param settings
      */
-    prepareIndex(mapping) {
+    prepareIndex(mapping, settings) {
         if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
         this.client.indices.create({
             index: this.indexName
@@ -34,7 +35,9 @@ class ElasticSearchUtils {
                 } else {
                     log.error('Error occurred creating index', err);
                 }
-            } else this.addMapping(this.indexName, this.settings.indexType, mapping);
+            } else {
+                this.addMapping(this.indexName, this.settings.indexType, mapping, settings);
+            }
         });
     }
 
@@ -126,15 +129,41 @@ class ElasticSearchUtils {
      * @param {string} index
      * @param {string} type
      * @param {object} mapping
+     * @param {object} settings
      */
-    addMapping(index, type, mapping) {
-        this.client.indices.putMapping({
-            index: index,
-            type: type,
-            body: mapping
-        }, err => {
-            if (err) log.error('Error occurred adding mapping', err);
-        });
+    addMapping(index, type, mapping, settings) {
+
+        // set settings
+        const handleSettings = () => {
+            this.client.indices.putSettings( {
+                index: index,
+                body: settings
+            }, err => {
+                if (err) log.error( 'Error occurred adding settings', err );
+                else handleMapping(); //this.client.indices.open({ index: index });
+            } );
+        };
+
+        // set mapping
+        const handleMapping = () => {
+            this.client.indices.putMapping( {
+                index: index,
+                type: type,
+                body: mapping
+            }, err => {
+                if (err) log.error( 'Error occurred adding mapping', err );
+                else this.client.indices.open({ index: index });
+            } );
+        };
+
+        // in order to update settings the index has to be closed
+        const handleClose = () => {
+            this.client.indices.close({ index: index }, handleSettings);
+        };
+
+        this.client.indices.create({ index: index }, handleClose);
+        // handleSettings();
+
     }
 
     /**
