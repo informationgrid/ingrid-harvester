@@ -8,6 +8,9 @@ module.exports = {
             'type': 'string',
             'analyzer': 'decomp'
         },
+        'lastUpdate': {
+            'type': 'date'
+        },
         'metadata_modified': {
             'type': 'date'
         },

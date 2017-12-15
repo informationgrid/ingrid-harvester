@@ -47,10 +47,11 @@ class ExcelImporter {
             'Datenformat': 20,
             'Zeitraum': 21,
             'Aktualisierungsdatum': 22,
-            'Lizenzbeschreibung': 23,
-            'Lizenzlink': 24,
-            'DatenhaltendeStelleLang': 25,
-            'DatenhaltendeStelleLink': 26
+            'Echtzeitdaten': 23,
+            'Lizenzbeschreibung': 24,
+            'Lizenzlink': 25,
+            'DatenhaltendeStelleLang': 26,
+            'DatenhaltendeStelleLink': 27
         };
 
         let workbook = new Excel.Workbook();
@@ -106,8 +107,9 @@ class ExcelImporter {
                         ogdObject.extras = {};
                         ogdObject.extras.dates = [];
                         if (dateMetaUpdate) {
-                            ogdObject.metadata_modified = dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
+                            ogdObject.lastUpdate = dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
                         }
+                        ogdObject.realtime = columnMap.Echtzeitdaten === 1;
                         // ogdObject.extras.metadata_original_id = TODO
 
                         ogdObject.extras.contacts = [{}];
