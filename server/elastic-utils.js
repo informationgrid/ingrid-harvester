@@ -25,19 +25,21 @@ class ElasticSearchUtils {
      * @param settings
      */
     prepareIndex(mapping, settings) {
-        if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
-        this.client.indices.create({
-            index: this.indexName
-        }, err => {
-            if (err) {
-                if (err.message.indexOf('index_already_exists_exception') !== -1) {
-                    log.info('Index ' + this.indexName + ' not created, since it already exists.');
+        return new Promise((resolve) => {
+            if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp( new Date() );
+            this.client.indices.create( {
+                index: this.indexName
+            }, err => {
+                if (err) {
+                    if (err.message.indexOf( 'index_already_exists_exception' ) !== -1) {
+                        log.info( 'Index ' + this.indexName + ' not created, since it already exists.' );
+                    } else {
+                        log.error( 'Error occurred creating index', err );
+                    }
                 } else {
-                    log.error('Error occurred creating index', err);
+                    this.addMapping( this.indexName, this.settings.indexType, mapping, settings, resolve );
                 }
-            } else {
-                this.addMapping(this.indexName, this.settings.indexType, mapping, settings);
-            }
+            } );
         });
     }
 
@@ -131,7 +133,7 @@ class ElasticSearchUtils {
      * @param {object} mapping
      * @param {object} settings
      */
-    addMapping(index, type, mapping, settings) {
+    addMapping(index, type, mapping, settings, callback) {
 
         // set settings
         const handleSettings = () => {
@@ -153,6 +155,7 @@ class ElasticSearchUtils {
             }, err => {
                 if (err) log.error( 'Error occurred adding mapping', err );
                 else this.client.indices.open({ index: index });
+                callback();
             } );
         };
 

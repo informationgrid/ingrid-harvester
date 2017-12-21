@@ -59,9 +59,8 @@ class ExcelImporter {
         let elastic = this.elastic;
         const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
 
-        elastic.prepareIndex(mapping, settings);
-
-        workbook.xlsx.readFile(this.excelFilepath)
+        elastic.prepareIndex(mapping, settings)
+            .then(() => workbook.xlsx.readFile(this.excelFilepath))
             .then(() => {
                 log.debug('done loading file');
                 let worksheet = workbook.getWorksheet(1);
@@ -164,6 +163,7 @@ class ExcelImporter {
 
                 Promise.all(this.promises).then(() => elastic.finishIndex());
             });
+
     }
 
     /**
