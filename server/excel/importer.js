@@ -96,7 +96,9 @@ class ExcelImporter {
 
                         ogdObject.name = uniqueName;
                         ogdObject.title = columnValues[columnMap.Daten];
-                        ogdObject.author = columnValues[columnMap.DatenhaltendeStelleLang].result;
+                        const authorAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
+                        const authors = this.getAuthors(workbook.getWorksheet(2), authorAbbreviations);
+                        ogdObject.author = authors.names;
                         ogdObject.type = 'dokument';
                         ogdObject.notes = columnValues[columnMap.Kurzbeschreibung];
                         ogdObject.license_id = columnValues[columnMap.Lizenzbeschreibung].result; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
@@ -119,7 +121,7 @@ class ExcelImporter {
                         ogdObject.extras.terms_of_use = {};
                         ogdObject.extras.terms_of_use.other = columnValues[columnMap.Nutzungshinweise];
 
-                        ogdObject.extras.metadata_original_portal = columnValues[columnMap.DatenhaltendeStelleLink].result;
+                        ogdObject.extras.metadata_original_portal = authors.links;
 
 
                         ogdObject.resources = [];
@@ -182,6 +184,27 @@ class ExcelImporter {
             case 'Luftverkehr': return 'aviation';
             }
         });
+    }
+
+    getAuthors(authorsSheet, /*string[]*/abbreviations) {
+        let authors = { names: [], links: [] };
+        const numAuthors = authorsSheet.rowCount;
+        abbreviations.forEach( abbr => {
+            let found = false;
+            for (let i=2; i<=numAuthors; i++) {
+                const row = authorsSheet.getRow(i);
+                if (row.values[1] === abbr) {
+                    authors.names.push(row.values[2]);
+                    authors.links.push(row.values[4]);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                log.warn('Could not find abbreviation of "Datenhaltende Stelle": ' + abbr);
+            }
+        });
+        return authors;
     }
 
     /**
