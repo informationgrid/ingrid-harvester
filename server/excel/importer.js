@@ -98,11 +98,12 @@ class ExcelImporter {
                         ogdObject.title = columnValues[columnMap.Daten];
                         const authorAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
                         const authors = this.getAuthors(workbook.getWorksheet(2), authorAbbreviations);
+                        const license = this.getLicense(workbook.getWorksheet(3), columnValues[columnMap.Lizenz]);
                         ogdObject.author = authors.names;
                         ogdObject.type = 'dokument';
                         ogdObject.notes = columnValues[columnMap.Kurzbeschreibung];
-                        ogdObject.license_id = columnValues[columnMap.Lizenzbeschreibung].result; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
-                        ogdObject.license_url = columnValues[columnMap.Lizenzlink].result;
+                        ogdObject.license_id = license.description; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
+                        ogdObject.license_url = license.link;
                         ogdObject.groups = ['transport_verkehr'];
 
                         ogdObject.extras = {};
@@ -206,6 +207,24 @@ class ExcelImporter {
         });
         return authors;
     }
+
+    getLicense(licenseSheet, /*string*/licenseId) {
+        const numLicenses = licenseSheet.rowCount;
+
+        for (let i=2; i<=numLicenses; i++) {
+            const row = licenseSheet.getRow(i);
+            if (row.values[1] === licenseId) {
+                return {
+                    description: row.values[2],
+                    abbreviation: row.values[3],
+                    link: row.values[4]
+                };
+            }
+        }
+
+        log.warn('Could not find abbreviation of "License": ' + licenseId);
+    }
+
 
     /**
      * Split download urls and add each one to the resource.
