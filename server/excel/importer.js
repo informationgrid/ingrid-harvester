@@ -39,19 +39,20 @@ class ExcelImporter {
             'SOS': 12,
             'WFS': 13,
             'WMTS': 14,
-            'API': 15,
-            'Lizenz': 16,
-            'Quellenvermerk': 17,
-            'Datentyp': 18,
-            'Verfuegbarkeit': 19,
-            'Datenformat': 20,
-            'Zeitraum': 21,
-            'Aktualisierungsdatum': 22,
-            'Echtzeitdaten': 23,
-            'Lizenzbeschreibung': 24,
-            'Lizenzlink': 25,
-            'DatenhaltendeStelleLang': 26,
-            'DatenhaltendeStelleLink': 27
+            'WCS': 15,
+            'API': 16,
+            'Lizenz': 17,
+            'Quellenvermerk': 18,
+            'Datentyp': 19,
+            'Verfuegbarkeit': 20,
+            'Datenformat': 21,
+            'Zeitraum': 22,
+            'Aktualisierungsdatum': 23,
+            'Echtzeitdaten': 24,
+            'Lizenzbeschreibung': 25,
+            'Lizenzlink': 26,
+            'DatenhaltendeStelleLang': 27,
+            'DatenhaltendeStelleLink': 28
         };
 
         let workbook = new Excel.Workbook();
@@ -147,6 +148,9 @@ class ExcelImporter {
                         }
                         if (columnValues[columnMap.WFS]) {
                             this.addDownloadUrls(ogdObject, 'WFS', columnValues[columnMap.WFS]);
+                        }
+                        if (columnValues[columnMap.WCS]) {
+                            this.addDownloadUrls(ogdObject, 'WCS', columnValues[columnMap.WCS]);
                         }
                         if (columnValues[columnMap.WMTS]) {
                             this.addDownloadUrls(ogdObject, 'WMTS', columnValues[columnMap.WMTS]);
