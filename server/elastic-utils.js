@@ -164,7 +164,7 @@ class ElasticSearchUtils {
             this.client.indices.close({ index: index }, handleSettings);
         };
 
-        this.client.indices.create({ index: index }, handleClose);
+        this.client.indices.create({ index: index }, () => setTimeout(handleClose, 1000));
         // handleSettings();
 
     }
