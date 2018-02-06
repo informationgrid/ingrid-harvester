@@ -187,6 +187,7 @@ class ExcelImporter {
             case 'Straßen': return 'roads';
             case 'Luftfahrt':
             case 'Luftverkehr': return 'aviation';
+            case 'Data-Run': return 'data-run';
             }
         });
     }
