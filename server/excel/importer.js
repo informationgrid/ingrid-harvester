@@ -114,6 +114,7 @@ class ExcelImporter {
                         }
                         ogdObject.realtime = columnMap.Echtzeitdaten === 1;
                         // ogdObject.extras.metadata_original_id = TODO
+                        ogdObject.extras.temporal_coverage = columnValues[columnMap.Zeitraum];
 
                         ogdObject.extras.contacts = [{}];
                         ogdObject.extras.contacts[0].name = columnValues[columnMap.Quellenvermerk];

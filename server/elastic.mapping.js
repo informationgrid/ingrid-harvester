@@ -53,6 +53,9 @@ module.exports = {
         },
         'extras': {
             'properties': {
+                'temporal_coverage': {
+                    'type': 'string'
+                },
                 'temporal_coverage_from': {
                     'type': 'string'
                 },

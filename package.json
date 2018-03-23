@@ -2,7 +2,7 @@
   "name": "govdata-importer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server/server.js",
   "scripts": {
     "start": "./node_modules/.bin/babel-node server/server.js --presets=es2017",
     "runFull": "npm run build && node ./dist/server.js",
