@@ -1,0 +1,83 @@
+{
+  "name": "govdata-importer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "./node_modules/.bin/babel-node server/server.js --presets=es2017",
+    "runFull": "npm run build && node ./dist/server.js",
+    "build": "gulp",
+    "lint": "./node_modules/.bin/eslint *.js",
+    "test": "mocha --compilers js:babel-register test/*.spec.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.0",
+    "elasticsearch": "^13.3.1",
+    "exceljs": "^0.2.46",
+    "find-port": "^2.0.1",
+    "log4js": "^0.6.38",
+    "promise": "^7.3.1",
+    "request": "^2.83.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^6.1.2",
+    "babel-preset-es2017": "^6.24.1",
+    "chai": "^3.5.0",
+    "eslint": "^3.19.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-sourcemaps": "^1.12.0",
+    "mocha": "^3.5.3",
+    "request-promise": "^4.2.2"
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 7
+    },
+    "parser": "babel-eslint",
+    "env": {
+      "node": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+      "indent": [
+        "error",
+        4
+      ],
+      "linebreak-style": [
+        "error",
+        "unix"
+      ],
+      "quotes": [
+        "error",
+        "single"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ],
+      "no-console": 1
+    },
+    "globals": {
+      "afterEach": false,
+      "beforeEach": false,
+      "describe": false,
+      "expect": false,
+      "it": false,
+      "jasmine": false,
+      "pending": false,
+      "spyOn": false,
+      "waits": false,
+      "waitsFor": false,
+      "xdescribe": false,
+      "xit": false,
+      "beforeAll": false,
+      "afterAll": false,
+      "runs": false
+    }
+  }
+}
