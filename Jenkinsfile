@@ -35,7 +35,7 @@ pipeline {
 
                 echo 'Since environment variables are not updated within docker, we have to use full path to nodejs'
                 sh '$NODEJS_HOME/bin/node --version'
-                sh '$NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm install && $NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm run build'
+                sh '$NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm install && $NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm run build --scripts-prepend-node-path=auto'
 
                 sh 'cp -r ./dist/* /root/rpmbuild/SOURCES/mcloud-ingrid/ingrid-excel-import'
                 sh 'cp ./docker/package.json /root/rpmbuild/SOURCES/mcloud-ingrid/ingrid-excel-import'
