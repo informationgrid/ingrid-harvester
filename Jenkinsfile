@@ -6,7 +6,7 @@ pipeline {
     }
 
     tools {
-        nodejs "nodejs"
+        nodejs "nodejs8"
     }
     
     environment {
@@ -34,6 +34,7 @@ pipeline {
                 sh 'rm -rf dist-rpm && mkdir -p dist-rpm'
 
                 echo 'Since environment variables are not updated within docker, we have to use full path to nodejs'
+                sh '$NODEJS_HOME/bin/node --version'
                 sh '$NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm install && $NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm run build'
 
                 sh 'cp -r ./dist/* /root/rpmbuild/SOURCES/mcloud-ingrid/ingrid-excel-import'
