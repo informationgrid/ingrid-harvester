@@ -37,7 +37,8 @@ pipeline {
                 sh '$NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm install && $NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm run build'
 
                 sh 'cp -r ./dist/* /root/rpmbuild/SOURCES/mcloud-ingrid/ingrid-excel-import'
-                sh 'cp -r ./docker/package.json /root/rpmbuild/SOURCES/mcloud-ingrid/ingrid-excel-import'
+                sh 'cp ./docker/package.json /root/rpmbuild/SOURCES/mcloud-ingrid/ingrid-excel-import'
+                sh 'cp ./config.js /root/rpmbuild/SOURCES/mcloud-ingrid/ingrid-excel-import'
                 sh 'cp ./docker/*.spec /root/rpmbuild/SPECS'
                 sh 'cp ./docker/ingrid.service /root/rpmbuild/SOURCES'
             }
