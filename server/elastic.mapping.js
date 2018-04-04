@@ -2,22 +2,28 @@ module.exports = {
     properties: {
         'title': {
             'type': 'string',
-            'analyzer': 'german'
+            'analyzer': 'decomp'
         },
         'notes': {
             'type': 'string',
-            'analyzer': 'german'
+            'analyzer': 'decomp'
+        },
+        'lastUpdate': {
+            'type': 'date'
+        },
+        'metadata_modified': {
+            'type': 'date'
         },
         'id': {
             'type': 'string',
             'index': 'not_analyzed'
         },
-        "author": {
-            "type": "string",
-            "fields": {
-                "raw" : {
-                    "type": "string",
-                    "index": "not_analyzed"
+        'author': {
+            'type': 'string',
+            'fields': {
+                'raw' : {
+                    'type': 'string',
+                    'index': 'not_analyzed'
                 }
             }
         },
@@ -47,6 +53,9 @@ module.exports = {
         },
         'extras': {
             'properties': {
+                'temporal_coverage': {
+                    'type': 'string'
+                },
                 'temporal_coverage_from': {
                     'type': 'string'
                 },

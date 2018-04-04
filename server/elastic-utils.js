@@ -22,19 +22,24 @@ class ElasticSearchUtils {
     /**
      *
      * @param mapping
+     * @param settings
      */
-    prepareIndex(mapping) {
-        if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
-        this.client.indices.create({
-            index: this.indexName
-        }, err => {
-            if (err) {
-                if (err.message.indexOf('index_already_exists_exception') !== -1) {
-                    log.info('Index ' + this.indexName + ' not created, since it already exists.');
+    prepareIndex(mapping, settings) {
+        return new Promise((resolve) => {
+            if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp( new Date() );
+            this.client.indices.create( {
+                index: this.indexName
+            }, err => {
+                if (err) {
+                    if (err.message.indexOf( 'index_already_exists_exception' ) !== -1) {
+                        log.info( 'Index ' + this.indexName + ' not created, since it already exists.' );
+                    } else {
+                        log.error( 'Error occurred creating index', err );
+                    }
                 } else {
-                    log.error('Error occurred creating index', err);
+                    this.addMapping( this.indexName, this.settings.indexType, mapping, settings, resolve );
                 }
-            } else this.addMapping(this.indexName, this.settings.indexType, mapping);
+            } );
         });
     }
 
@@ -126,15 +131,42 @@ class ElasticSearchUtils {
      * @param {string} index
      * @param {string} type
      * @param {object} mapping
+     * @param {object} settings
      */
-    addMapping(index, type, mapping) {
-        this.client.indices.putMapping({
-            index: index,
-            type: type,
-            body: mapping
-        }, err => {
-            if (err) log.error('Error occurred adding mapping', err);
-        });
+    addMapping(index, type, mapping, settings, callback) {
+
+        // set settings
+        const handleSettings = () => {
+            this.client.indices.putSettings( {
+                index: index,
+                body: settings
+            }, err => {
+                if (err) log.error( 'Error occurred adding settings', err );
+                else handleMapping(); //this.client.indices.open({ index: index });
+            } );
+        };
+
+        // set mapping
+        const handleMapping = () => {
+            this.client.indices.putMapping( {
+                index: index,
+                type: type,
+                body: mapping
+            }, err => {
+                if (err) log.error( 'Error occurred adding mapping', err );
+                else this.client.indices.open({ index: index });
+                callback();
+            } );
+        };
+
+        // in order to update settings the index has to be closed
+        const handleClose = () => {
+            this.client.indices.close({ index: index }, handleSettings);
+        };
+
+        this.client.indices.create({ index: index }, () => setTimeout(handleClose, 1000));
+        // handleSettings();
+
     }
 
     /**
