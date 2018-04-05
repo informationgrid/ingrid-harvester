@@ -1,0 +1,11 @@
+[
+  {
+    "importer": "EXCEL",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "excel",
+    "indexType": "base",
+    "alias": "mcloud",
+    "filePath": "./data.xlsx",
+    "includeTimestamp": true
+  }
+]
