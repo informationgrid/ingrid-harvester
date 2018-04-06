@@ -1,4 +1,4 @@
-%define ingrid_update_version 1.0.10.SNAPSHOT
+%define ingrid_update_version 1.1.0
 
 %define mcloud_dir /opt/ingrid
 
@@ -55,7 +55,12 @@ rm -rf %{mcloud_dir}/ingrid-iplug-csw-dsc_wsv/webapp/WEB-INF/work/*
 
 
 %changelog
-* Mon Feb 12 2018 Andre Wallat <andre.wallat@wemove.com> - 1.0.10.SNAPSHOT
+* Fri Apr 06 2018 Andre Wallat <andre.wallat@wemove.com> - 1.1.0
+- support for decompound plugin when indexing into elasticsearch
+- add WCS type
+- bundle application for production
+
+* Mon Feb 12 2018 Andre Wallat <andre.wallat@wemove.com> - 1.0.10
 - Add temporal coverage of data to index.
 - recognize new category data-run
 
