@@ -2,7 +2,9 @@
 
 let // findPort = require( 'find-port' ),
     log = require( 'log4js' ).getLogger( __filename ),
-    config = require( '../config' ),
+    config = require( './config.json' ),
+    excelDefaultMapper = require( './excel/excel.mapper' ),
+    excelIdfMapper = require( './excel/excel.idf.mapper' ),
     GovDataImporter = require( './ckan/importer' ),
     ExcelImporter = require( './excel/importer' );
 
@@ -21,8 +23,12 @@ function getImporter(type) {
     if (type === 'EXCEL') return ExcelImporter;
 }
 
-config.indexer.forEach( settings => {
-    // TODO: choose different importer depending on setting
+config.forEach( settings => {
+    // choose different importer depending on setting
+    if (settings.importer === 'EXCEL') {
+        settings.mapper = [ excelDefaultMapper, excelIdfMapper ];
+    }
+
     let importerClass = getImporter( settings.importer );
     if (!importerClass) {
         log.error( 'Importer not defined for: ' + settings.importer );

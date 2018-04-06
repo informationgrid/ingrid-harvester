@@ -1,15 +1,24 @@
+const browserify = require('browserify');
 const gulp = require('gulp');
-const sourcemaps = require('gulp-sourcemaps');
-const babel = require('gulp-babel');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
+
 // const concat = require('gulp-concat');
 
 gulp.task('default', () => {
-    return gulp.src('server/**/*.js')
-        .pipe(sourcemaps.init())
-        .pipe(babel({
-            presets: ['es2017']
-        }))
-        // .pipe(concat('all.js'))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('dist'));
+
+    // set up the browserify instance on a task basis
+    const b = browserify({
+        entries: './server/server.js',
+        node: true,
+        debug: false
+    });
+
+    gulp.src('./server/config.json')
+      .pipe(gulp.dest('./dist/'));
+
+    return b.external('./config.json').bundle()
+        .pipe(source('app.js'))
+        .pipe(buffer())
+        .pipe(gulp.dest('./dist/'));
 });
