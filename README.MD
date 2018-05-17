@@ -133,3 +133,4 @@ In visual studio code hit 5.
 * auf Server: mcloud-dev-1.wemove.com
 ** Release RPM von "/var/www/mcloud-deploy-develop/" nach "/var/www/mcloud-deploy/" kopieren
 ** sudo createrepo /var/www/mcloud-deploy/
+* Release-Seite aktualisieren (https://redmine.wemove.com/projects/bmvi-datenportal/wiki/Release-Changes)
