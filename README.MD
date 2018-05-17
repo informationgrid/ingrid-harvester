@@ -124,7 +124,9 @@ In visual studio code hit 5.
 * docker/mcloud-ingrid.spec anpassen (Version ohne SNAPSHOT, kein "-" verwenden + Changelog)
 * Commit (Branch develop)
 * Merge develop into master
+* Tag master mit Release-Version
 * Push master (Jenkins baut RPM)
+** Master und develop sollten nicht gleichzeitig gepusht werden (createrepo-Befehl macht Probleme)
 * Switch to branch develop
 * SPEC-Datei erneut anpassen (neue Version: x.y.z.SNAPSHOT)
 * Commit + Push (Jenkins baut nächste development RPM)
