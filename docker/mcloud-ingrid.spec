@@ -1,4 +1,4 @@
-%define ingrid_update_version 1.1.1
+%define ingrid_update_version 1.1.2
 
 %define mcloud_dir /opt/ingrid
 
@@ -55,6 +55,9 @@ rm -rf %{mcloud_dir}/ingrid-iplug-csw-dsc_wsv/webapp/WEB-INF/work/*
 
 
 %changelog
+* Thu May 17 2018 Andre Wallat <andre.wallat@wemove.com> - 1.1.2
+- fix excel import with nodejs 6
+
 * Wed May 02 2018 Andre Wallat <andre.wallat@wemove.com> - 1.1.1
 - add mFund-FKZ to index
 

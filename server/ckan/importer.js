@@ -34,7 +34,7 @@ class GovDataImporter {
      * @param {function} callback
      */
     async importDataset(id, callback) {
-        let options = Object.assign( {}, this.options_url_dataset );
+        const options = Object.assign( {}, this.options_url_dataset );
         options.uri += id;
         try {
             let json = await request.get( options );
