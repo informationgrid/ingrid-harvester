@@ -97,37 +97,36 @@ class ExcelImporter {
 
                         ogdObject.name = uniqueName;
                         ogdObject.title = columnValues[columnMap.Daten];
-                        const authorAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
-                        const authors = this.getAuthors(workbook.getWorksheet(2), authorAbbreviations);
+                        const publisherAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
+                        const publishers = this.getPublishers(workbook.getWorksheet(2), publisherAbbreviations);
                         const license = this.getLicense(workbook.getWorksheet(3), columnValues[columnMap.Lizenz]);
-                        ogdObject.author = authors.names;
-                        ogdObject.type = 'dokument';
-                        ogdObject.notes = columnValues[columnMap.Kurzbeschreibung];
-                        ogdObject.license_id = license.description; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
-                        ogdObject.license_url = license.link;
-                        ogdObject.groups = ['transport_verkehr'];
+
+                        ogdObject.publisher = {};
+                        ogdObject.publisher.organization = publishers.organisations;
+                        ogdObject.publisher.homepage = publishers.links;
+                        ogdObject.description = columnValues[columnMap.Kurzbeschreibung];
+                        ogdObject.themes = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
 
                         ogdObject.extras = {};
-                        ogdObject.extras.dates = [];
+                        ogdObject.extras.dates = {};
                         if (dateMetaUpdate) {
-                            ogdObject.lastUpdate = dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
+                            ogdObject.modified = dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
                         }
-                        ogdObject.realtime = columnMap.Echtzeitdaten === 1;
+                        ogdObject.extras.dates.metadata_modified = Date.now();
+                        ogdObject.extras.license_id = license.description; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
+                        ogdObject.extras.license_url = license.link;
+                        ogdObject.extras.realtime = columnMap.Echtzeitdaten === 1;
                         // ogdObject.extras.metadata_original_id = TODO
-                        ogdObject.extras.temporal_coverage = columnValues[columnMap.Zeitraum];
+                        ogdObject.extras.temporal = columnValues[columnMap.Zeitraum];
 
-                        ogdObject.extras.contacts = [{}];
-                        ogdObject.extras.contacts[0].name = columnValues[columnMap.Quellenvermerk];
-                        ogdObject.extras.contacts[0].role = 'vertrieb';
+                        ogdObject.extras.citation = columnValues[columnMap.Quellenvermerk];
                         ogdObject.extras.subgroups = this.mapCategories(columnValues[columnMap.Kategorie].split(','));
 
-                        ogdObject.extras.terms_of_use = {};
-                        ogdObject.extras.terms_of_use.other = columnValues[columnMap.Nutzungshinweise];
-
-                        ogdObject.extras.metadata_original_portal = authors.links;
+                        ogdObject.extras.terms_of_use = columnValues[columnMap.Nutzungshinweise];
 
 
-                        ogdObject.resources = [];
+
+                        ogdObject.distribution = [];
 
                         if (columnValues[columnMap.Dateidownload]) {
                             this.addDownloadUrls(ogdObject, 'Dateidownload', columnValues[columnMap.Dateidownload]);
@@ -193,16 +192,16 @@ class ExcelImporter {
         });
     }
 
-    getAuthors(authorsSheet, /*string[]*/abbreviations) {
-        let authors = { names: [], links: [] };
+    getPublishers(authorsSheet, /*string[]*/abbreviations) {
+        let publishers = { organisations: [], links: [] };
         const numAuthors = authorsSheet.rowCount;
         abbreviations.forEach( abbr => {
             let found = false;
             for (let i=2; i<=numAuthors; i++) {
                 const row = authorsSheet.getRow(i);
                 if (row.values[1] === abbr) {
-                    authors.names.push(row.values[2]);
-                    authors.links.push(row.values[4]);
+                    publishers.organisations.push(row.values[2]);
+                    publishers.links.push(row.values[4]);
                     found = true;
                     break;
                 }
@@ -211,7 +210,7 @@ class ExcelImporter {
                 log.warn('Could not find abbreviation of "Datenhaltende Stelle": ' + abbr);
             }
         });
-        return authors;
+        return publishers;
     }
 
     getLicense(licenseSheet, /*string*/licenseId) {
@@ -242,9 +241,9 @@ class ExcelImporter {
         // console.log('urlstring:', urlsString);
         let downloads = urlsString.split(',');
         downloads.forEach( downloadUrl => {
-            ogdObject.resources.push({
+            ogdObject.distribution.push({
                 format: type,
-                url: downloadUrl.trim()
+                accessUrl: downloadUrl.trim()
             });
         });
     }
