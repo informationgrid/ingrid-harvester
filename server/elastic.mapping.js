@@ -1,22 +1,16 @@
 module.exports = {
     properties: {
+        'id': {
+            'type': 'string',
+            'index': 'not_analyzed'
+        },
         'title': {
             'type': 'string',
             'analyzer': 'decomp'
         },
-        'notes': {
+        'description': {
             'type': 'string',
             'analyzer': 'decomp'
-        },
-        'lastUpdate': {
-            'type': 'date'
-        },
-        'metadata_modified': {
-            'type': 'date'
-        },
-        'id': {
-            'type': 'string',
-            'index': 'not_analyzed'
         },
         'author': {
             'type': 'string',
@@ -27,54 +21,67 @@ module.exports = {
                 }
             }
         },
-        'license_title': {
-            'type': 'string',
-            'index': 'not_analyzed'
-        },
-        'license_id': {
-            'type': 'string',
-            'index': 'not_analyzed'
-        },
-        'license': {
-            'type': 'string',
-            'index': 'not_analyzed'
-        },
         'type': {
             'type': 'string',
             'index': 'not_analyzed'
         },
-        'tags': {
+        'keywords': {
             'type': 'string',
             'index': 'not_analyzed'
         },
-        'groups': {
+        'themes': {
             'type': 'string',
             'index': 'not_analyzed'
         },
-        'extras': {
-            'properties': {
-                'temporal_coverage': {
-                    'type': 'string'
-                },
-                'temporal_coverage_from': {
-                    'type': 'string'
-                },
-                'temporal_coverage_to': {
-                    'type': 'string'
-                },
-                'subgroups': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
-                }
-            }
+        'modified': {
+            'type': 'date'
         },
-        'resources': {
+        'distribution': {
             'properties': {
                 'id': {
                     'type': 'string',
                     'index': 'not_analyzed'
                 },
-                'url': {
+                'accessURL': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'modified': {
+                    'type': 'date'
+                }
+            }
+        },
+        'extras': {
+            'properties': {
+                'dates': {
+                    'properties': {
+                        'metadata_modified': {
+                            'type': 'date'
+                        }
+                    }
+                },
+                'license_id': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'license_title': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'license': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'temporal': {
+                    'type': 'string'
+                },
+                'temporal_start': {
+                    'type': 'string'
+                },
+                'temporal_end': {
+                    'type': 'string'
+                },
+                'subgroups': {
                     'type': 'string',
                     'index': 'not_analyzed'
                 }
