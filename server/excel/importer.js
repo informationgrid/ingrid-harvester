@@ -105,14 +105,14 @@ class ExcelImporter {
                         ogdObject.publisher.organization = publishers.organisations;
                         ogdObject.publisher.homepage = publishers.links;
                         ogdObject.description = columnValues[columnMap.Kurzbeschreibung];
-                        ogdObject.themes = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
+                        ogdObject.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
 
                         ogdObject.extras = {};
-                        ogdObject.extras.dates = {};
+                        ogdObject.extras.metadata = {};
                         if (dateMetaUpdate) {
                             ogdObject.modified = dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
                         }
-                        ogdObject.extras.dates.metadata_modified = Date.now();
+                        ogdObject.extras.metadata.modified = new Date(Date.now());
                         ogdObject.extras.license_id = license.description; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
                         ogdObject.extras.license_url = license.link;
                         ogdObject.extras.realtime = columnMap.Echtzeitdaten === 1;
@@ -243,7 +243,7 @@ class ExcelImporter {
         downloads.forEach( downloadUrl => {
             ogdObject.distribution.push({
                 format: type,
-                accessUrl: downloadUrl.trim()
+                accessURL: downloadUrl.trim()
             });
         });
     }

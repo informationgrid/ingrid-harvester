@@ -29,7 +29,7 @@ module.exports = {
             'type': 'string',
             'index': 'not_analyzed'
         },
-        'themes': {
+        'theme': {
             'type': 'string',
             'index': 'not_analyzed'
         },
@@ -53,9 +53,9 @@ module.exports = {
         },
         'extras': {
             'properties': {
-                'dates': {
+                'metadata': {
                     'properties': {
-                        'metadata_modified': {
+                        'modified': {
                             'type': 'date'
                         }
                     }
