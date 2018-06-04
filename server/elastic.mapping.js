@@ -12,10 +12,39 @@ module.exports = {
             'type': 'string',
             'analyzer': 'decomp'
         },
-        'author': {
-            'type': 'string',
-            'fields': {
-                'raw' : {
+        'creator': {
+            'properties': {
+                'name': {
+                    'type': 'string',
+                    'fields': {
+                        'raw': {
+                            'type': 'string',
+                            'index': 'not_analyzed'
+                        }
+                    }
+                },
+                'mbox': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                }
+            }
+        },
+        'publisher': {
+            'properties': {
+                'name': {
+                    'type': 'string',
+                    'fields': {
+                        'raw': {
+                            'type': 'string',
+                            'index': 'not_analyzed'
+                        }
+                    }
+                },
+                'homepage': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'organization': {
                     'type': 'string',
                     'index': 'not_analyzed'
                 }
@@ -33,8 +62,14 @@ module.exports = {
             'type': 'string',
             'index': 'not_analyzed'
         },
+        'issued': {
+            'type': 'date'
+        },
         'modified': {
             'type': 'date'
+        },
+        'accrualPeriodicity': {
+            'type': 'string'
         },
         'distribution': {
             'properties': {
@@ -42,9 +77,24 @@ module.exports = {
                     'type': 'string',
                     'index': 'not_analyzed'
                 },
+                'title': {
+                    'type': 'string',
+                    'analyzer': 'decomp'
+                },
+                'description': {
+                    'type': 'string',
+                    'analyzer': 'decomp'
+                },
+                'format': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
                 'accessURL': {
                     'type': 'string',
                     'index': 'not_analyzed'
+                },
+                'issued': {
+                    'type': 'date'
                 },
                 'modified': {
                     'type': 'date'
@@ -55,6 +105,9 @@ module.exports = {
             'properties': {
                 'metadata': {
                     'properties': {
+                        'harvested': {
+                            'type': 'date'
+                        },
                         'modified': {
                             'type': 'date'
                         }
@@ -65,6 +118,10 @@ module.exports = {
                     'index': 'not_analyzed'
                 },
                 'license_title': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'license_url': {
                     'type': 'string',
                     'index': 'not_analyzed'
                 },
@@ -80,6 +137,10 @@ module.exports = {
                 },
                 'temporal_end': {
                     'type': 'string'
+                },
+                'groups': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
                 },
                 'subgroups': {
                     'type': 'string',
