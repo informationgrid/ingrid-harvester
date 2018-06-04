@@ -6,6 +6,7 @@
     "indexType": "base",
     "alias": "mcloud",
     "filePath": "./data.xlsx",
+    "ckanBaseUrl": "http://localhost/ckan",
     "includeTimestamp": true
   }
 ]
