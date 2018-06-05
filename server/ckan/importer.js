@@ -77,8 +77,15 @@ class GovDataImporter {
             if (source.organization !== null) {
                 target.publisher = {};
                 if (source.organization.title !== null) {
-                    target.publisher.organization = [source.organization.title];
-                    target.publisher.homepage = [];
+                    let title = source.organization.title;
+                    let homepage = source.organization.description;
+
+                    if (title !== null) {
+                        target.publisher.organization = [title];
+                    }
+                    if (homepage !== null) {
+                        target.publisher.homepage = [homepage];
+                    }
                 }
             }
 
