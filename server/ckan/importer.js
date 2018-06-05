@@ -116,9 +116,14 @@ class GovDataImporter {
                 harvested: now
             };
 
-            this.elastic.addDocToBulk(target, target.id);
+            // Execute the mappers
+            let theDoc = {};
+            this.settings.mapper.forEach(mapper => {
+                mapper.run(target, theDoc);
+            });
+            this.elastic.addDocToBulk(theDoc, theDoc.id);
 
-            // signal finished operation so that the next asynchronous task can run
+            // signal finished operation so that the next asynchronous task can run (callback set by async)
             callback();
 
         } catch (e) {
@@ -135,7 +140,8 @@ class GovDataImporter {
             }, 10);
 
             queue.drain = () => {
-                log.info( 'queue is empty' );
+                log.info( 'queue has been processed' );
+
                 // Prepare the index, send the data to elasticsearch and close the client
                 this.elastic.prepareIndex(mapping, settings)
                     .then(() => this.elastic.sendBulkData(false)
