@@ -14,6 +14,11 @@ class GovDataImporter {
      * @param { {urlSearch, urlData, mapper} }settings
      */
     constructor(settings) {
+        // Trim trailing slash
+        let url = settings.ckanBaseUrl;
+        if (url.charAt(url.length-1) === '/') {
+            settings.ckanBaseUrl = url.substring(0, url.length-1);
+        }
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
 
@@ -39,8 +44,10 @@ class GovDataImporter {
             log.debug("Processing dataset: " + source.name)
 
             let target = {};
+            let name = source.name;
+
             target.id = source.id;
-            target.name = source.name;
+            target.name = name;
             target.title = source.title;
             target.description = source.notes;
             target.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
@@ -94,8 +101,9 @@ class GovDataImporter {
             }
 
             // Extras
+            let subgroup = this.settings.defaultMcloudSubgroup;
             target.extras = {
-                // TODO subcategories (=mcloud categories)
+                subgroups: subgroup,
                 license_id: source.license_id,
                 license_title: source.license_title,
                 license_url: source.license_url
@@ -109,9 +117,14 @@ class GovDataImporter {
                 });
             }
 
-            // Metadata dates
+            // Metadata
+            // The harvest source
+            let upstream = this.settings.ckanBaseUrl + "/api/3/action/package_show?id=" + name;
+
+            // The harvest date
             let now = new Date(Date.now());
             target.extras.metadata = {
+                source: upstream,
                 modified: now,
                 harvested: now
             };
