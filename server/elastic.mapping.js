@@ -4,6 +4,15 @@ module.exports = {
             'type': 'string',
             'index': 'not_analyzed'
         },
+        'name': {
+            'type': 'string',
+            'fields': {
+                'raw': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                }
+            }
+        },
         'title': {
             'type': 'string',
             'analyzer': 'decomp'
@@ -46,7 +55,12 @@ module.exports = {
                 },
                 'organization': {
                     'type': 'string',
-                    'index': 'not_analyzed'
+                    'fields': {
+                        'raw': {
+                            'type': 'string',
+                            'index': 'not_analyzed'
+                        }
+                    }
                 }
             }
         },
@@ -108,8 +122,15 @@ module.exports = {
                         'harvested': {
                             'type': 'date'
                         },
+                        'issued': {
+                            'type': 'date'
+                        },
                         'modified': {
                             'type': 'date'
+                        },
+                        'source': {
+                            'type': 'string',
+                            'index': 'not_analyzed'
                         }
                     }
                 },
