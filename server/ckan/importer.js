@@ -41,7 +41,7 @@ class GovDataImporter {
      */
     async importDataset(source, callback) {
         try {
-            log.debug("Processing dataset: " + source.name)
+            log.debug("Processing dataset: " + source.name);
 
             let target = {};
             let name = source.name;
