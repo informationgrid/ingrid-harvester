@@ -4,6 +4,7 @@ let log = require('log4js').getLogger(__filename),
     ElasticSearchUtils = require('./../elastic-utils'),
     mapping = require('../elastic.mapping.js'),
     settings = require('../elastic.settings.js'),
+    async = require( 'async' ),
     Excel = require('exceljs'),
     Promise = require('promise');
 
@@ -56,121 +57,170 @@ class ExcelImporter {
         };
 
         let workbook = new Excel.Workbook();
-        let mapper = this.settings.mapper;
         let elastic = this.elastic;
-        const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
+        //const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
+
+        let self = this;
+        let queue  = async.queue(function() {
+            self.importSingleRow.call(self, ...arguments);
+        }, 25);
+
+        queue.drain = () => {
+            log.debug('Finished processing queue');
+            elastic.sendBulkData(false)
+                .then(() => Promise.all(this.promises))
+                .then(() => elastic.finishIndex());
+        };
 
         elastic.prepareIndex(mapping, settings)
-            .then(() => workbook.xlsx.readFile(this.excelFilepath))
             .then(() => {
-                log.debug('done loading file');
-                let worksheet = workbook.getWorksheet(1);
-                // Iterate over all rows that have values in a worksheet
-                worksheet.eachRow((row, rowNumber) => {
-                    if (rowNumber > 1) {
-                        let columnValues = [];
-                        for (let i = 0; i < row.values.length; i++) {
-                            let cur = row.values[i];
-                            if (!cur) {
-                                columnValues.push('');
-                                continue;
-                            }
+                workbook.xlsx.readFile(this.excelFilepath)
+                    .then(() => {
+                        log.debug('done loading file');
 
-                            if (cur.richText) {
-                                let clean = '';
-                                for (let i in cur.richText) {
-                                    clean += cur.richText[i].text;
+                        let worksheet = workbook.getWorksheet(1);
+                        // Iterate over all rows that have values in a worksheet
+                        worksheet.eachRow((row, rowNumber) => {
+                            if (rowNumber > 1) {
+                                let columnValues = [];
+                                for (let i = 0; i < row.values.length; i++) {
+                                    let cur = row.values[i];
+                                    if (!cur) {
+                                        columnValues.push('');
+                                        continue;
+                                    }
+
+                                    if (cur.richText) {
+                                        let clean = '';
+                                        for (let i in cur.richText) {
+                                            clean += cur.richText[i].text;
+                                        }
+                                        columnValues.push(clean);
+                                    } else {
+                                        columnValues.push(cur);
+                                    }
                                 }
-                                columnValues.push(clean);
-                            } else {
-                                columnValues.push(cur);
+                                if (columnValues.length != row.values.length) {
+                                    log.debug(columnValues.length + ' : ' + row.values.length);
+                                }
+                                queue.push({
+                                    workbook: workbook,
+                                    columnMap: columnMap,
+                                    columnValues: columnValues
+                                });
                             }
-                        }
-                        if (columnValues.length != row.values.length) {
-                            log.debug(columnValues.length + ' : ' + row.values.length);
-                        }
-                        let ogdObject = {};
-                        let doc = {};
+                        });
+                    })
+            })
+            .catch(error => log.error("Error reading excel workbook\n", error));
+    }
 
-                        let uniqueName = this.getUniqueName(columnValues[columnMap.Daten]);
-                        const dateMetaUpdate = columnValues[columnMap.Aktualisierungsdatum];
+    /**
+     * Import a single row from the excel workbook to elasticsearch index
+     *
+     * @param args {workbook, columnMap, columnValues}
+     * @param callback automatically added by async.queue
+     * @returns {Promise<void>}
+     */
+    async importSingleRow(args, callback) {
+        let workbook = args.workbook;
+        let columnMap = args.columnMap;
+        let columnValues = args.columnValues;
+        const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
 
-                        ogdObject.name = uniqueName;
-                        ogdObject.title = columnValues[columnMap.Daten];
-                        const publisherAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
-                        const publishers = this.getPublishers(workbook.getWorksheet(2), publisherAbbreviations);
-                        const license = this.getLicense(workbook.getWorksheet(3), columnValues[columnMap.Lizenz]);
+        log.debug("Processing excel dataset with title : " + columnValues[columnMap.Daten]);
 
-                        ogdObject.publisher = {};
-                        ogdObject.publisher.organization = publishers.organisations;
-                        ogdObject.publisher.homepage = publishers.links;
-                        ogdObject.description = columnValues[columnMap.Kurzbeschreibung];
-                        ogdObject.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
+        let ogdObject = {};
+        let doc = {};
 
-                        ogdObject.extras = {};
-                        ogdObject.extras.metadata = {};
-                        if (dateMetaUpdate) {
-                            ogdObject.modified = dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
-                        }
-                        ogdObject.extras.metadata.modified = new Date(Date.now());
-                        ogdObject.extras.license_id = license.description; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
-                        ogdObject.extras.license_url = license.link;
-                        ogdObject.extras.realtime = columnMap.Echtzeitdaten === 1;
-                        // ogdObject.extras.metadata_original_id = TODO
-                        ogdObject.extras.temporal = columnValues[columnMap.Zeitraum];
+        let uniqueName = this.getUniqueName(columnValues[columnMap.Daten]);
+        const dateMetaUpdate = columnValues[columnMap.Aktualisierungsdatum];
 
-                        ogdObject.extras.citation = columnValues[columnMap.Quellenvermerk];
-                        ogdObject.extras.subgroups = this.mapCategories(columnValues[columnMap.Kategorie].split(','));
+        ogdObject.name = uniqueName;
+        ogdObject.title = columnValues[columnMap.Daten];
+        const publisherAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
+        const publishers = this.getPublishers(workbook.getWorksheet(2), publisherAbbreviations);
+        const license = this.getLicense(workbook.getWorksheet(3), columnValues[columnMap.Lizenz]);
 
-                        ogdObject.extras.terms_of_use = columnValues[columnMap.Nutzungshinweise];
+        ogdObject.publisher = {};
+        ogdObject.publisher.organization = publishers.organisations;
+        ogdObject.publisher.homepage = publishers.links;
+        ogdObject.description = columnValues[columnMap.Kurzbeschreibung];
+        ogdObject.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
+
+        ogdObject.extras = {};
+        ogdObject.extras.metadata = {};
+        if (dateMetaUpdate) {
+            ogdObject.modified = dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
+        }
+
+        let now = new Date(Date.now());
+        let issued = null;
+        let existing = await this.elastic.searchById(uniqueName);
+        if (existing.hits.total > 0) {
+            let firstHit = existing.hits.hits[0]._source;
+            if (firstHit.extras.metadata.issued !== null) {
+                issued = firstHit.extras.metadata.issued;
+            }
+        }
+        if (typeof  issued === "undefined" || issued === null) {
+            issued = now;
+        }
+        ogdObject.extras.metadata.modified = now;
+        ogdObject.extras.metadata.issued = issued;
+
+        ogdObject.extras.license_id = license.description; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
+        ogdObject.extras.license_url = license.link;
+        ogdObject.extras.realtime = columnMap.Echtzeitdaten === 1;
+        // ogdObject.extras.metadata_original_id = TODO
+        ogdObject.extras.temporal = columnValues[columnMap.Zeitraum];
+
+        ogdObject.extras.citation = columnValues[columnMap.Quellenvermerk];
+        ogdObject.extras.subgroups = this.mapCategories(columnValues[columnMap.Kategorie].split(','));
+
+        ogdObject.extras.terms_of_use = columnValues[columnMap.Nutzungshinweise];
 
 
 
-                        ogdObject.distribution = [];
+        ogdObject.distribution = [];
 
-                        if (columnValues[columnMap.Dateidownload]) {
-                            this.addDownloadUrls(ogdObject, 'Dateidownload', columnValues[columnMap.Dateidownload]);
-                        }
-                        if (columnValues[columnMap.WMS]) {
-                            this.addDownloadUrls(ogdObject, 'WMS', columnValues[columnMap.WMS]);
-                        }
-                        if (columnValues[columnMap.FTP]) {
-                            this.addDownloadUrls(ogdObject, 'FTP', columnValues[columnMap.FTP]);
-                        }
-                        if (columnValues[columnMap.AtomFeed]) {
-                            this.addDownloadUrls(ogdObject, 'AtomFeed', columnValues[columnMap.AtomFeed]);
-                        }
-                        if (columnValues[columnMap.Portal]) {
-                            this.addDownloadUrls(ogdObject, 'Portal', columnValues[columnMap.Portal]);
-                        }
-                        if (columnValues[columnMap.SOS]) {
-                            this.addDownloadUrls(ogdObject, 'SOS', columnValues[columnMap.SOS]);
-                        }
-                        if (columnValues[columnMap.WFS]) {
-                            this.addDownloadUrls(ogdObject, 'WFS', columnValues[columnMap.WFS]);
-                        }
-                        if (columnValues[columnMap.WCS]) {
-                            this.addDownloadUrls(ogdObject, 'WCS', columnValues[columnMap.WCS]);
-                        }
-                        if (columnValues[columnMap.WMTS]) {
-                            this.addDownloadUrls(ogdObject, 'WMTS', columnValues[columnMap.WMTS]);
-                        }
-                        if (columnValues[columnMap.API]) {
-                            this.addDownloadUrls(ogdObject, 'API', columnValues[columnMap.API]);
-                        }
+        if (columnValues[columnMap.Dateidownload]) {
+            this.addDownloadUrls(ogdObject, 'Dateidownload', columnValues[columnMap.Dateidownload]);
+        }
+        if (columnValues[columnMap.WMS]) {
+            this.addDownloadUrls(ogdObject, 'WMS', columnValues[columnMap.WMS]);
+        }
+        if (columnValues[columnMap.FTP]) {
+            this.addDownloadUrls(ogdObject, 'FTP', columnValues[columnMap.FTP]);
+        }
+        if (columnValues[columnMap.AtomFeed]) {
+            this.addDownloadUrls(ogdObject, 'AtomFeed', columnValues[columnMap.AtomFeed]);
+        }
+        if (columnValues[columnMap.Portal]) {
+            this.addDownloadUrls(ogdObject, 'Portal', columnValues[columnMap.Portal]);
+        }
+        if (columnValues[columnMap.SOS]) {
+            this.addDownloadUrls(ogdObject, 'SOS', columnValues[columnMap.SOS]);
+        }
+        if (columnValues[columnMap.WFS]) {
+            this.addDownloadUrls(ogdObject, 'WFS', columnValues[columnMap.WFS]);
+        }
+        if (columnValues[columnMap.WCS]) {
+            this.addDownloadUrls(ogdObject, 'WCS', columnValues[columnMap.WCS]);
+        }
+        if (columnValues[columnMap.WMTS]) {
+            this.addDownloadUrls(ogdObject, 'WMTS', columnValues[columnMap.WMTS]);
+        }
+        if (columnValues[columnMap.API]) {
+            this.addDownloadUrls(ogdObject, 'API', columnValues[columnMap.API]);
+        }
 
-                        mapper.forEach(mapper => mapper.run(ogdObject, doc));
+        this.settings.mapper.forEach(mapper => mapper.run(ogdObject, doc));
 
-                        let promise = elastic.addDocToBulk(doc, uniqueName);
-                        if (promise) this.promises.push(promise);
-                    }
-                });
-                log.debug('sending rest of data');
-                this.promises.push(elastic.sendBulkData(false));
+        let promise = this.elastic.addDocToBulk(doc, uniqueName);
+        this.promises.push(promise);
 
-                Promise.all(this.promises).then(() => elastic.finishIndex());
-            });
-
+        callback();
     }
 
     /**
