@@ -41,12 +41,12 @@ class GovDataImporter {
      */
     async importDataset(source, callback) {
         try {
-            log.debug("Processing dataset: " + source.name);
+            log.debug("Processing CKAN dataset: " + source.name + " from data-source: " + this.settings.ckanBaseUrl);
 
             let target = {};
             let name = source.name;
 
-            target.id = source.id;
+            let id = source.id;
             target.name = name;
             target.title = source.title;
             target.description = source.notes;
@@ -129,10 +129,24 @@ class GovDataImporter {
             // The harvest source
             let upstream = this.settings.ckanBaseUrl + "/api/3/action/package_show?id=" + name;
 
-            // The harvest date
+            // Dates
             let now = new Date(Date.now());
+            let issued = null;
+
+            let existing = await this.elastic.searchById(source.id);
+            if (existing.hits.total > 0) {
+                let firstHit = existing.hits.hits[0]._source;
+                if (firstHit.extras.metadata.issued !== null) {
+                    issued = firstHit.extras.metadata.issued;
+                }
+            }
+            if (typeof  issued === "undefined" || issued === null) {
+                issued = now;
+            }
+
             target.extras.metadata = {
                 source: upstream,
+                issued: issued,
                 modified: now,
                 harvested: now
             };
@@ -142,7 +156,7 @@ class GovDataImporter {
             this.settings.mapper.forEach(mapper => {
                 mapper.run(target, theDoc);
             });
-            this.elastic.addDocToBulk(theDoc, theDoc.id);
+            this.elastic.addDocToBulk(theDoc, id);
 
             // signal finished operation so that the next asynchronous task can run (callback set by async)
             callback();

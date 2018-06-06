@@ -222,7 +222,7 @@ class ElasticSearchUtils {
      */
     sendBulkData(closeAfterBulk) {
         if (this._bulkData.length > 0) {
-            log.debug('Sending BULK message');
+            log.debug('Sending BULK message with ' + this._bulkData.length + ' items to index ' + this.indexName);
             let promise = this.bulk(this._bulkData, closeAfterBulk);
             this._bulkData = [];
             return promise;
@@ -242,6 +242,34 @@ class ElasticSearchUtils {
         stamp += ('0' + date.getSeconds()).slice(-2);
         stamp += ('00' + date.getMilliseconds()).slice(-3);
         return stamp;
+    }
+
+    /**
+     * Returns the creation date for the dataset with the given name, if it
+     * exists. Null otherwise.
+     *
+     * @param id id of dataset to search
+     */
+    searchById(id) {
+        return new Promise((resolve,  reject) => {
+            const response = this.client.search({
+                index: this.settings.alias,
+                body: {
+                    query: {
+                        bool: {
+                            filter: {
+                                term: {
+                                    "_id": id
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            response.then(res => resolve(res))
+                .catch(err => reject(err));
+        });
     }
 }
 
