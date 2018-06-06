@@ -113,7 +113,8 @@ class GovDataImporter {
                 subgroups: subgroup,
                 license_id: source.license_id,
                 license_title: source.license_title,
-                license_url: source.license_url
+                license_url: source.license_url,
+                harvested_data: JSON.stringify(source)
             };
 
             // Groups

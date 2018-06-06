@@ -166,6 +166,10 @@ module.exports = {
                 'subgroups': {
                     'type': 'string',
                     'index': 'not_analyzed'
+                },
+                'harvested_data': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
                 }
             }
         }
