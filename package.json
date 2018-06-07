@@ -19,7 +19,8 @@
     "find-port": "^2.0.1",
     "log4js": "^0.6.38",
     "promise": "^7.3.1",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "xml-js": "^1.6.4"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
