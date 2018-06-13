@@ -300,15 +300,16 @@ class ExcelImporter {
 
     getUniqueName(baseName) {
         let newName = baseName.replace(/[^a-zA-Z0-9-_]+/g, '').toLowerCase().substring(0, 98);
+        let candidate = newName;
         let count = this.names[newName];
         if (count) {
             count++;
-            newName = newName + count;
+            candidate = candidate + count;
         } else {
             count = 1;
         }
         this.names[newName] = count;
-        return newName;
+        return candidate;
     }
 }
 
