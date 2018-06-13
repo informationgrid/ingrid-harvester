@@ -136,7 +136,7 @@ class ExcelImporter {
         let uniqueName = this.getUniqueName(columnValues[columnMap.Daten]);
         const dateMetaUpdate = columnValues[columnMap.Aktualisierungsdatum];
 
-        ogdObject.name = uniqueName;
+        ogdObject.id = uniqueName;
         ogdObject.title = columnValues[columnMap.Daten];
         const publisherAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
         const publishers = this.getPublishers(workbook.getWorksheet(2), publisherAbbreviations);
@@ -168,6 +168,7 @@ class ExcelImporter {
         }
         ogdObject.extras.metadata.modified = now;
         ogdObject.extras.metadata.issued = issued;
+        ogdObject.extras.metadata.source = 'mcloud-excel';
 
         ogdObject.extras.license_id = license.description; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
         ogdObject.extras.license_url = license.link;

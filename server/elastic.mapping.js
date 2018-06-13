@@ -4,18 +4,15 @@ module.exports = {
             'type': 'string',
             'index': 'not_analyzed'
         },
-        'name': {
+        'title': {
             'type': 'string',
+            'analyzer': 'decomp',
             'fields': {
                 'raw': {
                     'type': 'string',
                     'index': 'not_analyzed'
                 }
             }
-        },
-        'title': {
-            'type': 'string',
-            'analyzer': 'decomp'
         },
         'description': {
             'type': 'string',

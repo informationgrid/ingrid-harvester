@@ -48,7 +48,7 @@ class GovDataImporter {
             let name = source.name;
 
             let id = source.id;
-            target.name = name;
+            target.id = name;
             target.title = source.title;
             target.description = source.notes;
             target.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
