@@ -11,7 +11,7 @@ class GovDataImporter {
 
     /**
      * Create the importer and initialize with settings.
-     * @param { {urlSearch, urlData, mapper} }settings
+     * @param { {ckanBaseUrl, defaultMcloudSubgroup, mapper} }settings
      */
     constructor(settings) {
         // Trim trailing slash
@@ -21,6 +21,7 @@ class GovDataImporter {
         }
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
+        this.promises = [];
 
         this.options_package_search = {
             uri: settings.ckanBaseUrl + "/api/3/action/package_search", // See http://docs.ckan.org/en/ckan-2.7.3/api/
@@ -156,7 +157,8 @@ class GovDataImporter {
             this.settings.mapper.forEach(mapper => {
                 mapper.run(target, theDoc);
             });
-            this.elastic.addDocToBulk(theDoc, id);
+            let promise = this.elastic.addDocToBulk(theDoc, id);
+            this.promises.push(promise);
 
             // signal finished operation so that the next asynchronous task can run (callback set by async)
             callback();
@@ -179,9 +181,9 @@ class GovDataImporter {
 
                 // Prepare the index, send the data to elasticsearch and close the client
                 this.elastic.prepareIndex(mapping, settings)
-                    .then(() => this.elastic.sendBulkData(false)
-                        .then(() => this.elastic.finishIndex())
-                    );
+                    .then(() => this.elastic.sendBulkData(false))
+                    .then(() => Promise.all(this.promises))
+                    .then(() => this.elastic.finishIndex());
             };
 
             // Fetch datasets 'qs.rows' at a time
