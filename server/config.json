@@ -6,7 +6,16 @@
     "indexType": "base",
     "alias": "mcloud",
     "filePath": "./data.xlsx",
+    "includeTimestamp": true
+  },
+  {
+    "importer": "CKAN",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "ckan",
+    "indexType": "base",
+    "alias": "mcloud",
     "ckanBaseUrl": "http://localhost/ckan",
+    "defaultMcloudSubgroup": "railway",
     "includeTimestamp": true
   }
 ]
