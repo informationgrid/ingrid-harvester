@@ -5,6 +5,8 @@ let // findPort = require( 'find-port' ),
     config = require( './config.json' ),
     excelDefaultMapper = require( './excel/excel.mapper' ),
     excelIdfMapper = require( './excel/excel.idf.mapper' ),
+    ckanDefaultMapper = require( './ckan/ckan.mapper' ),
+    ckanIdfMapper = require( './ckan/ckan.idf.mapper' ),
     GovDataImporter = require( './ckan/importer' ),
     ExcelImporter = require( './excel/importer' );
 
@@ -27,6 +29,8 @@ config.forEach( settings => {
     // choose different importer depending on setting
     if (settings.importer === 'EXCEL') {
         settings.mapper = [ excelDefaultMapper, excelIdfMapper ];
+    } else if (settings.importer === 'CKAN') {
+        settings.mapper = [ ckanDefaultMapper, ckanIdfMapper ];
     }
 
     let importerClass = getImporter( settings.importer );

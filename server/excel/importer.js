@@ -4,6 +4,7 @@ let log = require('log4js').getLogger(__filename),
     ElasticSearchUtils = require('./../elastic-utils'),
     mapping = require('../elastic.mapping.js'),
     settings = require('../elastic.settings.js'),
+    async = require( 'async' ),
     Excel = require('exceljs'),
     Promise = require('promise');
 
@@ -56,122 +57,171 @@ class ExcelImporter {
         };
 
         let workbook = new Excel.Workbook();
-        let mapper = this.settings.mapper;
         let elastic = this.elastic;
-        const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
+        //const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
+
+        let self = this;
+        let queue  = async.queue(function() {
+            self.importSingleRow.call(self, ...arguments);
+        }, 25);
+
+        queue.drain = () => {
+            log.debug('Finished processing queue');
+            elastic.sendBulkData(false)
+                .then(() => Promise.all(this.promises))
+                .then(() => elastic.finishIndex());
+        };
 
         elastic.prepareIndex(mapping, settings)
-            .then(() => workbook.xlsx.readFile(this.excelFilepath))
             .then(() => {
-                log.debug('done loading file');
-                let worksheet = workbook.getWorksheet(1);
-                // Iterate over all rows that have values in a worksheet
-                worksheet.eachRow((row, rowNumber) => {
-                    if (rowNumber > 1) {
-                        let columnValues = [];
-                        for (let i = 0; i < row.values.length; i++) {
-                            let cur = row.values[i];
-                            if (!cur) {
-                                columnValues.push('');
-                                continue;
-                            }
+                workbook.xlsx.readFile(this.excelFilepath)
+                    .then(() => {
+                        log.debug('done loading file');
 
-                            if (cur.richText) {
-                                let clean = '';
-                                for (let i in cur.richText) {
-                                    clean += cur.richText[i].text;
+                        let worksheet = workbook.getWorksheet(1);
+                        // Iterate over all rows that have values in a worksheet
+                        worksheet.eachRow((row, rowNumber) => {
+                            if (rowNumber > 1) {
+                                let columnValues = [];
+                                for (let i = 0; i < row.values.length; i++) {
+                                    let cur = row.values[i];
+                                    if (!cur) {
+                                        columnValues.push('');
+                                        continue;
+                                    }
+
+                                    if (cur.richText) {
+                                        let clean = '';
+                                        for (let i in cur.richText) {
+                                            clean += cur.richText[i].text;
+                                        }
+                                        columnValues.push(clean);
+                                    } else {
+                                        columnValues.push(cur);
+                                    }
                                 }
-                                columnValues.push(clean);
-                            } else {
-                                columnValues.push(cur);
+                                if (columnValues.length != row.values.length) {
+                                    log.debug(columnValues.length + ' : ' + row.values.length);
+                                }
+                                queue.push({
+                                    workbook: workbook,
+                                    columnMap: columnMap,
+                                    columnValues: columnValues
+                                });
                             }
-                        }
-                        if (columnValues.length != row.values.length) {
-                            log.debug(columnValues.length + ' : ' + row.values.length);
-                        }
-                        let ogdObject = {};
-                        let doc = {};
+                        });
+                    })
+            })
+            .catch(error => log.error("Error reading excel workbook\n", error));
+    }
 
-                        let uniqueName = this.getUniqueName(columnValues[columnMap.Daten]);
-                        const dateMetaUpdate = columnValues[columnMap.Aktualisierungsdatum];
+    /**
+     * Import a single row from the excel workbook to elasticsearch index
+     *
+     * @param args {workbook, columnMap, columnValues}
+     * @param callback automatically added by async.queue
+     * @returns {Promise<void>}
+     */
+    async importSingleRow(args, callback) {
+        let workbook = args.workbook;
+        let columnMap = args.columnMap;
+        let columnValues = args.columnValues;
+        const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
 
-                        ogdObject.name = uniqueName;
-                        ogdObject.title = columnValues[columnMap.Daten];
-                        const authorAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
-                        const authors = this.getAuthors(workbook.getWorksheet(2), authorAbbreviations);
-                        const license = this.getLicense(workbook.getWorksheet(3), columnValues[columnMap.Lizenz]);
-                        ogdObject.author = authors.names;
-                        ogdObject.type = 'dokument';
-                        ogdObject.notes = columnValues[columnMap.Kurzbeschreibung];
-                        ogdObject.license_id = license.description; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
-                        ogdObject.license_url = license.link;
-                        ogdObject.groups = ['transport_verkehr'];
+        log.debug("Processing excel dataset with title : " + columnValues[columnMap.Daten]);
 
-                        ogdObject.extras = {};
-                        ogdObject.extras.dates = [];
-                        if (dateMetaUpdate) {
-                            ogdObject.lastUpdate = dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
-                        }
-                        ogdObject.realtime = columnMap.Echtzeitdaten === 1;
-                        // ogdObject.extras.metadata_original_id = TODO
-                        ogdObject.extras.temporal_coverage = columnValues[columnMap.Zeitraum];
+        let ogdObject = {};
+        let doc = {};
 
-                        ogdObject.extras.contacts = [{}];
-                        ogdObject.extras.contacts[0].name = columnValues[columnMap.Quellenvermerk];
-                        ogdObject.extras.contacts[0].role = 'vertrieb';
-                        ogdObject.extras.subgroups = this.mapCategories(columnValues[columnMap.Kategorie].split(','));
+        let uniqueName = this.getUniqueName(columnValues[columnMap.Daten]);
+        const dateMetaUpdate = columnValues[columnMap.Aktualisierungsdatum];
 
-                        ogdObject.extras.terms_of_use = {};
-                        ogdObject.extras.terms_of_use.other = columnValues[columnMap.Nutzungshinweise];
+        ogdObject.title = columnValues[columnMap.Daten];
+        const publisherAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
+        const publishers = this.getPublishers(workbook.getWorksheet(2), publisherAbbreviations);
+        const license = this.getLicense(workbook.getWorksheet(3), columnValues[columnMap.Lizenz]);
 
-                        ogdObject.extras.metadata_original_portal = authors.links;
+        ogdObject.publisher = {};
+        ogdObject.publisher.organization = publishers.organisations;
+        ogdObject.publisher.homepage = publishers.links;
+        ogdObject.description = columnValues[columnMap.Kurzbeschreibung];
+        ogdObject.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
+
+        ogdObject.extras = {};
+        ogdObject.extras.metadata = {};
+        if (dateMetaUpdate) {
+            ogdObject.modified = dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
+        }
+
+        let now = new Date(Date.now());
+        let issued = null;
+        let existing = await this.elastic.searchById(uniqueName);
+        if (existing.hits.total > 0) {
+            let firstHit = existing.hits.hits[0]._source;
+            if (firstHit.extras.metadata.issued !== null) {
+                issued = firstHit.extras.metadata.issued;
+            }
+        }
+        if (typeof  issued === "undefined" || issued === null) {
+            issued = now;
+        }
+        ogdObject.extras.generated_id = uniqueName;
+        ogdObject.extras.metadata.modified = now;
+        ogdObject.extras.metadata.issued = issued;
+        ogdObject.extras.metadata.source = 'mcloud-excel';
+
+        ogdObject.extras.license_id = license.description; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
+        ogdObject.extras.license_url = license.link;
+        ogdObject.extras.realtime = columnMap.Echtzeitdaten === 1;
+        // ogdObject.extras.metadata_original_id = TODO
+        ogdObject.extras.temporal = columnValues[columnMap.Zeitraum];
+
+        ogdObject.extras.citation = columnValues[columnMap.Quellenvermerk];
+        ogdObject.extras.subgroups = this.mapCategories(columnValues[columnMap.Kategorie].split(','));
+
+        ogdObject.extras.terms_of_use = columnValues[columnMap.Nutzungshinweise];
 
 
-                        ogdObject.resources = [];
 
-                        if (columnValues[columnMap.Dateidownload]) {
-                            this.addDownloadUrls(ogdObject, 'Dateidownload', columnValues[columnMap.Dateidownload]);
-                        }
-                        if (columnValues[columnMap.WMS]) {
-                            this.addDownloadUrls(ogdObject, 'WMS', columnValues[columnMap.WMS]);
-                        }
-                        if (columnValues[columnMap.FTP]) {
-                            this.addDownloadUrls(ogdObject, 'FTP', columnValues[columnMap.FTP]);
-                        }
-                        if (columnValues[columnMap.AtomFeed]) {
-                            this.addDownloadUrls(ogdObject, 'AtomFeed', columnValues[columnMap.AtomFeed]);
-                        }
-                        if (columnValues[columnMap.Portal]) {
-                            this.addDownloadUrls(ogdObject, 'Portal', columnValues[columnMap.Portal]);
-                        }
-                        if (columnValues[columnMap.SOS]) {
-                            this.addDownloadUrls(ogdObject, 'SOS', columnValues[columnMap.SOS]);
-                        }
-                        if (columnValues[columnMap.WFS]) {
-                            this.addDownloadUrls(ogdObject, 'WFS', columnValues[columnMap.WFS]);
-                        }
-                        if (columnValues[columnMap.WCS]) {
-                            this.addDownloadUrls(ogdObject, 'WCS', columnValues[columnMap.WCS]);
-                        }
-                        if (columnValues[columnMap.WMTS]) {
-                            this.addDownloadUrls(ogdObject, 'WMTS', columnValues[columnMap.WMTS]);
-                        }
-                        if (columnValues[columnMap.API]) {
-                            this.addDownloadUrls(ogdObject, 'API', columnValues[columnMap.API]);
-                        }
+        ogdObject.distribution = [];
 
-                        mapper.forEach(mapper => mapper.run(ogdObject, doc));
+        if (columnValues[columnMap.Dateidownload]) {
+            this.addDownloadUrls(ogdObject, 'Dateidownload', columnValues[columnMap.Dateidownload]);
+        }
+        if (columnValues[columnMap.WMS]) {
+            this.addDownloadUrls(ogdObject, 'WMS', columnValues[columnMap.WMS]);
+        }
+        if (columnValues[columnMap.FTP]) {
+            this.addDownloadUrls(ogdObject, 'FTP', columnValues[columnMap.FTP]);
+        }
+        if (columnValues[columnMap.AtomFeed]) {
+            this.addDownloadUrls(ogdObject, 'AtomFeed', columnValues[columnMap.AtomFeed]);
+        }
+        if (columnValues[columnMap.Portal]) {
+            this.addDownloadUrls(ogdObject, 'Portal', columnValues[columnMap.Portal]);
+        }
+        if (columnValues[columnMap.SOS]) {
+            this.addDownloadUrls(ogdObject, 'SOS', columnValues[columnMap.SOS]);
+        }
+        if (columnValues[columnMap.WFS]) {
+            this.addDownloadUrls(ogdObject, 'WFS', columnValues[columnMap.WFS]);
+        }
+        if (columnValues[columnMap.WCS]) {
+            this.addDownloadUrls(ogdObject, 'WCS', columnValues[columnMap.WCS]);
+        }
+        if (columnValues[columnMap.WMTS]) {
+            this.addDownloadUrls(ogdObject, 'WMTS', columnValues[columnMap.WMTS]);
+        }
+        if (columnValues[columnMap.API]) {
+            this.addDownloadUrls(ogdObject, 'API', columnValues[columnMap.API]);
+        }
 
-                        let promise = elastic.addDocToBulk(doc, uniqueName);
-                        if (promise) this.promises.push(promise);
-                    }
-                });
-                log.debug('sending rest of data');
-                this.promises.push(elastic.sendBulkData(false));
+        this.settings.mapper.forEach(mapper => mapper.run(ogdObject, doc));
 
-                Promise.all(this.promises).then(() => elastic.finishIndex());
-            });
+        let promise = this.elastic.addDocToBulk(doc, uniqueName);
+        this.promises.push(promise);
 
+        callback();
     }
 
     /**
@@ -193,16 +243,16 @@ class ExcelImporter {
         });
     }
 
-    getAuthors(authorsSheet, /*string[]*/abbreviations) {
-        let authors = { names: [], links: [] };
+    getPublishers(authorsSheet, /*string[]*/abbreviations) {
+        let publishers = { organisations: [], links: [] };
         const numAuthors = authorsSheet.rowCount;
         abbreviations.forEach( abbr => {
             let found = false;
             for (let i=2; i<=numAuthors; i++) {
                 const row = authorsSheet.getRow(i);
                 if (row.values[1] === abbr) {
-                    authors.names.push(row.values[2]);
-                    authors.links.push(row.values[4]);
+                    publishers.organisations.push(row.values[2]);
+                    publishers.links.push(row.values[4]);
                     found = true;
                     break;
                 }
@@ -211,7 +261,7 @@ class ExcelImporter {
                 log.warn('Could not find abbreviation of "Datenhaltende Stelle": ' + abbr);
             }
         });
-        return authors;
+        return publishers;
     }
 
     getLicense(licenseSheet, /*string*/licenseId) {
@@ -242,24 +292,25 @@ class ExcelImporter {
         // console.log('urlstring:', urlsString);
         let downloads = urlsString.split(',');
         downloads.forEach( downloadUrl => {
-            ogdObject.resources.push({
+            ogdObject.distribution.push({
                 format: type,
-                url: downloadUrl.trim()
+                accessURL: downloadUrl.trim()
             });
         });
     }
 
     getUniqueName(baseName) {
         let newName = baseName.replace(/[^a-zA-Z0-9-_]+/g, '').toLowerCase().substring(0, 98);
+        let candidate = newName;
         let count = this.names[newName];
         if (count) {
             count++;
-            newName = newName + count;
+            candidate = candidate + count;
         } else {
             count = 1;
         }
         this.names[newName] = count;
-        return newName;
+        return candidate;
     }
 }
 
