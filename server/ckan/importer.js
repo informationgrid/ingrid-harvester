@@ -48,7 +48,6 @@ class GovDataImporter {
             let name = source.name;
 
             let id = source.id;
-            target.id = name;
             target.title = source.title;
             target.description = source.notes;
             target.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
@@ -111,6 +110,7 @@ class GovDataImporter {
             // Extras
             let subgroup = this.settings.defaultMcloudSubgroup;
             target.extras = {
+                generated_id: name,
                 subgroups: subgroup,
                 license_id: source.license_id,
                 license_title: source.license_title,

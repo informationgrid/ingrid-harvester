@@ -1,9 +1,5 @@
 module.exports = {
     properties: {
-        'id': {
-            'type': 'string',
-            'index': 'not_analyzed'
-        },
         'title': {
             'type': 'string',
             'analyzer': 'decomp',
@@ -130,6 +126,10 @@ module.exports = {
                             'index': 'not_analyzed'
                         }
                     }
+                },
+                'generated_id': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
                 },
                 'license_id': {
                     'type': 'string',

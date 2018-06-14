@@ -205,7 +205,7 @@ class ElasticSearchUtils {
             this.newerDuplicatesFor(doc, id)
                 .then(result => {
                     if (result.length > 0) {
-                        log.warn(`Skipping document with id '${doc.id}' since it is a duplicate of document with id '${result[0]._source.id}' from index '${result[0]._index}'`);
+                        log.warn(`Skipping document with generated_id '${doc.extras.generated_id}' since it is a duplicate of document with id '${result[0]._source.id}' from index '${result[0]._index}'`);
                     } else {
                         this._bulkData.push({
                             index: {
@@ -220,6 +220,7 @@ class ElasticSearchUtils {
                             this.sendBulkData();
                         }
                     }
+                    resolve();
                 })
                 .catch(err => reject(err));
         });
@@ -307,7 +308,7 @@ class ElasticSearchUtils {
      * duplicates were found
      */
     newerDuplicatesFor(doc, id) {
-        let harvestedId = doc.id;
+        let generatedId = doc.extras.generated_id;
         let source = doc.extras.metadata.source;
         let dt = doc.modified;
         let title = doc.title;
@@ -329,10 +330,10 @@ class ElasticSearchUtils {
                                 bool: {
                                     must: { "range": { "modified": { "gt": dt } } },
                                     should: [
-                                        { term: { "id": id }},
-                                        { term: { "id": harvestedId }},
+                                        { term: { "extras.generated_id": id }},
+                                        { term: { "extras.generated_id": generatedId }},
                                         { term: { "_id": id }},
-                                        { term: { "_id": harvestedId }},
+                                        { term: { "_id": generatedId }},
                                         {
                                             query: {
                                                 bool: {
