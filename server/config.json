@@ -11,10 +11,10 @@
   {
     "importer": "CKAN",
     "elasticSearchUrl": "http://localhost:9200",
-    "index": "ckan",
+    "index": "ckan_db",
     "indexType": "base",
     "alias": "mcloud",
-    "ckanBaseUrl": "http://localhost/ckan",
+    "ckanBaseUrl": "https://data.deutschebahn.com",
     "defaultMcloudSubgroup": "railway",
     "includeTimestamp": true
   }
