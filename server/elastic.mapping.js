@@ -83,6 +83,55 @@ module.exports = {
                 }
             }
         },
+        'contactPoint': {
+            'properties': {
+                'hasUID': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'fn': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'organization-name': {
+                    'type': 'string',
+                    'fields': {
+                        'raw': {
+                            'type': 'string',
+                            'index': 'not_analyzed'
+                        }
+                    }
+                },
+                'street-address': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'region': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'country-name': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'postal-code': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'hasEmail': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'hasTelephone': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'hasURL': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                }
+            }
+        },
         'type': {
             'type': 'string',
             'index': 'not_analyzed'
@@ -165,6 +214,13 @@ module.exports = {
                                     'index': 'not_analyzed'
                                 }
                             }
+                        },
+                        'isValid': {
+                            'type': 'boolean',
+                            'null_value': true
+                        },
+                        'harvesting_errors': {
+                            'type': 'string'
                         }
                     }
                 },
