@@ -325,35 +325,39 @@ class ElasticSearchUtils {
                 index: this.settings.alias,
                 body: {
                     query: {
-                        filtered: {
-                            filter: {
-                                bool: {
-                                    must: { "range": { "modified": { "gt": dt } } },
-                                    should: [
-                                        { term: { "extras.generated_id": id }},
-                                        { term: { "extras.generated_id": generatedId }},
-                                        { term: { "_id": id }},
-                                        { term: { "_id": generatedId }},
-                                        {
-                                            query: {
-                                                bool: {
-                                                    must: [
-                                                        {
-                                                            match: {
-                                                                "title": {
-                                                                    "query": title,
-                                                                    "minimum_should_match": "3<75%"
+                        bool: {
+                            must: [
+                                {"range": {"modified": {"gt": dt}}},
+                                {
+                                    query: {
+                                        bool: {
+                                            should: [
+                                                {term: {"extras.generated_id": id}},
+                                                {term: {"extras.generated_id": generatedId}},
+                                                {term: {"_id": id}},
+                                                {term: {"_id": generatedId}},
+                                                {
+                                                    query: {
+                                                        bool: {
+                                                            must: [
+                                                                { "terms": { "distribution.accessURL": urls } },
+                                                                {
+                                                                    match: {
+                                                                        "title.raw": {
+                                                                            "query": title,
+                                                                            "minimum_should_match": "3<80%"
+                                                                        }
+                                                                    }
                                                                 }
-                                                            }
-                                                        },
-                                                        { terms: { "dataset.accessURL": urls } }
-                                                    ]
+                                                            ]
+                                                        }
+                                                    }
                                                 }
-                                            }
+                                            ]
                                         }
-                                    ]
+                                    }
                                 }
-                            }
+                            ]
                         }
                     }
                 }
