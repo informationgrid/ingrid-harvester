@@ -204,8 +204,10 @@ class ElasticSearchUtils {
         return new Promise((resolve, reject) => {
             this.newerDuplicatesFor(doc, id)
                 .then(result => {
+                    let promise = null;
+
                     if (result.length > 0) {
-                        log.warn(`Skipping document with generated_id '${doc.extras.generated_id}' since it is a duplicate of document with id '${result[0]._source.id}' from index '${result[0]._index}'`);
+                        log.warn(`Skipping document with generated_id '${doc.extras.generated_id}' since it is a duplicate of document with generated_id '${result[0]._source.extras.generated_id}' from index '${result[0]._index}'`);
                     } else {
                         this._bulkData.push({
                             index: {
@@ -217,10 +219,17 @@ class ElasticSearchUtils {
                         // send data to elasticsearch if limit is reached
                         // TODO: don't use document size but bytes instead
                         if (this._bulkData.length > this.maxBulkSize) {
-                            this.sendBulkData();
+                            promise = this.sendBulkData();
                         }
                     }
-                    resolve();
+                    if (promise) {
+                        // Wait until the bulk data has been sent
+                        // TODO perform this check before finishing index and not here
+                        promise.then(() => resolve())
+                            .catch(err => reject(err));
+                    } else {
+                        resolve();
+                    }
                 })
                 .catch(err => reject(err));
         });
