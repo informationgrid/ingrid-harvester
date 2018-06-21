@@ -45,12 +45,13 @@ class ElasticSearchUtils {
 
     finishIndex() {
         if (this.settings.alias) {
-            this.deleteOldIndices(this.settings.index, this.indexName)
-              .then(() => this.addAlias(this.indexName, this.settings.alias))
-              .then(() => {
-                  this.client.close();
-                  log.info('Successfully added data into new index: ' + this.indexName);
-              });
+            this.client.cluster.health({waitForStatus: 'yellow'})
+                .then(() => this.deleteOldIndices(this.settings.index, this.indexName))
+                .then(() => this.addAlias(this.indexName, this.settings.alias))
+                .then(() => {
+                    this.client.close();
+                    log.info('Successfully added data into new index: ' + this.indexName);
+                });
         }
     }
 
