@@ -180,13 +180,13 @@ class GovDataImporter {
                 log.info( 'queue has been processed' );
 
                 // Prepare the index, send the data to elasticsearch and close the client
-                this.elastic.prepareIndex(mapping, settings)
-                    .then(() => this.elastic.sendBulkData(false))
+                this.elastic.sendBulkData(false)
                     .then(() => Promise.all(this.promises))
                     .then(() => this.elastic.finishIndex());
             };
 
             // Fetch datasets 'qs.rows' at a time
+            await this.elastic.prepareIndex(mapping, settings);
             while(true) {
                 let json = await request.get(this.options_package_search);
                 let results = json.result.results;
