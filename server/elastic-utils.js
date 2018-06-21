@@ -27,19 +27,15 @@ class ElasticSearchUtils {
     prepareIndex(mapping, settings) {
         return new Promise((resolve) => {
             if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp( new Date() );
-            this.client.indices.create( {
-                index: this.indexName
-            }, err => {
-                if (err) {
+            this.client.indices.create({ index: this.indexName, waitForActiveShards: '1' })
+                .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve))
+                .catch(err => {
                     if (err.message.indexOf( 'index_already_exists_exception' ) !== -1) {
                         log.info( 'Index ' + this.indexName + ' not created, since it already exists.' );
                     } else {
                         log.error( 'Error occurred creating index', err );
                     }
-                } else {
-                    this.addMapping( this.indexName, this.settings.indexType, mapping, settings, resolve );
-                }
-            } );
+                });
         });
     }
 
