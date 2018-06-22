@@ -104,6 +104,9 @@ module.exports = {
         'accrualPeriodicity': {
             'type': 'string'
         },
+        'accessRights': {
+            'type': 'string'
+        },
         'distribution': {
             'properties': {
                 'id': {
