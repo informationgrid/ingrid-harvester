@@ -18,5 +18,27 @@
     "ckanBaseUrl": "https://data.deutschebahn.com",
     "defaultMcloudSubgroup": "railway",
     "includeTimestamp": true
+  },
+  {
+    "importer": "WSV-CSW",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "csw_wsv",
+    "indexType": "base",
+    "alias": "mcloud",
+    "cswBaseUrl": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup",
+    "httpMethod": "POST",
+    "defaultMcloudSubgroup": "waters",
+    "includeTimestamp": true
+  },
+  {
+    "importer": "WSV-CSW",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "csw_bsh",
+    "indexType": "base",
+    "alias": "mcloud",
+    "cswBaseUrl": "https://www.geoseaportal.de/soapServices/CSWStartup",
+    "httpMethod": "POST",
+    "defaultMcloudSubgroup": "waters",
+    "includeTimestamp": true
   }
 ]
