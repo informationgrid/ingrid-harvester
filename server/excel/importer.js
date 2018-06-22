@@ -141,9 +141,7 @@ class ExcelImporter {
         const publishers = this.getPublishers(workbook.getWorksheet(2), publisherAbbreviations);
         const license = this.getLicense(workbook.getWorksheet(3), columnValues[columnMap.Lizenz]);
 
-        ogdObject.publisher = {};
-        ogdObject.publisher.organization = publishers.organisations;
-        ogdObject.publisher.homepage = publishers.links;
+        if (publishers.length > 0) ogdObject.publisher = publishers;
         ogdObject.description = columnValues[columnMap.Kurzbeschreibung];
         ogdObject.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
 
@@ -244,15 +242,17 @@ class ExcelImporter {
     }
 
     getPublishers(authorsSheet, /*string[]*/abbreviations) {
-        let publishers = { organisations: [], links: [] };
+        let publishers = [];
         const numAuthors = authorsSheet.rowCount;
         abbreviations.forEach( abbr => {
             let found = false;
             for (let i=2; i<=numAuthors; i++) {
                 const row = authorsSheet.getRow(i);
                 if (row.values[1] === abbr) {
-                    publishers.organisations.push(row.values[2]);
-                    publishers.links.push(row.values[4]);
+                    publishers.push({
+                        organization: row.values[2],
+                        homepage: row.values[4]
+                    })
                     found = true;
                     break;
                 }

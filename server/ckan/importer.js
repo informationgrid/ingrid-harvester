@@ -75,17 +75,18 @@ class GovDataImporter {
 
             // Organisation
             if (source.organization !== null) {
-                target.publisher = {};
                 if (source.organization.title !== null) {
+                    target.publisher = [];
+
                     let title = source.organization.title;
                     let homepage = source.organization.description;
+                    let match = homepage.match(/]\(([^)]+)/); // Square bracket followed by text in parentheses
+                    let org = {};
 
-                    if (title !== null) {
-                        target.publisher.organization = [title];
-                    }
-                    if (homepage !== null) {
-                        target.publisher.homepage = [homepage];
-                    }
+                    if (title) org.organization = title;
+                    if (match) org.homepage = match[1];
+
+                    target.publisher.push(org);
                 }
             }
 
