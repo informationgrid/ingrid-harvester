@@ -4,7 +4,6 @@ let log = require('log4js').getLogger(__filename),
     ElasticSearchUtils = require('./../elastic-utils'),
     mapping = require('../elastic.mapping.js'),
     settings = require('../elastic.settings.js'),
-    async = require( 'async' ),
     Excel = require('exceljs'),
     Promise = require('promise');
 
@@ -19,7 +18,6 @@ class ExcelImporter {
         this.elastic = new ElasticSearchUtils(settings);
         this.excelFilepath = settings.filePath;
 
-        this.promises = [];
         this.names = {};
     }
 
@@ -59,20 +57,8 @@ class ExcelImporter {
 
         let workbook = new Excel.Workbook();
         let elastic = this.elastic;
-        //const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
 
-        let self = this;
-        let queue  = async.queue(function() {
-            self.importSingleRow.call(self, ...arguments);
-        }, 25);
-
-        queue.drain = () => {
-            log.debug('Finished processing queue');
-            elastic.sendBulkData(false)
-                .then(() => Promise.all(this.promises))
-                .then(() => elastic.finishIndex());
-        };
-
+        let promises = [];
         elastic.prepareIndex(mapping, settings)
             .then(() => {
                 workbook.xlsx.readFile(this.excelFilepath)
@@ -104,14 +90,12 @@ class ExcelImporter {
                                 if (columnValues.length != row.values.length) {
                                     log.debug(columnValues.length + ' : ' + row.values.length);
                                 }
-                                queue.push({
-                                    workbook: workbook,
-                                    columnMap: columnMap,
-                                    columnValues: columnValues
-                                });
+                                promises.push(this.importSingleRow(workbook, columnMap, columnValues));
                             }
                         });
                     })
+                    .then(() => Promise.all(promises))
+                    .then(() => elastic.finishIndex());
             })
             .catch(error => log.error("Error reading excel workbook\n", error));
     }
@@ -123,10 +107,7 @@ class ExcelImporter {
      * @param callback automatically added by async.queue
      * @returns {Promise<void>}
      */
-    async importSingleRow(args, callback) {
-        let workbook = args.workbook;
-        let columnMap = args.columnMap;
-        let columnValues = args.columnValues;
+    async importSingleRow(workbook, columnMap, columnValues) {
         const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
 
         log.debug("Processing excel dataset with title : " + columnValues[columnMap.Daten]);
@@ -226,9 +207,7 @@ class ExcelImporter {
         this.settings.mapper.forEach(mapper => mapper.run(ogdObject, doc));
 
         let promise = this.elastic.addDocToBulk(doc, uniqueName);
-        this.promises.push(promise);
-
-        callback();
+        if (promise) return promise;
     }
 
     /**
