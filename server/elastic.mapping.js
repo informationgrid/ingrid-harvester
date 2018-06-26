@@ -7,12 +7,38 @@ module.exports = {
                 'raw': {
                     'type': 'string',
                     'index': 'not_analyzed'
+                },
+                'bigram': {
+                    'type': 'string',
+                    'analyzer': 'mcloud_bigram'
+                },
+                'trigram': {
+                    'type': 'string',
+                    'analyzer': 'mcloud_trigram'
+                },
+                'quadgram': {
+                    'type': 'string',
+                    'analyzer': 'mcloud_quadgram'
                 }
             }
         },
         'description': {
             'type': 'string',
-            'analyzer': 'decomp'
+            'analyzer': 'decomp',
+            'fields': {
+                'bigram': {
+                    'type': 'string',
+                    'analyzer': 'mcloud_bigram'
+                },
+                'trigram': {
+                    'type': 'string',
+                    'analyzer': 'mcloud_trigram'
+                },
+                'quadgram': {
+                    'type': 'string',
+                    'analyzer': 'mcloud_quadgram'
+                }
+            }
         },
         'creator': {
             'properties': {
