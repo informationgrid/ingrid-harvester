@@ -1,4 +1,4 @@
-%define ingrid_update_version 1.1.3.SNAPSHOT
+%define ingrid_update_version 1.2.0
 
 %define mcloud_dir /opt/ingrid
 
@@ -55,6 +55,12 @@ rm -rf %{mcloud_dir}/ingrid-iplug-csw-dsc_wsv/webapp/WEB-INF/work/*
 
 
 %changelog
+* Tue Jun 27 2018 Vikram Notay <vikram.notay@wemove.com> - 1.2.0
+- elasticsearch: updated mapping based on DCAT-AP DE
+- excel-importer: update importer for new elasticsearch mapping
+- Deutsche Bahn: new importer for Deutsche Bahn's open data interface (CKAN)
+- deduplication check for data from multiple sources
+
 * Thu May 17 2018 Andre Wallat <andre.wallat@wemove.com> - 1.1.2
 - fix excel import with nodejs 6
 
