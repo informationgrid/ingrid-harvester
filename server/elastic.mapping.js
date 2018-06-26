@@ -192,7 +192,7 @@ module.exports = {
                 },
                 'harvested_data': {
                     'type': 'string',
-                    'index': 'not_analyzed'
+                    'index': 'no'
                 }
             }
         }
