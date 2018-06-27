@@ -7,5 +7,15 @@
     "alias": "mcloud",
     "filePath": "./data.xlsx",
     "includeTimestamp": true
+  },
+  {
+    "importer": "CKAN",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "ckan_db",
+    "indexType": "base",
+    "alias": "mcloud",
+    "ckanBaseUrl": "https://data.deutschebahn.com",
+    "defaultMcloudSubgroup": "railway",
+    "includeTimestamp": true
   }
 ]

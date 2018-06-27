@@ -124,10 +124,13 @@ In visual studio code hit 5.
 * docker/mcloud-ingrid.spec anpassen (Version ohne SNAPSHOT, kein "-" verwenden + Changelog)
 * Commit (Branch develop)
 * Merge develop into master
+* Tag master mit Release-Version
 * Push master (Jenkins baut RPM)
+  * Master und develop sollten nicht gleichzeitig gepusht werden (createrepo-Befehl macht Probleme)
 * Switch to branch develop
-* SPEC-Datei erneut anpassen (neue Version: x.y.z.SNAPSHOT)
+* SPEC-Datei erneut anpassen (neue Version: x.y.z.SNAPSHOT , kein "-" verwenden)
 * Commit + Push (Jenkins baut nächste development RPM)
-* auf Server: mcloud-dev-1.wemove.com
-** Release RPM von "/var/www/mcloud-deploy-develop/" nach "/var/www/mcloud-deploy/" kopieren
-** sudo createrepo /var/www/mcloud-deploy/
+* auf Server: mcloud-dev-1.wemove.com (user *root*)
+  * Release RPM von */var/www/mcloud-deploy-develop/* nach */var/www/mcloud-deploy/* kopieren
+  * sudo createrepo /var/www/mcloud-deploy/
+* Release-Seite aktualisieren (https://redmine.wemove.com/projects/bmvi-datenportal/wiki/Release-Changes)
