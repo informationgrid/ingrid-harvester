@@ -53,7 +53,8 @@ class ExcelImporter {
             'Lizenzbeschreibung': 25,
             'Lizenzlink': 26,
             'DatenhaltendeStelleLang': 27,
-            'DatenhaltendeStelleLink': 28
+            'DatenhaltendeStelleLink': 28,
+            'mFundFoerderkennzeichen': 30
         };
 
         let workbook = new Excel.Workbook();
@@ -180,6 +181,14 @@ class ExcelImporter {
         ogdObject.extras.terms_of_use = columnValues[columnMap.Nutzungshinweise];
 
 
+                        if (columnValues[columnMap.mFundFoerderkennzeichen].formula) {
+                            ogdObject.extras.mfund_fkz = this.getmFundFkz(columnValues[columnMap.Kurzbeschreibung]);
+
+                        } else {
+                            ogdObject.extras.mfund_fkz = columnValues[columnMap.mFundFoerderkennzeichen];
+                        }
+
+
 
         ogdObject.distribution = [];
 
@@ -279,6 +288,17 @@ class ExcelImporter {
         }
 
         log.warn('Could not find abbreviation of "License": ' + licenseId);
+    }
+
+
+    getmFundFkz(description) {
+
+        var result = "";
+        // =IF(ISERROR(FIND("FKZ",B847)),0,MID(B847,FIND("FKZ",B847)+3,7))
+        if (description.indexOf("FKZ") > -1) {
+            result = description.substring(description.indexOf("FKZ")+3, description.indexOf("FKZ")+10);
+        }
+        return result;
     }
 
 
