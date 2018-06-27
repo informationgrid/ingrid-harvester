@@ -158,7 +158,8 @@ class ElasticSearchUtils {
 
         // in order to update settings the index has to be closed
         const handleClose = () => {
-            this.client.indices.close({ index: index }, handleSettings);
+            this.client.cluster.health({waitForStatus: 'yellow'})
+                .then(() => this.client.indices.close({ index: index }, handleSettings));
         };
 
         this.client.indices.create({ index: index }, () => setTimeout(handleClose, 1000));
