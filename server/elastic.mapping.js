@@ -193,6 +193,10 @@ module.exports = {
                 'harvested_data': {
                     'type': 'string',
                     'index': 'no'
+                },
+                'mfund_fkz': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
                 }
             }
         }
