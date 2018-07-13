@@ -136,7 +136,7 @@ class ExcelImporter {
         let now = new Date(Date.now());
         let issued = null;
         let existing = await this.elastic.searchById(uniqueName);
-        if (existing.hits.total > 0) {
+        if (existing.hits.hits && existing.hits.hits.length > 0) {
             let firstHit = existing.hits.hits[0]._source;
             if (firstHit.extras.metadata.issued !== null) {
                 issued = firstHit.extras.metadata.issued;
