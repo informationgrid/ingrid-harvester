@@ -118,7 +118,9 @@ class ExcelImporter {
         let uniqueName = this.getUniqueName(columnValues[columnMap.Daten]);
         const dateMetaUpdate = columnValues[columnMap.Aktualisierungsdatum];
 
-        ogdObject.title = columnValues[columnMap.Daten];
+        let title = columnValues[columnMap.Daten];
+        ogdObject.title = title.trim(); // Remove leading and trailing whitspace
+
         const publisherAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
         const publishers = this.getPublishers(workbook.getWorksheet(2), publisherAbbreviations);
         const license = this.getLicense(workbook.getWorksheet(3), columnValues[columnMap.Lizenz]);
