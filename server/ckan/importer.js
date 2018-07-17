@@ -40,7 +40,9 @@ class GovDataImporter {
      * @param {string} id
      * @param {function} callback
      */
-    async importDataset(source, callback) {
+    async importDataset(args, callback) {
+        let source = args.data;
+        let harvestTime = args.harvestTime;
         try {
             log.debug("Processing CKAN dataset: " + source.name + " from data-source: " + this.settings.ckanBaseUrl);
 
@@ -136,7 +138,7 @@ class GovDataImporter {
             let issued = null;
 
             let existing = await this.elastic.searchById(source.id);
-            if (existing.hits.total > 0) {
+            if (existing.hits.hits && existing.hits.hits.length > 0) {
                 let firstHit = existing.hits.hits[0]._source;
                 if (firstHit.extras.metadata.issued !== null) {
                     issued = firstHit.extras.metadata.issued;
@@ -150,7 +152,7 @@ class GovDataImporter {
                 source: upstream,
                 issued: issued,
                 modified: now,
-                harvested: now
+                harvested: harvestTime
             };
 
             // Execute the mappers
@@ -190,9 +192,13 @@ class GovDataImporter {
             await this.elastic.prepareIndex(mapping, settings);
             while(true) {
                 let json = await request.get(this.options_package_search);
+                let now = new Date(Date.now());
                 let results = json.result.results;
 
-                results.forEach(dataset => queue.push(dataset));
+                results.forEach(dataset => queue.push({
+                    data: dataset,
+                    harvestTime: now
+                }));
 
                 if (results.length < 1) {
                     break;
