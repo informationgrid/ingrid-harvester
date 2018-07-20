@@ -163,15 +163,14 @@ class ExcelImporter {
 
         ogdObject.extras.terms_of_use = columnValues[columnMap.Nutzungshinweise];
 
+        let mfundFkz = columnValues[columnMap.mFundFoerderkennzeichen];
+        if (mfundFkz.formula || mfundFkz.sharedFormula) {
+            let mfundFkzResult = mfundFkz.result;
+            ogdObject.extras.mfund_fkz = mfundFkzResult ? mfundFkzResult : '0';
 
-                        if (columnValues[columnMap.mFundFoerderkennzeichen].formula) {
-                            ogdObject.extras.mfund_fkz = this.getmFundFkz(columnValues[columnMap.Kurzbeschreibung]);
-
-                        } else {
-                            ogdObject.extras.mfund_fkz = columnValues[columnMap.mFundFoerderkennzeichen];
-                        }
-
-
+        } else {
+            ogdObject.extras.mfund_fkz = mfundFkz;
+        }
 
         ogdObject.distribution = [];
 
@@ -270,18 +269,6 @@ class ExcelImporter {
 
         log.warn('Could not find abbreviation of "License": ' + licenseId);
     }
-
-
-    getmFundFkz(description) {
-
-        var result = "";
-        // =IF(ISERROR(FIND("FKZ",B847)),0,MID(B847,FIND("FKZ",B847)+3,7))
-        if (description.indexOf("FKZ") > -1) {
-            result = description.substring(description.indexOf("FKZ")+3, description.indexOf("FKZ")+10);
-        }
-        return result;
-    }
-
 
     /**
      * Split download urls and add each one to the resource.
