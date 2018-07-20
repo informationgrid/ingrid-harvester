@@ -186,17 +186,27 @@ class ElasticSearchUtils {
                 index: this.indexName,
                 type: this.settings.indexType,
                 body: data
-            }, (err) => {
-                if (err) {
+            })
+                .then(response => {
+                    if (response.errors) {
+                        response.items.forEach(item => {
+                            let err = item.index.error;
+                            if (err) {
+                                log.error(`Error during bulk indexing for item with id '${item.index._id}' was: ${JSON.stringify(err)}`);
+                            }
+                        });
+                    }
+                    resolve();
+                })
+                .catch(err => {
                     log.error('Error occurred during bulk index', err);
                     reject(err);
-                    return;
-                }
-                if (closeAfterBulk) {
-                    this.client.close();
-                }
-                resolve();
-            });
+                })
+                .finally(() => {
+                    if (closeAfterBulk) {
+                        this.client.close();
+                    }
+                });
         });
     }
 
