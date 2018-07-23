@@ -177,10 +177,10 @@ module.exports = {
                     'type': 'string'
                 },
                 'temporal_start': {
-                    'type': 'string'
+                    'type': 'date'
                 },
                 'temporal_end': {
-                    'type': 'string'
+                    'type': 'date'
                 },
                 'groups': {
                     'type': 'string',
