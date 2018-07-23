@@ -182,6 +182,7 @@ class ElasticSearchUtils {
      */
     bulk(data, closeAfterBulk) {
         return new Promise((resolve, reject) => {
+            try {
             this.client.bulk({
                 index: this.indexName,
                 type: this.settings.indexType,
@@ -196,17 +197,21 @@ class ElasticSearchUtils {
                             }
                         });
                     }
+                    if (closeAfterBulk) {
+                        this.client.close();
+                    }
                     resolve();
                 })
                 .catch(err => {
                     log.error('Error occurred during bulk index', err);
-                    reject(err);
-                })
-                .finally(() => {
                     if (closeAfterBulk) {
                         this.client.close();
                     }
+                    reject(err);
                 });
+            } catch(e) {
+                log.error('Error during bulk indexing', e);
+            }
         });
     }
 
