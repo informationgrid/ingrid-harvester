@@ -93,6 +93,7 @@ class GovDataImporter {
             }
 
             // Resources/Distributions
+            let resourceDates = [];
             if (source.resources !== null) {
                 target.distribution = [];
                 source.resources.forEach(res => {
@@ -107,6 +108,20 @@ class GovDataImporter {
                         byteSize: res.size
                     };
                     target.distribution.push(dist);
+
+                    let created = res.created;
+                    let modified = res.modified;
+
+                    if (created) created = new Date(Date.parse(created));
+                    if (modified) modified = new Date(Date.parse(modified));
+
+                    if (created && modified) {
+                        resourceDates.push(Math.max(created, modified));
+                    } else if (modified) {
+                        resourceDates.push(modified);
+                    } else if (created) {
+                        resourceDates.push(created);
+                    }
                 });
             }
 
@@ -120,6 +135,21 @@ class GovDataImporter {
                 license_url: source.license_url,
                 harvested_data: JSON.stringify(source)
             };
+
+            // extras.temporal -> Aktualität der Daten
+            let minDate = new Date(Math.min(...resourceDates)); // Math.min and Math.max convert items to numbers
+            let maxDate = new Date(Math.max(...resourceDates));
+
+            if (minDate && maxDate && minDate.getTime() == maxDate.getTime()) {
+                target.extras.temporal = maxDate;
+            } else if (minDate && maxDate) {
+                target.extras.temporal_start = minDate;
+                target.extras.temporal_end = maxDate;
+            } else if (maxDate) {
+                target.extras.temporal = maxDate;
+            } else if (minDate) {
+                target.extras.temporal = minDate;
+            }
 
             // Groups
             if (source.groups !== null) {
