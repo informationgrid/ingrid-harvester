@@ -196,7 +196,7 @@ module.exports = {
                 },
                 'mfund_fkz': {
                     'type': 'string',
-                    'index': 'not_analyzed'
+                    'index': 'no'
                 }
             }
         }
