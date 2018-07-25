@@ -119,8 +119,7 @@ class ExcelImporter {
     /**
      * Import a single row from the excel workbook to elasticsearch index
      *
-     * @param args {workbook, columnMap, columnValues}
-     * @param callback automatically added by async.queue
+     * @param args {getUniqueName, issuedExisting, workbook, columnMap, columnValues}
      * @returns {Promise<void>}
      */
     async importSingleRow(args) {
