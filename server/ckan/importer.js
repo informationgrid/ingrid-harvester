@@ -7,7 +7,7 @@ let request = require( 'request-promise' ),
     settings = require('../elastic.settings.js'),
     mapping = require( '../elastic.mapping.js' );
 
-class GovDataImporter {
+class DeutscheBahnCkanImporter {
 
     /**
      * Create the importer and initialize with settings.
@@ -243,4 +243,4 @@ class GovDataImporter {
     }
 }
 
-module.exports = GovDataImporter;
+module.exports = DeutscheBahnCkanImporter;

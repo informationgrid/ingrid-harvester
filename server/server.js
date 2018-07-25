@@ -8,7 +8,7 @@ let // findPort = require( 'find-port' ),
     excelIdfMapper = require( './excel/excel.idf.mapper' ),
     ckanDefaultMapper = require( './ckan/ckan.mapper' ),
     ckanIdfMapper = require( './ckan/ckan.idf.mapper' ),
-    GovDataImporter = require( './ckan/importer' ),
+    DeutscheBahnCkanImporter = require( './ckan/importer' ),
     ExcelImporter = require( './excel/importer' );
 
 // create a server which finds a random free port
@@ -22,7 +22,7 @@ let // findPort = require( 'find-port' ),
 // listen for incoming messages, which can be "import" with parameter <type>
 
 function getImporter(type) {
-    if (type === 'CKAN') return GovDataImporter;
+    if (type === 'CKAN-DB') return DeutscheBahnCkanImporter;
     if (type === 'EXCEL') return ExcelImporter;
 }
 
@@ -47,7 +47,7 @@ config.forEach( settings => {
     // choose different importer depending on setting
     if (settings.importer === 'EXCEL') {
         settings.mapper = [ excelDefaultMapper, excelIdfMapper ];
-    } else if (settings.importer === 'CKAN') {
+    } else if (settings.importer === 'CKAN-DB') {
         settings.mapper = [ ckanDefaultMapper, ckanIdfMapper ];
     }
 
