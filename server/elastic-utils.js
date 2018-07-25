@@ -200,7 +200,7 @@ class ElasticSearchUtils {
                     if (closeAfterBulk) {
                         this.client.close();
                     }
-                    resolve();
+                    resolve(response);
                 })
                 .catch(err => {
                     log.error('Error occurred during bulk index', err);
@@ -273,6 +273,9 @@ class ElasticSearchUtils {
                 body.push({ index: this.deduplicationAlias });
                 body.push(item.query);
             });
+
+            if (body.length < 1) resolve(); // Don't send an empty query
+
             this.client.msearch({ body: body })
                 .then(results => {
                     for(let i=0; i < results.responses.length; i++) {
@@ -340,34 +343,56 @@ class ElasticSearchUtils {
     }
 
     /**
-     * Returns the creation date for the dataset with the given name, if it
-     * exists. Null otherwise.
+     * Searches the index for documents with the given ids and copies the issued
+     * date from existing documents, if any exist. If multiple documents with
+     * the same id are found, then the issued date is copied from the first hit
+     * returned by elasticsearch. If no indexed document with the given id is
+     * found, then null or undefined is returned.
      *
-     * @param id id of dataset to search
+     * @param ids {Array} array of ids for which to look up the issued date
+     * @returns {Promise<Array>}  array of issued dates (for found documents) or
+     * nulls (for new documents) in the same order as the given ids
      */
-    searchById(id) {
-        return new Promise((resolve,  reject) => {
-            const response = this.client.search({
-                index: this.settings.alias,
-                body: {
-                    query: {
-                        bool: {
-                            filter: {
-                                term: {
-                                    "_id": id
-                                }
-                            }
-                        }
-                    }
+    async getIssuedDates(ids) {
+        if (ids.length < 1) return [];
+
+        let data = [];
+        ids.forEach(id => {
+            data.push({});
+            data.push({
+                query: {
+                    term: { "_id": id }
                 }
             });
-
-            response.then(res => resolve(res))
-                .catch(err => {
-                    //log.warn("Error searching by id", err);
-                    resolve({ hits: { total: 0}})
-                });
         });
+
+        // Send data in chunks. Don't send too much at once.
+        let dates = [];
+        let maxSize = 100;
+        for(let i=0; i<data.length; i += maxSize) {
+            let end = Math.min(data.length, i + maxSize);
+
+            let slice = data.slice(i, end);
+            let result = await this.client.msearch({
+                index: this.settings.alias,
+                body: slice
+            });
+
+            for(let j=0; j<result.responses.length; j++) {
+                let response = result.responses[j];
+                if (!response.hits) return null;
+
+                let firstHit = response.hits.hits[0];
+                try {
+                    dates.push(firstHit._source.extras.metadata.issued);
+                } catch (e) {
+                    log.warn(`Error extracting issued date from elasticsearch response for id ${ids[j]}. Returned record was ${JSON.stringify(firstHit)}`, e);
+                    dates.push(null);
+                }
+            };
+        }
+
+        return dates;
     }
 
     /**
@@ -378,10 +403,18 @@ class ElasticSearchUtils {
      * @param id value to be assigned to the _id field of the document above
      */
     _queueForDuplicateSearch(doc, id) {
+        // Don't search duplicates for invalid documents. Firstly, it is not
+        // strictly necessarily and secondly, don't delete valid duplicates of
+        // an invalid document
+        if (!doc.extras.metadata.isValid) return;
+
         let generatedId = doc.extras.generated_id;
-        let source = doc.extras.metadata.source;
-        let dt = doc.modified;
+        let modified = doc.modified;
         let title = doc.title;
+
+        // Make sure there are no nulls
+        if (!generatedId) generatedId = "";
+        if (!modified) modified = "";
 
         let urls = [];
         doc.distribution.forEach(dist => {
@@ -438,14 +471,14 @@ class ElasticSearchUtils {
                     ],
                     must_not: [
                         { term: { "extras.metadata.isValid": false } },
-                        { term : { modified: dt } }
+                        { term : { modified: modified } }
                     ]
                 }
             }
         };
         this.duplicateStaging.push({
             id: id,
-            modified: dt,
+            modified: modified,
             title: doc.title,
             query: query
         });

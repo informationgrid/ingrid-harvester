@@ -59,45 +59,61 @@ class ExcelImporter {
         let elastic = this.elastic;
 
         let promises = [];
-        elastic.prepareIndex(mapping, settings)
-            .then(() => {
-                workbook.xlsx.readFile(this.excelFilepath)
-                    .then(() => {
-                        log.debug('done loading file');
+        try {
+            await elastic.prepareIndex(mapping, settings)
+            await workbook.xlsx.readFile(this.excelFilepath)
 
-                        let worksheet = workbook.getWorksheet(1);
-                        // Iterate over all rows that have values in a worksheet
-                        worksheet.eachRow((row, rowNumber) => {
-                            if (rowNumber > 1) {
-                                let columnValues = [];
-                                for (let i = 0; i < row.values.length; i++) {
-                                    let cur = row.values[i];
-                                    if (!cur) {
-                                        columnValues.push('');
-                                        continue;
-                                    }
+            log.debug('done loading file');
 
-                                    if (cur.richText) {
-                                        let clean = '';
-                                        for (let i in cur.richText) {
-                                            clean += cur.richText[i].text;
-                                        }
-                                        columnValues.push(clean);
-                                    } else {
-                                        columnValues.push(cur);
-                                    }
-                                }
-                                if (columnValues.length != row.values.length) {
-                                    log.debug(columnValues.length + ' : ' + row.values.length);
-                                }
-                                promises.push(this.importSingleRow(workbook, columnMap, columnValues));
+            let workUnits = [];
+            let worksheet = workbook.getWorksheet(1);
+
+            // Iterate over all rows that have values in a worksheet
+            worksheet.eachRow((row, rowNumber) => {
+                if (rowNumber > 1) {
+                    let columnValues = [];
+                    for (let i = 0; i < row.values.length; i++) {
+                        let cur = row.values[i];
+                        if (!cur) {
+                            columnValues.push('');
+                            continue;
+                        }
+
+                        if (cur.richText) {
+                            let clean = '';
+                            for (let i in cur.richText) {
+                                clean += cur.richText[i].text;
                             }
-                        });
-                    })
-                    .then(() => Promise.all(promises))
-                    .then(() => elastic.finishIndex());
-            })
-            .catch(error => log.error("Error reading excel workbook\n", error));
+                            columnValues.push(clean);
+                        } else {
+                            columnValues.push(cur);
+                        }
+                    }
+                    if (columnValues.length != row.values.length) {
+                        log.debug(columnValues.length + ' : ' + row.values.length);
+                    }
+                    let id = this.getUniqueName(columnValues[columnMap.Daten]);
+                    workUnits.push({id: id,  columnValues: columnValues});
+                }
+            });
+
+            let ids = workUnits.map(unit => unit.id);
+            let timestamps = await this.elastic.getIssuedDates(ids);
+
+            workUnits.forEach((unit, idx) => {
+                promises.push(this.importSingleRow({
+                    id: unit.id,
+                    columnValues: unit.columnValues,
+                    issued: timestamps[idx],
+                    workbook: workbook,
+                    columnMap: columnMap
+                }));
+            });
+            Promise.all(promises)
+                .then(() => elastic.finishIndex());
+        } catch(error) {
+            log.error("Error reading excel workbook\n", error);
+        }
     }
 
     /**
@@ -107,7 +123,13 @@ class ExcelImporter {
      * @param callback automatically added by async.queue
      * @returns {Promise<void>}
      */
-    async importSingleRow(workbook, columnMap, columnValues) {
+    async importSingleRow(args) {
+        let uniqueName = args.id;
+        let issuedExisting = args.issued;
+        let columnValues = args.columnValues;
+        let columnMap = args.columnMap;
+        let workbook = args.workbook;
+
         const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
 
         log.debug("Processing excel dataset with title : " + columnValues[columnMap.Daten]);
@@ -115,7 +137,6 @@ class ExcelImporter {
         let ogdObject = {};
         let doc = {};
 
-        let uniqueName = this.getUniqueName(columnValues[columnMap.Daten]);
         const dateMetaUpdate = columnValues[columnMap.Aktualisierungsdatum];
 
         let title = columnValues[columnMap.Daten];
@@ -136,17 +157,7 @@ class ExcelImporter {
         }
 
         let now = new Date(Date.now());
-        let issued = null;
-        let existing = await this.elastic.searchById(uniqueName);
-        if (existing.hits.hits && existing.hits.hits.length > 0) {
-            let firstHit = existing.hits.hits[0]._source;
-            if (firstHit.extras.metadata.issued !== null) {
-                issued = firstHit.extras.metadata.issued;
-            }
-        }
-        if (typeof  issued === "undefined" || issued === null) {
-            issued = now;
-        }
+        let issued = issuedExisting ? issuedExisting : now;
         ogdObject.extras.generated_id = uniqueName;
         ogdObject.extras.metadata.modified = now;
         ogdObject.extras.metadata.issued = issued;

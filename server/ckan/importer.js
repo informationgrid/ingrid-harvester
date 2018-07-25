@@ -42,6 +42,7 @@ class GovDataImporter {
      */
     async importDataset(args, callback) {
         let source = args.data;
+        let issuedExisting = args.issued;
         let harvestTime = args.harvestTime;
         try {
             log.debug("Processing CKAN dataset: " + source.name + " from data-source: " + this.settings.ckanBaseUrl);
@@ -165,18 +166,7 @@ class GovDataImporter {
 
             // Dates
             let now = new Date(Date.now());
-            let issued = null;
-
-            let existing = await this.elastic.searchById(source.id);
-            if (existing.hits.hits && existing.hits.hits.length > 0) {
-                let firstHit = existing.hits.hits[0]._source;
-                if (firstHit.extras.metadata.issued !== null) {
-                    issued = firstHit.extras.metadata.issued;
-                }
-            }
-            if (typeof  issued === "undefined" || issued === null) {
-                issued = now;
-            }
+            let issued = issuedExisting ? issuedExisting : now;
 
             target.extras.metadata = {
                 source: upstream,
@@ -225,8 +215,12 @@ class GovDataImporter {
                 let now = new Date(Date.now());
                 let results = json.result.results;
 
-                results.forEach(dataset => queue.push({
+                let ids = results.map(result => result.id);
+                let timestamps = await this.elastic.getIssuedDates(ids);
+
+                results.forEach((dataset, idx) => queue.push({
                     data: dataset,
+                    issued: timestamps[idx],
                     harvestTime: now
                 }));
 
