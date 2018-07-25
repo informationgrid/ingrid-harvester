@@ -32,6 +32,9 @@ class GovDataImporter {
             headers: {'User-Agent': 'Request-Promise'},
             json: true
         };
+        if (settings.proxy) {
+            this.options_package_search.proxy = settings.proxy;
+        }
     }
 
     /**
