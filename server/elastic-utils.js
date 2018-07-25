@@ -380,13 +380,11 @@ class ElasticSearchUtils {
 
             for(let j=0; j<result.responses.length; j++) {
                 let response = result.responses[j];
-                if (!response.hits) return null;
-
-                let firstHit = response.hits.hits[0];
                 try {
+                    let firstHit = response.hits.hits[0];
                     dates.push(firstHit._source.extras.metadata.issued);
                 } catch (e) {
-                    log.warn(`Error extracting issued date from elasticsearch response for id ${ids[j]}. Returned record was ${JSON.stringify(firstHit)}`, e);
+                    log.warn(`Error extracting issued date from elasticsearch response for id ${ids[j]}. Returned response was ${JSON.stringify(response)}`, e);
                     dates.push(null);
                 }
             };
