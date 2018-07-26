@@ -63,7 +63,6 @@ module.exports = {
                     'tokenizer': 'standard',
                     'filter': [
                         'decomp',
-                        'unique',
                         'german_normalization',
                         'lowercase'
                     ]
