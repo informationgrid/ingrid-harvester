@@ -1,4 +1,4 @@
-%define ingrid_update_version 1.2.1
+%define ingrid_update_version 1.2.2.SNAPSHOT
 
 %define mcloud_dir /opt/ingrid
 
