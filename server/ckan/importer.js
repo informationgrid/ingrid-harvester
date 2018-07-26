@@ -3,6 +3,7 @@
 let request = require( 'request-promise' ),
     async = require( 'async' ),
     log = require( 'log4js' ).getLogger( __filename ),
+    markdown = require('markdown').markdown,
     ElasticSearchUtils = require( './../elastic-utils' ),
     settings = require('../elastic.settings.js'),
     mapping = require( '../elastic.mapping.js' );
@@ -51,7 +52,7 @@ class DeutscheBahnCkanImporter {
 
             let id = source.id;
             target.title = source.title;
-            target.description = source.notes;
+            target.description = markdown.toHTML(source.notes);
             target.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
             target.issued = source.metadata_created;
             target.modified = source.metadata_modified;
@@ -133,7 +134,8 @@ class DeutscheBahnCkanImporter {
                 license_id: source.license_id,
                 license_title: source.license_title,
                 license_url: source.license_url,
-                harvested_data: JSON.stringify(source)
+                harvested_data: JSON.stringify(source),
+                subsection: []
             };
 
             // extras.temporal -> Aktualität der Daten
@@ -184,6 +186,28 @@ class DeutscheBahnCkanImporter {
                 modified: now,
                 harvested: harvestTime
             };
+
+            // Extra information from the Deutsche Bahn portal
+            if (source.description) {
+                target.extras.subsection.push({
+                    title: 'Langbeschreibung',
+                    description: markdown.toHTML(source.description)
+                });
+            }
+
+            if (source.license_detailed_description) {
+                target.extras.subsection.push({
+                    title: 'Lizenzbeschreibung',
+                    description: source.license_detailed_description
+                });
+            }
+
+            if (source.haftung_description) {
+                target.extras.subsection.push({
+                    title: 'Haftungsausschluss',
+                    description: source.haftung_description
+                });
+            }
 
             // Execute the mappers
             let theDoc = {};

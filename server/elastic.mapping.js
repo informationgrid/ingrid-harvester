@@ -197,6 +197,18 @@ module.exports = {
                 'mfund_fkz': {
                     'type': 'string',
                     'index': 'not_analyzed'
+                },
+                'subsection': {
+                    'properties': {
+                        'title': {
+                            'type': 'string',
+                            'analyzer': 'decomp'
+                        },
+                        'description': {
+                            'type': 'string',
+                            'analyzer': 'decomp'
+                        }
+                    }
                 }
             }
         }
