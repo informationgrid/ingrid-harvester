@@ -1,4 +1,4 @@
-%define ingrid_update_version 1.2.1.SNAPSHOT
+%define ingrid_update_version 1.2.1
 
 %define mcloud_dir /opt/ingrid
 
@@ -55,6 +55,11 @@ rm -rf %{mcloud_dir}/ingrid-iplug-csw-dsc_wsv/webapp/WEB-INF/work/*
 
 
 %changelog
+* Thu Jul 26 2018 Vikram Notay <vikram.notay@wemove.com> - 1.2.1
+- Improved search for German compound words
+- Deduplication of metadata-sets from different sources
+- Bugfixes and other minor improvements in indexing of metadata-sets
+
 * Tue Jun 27 2018 Vikram Notay <vikram.notay@wemove.com> - 1.2.0
 - elasticsearch: updated mapping based on DCAT-AP DE
 - excel-importer: update importer for new elasticsearch mapping
