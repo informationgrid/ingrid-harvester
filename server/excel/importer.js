@@ -4,7 +4,6 @@ let log = require('log4js').getLogger(__filename),
     ElasticSearchUtils = require('./../elastic-utils'),
     mapping = require('../elastic.mapping.js'),
     settings = require('../elastic.settings.js'),
-    async = require( 'async' ),
     Excel = require('exceljs'),
     Promise = require('promise');
 
@@ -19,7 +18,6 @@ class ExcelImporter {
         this.elastic = new ElasticSearchUtils(settings);
         this.excelFilepath = settings.filePath;
 
-        this.promises = [];
         this.names = {};
     }
 
@@ -59,74 +57,78 @@ class ExcelImporter {
 
         let workbook = new Excel.Workbook();
         let elastic = this.elastic;
-        //const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
 
-        let self = this;
-        let queue  = async.queue(function() {
-            self.importSingleRow.call(self, ...arguments);
-        }, 25);
+        let promises = [];
+        try {
+            await elastic.prepareIndex(mapping, settings)
+            await workbook.xlsx.readFile(this.excelFilepath)
 
-        queue.drain = () => {
-            log.debug('Finished processing queue');
-            elastic.sendBulkData(false)
-                .then(() => Promise.all(this.promises))
-                .then(() => elastic.finishIndex());
-        };
+            log.debug('done loading file');
 
-        elastic.prepareIndex(mapping, settings)
-            .then(() => {
-                workbook.xlsx.readFile(this.excelFilepath)
-                    .then(() => {
-                        log.debug('done loading file');
+            let workUnits = [];
+            let worksheet = workbook.getWorksheet(1);
 
-                        let worksheet = workbook.getWorksheet(1);
-                        // Iterate over all rows that have values in a worksheet
-                        worksheet.eachRow((row, rowNumber) => {
-                            if (rowNumber > 1) {
-                                let columnValues = [];
-                                for (let i = 0; i < row.values.length; i++) {
-                                    let cur = row.values[i];
-                                    if (!cur) {
-                                        columnValues.push('');
-                                        continue;
-                                    }
+            // Iterate over all rows that have values in a worksheet
+            worksheet.eachRow((row, rowNumber) => {
+                if (rowNumber > 1) {
+                    let columnValues = [];
+                    for (let i = 0; i < row.values.length; i++) {
+                        let cur = row.values[i];
+                        if (!cur) {
+                            columnValues.push('');
+                            continue;
+                        }
 
-                                    if (cur.richText) {
-                                        let clean = '';
-                                        for (let i in cur.richText) {
-                                            clean += cur.richText[i].text;
-                                        }
-                                        columnValues.push(clean);
-                                    } else {
-                                        columnValues.push(cur);
-                                    }
-                                }
-                                if (columnValues.length != row.values.length) {
-                                    log.debug(columnValues.length + ' : ' + row.values.length);
-                                }
-                                queue.push({
-                                    workbook: workbook,
-                                    columnMap: columnMap,
-                                    columnValues: columnValues
-                                });
+                        if (cur.richText) {
+                            let clean = '';
+                            for (let i in cur.richText) {
+                                clean += cur.richText[i].text;
                             }
-                        });
-                    })
-            })
-            .catch(error => log.error("Error reading excel workbook\n", error));
+                            columnValues.push(clean);
+                        } else {
+                            columnValues.push(cur);
+                        }
+                    }
+                    if (columnValues.length != row.values.length) {
+                        log.debug(columnValues.length + ' : ' + row.values.length);
+                    }
+                    let id = this.getUniqueName(columnValues[columnMap.Daten]);
+                    workUnits.push({id: id,  columnValues: columnValues});
+                }
+            });
+
+            let ids = workUnits.map(unit => unit.id);
+            let timestamps = await this.elastic.getIssuedDates(ids);
+
+            workUnits.forEach((unit, idx) => {
+                promises.push(this.importSingleRow({
+                    id: unit.id,
+                    columnValues: unit.columnValues,
+                    issued: timestamps[idx],
+                    workbook: workbook,
+                    columnMap: columnMap
+                }));
+            });
+            Promise.all(promises)
+                .then(() => elastic.finishIndex());
+        } catch(error) {
+            log.error("Error reading excel workbook\n", error);
+        }
     }
 
     /**
      * Import a single row from the excel workbook to elasticsearch index
      *
-     * @param args {workbook, columnMap, columnValues}
-     * @param callback automatically added by async.queue
+     * @param args {getUniqueName, issuedExisting, workbook, columnMap, columnValues}
      * @returns {Promise<void>}
      */
-    async importSingleRow(args, callback) {
-        let workbook = args.workbook;
-        let columnMap = args.columnMap;
+    async importSingleRow(args) {
+        let uniqueName = args.id;
+        let issuedExisting = args.issued;
         let columnValues = args.columnValues;
+        let columnMap = args.columnMap;
+        let workbook = args.workbook;
+
         const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
 
         log.debug("Processing excel dataset with title : " + columnValues[columnMap.Daten]);
@@ -134,10 +136,11 @@ class ExcelImporter {
         let ogdObject = {};
         let doc = {};
 
-        let uniqueName = this.getUniqueName(columnValues[columnMap.Daten]);
         const dateMetaUpdate = columnValues[columnMap.Aktualisierungsdatum];
 
-        ogdObject.title = columnValues[columnMap.Daten];
+        let title = columnValues[columnMap.Daten];
+        ogdObject.title = title.trim(); // Remove leading and trailing whitspace
+
         const publisherAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
         const publishers = this.getPublishers(workbook.getWorksheet(2), publisherAbbreviations);
         const license = this.getLicense(workbook.getWorksheet(3), columnValues[columnMap.Lizenz]);
@@ -153,17 +156,7 @@ class ExcelImporter {
         }
 
         let now = new Date(Date.now());
-        let issued = null;
-        let existing = await this.elastic.searchById(uniqueName);
-        if (existing.hits.total > 0) {
-            let firstHit = existing.hits.hits[0]._source;
-            if (firstHit.extras.metadata.issued !== null) {
-                issued = firstHit.extras.metadata.issued;
-            }
-        }
-        if (typeof  issued === "undefined" || issued === null) {
-            issued = now;
-        }
+        let issued = issuedExisting ? issuedExisting : now;
         ogdObject.extras.generated_id = uniqueName;
         ogdObject.extras.metadata.modified = now;
         ogdObject.extras.metadata.issued = issued;
@@ -180,15 +173,14 @@ class ExcelImporter {
 
         ogdObject.extras.terms_of_use = columnValues[columnMap.Nutzungshinweise];
 
+        let mfundFkz = columnValues[columnMap.mFundFoerderkennzeichen];
+        if (mfundFkz.formula || mfundFkz.sharedFormula) {
+            let mfundFkzResult = mfundFkz.result;
+            ogdObject.extras.mfund_fkz = mfundFkzResult ? mfundFkzResult : '0';
 
-                        if (columnValues[columnMap.mFundFoerderkennzeichen].formula) {
-                            ogdObject.extras.mfund_fkz = this.getmFundFkz(columnValues[columnMap.Kurzbeschreibung]);
-
-                        } else {
-                            ogdObject.extras.mfund_fkz = columnValues[columnMap.mFundFoerderkennzeichen];
-                        }
-
-
+        } else {
+            ogdObject.extras.mfund_fkz = mfundFkz;
+        }
 
         ogdObject.distribution = [];
 
@@ -226,9 +218,7 @@ class ExcelImporter {
         this.settings.mapper.forEach(mapper => mapper.run(ogdObject, doc));
 
         let promise = this.elastic.addDocToBulk(doc, uniqueName);
-        this.promises.push(promise);
-
-        callback();
+        if (promise) return promise;
     }
 
     /**
@@ -289,18 +279,6 @@ class ExcelImporter {
 
         log.warn('Could not find abbreviation of "License": ' + licenseId);
     }
-
-
-    getmFundFkz(description) {
-
-        var result = "";
-        // =IF(ISERROR(FIND("FKZ",B847)),0,MID(B847,FIND("FKZ",B847)+3,7))
-        if (description.indexOf("FKZ") > -1) {
-            result = description.substring(description.indexOf("FKZ")+3, description.indexOf("FKZ")+10);
-        }
-        return result;
-    }
-
 
     /**
      * Split download urls and add each one to the resource.

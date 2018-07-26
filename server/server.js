@@ -3,6 +3,7 @@
 let // findPort = require( 'find-port' ),
     log = require( 'log4js' ).getLogger( __filename ),
     config = require( './config.json' ),
+    process = require('process'),
     excelDefaultMapper = require( './excel/excel.mapper' ),
     excelIdfMapper = require( './excel/excel.idf.mapper' ),
     ckanDefaultMapper = require( './ckan/ckan.mapper' ),
@@ -25,7 +26,24 @@ function getImporter(type) {
     if (type === 'EXCEL') return ExcelImporter;
 }
 
+function getDateString() {
+    let dt = new Date(Date.now());
+    let year = dt.getFullYear();
+    let month = ('0' + dt.getMonth()).slice(-2);
+    let day = ('0' + dt.getDate()).slice(-2);
+
+    return `${year}${month}${day}`;
+}
+
+// Generate a quasi-random string for a deduplication alias
+let pid = process.pid;
+let dt = getDateString();
+let deduplicationAlias = `dedupe_${dt}_${pid}`;
+
 config.forEach( settings => {
+    // Set the same elasticsearch alias for deduplication for all importers
+    settings.deduplicationAlias = deduplicationAlias;
+
     // choose different importer depending on setting
     if (settings.importer === 'EXCEL') {
         settings.mapper = [ excelDefaultMapper, excelIdfMapper ];

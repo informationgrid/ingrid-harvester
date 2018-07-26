@@ -7,12 +7,38 @@ module.exports = {
                 'raw': {
                     'type': 'string',
                     'index': 'not_analyzed'
+                },
+                'bigram': {
+                    'type': 'string',
+                    'analyzer': 'mcloud_bigram'
+                },
+                'trigram': {
+                    'type': 'string',
+                    'analyzer': 'mcloud_trigram'
+                },
+                'quadgram': {
+                    'type': 'string',
+                    'analyzer': 'mcloud_quadgram'
                 }
             }
         },
         'description': {
             'type': 'string',
-            'analyzer': 'decomp'
+            'analyzer': 'decomp',
+            'fields': {
+                'bigram': {
+                    'type': 'string',
+                    'analyzer': 'mcloud_bigram'
+                },
+                'trigram': {
+                    'type': 'string',
+                    'analyzer': 'mcloud_trigram'
+                },
+                'quadgram': {
+                    'type': 'string',
+                    'analyzer': 'mcloud_quadgram'
+                }
+            }
         },
         'creator': {
             'properties': {
@@ -151,10 +177,10 @@ module.exports = {
                     'type': 'string'
                 },
                 'temporal_start': {
-                    'type': 'string'
+                    'type': 'date'
                 },
                 'temporal_end': {
-                    'type': 'string'
+                    'type': 'date'
                 },
                 'groups': {
                     'type': 'string',
@@ -166,7 +192,11 @@ module.exports = {
                 },
                 'harvested_data': {
                     'type': 'string',
-                    'index': 'not_analyzed'
+                    'index': 'no'
+                },
+                'mfund_fkz': {
+                    'type': 'string',
+                    'index': 'no'
                 }
             }
         }

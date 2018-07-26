@@ -1,7 +1,7 @@
 'use strict';
 
 let request = require( 'request-promise' ),
-    async = require( 'async' ),
+    Promise = require('promise'),
     log = require( 'log4js' ).getLogger( __filename ),
     ElasticSearchUtils = require( './../elastic-utils' ),
     settings = require('../elastic.settings.js'),
@@ -21,7 +21,6 @@ class GovDataImporter {
         }
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
-        this.promises = [];
 
         this.options_package_search = {
             uri: settings.ckanBaseUrl + "/api/3/action/package_search", // See http://docs.ckan.org/en/ckan-2.7.3/api/
@@ -33,14 +32,21 @@ class GovDataImporter {
             headers: {'User-Agent': 'Request-Promise'},
             json: true
         };
+        if (settings.proxy) {
+            this.options_package_search.proxy = settings.proxy;
+        }
     }
 
     /**
      * Requests a dataset with the given ID and imports it to Elasticsearch.
-     * @param {string} id
-     * @param {function} callback
+     *
+     * @param args { sourceJson, issuedExisting, harvestTime }
+     * @returns {Promise<*|Promise>}
      */
-    async importDataset(source, callback) {
+    async importDataset(args) {
+        let source = args.data;
+        let issuedExisting = args.issued;
+        let harvestTime = args.harvestTime;
         try {
             log.debug("Processing CKAN dataset: " + source.name + " from data-source: " + this.settings.ckanBaseUrl);
 
@@ -91,6 +97,7 @@ class GovDataImporter {
             }
 
             // Resources/Distributions
+            let resourceDates = [];
             if (source.resources !== null) {
                 target.distribution = [];
                 source.resources.forEach(res => {
@@ -105,6 +112,20 @@ class GovDataImporter {
                         byteSize: res.size
                     };
                     target.distribution.push(dist);
+
+                    let created = res.created;
+                    let modified = res.modified;
+
+                    if (created) created = new Date(Date.parse(created));
+                    if (modified) modified = new Date(Date.parse(modified));
+
+                    if (created && modified) {
+                        resourceDates.push(Math.max(created, modified));
+                    } else if (modified) {
+                        resourceDates.push(modified);
+                    } else if (created) {
+                        resourceDates.push(created);
+                    }
                 });
             }
 
@@ -118,6 +139,21 @@ class GovDataImporter {
                 license_url: source.license_url,
                 harvested_data: JSON.stringify(source)
             };
+
+            // extras.temporal -> Aktualität der Daten
+            let minDate = new Date(Math.min(...resourceDates)); // Math.min and Math.max convert items to numbers
+            let maxDate = new Date(Math.max(...resourceDates));
+
+            if (minDate && maxDate && minDate.getTime() == maxDate.getTime()) {
+                target.extras.temporal = maxDate;
+            } else if (minDate && maxDate) {
+                target.extras.temporal_start = minDate;
+                target.extras.temporal_end = maxDate;
+            } else if (maxDate) {
+                target.extras.temporal = maxDate;
+            } else if (minDate) {
+                target.extras.temporal = minDate;
+            }
 
             // Groups
             if (source.groups !== null) {
@@ -133,24 +169,13 @@ class GovDataImporter {
 
             // Dates
             let now = new Date(Date.now());
-            let issued = null;
-
-            let existing = await this.elastic.searchById(source.id);
-            if (existing.hits.total > 0) {
-                let firstHit = existing.hits.hits[0]._source;
-                if (firstHit.extras.metadata.issued !== null) {
-                    issued = firstHit.extras.metadata.issued;
-                }
-            }
-            if (typeof  issued === "undefined" || issued === null) {
-                issued = now;
-            }
+            let issued = issuedExisting ? issuedExisting : now;
 
             target.extras.metadata = {
                 source: upstream,
                 issued: issued,
                 modified: now,
-                harvested: now
+                harvested: harvestTime
             };
 
             // Execute the mappers
@@ -159,11 +184,8 @@ class GovDataImporter {
                 mapper.run(target, theDoc);
             });
             let promise = this.elastic.addDocToBulk(theDoc, id);
-            this.promises.push(promise);
 
-            // signal finished operation so that the next asynchronous task can run (callback set by async)
-            callback();
-
+            return promise ? promise : new Promise(resolve => resolve());
         } catch (e) {
             log.error("Error: " + e);
         }
@@ -171,28 +193,23 @@ class GovDataImporter {
 
     async run() {
         try {
-
-            let self = this;
-            let queue = async.queue(function () {
-                self.importDataset.call(self, ...arguments);
-            }, 10);
-
-            queue.drain = () => {
-                log.info( 'queue has been processed' );
-
-                // Prepare the index, send the data to elasticsearch and close the client
-                this.elastic.sendBulkData(false)
-                    .then(() => Promise.all(this.promises))
-                    .then(() => this.elastic.finishIndex());
-            };
+            await this.elastic.prepareIndex(mapping, settings);
+            let promises = [];
 
             // Fetch datasets 'qs.rows' at a time
-            await this.elastic.prepareIndex(mapping, settings);
             while(true) {
                 let json = await request.get(this.options_package_search);
+                let now = new Date(Date.now());
                 let results = json.result.results;
 
-                results.forEach(dataset => queue.push(dataset));
+                let ids = results.map(result => result.id);
+                let timestamps = await this.elastic.getIssuedDates(ids);
+
+                results.forEach((dataset, idx) => promises.push(this.importDataset({
+                    data: dataset,
+                    issued: timestamps[idx],
+                    harvestTime: now
+                })));
 
                 if (results.length < 1) {
                     break;
@@ -201,6 +218,8 @@ class GovDataImporter {
                 }
             }
 
+            Promise.all(promises)
+                .then(() => this.elastic.finishIndex());
         } catch (err) {
             log.error( 'error:', err );
         }
