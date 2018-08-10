@@ -29,8 +29,8 @@ function getImporter(type) {
 function getDateString() {
     let dt = new Date(Date.now());
     let year = dt.getFullYear();
-    let month = ('' + dt.getMonth()).padStart(2, '0');
-    let day = ('' + dt.getDate()).padStart(2, '0');
+    let month = ('0' + dt.getMonth()).slice(-2);
+    let day = ('0' + dt.getDate()).slice(-2);
 
     return `${year}${month}${day}`;
 }

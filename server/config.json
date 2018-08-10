@@ -11,6 +11,7 @@
   {
     "importer": "CKAN-DB",
     "elasticSearchUrl": "http://localhost:9200",
+    "proxy": null,
     "index": "ckan_db",
     "indexType": "base",
     "alias": "mcloud",
