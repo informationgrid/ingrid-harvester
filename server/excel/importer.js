@@ -160,7 +160,7 @@ class ExcelImporter {
         ogdObject.extras.generated_id = uniqueName;
         ogdObject.extras.metadata.modified = now;
         ogdObject.extras.metadata.issued = issued;
-        ogdObject.extras.metadata.source = 'mcloud-excel';
+        ogdObject.extras.metadata.source = { attribution: 'mcloud-excel' };
 
         ogdObject.extras.license_id = license.description; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
         ogdObject.extras.license_url = license.link;

@@ -148,8 +148,20 @@ module.exports = {
                             'type': 'date'
                         },
                         'source': {
-                            'type': 'string',
-                            'index': 'not_analyzed'
+                            'properties': {
+                                'raw_data_source': {
+                                    'type': 'string',
+                                    'index': 'no'
+                                },
+                                'portal_link': {
+                                    'type': 'string',
+                                    'index': 'no'
+                                },
+                                'attribution': {
+                                    'type': 'string',
+                                    'index': 'not_analyzed'
+                                }
+                            }
                         }
                     }
                 },
