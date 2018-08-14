@@ -167,14 +167,19 @@ class DeutscheBahnCkanImporter {
 
             // Metadata
             // The harvest source
-            let upstream = this.settings.ckanBaseUrl + "/api/3/action/package_show?id=" + name;
+            let rawSource = this.settings.ckanBaseUrl + "/api/3/action/package_show?id=" + name;
+            let portalSource = this.settings.ckanBaseUrl + '/dataset/' + name;
 
             // Dates
             let now = new Date(Date.now());
             let issued = issuedExisting ? issuedExisting : now;
 
             target.extras.metadata = {
-                source: upstream,
+                source: {
+                    raw_data_source: rawSource,
+                    portal_link: portalSource,
+                    attribution: 'Deutsche Bahn Datenportal'
+                },
                 issued: issued,
                 modified: now,
                 harvested: harvestTime
