@@ -384,7 +384,7 @@ class ElasticSearchUtils {
                     let firstHit = response.hits.hits[0];
                     dates.push(firstHit._source.extras.metadata.issued);
                 } catch (e) {
-                    log.warn(`Error extracting issued date from elasticsearch response for id ${ids[j]}. Returned response was ${JSON.stringify(response)}`, e);
+                    log.info(`Did not find an existing issued date for dataset with id ${ids[j]}`);
                     dates.push(null);
                 }
             };
