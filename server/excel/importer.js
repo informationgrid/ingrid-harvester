@@ -171,7 +171,10 @@ class ExcelImporter {
         ogdObject.extras.citation = columnValues[columnMap.Quellenvermerk];
         ogdObject.extras.subgroups = this.mapCategories(columnValues[columnMap.Kategorie].split(','));
 
-        ogdObject.extras.terms_of_use = columnValues[columnMap.Nutzungshinweise];
+        let accessRights = columnValues[columnMap.Nutzungshinweise];
+        if (accessRights.trim() !== '') {
+            ogdObject.accessRights = [columnValues[columnMap.Nutzungshinweise]];
+        }
 
         let mfundFkz = columnValues[columnMap.mFundFoerderkennzeichen];
         if (mfundFkz.formula || mfundFkz.sharedFormula) {
