@@ -30,7 +30,7 @@ class DeutscheBahnCkanImporter {
                 start: 0,
                 rows: 100
             },
-            headers: {'User-Agent': 'Request-Promise'},
+            headers: {'User-Agent': 'mCLOUD Harvester. Request-Promise'},
             json: true
         };
         if (settings.proxy) {
