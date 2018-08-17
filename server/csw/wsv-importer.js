@@ -52,6 +52,9 @@ class CswImporter {
                 'Content-Type': 'text/xml'
             },
             json: false
+        };
+        if (settings.proxy) {
+            this.options_csw_search.proxy = settings.proxy;
         }
     }
 

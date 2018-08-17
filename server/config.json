@@ -27,6 +27,7 @@
     "alias": "mcloud",
     "cswBaseUrl": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup",
     "httpMethod": "POST",
+    "proxy": null,
     "defaultMcloudSubgroup": "waters",
     "includeTimestamp": true
   },
@@ -38,6 +39,7 @@
     "alias": "mcloud",
     "cswBaseUrl": "https://www.geoseaportal.de/soapServices/CSWStartup",
     "httpMethod": "POST",
+    "proxy": null,
     "defaultMcloudSubgroup": "waters",
     "includeTimestamp": true
   }
