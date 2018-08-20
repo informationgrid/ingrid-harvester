@@ -129,13 +129,18 @@ class CswImporter {
         target.title = title;
         target.description = abstract;
 
-        this.extractContacts(target, record); // creator, publisher, contactPoint
-
-        target.keywords = [];
+        let keywords = [];
         select('.//gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', record).forEach(node => {
-            target.keywords.push(node.textContent);
+            keywords.push(node.textContent);
         });
+        if (!keywords.includes('opendata')) {
+            // Don't index metadata-sets without the `opendata' keyword
+            log.info(`Keyword 'opendata' not found. Item will be ignored. ID: '${uuid}', Title: '${title}', Source: '${this.settings.cswBaseUrl}'.`);
+            return;
+        }
 
+        this.extractContacts(target, record); // creator, publisher, contactPoint
+        target.keywords = keywords;
         target.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
 
         let created = select('./gmd:dateStamp/gco:Date|gco:DateTime', record, true).textContent;
