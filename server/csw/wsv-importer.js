@@ -321,9 +321,9 @@ class CswImporter {
         }
         if (!license || !license.id) {
             let msg = 'No license detected for dataset.';
-            log.warn(`${msg} It will not be displayed in the portal. ${this.getErrorSuffix(args.uuid, args.title)}`);
+            log.warn(`${msg} ${this.getErrorSuffix(args.uuid, args.title)}`);
 
-            extras.metadata.isValid = false;
+            extras.license_id = 'Unbekannt';
             extras.metadata.harvesting_errors.push(msg);
         }
     }
