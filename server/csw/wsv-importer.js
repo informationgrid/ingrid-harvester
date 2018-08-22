@@ -46,7 +46,7 @@ class CswImporter {
                 maxRecords: 25
             },
             headers: {
-                'User-Agent': 'Request-Promise',
+                'User-Agent': 'mCLOUD Harvester. Request-Promise',
                 'Content-Type': 'text/xml'
             },
             json: false
