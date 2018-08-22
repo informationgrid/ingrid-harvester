@@ -56,6 +56,9 @@ class CswImporter {
         if (settings.proxy) {
             this.options_csw_search.proxy = settings.proxy;
         }
+        if (!settings.defaultAttributionLink) {
+            this.settings.defaultAttributionLink = `${settings.cswBaseUrl}?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2`;
+        }
     }
 
     async run() {
@@ -210,12 +213,16 @@ class CswImporter {
                 harvested: harvestTime,
                 issued: issued,
                 modified: new Date(Date.now()),
-                source: { raw_data_source: cswLink },
+                source: {
+                    raw_data_source: cswLink,
+                    portal_link: this.settings.defaultAttributionLink
+                },
                 harvesting_errors: []
             },
             subgroups: this.settings.defaultMcloudSubgroup,
             harvested_data: record.toString()
         };
+        if (this.settings.defaultAttribution) target.extras.metadata.source.attribution = this.settings.defaultAttribution;
 
         this.extractLicense(target.extras, idInfo, {uuid: uuid, title: title});
         this.extractTemporal(target.extras, idInfo, {uuid: uuid, title: title});

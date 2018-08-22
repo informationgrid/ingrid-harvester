@@ -29,6 +29,7 @@
     "httpMethod": "POST",
     "proxy": null,
     "defaultMcloudSubgroup": "waters",
+    "defaultAttribution": "WSV.Geokatalog CSW",
     "includeTimestamp": true
   },
   {
@@ -41,6 +42,8 @@
     "httpMethod": "POST",
     "proxy": null,
     "defaultMcloudSubgroup": "waters",
+    "defaultAttribution": "GeoSeaPortal: Das Geodatenportal des BSH",
+    "defaultAttributionLink": "https://www.geoseaportal.de/",
     "includeTimestamp": true
   }
 ]
