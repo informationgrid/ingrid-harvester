@@ -5,8 +5,6 @@ let request = require('request-promise'),
     ElasticSearchUtils = require('./../elastic-utils'),
     settings = require('../elastic.settings.js'),
     mapping = require('../elastic.mapping.js'),
-    fs = require('fs'),
-    path = require('path'),
     Promise = require('promise'),
     DomParser = require('xmldom').DOMParser;
 
@@ -71,9 +69,7 @@ class CswImporter {
 
     async harvest() {
         let promises = [];
-        let filePath = path.join(__dirname, 'getrecords.body.xml');
-        log.info(__dirname);
-        let xml = fs.readFileSync(filePath, 'utf8');
+        let xml = this._getGetRecordsXmlBody();
         let startPosition = this.options_csw_search.qs.startPosition;
         let maxRecords = this.options_csw_search.qs.maxRecords;
         let numMatched = maxRecords;
@@ -456,6 +452,26 @@ class CswImporter {
 
     getErrorSuffix(uuid, title) {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.cswBaseUrl}'.`;
+    }
+
+    _getGetRecordsXmlBody() {
+        return `<?xml version="1.0" encoding="UTF-8"?>
+<GetRecords xmlns="http://www.opengis.net/cat/csw/2.0.2"
+            xmlns:gmd="http://www.isotc211.org/2005/gmd"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
+
+            service="CSW"
+            version="2.0.2"
+            resultType="results"
+            outputFormat="application/xml"
+            outputSchema="http://www.isotc211.org/2005/gmd"
+            startPosition="1"
+            maxRecords="10">
+    <Query typeNames="gmd:MD_Metadata">
+        <ElementSetName typeNames="">full</ElementSetName>
+    </Query>
+</GetRecords>`;
     }
 }
 

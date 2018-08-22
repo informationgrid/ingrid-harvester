@@ -16,8 +16,6 @@ gulp.task('default', () => {
 
     gulp.src('./server/config.json')
       .pipe(gulp.dest('./dist/'));
-    gulp.src('./server/csw/getrecords.body.xml')
-      .pipe(gulp.dest('./dist/csw/'));
 
     return b.external('./config.json')
         .transform("babelify", {presets: ["es2017"]})
