@@ -156,6 +156,8 @@ class CswImporter {
             target.accrualPeriodicity = freq[0].getAttribute('codeListValue');
         }
 
+        this.extractAccessRights(target, idInfo);
+
         let dists = [];
         let urlsFound = [];
         let srvIdent = select('./srv:SV_ServiceIdentification', idInfo, true);
@@ -329,6 +331,41 @@ class CswImporter {
         if (dt.length > 0) target.modified = dt[0].textContent;
     }
 
+    extractAccessRights(target, idInfo) {
+        // Select 'otherConstraints' elements that have a 'useLimtation' sibling
+        let constraints = select('./*/gmd:resourceConstraints/*[./gmd:useLimitation and ./gmd:otherConstraints]', idInfo);
+        if (constraints.length > 0) {
+            target.accessRights = [];
+            constraints.forEach(c => target.accessRights.push(... this.processConstraints(c)));
+        }
+    }
+
+    processConstraints(node) {
+        let use = select('./gmd:useLimitation', node,  true);
+        use = this.getCharacterStringContent(use);
+
+        let other = select('./gmd:otherConstraints', node)
+            .map(node => this.getCharacterStringContent(node));
+
+        if (use) {
+            let idx = use.indexOf(':');
+            let usePrefix = idx > 0 ? use.substring(0, idx) : use;
+            other = other.map(o => {
+                let match = o.match(/"name"\s*:\s*"([^"]+)"/);
+                if (match) {
+                    return '';
+                } else if (o.startsWith(usePrefix)) {
+                    return o;
+                } else {
+                    return `${usePrefix}: ${o}`;
+                }
+            })
+                .filter(o => o && o !== ''); // Filter out nulls and empty strings
+        }
+
+        return other;
+    }
+
     extractLicense(extras, idInfo, args) {
         let license = this.getLicense(idInfo);
         if (license) {
@@ -346,19 +383,29 @@ class CswImporter {
     }
 
     getLicense(idInfo) {
-        // Use the first resourceConstraints element with MD_RestrictionCode=license
-        let constraints = select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license"]', idInfo)[0];
-        if (constraints) {
-            let text =  this.getCharacterStringContent(constraints, 'otherConstraints');
-            let license = { text: text };
-            let match = text.match(/"name"\s*:\s*"([^"]+)"/);
-            if (match) {
-                license.id = match[1];
-            }
-            match = text.match(/"url"\s*:\s*"([^"]+)"/);
-            if (match) {
-                license.url = match[1];
-            }
+        let constraints = select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license"]', idInfo);
+        if (constraints && constraints.length > 0) {
+            let license = {};
+            constraints.forEach(c => {
+                // Search until id and url are not defined
+                let nodes = select('./gmd:otherConstraints', c);
+                for (let i = 0; i < nodes.length && (!license.id || !license.url); i++) {
+                    let text = this.getCharacterStringContent(nodes[i]);
+                    license.text = text;
+                    let match = text.match(/"name"\s*:\s*"([^"]+)"/);
+                    if (match) {
+                        license.id = match[1];
+                    } else {
+                        delete license.id;
+                    }
+                    match = text.match(/"url"\s*:\s*"([^"]+)"/);
+                    if (match) {
+                        license.url = match[1];
+                    } else {
+                        delete license.url;
+                    }
+                }
+            });
             return license;
         }
     }
