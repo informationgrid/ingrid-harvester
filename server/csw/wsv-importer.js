@@ -157,14 +157,28 @@ class CswImporter {
         }
 
         let dists = [];
+        let urlsFound = [];
         let srvIdent = select('./srv:SV_ServiceIdentification', idInfo, true);
         if (srvIdent) {
+            let getCapabilitiesElement = select(
+                './srv:containsOperations/srv:SV_OperationMetadata[./srv:operationName/gco:CharacterString[contains(./text(), "GetCapabilities")]]/srv:connectPoint/*/gmd:linkage/gmd:URL',
+                srvIdent,
+                true);
+            let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
             let format = select('.//srv:serviceType/gco:LocalName', srvIdent, true).textContent;
             let serviceLinks = [];
+            if (getCapablitiesUrl) {
+                let lowercase = getCapablitiesUrl.toLowerCase();
+                if (lowercase.match(/\bwms\b/)) format = 'WMS';
+                if (lowercase.match(/\bwfs\b/)) format = 'WFS';
+                if (lowercase.match(/\bwcs\b/)) format = 'WCS';
+                if (lowercase.match(/\bwmts\b/)) format = 'WMTS';
+            }
             select('./srv:containsOperations/*/srv:connectPoint/*/gmd:linkage/gmd:URL', srvIdent).forEach(node => {
                 let url = node.textContent;
                 if (!serviceLinks.includes(url)) {
                     serviceLinks.push(url);
+                    urlsFound.push(url);
                 }
             });
 
@@ -192,6 +206,9 @@ class CswImporter {
 
             // Combine formats in a single slash-separated string
             let format = formats.join(',');
+            // Filter out URLs that have already been found
+            urls = urls.filter(item => !urlsFound.includes(item));
+
             urls.forEach(url => {
                 let dist = {};
 
