@@ -110,7 +110,8 @@ class ExcelImporter {
                 }));
             });
             Promise.all(promises)
-                .then(() => elastic.finishIndex());
+                .then(() => elastic.finishIndex())
+                .catch(err => log.error('Error importing excel row', err));
         } catch(error) {
             log.error("Error reading excel workbook\n", error);
         }
