@@ -110,7 +110,8 @@ class ExcelImporter {
                 }));
             });
             Promise.all(promises)
-                .then(() => elastic.finishIndex());
+                .then(() => elastic.finishIndex())
+                .catch(err => log.error('Error importing excel row', err));
         } catch(error) {
             log.error("Error reading excel workbook\n", error);
         }
@@ -267,11 +268,12 @@ class ExcelImporter {
     }
 
     getLicense(licenseSheet, /*string*/licenseId) {
+        licenseId = licenseId.toLowerCase();
         const numLicenses = licenseSheet.rowCount;
 
         for (let i=2; i<=numLicenses; i++) {
             const row = licenseSheet.getRow(i);
-            if (row.values[1] === licenseId) {
+            if (row.values[1].toLowerCase() === licenseId) {
                 return {
                     description: row.values[2],
                     abbreviation: row.values[3],
