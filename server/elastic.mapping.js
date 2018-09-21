@@ -19,6 +19,11 @@ module.exports = {
                 'quadgram': {
                     'type': 'string',
                     'analyzer': 'mcloud_quadgram'
+                },
+                'decomp_shingles': {
+                    'type': 'string',
+                    'analyzer': 'decomp_shingles',
+                    'search_analyzer': 'decomp_shingles'
                 }
             }
         },
@@ -37,6 +42,11 @@ module.exports = {
                 'quadgram': {
                     'type': 'string',
                     'analyzer': 'mcloud_quadgram'
+                },
+                'decomp_shingles': {
+                    'type': 'string',
+                    'analyzer': 'decomp_shingles',
+                    'search_analyzer': 'decomp_shingles'
                 }
             }
         },

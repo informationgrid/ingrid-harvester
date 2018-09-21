@@ -25,6 +25,11 @@ module.exports = {
                     'max_shingle_size': '4',
                     'output_unigrams': 'false',
                     'output_unigrams_if_no_shingles': 'false'
+                },
+                'filter_shingle': {
+                    'type': 'shingle',
+                    'max_shingle_size': '5',
+                    'output_unigrams': 'true'
                 }
             },
             'analyzer': {
@@ -65,6 +70,16 @@ module.exports = {
                         'decomp',
                         'german_normalization',
                         'lowercase'
+                    ]
+                },
+                'decomp_shingles': {
+                    'type': 'custom',
+                    'tokenizer': 'standard',
+                    'filter': [
+                        'lowercase',
+                        'decomp',
+                        'german_normalization',
+                        'filter_shingle'
                     ]
                 }
             }
