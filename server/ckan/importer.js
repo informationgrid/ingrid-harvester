@@ -224,12 +224,16 @@ class DeutscheBahnCkanImporter {
         try {
             await this.elastic.prepareIndex(mapping, settings);
             let promises = [];
+            let total = 0;
 
             // Fetch datasets 'qs.rows' at a time
             while(true) {
                 let json = await request.get(this.options_package_search);
                 let now = new Date(Date.now());
                 let results = json.result.results;
+
+                log.info(`Received ${results.length} records from ${this.settings.ckanBaseUrl}`);
+                total += results.length;
 
                 let ids = results.map(result => result.id);
                 let timestamps = await this.elastic.getIssuedDates(ids);
@@ -247,8 +251,14 @@ class DeutscheBahnCkanImporter {
                 }
             }
 
-            Promise.all(promises)
-                .then(() => this.elastic.finishIndex());
+            if (total === 0) {
+                log.warn(`Could not harvest any datasets from ${this.settings.ckanBaseUrl}`);
+                await this.elastic.abortCurrentIndex();
+            } else {
+                Promise.all(promises)
+                    .then(() => this.elastic.finishIndex())
+                    .catch(err => log.error('Error indexing data', err));
+            }
         } catch (err) {
             log.error( 'error:', err );
         }
