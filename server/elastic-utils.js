@@ -129,6 +129,17 @@ class ElasticSearchUtils {
         });
     }
 
+    /**
+     * Deletes the current index, if for example there was an error during
+     * harvesting from the data source.
+     *
+     * @returns {Promise} a promise for the action deleting the current index
+     */
+    abortCurrentIndex() {
+        log.info(`Deleting index: ${this.indexName}`);
+        return this.client.indices.delete({index: this.indexName});
+    }
+
 
     /**
      * Add the specified mapping to an index and type.
@@ -265,67 +276,71 @@ class ElasticSearchUtils {
         return new Promise(resolve => resolve());
     }
 
-    _deduplicate() {
-        return new Promise((resolve, reject) => {
-            log.debug(`Looking for duplicates for items in index '${this.indexName}`);
-            let body = [];
-            this.duplicateStaging.forEach(item => {
-                body.push({ index: this.deduplicationAlias });
-                body.push(item.query);
-            });
+    async _deduplicate() {
+        await this._deduplicateByTitle();
+        await this._deduplicateUsingQuery();
+    }
 
-            if (body.length < 1) resolve(); // Don't send an empty query
-
-            this.client.msearch({ body: body })
-                .then(results => {
-                    for(let i=0; i < results.responses.length; i++) {
-                        if (!results.responses[i].hits) continue;
-
-                        results.responses[i].hits.hits.forEach(hit => {
-                            let item = this.duplicateStaging[i];
-                            let title = item.title;
-
-                            let myDate = item.modified;
-                            let hitDate = hit._source.modified;
-
-                            // Make sure we aren't comparing apples to oranges.
-                            // Convert to dates, if not already the case.
-                            if (typeof myDate === 'string') myDate = Date.parse(myDate);
-                            if (typeof hitDate === 'string') hitDate = Date.parse(hitDate);
-
-                            if (typeof myDate === 'number') myDate = new Date(myDate);
-                            if (typeof hitDate === 'number') hitDate = new Date(hitDate);
-
-                            let q = { "delete": {} };
-                            if (hitDate > myDate) {
-                                // Hit is newer. Delete document from current index.
-                                q.delete._index = this.indexName;
-                                q.delete._type = this.settings.indexTypes;
-                                q.delete._id = item.id;
-                            } else { // Hit is older. Delete (h)it.
-                                q.delete._index = hit._index;
-                                q.delete._type = hit._type;
-                                q.delete._id = hit._id;
-
-                                title = hit._source.title;
-                            }
-
-                            log.warn(`The following older duplicate item will be deleted. Id: '${q.delete._id}', Title: '${title}', Index: '${q.delete._index}'`);
-                            this._bulkData.push(q);
-                        });
-                    }
-
-                    // Perform bulk delete and resolve/reject the promise
-                    log.debug(`Deleting duplicates found in index ${this.indexName}`);
-                    this.sendBulkData(false)
-                        .then(() => {
-                            log.debug(`Finished deleting duplicates found in index ${this.indexName}`);
-                            resolve();
-                        })
-                        .catch(err => reject(err));
-                })
-                .catch(err => reject(err));
+    async _deduplicateUsingQuery() {
+        log.debug(`Looking for duplicates for items in index '${this.indexName}`);
+        let body = [];
+        this.duplicateStaging.forEach(item => {
+            body.push({ index: this.deduplicationAlias });
+            body.push(item.query);
         });
+
+        if (body.length < 1) return; // Don't send an empty query
+
+        let count = 0;
+        let results = await this.client.msearch({ body: body });
+        for(let i=0; i < results.responses.length; i++) {
+            if (!results.responses[i].hits) continue;
+
+            results.responses[i].hits.hits.forEach(hit => {
+                let item = this.duplicateStaging[i];
+                let title = item.title;
+
+                let myDate = item.modified;
+                let hitDate = hit._source.modified;
+
+                // Make sure we aren't comparing apples to oranges.
+                // Convert to dates, if not already the case.
+                if (typeof myDate === 'string') myDate = Date.parse(myDate);
+                if (typeof hitDate === 'string') hitDate = Date.parse(hitDate);
+
+                if (typeof myDate === 'number') myDate = new Date(myDate);
+                if (typeof hitDate === 'number') hitDate = new Date(hitDate);
+
+                let q = { "delete": {} };
+                let retained = '';
+                if (hitDate > myDate) {
+                    // Hit is newer. Delete document from current index.
+                    q.delete._index = this.indexName;
+                    q.delete._type = this.settings.indexTypes;
+                    q.delete._id = item.id;
+
+                    retained = `Item to retain -> ID: '${hit._id}', Title: '${hit._source.title}', Index: '${hit._index};`;
+                } else { // Hit is older. Delete (h)it.
+                    q.delete._index = hit._index;
+                    q.delete._type = hit._type;
+                    q.delete._id = hit._id;
+
+                    title = hit._source.title;
+                    retained = `Item to retain -> ID: '${item.id}', Title: '${title}', Index: '${this.indexName};`;
+                }
+
+                let deleted = `Item to delete -> ID: '${q.delete._id}', Title: '${title}', Index: '${q.delete._index}'`;
+
+                log.warn(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${retained}`);
+                this._bulkData.push(q);
+                count++;
+            });
+        }
+
+        // Perform bulk delete and resolve/reject the promise
+        log.debug(`${count} duplicates found using the duplicates query will be deleted from the index '${this.indexName}'.`);
+        await this.sendBulkData(false);
+        log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.indexName}`);
     }
 
     /**
@@ -384,7 +399,7 @@ class ElasticSearchUtils {
                     let firstHit = response.hits.hits[0];
                     dates.push(firstHit._source.extras.metadata.issued);
                 } catch (e) {
-                    log.warn(`Error extracting issued date from elasticsearch response for id ${ids[j]}. Returned response was ${JSON.stringify(response)}`, e);
+                    log.info(`Did not find an existing issued date for dataset with id ${ids[j]}`);
                     dates.push(null);
                 }
             };
@@ -404,7 +419,7 @@ class ElasticSearchUtils {
         // Don't search duplicates for invalid documents. Firstly, it is not
         // strictly necessarily and secondly, don't delete valid duplicates of
         // an invalid document
-        if (!doc.extras.metadata.isValid) return;
+        if (doc.extras.metadata.isValid === false) return;
 
         let generatedId = doc.extras.generated_id;
         let modified = doc.modified;
@@ -480,6 +495,91 @@ class ElasticSearchUtils {
             title: doc.title,
             query: query
         });
+    }
+
+    async _deduplicateByTitle() {
+        // By default elasticsearch limits the count of aggregates to 10. Ask it
+        // to return a lot more results!
+        let maxAggregates = 10000;
+        let query = {
+            size: 0,
+            query: {
+                bool: {
+                    must_not: { term: { "extras.metadata.isValid": false } },
+                }
+            },
+            aggregations: {
+                duplicates: {
+                    terms: {
+                        field: 'title.raw',
+                        min_doc_count: 2,
+                        size: maxAggregates
+                    },
+                    aggregations: {
+                        duplicates: {
+                            top_hits: {
+                                sort: [{ 'modified': { order: 'desc'} }],
+                                _source: { include: [ 'title', 'distribution', 'modified' ] }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        let response = await this.client.search({
+            index: this.deduplicationAlias,
+            body: query,
+            size: 50
+        });
+        try {
+            let count = 0;
+            log.debug(`Count of buckets for deduplication aggregates query: ${response.aggregations.duplicates.buckets.length}`);
+            response.aggregations.duplicates.buckets.forEach(bucket => {
+                /*
+                 * We asked the query to sort hits by modified dates. Newer hits are
+                 * towards the beginning.
+                 */
+                try {
+                    let hits = bucket.duplicates.hits.hits;
+                    for (let i=1; i<hits.length; i++) {
+                        let hit0 = hits[i-i];
+                        let hit1 = hits[i];
+
+                        let urls0 = [];
+                        let urls1 = [];
+                        hit0._source.distribution.forEach(dist => urls0.push(dist.accessURL));
+                        hit1._source.distribution.forEach(dist => urls1.push(dist.accessURL));
+
+                        let remove = false;
+                        for(let j=0; j<urls1.length && !remove; j++) {
+                            remove = urls0.includes(urls1[j]);
+                        }
+                        if (remove) {
+                            let deleted = `Item to delete -> ID: '${hit1._id}', Title: '${hit1._source.title}', Index: '${hit1._index}'`;
+                            let retained = `Item to retain -> ID: '${hit0._id}', Title: '${hit0._source.title}', Index: '${hit0._index}'`;
+                            log.warn(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${retained}`);
+                            this._bulkData.push({
+                                delete: {
+                                    _index: hit1._index,
+                                    _type: hit1._type,
+                                    _id: hit1._id
+                                }
+                            });
+                            count++;
+                        }
+                    }
+                    return count;
+                } catch (err) {
+                    log.error(`Error deduplicating hits for URL ${bucket.key}`, err);
+                }
+            });
+            log.info(`${count} duplicates found using the aggregates query will be deleted from index '${this.indexName}'.`);
+        } catch (err) {
+            log.error('Error processing results of aggregate query for duplicates', err);
+        }
+        await this.sendBulkData(false);
+        log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.indexName}`);
     }
 }
 

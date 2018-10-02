@@ -3,11 +3,12 @@
 let request = require( 'request-promise' ),
     Promise = require('promise'),
     log = require( 'log4js' ).getLogger( __filename ),
+    markdown = require('markdown').markdown,
     ElasticSearchUtils = require( './../elastic-utils' ),
     settings = require('../elastic.settings.js'),
     mapping = require( '../elastic.mapping.js' );
 
-class GovDataImporter {
+class DeutscheBahnCkanImporter {
 
     /**
      * Create the importer and initialize with settings.
@@ -29,7 +30,7 @@ class GovDataImporter {
                 start: 0,
                 rows: 100
             },
-            headers: {'User-Agent': 'Request-Promise'},
+            headers: {'User-Agent': 'mCLOUD Harvester. Request-Promise'},
             json: true
         };
         if (settings.proxy) {
@@ -55,7 +56,7 @@ class GovDataImporter {
 
             let id = source.id;
             target.title = source.title;
-            target.description = source.notes;
+            target.description = markdown.toHTML(source.notes);
             target.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
             target.issued = source.metadata_created;
             target.modified = source.metadata_modified;
@@ -137,7 +138,8 @@ class GovDataImporter {
                 license_id: source.license_id,
                 license_title: source.license_title,
                 license_url: source.license_url,
-                harvested_data: JSON.stringify(source)
+                harvested_data: JSON.stringify(source),
+                subsection: []
             };
 
             // extras.temporal -> Aktualität der Daten
@@ -165,18 +167,45 @@ class GovDataImporter {
 
             // Metadata
             // The harvest source
-            let upstream = this.settings.ckanBaseUrl + "/api/3/action/package_show?id=" + name;
+            let rawSource = this.settings.ckanBaseUrl + "/api/3/action/package_show?id=" + name;
+            let portalSource = this.settings.ckanBaseUrl + '/dataset/' + name;
 
             // Dates
             let now = new Date(Date.now());
             let issued = issuedExisting ? issuedExisting : now;
 
             target.extras.metadata = {
-                source: upstream,
+                source: {
+                    raw_data_source: rawSource,
+                    portal_link: portalSource,
+                    attribution: 'Deutsche Bahn Datenportal'
+                },
                 issued: issued,
                 modified: now,
                 harvested: harvestTime
             };
+
+            // Extra information from the Deutsche Bahn portal
+            if (source.description) {
+                target.extras.subsection.push({
+                    title: 'Langbeschreibung',
+                    description: markdown.toHTML(source.description)
+                });
+            }
+
+            if (source.license_detailed_description) {
+                target.extras.subsection.push({
+                    title: 'Lizenzbeschreibung',
+                    description: source.license_detailed_description
+                });
+            }
+
+            if (source.haftung_description) {
+                target.extras.subsection.push({
+                    title: 'Haftungsausschluss',
+                    description: source.haftung_description
+                });
+            }
 
             // Execute the mappers
             let theDoc = {};
@@ -195,12 +224,16 @@ class GovDataImporter {
         try {
             await this.elastic.prepareIndex(mapping, settings);
             let promises = [];
+            let total = 0;
 
             // Fetch datasets 'qs.rows' at a time
             while(true) {
                 let json = await request.get(this.options_package_search);
                 let now = new Date(Date.now());
                 let results = json.result.results;
+
+                log.info(`Received ${results.length} records from ${this.settings.ckanBaseUrl}`);
+                total += results.length;
 
                 let ids = results.map(result => result.id);
                 let timestamps = await this.elastic.getIssuedDates(ids);
@@ -218,12 +251,18 @@ class GovDataImporter {
                 }
             }
 
-            Promise.all(promises)
-                .then(() => this.elastic.finishIndex());
+            if (total === 0) {
+                log.warn(`Could not harvest any datasets from ${this.settings.ckanBaseUrl}`);
+                await this.elastic.abortCurrentIndex();
+            } else {
+                Promise.all(promises)
+                    .then(() => this.elastic.finishIndex())
+                    .catch(err => log.error('Error indexing data', err));
+            }
         } catch (err) {
             log.error( 'error:', err );
         }
     }
 }
 
-module.exports = GovDataImporter;
+module.exports = DeutscheBahnCkanImporter;

@@ -110,7 +110,8 @@ class ExcelImporter {
                 }));
             });
             Promise.all(promises)
-                .then(() => elastic.finishIndex());
+                .then(() => elastic.finishIndex())
+                .catch(err => log.error('Error importing excel row', err));
         } catch(error) {
             log.error("Error reading excel workbook\n", error);
         }
@@ -160,7 +161,7 @@ class ExcelImporter {
         ogdObject.extras.generated_id = uniqueName;
         ogdObject.extras.metadata.modified = now;
         ogdObject.extras.metadata.issued = issued;
-        ogdObject.extras.metadata.source = 'mcloud-excel';
+        ogdObject.extras.metadata.source = { attribution: 'mcloud-excel' };
 
         ogdObject.extras.license_id = license.description; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
         ogdObject.extras.license_url = license.link;
@@ -171,7 +172,10 @@ class ExcelImporter {
         ogdObject.extras.citation = columnValues[columnMap.Quellenvermerk];
         ogdObject.extras.subgroups = this.mapCategories(columnValues[columnMap.Kategorie].split(','));
 
-        ogdObject.extras.terms_of_use = columnValues[columnMap.Nutzungshinweise];
+        let accessRights = columnValues[columnMap.Nutzungshinweise];
+        if (accessRights.trim() !== '') {
+            ogdObject.accessRights = [columnValues[columnMap.Nutzungshinweise]];
+        }
 
         let mfundFkz = columnValues[columnMap.mFundFoerderkennzeichen];
         if (mfundFkz.formula || mfundFkz.sharedFormula) {
@@ -264,11 +268,12 @@ class ExcelImporter {
     }
 
     getLicense(licenseSheet, /*string*/licenseId) {
+        licenseId = licenseId.toLowerCase();
         const numLicenses = licenseSheet.rowCount;
 
         for (let i=2; i<=numLicenses; i++) {
             const row = licenseSheet.getRow(i);
-            if (row.values[1] === licenseId) {
+            if (row.values[1].toLowerCase() === licenseId) {
                 return {
                     description: row.values[2],
                     abbreviation: row.values[3],

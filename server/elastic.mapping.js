@@ -104,6 +104,9 @@ module.exports = {
         'accrualPeriodicity': {
             'type': 'string'
         },
+        'accessRights': {
+            'type': 'string'
+        },
         'distribution': {
             'properties': {
                 'id': {
@@ -148,8 +151,20 @@ module.exports = {
                             'type': 'date'
                         },
                         'source': {
-                            'type': 'string',
-                            'index': 'not_analyzed'
+                            'properties': {
+                                'raw_data_source': {
+                                    'type': 'string',
+                                    'index': 'no'
+                                },
+                                'portal_link': {
+                                    'type': 'string',
+                                    'index': 'no'
+                                },
+                                'attribution': {
+                                    'type': 'string',
+                                    'index': 'not_analyzed'
+                                }
+                            }
                         }
                     }
                 },
@@ -196,7 +211,19 @@ module.exports = {
                 },
                 'mfund_fkz': {
                     'type': 'string',
-                    'index': 'no'
+                    'index': 'not_analyzed'
+                },
+                'subsection': {
+                    'properties': {
+                        'title': {
+                            'type': 'string',
+                            'analyzer': 'decomp'
+                        },
+                        'description': {
+                            'type': 'string',
+                            'analyzer': 'decomp'
+                        }
+                    }
                 }
             }
         }
