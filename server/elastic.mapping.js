@@ -8,26 +8,14 @@ module.exports = {
                     'type': 'string',
                     'index': 'not_analyzed'
                 },
-                'bigram': {
+                'decomp_german': {
                     'type': 'string',
-                    'analyzer': 'mcloud_bigram'
-                },
-                'trigram': {
-                    'type': 'string',
-                    'analyzer': 'mcloud_trigram'
-                },
-                'quadgram': {
-                    'type': 'string',
-                    'analyzer': 'mcloud_quadgram'
-                },
-                'german_simple': {
-                    'type': 'string',
-                    'analyzer': 'german_simple'
+                    'analyzer': 'decomp_german',
+                    'search_analyzer': 'german_simple'
                 },
                 'decomp_shingles': {
                     'type': 'string',
-                    'analyzer': 'decomp_shingles',
-                    'search_analyzer': 'decomp_shingles'
+                    'analyzer': 'decomp_shingles'
                 }
             }
         },
@@ -35,26 +23,14 @@ module.exports = {
             'type': 'string',
             'analyzer': 'decomp',
             'fields': {
-                'bigram': {
+                'decomp_german': {
                     'type': 'string',
-                    'analyzer': 'mcloud_bigram'
-                },
-                'trigram': {
-                    'type': 'string',
-                    'analyzer': 'mcloud_trigram'
-                },
-                'quadgram': {
-                    'type': 'string',
-                    'analyzer': 'mcloud_quadgram'
-                },
-                'german_simple': {
-                    'type': 'string',
-                    'analyzer': 'german_simple'
+                    'analyzer': 'decomp_german',
+                    'search_analyzer': 'german_simple'
                 },
                 'decomp_shingles': {
                     'type': 'string',
                     'analyzer': 'decomp_shingles',
-                    'search_analyzer': 'decomp_shingles'
                 }
             }
         },
