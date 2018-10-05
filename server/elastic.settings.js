@@ -26,9 +26,13 @@ module.exports = {
                     'output_unigrams': 'false',
                     'output_unigrams_if_no_shingles': 'false'
                 },
-                'filter_shingle': {
+                'german_stemmer': {
+                    'type': 'stemmer',
+                    'name': 'light_german'
+                },
+                'decomp_shingle': {
                     'type': 'shingle',
-                    'max_shingle_size': '5',
+                    'max_shingle_size': '8',
                     'output_unigrams': 'true'
                 }
             },
@@ -72,6 +76,15 @@ module.exports = {
                         'lowercase'
                     ]
                 },
+                'german_simple': {
+                    'type': 'custom',
+                    'tokenizer': 'standard',
+                    'filter': [
+                        'lowercase',
+                        'german_stemmer',
+                        'german_normalization'
+                    ]
+                },
                 'decomp_shingles': {
                     'type': 'custom',
                     'tokenizer': 'standard',
@@ -79,7 +92,7 @@ module.exports = {
                         'lowercase',
                         'decomp',
                         'german_normalization',
-                        'filter_shingle'
+                        'decomp_shingle'
                     ]
                 }
             }

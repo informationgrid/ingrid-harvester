@@ -20,6 +20,10 @@ module.exports = {
                     'type': 'string',
                     'analyzer': 'mcloud_quadgram'
                 },
+                'german_simple': {
+                    'type': 'string',
+                    'analyzer': 'german_simple'
+                },
                 'decomp_shingles': {
                     'type': 'string',
                     'analyzer': 'decomp_shingles',
@@ -42,6 +46,10 @@ module.exports = {
                 'quadgram': {
                     'type': 'string',
                     'analyzer': 'mcloud_quadgram'
+                },
+                'german_simple': {
+                    'type': 'string',
+                    'analyzer': 'german_simple'
                 },
                 'decomp_shingles': {
                     'type': 'string',
