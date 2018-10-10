@@ -1,4 +1,4 @@
-%define ingrid_update_version 1.2.3.SNAPSHOT
+%define ingrid_update_version 1.4.0.SNAPSHOT
 
 %define mcloud_dir /opt/ingrid
 
@@ -55,6 +55,13 @@ rm -rf %{mcloud_dir}/ingrid-iplug-csw-dsc_wsv/webapp/WEB-INF/work/*
 
 
 %changelog
+* Tue Oct 02 2018 Vikram Notay <vikram.notay@wemove.com> - 1.3.0
+- Index additional information for metadata from Deutsche Bahn
+- Log missing timestamps without a stack-trace and as info instead of a warning
+- Index use limitations for metadata from excel and Deutsche Bahn
+- Deduplicate metadata with same title and at least one download link in common
+- Abort harvesting of Deutsche Bahn data if server not accessible or no data received
+
 * Thu Jul 26 2018 Vikram Notay <vikram.notay@wemove.com> - 1.2.1
 - Improved search for German compound words
 - Deduplication of metadata-sets from different sources
