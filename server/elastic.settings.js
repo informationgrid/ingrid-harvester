@@ -13,6 +13,11 @@ module.exports = {
                     'type': 'shingle',
                     'max_shingle_size': '8',
                     'output_unigrams': 'false'
+                },
+                'suggest_shingle': {
+                    'type': 'shingle',
+                    'max_shingle_size': '5',
+                    'output_unigrams': 'true'
                 }
             },
             'analyzer': {
@@ -52,6 +57,14 @@ module.exports = {
                         'decomp',
                         'german_normalization',
                         'decomp_shingle'
+                    ]
+                },
+                'suggest_shingles': {
+                    'type': 'custom',
+                    'tokenizer': 'standard',
+                    'filter': [
+                        'lowercase',
+                        'suggest_shingle'
                     ]
                 }
             }

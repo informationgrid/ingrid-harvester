@@ -16,6 +16,10 @@ module.exports = {
                 'decomp_shingles': {
                     'type': 'string',
                     'analyzer': 'decomp_shingles'
+                },
+                'suggest_shingles': {
+                    'type': 'string',
+                    'analyzer': 'suggest_shingles'
                 }
             }
         },
@@ -31,6 +35,10 @@ module.exports = {
                 'decomp_shingles': {
                     'type': 'string',
                     'analyzer': 'decomp_shingles',
+                },
+                'suggest_shingles': {
+                    'type': 'string',
+                    'analyzer': 'suggest_shingles'
                 }
             }
         },
