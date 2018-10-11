@@ -48,7 +48,7 @@ class CswUtils {
         let xmlSupplier = this.settings.getGetRecordsPostBody;
         let startPosition = this.options_csw_search.qs.startPosition;
         let maxRecords = this.options_csw_search.qs.maxRecords;
-        let numMatched = maxRecords;
+        let numMatched = startPosition + 1;
 
         while (numMatched > startPosition) {
             if (xmlSupplier) {
@@ -69,13 +69,16 @@ class CswUtils {
 
             let responseDom = new DomParser().parseFromString(response);
             let resultsNode = responseDom.getElementsByTagNameNS(CSW, "SearchResults")[0];
-            let numReturned = resultsNode.getAttribute("numberOfRecordsReturned");
-            numMatched = resultsNode.getAttribute("numberOfRecordsMatched");
+            if (!resultsNode) {
+                log.error(`Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nStart position: ${startPosition}, Max Records: ${maxRecords}, Server response: ${responseDom.toString()}.`);
+            } else {
+                let numReturned = resultsNode.getAttribute("numberOfRecordsReturned");
+                numMatched = resultsNode.getAttribute("numberOfRecordsMatched");
 
-            log.debug(`Received ${numReturned} records from ${this.settings.cswBaseUrl}`);
+                log.debug(`Received ${numReturned} records from ${this.settings.cswBaseUrl}`);
 
-            promises.push(this.extractRecords(response, harvestTime));
-
+                promises.push(this.extractRecords(response, harvestTime));
+            }
             startPosition += maxRecords;
         }
         await Promise.all(promises)
@@ -225,6 +228,15 @@ class CswUtils {
 
         this.extractLicense(target.extras, idInfo, {uuid: uuid, title: title});
         this.extractTemporal(target.extras, idInfo, {uuid: uuid, title: title});
+
+        // Sanity checks
+        if (!abstract) {
+            let msg = "Dataset doesn't have an abstract.";
+            log.warn(`${msg} It will not be displayed in the portal. Id: '${uuid}', title: '${title}', source: '${this.settings.cswBaseUrl}'`);
+
+            target.extras.metadata.isValid = false;
+            target.extras.metadata.harvesting_errors.push(msg);
+        }
 
         if (dists.length === 0) {
             let msg = 'Dataset has no links for download/access.';
@@ -427,7 +439,9 @@ class CswUtils {
     getCharacterStringContent(element, cname) {
         if (cname) {
             let node = select(`.//gmd:${cname}/gco:CharacterString`, element, true);
-            return node.textContent;
+            if (node) {
+                return node.textContent;
+            }
         } else {
             let node = select('./gco:CharacterString', element, true);
             return node.textContent;

@@ -45,5 +45,18 @@
     "defaultAttribution": "GeoSeaPortal: Das Geodatenportal des BSH",
     "defaultAttributionLink": "https://www.geoseaportal.de/",
     "includeTimestamp": true
+  },
+  {
+    "importer": "DWD-CSW",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "csw_dwd",
+    "indexType": "base",
+    "alias": "mcloud",
+    "cswBaseUrl": "https://cdc.dwd.de/catalogue/srv/csw",
+    "proxy": null,
+    "defaultMcloudSubgroup": "climate",
+    "defaultAttribution": "Climate Data Centre (CDC) Katalog des Deutschen Wetterdienstes",
+    "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/csw",
+    "includeTimestamp": true
   }
 ]

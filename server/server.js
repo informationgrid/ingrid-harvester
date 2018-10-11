@@ -10,6 +10,7 @@ let // findPort = require( 'find-port' ),
     ckanIdfMapper = require( './ckan/ckan.idf.mapper' ),
     DeutscheBahnCkanImporter = require( './ckan/importer' ),
     WsvCswImporter = require( './csw/wsv-importer' ),
+    DwdCswImporter = require( './csw/dwd-importer' ),
     ExcelImporter = require( './excel/importer' );
 
 // create a server which finds a random free port
@@ -26,6 +27,7 @@ function getImporter(type) {
     if (type === 'CKAN-DB') return DeutscheBahnCkanImporter;
     if (type === 'EXCEL') return ExcelImporter;
     if (type === 'WSV-CSW') return WsvCswImporter;
+    if (type === 'DWD-CSW') return DwdCswImporter;
 }
 
 function getDateString() {
