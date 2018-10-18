@@ -6,7 +6,7 @@ class WsvImporter {
     constructor(settings) {
         let gmdEncoded = encodeURIComponent(CswUtils.GMD);
         settings.getRecordsUrlFor = function(uuid) {
-            return `${settings.cswBaseUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputSchema=${gmdEncoded}&Id=${uuid}`;
+            return `${settings.getRecordsUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputSchema=${gmdEncoded}&Id=${uuid}`;
         };
         settings.getGetRecordsPostBody = this._getGetRecordsXmlBody;
 
@@ -16,7 +16,7 @@ class WsvImporter {
         }
         settings.options_csw_search = {
             method: method,
-            uri: settings.cswBaseUrl,
+            uri: settings.getRecordsUrl,
             qs: {
                 REQUEST: "GetRecords",
                 SERVICE: "CSW",

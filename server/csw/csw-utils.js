@@ -31,7 +31,7 @@ class CswUtils {
             this.options_csw_search.proxy = settings.proxy;
         }
         if (!settings.defaultAttributionLink) {
-            this.settings.defaultAttributionLink = `${settings.cswBaseUrl}?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2`;
+            this.settings.defaultAttributionLink = `${settings.getRecordsUrl}?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2`;
         }
     }
 
@@ -75,7 +75,7 @@ class CswUtils {
                 let numReturned = resultsNode.getAttribute("numberOfRecordsReturned");
                 numMatched = resultsNode.getAttribute("numberOfRecordsMatched");
 
-                log.debug(`Received ${numReturned} records from ${this.settings.cswBaseUrl}`);
+                log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
 
                 promises.push(this.extractRecords(response, harvestTime));
             }
@@ -121,7 +121,7 @@ class CswUtils {
         });
         if (!keywords.includes('opendata')) {
             // Don't index metadata-sets without the `opendata' keyword
-            log.info(`Keyword 'opendata' not found. Item will be ignored. ID: '${uuid}', Title: '${title}', Source: '${this.settings.cswBaseUrl}'.`);
+            log.info(`Keyword 'opendata' not found. Item will be ignored. ID: '${uuid}', Title: '${title}', Source: '${this.settings.getRecordsUrl}'.`);
             return;
         }
 
@@ -232,7 +232,7 @@ class CswUtils {
         // Sanity checks
         if (!abstract) {
             let msg = "Dataset doesn't have an abstract.";
-            log.warn(`${msg} It will not be displayed in the portal. Id: '${uuid}', title: '${title}', source: '${this.settings.cswBaseUrl}'`);
+            log.warn(`${msg} It will not be displayed in the portal. Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'`);
 
             target.extras.metadata.isValid = false;
             target.extras.metadata.harvesting_errors.push(msg);
@@ -240,7 +240,7 @@ class CswUtils {
 
         if (dists.length === 0) {
             let msg = 'Dataset has no links for download/access.';
-            log.warn(`${msg} It will not be displayed in the portal. Id: '${uuid}', title: '${title}', source: '${this.settings.cswBaseUrl}'`);
+            log.warn(`${msg} It will not be displayed in the portal. Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'`);
 
             target.extras.metadata.isValid = false;
             target.extras.metadata.harvesting_errors.push(msg);
@@ -451,7 +451,7 @@ class CswUtils {
     }
 
     getErrorSuffix(uuid, title) {
-        return `Id: '${uuid}', title: '${title}', source: '${this.settings.cswBaseUrl}'.`;
+        return `Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'.`;
     }
 
     static get GMD() {
