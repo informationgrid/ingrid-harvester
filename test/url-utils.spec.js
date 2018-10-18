@@ -45,5 +45,17 @@ describe('validateUrl()', function() {
             expect(result).to.be.undefined;
         });
     });
+
+    it('should be undefined if url is empty string', function() {
+        return UrlUtils.urlWithProtocolFor('').then(result => {
+            expect(result).to.be.undefined;
+        });
+    });
+
+    it('should be undefined if url only contains whitespace', function() {
+        return UrlUtils.urlWithProtocolFor('\t\r\n').then(result => {
+            expect(result).to.be.undefined;
+        });
+    });
 });
 

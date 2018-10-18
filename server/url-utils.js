@@ -6,14 +6,16 @@ let request = require('request-promise'),
 class UrlUtils {
 
     static async urlWithProtocolFor(url) {
-        if (!url) return url;
-        if (url.includes('://')) return url;
+        if (!url && url !== '') return url;
+        if (url.trim() !== '') {
+            if (url.includes('://')) return url;
 
-        let resp = await UrlUtils._check('https', url);
-        if (resp) return resp;
+            let resp = await UrlUtils._check('https', url);
+            if (resp) return resp;
 
-        resp = await UrlUtils._check('http', url);
-        if (resp) return resp;
+            resp = await UrlUtils._check('http', url);
+            if (resp) return resp;
+        }
 
         // By doing nothing return undefined if we reach here
     }
