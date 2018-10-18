@@ -256,7 +256,9 @@ class CswUtils {
     }
 
     async extractContacts(target, record) {
-        let found = {};
+        let creators = [];
+        let publishers = [];
+        let others = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
             './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
@@ -265,7 +267,6 @@ class CswUtils {
         for (let i=0; i<queries.length; i++) {
             let contacts = select('./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty', record);
             for (let j = 0; j < contacts.length; j++) {
-                //let contact = select('./gmd:contact/gmd:CI_ResponsibleParty', record, true);
                 let contact = contacts[j];
                 let role = select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
 
@@ -280,23 +281,21 @@ class CswUtils {
                 let urlNode = select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
                 let url = urlNode ? await UrlUtils.urlWithProtocolFor(urlNode.textContent) : null;
 
-                if (!found.creator && (role === 'originator' || role === 'author')) {
+                if (role === 'originator' || role === 'author') {
                     let infos = {};
                     if (name) infos.name = name.textContent;
                     if (email) infos.mbox = email.textContent;
 
-                    target.creator = infos;
-                    found.creator = true;
-                } else if (!found.publisher && role === 'publisher') {
+                    creators.push(infos);
+                } else if (role === 'publisher') {
                     let infos = {};
 
                     if (name) infos.name = name.textContent;
-                    if (url) infos.homepage = [url];
-                    if (org) infos.organization = [org.textContent];
+                    if (url) infos.homepage = url;
+                    if (org) infos.organization = org.textContent;
 
-                    target.publisher = infos;
-                    found.publisher = true;
-                } else if (!found.other) {
+                    publishers.push(infos);
+                } else {
                     let infos = {};
 
                     if (contact.getAttribute('uuid')) {
@@ -317,11 +316,14 @@ class CswUtils {
                     if (phone) infos.hasTelephone = phone.textContent;
                     if (url) infos.hasURL = url;
 
-                    target.contactPoint = infos;
-                    found.other = true;
+                    others.push(infos);
                 }
             }
         }
+        if (creators.length > 0) target.creator = creators;
+        if (publishers.length > 0) target.publisher = publishers;
+        //if (others.length > 0) target.contactPoint = others;
+        if (others.length > 0) target.contactPoint = others[0]; // TODO index all contacts
     }
 
     extractModifiedDate(target, idInfo) {
