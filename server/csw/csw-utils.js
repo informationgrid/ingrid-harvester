@@ -3,6 +3,7 @@
 let request = require('request-promise'),
     log = require('log4js').getLogger(__filename),
     ElasticSearchUtils = require('./../elastic-utils'),
+    UrlUtils = require('./../url-utils'),
     settings = require('../elastic.settings.js'),
     mapping = require('../elastic.mapping.js'),
     Promise = require('promise'),
@@ -89,7 +90,7 @@ class CswUtils {
         let promises = [];
         let xml = new DomParser().parseFromString(getRecordsResponse, "application/xml");
         let records = xml.getElementsByTagNameNS(GMD, "MD_Metadata");
-        let ids = []
+        let ids = [];
         for (let i=0; i<records.length; i++)  {
             ids.push(this.getCharacterStringContent(records[i], "fileIdentifier"));
         }
@@ -125,7 +126,7 @@ class CswUtils {
             return;
         }
 
-        this.extractContacts(target, record); // creator, publisher, contactPoint
+        await this.extractContacts(target, record); // creator, publisher, contactPoint
         target.keywords = keywords;
         target.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
 
@@ -159,13 +160,15 @@ class CswUtils {
                 if (lowercase.match(/\bwcs\b/)) format = 'WCS';
                 if (lowercase.match(/\bwmts\b/)) format = 'WMTS';
             }
-            select('./srv:containsOperations/*/srv:connectPoint/*/gmd:linkage/gmd:URL', srvIdent).forEach(node => {
-                let url = node.textContent;
-                if (!serviceLinks.includes(url)) {
+            let urls = select('./srv:containsOperations/*/srv:connectPoint/*/gmd:linkage/gmd:URL', srvIdent);
+            for (let i=0; i<urls.length; i++) {
+                let node = urls[i];
+                let url = await UrlUtils.urlWithProtocolFor(node.textContent);
+                if (url && !serviceLinks.includes(url)) {
                     serviceLinks.push(url);
                     urlsFound.push(url);
                 }
-            });
+            }
 
             serviceLinks.forEach(url => {
                 dists.push({
@@ -175,7 +178,9 @@ class CswUtils {
             });
         }
 
-        select('./gmd:distributionInfo/gmd:MD_Distribution', record).forEach(node => {
+        let distNodes = select('./gmd:distributionInfo/gmd:MD_Distribution', record);
+        for (let i=0; i<distNodes.length; i++) {
+            let node = distNodes[i];
             let id = node.getAttribute('id');
             if (!id) id = node.getAttribute('uuid');
 
@@ -185,9 +190,12 @@ class CswUtils {
             select('.//gmd:MD_Format/gmd:name/gco:CharacterString', node).forEach(fmt => {
                 if (!formats.includes(fmt.textContent)) formats.push(fmt.textContent);
             });
-            select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/*/gmd:linkage/gmd:URL', node).forEach(url => {
-                if (!urls.includes(url.textContent)) urls.push(url.textContent);
-            });
+            let nodes = select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/*/gmd:linkage/gmd:URL', node);
+            for(let j=0; j<nodes.length; j++) {
+                let node = nodes[j];
+                let url = node ? await UrlUtils.urlWithProtocolFor(node.textContent) : null;
+                if (url && !urls.includes(url)) urls.push(url);
+            }
 
             // Combine formats in a single slash-separated string
             let format = formats.join(',');
@@ -205,10 +213,9 @@ class CswUtils {
 
                 dists.push(dist);
             });
-        });
+        }
         target.distribution = dists;
 
-        let gmdEncoded = encodeURIComponent(GMD);
         let cswLink = this.settings.getRecordsUrlFor(uuid);
         target.extras = {
             metadata: {
@@ -226,7 +233,7 @@ class CswUtils {
         };
         if (this.settings.defaultAttribution) target.extras.metadata.source.attribution = this.settings.defaultAttribution;
 
-        this.extractLicense(target.extras, idInfo, {uuid: uuid, title: title});
+        await this.extractLicense(target.extras, idInfo, {uuid: uuid, title: title});
         this.extractTemporal(target.extras, idInfo, {uuid: uuid, title: title});
 
         // Sanity checks
@@ -248,7 +255,7 @@ class CswUtils {
         await this.elastic.addDocToBulk(target, uuid);
     }
 
-    extractContacts(target, record) {
+    async extractContacts(target, record) {
         let found = {};
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
@@ -270,7 +277,8 @@ class CswUtils {
                 let postCode = select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
                 let email = select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
                 let phone = select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
-                let url = select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let urlNode = select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let url = urlNode ? await UrlUtils.urlWithProtocolFor(urlNode.textContent) : null;
 
                 if (!found.creator && (role === 'originator' || role === 'author')) {
                     let infos = {};
@@ -283,7 +291,7 @@ class CswUtils {
                     let infos = {};
 
                     if (name) infos.name = name.textContent;
-                    if (url) infos.homepage = [url.textContent];
+                    if (url) infos.homepage = [url];
                     if (org) infos.organization = [org.textContent];
 
                     target.publisher = infos;
@@ -307,7 +315,7 @@ class CswUtils {
                     if (postCode) infos['postal-code'] = postCode.textContent;
                     if (email) infos.hasEmail = email.textContent;
                     if (phone) infos.hasTelephone = phone.textContent;
-                    if (url) infos.hasURL = url.textContent;
+                    if (url) infos.hasURL = url;
 
                     target.contactPoint = infos;
                     found.other = true;
@@ -360,8 +368,8 @@ class CswUtils {
         return other;
     }
 
-    extractLicense(extras, idInfo, args) {
-        let license = this.getLicense(idInfo);
+    async extractLicense(extras, idInfo, args) {
+        let license = await this.getLicense(idInfo);
         if (license) {
             extras.license_title = license.text;
             if (license.id) extras.license_id = license.id;
@@ -376,11 +384,12 @@ class CswUtils {
         }
     }
 
-    getLicense(idInfo) {
+    async getLicense(idInfo) {
         let constraints = select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license"]', idInfo);
         if (constraints && constraints.length > 0) {
             let license = {};
-            constraints.forEach(c => {
+            for(let j=0; j<constraints.length; j++) {
+                let c = constraints[j];
                 // Search until id and url are not defined
                 let nodes = select('./gmd:otherConstraints', c);
                 for (let i = 0; i < nodes.length && (!license.id || !license.url); i++) {
@@ -394,12 +403,12 @@ class CswUtils {
                     }
                     match = text.match(/"url"\s*:\s*"([^"]+)"/);
                     if (match) {
-                        license.url = match[1];
+                        license.url = await UrlUtils.urlWithProtocolFor(match[1]);
                     } else {
                         delete license.url;
                     }
                 }
-            });
+            }
             return license;
         }
     }
