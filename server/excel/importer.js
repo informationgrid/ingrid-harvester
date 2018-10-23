@@ -2,6 +2,7 @@
 
 let log = require('log4js').getLogger(__filename),
     ElasticSearchUtils = require('./../elastic-utils'),
+    UrlUtils = require('./../url-utils'),
     mapping = require('../elastic.mapping.js'),
     settings = require('../elastic.settings.js'),
     Excel = require('exceljs'),
@@ -189,34 +190,41 @@ class ExcelImporter {
         ogdObject.distribution = [];
 
         if (columnValues[columnMap.Dateidownload]) {
-            this.addDownloadUrls(ogdObject, 'Dateidownload', columnValues[columnMap.Dateidownload]);
+            await this.addDownloadUrls(ogdObject, 'Dateidownload', columnValues[columnMap.Dateidownload]);
         }
         if (columnValues[columnMap.WMS]) {
-            this.addDownloadUrls(ogdObject, 'WMS', columnValues[columnMap.WMS]);
+            await this.addDownloadUrls(ogdObject, 'WMS', columnValues[columnMap.WMS]);
         }
         if (columnValues[columnMap.FTP]) {
-            this.addDownloadUrls(ogdObject, 'FTP', columnValues[columnMap.FTP]);
+            await this.addDownloadUrls(ogdObject, 'FTP', columnValues[columnMap.FTP]);
         }
         if (columnValues[columnMap.AtomFeed]) {
-            this.addDownloadUrls(ogdObject, 'AtomFeed', columnValues[columnMap.AtomFeed]);
+            await this.addDownloadUrls(ogdObject, 'AtomFeed', columnValues[columnMap.AtomFeed]);
         }
         if (columnValues[columnMap.Portal]) {
-            this.addDownloadUrls(ogdObject, 'Portal', columnValues[columnMap.Portal]);
+            await this.addDownloadUrls(ogdObject, 'Portal', columnValues[columnMap.Portal]);
         }
         if (columnValues[columnMap.SOS]) {
-            this.addDownloadUrls(ogdObject, 'SOS', columnValues[columnMap.SOS]);
+            await this.addDownloadUrls(ogdObject, 'SOS', columnValues[columnMap.SOS]);
         }
         if (columnValues[columnMap.WFS]) {
-            this.addDownloadUrls(ogdObject, 'WFS', columnValues[columnMap.WFS]);
+            await this.addDownloadUrls(ogdObject, 'WFS', columnValues[columnMap.WFS]);
         }
         if (columnValues[columnMap.WCS]) {
-            this.addDownloadUrls(ogdObject, 'WCS', columnValues[columnMap.WCS]);
+            await this.addDownloadUrls(ogdObject, 'WCS', columnValues[columnMap.WCS]);
         }
         if (columnValues[columnMap.WMTS]) {
-            this.addDownloadUrls(ogdObject, 'WMTS', columnValues[columnMap.WMTS]);
+            await this.addDownloadUrls(ogdObject, 'WMTS', columnValues[columnMap.WMTS]);
         }
         if (columnValues[columnMap.API]) {
-            this.addDownloadUrls(ogdObject, 'API', columnValues[columnMap.API]);
+            await this.addDownloadUrls(ogdObject, 'API', columnValues[columnMap.API]);
+        }
+
+        // Extra checks
+        if (ogdObject.distribution.length === 0) {
+            ogdObject.extras.metadata.isValid = false;
+            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${uniqueName}', title: '${title}', index: '${this.elastic.indexName}'.`;
+            log.warn(msg);
         }
 
         this.settings.mapper.forEach(mapper => mapper.run(ogdObject, doc));
@@ -291,15 +299,26 @@ class ExcelImporter {
      * @param type
      * @param urlsString
      */
-    addDownloadUrls(ogdObject, type, urlsString) {
+    async addDownloadUrls(ogdObject, type, urlsString) {
         // console.log('urlstring:', urlsString);
         let downloads = urlsString.split(',');
-        downloads.forEach( downloadUrl => {
-            ogdObject.distribution.push({
-                format: type,
-                accessURL: downloadUrl.trim()
-            });
-        });
+        for (let i=0; i<downloads.length; i++) {
+            let downloadUrl = downloads[i];
+            let checkedUrl = await UrlUtils.urlWithProtocolFor(downloadUrl);
+            if (checkedUrl) {
+                ogdObject.distribution.push({
+                    format: type,
+                    accessURL: downloadUrl.trim()
+                });
+            } else {
+                if (!ogdObject.extras.metadata.harvesting_errors) {
+                    ogdObject.extras.metadata.harvesting_errors = [];
+                }
+                let msg = `Invalid URL '${downloadUrl} found for item with id: '${ogdObject.extras.generated_id}', title: '${ogdObject.title}', index: '${this.elastic.indexName}'.`;
+                ogdObject.extras.metadata.harvesting_errors.push(msg);
+                log.warn(msg);
+            }
+        }
     }
 
     getUniqueName(baseName) {
