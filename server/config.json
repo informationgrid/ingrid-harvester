@@ -33,33 +33,6 @@
     "includeTimestamp": true
   },
   {
-    "importer": "WSV-CSW",
-    "elasticSearchUrl": "http://localhost:9200",
-    "index": "csw_bsh",
-    "indexType": "base",
-    "alias": "mcloud",
-    "getRecordsUrl": "https://www.geoseaportal.de/soapServices/CSWStartup",
-    "httpMethod": "POST",
-    "proxy": null,
-    "defaultMcloudSubgroup": "waters",
-    "defaultAttribution": "GeoSeaPortal: Das Geodatenportal des BSH",
-    "defaultAttributionLink": "https://www.geoseaportal.de/",
-    "includeTimestamp": true
-  },
-  {
-    "importer": "DWD-CSW",
-    "elasticSearchUrl": "http://localhost:9200",
-    "index": "csw_dwd",
-    "indexType": "base",
-    "alias": "mcloud",
-    "getRecordsUrl": "https://cdc.dwd.de/catalogue/srv/csw",
-    "proxy": null,
-    "defaultMcloudSubgroup": "climate",
-    "defaultAttribution": "Climate Data Centre (CDC) Katalog des Deutschen Wetterdienstes",
-    "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/csw",
-    "includeTimestamp": true,
-  },
-  {
    "importer": "MDI-CSW",
    "elasticSearchUrl": "http://localhost:9200",
    "index": "csw_mdi",
