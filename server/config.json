@@ -57,6 +57,21 @@
     "defaultMcloudSubgroup": "climate",
     "defaultAttribution": "Climate Data Centre (CDC) Katalog des Deutschen Wetterdienstes",
     "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/csw",
-    "includeTimestamp": true
+    "includeTimestamp": true,
+  },
+  {
+   "importer": "MDI-CSW",
+   "elasticSearchUrl": "http://localhost:9200",
+   "index": "csw_mdi",
+   "indexType": "base",
+   "alias": "mcloud",
+   "getRecordsUrl": "http://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecords$Post$XML",
+   "getRecordByIdUrl": "http://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecordByIdServant$Get",
+   "httpMethod": "POST",
+   "proxy": null,
+   "defaultMcloudSubgroup": "waters",
+   "defaultAttribution": "MDI-DE",
+   "defaultAttributionLink": "https://www.mdi-de.org/",
+   "includeTimestamp": true
   }
 ]

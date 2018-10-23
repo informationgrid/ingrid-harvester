@@ -11,6 +11,7 @@ let // findPort = require( 'find-port' ),
     DeutscheBahnCkanImporter = require( './ckan/importer' ),
     WsvCswImporter = require( './csw/wsv-importer' ),
     DwdCswImporter = require( './csw/dwd-importer' ),
+    MdiCswImporter = require( './csw/mdi-importer' ),
     ExcelImporter = require( './excel/importer' );
 
 // create a server which finds a random free port
@@ -28,6 +29,7 @@ function getImporter(type) {
     if (type === 'EXCEL') return ExcelImporter;
     if (type === 'WSV-CSW') return WsvCswImporter;
     if (type === 'DWD-CSW') return DwdCswImporter;
+    if (type === 'MDI-CSW') return MdiCswImporter;
 }
 
 function getDateString() {
