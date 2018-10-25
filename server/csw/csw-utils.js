@@ -326,38 +326,43 @@ class CswUtils {
     }
 
     extractAccessRights(target, idInfo) {
-        // Select 'otherConstraints' elements that have a 'useLimtation' sibling
-        let constraints = select('./*/gmd:resourceConstraints/*[./gmd:useLimitation and ./gmd:otherConstraints]', idInfo);
-        if (constraints.length > 0) {
-            target.accessRights = [];
-            constraints.forEach(c => target.accessRights.push(... this.processConstraints(c)));
+        /*
+         * For Open Data, GDI-DE expects access rights to be defined three times:
+         * - As text in useLimitation
+         * - As text in a useConstraints/otherConstraints combination
+         * - As a JSON-snippet in a useConstraints/otherConstraints combination
+         *
+         * Use limitations can also be defined as separate fields
+         * Plus access constraints can be set from the ISO codelist MD_RestrictionCode
+         *
+         * GeoDCAT-AP of the EU on the other had uses the
+         * useLimitation/accessConstraints=otherRestritions/otherConstraints
+         * combination and uses the accessRights field to store this information.
+         *
+         * We use a combination of these strategies:
+         * - Use the accessRights field like GeoDCAT-AP but store:
+         *    + all the useLimitation items
+         *    + all otherConstraints texts for useConstraints/otherConstraints
+         *      combinations that are not JSON-snippets.
+         */
+        // Extract all useLimitation texts
+        let limitations = select('./*/gmd:resourceConstraints/*/gmd:useLimitation', idInfo)
+            .map(node => this.getCharacterStringContent(node)) // Extract the text
+            .filter(text => text) // Filter out falsy items
+            .map(text => text.trim());
+
+        // Select 'otherConstraints' elements that have a 'useConstraints' sibling
+        let constraints = select('./*/gmd:resourceConstraints/*[./gmd:useConstraints and ./gmd:otherConstraints]/gmd:otherConstraints', idInfo)
+            .map(node => this.getCharacterStringContent(node)) // Extract the text
+            .filter(text => text) // Filter out null and undefined values
+            .map(text => text.trim())
+            .filter(text => text && !limitations.includes(text.trim()) && !text.match(/"url"\s*:\s*"([^"]+)"/)); // Keep non-empty (truthy) items that are not defined in useLimitations and are not a JSON-snippet
+
+        // Combine useLimitations and otherConstraints and store in accessRights
+        let accessRights = limitations.concat(constraints);
+        if (accessRights.length > 0) {
+            target.accessRights = accessRights;
         }
-    }
-
-    processConstraints(node) {
-        let use = select('./gmd:useLimitation', node,  true);
-        use = this.getCharacterStringContent(use);
-
-        let other = select('./gmd:otherConstraints', node)
-            .map(node => this.getCharacterStringContent(node));
-
-        if (use) {
-            let idx = use.indexOf(':');
-            let usePrefix = idx > 0 ? use.substring(0, idx) : use;
-            other = other.map(o => {
-                let match = o.match(/"name"\s*:\s*"([^"]+)"/);
-                if (match) {
-                    return '';
-                } else if (o.startsWith(usePrefix)) {
-                    return o;
-                } else {
-                    return `${usePrefix}: ${o}`;
-                }
-            })
-                .filter(o => o && o !== ''); // Filter out nulls and empty strings
-        }
-
-        return other;
     }
 
     async extractLicense(extras, idInfo, args) {
