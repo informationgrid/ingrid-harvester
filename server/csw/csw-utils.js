@@ -130,9 +130,8 @@ class CswUtils {
         target.keywords = keywords;
         target.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
 
-        let created = select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', record, true).textContent;
-        target.issued = created;
-        this.extractModifiedDate(target, idInfo);
+        let modified = select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', record, true).textContent;
+        target.modified = modified;
 
         // Multiple resourceMaintenance elements are allowed. If present, use the first one
         let freq = select('./*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode', idInfo);
@@ -324,15 +323,6 @@ class CswUtils {
         if (publishers.length > 0) target.publisher = publishers;
         //if (others.length > 0) target.contactPoint = others;
         if (others.length > 0) target.contactPoint = others[0]; // TODO index all contacts
-    }
-
-    extractModifiedDate(target, idInfo) {
-        let dateXpath = './*/gmd:citation/*/gmd:date/*[./gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="revision"]/gmd:date';
-        dateXpath = `${dateXpath}/gco:Date|${dateXpath}/gco:DateTime`;
-        let dt = select(dateXpath, idInfo);
-        // Multiple dates may be defined (creation, publication, revision).
-        // Just use the first found revision date
-        if (dt.length > 0) target.modified = dt[0].textContent;
     }
 
     extractAccessRights(target, idInfo) {
