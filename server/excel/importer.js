@@ -2,6 +2,7 @@
 
 let log = require('log4js').getLogger(__filename),
     ElasticSearchUtils = require('./../elastic-utils'),
+    Utils = require('./../common-utils'),
     UrlUtils = require('./../url-utils'),
     mapping = require('../elastic.mapping.js'),
     settings = require('../elastic.settings.js'),
@@ -229,6 +230,7 @@ class ExcelImporter {
 
         this.settings.mapper.forEach(mapper => mapper.run(ogdObject, doc));
 
+        Utils.setDisplayContactIn(ogdObject);
         let promise = this.elastic.addDocToBulk(doc, uniqueName);
         if (promise) return promise;
     }

@@ -228,6 +228,22 @@ module.exports = {
                     'type': 'string',
                     'index': 'not_analyzed'
                 },
+                'displayContact': {
+                    'properties': {
+                        'name': {
+                            'type': 'string',
+                            'fields': {
+                                'raw': {
+                                    'type': 'string',
+                                    'index': 'not_analyzed'
+                                }
+                            }
+                        },
+                        'url': {
+                            'type': 'string'
+                        }
+                    }
+                },
                 'license_id': {
                     'type': 'string',
                     'index': 'not_analyzed'

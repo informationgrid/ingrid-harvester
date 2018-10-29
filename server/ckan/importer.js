@@ -5,6 +5,7 @@ let request = require( 'request-promise' ),
     log = require( 'log4js' ).getLogger( __filename ),
     markdown = require('markdown').markdown,
     ElasticSearchUtils = require( './../elastic-utils' ),
+    Utils = require('./../common-utils'),
     UrlUtils = require('./../url-utils'),
     settings = require('../elastic.settings.js'),
     mapping = require( '../elastic.mapping.js' );
@@ -227,12 +228,14 @@ class DeutscheBahnCkanImporter {
             if (urlErrors.length > 0) {
                 target.extras.metadata.harvesting_errors = urlErrors;
             }
+            Utils.setDisplayContactIn(target);
 
             // Execute the mappers
             let theDoc = {};
             this.settings.mapper.forEach(mapper => {
                 mapper.run(target, theDoc);
             });
+
             let promise = this.elastic.addDocToBulk(theDoc, id);
 
             return promise ? promise : new Promise(resolve => resolve());

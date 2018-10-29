@@ -3,6 +3,7 @@
 let request = require('request-promise'),
     log = require('log4js').getLogger(__filename),
     ElasticSearchUtils = require('./../elastic-utils'),
+    Utils = require('./../common-utils'),
     UrlUtils = require('./../url-utils'),
     settings = require('../elastic.settings.js'),
     mapping = require('../elastic.mapping.js'),
@@ -198,6 +199,7 @@ class CswUtils {
 
             // Combine formats in a single slash-separated string
             let format = formats.join(',');
+            if (!format) format = "Unbekannt";
             // Filter out URLs that have already been found
             urls = urls.filter(item => !urlsFound.includes(item));
 
@@ -251,6 +253,7 @@ class CswUtils {
             target.extras.metadata.isValid = false;
             target.extras.metadata.harvesting_errors.push(msg);
         }
+        Utils.setDisplayContactIn(target);
         await this.elastic.addDocToBulk(target, uuid);
     }
 
