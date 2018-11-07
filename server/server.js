@@ -46,7 +46,12 @@ let pid = process.pid;
 let dt = getDateString();
 let deduplicationAlias = `dedupe_${dt}_${pid}`;
 
+let args = process.argv.slice(2);
+
 config.forEach( settings => {
+    // Include relevant CLI args
+    settings.dryRun = args.includes('-n') || args.includes('--dry-run');
+
     // Set the same elasticsearch alias for deduplication for all importers
     settings.deduplicationAlias = deduplicationAlias;
 

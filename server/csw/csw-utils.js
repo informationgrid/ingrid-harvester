@@ -38,11 +38,17 @@ class CswUtils {
     }
 
     async run() {
-        this.elastic.prepareIndex(mapping, settings)
-            .then(() => this.harvest())
-            .then(() => this.elastic.sendBulkData(false))
-            .then(() => this.elastic.finishIndex())
-            .catch(err => log.error("Error during CSW import", err));
+        if (this.settings.dryRun) {
+            log.debug('Dry run option enabled. Skipping index creation.');
+            await this.harvest();
+            log.debug('Skipping finalisation of index for dry run.');
+        } else {
+            this.elastic.prepareIndex(mapping, settings)
+                .then(() => this.harvest())
+                .then(() => this.elastic.sendBulkData(false))
+                .then(() => this.elastic.finishIndex())
+                .catch(err => log.error("Error during CSW import", err));
+        }
     }
 
     async harvest() {

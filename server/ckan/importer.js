@@ -246,7 +246,11 @@ class DeutscheBahnCkanImporter {
 
     async run() {
         try {
-            await this.elastic.prepareIndex(mapping, settings);
+            if (this.settings.dryRun) {
+                log.debug('Dry run option enabled. Skipping index creation.');
+            } else {
+                await this.elastic.prepareIndex(mapping, settings);
+            }
             let promises = [];
             let total = 0;
 
@@ -280,7 +284,13 @@ class DeutscheBahnCkanImporter {
                 await this.elastic.abortCurrentIndex();
             } else {
                 Promise.all(promises)
-                    .then(() => this.elastic.finishIndex())
+                    .then(() => {
+                        if (this.settings.dryRun) {
+                            log.debug('Skipping finalisation of index for dry run.');
+                        } else {
+                            this.elastic.finishIndex();
+                        }
+                    })
                     .catch(err => log.error('Error indexing data', err));
             }
         } catch (err) {
