@@ -300,7 +300,9 @@ class ExcelImporter {
      * @param urlsString
      */
     async addDownloadUrls(ogdObject, type, urlsString) {
-        // console.log('urlstring:', urlsString);
+        // Check if the cell contains just text or hyperlinked text
+        if (urlsString.text) urlsString = urlsString.text;
+
         let downloads = urlsString.split(',');
         for (let i=0; i<downloads.length; i++) {
             let downloadUrl = downloads[i];
