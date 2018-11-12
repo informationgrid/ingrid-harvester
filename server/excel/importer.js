@@ -303,7 +303,7 @@ class ExcelImporter {
         // Check if the cell contains just text or hyperlinked text
         if (urlsString.text) urlsString = urlsString.text;
 
-        let downloads = urlsString.split(',');
+        let downloads = urlsString.split(/,[\r\n]+/); // comma followed by one or more (carriage returns or newlines)
         for (let i=0; i<downloads.length; i++) {
             let downloadUrl = downloads[i];
             let checkedUrl = await UrlUtils.urlWithProtocolFor(downloadUrl);
