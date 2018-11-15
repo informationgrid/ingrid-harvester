@@ -250,6 +250,18 @@ class CswUtils {
         }
         target.distribution = dists;
 
+        let subgroups = [];
+        keywords.forEach(k => {
+            k = k.trim();
+            if (k === 'mcloud_category_roads') subgroups.push('roads');
+            if (k === 'mcloud_category_climate') subgroups.push('climate');
+            if (k === 'mcloud_category_waters') subgroups.push('waters');
+            if (k === 'mcloud_category_railway') subgroups.push('railway');
+            if (k === 'mcloud_category_infrastructure') subgroups.push('infrastructure');
+            if (k === 'mcloud_category_aviation') subgroups.push('aviation');
+        });
+        if (subgroups.length === 0) subgroups.push(this.settings.defaultMcloudSubgroup);
+
         let cswLink = this.settings.getRecordsUrlFor(uuid);
         target.extras = {
             metadata: {
@@ -262,7 +274,7 @@ class CswUtils {
                 },
                 harvesting_errors: []
             },
-            subgroups: this.settings.defaultMcloudSubgroup,
+            subgroups: subgroups,
             harvested_data: record.toString()
         };
         if (this.settings.defaultAttribution) target.extras.metadata.source.attribution = this.settings.defaultAttribution;
