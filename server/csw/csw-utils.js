@@ -35,6 +35,15 @@ class CswUtils {
         if (!settings.defaultAttributionLink) {
             this.settings.defaultAttributionLink = `${settings.getRecordsUrl}?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2`;
         }
+        if (settings.printSummary) {
+            this.summary = {
+                numMatched: 0,
+                opendata: 0,
+                missingLinks: 0,
+                missingLicense: 0,
+                ok: 0
+            };
+        }
     }
 
     async run() {
@@ -82,6 +91,7 @@ class CswUtils {
             } else {
                 let numReturned = resultsNode.getAttribute("numberOfRecordsReturned");
                 numMatched = resultsNode.getAttribute("numberOfRecordsMatched");
+                if (this.settings.printSummary) this.summary.numMatched = numMatched;
 
                 log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
 
@@ -91,6 +101,14 @@ class CswUtils {
         }
         await Promise.all(promises)
             .catch(err => log.error('Error extracting records from CSW reply', err));
+
+        if (this.settings.printSummary) {
+            log.info(`Number of matched records: ${this.summary.numMatched}`);
+            log.info(`Number of records with 'opendata' keyword: ${this.summary.opendata}`);
+            log.info(`Number of records with missing links: ${this.summary.missingLinks}`);
+            log.info(`Number of records license: ${this.summary.missingLicense}`);
+            log.info(`Number of records imported without problems: ${this.summary.ok}`);
+        }
     }
 
     async extractRecords(getRecordsResponse, harvestTime) {
@@ -101,7 +119,14 @@ class CswUtils {
         for (let i=0; i<records.length; i++)  {
             ids.push(this.getCharacterStringContent(records[i], "fileIdentifier"));
         }
-        let issued = this.elastic.getIssuedDates(ids);
+
+        let now = new Date(Date.now());
+        let issued;
+        if (this.settings.dryRun) {
+            issued = ids.map(id => now);
+        } else {
+            issued = this.elastic.getIssuedDates(ids);
+        }
         for(let i=0; i<records.length; i++) {
             promises.push(this.indexRecord(records[i], harvestTime, issued[i]));
         }
@@ -127,7 +152,9 @@ class CswUtils {
         select('.//gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', record).forEach(node => {
             keywords.push(node.textContent);
         });
-        if (!keywords.includes('opendata')) {
+        if (keywords.includes('opendata')) {
+            if (this.settings.printSummary) this.summary.opendata++;
+        } else {
             // Don't index metadata-sets without the `opendata' keyword
             log.info(`Keyword 'opendata' not found. Item will be ignored. ID: '${uuid}', Title: '${title}', Source: '${this.settings.getRecordsUrl}'.`);
             return;
@@ -254,12 +281,19 @@ class CswUtils {
 
         if (dists.length === 0) {
             let msg = 'Dataset has no links for download/access.';
+            if (this.settings.printSummary) this.summary.missingLinks++;
             log.warn(`${msg} It will not be displayed in the portal. Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'`);
 
             target.extras.metadata.isValid = false;
             target.extras.metadata.harvesting_errors.push(msg);
         }
+
         Utils.setDisplayContactIn(target);
+
+        if (target.extras.metadata.isValid !== false && dists.length > 0 && this.settings.printSummary) {
+            this.summary.ok++;
+        }
+
         await this.elastic.addDocToBulk(target, uuid);
     }
 
@@ -383,6 +417,7 @@ class CswUtils {
         }
         if (!license || !license.id) {
             let msg = 'No license detected for dataset.';
+            if (this.settings.printSummary) this.summary.missingLicense++;
             log.warn(`${msg} ${this.getErrorSuffix(args.uuid, args.title)}`);
 
             extras.license_id = 'Unbekannt';

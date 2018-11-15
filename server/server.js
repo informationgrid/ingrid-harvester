@@ -51,6 +51,7 @@ let args = process.argv.slice(2);
 config.forEach( settings => {
     // Include relevant CLI args
     settings.dryRun = args.includes('-n') || args.includes('--dry-run');
+    settings.printSummary = args.includes('--print-summary');
 
     // Set the same elasticsearch alias for deduplication for all importers
     settings.deduplicationAlias = deduplicationAlias;
