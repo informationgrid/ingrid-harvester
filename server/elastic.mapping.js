@@ -8,17 +8,18 @@ module.exports = {
                     'type': 'string',
                     'index': 'not_analyzed'
                 },
-                'bigram': {
+                'decomp_german': {
                     'type': 'string',
-                    'analyzer': 'mcloud_bigram'
+                    'analyzer': 'decomp_german',
+                    'search_analyzer': 'german_simple'
                 },
-                'trigram': {
+                'decomp_shingles': {
                     'type': 'string',
-                    'analyzer': 'mcloud_trigram'
+                    'analyzer': 'decomp_shingles'
                 },
-                'quadgram': {
+                'suggest_shingles': {
                     'type': 'string',
-                    'analyzer': 'mcloud_quadgram'
+                    'analyzer': 'suggest_shingles'
                 }
             }
         },
@@ -26,17 +27,18 @@ module.exports = {
             'type': 'string',
             'analyzer': 'decomp',
             'fields': {
-                'bigram': {
+                'decomp_german': {
                     'type': 'string',
-                    'analyzer': 'mcloud_bigram'
+                    'analyzer': 'decomp_german',
+                    'search_analyzer': 'german_simple'
                 },
-                'trigram': {
+                'decomp_shingles': {
                     'type': 'string',
-                    'analyzer': 'mcloud_trigram'
+                    'analyzer': 'decomp_shingles',
                 },
-                'quadgram': {
+                'suggest_shingles': {
                     'type': 'string',
-                    'analyzer': 'mcloud_quadgram'
+                    'analyzer': 'suggest_shingles'
                 }
             }
         },
