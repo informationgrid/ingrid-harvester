@@ -11,6 +11,7 @@ let // findPort = require( 'find-port' ),
     DeutscheBahnCkanImporter = require( './ckan/importer' ),
     WsvCswImporter = require( './csw/wsv-importer' ),
     DwdCswImporter = require( './csw/dwd-importer' ),
+    BfgCswImporter = require( './csw/bfg-importer' ),
     MdiCswImporter = require( './csw/mdi-importer' ),
     ExcelImporter = require( './excel/importer' );
 
@@ -29,6 +30,7 @@ function getImporter(type) {
     if (type === 'EXCEL') return ExcelImporter;
     if (type === 'WSV-CSW') return WsvCswImporter;
     if (type === 'DWD-CSW') return DwdCswImporter;
+    if (type === 'BFG-CSW') return BfgCswImporter;
     if (type === 'MDI-CSW') return MdiCswImporter;
 }
 

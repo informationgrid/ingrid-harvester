@@ -46,5 +46,18 @@
    "defaultAttribution": "MDI-DE",
    "defaultAttributionLink": "https://www.mdi-de.org/",
    "includeTimestamp": true
+  },
+  {
+    "importer": "BFG-CSW",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "csw_bfg",
+    "indexType": "base",
+    "alias": "mcloud",
+    "getRecordsUrl": "https://geoportal.bafg.de/soapServices/CSWStartup",
+    "proxy": null,
+    "defaultMcloudSubgroup": "waters",
+    "defaultAttribution": "Bundesanstalt für Gewässerkunde",
+    "defaultAttributionLink": "https://www.bafg.de/",
+    "includeTimestamp": true
   }
 ]
