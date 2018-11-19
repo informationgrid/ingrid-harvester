@@ -496,8 +496,10 @@ class CswUtils {
         }
 
         nodes = select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', idInfo);
-        if (nodes.length === 1) {
-        } else if (nodes.length > 1) {
+        if (nodes.length > 1) {
+            log.warn(`Multiple time extents defined. Using only the first one. ${suffix}`);
+        }
+        if (nodes.length > 0) {
             let begin = select('./gml:beginPosition', nodes[0], true);
             let end = select('./gml:endPosition', nodes[0], true);
             if (!begin) {
@@ -507,14 +509,17 @@ class CswUtils {
                 end = select('./gml:end/*/gml:timePosition', nodes[0], true);
             }
             try {
-                begin = begin.textContent;
-                end = end.textContent;
-                extras.temporal_begin = begin;
-                extras.temporal_end = end;
+                if (!begin.hasAttribute('indeterminatePosition')) {
+                    begin = begin.textContent;
+                    extras.temporal_begin = begin;
+                }
+                if (!end.hasAttribute('indeterminatePosition')) {
+                    end = end.textContent;
+                    extras.temporal_end = end;
+                }
             } catch (e) {
                 log.error(`Cannot extract time range. ${suffix}`);
             }
-            log.warn(`Multiple time extents defined. Using only the first one. ${suffix}`);
         }
     }
 
