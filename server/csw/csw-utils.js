@@ -488,7 +488,7 @@ class CswUtils {
         let suffix = this.getErrorSuffix(args.uuid, args.title);
         let nodes = select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimeInstant/gml:timePosition', idInfo);
         let times = nodes.map(node => node.textContent);
-        if (times.length == 1) {
+        if (times.length === 1) {
             extras.temporal = times[0];
         } else if (times.length > 1) {
             log.warn(`Multiple time instants defined: [${times.join(", ")}]. ${suffix}`);
@@ -496,7 +496,7 @@ class CswUtils {
         }
 
         nodes = select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', idInfo);
-        if (nodes.length == 1) {
+        if (nodes.length === 1) {
         } else if (nodes.length > 1) {
             let begin = select('./gml:beginPosition', nodes[0], true);
             let end = select('./gml:endPosition', nodes[0], true);
@@ -536,26 +536,6 @@ class CswUtils {
 
     static get GMD() {
         return GMD;
-    }
-
-    _getGetRecordsXmlBody() {
-        return `<?xml version="1.0" encoding="UTF-8"?>
-<GetRecords xmlns="http://www.opengis.net/cat/csw/2.0.2"
-            xmlns:gmd="http://www.isotc211.org/2005/gmd"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
-
-            service="CSW"
-            version="2.0.2"
-            resultType="results"
-            outputFormat="application/xml"
-            outputSchema="http://www.isotc211.org/2005/gmd"
-            startPosition="1"
-            maxRecords="10">
-    <Query typeNames="gmd:MD_Metadata">
-        <ElementSetName typeNames="">full</ElementSetName>
-    </Query>
-</GetRecords>`;
     }
 }
 
