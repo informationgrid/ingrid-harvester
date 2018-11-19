@@ -263,6 +263,7 @@ class CswUtils {
         if (subgroups.length === 0) subgroups.push(this.settings.defaultMcloudSubgroup);
 
         let cswLink = this.settings.getRecordsUrlFor(uuid);
+        let existingExtras = target.extras;
         target.extras = {
             metadata: {
                 harvested: harvestTime,
@@ -277,6 +278,7 @@ class CswUtils {
             subgroups: subgroups,
             harvested_data: record.toString()
         };
+        if (existingExtras.creators) target.extras.creators = existingExtras.creators;
         if (this.settings.defaultAttribution) target.extras.metadata.source.attribution = this.settings.defaultAttribution;
 
         await this.extractLicense(target.extras, idInfo, {uuid: uuid, title: title});
@@ -310,6 +312,9 @@ class CswUtils {
     }
 
     async extractContacts(target, record) {
+        target.extras = {
+            creators: []
+        };
         let creators = [];
         let publishers = [];
         let others = [];
@@ -335,12 +340,25 @@ class CswUtils {
                 let urlNode = select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
                 let url = urlNode ? await UrlUtils.urlWithProtocolFor(urlNode.textContent) : null;
 
+
                 if (role === 'originator' || role === 'author') {
                     let infos = {};
                     if (name) infos.name = name.textContent;
                     if (email) infos.mbox = email.textContent;
 
                     creators.push(infos);
+
+                    /*
+                     * foaf:Person and foaf:Organization are disjoint classes.
+                     * Also there are no URL fields for organizations. Use the
+                     * extras section to store this information temporarily.
+                     */
+                    let c = {};
+                    if (name) c.fullName = name.textContent;
+                    if (org) c.organisationName = org.textContent;
+                    if (url) c.homepage = url;
+
+                    target.extras.creators.push(c);
                 } else if (role === 'publisher') {
                     let infos = {};
 

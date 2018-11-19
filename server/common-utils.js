@@ -34,6 +34,20 @@ class Utils {
             if (item.publisher[0].homepage) {
                 contact.url = item.publisher[0].homepage;
             }
+        } else if (item.extras.creators && item.extras.creators[0]) {
+            let creator = item.extras.creators[0];
+            if (creator.organisationName) {
+                contact.name = creator.organisationName;
+            } else if (creator.name) {
+                contact.name = creator.name;
+            }
+
+            if (creator.homepage) {
+                contact.url = creator.homepage;
+            }
+
+            // This information is no longer needed
+            delete item.extras.creators;
         } else if (item.creator && item.creator[0]) {
             if (item.creator[0].name) {
                 contact.name = item.creator[0].name;
