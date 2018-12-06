@@ -287,6 +287,15 @@ module.exports = {
                     'type': 'string',
                     'index': 'not_analyzed'
                 },
+                'mfund_project_title': {
+                    'type': 'string',
+                    'fields': {
+                        'raw': {
+                            'type': 'string',
+                            'index': 'not_analyzed'
+                        }
+                    }
+                },
                 'subsection': {
                     'properties': {
                         'title': {
