@@ -161,7 +161,7 @@ class CswUtils {
         }
 
         await this.extractContacts(target, record); // creator, publisher, contactPoint
-        target.keywords = keywords;
+        target.keywords = keywords; // TODO should special keywords (mcloud categories, mfund-fkz, etc.) be excluded?
         target.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
 
         let modified = select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', record, true).textContent;
@@ -279,6 +279,22 @@ class CswUtils {
             harvested_data: record.toString()
         };
         if (existingExtras.creators) target.extras.creators = existingExtras.creators;
+
+        // Detect mFund properties
+        keywords.forEach(kw => {
+            let kwLower = kw.toLowerCase();
+            if (kwLower.startsWith('mfund-fkz:')) {
+                let idx = kw.indexOf(':');
+                let fkz = kw.substr(idx+1);
+
+                if (fkz) target.extras.mfund_fkz = fkz.trim();
+            } else if (kwLower.startsWith('mfund-projekt:')) {
+                let idx = kw.indexOf(':');
+                let mfName = kw.substr(idx+1);
+
+                if (mfName) target.extras.mfund_project_title = mfName.trim();
+            }
+        });
         if (this.settings.defaultAttribution) target.extras.metadata.source.attribution = this.settings.defaultAttribution;
 
         await this.extractLicense(target.extras, idInfo, {uuid: uuid, title: title});
