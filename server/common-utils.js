@@ -28,7 +28,7 @@ class Utils {
             if (item.publisher[0].organization) {
                 contact.name = item.publisher[0].organization;
             } else if (item.publisher[0].name) {
-                contact.name = item.publisher[0].organization;
+                contact.name = item.publisher[0].name;
             }
 
             if (item.publisher[0].homepage) {
