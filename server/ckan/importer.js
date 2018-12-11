@@ -228,7 +228,7 @@ class DeutscheBahnCkanImporter {
             if (urlErrors.length > 0) {
                 target.extras.metadata.harvesting_errors = urlErrors;
             }
-            Utils.setDisplayContactIn(target);
+            Util.postProcess(target);
 
             // Execute the mappers
             let theDoc = {};

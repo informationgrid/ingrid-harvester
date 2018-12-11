@@ -289,6 +289,7 @@ module.exports = {
                 },
                 'mfund_project_title': {
                     'type': 'string',
+                    'analyzer': 'decomp',
                     'fields': {
                         'raw': {
                             'type': 'string',
@@ -307,6 +308,10 @@ module.exports = {
                             'analyzer': 'decomp'
                         }
                     }
+                },
+                'all': {
+                    'type': 'string',
+                    'analyzer': 'decomp'
                 }
             }
         }

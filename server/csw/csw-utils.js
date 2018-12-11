@@ -318,7 +318,7 @@ class CswUtils {
             target.extras.metadata.harvesting_errors.push(msg);
         }
 
-        Utils.setDisplayContactIn(target);
+        Utils.postProcess(target);
 
         if (target.extras.metadata.isValid !== false && dists.length > 0 && this.settings.printSummary) {
             this.summary.ok++;

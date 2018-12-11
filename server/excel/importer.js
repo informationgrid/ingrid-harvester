@@ -240,7 +240,7 @@ class ExcelImporter {
 
         this.settings.mapper.forEach(mapper => mapper.run(ogdObject, doc));
 
-        Utils.setDisplayContactIn(ogdObject);
+        Utils.postProcess(ogdObject);
         let promise = this.elastic.addDocToBulk(doc, uniqueName);
         if (promise) return promise;
     }
