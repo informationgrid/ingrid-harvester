@@ -53,7 +53,8 @@ class ExcelImporter {
             'Lizenzlink': 26,
             'DatenhaltendeStelleLang': 27,
             'DatenhaltendeStelleLink': 28,
-            'mFundFoerderkennzeichen': 30
+            'mFundFoerderkennzeichen': 30,
+            'mFundProjekt': 31
         };
 
         let workbook = new Excel.Workbook();
@@ -180,12 +181,15 @@ class ExcelImporter {
 
         let mfundFkz = columnValues[columnMap.mFundFoerderkennzeichen];
         if (mfundFkz.formula || mfundFkz.sharedFormula) {
-            let mfundFkzResult = mfundFkz.result;
-            ogdObject.extras.mfund_fkz = mfundFkzResult ? mfundFkzResult : '0';
-
-        } else {
-            ogdObject.extras.mfund_fkz = mfundFkz;
+            mfundFkz = mfundFkz.result;
         }
+        ogdObject.extras.mfund_fkz = mfundFkz && mfundFkz.length > 0 ? mfundFkz : null;
+
+        let mfundProject = columnValues[columnMap.mFundProjekt];
+        if (mfundProject.formula || mfundProject.sharedFormula) {
+            mfundProject = mfundProject.result;
+        }
+        ogdObject.extras.mfund_project_title = mfundProject && mfundProject.length > 0 ? mfundProject : null;;
 
         ogdObject.distribution = [];
 
