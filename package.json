@@ -21,7 +21,8 @@
     "markdown": "^0.5.0",
     "promise": "^7.3.1",
     "request": "^2.83.0",
-    "xml-js": "^1.6.4"
+    "xmldom": "^0.1.27",
+    "xpath": "0.0.27"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

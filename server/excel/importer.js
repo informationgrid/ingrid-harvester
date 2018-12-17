@@ -2,6 +2,7 @@
 
 let log = require('log4js').getLogger(__filename),
     ElasticSearchUtils = require('./../elastic-utils'),
+    Utils = require('./../common-utils'),
     UrlUtils = require('./../url-utils'),
     mapping = require('../elastic.mapping.js'),
     settings = require('../elastic.settings.js'),
@@ -62,8 +63,12 @@ class ExcelImporter {
 
         let promises = [];
         try {
-            await elastic.prepareIndex(mapping, settings)
-            await workbook.xlsx.readFile(this.excelFilepath)
+            if (this.settings.dryRun) {
+                log.debug('Dry run option enabled. Skipping index creation.');
+            } else {
+                await elastic.prepareIndex(mapping, settings);
+            }
+            await workbook.xlsx.readFile(this.excelFilepath);
 
             log.debug('done loading file');
 
@@ -112,7 +117,13 @@ class ExcelImporter {
                 }));
             });
             Promise.all(promises)
-                .then(() => elastic.finishIndex())
+                .then(() => {
+                    if (this.settings.dryRun) {
+                        log.debug('Skipping finalisation of index for dry run.');
+                    } else {
+                        elastic.finishIndex();
+                    }
+                })
                 .catch(err => log.error('Error importing excel row', err));
         } catch(error) {
             log.error("Error reading excel workbook\n", error);
@@ -233,6 +244,7 @@ class ExcelImporter {
 
         this.settings.mapper.forEach(mapper => mapper.run(ogdObject, doc));
 
+        Utils.postProcess(ogdObject);
         let promise = this.elastic.addDocToBulk(doc, uniqueName);
         if (promise) return promise;
     }

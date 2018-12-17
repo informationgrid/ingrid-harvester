@@ -85,6 +85,55 @@ module.exports = {
                 }
             }
         },
+        'contactPoint': {
+            'properties': {
+                'hasUID': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'fn': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'organization-name': {
+                    'type': 'string',
+                    'fields': {
+                        'raw': {
+                            'type': 'string',
+                            'index': 'not_analyzed'
+                        }
+                    }
+                },
+                'street-address': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'region': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'country-name': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'postal-code': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'hasEmail': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'hasTelephone': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                },
+                'hasURL': {
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                }
+            }
+        },
         'type': {
             'type': 'string',
             'index': 'not_analyzed'
@@ -167,12 +216,35 @@ module.exports = {
                                     'index': 'not_analyzed'
                                 }
                             }
+                        },
+                        'isValid': {
+                            'type': 'boolean',
+                            'null_value': true
+                        },
+                        'harvesting_errors': {
+                            'type': 'string'
                         }
                     }
                 },
                 'generated_id': {
                     'type': 'string',
                     'index': 'not_analyzed'
+                },
+                'displayContact': {
+                    'properties': {
+                        'name': {
+                            'type': 'string',
+                            'fields': {
+                                'raw': {
+                                    'type': 'string',
+                                    'index': 'not_analyzed'
+                                }
+                            }
+                        },
+                        'url': {
+                            'type': 'string'
+                        }
+                    }
                 },
                 'license_id': {
                     'type': 'string',
@@ -225,6 +297,16 @@ module.exports = {
                     'type': 'string',
                     'index': 'not_analyzed'
                 },
+                'mfund_project_title': {
+                    'type': 'string',
+                    'analyzer': 'decomp',
+                    'fields': {
+                        'raw': {
+                            'type': 'string',
+                            'index': 'not_analyzed'
+                        }
+                    }
+                },
                 'subsection': {
                     'properties': {
                         'title': {
@@ -236,6 +318,10 @@ module.exports = {
                             'analyzer': 'decomp'
                         }
                     }
+                },
+                'all': {
+                    'type': 'string',
+                    'analyzer': 'decomp'
                 }
             }
         }

@@ -9,6 +9,10 @@ let // findPort = require( 'find-port' ),
     ckanDefaultMapper = require( './ckan/ckan.mapper' ),
     ckanIdfMapper = require( './ckan/ckan.idf.mapper' ),
     DeutscheBahnCkanImporter = require( './ckan/importer' ),
+    WsvCswImporter = require( './csw/wsv-importer' ),
+    DwdCswImporter = require( './csw/dwd-importer' ),
+    BfgCswImporter = require( './csw/bfg-importer' ),
+    MdiCswImporter = require( './csw/mdi-importer' ),
     ExcelImporter = require( './excel/importer' );
 
 // create a server which finds a random free port
@@ -24,6 +28,10 @@ let // findPort = require( 'find-port' ),
 function getImporter(type) {
     if (type === 'CKAN-DB') return DeutscheBahnCkanImporter;
     if (type === 'EXCEL') return ExcelImporter;
+    if (type === 'WSV-CSW') return WsvCswImporter;
+    if (type === 'DWD-CSW') return DwdCswImporter;
+    if (type === 'BFG-CSW') return BfgCswImporter;
+    if (type === 'MDI-CSW') return MdiCswImporter;
 }
 
 function getDateString() {
@@ -40,7 +48,13 @@ let pid = process.pid;
 let dt = getDateString();
 let deduplicationAlias = `dedupe_${dt}_${pid}`;
 
+let args = process.argv.slice(2);
+
 config.forEach( settings => {
+    // Include relevant CLI args
+    settings.dryRun = args.includes('-n') || args.includes('--dry-run');
+    settings.printSummary = args.includes('--print-summary');
+
     // Set the same elasticsearch alias for deduplication for all importers
     settings.deduplicationAlias = deduplicationAlias;
 
