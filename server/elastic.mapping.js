@@ -34,7 +34,7 @@ module.exports = {
                 },
                 'decomp_shingles': {
                     'type': 'string',
-                    'analyzer': 'decomp_shingles',
+                    'analyzer': 'decomp_shingles'
                 },
                 'suggest_shingles': {
                     'type': 'string',
@@ -176,11 +176,21 @@ module.exports = {
                 },
                 'license_id': {
                     'type': 'string',
-                    'index': 'not_analyzed'
+                    'index': 'not_analyzed',
+                    'fields': {
+                        'analyzed': {
+                            'type': 'string'
+                        }
+                    }
                 },
                 'license_title': {
                     'type': 'string',
-                    'index': 'not_analyzed'
+                    'index': 'not_analyzed',
+                    'fields': {
+                        'analyzed': {
+                            'type': 'string'
+                        }
+                    }
                 },
                 'license_url': {
                     'type': 'string',
