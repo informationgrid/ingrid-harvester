@@ -69,19 +69,17 @@ class Utils {
      * @private
      */
     static _addIndexTerms(item) {
-        let catchAll = [];
-        if (item.keywords) {
-            item.keywords.forEach(kw => catchAll.push(kw));
-        }
-        if (item.extras && item.extras.mfund_fkz) {
-            catchAll.push(item.extras.mfund_fkz);
-        }
-
+        // Make sure that the pokemon item exists (catch 'em all)
         if (!item.extras) item.extras = {};
-        if (!item.extras.all) {
-            item.extras.all = catchAll;
-        } else {
-            catchAll.forEach(e => item.extras.all.push(e));
+        if (!item.extras.all) item.extras.all = [];
+
+        // Add
+        if (item.keywords) {
+            item.keywords.forEach(kw => item.extras.all.push(kw));
+        }
+        if (item.extras.mfund_fkz) { // mfund_fkz exists and isn't zero (falsy)
+            item.extras.all.push(item.extras.mfund_fkz);
+            item.extras.all.push('mFUND'); // Add an additional keyword as aid for search
         }
     }
 }
