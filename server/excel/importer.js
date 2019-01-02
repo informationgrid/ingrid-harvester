@@ -126,7 +126,7 @@ class ExcelImporter {
                 })
                 .catch(err => log.error('Error importing excel row', err));
         } catch(error) {
-            log.error("Error reading excel workbook\n", error);
+            log.error('Error reading excel workbook', error);
         }
     }
 
@@ -145,7 +145,7 @@ class ExcelImporter {
 
         const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
 
-        log.debug("Processing excel dataset with title : " + columnValues[columnMap.Daten]);
+        log.debug('Processing excel dataset with title : ' + columnValues[columnMap.Daten]);
 
         let ogdObject = {};
         let doc = {};
@@ -154,16 +154,24 @@ class ExcelImporter {
 
         let title = columnValues[columnMap.Daten];
         ogdObject.title = title.trim(); // Remove leading and trailing whitspace
+        ogdObject.extras = {};
 
         const publisherAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
         const publishers = this.getPublishers(workbook.getWorksheet(2), publisherAbbreviations);
         const license = this.getLicense(workbook.getWorksheet(3), columnValues[columnMap.Lizenz]);
 
-        if (publishers.length > 0) ogdObject.publisher = publishers;
+        if (publishers.length > 0) {
+            ogdObject.publisher = publishers;
+            // also add publisher under display contact which is used for facets
+            ogdObject.extras.displayContact = {
+                name: publishers[0].organization,
+                url: publishers[0].homepage
+            };
+        }
+
         ogdObject.description = columnValues[columnMap.Kurzbeschreibung];
         ogdObject.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
 
-        ogdObject.extras = {};
         ogdObject.extras.metadata = {};
         if (dateMetaUpdate) {
             ogdObject.modified = dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
@@ -200,7 +208,7 @@ class ExcelImporter {
         if (mfundProject && (mfundProject.formula || mfundProject.sharedFormula)) {
             mfundProject = mfundProject.result;
         }
-        ogdObject.extras.mfund_project_title = mfundProject && mfundProject.length > 0 ? mfundProject : null;;
+        ogdObject.extras.mfund_project_title = mfundProject && mfundProject.length > 0 ? mfundProject : null;
 
         ogdObject.distribution = [];
 
@@ -279,7 +287,7 @@ class ExcelImporter {
                     publishers.push({
                         organization: row.values[2],
                         homepage: row.values[4]
-                    })
+                    });
                     found = true;
                     break;
                 }
