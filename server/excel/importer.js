@@ -162,11 +162,6 @@ class ExcelImporter {
 
         if (publishers.length > 0) {
             ogdObject.publisher = publishers;
-            // also add publisher under display contact which is used for facets
-            ogdObject.extras.displayContact = {
-                name: publishers[0].organization,
-                url: publishers[0].homepage
-            };
         }
 
         ogdObject.description = columnValues[columnMap.Kurzbeschreibung];
@@ -252,7 +247,19 @@ class ExcelImporter {
 
         this.settings.mapper.forEach(mapper => mapper.run(ogdObject, doc));
 
+        // add displayContact and a summary index field
         Utils.postProcess(ogdObject);
+
+        // modify displayContact
+        // add all publisher under display contact which is used for facets
+        ogdObject.extras.displayContact = [];
+        publishers.forEach( p => {
+            ogdObject.extras.displayContact.push({
+                name: p.organization,
+                url: p.homepage
+            });
+        });
+
         let promise = this.elastic.addDocToBulk(doc, uniqueName);
         if (promise) return promise;
     }
