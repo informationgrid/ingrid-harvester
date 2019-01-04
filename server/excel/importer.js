@@ -110,8 +110,9 @@ class ExcelImporter {
             let ids = workUnits.map(unit => unit.id);
             let timestamps = await this.elastic.getIssuedDates(ids);
 
-            workUnits.forEach(async (unit, idx) => {
-                var doc = await IndexDocument.create(new ExcelMapper({
+            // Attention: forEach does not work with async/await! using Promise.all for sequence
+            await Promise.all(workUnits.map(async (unit, idx) => {
+                let doc = await IndexDocument.create(new ExcelMapper({
                     id: unit.id,
                     columnValues: unit.columnValues,
                     issued: timestamps[idx],
@@ -127,12 +128,14 @@ class ExcelImporter {
                 if (promise) {
                     promises.push(promise);
                 }
-            });
+            }));
+            log.debug('Waiting for #promises to finish: ' + promises.length);
             Promise.all(promises)
                 .then(() => {
                     if (this.settings.dryRun) {
                         log.debug('Skipping finalisation of index for dry run.');
                     } else {
+                        log.debug('All promises finished ... continue');
                         elastic.finishIndex();
                     }
                 })
