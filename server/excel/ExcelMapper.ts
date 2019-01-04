@@ -1,4 +1,3 @@
-'use strict';
 //const GenericMapper = require('../model/GenericMapper');
 const log = require('log4js').getLogger(__filename),
     UrlUtils = require('./../url-utils');
@@ -44,7 +43,8 @@ class GenericMapper {
     /**
      * @abstract
      */
-    async getDistributions() {
+    async getDistributions(): Promise<any[]> {
+        return Promise.resolve([]);
     }
 
     /**
@@ -153,7 +153,14 @@ module.exports = GenericMapper;
  * @type {module.ExcelMapper}
  * // @extends GenericMapper
  */
-module.exports = class ExcelMapper extends GenericMapper {
+export class ExcelMapper extends GenericMapper {
+
+    data;
+    id;
+    issuedExisting;
+    columnValues;
+    columnMap;
+    workbook;
 
     constructor(data) {
         super();
@@ -175,7 +182,7 @@ module.exports = class ExcelMapper extends GenericMapper {
 
     getPublisher() {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
-        const publishers = this._getPublishers(this.data.workbook.getWorksheet(2), publisherAbbreviations);
+        const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
         return publishers.map( p => this.createPublisher(p.name, p.url));
     }
@@ -204,12 +211,12 @@ module.exports = class ExcelMapper extends GenericMapper {
     }
 
     getLicenseId() {
-        const license = this.getLicense(this.data.workbook.getWorksheet(3), this.columnValues[this.columnMap.Lizenz]);
+        const license = this.getLicense(this.workbook.getWorksheet(3), this.columnValues[this.columnMap.Lizenz]);
         return license.description;
     }
 
     getLicenseURL() {
-        const license = this.getLicense(this.data.workbook.getWorksheet(3), this.columnValues[this.columnMap.Lizenz]);
+        const license = this.getLicense(this.workbook.getWorksheet(3), this.columnValues[this.columnMap.Lizenz]);
         return license.link;
     }
 
@@ -249,7 +256,7 @@ module.exports = class ExcelMapper extends GenericMapper {
 
     getDisplayContacts() {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
-        const publishers = this._getPublishers(this.data.workbook.getWorksheet(2), publisherAbbreviations);
+        const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
         return publishers.map( p => this.createDisplayContact(p.name, p.url));
     }
@@ -307,7 +314,6 @@ module.exports = class ExcelMapper extends GenericMapper {
 
     /**
      * Split download urls and add each one to the resource.
-     * @param ogdObject
      * @param type
      * @param urlsString
      */
@@ -378,4 +384,4 @@ module.exports = class ExcelMapper extends GenericMapper {
         log.warn('Could not find abbreviation of "License": ' + licenseId);
     }
 
-};
+}

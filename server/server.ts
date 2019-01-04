@@ -1,8 +1,20 @@
-'use strict';
+import {ExcelImporter} from './excel/importer';
 
+const config = [
+    {
+        "importer": "EXCEL",
+        "elasticSearchUrl": "http://localhost:9200",
+        "index": "excel",
+        "indexType": "base",
+        "alias": "mcloud",
+        "filePath": "./FinaleImportExcel_v25_ohne_DB-Daten.xlsx",
+        "includeTimestamp": true
+    }
+];
+
+/*
 let // findPort = require( 'find-port' ),
     log = require( 'log4js' ).getLogger( __filename ),
-    config = require( './config.json' ),
     process = require('process'),
     excelDefaultMapper = require( './excel/excel.mapper' ),
     excelIdfMapper = require( './excel/excel.idf.mapper' ),
@@ -12,8 +24,9 @@ let // findPort = require( 'find-port' ),
     WsvCswImporter = require( './csw/wsv-importer' ),
     DwdCswImporter = require( './csw/dwd-importer' ),
     BfgCswImporter = require( './csw/bfg-importer' ),
-    MdiCswImporter = require( './csw/mdi-importer' ),
-    ExcelImporter = require( './excel/importer' );
+    MdiCswImporter = require( './csw/mdi-importer' );
+*/
+
 
 // create a server which finds a random free port
 // scan a range
@@ -25,7 +38,7 @@ let // findPort = require( 'find-port' ),
 
 // listen for incoming messages, which can be "import" with parameter <type>
 
-function getImporter(type) {
+/*function getImporter(type) {
     if (type === 'CKAN-DB') return DeutscheBahnCkanImporter;
     if (type === 'EXCEL') return ExcelImporter;
     if (type === 'WSV-CSW') return WsvCswImporter;
@@ -48,11 +61,11 @@ let pid = process.pid;
 let dt = getDateString();
 let deduplicationAlias = `dedupe_${dt}_${pid}`;
 
-let args = process.argv.slice(2);
+let args = process.argv.slice(2);*/
 
 config.forEach( settings => {
     // Include relevant CLI args
-    settings.dryRun = args.includes('-n') || args.includes('--dry-run');
+    /*settings.dryRun = args.includes('-n') || args.includes('--dry-run');
     settings.printSummary = args.includes('--print-summary');
 
     // Set the same elasticsearch alias for deduplication for all importers
@@ -72,5 +85,6 @@ config.forEach( settings => {
     }
 
     let importer = new importerClass( settings );
-    importer.run();
+    importer.run();*/
+    new ExcelImporter(settings).run();
 } );

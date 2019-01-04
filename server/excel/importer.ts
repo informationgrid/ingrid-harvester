@@ -1,23 +1,30 @@
-'use strict';
-
+import {IndexDocument} from '../model/model';
+import {ElasticSearchUtils} from '../elastic-utils';
+import {ExcelMapper} from "./ExcelMapper";
+import Excel = require('exceljs');
 
 let log = require('log4js').getLogger(__filename),
-    ElasticSearchUtils = require('./../elastic-utils'),
+    //ElasticSearchUtils = require('../elastic-utils'),
     Utils = require('./../common-utils'),
     mapping = require('../elastic.mapping.js'),
-    settings = require('../elastic.settings.js'),
-    Excel = require('exceljs'),
-    IndexDocument = require('../model/model'),
-    ExcelMapper = require('./ExcelMapper'),
-    Promise = require('promise');
+    settings = require('../elastic.settings.js')
+    // Excel = require('exceljs'),
+    //IndexDocument = require('../model/model'),
+    //ExcelMapper = require('./ExcelMapper');//,
+    //Promise = require('promise');
 
-class ExcelImporter {
+export class ExcelImporter {
+
+    settings;
+    elastic;
+    excelFilepath;
+    names;
 
     /**
      * Create the importer and initialize with settings.
      * @param { {filePath, mapper} }settings
      */
-    constructor(settings) {
+    constructor(settings: { filePath; mapper; }) {
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
         this.excelFilepath = settings.filePath;
@@ -151,7 +158,7 @@ class ExcelImporter {
      * @param args {getUniqueName, issuedExisting, workbook, columnMap, columnValues}
      * @returns {Promise<void>}
      */
-    async importSingleRow(args) {
+    /*async importSingleRow(args) {
         let uniqueName = args.id;
         let issuedExisting = args.issued;
         let columnValues = args.columnValues;
@@ -162,7 +169,7 @@ class ExcelImporter {
 
         log.debug('Processing excel dataset with title : ' + columnValues[columnMap.Daten]);
 
-        let ogdObject = {};
+        let ogdObject: any = {};
         let doc = {};
 
         const dateMetaUpdate = columnValues[columnMap.Aktualisierungsdatum];
@@ -277,7 +284,7 @@ class ExcelImporter {
 
         let promise = this.elastic.addDocToBulk(doc, uniqueName);
         if (promise) return promise;
-    }
+    }*/
 
     getUniqueName(baseName) {
         let newName = baseName.replace(/[^a-zA-Z0-9-_]+/g, '').toLowerCase().substring(0, 98);
@@ -294,4 +301,4 @@ class ExcelImporter {
     }
 }
 
-module.exports = ExcelImporter;
+// export default ExcelImporter;

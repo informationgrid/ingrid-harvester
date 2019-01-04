@@ -1,4 +1,4 @@
-module.exports = class GenericMapper {
+export class GenericMapper {
 
     /**
      * @abstract
@@ -15,4 +15,4 @@ module.exports = class GenericMapper {
      */
     getPublisher() {}
 
-};
+}

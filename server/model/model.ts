@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = class IndexDocument {
+export class IndexDocument {
 
     /**
      *
@@ -35,4 +33,4 @@ module.exports = class IndexDocument {
             }
         };
     }
-};
+}

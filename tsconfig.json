@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "allowJs": true,
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["es2018", "dom", "es2015.promise"],
+    "noImplicitAny": false,
+    "strict": false
+  },
+  "include": [
+    "./server/**/*"
+  ]
+}

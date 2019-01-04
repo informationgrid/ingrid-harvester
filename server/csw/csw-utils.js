@@ -2,7 +2,7 @@
 
 let request = require('request-promise'),
     log = require('log4js').getLogger(__filename),
-    ElasticSearchUtils = require('./../elastic-utils'),
+    ElasticSearchUtils = require('../elastic-utils'),
     Utils = require('./../common-utils'),
     UrlUtils = require('./../url-utils'),
     settings = require('../elastic.settings.js'),

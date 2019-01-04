@@ -1,10 +1,15 @@
-'use strict';
-
 let elasticsearch = require('elasticsearch'),
-    log = require('log4js').getLogger(__filename),
-    Promise = require('promise');
+    log = require('log4js').getLogger(__filename);
 
-class ElasticSearchUtils {
+export class ElasticSearchUtils {
+
+    settings;
+    client;
+    _bulkData;
+    duplicateStaging;
+    maxBulkSize;
+    indexName;
+    deduplicationAlias;
 
     constructor(settings) {
         this.settings = settings;
@@ -256,7 +261,7 @@ class ElasticSearchUtils {
      *
      * @param {boolean=} closeAfterBulk
      */
-    sendBulkData(closeAfterBulk) {
+    sendBulkData(closeAfterBulk?) {
         if (this._bulkData.length > 0) {
             log.debug('Sending BULK message with ' + this._bulkData.length + ' items to index ' + this.indexName);
             let promise = this.bulk(this._bulkData, closeAfterBulk);
@@ -309,7 +314,7 @@ class ElasticSearchUtils {
                     if (typeof myDate === 'number') myDate = new Date(myDate);
                     if (typeof hitDate === 'number') hitDate = new Date(hitDate);
 
-                    let q = {'delete': {}};
+                    let q = {'delete': <any>{}};
                     let retained = '';
                     if (hitDate > myDate) {
                         // Hit is newer. Delete document from current index.
