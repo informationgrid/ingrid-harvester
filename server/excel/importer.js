@@ -1,12 +1,14 @@
 'use strict';
 
+
 let log = require('log4js').getLogger(__filename),
     ElasticSearchUtils = require('./../elastic-utils'),
     Utils = require('./../common-utils'),
-    UrlUtils = require('./../url-utils'),
     mapping = require('../elastic.mapping.js'),
     settings = require('../elastic.settings.js'),
     Excel = require('exceljs'),
+    IndexDocument = require('../model/model'),
+    ExcelMapper = require('./ExcelMapper'),
     Promise = require('promise');
 
 class ExcelImporter {
@@ -104,17 +106,27 @@ class ExcelImporter {
                 }
             });
 
+
             let ids = workUnits.map(unit => unit.id);
             let timestamps = await this.elastic.getIssuedDates(ids);
 
-            workUnits.forEach((unit, idx) => {
-                promises.push(this.importSingleRow({
+            workUnits.forEach(async (unit, idx) => {
+                var doc = await IndexDocument.create(new ExcelMapper({
                     id: unit.id,
                     columnValues: unit.columnValues,
                     issued: timestamps[idx],
                     workbook: workbook,
                     columnMap: columnMap
                 }));
+
+                // add all-field for special index search
+                Utils._addIndexTerms(doc);
+
+                // log.debug(JSON.stringify(doc, null, 2));
+                let promise = this.elastic.addDocToBulk(doc, unit.id);
+                if (promise) {
+                    promises.push(promise);
+                }
             });
             Promise.all(promises)
                 .then(() => {
@@ -262,96 +274,6 @@ class ExcelImporter {
 
         let promise = this.elastic.addDocToBulk(doc, uniqueName);
         if (promise) return promise;
-    }
-
-    /**
-    * Convert each category to a unified name.
-    * @param {string[]} categories
-    */
-    mapCategories(categories) {
-        return categories.map( cat => {
-            switch (cat) {
-            case 'Infrastruktur': return 'infrastructure';
-            case 'Bahn': return 'railway';
-            case 'Klima': return 'climate';
-            case 'Gewässer': return 'waters';
-            case 'Straßen': return 'roads';
-            case 'Luftfahrt':
-            case 'Luftverkehr': return 'aviation';
-            case 'Data-Run': return 'data-run';
-            }
-        });
-    }
-
-    getPublishers(authorsSheet, /*string[]*/abbreviations) {
-        let publishers = [];
-        const numAuthors = authorsSheet.rowCount;
-        abbreviations.forEach( abbr => {
-            let found = false;
-            for (let i=2; i<=numAuthors; i++) {
-                const row = authorsSheet.getRow(i);
-                if (row.values[1] === abbr) {
-                    publishers.push({
-                        organization: row.values[2],
-                        homepage: row.values[4]
-                    });
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                log.warn('Could not find abbreviation of "Datenhaltende Stelle": ' + abbr);
-            }
-        });
-        return publishers;
-    }
-
-    getLicense(licenseSheet, /*string*/licenseId) {
-        licenseId = licenseId.toLowerCase();
-        const numLicenses = licenseSheet.rowCount;
-
-        for (let i=2; i<=numLicenses; i++) {
-            const row = licenseSheet.getRow(i);
-            if (row.values[1].toLowerCase() === licenseId) {
-                return {
-                    description: row.values[2],
-                    abbreviation: row.values[3],
-                    link: row.values[4]
-                };
-            }
-        }
-
-        log.warn('Could not find abbreviation of "License": ' + licenseId);
-    }
-
-    /**
-     * Split download urls and add each one to the resource.
-     * @param ogdObject
-     * @param type
-     * @param urlsString
-     */
-    async addDownloadUrls(ogdObject, type, urlsString) {
-        // Check if the cell contains just text or hyperlinked text
-        if (urlsString.text) urlsString = urlsString.text;
-
-        let downloads = urlsString.split(/,[\r\n]+/); // comma followed by one or more (carriage returns or newlines)
-        for (let i=0; i<downloads.length; i++) {
-            let downloadUrl = downloads[i];
-            let checkedUrl = await UrlUtils.urlWithProtocolFor(downloadUrl);
-            if (checkedUrl) {
-                ogdObject.distribution.push({
-                    format: type,
-                    accessURL: downloadUrl.trim()
-                });
-            } else {
-                if (!ogdObject.extras.metadata.harvesting_errors) {
-                    ogdObject.extras.metadata.harvesting_errors = [];
-                }
-                let msg = `Invalid URL '${downloadUrl} found for item with id: '${ogdObject.extras.generated_id}', title: '${ogdObject.title}', index: '${this.elastic.indexName}'.`;
-                ogdObject.extras.metadata.harvesting_errors.push(msg);
-                log.warn(msg);
-            }
-        }
     }
 
     getUniqueName(baseName) {

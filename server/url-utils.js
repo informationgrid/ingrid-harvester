@@ -25,10 +25,9 @@ class UrlUtils {
         let found = false;
         try {
             await request({
-                    url: url,
-                    headers: {'User-Agent': 'mCLOUD Harvester. Request-Promise'}
-                },
-                (err, resp, body) => {
+                url: url,
+                headers: {'User-Agent': 'mCLOUD Harvester. Request-Promise'}
+            }, (err, resp, body) => {
                 if (resp && resp.statusCode === 200) found = true;
             });
             if (found) return url;

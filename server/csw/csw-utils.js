@@ -10,17 +10,17 @@ let request = require('request-promise'),
     Promise = require('promise'),
     DomParser = require('xmldom').DOMParser;
 
-const GMD = "http://www.isotc211.org/2005/gmd";
-const GCO = "http://www.isotc211.org/2005/gco";
-const GML = "http://www.opengis.net/gml";
-const CSW = "http://www.opengis.net/cat/csw/2.0.2";
-const SRV = "http://www.isotc211.org/2005/srv";
+const GMD = 'http://www.isotc211.org/2005/gmd';
+const GCO = 'http://www.isotc211.org/2005/gco';
+const GML = 'http://www.opengis.net/gml';
+const CSW = 'http://www.opengis.net/cat/csw/2.0.2';
+const SRV = 'http://www.isotc211.org/2005/srv';
 
 let select = require('xpath').useNamespaces({
-    "gmd": GMD,
-    "gco": GCO,
-    "gml": GML,
-    "srv": SRV
+    'gmd': GMD,
+    'gco': GCO,
+    'gml': GML,
+    'srv': SRV
 });
 
 class CswUtils {
@@ -56,7 +56,7 @@ class CswUtils {
                 .then(() => this.harvest())
                 .then(() => this.elastic.sendBulkData(false))
                 .then(() => this.elastic.finishIndex())
-                .catch(err => log.error("Error during CSW import", err));
+                .catch(err => log.error('Error during CSW import', err));
         }
     }
 
@@ -70,10 +70,10 @@ class CswUtils {
         while (numMatched > startPosition) {
             if (xmlSupplier) {
                 let xml = xmlSupplier();
-                let requestBody = new DomParser().parseFromString(xml, "application/xml");
+                let requestBody = new DomParser().parseFromString(xml, 'application/xml');
 
-                requestBody.documentElement.setAttribute("startPosition", startPosition);
-                requestBody.documentElement.setAttribute("maxRecords", maxRecords);
+                requestBody.documentElement.setAttribute('startPosition', startPosition);
+                requestBody.documentElement.setAttribute('maxRecords', maxRecords);
                 this.options_csw_search.body = requestBody.toString();
                 this.options_csw_search.method = 'POST';
             }
@@ -85,12 +85,12 @@ class CswUtils {
             let harvestTime = new Date(Date.now());
 
             let responseDom = new DomParser().parseFromString(response);
-            let resultsNode = responseDom.getElementsByTagNameNS(CSW, "SearchResults")[0];
+            let resultsNode = responseDom.getElementsByTagNameNS(CSW, 'SearchResults')[0];
             if (!resultsNode) {
                 log.error(`Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nStart position: ${startPosition}, Max Records: ${maxRecords}, Server response: ${responseDom.toString()}.`);
             } else {
-                let numReturned = resultsNode.getAttribute("numberOfRecordsReturned");
-                numMatched = resultsNode.getAttribute("numberOfRecordsMatched");
+                let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
+                numMatched = resultsNode.getAttribute('numberOfRecordsMatched');
                 if (this.settings.printSummary) this.summary.numMatched = numMatched;
 
                 log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
@@ -113,11 +113,11 @@ class CswUtils {
 
     async extractRecords(getRecordsResponse, harvestTime) {
         let promises = [];
-        let xml = new DomParser().parseFromString(getRecordsResponse, "application/xml");
-        let records = xml.getElementsByTagNameNS(GMD, "MD_Metadata");
+        let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
+        let records = xml.getElementsByTagNameNS(GMD, 'MD_Metadata');
         let ids = [];
         for (let i=0; i<records.length; i++)  {
-            ids.push(this.getCharacterStringContent(records[i], "fileIdentifier"));
+            ids.push(this.getCharacterStringContent(records[i], 'fileIdentifier'));
         }
 
         let now = new Date(Date.now());
@@ -137,11 +137,11 @@ class CswUtils {
     async indexRecord(record, harvestTime, issued) {
         let target = {};
 
-        let uuid = this.getCharacterStringContent(record, "fileIdentifier");
+        let uuid = this.getCharacterStringContent(record, 'fileIdentifier');
 
         let idInfo = select('./gmd:identificationInfo', record, true);
-        let title = this.getCharacterStringContent(idInfo, "title");
-        let abstract = this.getCharacterStringContent(idInfo, "abstract");
+        let title = this.getCharacterStringContent(idInfo, 'title');
+        let abstract = this.getCharacterStringContent(idInfo, 'abstract');
 
         log.debug(`Processing record with id '${uuid}' and title '${title}'`);
 
@@ -232,7 +232,7 @@ class CswUtils {
 
             // Combine formats in a single slash-separated string
             let format = formats.join(',');
-            if (!format) format = "Unbekannt";
+            if (!format) format = 'Unbekannt';
             // Filter out URLs that have already been found
             urls = urls.filter(item => !urlsFound.includes(item));
 
@@ -302,7 +302,7 @@ class CswUtils {
 
         // Sanity checks
         if (!abstract) {
-            let msg = "Dataset doesn't have an abstract.";
+            let msg = 'Dataset doesn\'t have an abstract.';
             log.warn(`${msg} It will not be displayed in the portal. Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'`);
 
             target.extras.metadata.isValid = false;
@@ -507,7 +507,7 @@ class CswUtils {
         if (times.length === 1) {
             extras.temporal = times[0];
         } else if (times.length > 1) {
-            log.warn(`Multiple time instants defined: [${times.join(", ")}]. ${suffix}`);
+            log.warn(`Multiple time instants defined: [${times.join(', ')}]. ${suffix}`);
             extras.temporal = times;
         }
 
