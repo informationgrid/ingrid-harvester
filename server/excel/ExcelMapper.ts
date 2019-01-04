@@ -146,8 +146,6 @@ class GenericMapper {
 
 }
 
-module.exports = GenericMapper;
-
 /**
  *
  * @type {module.ExcelMapper}

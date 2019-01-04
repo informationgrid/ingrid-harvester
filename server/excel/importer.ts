@@ -24,7 +24,7 @@ export class ExcelImporter {
      * Create the importer and initialize with settings.
      * @param { {filePath, mapper} }settings
      */
-    constructor(settings: { filePath; mapper; }) {
+    constructor(settings) {
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
         this.excelFilepath = settings.filePath;

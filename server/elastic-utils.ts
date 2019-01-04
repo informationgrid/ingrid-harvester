@@ -586,5 +586,3 @@ export class ElasticSearchUtils {
         log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.indexName}`);
     }
 }
-
-module.exports = ElasticSearchUtils;
