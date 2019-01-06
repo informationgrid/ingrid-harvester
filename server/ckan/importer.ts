@@ -4,6 +4,7 @@ import {Utils} from "../utils/common-utils";
 import {elasticsearchSettings} from "../elastic.settings";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {CkanToElasticsearchMapper} from "./ckan.mapper";
+import {IndexDocument} from "../model/index-document";
 
 let request = require( 'request-promise' ),
     log = require( 'log4js' ).getLogger( __filename ),
@@ -13,7 +14,6 @@ export class DeutscheBahnCkanImporter {
     private settings: any;
     private elastic;
     private options_package_search;
-    private mapper: CkanToElasticsearchMapper;
 
     /**
      * Create the importer and initialize with settings.
@@ -27,7 +27,6 @@ export class DeutscheBahnCkanImporter {
         }
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
-        this.mapper = new CkanToElasticsearchMapper();
 
         this.options_package_search = {
             uri: settings.ckanBaseUrl + "/api/3/action/package_search", // See http://docs.ckan.org/en/ckan-2.7.3/api/
@@ -235,10 +234,10 @@ export class DeutscheBahnCkanImporter {
             Utils.postProcess(target);
 
             // Execute the mappers
-            let theDoc = {};
-            this.mapper.run(target, theDoc);
+            let mapper = new CkanToElasticsearchMapper(target);
+            let doc = await IndexDocument.create(mapper);
 
-            let promise = this.elastic.addDocToBulk(theDoc, id);
+            let promise = this.elastic.addDocToBulk(doc, id);
 
             return promise ? promise : new Promise(resolve => resolve());
         } catch (e) {

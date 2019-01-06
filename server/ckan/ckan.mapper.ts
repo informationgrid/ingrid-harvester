@@ -1,16 +1,74 @@
 /**
  * A mapper for CKAN documents.
  */
-export class CkanToElasticsearchMapper {
+import {GenericMapper} from "../model/generic-mapper";
 
-    /**
-     * Maps a document coming from a CKAN instance to an elasticsearch document...
-     * @param {object} source - Contains the whole source document in ckan format
-     * @param {object} doc - is a reference to the elasticsearch document, which will be mapped here
-     */
-    run(source, doc) {
+export class CkanToElasticsearchMapper extends GenericMapper {
 
-        // just extend the document with all fields from the source
-        Object.assign( doc, source );
+    private data: any;
+
+    constructor(data) {
+        super();
+        this.data = data;
     }
+
+    getAccessRights() {
+    }
+
+    getCategories() {
+    }
+
+    getCitation() {
+    }
+
+    getDescription() {
+    }
+
+    getDisplayContacts() {
+    }
+
+    async getDistributions(): Promise<any[]> {
+        return undefined;
+    }
+
+    getGeneratedId() {
+    }
+
+    getLicenseId() {
+    }
+
+    getLicenseURL() {
+    }
+
+    getMFundFKZ() {
+    }
+
+    getMFundProjectTitle() {
+    }
+
+    getMetadataIssued() {
+    }
+
+    getMetadataSource() {
+    }
+
+    getModifiedDate() {
+    }
+
+    getPublisher() {
+    }
+
+    getTemporal() {
+    }
+
+    getThemes() {
+    }
+
+    getTitle() {
+    }
+
+    isRealtime() {
+    }
+
+
 }
