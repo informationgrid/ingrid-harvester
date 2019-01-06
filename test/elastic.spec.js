@@ -1,7 +1,7 @@
 'use strict';
 
 const expect = require( 'chai' ).expect
-let ElasticSearchUtils = require( '../server/elastic-utils' )
+let ElasticSearchUtils = require( '../server/utils/elastic-utils' )
 
 describe( 'Elasticsearch Utils', function () {
 

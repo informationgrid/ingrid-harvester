@@ -4,7 +4,7 @@
     "allowJs": true,
     "target": "es5",
     "module": "commonjs",
-    "lib": ["es2018", "dom", "es2015.promise"],
+    "lib": ["es2018", "dom", "es6"],
     "noImplicitAny": false,
     "strict": false
   },

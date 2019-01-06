@@ -1,16 +1,19 @@
-'use strict';
+import {ElasticSearchUtils} from "../utils/elastic-utils";
+import {UrlUtils} from "../utils/url-utils";
+import {Utils} from "../utils/common-utils";
+import {elasticsearchSettings} from "../elastic.settings";
+import {elasticsearchMapping} from "../elastic.mapping";
+import {CkanToElasticsearchMapper} from "./ckan.mapper";
 
 let request = require( 'request-promise' ),
-    Promise = require('promise'),
     log = require( 'log4js' ).getLogger( __filename ),
-    markdown = require('markdown').markdown,
-    ElasticSearchUtils = require( '../elastic-utils' ),
-    Utils = require('./../common-utils'),
-    UrlUtils = require('./../url-utils'),
-    settings = require('../elastic.settings.js'),
-    mapping = require( '../elastic.mapping.js' );
+    markdown = require('markdown').markdown;
 
-class DeutscheBahnCkanImporter {
+export class DeutscheBahnCkanImporter {
+    private settings: any;
+    private elastic;
+    private options_package_search;
+    private mapper: CkanToElasticsearchMapper;
 
     /**
      * Create the importer and initialize with settings.
@@ -24,6 +27,7 @@ class DeutscheBahnCkanImporter {
         }
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
+        this.mapper = new CkanToElasticsearchMapper();
 
         this.options_package_search = {
             uri: settings.ckanBaseUrl + "/api/3/action/package_search", // See http://docs.ckan.org/en/ckan-2.7.3/api/
@@ -43,7 +47,7 @@ class DeutscheBahnCkanImporter {
     /**
      * Requests a dataset with the given ID and imports it to Elasticsearch.
      *
-     * @param args { sourceJson, issuedExisting, harvestTime }
+     * @param args { issuedExisting, harvestTime }
      * @returns {Promise<*|Promise>}
      */
     async importDataset(args) {
@@ -53,7 +57,7 @@ class DeutscheBahnCkanImporter {
         try {
             log.debug("Processing CKAN dataset: " + source.name + " from data-source: " + this.settings.ckanBaseUrl);
 
-            let target = {};
+            let target: any = {};
             let name = source.name;
 
             let id = source.id;
@@ -90,7 +94,7 @@ class DeutscheBahnCkanImporter {
                     let title = source.organization.title;
                     let homepage = source.organization.description;
                     let match = homepage.match(/]\(([^)]+)/); // Square bracket followed by text in parentheses
-                    let org = {};
+                    let org: any = {};
 
                     if (title) org.organization = title;
                     if (match) org.homepage = match[1];
@@ -232,9 +236,7 @@ class DeutscheBahnCkanImporter {
 
             // Execute the mappers
             let theDoc = {};
-            this.settings.mapper.forEach(mapper => {
-                mapper.run(target, theDoc);
-            });
+            this.mapper.run(target, theDoc);
 
             let promise = this.elastic.addDocToBulk(theDoc, id);
 
@@ -249,7 +251,7 @@ class DeutscheBahnCkanImporter {
             if (this.settings.dryRun) {
                 log.debug('Dry run option enabled. Skipping index creation.');
             } else {
-                await this.elastic.prepareIndex(mapping, settings);
+                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
             }
             let promises = [];
             let total = 0;
@@ -298,5 +300,3 @@ class DeutscheBahnCkanImporter {
         }
     }
 }
-
-module.exports = DeutscheBahnCkanImporter;

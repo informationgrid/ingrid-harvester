@@ -1,13 +1,11 @@
-'use-strict';
+import {ElasticSearchUtils} from "../utils/elastic-utils";
+import {elasticsearchMapping} from "../elastic.mapping";
+import {elasticsearchSettings} from "../elastic.settings";
+import {UrlUtils} from "../utils/url-utils";
+import {Utils} from "../utils/common-utils";
 
 let request = require('request-promise'),
     log = require('log4js').getLogger(__filename),
-    ElasticSearchUtils = require('../elastic-utils'),
-    Utils = require('./../common-utils'),
-    UrlUtils = require('./../url-utils'),
-    settings = require('../elastic.settings.js'),
-    mapping = require('../elastic.mapping.js'),
-    Promise = require('promise'),
     DomParser = require('xmldom').DOMParser;
 
 const GMD = 'http://www.isotc211.org/2005/gmd';
@@ -23,7 +21,12 @@ let select = require('xpath').useNamespaces({
     'srv': SRV
 });
 
-class CswUtils {
+export class CswUtils {
+    private settings: any;
+    private elastic: ElasticSearchUtils;
+    private options_csw_search: any;
+    private summary: any;
+
     constructor(settings) {
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
@@ -52,7 +55,7 @@ class CswUtils {
             await this.harvest();
             log.debug('Skipping finalisation of index for dry run.');
         } else {
-            this.elastic.prepareIndex(mapping, settings)
+            this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings)
                 .then(() => this.harvest())
                 .then(() => this.elastic.sendBulkData(false))
                 .then(() => this.elastic.finishIndex())
@@ -135,7 +138,7 @@ class CswUtils {
     }
 
     async indexRecord(record, harvestTime, issued) {
-        let target = {};
+        let target: any = {};
 
         let uuid = this.getCharacterStringContent(record, 'fileIdentifier');
 
@@ -237,7 +240,7 @@ class CswUtils {
             urls = urls.filter(item => !urlsFound.includes(item));
 
             urls.forEach(url => {
-                let dist = {};
+                let dist: any = {};
 
                 // Set id only if there is a single resource
                 if (urls.length === 1) dist.id = id;
@@ -358,7 +361,7 @@ class CswUtils {
 
 
                 if (role === 'originator' || role === 'author') {
-                    let infos = {};
+                    let infos: any = {};
                     if (name) infos.name = name.textContent;
                     if (email) infos.mbox = email.textContent;
 
@@ -369,14 +372,14 @@ class CswUtils {
                      * Also there are no URL fields for organizations. Use the
                      * extras section to store this information temporarily.
                      */
-                    let c = {};
+                    let c: any = {};
                     if (name) c.fullName = name.textContent;
                     if (org) c.organisationName = org.textContent;
                     if (url) c.homepage = url;
 
                     target.extras.creators.push(c);
                 } else if (role === 'publisher') {
-                    let infos = {};
+                    let infos: any = {};
 
                     if (name) infos.name = name.textContent;
                     if (url) infos.homepage = url;
@@ -384,7 +387,7 @@ class CswUtils {
 
                     publishers.push(infos);
                 } else {
-                    let infos = {};
+                    let infos: any = {};
 
                     if (contact.getAttribute('uuid')) {
                         infos.hasUID = contact.getAttribute('uuid');
@@ -474,7 +477,7 @@ class CswUtils {
     async getLicense(idInfo) {
         let constraints = select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license"]', idInfo);
         if (constraints && constraints.length > 0) {
-            let license = {};
+            let license: any = {};
             for(let j=0; j<constraints.length; j++) {
                 let c = constraints[j];
                 // Search until id and url are not defined
@@ -539,7 +542,7 @@ class CswUtils {
         }
     }
 
-    getCharacterStringContent(element, cname) {
+    getCharacterStringContent(element, cname?) {
         if (cname) {
             let node = select(`.//gmd:${cname}/gco:CharacterString`, element, true);
             if (node) {
@@ -559,5 +562,3 @@ class CswUtils {
         return GMD;
     }
 }
-
-module.exports = CswUtils;

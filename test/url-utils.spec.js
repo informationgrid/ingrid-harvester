@@ -1,7 +1,7 @@
 'use strict';
 
 const expect = require( 'chai' ).expect;
-let UrlUtils = require('../server/url-utils');
+let UrlUtils = require('../server/utils/url-utils');
 
 describe('validateUrl()', function() {
 

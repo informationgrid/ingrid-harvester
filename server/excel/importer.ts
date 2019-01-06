@@ -1,24 +1,20 @@
-import {IndexDocument} from '../model/model';
-import {ElasticSearchUtils} from '../elastic-utils';
-import {ExcelMapper} from "./ExcelMapper";
+import {IndexDocument} from '../model/index-document';
+import {ElasticSearchUtils} from '../utils/elastic-utils';
+import {ExcelMapper} from "./excel-mapper";
 import Excel = require('exceljs');
+import {Worksheet} from "exceljs";
+import {Utils} from "../utils/common-utils";
+import {elasticsearchMapping} from "../elastic.mapping";
+import {elasticsearchSettings} from "../elastic.settings";
 
-let log = require('log4js').getLogger(__filename),
-    //ElasticSearchUtils = require('../elastic-utils'),
-    Utils = require('./../common-utils'),
-    mapping = require('../elastic.mapping.js'),
-    settings = require('../elastic.settings.js')
-    // Excel = require('exceljs'),
-    //IndexDocument = require('../model/model'),
-    //ExcelMapper = require('./ExcelMapper');//,
-    //Promise = require('promise');
+let log = require('log4js').getLogger(__filename);
 
 export class ExcelImporter {
 
-    settings;
-    elastic;
-    excelFilepath;
-    names;
+    settings: any;
+    elastic: ElasticSearchUtils;
+    excelFilepath: string;
+    names = {};
 
     /**
      * Create the importer and initialize with settings.
@@ -28,12 +24,10 @@ export class ExcelImporter {
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
         this.excelFilepath = settings.filePath;
-
-        this.names = {};
     }
 
     async run() {
-        // let licenses = ['apache', 'app_commercial', 'app_freeware', 'app_opensource', 'bsd-license', 'cc-by', 'cc-by-sa', 'cc-nc', 'cc-by-nd', 'cc-zero', 'cc-by-4.0', 'cc-by-nc-4.0', 'cc-by-sa-4.0', 'cc-by-nd-4.0', 'dl-de-by-1.0', 'dl-de-by-nc-1.0', 'dl-de-zero-2.0', 'dl-de-by-2.0', 'geolizenz-v1.2.1-open', 'geolizenz-v1.2-1a', 'geolizenz-v1.2-1b', 'geolizenz-v1.2-2a', 'geolizenz-v1.2-2b', 'geolizenz-v1.2-3a', 'geolizenz-v1.2-3b', 'geolizenz-v1.2-4a', 'geolizenz-v1.2-4b', 'geonutzv-de-2013-03-19', 'gfdl', 'gpl-3.0', 'mozilla', 'odc-by', 'odc-odbl', 'odc-pddl', 'official-work', 'other-closed', 'other-open'];
+        // map of the column index to a name
         let columnMap = {
             'Daten': 1,
             'Kurzbeschreibung': 2,
@@ -68,57 +62,35 @@ export class ExcelImporter {
         };
 
         let workbook = new Excel.Workbook();
-        let elastic = this.elastic;
 
         let promises = [];
         try {
             if (this.settings.dryRun) {
                 log.debug('Dry run option enabled. Skipping index creation.');
             } else {
-                await elastic.prepareIndex(mapping, settings);
+                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
             }
             await workbook.xlsx.readFile(this.excelFilepath);
 
             log.debug('done loading file');
 
-            let workUnits = [];
             let worksheet = workbook.getWorksheet(1);
 
             // Iterate over all rows that have values in a worksheet
-            worksheet.eachRow((row, rowNumber) => {
-                if (rowNumber > 1) {
-                    let columnValues = [];
-                    for (let i = 0; i < row.values.length; i++) {
-                        let cur = row.values[i];
-                        if (!cur) {
-                            columnValues.push('');
-                            continue;
-                        }
+            // prepare all rows for easier value access
+            const workUnits = this.prepareExcelRows(worksheet, columnMap);
 
-                        if (cur.richText) {
-                            let clean = '';
-                            for (let i in cur.richText) {
-                                clean += cur.richText[i].text;
-                            }
-                            columnValues.push(clean);
-                        } else {
-                            columnValues.push(cur);
-                        }
-                    }
-                    if (columnValues.length != row.values.length) {
-                        log.debug(columnValues.length + ' : ' + row.values.length);
-                    }
-                    let id = this.getUniqueName(columnValues[columnMap.Daten]);
-                    workUnits.push({id: id,  columnValues: columnValues});
-                }
-            });
-
-
+            // get all generated IDs from each row
             let ids = workUnits.map(unit => unit.id);
+
+            // get all issued dates from IDs
+            // TODO: why do we need this? the date will be set from data, right?
             let timestamps = await this.elastic.getIssuedDates(ids);
 
             // Attention: forEach does not work with async/await! using Promise.all for sequence
             await Promise.all(workUnits.map(async (unit, idx) => {
+
+                // create json document and create values with ExcelMapper
                 let doc = await IndexDocument.create(new ExcelMapper({
                     id: unit.id,
                     columnValues: unit.columnValues,
@@ -131,11 +103,14 @@ export class ExcelImporter {
                 Utils._addIndexTerms(doc);
 
                 // log.debug(JSON.stringify(doc, null, 2));
+                // add document to buffer and send to elasticsearch if full
                 let promise = this.elastic.addDocToBulk(doc, unit.id);
+                // TODO: can we just push return value if if null?
                 if (promise) {
                     promises.push(promise);
                 }
             }));
+
             log.debug('Waiting for #promises to finish: ' + promises.length);
             Promise.all(promises)
                 .then(() => {
@@ -143,7 +118,7 @@ export class ExcelImporter {
                         log.debug('Skipping finalisation of index for dry run.');
                     } else {
                         log.debug('All promises finished ... continue');
-                        elastic.finishIndex();
+                        this.elastic.finishIndex();
                     }
                 })
                 .catch(err => log.error('Error importing excel row', err));
@@ -155,8 +130,6 @@ export class ExcelImporter {
     /**
      * Import a single row from the excel workbook to elasticsearch index
      *
-     * @param args {getUniqueName, issuedExisting, workbook, columnMap, columnValues}
-     * @returns {Promise<void>}
      */
     /*async importSingleRow(args) {
         let uniqueName = args.id;
@@ -286,7 +259,11 @@ export class ExcelImporter {
         if (promise) return promise;
     }*/
 
-    getUniqueName(baseName) {
+    /**
+     * Generate unique name from a given string.
+     * @param baseName
+     */
+    private getUniqueName(baseName: string) {
         let newName = baseName.replace(/[^a-zA-Z0-9-_]+/g, '').toLowerCase().substring(0, 98);
         let candidate = newName;
         let count = this.names[newName];
@@ -298,6 +275,39 @@ export class ExcelImporter {
         }
         this.names[newName] = count;
         return candidate;
+    }
+
+    private prepareExcelRows(worksheet: Worksheet, columnMap) {
+        let workUnits = [];
+
+        worksheet.eachRow((row, rowNumber) => {
+            if (rowNumber > 1) {
+                let columnValues = [];
+                for (let i = 0; i < row.values.length; i++) {
+                    let cur = row.values[i];
+                    if (!cur) {
+                        columnValues.push('');
+                        continue;
+                    }
+
+                    if (cur.richText) {
+                        let clean = '';
+                        for (let i in cur.richText) {
+                            clean += cur.richText[i].text;
+                        }
+                        columnValues.push(clean);
+                    } else {
+                        columnValues.push(cur);
+                    }
+                }
+                if (columnValues.length != row.values.length) {
+                    log.debug(columnValues.length + ' : ' + row.values.length);
+                }
+                let id = this.getUniqueName(columnValues[columnMap.Daten]);
+                workUnits.push({id: id,  columnValues: columnValues});
+            }
+        });
+        return workUnits;
     }
 }
 

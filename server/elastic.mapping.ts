@@ -1,4 +1,4 @@
-module.exports = {
+export const elasticsearchMapping = {
     properties: {
         'title': {
             'type': 'string',

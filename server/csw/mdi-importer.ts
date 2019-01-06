@@ -1,8 +1,9 @@
-'use-strict';
+import {CswUtils} from './csw-utils';
 
-let CswUtils = require('./csw-utils');
+export class MdiImporter {
 
-class MdiImporter {
+    private cswUtil: CswUtils;
+
     constructor(settings) {
         let gmdEncoded = encodeURIComponent(CswUtils.GMD);
         settings.getRecordsUrlFor = function(uuid) {
@@ -61,5 +62,3 @@ class MdiImporter {
 </GetRecords>`;
     }
 }
-
-module.exports = MdiImporter;

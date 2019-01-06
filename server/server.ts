@@ -1,31 +1,15 @@
 import {ExcelImporter} from './excel/importer';
+import {DeutscheBahnCkanImporter} from "./ckan/importer";
+import {WsvImporter} from "./csw/wsv-importer";
+import {DwdImporter} from "./csw/dwd-importer";
+import {BfgImporter} from "./csw/bfg-importer";
+import {MdiImporter} from "./csw/mdi-importer";
+import {CkanToElasticsearchMapper} from "./ckan/ckan.mapper";
 
-const config = [
-    {
-        "importer": "EXCEL",
-        "elasticSearchUrl": "http://localhost:9200",
-        "index": "excel",
-        "indexType": "base",
-        "alias": "mcloud",
-        "filePath": "./FinaleImportExcel_v25_ohne_DB-Daten.xlsx",
-        "includeTimestamp": true
-    }
-];
-
-/*
 let // findPort = require( 'find-port' ),
     log = require( 'log4js' ).getLogger( __filename ),
-    process = require('process'),
-    excelDefaultMapper = require( './excel/excel.mapper' ),
-    excelIdfMapper = require( './excel/excel.idf.mapper' ),
-    ckanDefaultMapper = require( './ckan/ckan.mapper' ),
-    ckanIdfMapper = require( './ckan/ckan.idf.mapper' ),
-    DeutscheBahnCkanImporter = require( './ckan/importer' ),
-    WsvCswImporter = require( './csw/wsv-importer' ),
-    DwdCswImporter = require( './csw/dwd-importer' ),
-    BfgCswImporter = require( './csw/bfg-importer' ),
-    MdiCswImporter = require( './csw/mdi-importer' );
-*/
+    config = require( './config.json' ),
+    process = require('process');
 
 
 // create a server which finds a random free port
@@ -38,13 +22,14 @@ let // findPort = require( 'find-port' ),
 
 // listen for incoming messages, which can be "import" with parameter <type>
 
-/*function getImporter(type) {
-    if (type === 'CKAN-DB') return DeutscheBahnCkanImporter;
-    if (type === 'EXCEL') return ExcelImporter;
-    if (type === 'WSV-CSW') return WsvCswImporter;
-    if (type === 'DWD-CSW') return DwdCswImporter;
-    if (type === 'BFG-CSW') return BfgCswImporter;
-    if (type === 'MDI-CSW') return MdiCswImporter;
+function getImporter(settings) {
+    const type = settings.importer;
+    if (type === 'CKAN-DB') return new DeutscheBahnCkanImporter(settings);
+    if (type === 'EXCEL') return new ExcelImporter(settings);
+    if (type === 'WSV-CSW') return new WsvImporter(settings);
+    if (type === 'DWD-CSW') return new DwdImporter(settings);
+    if (type === 'BFG-CSW') return new BfgImporter(settings);
+    if (type === 'MDI-CSW') return new MdiImporter(settings);
 }
 
 function getDateString() {
@@ -61,30 +46,21 @@ let pid = process.pid;
 let dt = getDateString();
 let deduplicationAlias = `dedupe_${dt}_${pid}`;
 
-let args = process.argv.slice(2);*/
+let args = process.argv.slice(2);
 
-config.forEach( settings => {
+config.forEach( (settings:any) => {
     // Include relevant CLI args
-    /*settings.dryRun = args.includes('-n') || args.includes('--dry-run');
+    settings.dryRun = args.includes('-n') || args.includes('--dry-run');
     settings.printSummary = args.includes('--print-summary');
 
     // Set the same elasticsearch alias for deduplication for all importers
     settings.deduplicationAlias = deduplicationAlias;
 
-    // choose different importer depending on setting
-    if (settings.importer === 'EXCEL') {
-        settings.mapper = [ excelDefaultMapper, excelIdfMapper ];
-    } else if (settings.importer === 'CKAN-DB') {
-        settings.mapper = [ ckanDefaultMapper, ckanIdfMapper ];
-    }
-
-    let importerClass = getImporter( settings.importer );
-    if (!importerClass) {
+    let importer = getImporter( settings );
+    if (!importer) {
         log.error( 'Importer not defined for: ' + settings.importer );
         return;
     }
 
-    let importer = new importerClass( settings );
-    importer.run();*/
-    new ExcelImporter(settings).run();
+    importer.run();
 } );

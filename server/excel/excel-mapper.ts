@@ -1,156 +1,8 @@
-//const GenericMapper = require('../model/GenericMapper');
-const log = require('log4js').getLogger(__filename),
-    UrlUtils = require('./../url-utils');
+import {UrlUtils} from "../utils/url-utils";
+import {GenericMapper} from "../model/generic-mapper";
 
-class GenericMapper {
+const log = require('log4js').getLogger(__filename);
 
-    /**
-     * @abstract
-     */
-    getTitle() {
-    }
-
-    /**
-     * @abstract
-     */
-    getDescription() {
-    }
-
-    /**
-     * @abstract
-     */
-    getPublisher() {
-    }
-
-    /**
-     * @abstract
-     */
-    getThemes() {
-    }
-
-    /**
-     * @abstract
-     */
-    getModifiedDate() {
-    }
-
-    /**
-     * @abstract
-     */
-    getAccessRights() {
-    }
-
-    /**
-     * @abstract
-     */
-    async getDistributions(): Promise<any[]> {
-        return Promise.resolve([]);
-    }
-
-    /**
-     * @abstract
-     */
-    getLicenseId() {
-    }
-
-    /**
-     * @abstract
-     */
-    getLicenseURL() {
-    }
-
-    /**
-     * @abstract
-     */
-    getGeneratedId() {
-    }
-
-    getMetadataModified() {
-        return new Date(Date.now());
-    }
-
-    /**
-     * @abstract
-     */
-    getMetadataSource() {}
-
-    /**
-     * @abstract
-     */
-    getMetadataIssued() {
-    }
-
-    /**
-     * @abstract
-     */
-    isRealtime() {
-    }
-
-    /**
-     * @abstract
-     */
-    getTemporal() {}
-
-    /**
-     * @abstract
-     */
-    getCitation() {}
-
-    /**
-     * @abstract
-     */
-    getCategories() {}
-
-    /**
-     * @abstract
-     */
-    getMFundFKZ() {}
-
-    /**
-     * @abstract
-     */
-    getMFundProjectTitle() {}
-
-    /**
-     * @abstract
-     */
-    getDisplayContacts() {}
-
-    createPublisher(name, url) {
-        return {
-            organization: name,
-            homepage: url
-        };
-    }
-
-    createDisplayContact(name, url) {
-        return {
-            name: name,
-            url: url
-        };
-    }
-
-    createSourceAttribution(name) {
-        return {
-            attribution: name
-        };
-    }
-    
-    createLicense(description, abbreviation, link) {
-        return {
-            description: description,
-            abbreviation: abbreviation,
-            link: link
-        };
-    }
-
-}
-
-/**
- *
- * @type {module.ExcelMapper}
- * // @extends GenericMapper
- */
 export class ExcelMapper extends GenericMapper {
 
     data;
@@ -182,7 +34,7 @@ export class ExcelMapper extends GenericMapper {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
         const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
-        return publishers.map( p => this.createPublisher(p.name, p.url));
+        return publishers.map( p => GenericMapper.createPublisher(p.name, p.url));
     }
 
     getThemes() {
@@ -233,7 +85,7 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getMetadataSource() {
-        return this.createSourceAttribution('mcloud-excel');
+        return GenericMapper.createSourceAttribution('mcloud-excel');
     }
 
     isRealtime() {
@@ -256,7 +108,7 @@ export class ExcelMapper extends GenericMapper {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
         const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
-        return publishers.map( p => this.createDisplayContact(p.name, p.url));
+        return publishers.map( p => GenericMapper.createDisplayContact(p.name, p.url));
     }
 
     getMFundFKZ() {
@@ -375,7 +227,7 @@ export class ExcelMapper extends GenericMapper {
         for (let i=2; i<=numLicenses; i++) {
             const row = licenseSheet.getRow(i);
             if (row.values[1].toLowerCase() === licenseId) {
-                return this.createLicense(row.values[2], row.values[3], row.values[4]);
+                return GenericMapper.createLicense(row.values[2], row.values[3], row.values[4]);
             }
         }
 

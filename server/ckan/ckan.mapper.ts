@@ -1,9 +1,7 @@
-'use strict';
-
 /**
  * A mapper for CKAN documents.
  */
-class CkanToElasticsearchMapper {
+export class CkanToElasticsearchMapper {
 
     /**
      * Maps a document coming from a CKAN instance to an elasticsearch document...
@@ -16,5 +14,3 @@ class CkanToElasticsearchMapper {
         Object.assign( doc, source );
     }
 }
-
-module.exports = new CkanToElasticsearchMapper();

@@ -1,11 +1,8 @@
+import {GenericMapper} from "./generic-mapper";
+
 export class IndexDocument {
 
-    /**
-     *
-     * @param {GenericMapper} mapper
-     * @returns {{description: *, publisher: *, modified: string, extras: {all: Array, metadata: {modified: string, source: {attribution: string}, issued: string}, realtime: boolean, mfund_project_title: null, subgroups: string[], citation: string, license_id: string, displayContact: {name: string, url: string}[], generated_id: string, license_url: string, temporal: string, mfund_fkz: null}, theme: string[], accessRights: string[], title: *, distribution: {accessURL: string, format: string}[]}}
-     */
-    static async create(mapper) {
+    static async create(mapper: GenericMapper) {
         return {
             title: mapper.getTitle(),
             description: mapper.getDescription(),

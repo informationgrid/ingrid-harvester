@@ -153,6 +153,7 @@ export class ElasticSearchUtils {
      * @param {string} type
      * @param {object} mapping
      * @param {object} settings
+     * @param callback
      */
     addMapping(index, type, mapping, settings, callback) {
 

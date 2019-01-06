@@ -1,14 +1,15 @@
-'use-strict';
+import {CswUtils} from './csw-utils';
 
-let CswUtils = require('./csw-utils');
+export class BfgImporter {
 
-class BfgImporter {
+    private cswUtil: CswUtils;
+
     constructor(settings) {
         let gmdEncoded = encodeURIComponent(CswUtils.GMD);
         settings.getRecordsUrlFor = function(uuid) {
             return `${settings.getRecordsUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputSchema=${gmdEncoded}&Id=${uuid}`;
         };
-        settings.getGetRecordsPostBody = this._getGetRecordsXmlBody;
+        // TODO: settings.getGetRecordsPostBody = this._getGetRecordsXmlBody;
 
         let method = "GET";
         if (settings.httpMethod) {
@@ -45,5 +46,3 @@ class BfgImporter {
         this.cswUtil.run();
     }
 }
-
-module.exports = BfgImporter;

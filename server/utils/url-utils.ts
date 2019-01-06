@@ -3,7 +3,7 @@
 let request = require('request-promise'),
     log = require('log4js').getLogger( __filename );
 
-class UrlUtils {
+export class UrlUtils {
 
     static async urlWithProtocolFor(url) {
         if (!url && url !== '') return url;
@@ -41,7 +41,3 @@ class UrlUtils {
         }
     }
 }
-
-
-module.exports = UrlUtils;
-

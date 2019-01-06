@@ -1,4 +1,4 @@
-module.exports = {
+export const elasticsearchSettings = {
     'index': {
         'analysis': {
             'filter': {
