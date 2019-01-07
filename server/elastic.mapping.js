@@ -185,6 +185,9 @@ module.exports = {
                 },
                 'modified': {
                     'type': 'date'
+                },
+                'byteSize': {
+                    'type': 'long'
                 }
             }
         },
