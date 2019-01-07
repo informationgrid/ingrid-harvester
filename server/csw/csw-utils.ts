@@ -3,23 +3,13 @@ import {elasticsearchMapping} from "../elastic.mapping";
 import {elasticsearchSettings} from "../elastic.settings";
 import {UrlUtils} from "../utils/url-utils";
 import {Utils} from "../utils/common-utils";
+import {IndexDocument} from "../model/index-document";
+import {CswMapper} from "./csw-mapper";
 
 let request = require('request-promise'),
     log = require('log4js').getLogger(__filename),
     DomParser = require('xmldom').DOMParser;
 
-const GMD = 'http://www.isotc211.org/2005/gmd';
-const GCO = 'http://www.isotc211.org/2005/gco';
-const GML = 'http://www.opengis.net/gml';
-const CSW = 'http://www.opengis.net/cat/csw/2.0.2';
-const SRV = 'http://www.isotc211.org/2005/srv';
-
-let select = require('xpath').useNamespaces({
-    'gmd': GMD,
-    'gco': GCO,
-    'gml': GML,
-    'srv': SRV
-});
 
 export class CswUtils {
     private settings: any;
@@ -88,7 +78,7 @@ export class CswUtils {
             let harvestTime = new Date(Date.now());
 
             let responseDom = new DomParser().parseFromString(response);
-            let resultsNode = responseDom.getElementsByTagNameNS(CSW, 'SearchResults')[0];
+            let resultsNode = responseDom.getElementsByTagNameNS(CswMapper.CSW, 'SearchResults')[0];
             if (!resultsNode) {
                 log.error(`Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nStart position: ${startPosition}, Max Records: ${maxRecords}, Server response: ${responseDom.toString()}.`);
             } else {
@@ -117,10 +107,10 @@ export class CswUtils {
     async extractRecords(getRecordsResponse, harvestTime) {
         let promises = [];
         let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
-        let records = xml.getElementsByTagNameNS(GMD, 'MD_Metadata');
+        let records = xml.getElementsByTagNameNS(CswMapper.GMD, 'MD_Metadata');
         let ids = [];
         for (let i=0; i<records.length; i++)  {
-            ids.push(this.getCharacterStringContent(records[i], 'fileIdentifier'));
+            ids.push(CswMapper.getCharacterStringContent(records[i], 'fileIdentifier'));
         }
 
         let now = new Date(Date.now());
@@ -131,7 +121,10 @@ export class CswUtils {
             issued = this.elastic.getIssuedDates(ids);
         }
         for(let i=0; i<records.length; i++) {
-            promises.push(this.indexRecord(records[i], harvestTime, issued[i]));
+            promises.push(
+                //this.indexRecord(records[i], harvestTime, issued[i])
+                IndexDocument.create(new CswMapper(this.settings, records[i], harvestTime, issued[i]))
+            );
         }
         await Promise.all(promises)
             .catch(err => log.error('Error indexing CSW record', err));
@@ -140,130 +133,16 @@ export class CswUtils {
     async indexRecord(record, harvestTime, issued) {
         let target: any = {};
 
-        let uuid = this.getCharacterStringContent(record, 'fileIdentifier');
+        let uuid = CswMapper.getCharacterStringContent(record, 'fileIdentifier');
 
-        let idInfo = select('./gmd:identificationInfo', record, true);
-        let title = this.getCharacterStringContent(idInfo, 'title');
-        let abstract = this.getCharacterStringContent(idInfo, 'abstract');
 
         log.debug(`Processing record with id '${uuid}' and title '${title}'`);
 
-        target.title = title;
-        target.description = abstract;
-
-        let keywords = [];
-        select('.//gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', record).forEach(node => {
-            keywords.push(node.textContent);
-        });
-        if (keywords.includes('opendata')) {
-            if (this.settings.printSummary) this.summary.opendata++;
-        } else {
-            // Don't index metadata-sets without the `opendata' keyword
-            log.info(`Keyword 'opendata' not found. Item will be ignored. ID: '${uuid}', Title: '${title}', Source: '${this.settings.getRecordsUrl}'.`);
-            return;
-        }
 
         await this.extractContacts(target, record); // creator, publisher, contactPoint
-        target.keywords = keywords; // TODO should special keywords (mcloud categories, mfund-fkz, etc.) be excluded?
         target.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
 
-        let modified = select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', record, true).textContent;
-        target.modified = modified;
-
-        // Multiple resourceMaintenance elements are allowed. If present, use the first one
-        let freq = select('./*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode', idInfo);
-        if (freq.length > 0) {
-            target.accrualPeriodicity = freq[0].getAttribute('codeListValue');
-        }
-
         this.extractAccessRights(target, idInfo);
-
-        let dists = [];
-        let urlsFound = [];
-        let srvIdent = select('./srv:SV_ServiceIdentification', idInfo, true);
-        if (srvIdent) {
-            let getCapabilitiesElement = select(
-                './srv:containsOperations/srv:SV_OperationMetadata[./srv:operationName/gco:CharacterString[contains(./text(), "GetCapabilities")]]/srv:connectPoint/*/gmd:linkage/gmd:URL',
-                srvIdent,
-                true);
-            let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
-            let format = select('.//srv:serviceType/gco:LocalName', srvIdent, true).textContent;
-            let serviceLinks = [];
-            if (getCapablitiesUrl) {
-                let lowercase = getCapablitiesUrl.toLowerCase();
-                if (lowercase.match(/\bwms\b/)) format = 'WMS';
-                if (lowercase.match(/\bwfs\b/)) format = 'WFS';
-                if (lowercase.match(/\bwcs\b/)) format = 'WCS';
-                if (lowercase.match(/\bwmts\b/)) format = 'WMTS';
-            }
-            let urls = select('./srv:containsOperations/*/srv:connectPoint/*/gmd:linkage/gmd:URL', srvIdent);
-            for (let i=0; i<urls.length; i++) {
-                let node = urls[i];
-                let url = await UrlUtils.urlWithProtocolFor(node.textContent);
-                if (url && !serviceLinks.includes(url)) {
-                    serviceLinks.push(url);
-                    urlsFound.push(url);
-                }
-            }
-
-            serviceLinks.forEach(url => {
-                dists.push({
-                    format: format,
-                    accessURL: url
-                });
-            });
-        }
-
-        let distNodes = select('./gmd:distributionInfo/gmd:MD_Distribution', record);
-        for (let i=0; i<distNodes.length; i++) {
-            let node = distNodes[i];
-            let id = node.getAttribute('id');
-            if (!id) id = node.getAttribute('uuid');
-
-            let formats = [];
-            let urls = [];
-
-            select('.//gmd:MD_Format/gmd:name/gco:CharacterString', node).forEach(fmt => {
-                if (!formats.includes(fmt.textContent)) formats.push(fmt.textContent);
-            });
-            let nodes = select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/*/gmd:linkage/gmd:URL', node);
-            for(let j=0; j<nodes.length; j++) {
-                let node = nodes[j];
-                let url = node ? await UrlUtils.urlWithProtocolFor(node.textContent) : null;
-                if (url && !urls.includes(url)) urls.push(url);
-            }
-
-            // Combine formats in a single slash-separated string
-            let format = formats.join(',');
-            if (!format) format = 'Unbekannt';
-            // Filter out URLs that have already been found
-            urls = urls.filter(item => !urlsFound.includes(item));
-
-            urls.forEach(url => {
-                let dist: any = {};
-
-                // Set id only if there is a single resource
-                if (urls.length === 1) dist.id = id;
-
-                dist.format = format;
-                dist.accessURL = url;
-
-                dists.push(dist);
-            });
-        }
-        target.distribution = dists;
-
-        let subgroups = [];
-        keywords.forEach(k => {
-            k = k.trim();
-            if (k === 'mcloud_category_roads') subgroups.push('roads');
-            if (k === 'mcloud_category_climate') subgroups.push('climate');
-            if (k === 'mcloud_category_waters') subgroups.push('waters');
-            if (k === 'mcloud_category_railway') subgroups.push('railway');
-            if (k === 'mcloud_category_infrastructure') subgroups.push('infrastructure');
-            if (k === 'mcloud_category_aviation') subgroups.push('aviation');
-        });
-        if (subgroups.length === 0) subgroups.push(this.settings.defaultMcloudSubgroup);
 
         let cswLink = this.settings.getRecordsUrlFor(uuid);
         let existingExtras = target.extras;
@@ -283,21 +162,7 @@ export class CswUtils {
         };
         if (existingExtras.creators) target.extras.creators = existingExtras.creators;
 
-        // Detect mFund properties
-        keywords.forEach(kw => {
-            let kwLower = kw.toLowerCase();
-            if (kwLower.startsWith('mfund-fkz:')) {
-                let idx = kw.indexOf(':');
-                let fkz = kw.substr(idx+1);
 
-                if (fkz) target.extras.mfund_fkz = fkz.trim();
-            } else if (kwLower.startsWith('mfund-projekt:')) {
-                let idx = kw.indexOf(':');
-                let mfName = kw.substr(idx+1);
-
-                if (mfName) target.extras.mfund_project_title = mfName.trim();
-            }
-        });
         if (this.settings.defaultAttribution) target.extras.metadata.source.attribution = this.settings.defaultAttribution;
 
         await this.extractLicense(target.extras, idInfo, {uuid: uuid, title: title});
@@ -417,148 +282,9 @@ export class CswUtils {
         if (others.length > 0) target.contactPoint = others[0]; // TODO index all contacts
     }
 
-    extractAccessRights(target, idInfo) {
-        /*
-         * For Open Data, GDI-DE expects access rights to be defined three times:
-         * - As text in useLimitation
-         * - As text in a useConstraints/otherConstraints combination
-         * - As a JSON-snippet in a useConstraints/otherConstraints combination
-         *
-         * Use limitations can also be defined as separate fields
-         * Plus access constraints can be set from the ISO codelist MD_RestrictionCode
-         *
-         * GeoDCAT-AP of the EU on the other had uses the
-         * useLimitation/accessConstraints=otherRestritions/otherConstraints
-         * combination and uses the accessRights field to store this information.
-         *
-         * We use a combination of these strategies:
-         * - Use the accessRights field like GeoDCAT-AP but store:
-         *    + all the useLimitation items
-         *    + all otherConstraints texts for useConstraints/otherConstraints
-         *      combinations that are not JSON-snippets.
-         */
-        // Extract all useLimitation texts
-        let limitations = select('./*/gmd:resourceConstraints/*/gmd:useLimitation', idInfo)
-            .map(node => this.getCharacterStringContent(node)) // Extract the text
-            .filter(text => text) // Filter out falsy items
-            .map(text => text.trim());
-
-        // Select 'otherConstraints' elements that have a 'useConstraints' sibling
-        let constraints = select('./*/gmd:resourceConstraints/*[./gmd:useConstraints and ./gmd:otherConstraints]/gmd:otherConstraints', idInfo)
-            .map(node => this.getCharacterStringContent(node)) // Extract the text
-            .filter(text => text) // Filter out null and undefined values
-            .map(text => text.trim())
-            .filter(text => text && !limitations.includes(text.trim()) && !text.match(/"url"\s*:\s*"([^"]+)"/)); // Keep non-empty (truthy) items that are not defined in useLimitations and are not a JSON-snippet
-
-        // Combine useLimitations and otherConstraints and store in accessRights
-        let accessRights = limitations.concat(constraints);
-        if (accessRights.length > 0) {
-            target.accessRights = accessRights;
-        }
-    }
-
-    async extractLicense(extras, idInfo, args) {
-        let license = await this.getLicense(idInfo);
-        if (license) {
-            extras.license_title = license.text;
-            if (license.id) extras.license_id = license.id;
-            if (license.url) extras.license_url = license.url;
-        }
-        if (!license || !license.id) {
-            let msg = 'No license detected for dataset.';
-            if (this.settings.printSummary) this.summary.missingLicense++;
-            log.warn(`${msg} ${this.getErrorSuffix(args.uuid, args.title)}`);
-
-            extras.license_id = 'Unbekannt';
-            extras.metadata.harvesting_errors.push(msg);
-        }
-    }
-
-    async getLicense(idInfo) {
-        let constraints = select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license"]', idInfo);
-        if (constraints && constraints.length > 0) {
-            let license: any = {};
-            for(let j=0; j<constraints.length; j++) {
-                let c = constraints[j];
-                // Search until id and url are not defined
-                let nodes = select('./gmd:otherConstraints', c);
-                for (let i = 0; i < nodes.length && (!license.id || !license.url); i++) {
-                    let text = this.getCharacterStringContent(nodes[i]);
-                    license.text = text;
-                    let match = text.match(/"name"\s*:\s*"([^"]+)"/);
-                    if (match) {
-                        license.id = match[1];
-                    } else {
-                        delete license.id;
-                    }
-                    match = text.match(/"url"\s*:\s*"([^"]+)"/);
-                    if (match) {
-                        license.url = await UrlUtils.urlWithProtocolFor(match[1]);
-                    } else {
-                        delete license.url;
-                    }
-                }
-            }
-            return license;
-        }
-    }
 
     extractTemporal(extras, idInfo, args) {
-        let suffix = this.getErrorSuffix(args.uuid, args.title);
-        let nodes = select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimeInstant/gml:timePosition', idInfo);
-        let times = nodes.map(node => node.textContent);
-        if (times.length === 1) {
-            extras.temporal = times[0];
-        } else if (times.length > 1) {
-            log.warn(`Multiple time instants defined: [${times.join(', ')}]. ${suffix}`);
-            extras.temporal = times;
-        }
 
-        nodes = select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', idInfo);
-        if (nodes.length > 1) {
-            log.warn(`Multiple time extents defined. Using only the first one. ${suffix}`);
-        }
-        if (nodes.length > 0) {
-            let begin = select('./gml:beginPosition', nodes[0], true);
-            let end = select('./gml:endPosition', nodes[0], true);
-            if (!begin) {
-                begin = select('./gml:begin/*/gml:timePosition', nodes[0], true);
-            }
-            if (!end) {
-                end = select('./gml:end/*/gml:timePosition', nodes[0], true);
-            }
-            try {
-                if (!begin.hasAttribute('indeterminatePosition')) {
-                    begin = begin.textContent;
-                    extras.temporal_begin = begin;
-                }
-                if (!end.hasAttribute('indeterminatePosition')) {
-                    end = end.textContent;
-                    extras.temporal_end = end;
-                }
-            } catch (e) {
-                log.error(`Cannot extract time range. ${suffix}`);
-            }
-        }
     }
 
-    getCharacterStringContent(element, cname?) {
-        if (cname) {
-            let node = select(`.//gmd:${cname}/gco:CharacterString`, element, true);
-            if (node) {
-                return node.textContent;
-            }
-        } else {
-            let node = select('./gco:CharacterString', element, true);
-            return node.textContent;
-        }
-    }
-
-    getErrorSuffix(uuid, title) {
-        return `Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'.`;
-    }
-
-    static get GMD() {
-        return GMD;
-    }
 }

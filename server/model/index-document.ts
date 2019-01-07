@@ -7,10 +7,12 @@ export class IndexDocument {
             title: mapper.getTitle(),
             description: mapper.getDescription(),
             publisher: mapper.getPublisher(),
+            keywords: mapper.getKeywords(),
             theme: mapper.getThemes(),
             modified: mapper.getModifiedDate(),
             accessRights: mapper.getAccessRights(),
             distribution: await mapper.getDistributions(),
+            accrualPeriodicity: mapper.getAccrualPeriodicity(),
             extras: {
                 metadata: {
                     modified: mapper.getMetadataModified(),
@@ -18,8 +20,8 @@ export class IndexDocument {
                     source: mapper.getMetadataSource()
                 },
                 generated_id: mapper.getGeneratedId(),
-                license_id: mapper.getLicenseId(),
-                license_url: mapper.getLicenseURL(),
+                license_id: await mapper.getLicenseId(),
+                license_url: await mapper.getLicenseURL(),
                 realtime: mapper.isRealtime(),
                 temporal: mapper.getTemporal(),
                 citation: mapper.getCitation(),
