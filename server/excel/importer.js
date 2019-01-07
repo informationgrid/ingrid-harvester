@@ -337,6 +337,10 @@ class ExcelImporter {
         let downloads = urlsString.split(/,[\r\n]+/); // comma followed by one or more (carriage returns or newlines)
         for (let i=0; i<downloads.length; i++) {
             let downloadUrl = downloads[i];
+
+            // check for empty download URLs
+            if (downloadUrl.trim().length === 0) continue;
+
             let checkedUrl = await UrlUtils.urlWithProtocolFor(downloadUrl);
             if (checkedUrl) {
                 ogdObject.distribution.push({
