@@ -4,9 +4,10 @@
     "allowJs": true,
     "target": "es5",
     "module": "commonjs",
-    "lib": ["es2018", "dom", "es6"],
+    "lib": ["es2016"],
     "noImplicitAny": false,
-    "strict": false
+    "strict": false,
+    "sourceMap": true
   },
   "include": [
     "./server/**/*"
