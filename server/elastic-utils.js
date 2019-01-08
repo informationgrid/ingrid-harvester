@@ -271,6 +271,7 @@ class ElasticSearchUtils {
 
     async _deduplicateUsingQuery() {
         log.debug(`Looking for duplicates for items in index '${this.indexName}`);
+        // TODO: make sure the index was refreshed to get the updated results (e.g. previous deletion of duplicated items)
 
         // Send data in chunks. Don't send too much at once.
         let maxSize = 50;
@@ -289,11 +290,11 @@ class ElasticSearchUtils {
             if (body.length < 1) return; // Don't send an empty query
 
             let results = await this.client.msearch({body: body});
-            for (let i = 0; i < results.responses.length; i++) {
-                if (!results.responses[i].hits) continue;
+            for (let j = 0; j < results.responses.length; j++) {
+                if (!results.responses[j].hits) continue;
 
-                results.responses[i].hits.hits.forEach(hit => {
-                    let item = this.duplicateStaging[i];
+                results.responses[j].hits.hits.forEach(hit => {
+                    let item = slice[j];
                     let title = item.title;
 
                     let myDate = item.modified;
