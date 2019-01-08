@@ -543,15 +543,17 @@ class ElasticSearchUtils {
                         let hit0 = hits[i-i];
                         let hit1 = hits[i];
 
-                        let urls0 = [];
-                        let urls1 = [];
-                        hit0._source.distribution.forEach(dist => urls0.push(dist.accessURL));
-                        hit1._source.distribution.forEach(dist => urls1.push(dist.accessURL));
+                        // collect URLs from hits we want to compare
+                        let urlsFromHit = [];
+                        let urlsFromOtherHit = [];
+                        hit0._source.distribution.forEach(dist => urlsFromHit.push(dist.accessURL));
+                        hit1._source.distribution.forEach(dist => urlsFromOtherHit.push(dist.accessURL));
 
-                        let remove = false;
-                        for(let j=0; j<urls1.length && !remove; j++) {
-                            remove = urls0.includes(urls1[j]);
-                        }
+                        // only if all URLs are the same in both hits, we expect them to be equal AND have the same length
+                        let remove =
+                            urlsFromHit.length === urlsFromOtherHit.length
+                            && urlsFromHit.every(url => urlsFromOtherHit.includes(url));
+
                         if (remove) {
                             let deleted = `Item to delete -> ID: '${hit1._id}', Title: '${hit1._source.title}', Index: '${hit1._index}'`;
                             let retained = `Item to retain -> ID: '${hit0._id}', Title: '${hit0._source.title}', Index: '${hit0._index}'`;
