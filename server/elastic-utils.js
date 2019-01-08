@@ -464,14 +464,7 @@ class ElasticSearchUtils {
                                         bool: {
                                             must: [
                                                 { terms: { "distribution.accessURL": urls } },
-                                                {
-                                                    match: {
-                                                        "title.raw": {
-                                                            query: title,
-                                                            minimum_should_match: "3<80%"
-                                                        }
-                                                    }
-                                                }
+                                                { term: { "title.raw": title } }
                                             ]
                                         }
                                     }
