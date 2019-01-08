@@ -234,7 +234,7 @@ export class DeutscheBahnCkanImporter {
             Utils.postProcess(target);
 
             // Execute the mappers
-            let mapper = new CkanToElasticsearchMapper(target);
+            let mapper = new CkanToElasticsearchMapper(source);
             let doc = await IndexDocument.create(mapper);
 
             let promise = this.elastic.addDocToBulk(doc, id);

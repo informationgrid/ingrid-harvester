@@ -6,6 +6,7 @@ export class IndexDocument {
         return {
             title: mapper.getTitle(),
             description: mapper.getDescription(),
+            creator: mapper.getCreator(),
             publisher: mapper.getPublisher(),
             keywords: mapper.getKeywords(),
             theme: mapper.getThemes(),
@@ -20,15 +21,19 @@ export class IndexDocument {
                     source: mapper.getMetadataSource()
                 },
                 generated_id: mapper.getGeneratedId(),
+                license_title: await mapper.getLicenseTitle(),
                 license_id: await mapper.getLicenseId(),
                 license_url: await mapper.getLicenseURL(),
                 realtime: mapper.isRealtime(),
                 temporal: mapper.getTemporal(),
+                temporal_start: mapper.getTemporalStart(),
+                temporal_end: mapper.getTemporalEnd(),
                 citation: mapper.getCitation(),
                 subgroups: mapper.getCategories(),
                 mfund_fkz: mapper.getMFundFKZ(),
                 mfund_project_title: mapper.getMFundProjectTitle(),
-                displayContact: mapper.getDisplayContacts()
+                displayContact: mapper.getDisplayContacts(),
+                harvested_data: mapper.getHarvestedData()
             }
         };
     }

@@ -4,12 +4,15 @@ import {WsvImporter} from "./csw/wsv-importer";
 import {DwdImporter} from "./csw/dwd-importer";
 import {BfgImporter} from "./csw/bfg-importer";
 import {MdiImporter} from "./csw/mdi-importer";
-import {CkanToElasticsearchMapper} from "./ckan/ckan.mapper";
+import { configure, getLogger } from 'log4js';
 
-let // findPort = require( 'find-port' ),
-    log = require( 'log4js' ).getLogger( __filename ),
-    config = require( './config.json' ),
-    process = require('process');
+
+let config = require( './config.json' ),
+    process = require('process'),
+    log = getLogger('app');
+
+configure('server/log4js.json');
+// log.level = 'info';
 
 
 // create a server which finds a random free port
@@ -61,6 +64,6 @@ config.forEach( (settings:any) => {
         log.error( 'Importer not defined for: ' + settings.importer );
         return;
     }
-
+    log.info("Starting import ...");
     importer.run();
 } );

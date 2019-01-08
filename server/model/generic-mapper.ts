@@ -6,11 +6,11 @@ export abstract class GenericMapper {
 
     abstract getPublisher(): any;
 
-    abstract getThemes(): string;
+    abstract getThemes(): string[];
 
-    abstract getModifiedDate(): string;
+    abstract getModifiedDate(): Date;
 
-    abstract getAccessRights(): string;
+    abstract getAccessRights(): string[];
 
     abstract async getDistributions(): Promise<any[]>;
 
@@ -24,13 +24,13 @@ export abstract class GenericMapper {
         return new Date(Date.now());
     }
 
-    abstract getMetadataSource(): string;
+    abstract getMetadataSource(): any;
 
     abstract getMetadataIssued(): Date;
 
     abstract isRealtime(): boolean;
 
-    abstract getTemporal(): string;
+    abstract getTemporal(): Date;
 
     abstract getCitation(): string;
 
@@ -76,5 +76,19 @@ export abstract class GenericMapper {
 
 
     abstract getAccrualPeriodicity(): string;
+
+    abstract getCreator(): any;
+
+    abstract getLicenseTitle(): string;
+
+    abstract getHarvestedData(): string;
+
+
+    abstract getTemporalStart(): Date;
+
+    abstract getTemporalEnd(): Date;
+
 }
+
+
 

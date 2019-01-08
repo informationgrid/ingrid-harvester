@@ -234,4 +234,12 @@ export class ExcelMapper extends GenericMapper {
         log.warn('Could not find abbreviation of "License": ' + licenseId);
     }
 
+    getAccrualPeriodicity(): string {
+        return null;
+    }
+
+    getKeywords(): string[] {
+        return null;
+    }
+
 }
