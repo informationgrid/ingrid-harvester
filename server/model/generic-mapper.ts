@@ -1,46 +1,48 @@
 export abstract class GenericMapper {
 
-    abstract getTitle();
+    abstract getTitle(): string;
 
-    abstract getDescription();
+    abstract getDescription(): string;
 
-    abstract getPublisher();
+    abstract getPublisher(): any;
 
-    abstract getThemes();
+    abstract getThemes(): string;
 
-    abstract getModifiedDate();
+    abstract getModifiedDate(): string;
 
-    abstract getAccessRights();
+    abstract getAccessRights(): string;
 
     abstract async getDistributions(): Promise<any[]>;
 
-    abstract getLicenseId();
+    abstract async getLicenseId(): Promise<string>;
 
-    abstract getLicenseURL();
+    abstract async getLicenseURL(): Promise<string>;
 
-    abstract getGeneratedId();
+    abstract getGeneratedId(): string;
 
-    getMetadataModified() {
+    getMetadataModified(): Date {
         return new Date(Date.now());
     }
 
-    abstract getMetadataSource();
+    abstract getMetadataSource(): string;
 
-    abstract getMetadataIssued();
+    abstract getMetadataIssued(): Date;
 
-    abstract isRealtime();
+    abstract isRealtime(): boolean;
 
-    abstract getTemporal();
+    abstract getTemporal(): string;
 
-    abstract getCitation();
+    abstract getCitation(): string;
 
-    abstract getCategories();
+    abstract getCategories(): string[];
 
-    abstract getMFundFKZ();
+    abstract getMFundFKZ(): string;
 
-    abstract getMFundProjectTitle();
+    abstract getMFundProjectTitle(): string;
 
-    abstract getDisplayContacts();
+    abstract getDisplayContacts(): any[];
+
+    abstract getKeywords(): string[];
 
     // HELPER METHODS
 
@@ -72,4 +74,7 @@ export abstract class GenericMapper {
         };
     }
 
+
+    abstract getAccrualPeriodicity(): string;
 }
+
