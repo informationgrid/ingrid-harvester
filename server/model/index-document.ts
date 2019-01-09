@@ -6,34 +6,40 @@ export class IndexDocument {
         return {
             title: mapper.getTitle(),
             description: mapper.getDescription(),
-            creator: mapper.getCreator(),
-            publisher: mapper.getPublisher(),
-            keywords: mapper.getKeywords(),
             theme: mapper.getThemes(),
+            issued: mapper.getIssued(),
             modified: mapper.getModifiedDate(),
+            accrualPeriodicity: mapper.getAccrualPeriodicity(),
+            keywords: mapper.getKeywords(),
+            creator: mapper.getCreator(),
+            publisher: await mapper.getPublisher(),
             accessRights: mapper.getAccessRights(),
             distribution: await mapper.getDistributions(),
-            accrualPeriodicity: mapper.getAccrualPeriodicity(),
             extras: {
                 metadata: {
-                    modified: mapper.getMetadataModified(),
+                    source: mapper.getMetadataSource(),
                     issued: mapper.getMetadataIssued(),
-                    source: mapper.getMetadataSource()
+                    modified: mapper.getMetadataModified(),
+                    harvested: mapper.getMetadataHarvested()
                 },
                 generated_id: mapper.getGeneratedId(),
-                license_title: await mapper.getLicenseTitle(),
+                subgroups: mapper.getCategories(),
                 license_id: await mapper.getLicenseId(),
+                license_title: await mapper.getLicenseTitle(),
                 license_url: await mapper.getLicenseURL(),
-                realtime: mapper.isRealtime(),
+                harvested_data: mapper.getHarvestedData(),
+                harvesting_errors: mapper.getHarvestErrors(),
+                subsection: mapper.getSubSections(),
                 temporal: mapper.getTemporal(),
+                groups: mapper.getGroups(),
+                displayContact: await mapper.getDisplayContacts(),
+                all: null,
                 temporal_start: mapper.getTemporalStart(),
                 temporal_end: mapper.getTemporalEnd(),
+                realtime: mapper.isRealtime(),
                 citation: mapper.getCitation(),
-                subgroups: mapper.getCategories(),
                 mfund_fkz: mapper.getMFundFKZ(),
-                mfund_project_title: mapper.getMFundProjectTitle(),
-                displayContact: mapper.getDisplayContacts(),
-                harvested_data: mapper.getHarvestedData()
+                mfund_project_title: mapper.getMFundProjectTitle()
             }
         };
     }

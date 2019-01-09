@@ -1,10 +1,11 @@
 export abstract class GenericMapper {
+    protected errors: string[];
 
     abstract getTitle(): string;
 
     abstract getDescription(): string;
 
-    abstract getPublisher(): any;
+    abstract async getPublisher(): Promise<any[]>;
 
     abstract getThemes(): string[];
 
@@ -40,7 +41,7 @@ export abstract class GenericMapper {
 
     abstract getMFundProjectTitle(): string;
 
-    abstract getDisplayContacts(): any[];
+    abstract async getDisplayContacts(): Promise<any[]>;
 
     abstract getKeywords(): string[];
 
@@ -77,7 +78,7 @@ export abstract class GenericMapper {
 
     abstract getAccrualPeriodicity(): string;
 
-    abstract getCreator(): any;
+    abstract getCreator(): {name: string, mbox: string};
 
     abstract getLicenseTitle(): string;
 
@@ -87,6 +88,18 @@ export abstract class GenericMapper {
     abstract getTemporalStart(): Date;
 
     abstract getTemporalEnd(): Date;
+
+    getHarvestErrors() {
+        return this.errors;
+    }
+
+    abstract getIssued(): Date;
+
+    abstract getMetadataHarvested(): Date;
+
+    abstract getSubSections(): any[];
+
+    abstract getGroups(): string[];
 
 }
 

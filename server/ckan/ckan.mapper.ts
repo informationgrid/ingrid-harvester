@@ -11,15 +11,22 @@ export class CkanToElasticsearchMapper extends GenericMapper {
 
     private log = getLogger();
 
-    private data: any;
+    private readonly data: any;
     private resourcesDate: Date[] = null;
+    private settings: any;
 
-    constructor(data) {
+    constructor(settings, data) {
         super();
+        this.settings = settings;
         this.data = data;
     }
 
+    getErrors() {
+        return this.errors;
+    }
+
     getAccessRights() {
+        return null;
     }
 
     getCategories() {
@@ -27,19 +34,32 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getCitation() {
+        return null;
     }
 
     getDescription() {
         return markdown.toHTML(this.data.notes);
     }
 
-    getDisplayContacts() {
+    async getDisplayContacts() {
+        let contact: any = {};
+
+        let publisher = await this.getPublisher();
+        if (publisher[0].organization) {
+            contact.name = publisher[0].organization;
+        }
+
+        if (publisher[0].homepage) {
+            contact.url = publisher[0].homepage;
+        }
+
+        return contact;
     }
 
     async getDistributions(): Promise<any[]> {
         let urlErrors = [];
         let distributions = [];
-        let resources = source.resources;
+        let resources = this.data.resources;
         if (resources !== null) {
             for(let i=0; i<resources.length; i++) {
                 let res = resources[i];
@@ -57,54 +77,68 @@ export class CkanToElasticsearchMapper extends GenericMapper {
                     };
                     distributions.push(dist);
                 } else {
-                    let msg = `Invalid URL '${res.url} found for item with id: '${source.id}', title: '${source.title}', index: '${this.elastic.indexName}'.`;
+                    let msg = `Invalid URL '${res.url} found for item with id: '${this.data.id}', title: '${this.data.title}', index: '${this.settings.currentIndexName}'.`;
                     urlErrors.push(msg);
                     this.log.warn(msg);
                 }
             }
         }
+        this.errors = urlErrors;
+
         return distributions;
     }
 
     getGeneratedId() {
-        return source.name;
+        return this.data.name;
     }
 
     getLicenseTitle() {
-        return source.license_title;
+        return this.data.license_title;
     }
 
     getLicenseId() {
-        return source.license_id;
+        return this.data.license_id;
     }
 
     getLicenseURL() {
-        return source.license_url;
+        return this.data.license_url;
     }
 
     getMFundFKZ() {
+        return null;
     }
 
     getMFundProjectTitle() {
+        return null;
     }
 
     getMetadataIssued() {
-        return source.metadata_created;
+        return new Date(Date.now());
     }
 
     getMetadataSource() {
+        // Metadata
+        // The harvest source
+        let rawSource = this.settings.ckanBaseUrl + "/api/3/action/package_show?id=" + this.data.name;
+        let portalSource = this.settings.ckanBaseUrl + '/dataset/' + this.data.name;
+
+        return {
+            raw_data_source: rawSource,
+            portal_link: portalSource,
+            attribution: 'Deutsche Bahn Datenportal'
+        };
     }
 
     getModifiedDate() {
-        return source.metadata_modified;
+        return this.data.metadata_modified;
     }
 
-    getPublisher() {
+    async getPublisher() {
         let publisher = [];
-        if (source.organization !== null) {
-            if (source.organization.title !== null) {
-                let title = source.organization.title;
-                let homepage = source.organization.description;
+        if (this.data.organization !== null) {
+            if (this.data.organization.title !== null) {
+                let title = this.data.organization.title;
+                let homepage = this.data.organization.description;
                 let match = homepage.match(/]\(([^)]+)/); // Square bracket followed by text in parentheses
                 let org: any = {};
 
@@ -120,17 +154,37 @@ export class CkanToElasticsearchMapper extends GenericMapper {
 
     getTemporal() {
         let dates = this.getResourcesData();
-        return new Date(Math.max(...dates));
+        let minDate = new Date(Math.min(...dates)); // Math.min and Math.max convert items to numbers
+        let maxDate = new Date(Math.max(...dates));
+
+        if (maxDate) {
+            return maxDate;
+        } else if (minDate) {
+            return minDate;
+        }
+        return null;
     }
 
     getTemporalStart() {
         let dates = this.getResourcesData();
-        return new Date(Math.min(...dates)); // Math.min and Math.max convert items to numbers
+        let minDate = new Date(Math.min(...dates)); // Math.min and Math.max convert items to numbers
+        let maxDate = new Date(Math.max(...dates));
+
+        if (minDate && maxDate && minDate.getTime() != maxDate.getTime()) {
+            return minDate; // Math.min and Math.max convert items to numbers
+        }
+        return null;
     }
 
     getTemporalEnd() {
         let dates = this.getResourcesData();
-        return new Date(Math.max(...dates));
+        let minDate = new Date(Math.min(...dates)); // Math.min and Math.max convert items to numbers
+        let maxDate = new Date(Math.max(...dates));
+
+        if (minDate && maxDate && minDate.getTime() != maxDate.getTime()) {
+            return maxDate;
+        }
+        return null;
     }
 
     getThemes() {
@@ -142,16 +196,17 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     isRealtime() {
+        return null;
     }
 
     getAccrualPeriodicity(): string {
-        return source.update_cycle;
+        return this.data.update_cycle;
     }
 
     getKeywords(): string[] {
         let keywords = [];
-        if (source.tags !== null) {
-            source.tags.forEach(tag => {
+        if (this.data.tags !== null) {
+            this.data.tags.forEach(tag => {
                 if (tag.display_name !== null) {
                     keywords.push(tag.display_name);
                 }
@@ -161,19 +216,8 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         return keywords;
     }
 
-    getCreator(): any {
-        if (source.author !== null || source.author_email !== null) {
-            return {
-                name: source.author,
-                mbox: source.author_email
-            };
-        }
-
-        return null;
-    }
-
     getHarvestedData(): string {
-        return JSON.stringify(source);
+        return JSON.stringify(this.data);
     }
 
     private getResourcesData() {
@@ -183,7 +227,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         }
 
         let dates = [];
-        let resources = source.resources;
+        let resources = this.data.resources;
         if (resources !== null) {
             for (let i = 0; i < resources.length; i++) {
                 let res = resources[i];
@@ -208,6 +252,62 @@ export class CkanToElasticsearchMapper extends GenericMapper {
 
         this.resourcesDate = dates;
         return dates;
+    }
+
+    getCreator() {
+        return {
+            name: this.data.author,
+            mbox: this.data.author_email
+        };
+    }
+
+    getGroups(): string[] {
+        let groups = [];
+
+        // Groups
+        if (this.data.groups !== null) {
+            groups = [];
+            this.data.groups.forEach(group => {
+                groups.push(group.display_name);
+            });
+        }
+
+        return groups;
+    }
+
+    getIssued(): Date {
+        return this.data.metadata_created;
+    }
+
+    getMetadataHarvested(): Date {
+        return this.settings.harvestTime;
+    }
+
+    getSubSections(): any[] {
+        let subsections = [];
+
+        // Extra information from the Deutsche Bahn portal
+        if (this.data.description) {
+            subsections.push({
+                title: 'Langbeschreibung',
+                description: markdown.toHTML(this.data.description)
+            });
+        }
+
+        if (this.data.license_detailed_description) {
+            subsections.push({
+                title: 'Lizenzbeschreibung',
+                description: this.data.license_detailed_description
+            });
+        }
+
+        if (this.data.haftung_description) {
+            subsections.push({
+                title: 'Haftungsausschluss',
+                description: this.data.haftung_description
+            });
+        }
+        return subsections;
     }
 
 }
