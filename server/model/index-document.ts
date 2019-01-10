@@ -3,7 +3,7 @@ import {GenericMapper} from "./generic-mapper";
 export class IndexDocument {
 
     static async create(mapper: GenericMapper) {
-        return {
+        let result = await {
             title: mapper.getTitle(),
             description: mapper.getDescription(),
             theme: mapper.getThemes(),
@@ -20,7 +20,8 @@ export class IndexDocument {
                     source: mapper.getMetadataSource(),
                     issued: mapper.getMetadataIssued(),
                     modified: mapper.getMetadataModified(),
-                    harvested: mapper.getMetadataHarvested()
+                    harvested: mapper.getMetadataHarvested(),
+                    harvesting_errors: null // get errors after all operations been done
                 },
                 generated_id: mapper.getGeneratedId(),
                 subgroups: mapper.getCategories(),
@@ -28,12 +29,11 @@ export class IndexDocument {
                 license_title: await mapper.getLicenseTitle(),
                 license_url: await mapper.getLicenseURL(),
                 harvested_data: mapper.getHarvestedData(),
-                harvesting_errors: mapper.getHarvestErrors(),
                 subsection: mapper.getSubSections(),
                 temporal: mapper.getTemporal(),
                 groups: mapper.getGroups(),
                 displayContact: await mapper.getDisplayContacts(),
-                all: null,
+                all: mapper.getExtrasAllData(),
                 temporal_start: mapper.getTemporalStart(),
                 temporal_end: mapper.getTemporalEnd(),
                 realtime: mapper.isRealtime(),
@@ -42,5 +42,8 @@ export class IndexDocument {
                 mfund_project_title: mapper.getMFundProjectTitle()
             }
         };
+
+        result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
+        return result;
     }
 }

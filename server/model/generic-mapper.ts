@@ -31,7 +31,7 @@ export abstract class GenericMapper {
 
     abstract isRealtime(): boolean;
 
-    abstract getTemporal(): Date;
+    abstract getTemporal(): string;
 
     abstract getCitation(): string;
 
@@ -41,7 +41,7 @@ export abstract class GenericMapper {
 
     abstract getMFundProjectTitle(): string;
 
-    abstract async getDisplayContacts(): Promise<any[]>;
+    abstract async getDisplayContacts(): Promise<any | any[]>;
 
     abstract getKeywords(): string[];
 
@@ -75,10 +75,17 @@ export abstract class GenericMapper {
         };
     }
 
+    static createCreator(name, email) {
+        return {
+            name: name,
+            mbox: email
+        };
+    }
+
 
     abstract getAccrualPeriodicity(): string;
 
-    abstract getCreator(): {name: string, mbox: string};
+    abstract getCreator(): {name: string, mbox: string}[] | {name: string, mbox: string};
 
     abstract getLicenseTitle(): string;
 
@@ -101,6 +108,21 @@ export abstract class GenericMapper {
 
     abstract getGroups(): string[];
 
+    getExtrasAllData(): any[] {
+        let all = [];
+
+        let keywords = this.getKeywords();
+        if (keywords) {
+            keywords.forEach(kw => all.push(kw));
+        }
+
+        let mfundFkz = this.getMFundFKZ();
+        if (mfundFkz) { // mfund_fkz exists and isn't zero (falsy)
+            all.push(mfundFkz);
+            all.push('mFUND'); // Add an additional keyword as aid for search
+        }
+        return all;
+    }
 }
 
 

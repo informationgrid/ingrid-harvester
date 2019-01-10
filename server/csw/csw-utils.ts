@@ -1,8 +1,6 @@
 import {ElasticSearchUtils} from "../utils/elastic-utils";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {elasticsearchSettings} from "../elastic.settings";
-import {UrlUtils} from "../utils/url-utils";
-import {Utils} from "../utils/common-utils";
 import {IndexDocument} from "../model/index-document";
 import {CswMapper} from "./csw-mapper";
 
@@ -13,7 +11,7 @@ let request = require('request-promise'),
 
 export class CswUtils {
     private settings: any;
-    private elastic: ElasticSearchUtils;
+    elastic: ElasticSearchUtils;
     private options_csw_search: any;
     private summary: any;
 
@@ -136,10 +134,10 @@ export class CswUtils {
         let uuid = CswMapper.getCharacterStringContent(record, 'fileIdentifier');
 
 
-        log.debug(`Processing record with id '${uuid}' and title '${title}'`);
+        // TODO: log.debug(`Processing record with id '${uuid}' and title '${title}'`);
 
 
-        await this.extractContacts(target, record); // creator, publisher, contactPoint
+        /*await this.extractContacts(target, record); // creator, publisher, contactPoint
         target.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
 
         this.extractAccessRights(target, idInfo);
@@ -190,12 +188,17 @@ export class CswUtils {
 
         if (target.extras.metadata.isValid !== false && dists.length > 0 && this.settings.printSummary) {
             this.summary.ok++;
-        }
+        }*/
+
+        // Execute the mappers
+        this.settings.currentIndexName = this.elastic.indexName;
+        let mapper = new CswMapper(this.settings, record, harvestTime, issued);
+        let doc = await IndexDocument.create(mapper);
 
         await this.elastic.addDocToBulk(target, uuid);
     }
 
-    async extractContacts(target, record) {
+    /*async extractContacts(target, record) {
         target.extras = {
             creators: []
         };
@@ -204,24 +207,24 @@ export class CswUtils {
         let others = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
-            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:identificationInfo/!*!/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i=0; i<queries.length; i++) {
-            let contacts = select('./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty', record);
+            let contacts = select('./gmd:identificationInfo/!*!/gmd:pointOfContact/gmd:CI_ResponsibleParty', record);
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
                 let role = select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
 
                 let name = select('./gmd:individualName/gco:CharacterString', contact, true);
                 let org = select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let delPt = select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
-                let region = select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
-                let country = select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
-                let postCode = select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
-                let email = select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
-                let phone = select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
-                let urlNode = select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let delPt = select('./gmd:contactInfo/!*!/gmd:address/!*!/gmd:deliveryPoint', contact);
+                let region = select('./gmd:contactInfo/!*!/gmd:address/!*!/gmd:administrativeArea/gco:CharacterString', contact, true);
+                let country = select('./gmd:contactInfo/!*!/gmd:address/!*!/gmd:country/gco:CharacterString', contact, true);
+                let postCode = select('./gmd:contactInfo/!*!/gmd:address/!*!/gmd:postalCode/gco:CharacterString', contact, true);
+                let email = select('./gmd:contactInfo/!*!/gmd:address/!*!/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                let phone = select('./gmd:contactInfo/!*!/gmd:phone/!*!/gmd:voice/gco:CharacterString', contact, true);
+                let urlNode = select('./gmd:contactInfo/!*!/gmd:onlineResource/!*!/gmd:linkage/gmd:URL', contact, true);
                 let url = urlNode ? await UrlUtils.urlWithProtocolFor(urlNode.textContent) : null;
 
 
@@ -232,11 +235,11 @@ export class CswUtils {
 
                     creators.push(infos);
 
-                    /*
+                    /!*
                      * foaf:Person and foaf:Organization are disjoint classes.
                      * Also there are no URL fields for organizations. Use the
                      * extras section to store this information temporarily.
-                     */
+                     *!/
                     let c: any = {};
                     if (name) c.fullName = name.textContent;
                     if (org) c.organisationName = org.textContent;
@@ -280,11 +283,6 @@ export class CswUtils {
         if (publishers.length > 0) target.publisher = publishers;
         //if (others.length > 0) target.contactPoint = others;
         if (others.length > 0) target.contactPoint = others[0]; // TODO index all contacts
-    }
-
-
-    extractTemporal(extras, idInfo, args) {
-
-    }
+    }*/
 
 }

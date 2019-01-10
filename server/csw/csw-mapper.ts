@@ -16,17 +16,29 @@ export class CswMapper extends GenericMapper {
     static CSW = 'http://www.opengis.net/cat/csw/2.0.2';
     static SRV = 'http://www.isotc211.org/2005/srv';
 
-    static select;
+    static select = xpath.useNamespaces({
+        'gmd': CswMapper.GMD,
+        'gco': CswMapper.GCO,
+        'gml': CswMapper.GML,
+        'srv': CswMapper.SRV
+    });
 
     private log = getLogger();
 
     private record: any;
     private harvestTime: any;
-    private issued: any;
+    private issued: string;
 
     private idInfo: SelectedValue;
     private settings: any;
-    private harvesting_errors: any[] = [];
+    private uuid: string;
+    private summary = {
+        numMatched: 0,
+        opendata: 0,
+        missingLinks: 0,
+        missingLicense: 0,
+        ok: 0
+    };
 
 
     constructor(settings, record, harvestTime, issued) {
@@ -36,12 +48,7 @@ export class CswMapper extends GenericMapper {
         this.harvestTime = harvestTime;
         this.issued = issued;
 
-        CswMapper.select = xpath.useNamespaces({
-            'gmd': CswMapper.GMD,
-            'gco': CswMapper.GCO,
-            'gml': CswMapper.GML,
-            'srv': CswMapper.SRV
-        });
+        this.uuid = CswMapper.getCharacterStringContent(record, 'fileIdentifier');
 
         this.idInfo = CswMapper.select('./gmd:identificationInfo', record, true);
 
@@ -129,14 +136,50 @@ export class CswMapper extends GenericMapper {
         return dists;
     }
 
-    getPublisher() {
+    async getPublisher() {
+        let publishers = [];
+        // Look up contacts for the dataset first and then the metadata contact
+        let queries = [
+            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:contact/gmd:CI_ResponsibleParty'
+        ];
+        for (let i = 0; i < queries.length; i++) {
+            let contacts = CswMapper.select('./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty', this.record);
+            for (let j = 0; j < contacts.length; j++) {
+                let contact = contacts[j];
+                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+
+                let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                let delPt = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
+                let region = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
+                let country = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
+                let postCode = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
+                let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                let phone = CswMapper.select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let url = urlNode ? await UrlUtils.urlWithProtocolFor(urlNode.textContent) : null;
+
+
+                if (role === 'publisher') {
+                    let infos: any = {};
+
+                    if (name) infos.name = name.textContent;
+                    if (url) infos.homepage = url;
+                    if (org) infos.organization = org.textContent;
+
+                    publishers.push(infos);
+                }
+            }
+        }
+        return publishers.length > 0 ? publishers : null;
     }
 
     getTitle() {
         return CswMapper.getCharacterStringContent(this.idInfo, 'title')
     }
 
-    getAccessRights(): string {
+    getAccessRights(): string[] {
         /*
          * For Open Data, GDI-DE expects access rights to be defined three times:
          * - As text in useLimitation
@@ -179,15 +222,18 @@ export class CswMapper extends GenericMapper {
 
     getCategories(): string[] {
         let subgroups = [];
-        keywords.forEach(k => {
-            k = k.trim();
-            if (k === 'mcloud_category_roads') subgroups.push('roads');
-            if (k === 'mcloud_category_climate') subgroups.push('climate');
-            if (k === 'mcloud_category_waters') subgroups.push('waters');
-            if (k === 'mcloud_category_railway') subgroups.push('railway');
-            if (k === 'mcloud_category_infrastructure') subgroups.push('infrastructure');
-            if (k === 'mcloud_category_aviation') subgroups.push('aviation');
-        });
+        let keywords = this.getKeywords();
+        if (keywords) {
+            keywords.forEach(k => {
+                k = k.trim();
+                if (k === 'mcloud_category_roads') subgroups.push('roads');
+                if (k === 'mcloud_category_climate') subgroups.push('climate');
+                if (k === 'mcloud_category_waters') subgroups.push('waters');
+                if (k === 'mcloud_category_railway') subgroups.push('railway');
+                if (k === 'mcloud_category_infrastructure') subgroups.push('infrastructure');
+                if (k === 'mcloud_category_aviation') subgroups.push('aviation');
+            });
+        }
         if (subgroups.length === 0) subgroups.push(this.settings.defaultMcloudSubgroup);
         return subgroups;
     }
@@ -196,8 +242,34 @@ export class CswMapper extends GenericMapper {
         return "";
     }
 
-    getDisplayContacts(): any[] {
-        return [];
+    async getDisplayContacts() {
+        // Look up contacts for the dataset first and then the metadata contact
+        let queries = [
+            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:contact/gmd:CI_ResponsibleParty'
+        ];
+        for (let i=0; i<queries.length; i++) {
+            let contacts = CswMapper.select('./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty', this.record);
+            for (let j = 0; j < contacts.length; j++) {
+                let contact = contacts[j];
+                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+
+                let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let url = urlNode ? await UrlUtils.urlWithProtocolFor(urlNode.textContent) : null;
+
+                if (role === 'originator' || role === 'author') {
+                    let displayName = org.textContent ? org.textContent : name.textContent;
+                    let displayUrl = url;
+                    return CswMapper.createDisplayContact(displayName, displayUrl);
+                }
+            }
+        }
+        return null;
+    }
+
+    async extractContacts(target, record) {
     }
 
     getGeneratedId(): string {
@@ -210,11 +282,11 @@ export class CswMapper extends GenericMapper {
             keywords.push(node.textContent);
         });
         if (keywords.includes('opendata')) {
-            if (this.settings.printSummary) this.summary.opendata++;
+            this.summary.opendata++;
         } else {
             // Don't index metadata-sets without the `opendata' keyword
-            this.log.info(`Keyword 'opendata' not found. Item will be ignored. ID: '${uuid}', Title: '${title}', Source: '${this.settings.getRecordsUrl}'.`);
-            return;
+            this.log.info(`Keyword 'opendata' not found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.getRecordsUrl}'.`);
+            return null;
         }
 
         return keywords;
@@ -228,9 +300,12 @@ export class CswMapper extends GenericMapper {
         if (!license || !license.id) {
             let msg = 'No license detected for dataset.';
             if (this.settings.printSummary) this.summary.missingLicense++;
-            this.log.warn(`${msg} ${this.getErrorSuffix(args.uuid, args.title)}`);
+            this.log.warn(`${msg} ${this.getErrorSuffix(this.uuid, this.getTitle())}`);
 
-            this.harvesting_errors.push(msg);
+            if (!this.errors) {
+                this.errors = [];
+            }
+            this.errors.push(msg);
             return 'Unbekannt';
         }
         return null;
@@ -246,46 +321,57 @@ export class CswMapper extends GenericMapper {
 
     getMFundFKZ(): string {
         // Detect mFund properties
-        keywords.forEach(kw => {
-            let kwLower = kw.toLowerCase();
-            if (kwLower.startsWith('mfund-fkz:')) {
-                let idx = kw.indexOf(':');
-                let fkz = kw.substr(idx+1);
+        let keywords = this.getKeywords();
+        if (keywords) {
+            keywords.forEach(kw => {
+                let kwLower = kw.toLowerCase();
+                if (kwLower.startsWith('mfund-fkz:')) {
+                    let idx = kw.indexOf(':');
+                    let fkz = kw.substr(idx + 1);
 
-                if (fkz) return fkz.trim();
-            }
-        });
+                    if (fkz) return fkz.trim();
+                }
+            });
+        }
         return null;
     }
 
     getMFundProjectTitle(): string {
         // Detect mFund properties
-        keywords.forEach(kw => {
-            let kwLower = kw.toLowerCase();
-            if (kwLower.startsWith('mfund-projekt:')) {
-                let idx = kw.indexOf(':');
-                let mfName = kw.substr(idx+1);
+        let keywords = this.getKeywords();
+        if (keywords) {
+            keywords.forEach(kw => {
+                let kwLower = kw.toLowerCase();
+                if (kwLower.startsWith('mfund-projekt:')) {
+                    let idx = kw.indexOf(':');
+                    let mfName = kw.substr(idx + 1);
 
-                if (mfName) return mfName.trim();
-            }
-        });
+                    if (mfName) return mfName.trim();
+                }
+            });
+        }
         return null;
     }
 
     getMetadataIssued(): Date {
-        return this.issued;
+        return this.issued ? new Date(this.issued) : new Date(Date.now());
     }
 
-    getMetadataSource(): string {
-        return "";
+    getMetadataSource(): any {
+        let cswLink = this.settings.getRecordsUrlFor(this.uuid);
+        return {
+            raw_data_source: cswLink,
+            portal_link: this.settings.defaultAttributionLink,
+            attribution: this.settings.defaultAttribution
+        };
     }
 
-    getModifiedDate(): string {
+    getModifiedDate() {
         return CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent;
     }
 
-    getTemporal(): string {
-        let suffix = this.getErrorSuffix(args.uuid, args.title);
+    getTemporal() {
+        let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
         let nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimeInstant/gml:timePosition', this.idInfo);
         let times = nodes.map(node => node.textContent);
         if (times.length === 1) {
@@ -294,38 +380,57 @@ export class CswMapper extends GenericMapper {
             this.log.warn(`Multiple time instants defined: [${times.join(', ')}]. ${suffix}`);
             return times;
         }
+        return null;
+    }
 
-        nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', this.idInfo);
+    getTemporalStart(): Date {
+        let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
+
+        let nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', this.idInfo);
         if (nodes.length > 1) {
             this.log.warn(`Multiple time extents defined. Using only the first one. ${suffix}`);
         }
         if (nodes.length > 0) {
             let begin = CswMapper.select('./gml:beginPosition', nodes[0], true);
-            let end = CswMapper.select('./gml:endPosition', nodes[0], true);
             if (!begin) {
                 begin = CswMapper.select('./gml:begin/*/gml:timePosition', nodes[0], true);
             }
-            if (!end) {
-                end = CswMapper.select('./gml:end/*/gml:timePosition', nodes[0], true);
-            }
             try {
                 if (!begin.hasAttribute('indeterminatePosition')) {
-                    begin = begin.textContent;
-                    extras.temporal_begin = begin;
-                }
-                if (!end.hasAttribute('indeterminatePosition')) {
-                    end = end.textContent;
-                    extras.temporal_end = end;
+                    return begin.textContent;
                 }
             } catch (e) {
-                this.log.error(`Cannot extract time range. ${suffix}`);
+                this.log.error(`Cannot extract time range. ${suffix}`, e);
             }
         }
         return null;
     }
 
-    getThemes(): string {
-        return "";
+    getTemporalEnd(): Date {
+        let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
+
+        let nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', this.idInfo);
+        if (nodes.length > 1) {
+            this.log.warn(`Multiple time extents defined. Using only the first one. ${suffix}`);
+        }
+        if (nodes.length > 0) {
+            let end = CswMapper.select('./gml:endPosition', nodes[0], true);
+            if (!end) {
+                end = CswMapper.select('./gml:end/*/gml:timePosition', nodes[0], true);
+            }
+            try {
+                if (!end.hasAttribute('indeterminatePosition')) {
+                    return end.textContent;
+                }
+            } catch (e) {
+                this.log.error(`Cannot extract time range. ${suffix}`, e);
+            }
+        }
+        return null;
+    }
+
+    getThemes() {
+        return ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary;
     }
 
     isRealtime(): boolean {
@@ -385,4 +490,59 @@ export class CswMapper extends GenericMapper {
     getErrorSuffix(uuid, title) {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'.`;
     }
+
+    getHarvestedData(): string {
+        return this.record.toString();
+    }
+
+    getLicenseTitle(): string {
+        return "";
+    }
+
+    getCreator() {
+        let creators = [];
+        // Look up contacts for the dataset first and then the metadata contact
+        let queries = [
+            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:contact/gmd:CI_ResponsibleParty'
+        ];
+        for (let i=0; i<queries.length; i++) {
+            let contacts = CswMapper.select('./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty', this.record);
+            for (let j = 0; j < contacts.length; j++) {
+                let contact = contacts[j];
+                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+
+                let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+
+
+                if (role === 'originator' || role === 'author') {
+                    let creator = CswMapper.createCreator(name.textContent, email.textContent);
+
+                    let alreadyPresent = creators.filter(c => c.name === creator.name && c.mbox === creator.mbox).length > 0;
+                    if (!alreadyPresent) {
+                        creators.push(creator);
+                    }
+                }
+            }
+        }
+        return creators;
+    }
+
+    getGroups(): string[] {
+        return null;
+    }
+
+    getIssued(): Date {
+        return null;
+    }
+
+    getMetadataHarvested(): Date {
+        return null;
+    }
+
+    getSubSections(): any[] {
+        return null;
+    }
+
 }
