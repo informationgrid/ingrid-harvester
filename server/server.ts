@@ -6,7 +6,6 @@ import {BfgImporter} from "./csw/bfg-importer";
 import {MdiImporter} from "./csw/mdi-importer";
 import { configure, getLogger } from 'log4js';
 
-
 let config = require( './config.json' ),
     process = require('process'),
     log = getLogger('app');

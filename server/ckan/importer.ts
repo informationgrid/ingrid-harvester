@@ -12,7 +12,7 @@ let request = require( 'request-promise' ),
 
 export class DeutscheBahnCkanImporter {
     private settings: any;
-    private elastic;
+    elastic: ElasticSearchUtils;
     private options_package_search;
 
     /**
@@ -59,21 +59,13 @@ export class DeutscheBahnCkanImporter {
             // Execute the mappers
             this.settings.currentIndexName = this.elastic.indexName;
             this.settings.harvestTime = harvestTime;
+            this.settings.issuedDate = issuedExisting;
             let mapper = new CkanToElasticsearchMapper(this.settings, source);
             let doc = await IndexDocument.create(mapper);
 
-            // add errors to document, if any
-            // should be done automatically by IndexDocument
-            /*if (mapper.getErrors().length > 0) {
-                doc.extras.metadata.harvesting_errors = mapper.getErrors();
-            }*/
-
-            // add all-field for special index search
-            Utils._addIndexTerms(doc);
-
-            let promise = this.elastic.addDocToBulk(doc, source.id);
-
-            return promise ? promise : new Promise(resolve => resolve());
+            if (!this.settings.dryRun) {
+                return this.elastic.addDocToBulk(doc, source.id);
+            }
         } catch (e) {
             log.error("Error: " + e);
         }

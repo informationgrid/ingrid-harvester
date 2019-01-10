@@ -113,7 +113,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getMetadataIssued() {
-        return new Date(Date.now());
+        return this.settings.issuedDate ? new Date(this.settings.issuedDate) : new Date(Date.now());
     }
 
     getMetadataSource() {
@@ -157,10 +157,12 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         let minDate = new Date(Math.min(...dates)); // Math.min and Math.max convert items to numbers
         let maxDate = new Date(Math.max(...dates));
 
-        if (maxDate) {
-            return maxDate;
+        if (minDate.toISOString() !== maxDate.toISOString()) {
+            return null;
+        } else if (maxDate) {
+            return maxDate.toISOString();
         } else if (minDate) {
-            return minDate;
+            return minDate.toISOString();
         }
         return null;
     }

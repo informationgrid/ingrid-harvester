@@ -11,9 +11,11 @@ export class ExcelMapper extends GenericMapper {
     columnValues;
     columnMap;
     workbook;
+    private settings: any;
 
-    constructor(data) {
+    constructor(settings, data) {
         super();
+        this.settings = settings;
         this.data = data;
         this.id = data.id;
         this.issuedExisting = data.issued;
@@ -30,7 +32,7 @@ export class ExcelMapper extends GenericMapper {
         return this.columnValues[this.columnMap.Kurzbeschreibung];
     }
 
-    getPublisher() {
+    async getPublisher() {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
         const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
@@ -81,7 +83,7 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getMetadataIssued() {
-        return this.data.issued ? this.data.issued : new Date(Date.now());
+        return this.issuedExisting ? this.issuedExisting : new Date(Date.now());
     }
 
     getMetadataSource() {
@@ -104,7 +106,7 @@ export class ExcelMapper extends GenericMapper {
         return this.columnValues[this.columnMap.Quellenvermerk];
     }
 
-    getDisplayContacts() {
+    async getDisplayContacts() {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
         const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
@@ -188,12 +190,12 @@ export class ExcelMapper extends GenericMapper {
                 });
             } else {
                 // TODO: handle errors
-                /*if (!ogdObject.extras.metadata.harvesting_errors) {
-                    ogdObject.extras.metadata.harvesting_errors = [];
+                if (!this.errors) {
+                    this.errors = [];
                 }
-                let msg = `Invalid URL '${downloadUrl} found for item with id: '${ogdObject.extras.generated_id}', title: '${ogdObject.title}', index: '${this.elastic.indexName}'.`;
-                ogdObject.extras.metadata.harvesting_errors.push(msg);
-                log.warn(msg);*/
+                let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.settings.currentIndexName}'.`;
+                this.errors.push(msg);
+                log.warn(msg);
                 log.warn(`Invalid URL '${downloadUrl}' found`);
             }
         }
@@ -239,6 +241,42 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getKeywords(): string[] {
+        return null;
+    }
+
+    getCreator() {
+        return null;
+    }
+
+    getHarvestedData(): string {
+        return null;
+    }
+
+    getLicenseTitle(): string {
+        return null;
+    }
+
+    getTemporalEnd(): Date {
+        return null;
+    }
+
+    getTemporalStart(): Date {
+        return null;
+    }
+
+    getGroups(): string[] {
+        return null;
+    }
+
+    getIssued(): Date {
+        return null;
+    }
+
+    getMetadataHarvested(): Date {
+        return null;
+    }
+
+    getSubSections(): any[] {
         return null;
     }
 

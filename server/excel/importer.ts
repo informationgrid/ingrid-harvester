@@ -3,15 +3,15 @@ import {ElasticSearchUtils} from '../utils/elastic-utils';
 import {ExcelMapper} from "./excel-mapper";
 import Excel = require('exceljs');
 import {Worksheet} from "exceljs";
-import {Utils} from "../utils/common-utils";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {elasticsearchSettings} from "../elastic.settings";
+import {settings} from "cluster";
 
 let log = require('log4js').getLogger(__filename);
 
 export class ExcelImporter {
 
-    settings: any;
+    settings: { importer, elasticSearchUrl, index, indexType, alias, filePath, includeTimestamp, dryRun, currentIndexName};
     elastic: ElasticSearchUtils;
     excelFilepath: string;
     names = {};
@@ -84,14 +84,15 @@ export class ExcelImporter {
             let ids = workUnits.map(unit => unit.id);
 
             // get all issued dates from IDs
-            // TODO: why do we need this? the date will be set from data, right?
             let timestamps = await this.elastic.getIssuedDates(ids);
+
+            this.settings.currentIndexName = this.elastic.indexName;
 
             // Attention: forEach does not work with async/await! using Promise.all for sequence
             await Promise.all(workUnits.map(async (unit, idx) => {
 
                 // create json document and create values with ExcelMapper
-                let doc = await IndexDocument.create(new ExcelMapper({
+                let doc = await IndexDocument.create(new ExcelMapper(settings, {
                     id: unit.id,
                     columnValues: unit.columnValues,
                     issued: timestamps[idx],
@@ -99,15 +100,9 @@ export class ExcelImporter {
                     columnMap: columnMap
                 }));
 
-                // add all-field for special index search
-                Utils._addIndexTerms(doc);
-
-                // log.debug(JSON.stringify(doc, null, 2));
                 // add document to buffer and send to elasticsearch if full
-                let promise = this.elastic.addDocToBulk(doc, unit.id);
-                // TODO: can we just push return value if if null?
-                if (promise) {
-                    promises.push(promise);
+                if (!this.settings.dryRun) {
+                    promises.push(this.elastic.addDocToBulk(doc, unit.id));
                 }
             }));
 
@@ -126,138 +121,6 @@ export class ExcelImporter {
             log.error('Error reading excel workbook', error);
         }
     }
-
-    /**
-     * Import a single row from the excel workbook to elasticsearch index
-     *
-     */
-    /*async importSingleRow(args) {
-        let uniqueName = args.id;
-        let issuedExisting = args.issued;
-        let columnValues = args.columnValues;
-        let columnMap = args.columnMap;
-        let workbook = args.workbook;
-
-        const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
-
-        log.debug('Processing excel dataset with title : ' + columnValues[columnMap.Daten]);
-
-        let ogdObject: any = {};
-        let doc = {};
-
-        const dateMetaUpdate = columnValues[columnMap.Aktualisierungsdatum];
-
-        let title = columnValues[columnMap.Daten];
-        ogdObject.title = title.trim(); // Remove leading and trailing whitspace
-        ogdObject.extras = {};
-
-        const publisherAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
-        const publishers = this.getPublishers(workbook.getWorksheet(2), publisherAbbreviations);
-        const license = this.getLicense(workbook.getWorksheet(3), columnValues[columnMap.Lizenz]);
-
-        if (publishers.length > 0) {
-            ogdObject.publisher = publishers;
-        }
-
-        ogdObject.description = columnValues[columnMap.Kurzbeschreibung];
-        ogdObject.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
-
-        ogdObject.extras.metadata = {};
-        if (dateMetaUpdate) {
-            ogdObject.modified = dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
-        }
-
-        let now = new Date(Date.now());
-        let issued = issuedExisting ? issuedExisting : now;
-        ogdObject.extras.generated_id = uniqueName;
-        ogdObject.extras.metadata.modified = now;
-        ogdObject.extras.metadata.issued = issued;
-        ogdObject.extras.metadata.source = { attribution: 'mcloud-excel' };
-
-        ogdObject.extras.license_id = license.description; // licenses.includes(v[c.Lizenz]) ? v[c.Lizenz] : 'cc-by-4.0';
-        ogdObject.extras.license_url = license.link;
-        ogdObject.extras.realtime = columnMap.Echtzeitdaten === 1;
-        // ogdObject.extras.metadata_original_id = TODO
-        ogdObject.extras.temporal = columnValues[columnMap.Zeitraum];
-
-        ogdObject.extras.citation = columnValues[columnMap.Quellenvermerk];
-        ogdObject.extras.subgroups = this.mapCategories(columnValues[columnMap.Kategorie].split(','));
-
-        let accessRights = columnValues[columnMap.Nutzungshinweise];
-        if (accessRights.trim() !== '') {
-            ogdObject.accessRights = [columnValues[columnMap.Nutzungshinweise]];
-        }
-
-        let mfundFkz = columnValues[columnMap.mFundFoerderkennzeichen];
-        if (mfundFkz && (mfundFkz.formula || mfundFkz.sharedFormula)) {
-            mfundFkz = mfundFkz.result;
-        }
-        ogdObject.extras.mfund_fkz = mfundFkz && mfundFkz.length > 0 ? mfundFkz : null;
-
-        let mfundProject = columnValues[columnMap.mFundProjekt];
-        if (mfundProject && (mfundProject.formula || mfundProject.sharedFormula)) {
-            mfundProject = mfundProject.result;
-        }
-        ogdObject.extras.mfund_project_title = mfundProject && mfundProject.length > 0 ? mfundProject : null;
-
-        ogdObject.distribution = [];
-
-        if (columnValues[columnMap.Dateidownload]) {
-            await this.addDownloadUrls(ogdObject, 'Dateidownload', columnValues[columnMap.Dateidownload]);
-        }
-        if (columnValues[columnMap.WMS]) {
-            await this.addDownloadUrls(ogdObject, 'WMS', columnValues[columnMap.WMS]);
-        }
-        if (columnValues[columnMap.FTP]) {
-            await this.addDownloadUrls(ogdObject, 'FTP', columnValues[columnMap.FTP]);
-        }
-        if (columnValues[columnMap.AtomFeed]) {
-            await this.addDownloadUrls(ogdObject, 'AtomFeed', columnValues[columnMap.AtomFeed]);
-        }
-        if (columnValues[columnMap.Portal]) {
-            await this.addDownloadUrls(ogdObject, 'Portal', columnValues[columnMap.Portal]);
-        }
-        if (columnValues[columnMap.SOS]) {
-            await this.addDownloadUrls(ogdObject, 'SOS', columnValues[columnMap.SOS]);
-        }
-        if (columnValues[columnMap.WFS]) {
-            await this.addDownloadUrls(ogdObject, 'WFS', columnValues[columnMap.WFS]);
-        }
-        if (columnValues[columnMap.WCS]) {
-            await this.addDownloadUrls(ogdObject, 'WCS', columnValues[columnMap.WCS]);
-        }
-        if (columnValues[columnMap.WMTS]) {
-            await this.addDownloadUrls(ogdObject, 'WMTS', columnValues[columnMap.WMTS]);
-        }
-        if (columnValues[columnMap.API]) {
-            await this.addDownloadUrls(ogdObject, 'API', columnValues[columnMap.API]);
-        }
-
-        // Extra checks
-        if (ogdObject.distribution.length === 0) {
-            ogdObject.extras.metadata.isValid = false;
-            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${uniqueName}', title: '${title}', index: '${this.elastic.indexName}'.`;
-            log.warn(msg);
-        }
-
-        this.settings.mapper.forEach(mapper => mapper.run(ogdObject, doc));
-
-        // add displayContact and a summary index field
-        Utils.postProcess(ogdObject);
-
-        // modify displayContact
-        // add all publisher under display contact which is used for facets
-        ogdObject.extras.displayContact = [];
-        publishers.forEach( p => {
-            ogdObject.extras.displayContact.push({
-                name: p.organization,
-                url: p.homepage
-            });
-        });
-
-        let promise = this.elastic.addDocToBulk(doc, uniqueName);
-        if (promise) return promise;
-    }*/
 
     /**
      * Generate unique name from a given string.
@@ -310,5 +173,3 @@ export class ExcelImporter {
         return workUnits;
     }
 }
-
-// export default ExcelImporter;
