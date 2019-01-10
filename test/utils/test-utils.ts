@@ -13,7 +13,7 @@ export class TestUtils {
     static compareDocuments(actual: any, expected: any, extraChecks?: (actual, expected) => void) {
         actual = JSON.parse(JSON.stringify(actual));
 
-        console.log("Actual doc", JSON.stringify(actual, null, 2));
+        // console.log("Actual doc", JSON.stringify(actual, null, 2));
 
         if (extraChecks) {
             extraChecks(actual, expected);

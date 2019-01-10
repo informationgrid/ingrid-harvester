@@ -9,7 +9,7 @@
     "build": "gulp",
     "lint": "./node_modules/.bin/eslint *.js",
     "test": "mocha -r ts-node/register test/*.spec.ts",
-    "test-jenkins": "JUNIT_REPORT_PATH=/report.xml mocha -r ts-node/register test/*.spec.ts --colors --reporter mocha-jenkins-reporter"
+    "test-jenkins": "JUNIT_REPORT_PATH=report.xml mocha -r ts-node/register test/*.spec.ts --colors --reporter mocha-jenkins-reporter"
   },
   "author": "",
   "license": "ISC",
