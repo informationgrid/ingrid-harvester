@@ -8,7 +8,8 @@
     "runFull": "npm run build && node ./dist/server.js",
     "build": "gulp",
     "lint": "./node_modules/.bin/eslint *.js",
-    "test": "mocha --compilers js:babel-register test/*.spec.js"
+    "test": "mocha -r ts-node/register test/*.spec.ts",
+    "test-jenkins": "JUNIT_REPORT_PATH=/report.xml mocha --colors --reporter mocha-jenkins-reporter"
   },
   "author": "",
   "license": "ISC",
@@ -25,9 +26,11 @@
     "xpath": "0.0.27"
   },
   "devDependencies": {
+    "@types/browserify": "^12.0.36",
     "@types/chai": "^4.1.7",
     "@types/chai-as-promised": "^7.1.0",
     "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.18",
     "@types/sinon": "^7.0.3",
     "browserify": "^16.2.3",
     "chai": "^4.2.0",
@@ -40,6 +43,7 @@
     "gulp-typescript": "^5.0.0",
     "gulp-uglify": "^3.0.1",
     "mocha": "^5.2.0",
+    "mocha-jenkins-reporter": "^0.4.1",
     "request-promise": "^4.2.2",
     "sinon": "^7.2.2",
     "ts-node": "^7.0.1",
@@ -48,51 +52,5 @@
     "v8": "^0.1.0",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
-  },
-  "eslintConfig": {
-    "parserOptions": {
-      "ecmaVersion": 7
-    },
-    "parser": "babel-eslint",
-    "env": {
-      "node": true
-    },
-    "extends": "eslint:recommended",
-    "rules": {
-      "indent": [
-        "error",
-        4
-      ],
-      "linebreak-style": [
-        "error",
-        "unix"
-      ],
-      "quotes": [
-        "error",
-        "single"
-      ],
-      "semi": [
-        "error",
-        "always"
-      ],
-      "no-console": 1
-    },
-    "globals": {
-      "afterEach": false,
-      "beforeEach": false,
-      "describe": false,
-      "expect": false,
-      "it": false,
-      "jasmine": false,
-      "pending": false,
-      "spyOn": false,
-      "waits": false,
-      "waitsFor": false,
-      "xdescribe": false,
-      "xit": false,
-      "beforeAll": false,
-      "afterAll": false,
-      "runs": false
-    }
   }
 }

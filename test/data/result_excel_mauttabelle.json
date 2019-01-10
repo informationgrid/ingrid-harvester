@@ -15,10 +15,10 @@
     "subgroups" : [ "roads" ],
     "mfund_fkz" : null,
     "mfund_project_title" : null,
-    "displayContact" : [ {
+    "displayContact" : {
       "name" : "Bundesanstalt für Straßenwesen (BASt)",
       "url" : "http://www.bast.de/"
-    } ],
+    },
     "all" : [ ]
   },
   "publisher" : [ {

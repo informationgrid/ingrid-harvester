@@ -1,4 +1,3 @@
-import {ElasticSearchUtils} from "../server/utils/elastic-utils";
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
@@ -8,7 +7,7 @@ import {IndexDocument} from "../server/model/index-document";
 import {TestUtils} from "./utils/test-utils";
 
 let log = getLogger();
-configure('server/log4js.json');
+configure('./log4js.json');
 
 let resultZugbildungsplan = require('./data/result_ckan_bahn_Zugbildungsplan.json');
 
@@ -41,6 +40,7 @@ describe( 'Import CKAN Bahn', function () {
 
     await indexDocumentCreateSpy.getCall(0).returnValue.then( value => TestUtils.compareDocuments(value, resultZugbildungsplan, extraChecks) );
 
-  } ).timeout(10000)
+    indexDocumentCreateSpy.restore();
+  } ).timeout(10000);
 
 } );

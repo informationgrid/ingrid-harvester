@@ -8,7 +8,7 @@ import {IndexDocument} from "../server/model/index-document";
 import {TestUtils} from "./utils/test-utils";
 
 let log = getLogger();
-configure('server/log4js.json');
+configure('./log4js.json');
 
 let resultMauttabelle = require('./data/result_excel_mauttabelle.json');
 let resultBathymetrien = require('./data/result_excel_bathymetrien.json');
@@ -17,12 +17,6 @@ let resultBadegewaesser = require('./data/result_excel_badegewaesser.json');
 chai.use(chaiAsPromised);
 
 describe( 'Import Excel', function () {
-
-  let elastic = null;
-
-  beforeEach(() => {
-    elastic = new ElasticSearchUtils({});
-  });
 
   it( 'correct import of Excel file', async function () {
 
@@ -46,7 +40,7 @@ describe( 'Import Excel', function () {
     await indexDocumentCreateSpy.getCall(1).returnValue.then( value => TestUtils.compareDocuments(value, resultBathymetrien) );
     await indexDocumentCreateSpy.getCall(2).returnValue.then( value => TestUtils.compareDocuments(value, resultBadegewaesser) );
 
-  } ).timeout(10000)
-
+    indexDocumentCreateSpy.restore();
+  } ).timeout(10000);
 
 } );

@@ -1,15 +1,13 @@
-import {ElasticSearchUtils} from "../server/utils/elastic-utils";
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
-import {DeutscheBahnCkanImporter} from "../server/ckan/importer";
 import * as sinon from "sinon";
 import {IndexDocument} from "../server/model/index-document";
 import {TestUtils} from "./utils/test-utils";
 import {BfgImporter} from "../server/csw/bfg-importer";
 
 let log = getLogger();
-configure('server/log4js.json');
+configure('./log4js.json');
 
 let resultFlussgebietseinheiten = require('./data/result_csw_bfg_Flussgebietseinheiten.json');
 
@@ -47,6 +45,7 @@ describe( 'Import CSW BFG', function () {
 
     await indexDocumentCreateSpy.getCall(0).returnValue.then( value => TestUtils.compareDocuments(value, resultFlussgebietseinheiten, extraChecks) );
 
+    indexDocumentCreateSpy.restore();
   } ).timeout(10000)
 
 } );

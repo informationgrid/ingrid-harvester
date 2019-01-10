@@ -10,7 +10,7 @@ let config = require( './config.json' ),
     process = require('process'),
     log = getLogger('app');
 
-configure('server/log4js.json');
+configure('./log4js.json');
 // log.level = 'info';
 
 

@@ -43,6 +43,11 @@ pipeline {
                 sh 'cp ./docker/ingrid.service /root/rpmbuild/SOURCES'
             }
         }
+        stage('Test') {
+            steps {
+                sh '$NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm run test-jenkins'
+            }
+        }
         stage('Create') {
             steps {
                 sh 'rpmbuild -ba /root/rpmbuild/SPECS/mcloud-ingrid.spec'

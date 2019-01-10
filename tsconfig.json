@@ -7,7 +7,9 @@
     "lib": ["es2016"],
     "noImplicitAny": false,
     "strict": false,
-    "sourceMap": true
+    "sourceMap": true,
+    "types": ["node", "mocha"],
+    "skipLibCheck": true
   },
   "include": [
     "./server/**/*"
