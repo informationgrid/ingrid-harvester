@@ -1,7 +1,5 @@
-'use strict';
-
-const expect = require( 'chai' ).expect;
-let UrlUtils = require('../server/utils/url-utils');
+import {UrlUtils} from "../server/utils/url-utils";
+import {expect} from "chai";
 
 describe('validateUrl()', function() {
 
@@ -41,7 +39,7 @@ describe('validateUrl()', function() {
     });
 
     it('should be undefined if url is undefined', function() {
-        return UrlUtils.urlWithProtocolFor().then(result => {
+        return UrlUtils.urlWithProtocolFor(undefined).then(result => {
             expect(result).to.be.undefined;
         });
     });

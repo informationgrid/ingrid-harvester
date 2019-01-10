@@ -1,0 +1,35 @@
+{
+  "title" : "Mauttabelle",
+  "extras" : {
+    "metadata" : {
+      "issued" : "2019-01-08T16:33:11.168Z",
+      "source" : {
+        "attribution" : "mcloud-excel"
+      }
+    },
+    "generated_id" : "mauttabelle",
+    "license_id" : "Keine Angabe",
+    "realtime" : false,
+    "temporal" : "01.12.2018 - 30.01.2019",
+    "citation" : "Bundesanstalt für Straßenwesen",
+    "subgroups" : [ "roads" ],
+    "mfund_fkz" : null,
+    "mfund_project_title" : null,
+    "displayContact" : [ {
+      "name" : "Bundesanstalt für Straßenwesen (BASt)",
+      "url" : "http://www.bast.de/"
+    } ],
+    "all" : [ ]
+  },
+  "publisher" : [ {
+    "organization" : "Bundesanstalt für Straßenwesen (BASt)",
+    "homepage" : "http://www.bast.de/"
+  } ],
+  "description" : "Das mautpflichtige Straßennetz ist unterteilt in Knotenpunkte und Strecken. Ein Knotenpunkt kann <br>\n- eine Anschlussstelle einer Bundesautobahn einschließlich Bundesautobahnkreuz und Bundesautobahndreieck,<br>\n- eine Rastanlage mit einer straßenverkehrsrechtlich zulässigen Wendemöglichkeit,<br>\n- eine Kreuzung, Einmündung oder Zufahrt auf eine mautpflichtige oder Abfahrt von einer Bundesstraße, ausgenommen Zufahrten im Sinne des § 8a des Bundesfernstraßengesetzes,<br>\n- die Bundesgrenze sein.<br>\n<br>\nDer maßgebliche Referenzpunkt zur Längenberechnung befindet sich in der Regel am Kreuzungspunkt der mautpflichtigen Strecke mit der dort angeschlossenen untergeordneten Straße. Sinngemäß gilt diese Definition auch bei Autobahndreiecken und -kreuzen. Zwei aufeinanderfolgende Knotenpunkte begrenzen eine Tarifstrecke. Die Länge der Strecke wird als Tariflänge definiert. Sie entspricht der vermessenen Länge, die auf 100 Meter kaufmännisch gerundet wurde. Die Tariflängen, die Namen und Koordinaten der Knotenpunkte sind in der Mauttabelle aufgelistet.<br>\n<br>\nAlle Dateien werden automatisch vom Original generiert. Sie sind Kopien des Originals, das fälschungssicher aufbewahrt wird. Bei Unstimmigkeiten gilt das Original und nicht die veröffentlichten Kopien. ",
+  "theme" : [ "http://publications.europa.eu/resource/authority/data-theme/TRAN" ],
+  "modified" : "2018-12-01T00:00:00.000Z",
+  "distribution" : [ {
+    "format" : "Dateidownload",
+    "accessURL" : "http://www.mauttabelle.de/2018-12-01_Mauttabelle.zip"
+  } ]
+}
