@@ -45,7 +45,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh '$NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm run test-jenkins'
+                sh '$NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm run test-jenkins --scripts-prepend-node-path=auto'
             }
         }
         stage('Create') {
