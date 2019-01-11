@@ -20,7 +20,7 @@ BuildArch: 	noarch
 AutoReqProv: no
 
 
-Requires:	httpd java-1.8.0-oracle java-1.8.0-oracle-devel nodejs
+Requires:	httpd java >= 1:1.8.0 java-devel >= 1:1.8.0 nodejs
 
 
 
