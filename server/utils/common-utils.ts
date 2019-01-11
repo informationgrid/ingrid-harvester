@@ -52,6 +52,7 @@ export class Utils {
             }
 
             // This information is no longer needed
+            // FIXME: creators shouldn't be added as a temporary field
             delete item.extras.creators;
         } else if (item.creator && item.creator[0]) {
             if (item.creator[0].name) {

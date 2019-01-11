@@ -185,6 +185,9 @@ export const elasticsearchMapping = {
                 },
                 'modified': {
                     'type': 'date'
+                },
+                'byteSize': {
+                    'type': 'long'
                 }
             }
         },

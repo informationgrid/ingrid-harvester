@@ -279,6 +279,7 @@ export class ElasticSearchUtils {
 
     async _deduplicateUsingQuery() {
         log.debug(`Looking for duplicates for items in index '${this.indexName}`);
+        // TODO: make sure the index was refreshed to get the updated results (e.g. previous deletion of duplicated items)
 
         // Send data in chunks. Don't send too much at once.
         let maxSize = 50;
@@ -297,11 +298,11 @@ export class ElasticSearchUtils {
             if (body.length < 1) return; // Don't send an empty query
 
             let results = await this.client.msearch({body: body});
-            for (let i = 0; i < results.responses.length; i++) {
-                if (!results.responses[i].hits) continue;
+            for (let j = 0; j < results.responses.length; j++) {
+                if (!results.responses[j].hits) continue;
 
-                results.responses[i].hits.hits.forEach(hit => {
-                    let item = this.duplicateStaging[i];
+                results.responses[j].hits.hits.forEach(hit => {
+                    let item = slice[j];
                     let title = item.title;
 
                     let myDate = item.modified;
@@ -472,14 +473,7 @@ export class ElasticSearchUtils {
                                         bool: {
                                             must: [
                                                 { terms: { 'distribution.accessURL': urls } },
-                                                {
-                                                    match: {
-                                                        'title.raw': {
-                                                            query: title,
-                                                            minimum_should_match: '3<80%'
-                                                        }
-                                                    }
-                                                }
+                                                { term: { 'title.raw': title } }
                                             ]
                                         }
                                     }
@@ -551,15 +545,17 @@ export class ElasticSearchUtils {
                         let hit0 = hits[i-i];
                         let hit1 = hits[i];
 
-                        let urls0 = [];
-                        let urls1 = [];
-                        hit0._source.distribution.forEach(dist => urls0.push(dist.accessURL));
-                        hit1._source.distribution.forEach(dist => urls1.push(dist.accessURL));
+                        // collect URLs from hits we want to compare
+                        let urlsFromHit = [];
+                        let urlsFromOtherHit = [];
+                        hit0._source.distribution.forEach(dist => urlsFromHit.push(dist.accessURL));
+                        hit1._source.distribution.forEach(dist => urlsFromOtherHit.push(dist.accessURL));
 
-                        let remove = false;
-                        for(let j=0; j<urls1.length && !remove; j++) {
-                            remove = urls0.includes(urls1[j]);
-                        }
+                        // only if all URLs are the same in both hits, we expect them to be equal AND have the same length
+                        let remove =
+                            urlsFromHit.length === urlsFromOtherHit.length
+                            && urlsFromHit.every(url => urlsFromOtherHit.includes(url));
+
                         if (remove) {
                             let deleted = `Item to delete -> ID: '${hit1._id}', Title: '${hit1._source.title}', Index: '${hit1._index}'`;
                             let retained = `Item to retain -> ID: '${hit0._id}', Title: '${hit0._source.title}', Index: '${hit0._index}'`;
