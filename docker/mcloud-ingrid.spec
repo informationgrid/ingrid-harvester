@@ -20,8 +20,9 @@ BuildArch: 	noarch
 AutoReqProv: no
 
 
-Requires:	httpd java >= 1:1.8.0 java-devel >= 1:1.8.0 nodejs
-
+Requires:	httpd nodejs
+# since we move from Oracle Java to OpenJDK we disable requirement here
+#Requires:   java = 1:1.8.0 java-devel = 1:1.8.0
 
 
 %description
