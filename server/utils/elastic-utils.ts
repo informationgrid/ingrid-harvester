@@ -1,10 +1,15 @@
-'use strict';
-
 let elasticsearch = require('elasticsearch'),
-    log = require('log4js').getLogger(__filename),
-    Promise = require('promise');
+    log = require('log4js').getLogger(__filename);
 
-class ElasticSearchUtils {
+export class ElasticSearchUtils {
+
+    settings;
+    client;
+    _bulkData;
+    duplicateStaging;
+    maxBulkSize;
+    indexName;
+    deduplicationAlias;
 
     constructor(settings) {
         this.settings = settings;
@@ -55,7 +60,7 @@ class ElasticSearchUtils {
                     this.client.close();
                     log.info('Successfully added data into new index: ' + this.indexName);
                 })
-                .catch(err => log.error("Error finishing index", err));
+                .catch(err => log.error('Error finishing index', err));
         }
     }
 
@@ -148,6 +153,7 @@ class ElasticSearchUtils {
      * @param {string} type
      * @param {object} mapping
      * @param {object} settings
+     * @param callback
      */
     addMapping(index, type, mapping, settings, callback) {
 
@@ -209,19 +215,21 @@ class ElasticSearchUtils {
                         });
                     }
                     if (closeAfterBulk) {
+                        log.debug('Closing client connection to Elasticsearch');
                         this.client.close();
                     }
+                    log.debug('Bulk finished of data #items: ' + data.length);
                     resolve(response);
                 })
                 .catch(err => {
-                    log.error('Error occurred during bulk index', err);
+                    log.error('Error occurred during bulk index of #items: ' + data.length, err);
                     if (closeAfterBulk) {
                         this.client.close();
                     }
                     reject(err);
                 });
             } catch(e) {
-                log.error('Error during bulk indexing', e);
+                log.error('Error during bulk indexing of #items: ' + data.length, e);
             }
         });
     }
@@ -254,7 +262,7 @@ class ElasticSearchUtils {
      *
      * @param {boolean=} closeAfterBulk
      */
-    sendBulkData(closeAfterBulk) {
+    sendBulkData(closeAfterBulk?) {
         if (this._bulkData.length > 0) {
             log.debug('Sending BULK message with ' + this._bulkData.length + ' items to index ' + this.indexName);
             let promise = this.bulk(this._bulkData, closeAfterBulk);
@@ -308,7 +316,7 @@ class ElasticSearchUtils {
                     if (typeof myDate === 'number') myDate = new Date(myDate);
                     if (typeof hitDate === 'number') hitDate = new Date(hitDate);
 
-                    let q = {"delete": {}};
+                    let q = {'delete': <any>{}};
                     let retained = '';
                     if (hitDate > myDate) {
                         // Hit is newer. Delete document from current index.
@@ -374,7 +382,7 @@ class ElasticSearchUtils {
             data.push({});
             data.push({
                 query: {
-                    term: { "_id": id }
+                    term: { '_id': id }
                 }
             });
         });
@@ -424,8 +432,8 @@ class ElasticSearchUtils {
         let title = doc.title;
 
         // Make sure there are no nulls
-        if (!generatedId) generatedId = "";
-        if (!modified) modified = "";
+        if (!generatedId) generatedId = '';
+        if (!modified) modified = '';
 
         let urls = [];
         doc.distribution.forEach(dist => {
@@ -457,15 +465,15 @@ class ElasticSearchUtils {
                         {
                             bool: {
                                 should: [
-                                    { term: { "extras.generated_id" : id } },
-                                    { term: { "extras.generated_id" : generatedId } },
-                                    { term: { "_id" : id } },
-                                    { term: { "_id" : generatedId } },
+                                    { term: { 'extras.generated_id' : id } },
+                                    { term: { 'extras.generated_id' : generatedId } },
+                                    { term: { '_id' : id } },
+                                    { term: { '_id' : generatedId } },
                                     {
                                         bool: {
                                             must: [
-                                                { terms: { "distribution.accessURL": urls } },
-                                                { term: { "title.raw": title } }
+                                                { terms: { 'distribution.accessURL': urls } },
+                                                { term: { 'title.raw': title } }
                                             ]
                                         }
                                     }
@@ -474,7 +482,7 @@ class ElasticSearchUtils {
                         }
                     ],
                     must_not: [
-                        { term: { "extras.metadata.isValid": false } },
+                        { term: { 'extras.metadata.isValid': false } },
                         { term : { modified: modified } }
                     ]
                 }
@@ -496,7 +504,7 @@ class ElasticSearchUtils {
             size: 0,
             query: {
                 bool: {
-                    must_not: { term: { "extras.metadata.isValid": false } },
+                    must_not: { term: { 'extras.metadata.isValid': false } },
                 }
             },
             aggregations: {
@@ -575,5 +583,3 @@ class ElasticSearchUtils {
         log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.indexName}`);
     }
 }
-
-module.exports = ElasticSearchUtils;

@@ -43,6 +43,11 @@ pipeline {
                 sh 'cp ./docker/ingrid.service /root/rpmbuild/SOURCES'
             }
         }
+        stage('Test') {
+            steps {
+                sh '$NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm run test-jenkins --scripts-prepend-node-path=auto'
+            }
+        }
         stage('Create') {
             steps {
                 sh 'rpmbuild -ba /root/rpmbuild/SPECS/mcloud-ingrid.spec'
@@ -75,6 +80,7 @@ pipeline {
     }
     post {
         always {
+            junit 'report.xml'
             deleteDir() /* clean up our workspace */
         }
     }

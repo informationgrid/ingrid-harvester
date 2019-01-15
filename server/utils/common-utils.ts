@@ -2,7 +2,7 @@
 
 let log = require( 'log4js' ).getLogger( __filename );
 
-class Utils {
+export class Utils {
     static postProcess(item) {
         this._setDisplayContactIn(item);
         this._addIndexTerms(item);
@@ -17,7 +17,7 @@ class Utils {
      * @param item the elasticsearch object in mcloud-DCAT format
      */
     static _setDisplayContactIn(item) {
-        let contact = {};
+        let contact: any = {};
 
         if (item.contactPoint) {
             if (item.contactPoint['organization-name']) {
@@ -84,6 +84,3 @@ class Utils {
         }
     }
 }
-
-module.exports = Utils;
-

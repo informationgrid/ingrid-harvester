@@ -1,10 +1,12 @@
-'use-strict';
+import {CswUtils} from "./csw-utils";
+import {CswMapper} from "./csw-mapper";
 
-let CswUtils = require('./csw-utils');
+export class DwdImporter {
 
-class DwdImporter {
+    private cswUtil: CswUtils;
+
     constructor(settings) {
-        let gmdEncoded = encodeURIComponent(CswUtils.GMD);
+        let gmdEncoded = encodeURIComponent(CswMapper.GMD);
         settings.getRecordsUrlFor = function(uuid) {
             return `${settings.getRecordsUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${uuid}`;
         };
@@ -41,5 +43,3 @@ class DwdImporter {
         this.cswUtil.run();
     }
 }
-
-module.exports = DwdImporter;

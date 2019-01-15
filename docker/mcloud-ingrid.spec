@@ -1,4 +1,4 @@
-%define ingrid_update_version 1.4.0
+%define ingrid_update_version 1.4.0.SNAPSHOT
 
 %define mcloud_dir /opt/ingrid
 
@@ -20,8 +20,9 @@ BuildArch: 	noarch
 AutoReqProv: no
 
 
-Requires:	httpd java-1.8.0-oracle java-1.8.0-oracle-devel nodejs
-
+Requires:	httpd nodejs
+# since we move from Oracle Java to OpenJDK we disable requirement here
+#Requires:   java = 1:1.8.0 java-devel = 1:1.8.0
 
 
 %description

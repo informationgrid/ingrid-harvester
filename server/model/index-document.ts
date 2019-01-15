@@ -1,0 +1,49 @@
+import {GenericMapper} from "./generic-mapper";
+
+export class IndexDocument {
+
+    static async create(mapper: GenericMapper) {
+        let result = await {
+            title: mapper.getTitle(),
+            description: mapper.getDescription(),
+            theme: mapper.getThemes(),
+            issued: mapper.getIssued(),
+            modified: mapper.getModifiedDate(),
+            accrualPeriodicity: mapper.getAccrualPeriodicity(),
+            keywords: mapper.getKeywords(),
+            creator: mapper.getCreator(),
+            publisher: await mapper.getPublisher(),
+            accessRights: mapper.getAccessRights(),
+            distribution: await mapper.getDistributions(),
+            extras: {
+                metadata: {
+                    source: mapper.getMetadataSource(),
+                    issued: mapper.getMetadataIssued(),
+                    modified: mapper.getMetadataModified(),
+                    harvested: mapper.getMetadataHarvested(),
+                    harvesting_errors: null // get errors after all operations been done
+                },
+                generated_id: mapper.getGeneratedId(),
+                subgroups: mapper.getCategories(),
+                license_id: await mapper.getLicenseId(),
+                license_title: await mapper.getLicenseTitle(),
+                license_url: await mapper.getLicenseURL(),
+                harvested_data: mapper.getHarvestedData(),
+                subsection: mapper.getSubSections(),
+                temporal: mapper.getTemporal(),
+                groups: mapper.getGroups(),
+                displayContact: await mapper.getDisplayContacts(),
+                all: mapper.getExtrasAllData(),
+                temporal_start: mapper.getTemporalStart(),
+                temporal_end: mapper.getTemporalEnd(),
+                realtime: mapper.isRealtime(),
+                citation: mapper.getCitation(),
+                mfund_fkz: mapper.getMFundFKZ(),
+                mfund_project_title: mapper.getMFundProjectTitle()
+            }
+        };
+
+        result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
+        return result;
+    }
+}
