@@ -1,4 +1,4 @@
-%define ingrid_update_version 1.4.0.SNAPSHOT
+%define ingrid_update_version 1.4.0
 
 %define mcloud_dir /opt/ingrid
 
@@ -55,7 +55,7 @@ rm -rf %{mcloud_dir}/ingrid-iplug-csw-dsc_wsv/webapp/WEB-INF/work/*
 
 
 %changelog
-* Mon Jan 14 2019 André Wallat <andre.wallat@wemove.com> - 1.4.0
+* Tue Jan 15 2019 André Wallat <andre.wallat@wemove.com> - 1.4.0
 - Check valid URLs when importing datasets (#1776)
 - Separate URLs by new line instead of comma (#1834)
 - Decompound words for search (#1785)
