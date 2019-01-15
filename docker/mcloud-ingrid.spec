@@ -1,4 +1,4 @@
-%define ingrid_update_version 1.3.0
+%define ingrid_update_version 1.4.0
 
 %define mcloud_dir /opt/ingrid
 
@@ -25,7 +25,7 @@ Requires:	httpd java-1.8.0-oracle java-1.8.0-oracle-devel nodejs
 
 
 %description
-Mcloud InGrid Components.
+mCLOUD InGrid Components.
 
 #%build
 
@@ -55,6 +55,14 @@ rm -rf %{mcloud_dir}/ingrid-iplug-csw-dsc_wsv/webapp/WEB-INF/work/*
 
 
 %changelog
+* Tue Jan 15 2019 André Wallat <andre.wallat@wemove.com> - 1.4.0
+- Check valid URLs when importing datasets (#1776)
+- Separate URLs by new line instead of comma (#1834)
+- Decompound words for search (#1785)
+- Support new column "mFUND-Projekt" (#1911)
+- Search in additional index fields (#1321)
+- Add new harvester for CSW (#1271,#1808-#1811)
+
 * Tue Oct 02 2018 Vikram Notay <vikram.notay@wemove.com> - 1.3.0
 - Index additional information for metadata from Deutsche Bahn
 - Log missing timestamps without a stack-trace and as info instead of a warning

@@ -194,11 +194,11 @@ class ElasticSearchUtils {
     bulk(data, closeAfterBulk) {
         return new Promise((resolve, reject) => {
             try {
-            this.client.bulk({
-                index: this.indexName,
-                type: this.settings.indexType,
-                body: data
-            })
+                this.client.bulk({
+                    index: this.indexName,
+                    type: this.settings.indexType,
+                    body: data
+                })
                 .then(response => {
                     if (response.errors) {
                         response.items.forEach(item => {
@@ -233,32 +233,20 @@ class ElasticSearchUtils {
      * @param {string|number} id
      */
     addDocToBulk(doc, id) {
-        return new Promise((resolve, reject) => {
-            let promise = null;
-
-            this._bulkData.push({
-                index: {
-                    _id: id
-                }
-            });
-            this._bulkData.push(doc);
-
-            this._queueForDuplicateSearch(doc, id);
-
-            // send data to elasticsearch if limit is reached
-            // TODO: don't use document size but bytes instead
-            if (this._bulkData.length > this.maxBulkSize) {
-                promise = this.sendBulkData();
-            }
-            if (promise) {
-                // Wait until the bulk data has been sent
-                // TODO perform this check before finishing index and not here
-                promise.then(() => resolve())
-                    .catch(err => reject(err));
-            } else {
-                resolve();
+        this._bulkData.push({
+            index: {
+                _id: id
             }
         });
+        this._bulkData.push(doc);
+
+        this._queueForDuplicateSearch(doc, id);
+
+        // send data to elasticsearch if limit is reached
+        // TODO: don't use document size but bytes instead
+        if (this._bulkData.length > this.maxBulkSize) {
+            return this.sendBulkData();
+        }
     }
 
     /**
@@ -283,58 +271,68 @@ class ElasticSearchUtils {
 
     async _deduplicateUsingQuery() {
         log.debug(`Looking for duplicates for items in index '${this.indexName}`);
-        let body = [];
-        this.duplicateStaging.forEach(item => {
-            body.push({ index: this.deduplicationAlias });
-            body.push(item.query);
-        });
+        // TODO: make sure the index was refreshed to get the updated results (e.g. previous deletion of duplicated items)
 
-        if (body.length < 1) return; // Don't send an empty query
-
+        // Send data in chunks. Don't send too much at once.
+        let maxSize = 50;
         let count = 0;
-        let results = await this.client.msearch({ body: body });
-        for(let i=0; i < results.responses.length; i++) {
-            if (!results.responses[i].hits) continue;
+        for(let i=0; i<this.duplicateStaging.length; i += maxSize) {
+            let body = [];
+            let end = Math.min(this.duplicateStaging.length, i + maxSize);
 
-            results.responses[i].hits.hits.forEach(hit => {
-                let item = this.duplicateStaging[i];
-                let title = item.title;
+            let slice = this.duplicateStaging.slice(i, end);
 
-                let myDate = item.modified;
-                let hitDate = hit._source.modified;
-
-                // Make sure we aren't comparing apples to oranges.
-                // Convert to dates, if not already the case.
-                if (typeof myDate === 'string') myDate = Date.parse(myDate);
-                if (typeof hitDate === 'string') hitDate = Date.parse(hitDate);
-
-                if (typeof myDate === 'number') myDate = new Date(myDate);
-                if (typeof hitDate === 'number') hitDate = new Date(hitDate);
-
-                let q = { "delete": {} };
-                let retained = '';
-                if (hitDate > myDate) {
-                    // Hit is newer. Delete document from current index.
-                    q.delete._index = this.indexName;
-                    q.delete._type = this.settings.indexTypes;
-                    q.delete._id = item.id;
-
-                    retained = `Item to retain -> ID: '${hit._id}', Title: '${hit._source.title}', Index: '${hit._index};`;
-                } else { // Hit is older. Delete (h)it.
-                    q.delete._index = hit._index;
-                    q.delete._type = hit._type;
-                    q.delete._id = hit._id;
-
-                    title = hit._source.title;
-                    retained = `Item to retain -> ID: '${item.id}', Title: '${title}', Index: '${this.indexName};`;
-                }
-
-                let deleted = `Item to delete -> ID: '${q.delete._id}', Title: '${title}', Index: '${q.delete._index}'`;
-
-                log.warn(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${retained}`);
-                this._bulkData.push(q);
-                count++;
+            slice.forEach(item => {
+                body.push({index: this.deduplicationAlias});
+                body.push(item.query);
             });
+
+            if (body.length < 1) return; // Don't send an empty query
+
+            let results = await this.client.msearch({body: body});
+            for (let j = 0; j < results.responses.length; j++) {
+                if (!results.responses[j].hits) continue;
+
+                results.responses[j].hits.hits.forEach(hit => {
+                    let item = slice[j];
+                    let title = item.title;
+
+                    let myDate = item.modified;
+                    let hitDate = hit._source.modified;
+
+                    // Make sure we aren't comparing apples to oranges.
+                    // Convert to dates, if not already the case.
+                    if (typeof myDate === 'string') myDate = Date.parse(myDate);
+                    if (typeof hitDate === 'string') hitDate = Date.parse(hitDate);
+
+                    if (typeof myDate === 'number') myDate = new Date(myDate);
+                    if (typeof hitDate === 'number') hitDate = new Date(hitDate);
+
+                    let q = {"delete": {}};
+                    let retained = '';
+                    if (hitDate > myDate) {
+                        // Hit is newer. Delete document from current index.
+                        q.delete._index = this.indexName;
+                        q.delete._type = this.settings.indexTypes;
+                        q.delete._id = item.id;
+
+                        retained = `Item to retain -> ID: '${hit._id}', Title: '${hit._source.title}', Index: '${hit._index};`;
+                    } else { // Hit is older. Delete (h)it.
+                        q.delete._index = hit._index;
+                        q.delete._type = hit._type;
+                        q.delete._id = hit._id;
+
+                        title = hit._source.title;
+                        retained = `Item to retain -> ID: '${item.id}', Title: '${title}', Index: '${this.indexName};`;
+                    }
+
+                    let deleted = `Item to delete -> ID: '${q.delete._id}', Title: '${title}', Index: '${q.delete._index}'`;
+
+                    log.warn(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${retained}`);
+                    this._bulkData.push(q);
+                    count++;
+                });
+            }
         }
 
         // Perform bulk delete and resolve/reject the promise
@@ -383,7 +381,7 @@ class ElasticSearchUtils {
 
         // Send data in chunks. Don't send too much at once.
         let dates = [];
-        let maxSize = 100;
+        let maxSize = 50;
         for(let i=0; i<data.length; i += maxSize) {
             let end = Math.min(data.length, i + maxSize);
 
@@ -402,7 +400,7 @@ class ElasticSearchUtils {
                     log.info(`Did not find an existing issued date for dataset with id ${ids[j]}`);
                     dates.push(null);
                 }
-            };
+            }
         }
 
         return dates;
@@ -467,14 +465,7 @@ class ElasticSearchUtils {
                                         bool: {
                                             must: [
                                                 { terms: { "distribution.accessURL": urls } },
-                                                {
-                                                    match: {
-                                                        "title.raw": {
-                                                            query: title,
-                                                            minimum_should_match: "3<80%"
-                                                        }
-                                                    }
-                                                }
+                                                { term: { "title.raw": title } }
                                             ]
                                         }
                                     }
@@ -546,15 +537,17 @@ class ElasticSearchUtils {
                         let hit0 = hits[i-i];
                         let hit1 = hits[i];
 
-                        let urls0 = [];
-                        let urls1 = [];
-                        hit0._source.distribution.forEach(dist => urls0.push(dist.accessURL));
-                        hit1._source.distribution.forEach(dist => urls1.push(dist.accessURL));
+                        // collect URLs from hits we want to compare
+                        let urlsFromHit = [];
+                        let urlsFromOtherHit = [];
+                        hit0._source.distribution.forEach(dist => urlsFromHit.push(dist.accessURL));
+                        hit1._source.distribution.forEach(dist => urlsFromOtherHit.push(dist.accessURL));
 
-                        let remove = false;
-                        for(let j=0; j<urls1.length && !remove; j++) {
-                            remove = urls0.includes(urls1[j]);
-                        }
+                        // only if all URLs are the same in both hits, we expect them to be equal AND have the same length
+                        let remove =
+                            urlsFromHit.length === urlsFromOtherHit.length
+                            && urlsFromHit.every(url => urlsFromOtherHit.includes(url));
+
                         if (remove) {
                             let deleted = `Item to delete -> ID: '${hit1._id}', Title: '${hit1._source.title}', Index: '${hit1._index}'`;
                             let retained = `Item to retain -> ID: '${hit0._id}', Title: '${hit0._source.title}', Index: '${hit0._index}'`;

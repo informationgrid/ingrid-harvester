@@ -2,6 +2,8 @@
 
 let log = require('log4js').getLogger(__filename),
     ElasticSearchUtils = require('./../elastic-utils'),
+    Utils = require('./../common-utils'),
+    UrlUtils = require('./../url-utils'),
     mapping = require('../elastic.mapping.js'),
     settings = require('../elastic.settings.js'),
     Excel = require('exceljs'),
@@ -52,7 +54,8 @@ class ExcelImporter {
             'Lizenzlink': 26,
             'DatenhaltendeStelleLang': 27,
             'DatenhaltendeStelleLink': 28,
-            'mFundFoerderkennzeichen': 30
+            'mFundFoerderkennzeichen': 30,
+            'mFundProjekt': 31
         };
 
         let workbook = new Excel.Workbook();
@@ -60,8 +63,12 @@ class ExcelImporter {
 
         let promises = [];
         try {
-            await elastic.prepareIndex(mapping, settings)
-            await workbook.xlsx.readFile(this.excelFilepath)
+            if (this.settings.dryRun) {
+                log.debug('Dry run option enabled. Skipping index creation.');
+            } else {
+                await elastic.prepareIndex(mapping, settings);
+            }
+            await workbook.xlsx.readFile(this.excelFilepath);
 
             log.debug('done loading file');
 
@@ -110,10 +117,16 @@ class ExcelImporter {
                 }));
             });
             Promise.all(promises)
-                .then(() => elastic.finishIndex())
+                .then(() => {
+                    if (this.settings.dryRun) {
+                        log.debug('Skipping finalisation of index for dry run.');
+                    } else {
+                        elastic.finishIndex();
+                    }
+                })
                 .catch(err => log.error('Error importing excel row', err));
         } catch(error) {
-            log.error("Error reading excel workbook\n", error);
+            log.error('Error reading excel workbook', error);
         }
     }
 
@@ -132,7 +145,7 @@ class ExcelImporter {
 
         const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
 
-        log.debug("Processing excel dataset with title : " + columnValues[columnMap.Daten]);
+        log.debug('Processing excel dataset with title : ' + columnValues[columnMap.Daten]);
 
         let ogdObject = {};
         let doc = {};
@@ -141,16 +154,19 @@ class ExcelImporter {
 
         let title = columnValues[columnMap.Daten];
         ogdObject.title = title.trim(); // Remove leading and trailing whitspace
+        ogdObject.extras = {};
 
         const publisherAbbreviations = columnValues[columnMap.DatenhaltendeStelle].split(',');
         const publishers = this.getPublishers(workbook.getWorksheet(2), publisherAbbreviations);
         const license = this.getLicense(workbook.getWorksheet(3), columnValues[columnMap.Lizenz]);
 
-        if (publishers.length > 0) ogdObject.publisher = publishers;
+        if (publishers.length > 0) {
+            ogdObject.publisher = publishers;
+        }
+
         ogdObject.description = columnValues[columnMap.Kurzbeschreibung];
         ogdObject.theme = ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
 
-        ogdObject.extras = {};
         ogdObject.extras.metadata = {};
         if (dateMetaUpdate) {
             ogdObject.modified = dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
@@ -178,48 +194,71 @@ class ExcelImporter {
         }
 
         let mfundFkz = columnValues[columnMap.mFundFoerderkennzeichen];
-        if (mfundFkz.formula || mfundFkz.sharedFormula) {
-            let mfundFkzResult = mfundFkz.result;
-            ogdObject.extras.mfund_fkz = mfundFkzResult ? mfundFkzResult : '0';
-
-        } else {
-            ogdObject.extras.mfund_fkz = mfundFkz;
+        if (mfundFkz && (mfundFkz.formula || mfundFkz.sharedFormula)) {
+            mfundFkz = mfundFkz.result;
         }
+        ogdObject.extras.mfund_fkz = mfundFkz && mfundFkz.length > 0 ? mfundFkz : null;
+
+        let mfundProject = columnValues[columnMap.mFundProjekt];
+        if (mfundProject && (mfundProject.formula || mfundProject.sharedFormula)) {
+            mfundProject = mfundProject.result;
+        }
+        ogdObject.extras.mfund_project_title = mfundProject && mfundProject.length > 0 ? mfundProject : null;
 
         ogdObject.distribution = [];
 
         if (columnValues[columnMap.Dateidownload]) {
-            this.addDownloadUrls(ogdObject, 'Dateidownload', columnValues[columnMap.Dateidownload]);
+            await this.addDownloadUrls(ogdObject, 'Dateidownload', columnValues[columnMap.Dateidownload]);
         }
         if (columnValues[columnMap.WMS]) {
-            this.addDownloadUrls(ogdObject, 'WMS', columnValues[columnMap.WMS]);
+            await this.addDownloadUrls(ogdObject, 'WMS', columnValues[columnMap.WMS]);
         }
         if (columnValues[columnMap.FTP]) {
-            this.addDownloadUrls(ogdObject, 'FTP', columnValues[columnMap.FTP]);
+            await this.addDownloadUrls(ogdObject, 'FTP', columnValues[columnMap.FTP]);
         }
         if (columnValues[columnMap.AtomFeed]) {
-            this.addDownloadUrls(ogdObject, 'AtomFeed', columnValues[columnMap.AtomFeed]);
+            await this.addDownloadUrls(ogdObject, 'AtomFeed', columnValues[columnMap.AtomFeed]);
         }
         if (columnValues[columnMap.Portal]) {
-            this.addDownloadUrls(ogdObject, 'Portal', columnValues[columnMap.Portal]);
+            await this.addDownloadUrls(ogdObject, 'Portal', columnValues[columnMap.Portal]);
         }
         if (columnValues[columnMap.SOS]) {
-            this.addDownloadUrls(ogdObject, 'SOS', columnValues[columnMap.SOS]);
+            await this.addDownloadUrls(ogdObject, 'SOS', columnValues[columnMap.SOS]);
         }
         if (columnValues[columnMap.WFS]) {
-            this.addDownloadUrls(ogdObject, 'WFS', columnValues[columnMap.WFS]);
+            await this.addDownloadUrls(ogdObject, 'WFS', columnValues[columnMap.WFS]);
         }
         if (columnValues[columnMap.WCS]) {
-            this.addDownloadUrls(ogdObject, 'WCS', columnValues[columnMap.WCS]);
+            await this.addDownloadUrls(ogdObject, 'WCS', columnValues[columnMap.WCS]);
         }
         if (columnValues[columnMap.WMTS]) {
-            this.addDownloadUrls(ogdObject, 'WMTS', columnValues[columnMap.WMTS]);
+            await this.addDownloadUrls(ogdObject, 'WMTS', columnValues[columnMap.WMTS]);
         }
         if (columnValues[columnMap.API]) {
-            this.addDownloadUrls(ogdObject, 'API', columnValues[columnMap.API]);
+            await this.addDownloadUrls(ogdObject, 'API', columnValues[columnMap.API]);
+        }
+
+        // Extra checks
+        if (ogdObject.distribution.length === 0) {
+            ogdObject.extras.metadata.isValid = false;
+            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${uniqueName}', title: '${title}', index: '${this.elastic.indexName}'.`;
+            log.warn(msg);
         }
 
         this.settings.mapper.forEach(mapper => mapper.run(ogdObject, doc));
+
+        // add displayContact and a summary index field
+        Utils.postProcess(ogdObject);
+
+        // modify displayContact
+        // add all publisher under display contact which is used for facets
+        ogdObject.extras.displayContact = [];
+        publishers.forEach( p => {
+            ogdObject.extras.displayContact.push({
+                name: p.organization,
+                url: p.homepage
+            });
+        });
 
         let promise = this.elastic.addDocToBulk(doc, uniqueName);
         if (promise) return promise;
@@ -255,7 +294,7 @@ class ExcelImporter {
                     publishers.push({
                         organization: row.values[2],
                         homepage: row.values[4]
-                    })
+                    });
                     found = true;
                     break;
                 }
@@ -291,15 +330,32 @@ class ExcelImporter {
      * @param type
      * @param urlsString
      */
-    addDownloadUrls(ogdObject, type, urlsString) {
-        // console.log('urlstring:', urlsString);
-        let downloads = urlsString.split(',');
-        downloads.forEach( downloadUrl => {
-            ogdObject.distribution.push({
-                format: type,
-                accessURL: downloadUrl.trim()
-            });
-        });
+    async addDownloadUrls(ogdObject, type, urlsString) {
+        // Check if the cell contains just text or hyperlinked text
+        if (urlsString.text) urlsString = urlsString.text;
+
+        let downloads = urlsString.split(/,[\r\n]+/); // comma followed by one or more (carriage returns or newlines)
+        for (let i=0; i<downloads.length; i++) {
+            let downloadUrl = downloads[i];
+
+            // check for empty download URLs
+            if (downloadUrl.trim().length === 0) continue;
+
+            let checkedUrl = await UrlUtils.urlWithProtocolFor(downloadUrl);
+            if (checkedUrl) {
+                ogdObject.distribution.push({
+                    format: type,
+                    accessURL: downloadUrl.trim()
+                });
+            } else {
+                if (!ogdObject.extras.metadata.harvesting_errors) {
+                    ogdObject.extras.metadata.harvesting_errors = [];
+                }
+                let msg = `Invalid URL '${downloadUrl} found for item with id: '${ogdObject.extras.generated_id}', title: '${ogdObject.title}', index: '${this.elastic.indexName}'.`;
+                ogdObject.extras.metadata.harvesting_errors.push(msg);
+                log.warn(msg);
+            }
+        }
     }
 
     getUniqueName(baseName) {

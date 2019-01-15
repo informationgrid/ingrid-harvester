@@ -18,5 +18,46 @@
     "ckanBaseUrl": "https://data.deutschebahn.com",
     "defaultMcloudSubgroup": "railway",
     "includeTimestamp": true
+  },
+  {
+    "importer": "WSV-CSW",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "csw_wsv",
+    "indexType": "base",
+    "alias": "mcloud",
+    "getRecordsUrl": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup",
+    "httpMethod": "POST",
+    "proxy": null,
+    "defaultMcloudSubgroup": "waters",
+    "defaultAttribution": "WSV.Geokatalog CSW",
+    "includeTimestamp": true
+  },
+  {
+   "importer": "MDI-CSW",
+   "elasticSearchUrl": "http://localhost:9200",
+   "index": "csw_mdi",
+   "indexType": "base",
+   "alias": "mcloud",
+   "getRecordsUrl": "http://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecords$Post$XML",
+   "getRecordByIdUrl": "http://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecordByIdServant$Get",
+   "httpMethod": "POST",
+   "proxy": null,
+   "defaultMcloudSubgroup": "waters",
+   "defaultAttribution": "MDI-DE",
+   "defaultAttributionLink": "https://www.mdi-de.org/",
+   "includeTimestamp": true
+  },
+  {
+    "importer": "BFG-CSW",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "csw_bfg",
+    "indexType": "base",
+    "alias": "mcloud",
+    "getRecordsUrl": "https://geoportal.bafg.de/soapServices/CSWStartup",
+    "proxy": null,
+    "defaultMcloudSubgroup": "waters",
+    "defaultAttribution": "Bundesanstalt für Gewässerkunde",
+    "defaultAttributionLink": "https://www.bafg.de/",
+    "includeTimestamp": true
   }
 ]
