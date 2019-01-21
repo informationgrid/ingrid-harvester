@@ -13,34 +13,37 @@ let resultZugbildungsplan = require('./data/result_ckan_bahn_Zugbildungsplan.jso
 
 chai.use(chaiAsPromised);
 
-describe( 'Import CKAN Bahn', function () {
+describe('Import CKAN Bahn', function () {
 
-  it( 'correct import of CKAN data', async function () {
+    let indexDocumentCreateSpy;
 
-    log.info('Start test ...');
+    it('correct import of CKAN data', async function () {
 
-    var settings = {
-      dryRun: true,
-      ckanBaseUrl: "https://data.deutschebahn.com",
-      defaultMcloudSubgroup: "railway",
-      includeTimestamp: true
-    };
-    let importer = new DeutscheBahnCkanImporter(settings);
+        log.info('Start test ...');
 
-    sinon.stub(importer.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
+        var settings = {
+            dryRun: true,
+            ckanBaseUrl: "https://data.deutschebahn.com",
+            defaultMcloudSubgroup: "railway",
+            includeTimestamp: true
+        };
+        let importer = new DeutscheBahnCkanImporter(settings);
 
-    let indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
+        sinon.stub(importer.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
 
-    await importer.run();
+        indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
 
-    chai.expect(indexDocumentCreateSpy.called).to.be.true;
-    let extraChecks = (actual, expected) => {
-      chai.expect(actual.extras.metadata.harvested).not.to.be.null.and.empty;
-    };
+        await importer.run();
 
-    await indexDocumentCreateSpy.getCall(0).returnValue.then( value => TestUtils.compareDocuments(value, resultZugbildungsplan, extraChecks) );
+        chai.expect(indexDocumentCreateSpy.called).to.be.true;
+        let extraChecks = (actual, expected) => {
+            chai.expect(actual.extras.metadata.harvested).not.to.be.null.and.empty;
+        };
 
-    indexDocumentCreateSpy.restore();
-  } ).timeout(10000);
+        await indexDocumentCreateSpy.getCall(0).returnValue.then(value => TestUtils.compareDocuments(value, resultZugbildungsplan, extraChecks));
 
-} );
+    }).timeout(10000);
+
+    after(() => indexDocumentCreateSpy.restore());
+
+});

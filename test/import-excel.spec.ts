@@ -1,4 +1,3 @@
-import {ElasticSearchUtils} from "../server/utils/elastic-utils";
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
@@ -16,31 +15,34 @@ let resultBadegewaesser = require('./data/result_excel_badegewaesser.json');
 
 chai.use(chaiAsPromised);
 
-describe( 'Import Excel', function () {
+describe('Import Excel', function () {
 
-  it( 'correct import of Excel file', async function () {
+    let indexDocumentCreateSpy;
 
-    log.info('Start test ...');
+    it('correct import of Excel file', async function () {
 
-    var settings = {
-      dryRun: true,
-      filePath: 'test/data/data-test.xlsx',
-      rememberAllDocs: true
-    };
-    let importer = new ExcelImporter(settings);
+        log.info('Start test ...');
 
-    sinon.stub(importer.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(3, "2019-01-08T16:33:11.168Z"));
+        var settings = {
+            dryRun: true,
+            filePath: 'test/data/data-test.xlsx',
+            rememberAllDocs: true
+        };
+        let importer = new ExcelImporter(settings);
 
-    let indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
+        sinon.stub(importer.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(3, "2019-01-08T16:33:11.168Z"));
 
-    await importer.run();
+        indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
 
-    chai.expect(indexDocumentCreateSpy.calledThrice).to.be.true;
-    await indexDocumentCreateSpy.getCall(0).returnValue.then( value => TestUtils.compareDocuments(value, resultMauttabelle) );
-    await indexDocumentCreateSpy.getCall(1).returnValue.then( value => TestUtils.compareDocuments(value, resultBathymetrien) );
-    await indexDocumentCreateSpy.getCall(2).returnValue.then( value => TestUtils.compareDocuments(value, resultBadegewaesser) );
+        await importer.run();
 
-    indexDocumentCreateSpy.restore();
-  } ).timeout(10000);
+        chai.expect(indexDocumentCreateSpy.calledThrice).to.be.true;
+        await indexDocumentCreateSpy.getCall(0).returnValue.then(value => TestUtils.compareDocuments(value, resultMauttabelle));
+        await indexDocumentCreateSpy.getCall(1).returnValue.then(value => TestUtils.compareDocuments(value, resultBathymetrien));
+        await indexDocumentCreateSpy.getCall(2).returnValue.then(value => TestUtils.compareDocuments(value, resultBadegewaesser));
 
-} );
+    }).timeout(10000);
+
+    after(() => indexDocumentCreateSpy.restore());
+
+});

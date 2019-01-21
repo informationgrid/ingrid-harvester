@@ -30,18 +30,22 @@ export class TestUtils {
 
             // check extras without metadata
             delete expected.extras.metadata;
+            delete expected.extras.harvested_data;
             chai.assert.deepInclude(actual.extras, expected.extras);
 
             // check doc without extras
             delete expected.extras;
         }
 
+        // modification date can change, but must be set
+        chai.expect(actual.modified).not.to.be.null.and.empty;
+        delete expected.modified;
         chai.assert.deepInclude(actual, expected);
     }
 
     static prepareIssuedDates(repeat: number, date: string): string[] {
         let issuedDates = [];
-        for (let i=0; i<repeat; i++) issuedDates.push(date);
+        for (let i = 0; i < repeat; i++) issuedDates.push(date);
         return issuedDates;
     }
 }

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>ingrid-mcloud-importer</artifactId>
+  <groupId>de.ingrid</groupId>
+  <name>InGrid mCLOUD Importer</name>
+  <version>MANAGED_BY_JGITVER</version>
+
+  <!-- ==================== Build Configuration ==================== -->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.6</version>
+        <configuration>
+          <nodeVersion>v8.9.1</nodeVersion>
+          <npmVersion>6.0.0</npmVersion>
+          <workingDirectory>.</workingDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>npm test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>test</arguments>
+              <testFailureIgnore>true</testFailureIgnore>
+            </configuration>
+          </execution>
+          <execution>
+            <id>npm run build</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>run build</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>rpm-maven-plugin</artifactId>
+        <version>2.2.0</version>
+        <!--<extensions>true</extensions>-->
+        <configuration>
+          <license>GPL</license>
+          <distribution>wemove digital solutions GmbH</distribution>
+          <group>mcloud</group>
+          <vendor>wemove digital solutions GmbH</vendor>
+          <packager>wemove digital solutions GmbH</packager>
+          <url>https://www.wemove.com</url>
+          <!--suppress UnresolvedMavenProperty -->
+          <projversion>${jgitver.calculated_version}</projversion>
+          <changelogFile>changelog</changelogFile>
+          <!--<requires>java &gt; 1.8</requires>-->
+          <mappings>
+            <mapping>
+              <directory>/opt/ingrid/mcloud-dcatapde-exporter</directory>
+              <sources>
+                <source>
+                  <location>target/${project.build.finalName}.jar</location>
+                  <destination>mcloud-exporter.jar</destination>
+                </source>
+                <source>
+                  <location>rpm/application-default.properties</location>
+                </source>
+                <source>
+                  <location>src/main/resources/application.properties</location>
+                </source>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>/etc/systemd/system/</directory>
+              <directoryIncluded>false</directoryIncluded>
+              <sources>
+                <source>
+                  <location>rpm/mcloud-exporter.service</location>
+                </source>
+              </sources>
+            </mapping>
+          </mappings>
+          <preinstallScriptlet>
+            <script>echo "clean up directory before installation"</script>
+            <script>rm -rf /opt/ingrid/mcloud-dcatapde-exporter/*.jar</script>
+          </preinstallScriptlet>
+        </configuration>
+        <executions>
+          <execution>
+            <id>attach-rpm</id>
+            <goals>
+              <goal>attached-rpm</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>1.16</version>
+        <configuration>
+          <inceptionYear>2014</inceptionYear>
+          <organizationName>wemove digital solutions GmbH</organizationName>
+          <projectName>${project.name}</projectName>
+          <licenseName>eupl_v1_1</licenseName>
+          <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+          <canUpdateCopyright>true</canUpdateCopyright>
+          <!-- canUpdateDescription must be switched off since update-file-header always finds change -->
+          <!--<canUpdateDescription>true</canUpdateDescription>-->
+          <sectionDelimiter>==================================================</sectionDelimiter>
+          <processStartTag>**************************************************-</processStartTag>
+          <processEndTag>**************************************************#</processEndTag>
+          <excludes>
+            <exclude>**/*.properties</exclude>
+            <exclude>**/*.json</exclude>
+            <exclude>**/*.sql</exclude>
+            <exclude>**/*.xml</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>check-header</id>
+            <goals>
+              <goal>check-file-header</goal>
+            </goals>
+            <phase>process-sources</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+    <resources>
+      <resource>
+        <directory>target/frontend</directory>
+        <targetPath>static</targetPath>
+      </resource>
+    </resources>
+  </build>
+</project>

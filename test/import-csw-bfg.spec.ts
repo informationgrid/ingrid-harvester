@@ -13,39 +13,42 @@ let resultFlussgebietseinheiten = require('./data/result_csw_bfg_Flussgebietsein
 
 chai.use(chaiAsPromised);
 
-describe( 'Import CSW BFG', function () {
+describe('Import CSW BFG', function () {
 
-  it( 'correct import of CSW-BFG data', async function () {
+    let indexDocumentCreateSpy;
 
-    log.info('Start test ...');
+    it('correct import of CSW-BFG data', async function () {
 
-    var settings = {
-      dryRun: true,
-      getRecordsUrl: "https://geoportal.bafg.de/soapServices/CSWStartup",
-      proxy: null,
-      defaultMcloudSubgroup: "waters",
-      defaultAttribution: "Bundesanstalt für Gewässerkunde",
-      defaultAttributionLink: "https://www.bafg.de/",
-      includeTimestamp: true
-    };
-    let importer = new BfgImporter(settings);
+        log.info('Start test ...');
 
-    sinon.stub(importer.cswUtil.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
+        const settings = {
+            dryRun: true,
+            getRecordsUrl: "https://geoportal.bafg.de/soapServices/CSWStartup",
+            proxy: null,
+            defaultMcloudSubgroup: "waters",
+            defaultAttribution: "Bundesanstalt für Gewässerkunde",
+            defaultAttributionLink: "https://www.bafg.de/",
+            includeTimestamp: true
+        };
+        let importer = new BfgImporter(settings);
 
-    let indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
+        sinon.stub(importer.cswUtil.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
 
-    await importer.cswUtil.run();
+        indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
 
-    chai.expect(indexDocumentCreateSpy.called).to.be.true;
-    let extraChecks = (actual, expected) => {
-      // chai.expect(actual.extras.metadata.harvested).not.to.be.null.and.empty;
-    };
+        await importer.cswUtil.run();
 
-    // await chai.expect(indexDocumentCreateSpy.getCall(0).returnValue).to.eventually.deep.include(resultFlussgebietseinheiten);
+        chai.expect(indexDocumentCreateSpy.called).to.be.true;
+        let extraChecks = (actual, expected) => {
+            // chai.expect(actual.extras.metadata.harvested).not.to.be.null.and.empty;
+        };
 
-    await indexDocumentCreateSpy.getCall(0).returnValue.then( value => TestUtils.compareDocuments(value, resultFlussgebietseinheiten, extraChecks) );
+        // await chai.expect(indexDocumentCreateSpy.getCall(0).returnValue).to.eventually.deep.include(resultFlussgebietseinheiten);
 
-    indexDocumentCreateSpy.restore();
-  } ).timeout(10000)
+        await indexDocumentCreateSpy.getCall(0).returnValue.then(value => TestUtils.compareDocuments(value, resultFlussgebietseinheiten, extraChecks));
 
-} );
+    }).timeout(10000);
+
+    after(() => indexDocumentCreateSpy.restore())
+
+});

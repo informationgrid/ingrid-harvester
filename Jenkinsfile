@@ -1,14 +1,10 @@
 pipeline {
     agent {
-        docker { 
+        docker {
             image 'docker-registry.wemove.com/ingrid-rpmbuilder'
         }
     }
 
-    tools {
-        nodejs "nodejs8"
-    }
-    
     environment {
         RPM_PUBLIC_KEY  = credentials('mcloud-rpm-public')
         RPM_PRIVATE_KEY = credentials('mcloud-rpm-private')
@@ -27,30 +23,9 @@ pipeline {
     
     stages {
 
-        stage('Prepare') {
-            steps {
-                sh 'mkdir -p /root/rpmbuild/SOURCES/mcloud-ingrid/ingrid-excel-import'
-                sh 'rm -rf dist && mkdir -p dist'
-                sh 'rm -rf dist-rpm && mkdir -p dist-rpm'
-
-                echo 'Since environment variables are not updated within docker, we have to use full path to nodejs'
-                sh '$NODEJS_HOME/bin/node --version'
-                sh '$NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm install && $NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm run build --scripts-prepend-node-path=auto'
-
-                sh 'cp -r ./dist/* /root/rpmbuild/SOURCES/mcloud-ingrid/ingrid-excel-import'
-                sh 'cp ./docker/package.json /root/rpmbuild/SOURCES/mcloud-ingrid/ingrid-excel-import'
-                sh 'cp ./docker/*.spec /root/rpmbuild/SPECS'
-                sh 'cp ./docker/ingrid.service /root/rpmbuild/SOURCES'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh '$NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm run test-jenkins --scripts-prepend-node-path=auto'
-            }
-        }
         stage('Create') {
             steps {
-                sh 'rpmbuild -ba /root/rpmbuild/SPECS/mcloud-ingrid.spec'
+                sh './mvnw clean package -Dmaven.test.failure.ignore=true'
             }
         }
         stage('Sign') {
