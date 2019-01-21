@@ -4,15 +4,13 @@ import {WsvImporter} from "./csw/wsv-importer";
 import {DwdImporter} from "./csw/dwd-importer";
 import {BfgImporter} from "./csw/bfg-importer";
 import {MdiImporter} from "./csw/mdi-importer";
-import { configure, getLogger } from 'log4js';
+import {configure, getLogger} from 'log4js';
 
-let config = require( './config.json' ),
+let config = require( '../config.json' ),
     process = require('process'),
     log = getLogger('app');
 
 configure('./log4js.json');
-// log.level = 'info';
-
 
 // create a server which finds a random free port
 // scan a range

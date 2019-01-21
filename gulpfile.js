@@ -7,7 +7,7 @@ const tsify = require('tsify');
 
 gulp.task('default', () => {
 
-    gulp.src(['./server/config.json', './log4js.json'])
+    gulp.src(['./config.json', './log4js.json'])
         .pipe(gulp.dest('./dist/'));
 
     return browserify({
@@ -20,9 +20,9 @@ gulp.task('default', () => {
     })
         .plugin(tsify)
         .bundle()
-        .pipe(source('bundle.js'))
+        .pipe(source('app.js'))
         .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(sourcemaps.write('./'))
+        // .pipe(sourcemaps.init({loadMaps: true}))
+        // .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest("dist"));
 });

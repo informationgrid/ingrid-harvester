@@ -6,6 +6,6 @@
 
   },
   "categories": {
-    "default": { "appenders": [ "app" ], "level": "DEBUG" }
+    "default": { "appenders": [ "app" ], "level": "INFO" }
   }
 }
