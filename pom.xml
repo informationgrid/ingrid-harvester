@@ -12,6 +12,17 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>dist</directory>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
         <version>1.6</version>
@@ -74,17 +85,10 @@
           <!--<requires>java &gt; 1.8</requires>-->
           <mappings>
             <mapping>
-              <directory>/opt/ingrid/mcloud-dcatapde-exporter</directory>
+              <directory>/opt/ingrid/ingrid-excel-import</directory>
               <sources>
                 <source>
-                  <location>target/${project.build.finalName}.jar</location>
-                  <destination>mcloud-exporter.jar</destination>
-                </source>
-                <source>
-                  <location>rpm/application-default.properties</location>
-                </source>
-                <source>
-                  <location>src/main/resources/application.properties</location>
+                  <location>dist</location>
                 </source>
               </sources>
             </mapping>
@@ -93,14 +97,24 @@
               <directoryIncluded>false</directoryIncluded>
               <sources>
                 <source>
-                  <location>rpm/mcloud-exporter.service</location>
+                  <location>rpm/mcloud-ingrid.spec</location>
                 </source>
               </sources>
             </mapping>
           </mappings>
           <preinstallScriptlet>
-            <script>echo "clean up directory before installation"</script>
-            <script>rm -rf /opt/ingrid/mcloud-dcatapde-exporter/*.jar</script>
+            <script>echo "Delete the lib and work directory for each updated component"</script>
+            <script>rm -rf %{mcloud_dir}/ingrid-iplug-ckan_bahn/lib/*</script>
+            <script>rm -rf %{mcloud_dir}/ingrid-iplug-ckan_bahn/webapp/WEB-INF/work/*</script>
+
+            <script>rm -rf %{mcloud_dir}/ingrid-iplug-ckan_govdata.de/lib/*</script>
+            <script>rm -rf %{mcloud_dir}/ingrid-iplug-ckan_govdata.de/webapp/WEB-INF/work/*</script>
+
+            <script>rm -rf %{mcloud_dir}/ingrid-iplug-csw-dsc_bfg/lib/*</script>
+            <script>rm -rf %{mcloud_dir}/ingrid-iplug-csw-dsc_bfg/webapp/WEB-INF/work/*</script>
+
+            <script>rm -rf %{mcloud_dir}/ingrid-iplug-csw-dsc_wsv/lib/*</script>
+            <script>rm -rf %{mcloud_dir}/ingrid-iplug-csw-dsc_wsv/webapp/WEB-INF/work/*</script>
           </preinstallScriptlet>
         </configuration>
         <executions>
