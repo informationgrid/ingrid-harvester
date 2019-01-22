@@ -25,7 +25,7 @@ pipeline {
 
         stage('Create') {
             steps {
-                sh './mvnw clean package -Dmaven.test.failure.ignore=true'
+                sh './mvnw clean package -Dmaven.test.failure.ignore=true -s .mvn/settings.xml'
             }
         }
         stage('Sign') {
@@ -34,20 +34,19 @@ pipeline {
                 withCredentials([file(credentialsId: 'mcloud-rpm-public', variable: 'rpm-key-public')]) {
                     sh 'gpg --import $RPM_PUBLIC_KEY'
                     sh 'gpg --import $RPM_PRIVATE_KEY'
-                    sh 'expect /rpm-sign.exp /root/rpmbuild/RPMS/noarch/*.rpm'
+                    sh 'expect /rpm-sign.exp target/rpm/ingrid-mcloud-importer/RPMS/noarch/*.rpm'
                 }
             }
         }
         stage('Archive') {
             steps {
-                sh 'mv /root/rpmbuild/RPMS/noarch/*.rpm ./dist-rpm/'
-                archiveArtifacts artifacts: 'dist-rpm/*.rpm'
+                archiveArtifacts artifacts: 'target/rpm/ingrid-mcloud-importer/RPMS/noarch/*.rpm'
             }
         }
         stage('Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'ingrid_mcloud-dev', passwordVariable: 'SSHPASS', usernameVariable: 'username')]) {
-                    sh 'sshpass -ve scp -o StrictHostKeyChecking=no ./dist-rpm/*.rpm ingrid@mcloud-dev-1.wemove.com:/var/www/mcloud-deploy-develop/'
+                    sh 'sshpass -ve scp -o StrictHostKeyChecking=no target/rpm/ingrid-mcloud-importer/RPMS/noarch/*.rpm ingrid@mcloud-dev-1.wemove.com:/var/www/mcloud-deploy-develop/'
                     sh 'sshpass -ve ssh -o StrictHostKeyChecking=no ingrid@mcloud-dev-1.wemove.com createrepo --update /var/www/mcloud-deploy-develop/'
                 }
             }
