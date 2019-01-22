@@ -34,19 +34,19 @@ pipeline {
                 withCredentials([file(credentialsId: 'mcloud-rpm-public', variable: 'rpm-key-public')]) {
                     sh 'gpg --import $RPM_PUBLIC_KEY'
                     sh 'gpg --import $RPM_PRIVATE_KEY'
-                    sh 'expect /rpm-sign.exp target/rpm/ingrid-mcloud-importer/RPMS/noarch/*.rpm'
+                    sh 'expect /rpm-sign.exp target/rpm/mcloud-ingrid/RPMS/noarch/*.rpm'
                 }
             }
         }
         stage('Archive') {
             steps {
-                archiveArtifacts artifacts: 'target/rpm/ingrid-mcloud-importer/RPMS/noarch/*.rpm'
+                archiveArtifacts artifacts: 'target/rpm/mcloud-ingrid/RPMS/noarch/*.rpm'
             }
         }
         stage('Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'ingrid_mcloud-dev', passwordVariable: 'SSHPASS', usernameVariable: 'username')]) {
-                    sh 'sshpass -ve scp -o StrictHostKeyChecking=no target/rpm/ingrid-mcloud-importer/RPMS/noarch/*.rpm ingrid@mcloud-dev-1.wemove.com:/var/www/mcloud-deploy-develop/'
+                    sh 'sshpass -ve scp -o StrictHostKeyChecking=no target/rpm/mcloud-ingrid/RPMS/noarch/*.rpm ingrid@mcloud-dev-1.wemove.com:/var/www/mcloud-deploy-develop/'
                     sh 'sshpass -ve ssh -o StrictHostKeyChecking=no ingrid@mcloud-dev-1.wemove.com createrepo --update /var/www/mcloud-deploy-develop/'
                 }
             }

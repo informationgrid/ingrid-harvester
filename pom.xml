@@ -6,6 +6,7 @@
   <artifactId>mcloud-importer</artifactId>
   <groupId>de.ingrid</groupId>
   <version>MANAGED_BY_JGITVER</version>
+  <packaging>pom</packaging>
 
   <name>InGrid mCLOUD Importer</name>
   <description>
