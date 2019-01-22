@@ -55,7 +55,7 @@ pipeline {
     post {
         always {
             junit 'report.xml'
-            deleteDir() /* clean up our workspace */
+            //deleteDir() /* clean up our workspace */
         }
     }
 }
