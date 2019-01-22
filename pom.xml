@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>ingrid-mcloud-importer</artifactId>
+  <artifactId>mcloud-importer</artifactId>
   <groupId>de.ingrid</groupId>
   <version>MANAGED_BY_JGITVER</version>
 
@@ -90,6 +90,7 @@
           <packager>wemove digital solutions GmbH</packager>
           <url>https://www.wemove.com</url>
           <!--suppress UnresolvedMavenProperty -->
+          <name>mcloud-ingrid</name>
           <projversion>${jgitver.calculated_version}</projversion>
           <changelogFile>changelog</changelogFile>
           <!--<requires>java &gt; 1.8</requires>-->
