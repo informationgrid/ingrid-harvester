@@ -513,6 +513,7 @@ export class CswMapper extends GenericMapper {
                 let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
 
                 let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                if (!name) name = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
                 let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
 
 
