@@ -5,6 +5,7 @@ import {GenericMapper} from "../model/generic-mapper";
 import {SelectedValue} from "xpath";
 import {getLogger} from "log4js";
 import {UrlUtils} from "../utils/url-utils";
+import {Summary} from "../model/summary";
 
 let xpath = require('xpath');
 
@@ -32,21 +33,16 @@ export class CswMapper extends GenericMapper {
     private idInfo: SelectedValue;
     private settings: any;
     private uuid: string;
-    private summary = {
-        numMatched: 0,
-        opendata: 0,
-        missingLinks: 0,
-        missingLicense: 0,
-        ok: 0
-    };
+    private summary: Summary;
 
 
-    constructor(settings, record, harvestTime, issued) {
+    constructor(settings, record, harvestTime, issued, summary) {
         super();
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
         this.issued = issued;
+        this.summary = summary;
 
         this.uuid = CswMapper.getCharacterStringContent(record, 'fileIdentifier');
 
@@ -55,7 +51,16 @@ export class CswMapper extends GenericMapper {
     }
 
     getDescription() {
-        return CswMapper.getCharacterStringContent(this.idInfo, 'abstract');
+        let abstract = CswMapper.getCharacterStringContent(this.idInfo, 'abstract');
+        if (!abstract) {
+            let msg = 'Dataset doesn\'t have an abstract.';
+            this.log.warn(`${msg} It will not be displayed in the portal. Id: '${this.uuid}', title: '${this.getTitle()}', source: '${this.settings.getRecordsUrl}'`);
+            this.errors.push(msg);
+            this.valid = false;
+            this.summary.numErrors++;
+        }
+
+        return abstract;
     }
 
 
@@ -133,6 +138,17 @@ export class CswMapper extends GenericMapper {
                 dists.push(dist);
             });
         }
+
+        if (dists.length === 0) {
+            let msg = 'Dataset has no links for download/access.';
+            this.summary.missingLinks++;
+            this.log.warn(`${msg} It will not be displayed in the portal. Id: '${this.uuid}', source: '${this.settings.getRecordsUrl}'`);
+
+            this.valid = false;
+            this.errors.push(msg);
+            this.summary.numErrors++;
+        }
+
         return dists;
     }
 
@@ -302,10 +318,8 @@ export class CswMapper extends GenericMapper {
             if (this.settings.printSummary) this.summary.missingLicense++;
             this.log.warn(`${msg} ${this.getErrorSuffix(this.uuid, this.getTitle())}`);
 
-            if (!this.errors) {
-                this.errors = [];
-            }
             this.errors.push(msg);
+            this.summary.numErrors++;
             return 'Unbekannt';
         }
         return null;

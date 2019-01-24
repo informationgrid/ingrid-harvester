@@ -6,15 +6,30 @@ import {Worksheet} from "exceljs";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {elasticsearchSettings} from "../elastic.settings";
 import {settings} from "cluster";
+import {Summary} from "../model/summary";
+import {getLogger} from "log4js";
+import {Importer} from "../importer";
 
-let log = require('log4js').getLogger(__filename);
+let log = require('log4js').getLogger(__filename),
+    logSummary = getLogger('summary');
 
-export class ExcelImporter {
+export class ExcelImporter implements Importer {
 
     settings: { importer, elasticSearchUrl, index, indexType, alias, filePath, includeTimestamp, dryRun, currentIndexName};
     elastic: ElasticSearchUtils;
     excelFilepath: string;
     names = {};
+    summary: Summary = {
+        numDocs: 0,
+        numErrors: 0,
+        print: () => {
+            logSummary.info(`---------------------------------------------------------`);
+            logSummary.info(`Summary of: ${this.settings.importer}`);
+            logSummary.info(`---------------------------------------------------------`);
+            logSummary.info(`Number of records: ${this.summary.numDocs}`);
+            logSummary.info(`Number of errors: ${this.summary.numErrors}`);
+        }
+    };
 
     /**
      * Create the importer and initialize with settings.
@@ -26,7 +41,7 @@ export class ExcelImporter {
         this.excelFilepath = settings.filePath;
     }
 
-    async run() {
+    async run(): Promise<Summary> {
         // map of the column index to a name
         let columnMap = {
             'Daten': 1,
@@ -91,13 +106,16 @@ export class ExcelImporter {
             // Attention: forEach does not work with async/await! using Promise.all for sequence
             await Promise.all(workUnits.map(async (unit, idx) => {
 
+                this.summary.numDocs++;
+
                 // create json document and create values with ExcelMapper
                 let doc = await IndexDocument.create(new ExcelMapper(settings, {
                     id: unit.id,
                     columnValues: unit.columnValues,
                     issued: timestamps[idx],
                     workbook: workbook,
-                    columnMap: columnMap
+                    columnMap: columnMap,
+                    summary: this.summary
                 }));
 
                 // add document to buffer and send to elasticsearch if full
@@ -107,7 +125,7 @@ export class ExcelImporter {
             }));
 
             log.debug('Waiting for #promises to finish: ' + promises.length);
-            Promise.all(promises)
+            return Promise.all(promises)
                 .then(() => {
                     if (this.settings.dryRun) {
                         log.debug('Skipping finalisation of index for dry run.');
@@ -116,6 +134,7 @@ export class ExcelImporter {
                         this.elastic.finishIndex();
                     }
                 })
+                .then( () => this.summary )
                 .catch(err => log.error('Error importing excel row', err));
         } catch(error) {
             log.error('Error reading excel workbook', error);

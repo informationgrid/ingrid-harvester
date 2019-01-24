@@ -21,7 +21,8 @@ export class IndexDocument {
                     issued: mapper.getMetadataIssued(),
                     modified: mapper.getMetadataModified(),
                     harvested: mapper.getMetadataHarvested(),
-                    harvesting_errors: null // get errors after all operations been done
+                    harvesting_errors: null, // get errors after all operations been done
+                    isValid: null, // checks validity after all operations been done
                 },
                 generated_id: mapper.getGeneratedId(),
                 subgroups: mapper.getCategories(),
@@ -44,6 +45,7 @@ export class IndexDocument {
         };
 
         result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
+        result.extras.metadata.isValid = mapper.isValid();
         return result;
     }
 }

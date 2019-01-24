@@ -1,19 +1,31 @@
 import {ElasticSearchUtils} from "../utils/elastic-utils";
-import {UrlUtils} from "../utils/url-utils";
-import {Utils} from "../utils/common-utils";
 import {elasticsearchSettings} from "../elastic.settings";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {CkanToElasticsearchMapper} from "./ckan.mapper";
 import {IndexDocument} from "../model/index-document";
+import {Summary} from "../model/summary";
+import {getLogger} from "log4js";
+import {Importer} from "../importer";
 
 let request = require( 'request-promise' ),
     log = require( 'log4js' ).getLogger( __filename ),
-    markdown = require('markdown').markdown;
+    logSummary = getLogger('summary');
 
-export class DeutscheBahnCkanImporter {
+export class DeutscheBahnCkanImporter implements Importer {
     private settings: any;
     elastic: ElasticSearchUtils;
     private options_package_search;
+    summary: Summary = {
+        numDocs: 0,
+        numErrors: 0,
+        print: () => {
+            logSummary.info(`---------------------------------------------------------`);
+            logSummary.info(`Summary of: ${this.settings.importer}`);
+            logSummary.info(`---------------------------------------------------------`);
+            logSummary.info(`Number of records: ${this.summary.numDocs}`);
+            logSummary.info(`Number of errors: ${this.summary.numErrors}`);
+        }
+    };
 
     /**
      * Create the importer and initialize with settings.
@@ -56,6 +68,8 @@ export class DeutscheBahnCkanImporter {
         try {
             log.debug("Processing CKAN dataset: " + source.name + " from data-source: " + this.settings.ckanBaseUrl);
 
+            this.summary.numDocs++;
+
             // Execute the mappers
             this.settings.currentIndexName = this.elastic.indexName;
             this.settings.harvestTime = harvestTime;
@@ -71,7 +85,7 @@ export class DeutscheBahnCkanImporter {
         }
     }
 
-    async run() {
+    async run(): Promise<Summary> {
         try {
             if (this.settings.dryRun) {
                 log.debug('Dry run option enabled. Skipping index creation.');
@@ -111,8 +125,9 @@ export class DeutscheBahnCkanImporter {
             if (total === 0) {
                 log.warn(`Could not harvest any datasets from ${this.settings.ckanBaseUrl}`);
                 await this.elastic.abortCurrentIndex();
+                return this.summary;
             } else {
-                Promise.all(promises)
+                return Promise.all(promises)
                     .then(() => {
                         if (this.settings.dryRun) {
                             log.debug('Skipping finalisation of index for dry run.');
@@ -120,6 +135,7 @@ export class DeutscheBahnCkanImporter {
                             this.elastic.finishIndex();
                         }
                     })
+                    .then( () => this.summary)
                     .catch(err => log.error('Error indexing data', err));
             }
         } catch (err) {

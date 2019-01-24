@@ -1,7 +1,9 @@
 import {CswUtils} from './csw-utils';
 import {CswMapper} from "./csw-mapper";
+import {Summary} from "../model/summary";
+import {Importer} from "../importer";
 
-export class MdiImporter {
+export class MdiImporter implements Importer {
 
     private cswUtil: CswUtils;
 
@@ -39,8 +41,8 @@ export class MdiImporter {
         this.cswUtil = new CswUtils(settings);
     }
 
-    async run() {
-        this.cswUtil.run();
+    async run(): Promise<Summary> {
+        return this.cswUtil.run();
     }
 
     _getGetRecordsXmlBody() {

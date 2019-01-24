@@ -1,5 +1,7 @@
 export abstract class GenericMapper {
-    protected errors: string[];
+    protected errors: string[] = [];
+
+    protected valid = true;
 
     abstract getTitle(): string;
 
@@ -122,6 +124,10 @@ export abstract class GenericMapper {
             all.push('mFUND'); // Add an additional keyword as aid for search
         }
         return all;
+    }
+
+    isValid() {
+        return this.valid;
     }
 }
 

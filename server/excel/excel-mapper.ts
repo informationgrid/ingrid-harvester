@@ -1,5 +1,6 @@
 import {UrlUtils} from "../utils/url-utils";
 import {GenericMapper} from "../model/generic-mapper";
+import {Summary} from "../model/summary";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -12,6 +13,7 @@ export class ExcelMapper extends GenericMapper {
     columnMap;
     workbook;
     private settings: any;
+    private summary: Summary;
 
     constructor(settings, data) {
         super();
@@ -22,6 +24,7 @@ export class ExcelMapper extends GenericMapper {
         this.columnValues = data.columnValues;
         this.columnMap = data.columnMap;
         this.workbook = data.workbook;
+        this.summary = data.summary;
     }
 
     getTitle() {
@@ -189,14 +192,10 @@ export class ExcelMapper extends GenericMapper {
                     accessURL: downloadUrl.trim()
                 });
             } else {
-                // TODO: handle errors
-                if (!this.errors) {
-                    this.errors = [];
-                }
                 let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.settings.currentIndexName}'.`;
-                this.errors.push(msg);
                 log.warn(msg);
-                log.warn(`Invalid URL '${downloadUrl}' found`);
+                this.errors.push(msg);
+                this.summary.numErrors++;
             }
         }
 

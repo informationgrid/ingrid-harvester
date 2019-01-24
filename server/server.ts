@@ -5,12 +5,16 @@ import {DwdImporter} from "./csw/dwd-importer";
 import {BfgImporter} from "./csw/bfg-importer";
 import {MdiImporter} from "./csw/mdi-importer";
 import {configure, getLogger} from 'log4js';
+import {Summary} from "./model/summary";
 
 let config = require( '../config.json' ),
     process = require('process'),
-    log = getLogger('app');
+    log = getLogger(),
+    logSummary = getLogger('summary');
 
 configure('./log4js.json');
+
+const start = new Date();
 
 // create a server which finds a random free port
 // scan a range
@@ -48,6 +52,7 @@ let deduplicationAlias = `dedupe_${dt}_${pid}`;
 
 let args = process.argv.slice(2);
 
+const processes = [];
 config.forEach( (settings:any) => {
     // Include relevant CLI args
     settings.dryRun = args.includes('-n') || args.includes('--dry-run');
@@ -62,5 +67,14 @@ config.forEach( (settings:any) => {
         return;
     }
     log.info("Starting import ...");
-    importer.run();
+    processes.push(importer.run());
 } );
+
+Promise.all(processes).then( (summaries: Summary[]) => {
+    const duration = (+new Date() - +start) / 1000;
+    logSummary.info('#######################################');
+    logSummary.info('Import started at: ' + start);
+    logSummary.info('Import took: ' + duration + 's\n');
+    summaries.forEach( summary => summary.print());
+    logSummary.info('#######################################');
+});

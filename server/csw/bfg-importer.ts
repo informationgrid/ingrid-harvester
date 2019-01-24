@@ -1,7 +1,9 @@
 import {CswUtils} from './csw-utils';
 import {CswMapper} from "./csw-mapper";
+import {Summary} from "../model/summary";
+import {Importer} from "../importer";
 
-export class BfgImporter {
+export class BfgImporter implements Importer {
 
     cswUtil: CswUtils;
 
@@ -43,7 +45,7 @@ export class BfgImporter {
         this.cswUtil = new CswUtils(settings);
     }
 
-    async run() {
-        this.cswUtil.run();
+    async run(): Promise<Summary> {
+        return this.cswUtil.run();
     }
 }

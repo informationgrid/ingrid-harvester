@@ -1,11 +1,23 @@
 {
   "appenders": {
-    "app": {
+    "console": {
       "type": "console"
+    },
+    "summaryFile": {
+      "type": "file",
+      "filename": "summary.log",
+      "maxLogSize": 10485760,
+      "backups": 3
     }
-
   },
   "categories": {
-    "default": { "appenders": [ "app" ], "level": "INFO" }
+    "default": {
+      "appenders": [ "console" ],
+      "level": "INFO"
+    },
+    "summary": {
+      "appenders": [ "console", "summaryFile" ],
+      "level": "INFO"
+    }
   }
 }
