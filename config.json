@@ -59,5 +59,17 @@
     "defaultAttribution": "Bundesanstalt für Gewässerkunde",
     "defaultAttributionLink": "https://www.bafg.de/",
     "includeTimestamp": true
+  },
+  {
+    "importer": "DWD-CSW",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "csw_dwd",
+    "indexType": "base",
+    "alias": "mcloud",
+    "getRecordsUrl": "https://cdc.dwd.de/catalogue/srv/en/csw",
+    "proxy": null,
+    "defaultMcloudSubgroup": "climate",
+    "defaultAttribution": "Climate Data Centre (CDC) Katalog des DWD",
+    "includeTimestamp": true
   }
 ]

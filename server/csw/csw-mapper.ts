@@ -1,5 +1,5 @@
 /**
- * A mapper for CKAN documents.
+ * A mapper for ISO-XML documents harvested over CSW.
  */
 import {GenericMapper} from "../model/generic-mapper";
 import {SelectedValue} from "xpath";
@@ -292,16 +292,24 @@ export class CswMapper extends GenericMapper {
         return "";
     }
 
-    getKeywords(): string[] {
+    getKeywords(mandatoryKws = ['opendata']): string[] {
         let keywords = [];
         CswMapper.select('.//gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', this.record).forEach(node => {
             keywords.push(node.textContent);
         });
+
+        // Update the statistics
         if (keywords.includes('opendata')) {
             this.summary.opendata++;
-        } else {
-            // Don't index metadata-sets without the `opendata' keyword
-            this.log.info(`Keyword 'opendata' not found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.getRecordsUrl}'.`);
+        }
+
+        // Check if at least one mandatory keyword is present
+        let valid = keywords.reduce((accumulator, currentValue) => {
+            return accumulator || mandatoryKws.includes(currentValue);
+        }, false);
+        if (!valid) {
+            // Don't index metadata-sets without any of the mandatory keywords
+            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.getRecordsUrl}'.`);
             this.skipped = true;
         }
 

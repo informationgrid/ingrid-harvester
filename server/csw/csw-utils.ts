@@ -129,7 +129,7 @@ export class CswUtils {
         }
         for(let i=0; i<records.length; i++) {
             this.summary.numDocs++;
-            let mapper = new CswMapper(this.settings, records[i], harvestTime, issued[i], this.summary);
+            let mapper = this.getMapper(this.settings, records[i], harvestTime, issued[i], this.summary);
             let doc = await IndexDocument.create(mapper);
             if (!mapper.shouldBeSkipped()) {
                 promises.push(
@@ -139,6 +139,10 @@ export class CswUtils {
         }
         await Promise.all(promises)
             .catch(err => log.error('Error indexing CSW record', err));
+    }
+
+    getMapper(settings, record, harvestTime, issuedTime, summary): CswMapper {
+        return new CswMapper(settings, record, harvestTime, issuedTime, summary);
     }
 
     async importDataset(doc) {

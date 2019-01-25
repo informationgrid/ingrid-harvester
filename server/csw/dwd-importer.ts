@@ -1,11 +1,11 @@
-import {CswUtils} from "./csw-utils";
-import {CswMapper} from "./csw-mapper";
 import {Summary} from "../model/summary";
 import {Importer} from "../importer";
+import {DwdUtils} from "./dwd-utils";
+import {CswMapper} from "./csw-mapper";
 
 export class DwdImporter implements Importer {
 
-    private cswUtil: CswUtils;
+    private dwdUtil: DwdUtils;
 
     constructor(settings) {
         let gmdEncoded = encodeURIComponent(CswMapper.GMD);
@@ -30,7 +30,10 @@ export class DwdImporter implements Importer {
                 typeNames: 'gmd:MD_Metadata',
                 CONSTRAINTLANGUAGE: 'FILTER',
                 startPosition: 1,
-                maxRecords: 50
+                maxRecords: 50,
+                constraint_language_version: '1.1.0',
+                elementSetName: 'full',
+                constraint: '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>'
             },
             headers: {
                 'User-Agent': 'mCLOUD Harvester. Request-Promise',
@@ -38,10 +41,10 @@ export class DwdImporter implements Importer {
             },
             json: false
         };
-        this.cswUtil = new CswUtils(settings);
+        this.dwdUtil = new DwdUtils(settings);
     }
 
     async run(): Promise<Summary> {
-        return this.cswUtil.run();
+        return this.dwdUtil.run();
     }
 }
