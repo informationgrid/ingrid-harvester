@@ -129,13 +129,22 @@ export class CswUtils {
         }
         for(let i=0; i<records.length; i++) {
             this.summary.numDocs++;
-            promises.push(
-                //this.indexRecord(records[i], harvestTime, issued[i])
-                IndexDocument.create(new CswMapper(this.settings, records[i], harvestTime, issued[i], this.summary))
-            );
+            let mapper = new CswMapper(this.settings, records[i], harvestTime, issued[i], this.summary);
+            let doc = await IndexDocument.create(mapper);
+            if (!mapper.shouldBeSkipped()) {
+                promises.push(
+                    this.importDataset(doc)
+                );
+            }
         }
         await Promise.all(promises)
             .catch(err => log.error('Error indexing CSW record', err));
+    }
+
+    async importDataset(doc) {
+        if (!this.settings.dryRun) {
+            return this.elastic.addDocToBulk(doc, doc.id);
+        }
     }
 
 }

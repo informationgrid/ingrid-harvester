@@ -3,6 +3,8 @@ export abstract class GenericMapper {
 
     protected valid = true;
 
+    protected skipped = false;
+
     abstract getTitle(): string;
 
     abstract getDescription(): string;
@@ -128,6 +130,10 @@ export abstract class GenericMapper {
 
     isValid() {
         return this.valid;
+    }
+
+    shouldBeSkipped() {
+        return this.skipped;
     }
 }
 

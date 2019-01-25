@@ -302,7 +302,7 @@ export class CswMapper extends GenericMapper {
         } else {
             // Don't index metadata-sets without the `opendata' keyword
             this.log.info(`Keyword 'opendata' not found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.getRecordsUrl}'.`);
-            return null;
+            this.skipped = true;
         }
 
         return keywords;
