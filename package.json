@@ -4,7 +4,7 @@
   "description": "",
   "main": "server/server.ts",
   "scripts": {
-    "start": "./node_modules/.bin/babel-node server/server.js --presets=es2017",
+    "start": "node --require ts-node/register ./server/server.ts",
     "runFull": "npm run build && node ./dist/server.js",
     "build": "gulp",
     "lint": "./node_modules/.bin/eslint *.js",
