@@ -24,6 +24,10 @@ export class TestUtils {
             chai.assert.deepInclude(actual.extras.displayContact, expected.extras.displayContact);
             delete expected.extras.displayContact;
 
+            // check issued date to be set and exclude from further comparison
+            chai.expect(actual.extras.metadata.issued).not.to.be.null.and.empty;
+            delete expected.extras.metadata.issued;
+
             // check extras metadata
             chai.assert.deepInclude(actual.extras.metadata, expected.extras.metadata);
             chai.expect(actual.extras.metadata.modified).not.to.be.null.and.empty;
