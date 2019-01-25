@@ -62,6 +62,12 @@ export class ExcelMapper extends GenericMapper {
                 distributions.push(...dist);
             });
 
+        if (distributions.length === 0) {
+            this.valid = false;
+            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.id}', index: '${this.settings.currentIndexName}'.`;
+            log.warn(msg);
+        }
+
         return distributions;
     }
 

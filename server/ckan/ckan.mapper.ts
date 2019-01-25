@@ -83,7 +83,13 @@ export class CkanToElasticsearchMapper extends GenericMapper {
                 }
             }
         }
-        this.errors = urlErrors;
+        this.errors.push(...urlErrors);
+
+        if (distributions.length === 0) {
+            this.valid = false;
+            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.data.id}', index: '${this.settings.currentIndexName}'.`;
+            this.log.warn(msg);
+        }
 
         return distributions;
     }
