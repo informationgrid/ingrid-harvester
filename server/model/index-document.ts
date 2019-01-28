@@ -10,6 +10,7 @@ export class IndexDocument {
             issued: mapper.getIssued(),
             modified: mapper.getModifiedDate(),
             accrualPeriodicity: mapper.getAccrualPeriodicity(),
+            contactPoint: await mapper.getContactPoint(),
             keywords: mapper.getKeywords(),
             creator: mapper.getCreator(),
             publisher: await mapper.getPublisher(),

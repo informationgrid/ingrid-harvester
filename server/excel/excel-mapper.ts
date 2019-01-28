@@ -9,7 +9,7 @@ export class ExcelMapper extends GenericMapper {
     data;
     id;
     issuedExisting;
-    columnValues;
+    columnValues: string[] | Date;
     columnMap;
     workbook;
     private settings: any;
@@ -47,7 +47,8 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getAccessRights() {
-        return [this.columnValues[this.columnMap.Nutzungshinweise]];
+        let rights = this.columnValues[this.columnMap.Nutzungshinweise];
+        return rights && rights.trim() !== '' ? [rights] : null;
     }
 
     async getDistributions() {
@@ -55,12 +56,11 @@ export class ExcelMapper extends GenericMapper {
 
         const distributions = [];
 
-        types
-            .filter(type => this.columnValues[this.columnMap[type]])
-            .forEach(async type => {
-                const dist = await this.addDownloadUrls(type, this.columnValues[this.columnMap[type]]);
-                distributions.push(...dist);
-            });
+        const filteredTypes = types.filter(type => this.columnValues[this.columnMap[type]]);
+        await Promise.all(filteredTypes.map(async type => {
+            const dist = await this.addDownloadUrls(type, this.columnValues[this.columnMap[type]]);
+            distributions.push(...dist);
+        }));
 
         if (distributions.length === 0) {
             this.valid = false;
@@ -183,12 +183,11 @@ export class ExcelMapper extends GenericMapper {
         if (urlsString.text) urlsString = urlsString.text;
         const distributions = [];
 
-        let downloads = urlsString.split(/,[\r\n]+/); // comma followed by one or more (carriage returns or newlines)
-        for (let i = 0; i < downloads.length; i++) {
-            let downloadUrl = downloads[i];
+        let downloads: string[] = urlsString.split(/,[\r\n]+/); // comma followed by one or more (carriage returns or newlines)
+        await Promise.all(downloads.map( async (downloadUrl) => {
 
             // skip if downloadURL is empty
-            if (downloadUrl.trim().length === 0) continue;
+            if (downloadUrl.trim().length === 0) return;
 
             let checkedUrl = await UrlUtils.urlWithProtocolFor(downloadUrl);
 
@@ -203,7 +202,7 @@ export class ExcelMapper extends GenericMapper {
                 this.errors.push(msg);
                 this.summary.numErrors++;
             }
-        }
+        }));
 
         return distributions;
     }
@@ -242,47 +241,51 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getAccrualPeriodicity(): string {
-        return null;
+        return undefined;
     }
 
     getKeywords(): string[] {
-        return null;
+        return undefined;
     }
 
     getCreator() {
-        return null;
+        return undefined;
     }
 
     getHarvestedData(): string {
-        return null;
+        return undefined;
     }
 
     getLicenseTitle(): string {
-        return null;
+        return undefined;
     }
 
     getTemporalEnd(): Date {
-        return null;
+        return undefined;
     }
 
     getTemporalStart(): Date {
-        return null;
+        return undefined;
     }
 
     getGroups(): string[] {
-        return null;
+        return undefined;
     }
 
     getIssued(): Date {
-        return null;
+        return undefined;
     }
 
     getMetadataHarvested(): Date {
-        return null;
+        return undefined;
     }
 
     getSubSections(): any[] {
-        return null;
+        return undefined;
+    }
+
+    getContactPoint(): any {
+        return undefined;
     }
 
 }

@@ -3,10 +3,6 @@
 let log = require( 'log4js' ).getLogger( __filename );
 
 export class Utils {
-    static postProcess(item) {
-        this._setDisplayContactIn(item);
-        this._addIndexTerms(item);
-    }
 
     /**
      * Sets the details for the contact that will be displayed in the portal.

@@ -89,7 +89,9 @@ export abstract class GenericMapper {
 
     abstract getAccrualPeriodicity(): string;
 
-    abstract getCreator(): {name: string, mbox: string}[] | {name: string, mbox: string};
+    abstract getContactPoint(): any;
+
+    abstract getCreator(): { name: string, mbox: string }[] | { name: string, mbox: string };
 
     abstract getLicenseTitle(): string;
 
@@ -135,7 +137,7 @@ export abstract class GenericMapper {
     shouldBeSkipped() {
         return this.skipped;
     }
-}
 
+}
 
 

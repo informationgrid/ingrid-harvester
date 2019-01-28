@@ -26,7 +26,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getAccessRights() {
-        return null;
+        return undefined;
     }
 
     getCategories() {
@@ -34,7 +34,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getCitation() {
-        return null;
+        return undefined;
     }
 
     getDescription() {
@@ -111,11 +111,11 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getMFundFKZ() {
-        return null;
+        return undefined;
     }
 
     getMFundProjectTitle() {
-        return null;
+        return undefined;
     }
 
     getMetadataIssued() {
@@ -164,13 +164,13 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         let maxDate = new Date(Math.max(...dates));
 
         if (minDate.toISOString() !== maxDate.toISOString()) {
-            return null;
+            return undefined;
         } else if (maxDate) {
             return maxDate.toISOString();
         } else if (minDate) {
             return minDate.toISOString();
         }
-        return null;
+        return undefined;
     }
 
     getTemporalStart() {
@@ -181,7 +181,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         if (minDate && maxDate && minDate.getTime() != maxDate.getTime()) {
             return minDate; // Math.min and Math.max convert items to numbers
         }
-        return null;
+        return undefined;
     }
 
     getTemporalEnd() {
@@ -192,7 +192,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         if (minDate && maxDate && minDate.getTime() != maxDate.getTime()) {
             return maxDate;
         }
-        return null;
+        return undefined;
     }
 
     getThemes() {
@@ -204,7 +204,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     isRealtime() {
-        return null;
+        return undefined;
     }
 
     getAccrualPeriodicity(): string {
@@ -316,6 +316,10 @@ export class CkanToElasticsearchMapper extends GenericMapper {
             });
         }
         return subsections;
+    }
+
+    getContactPoint(): any {
+        return undefined;
     }
 
 }
