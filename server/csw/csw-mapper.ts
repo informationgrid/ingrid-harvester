@@ -35,6 +35,13 @@ export class CswMapper extends GenericMapper {
     private readonly uuid: string;
     private summary: Summary;
 
+    private keywordsAlreadyFetched = false;
+    private fetched: any = {
+        contactPoint: null,
+        license: null,
+        keywords: {}
+    };
+
 
     constructor(settings, record, harvestTime, issued, summary) {
         super();
@@ -189,26 +196,26 @@ export class CswMapper extends GenericMapper {
         return title && title.trim() !== '' ? title : undefined;
     }
 
+    /**
+     * For Open Data, GDI-DE expects access rights to be defined three times:
+     * - As text in useLimitation
+     * - As text in a useConstraints/otherConstraints combination
+     * - As a JSON-snippet in a useConstraints/otherConstraints combination
+     *
+     * Use limitations can also be defined as separate fields
+     * Plus access constraints can be set from the ISO codelist MD_RestrictionCode
+     *
+     * GeoDCAT-AP of the EU on the other had uses the
+     * useLimitation/accessConstraints=otherRestritions/otherConstraints
+     * combination and uses the accessRights field to store this information.
+     *
+     * We use a combination of these strategies:
+     * - Use the accessRights field like GeoDCAT-AP but store:
+     *    + all the useLimitation items
+     *    + all otherConstraints texts for useConstraints/otherConstraints
+     *      combinations that are not JSON-snippets.
+     */
     getAccessRights(): string[] {
-        /*
-         * For Open Data, GDI-DE expects access rights to be defined three times:
-         * - As text in useLimitation
-         * - As text in a useConstraints/otherConstraints combination
-         * - As a JSON-snippet in a useConstraints/otherConstraints combination
-         *
-         * Use limitations can also be defined as separate fields
-         * Plus access constraints can be set from the ISO codelist MD_RestrictionCode
-         *
-         * GeoDCAT-AP of the EU on the other had uses the
-         * useLimitation/accessConstraints=otherRestritions/otherConstraints
-         * combination and uses the accessRights field to store this information.
-         *
-         * We use a combination of these strategies:
-         * - Use the accessRights field like GeoDCAT-AP but store:
-         *    + all the useLimitation items
-         *    + all otherConstraints texts for useConstraints/otherConstraints
-         *      combinations that are not JSON-snippets.
-         */
         // Extract all useLimitation texts
         let limitations = CswMapper.select('./*/gmd:resourceConstraints/*/gmd:useLimitation', this.idInfo)
             .map(node => CswMapper.getCharacterStringContent(node)) // Extract the text
@@ -301,15 +308,23 @@ export class CswMapper extends GenericMapper {
      * must be found in the ISO-XML document for it to be indexed
      */
     getKeywords(mandatoryKws : string[] = ['opendata']): string[] {
-        let keywords = [];
+
+        let keywords = this.fetched.keywords[mandatoryKws.join()];
+        if (keywords) {
+            return keywords;
+        }
+
+        keywords = [];
         CswMapper.select('.//gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', this.record).forEach(node => {
             keywords.push(node.textContent);
         });
 
         // Update the statistics
-        if (keywords.includes('opendata')) {
+        if (!this.keywordsAlreadyFetched && keywords.includes('opendata')) {
             this.summary.opendata++;
         }
+
+        this.keywordsAlreadyFetched = true;
 
         // Check if at least one mandatory keyword is present
         let valid = keywords.reduce((accumulator, currentValue) => {
@@ -321,17 +336,18 @@ export class CswMapper extends GenericMapper {
             this.skipped = true;
         }
 
+        this.fetched.keywords[mandatoryKws.join()] = keywords;
         return keywords;
     }
 
     async getLicenseId(): Promise<string> {
-        let license = await CswMapper.getLicense(this.idInfo);
+        let license = await this.getLicense(this.idInfo);
         if (license) {
             if (license.id) return license.id;
         }
         if (!license || !license.id) {
             let msg = 'No license detected for dataset.';
-            if (this.settings.printSummary) this.summary.missingLicense++;
+            this.summary.missingLicense++;
             this.log.warn(`${msg} ${this.getErrorSuffix(this.uuid, this.getTitle())}`);
 
             this.errors.push(msg);
@@ -342,7 +358,7 @@ export class CswMapper extends GenericMapper {
     }
 
     async getLicenseURL(): Promise<string> {
-        let license = await CswMapper.getLicense(this.idInfo);
+        let license = await this.getLicense(this.idInfo);
         if (license) {
             if (license.url) return license.url;
         }
@@ -488,7 +504,12 @@ export class CswMapper extends GenericMapper {
         return undefined;
     }
 
-    static async getLicense(idInfo) {
+    async getLicense(idInfo) {
+        let license = this.fetched.license;
+        if (license) {
+            return license;
+        }
+
         let constraints = CswMapper.select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license"]', idInfo);
         if (constraints && constraints.length > 0) {
             let license: any = {};
@@ -513,6 +534,8 @@ export class CswMapper extends GenericMapper {
                     }
                 }
             }
+
+            this.fetched.license = license;
             return license;
         }
     }
@@ -529,7 +552,7 @@ export class CswMapper extends GenericMapper {
         return undefined;
     }
 
-    getCreator() {
+    getCreator(): any[] {
         let creators = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
@@ -557,7 +580,7 @@ export class CswMapper extends GenericMapper {
                 }
             }
         }
-        return creators;
+        return creators.length === 0 ? undefined : creators;
     }
 
     getGroups(): string[] {
@@ -577,6 +600,12 @@ export class CswMapper extends GenericMapper {
     }
 
     async getContactPoint(): Promise<any> {
+
+        let contactPoint = this.fetched.contactPoint;
+        if (contactPoint) {
+            return contactPoint;
+        }
+
         let others = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
@@ -627,6 +656,8 @@ export class CswMapper extends GenericMapper {
             }
         }
 
-        return others.length === 0 ? null : others[0]; // TODO index all contacts
+        contactPoint = others.length === 0 ? undefined : others[0];
+        this.fetched.contactPoint = contactPoint;
+        return contactPoint; // TODO index all contacts
     }
 }

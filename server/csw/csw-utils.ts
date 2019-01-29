@@ -30,10 +30,9 @@ export class CswUtils {
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);
-            logSummary.info(`Number of matched records: ${this.summary.numMatched}`);
             logSummary.info(`Number of records with 'opendata' keyword: ${this.summary.opendata}`);
             logSummary.info(`Number of records with missing links: ${this.summary.missingLinks}`);
-            logSummary.info(`Number of records license: ${this.summary.missingLicense}`);
+            logSummary.info(`Number of records with missing license: ${this.summary.missingLicense}`);
             logSummary.info(`Number of records imported without problems: ${this.summary.ok}`);
         }
     };
@@ -98,7 +97,6 @@ export class CswUtils {
             } else {
                 let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
                 numMatched = resultsNode.getAttribute('numberOfRecordsMatched');
-                if (this.settings.printSummary) this.summary.numMatched = numMatched;
 
                 log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
 
@@ -129,11 +127,16 @@ export class CswUtils {
         }
         for(let i=0; i<records.length; i++) {
             this.summary.numDocs++;
+            const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');
             let mapper = this.getMapper(this.settings, records[i], harvestTime, issued[i], this.summary);
             let doc = await IndexDocument.create(mapper);
             if (!mapper.shouldBeSkipped()) {
+
+                if (doc.extras.metadata.isValid && doc.distribution.length > 0) {
+                    this.summary.ok++;
+                }
                 promises.push(
-                    this.importDataset(doc)
+                    this.importDataset(doc, uuid)
                 );
             }
         }
@@ -145,9 +148,9 @@ export class CswUtils {
         return new CswMapper(settings, record, harvestTime, issuedTime, summary);
     }
 
-    async importDataset(doc) {
+    async importDataset(doc: any, uuid: string) {
         if (!this.settings.dryRun) {
-            return this.elastic.addDocToBulk(doc, doc.id);
+            return this.elastic.addDocToBulk(doc, uuid);
         }
     }
 

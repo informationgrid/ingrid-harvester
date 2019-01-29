@@ -48,7 +48,7 @@ export class ExcelMapper extends GenericMapper {
 
     getAccessRights() {
         let rights = this.columnValues[this.columnMap.Nutzungshinweise];
-        return rights && rights.trim() !== '' ? [rights] : null;
+        return rights && rights.trim() !== '' ? [rights] : undefined;
     }
 
     async getDistributions() {
@@ -127,7 +127,7 @@ export class ExcelMapper extends GenericMapper {
         if (mfundFkz && (mfundFkz.formula || mfundFkz.sharedFormula)) {
             mfundFkz = mfundFkz.result;
         }
-        return mfundFkz && mfundFkz.length > 0 ? mfundFkz : null;
+        return mfundFkz && mfundFkz.length > 0 ? mfundFkz : undefined;
     }
 
     getMFundProjectTitle() {
@@ -135,7 +135,7 @@ export class ExcelMapper extends GenericMapper {
         if (mfundProject && (mfundProject.formula || mfundProject.sharedFormula)) {
             mfundProject = mfundProject.result;
         }
-        return mfundProject && mfundProject.length > 0 ? mfundProject : null;
+        return mfundProject && mfundProject.length > 0 ? mfundProject : undefined;
     }
 
 

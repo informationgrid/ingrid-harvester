@@ -103,7 +103,7 @@ export abstract class GenericMapper {
     abstract getTemporalEnd(): Date;
 
     getHarvestErrors() {
-        return this.errors;
+        return this.errors.length === 0 ? undefined : this.errors;
     }
 
     abstract getIssued(): Date;
