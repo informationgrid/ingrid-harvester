@@ -8,7 +8,7 @@ pipeline {
     environment {
         RPM_PUBLIC_KEY  = credentials('mcloud-rpm-public')
         RPM_PRIVATE_KEY = credentials('mcloud-rpm-private')
-        MCLOUD_SIGN_PASSPHRASE = credentials('mcloud-rpm-passphrase')
+        RPM_SIGN_PASSPHRASE = credentials('mcloud-rpm-passphrase')
         PATH = "$NODEJS_HOME/bin:$PATH"
     }
 
