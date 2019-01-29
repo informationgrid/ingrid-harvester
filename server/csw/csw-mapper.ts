@@ -289,7 +289,18 @@ export class CswMapper extends GenericMapper {
         return undefined;
     }
 
-    getKeywords(mandatoryKws = ['opendata']): string[] {
+    /**
+     * Extracts and returns an array of keywords defined in the ISO-XML document.
+     * This method also checks if these keywords contain at least one of the
+     * given mandatory keywords. If this is not the case, then the mapped
+     * document is flagged to be skipped from the index. By default this array
+     * contains just one entry 'opendata' i.e. if the ISO-XML document doesn't
+     * have this keyword defined, then it will be skipped from the index.
+     *
+     * @param mandatoryKws array of mandatory keywords, at least one of which
+     * must be found in the ISO-XML document for it to be indexed
+     */
+    getKeywords(mandatoryKws : string[] = ['opendata']): string[] {
         let keywords = [];
         CswMapper.select('.//gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', this.record).forEach(node => {
             keywords.push(node.textContent);
