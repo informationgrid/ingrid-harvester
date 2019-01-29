@@ -286,6 +286,17 @@ export class CswMapper extends GenericMapper {
                 }
 
                 return CswMapper.createDisplayContact(displayName, publisher[0].homepage);
+            } else {
+                let displayName;
+                let creator = this.getCreatorWithOrganisation();
+
+                if (creator[0].organisationName) {
+                    displayName = creator[0].organisationName;
+                } else if (creator[0].name) {
+                    displayName = creator[0].name;
+                }
+
+                return CswMapper.createDisplayContact(displayName, creator[0].homepage);
             }
         }
 
@@ -553,6 +564,16 @@ export class CswMapper extends GenericMapper {
     }
 
     getCreator(): any[] {
+        let creators = this.getCreatorWithOrganisation();
+
+        if (creators) {
+            // we don't need the organisation here
+            creators.forEach( c => delete c.organisationName);
+        }
+        return creators;
+    }
+
+    private getCreatorWithOrganisation(): any[] {
         let creators = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
@@ -566,12 +587,15 @@ export class CswMapper extends GenericMapper {
                 let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
 
                 let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
-                if (!name) name = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                let organisation = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
                 let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
 
-
                 if (role === 'originator' || role === 'author') {
-                    let creator = CswMapper.createCreator(name.textContent, email.textContent);
+                    let creator = {
+                        name: name.textContent,
+                        mbox: email.textContent,
+                        organisationName: organisation.textContent
+                    };
 
                     let alreadyPresent = creators.filter(c => c.name === creator.name && c.mbox === creator.mbox).length > 0;
                     if (!alreadyPresent) {

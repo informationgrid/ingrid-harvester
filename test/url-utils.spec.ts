@@ -31,28 +31,28 @@ describe('validateUrl()', function () {
         });
     });
 
-    it('should be undefined for links that are not found', function () {
+    it('should be null for links that are not found', function () {
         let input = 'does-not-exist-test.wemove.com';
-        return UrlUtils.urlWithProtocolFor(input).then(result => {
-            expect(result).to.be.undefined;
+        UrlUtils.urlWithProtocolFor(input).then(result => {
+            expect(result).to.be.null;
         });
     });
 
-    it('should be undefined if url is undefined', function () {
+    it('should be null if url is undefined', function () {
         return UrlUtils.urlWithProtocolFor(undefined).then(result => {
-            expect(result).to.be.undefined;
+            expect(result).to.be.null;
         });
     });
 
-    it('should be undefined if url is empty string', function () {
+    it('should be null if url is empty string', function () {
         return UrlUtils.urlWithProtocolFor('').then(result => {
-            expect(result).to.be.undefined;
+            expect(result).to.be.null;
         });
     });
 
-    it('should be undefined if url only contains whitespace', function () {
+    it('should be null if url only contains whitespace', function () {
         return UrlUtils.urlWithProtocolFor('\t\r\n').then(result => {
-            expect(result).to.be.undefined;
+            expect(result).to.be.null;
         });
     });
 });

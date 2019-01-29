@@ -13,8 +13,6 @@
     "temporal" : "01.12.2018 - 30.01.2019",
     "citation" : "Bundesanstalt für Straßenwesen",
     "subgroups" : [ "roads" ],
-    "mfund_fkz" : null,
-    "mfund_project_title" : null,
     "displayContact" : {
       "name" : "Bundesanstalt für Straßenwesen (BASt)",
       "url" : "http://www.bast.de/"

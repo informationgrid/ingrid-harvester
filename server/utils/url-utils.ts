@@ -12,8 +12,8 @@ export class UrlUtils {
      * @returns a valid URL with protocol https or http
      */
     static async urlWithProtocolFor(url): Promise<string> {
-        if (!url && url !== '') return url;
-        if (url.trim() !== '') {
+
+        if (url && url.trim()) {
             // we assume that an URL which contains '://' also has a protocol and is valid
             if (url.includes('://')) return url;
 
