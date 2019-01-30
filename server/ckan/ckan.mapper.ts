@@ -136,7 +136,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getModifiedDate() {
-        return this.data.metadata_modified;
+        return this.data.metadata_modified instanceof Date ? this.data.metadata_modified : new Date(this.data.metadata_modified);
     }
 
     async getPublisher() {
@@ -284,7 +284,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getIssued(): Date {
-        return this.data.metadata_created;
+        return this.data.metadata_created instanceof Date ? this.data.metadata_created : new Date(this.data.metadata_created);
     }
 
     getMetadataHarvested(): Date {

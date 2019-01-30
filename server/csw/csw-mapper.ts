@@ -424,7 +424,7 @@ export class CswMapper extends GenericMapper {
     }
 
     getModifiedDate() {
-        return CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent;
+        return new Date(CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent);
     }
 
     getTemporal() {
