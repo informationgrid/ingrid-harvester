@@ -7,7 +7,7 @@ const tsify = require('tsify');
 
 gulp.task('default', () => {
 
-    gulp.src(['./config.json', './log4js.json', './rpm/package.json'])
+    gulp.src(['./server/config.json', './log4js.json', './rpm/package.json'])
         .pipe(gulp.dest('./dist/'));
 
     return browserify({

@@ -35,6 +35,8 @@ export class TestUtils {
             // check extras without metadata
             delete expected.extras.metadata;
             delete expected.extras.harvested_data;
+            chai.expect(actual.extras.temporal_end).not.to.be.null;
+            delete expected.extras.temporal_end;
             chai.assert.deepInclude(actual.extras, expected.extras);
 
             // check doc without extras

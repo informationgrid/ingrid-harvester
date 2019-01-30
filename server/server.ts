@@ -7,7 +7,7 @@ import {MdiImporter} from "./csw/mdi-importer";
 import {configure, getLogger} from 'log4js';
 import {Summary} from "./model/summary";
 
-let config = require( '../config.json' ),
+let config = require( './config.json' ),
     process = require('process'),
     log = getLogger(),
     logSummary = getLogger('summary');
