@@ -1,3 +1,8 @@
+export interface Distribution {
+    format: string;
+    accessURL: string;
+}
+
 export abstract class GenericMapper {
     protected errors: string[] = [];
 

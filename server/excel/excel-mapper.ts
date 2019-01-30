@@ -1,5 +1,5 @@
 import {UrlUtils} from "../utils/url-utils";
-import {GenericMapper} from "../model/generic-mapper";
+import {Distribution, GenericMapper} from "../model/generic-mapper";
 import {Summary} from "../model/summary";
 
 const log = require('log4js').getLogger(__filename);
@@ -54,7 +54,7 @@ export class ExcelMapper extends GenericMapper {
     async getDistributions() {
         const types = ['Dateidownload', 'WMS', 'FTP', 'AtomFeed', 'Portal', 'SOS', 'WFS', 'WCS', 'WMTS', 'API'];
 
-        const distributions = [];
+        const distributions: Distribution[] = [];
 
         const filteredTypes = types.filter(type => this.columnValues[this.columnMap[type]]);
         await Promise.all(filteredTypes.map(async type => {
@@ -177,11 +177,12 @@ export class ExcelMapper extends GenericMapper {
      * Split download urls and add each one to the resource.
      * @param type
      * @param urlsString
+     * @param dataFormats
      */
-    async addDownloadUrls(type, urlsString) {
+    async addDownloadUrls(type: string, urlsString): Promise<Distribution[]> {
         // Check if the cell contains just text or hyperlinked text
         if (urlsString.text) urlsString = urlsString.text;
-        const distributions = [];
+        const distributions: Distribution[] = [];
 
         let downloads: string[] = urlsString.split(/,[\r\n]+/); // comma followed by one or more (carriage returns or newlines)
         await Promise.all(downloads.map( async (downloadUrl) => {
