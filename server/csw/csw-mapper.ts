@@ -591,11 +591,18 @@ export class CswMapper extends GenericMapper {
                 let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
 
                 if (role === 'originator' || role === 'author') {
-                    let creator = {
-                        name: name.textContent,
-                        mbox: email.textContent,
-                        organisationName: organisation.textContent
-                    };
+                    let creator : creatorType = {};
+                    /*
+                     * Creator has only one field for name. Use either the name
+                     * of the organisation or the person for this field. The
+                     * organisation name has a higher priority.
+                     */
+                    if (organisation) {
+                        creator.name =  organisation.textContent;
+                    } else if (name) {
+                        creator.name = name.textContent;
+                    }
+                    if (email) creator.mbox = email.textContent;
 
                     let alreadyPresent = creators.filter(c => c.name === creator.name && c.mbox === creator.mbox).length > 0;
                     if (!alreadyPresent) {
@@ -684,4 +691,10 @@ export class CswMapper extends GenericMapper {
         this.fetched.contactPoint = contactPoint;
         return contactPoint; // TODO index all contacts
     }
+}
+
+// Private interface. Do not export
+interface creatorType {
+    name? : string;
+    mbox? : string;
 }
