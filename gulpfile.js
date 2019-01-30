@@ -18,6 +18,7 @@ gulp.task('default', () => {
         cache: {},
         packageCache: {}
     })
+        .external('./config.json')
         .plugin(tsify)
         .bundle()
         .pipe(source('app.js'))
