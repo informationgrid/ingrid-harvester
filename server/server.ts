@@ -6,11 +6,18 @@ import {BfgImporter} from "./csw/bfg-importer";
 import {MdiImporter} from "./csw/mdi-importer";
 import {configure, getLogger} from 'log4js';
 import {Summary} from "./model/summary";
+import * as fs from "fs";
 
 let config = require( './config.json' ),
     process = require('process'),
     log = getLogger(),
-    logSummary = getLogger('summary');
+    logSummary = getLogger('summary'),
+    lastExecutionLogFile = './logs/last-execution.log';
+
+// remove log file to only log current execution
+if (fs.existsSync(lastExecutionLogFile)) {
+    fs.unlinkSync(lastExecutionLogFile);
+}
 
 configure('./log4js.json');
 
@@ -56,7 +63,6 @@ const processes = [];
 config.forEach( (settings:any) => {
     // Include relevant CLI args
     settings.dryRun = args.includes('-n') || args.includes('--dry-run');
-    settings.printSummary = args.includes('--print-summary');
 
     // Set the same elasticsearch alias for deduplication for all importers
     settings.deduplicationAlias = deduplicationAlias;

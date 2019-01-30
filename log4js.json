@@ -3,20 +3,24 @@
     "console": {
       "type": "console"
     },
+    "lastLog": {
+      "type": "file",
+      "filename": "logs/last-execution.log"
+    },
     "summaryFile": {
       "type": "file",
-      "filename": "summary.log",
+      "filename": "logs/summary.log",
       "maxLogSize": 10485760,
       "backups": 3
     }
   },
   "categories": {
     "default": {
-      "appenders": [ "console" ],
+      "appenders": [ "console", "lastLog" ],
       "level": "INFO"
     },
     "summary": {
-      "appenders": [ "console", "summaryFile" ],
+      "appenders": [ "console", "summaryFile", "lastLog" ],
       "level": "INFO"
     }
   }

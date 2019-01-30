@@ -138,6 +138,8 @@ export class ExcelImporter implements Importer {
                 .catch(err => log.error('Error importing excel row', err));
         } catch(error) {
             log.error('Error reading excel workbook', error);
+            this.summary.numErrors++;
+            return this.summary;
         }
     }
 
