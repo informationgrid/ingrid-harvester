@@ -148,7 +148,7 @@ export class ExcelImporter implements Importer {
      * @param baseName
      */
     private getUniqueName(baseName: string) {
-        let newName = 'https://mcloud.de_' + baseName.replace(/[^a-zA-Z0-9-_]+/g, '').toLowerCase().substring(0, 98);
+        let newName = '_mcloudde_' + baseName.replace(/[^a-zA-Z0-9-_]+/g, '').toLowerCase().substring(0, 98);
         let candidate = newName;
         let count = this.names[newName];
         if (count) {
