@@ -2,7 +2,7 @@
   "title" : "Zugbildungsplan A -Reihung- (ZpAR)",
   "description" : "<p>Darstellung der Wagenreihung der Züge der DB Fernverkehr AG</p>",
   "theme" : [ "http://publications.europa.eu/resource/authority/data-theme/TRAN" ],
-  "issued" : "2018-10-26T17:21:38.358392",
+  "issued" : "2018-10-26T15:21:38.358Z",
   "modified" : "2018-11-26T15:07:40.316406",
   "accrualPeriodicity" : "once_per_quarter",
   "keywords" : [ "Fernverkehr", "Wagenreihung" ],
@@ -23,15 +23,36 @@
     "issued" : "2018-11-26T14:30:42.834779",
     "modified" : null,
     "byteSize" : null
-  }, {
-    "id" : "084f76a9-4538-4d47-a4ee-b34fa321a92d",
-    "title" : "Zugbildungsplan A -Reihung- (ZpAR)",
-    "description" : "Endstück Winterfahrplan 2018 Gültigkeit: 09.12.2018 – 10.06.2019",
-    "accessURL" : "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR_Wi_Endstueck.pdf",
-    "format" : "PDF",
-    "issued" : "2018-11-26T15:04:35.550582",
-    "modified" : null,
-    "byteSize" : null
+  },
+    {
+      "id": "084f76a9-4538-4d47-a4ee-b34fa321a92d",
+      "title": "Zugbildungsplan A -Reihung- (ZpAR)",
+      "description": "Endstück Winterfahrplan 2018 Gültigkeit: 09.12.2018 – 10.06.2019",
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR_Wi_Endstueck.pdf",
+      "format": "PDF",
+      "issued": "2018-11-26T15:04:35.550582",
+      "modified": null,
+      "byteSize": null
+    },
+    {
+      "id": "0cef9665-72d7-4e24-9629-1d52ecf3491d",
+      "title": "Zugbildungsplan A -Reihung- (ZpAR) - Wi_B1_Korrektur ",
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR_Wi_B1_Korrektur_Version_Open_Data.pdf",
+      "byteSize": null,
+      "description": "Endstück Winterfahrplan 2018 - B1 Korrektur - Gültigkeit: 04.02.2019 – 10.06.2019 (Vom 19.12.2018)",
+      "format": "PDF",
+      "issued": "2019-01-30T08:29:44.149573",
+      "modified": null
+    },
+    {
+      "id": "7383691c-f68a-4a7c-8037-b51db61325c6",
+      "title": "Zugbildungsplan A -Reihung- (ZpAR) - B2",
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR%20Wi_B2_.pdf",
+      "byteSize": null,
+      "description": "Endstück Winterfahrplan 2018 - B2 - Gültigkeit: 01.04.2019 – 10.06.2019 (vom 11.1.2019)",
+      "format": "PDF",
+      "issued": "2019-01-30T08:32:08.292408",
+      "modified": null
   } ],
   "extras" : {
     "generated_id" : "zugbildungsplan-zpar",

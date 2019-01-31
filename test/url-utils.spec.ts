@@ -36,7 +36,7 @@ describe('validateUrl()', function () {
         UrlUtils.urlWithProtocolFor(input).then(result => {
             expect(result).to.be.null;
         });
-    });
+    }).timeout(5000);
 
     it('should be null if url is undefined', function () {
         return UrlUtils.urlWithProtocolFor(undefined).then(result => {
