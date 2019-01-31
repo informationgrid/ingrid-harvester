@@ -526,23 +526,18 @@ export class CswMapper extends GenericMapper {
             let license: any = {};
             for(let j=0; j<constraints.length; j++) {
                 let c = constraints[j];
-                // Search until id and url are not defined
                 let nodes = CswMapper.select('./gmd:otherConstraints', c);
-                for (let i = 0; i < nodes.length && (!license.id || !license.url); i++) {
+                for (let i = 0; i < nodes.length; i++) {
                     let text = CswMapper.getCharacterStringContent(nodes[i]);
-                    license.text = text;
-                    let match = text.match(/"name"\s*:\s*"([^"]+)"/);
-                    if (match) {
-                        license.id = match[1];
-                    } else {
-                        delete license.id;
-                    }
-                    match = text.match(/"url"\s*:\s*"([^"]+)"/);
-                    if (match) {
-                        license.url = await UrlUtils.urlWithProtocolFor(match[1]);
-                    } else {
-                        delete license.url;
-                    }
+                    try {
+                        let json = JSON.parse(text);
+
+                        if (!json.id || !json.url) continue;
+
+                        license.id = json.id;
+                        license.text = json.name;
+                        license.url = json.url;
+                    } catch(ignored) {}
                 }
             }
 
