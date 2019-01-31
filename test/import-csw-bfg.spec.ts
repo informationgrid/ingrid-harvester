@@ -32,11 +32,11 @@ describe('Import CSW BFG', function () {
         };
         let importer = new BfgImporter(settings);
 
-        sinon.stub(importer.cswUtil.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
+        sinon.stub(importer.bfgUtil.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
 
         indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
 
-        await importer.cswUtil.run();
+        await importer.bfgUtil.run();
 
         chai.expect(indexDocumentCreateSpy.called).to.be.true;
         let extraChecks = (actual, expected) => {
