@@ -1,7 +1,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {GenericMapper} from "../model/generic-mapper";
+import {GenericMapper, License, Person} from "../model/generic-mapper";
 import {SelectedValue} from "xpath";
 import {getLogger} from "log4js";
 import {UrlUtils} from "../utils/url-utils";
@@ -30,7 +30,7 @@ export class CswMapper extends GenericMapper {
     private harvestTime: any;
     private readonly issued: string;
 
-    private readonly idInfo: SelectedValue;
+    protected readonly idInfo: SelectedValue;
     private settings: any;
     private readonly uuid: string;
     private summary: Summary;
@@ -38,7 +38,6 @@ export class CswMapper extends GenericMapper {
     private keywordsAlreadyFetched = false;
     private fetched: any = {
         contactPoint: null,
-        license: null,
         keywords: {}
     };
 
@@ -287,20 +286,12 @@ export class CswMapper extends GenericMapper {
 
                 return CswMapper.createDisplayContact(displayName, publisher[0].homepage);
             } else {
-                let displayName;
-                let creator = this.getCreatorWithOrganisation();
+                let creator = this.getCreator();
 
-                if (creator[0].organisationName) {
-                    displayName = creator[0].organisationName;
-                } else if (creator[0].name) {
-                    displayName = creator[0].name;
-                }
-
-                return CswMapper.createDisplayContact(displayName, creator[0].homepage);
+                return CswMapper.createDisplayContact(creator[0].name, creator[0].homepage);
             }
         }
 
-        return undefined;
     }
 
     getGeneratedId(): string {
@@ -351,30 +342,7 @@ export class CswMapper extends GenericMapper {
         return keywords;
     }
 
-    async getLicenseId(): Promise<string> {
-        let license = await this.getLicense(this.idInfo);
-        if (license) {
-            if (license.id) return license.id;
-        }
-        if (!license || !license.id) {
-            let msg = 'No license detected for dataset.';
-            this.summary.missingLicense++;
-            this.log.warn(`${msg} ${this.getErrorSuffix(this.uuid, this.getTitle())}`);
 
-            this.errors.push(msg);
-            this.summary.numErrors++;
-            return 'Unbekannt';
-        }
-        return undefined;
-    }
-
-    async getLicenseURL(): Promise<string> {
-        let license = await this.getLicense(this.idInfo);
-        if (license) {
-            if (license.url) return license.url;
-        }
-        return undefined;
-    }
 
     getMFundFKZ(): string {
         // Detect mFund properties
@@ -515,15 +483,11 @@ export class CswMapper extends GenericMapper {
         return undefined;
     }
 
-    async getLicense(idInfo) {
-        let license = this.fetched.license;
-        if (license) {
-            return license;
-        }
+    async getLicense() {
+        let license: License;
+        let constraints = CswMapper.select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license"]', this.idInfo);
 
-        let constraints = CswMapper.select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license"]', idInfo);
         if (constraints && constraints.length > 0) {
-            let license: any = {};
             for(let j=0; j<constraints.length; j++) {
                 let c = constraints[j];
                 let nodes = CswMapper.select('./gmd:otherConstraints', c);
@@ -534,16 +498,32 @@ export class CswMapper extends GenericMapper {
 
                         if (!json.id || !json.url) continue;
 
-                        license.id = json.id;
-                        license.text = json.name;
-                        license.url = json.url;
+                        license = {
+                            id: json.id,
+                            title: json.name,
+                            url: await UrlUtils.urlWithProtocolFor(json.url)
+                        };
+
                     } catch(ignored) {}
                 }
             }
-
-            this.fetched.license = license;
-            return license;
         }
+
+        if (!license) {
+            let msg = 'No license detected for dataset.';
+            this.summary.missingLicense++;
+            this.summary.numErrors++;
+
+            this.log.warn(`${msg} ${this.getErrorSuffix(this.uuid, this.getTitle())}`);
+            this.errors.push(msg);
+            return {
+                id: 'Unbekannt',
+                title: undefined,
+                url: undefined
+            };
+        }
+
+        return license;
     }
 
     getErrorSuffix(uuid, title) {
@@ -554,21 +534,7 @@ export class CswMapper extends GenericMapper {
         return this.record.toString();
     }
 
-    getLicenseTitle(): string {
-        return undefined;
-    }
-
-    getCreator(): any[] {
-        let creators = this.getCreatorWithOrganisation();
-
-        if (creators) {
-            // we don't need the organisation here
-            creators.forEach( c => delete c.organisationName);
-        }
-        return creators;
-    }
-
-    private getCreatorWithOrganisation(): any[] {
+    getCreator(): Person[] {
         let creators = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
@@ -609,6 +575,7 @@ export class CswMapper extends GenericMapper {
         return creators.length === 0 ? undefined : creators;
     }
 
+
     getGroups(): string[] {
         return undefined;
     }
@@ -622,6 +589,10 @@ export class CswMapper extends GenericMapper {
     }
 
     getSubSections(): any[] {
+        return undefined;
+    }
+
+    getOriginator(): Person[] {
         return undefined;
     }
 

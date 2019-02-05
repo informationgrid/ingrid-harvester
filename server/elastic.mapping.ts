@@ -249,31 +249,31 @@ export const elasticsearchMapping = {
                         }
                     }
                 },
-                'license_id': {
-                    'type': 'string',
-                    'index': 'not_analyzed',
-                    'fields': {
-                        'analyzed': {
-                            'type': 'string'
-                        }
-                    }
-                },
-                'license_title': {
-                    'type': 'string',
-                    'index': 'not_analyzed',
-                    'fields': {
-                        'analyzed': {
-                            'type': 'string'
-                        }
-                    }
-                },
-                'license_url': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
-                },
                 'license': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'properties': {
+                        'id': {
+                            'type': 'string',
+                            'index': 'not_analyzed',
+                            'fields': {
+                                'analyzed': {
+                                    'type': 'string'
+                                }
+                            }
+                        },
+                        'title': {
+                            'type': 'string',
+                            'index': 'not_analyzed',
+                            'fields': {
+                                'analyzed': {
+                                    'type': 'string'
+                                }
+                            }
+                        },
+                        'url': {
+                            'type': 'string',
+                            'index': 'not_analyzed'
+                        }
+                    }
                 },
                 'temporal': {
                     'type': 'string'

@@ -27,7 +27,7 @@ export class UrlUtils {
         }
 
         // By doing nothing return undefined if we reach here
-        return null;
+        return undefined;
     }
 
     /**

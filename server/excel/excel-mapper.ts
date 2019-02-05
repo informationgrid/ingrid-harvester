@@ -1,5 +1,5 @@
 import {UrlUtils} from "../utils/url-utils";
-import {Distribution, GenericMapper} from "../model/generic-mapper";
+import {Distribution, GenericMapper, License, Organization} from "../model/generic-mapper";
 import {Summary} from "../model/summary";
 
 const log = require('log4js').getLogger(__filename);
@@ -69,16 +69,6 @@ export class ExcelMapper extends GenericMapper {
         }
 
         return distributions;
-    }
-
-    getLicenseId() {
-        const license = this.getLicense(this.workbook.getWorksheet(3), this.columnValues[this.columnMap.Lizenz]);
-        return license.description;
-    }
-
-    getLicenseURL() {
-        const license = this.getLicense(this.workbook.getWorksheet(3), this.columnValues[this.columnMap.Lizenz]);
-        return license.link;
     }
 
     getModifiedDate() {
@@ -227,18 +217,29 @@ export class ExcelMapper extends GenericMapper {
         });
     }
 
-    getLicense(licenseSheet, /*string*/licenseId) {
-        licenseId = licenseId.toLowerCase();
+    async getLicense() {
+        const licenseSheet = this.workbook.getWorksheet(3);
+        const licenseId = this.columnValues[this.columnMap.Lizenz].toLowerCase();
         const numLicenses = licenseSheet.rowCount;
+
+        let license: License;
 
         for (let i=2; i<=numLicenses; i++) {
             const row = licenseSheet.getRow(i);
             if (row.values[1].toLowerCase() === licenseId) {
-                return GenericMapper.createLicense(row.values[2], row.values[3], row.values[4]);
+                license = {
+                    id: row.values[2] === 'Keine Angabe' ? undefined : row.values[3],
+                    title: row.values[2],
+                    url: row.values[4]
+                };
             }
         }
 
-        log.warn('Could not find abbreviation of "License": ' + licenseId);
+        if (!license) {
+            log.warn('Could not find abbreviation of "License": ' + licenseId);
+        }
+
+        return license;
     }
 
     getAccrualPeriodicity(): string {
@@ -254,10 +255,6 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getHarvestedData(): string {
-        return undefined;
-    }
-
-    getLicenseTitle(): string {
         return undefined;
     }
 
@@ -287,6 +284,19 @@ export class ExcelMapper extends GenericMapper {
 
     getContactPoint(): any {
         return undefined;
+    }
+
+    getOriginator(): Organization[] {
+        let originator = {
+            organization: this.columnValues[this.columnMap.Quellenvermerk]
+        };
+
+        if (originator.organization === 'keinen') {
+            return undefined;
+        }
+
+        return [originator];
+
     }
 
 }

@@ -2,6 +2,22 @@ export interface Distribution {
     format: string;
     accessURL: string;
 }
+export interface Agent {
+    homepage?: string;
+    mbox?: string;
+}
+export interface Person extends Agent {
+    name: string;
+}
+export interface Organization extends Agent {
+    organization: string;
+}
+export interface License {
+    id: string;
+    title: string;
+    url: string;
+}
+
 
 export abstract class GenericMapper {
     protected errors: string[] = [];
@@ -14,7 +30,7 @@ export abstract class GenericMapper {
 
     abstract getDescription(): string;
 
-    abstract async getPublisher(): Promise<any[]>;
+    abstract async getPublisher(): Promise<Person[]|Organization[]>;
 
     abstract getThemes(): string[];
 
@@ -23,10 +39,6 @@ export abstract class GenericMapper {
     abstract getAccessRights(): string[];
 
     abstract async getDistributions(): Promise<any[]>;
-
-    abstract async getLicenseId(): Promise<string>;
-
-    abstract async getLicenseURL(): Promise<string>;
 
     abstract getGeneratedId(): string;
 
@@ -91,14 +103,20 @@ export abstract class GenericMapper {
         };
     }
 
+    static createAgent(name: string, url?: string, about?: string) {
+        return {
+            name: name,
+            url: url,
+            about: about
+        };
+    }
+
 
     abstract getAccrualPeriodicity(): string;
 
     abstract getContactPoint(): any;
 
-    abstract getCreator(): { name: string, mbox: string }[] | { name: string, mbox: string };
-
-    abstract getLicenseTitle(): string;
+    abstract getCreator(): Person[] | Person;
 
     abstract getHarvestedData(): string;
 
@@ -142,6 +160,10 @@ export abstract class GenericMapper {
     shouldBeSkipped() {
         return this.skipped;
     }
+
+    abstract getOriginator(): Person[]|Organization[];
+
+    abstract async getLicense(): Promise<License>;
 
 }
 

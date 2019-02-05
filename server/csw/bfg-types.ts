@@ -9,22 +9,22 @@ export class BfgMapper extends CswMapper {
     }
 
 
-    async getLicense(idInfo): Promise<any | any> {
-        let constraints = CswMapper.select('//gmd:otherConstraints/gco:CharacterString', idInfo);
+    async getLicense() {
+        let constraints = CswMapper.select('//gmd:otherConstraints/gco:CharacterString', this.idInfo);
         for (let i=0; i<constraints.length; i++) {
             try {
                 let snippet: GdiLicense = JSON.parse(constraints[i].textContent);
                 if (snippet.id && snippet.url) {
                     return {
                         id: snippet.id,
-                        text: snippet.name,
+                        title: snippet.name,
                         url: await UrlUtils.urlWithProtocolFor(snippet.url)
-                    }
+                    };
                 }
             } catch (ignored) {}
         }
         // If no license found until here, then fall back to superclass implementation
-        return super.getLicense(idInfo);
+        return super.getLicense();
     }
 }
 

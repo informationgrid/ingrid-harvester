@@ -1,7 +1,7 @@
 /**
  * A mapper for CKAN documents.
  */
-import {GenericMapper} from "../model/generic-mapper";
+import {GenericMapper, Organization, Person} from "../model/generic-mapper";
 import {UrlUtils} from "../utils/url-utils";
 import {getLogger} from "log4js";
 
@@ -98,18 +98,6 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         return this.data.name;
     }
 
-    getLicenseTitle() {
-        return this.data.license_title;
-    }
-
-    getLicenseId() {
-        return this.data.license_id;
-    }
-
-    getLicenseURL() {
-        return this.data.license_url;
-    }
-
     getMFundFKZ() {
         return undefined;
     }
@@ -139,23 +127,21 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         return this.data.metadata_modified instanceof Date ? this.data.metadata_modified : new Date(this.data.metadata_modified);
     }
 
-    async getPublisher() {
-        let publisher = [];
+    async getPublisher(): Promise<Organization[]> {
+        let publisher: Organization;
         if (this.data.organization !== null) {
             if (this.data.organization.title !== null) {
                 let title = this.data.organization.title;
                 let homepage = this.data.organization.description;
                 let match = homepage.match(/]\(([^)]+)/); // Square bracket followed by text in parentheses
-                let org: any = {};
-
-                if (title) org.organization = title;
-                if (match) org.homepage = match[1];
-
-                publisher.push(org);
+                publisher = {
+                    organization: this.data.organization.title,
+                    homepage: match ? match[1] : undefined
+                };
             }
         }
 
-        return publisher;
+        return [publisher];
     }
 
     getTemporal() {
@@ -262,7 +248,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         return dates;
     }
 
-    getCreator() {
+    getCreator(): Person {
         return {
             name: this.data.author,
             mbox: this.data.author_email
@@ -320,6 +306,21 @@ export class CkanToElasticsearchMapper extends GenericMapper {
 
     getContactPoint(): any {
         return undefined;
+    }
+
+    getOriginator(): Person[] {
+        return [{
+            name: this.data.author,
+            mbox: this.data.author_email
+        }];
+    }
+
+    async getLicense() {
+        return {
+            id: this.data.license_id,
+            title: this.data.license_title,
+            url: this.data.license_url
+        };
     }
 
 }
