@@ -21,7 +21,7 @@ describe('Import CSW BFG', function () {
 
         log.info('Start test ...');
 
-        const settings = {
+        const settings: any = {
             dryRun: true,
             getRecordsUrl: "https://geoportal.bafg.de/soapServices/CSWStartup",
             proxy: null,
@@ -31,6 +31,17 @@ describe('Import CSW BFG', function () {
             includeTimestamp: true
         };
         let importer = new BfgImporter(settings);
+        settings.options_csw_search.qs.constraint = `
+            <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+                <ogc:PropertyIsEqualTo>
+                    <ogc:PropertyName>subject</ogc:PropertyName>
+                    <ogc:Literal>opendata</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+                <ogc:PropertyIsEqualTo>
+                    <ogc:PropertyName>identifier</ogc:PropertyName>
+                    <ogc:Literal>82f97ad0-198b-477e-a440-82fa781624eb</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+            </ogc:Filter>`;
 
         sinon.stub(importer.bfgUtil.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
 

@@ -4,7 +4,7 @@
   "extras": {
     "metadata": {
       "source": {
-        "raw_data_source": "https://geoportal.bafg.de/soapServices/CSWStartup?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=994b2117-cf62-438c-80e1-08cb9d510376",
+        "raw_data_source": "https://geoportal.bafg.de/soapServices/CSWStartup?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=82f97ad0-198b-477e-a440-82fa781624eb",
         "portal_link": "https://www.bafg.de/",
         "attribution": "Bundesanstalt für Gewässerkunde"
       }
@@ -40,11 +40,11 @@
       "Mecklenburg-Vorpommern",
       "Schleswig-Holstein",
       "Directive 2000/60/EC",
-      "Protected areas (Water Framework Directive)",
-      "Designated waters (Water Framework Directive)",
-      "Protection of economically significant aquatic species - freshwater fish designated waters (Water Framework Directive)",
-      "inspireidentifiziert",
+      "River basin districts (Water Framework Directive)",
+      "River basin districts sub-units (Water Framework Directive)",
       "NGDB",
+      "Flussgebietseinheiten",
+      "inspireidentifiziert",
       "opendata",
       "umwelt_klima",
       "geo"
