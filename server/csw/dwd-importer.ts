@@ -5,7 +5,7 @@ import {CswMapper} from "./csw-mapper";
 
 export class DwdImporter implements Importer {
 
-    private dwdUtil: DwdUtils;
+    public dwdUtil: DwdUtils;
 
     constructor(settings) {
         let gmdEncoded = encodeURIComponent(CswMapper.GMD);

@@ -42,18 +42,15 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     async getDisplayContacts() {
-        let contact: any = {};
 
         let publisher = await this.getPublisher();
-        if (publisher[0].organization) {
-            contact.name = publisher[0].organization;
-        }
 
-        if (publisher[0].homepage) {
-            contact.url = publisher[0].homepage;
-        }
+        let contact: Person = {
+            name: publisher[0].organization ? publisher[0].organization : undefined,
+            homepage: publisher[0].homepage ? publisher[0].homepage : undefined
+        };
 
-        return contact;
+        return [contact];
     }
 
     async getDistributions(): Promise<any[]> {
@@ -317,7 +314,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
 
     async getLicense() {
         return {
-            id: this.data.license_id,
+            id: this.data.license_id ? this.data.license_id : 'unknown',
             title: this.data.license_title,
             url: this.data.license_url
         };

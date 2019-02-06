@@ -9,16 +9,19 @@
     },
     "generated_id" : "_mcloudde_mauttabelle",
     "license": {
-      "title": "Keine Angabe"
+      "id": "unknown",
+      "title": "Unbekannt"
     },
     "realtime" : false,
     "temporal" : "01.12.2018 - 30.01.2019",
     "citation" : "Bundesanstalt für Straßenwesen",
     "subgroups" : [ "roads" ],
-    "displayContact" : {
-      "name" : "Bundesanstalt für Straßenwesen (BASt)",
-      "url" : "http://www.bast.de/"
-    },
+    "displayContact" : [
+      {
+        "name" : "Bundesanstalt für Straßenwesen (BASt)",
+        "homepage" : "http://www.bast.de/"
+      }
+    ],
     "all" : [ ]
   },
   "publisher" : [ {

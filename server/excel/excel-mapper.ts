@@ -1,5 +1,5 @@
 import {UrlUtils} from "../utils/url-utils";
-import {Distribution, GenericMapper, License, Organization} from "../model/generic-mapper";
+import {Distribution, GenericMapper, License, Organization, Person} from "../model/generic-mapper";
 import {Summary} from "../model/summary";
 
 const log = require('log4js').getLogger(__filename);
@@ -109,7 +109,7 @@ export class ExcelMapper extends GenericMapper {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
         const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
-        return publishers.map( p => GenericMapper.createDisplayContact(p.name, p.url));
+        return publishers.map( p => <Person>{name: p.name, homepage: p.url});
     }
 
     getMFundFKZ() {
@@ -228,8 +228,8 @@ export class ExcelMapper extends GenericMapper {
             const row = licenseSheet.getRow(i);
             if (row.values[1].toLowerCase() === licenseId) {
                 license = {
-                    id: row.values[2] === 'Keine Angabe' ? undefined : row.values[3],
-                    title: row.values[2],
+                    id: row.values[2] === 'Keine Angabe' ? 'unknown' : row.values[3],
+                    title: row.values[2] === 'Keine Angabe' ? 'Unbekannt' : row.values[2],
                     url: row.values[4]
                 };
             }

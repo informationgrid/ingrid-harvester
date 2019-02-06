@@ -21,12 +21,16 @@ export class TestUtils {
 
         if (expected.extras) {
             // check extras displayContact
-            chai.assert.deepInclude(actual.extras.displayContact, expected.extras.displayContact);
+            chai.expect(actual.extras.displayContact).to.eql(expected.extras.displayContact);
             delete expected.extras.displayContact;
 
             // check issued date to be set and exclude from further comparison
             chai.expect(actual.extras.metadata.issued).not.to.be.null.and.empty;
             delete expected.extras.metadata.issued;
+            chai.expect(actual.extras.metadata.modified).not.to.be.null.and.empty;
+            delete expected.extras.metadata.modified;
+            // chai.expect(actual.extras.metadata.harvested).not.to.be.null.and.empty; // is undefined for Excel
+            delete expected.extras.metadata.harvested;
 
             // check extras metadata
             chai.assert.deepInclude(actual.extras.metadata, expected.extras.metadata);

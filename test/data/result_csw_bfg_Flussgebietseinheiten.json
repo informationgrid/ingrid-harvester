@@ -1,5 +1,5 @@
 {
-  "title": "Flussgebietseinheiten-DE (WRRL)",
+  "title": "Flussgebietseinheiten-DE (Wasserrahmenrichtlinie 2. Zyklus 2015-2021)",
   "description": "Dieser Metadatensatz beschreibt \"Flussgebietseinheiten\" und Untereinheiten (Bearbeitungsgebiet/Koordinierungsraum/sub-unit) als Gebietstyp der Objektart „Bewirtschaftungsgebiet, Schutzgebiet, geregeltes Gebiet“ des INSPIRE Annex- Thema III \"Bewirtschaftungsgebiete, Schutzgebiete, geregelte Gebiete und Berichterstattungseinheiten\". Die Bundesanstalt für Gewässerkunde (BfG) verwaltet im Auftrag der Wasserwirtschaftsverwaltungen in Deutschland im nationalen Berichtsportal Wasser (WasserBLIcK) die Daten der Berichterstattung zu diversen wasserbezogenen EG-Umweltrichtlinien. Auf Basis dieser Datengrundlage stellt die BfG in Abstimmung mit der Länderarbeitsgemeinschaft Wasser (LAWA) ausgewählte Karten- und Datendienste bereit. Die hier bereitgestellten Dienste basieren auf national flächendeckend homogenisierten Datenbeständen. Andere administrative Ebenen in Deutschland (Land, Bezirk, Kreis, Kommune) stellen gegebenenfalls zu diesem Thema Dienste in einer höheren räumlichen und zeitlichen Auflösung bereit.",
   "extras": {
     "metadata": {
@@ -18,9 +18,11 @@
       "title": "Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes",
       "url": "http://www.geodatenzentrum.de/docpdf/geonutzv.pdf"
     },
-    "displayContact": {
-      "name": "Bundesanstalt für Gewässerkunde"
-    },
+    "displayContact": [
+      {
+        "name": "Bundesanstalt für Gewässerkunde"
+      }
+    ],
     "all": [
       "Bewirtschaftungsgebiete/Schutzgebiete/geregelte Gebiete und Berichterstattungseinheiten",
       "Baden-Württemberg",

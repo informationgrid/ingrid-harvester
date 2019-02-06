@@ -62,7 +62,7 @@ export abstract class GenericMapper {
 
     abstract getMFundProjectTitle(): string;
 
-    abstract async getDisplayContacts(): Promise<any | any[]>;
+    abstract async getDisplayContacts(): Promise<Organization[] | Person[]>;
 
     abstract getKeywords(): string[];
 
@@ -78,7 +78,7 @@ export abstract class GenericMapper {
     static createDisplayContact(name, url) {
         return {
             name: name,
-            url: url
+            homepage: url
         };
     }
 
@@ -106,7 +106,7 @@ export abstract class GenericMapper {
     static createAgent(name: string, url?: string, about?: string) {
         return {
             name: name,
-            url: url,
+            homepage: url,
             about: about
         };
     }

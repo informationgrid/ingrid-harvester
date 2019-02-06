@@ -1,7 +1,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {GenericMapper, License, Person} from "../model/generic-mapper";
+import {Agent, GenericMapper, License, Organization, Person} from "../model/generic-mapper";
 import {SelectedValue} from "xpath";
 import {getLogger} from "log4js";
 import {UrlUtils} from "../utils/url-utils";
@@ -261,6 +261,7 @@ export class CswMapper extends GenericMapper {
     async getDisplayContacts() {
 
         let contactPoint = await this.getContactPoint();
+        let displayContact: Person;
 
         if (contactPoint) {
             let displayName;
@@ -271,7 +272,10 @@ export class CswMapper extends GenericMapper {
                 displayName = contactPoint.fn;
             }
 
-            return CswMapper.createDisplayContact(displayName, contactPoint.hasURL);
+            displayContact = {
+                name: displayName,
+                homepage: contactPoint.hasURL
+            };
         } else {
             let publisher = await this.getPublisher();
 
@@ -284,14 +288,20 @@ export class CswMapper extends GenericMapper {
                     displayName = publisher[0].name;
                 }
 
-                return CswMapper.createDisplayContact(displayName, publisher[0].homepage);
+                displayContact = {
+                    name: displayName,
+                    homepage: publisher[0].homepage
+                };
             } else {
                 let creator = this.getCreator();
 
-                return CswMapper.createDisplayContact(creator[0].name, creator[0].homepage);
+                displayContact = {
+                    name: creator[0].name,
+                    homepage: creator[0].homepage
+                };
             }
         }
-
+        return [displayContact];
     }
 
     getGeneratedId(): string {
@@ -517,8 +527,8 @@ export class CswMapper extends GenericMapper {
             this.log.warn(`${msg} ${this.getErrorSuffix(this.uuid, this.getTitle())}`);
             this.errors.push(msg);
             return {
-                id: 'Unbekannt',
-                title: undefined,
+                id: 'unknown',
+                title: 'Unbekannt',
                 url: undefined
             };
         }
@@ -593,7 +603,51 @@ export class CswMapper extends GenericMapper {
     }
 
     getOriginator(): Person[] {
-        return undefined;
+
+        let originators: any[] = [];
+
+        let queries = [
+            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:contact/gmd:CI_ResponsibleParty'
+        ];
+        for (let i=0; i<queries.length; i++) {
+            let contacts = CswMapper.select('./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty', this.record);
+            for (let j = 0; j < contacts.length; j++) {
+                let contact = contacts[j];
+                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+
+                if (role === 'originator') {
+                    let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                    let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                    let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                    let url = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+
+                    if (!name && !org) continue;
+
+                    let originator: Agent = {
+                        homepage: url.textContent,
+                        mbox: email.textContent
+                    };
+                    if (name) {
+                        (<Person>originator).name = name.textContent
+                    } else {
+                        (<Organization>originator).organization = org.textContent
+                    }
+
+                    let alreadyPresent = originators.filter(other => {
+                        return other.name === (<Person>originator).name
+                            && other.organization === (<Organization>originator).organization
+                            && other.mbox === originator.mbox
+                            && other.homepage === originator.homepage;
+                    }).length > 0;
+                    if (!alreadyPresent) {
+                        originators.push(originator);
+                    }
+                }
+            }
+        }
+
+        return originators.length > 0 ? originators : undefined;
     }
 
     async getContactPoint(): Promise<any> {
@@ -615,19 +669,18 @@ export class CswMapper extends GenericMapper {
                 let contact = contacts[j];
                 let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
 
-                let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
-                let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let delPt = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
-                let region = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
-                let country = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
-                let postCode = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
-                let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
-                let phone = CswMapper.select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
-                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
-                let url = urlNode ? await UrlUtils.urlWithProtocolFor(urlNode.textContent) : null;
-
-
                 if (role !== 'originator' && role !== 'author' && role !== 'publisher') {
+                    let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                    let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                    let delPt = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
+                    let region = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
+                    let country = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
+                    let postCode = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
+                    let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                    let phone = CswMapper.select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
+                    let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                    let url = urlNode ? await UrlUtils.urlWithProtocolFor(urlNode.textContent) : null;
+
                     let infos: any = {};
 
                     if (contact.getAttribute('uuid')) {
