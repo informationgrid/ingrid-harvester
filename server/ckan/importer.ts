@@ -16,6 +16,7 @@ export class DeutscheBahnCkanImporter implements Importer {
     elastic: ElasticSearchUtils;
     private options_package_search;
     summary: Summary = {
+        appErrors: [],
         numDocs: 0,
         numErrors: 0,
         print: () => {
@@ -24,6 +25,10 @@ export class DeutscheBahnCkanImporter implements Importer {
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);
+            logSummary.info(`App-Errors: ${this.summary.appErrors.length}`);
+            if (this.summary.appErrors.length > 0) {
+                logSummary.info(`\t${this.summary.appErrors.map( e => e + '\n\t')}`);
+            }
         }
     };
 
@@ -75,9 +80,13 @@ export class DeutscheBahnCkanImporter implements Importer {
             this.settings.harvestTime = harvestTime;
             this.settings.issuedDate = issuedExisting;
             let mapper = new CkanToElasticsearchMapper(this.settings, source);
-            let doc = await IndexDocument.create(mapper);
+            let doc = await IndexDocument.create(mapper).catch( e => {
+                log.error('Error creating index document', e);
+                this.summary.appErrors.push(e.toString());
+                mapper.skipped = true;
+            });
 
-            if (!this.settings.dryRun) {
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 return this.elastic.addDocToBulk(doc, source.id);
             }
         } catch (e) {

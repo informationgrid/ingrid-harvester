@@ -17,6 +17,7 @@ export class CswUtils {
     elastic: ElasticSearchUtils;
     private options_csw_search: any;
     private summary: Summary = {
+        appErrors: [],
         numDocs: 0,
         numErrors: 0,
         numMatched: 0,
@@ -34,6 +35,10 @@ export class CswUtils {
             logSummary.info(`Number of records with missing links: ${this.summary.missingLinks}`);
             logSummary.info(`Number of records with missing license: ${this.summary.missingLicense}`);
             logSummary.info(`Number of records imported without problems: ${this.summary.ok}`);
+            logSummary.info(`App-Errors: ${this.summary.appErrors.length}`);
+            if (this.summary.appErrors.length > 0) {
+                logSummary.info(`\t${this.summary.appErrors.map( e => e + '\n\t')}`);
+            }
         }
     };
 
@@ -127,9 +132,14 @@ export class CswUtils {
         }
         for(let i=0; i<records.length; i++) {
             this.summary.numDocs++;
+
             const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');
             let mapper = this.getMapper(this.settings, records[i], harvestTime, issued[i], this.summary);
-            let doc = await IndexDocument.create(mapper);
+            let doc: any = await IndexDocument.create(mapper).catch( e => {
+                log.error('Error creating index document', e);
+                this.summary.appErrors.push(e.toString());
+                mapper.skipped = true;
+            });
             if (!mapper.shouldBeSkipped()) {
 
                 if (doc.extras.metadata.isValid && doc.distribution.length > 0) {

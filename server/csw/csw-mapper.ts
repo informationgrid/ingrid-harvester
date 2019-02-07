@@ -626,7 +626,7 @@ export class CswMapper extends GenericMapper {
 
                     let originator: Agent = {
                         homepage: url ? url.textContent : undefined,
-                        mbox: email.textContent
+                        mbox: email ? email.textContent : undefined
                     };
                     if (name) {
                         (<Person>originator).name = name.textContent

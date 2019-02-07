@@ -1,7 +1,6 @@
 import {IndexDocument} from '../model/index-document';
 import {ElasticSearchUtils} from '../utils/elastic-utils';
 import {ExcelMapper} from "./excel-mapper";
-import Excel = require('exceljs');
 import {Worksheet} from "exceljs";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {elasticsearchSettings} from "../elastic.settings";
@@ -9,6 +8,7 @@ import {settings} from "cluster";
 import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
 import {Importer} from "../importer";
+import Excel = require('exceljs');
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary');
@@ -20,6 +20,7 @@ export class ExcelImporter implements Importer {
     excelFilepath: string;
     names = {};
     summary: Summary = {
+        appErrors: [],
         numDocs: 0,
         numErrors: 0,
         print: () => {
@@ -28,6 +29,10 @@ export class ExcelImporter implements Importer {
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);
+            logSummary.info(`App-Errors: ${this.summary.appErrors.length}`);
+            if (this.summary.appErrors.length > 0) {
+                logSummary.info(`\t${this.summary.appErrors.map( e => e + '\n\t')}`);
+            }
         }
     };
 
@@ -109,17 +114,22 @@ export class ExcelImporter implements Importer {
                 this.summary.numDocs++;
 
                 // create json document and create values with ExcelMapper
-                let doc = await IndexDocument.create(new ExcelMapper(settings, {
+                let mapper = new ExcelMapper(settings, {
                     id: unit.id,
                     columnValues: unit.columnValues,
                     issued: timestamps[idx],
                     workbook: workbook,
                     columnMap: columnMap,
                     summary: this.summary
-                }));
+                });
+                let doc = await IndexDocument.create(mapper).catch( e => {
+                    log.error('Error creating index document', e);
+                    this.summary.appErrors.push(e.toString());
+                    mapper.skipped = true;
+                });
 
                 // add document to buffer and send to elasticsearch if full
-                if (!this.settings.dryRun) {
+                if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                     promises.push(this.elastic.addDocToBulk(doc, unit.id));
                 }
             }));

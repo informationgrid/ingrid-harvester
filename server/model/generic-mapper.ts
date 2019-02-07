@@ -24,7 +24,7 @@ export abstract class GenericMapper {
 
     protected valid = true;
 
-    protected skipped = false;
+    public skipped = false;
 
     abstract getTitle(): string;
 
