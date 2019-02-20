@@ -119,6 +119,10 @@ Get all dependencies:
 
 In visual studio code hit 5.
 
+# Development
+
+The main document is "server/model/index-document.ts", which represents the Elasticsearch document. This model is used by all harvester and helps to stay synchronized. When adding a new index field then the compiler will let you know about missing implementations.
+
 # Release
 
 * Update changelog-file

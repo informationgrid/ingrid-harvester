@@ -4,44 +4,44 @@ export class IndexDocument {
 
     static async create(mapper: GenericMapper) {
         let result = await {
-            title: mapper.getTitle(),
-            description: mapper.getDescription(),
-            theme: mapper.getThemes(),
-            issued: mapper.getIssued(),
-            modified: mapper.getModifiedDate(),
+            accessRights: mapper.getAccessRights(),
             accrualPeriodicity: mapper.getAccrualPeriodicity(),
             contactPoint: await mapper.getContactPoint(),
-            keywords: mapper.getKeywords(),
             creator: mapper.getCreator(),
-            originator: mapper.getOriginator(),
-            publisher: await mapper.getPublisher(),
-            accessRights: mapper.getAccessRights(),
+            description: mapper.getDescription(),
             distribution: await mapper.getDistributions(),
             extras: {
+                all: mapper.getExtrasAllData(),
+                citation: mapper.getCitation(),
+                displayContact: await mapper.getDisplayContacts(),
+                generated_id: mapper.getGeneratedId(),
+                groups: mapper.getGroups(),
+                harvested_data: mapper.getHarvestedData(),
+                license: await mapper.getLicense(),
                 metadata: {
-                    source: mapper.getMetadataSource(),
-                    issued: mapper.getMetadataIssued(),
-                    modified: mapper.getMetadataModified(),
                     harvested: mapper.getMetadataHarvested(),
                     harvesting_errors: null, // get errors after all operations been done
+                    issued: mapper.getMetadataIssued(),
                     isValid: null, // checks validity after all operations been done
+                    modified: mapper.getMetadataModified(),
+                    source: mapper.getMetadataSource(),
                 },
-                generated_id: mapper.getGeneratedId(),
+                mfund_fkz: mapper.getMFundFKZ(),
+                mfund_project_title: mapper.getMFundProjectTitle(),
+                realtime: mapper.isRealtime(),
                 subgroups: mapper.getCategories(),
-                license: await mapper.getLicense(),
-                harvested_data: mapper.getHarvestedData(),
                 subsection: mapper.getSubSections(),
                 temporal: mapper.getTemporal(),
-                groups: mapper.getGroups(),
-                displayContact: await mapper.getDisplayContacts(),
-                all: mapper.getExtrasAllData(),
                 temporal_start: mapper.getTemporalStart(),
-                temporal_end: mapper.getTemporalEnd(),
-                realtime: mapper.isRealtime(),
-                citation: mapper.getCitation(),
-                mfund_fkz: mapper.getMFundFKZ(),
-                mfund_project_title: mapper.getMFundProjectTitle()
-            }
+                temporal_end: mapper.getTemporalEnd()
+            },
+            issued: mapper.getIssued(),
+            keywords: mapper.getKeywords(),
+            modified: mapper.getModifiedDate(),
+            publisher: await mapper.getPublisher(),
+            originator: mapper.getOriginator(),
+            theme: mapper.getThemes(),
+            title: mapper.getTitle()
         };
 
         result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
