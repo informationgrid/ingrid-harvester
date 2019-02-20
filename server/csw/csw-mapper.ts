@@ -710,6 +710,10 @@ export class CswMapper extends GenericMapper {
         this.fetched.contactPoint = contactPoint;
         return contactPoint; // TODO index all contacts
     }
+
+    getDCATCategories(): string[] {
+        return undefined;
+    }
 }
 
 // Private interface. Do not export

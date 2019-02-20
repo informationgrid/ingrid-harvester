@@ -1,6 +1,7 @@
 import {UrlUtils} from "../utils/url-utils";
 import {Distribution, GenericMapper, License, Organization, Person} from "../model/generic-mapper";
 import {Summary} from "../model/summary";
+import {ExcelSettings} from "./importer";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -12,10 +13,10 @@ export class ExcelMapper extends GenericMapper {
     columnValues: string[] | Date;
     columnMap;
     workbook;
-    private settings: any;
+    private settings: ExcelSettings;
     private summary: Summary;
 
-    constructor(settings, data) {
+    constructor(settings: ExcelSettings, data) {
         super();
         this.settings = settings;
         this.data = data;
@@ -296,6 +297,17 @@ export class ExcelMapper extends GenericMapper {
         }
 
         return [originator];
+
+    }
+
+    getDCATCategories(): string[] {
+
+        const dcatCategoriesString = this.columnValues[this.columnMap.DCATKategorie];
+        if (dcatCategoriesString) {
+            return dcatCategoriesString.split(',');
+        } else {
+            return [this.settings.defaultDCATCategory];
+        }
 
     }
 

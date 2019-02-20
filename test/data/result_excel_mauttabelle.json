@@ -22,7 +22,10 @@
         "homepage" : "http://www.bast.de/"
       }
     ],
-    "all" : [ ]
+    "all" : [ ],
+    "dcatCategories": [
+      "TRAN"
+    ]
   },
   "publisher" : [ {
     "organization" : "Bundesanstalt für Straßenwesen (BASt)",

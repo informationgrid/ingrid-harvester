@@ -320,4 +320,8 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         };
     }
 
+    getDCATCategories(): string[] {
+        return undefined;
+    }
+
 }

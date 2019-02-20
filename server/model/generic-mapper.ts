@@ -165,6 +165,8 @@ export abstract class GenericMapper {
 
     abstract async getLicense(): Promise<License>;
 
+    abstract getDCATCategories(): string[];
+
 }
 
 

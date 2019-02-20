@@ -4,7 +4,6 @@ import {ExcelMapper} from "./excel-mapper";
 import {Worksheet} from "exceljs";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {elasticsearchSettings} from "../elastic.settings";
-import {settings} from "cluster";
 import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
 import {Importer} from "../importer";
@@ -13,9 +12,13 @@ import Excel = require('exceljs');
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary');
 
+export type ExcelSettings = {
+    importer, elasticSearchUrl, index, indexType, alias, filePath, includeTimestamp, dryRun, currentIndexName, defaultDCATCategory
+}
+
 export class ExcelImporter implements Importer {
 
-    settings: { importer, elasticSearchUrl, index, indexType, alias, filePath, includeTimestamp, dryRun, currentIndexName};
+    settings: ExcelSettings;
     elastic: ElasticSearchUtils;
     excelFilepath: string;
     names = {};
@@ -78,7 +81,8 @@ export class ExcelImporter implements Importer {
             'DatenhaltendeStelleLang': 27,
             'DatenhaltendeStelleLink': 28,
             'mFundFoerderkennzeichen': 30,
-            'mFundProjekt': 31
+            'mFundProjekt': 31,
+            'DCATKategorie': 32
         };
 
         let workbook = new Excel.Workbook();
@@ -114,7 +118,7 @@ export class ExcelImporter implements Importer {
                 this.summary.numDocs++;
 
                 // create json document and create values with ExcelMapper
-                let mapper = new ExcelMapper(settings, {
+                let mapper = new ExcelMapper(this.settings, {
                     id: unit.id,
                     columnValues: unit.columnValues,
                     issued: timestamps[idx],

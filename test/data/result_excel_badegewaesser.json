@@ -1,3 +1,9 @@
 {
-  "title" : "Badegewässer-DE (BG-RL)"
+  "title" : "Badegewässer-DE (BG-RL)",
+  "extras": {
+    "dcatCategories": [
+      "TRAN",
+      "ENVI"
+    ]
+  }
 }

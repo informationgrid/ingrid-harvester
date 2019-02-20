@@ -6,7 +6,8 @@
     "indexType": "base",
     "alias": "mcloud",
     "filePath": "./data.xlsx",
-    "includeTimestamp": true
+    "includeTimestamp": true,
+    "defaultDCATCategory": "TRAN"
   },
   {
     "importer": "CKAN-DB",
