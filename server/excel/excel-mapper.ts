@@ -44,7 +44,15 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getThemes() {
-        return ['http://publications.europa.eu/resource/authority/data-theme/TRAN']; // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
+
+        // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
+        const dcatCategoriesString: string = this.columnValues[this.columnMap.DCATKategorie];
+        if (dcatCategoriesString) {
+            return dcatCategoriesString.split(',').map( cat => this.DCAT_CATEGORY_URL + cat);
+        } else {
+            return [ this.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory];
+        }
+
     }
 
     getAccessRights() {
@@ -297,17 +305,6 @@ export class ExcelMapper extends GenericMapper {
         }
 
         return [originator];
-
-    }
-
-    getDCATCategories(): string[] {
-
-        const dcatCategoriesString = this.columnValues[this.columnMap.DCATKategorie];
-        if (dcatCategoriesString) {
-            return dcatCategoriesString.split(',');
-        } else {
-            return [this.settings.defaultDCATCategory];
-        }
 
     }
 

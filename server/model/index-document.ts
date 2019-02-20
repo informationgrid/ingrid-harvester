@@ -14,7 +14,6 @@ export class IndexDocument {
                 all: mapper.getExtrasAllData(),
                 citation: mapper.getCitation(),
                 displayContact: await mapper.getDisplayContacts(),
-                dcatCategories: mapper.getDCATCategories(),
                 generated_id: mapper.getGeneratedId(),
                 groups: mapper.getGroups(),
                 harvested_data: mapper.getHarvestedData(),

@@ -1,8 +1,4 @@
 {
   "title" : "Bathymetrien 1982 - 2012",
-  "extras": {
-    "dcatCategories": [
-      "DEFAULT_TRAN"
-    ]
-  }
+  "theme" : [ "http://publications.europa.eu/resource/authority/data-theme/DEFAULT_TRAN" ]
 }

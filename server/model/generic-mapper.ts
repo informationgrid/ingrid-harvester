@@ -20,6 +20,9 @@ export interface License {
 
 
 export abstract class GenericMapper {
+
+    protected DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
+
     protected errors: string[] = [];
 
     protected valid = true;
@@ -164,8 +167,6 @@ export abstract class GenericMapper {
     abstract getOriginator(): Person[]|Organization[];
 
     abstract async getLicense(): Promise<License>;
-
-    abstract getDCATCategories(): string[];
 
 }
 
