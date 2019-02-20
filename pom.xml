@@ -103,15 +103,6 @@
                 </source>
               </sources>
             </mapping>
-            <mapping>
-              <directory>/etc/systemd/system/</directory>
-              <directoryIncluded>false</directoryIncluded>
-              <sources>
-                <source>
-                  <location>rpm/mcloud-ingrid.spec</location>
-                </source>
-              </sources>
-            </mapping>
           </mappings>
           <preinstallScriptlet>
             <script>echo "Delete the lib and work directory for each updated component"</script>
