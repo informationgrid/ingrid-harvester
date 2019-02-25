@@ -80,7 +80,7 @@ export class ElasticSearchUtils {
             }, err => {
                 if (err) {
                     log.error('Error occurred adding alias', err);
-                    reject();
+                    reject(err);
                     return;
                 }
                 resolve();
@@ -90,7 +90,7 @@ export class ElasticSearchUtils {
 
 
     /**
-     * Delete all indeces starting with indexBaseName but not indexName .
+     * Delete all indices starting with indexBaseName but not indexName .
      *
      * @param {string} indexBaseName
      * @param {string} indexName
@@ -282,7 +282,7 @@ export class ElasticSearchUtils {
         // TODO: make sure the index was refreshed to get the updated results (e.g. previous deletion of duplicated items)
 
         // Send data in chunks. Don't send too much at once.
-        let maxSize = 50;
+        let maxSize = 5;
         let count = 0;
         for(let i=0; i<this.duplicateStaging.length; i += maxSize) {
             let body = [];
@@ -297,49 +297,59 @@ export class ElasticSearchUtils {
 
             if (body.length < 1) return; // Don't send an empty query
 
-            let results = await this.client.msearch({body: body});
-            for (let j = 0; j < results.responses.length; j++) {
-                if (!results.responses[j].hits) continue;
+            try {
+                let results = await this.client.msearch({body: body});
+                for (let j = 0; j < results.responses.length; j++) {
+                    let response = results.responses[j];
 
-                results.responses[j].hits.hits.forEach(hit => {
-                    let item = slice[j];
-                    let title = item.title;
-
-                    let myDate = item.modified;
-                    let hitDate = hit._source.modified;
-
-                    // Make sure we aren't comparing apples to oranges.
-                    // Convert to dates, if not already the case.
-                    if (typeof myDate === 'string') myDate = Date.parse(myDate);
-                    if (typeof hitDate === 'string') hitDate = Date.parse(hitDate);
-
-                    if (typeof myDate === 'number') myDate = new Date(myDate);
-                    if (typeof hitDate === 'number') hitDate = new Date(hitDate);
-
-                    let q = {'delete': <any>{}};
-                    let retained = '';
-                    if (hitDate > myDate) {
-                        // Hit is newer. Delete document from current index.
-                        q.delete._index = this.indexName;
-                        q.delete._type = this.settings.indexTypes;
-                        q.delete._id = item.id;
-
-                        retained = `Item to retain -> ID: '${hit._id}', Title: '${hit._source.title}', Index: '${hit._index};`;
-                    } else { // Hit is older. Delete (h)it.
-                        q.delete._index = hit._index;
-                        q.delete._type = hit._type;
-                        q.delete._id = hit._id;
-
-                        title = hit._source.title;
-                        retained = `Item to retain -> ID: '${item.id}', Title: '${title}', Index: '${this.indexName};`;
+                    if (response.error) {
+                        log.error("Error in one of the search responses:", response.error);
+                        continue;
                     }
+                    if (!response.hits) continue;
 
-                    let deleted = `Item to delete -> ID: '${q.delete._id}', Title: '${title}', Index: '${q.delete._index}'`;
+                    response.hits.hits.forEach(hit => {
+                        let item = slice[j];
+                        let title = item.title;
 
-                    log.warn(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${retained}`);
-                    this._bulkData.push(q);
-                    count++;
-                });
+                        let myDate = item.modified;
+                        let hitDate = hit._source.modified;
+
+                        // Make sure we aren't comparing apples to oranges.
+                        // Convert to dates, if not already the case.
+                        if (typeof myDate === 'string') myDate = Date.parse(myDate);
+                        if (typeof hitDate === 'string') hitDate = Date.parse(hitDate);
+
+                        if (typeof myDate === 'number') myDate = new Date(myDate);
+                        if (typeof hitDate === 'number') hitDate = new Date(hitDate);
+
+                        let q = {'delete': <any>{}};
+                        let retained = '';
+                        if (hitDate > myDate) {
+                            // Hit is newer. Delete document from current index.
+                            q.delete._index = this.indexName;
+                            q.delete._type = this.settings.indexTypes;
+                            q.delete._id = item.id;
+
+                            retained = `Item to retain -> ID: '${hit._id}', Title: '${hit._source.title}', Index: '${hit._index};`;
+                        } else { // Hit is older. Delete (h)it.
+                            q.delete._index = hit._index;
+                            q.delete._type = hit._type;
+                            q.delete._id = hit._id;
+
+                            title = hit._source.title;
+                            retained = `Item to retain -> ID: '${item.id}', Title: '${title}', Index: '${this.indexName};`;
+                        }
+
+                        let deleted = `Item to delete -> ID: '${q.delete._id}', Title: '${title}', Index: '${q.delete._index}'`;
+
+                        log.warn(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${retained}`);
+                        this._bulkData.push(q);
+                        count++;
+                    });
+                }
+            } catch (e) {
+                log.error('Error during deduplication', e);
             }
         }
 
@@ -389,25 +399,39 @@ export class ElasticSearchUtils {
 
         // Send data in chunks. Don't send too much at once.
         let dates = [];
-        let maxSize = 50;
+        let maxSize = 5;
         for(let i=0; i<data.length; i += maxSize) {
             let end = Math.min(data.length, i + maxSize);
 
             let slice = data.slice(i, end);
-            let result = await this.client.msearch({
-                index: this.settings.alias,
-                body: slice
-            });
 
-            for(let j=0; j<result.responses.length; j++) {
-                let response = result.responses[j];
-                try {
-                    let firstHit = response.hits.hits[0];
-                    dates.push(firstHit._source.extras.metadata.issued);
-                } catch (e) {
-                    log.info(`Did not find an existing issued date for dataset with id ${ids[j]}`);
-                    dates.push(null);
+            try {
+                let result = await this.client.msearch({
+                    index: this.settings.alias,
+                    body: slice
+                });
+
+                if (result.responses) {
+                    for (let j = 0; j < result.responses.length; j++) {
+                        let response = result.responses[j];
+
+                        if (response.error) {
+                            log.error("Error in one of the search responses:", response.error);
+                            continue;
+                        }
+                        try {
+                            let firstHit = response.hits.hits[0];
+                            dates.push(firstHit._source.extras.metadata.issued);
+                        } catch (e) {
+                            log.info(`Did not find an existing issued date for dataset with id ${ids[j]}`);
+                            dates.push(null);
+                        }
+                    }
+                } else {
+                    log.debug('No result.reponse after msearch', result);
                 }
+            } catch (e) {
+                log.error('Error during search', e);
             }
         }
 
@@ -526,12 +550,13 @@ export class ElasticSearchUtils {
             }
         };
 
-        let response = await this.client.search({
-            index: this.deduplicationAlias,
-            body: query,
-            size: 50
-        });
         try {
+            let response = await this.client.search({
+                index: this.deduplicationAlias,
+                body: query,
+                size: 50
+            });
+
             let count = 0;
             log.debug(`Count of buckets for deduplication aggregates query: ${response.aggregations.duplicates.buckets.length}`);
             response.aggregations.duplicates.buckets.forEach(bucket => {

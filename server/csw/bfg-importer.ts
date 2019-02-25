@@ -33,7 +33,7 @@ export class BfgImporter implements Importer {
                 CONSTRAINTLANGUAGE: 'FILTER',
                 CONSTRAINT_LANGUAGE_VERSION: '1.1.0',
                 startPosition: 1,
-                maxRecords: 50,
+                maxRecords: 25,
                 constraint: '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>opendata</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>'
             },
             headers: {

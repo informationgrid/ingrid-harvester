@@ -30,7 +30,7 @@ export class DwdImporter implements Importer {
                 typeNames: 'gmd:MD_Metadata',
                 CONSTRAINTLANGUAGE: 'FILTER',
                 startPosition: 1,
-                maxRecords: 50,
+                maxRecords: 25,
                 constraint_language_version: '1.1.0',
                 elementSetName: 'full',
                 constraint: '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>'
