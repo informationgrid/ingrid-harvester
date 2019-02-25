@@ -11,6 +11,11 @@ let request = require( 'request-promise' ),
     log = require( 'log4js' ).getLogger( __filename ),
     logSummary = getLogger('summary');
 
+export type CkanSettings = {
+    importer, elasticSearchUrl, proxy, index, indexType, alias, ckanBaseUrl, includeTimestamp, dryRun, currentIndexName,
+    defaultMcloudSubgroup, defaultDCATCategory
+};
+
 export class DeutscheBahnCkanImporter implements Importer {
     private settings: any;
     elastic: ElasticSearchUtils;
@@ -36,7 +41,7 @@ export class DeutscheBahnCkanImporter implements Importer {
      * Create the importer and initialize with settings.
      * @param { {ckanBaseUrl, defaultMcloudSubgroup, mapper} }settings
      */
-    constructor(settings) {
+    constructor(settings: CkanSettings) {
         // Trim trailing slash
         let url = settings.ckanBaseUrl;
         if (url.charAt(url.length-1) === '/') {

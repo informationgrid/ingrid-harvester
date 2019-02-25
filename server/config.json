@@ -18,6 +18,7 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://data.deutschebahn.com",
     "defaultMcloudSubgroup": "railway",
+    "defaultDCATCategory": "TRAN",
     "includeTimestamp": true
   },
   {
@@ -44,6 +45,7 @@
     "httpMethod": "POST",
     "proxy": null,
     "defaultMcloudSubgroup": "waters",
+    "defaultDCATCategory": "ENVI",
     "defaultAttribution": "MDI-DE",
     "defaultAttributionLink": "https://www.mdi-de.org/",
     "includeTimestamp": true
@@ -57,6 +59,7 @@
     "getRecordsUrl": "https://geoportal.bafg.de/soapServices/CSWStartup",
     "proxy": null,
     "defaultMcloudSubgroup": "waters",
+    "defaultDCATCategory": "ENVI",
     "defaultAttribution": "Bundesanstalt für Gewässerkunde",
     "defaultAttributionLink": "https://www.bafg.de/",
     "includeTimestamp": true
