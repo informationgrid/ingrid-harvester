@@ -21,7 +21,7 @@ export class WsvImporter implements Importer {
         }
 
         let parameters: CswParameters = {
-            REQUEST: "GetRecords",
+            request: "GetRecords",
             SERVICE: "CSW",
             VERSION: "2.0.2",
             elementSetName: "full",

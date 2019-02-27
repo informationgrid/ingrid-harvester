@@ -75,5 +75,18 @@
     "defaultMcloudSubgroup": "climate",
     "defaultAttribution": "Climate Data Centre (CDC) Katalog des DWD",
     "includeTimestamp": true
+  },
+  {
+    "importer": "BSH-CSW",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "csw_bsh",
+    "indexType": "base",
+    "alias": "mcloud",
+    "getRecordsUrl": "https://www.geoseaportal.de/soapServices/CSWStartup",
+    "httpMethod": "POST",
+    "proxy": null,
+    "defaultMcloudSubgroup": "waters",
+    "defaultAttribution": "GeoSeaPortal (BSH)",
+    "includeTimestamp": true
   }
 ]
