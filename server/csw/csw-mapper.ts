@@ -174,7 +174,7 @@ export class CswMapper extends GenericMapper {
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i = 0; i < queries.length; i++) {
-            let contacts = CswMapper.select('./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty', this.record);
+            let contacts = CswMapper.select(queries[i], this.record);
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
                 let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
@@ -567,7 +567,7 @@ export class CswMapper extends GenericMapper {
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i=0; i<queries.length; i++) {
-            let contacts = CswMapper.select('./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty', this.record);
+            let contacts = CswMapper.select(queries[i], this.record);
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
                 let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
@@ -626,7 +626,7 @@ export class CswMapper extends GenericMapper {
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i=0; i<queries.length; i++) {
-            let contacts = CswMapper.select('./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty', this.record);
+            let contacts = CswMapper.select(queries[i], this.record);
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
                 let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
@@ -679,7 +679,7 @@ export class CswMapper extends GenericMapper {
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i=0; i<queries.length; i++) {
-            let contacts = CswMapper.select('./gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty', this.record);
+            let contacts = CswMapper.select(queries[i], this.record);
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
                 let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
