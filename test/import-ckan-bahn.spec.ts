@@ -21,7 +21,7 @@ describe('Import CKAN Bahn', function () {
 
         log.info('Start test ...');
 
-        var settings = {
+        var settings: any = {
             dryRun: true,
             ckanBaseUrl: "https://data.deutschebahn.com",
             defaultMcloudSubgroup: "railway",
