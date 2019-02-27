@@ -5,17 +5,17 @@ import {IndexDocument} from "../model/index-document";
 import {CswMapper} from "./csw-mapper";
 import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
+import {RequestDelegate} from "../utils/http-request-utils";
 
-let request = require('request-promise'),
-    log = require('log4js').getLogger(__filename),
+let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
     DomParser = require('xmldom').DOMParser;
 
 
 export class CswUtils {
-    private settings: any;
+    private readonly settings: any;
     elastic: ElasticSearchUtils;
-    private options_csw_search: any;
+    private readonly requestDelegate: RequestDelegate;
     private summary: Summary = {
         appErrors: [],
         numDocs: 0,
@@ -42,17 +42,10 @@ export class CswUtils {
         }
     };
 
-    constructor(settings) {
+    constructor(settings, requestDelegate: RequestDelegate) {
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
-
-        this.options_csw_search = settings.options_csw_search;
-        if (settings.proxy) {
-            this.options_csw_search.proxy = settings.proxy;
-        }
-        if (!settings.defaultAttributionLink) {
-            this.settings.defaultAttributionLink = `${settings.getRecordsUrl}?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2`;
-        }
+        this.requestDelegate = requestDelegate;
     }
 
     async run(): Promise<Summary> {
@@ -73,41 +66,36 @@ export class CswUtils {
 
     async harvest() {
         let promises = [];
-        let xmlSupplier = this.settings.getGetRecordsPostBody;
-        let startPosition = this.options_csw_search.qs.startPosition;
-        let maxRecords = this.options_csw_search.qs.maxRecords;
-        let numMatched = startPosition + 1;
 
-        while (numMatched > startPosition) {
-            if (xmlSupplier) {
-                let xml = xmlSupplier();
-                let requestBody = new DomParser().parseFromString(xml, 'application/xml');
-
-                requestBody.documentElement.setAttribute('startPosition', startPosition);
-                requestBody.documentElement.setAttribute('maxRecords', maxRecords);
-                this.options_csw_search.body = requestBody.toString();
-                this.options_csw_search.method = 'POST';
-            }
-
-            this.options_csw_search.qs.startPosition = startPosition;
-            this.options_csw_search.qs.maxRecords = maxRecords;
-
-            let response = await request(this.options_csw_search);
+        let numMatched = 0;
+        while (true) {
+            let response = await this.requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
 
             let responseDom = new DomParser().parseFromString(response);
             let resultsNode = responseDom.getElementsByTagNameNS(CswMapper.CSW, 'SearchResults')[0];
-            if (!resultsNode) {
-                log.error(`Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nStart position: ${startPosition}, Max Records: ${maxRecords}, Server response: ${responseDom.toString()}.`);
-            } else {
+            if (resultsNode) {
                 let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
                 numMatched = resultsNode.getAttribute('numberOfRecordsMatched');
 
                 log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
 
                 promises.push(this.extractRecords(response, harvestTime));
+            } else {
+                log.error(`Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`);
             }
-            startPosition += maxRecords;
+            this.requestDelegate.incrementStartRecordIndex();
+            /*
+              * startRecord was already incremented in the last step, so we can
+              * directly use it to check if we need to continue.
+              *
+              * If there is a problem with the first request, then numMatched is
+              * still 0. This will result in no records being harvested. If this
+              * behaviour is not desired then the following check should be
+              * updated. The easiest solution would be to set numMatched to
+              * maxRecords * numRetries
+              */
+            if (numMatched < this.requestDelegate.getStartRecordIndex()) break;
         }
         await Promise.all(promises)
             .catch(err => log.error('Error extracting records from CSW reply', err));

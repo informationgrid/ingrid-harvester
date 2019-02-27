@@ -6,6 +6,7 @@ import {SelectedValue} from "xpath";
 import {getLogger} from "log4js";
 import {UrlUtils} from "../utils/url-utils";
 import {Summary} from "../model/summary";
+import {RequestConfig, RequestDelegate} from "../utils/http-request-utils";
 
 let xpath = require('xpath');
 
@@ -92,7 +93,9 @@ export class CswMapper extends GenericMapper {
             let urls = CswMapper.select('./srv:containsOperations/*/srv:connectPoint/*/gmd:linkage/gmd:URL', srvIdent);
             for (let i=0; i<urls.length; i++) {
                 let node = urls[i];
-                let url = await UrlUtils.urlWithProtocolFor(node.textContent);
+
+                let requestConfig = this.getUrlCheckRequestConfig(node.textContent);
+                let url = await UrlUtils.urlWithProtocolFor(requestConfig);
                 if (url && !serviceLinks.includes(url)) {
                     serviceLinks.push(url);
                     urlsFound.push(url);
@@ -122,7 +125,12 @@ export class CswMapper extends GenericMapper {
             let nodes = CswMapper.select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/*/gmd:linkage/gmd:URL', node);
             for(let j=0; j<nodes.length; j++) {
                 let node = nodes[j];
-                let url = node ? await UrlUtils.urlWithProtocolFor(node.textContent) : null;
+
+                let url = null;
+                if (node) {
+                    let requestConfig = this.getUrlCheckRequestConfig(node.textContent);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig);
+                }
                 if (url && !urls.includes(url)) urls.push(url);
             }
 
@@ -174,7 +182,12 @@ export class CswMapper extends GenericMapper {
                 let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                 let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
                 let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
-                let url = urlNode ? await UrlUtils.urlWithProtocolFor(urlNode.textContent) : null;
+
+                let url = null;
+                if (urlNode) {
+                    let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
+                    await UrlUtils.urlWithProtocolFor(requestConfig);
+                }
 
                 if (role === 'publisher') {
                     let infos: any = {};
@@ -509,10 +522,11 @@ export class CswMapper extends GenericMapper {
 
                         if (!json.id || !json.url) continue;
 
+                        let requestConfig = this.getUrlCheckRequestConfig(json.url);
                         license = {
                             id: json.id,
                             title: json.name,
-                            url: await UrlUtils.urlWithProtocolFor(json.url)
+                            url: await UrlUtils.urlWithProtocolFor(requestConfig)
                         };
 
                     } catch(ignored) {}
@@ -680,7 +694,11 @@ export class CswMapper extends GenericMapper {
                     let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
                     let phone = CswMapper.select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
                     let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
-                    let url = urlNode ? await UrlUtils.urlWithProtocolFor(urlNode.textContent) : null;
+                    let url = null;
+                    if (urlNode) {
+                        let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
+                        await UrlUtils.urlWithProtocolFor(requestConfig);
+                    }
 
                     let infos: any = {};
 
@@ -710,6 +728,22 @@ export class CswMapper extends GenericMapper {
         contactPoint = others.length === 0 ? undefined : others[0];
         this.fetched.contactPoint = contactPoint;
         return contactPoint; // TODO index all contacts
+    }
+
+    getUrlCheckRequestConfig(uri: string): RequestConfig {
+        let config: RequestConfig = {
+            method: 'GET',
+            json: false,
+            headers: RequestDelegate.defaultRequestHeaders(),
+            qs: {},
+            uri: uri
+        };
+
+        if (this.settings.proxy) {
+            config.proxy = this.settings.proxy;
+        }
+
+        return config;
     }
 
 }

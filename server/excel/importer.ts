@@ -13,7 +13,7 @@ let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary');
 
 export type ExcelSettings = {
-    importer, elasticSearchUrl, index, indexType, alias, filePath, includeTimestamp, dryRun, currentIndexName, defaultDCATCategory
+    importer, elasticSearchUrl, index, indexType, alias, filePath, includeTimestamp, dryRun, currentIndexName, defaultDCATCategory, proxy?
 }
 
 export class ExcelImporter implements Importer {

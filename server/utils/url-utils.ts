@@ -1,29 +1,47 @@
 'use strict';
 
-let request = require('request-promise'),
+import {RequestConfig, RequestDelegate} from "./http-request-utils";
+
+let /*request = require('request-promise'),*/
     log = require('log4js').getLogger( __filename );
 
 export class UrlUtils {
 
     /**
-     * Check an URL if it's valid. If there's no protocol then check if https
-     * or http works.
-     * @param url
-     * @returns a valid URL with protocol https or http
+     * Rudimentary checks for URL validity. This method extracts the request
+     * URI from the given configuration, and returns
+     * - this URI unmodified if it contains the substring '://'
+     * - this URI prefixed with 'https://' if a GET request to the resulting URI
+     *   returns a status code of 200
+     * - this URI prefixed with 'http://' if a GET request to the resulting URI
+     *   returns a status code of 200
+     * - undefined for all other cases
+     *
+     * @param requestConfig configuration object for HTTP requests
+     * @returns the uri of the requestConfig, if it already contains a protocol,
+     * or the uri prefixed with 'https://' or 'http://' if these are reachable,
+     * or undefined otherwise
      */
-    static async urlWithProtocolFor(url): Promise<string> {
+    static async urlWithProtocolFor(requestConfig: RequestConfig): Promise<string> {
+        let url = requestConfig.uri;
 
         if (url && url.trim()) {
             // we assume that an URL which contains '://' also has a protocol and is valid
             if (url.includes('://')) return url;
 
             // if URL is just a domain name with no protocol then first check if 'https://' works
-            let resp = await UrlUtils._check('https', url);
-            if (resp) return resp;
+            let urlToCheck = `https://${url}`;
+            requestConfig.uri = urlToCheck;
+            if (await UrlUtils.checkUrlWithProtocol(requestConfig)) {
+                return urlToCheck;
+            }
 
             // otherwise try with 'http://'
-            resp = await UrlUtils._check('http', url);
-            if (resp) return resp;
+            urlToCheck = `http://${url}`;
+            requestConfig.uri = urlToCheck;
+            if (await UrlUtils.checkUrlWithProtocol(requestConfig)) {
+                return urlToCheck;
+            }
         }
 
         // By doing nothing return undefined if we reach here
@@ -33,27 +51,23 @@ export class UrlUtils {
     /**
      * Test the given protocol with a URL. If the URL is reachable
      * then return the URL with the protocol.
-     * @param protocol, which can be 'http' or 'https'
-     * @param url is the URL (without a protocol) to be checked
+     * @param requestConfig the configuration to use for HTTP requests
      * @private
      */
-    static async _check(protocol, url): Promise<string> {
-        url = `${protocol}://${url}`;
+    private static async checkUrlWithProtocol(requestConfig: RequestConfig): Promise<boolean> {
         let found = false;
         try {
-            await request({
-                url: url,
-                headers: {'User-Agent': 'mCLOUD Harvester. Request-Promise'}
-            }, (err, resp) => {
-                if (resp && resp.statusCode === 200) found = true;
-            });
-            if (found) return url;
+            let delegate = new RequestDelegate(requestConfig);
+            let callback = (err, resp) => found = resp && resp.statusCode === 200;
+
+            await delegate.doRequest(callback);
+            return found;
         } catch(err) {
             let message = err.message;
             // Ignore errors caused by 404 status code and invalid certificates
             if (!message.includes('ERR_TLS_CERT_ALTNAME_INVALID')
                 && !message.includes('ENOTFOUND')) {
-                log.warn(`Error occured while testing URL '${url}'. Original error message was: ${message}`);
+                log.warn(`Error occured while testing URL '${requestConfig.uri}'. Original error message was: ${message}`);
             }
         }
     }

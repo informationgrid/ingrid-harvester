@@ -15,10 +15,11 @@ export class BfgMapper extends CswMapper {
             try {
                 let snippet: GdiLicense = JSON.parse(constraints[i].textContent);
                 if (snippet.id && snippet.url) {
+                    let requestConfig = this.getUrlCheckRequestConfig(snippet.url);
                     return {
                         id: snippet.id,
                         title: snippet.name,
-                        url: await UrlUtils.urlWithProtocolFor(snippet.url)
+                        url: await UrlUtils.urlWithProtocolFor(requestConfig)
                     };
                 }
             } catch (ignored) {}

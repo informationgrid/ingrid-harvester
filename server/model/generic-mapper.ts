@@ -1,3 +1,5 @@
+import {RequestConfig} from "../utils/http-request-utils";
+
 export interface Distribution {
     format: string;
     accessURL: string;
@@ -167,6 +169,8 @@ export abstract class GenericMapper {
     abstract getOriginator(): Person[]|Organization[];
 
     abstract async getLicense(): Promise<License>;
+
+    abstract getUrlCheckRequestConfig(uri: string): RequestConfig;
 
 }
 

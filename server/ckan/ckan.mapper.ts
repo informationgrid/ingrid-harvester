@@ -4,6 +4,7 @@
 import {GenericMapper, Organization, Person} from "../model/generic-mapper";
 import {UrlUtils} from "../utils/url-utils";
 import {getLogger} from "log4js";
+import {RequestConfig, RequestDelegate} from "../utils/http-request-utils";
 
 let markdown = require('markdown').markdown;
 
@@ -60,7 +61,10 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         if (resources !== null) {
             for(let i=0; i<resources.length; i++) {
                 let res = resources[i];
-                let accessURL = await UrlUtils.urlWithProtocolFor(res.url);
+
+                let requestConfig = this.getUrlCheckRequestConfig(res.url);
+                let accessURL = await UrlUtils.urlWithProtocolFor(requestConfig);
+
                 if (accessURL) {
                     let dist = {
                         id: res.id,
@@ -128,7 +132,6 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         let publisher: Organization;
         if (this.data.organization !== null) {
             if (this.data.organization.title !== null) {
-                let title = this.data.organization.title;
                 let homepage = this.data.organization.description;
                 let match = homepage.match(/]\(([^)]+)/); // Square bracket followed by text in parentheses
                 publisher = {
@@ -321,4 +324,19 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         };
     }
 
+    getUrlCheckRequestConfig(uri: string): RequestConfig {
+        let config: RequestConfig = {
+            method: 'GET',
+            json: false,
+            headers: RequestDelegate.defaultRequestHeaders(),
+            qs: {},
+            uri: uri
+        };
+
+        if (this.settings.proxy) {
+            config.proxy = this.settings.proxy;
+        }
+
+        return config;
+    }
 }

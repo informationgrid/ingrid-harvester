@@ -2,6 +2,7 @@ import {UrlUtils} from "../utils/url-utils";
 import {Distribution, GenericMapper, License, Organization, Person} from "../model/generic-mapper";
 import {Summary} from "../model/summary";
 import {ExcelSettings} from "./importer";
+import {RequestConfig, RequestDelegate} from "../utils/http-request-utils";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -176,7 +177,6 @@ export class ExcelMapper extends GenericMapper {
      * Split download urls and add each one to the resource.
      * @param type
      * @param urlsString
-     * @param dataFormats
      */
     async addDownloadUrls(type: string, urlsString): Promise<Distribution[]> {
         // Check if the cell contains just text or hyperlinked text
@@ -189,7 +189,8 @@ export class ExcelMapper extends GenericMapper {
             // skip if downloadURL is empty
             if (downloadUrl.trim().length === 0) return;
 
-            let checkedUrl = await UrlUtils.urlWithProtocolFor(downloadUrl);
+            let requestConfig = this.getUrlCheckRequestConfig(downloadUrl);
+            let checkedUrl = await UrlUtils.urlWithProtocolFor(requestConfig);
 
             if (checkedUrl) {
                 distributions.push({
@@ -306,6 +307,22 @@ export class ExcelMapper extends GenericMapper {
 
         return [originator];
 
+    }
+
+    getUrlCheckRequestConfig(uri: string): RequestConfig {
+        let config: RequestConfig = {
+            method: 'GET',
+            json: false,
+            headers: RequestDelegate.defaultRequestHeaders(),
+            qs: {},
+            uri: uri
+        };
+
+        if (this.settings.proxy) {
+            config.proxy = this.settings.proxy;
+        }
+
+        return config;
     }
 
 }

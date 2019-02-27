@@ -6,9 +6,9 @@ import {IndexDocument} from "../model/index-document";
 import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
 import {Importer} from "../importer";
+import {CkanParameters, RequestConfig, RequestDelegate} from "../utils/http-request-utils";
 
-let request = require( 'request-promise' ),
-    log = require( 'log4js' ).getLogger( __filename ),
+let log = require( 'log4js' ).getLogger( __filename ),
     logSummary = getLogger('summary');
 
 export type CkanSettings = {
@@ -17,9 +17,9 @@ export type CkanSettings = {
 };
 
 export class DeutscheBahnCkanImporter implements Importer {
-    private settings: any;
+    private readonly settings: any;
     elastic: ElasticSearchUtils;
-    private options_package_search;
+    private requestDelegate: RequestDelegate;
     summary: Summary = {
         appErrors: [],
         numDocs: 0,
@@ -50,19 +50,22 @@ export class DeutscheBahnCkanImporter implements Importer {
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
 
-        this.options_package_search = {
+        let parameters: CkanParameters = {
+            sort: "id asc",
+            start: 0,
+            rows: 100
+        };
+        let requestConfig: RequestConfig = {
+            method: 'GET',
             uri: settings.ckanBaseUrl + "/api/3/action/package_search", // See http://docs.ckan.org/en/ckan-2.7.3/api/
-            qs: {
-                sort: "id asc",
-                start: 0,
-                rows: 100
-            },
-            headers: {'User-Agent': 'mCLOUD Harvester. Request-Promise'},
-            json: true
+            json: true,
+            headers: RequestDelegate.defaultRequestHeaders(),
+            qs: parameters
         };
         if (settings.proxy) {
-            this.options_package_search.proxy = settings.proxy;
+            requestConfig.proxy = settings.proxy;
         }
+        this.requestDelegate = new RequestDelegate(requestConfig);
     }
 
     /**
@@ -111,7 +114,7 @@ export class DeutscheBahnCkanImporter implements Importer {
 
             // Fetch datasets 'qs.rows' at a time
             while(true) {
-                let json = await request.get(this.options_package_search);
+                let json = await this.requestDelegate.doRequest();
                 let now = new Date(Date.now());
                 let results = json.result.results;
 
@@ -132,7 +135,7 @@ export class DeutscheBahnCkanImporter implements Importer {
                 if (results.length < 1) {
                     break;
                 } else {
-                    this.options_package_search.qs.start += this.options_package_search.qs.rows;
+                    this.requestDelegate.incrementStartRecordIndex();
                 }
             }
 
