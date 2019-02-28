@@ -186,7 +186,7 @@ export class CswMapper extends GenericMapper {
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                    await UrlUtils.urlWithProtocolFor(requestConfig);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig);
                 }
 
                 if (role === 'publisher') {
@@ -697,7 +697,7 @@ export class CswMapper extends GenericMapper {
                     let url = null;
                     if (urlNode) {
                         let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                        await UrlUtils.urlWithProtocolFor(requestConfig);
+                        url = await UrlUtils.urlWithProtocolFor(requestConfig);
                     }
 
                     let infos: any = {};
