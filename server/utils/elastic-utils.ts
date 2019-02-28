@@ -51,7 +51,7 @@ export class ElasticSearchUtils {
         // Deduplication alias doesn't need to be deleted. It will stop existing
         // once all the old indices it points to are deleted.
         if (this.settings.alias) {
-            this.client.cluster.health({waitForStatus: 'yellow'})
+            return this.client.cluster.health({waitForStatus: 'yellow'})
                 .then(() => this.sendBulkData(false))
                 .then(() => this._deduplicate())
                 .then(() => this.deleteOldIndices(this.settings.index, this.indexName))
