@@ -31,18 +31,19 @@ describe('Import CSW DWD', function () {
             getRecordsUrl: "https://cdc.dwd.de/catalogue/srv/en/csw",
             proxy: null,
             defaultMcloudSubgroup: "climate",
+            defaultDCATCategory: "TRAN",
             defaultAttribution: "Climate Data Centre (CDC) Katalog des DWD",
             includeTimestamp: true
         };
-        let importer = new DwdImporter(settings);
         // settings.options_csw_search.qs.constraint = '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"></ogc:Filter>';
-        settings.options_csw_search.qs.constraint = `
+        const filter = `
             <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                 <ogc:PropertyIsEqualTo>
                     <ogc:PropertyName>identifier</ogc:PropertyName>
                     <ogc:Literal>de.dwd.geoserver.fach.RBSN_RH</ogc:Literal>
                 </ogc:PropertyIsEqualTo>
             </ogc:Filter>`;
+        let importer = new DwdImporter(settings, {constraint: filter});
 
         sinon.stub(importer.dwdUtil.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
 

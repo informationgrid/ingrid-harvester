@@ -26,12 +26,12 @@ describe('Import CSW BFG', function () {
             getRecordsUrl: "https://geoportal.bafg.de/soapServices/CSWStartup",
             proxy: null,
             defaultMcloudSubgroup: "waters",
+            defaultDCATCategory: "TRAN",
             defaultAttribution: "Bundesanstalt für Gewässerkunde",
             defaultAttributionLink: "https://www.bafg.de/",
             includeTimestamp: true
         };
-        let importer = new BfgImporter(settings);
-        settings.options_csw_search.qs.constraint = `
+        const filter = `
             <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                 <ogc:PropertyIsEqualTo>
                     <ogc:PropertyName>subject</ogc:PropertyName>
@@ -42,6 +42,7 @@ describe('Import CSW BFG', function () {
                     <ogc:Literal>82f97ad0-198b-477e-a440-82fa781624eb</ogc:Literal>
                 </ogc:PropertyIsEqualTo>
             </ogc:Filter>`;
+        let importer = new BfgImporter(settings, {constraint: filter});
 
         sinon.stub(importer.bfgUtil.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
 

@@ -8,7 +8,7 @@ export class DwdImporter implements Importer {
 
     public dwdUtil: DwdUtils;
 
-    constructor(settings) {
+    constructor(settings, overrideCswParameters?) {
         let gmdEncoded = encodeURIComponent(CswMapper.GMD);
         settings.getRecordsUrlFor = function(uuid) {
             return `${settings.getRecordsUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${uuid}`;
@@ -34,6 +34,10 @@ export class DwdImporter implements Importer {
             elementSetName: 'full',
             constraint: '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>'
         };
+
+        if (overrideCswParameters) {
+            parameters = {...parameters, ...overrideCswParameters};
+        }
 
         let requestConfig: RequestConfig = {
             method: method,

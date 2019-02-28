@@ -43,7 +43,6 @@
     "metadata": {
       "source": {
         "raw_data_source": "https://cdc.dwd.de/catalogue/srv/en/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=de.dwd.geoserver.fach.RBSN_RH",
-        "portal_link": "https://cdc.dwd.de/catalogue/srv/en/csw?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2",
         "attribution": "Climate Data Centre (CDC) Katalog des DWD"
       },
       "issued": "2019-02-06T15:54:44.822Z",
