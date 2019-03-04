@@ -77,6 +77,18 @@
     "includeTimestamp": true
   },
   {
+    "importer": "DWD-CSW",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "csw_codede",
+    "indexType": "base",
+    "alias": "mcloud",
+    "getRecordsUrl": "https://catalog.code-de.org/discovery/srv/en/csw",
+    "proxy": null,
+    "defaultMcloudSubgroup": "climate",
+    "defaultAttribution": "CODE-DE Catalogue",
+    "includeTimestamp": true
+  },
+  {
     "importer": "BSH-CSW",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_bsh",
