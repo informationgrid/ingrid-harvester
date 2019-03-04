@@ -31,7 +31,7 @@ export class CswUtils {
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);
-            logSummary.info(`Number of records with 'opendata' keyword: ${this.summary.opendata}`);
+            logSummary.info(`Number of records with at least one mandatory keyword: ${this.summary.opendata}`);
             logSummary.info(`Number of records with missing links: ${this.summary.missingLinks}`);
             logSummary.info(`Number of records with missing license: ${this.summary.missingLicense}`);
             logSummary.info(`Number of records imported without problems: ${this.summary.ok}`);

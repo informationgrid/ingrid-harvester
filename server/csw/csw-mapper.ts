@@ -344,13 +344,6 @@ export class CswMapper extends GenericMapper {
             keywords.push(node.textContent);
         });
 
-        // Update the statistics
-        if (!this.keywordsAlreadyFetched && keywords.includes('opendata')) {
-            this.summary.opendata++;
-        }
-
-        this.keywordsAlreadyFetched = true;
-
         // Check if at least one mandatory keyword is present
         let valid = keywords.reduce((accumulator, currentValue) => {
             return accumulator || mandatoryKws.includes(currentValue);
@@ -360,6 +353,13 @@ export class CswMapper extends GenericMapper {
             this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.getRecordsUrl}'.`);
             this.skipped = true;
         }
+
+        // Update the statistics
+        if (!this.keywordsAlreadyFetched && valid) {
+            this.summary.opendata++;
+        }
+
+        this.keywordsAlreadyFetched = true;
 
         this.fetched.keywords[mandatoryKws.join()] = keywords;
         return keywords;
