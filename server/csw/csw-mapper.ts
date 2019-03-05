@@ -7,6 +7,7 @@ import {getLogger} from "log4js";
 import {UrlUtils} from "../utils/url-utils";
 import {Summary} from "../model/summary";
 import {RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {URL} from "url";
 
 let xpath = require('xpath');
 
@@ -74,40 +75,32 @@ export class CswMapper extends GenericMapper {
     async getDistributions(): Promise<any[]> {
         let dists = [];
         let urlsFound = [];
+
         let srvIdent = CswMapper.select('./srv:SV_ServiceIdentification', this.idInfo, true);
         if (srvIdent) {
-            let getCapabilitiesElement = CswMapper.select(
-                './srv:containsOperations/srv:SV_OperationMetadata[./srv:operationName/gco:CharacterString[contains(./text(), "GetCapabilities")]]/srv:connectPoint/*/gmd:linkage/gmd:URL',
-                srvIdent,
-                true);
-            let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
-            let serviceFormat = CswMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true).textContent;
-            let serviceLinks = [];
-            if (getCapablitiesUrl) {
-                let lowercase = getCapablitiesUrl.toLowerCase();
-                if (lowercase.match(/\bwms\b/)) serviceFormat = 'WMS';
-                if (lowercase.match(/\bwfs\b/)) serviceFormat = 'WFS';
-                if (lowercase.match(/\bwcs\b/)) serviceFormat = 'WCS';
-                if (lowercase.match(/\bwmts\b/)) serviceFormat = 'WMTS';
-            }
-            let urls = CswMapper.select('./srv:containsOperations/*/srv:connectPoint/*/gmd:linkage/gmd:URL', srvIdent);
-            for (let i=0; i<urls.length; i++) {
-                let node = urls[i];
+            let operationMdNodes = CswMapper.select('./srv:containsOperations/srv:SV_OperationMetadata', srvIdent);
 
-                let requestConfig = this.getUrlCheckRequestConfig(node.textContent);
-                let url = await UrlUtils.urlWithProtocolFor(requestConfig);
-                if (url && !serviceLinks.includes(url)) {
-                    serviceLinks.push(url);
-                    urlsFound.push(url);
-                }
-            }
+            for(let i=0; i<operationMdNodes.length; i++) {
+                let mdNode = operationMdNodes[i];
 
-            serviceLinks.forEach(url => {
+                let opNameNode = CswMapper.select('./srv:operationName/gco:CharacterString', mdNode, true);
+                let operationName = opNameNode.textContent;
+
+                let urlNode = CswMapper.select('./srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', mdNode, true);
+                let operationUrl = new URL(urlNode.textContent);
+
+                // The "service" parameter is mandatory for many OGC services
+                let service = operationUrl.searchParams.get('service');
+
+                // Prefer service as the format name. If not found, then fall back to the operationName
+                if (!service) service = operationName;
+
                 dists.push({
-                    format: serviceFormat,
-                    accessURL: url
+                    format: service,
+                    accessURL: operationUrl.toString()
                 });
-            });
+                urlsFound.push(operationUrl.toString());
+            }
         }
 
         let distNodes = CswMapper.select('./gmd:distributionInfo/gmd:MD_Distribution', this.record);
@@ -144,7 +137,7 @@ export class CswMapper extends GenericMapper {
                 let dist: any = {};
 
                 // Set id only if there is a single resource
-                if (urls.length === 1) dist.id = id;
+                if (urls.length === 1 && id) dist.id = id;
 
                 dist.format = distributionFormat;
                 dist.accessURL = url;
