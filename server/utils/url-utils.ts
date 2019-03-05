@@ -2,8 +2,7 @@
 
 import {RequestConfig, RequestDelegate} from "./http-request-utils";
 
-let /*request = require('request-promise'),*/
-    log = require('log4js').getLogger( __filename );
+let log = require('log4js').getLogger( __filename );
 
 export class UrlUtils {
 

@@ -81,14 +81,14 @@ export class CswMapper extends GenericMapper {
                 srvIdent,
                 true);
             let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
-            let format = CswMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true).textContent;
+            let serviceFormat = CswMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true).textContent;
             let serviceLinks = [];
             if (getCapablitiesUrl) {
                 let lowercase = getCapablitiesUrl.toLowerCase();
-                if (lowercase.match(/\bwms\b/)) format = 'WMS';
-                if (lowercase.match(/\bwfs\b/)) format = 'WFS';
-                if (lowercase.match(/\bwcs\b/)) format = 'WCS';
-                if (lowercase.match(/\bwmts\b/)) format = 'WMTS';
+                if (lowercase.match(/\bwms\b/)) serviceFormat = 'WMS';
+                if (lowercase.match(/\bwfs\b/)) serviceFormat = 'WFS';
+                if (lowercase.match(/\bwcs\b/)) serviceFormat = 'WCS';
+                if (lowercase.match(/\bwmts\b/)) serviceFormat = 'WMTS';
             }
             let urls = CswMapper.select('./srv:containsOperations/*/srv:connectPoint/*/gmd:linkage/gmd:URL', srvIdent);
             for (let i=0; i<urls.length; i++) {
@@ -104,7 +104,7 @@ export class CswMapper extends GenericMapper {
 
             serviceLinks.forEach(url => {
                 dists.push({
-                    format: format,
+                    format: serviceFormat,
                     accessURL: url
                 });
             });
@@ -112,31 +112,31 @@ export class CswMapper extends GenericMapper {
 
         let distNodes = CswMapper.select('./gmd:distributionInfo/gmd:MD_Distribution', this.record);
         for (let i=0; i<distNodes.length; i++) {
-            let node = distNodes[i];
-            let id = node.getAttribute('id');
-            if (!id) id = node.getAttribute('uuid');
+            let distNode = distNodes[i];
+            let id = distNode.getAttribute('id');
+            if (!id) id = distNode.getAttribute('uuid');
 
             let formats = [];
             let urls = [];
 
-            CswMapper.select('.//gmd:MD_Format/gmd:name/gco:CharacterString', node).forEach(fmt => {
+            CswMapper.select('.//gmd:MD_Format/gmd:name/gco:CharacterString', distNode).forEach(fmt => {
                 if (!formats.includes(fmt.textContent)) formats.push(fmt.textContent);
             });
-            let nodes = CswMapper.select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/*/gmd:linkage/gmd:URL', node);
-            for(let j=0; j<nodes.length; j++) {
-                let node = nodes[j];
+            let urlNodes = CswMapper.select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/*/gmd:linkage/gmd:URL', distNode);
+            for(let j=0; j<urlNodes.length; j++) {
+                let urlNode = urlNodes[j];
 
                 let url = null;
-                if (node) {
-                    let requestConfig = this.getUrlCheckRequestConfig(node.textContent);
+                if (urlNode) {
+                    let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
                     url = await UrlUtils.urlWithProtocolFor(requestConfig);
                 }
                 if (url && !urls.includes(url)) urls.push(url);
             }
 
             // Combine formats in a single slash-separated string
-            let format = formats.join(',');
-            if (!format) format = 'Unbekannt';
+            let distributionFormat = formats.join(',');
+            if (!distributionFormat) distributionFormat = 'Unbekannt';
             // Filter out URLs that have already been found
             urls = urls.filter(item => !urlsFound.includes(item));
 
@@ -146,7 +146,7 @@ export class CswMapper extends GenericMapper {
                 // Set id only if there is a single resource
                 if (urls.length === 1) dist.id = id;
 
-                dist.format = format;
+                dist.format = distributionFormat;
                 dist.accessURL = url;
 
                 dists.push(dist);
