@@ -23,7 +23,7 @@ export interface License {
 
 export abstract class GenericMapper {
 
-    protected DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
+    protected static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
 
     protected errors: string[] = [];
 
@@ -171,6 +171,72 @@ export abstract class GenericMapper {
     abstract async getLicense(): Promise<License>;
 
     abstract getUrlCheckRequestConfig(uri: string): RequestConfig;
+
+    static dcatThemeUriFromKeyword(keyword: string): string {
+        // Check falsy values first
+        if (!keyword) return null;
+
+        let code: string = null;
+        keyword = keyword.trim();
+
+        switch(keyword) {
+            case 'Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel':
+                code = 'AGRI';
+                break;
+
+            case 'Wirtschaft und Finanzen':
+                code = 'ECON';
+                break;
+
+            case 'Bildung, Kultur und Sport':
+                code = 'EDUC';
+                break;
+
+            case 'Energie':
+                code = 'ENER';
+                break;
+
+            case 'Umwelt':
+                code = 'ENVI';
+                break;
+
+            case 'Regierung und öffentlicher Sektor':
+                code = 'GOVE';
+                break;
+
+            case 'Gesundheit':
+                code = 'HEAL';
+                break;
+
+            case 'Internationale Themen':
+                code = 'INTR';
+                break;
+
+            case 'Justiz, Rechtssystem und öffentliche Sicherheit':
+                code = 'JUST';
+                break;
+
+            case 'Regionen und Städte':
+                code = 'REGI';
+                break;
+
+            case 'Bevölkerung und Gesellschaft':
+                code = 'SOCI';
+                break;
+
+            case 'Wissenschaft und Technologie':
+                code = 'TECH';
+                break;
+
+            case 'Verkehr':
+                code = 'TRAN';
+                break;
+
+            default:
+                return null;
+        }
+        return code ? GenericMapper.DCAT_CATEGORY_URL + code : null;
+    }
 
 }
 

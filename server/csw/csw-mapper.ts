@@ -40,7 +40,8 @@ export class CswMapper extends GenericMapper {
     private keywordsAlreadyFetched = false;
     private fetched: any = {
         contactPoint: null,
-        keywords: {}
+        keywords: {},
+        themes: null
     };
 
 
@@ -471,8 +472,22 @@ export class CswMapper extends GenericMapper {
     }
 
     getThemes() {
-        // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary;
-        return this.settings.defaultDCATCategory ? [ this.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory] : undefined;
+        // Return cached value, if present
+        if (this.fetched.themes) return this.fetched.themes;
+
+        // Evaluate the themes
+        let xpath = './/gmd:descriptiveKeywords/gmd:MD_Keywords[./gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()="Data theme (EU MDR)"]/gmd:keyword/gco:CharacterString';
+        let themes = CswMapper.select(xpath, this.record)
+            .map(node => CswMapper.dcatThemeUriFromKeyword(node.textContent))
+            .filter(theme => theme); // Filter out falsy values
+
+        if (!themes || themes.length === 0) {
+            // Fall back to default value
+            themes = this.settings.defaultDCATCategory ? [ CswMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory] : undefined;
+        }
+
+        this.fetched.themes = themes;
+        return themes;
     }
 
     isRealtime(): boolean {
