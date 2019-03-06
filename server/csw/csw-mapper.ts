@@ -365,15 +365,15 @@ export class CswMapper extends GenericMapper {
         // Detect mFund properties
         let keywords = this.getKeywords();
         if (keywords) {
-            keywords.forEach(kw => {
-                let kwLower = kw.toLowerCase();
-                if (kwLower.startsWith('mfund-fkz:')) {
-                    let idx = kw.indexOf(':');
-                    let fkz = kw.substr(idx + 1);
+            let fkzKeyword: string = keywords.map(kw => kw.toLowerCase())
+                .find(kw => kw.startsWith('mfund-fkz:'));
 
-                    if (fkz) return fkz.trim();
-                }
-            });
+            if (fkzKeyword) {
+                let idx = fkzKeyword.indexOf(':');
+                let fkz = fkzKeyword.substr(idx + 1);
+
+                if (fkz) return fkz.trim();
+            }
         }
         return undefined;
     }
@@ -382,15 +382,15 @@ export class CswMapper extends GenericMapper {
         // Detect mFund properties
         let keywords = this.getKeywords();
         if (keywords) {
-            keywords.forEach(kw => {
-                let kwLower = kw.toLowerCase();
-                if (kwLower.startsWith('mfund-projekt:')) {
-                    let idx = kw.indexOf(':');
-                    let mfName = kw.substr(idx + 1);
+            let mfKeyword: string = keywords.map(kw => kw.toLowerCase())
+                .find(kw => kw.startsWith('mfund-projekt:'));
 
-                    if (mfName) return mfName.trim();
-                }
-            });
+            if (mfKeyword) {
+                let idx = mfKeyword.indexOf(':');
+                let mfName = mfKeyword.substr(idx + 1);
+
+                if (mfName) return mfName.trim();
+            }
         }
         return undefined;
     }
