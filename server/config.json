@@ -31,6 +31,7 @@
     "httpMethod": "POST",
     "proxy": null,
     "defaultMcloudSubgroup": "waters",
+    "defaultDCATCategory": "TRAN",
     "defaultAttribution": "WSV.Geokatalog CSW",
     "defaultAttributionLink": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2",
     "includeTimestamp": true
@@ -74,6 +75,7 @@
     "getRecordsUrl": "https://cdc.dwd.de/catalogue/srv/en/csw",
     "proxy": null,
     "defaultMcloudSubgroup": "climate",
+    "defaultDCATCategory": "ENVI",
     "defaultAttribution": "Climate Data Centre (CDC) Katalog des DWD",
     "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/csw",
     "includeTimestamp": true
@@ -87,6 +89,7 @@
     "getRecordsUrl": "https://catalog.code-de.org/discovery/srv/en/csw",
     "proxy": null,
     "defaultMcloudSubgroup": "climate",
+    "defaultDCATCategory": "ENVI",
     "defaultAttribution": "CODE-DE Catalogue",
     "defaultAttributionLink": "https://code-de.org/de/marketplace",
     "includeTimestamp": true
@@ -101,6 +104,7 @@
     "httpMethod": "POST",
     "proxy": null,
     "defaultMcloudSubgroup": "waters",
+    "defaultDCATCategory": "ENVI",
     "defaultAttribution": "GeoSeaPortal (BSH)",
     "defaultAttributionLink": "https://www.geoseaportal.de/",
     "includeTimestamp": true
