@@ -399,7 +399,7 @@ export class ElasticSearchUtils {
 
         // Send data in chunks. Don't send too much at once.
         let dates = [];
-        let maxSize = 5;
+        let maxSize = 2 * 3; // !!! IMPORTANT: This number has to be even. That is the reason for the funny way to calculate it. That way one cannot forget to set an odd number when changing the value. !!!
         for(let i=0; i<data.length; i += maxSize) {
             let end = Math.min(data.length, i + maxSize);
 

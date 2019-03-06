@@ -60,6 +60,7 @@ export class WsvImporter implements Importer {
 <GetRecords xmlns="http://www.opengis.net/cat/csw/2.0.2"
             xmlns:gmd="http://www.isotc211.org/2005/gmd"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:ogc="http://www.opengis.net/ogc"
             xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
 
             service="CSW"
@@ -71,6 +72,14 @@ export class WsvImporter implements Importer {
             maxRecords="${WsvImporter.MAX_RECORDS}">
     <Query typeNames="gmd:MD_Metadata">
         <ElementSetName typeNames="">full</ElementSetName>
+        <Constraint version="1.1.0">
+            <ogc:Filter>
+                <ogc:PropertyIsEqualTo>
+                    <ogc:PropertyName>subject</ogc:PropertyName>
+                    <ogc:Literal>opendata</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+            </ogc:Filter>
+        </Constraint>
     </Query>
 </GetRecords>`;
     }
