@@ -6,6 +6,9 @@ import {CswParameters, RequestConfig, RequestDelegate} from "../utils/http-reque
 
 export class MdiImporter implements Importer {
 
+    private static readonly START_POSITION = 1;
+    private static readonly MAX_RECORDS = 25;
+
     private cswUtil: CswUtils;
 
     constructor(settings) {
@@ -28,8 +31,8 @@ export class MdiImporter implements Importer {
             resultType: "results",
             outputFormat: "application/xml",
             outputSchema: "http://www.isotc211.org/2005/gmd",
-            startPosition: 1,
-            maxRecords: 25
+            startPosition: MdiImporter.START_POSITION,
+            maxRecords: MdiImporter.MAX_RECORDS
         };
 
         let requestConfig: RequestConfig = {
@@ -64,8 +67,8 @@ export class MdiImporter implements Importer {
             resultType="results"
             outputFormat="application/xml"
             outputSchema="http://www.isotc211.org/2005/gmd"
-            startPosition="1"
-            maxRecords="10">
+            startPosition="${MdiImporter.START_POSITION}"
+            maxRecords="${MdiImporter.MAX_RECORDS}">
     <Query typeNames="gmd:MD_Metadata">
         <ElementSetName typeNames="">full</ElementSetName>
     </Query>

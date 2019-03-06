@@ -26,6 +26,9 @@ export class BshUtils extends CswUtils {
 }
 
 export class BshImporter implements Importer {
+    private static readonly START_POSITION = 1;
+    private static readonly MAX_RECORDS = 25;
+
     private readonly bshUtils: BshUtils;
 
     constructor(settings) {
@@ -48,8 +51,8 @@ export class BshImporter implements Importer {
             outputSchema: 'http://www.isotc211.org/2005/gmd',
             typeNames: 'gmd:MD_Metadata',
             CONSTRAINTLANGUAGE: 'FILTER',
-            startPosition: 1,
-            maxRecords: 25,
+            startPosition: BshImporter.START_POSITION,
+            maxRecords: BshImporter.MAX_RECORDS,
             elementSetName: 'full'
         };
 
@@ -86,8 +89,8 @@ export class BshImporter implements Importer {
             resultType="results"
             outputFormat="application/xml"
             outputSchema="http://www.isotc211.org/2005/gmd"
-            startPosition="1"
-            maxRecords="25">
+            startPosition="${BshImporter.START_POSITION}"
+            maxRecords="${BshImporter.MAX_RECORDS}">
     <Query typeNames="gmd:MD_Metadata">
         <ElementSetName typeNames="">full</ElementSetName>
         <Constraint version="1.1.0">
