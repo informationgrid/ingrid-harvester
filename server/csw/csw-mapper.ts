@@ -138,7 +138,6 @@ export class CswMapper extends GenericMapper {
     }
 
     async handleDistributionforService(srvIdent, urlsFound): Promise<Distribution[]> {
-        let dists = [];
 
         let getCapabilitiesElement = CswMapper.select(
             // convert containing text to lower case

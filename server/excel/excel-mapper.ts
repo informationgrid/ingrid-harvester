@@ -49,9 +49,9 @@ export class ExcelMapper extends GenericMapper {
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
         const dcatCategoriesString: string = this.columnValues[this.columnMap.DCATKategorie];
         if (dcatCategoriesString) {
-            return dcatCategoriesString.split(',').map( cat => this.DCAT_CATEGORY_URL + cat);
+            return dcatCategoriesString.split(',').map( cat => GenericMapper.DCAT_CATEGORY_URL + cat);
         } else {
-            return [ this.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory];
+            return [ GenericMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory];
         }
 
     }

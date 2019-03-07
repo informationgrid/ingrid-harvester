@@ -183,7 +183,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
 
     getThemes() {
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
-        return this.settings.defaultDCATCategory ? [ this.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory] : undefined;
+        return this.settings.defaultDCATCategory ? [ GenericMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory] : undefined;
     }
 
     getTitle() {
