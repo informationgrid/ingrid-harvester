@@ -1,13 +1,12 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Agent, GenericMapper, License, Organization, Person} from "../model/generic-mapper";
+import {Agent, Distribution, GenericMapper, License, Organization, Person} from "../model/generic-mapper";
 import {SelectedValue} from "xpath";
 import {getLogger} from "log4js";
 import {UrlUtils} from "../utils/url-utils";
 import {Summary} from "../model/summary";
 import {RequestConfig, RequestDelegate} from "../utils/http-request-utils";
-import {URL} from "url";
 
 let xpath = require('xpath');
 
@@ -73,35 +72,13 @@ export class CswMapper extends GenericMapper {
     }
 
 
-    async getDistributions(): Promise<any[]> {
+    async getDistributions(): Promise<Distribution[]> {
         let dists = [];
         let urlsFound = [];
 
         let srvIdent = CswMapper.select('./srv:SV_ServiceIdentification', this.idInfo, true);
         if (srvIdent) {
-            let operationMdNodes = CswMapper.select('./srv:containsOperations/srv:SV_OperationMetadata', srvIdent);
-
-            for(let i=0; i<operationMdNodes.length; i++) {
-                let mdNode = operationMdNodes[i];
-
-                let opNameNode = CswMapper.select('./srv:operationName/gco:CharacterString', mdNode, true);
-                let operationName = opNameNode.textContent;
-
-                let urlNode = CswMapper.select('./srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', mdNode, true);
-                let operationUrl = new URL(urlNode.textContent);
-
-                // The "service" parameter is mandatory for many OGC services
-                let service = operationUrl.searchParams.get('service');
-
-                // Prefer service as the format name. If not found, then fall back to the operationName
-                if (!service) service = operationName;
-
-                dists.push({
-                    format: service,
-                    accessURL: operationUrl.toString()
-                });
-                urlsFound.push(operationUrl.toString());
-            }
+            dists = await this.handleDistributionforService(srvIdent, urlsFound);
         }
 
         let distNodes = CswMapper.select('./gmd:distributionInfo/gmd:MD_Distribution', this.record);
@@ -159,6 +136,44 @@ export class CswMapper extends GenericMapper {
 
         return dists;
     }
+
+    async handleDistributionforService(srvIdent, urlsFound): Promise<Distribution[]> {
+        let dists = [];
+
+        let getCapabilitiesElement = CswMapper.select(
+            // convert containing text to lower case
+            './srv:containsOperations/srv:SV_OperationMetadata[./srv:operationName/gco:CharacterString/text()[contains(translate(\'GetCapabilities\', \'ABCEGILPST\', \'abcegilpst\'), "getcapabilities")]]/srv:connectPoint/*/gmd:linkage/gmd:URL',
+            srvIdent,
+            true);
+        let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
+        let serviceFormat = CswMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true).textContent;
+        let serviceLinks = [];
+        if (getCapablitiesUrl) {
+            let lowercase = getCapablitiesUrl.toLowerCase();
+            if (lowercase.match(/\bwms\b/)) serviceFormat = 'WMS';
+            if (lowercase.match(/\bwfs\b/)) serviceFormat = 'WFS';
+            if (lowercase.match(/\bwcs\b/)) serviceFormat = 'WCS';
+            if (lowercase.match(/\bwmts\b/)) serviceFormat = 'WMTS';
+        }
+        let urls = CswMapper.select('./srv:containsOperations/*/srv:connectPoint/*/gmd:linkage/gmd:URL', srvIdent);
+        for (let i=0; i<urls.length; i++) {
+            let node = urls[i];
+
+            let requestConfig = this.getUrlCheckRequestConfig(node.textContent);
+            let url = await UrlUtils.urlWithProtocolFor(requestConfig);
+            if (url && !serviceLinks.includes(url)) {
+                serviceLinks.push(url);
+                urlsFound.push(url);
+            }
+        }
+
+        return serviceLinks.map(url => ({
+                format: serviceFormat,
+                accessURL: url
+            })
+        );
+
+   }
 
     async getPublisher(): Promise<any[]> {
         let publishers = [];
