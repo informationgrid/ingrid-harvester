@@ -1,5 +1,8 @@
+import {getLogger} from "log4js";
+
 let request = require('request-promise');
 let DomParser = require('xmldom').DOMParser;
+let logRequest = getLogger('requests');
 
 /**
  * HTTP-Headers to set for outgoing HTTP requests.
@@ -152,11 +155,15 @@ export class RequestDelegate {
      * @param callback optional callback for the request library
      */
     async doRequest(callback?: (error: any, response: any) => boolean): Promise<any> {
+
+        logRequest.debug('Requesting: ' + this.config.uri);
+
         if (callback) {
             return request(this.config, callback);
         } else {
             return request(this.config);
         }
+
     }
 }
 

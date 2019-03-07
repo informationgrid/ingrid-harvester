@@ -9,6 +9,7 @@ import {RequestDelegate} from "../utils/http-request-utils";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
+    logRequest = getLogger('requests'),
     DomParser = require('xmldom').DOMParser;
 
 
@@ -80,7 +81,9 @@ export class CswUtils {
 
                 log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
 
-                promises.push(this.extractRecords(response, harvestTime));
+                promises.push(
+                    this.extractRecords(response, harvestTime)
+                );
             } else {
                 log.error(`Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`);
             }
@@ -120,6 +123,10 @@ export class CswUtils {
         }
         for(let i=0; i<records.length; i++) {
             this.summary.numDocs++;
+
+            if (logRequest.isDebugEnabled()) {
+                logRequest.debug("Record content: ", records[i].toString());
+            }
 
             const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');
             let mapper = this.getMapper(this.settings, records[i], harvestTime, issued[i], this.summary);
