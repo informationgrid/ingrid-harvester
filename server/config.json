@@ -81,7 +81,7 @@
     "includeTimestamp": true
   },
   {
-    "importer": "DWD-CSW",
+    "importer": "CODEDE-CSW",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_codede",
     "indexType": "base",

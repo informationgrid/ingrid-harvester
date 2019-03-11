@@ -8,6 +8,7 @@ import {configure, getLogger} from 'log4js';
 import {Summary} from "./model/summary";
 import * as fs from "fs";
 import {BshImporter} from "./csw/bsh-types";
+import {CodeDeImporter} from "./csw/codede-types";
 
 let config = require( './config.json' ),
     process = require('process'),
@@ -43,6 +44,7 @@ function getImporter(settings) {
     if (type === 'BFG-CSW') return new BfgImporter(settings);
     if (type === 'MDI-CSW') return new MdiImporter(settings);
     if (type === 'BSH-CSW') return new BshImporter(settings);
+    if (type === 'CODEDE-CSW') return new CodeDeImporter(settings);
 }
 
 function getDateString() {

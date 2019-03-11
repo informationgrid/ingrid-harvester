@@ -768,6 +768,10 @@ export class CswMapper extends GenericMapper {
         return config;
     }
 
+    protected getUuid(): string {
+        return this.uuid;
+    }
+
 }
 
 // Private interface. Do not export
