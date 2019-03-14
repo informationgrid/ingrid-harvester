@@ -208,7 +208,13 @@ export class CswMapper extends GenericMapper {
                 }
             }
         }
-        return publishers.length > 0 ? publishers : undefined;
+
+        if (publishers.length === 0) {
+            this.summary.missingPublishers++;
+            return undefined;
+        } else {
+            return publishers;
+        }
     }
 
     getTitle() {

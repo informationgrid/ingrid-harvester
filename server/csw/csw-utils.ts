@@ -24,6 +24,7 @@ export class CswUtils {
         numMatched: 0,
         opendata: 0,
         missingLinks: 0,
+        missingPublishers: 0,
         missingLicense: 0,
         ok: 0,
         print: () => {
@@ -35,7 +36,8 @@ export class CswUtils {
             logSummary.info(`Number of records with at least one mandatory keyword: ${this.summary.opendata}`);
             logSummary.info(`Number of records with missing links: ${this.summary.missingLinks}`);
             logSummary.info(`Number of records with missing license: ${this.summary.missingLicense}`);
-            logSummary.info(`Number of records imported without problems: ${this.summary.ok}`);
+            logSummary.info(`Number of records with missing publishers: ${this.summary.missingPublishers}`);
+            logSummary.info(`Number of records imported as valid: ${this.summary.ok}`);
             logSummary.info(`App-Errors: ${this.summary.appErrors.length}`);
             if (this.summary.appErrors.length > 0) {
                 logSummary.info(`\t${this.summary.appErrors.map( e => e + '\n\t')}`);
