@@ -176,8 +176,10 @@ export class ElasticSearchUtils {
                 body: mapping
             }, err => {
                 if (err) log.error( 'Error occurred adding mapping', err );
-                else this.client.indices.open({ index: index });
-                callback();
+                else this.client.indices.open({ index: index }, errOpen => {
+                    if (errOpen) log.error('Error opening index', errOpen);
+                    callback();
+                });
             } );
         };
 

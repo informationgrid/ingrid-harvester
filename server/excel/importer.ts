@@ -145,7 +145,7 @@ export class ExcelImporter implements Importer {
                         log.debug('Skipping finalisation of index for dry run.');
                     } else {
                         log.debug('All promises finished ... continue');
-                        this.elastic.finishIndex();
+                        return this.elastic.finishIndex();
                     }
                 })
                 .then( () => this.summary )
