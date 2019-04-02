@@ -1,3 +1,15 @@
+* Tue Apr 02 2019 Martin Maidhof <martin.maidhof@wemove.com> - 1.5.0
+- Initial harvesting of CSW BSH catalogue, harmonized data (#1809)
+- Initial harvesting of CSW DWD catalogue, harmonized data (#1810)
+- Initial harvesting of CSW BfG catalogue, harmonized data (#1811)
+- Initial harvesting of CSW CODE-DE catalogue, harmonized data (#2010)
+- Harvesting of DCAT-AP.de theme (opendata category) from ISO XML e.g. from WSV (#1984)
+- Use Proxy when harvesting e.g. for validating URLs (#2001)
+- Setup cronjob when deploying (#1700)
+- WSV: Fix harvesting of dataformat of links (#1808)
+- Fix harvesting of mFUND information from keywords (#2041)
+- Excel: Add DCAT category (#1983)
+
 * Tue Jan 15 2019 André Wallat <andre.wallat@wemove.com> - 1.4.0
 - Check valid URLs when importing datasets (#1776)
 - Separate URLs by new line instead of comma (#1834)
