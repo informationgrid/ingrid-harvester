@@ -1,0 +1,65 @@
+{
+  "title" : "Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene",
+  "description" : "<p>Die hier bereitgestellte API stellt äquivalent zum Datensatz <a href=\"http://data.deutschebahn.com/dataset/edit/ist-verkehrsdaten-der-db-cargo-auf-bst8-ebene\">Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene</a> die Anzahl der Zugfahrten und Verspätungsminuten pro Tag und Betriebsstelle dar. Berücksichtigt wurden alle Bst, über die mindestens 10 Zugfahrten stattfanden.</p>",
+  "theme" : [ "http://publications.europa.eu/resource/authority/data-theme/TRAN" ],
+  "issued" : "2017-05-12T13:47:33.056410",
+  "modified" : "2017-12-13T13:03:48.489043",
+  "accrualPeriodicity" : "once_per_year",
+  "keywords" : [ "Betriebsstelle", "Logistik" ],
+  "creator" : {
+    "name" : "Hannah Richta",
+    "mbox" : "hannah.richta@deutschebahn.com"
+  },
+  "publisher" : [ {
+    "organization" : "DB Cargo AG",
+    "homepage" : "https://www.dbcargo.com/"
+  } ],
+  "distribution" : [ {
+    "id" : "04e9934a-8043-4b16-a6eb-6d5fb5c0a6b9",
+    "title" : "Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene",
+    "description" : "",
+    "accessURL" : "https://developer.deutschebahn.com/store/apis/info?name=Cargo-Delay-Statistics&version=v1&provider=DBOpenData",
+    "format" : "REST",
+    "issued" : "2017-05-12T13:48:15.200604",
+    "modified" : null,
+    "byteSize" : null
+  } ],
+  "extras" : {
+    "generated_id" : "api-cargo",
+    "subgroups" : "railway",
+    "license": {
+      "id": "cc-by",
+      "title": "Creative Commons Attribution",
+      "url": "http://www.opendefinition.org/licenses/cc-by"
+    },
+    "harvested_data" : "{\"license_title\":\"Creative Commons Attribution\",\"maintainer\":null,\"relationships_as_object\":[],\"private\":false,\"maintainer_email\":null,\"num_tags\":2,\"license_detailed_description\":\"Dieser Datensatz wird bereitgestellt unter der Lizenz Creative Commons Attribution 4.0 International (CC BY 4.0).\\r\\nWenn die Daten der Deutschen Bahn (DB) Bestandteil des OpenStreetMap-Datenbankwerkes werden, genügt eine Nennung der Deutschen Bahn AG in der Liste der Beitragenden. Eine Nennung der DB bei jeder Verwendung der Daten auch durch Lizenznehmer des oben genannten Datenbankwerks ist dann nicht mehr erforderlich. Eine indirekte Nennung (Verweis auf Herausgeber des Datenbankwerks, der wiederum auf die DB verweist) genügt.\",\"id\":\"7e526b8c-16bd-4f2c-a02b-8d4d0a29d310\",\"metadata_created\":\"2017-05-12T13:47:33.056410\",\"metadata_modified\":\"2017-12-13T13:03:48.489043\",\"author\":\"Hannah Richta\",\"author_email\":\"hannah.richta@deutschebahn.com\",\"last_update\":\"2017-05-12\",\"update_cycle\":\"once_per_year\",\"state\":\"active\",\"version\":null,\"license_id\":\"cc-by\",\"type\":\"dataset\",\"resources\":[{\"mimetype\":null,\"cache_url\":null,\"hash\":\"\",\"description\":\"\",\"name\":\"Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene\",\"format\":\"REST\",\"url\":\"https://developer.deutschebahn.com/store/apis/info?name=Cargo-Delay-Statistics&version=v1&provider=DBOpenData\",\"cache_last_updated\":null,\"package_id\":\"7e526b8c-16bd-4f2c-a02b-8d4d0a29d310\",\"created\":\"2017-05-12T13:48:15.200604\",\"state\":\"active\",\"mimetype_inner\":null,\"webstore_last_updated\":null,\"last_modified\":null,\"position\":0,\"revision_id\":\"744ef694-0194-4b1e-8296-b94bb7ad8179\",\"webstore_url\":null,\"url_type\":null,\"id\":\"04e9934a-8043-4b16-a6eb-6d5fb5c0a6b9\",\"resource_type\":null,\"size\":null}],\"haftung_description\":\"Dieser Datenbestand kann Fehler enthalten und/oder unvollständig sein. DB Cargo AG übernimmt keine Haftung und leistet keinerlei Gewähr.\",\"num_resources\":1,\"description\":\"Zugfahrten und Verspätungsminuten sind wesentliche Indikatoren für den Verkehr an einer Betriebsstelle. Die Zugfahrten zeigen, wie stark die Betriebsstelle genutzt wird. Die Verspätungsminuten, die an einer Betriebsstelle entstehen, zeigen ob und wenn ja mit welchem Ausmaß Störungen an dieser Betriebsstelle bestanden.\\r\\n\\r\\nBeschreibung der wichtigsten Bezeichner in der CSV-Datei:\\r\\n\\r\\n- **BST_NR_8**: Interne Nummer der Betriebsstelle, z.B. 10000018. Kann als Schlüssel zur Verbindung mit dem Datensatz \\\"Betriebsstellenverzeichnis Güterverkehr\\\" mit der dortigen Spalte \\\"BST8\\\" genutzt werden.\\r\\n\\r\\n- **LAND**: Name des Landes, in dem die BST liegt, z.B. Finnland \\r\\n\\r\\n- **PROD_DATUM**: Produktionsdatum. Der Tag für den die Daten in den Spalten \\\"Zugfahrten\\\" und \\\"Verspätungsminuten\\\" gemessen wurden.\\r\\n\\r\\n- **Zugfahrten**: Anzahl der Zugfahrten von DB Cargo, die an dem durch die Spalte \\\"PROD_DATUM\\\" spezifizierten Tag über die in der Spalte \\\"BST_NR_8\\\" spezifizierte Betriebsstelle liefen.\\r\\n\\r\\n- **Verspätungsminuten**: Summe der Verspätungsminuten von DB Cargo, die an dem durch die Spalte \\\"PROD_DATUM\\\" spezifizierten Tag für die in der Spalte \\\"BST_NR_8\\\" spezifizierte Betriebsstelle erfasst wurden.\\r\\n\",\"tags\":[{\"vocabulary_id\":null,\"state\":\"active\",\"display_name\":\"Betriebsstelle\",\"id\":\"c477865c-c552-4ab7-980d-b7fc05936206\",\"name\":\"Betriebsstelle\"},{\"vocabulary_id\":null,\"state\":\"active\",\"display_name\":\"Logistik\",\"id\":\"e550a7f0-3c65-4012-917d-3bf2188b881f\",\"name\":\"Logistik\"}],\"groups\":[{\"display_name\":\"APIs\",\"description\":\"\",\"image_display_url\":\"\",\"title\":\"APIs\",\"id\":\"3dbc3ba6-5775-4105-af2f-7b1163f0e888\",\"name\":\"apis\"}],\"creator_user_id\":\"ea98ea23-5039-4a2e-8ac8-f5beab1420b5\",\"relationships_as_subject\":[],\"organization\":{\"description\":\"[Webseite](https://www.dbcargo.com/) \",\"created\":\"2016-08-23T12:27:08.778852\",\"title\":\"DB Cargo AG\",\"name\":\"db-cargo\",\"is_organization\":true,\"state\":\"active\",\"image_url\":\"http://data.deutschebahn.com/images/DB_Logo_Organisationen.png\",\"revision_id\":\"01ae56a9-7fc6-4d09-bc9e-368c3c4d117d\",\"type\":\"organization\",\"id\":\"5045db2c-626b-4bc2-a002-a5e2ce52652b\",\"approval_status\":\"approved\"},\"name\":\"api-cargo\",\"isopen\":true,\"url\":null,\"notes\":\"Die hier bereitgestellte API stellt äquivalent zum Datensatz [Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene](http://data.deutschebahn.com/dataset/edit/ist-verkehrsdaten-der-db-cargo-auf-bst8-ebene) die Anzahl der Zugfahrten und Verspätungsminuten pro Tag und Betriebsstelle dar. Berücksichtigt wurden alle Bst, über die mindestens 10 Zugfahrten stattfanden.\",\"owner_org\":\"5045db2c-626b-4bc2-a002-a5e2ce52652b\",\"license_url\":\"http://www.opendefinition.org/licenses/cc-by\",\"title\":\"Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene\",\"revision_id\":\"34e8304d-2523-4473-92c9-620620f26ef6\"}",
+    "subsection" : [ {
+      "title" : "Langbeschreibung",
+      "description" : "<p>Zugfahrten und Verspätungsminuten sind wesentliche Indikatoren für den Verkehr an einer Betriebsstelle. Die Zugfahrten zeigen, wie stark die Betriebsstelle genutzt wird. Die Verspätungsminuten, die an einer Betriebsstelle entstehen, zeigen ob und wenn ja mit welchem Ausmaß Störungen an dieser Betriebsstelle bestanden.</p>\n\n<p>Beschreibung der wichtigsten Bezeichner in der CSV-Datei:</p>\n\n<ul><li><p><strong>BST<em>NR</em>8</strong>: Interne Nummer der Betriebsstelle, z.B. 10000018. Kann als Schlüssel zur Verbindung mit dem Datensatz &quot;Betriebsstellenverzeichnis Güterverkehr&quot; mit der dortigen Spalte &quot;BST8&quot; genutzt werden.</p></li><li><p><strong>LAND</strong>: Name des Landes, in dem die BST liegt, z.B. Finnland </p></li><li><p><strong>PROD_DATUM</strong>: Produktionsdatum. Der Tag für den die Daten in den Spalten &quot;Zugfahrten&quot; und &quot;Verspätungsminuten&quot; gemessen wurden.</p></li><li><p><strong>Zugfahrten</strong>: Anzahl der Zugfahrten von DB Cargo, die an dem durch die Spalte &quot;PROD<em>DATUM&quot; spezifizierten Tag über die in der Spalte &quot;BST</em>NR_8&quot; spezifizierte Betriebsstelle liefen.</p></li><li><p><strong>Verspätungsminuten</strong>: Summe der Verspätungsminuten von DB Cargo, die an dem durch die Spalte &quot;PROD<em>DATUM&quot; spezifizierten Tag für die in der Spalte &quot;BST</em>NR_8&quot; spezifizierte Betriebsstelle erfasst wurden.</p></li></ul>"
+    }, {
+      "title" : "Lizenzbeschreibung",
+      "description" : "Dieser Datensatz wird bereitgestellt unter der Lizenz Creative Commons Attribution 4.0 International (CC BY 4.0).\r\nWenn die Daten der Deutschen Bahn (DB) Bestandteil des OpenStreetMap-Datenbankwerkes werden, genügt eine Nennung der Deutschen Bahn AG in der Liste der Beitragenden. Eine Nennung der DB bei jeder Verwendung der Daten auch durch Lizenznehmer des oben genannten Datenbankwerks ist dann nicht mehr erforderlich. Eine indirekte Nennung (Verweis auf Herausgeber des Datenbankwerks, der wiederum auf die DB verweist) genügt."
+    }, {
+      "title" : "Haftungsausschluss",
+      "description" : "Dieser Datenbestand kann Fehler enthalten und/oder unvollständig sein. DB Cargo AG übernimmt keine Haftung und leistet keinerlei Gewähr."
+    } ],
+    "temporal" : "2017-05-12T11:48:15.200Z",
+    "groups" : [ "APIs" ],
+    "metadata" : {
+      "source" : {
+        "raw_data_source" : "https://data.deutschebahn.com/api/3/action/package_show?id=api-cargo",
+        "portal_link" : "https://data.deutschebahn.com/dataset/api-cargo",
+        "attribution" : "Deutsche Bahn Datenportal"
+      },
+      "issued" : "2019-01-08T16:33:11.960Z",
+      "modified" : "2019-01-09T02:17:16.269Z",
+      "harvested" : "2019-01-09T02:17:15.762Z"
+    },
+    "displayContact" : {
+      "name" : "DB Cargo AG",
+      "url" : "https://www.dbcargo.com/"
+    },
+    "all" : [ "Betriebsstelle", "Logistik" ]
+  },
+  "idf" : "Mein IDF Dokument"
+}

@@ -1,18 +1,14 @@
 pipeline {
     agent {
-        docker { 
+        docker {
             image 'docker-registry.wemove.com/ingrid-rpmbuilder'
         }
     }
 
-    tools {
-        nodejs "nodejs8"
-    }
-    
     environment {
         RPM_PUBLIC_KEY  = credentials('mcloud-rpm-public')
         RPM_PRIVATE_KEY = credentials('mcloud-rpm-private')
-        MCLOUD_SIGN_PASSPHRASE = credentials('mcloud-rpm-passphrase')
+        RPM_SIGN_PASSPHRASE = credentials('mcloud-rpm-passphrase')
         PATH = "$NODEJS_HOME/bin:$PATH"
     }
 
@@ -27,25 +23,9 @@ pipeline {
     
     stages {
 
-        stage('Prepare') {
-            steps {
-                sh 'mkdir -p /root/rpmbuild/SOURCES/mcloud-ingrid/ingrid-excel-import'
-                sh 'rm -rf dist && mkdir -p dist'
-                sh 'rm -rf dist-rpm && mkdir -p dist-rpm'
-
-                echo 'Since environment variables are not updated within docker, we have to use full path to nodejs'
-                sh '$NODEJS_HOME/bin/node --version'
-                sh '$NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm install && $NODEJS_HOME/bin/node $NODEJS_HOME/bin/npm run build --scripts-prepend-node-path=auto'
-
-                sh 'cp -r ./dist/* /root/rpmbuild/SOURCES/mcloud-ingrid/ingrid-excel-import'
-                sh 'cp ./docker/package.json /root/rpmbuild/SOURCES/mcloud-ingrid/ingrid-excel-import'
-                sh 'cp ./docker/*.spec /root/rpmbuild/SPECS'
-                sh 'cp ./docker/ingrid.service /root/rpmbuild/SOURCES'
-            }
-        }
         stage('Create') {
             steps {
-                sh 'rpmbuild -ba /root/rpmbuild/SPECS/mcloud-ingrid.spec'
+                sh './mvnw clean package -Dmaven.test.failure.ignore=true -s .mvn/settings.xml'
             }
         }
         stage('Sign') {
@@ -54,20 +34,19 @@ pipeline {
                 withCredentials([file(credentialsId: 'mcloud-rpm-public', variable: 'rpm-key-public')]) {
                     sh 'gpg --import $RPM_PUBLIC_KEY'
                     sh 'gpg --import $RPM_PRIVATE_KEY'
-                    sh 'expect /rpm-sign.exp /root/rpmbuild/RPMS/noarch/*.rpm'
+                    sh 'expect /rpm-sign.exp target/rpm/mcloud-ingrid/RPMS/noarch/*.rpm'
                 }
             }
         }
         stage('Archive') {
             steps {
-                sh 'mv /root/rpmbuild/RPMS/noarch/*.rpm ./dist-rpm/'
-                archiveArtifacts artifacts: 'dist-rpm/*.rpm'
+                archiveArtifacts artifacts: 'target/rpm/mcloud-ingrid/RPMS/noarch/*.rpm'
             }
         }
         stage('Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'ingrid_mcloud-dev', passwordVariable: 'SSHPASS', usernameVariable: 'username')]) {
-                    sh 'sshpass -ve scp -o StrictHostKeyChecking=no ./dist-rpm/*.rpm ingrid@mcloud-dev-1.wemove.com:/var/www/mcloud-deploy-develop/'
+                    sh 'sshpass -ve scp -o StrictHostKeyChecking=no target/rpm/mcloud-ingrid/RPMS/noarch/*.rpm ingrid@mcloud-dev-1.wemove.com:/var/www/mcloud-deploy-develop/'
                     sh 'sshpass -ve ssh -o StrictHostKeyChecking=no ingrid@mcloud-dev-1.wemove.com createrepo --update /var/www/mcloud-deploy-develop/'
                 }
             }
@@ -75,7 +54,8 @@ pipeline {
     }
     post {
         always {
-            deleteDir() /* clean up our workspace */
+            junit 'report.xml'
+            //deleteDir() /* clean up our workspace */
         }
     }
 }

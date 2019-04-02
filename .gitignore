@@ -43,3 +43,4 @@ dist
 package-lock.json
 data.xlsx*
 FinaleImportExcel*
+node/
