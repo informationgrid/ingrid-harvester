@@ -24,6 +24,7 @@ if (fs.existsSync(lastExecutionLogFile)) {
 configure('./log4js.json');
 
 const start = new Date();
+let runAsync = false;
 
 // create a server which finds a random free port
 // scan a range
@@ -56,35 +57,60 @@ function getDateString() {
     return `${year}${month}${day}`;
 }
 
+function showSummaries(summaries: Summary[]) {
+    const duration = (+new Date() - +start) / 1000;
+    logSummary.info('#######################################');
+    logSummary.info('Import started at: ' + start);
+    logSummary.info('Import took: ' + duration + 's\n');
+    summaries.forEach(summary => summary ? summary.print() : '');
+    logSummary.info('#######################################');
+}
+
+async function startProcess() {
+
+    const processes = [];
+    let summaries: Summary[] = [];
+
+    for (let settings of config) {
+        // Include relevant CLI args
+        settings.dryRun = args.includes('-n') || args.includes('--dry-run') || settings.dryRun === true;
+
+        // Set the same elasticsearch alias for deduplication for all importers
+        settings.deduplicationAlias = deduplicationAlias;
+
+        let importer = getImporter( settings );
+        if (!importer) {
+            log.error( 'Importer not defined for: ' + settings.importer );
+            return;
+        }
+        log.info("Starting import ...");
+        try {
+            if (runAsync) {
+                processes.push(importer.run());
+            } else {
+                summaries.push(await importer.run());
+            }
+        } catch (e) {
+            console.error(`Importer ${settings.importer} failed: `, e);
+        }
+    }
+
+    if (runAsync) {
+        Promise.all(
+            processes.map(p => p.catch(e => console.error('Error for harvester occurred: ', e)))
+        ).then( showSummaries );
+    } else {
+        showSummaries(summaries);
+    }
+
+}
+
 // Generate a quasi-random string for a deduplication alias
 let pid = process.pid;
 let dt = getDateString();
 let deduplicationAlias = `dedupe_${dt}_${pid}`;
 
 let args = process.argv.slice(2);
+runAsync = args.includes('--async');
 
-const processes = [];
-config.forEach( (settings:any) => {
-    // Include relevant CLI args
-    settings.dryRun = args.includes('-n') || args.includes('--dry-run') || settings.dryRun === true;
-
-    // Set the same elasticsearch alias for deduplication for all importers
-    settings.deduplicationAlias = deduplicationAlias;
-
-    let importer = getImporter( settings );
-    if (!importer) {
-        log.error( 'Importer not defined for: ' + settings.importer );
-        return;
-    }
-    log.info("Starting import ...");
-    processes.push(importer.run());
-} );
-
-Promise.all(processes).then( (summaries: Summary[]) => {
-    const duration = (+new Date() - +start) / 1000;
-    logSummary.info('#######################################');
-    logSummary.info('Import started at: ' + start);
-    logSummary.info('Import took: ' + duration + 's\n');
-    summaries.forEach( summary => summary.print());
-    logSummary.info('#######################################');
-});
+startProcess();
