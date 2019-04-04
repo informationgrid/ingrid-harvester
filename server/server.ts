@@ -80,11 +80,13 @@ config.forEach( (settings:any) => {
     processes.push(importer.run());
 } );
 
-Promise.all(processes).then( (summaries: Summary[]) => {
+Promise.all(
+    processes.map(p => p.catch(e => console.error('Error for harvester occurred: ', e)))
+).then( (summaries: Summary[]) => {
     const duration = (+new Date() - +start) / 1000;
     logSummary.info('#######################################');
     logSummary.info('Import started at: ' + start);
     logSummary.info('Import took: ' + duration + 's\n');
-    summaries.forEach( summary => summary.print());
+    summaries.forEach( summary => summary ? summary.print() : '');
     logSummary.info('#######################################');
 });

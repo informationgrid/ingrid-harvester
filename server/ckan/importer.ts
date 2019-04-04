@@ -149,7 +149,7 @@ export class DeutscheBahnCkanImporter implements Importer {
                         if (this.settings.dryRun) {
                             log.debug('Skipping finalisation of index for dry run.');
                         } else {
-                            this.elastic.finishIndex();
+                            return this.elastic.finishIndex();
                         }
                     })
                     .then( () => this.summary)
