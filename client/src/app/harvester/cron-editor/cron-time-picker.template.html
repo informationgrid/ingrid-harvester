@@ -1,0 +1,31 @@
+<!-- hour -->
+<mat-form-field>
+  <mat-select style="width: 70px; display: inline;" (selectionChange)="changeEmit()" [(ngModel)]="model.hours" [disabled]="disabled"
+    [ngClass]="selectClass">
+    <mat-option *ngFor="let hour of hours" [value]="hour">{{hour}}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<!-- minute -->
+<mat-form-field>
+  <mat-select style="width: 70px; display: inline;" (selectionChange)="changeEmit()" [(ngModel)]="model.minutes" [disabled]="disabled"
+    [ngClass]="selectClass">
+    <mat-option *ngFor="let minute of minutes" [value]="minute">{{minute}}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<!-- second -->
+<mat-form-field *ngIf="!hideSeconds">
+  <mat-select style="width: 70px; display: inline;" (selectionChange)="changeEmit()" [(ngModel)]="model.seconds" [disabled]="disabled"
+     [ngClass]="selectClass">
+    <mat-option *ngFor="let second of seconds" [value]="second">{{second}}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<!-- am/pm -->
+<mat-form-field *ngIf="!use24HourTime">
+  <mat-select style="width: 70px; display: inline;" (selectionChange)="changeEmit()" [(ngModel)]="model.hourType" [disabled]="disabled"
+     [ngClass]="selectClass">
+    <mat-option *ngFor="let hourType of hourTypes" [value]="hourType">{{hourType}}</mat-option>
+  </mat-select>
+</mat-form-field>

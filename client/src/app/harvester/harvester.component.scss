@@ -1,0 +1,46 @@
+:host {
+  display: block;
+  padding: 20px;
+}
+
+mat-expansion-panel {
+  margin-bottom: 20px;
+}
+
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.success {
+  color: #5dc57b;
+}
+
+.flex-space {
+  flex: 1 1 auto;
+}
+
+mat-action-row {
+  padding-left: 8px;
+}
+
+.lastExecution, .nextExecution {
+  color: #d2d2d2;
+}
+
+.lastExecution {
+  float: left;
+}
+
+.nextExecution {
+  float: right;
+}
+
+  .clearfix {
+  clear: both;
+}

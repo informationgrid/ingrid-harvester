@@ -1,0 +1,22 @@
+<mat-toolbar color="primary">
+  <span>Harvester Admin GUI</span>
+
+  <!-- This fills the remaining space of the current row -->
+  <span class="toolbar"></span>
+
+  <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">verified_user</mat-icon>
+</mat-toolbar>
+
+<mat-sidenav-container class="navigation">
+  <mat-sidenav mode="side" opened>
+    <mat-action-list>
+      <button mat-list-item (click)="page = 'config'"> Konfiguration </button>
+      <button mat-list-item (click)="page = 'harvester'"> Harvester </button>
+    </mat-action-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <app-harvester *ngIf="page === 'harvester'"></app-harvester>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

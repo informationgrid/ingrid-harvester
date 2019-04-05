@@ -1,0 +1,55 @@
+<!--<mat-card *ngFor="let harvester of harvesters | async" class="harvester-card">
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+    <mat-card-title>{{harvester.name}}</mat-card-title>
+    <mat-card-subtitle>{{harvester.description}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      Dokumente: {{harvester.summary.numberOfDocs}}
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button>Import starten</button>
+    <button mat-button (click)="schedule(harvester.id)">Planen</button>
+    <button mat-button>Bearbeiten</button>
+  </mat-card-actions>
+</mat-card>-->
+<div class="example-headers-align">
+  <mat-expansion-panel *ngFor="let harvester of harvesters | async" hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{harvester.name}}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{harvester.description}}
+        <mat-icon *ngIf="harvester.summary?.numberOfErrors > 0" color="warn">error_outline</mat-icon>
+        <mat-icon *ngIf="harvester.summary?.numberOfErrors === 0" class="success">check_circle_outline</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <div class="lastExecution" title="Letzte Ausführung">
+      {{harvester.summary?.lastExecution | date:'short'}}
+    </div>
+    <div class="nextExecution" title="Nächste Ausführung">
+      <mat-icon [inline]="true">alarm</mat-icon> {{harvester.summary?.nextExecution | date:'short'}}
+    </div>
+    <div class="clearfix"></div>
+
+    <ul>
+      <li>Dokumente: {{harvester.summary?.numberOfDocs}}</li>
+      <li>Warnungen: {{harvester.summary?.numberOfWarnings}}</li>
+      <li>Fehler: {{harvester.summary?.numberOfErrors}}</li>
+    </ul>
+
+
+    <mat-action-row>
+      <button mat-button (click)="showLog(harvester.id)"><mat-icon [inline]="true">description</mat-icon> Log</button>
+      <button mat-button (click)="startImport(harvester.id)"><mat-icon [inline]="true">import_export</mat-icon> Import starten</button>
+      <button mat-button (click)="schedule(harvester.id)"><mat-icon [inline]="true">schedule</mat-icon> Planen</button>
+      <div class="flex-space"></div>
+      <button mat-button color="primary" (click)="edit(harvester.id)"><mat-icon [inline]="true">edit</mat-icon> Bearbeiten</button>
+    </mat-action-row>
+
+  </mat-expansion-panel>
+</div>
