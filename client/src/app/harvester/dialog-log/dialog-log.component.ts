@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA} from "@angular/material";
 
 @Component({
   selector: 'app-dialog-log',
@@ -7,7 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DialogLogComponent implements OnInit {
 
-  constructor() { }
+  logText: string;
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
+    this.logText = data.content;
+  }
 
   ngOnInit() {
   }

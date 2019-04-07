@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {HarvesterService} from "./harvester.service";
 import {Observable} from "rxjs";
 import {Harvester} from "./model/harvester";
-import {MatDialog} from "@angular/material";
+import {MatDialog, MatSnackBar} from "@angular/material";
 import {DialogSchedulerComponent} from "./dialog-scheduler/dialog-scheduler.component";
 import {DialogLogComponent} from "./dialog-log/dialog-log.component";
 import {DialogEditComponent} from "./dialog-edit/dialog-edit.component";
+import {ImportNotifyComponent} from "./notifications/import-notify.component";
 
 @Component({
   selector: 'app-harvester',
@@ -16,7 +17,7 @@ export class HarvesterComponent implements OnInit {
 
   harvesters: Observable<Harvester[]>;
 
-  constructor(public dialog: MatDialog, private harvesterService: HarvesterService) { }
+  constructor(public dialog: MatDialog, private snackBar: MatSnackBar, private harvesterService: HarvesterService) { }
 
   ngOnInit() {
     this.harvesters = this.harvesterService.getHarvester();
@@ -35,12 +36,17 @@ export class HarvesterComponent implements OnInit {
 
   showLog(id: string) {
     const dialogRef = this.dialog.open(DialogLogComponent, {
-      width: '900px'
+      width: '900px',
+      data: {
+        content: 'xxx'
+      }
     });
   }
 
   startImport(id: string) {
-
+    this.snackBar.openFromComponent(ImportNotifyComponent, {
+      duration: 3 * 1000,
+    });
   }
 
   edit(id: string) {
