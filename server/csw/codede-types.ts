@@ -68,7 +68,7 @@ export class CodeDeImporter implements Importer {
             maxRecords: 25,
             CONSTRAINT_LANGUAGE_VERSION: '1.1.0',
             elementSetName: 'full',
-            constraint: '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>'
+            constraint: '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><ogc:PropertyIsEqualTo><ogc:PropertyName>HasSecurityConstraints</ogc:PropertyName><ogc:Literal>false</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>'
         };
 
         if (overrideCswParameters) {
