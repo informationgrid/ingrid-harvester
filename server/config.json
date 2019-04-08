@@ -88,8 +88,8 @@
     "alias": "mcloud",
     "getRecordsUrl": "https://catalog.code-de.org/discovery/srv/en/csw",
     "proxy": null,
-    "defaultMcloudSubgroup": "climate",
-    "defaultDCATCategory": "ENVI",
+    "defaultMcloudSubgroup": "aviation",
+    "defaultDCATCategory": "TECH",
     "defaultAttribution": "CODE-DE Catalogue",
     "defaultAttributionLink": "https://code-de.org/de/marketplace",
     "includeTimestamp": true
