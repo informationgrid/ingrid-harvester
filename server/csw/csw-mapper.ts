@@ -358,8 +358,13 @@ export class CswMapper extends GenericMapper {
             keywords.push(node.textContent);
         });
 
-        // Check if at least one mandatory keyword is present
-        let valid = keywords.reduce((accumulator, currentValue) => {
+        /*
+         * Check keywords. Mark datasets as valid only if:
+         * - there are no mandatory keywords OR
+         * - at least one of the mandatory keywords is present
+         */
+        let valid = mandatoryKws.length === 0;
+        valid = valid || keywords.reduce((accumulator, currentValue) => {
             return accumulator || mandatoryKws.includes(currentValue);
         }, false);
         if (!valid) {
@@ -459,7 +464,13 @@ export class CswMapper extends GenericMapper {
             }
             try {
                 if (!begin.hasAttribute('indeterminatePosition')) {
-                    return begin.textContent;
+                    let text = begin.textContent;
+                    let date = Date.parse(text);
+                    if (date) {
+                        return text;
+                    } else {
+                        this.log.warn(`Error parsing begin date, which was '${text}'. It will be ignored.`);
+                    }
                 }
             } catch (e) {
                 this.log.error(`Cannot extract time range. ${suffix}`, e);
@@ -482,7 +493,13 @@ export class CswMapper extends GenericMapper {
             }
             try {
                 if (!end.hasAttribute('indeterminatePosition')) {
-                    return end.textContent;
+                    let text = end.textContent;
+                    let date = Date.parse(text);
+                    if (date) {
+                        return text;
+                    } else {
+                        this.log.warn(`Error parsing end date, which was '${text}'. It will be ignored.`);
+                    }
                 }
             } catch (e) {
                 this.log.error(`Cannot extract time range. ${suffix}`, e);

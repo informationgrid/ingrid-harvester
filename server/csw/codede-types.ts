@@ -21,10 +21,7 @@ export class CodeDeMapper extends CswMapper {
     }
 
     getKeywords(mandatoryKws: string[] = ['opendata']): string[] {
-        return super.getKeywords([
-            'opendata',
-            'inspireidentifiziert'
-        ]);
+        return super.getKeywords([]);
     }
 
     getMetadataSource(): any {
