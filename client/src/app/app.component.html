@@ -16,6 +16,7 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
+    <app-config *ngIf="page === 'config'"></app-config>
     <app-harvester *ngIf="page === 'harvester'"></app-harvester>
   </mat-sidenav-content>
 

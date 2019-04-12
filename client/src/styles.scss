@@ -2,3 +2,31 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.form-wrapper {
+  padding-top: 40px;
+  margin-left: 10%;
+  max-width: 700px;
+
+  form, .flex-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-buttons {
+    display: flex;
+    flex-direction: row;
+  }
+
+  & > * {
+    width: 100%;
+  }
+}
+
+.flex-space {
+  flex: 1 1 auto;
+}
+
+.half {
+  width: 50%;
+}

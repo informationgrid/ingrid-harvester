@@ -1,0 +1,25 @@
+<div class="form-wrapper">
+
+  <form>
+
+    <mat-form-field>
+      <input matInput type="url" placeholder="Elasticsearch-URL" [(ngModel)]="config.elasticsearchUrl" name="elasticsearchUrl">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Alias-Name" [(ngModel)]="config.alias" name="alias">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Proxy" [(ngModel)]="config.proxy" name="proxy">
+    </mat-form-field>
+
+  </form>
+
+  <div class="form-buttons">
+    <button mat-button (click)="reset()">Zurücksetzen</button>
+    <div class="flex-space"></div>
+    <button mat-button color="primary" (click)="save()">Speichern</button>
+  </div>
+
+</div>

@@ -1,3 +1,73 @@
-<p>
-  dialog-edit works!
-</p>
+<h2 mat-dialog-title>Neuen Harvester anlegen</h2>
+
+<mat-dialog-content>
+  <div class="form-wrapper">
+    <form class="example-container">
+      <mat-form-field>
+        <mat-label>Typ</mat-label>
+        <mat-select #harvesterType [(ngModel)]="harvester.type" [disabled]="harvester.id" name="type">
+          <mat-option value="excel">EXCEL</mat-option>
+          <mat-option value="ckan">CKAN</mat-option>
+          <mat-option value="csw">CSW</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Beschreibung" [(ngModel)]="harvester.description" name="description">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Indexname" [(ngModel)]="harvester.index" name="index">
+      </mat-form-field>
+
+      <div style="display: flex; flex-direction: row; place-content: stretch space-between; align-items: stretch;">
+        <mat-form-field class="flex-space" style="padding-right: 10px;">
+          <mat-select placeholder="Standard DCAT-Kategorien" multiple [(ngModel)]="harvester.defaultDCATCategory"
+                      name="defaultDCATCategory">
+            <mat-option value="AGRI">Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel</mat-option>
+            <mat-option value="ECON">Wirtschaft und Finanzen</mat-option>
+            <mat-option value="EDUC">Bildung, Kultur und Sport</mat-option>
+            <mat-option value="ENER">Energie</mat-option>
+            <mat-option value="ENVI">Umwelt</mat-option>
+            <mat-option value="GOVE">Regierung und öffentlicher Sektor</mat-option>
+            <mat-option value="HEAL">Gesundheit</mat-option>
+            <mat-option value="INTR">Internationale Themen</mat-option>
+            <mat-option value="JUST">Justiz, Rechtssystem und öffentliche Sicherheit</mat-option>
+            <mat-option value="OP_DATPRO">Vorläufige Daten</mat-option>
+            <mat-option value="REGI">Regionen und Städte</mat-option>
+            <mat-option value="SOCI">Bevölkerung und Gesellschaft</mat-option>
+            <mat-option value="TECH">Wissenschaft und Technologie</mat-option>
+            <mat-option value="TRAN">Verkehr</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="flex-space" style="padding-left: 10px;">
+          <mat-select placeholder="Standard mCLOUD-Kategorien" multiple [(ngModel)]="harvester.defaultmCLOUDCategory"
+                      name="defaultmCLOUDCategory">
+            <mat-option value="roads">Straßen</mat-option>
+            <mat-option value="climate">Klima und Wetter</mat-option>
+            <mat-option value="waters">Wasserstraßen und Gewässer</mat-option>
+            <mat-option value="railway">Bahn</mat-option>
+            <mat-option value="infrastructure">Infrastruktur</mat-option>
+            <mat-option value="aviation">Luft- und Raumfahrt</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <app-excel-harvester *ngIf="harvesterType.value === 'excel'" [model]="harvester" class="flex-column"></app-excel-harvester>
+
+      <app-ckan-harvester *ngIf="harvesterType.value === 'ckan'" [model]="harvester" class="flex-column"></app-ckan-harvester>
+
+      <app-csw-harvester *ngIf="harvesterType.value === 'csw'" [model]="harvester" class="flex-column"></app-csw-harvester>
+
+      <span class="mat-small">{{harvester | json}}</span>
+    </form>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Abbrechen</button>
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+  <div class="flex-space"></div>
+  <button mat-button color="primary" [mat-dialog-close]="harvester">Anlegen</button>
+</mat-dialog-actions>

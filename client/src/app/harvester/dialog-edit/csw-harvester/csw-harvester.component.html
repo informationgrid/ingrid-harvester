@@ -1,0 +1,18 @@
+<mat-form-field>
+  <input matInput placeholder="getRecords URL" [(ngModel)]="model.getRecordsUrl" name="getRecordsUrl">
+</mat-form-field>
+
+<mat-form-field>
+  <mat-select placeholder="HTTP Method" [(ngModel)]="model.httpMethod" name="httpMethod">
+    <mat-option value="get">GET</mat-option>
+    <mat-option value="post">POST</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field>
+  <input matInput placeholder="Default Attribution" [(ngModel)]="model.defaultAttribution" name="defaultAttribution">
+</mat-form-field>
+
+<mat-form-field>
+  <input matInput placeholder="Default Attribution Link" [(ngModel)]="model.defaultAttributionLink" name="defaultAttributionLink">
+</mat-form-field>

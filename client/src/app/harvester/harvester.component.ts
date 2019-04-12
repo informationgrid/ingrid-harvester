@@ -49,7 +49,19 @@ export class HarvesterComponent implements OnInit {
     });
   }
 
-  edit(id: string) {
+  edit(harvester: Harvester) {
+    const dialogRef = this.dialog.open(DialogEditComponent, {
+      data: harvester,
+      width: '900px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      // this.animal = result;
+    });
+  }
+
+  addHarvester() {
     const dialogRef = this.dialog.open(DialogEditComponent, {
       width: '900px'
     });

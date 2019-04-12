@@ -48,8 +48,15 @@
       <button mat-button (click)="startImport(harvester.id)"><mat-icon [inline]="true">import_export</mat-icon> Import starten</button>
       <button mat-button (click)="schedule(harvester.id)"><mat-icon [inline]="true">schedule</mat-icon> Planen</button>
       <div class="flex-space"></div>
-      <button mat-button color="primary" (click)="edit(harvester.id)"><mat-icon [inline]="true">edit</mat-icon> Bearbeiten</button>
+      <button mat-button color="primary" (click)="edit(harvester)"><mat-icon [inline]="true">edit</mat-icon> Bearbeiten</button>
     </mat-action-row>
 
   </mat-expansion-panel>
+
+  <button mat-fab
+          color="primary"
+          (click)="addHarvester()"
+          id="btnAddHarvester">
+    <mat-icon aria-label="Add Harvester">add</mat-icon>
+  </button>
 </div>

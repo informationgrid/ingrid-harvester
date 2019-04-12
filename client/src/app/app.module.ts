@@ -7,6 +7,8 @@ import {MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule} from "
 import {HarvesterModule} from "./harvester/harvester.module";
 import {registerLocaleData} from "@angular/common";
 import localeDe from '@angular/common/locales/de'
+import {ConfigModule} from "./config/config.module";
+import {HttpClientModule} from "@angular/common/http";
 
 
 registerLocaleData(localeDe);
@@ -18,11 +20,13 @@ registerLocaleData(localeDe);
   imports: [
     BrowserModule,
     NoopAnimationsModule,
+    HttpClientModule,
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
     MatIconModule,
-    HarvesterModule
+    HarvesterModule,
+    ConfigModule
   ],
   providers: [
     {

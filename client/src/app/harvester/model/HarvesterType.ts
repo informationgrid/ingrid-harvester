@@ -1,5 +1,5 @@
 export enum HarvesterType {
-  EXCEL = 'EXCEL',
-  CKAN = 'CKAN',
-  CSW = 'CSW'
+  EXCEL = 'excel',
+  CKAN = 'ckan',
+  CSW = 'csw'
 }
