@@ -1,10 +1,10 @@
-import {CswUtils} from './csw-utils';
+import {CswUtils} from "./csw-utils";
 import {CswMapper} from "./csw-mapper";
-import {Summary} from "../model/summary";
-import {Importer} from "../importer";
-import {CswParameters, RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {Summary} from "../../model/summary";
+import {Importer} from "../../importer";
+import {CswParameters, RequestConfig, RequestDelegate} from "../../utils/http-request-utils";
 
-export class MdiImporter implements Importer {
+export class WsvImporter implements Importer {
 
     private static readonly START_POSITION = 1;
     private static readonly MAX_RECORDS = 25;
@@ -14,9 +14,9 @@ export class MdiImporter implements Importer {
     constructor(settings) {
         let gmdEncoded = encodeURIComponent(CswMapper.GMD);
         settings.getRecordsUrlFor = function(uuid) {
-            return `${settings.getRecordByIdUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputSchema=${gmdEncoded}&Id=${uuid}`;
+            return `${settings.getRecordsUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputSchema=${gmdEncoded}&Id=${uuid}`;
         };
-        settings.getGetRecordsPostBody = MdiImporter._getGetRecordsXmlBody;
+        settings.getGetRecordsPostBody = WsvImporter._getGetRecordsXmlBody;
 
         let method: "GET" | "POST" = "GET";
         if (settings.httpMethod) {
@@ -31,8 +31,8 @@ export class MdiImporter implements Importer {
             resultType: "results",
             outputFormat: "application/xml",
             outputSchema: "http://www.isotc211.org/2005/gmd",
-            startPosition: MdiImporter.START_POSITION,
-            maxRecords: MdiImporter.MAX_RECORDS
+            startPosition: WsvImporter.START_POSITION,
+            maxRecords: WsvImporter.MAX_RECORDS
         };
 
         let requestConfig: RequestConfig = {
@@ -41,7 +41,7 @@ export class MdiImporter implements Importer {
             json: false,
             headers: RequestDelegate.cswRequestHeaders(),
             qs: parameters,
-            body: MdiImporter._getGetRecordsXmlBody()
+            body: WsvImporter._getGetRecordsXmlBody()
         };
         if (settings.proxy) {
             requestConfig.proxy = settings.proxy;
@@ -60,6 +60,7 @@ export class MdiImporter implements Importer {
 <GetRecords xmlns="http://www.opengis.net/cat/csw/2.0.2"
             xmlns:gmd="http://www.isotc211.org/2005/gmd"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:ogc="http://www.opengis.net/ogc"
             xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
 
             service="CSW"
@@ -67,10 +68,18 @@ export class MdiImporter implements Importer {
             resultType="results"
             outputFormat="application/xml"
             outputSchema="http://www.isotc211.org/2005/gmd"
-            startPosition="${MdiImporter.START_POSITION}"
-            maxRecords="${MdiImporter.MAX_RECORDS}">
+            startPosition="${WsvImporter.START_POSITION}"
+            maxRecords="${WsvImporter.MAX_RECORDS}">
     <Query typeNames="gmd:MD_Metadata">
         <ElementSetName typeNames="">full</ElementSetName>
+        <Constraint version="1.1.0">
+            <ogc:Filter>
+                <ogc:PropertyIsEqualTo>
+                    <ogc:PropertyName>subject</ogc:PropertyName>
+                    <ogc:Literal>opendata</ogc:Literal>
+                </ogc:PropertyIsEqualTo>
+            </ogc:Filter>
+        </Constraint>
     </Query>
 </GetRecords>`;
     }

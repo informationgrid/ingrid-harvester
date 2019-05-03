@@ -1,12 +1,12 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Agent, Distribution, GenericMapper, License, Organization, Person} from "../model/generic-mapper";
+import {Agent, Distribution, GenericMapper, License, Organization, Person} from "../../model/generic-mapper";
 import {SelectedValue} from "xpath";
 import {getLogger} from "log4js";
-import {UrlUtils} from "../utils/url-utils";
-import {Summary} from "../model/summary";
-import {RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {UrlUtils} from "../../utils/url-utils";
+import {Summary} from "../../model/summary";
+import {RequestConfig, RequestDelegate} from "../../utils/http-request-utils";
 
 let xpath = require('xpath');
 

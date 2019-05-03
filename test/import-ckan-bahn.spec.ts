@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
-import {CkanSettings, DeutscheBahnCkanImporter} from "../server/ckan/importer";
+import {CkanSettings, DeutscheBahnCkanImporter} from "../server/importer/ckan/importer";
 import * as sinon from "sinon";
 import {IndexDocument} from "../server/model/index-document";
 import {TestUtils} from "./utils/test-utils";

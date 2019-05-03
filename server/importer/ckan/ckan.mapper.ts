@@ -1,10 +1,10 @@
 /**
  * A mapper for CKAN documents.
  */
-import {GenericMapper, Organization, Person} from "../model/generic-mapper";
-import {UrlUtils} from "../utils/url-utils";
+import {GenericMapper, Organization, Person} from "../../model/generic-mapper";
+import {UrlUtils} from "../../utils/url-utils";
 import {getLogger} from "log4js";
-import {RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {RequestConfig, RequestDelegate} from "../../utils/http-request-utils";
 
 let markdown = require('markdown').markdown;
 

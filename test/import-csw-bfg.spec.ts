@@ -4,7 +4,7 @@ import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
 import {IndexDocument} from "../server/model/index-document";
 import {TestUtils} from "./utils/test-utils";
-import {BfgImporter} from "../server/csw/bfg-importer";
+import {BfgImporter} from "../server/importer/csw/bfg-importer";
 
 let log = getLogger();
 configure('./log4js.json');

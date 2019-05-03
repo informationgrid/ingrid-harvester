@@ -1,8 +1,8 @@
 import {CswMapper} from "./csw-mapper";
-import {Summary} from "../model/summary";
-import {Importer} from "../importer";
+import {Summary} from "../../model/summary";
+import {Importer} from "../../importer";
 import {BfgUtils} from "./bfg-types";
-import {CswParameters, RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {CswParameters, RequestConfig, RequestDelegate} from "../../utils/http-request-utils";
 
 export class BfgImporter implements Importer {
 

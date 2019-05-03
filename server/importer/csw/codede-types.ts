@@ -1,12 +1,48 @@
-import {Summary} from "../model/summary";
-import {Importer} from "../importer";
-import {DwdUtils} from "./dwd-utils";
+import {Summary} from "../../model/summary";
+import {Importer} from "../../importer";
 import {CswMapper} from "./csw-mapper";
-import {CswParameters, RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {CswParameters, RequestConfig, RequestDelegate} from "../../utils/http-request-utils";
+import {CswUtils} from "./csw-utils";
 
-export class DwdImporter implements Importer {
+export class CodeDeUtils extends CswUtils {
 
-    public dwdUtil: DwdUtils;
+    getMapper(settings, record, harvestTime, issuedTime, summary): CswMapper {
+        return new CodeDeMapper(settings, record, harvestTime, issuedTime, summary);
+    }
+}
+
+export class CodeDeMapper extends CswMapper {
+
+    private readonly mySettings: any;
+
+    constructor(settings, record, harvestTime, issued, summary) {
+        super(settings, record, harvestTime, issued, summary);
+        this.mySettings = settings;
+    }
+
+    getKeywords(mandatoryKws: string[] = ['opendata']): string[] {
+        return super.getKeywords([
+            'opendata',
+            'inspireidentifiziert'
+        ]);
+    }
+
+    getMetadataSource(): any {
+        let uuid = this.getUuid();
+        let cswLink = this.mySettings.getRecordsUrlFor(uuid);
+        let portalLink = `https://code-de.org/de/record/${uuid}`;
+
+        return {
+            raw_data_source: cswLink,
+            portal_link: portalLink,
+            attribution: this.mySettings.defaultAttribution
+        };
+    }
+}
+
+export class CodeDeImporter implements Importer {
+
+    public dwdUtil: CodeDeUtils;
 
     constructor(settings, overrideCswParameters?) {
         let gmdEncoded = encodeURIComponent(CswMapper.GMD);
@@ -51,10 +87,11 @@ export class DwdImporter implements Importer {
         }
 
         let requestDelegate: RequestDelegate = new RequestDelegate(requestConfig);
-        this.dwdUtil = new DwdUtils(settings, requestDelegate);
+        this.dwdUtil = new CodeDeUtils(settings, requestDelegate);
     }
 
     async run(): Promise<Summary> {
         return this.dwdUtil.run();
     }
 }
+

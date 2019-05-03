@@ -1,12 +1,12 @@
-import {ElasticSearchUtils} from "../utils/elastic-utils";
-import {elasticsearchSettings} from "../elastic.settings";
-import {elasticsearchMapping} from "../elastic.mapping";
+import {ElasticSearchUtils} from "../../utils/elastic-utils";
+import {elasticsearchSettings} from "../../elastic.settings";
+import {elasticsearchMapping} from "../../elastic.mapping";
 import {CkanToElasticsearchMapper} from "./ckan.mapper";
-import {IndexDocument} from "../model/index-document";
-import {Summary} from "../model/summary";
+import {IndexDocument} from "../../model/index-document";
+import {Summary} from "../../model/summary";
 import {getLogger} from "log4js";
-import {Importer} from "../importer";
-import {CkanParameters, RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {Importer} from "../../importer";
+import {CkanParameters, RequestConfig, RequestDelegate} from "../../utils/http-request-utils";
 
 let log = require( 'log4js' ).getLogger( __filename ),
     logSummary = getLogger('summary');

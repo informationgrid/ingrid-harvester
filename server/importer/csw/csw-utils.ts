@@ -1,11 +1,11 @@
-import {ElasticSearchUtils} from "../utils/elastic-utils";
-import {elasticsearchMapping} from "../elastic.mapping";
-import {elasticsearchSettings} from "../elastic.settings";
-import {IndexDocument} from "../model/index-document";
+import {ElasticSearchUtils} from "../../utils/elastic-utils";
+import {elasticsearchMapping} from "../../elastic.mapping";
+import {elasticsearchSettings} from "../../elastic.settings";
+import {IndexDocument} from "../../model/index-document";
 import {CswMapper} from "./csw-mapper";
-import {Summary} from "../model/summary";
+import {Summary} from "../../model/summary";
 import {getLogger} from "log4js";
-import {RequestDelegate} from "../utils/http-request-utils";
+import {RequestDelegate} from "../../utils/http-request-utils";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),

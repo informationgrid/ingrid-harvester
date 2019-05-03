@@ -1,6 +1,6 @@
 import {CswMapper} from "./csw-mapper";
 import {CswUtils} from "./csw-utils";
-import {UrlUtils} from "../utils/url-utils";
+import {UrlUtils} from "../../utils/url-utils";
 
 export class BfgMapper extends CswMapper {
 
