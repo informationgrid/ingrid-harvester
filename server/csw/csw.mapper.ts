@@ -1,12 +1,14 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Agent, Distribution, GenericMapper, License, Organization, Person} from "../model/generic-mapper";
+import {Agent, Distribution, GenericMapper, License, Organization, Person} from "../model/generic.mapper";
 import {SelectedValue} from "xpath";
 import {getLogger} from "log4js";
-import {UrlUtils} from "../utils/url-utils";
+import {UrlUtils} from "../utils/url.utils";
 import {Summary} from "../model/summary";
-import {RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {RequestDelegate} from "../utils/http-request.utils";
+import {CswSettings} from "./csw.importer";
+import {OptionsWithUri} from "request-promise";
 
 let xpath = require('xpath');
 
@@ -32,7 +34,7 @@ export class CswMapper extends GenericMapper {
     private readonly issued: string;
 
     protected readonly idInfo: SelectedValue;
-    private settings: any;
+    private settings: CswSettings;
     private readonly uuid: string;
     private summary: Summary;
 
@@ -342,12 +344,9 @@ export class CswMapper extends GenericMapper {
      * document is flagged to be skipped from the index. By default this array
      * contains just one entry 'opendata' i.e. if the ISO-XML document doesn't
      * have this keyword defined, then it will be skipped from the index.
-     *
-     * @param mandatoryKws array of mandatory keywords, at least one of which
-     * must be found in the ISO-XML document for it to be indexed
      */
-    getKeywords(mandatoryKws : string[] = ['opendata']): string[] {
-
+    getKeywords(): string[] {
+        let mandatoryKws = this.settings.mandatoryKeywords || ['opendata'];
         let keywords = this.fetched.keywords[mandatoryKws.join()];
         if (keywords) {
             return keywords;
@@ -425,7 +424,8 @@ export class CswMapper extends GenericMapper {
     }
 
     getMetadataSource(): any {
-        let cswLink = this.settings.getRecordsUrlFor(this.uuid);
+        let gmdEncoded = encodeURIComponent(CswMapper.GMD);
+        let cswLink = `${this.settings.getRecordsUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
         return {
             raw_data_source: cswLink,
             portal_link: this.settings.defaultAttributionLink,
@@ -775,8 +775,8 @@ export class CswMapper extends GenericMapper {
         return contactPoint; // TODO index all contacts
     }
 
-    getUrlCheckRequestConfig(uri: string): RequestConfig {
-        let config: RequestConfig = {
+    getUrlCheckRequestConfig(uri: string): OptionsWithUri {
+        let config: OptionsWithUri = {
             method: 'GET',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),

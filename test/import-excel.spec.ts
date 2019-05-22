@@ -1,9 +1,9 @@
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
-import {ExcelImporter, ExcelSettings} from "../server/excel/importer";
+import {ExcelImporter, ExcelSettings} from "../server/excel/excel.importer";
 import {configure, getLogger} from "log4js";
-import {IndexDocument} from "../server/model/index-document";
+import {IndexDocument} from "../server/model/index.document";
 import {TestUtils} from "./utils/test-utils";
 
 let log = getLogger();
