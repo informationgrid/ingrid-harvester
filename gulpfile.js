@@ -1,11 +1,18 @@
 const browserify = require('browserify');
 const gulp = require('gulp');
+const del = require('del');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const sourcemaps = require('gulp-sourcemaps');
 const tsify = require('tsify');
 
-gulp.task('default', () => {
+gulp.task('clean', function () {
+    return del([
+        'dist'
+    ]);
+});
+
+gulp.task('default', gulp.series('clean', () => {
 
     gulp.src(['./server/config.json', './log4js.json', './rpm/package.json'])
         .pipe(gulp.dest('./dist/'));
@@ -26,4 +33,4 @@ gulp.task('default', () => {
         // .pipe(sourcemaps.init({loadMaps: true}))
         // .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest("dist"));
-});
+}));
