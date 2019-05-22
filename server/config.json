@@ -29,6 +29,7 @@
     "alias": "mcloud",
     "getRecordsUrl": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup",
     "httpMethod": "POST",
+    "recordFilter": "<ogc:Filter> <ogc:PropertyIsEqualTo> <ogc:PropertyName>subject</ogc:PropertyName> <ogc:Literal>opendata</ogc:Literal> </ogc:PropertyIsEqualTo> </ogc:Filter>",
     "proxy": null,
     "defaultMcloudSubgroup": "waters",
     "defaultDCATCategory": "TRAN",

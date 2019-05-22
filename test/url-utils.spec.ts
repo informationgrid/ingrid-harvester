@@ -1,6 +1,7 @@
 import {UrlUtils} from "../server/utils/url-utils";
 import {expect} from "chai";
-import {RequestConfig, RequestDelegate} from "../server/utils/http-request-utils";
+import {RequestDelegate} from "../server/utils/http-request-utils";
+import {OptionsWithUri} from "request-promise";
 
 describe('validateUrl()', function () {
 
@@ -68,7 +69,7 @@ describe('validateUrl()', function () {
     });
 });
 
-function getRequestConfigFor(uri): RequestConfig {
+function getRequestConfigFor(uri): OptionsWithUri {
     return {
         method: 'GET',
         json: false,

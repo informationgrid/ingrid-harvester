@@ -5,16 +5,22 @@ import {IndexDocument} from "../model/index-document";
 import {CswMapper} from "./csw-mapper";
 import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
-import {RequestDelegate} from "../utils/http-request-utils";
+import {CswParameters, RequestDelegate} from "../utils/http-request-utils";
+import {OptionsWithUri} from "request-promise";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
     logRequest = getLogger('requests'),
     DomParser = require('xmldom').DOMParser;
 
+export type CswSettings = {
+    importer, elasticSearchUrl, index, indexType, alias, getRecordsUrl, mandatoryKeywords: string[], httpMethod, proxy?,
+    defaultMcloudSubgroup, defaultDCATCategory, defaultAttribution, defaultAttributionLink, includeTimestamp, dryRun?,
+    maxRecords: number, startPosition: number, recordFilter: string
+}
 
 export class CswUtils {
-    private readonly settings: any;
+    private readonly settings: CswSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
     private summary: Summary = {
@@ -40,7 +46,7 @@ export class CswUtils {
             logSummary.info(`Number of records imported as valid: ${this.summary.ok}`);
             logSummary.info(`App-Errors: ${this.summary.appErrors.length}`);
             if (this.summary.appErrors.length > 0) {
-                logSummary.info(`\t${this.summary.appErrors.map( e => e + '\n\t')}`);
+                logSummary.info(`\t${this.summary.appErrors.map(e => e + '\n\t')}`);
             }
         }
     };
@@ -112,7 +118,7 @@ export class CswUtils {
         let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
         let records = xml.getElementsByTagNameNS(CswMapper.GMD, 'MD_Metadata');
         let ids = [];
-        for (let i=0; i<records.length; i++)  {
+        for (let i = 0; i < records.length; i++) {
             ids.push(CswMapper.getCharacterStringContent(records[i], 'fileIdentifier'));
         }
 
@@ -123,7 +129,7 @@ export class CswUtils {
         } else {
             issued = this.elastic.getIssuedDates(ids);
         }
-        for(let i=0; i<records.length; i++) {
+        for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
 
             if (logRequest.isDebugEnabled()) {
@@ -132,7 +138,7 @@ export class CswUtils {
 
             const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');
             let mapper = this.getMapper(this.settings, records[i], harvestTime, issued[i], this.summary);
-            let doc: any = await IndexDocument.create(mapper).catch( e => {
+            let doc: any = await IndexDocument.create(mapper).catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
@@ -161,4 +167,65 @@ export class CswUtils {
         }
     }
 
+    static createRequestConfig(settings: CswSettings): OptionsWithUri {
+        let requestConfig: OptionsWithUri = {
+            method: settings.httpMethod || "GET",
+            uri: settings.getRecordsUrl,
+            json: false,
+            headers: RequestDelegate.cswRequestHeaders(),
+            proxy: settings.proxy || null
+        };
+
+        if (settings.httpMethod === "POST") {
+            requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
+            <GetRecords xmlns="http://www.opengis.net/cat/csw/2.0.2"
+                        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xmlns:ogc="http://www.opengis.net/ogc"
+                        xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
+            
+                        service="CSW"
+                        version="2.0.2"
+                        resultType="results"
+                        outputFormat="application/xml"
+                        outputSchema="http://www.isotc211.org/2005/gmd"
+                        startPosition="${settings.startPosition || 1}"
+                        maxRecords="${settings.maxRecords || 25}">
+                <Query typeNames="gmd:MD_Metadata">
+                    <ElementSetName typeNames="">full</ElementSetName>
+                    ${settings.recordFilter ? `
+                    <Constraint version=\"1.1.0\">
+                        ${settings.recordFilter}
+                    </Constraint>` : ''}
+                </Query>
+            </GetRecords>`
+
+        } else {
+            requestConfig.qs = <CswParameters>{
+                request: 'GetRecords',
+                SERVICE: 'CSW',
+                VERSION: '2.0.2',
+                resultType: 'results',
+                outputFormat: 'application/xml',
+                outputSchema: 'http://www.isotc211.org/2005/gmd',
+                typeNames: 'gmd:MD_Metadata',
+                CONSTRAINTLANGUAGE: 'FILTER',
+                startPosition: settings.startPosition || 1,
+                maxRecords: settings.maxRecords || 25,
+                CONSTRAINT_LANGUAGE_VERSION: '1.1.0',
+                elementSetName: 'full',
+                constraint: settings.recordFilter
+            };
+        }
+
+        return requestConfig;
+    }
+
+    static createPaging(settings: CswSettings) {
+        return {
+            startFieldName: 'startPosition',
+            startPosition: settings.startPosition || 1,
+            numRecords: settings.maxRecords || 25
+        }
+    }
 }

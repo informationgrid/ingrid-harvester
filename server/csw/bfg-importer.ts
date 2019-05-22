@@ -1,56 +1,17 @@
-import {CswMapper} from "./csw-mapper";
 import {Summary} from "../model/summary";
 import {Importer} from "../importer";
 import {BfgUtils} from "./bfg-types";
-import {CswParameters, RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {RequestDelegate} from "../utils/http-request-utils";
+import {CswUtils} from "./csw-utils";
 
 export class BfgImporter implements Importer {
 
     bfgUtil: BfgUtils;
 
-    constructor(settings, overrideCswParameters?) {
-        let gmdEncoded = encodeURIComponent(CswMapper.GMD);
-        settings.getRecordsUrlFor = function (uuid) {
-            return `${settings.getRecordsUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputSchema=${gmdEncoded}&Id=${uuid}`;
-        };
+    constructor(settings) {
+        let requestConfig = CswUtils.createRequestConfig(settings);
 
-        let method: "GET" | "POST" = "GET";
-        if (settings.httpMethod) {
-            method = settings.httpMethod;
-        }
-
-        let parameters: CswParameters = {
-            request: "GetRecords",
-            SERVICE: "CSW",
-            VERSION: "2.0.2",
-            elementSetName: "full",
-            resultType: "results",
-            outputFormat: "application/xml",
-            outputSchema: "http://www.isotc211.org/2005/gmd",
-            typeNames: 'gmd:MD_Metadata',
-            CONSTRAINTLANGUAGE: 'FILTER',
-            CONSTRAINT_LANGUAGE_VERSION: '1.1.0',
-            startPosition: 1,
-            maxRecords: 25,
-            constraint: settings.recordFilter
-        };
-
-        if (overrideCswParameters) {
-            parameters = {...parameters, ...overrideCswParameters};
-        }
-
-        let requestConfig: RequestConfig = {
-            method: method,
-            uri: settings.getRecordsUrl,
-            json: false,
-            headers: RequestDelegate.cswRequestHeaders(),
-            qs: parameters
-        };
-        if (settings.proxy) {
-            requestConfig.proxy = settings.proxy;
-        }
-
-        let requestDelegate: RequestDelegate = new RequestDelegate(requestConfig);
+        let requestDelegate: RequestDelegate = new RequestDelegate(requestConfig, CswUtils.createPaging(settings));
         this.bfgUtil = new BfgUtils(settings, requestDelegate);
     }
 

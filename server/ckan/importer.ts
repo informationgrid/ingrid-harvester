@@ -65,7 +65,11 @@ export class DeutscheBahnCkanImporter implements Importer {
         if (settings.proxy) {
             requestConfig.proxy = settings.proxy;
         }
-        this.requestDelegate = new RequestDelegate(requestConfig);
+        this.requestDelegate = new RequestDelegate(requestConfig, {
+            startFieldName: 'startPosition',
+            startPosition: 0,
+            numRecords: 100
+        });
     }
 
     /**

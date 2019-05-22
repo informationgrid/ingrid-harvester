@@ -7,6 +7,7 @@ import {getLogger} from "log4js";
 import {UrlUtils} from "../utils/url-utils";
 import {Summary} from "../model/summary";
 import {RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {CswSettings} from "./csw-utils";
 
 let xpath = require('xpath');
 
@@ -32,7 +33,7 @@ export class CswMapper extends GenericMapper {
     private readonly issued: string;
 
     protected readonly idInfo: SelectedValue;
-    private settings: any;
+    private settings: CswSettings;
     private readonly uuid: string;
     private summary: Summary;
 
@@ -344,7 +345,7 @@ export class CswMapper extends GenericMapper {
      * have this keyword defined, then it will be skipped from the index.
      */
     getKeywords(): string[] {
-        let mandatoryKws = this.settings.mandatoryKeywords ? this.settings.mandatoryKeywords : ['opendata'];
+        let mandatoryKws = this.settings.mandatoryKeywords || ['opendata'];
         let keywords = this.fetched.keywords[mandatoryKws.join()];
         if (keywords) {
             return keywords;
@@ -422,7 +423,8 @@ export class CswMapper extends GenericMapper {
     }
 
     getMetadataSource(): any {
-        let cswLink = this.settings.getRecordsUrlFor(this.uuid);
+        let gmdEncoded = encodeURIComponent(CswMapper.GMD);
+        let cswLink = `${this.settings.getRecordsUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
         return {
             raw_data_source: cswLink,
             portal_link: this.settings.defaultAttributionLink,

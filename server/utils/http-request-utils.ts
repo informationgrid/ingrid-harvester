@@ -1,4 +1,5 @@
 import {getLogger} from "log4js";
+import {OptionsWithUri} from "request-promise";
 
 let request = require('request-promise');
 let DomParser = require('xmldom').DOMParser;
@@ -12,16 +13,18 @@ export interface RequestHeaders {
     readonly 'Content-Type'?: string
 }
 
+export type HttpMethodType = "GET" | "POST";
+
 /**
  * Configuration to be used for HTTP requests. This configuration will be used
  * as-is with the request library, so the object keys are the same as those
  * used by this library.
  */
 export interface RequestConfig {
-    readonly method: 'GET' | 'POST',
+    readonly method: HttpMethodType,
     readonly json: boolean,
     readonly headers: RequestHeaders
-    readonly qs: RequestParameters,
+    readonly qs?: RequestParameters,
 
     uri: string,
     body?: string,
@@ -62,31 +65,39 @@ export interface CkanParameters {
 
 type RequestParameters = CswParameters | CkanParameters;
 
+export interface RequestPaging {
+    // the query parameter to be used for setting the start record
+    startFieldName: string;
+
+    // the position to start to fetch the new records
+    startPosition: number;
+
+    // the number of records to fetch
+    numRecords: number;
+
+}
+
 /**
  * Delegate class for handling HTTP-requests.
  */
 export class RequestDelegate {
-    private readonly config: RequestConfig;
-    private readonly maxRecordCount;
+    private readonly config: OptionsWithUri;
     private readonly postBodyXml: any;
+    private paging: RequestPaging;
 
     /**
      * Create a delegate object for handling HTTP requests
      *
      * @param config configuration to use for the HTTP requests
+     * @param paging
      */
-    constructor(config: RequestConfig) {
+    constructor(config: OptionsWithUri, paging?: RequestPaging) {
         this.config = config;
         if (config.body) {
             this.postBodyXml = new DomParser().parseFromString(config.body, 'application/xml');
         }
 
-        let parameters: RequestParameters = config.qs;
-        if (parameters.hasOwnProperty('maxRecords')) {
-            this.maxRecordCount = (<CswParameters>parameters).maxRecords;
-        } else if (parameters.hasOwnProperty('rows')) {
-            this.maxRecordCount = (<CkanParameters>parameters).rows;
-        }
+        this.paging = paging;
     }
 
     /**
@@ -120,30 +131,25 @@ export class RequestDelegate {
      * @return the starting index for the next batch of records to be harvested
      */
     getStartRecordIndex(): number {
-        let parameters: RequestParameters = this.config.qs;
-        if (parameters.hasOwnProperty('startPosition')) {
-            return (<CswParameters>parameters).startPosition;
-        }
+        return this.paging.startPosition;
     }
 
     /**
      * Increments the starting index for the next batch of records to fetch from
      * the upstream server. If the request is a CSW request and consists of an
-     * XML body, the starting index will be updated in both the GET parameters
-     * and the XML body.
+     * XML body, the starting index will be updated in the GET parameters
+     * or the XML body.
      */
     incrementStartRecordIndex(): void {
-        let parameters: RequestParameters = this.config.qs;
+        this.paging.startPosition += this.paging.numRecords;
 
-        if (parameters.hasOwnProperty('startPosition')) {
-            let updated = this.maxRecordCount + (<CswParameters>parameters).startPosition;
-            (<CswParameters>parameters).startPosition = updated;
-            if (this.postBodyXml) {
-                this.postBodyXml.documentElement.setAttribute('startPosition', updated);
-                this.config.body = this.postBodyXml.toString();
-            }
-        } else if (parameters.hasOwnProperty('start')) {
-            (<CkanParameters>parameters).start += this.maxRecordCount;
+        if (this.postBodyXml) {
+            // update body element
+            this.postBodyXml.documentElement.setAttribute(this.paging.startFieldName, this.paging.startPosition);
+            this.config.body = this.postBodyXml.toString();
+        } else {
+            // update query parameter
+            this.config.qs[this.paging.startFieldName] = this.paging.startPosition;
         }
     }
 
@@ -157,7 +163,6 @@ export class RequestDelegate {
     async doRequest(callback?: (error: any, response: any) => boolean): Promise<any> {
 
         logRequest.debug('Requesting: ' + this.config.uri);
-
         if (callback) {
             return request(this.config, callback);
         } else {
