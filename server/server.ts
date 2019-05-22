@@ -7,8 +7,8 @@ import {MdiImporter} from "./csw/mdi-importer";
 import {configure, getLogger} from 'log4js';
 import {Summary} from "./model/summary";
 import * as fs from "fs";
-import {BshImporter} from "./csw/bsh-types";
-import {CodeDeImporter} from "./csw/codede-types";
+import {BshImporter} from "./csw/bsh-importer";
+import {CodeDeImporter} from "./csw/codede-importer";
 
 let config = require( './config.json' ),
     process = require('process'),

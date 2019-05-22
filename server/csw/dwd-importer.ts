@@ -1,12 +1,12 @@
 import {Summary} from "../model/summary";
 import {Importer} from "../importer";
-import {DwdUtils} from "./dwd-utils";
 import {CswMapper} from "./csw-mapper";
 import {CswParameters, RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {CswUtils} from "./csw-utils";
 
 export class DwdImporter implements Importer {
 
-    public dwdUtil: DwdUtils;
+    public cswUtil: CswUtils;
 
     constructor(settings, overrideCswParameters?) {
         let gmdEncoded = encodeURIComponent(CswMapper.GMD);
@@ -32,7 +32,7 @@ export class DwdImporter implements Importer {
             maxRecords: 25,
             CONSTRAINT_LANGUAGE_VERSION: '1.1.0',
             elementSetName: 'full',
-            constraint: '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>'
+            constraint: settings.recordFilter
         };
 
         if (overrideCswParameters) {
@@ -51,10 +51,10 @@ export class DwdImporter implements Importer {
         }
 
         let requestDelegate: RequestDelegate = new RequestDelegate(requestConfig);
-        this.dwdUtil = new DwdUtils(settings, requestDelegate);
+        this.cswUtil = new CswUtils(settings, requestDelegate);
     }
 
     async run(): Promise<Summary> {
-        return this.dwdUtil.run();
+        return this.cswUtil.run();
     }
 }

@@ -59,6 +59,7 @@
     "indexType": "base",
     "alias": "mcloud",
     "getRecordsUrl": "https://geoportal.bafg.de/soapServices/CSWStartup",
+    "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>opendata</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
     "proxy": null,
     "defaultMcloudSubgroup": "waters",
     "defaultDCATCategory": "ENVI",
@@ -73,6 +74,11 @@
     "indexType": "base",
     "alias": "mcloud",
     "getRecordsUrl": "https://cdc.dwd.de/catalogue/srv/en/csw",
+    "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
+    "mandatoryKeywords": [
+      "opendata",
+      "inspireidentifiziert"
+    ],
     "proxy": null,
     "defaultMcloudSubgroup": "climate",
     "defaultDCATCategory": "ENVI",
@@ -87,6 +93,8 @@
     "indexType": "base",
     "alias": "mcloud",
     "getRecordsUrl": "https://catalog.code-de.org/discovery/srv/en/csw",
+    "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>opendata</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
+    "mandatoryKeywords": [],
     "proxy": null,
     "defaultMcloudSubgroup": "aviation",
     "defaultDCATCategory": "TECH",
@@ -101,6 +109,10 @@
     "indexType": "base",
     "alias": "mcloud",
     "getRecordsUrl": "https://www.geoseaportal.de/soapServices/CSWStartup",
+    "mandatoryKeywords": [
+      "opendata",
+      "inspireidentifiziert"
+    ],
     "httpMethod": "POST",
     "proxy": null,
     "defaultMcloudSubgroup": "waters",

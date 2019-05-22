@@ -342,12 +342,9 @@ export class CswMapper extends GenericMapper {
      * document is flagged to be skipped from the index. By default this array
      * contains just one entry 'opendata' i.e. if the ISO-XML document doesn't
      * have this keyword defined, then it will be skipped from the index.
-     *
-     * @param mandatoryKws array of mandatory keywords, at least one of which
-     * must be found in the ISO-XML document for it to be indexed
      */
-    getKeywords(mandatoryKws : string[] = ['opendata']): string[] {
-
+    getKeywords(): string[] {
+        let mandatoryKws = this.settings.mandatoryKeywords ? this.settings.mandatoryKeywords : ['opendata'];
         let keywords = this.fetched.keywords[mandatoryKws.join()];
         if (keywords) {
             return keywords;

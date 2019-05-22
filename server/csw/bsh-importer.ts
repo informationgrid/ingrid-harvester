@@ -4,32 +4,11 @@ import {Importer} from "../importer";
 import {Summary} from "../model/summary";
 import {CswParameters, RequestConfig, RequestDelegate} from "../utils/http-request-utils";
 
-export class BshMapper extends CswMapper {
-
-    constructor(settings, record, harvestTime, issued, summary) {
-        super(settings, record, harvestTime, issued, summary);
-    }
-
-    getKeywords(mandatoryKws: string[] = ['opendata']): string[] {
-        return super.getKeywords([
-            'opendata',
-            'inspireidentifiziert'
-        ]);
-    }
-}
-
-export class BshUtils extends CswUtils {
-
-    getMapper(settings, record, harvestTime, issuedTime, summary): CswMapper {
-        return new BshMapper(settings, record, harvestTime, issuedTime, summary);
-    }
-}
-
 export class BshImporter implements Importer {
     private static readonly START_POSITION = 1;
     private static readonly MAX_RECORDS = 25;
 
-    private readonly bshUtils: BshUtils;
+    private readonly cswUtil: CswUtils;
 
     constructor(settings) {
         let gmdEncoded = encodeURIComponent(CswMapper.GMD);
@@ -69,11 +48,11 @@ export class BshImporter implements Importer {
         }
 
         let requestDelegate: RequestDelegate = new RequestDelegate(requestConfig);
-        this.bshUtils = new BshUtils(settings, requestDelegate);
+        this.cswUtil = new CswUtils(settings, requestDelegate);
     }
 
     async run(): Promise<Summary> {
-        return this.bshUtils.run();
+        return this.cswUtil.run();
     }
 
     private static _getGetRecordsXmlBody() {
