@@ -1,10 +1,12 @@
 /**
  * A mapper for CKAN documents.
  */
-import {GenericMapper, Organization, Person} from "../model/generic-mapper";
-import {UrlUtils} from "../utils/url-utils";
+import {GenericMapper, Organization, Person} from "../model/generic.mapper";
+import {UrlUtils} from "../utils/url.utils";
 import {getLogger} from "log4js";
-import {RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {CkanParameters, RequestDelegate, RequestPaging} from "../utils/http-request.utils";
+import {OptionsWithUri} from "request-promise";
+import {CkanSettings} from "./ckan.importer";
 
 let markdown = require('markdown').markdown;
 
@@ -59,7 +61,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         let distributions = [];
         let resources = this.data.resources;
         if (resources !== null) {
-            for(let i=0; i<resources.length; i++) {
+            for (let i = 0; i < resources.length; i++) {
                 let res = resources[i];
 
                 let requestConfig = this.getUrlCheckRequestConfig(res.url);
@@ -183,7 +185,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
 
     getThemes() {
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
-        return this.settings.defaultDCATCategory ? [ GenericMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory] : undefined;
+        return this.settings.defaultDCATCategory ? [GenericMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory] : undefined;
     }
 
     getTitle() {
@@ -228,19 +230,19 @@ export class CkanToElasticsearchMapper extends GenericMapper {
                 let res = resources[i];
                 // let accessURL = await UrlUtils.urlWithProtocolFor(res.url);
                 // if (accessURL) {
-                    let created = res.created;
-                    let modified = res.modified;
+                let created = res.created;
+                let modified = res.modified;
 
-                    if (created) created = new Date(Date.parse(created));
-                    if (modified) modified = new Date(Date.parse(modified));
+                if (created) created = new Date(Date.parse(created));
+                if (modified) modified = new Date(Date.parse(modified));
 
-                    if (created && modified) {
-                        dates.push(Math.max(created, modified));
-                    } else if (modified) {
-                        dates.push(modified);
-                    } else if (created) {
-                        dates.push(created);
-                    }
+                if (created && modified) {
+                    dates.push(Math.max(created, modified));
+                } else if (modified) {
+                    dates.push(modified);
+                } else if (created) {
+                    dates.push(created);
+                }
                 // }
             }
         }
@@ -324,8 +326,8 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         };
     }
 
-    getUrlCheckRequestConfig(uri: string): RequestConfig {
-        let config: RequestConfig = {
+    getUrlCheckRequestConfig(uri: string): OptionsWithUri {
+        let config: OptionsWithUri = {
             method: 'GET',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),
@@ -339,4 +341,31 @@ export class CkanToElasticsearchMapper extends GenericMapper {
 
         return config;
     }
+
+    static createRequestConfig(settings: CkanSettings): OptionsWithUri {
+
+        return {
+            method: 'GET',
+            uri: settings.ckanBaseUrl + "/api/3/action/package_search", // See http://docs.ckan.org/en/ckan-2.7.3/api/
+            json: true,
+            headers: RequestDelegate.defaultRequestHeaders(),
+            proxy: settings.proxy || null,
+            qs: <CkanParameters>{
+                sort: "id asc",
+                start: 0,
+                rows: 100
+            }
+        };
+
+    }
+
+    static createPaging(settings: CkanSettings): RequestPaging {
+        return {
+            startFieldName: 'start',
+            startPosition: settings.startPosition || 0,
+            numRecords: settings.maxRecords || 100
+        };
+    }
+
 }
+

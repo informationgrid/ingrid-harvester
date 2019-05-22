@@ -1,6 +1,6 @@
 'use strict';
 
-import {RequestDelegate} from "./http-request-utils";
+import {RequestDelegate} from "./http-request.utils";
 import {OptionsWithUri} from "request-promise";
 
 let log = require('log4js').getLogger( __filename );

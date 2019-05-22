@@ -1,11 +1,11 @@
-import {ElasticSearchUtils} from "../utils/elastic-utils";
+import {ElasticSearchUtils} from "../utils/elastic.utils";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {elasticsearchSettings} from "../elastic.settings";
-import {IndexDocument} from "../model/index-document";
-import {CswMapper} from "./csw-mapper";
+import {IndexDocument} from "../model/index.document";
+import {CswMapper} from "./csw.mapper";
 import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
-import {CswParameters, RequestDelegate} from "../utils/http-request-utils";
+import {CswParameters, RequestDelegate} from "../utils/http-request.utils";
 import {OptionsWithUri} from "request-promise";
 
 let log = require('log4js').getLogger(__filename),
@@ -19,7 +19,7 @@ export type CswSettings = {
     maxRecords: number, startPosition: number, recordFilter: string
 }
 
-export class CswUtils {
+export class CswImporter {
     private readonly settings: CswSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;

@@ -1,14 +1,14 @@
-import {ExcelImporter} from './excel/importer';
-import {DeutscheBahnCkanImporter} from "./ckan/importer";
-import {WsvImporter} from "./csw/wsv-importer";
-import {DwdImporter} from "./csw/dwd-importer";
-import {BfgImporter} from "./csw/bfg-importer";
-import {MdiImporter} from "./csw/mdi-importer";
+import {ExcelImporter} from './excel/excel.importer';
+import {DeutscheBahnCkanImporter} from "./ckan/ckan.importer";
+import {WsvImporter} from "./csw/wsv.importer";
+import {DwdImporter} from "./csw/dwd.importer";
+import {BfgImporter} from "./csw/bfg.importer";
+import {MdiImporter} from "./csw/mdi.importer";
 import {configure, getLogger} from 'log4js';
 import {Summary} from "./model/summary";
 import * as fs from "fs";
-import {BshImporter} from "./csw/bsh-importer";
-import {CodeDeImporter} from "./csw/codede-importer";
+import {BshImporter} from "./csw/bsh.importer";
+import {CodedeImporter} from "./csw/codede.importer";
 
 let config = require( './config.json' ),
     process = require('process'),
@@ -37,7 +37,7 @@ let runAsync = false;
 // listen for incoming messages, which can be "import" with parameter <type>
 
 function getImporter(settings) {
-    const type = settings.importer;
+    const type = settings.excel;
     if (type === 'CKAN-DB') return new DeutscheBahnCkanImporter(settings);
     if (type === 'EXCEL') return new ExcelImporter(settings);
     if (type === 'WSV-CSW') return new WsvImporter(settings);
@@ -45,7 +45,7 @@ function getImporter(settings) {
     if (type === 'BFG-CSW') return new BfgImporter(settings);
     if (type === 'MDI-CSW') return new MdiImporter(settings);
     if (type === 'BSH-CSW') return new BshImporter(settings);
-    if (type === 'CODEDE-CSW') return new CodeDeImporter(settings);
+    if (type === 'CODEDE-CSW') return new CodedeImporter(settings);
 }
 
 function getDateString() {
@@ -80,7 +80,7 @@ async function startProcess() {
 
         let importer = getImporter( settings );
         if (!importer) {
-            log.error( 'Importer not defined for: ' + settings.importer );
+            log.error( 'Importer not defined for: ' + settings.excel );
             return;
         }
         log.info("Starting import ...");
@@ -91,7 +91,7 @@ async function startProcess() {
                 summaries.push(await importer.run());
             }
         } catch (e) {
-            console.error(`Importer ${settings.importer} failed: `, e);
+            console.error(`Importer ${settings.excel} failed: `, e);
         }
     }
 

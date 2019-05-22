@@ -1,6 +1,6 @@
-import {UrlUtils} from "../server/utils/url-utils";
+import {UrlUtils} from "../server/utils/url.utils";
 import {expect} from "chai";
-import {RequestDelegate} from "../server/utils/http-request-utils";
+import {RequestDelegate} from "../server/utils/http-request.utils";
 import {OptionsWithUri} from "request-promise";
 
 describe('validateUrl()', function () {

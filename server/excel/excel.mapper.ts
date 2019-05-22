@@ -1,8 +1,9 @@
-import {UrlUtils} from "../utils/url-utils";
-import {Distribution, GenericMapper, License, Organization, Person} from "../model/generic-mapper";
+import {UrlUtils} from "../utils/url.utils";
+import {Distribution, GenericMapper, License, Organization, Person} from "../model/generic.mapper";
 import {Summary} from "../model/summary";
-import {ExcelSettings} from "./importer";
-import {RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {ExcelSettings} from "./excel.importer";
+import {RequestDelegate} from "../utils/http-request.utils";
+import {OptionsWithUri} from "request-promise";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -309,8 +310,8 @@ export class ExcelMapper extends GenericMapper {
 
     }
 
-    getUrlCheckRequestConfig(uri: string): RequestConfig {
-        let config: RequestConfig = {
+    getUrlCheckRequestConfig(uri: string): OptionsWithUri {
+        let config: OptionsWithUri = {
             method: 'GET',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),

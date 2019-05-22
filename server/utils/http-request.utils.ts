@@ -1,35 +1,10 @@
 import {getLogger} from "log4js";
 import {OptionsWithUri} from "request-promise";
+import {Headers} from "request";
 
 let request = require('request-promise');
 let DomParser = require('xmldom').DOMParser;
 let logRequest = getLogger('requests');
-
-/**
- * HTTP-Headers to set for outgoing HTTP requests.
- */
-export interface RequestHeaders {
-    readonly 'User-Agent': 'mCLOUD Harvester. Request-Promise',
-    readonly 'Content-Type'?: string
-}
-
-export type HttpMethodType = "GET" | "POST";
-
-/**
- * Configuration to be used for HTTP requests. This configuration will be used
- * as-is with the request library, so the object keys are the same as those
- * used by this library.
- */
-export interface RequestConfig {
-    readonly method: HttpMethodType,
-    readonly json: boolean,
-    readonly headers: RequestHeaders
-    readonly qs?: RequestParameters,
-
-    uri: string,
-    body?: string,
-    proxy?: string
-}
 
 /**
  * HTTP parameters configuration for CSW harvesters.
@@ -62,8 +37,6 @@ export interface CkanParameters {
     start?: number,
     rows?: number
 }
-
-type RequestParameters = CswParameters | CkanParameters;
 
 export interface RequestPaging {
     // the query parameter to be used for setting the start record
@@ -105,7 +78,7 @@ export class RequestDelegate {
      * The headers only consist of the User-Agent set to a value of:
      * "mCLOUD Harvester. Request-Promise"
      */
-    static defaultRequestHeaders(): RequestHeaders {
+    static defaultRequestHeaders(): Headers {
         return {
             "User-Agent": "mCLOUD Harvester. Request-Promise"
         };
@@ -117,7 +90,7 @@ export class RequestDelegate {
      * - User-Agent: mCLOUD Harvester. Request-Promise
      * - Content-Type: text/xml
      */
-    static cswRequestHeaders(): RequestHeaders {
+    static cswRequestHeaders(): Headers {
         return {
             'User-Agent': 'mCLOUD Harvester. Request-Promise',
             'Content-Type': 'text/xml'

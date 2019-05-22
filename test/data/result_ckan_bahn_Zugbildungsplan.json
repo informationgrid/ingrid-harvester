@@ -71,6 +71,26 @@
       "issued": "2019-02-13T13:01:35.334119",
       "modified": null,
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - B2 Korrektur"
+    },
+    {
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR Sm_Endstück_Open Data.pdf",
+      "byteSize": null,
+      "description": "Endstück Sommerfahrplan 2019 - Gültigkeit: 09.06.2019 – 14.12.2019 (Stand: 8.3.2019)",
+      "format": "PDF",
+      "id": "448aa7b4-7a18-4341-a5b7-a7a64bafcc95",
+      "issued": "2019-03-15T09:33:33.724732",
+      "modified": null,
+      "title": "Zugbildungsplan A -Reihung- (ZpAR) - Sm"
+    },
+    {
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR Sm_B1.pdf",
+      "byteSize": null,
+      "description": "Endstück Sommerfahrplan 2019 B1 - Gültigkeit: 09.06.2019 – 14.12.2019 (Stand: 26.4.2019)",
+      "format": "PDF",
+      "id": "05e9d7ae-66c2-49b8-b242-222575264667",
+      "issued": "2019-04-26T13:29:28.792512",
+      "modified": null,
+      "title": "Zugbildungsplan A -Reihung- (ZpAR) - Sm B1"
     }
   ],
   "extras": {

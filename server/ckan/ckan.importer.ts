@@ -1,19 +1,19 @@
-import {ElasticSearchUtils} from "../utils/elastic-utils";
+import {ElasticSearchUtils} from "../utils/elastic.utils";
 import {elasticsearchSettings} from "../elastic.settings";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {CkanToElasticsearchMapper} from "./ckan.mapper";
-import {IndexDocument} from "../model/index-document";
+import {IndexDocument} from "../model/index.document";
 import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
 import {Importer} from "../importer";
-import {CkanParameters, RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {RequestDelegate} from "../utils/http-request.utils";
 
 let log = require( 'log4js' ).getLogger( __filename ),
     logSummary = getLogger('summary');
 
 export type CkanSettings = {
     importer, elasticSearchUrl, proxy, index, indexType, alias, ckanBaseUrl, includeTimestamp, dryRun, currentIndexName,
-    defaultMcloudSubgroup, defaultDCATCategory
+    defaultMcloudSubgroup, defaultDCATCategory, maxRecords?: number, startPosition?: number
 };
 
 export class DeutscheBahnCkanImporter implements Importer {
@@ -26,7 +26,7 @@ export class DeutscheBahnCkanImporter implements Importer {
         numErrors: 0,
         print: () => {
             logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.importer}`);
+            logSummary.info(`Summary of: ${this.settings.excel}`);
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);
@@ -50,26 +50,9 @@ export class DeutscheBahnCkanImporter implements Importer {
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
 
-        let parameters: CkanParameters = {
-            sort: "id asc",
-            start: 0,
-            rows: 100
-        };
-        let requestConfig: RequestConfig = {
-            method: 'GET',
-            uri: settings.ckanBaseUrl + "/api/3/action/package_search", // See http://docs.ckan.org/en/ckan-2.7.3/api/
-            json: true,
-            headers: RequestDelegate.defaultRequestHeaders(),
-            qs: parameters
-        };
-        if (settings.proxy) {
-            requestConfig.proxy = settings.proxy;
-        }
-        this.requestDelegate = new RequestDelegate(requestConfig, {
-            startFieldName: 'startPosition',
-            startPosition: 0,
-            numRecords: 100
-        });
+        let requestConfig = CkanToElasticsearchMapper.createRequestConfig(settings);
+
+        this.requestDelegate = new RequestDelegate(requestConfig, CkanToElasticsearchMapper.createPaging(settings));
     }
 
     /**

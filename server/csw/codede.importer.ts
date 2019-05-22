@@ -1,10 +1,10 @@
 import {Summary} from "../model/summary";
 import {Importer} from "../importer";
-import {CswMapper} from "./csw-mapper";
-import {RequestDelegate} from "../utils/http-request-utils";
-import {CswUtils} from "./csw-utils";
+import {CswMapper} from "./csw.mapper";
+import {RequestDelegate} from "../utils/http-request.utils";
+import {CswImporter} from "./csw.importer";
 
-export class CodeDeUtils extends CswUtils {
+export class CodeDeUtils extends CswImporter {
 
     getMapper(settings, record, harvestTime, issuedTime, summary): CswMapper {
         return new CodeDeMapper(settings, record, harvestTime, issuedTime, summary);
@@ -34,14 +34,14 @@ export class CodeDeMapper extends CswMapper {
     }
 }
 
-export class CodeDeImporter implements Importer {
+export class CodedeImporter implements Importer {
 
     public dwdUtil: CodeDeUtils;
 
     constructor(settings) {
-        let requestConfig = CswUtils.createRequestConfig(settings);
+        let requestConfig = CswImporter.createRequestConfig(settings);
 
-        let requestDelegate: RequestDelegate = new RequestDelegate(requestConfig, CswUtils.createPaging(settings));
+        let requestDelegate: RequestDelegate = new RequestDelegate(requestConfig, CswImporter.createPaging(settings));
         this.dwdUtil = new CodeDeUtils(settings, requestDelegate);
     }
 

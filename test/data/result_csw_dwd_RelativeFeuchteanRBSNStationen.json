@@ -27,7 +27,8 @@
     }
   ],
   "accessRights": [
-    "Offen"
+    "Nutzungseinschränkungen: Es gelten keine Einschränkungen.",
+    "Nutzungsbedingungen: Es gilt die Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes (GeoNutzV), Einzelheiten unter \"http://www.geodatenzentrum.de/docpdf/geonutzv.pdf\" und \"http://www.dwd.de/DE/service/copyright/copyright_artikel.html\"."
   ],
   "distribution": [
     {
@@ -36,7 +37,7 @@
     },
     {
       "format": "null, Datenbank",
-      "accessURL": "https://maps.dwd.de/geoserver/dwd/RBSN_RH/ows?service=wfs&version=2.0.0&request=GetFeature&typeNames=RBSN_RH&outputFormat=csv&count=100&sortBy=M_DATE D"
+      "accessURL": "https://maps.dwd.de/geoserver/dwd/RBSN_RH/ows?service=wfs&version=2.0.0&request=GetFeature&typeNames=RBSN_RH&outputFormat=csv&count=100&sortBy=M_DATE%20D"
     }
   ],
   "extras": {
