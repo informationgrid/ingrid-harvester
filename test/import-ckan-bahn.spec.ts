@@ -29,7 +29,7 @@ describe('Import CKAN Bahn', function () {
             defaultMcloudSubgroup: 'railway',
             dryRun: true,
             elasticSearchUrl: undefined,
-            importer: undefined,
+            type: undefined,
             includeTimestamp: true,
             index: undefined
         };

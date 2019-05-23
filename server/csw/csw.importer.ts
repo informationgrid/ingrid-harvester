@@ -7,6 +7,7 @@ import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
 import {CswParameters, RequestDelegate} from "../utils/http-request.utils";
 import {OptionsWithUri} from "request-promise";
+import {ImporterSettings} from "../importer";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -14,10 +15,10 @@ let log = require('log4js').getLogger(__filename),
     DomParser = require('xmldom').DOMParser;
 
 export type CswSettings = {
-    importer, getRecordsUrl, mandatoryKeywords: string[], httpMethod, proxy?,
-    defaultMcloudSubgroup, defaultDCATCategory, defaultAttribution, defaultAttributionLink, dryRun?,
+    getRecordsUrl, mandatoryKeywords: string[], httpMethod,
+    defaultMcloudSubgroup, defaultDCATCategory, defaultAttribution, defaultAttributionLink,
     maxRecords: number, startPosition: number, recordFilter: string
-} & ElasticSettings;
+} & ElasticSettings & ImporterSettings;
 
 export class CswImporter {
     private readonly settings: CswSettings;
@@ -35,7 +36,7 @@ export class CswImporter {
         ok: 0,
         print: () => {
             logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.importer}`);
+            logSummary.info(`Summary of: ${this.settings.type}`);
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);

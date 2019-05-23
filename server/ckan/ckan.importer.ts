@@ -5,16 +5,16 @@ import {CkanMapper} from "./ckan.mapper";
 import {IndexDocument} from "../model/index.document";
 import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
-import {Importer} from "../importer";
+import {Importer, ImporterSettings} from "../importer";
 import {RequestDelegate} from "../utils/http-request.utils";
 
 let log = require( 'log4js' ).getLogger( __filename ),
     logSummary = getLogger('summary');
 
 export type CkanSettings = {
-    importer, description?, proxy?, ckanBaseUrl, dryRun,
+    description?, ckanBaseUrl,
     defaultMcloudSubgroup, defaultDCATCategory, maxRecords?: number, startPosition?: number
-} & ElasticSettings;
+} & ElasticSettings & ImporterSettings;
 
 export class CkanImporter implements Importer {
     private readonly settings: CkanSettings;
@@ -26,7 +26,7 @@ export class CkanImporter implements Importer {
         numErrors: 0,
         print: () => {
             logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.importer}`);
+            logSummary.info(`Summary of: ${this.settings.type}`);
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);

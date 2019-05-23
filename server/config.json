@@ -1,21 +1,19 @@
 [
   {
-    "importer": "EXCEL",
+    "type": "EXCEL",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "excel",
-    "indexType": "base",
     "alias": "mcloud",
     "filePath": "./data.xlsx",
     "includeTimestamp": true,
     "defaultDCATCategory": "TRAN"
   },
   {
-    "importer": "CKAN",
+    "type": "CKAN",
     "description": "Deutsche Bahn Datenportal",
     "elasticSearchUrl": "http://localhost:9200",
     "proxy": null,
     "index": "ckan_db",
-    "indexType": "base",
     "alias": "mcloud",
     "ckanBaseUrl": "https://data.deutschebahn.com",
     "defaultMcloudSubgroup": "railway",
@@ -23,20 +21,20 @@
     "includeTimestamp": true
   },
   {
-    "importer": "CKAN",
+    "type": "CKAN",
     "description": "OpenData Rostock",
     "elasticSearchUrl": "http://localhost:9200",
     "proxy": null,
     "index": "ckan_opendata_hro",
-    "indexType": "base",
     "alias": "mcloud",
     "ckanBaseUrl": "https://www.opendata-hro.de",
     "defaultMcloudSubgroup": "infrastructure",
     "defaultDCATCategory": "REGI",
-    "includeTimestamp": true
+    "includeTimestamp": true,
+    "disable": true
   },
   {
-    "importer": "CKAN",
+    "type": "CKAN",
     "description": "Offenesdatenportal",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_offenesdatenportal",
@@ -44,60 +42,69 @@
     "ckanBaseUrl": "https://www.offenesdatenportal.de",
     "defaultMcloudSubgroup": "infrastructure",
     "defaultDCATCategory": "REGI",
-    "includeTimestamp": true
+    "includeTimestamp": true,
+    "disable": true
   },
   {
-    "importer": "WSV-CSW",
+    "type": "CKAN",
+    "description": "Transparentzportal Hamburg",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "ckan_portal_hamburg",
+    "alias": "mcloud",
+    "ckanBaseUrl": "http://suche.transparenz.hamburg.de",
+    "defaultMcloudSubgroup": "infrastructure",
+    "defaultDCATCategory": "REGI",
+    "includeTimestamp": true,
+    "disable": true
+  },
+  {
+    "type": "WSV-CSW",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_wsv",
-    "indexType": "base",
     "alias": "mcloud",
     "getRecordsUrl": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup",
     "httpMethod": "POST",
     "recordFilter": "<ogc:Filter> <ogc:PropertyIsEqualTo> <ogc:PropertyName>subject</ogc:PropertyName> <ogc:Literal>opendata</ogc:Literal> </ogc:PropertyIsEqualTo> </ogc:Filter>",
-    "proxy": null,
     "defaultMcloudSubgroup": "waters",
     "defaultDCATCategory": "TRAN",
     "defaultAttribution": "WSV.Geokatalog CSW",
     "defaultAttributionLink": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2",
-    "includeTimestamp": true
+    "includeTimestamp": true,
+    "disable": true
   },
   {
-    "importer": "MDI-CSW",
+    "type": "MDI-CSW",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_mdi",
-    "indexType": "base",
     "alias": "mcloud",
     "getRecordsUrl": "http://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecords$Post$XML",
     "getRecordByIdUrl": "http://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecordByIdServant$Get",
     "httpMethod": "POST",
-    "proxy": null,
     "defaultMcloudSubgroup": "waters",
     "defaultDCATCategory": "ENVI",
     "defaultAttribution": "MDI-DE",
     "defaultAttributionLink": "https://www.mdi-de.org/",
-    "includeTimestamp": true
+    "includeTimestamp": true,
+    "disable": true
   },
   {
-    "importer": "BFG-CSW",
+    "type": "BFG-CSW",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_bfg",
-    "indexType": "base",
     "alias": "mcloud",
     "getRecordsUrl": "https://geoportal.bafg.de/soapServices/CSWStartup",
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>opendata</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
-    "proxy": null,
     "defaultMcloudSubgroup": "waters",
     "defaultDCATCategory": "ENVI",
     "defaultAttribution": "Bundesanstalt für Gewässerkunde",
     "defaultAttributionLink": "https://geoportal.bafg.de/",
-    "includeTimestamp": true
+    "includeTimestamp": true,
+    "disable": true
   },
   {
-    "importer": "DWD-CSW",
+    "type": "DWD-CSW",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_dwd",
-    "indexType": "base",
     "alias": "mcloud",
     "getRecordsUrl": "https://cdc.dwd.de/catalogue/srv/en/csw",
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
@@ -105,34 +112,32 @@
       "opendata",
       "inspireidentifiziert"
     ],
-    "proxy": null,
     "defaultMcloudSubgroup": "climate",
     "defaultDCATCategory": "ENVI",
     "defaultAttribution": "Climate Data Centre (CDC) Katalog des DWD",
     "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/csw",
-    "includeTimestamp": true
+    "includeTimestamp": true,
+    "disable": true
   },
   {
-    "importer": "CODEDE-CSW",
+    "type": "CODEDE-CSW",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_codede",
-    "indexType": "base",
     "alias": "mcloud",
     "getRecordsUrl": "https://catalog.code-de.org/discovery/srv/en/csw",
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>opendata</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
     "mandatoryKeywords": [],
-    "proxy": null,
     "defaultMcloudSubgroup": "aviation",
     "defaultDCATCategory": "TECH",
     "defaultAttribution": "CODE-DE Catalogue",
     "defaultAttributionLink": "https://code-de.org/de/marketplace",
-    "includeTimestamp": true
+    "includeTimestamp": true,
+    "disable": true
   },
   {
-    "importer": "BSH-CSW",
+    "type": "BSH-CSW",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_bsh",
-    "indexType": "base",
     "alias": "mcloud",
     "getRecordsUrl": "https://www.geoseaportal.de/soapServices/CSWStartup",
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
@@ -141,11 +146,11 @@
       "inspireidentifiziert"
     ],
     "httpMethod": "POST",
-    "proxy": null,
     "defaultMcloudSubgroup": "waters",
     "defaultDCATCategory": "ENVI",
     "defaultAttribution": "GeoSeaPortal (BSH)",
     "defaultAttributionLink": "https://www.geoseaportal.de/",
-    "includeTimestamp": true
+    "includeTimestamp": true,
+    "disable": true
   }
 ]

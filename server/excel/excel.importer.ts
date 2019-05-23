@@ -6,15 +6,15 @@ import {elasticsearchMapping} from "../elastic.mapping";
 import {elasticsearchSettings} from "../elastic.settings";
 import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
-import {Importer} from "../importer";
+import {Importer, ImporterSettings} from "../importer";
 import Excel = require('exceljs');
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary');
 
 export type ExcelSettings = {
-    importer, filePath, dryRun, defaultDCATCategory, proxy?
-} & ElasticSettings
+    filePath, defaultDCATCategory
+} & ElasticSettings & ImporterSettings;
 
 export class ExcelImporter implements Importer {
 
@@ -28,7 +28,7 @@ export class ExcelImporter implements Importer {
         numErrors: 0,
         print: () => {
             logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.importer}`);
+            logSummary.info(`Summary of: ${this.settings.type}`);
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);

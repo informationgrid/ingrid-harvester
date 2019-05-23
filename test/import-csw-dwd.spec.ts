@@ -25,7 +25,7 @@ describe('Import CSW DWD', function () {
         // @ts-ignore
         const settings: CswSettings = {
             dryRun: true,
-            importer: "DWD-CSW",
+            type: "DWD-CSW",
             elasticSearchUrl: "http://localhost:9200",
             index: "csw_dwd",
             indexType: "base",

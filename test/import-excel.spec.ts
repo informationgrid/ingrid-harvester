@@ -29,7 +29,7 @@ describe('Import Excel', function () {
             defaultDCATCategory: 'DEFAULT_TRAN',
             alias: undefined,
             elasticSearchUrl: undefined,
-            importer: undefined,
+            type: undefined,
             includeTimestamp: undefined,
             index: undefined
         };

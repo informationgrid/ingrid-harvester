@@ -50,17 +50,24 @@ export class CkanMapper extends GenericMapper {
     }
 
     getDescription() {
-        return markdown.toHTML(this.source.notes);
+        return this.source.notes ? markdown.toHTML(this.source.notes) : undefined;
     }
 
     async getDisplayContacts() {
 
         let publisher = await this.getPublisher();
 
-        let contact: Person = {
-            name: publisher[0].organization ? publisher[0].organization : undefined,
-            homepage: publisher[0].homepage ? publisher[0].homepage : undefined
-        };
+        let contact: Person;
+        if (publisher.length === 0) {
+            contact = {
+                name: this.settings.description
+            }
+        } else {
+            contact = {
+                name: publisher[0].organization ? publisher[0].organization : this.settings.description,
+                homepage: publisher[0].homepage ? publisher[0].homepage : undefined
+            }
+        }
 
         return [contact];
     }
@@ -152,7 +159,7 @@ export class CkanMapper extends GenericMapper {
             }
         }
 
-        return [publisher];
+        return publisher ? [publisher] : [];
     }
 
     getTemporal() {
