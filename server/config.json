@@ -30,8 +30,7 @@
     "ckanBaseUrl": "https://www.opendata-hro.de",
     "defaultMcloudSubgroup": "infrastructure",
     "defaultDCATCategory": "REGI",
-    "includeTimestamp": true,
-    "disable": true
+    "includeTimestamp": true
   },
   {
     "type": "CKAN",
@@ -42,8 +41,7 @@
     "ckanBaseUrl": "https://www.offenesdatenportal.de",
     "defaultMcloudSubgroup": "infrastructure",
     "defaultDCATCategory": "REGI",
-    "includeTimestamp": true,
-    "disable": true
+    "includeTimestamp": true
   },
   {
     "type": "CKAN",
@@ -54,8 +52,7 @@
     "ckanBaseUrl": "http://suche.transparenz.hamburg.de",
     "defaultMcloudSubgroup": "infrastructure",
     "defaultDCATCategory": "REGI",
-    "includeTimestamp": true,
-    "disable": true
+    "includeTimestamp": true
   },
   {
     "type": "WSV-CSW",
@@ -69,8 +66,7 @@
     "defaultDCATCategory": "TRAN",
     "defaultAttribution": "WSV.Geokatalog CSW",
     "defaultAttributionLink": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2",
-    "includeTimestamp": true,
-    "disable": true
+    "includeTimestamp": true
   },
   {
     "type": "MDI-CSW",
@@ -84,8 +80,7 @@
     "defaultDCATCategory": "ENVI",
     "defaultAttribution": "MDI-DE",
     "defaultAttributionLink": "https://www.mdi-de.org/",
-    "includeTimestamp": true,
-    "disable": true
+    "includeTimestamp": true
   },
   {
     "type": "BFG-CSW",
@@ -98,8 +93,7 @@
     "defaultDCATCategory": "ENVI",
     "defaultAttribution": "Bundesanstalt für Gewässerkunde",
     "defaultAttributionLink": "https://geoportal.bafg.de/",
-    "includeTimestamp": true,
-    "disable": true
+    "includeTimestamp": true
   },
   {
     "type": "DWD-CSW",
@@ -116,8 +110,7 @@
     "defaultDCATCategory": "ENVI",
     "defaultAttribution": "Climate Data Centre (CDC) Katalog des DWD",
     "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/csw",
-    "includeTimestamp": true,
-    "disable": true
+    "includeTimestamp": true
   },
   {
     "type": "CODEDE-CSW",
@@ -131,8 +124,7 @@
     "defaultDCATCategory": "TECH",
     "defaultAttribution": "CODE-DE Catalogue",
     "defaultAttributionLink": "https://code-de.org/de/marketplace",
-    "includeTimestamp": true,
-    "disable": true
+    "includeTimestamp": true
   },
   {
     "type": "BSH-CSW",
@@ -150,7 +142,6 @@
     "defaultDCATCategory": "ENVI",
     "defaultAttribution": "GeoSeaPortal (BSH)",
     "defaultAttributionLink": "https://www.geoseaportal.de/",
-    "includeTimestamp": true,
-    "disable": true
+    "includeTimestamp": true
   }
 ]
