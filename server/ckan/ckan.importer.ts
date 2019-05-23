@@ -1,4 +1,4 @@
-import {ElasticSearchUtils} from "../utils/elastic.utils";
+import {ElasticSearchUtils, ElasticSettings} from "../utils/elastic.utils";
 import {elasticsearchSettings} from "../elastic.settings";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {CkanMapper} from "./ckan.mapper";
@@ -12,9 +12,9 @@ let log = require( 'log4js' ).getLogger( __filename ),
     logSummary = getLogger('summary');
 
 export type CkanSettings = {
-    importer, description, elasticSearchUrl, proxy, index, indexType, alias, ckanBaseUrl, includeTimestamp, dryRun,
+    importer, description?, proxy?, ckanBaseUrl, dryRun,
     defaultMcloudSubgroup, defaultDCATCategory, maxRecords?: number, startPosition?: number
-};
+} & ElasticSettings;
 
 export class CkanImporter implements Importer {
     private readonly settings: CkanSettings;

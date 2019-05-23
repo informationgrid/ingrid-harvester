@@ -17,6 +17,7 @@ export class ExcelMapper extends GenericMapper {
     workbook;
     private settings: ExcelSettings;
     private summary: Summary;
+    private currentIndexName: string;
 
     constructor(settings: ExcelSettings, data) {
         super();
@@ -28,6 +29,7 @@ export class ExcelMapper extends GenericMapper {
         this.columnMap = data.columnMap;
         this.workbook = data.workbook;
         this.summary = data.summary;
+        this.currentIndexName = data.currentIndexName;
     }
 
     getTitle() {
@@ -75,7 +77,7 @@ export class ExcelMapper extends GenericMapper {
 
         if (distributions.length === 0) {
             this.valid = false;
-            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.id}', index: '${this.settings.currentIndexName}'.`;
+            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.id}', index: '${this.currentIndexName}'.`;
             log.warn(msg);
         }
 
@@ -199,7 +201,7 @@ export class ExcelMapper extends GenericMapper {
                     accessURL: downloadUrl.trim()
                 });
             } else {
-                let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.settings.currentIndexName}'.`;
+                let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.currentIndexName}'.`;
                 log.warn(msg);
                 this.errors.push(msg);
                 this.summary.numErrors++;

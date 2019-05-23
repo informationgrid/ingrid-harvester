@@ -1,4 +1,4 @@
-import {ElasticSearchUtils} from "../utils/elastic.utils";
+import {ElasticSearchUtils, ElasticSettings} from "../utils/elastic.utils";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {elasticsearchSettings} from "../elastic.settings";
 import {IndexDocument} from "../model/index.document";
@@ -14,10 +14,10 @@ let log = require('log4js').getLogger(__filename),
     DomParser = require('xmldom').DOMParser;
 
 export type CswSettings = {
-    importer, elasticSearchUrl, index, indexType, alias, getRecordsUrl, mandatoryKeywords: string[], httpMethod, proxy?,
-    defaultMcloudSubgroup, defaultDCATCategory, defaultAttribution, defaultAttributionLink, includeTimestamp, dryRun?,
+    importer, getRecordsUrl, mandatoryKeywords: string[], httpMethod, proxy?,
+    defaultMcloudSubgroup, defaultDCATCategory, defaultAttribution, defaultAttributionLink, dryRun?,
     maxRecords: number, startPosition: number, recordFilter: string
-}
+} & ElasticSettings;
 
 export class CswImporter {
     private readonly settings: CswSettings;
@@ -125,7 +125,7 @@ export class CswImporter {
         let now = new Date(Date.now());
         let issued;
         if (this.settings.dryRun) {
-            issued = ids.map(id => now);
+            issued = ids.map(() => now);
         } else {
             issued = this.elastic.getIssuedDates(ids);
         }

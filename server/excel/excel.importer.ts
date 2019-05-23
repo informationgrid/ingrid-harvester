@@ -1,5 +1,5 @@
 import {IndexDocument} from '../model/index.document';
-import {ElasticSearchUtils} from '../utils/elastic.utils';
+import {ElasticSearchUtils, ElasticSettings} from '../utils/elastic.utils';
 import {ExcelMapper} from "./excel.mapper";
 import {Worksheet} from "exceljs";
 import {elasticsearchMapping} from "../elastic.mapping";
@@ -13,8 +13,8 @@ let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary');
 
 export type ExcelSettings = {
-    importer, elasticSearchUrl, index, indexType, alias, filePath, includeTimestamp, dryRun, currentIndexName, defaultDCATCategory, proxy?
-}
+    importer, filePath, dryRun, defaultDCATCategory, proxy?
+} & ElasticSettings
 
 export class ExcelImporter implements Importer {
 
@@ -110,8 +110,6 @@ export class ExcelImporter implements Importer {
             // get all issued dates from IDs
             let timestamps = await this.elastic.getIssuedDates(ids);
 
-            this.settings.currentIndexName = this.elastic.indexName;
-
             // Attention: forEach does not work with async/await! using Promise.all for sequence
             await Promise.all(workUnits.map(async (unit, idx) => {
 
@@ -124,6 +122,7 @@ export class ExcelImporter implements Importer {
                     issued: timestamps[idx],
                     workbook: workbook,
                     columnMap: columnMap,
+                    currentIndexName: this.elastic.indexName,
                     summary: this.summary
                 });
                 let doc = await IndexDocument.create(mapper).catch( e => {

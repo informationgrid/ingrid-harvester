@@ -24,7 +24,6 @@ describe('Import CKAN Bahn', function () {
         var settings: CkanSettings = {
             alias: undefined,
             ckanBaseUrl: "https://data.deutschebahn.com",
-            currentIndexName: undefined,
             defaultDCATCategory: 'TRAN',
             defaultMcloudSubgroup: "railway",
             dryRun: true,
