@@ -36,6 +36,17 @@
     "includeTimestamp": true
   },
   {
+    "importer": "CKAN",
+    "description": "Offenesdatenportal",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "ckan_offenesdatenportal",
+    "alias": "mcloud",
+    "ckanBaseUrl": "https://www.offenesdatenportal.de",
+    "defaultMcloudSubgroup": "infrastructure",
+    "defaultDCATCategory": "REGI",
+    "includeTimestamp": true
+  },
+  {
     "importer": "WSV-CSW",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_wsv",
