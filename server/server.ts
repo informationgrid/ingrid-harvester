@@ -1,5 +1,5 @@
 import {ExcelImporter} from './excel/excel.importer';
-import {DeutscheBahnCkanImporter} from "./ckan/ckan.importer";
+import {CkanImporter} from "./ckan/ckan.importer";
 import {WsvImporter} from "./csw/wsv.importer";
 import {DwdImporter} from "./csw/dwd.importer";
 import {BfgImporter} from "./csw/bfg.importer";
@@ -38,7 +38,7 @@ let runAsync = false;
 
 function getImporter(settings) {
     const type = settings.importer;
-    if (type === 'CKAN-DB') return new DeutscheBahnCkanImporter(settings);
+    if (type === 'CKAN') return new CkanImporter(settings);
     if (type === 'EXCEL') return new ExcelImporter(settings);
     if (type === 'WSV-CSW') return new WsvImporter(settings);
     if (type === 'DWD-CSW') return new DwdImporter(settings);

@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
-import {CkanSettings, DeutscheBahnCkanImporter} from "../server/ckan/ckan.importer";
+import {CkanSettings, CkanImporter} from "../server/ckan/ckan.importer";
 import * as sinon from "sinon";
 import {IndexDocument} from "../server/model/index.document";
 import {TestUtils} from "./utils/test-utils";
@@ -35,7 +35,7 @@ describe('Import CKAN Bahn', function () {
             indexType: undefined,
             proxy: undefined
         };
-        let importer = new DeutscheBahnCkanImporter(settings);
+        let importer = new CkanImporter(settings);
 
         sinon.stub(importer.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
 

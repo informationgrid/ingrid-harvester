@@ -1,7 +1,7 @@
 import {ElasticSearchUtils} from "../utils/elastic.utils";
 import {elasticsearchSettings} from "../elastic.settings";
 import {elasticsearchMapping} from "../elastic.mapping";
-import {CkanToElasticsearchMapper} from "./ckan.mapper";
+import {CkanMapper} from "./ckan.mapper";
 import {IndexDocument} from "../model/index.document";
 import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
@@ -12,12 +12,12 @@ let log = require( 'log4js' ).getLogger( __filename ),
     logSummary = getLogger('summary');
 
 export type CkanSettings = {
-    importer, elasticSearchUrl, proxy, index, indexType, alias, ckanBaseUrl, includeTimestamp, dryRun, currentIndexName,
+    importer, description, elasticSearchUrl, proxy, index, indexType, alias, ckanBaseUrl, includeTimestamp, dryRun,
     defaultMcloudSubgroup, defaultDCATCategory, maxRecords?: number, startPosition?: number
 };
 
-export class DeutscheBahnCkanImporter implements Importer {
-    private readonly settings: any;
+export class CkanImporter implements Importer {
+    private readonly settings: CkanSettings;
     elastic: ElasticSearchUtils;
     private requestDelegate: RequestDelegate;
     summary: Summary = {
@@ -50,9 +50,9 @@ export class DeutscheBahnCkanImporter implements Importer {
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
 
-        let requestConfig = CkanToElasticsearchMapper.createRequestConfig(settings);
+        let requestConfig = CkanMapper.createRequestConfig(settings);
 
-        this.requestDelegate = new RequestDelegate(requestConfig, CkanToElasticsearchMapper.createPaging(settings));
+        this.requestDelegate = new RequestDelegate(requestConfig, CkanMapper.createPaging(settings));
     }
 
     /**
@@ -71,10 +71,13 @@ export class DeutscheBahnCkanImporter implements Importer {
             this.summary.numDocs++;
 
             // Execute the mappers
-            this.settings.currentIndexName = this.elastic.indexName;
-            this.settings.harvestTime = harvestTime;
-            this.settings.issuedDate = issuedExisting;
-            let mapper = new CkanToElasticsearchMapper(this.settings, source);
+            let mapper = new CkanMapper(this.settings, {
+                harvestTime: harvestTime,
+                issuedDate: issuedExisting,
+                currentIndexName: this.elastic.indexName,
+                source: source
+            });
+
             let doc = await IndexDocument.create(mapper).catch( e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());

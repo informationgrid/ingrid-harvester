@@ -10,7 +10,8 @@
     "defaultDCATCategory": "TRAN"
   },
   {
-    "importer": "CKAN-DB",
+    "importer": "CKAN",
+    "description": "Deutsche Bahn Datenportal",
     "elasticSearchUrl": "http://localhost:9200",
     "proxy": null,
     "index": "ckan_db",
@@ -19,6 +20,19 @@
     "ckanBaseUrl": "https://data.deutschebahn.com",
     "defaultMcloudSubgroup": "railway",
     "defaultDCATCategory": "TRAN",
+    "includeTimestamp": true
+  },
+  {
+    "importer": "CKAN",
+    "description": "OpenData Rostock",
+    "elasticSearchUrl": "http://localhost:9200",
+    "proxy": null,
+    "index": "ckan_opendata_hro",
+    "indexType": "base",
+    "alias": "mcloud",
+    "ckanBaseUrl": "https://www.opendata-hro.de",
+    "defaultMcloudSubgroup": "infrastructure",
+    "defaultDCATCategory": "REGI",
     "includeTimestamp": true
   },
   {
