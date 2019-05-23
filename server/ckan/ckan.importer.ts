@@ -26,7 +26,7 @@ export class DeutscheBahnCkanImporter implements Importer {
         numErrors: 0,
         print: () => {
             logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.excel}`);
+            logSummary.info(`Summary of: ${this.settings.importer}`);
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);

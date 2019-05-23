@@ -37,7 +37,7 @@ let runAsync = false;
 // listen for incoming messages, which can be "import" with parameter <type>
 
 function getImporter(settings) {
-    const type = settings.excel;
+    const type = settings.importer;
     if (type === 'CKAN-DB') return new DeutscheBahnCkanImporter(settings);
     if (type === 'EXCEL') return new ExcelImporter(settings);
     if (type === 'WSV-CSW') return new WsvImporter(settings);
@@ -80,7 +80,7 @@ async function startProcess() {
 
         let importer = getImporter( settings );
         if (!importer) {
-            log.error( 'Importer not defined for: ' + settings.excel );
+            log.error( 'Importer not defined for: ' + settings.importer );
             return;
         }
         log.info("Starting import ...");
@@ -91,7 +91,7 @@ async function startProcess() {
                 summaries.push(await importer.run());
             }
         } catch (e) {
-            console.error(`Importer ${settings.excel} failed: `, e);
+            console.error(`Importer ${settings.importer} failed: `, e);
         }
     }
 
