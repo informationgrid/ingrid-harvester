@@ -28,12 +28,10 @@ describe('Import Excel', function () {
             filePath: 'test/data/data-test.xlsx',
             defaultDCATCategory: 'DEFAULT_TRAN',
             alias: undefined,
-            currentIndexName: undefined,
             elasticSearchUrl: undefined,
             importer: undefined,
             includeTimestamp: undefined,
-            index: undefined,
-            indexType: undefined
+            index: undefined
         };
         let importer = new ExcelImporter(settings);
 

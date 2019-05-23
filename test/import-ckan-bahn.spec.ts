@@ -30,9 +30,7 @@ describe('Import CKAN Bahn', function () {
             elasticSearchUrl: undefined,
             importer: undefined,
             includeTimestamp: true,
-            index: undefined,
-            indexType: undefined,
-            proxy: undefined
+            index: undefined
         };
         let importer = new CkanImporter(settings);
 
