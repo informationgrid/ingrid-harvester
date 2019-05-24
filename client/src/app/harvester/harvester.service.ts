@@ -1,16 +1,18 @@
-import { Injectable } from '@angular/core';
-import {Observable, of} from "rxjs";
+import {Injectable} from '@angular/core';
+import {Observable} from "rxjs";
 import {Harvester} from "./model/harvester";
-import {HarvesterType} from "./model/HarvesterType";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class HarvesterService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   getHarvester(): Observable<Harvester[]> {
+    return this.http.get<Harvester[]>('api/harvester');
+/*
     return of(<Harvester[]>[
       {
         id: '1',
@@ -33,5 +35,6 @@ export class HarvesterService {
         summary: null
       }
     ])
+*/
   }
 }

@@ -71,4 +71,8 @@ export class HarvesterComponent implements OnInit {
       // this.animal = result;
     });
   }
+
+  stopPropagation($event: MouseEvent) {
+    $event.stopImmediatePropagation();
+  }
 }

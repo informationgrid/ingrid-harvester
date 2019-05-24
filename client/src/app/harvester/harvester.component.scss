@@ -7,6 +7,15 @@ mat-expansion-panel {
   margin-bottom: 20px;
 }
 
+mat-expansion-panel-header {
+  padding-left: 0;
+}
+
+.mat-slide-toggle {
+  height: 48px;
+  padding: 0 20px;
+}
+
 .example-headers-align .mat-expansion-panel-header-title,
 .example-headers-align .mat-expansion-panel-header-description {
   flex-basis: 0;

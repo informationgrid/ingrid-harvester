@@ -5,8 +5,10 @@ import {
   MatButtonModule,
   MatDialogModule,
   MatExpansionModule,
-  MatIconModule, MatInputModule,
+  MatIconModule,
+  MatInputModule,
   MatSelectModule,
+  MatSlideToggleModule,
   MatSnackBarModule
 } from "@angular/material";
 import {CommonModule} from "@angular/common";
@@ -16,9 +18,9 @@ import {DialogLogComponent} from './dialog-log/dialog-log.component';
 import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
 import {ImportNotifyComponent} from "./notifications/import-notify.component";
 import {FormsModule} from "@angular/forms";
-import { ExcelHarvesterComponent } from './dialog-edit/excel-harvester/excel-harvester.component';
-import { CkanHarvesterComponent } from './dialog-edit/ckan-harvester/ckan-harvester.component';
-import { CswHarvesterComponent } from './dialog-edit/csw-harvester/csw-harvester.component';
+import {ExcelHarvesterComponent} from './dialog-edit/excel-harvester/excel-harvester.component';
+import {CkanHarvesterComponent} from './dialog-edit/ckan-harvester/ckan-harvester.component';
+import {CswHarvesterComponent} from './dialog-edit/csw-harvester/csw-harvester.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,7 @@ import { CswHarvesterComponent } from './dialog-edit/csw-harvester/csw-harvester
     MatInputModule,
     MatSnackBarModule,
     MatSelectModule,
+    MatSlideToggleModule,
     CronEditorModule
   ],
   entryComponents: [

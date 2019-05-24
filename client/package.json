@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "update": "ng update @angular/cli @angular/core @angular/material",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

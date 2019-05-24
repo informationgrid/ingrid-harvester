@@ -19,7 +19,8 @@
   <mat-expansion-panel *ngFor="let harvester of harvesters | async" hideToggle>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        {{harvester.name}}
+        <mat-slide-toggle color="primary" (click)="stopPropagation($event)"></mat-slide-toggle>
+        <p>{{harvester.name}}</p>
       </mat-panel-title>
       <mat-panel-description>
         {{harvester.description}}
