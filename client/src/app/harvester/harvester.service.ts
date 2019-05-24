@@ -11,7 +11,7 @@ export class HarvesterService {
   constructor(private http: HttpClient) { }
 
   getHarvester(): Observable<Harvester[]> {
-    return this.http.get<Harvester[]>('api/harvester');
+    return this.http.get<Harvester[]>('rest/api/harvester');
 /*
     return of(<Harvester[]>[
       {

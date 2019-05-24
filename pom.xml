@@ -39,7 +39,7 @@
         <configuration>
           <nodeVersion>v8.9.1</nodeVersion>
           <npmVersion>6.0.0</npmVersion>
-          <workingDirectory>.</workingDirectory>
+          <workingDirectory>./server</workingDirectory>
         </configuration>
         <executions>
           <execution>

@@ -19,11 +19,11 @@
   <mat-expansion-panel *ngFor="let harvester of harvesters | async" hideToggle>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <mat-slide-toggle color="primary" (click)="stopPropagation($event)"></mat-slide-toggle>
-        <p>{{harvester.name}}</p>
+        <mat-slide-toggle color="primary" [checked]="!harvester.disable" (click)="stopPropagation($event)"></mat-slide-toggle>
+        <p>{{harvester.type}}</p>
       </mat-panel-title>
       <mat-panel-description>
-        {{harvester.description}}
+        {{harvester.description || harvester.defaultAttribution}}
         <mat-icon *ngIf="harvester.summary?.numberOfErrors > 0" color="warn">error_outline</mat-icon>
         <mat-icon *ngIf="harvester.summary?.numberOfErrors === 0" class="success">check_circle_outline</mat-icon>
       </mat-panel-description>
