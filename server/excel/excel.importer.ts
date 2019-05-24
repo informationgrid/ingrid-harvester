@@ -1,20 +1,20 @@
-import {IndexDocument} from '../../model/index-document';
-import {ElasticSearchUtils} from '../../utils/elastic-utils';
-import {ExcelMapper} from "./excel-mapper";
+import {IndexDocument} from '../model/index.document';
+import {ElasticSearchUtils, ElasticSettings} from '../utils/elastic.utils';
+import {ExcelMapper} from "./excel.mapper";
 import {Worksheet} from "exceljs";
-import {elasticsearchMapping} from "../../elastic.mapping";
-import {elasticsearchSettings} from "../../elastic.settings";
-import {Summary} from "../../model/summary";
+import {elasticsearchMapping} from "../elastic.mapping";
+import {elasticsearchSettings} from "../elastic.settings";
+import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
-import {Importer} from "../../importer";
+import {Importer, ImporterSettings} from "../importer";
 import Excel = require('exceljs');
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary');
 
 export type ExcelSettings = {
-    importer, elasticSearchUrl, index, indexType, alias, filePath, includeTimestamp, dryRun, currentIndexName, defaultDCATCategory, proxy?
-}
+    filePath, defaultDCATCategory
+} & ElasticSettings & ImporterSettings;
 
 export class ExcelImporter implements Importer {
 
@@ -28,7 +28,7 @@ export class ExcelImporter implements Importer {
         numErrors: 0,
         print: () => {
             logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.importer}`);
+            logSummary.info(`Summary of: ${this.settings.type}`);
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);
@@ -110,8 +110,6 @@ export class ExcelImporter implements Importer {
             // get all issued dates from IDs
             let timestamps = await this.elastic.getIssuedDates(ids);
 
-            this.settings.currentIndexName = this.elastic.indexName;
-
             // Attention: forEach does not work with async/await! using Promise.all for sequence
             await Promise.all(workUnits.map(async (unit, idx) => {
 
@@ -124,6 +122,7 @@ export class ExcelImporter implements Importer {
                     issued: timestamps[idx],
                     workbook: workbook,
                     columnMap: columnMap,
+                    currentIndexName: this.elastic.indexName,
                     summary: this.summary
                 });
                 let doc = await IndexDocument.create(mapper).catch( e => {

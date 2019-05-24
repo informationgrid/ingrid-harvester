@@ -1,23 +1,23 @@
-import {ElasticSearchUtils} from "../../utils/elastic-utils";
-import {elasticsearchSettings} from "../../elastic.settings";
-import {elasticsearchMapping} from "../../elastic.mapping";
-import {CkanToElasticsearchMapper} from "./ckan.mapper";
-import {IndexDocument} from "../../model/index-document";
-import {Summary} from "../../model/summary";
+import {ElasticSearchUtils, ElasticSettings} from "../utils/elastic.utils";
+import {elasticsearchSettings} from "../elastic.settings";
+import {elasticsearchMapping} from "../elastic.mapping";
+import {CkanMapper} from "./ckan.mapper";
+import {IndexDocument} from "../model/index.document";
+import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
-import {Importer} from "../../importer";
-import {CkanParameters, RequestConfig, RequestDelegate} from "../../utils/http-request-utils";
+import {Importer, ImporterSettings} from "../importer";
+import {RequestDelegate} from "../utils/http-request.utils";
 
 let log = require( 'log4js' ).getLogger( __filename ),
     logSummary = getLogger('summary');
 
 export type CkanSettings = {
-    importer, elasticSearchUrl, proxy, index, indexType, alias, ckanBaseUrl, includeTimestamp, dryRun, currentIndexName,
-    defaultMcloudSubgroup, defaultDCATCategory
-};
+    description?, ckanBaseUrl,
+    defaultMcloudSubgroup, defaultDCATCategory, maxRecords?: number, startPosition?: number
+} & ElasticSettings & ImporterSettings;
 
-export class DeutscheBahnCkanImporter implements Importer {
-    private readonly settings: any;
+export class CkanImporter implements Importer {
+    private readonly settings: CkanSettings;
     elastic: ElasticSearchUtils;
     private requestDelegate: RequestDelegate;
     summary: Summary = {
@@ -26,7 +26,7 @@ export class DeutscheBahnCkanImporter implements Importer {
         numErrors: 0,
         print: () => {
             logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.importer}`);
+            logSummary.info(`Summary of: ${this.settings.type}`);
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);
@@ -50,22 +50,9 @@ export class DeutscheBahnCkanImporter implements Importer {
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings);
 
-        let parameters: CkanParameters = {
-            sort: "id asc",
-            start: 0,
-            rows: 100
-        };
-        let requestConfig: RequestConfig = {
-            method: 'GET',
-            uri: settings.ckanBaseUrl + "/api/3/action/package_search", // See http://docs.ckan.org/en/ckan-2.7.3/api/
-            json: true,
-            headers: RequestDelegate.defaultRequestHeaders(),
-            qs: parameters
-        };
-        if (settings.proxy) {
-            requestConfig.proxy = settings.proxy;
-        }
-        this.requestDelegate = new RequestDelegate(requestConfig);
+        let requestConfig = CkanMapper.createRequestConfig(settings);
+
+        this.requestDelegate = new RequestDelegate(requestConfig, CkanMapper.createPaging(settings));
     }
 
     /**
@@ -84,10 +71,13 @@ export class DeutscheBahnCkanImporter implements Importer {
             this.summary.numDocs++;
 
             // Execute the mappers
-            this.settings.currentIndexName = this.elastic.indexName;
-            this.settings.harvestTime = harvestTime;
-            this.settings.issuedDate = issuedExisting;
-            let mapper = new CkanToElasticsearchMapper(this.settings, source);
+            let mapper = new CkanMapper(this.settings, {
+                harvestTime: harvestTime,
+                issuedDate: issuedExisting,
+                currentIndexName: this.elastic.indexName,
+                source: source
+            });
+
             let doc = await IndexDocument.create(mapper).catch( e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());

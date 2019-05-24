@@ -1,4 +1,4 @@
-import {RequestConfig} from "../utils/http-request-utils";
+import {OptionsWithUri} from "request-promise";
 
 export interface Distribution {
     format: string;
@@ -170,7 +170,7 @@ export abstract class GenericMapper {
 
     abstract async getLicense(): Promise<License>;
 
-    abstract getUrlCheckRequestConfig(uri: string): RequestConfig;
+    abstract getUrlCheckRequestConfig(uri: string): OptionsWithUri;
 
     static dcatThemeUriFromKeyword(keyword: string): string {
         // Check falsy values first

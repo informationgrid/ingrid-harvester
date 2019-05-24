@@ -1,6 +1,6 @@
-import {CswMapper} from "./csw-mapper";
-import {CswUtils} from "./csw-utils";
-import {UrlUtils} from "../../utils/url-utils";
+import {CswMapper} from "./csw.mapper";
+import {CswImporter} from "./csw.importer";
+import {UrlUtils} from "../utils/url.utils";
 
 export class BfgMapper extends CswMapper {
 
@@ -29,7 +29,7 @@ export class BfgMapper extends CswMapper {
     }
 }
 
-export class BfgUtils extends CswUtils {
+export class BfgUtils extends CswImporter {
 
     getMapper(settings, record, harvestTime, issuedTime, summary): CswMapper {
         return new BfgMapper(settings, record, harvestTime, issuedTime, summary);

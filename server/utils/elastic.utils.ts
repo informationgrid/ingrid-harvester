@@ -1,9 +1,13 @@
 let elasticsearch = require('elasticsearch'),
     log = require('log4js').getLogger(__filename);
 
+export type ElasticSettings = {
+    elasticSearchUrl, index, indexType?, alias, deduplicationAlias?, includeTimestamp
+}
+
 export class ElasticSearchUtils {
 
-    settings;
+    settings: ElasticSettings;
     client;
     _bulkData;
     duplicateStaging;
@@ -172,7 +176,7 @@ export class ElasticSearchUtils {
         const handleMapping = () => {
             this.client.indices.putMapping( {
                 index: index,
-                type: type,
+                type: type || 'base',
                 body: mapping
             }, err => {
                 if (err) log.error( 'Error occurred adding mapping', err );
@@ -204,7 +208,7 @@ export class ElasticSearchUtils {
             try {
                 this.client.bulk({
                     index: this.indexName,
-                    type: this.settings.indexType,
+                    type: this.settings.indexType || 'base',
                     body: data
                 })
                 .then(response => {
@@ -330,7 +334,7 @@ export class ElasticSearchUtils {
                         if (hitDate > myDate) {
                             // Hit is newer. Delete document from current index.
                             q.delete._index = this.indexName;
-                            q.delete._type = this.settings.indexTypes;
+                            q.delete._type = this.settings.indexType;
                             q.delete._id = item.id;
 
                             retained = `Item to retain -> ID: '${hit._id}', Title: '${hit._source.title}', Index: '${hit._index};`;

@@ -1,8 +1,9 @@
-import {UrlUtils} from "../../utils/url-utils";
-import {Distribution, GenericMapper, License, Organization, Person} from "../../model/generic-mapper";
-import {Summary} from "../../model/summary";
-import {ExcelSettings} from "./importer";
-import {RequestConfig, RequestDelegate} from "../../utils/http-request-utils";
+import {UrlUtils} from "../utils/url.utils";
+import {Distribution, GenericMapper, License, Organization, Person} from "../model/generic.mapper";
+import {Summary} from "../model/summary";
+import {ExcelSettings} from "./excel.importer";
+import {RequestDelegate} from "../utils/http-request.utils";
+import {OptionsWithUri} from "request-promise";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -16,6 +17,7 @@ export class ExcelMapper extends GenericMapper {
     workbook;
     private settings: ExcelSettings;
     private summary: Summary;
+    private currentIndexName: string;
 
     constructor(settings: ExcelSettings, data) {
         super();
@@ -27,6 +29,7 @@ export class ExcelMapper extends GenericMapper {
         this.columnMap = data.columnMap;
         this.workbook = data.workbook;
         this.summary = data.summary;
+        this.currentIndexName = data.currentIndexName;
     }
 
     getTitle() {
@@ -74,7 +77,7 @@ export class ExcelMapper extends GenericMapper {
 
         if (distributions.length === 0) {
             this.valid = false;
-            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.id}', index: '${this.settings.currentIndexName}'.`;
+            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.id}', index: '${this.currentIndexName}'.`;
             log.warn(msg);
         }
 
@@ -198,7 +201,7 @@ export class ExcelMapper extends GenericMapper {
                     accessURL: downloadUrl.trim()
                 });
             } else {
-                let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.settings.currentIndexName}'.`;
+                let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.currentIndexName}'.`;
                 log.warn(msg);
                 this.errors.push(msg);
                 this.summary.numErrors++;
@@ -309,8 +312,8 @@ export class ExcelMapper extends GenericMapper {
 
     }
 
-    getUrlCheckRequestConfig(uri: string): RequestConfig {
-        let config: RequestConfig = {
+    getUrlCheckRequestConfig(uri: string): OptionsWithUri {
+        let config: OptionsWithUri = {
             method: 'GET',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),

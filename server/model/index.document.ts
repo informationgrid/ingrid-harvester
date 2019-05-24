@@ -1,4 +1,4 @@
-import {GenericMapper} from "./generic-mapper";
+import {GenericMapper} from "./generic.mapper";
 
 export class IndexDocument {
 

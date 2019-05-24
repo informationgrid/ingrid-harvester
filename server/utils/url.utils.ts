@@ -1,6 +1,7 @@
 'use strict';
 
-import {RequestConfig, RequestDelegate} from "./http-request-utils";
+import {RequestDelegate} from "./http-request.utils";
+import {OptionsWithUri} from "request-promise";
 
 let log = require('log4js').getLogger( __filename );
 
@@ -21,8 +22,8 @@ export class UrlUtils {
      * or the uri prefixed with 'https://' or 'http://' if these are reachable,
      * or undefined otherwise
      */
-    static async urlWithProtocolFor(requestConfig: RequestConfig): Promise<string> {
-        let url = requestConfig.uri;
+    static async urlWithProtocolFor(requestConfig: OptionsWithUri): Promise<string> {
+        let url = <string>requestConfig.uri;
 
         if (url && url.trim()) {
             // we assume that an URL which contains '://' also has a protocol and is valid
@@ -53,7 +54,7 @@ export class UrlUtils {
      * @param requestConfig the configuration to use for HTTP requests
      * @private
      */
-    private static async checkUrlWithProtocol(requestConfig: RequestConfig): Promise<boolean> {
+    private static async checkUrlWithProtocol(requestConfig: OptionsWithUri): Promise<boolean> {
         let found = false;
         try {
             let delegate = new RequestDelegate(requestConfig);

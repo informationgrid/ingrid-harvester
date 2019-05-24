@@ -1,9 +1,9 @@
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
-import {ExcelImporter, ExcelSettings} from "../server/importer/excel/importer";
+import {ExcelImporter, ExcelSettings} from "../server/excel/excel.importer";
 import {configure, getLogger} from "log4js";
-import {IndexDocument} from "../server/model/index-document";
+import {IndexDocument} from "../server/model/index.document";
 import {TestUtils} from "./utils/test-utils";
 
 let log = getLogger();
@@ -28,12 +28,10 @@ describe('Import Excel', function () {
             filePath: 'test/data/data-test.xlsx',
             defaultDCATCategory: 'DEFAULT_TRAN',
             alias: undefined,
-            currentIndexName: undefined,
             elasticSearchUrl: undefined,
-            importer: undefined,
+            type: undefined,
             includeTimestamp: undefined,
-            index: undefined,
-            indexType: undefined
+            index: undefined
         };
         let importer = new ExcelImporter(settings);
 

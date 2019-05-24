@@ -2,9 +2,10 @@ import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
-import {IndexDocument} from "../server/model/index-document";
+import {IndexDocument} from "../server/model/index.document";
 import {TestUtils} from "./utils/test-utils";
-import {BfgImporter} from "../server/importer/csw/bfg-importer";
+import {BfgImporter} from "../server/csw/bfg.importer";
+import {CswSettings} from "../server/csw/csw.importer";
 
 let log = getLogger();
 configure('./log4js.json');
@@ -21,7 +22,8 @@ describe('Import CSW BFG', function () {
 
         log.info('Start test ...');
 
-        const settings: any = {
+        // @ts-ignore
+        const settings: CswSettings = {
             dryRun: true,
             getRecordsUrl: "https://geoportal.bafg.de/soapServices/CSWStartup",
             proxy: null,
@@ -29,20 +31,21 @@ describe('Import CSW BFG', function () {
             defaultDCATCategory: "TRAN",
             defaultAttribution: "Bundesanstalt für Gewässerkunde",
             defaultAttributionLink: "https://www.bafg.de/",
-            includeTimestamp: true
+            includeTimestamp: true,
+            recordFilter: `
+                <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+                    <ogc:PropertyIsEqualTo>
+                        <ogc:PropertyName>subject</ogc:PropertyName>
+                        <ogc:Literal>opendata</ogc:Literal>
+                    </ogc:PropertyIsEqualTo>
+                    <ogc:PropertyIsEqualTo>
+                        <ogc:PropertyName>identifier</ogc:PropertyName>
+                        <ogc:Literal>82f97ad0-198b-477e-a440-82fa781624eb</ogc:Literal>
+                    </ogc:PropertyIsEqualTo>
+                </ogc:Filter>`
         };
-        const filter = `
-            <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-                <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>subject</ogc:PropertyName>
-                    <ogc:Literal>opendata</ogc:Literal>
-                </ogc:PropertyIsEqualTo>
-                <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>identifier</ogc:PropertyName>
-                    <ogc:Literal>82f97ad0-198b-477e-a440-82fa781624eb</ogc:Literal>
-                </ogc:PropertyIsEqualTo>
-            </ogc:Filter>`;
-        let importer = new BfgImporter(settings, {constraint: filter});
+
+        let importer = new BfgImporter(settings);
 
         sinon.stub(importer.bfgUtil.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
 
