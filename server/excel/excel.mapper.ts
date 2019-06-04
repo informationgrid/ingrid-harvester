@@ -181,12 +181,12 @@ export class ExcelMapper extends GenericMapper {
      * @param type
      * @param urlsString
      */
-    async addDownloadUrls(type: string, urlsString): Promise<Distribution[]> {
+    async addDownloadUrls(type: string, urlsString: string|any): Promise<Distribution[]> {
         // Check if the cell contains just text or hyperlinked text
         if (urlsString.text) urlsString = urlsString.text;
         const distributions: Distribution[] = [];
 
-        let downloads: string[] = urlsString.split(/,[\r\n]+/); // comma followed by one or more (carriage returns or newlines)
+        let downloads: string[] = urlsString.split(/,[\s]+/); // comma followed by one or more (spaces, carriage returns or newlines)
         await Promise.all(downloads.map( async (downloadUrl) => {
 
             // skip if downloadURL is empty

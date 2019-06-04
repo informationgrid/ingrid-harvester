@@ -45,7 +45,7 @@
   },
   {
     "type": "CKAN",
-    "description": "Transparentzportal Hamburg",
+    "description": "Transparenzportal Hamburg",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_portal_hamburg",
     "alias": "mcloud",
