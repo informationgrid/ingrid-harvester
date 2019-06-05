@@ -12,8 +12,9 @@ let log = require( 'log4js' ).getLogger( __filename ),
     logSummary = getLogger('summary');
 
 export type CkanSettings = {
-    description?, ckanBaseUrl,
-    defaultMcloudSubgroup, defaultDCATCategory, maxRecords?: number, startPosition?: number
+    ckanBaseUrl: string,
+    maxRecords?: number,
+    startPosition?: number
 } & ElasticSettings & ImporterSettings;
 
 export class CkanImporter implements Importer {
@@ -26,7 +27,7 @@ export class CkanImporter implements Importer {
         numErrors: 0,
         print: () => {
             logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.type}`);
+            logSummary.info(`Summary of: ${this.settings.description} (${this.settings.type})`);
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);

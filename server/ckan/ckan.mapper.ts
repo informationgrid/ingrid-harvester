@@ -42,7 +42,7 @@ export class CkanMapper extends GenericMapper {
     }
 
     getCategories() {
-        return this.settings.defaultMcloudSubgroup;
+        return [this.settings.defaultMcloudSubgroup];
     }
 
     getCitation() {

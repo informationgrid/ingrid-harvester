@@ -2,7 +2,7 @@ let elasticsearch = require('elasticsearch'),
     log = require('log4js').getLogger(__filename);
 
 export type ElasticSettings = {
-    elasticSearchUrl, index, indexType?, alias, deduplicationAlias?, includeTimestamp
+    elasticSearchUrl: string, index: string, indexType?: string, alias: string, deduplicationAlias?: string, includeTimestamp: boolean
 }
 
 export class ElasticSearchUtils {

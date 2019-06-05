@@ -1,7 +1,9 @@
 import {Summary} from "./model/summary";
 
 export type ImporterSettings = {
-    type, proxy?, dryRun?, disable?
+    description: string, type: string, proxy?: string, dryRun?: boolean, disable?: boolean,
+    defaultMcloudSubgroup: string,
+    defaultDCATCategory: string
 }
 
 export interface Importer {

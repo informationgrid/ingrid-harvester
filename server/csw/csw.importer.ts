@@ -15,9 +15,14 @@ let log = require('log4js').getLogger(__filename),
     DomParser = require('xmldom').DOMParser;
 
 export type CswSettings = {
-    getRecordsUrl, mandatoryKeywords: string[], httpMethod,
-    defaultMcloudSubgroup, defaultDCATCategory, defaultAttribution, defaultAttributionLink,
-    maxRecords: number, startPosition: number, recordFilter: string
+    getRecordsUrl: string,
+    eitherKeywords: string[],
+    httpMethod: "GET" | "POST",
+    defaultAttribution: string,
+    defaultAttributionLink: string,
+    maxRecords: number,
+    startPosition: number,
+    recordFilter: string
 } & ElasticSettings & ImporterSettings;
 
 export class CswImporter {
@@ -36,7 +41,7 @@ export class CswImporter {
         ok: 0,
         print: () => {
             logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.type}`);
+            logSummary.info(`Summary of: ${this.settings.description || this.settings.defaultAttribution} (${this.settings.type})`);
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);

@@ -13,7 +13,7 @@ let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary');
 
 export type ExcelSettings = {
-    filePath, defaultDCATCategory
+    filePath
 } & ElasticSettings & ImporterSettings;
 
 export class ExcelImporter implements Importer {
@@ -28,7 +28,7 @@ export class ExcelImporter implements Importer {
         numErrors: 0,
         print: () => {
             logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.type}`);
+            logSummary.info(`Summary of: ${this.settings.description || ''} (${this.settings.type})`);
             logSummary.info(`---------------------------------------------------------`);
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);

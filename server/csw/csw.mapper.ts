@@ -346,7 +346,7 @@ export class CswMapper extends GenericMapper {
      * have this keyword defined, then it will be skipped from the index.
      */
     getKeywords(): string[] {
-        let mandatoryKws = this.settings.mandatoryKeywords || ['opendata'];
+        let mandatoryKws = this.settings.eitherKeywords || [];
         let keywords = this.fetched.keywords[mandatoryKws.join()];
         if (keywords) {
             return keywords;

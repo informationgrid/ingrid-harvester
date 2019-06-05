@@ -111,7 +111,9 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getCategories() {
-        return this.mapCategories(this.columnValues[this.columnMap.Kategorie].split(','));
+        let categories = this.mapCategories(this.columnValues[this.columnMap.Kategorie].split(','));
+        if (!categories || categories.length === 0) categories = [this.settings.defaultMcloudSubgroup];
+        return categories;
     }
 
     getCitation() {
