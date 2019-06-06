@@ -306,7 +306,7 @@ export class ExcelMapper extends GenericMapper {
             organization: this.columnValues[this.columnMap.Quellenvermerk]
         };
 
-        if (originator.organization === 'keinen') {
+        if (!originator.organization || originator.organization === 'keinen') {
             return undefined;
         }
 
