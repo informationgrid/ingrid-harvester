@@ -1,10 +1,10 @@
-import * as chai from "chai";
-import * as chaiAsPromised from "chai-as-promised";
-import {configure, getLogger} from "log4js";
-import {CkanSettings, DeutscheBahnCkanImporter} from "../server/ckan/importer";
-import * as sinon from "sinon";
-import {IndexDocument} from "../server/model/index-document";
-import {TestUtils} from "./utils/test-utils";
+import * as chai from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
+import {configure, getLogger} from 'log4js';
+import {CkanSettings, CkanImporter} from '../server/ckan/ckan.importer';
+import * as sinon from 'sinon';
+import {IndexDocument} from '../server/model/index.document';
+import {TestUtils} from './utils/test-utils';
 
 let log = getLogger();
 configure('./log4js.json');
@@ -23,21 +23,19 @@ describe('Import CKAN Bahn', function () {
 
         var settings: CkanSettings = {
             alias: undefined,
-            ckanBaseUrl: "https://data.deutschebahn.com",
-            currentIndexName: undefined,
+            ckanBaseUrl: 'https://data.deutschebahn.com',
+            description: 'Deutsche Bahn Datenportal',
             defaultDCATCategory: 'TRAN',
-            defaultMcloudSubgroup: "railway",
+            defaultMcloudSubgroup: 'railway',
             dryRun: true,
             elasticSearchUrl: undefined,
-            importer: undefined,
+            type: undefined,
             includeTimestamp: true,
-            index: undefined,
-            indexType: undefined,
-            proxy: undefined
+            index: undefined
         };
-        let importer = new DeutscheBahnCkanImporter(settings);
+        let importer = new CkanImporter(settings);
 
-        sinon.stub(importer.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
+        sinon.stub(importer.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, '2019-01-09T17:51:38.934Z'));
 
         indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
 

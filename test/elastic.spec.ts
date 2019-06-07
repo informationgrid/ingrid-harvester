@@ -1,4 +1,4 @@
-import {ElasticSearchUtils} from "../server/utils/elastic-utils";
+import {ElasticSearchUtils} from "../server/utils/elastic.utils";
 import {expect} from "chai";
 
 

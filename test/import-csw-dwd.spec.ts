@@ -2,9 +2,10 @@ import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
-import {IndexDocument} from "../server/model/index-document";
+import {IndexDocument} from "../server/model/index.document";
 import {TestUtils} from "./utils/test-utils";
-import {DwdImporter} from "../server/csw/dwd-importer";
+import {DwdImporter} from "../server/csw/dwd.importer";
+import {CswSettings} from "../server/csw/csw.importer";
 
 let log = getLogger();
 configure('./log4js.json');
@@ -21,9 +22,10 @@ describe('Import CSW DWD', function () {
 
         log.info('Start test ...');
 
-        const settings: any = {
+        // @ts-ignore
+        const settings: CswSettings = {
             dryRun: true,
-            importer: "DWD-CSW",
+            type: "DWD-CSW",
             elasticSearchUrl: "http://localhost:9200",
             index: "csw_dwd",
             indexType: "base",
@@ -33,19 +35,18 @@ describe('Import CSW DWD', function () {
             defaultMcloudSubgroup: "climate",
             defaultDCATCategory: "TRAN",
             defaultAttribution: "Climate Data Centre (CDC) Katalog des DWD",
-            includeTimestamp: true
+            includeTimestamp: true,
+            recordFilter: `
+                <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+                    <ogc:PropertyIsEqualTo>
+                        <ogc:PropertyName>identifier</ogc:PropertyName>
+                        <ogc:Literal>de.dwd.geoserver.fach.RBSN_RH</ogc:Literal>
+                    </ogc:PropertyIsEqualTo>
+                </ogc:Filter>`
         };
-        // settings.options_csw_search.qs.constraint = '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"></ogc:Filter>';
-        const filter = `
-            <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-                <ogc:PropertyIsEqualTo>
-                    <ogc:PropertyName>identifier</ogc:PropertyName>
-                    <ogc:Literal>de.dwd.geoserver.fach.RBSN_RH</ogc:Literal>
-                </ogc:PropertyIsEqualTo>
-            </ogc:Filter>`;
-        let importer = new DwdImporter(settings, {constraint: filter});
+        let importer = new DwdImporter(settings);
 
-        sinon.stub(importer.dwdUtil.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
+        sinon.stub(importer.cswUtil.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
 
         indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
 

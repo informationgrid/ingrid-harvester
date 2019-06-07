@@ -1,16 +1,17 @@
-import {ExcelImporter} from './excel/importer';
-import {DeutscheBahnCkanImporter} from "./ckan/importer";
-import {WsvImporter} from "./csw/wsv-importer";
-import {DwdImporter} from "./csw/dwd-importer";
-import {BfgImporter} from "./csw/bfg-importer";
-import {MdiImporter} from "./csw/mdi-importer";
+import {ExcelImporter, ExcelSettings} from './excel/excel.importer';
+import {CkanImporter, CkanSettings} from "./ckan/ckan.importer";
+import {WsvImporter} from "./csw/wsv.importer";
+import {DwdImporter} from "./csw/dwd.importer";
+import {BfgImporter} from "./csw/bfg.importer";
+import {MdiImporter} from "./csw/mdi.importer";
 import {configure, getLogger} from 'log4js';
 import {Summary} from "./model/summary";
 import * as fs from "fs";
-import {BshImporter} from "./csw/bsh-types";
-import {CodeDeImporter} from "./csw/codede-types";
+import {BshImporter} from "./csw/bsh.importer";
+import {CodedeImporter} from "./csw/codede.importer";
+import {CswSettings} from "./csw/csw.importer";
 
-let config = require( './config.json' ),
+let config: (CkanSettings | CswSettings | ExcelSettings)[] = require( './config.json' ),
     process = require('process'),
     log = getLogger(),
     logSummary = getLogger('summary'),
@@ -36,16 +37,16 @@ let runAsync = false;
 
 // listen for incoming messages, which can be "import" with parameter <type>
 
-function getImporter(settings) {
-    const type = settings.importer;
-    if (type === 'CKAN-DB') return new DeutscheBahnCkanImporter(settings);
-    if (type === 'EXCEL') return new ExcelImporter(settings);
-    if (type === 'WSV-CSW') return new WsvImporter(settings);
-    if (type === 'DWD-CSW') return new DwdImporter(settings);
-    if (type === 'BFG-CSW') return new BfgImporter(settings);
-    if (type === 'MDI-CSW') return new MdiImporter(settings);
-    if (type === 'BSH-CSW') return new BshImporter(settings);
-    if (type === 'CODEDE-CSW') return new CodeDeImporter(settings);
+function getImporter(importerConfig) {
+    const type = importerConfig.type;
+    if (type === 'CKAN') return new CkanImporter(importerConfig);
+    if (type === 'EXCEL') return new ExcelImporter(importerConfig);
+    if (type === 'WSV-CSW') return new WsvImporter(importerConfig);
+    if (type === 'DWD-CSW') return new DwdImporter(importerConfig);
+    if (type === 'BFG-CSW') return new BfgImporter(importerConfig);
+    if (type === 'MDI-CSW') return new MdiImporter(importerConfig);
+    if (type === 'BSH-CSW') return new BshImporter(importerConfig);
+    if (type === 'CODEDE-CSW') return new CodedeImporter(importerConfig);
 }
 
 function getDateString() {
@@ -71,16 +72,20 @@ async function startProcess() {
     const processes = [];
     let summaries: Summary[] = [];
 
-    for (let settings of config) {
+    for (let importerConfig of config) {
+
+        // skip disabled importer
+        if (importerConfig.disable) continue;
+
         // Include relevant CLI args
-        settings.dryRun = args.includes('-n') || args.includes('--dry-run') || settings.dryRun === true;
+        importerConfig.dryRun = args.includes('-n') || args.includes('--dry-run') || importerConfig.dryRun === true;
 
         // Set the same elasticsearch alias for deduplication for all importers
-        settings.deduplicationAlias = deduplicationAlias;
+        importerConfig.deduplicationAlias = deduplicationAlias;
 
-        let importer = getImporter( settings );
+        let importer = getImporter( importerConfig );
         if (!importer) {
-            log.error( 'Importer not defined for: ' + settings.importer );
+            log.error( 'Importer not defined for: ' + importerConfig.type );
             return;
         }
         log.info("Starting import ...");
@@ -91,7 +96,7 @@ async function startProcess() {
                 summaries.push(await importer.run());
             }
         } catch (e) {
-            console.error(`Importer ${settings.importer} failed: `, e);
+            console.error(`Importer ${importerConfig.type} failed: `, e);
         }
     }
 

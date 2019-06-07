@@ -1,24 +1,35 @@
 /**
  * A mapper for CKAN documents.
  */
-import {GenericMapper, Organization, Person} from "../model/generic-mapper";
-import {UrlUtils} from "../utils/url-utils";
+import {GenericMapper, Organization, Person} from "../model/generic.mapper";
+import {UrlUtils} from "../utils/url.utils";
 import {getLogger} from "log4js";
-import {RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {CkanParameters, RequestDelegate, RequestPaging} from "../utils/http-request.utils";
+import {OptionsWithUri} from "request-promise";
+import {CkanSettings} from "./ckan.importer";
 
 let markdown = require('markdown').markdown;
 
-export class CkanToElasticsearchMapper extends GenericMapper {
+interface CkanMapperData {
+    harvestTime: Date;
+    issuedDate: Date;
+    source: any;
+    currentIndexName: string;
+}
+
+export class CkanMapper extends GenericMapper {
 
     private log = getLogger();
 
-    private readonly data: any;
+    private readonly source: any;
+    private readonly data: CkanMapperData;
     private resourcesDate: Date[] = null;
-    private settings: any;
+    private settings: CkanSettings;
 
-    constructor(settings, data) {
+    constructor(settings: CkanSettings, data: CkanMapperData) {
         super();
         this.settings = settings;
+        this.source = data.source;
         this.data = data;
     }
 
@@ -31,7 +42,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getCategories() {
-        return this.settings.defaultMcloudSubgroup;
+        return [this.settings.defaultMcloudSubgroup];
     }
 
     getCitation() {
@@ -39,17 +50,24 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getDescription() {
-        return markdown.toHTML(this.data.notes);
+        return this.source.notes ? markdown.toHTML(this.source.notes) : undefined;
     }
 
     async getDisplayContacts() {
 
         let publisher = await this.getPublisher();
 
-        let contact: Person = {
-            name: publisher[0].organization ? publisher[0].organization : undefined,
-            homepage: publisher[0].homepage ? publisher[0].homepage : undefined
-        };
+        let contact: Person;
+        if (publisher.length === 0) {
+            contact = {
+                name: this.settings.description
+            }
+        } else {
+            contact = {
+                name: publisher[0].organization ? publisher[0].organization : this.settings.description,
+                homepage: publisher[0].homepage ? publisher[0].homepage : undefined
+            }
+        }
 
         return [contact];
     }
@@ -57,9 +75,9 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     async getDistributions(): Promise<any[]> {
         let urlErrors = [];
         let distributions = [];
-        let resources = this.data.resources;
+        let resources = this.source.resources;
         if (resources !== null) {
-            for(let i=0; i<resources.length; i++) {
+            for (let i = 0; i < resources.length; i++) {
                 let res = resources[i];
 
                 let requestConfig = this.getUrlCheckRequestConfig(res.url);
@@ -78,7 +96,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
                     };
                     distributions.push(dist);
                 } else {
-                    let msg = `Invalid URL '${res.url} found for item with id: '${this.data.id}', title: '${this.data.title}', index: '${this.settings.currentIndexName}'.`;
+                    let msg = `Invalid URL '${res.url} found for item with id: '${this.source.id}', title: '${this.source.title}', index: '${this.data.currentIndexName}'.`;
                     urlErrors.push(msg);
                     this.log.warn(msg);
                 }
@@ -88,7 +106,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
 
         if (distributions.length === 0) {
             this.valid = false;
-            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.data.id}', index: '${this.settings.currentIndexName}'.`;
+            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.source.id}', index: '${this.data.currentIndexName}'.`;
             this.log.warn(msg);
         }
 
@@ -96,7 +114,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getGeneratedId() {
-        return this.data.name;
+        return this.source.name;
     }
 
     getMFundFKZ() {
@@ -108,40 +126,40 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getMetadataIssued() {
-        return this.settings.issuedDate ? new Date(this.settings.issuedDate) : new Date(Date.now());
+        return this.data.issuedDate ? new Date(this.data.issuedDate) : new Date(Date.now());
     }
 
     getMetadataSource() {
         // Metadata
         // The harvest source
-        let rawSource = this.settings.ckanBaseUrl + "/api/3/action/package_show?id=" + this.data.name;
-        let portalSource = this.settings.ckanBaseUrl + '/dataset/' + this.data.name;
+        let rawSource = this.settings.ckanBaseUrl + "/api/3/action/package_show?id=" + this.source.name;
+        let portalSource = this.settings.ckanBaseUrl + '/dataset/' + this.source.name;
 
         return {
             raw_data_source: rawSource,
             portal_link: portalSource,
-            attribution: 'Deutsche Bahn Datenportal'
+            attribution: this.settings.description
         };
     }
 
     getModifiedDate() {
-        return this.data.metadata_modified instanceof Date ? this.data.metadata_modified : new Date(this.data.metadata_modified);
+        return this.source.metadata_modified instanceof Date ? this.source.metadata_modified : new Date(this.source.metadata_modified);
     }
 
     async getPublisher(): Promise<Organization[]> {
         let publisher: Organization;
-        if (this.data.organization !== null) {
-            if (this.data.organization.title !== null) {
-                let homepage = this.data.organization.description;
+        if (this.source.organization !== null) {
+            if (this.source.organization.title !== null) {
+                let homepage = this.source.organization.description;
                 let match = homepage.match(/]\(([^)]+)/); // Square bracket followed by text in parentheses
                 publisher = {
-                    organization: this.data.organization.title,
+                    organization: this.source.organization.title,
                     homepage: match ? match[1] : undefined
                 };
             }
         }
 
-        return [publisher];
+        return publisher ? [publisher] : [];
     }
 
     getTemporal() {
@@ -183,11 +201,11 @@ export class CkanToElasticsearchMapper extends GenericMapper {
 
     getThemes() {
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
-        return this.settings.defaultDCATCategory ? [ GenericMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory] : undefined;
+        return this.settings.defaultDCATCategory ? [GenericMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory] : undefined;
     }
 
     getTitle() {
-        return this.data.title;
+        return this.source.title;
     }
 
     isRealtime() {
@@ -195,13 +213,13 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getAccrualPeriodicity(): string {
-        return this.data.update_cycle;
+        return this.source.update_cycle;
     }
 
     getKeywords(): string[] {
         let keywords = [];
-        if (this.data.tags !== null) {
-            this.data.tags.forEach(tag => {
+        if (this.source.tags !== null) {
+            this.source.tags.forEach(tag => {
                 if (tag.display_name !== null) {
                     keywords.push(tag.display_name);
                 }
@@ -212,7 +230,7 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getHarvestedData(): string {
-        return JSON.stringify(this.data);
+        return JSON.stringify(this.source);
     }
 
     private getResourcesData() {
@@ -222,25 +240,25 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         }
 
         let dates = [];
-        let resources = this.data.resources;
+        let resources = this.source.resources;
         if (resources !== null) {
             for (let i = 0; i < resources.length; i++) {
                 let res = resources[i];
                 // let accessURL = await UrlUtils.urlWithProtocolFor(res.url);
                 // if (accessURL) {
-                    let created = res.created;
-                    let modified = res.modified;
+                let created = res.created;
+                let modified = res.modified;
 
-                    if (created) created = new Date(Date.parse(created));
-                    if (modified) modified = new Date(Date.parse(modified));
+                if (created) created = new Date(Date.parse(created));
+                if (modified) modified = new Date(Date.parse(modified));
 
-                    if (created && modified) {
-                        dates.push(Math.max(created, modified));
-                    } else if (modified) {
-                        dates.push(modified);
-                    } else if (created) {
-                        dates.push(created);
-                    }
+                if (created && modified) {
+                    dates.push(Math.max(created, modified));
+                } else if (modified) {
+                    dates.push(modified);
+                } else if (created) {
+                    dates.push(created);
+                }
                 // }
             }
         }
@@ -251,8 +269,8 @@ export class CkanToElasticsearchMapper extends GenericMapper {
 
     getCreator(): Person {
         return {
-            name: this.data.author,
-            mbox: this.data.author_email
+            name: this.source.author,
+            mbox: this.source.author_email
         };
     }
 
@@ -260,9 +278,9 @@ export class CkanToElasticsearchMapper extends GenericMapper {
         let groups = [];
 
         // Groups
-        if (this.data.groups !== null) {
+        if (this.source.groups !== null) {
             groups = [];
-            this.data.groups.forEach(group => {
+            this.source.groups.forEach(group => {
                 groups.push(group.display_name);
             });
         }
@@ -271,35 +289,35 @@ export class CkanToElasticsearchMapper extends GenericMapper {
     }
 
     getIssued(): Date {
-        return this.data.metadata_created instanceof Date ? this.data.metadata_created : new Date(this.data.metadata_created);
+        return this.source.metadata_created instanceof Date ? this.source.metadata_created : new Date(this.source.metadata_created);
     }
 
     getMetadataHarvested(): Date {
-        return this.settings.harvestTime;
+        return this.data.harvestTime;
     }
 
     getSubSections(): any[] {
         let subsections = [];
 
-        // Extra information from the Deutsche Bahn portal
-        if (this.data.description) {
+        // Extra information
+        if (this.source.description) {
             subsections.push({
                 title: 'Langbeschreibung',
-                description: markdown.toHTML(this.data.description)
+                description: markdown.toHTML(this.source.description)
             });
         }
 
-        if (this.data.license_detailed_description) {
+        if (this.source.license_detailed_description) {
             subsections.push({
                 title: 'Lizenzbeschreibung',
-                description: this.data.license_detailed_description
+                description: this.source.license_detailed_description
             });
         }
 
-        if (this.data.haftung_description) {
+        if (this.source.haftung_description) {
             subsections.push({
                 title: 'Haftungsausschluss',
-                description: this.data.haftung_description
+                description: this.source.haftung_description
             });
         }
         return subsections;
@@ -311,21 +329,21 @@ export class CkanToElasticsearchMapper extends GenericMapper {
 
     getOriginator(): Person[] {
         return [{
-            name: this.data.author,
-            mbox: this.data.author_email
+            name: this.source.author,
+            mbox: this.source.author_email
         }];
     }
 
     async getLicense() {
         return {
-            id: this.data.license_id ? this.data.license_id : 'unknown',
-            title: this.data.license_title,
-            url: this.data.license_url
+            id: this.source.license_id ? this.source.license_id : 'unknown',
+            title: this.source.license_title,
+            url: this.source.license_url
         };
     }
 
-    getUrlCheckRequestConfig(uri: string): RequestConfig {
-        let config: RequestConfig = {
+    getUrlCheckRequestConfig(uri: string): OptionsWithUri {
+        let config: OptionsWithUri = {
             method: 'GET',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),
@@ -339,4 +357,31 @@ export class CkanToElasticsearchMapper extends GenericMapper {
 
         return config;
     }
+
+    static createRequestConfig(settings: CkanSettings): OptionsWithUri {
+
+        return {
+            method: 'GET',
+            uri: settings.ckanBaseUrl + "/api/3/action/package_search", // See http://docs.ckan.org/en/ckan-2.7.3/api/
+            json: true,
+            headers: RequestDelegate.defaultRequestHeaders(),
+            proxy: settings.proxy || null,
+            qs: <CkanParameters>{
+                sort: "id asc",
+                start: 0,
+                rows: 100
+            }
+        };
+
+    }
+
+    static createPaging(settings: CkanSettings): RequestPaging {
+        return {
+            startFieldName: 'start',
+            startPosition: settings.startPosition || 0,
+            numRecords: settings.maxRecords || 100
+        };
+    }
+
 }
+

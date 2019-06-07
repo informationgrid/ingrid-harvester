@@ -1,8 +1,9 @@
-import {UrlUtils} from "../utils/url-utils";
-import {Distribution, GenericMapper, License, Organization, Person} from "../model/generic-mapper";
+import {UrlUtils} from "../utils/url.utils";
+import {Distribution, GenericMapper, License, Organization, Person} from "../model/generic.mapper";
 import {Summary} from "../model/summary";
-import {ExcelSettings} from "./importer";
-import {RequestConfig, RequestDelegate} from "../utils/http-request-utils";
+import {ExcelSettings} from "./excel.importer";
+import {RequestDelegate} from "../utils/http-request.utils";
+import {OptionsWithUri} from "request-promise";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -16,6 +17,7 @@ export class ExcelMapper extends GenericMapper {
     workbook;
     private settings: ExcelSettings;
     private summary: Summary;
+    private currentIndexName: string;
 
     constructor(settings: ExcelSettings, data) {
         super();
@@ -27,6 +29,7 @@ export class ExcelMapper extends GenericMapper {
         this.columnMap = data.columnMap;
         this.workbook = data.workbook;
         this.summary = data.summary;
+        this.currentIndexName = data.currentIndexName;
     }
 
     getTitle() {
@@ -74,7 +77,7 @@ export class ExcelMapper extends GenericMapper {
 
         if (distributions.length === 0) {
             this.valid = false;
-            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.id}', index: '${this.settings.currentIndexName}'.`;
+            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.id}', index: '${this.currentIndexName}'.`;
             log.warn(msg);
         }
 
@@ -108,7 +111,9 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getCategories() {
-        return this.mapCategories(this.columnValues[this.columnMap.Kategorie].split(','));
+        let categories = this.mapCategories(this.columnValues[this.columnMap.Kategorie].split(','));
+        if (!categories || categories.length === 0) categories = [this.settings.defaultMcloudSubgroup];
+        return categories;
     }
 
     getCitation() {
@@ -178,12 +183,12 @@ export class ExcelMapper extends GenericMapper {
      * @param type
      * @param urlsString
      */
-    async addDownloadUrls(type: string, urlsString): Promise<Distribution[]> {
+    async addDownloadUrls(type: string, urlsString: string|any): Promise<Distribution[]> {
         // Check if the cell contains just text or hyperlinked text
         if (urlsString.text) urlsString = urlsString.text;
         const distributions: Distribution[] = [];
 
-        let downloads: string[] = urlsString.split(/,[\r\n]+/); // comma followed by one or more (carriage returns or newlines)
+        let downloads: string[] = urlsString.split(/,[\s]+/); // comma followed by one or more (spaces, carriage returns or newlines)
         await Promise.all(downloads.map( async (downloadUrl) => {
 
             // skip if downloadURL is empty
@@ -198,7 +203,7 @@ export class ExcelMapper extends GenericMapper {
                     accessURL: downloadUrl.trim()
                 });
             } else {
-                let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.settings.currentIndexName}'.`;
+                let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.currentIndexName}'.`;
                 log.warn(msg);
                 this.errors.push(msg);
                 this.summary.numErrors++;
@@ -301,7 +306,7 @@ export class ExcelMapper extends GenericMapper {
             organization: this.columnValues[this.columnMap.Quellenvermerk]
         };
 
-        if (originator.organization === 'keinen') {
+        if (!originator.organization || originator.organization === 'keinen') {
             return undefined;
         }
 
@@ -309,8 +314,8 @@ export class ExcelMapper extends GenericMapper {
 
     }
 
-    getUrlCheckRequestConfig(uri: string): RequestConfig {
-        let config: RequestConfig = {
+    getUrlCheckRequestConfig(uri: string): OptionsWithUri {
+        let config: OptionsWithUri = {
             method: 'GET',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),
