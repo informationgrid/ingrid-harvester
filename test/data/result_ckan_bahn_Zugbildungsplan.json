@@ -95,7 +95,9 @@
   ],
   "extras": {
     "generated_id": "zugbildungsplan-zpar",
-    "subgroups": "railway",
+    "subgroups": [
+      "railway"
+    ],
     "license": {
       "id": "cc-by",
       "title": "Creative Commons Attribution",
