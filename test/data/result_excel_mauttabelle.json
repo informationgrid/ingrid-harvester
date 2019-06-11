@@ -13,7 +13,10 @@
       "title": "Unbekannt"
     },
     "realtime" : false,
-    "temporal" : "01.12.2018 - 30.01.2019",
+    "temporal": {
+      "start": "2018-11-30T23:00:00.000Z",
+      "end": "2019-01-29T23:00:00.000Z"
+    },
     "citation" : "Bundesanstalt für Straßenwesen",
     "subgroups" : [ "roads" ],
     "displayContact" : [

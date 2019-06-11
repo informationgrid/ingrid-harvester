@@ -31,9 +31,7 @@ export class IndexDocument {
                 realtime: mapper.isRealtime(),
                 subgroups: mapper.getCategories(),
                 subsection: mapper.getSubSections(),
-                temporal: mapper.getTemporal(),
-                temporal_start: mapper.getTemporalStart(),
-                temporal_end: mapper.getTemporalEnd()
+                temporal: mapper.getTemporal()
             },
             issued: mapper.getIssued(),
             keywords: mapper.getKeywords(),

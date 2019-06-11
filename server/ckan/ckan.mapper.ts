@@ -1,7 +1,7 @@
 /**
  * A mapper for CKAN documents.
  */
-import {GenericMapper, Organization, Person} from "../model/generic.mapper";
+import {DateRange, GenericMapper, Organization, Person} from "../model/generic.mapper";
 import {UrlUtils} from "../utils/url.utils";
 import {getLogger} from "log4js";
 import {CkanParameters, RequestDelegate, RequestPaging} from "../utils/http-request.utils";
@@ -162,39 +162,26 @@ export class CkanMapper extends GenericMapper {
         return publisher ? [publisher] : [];
     }
 
-    getTemporal() {
+    getTemporal(): DateRange {
         let dates = this.getResourcesData();
         let minDate = new Date(Math.min(...dates)); // Math.min and Math.max convert items to numbers
         let maxDate = new Date(Math.max(...dates));
 
-        if (minDate.toISOString() !== maxDate.toISOString()) {
-            return undefined;
+        if (minDate && maxDate) {
+            return {
+                start: minDate,
+                end: maxDate
+            };
         } else if (maxDate) {
-            return maxDate.toISOString();
+            return {
+                start: maxDate,
+                end: maxDate
+            };
         } else if (minDate) {
-            return minDate.toISOString();
-        }
-        return undefined;
-    }
-
-    getTemporalStart() {
-        let dates = this.getResourcesData();
-        let minDate = new Date(Math.min(...dates)); // Math.min and Math.max convert items to numbers
-        let maxDate = new Date(Math.max(...dates));
-
-        if (minDate && maxDate && minDate.getTime() != maxDate.getTime()) {
-            return minDate; // Math.min and Math.max convert items to numbers
-        }
-        return undefined;
-    }
-
-    getTemporalEnd() {
-        let dates = this.getResourcesData();
-        let minDate = new Date(Math.min(...dates)); // Math.min and Math.max convert items to numbers
-        let maxDate = new Date(Math.max(...dates));
-
-        if (minDate && maxDate && minDate.getTime() != maxDate.getTime()) {
-            return maxDate;
+            return {
+                start: minDate,
+                end: minDate
+            };
         }
         return undefined;
     }

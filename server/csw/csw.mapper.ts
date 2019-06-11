@@ -1,7 +1,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Agent, Distribution, GenericMapper, License, Organization, Person} from "../model/generic.mapper";
+import {Agent, DateRange, Distribution, GenericMapper, License, Organization, Person} from "../model/generic.mapper";
 import {SelectedValue} from "xpath";
 import {getLogger} from "log4js";
 import {UrlUtils} from "../utils/url.utils";
@@ -437,75 +437,61 @@ export class CswMapper extends GenericMapper {
         return new Date(CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent);
     }
 
-    getTemporal() {
+    getTemporal(): DateRange {
         let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
-        let nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimeInstant/gml:timePosition', this.idInfo);
+
+        let nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', this.idInfo);
+        if (nodes.length > 1) {
+            this.log.warn(`Multiple time extents defined. Using only the first one. ${suffix}`);
+        }
+        if (nodes.length > 0) {
+            let begin = this.getTimeValue(nodes, 'begin');
+            let end = this.getTimeValue(nodes, 'end');
+
+            if (begin || end) {
+                return {
+                    start: begin ? begin : undefined,
+                    end: end ? end : undefined
+                }
+            }
+        }
+
+        // otherwise
+
+        nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimeInstant/gml:timePosition', this.idInfo);
         let times = nodes.map(node => node.textContent);
         if (times.length === 1) {
-            return times[0];
+            return {
+                start: new Date(times[0]),
+                end: new Date(times[0])
+            };
         } else if (times.length > 1) {
             this.log.warn(`Multiple time instants defined: [${times.join(', ')}]. ${suffix}`);
-            return times;
+            return {
+                custom: times
+            };
         }
         return undefined;
     }
 
-    getTemporalStart(): Date {
-        let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
-
-        let nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', this.idInfo);
-        if (nodes.length > 1) {
-            this.log.warn(`Multiple time extents defined. Using only the first one. ${suffix}`);
+    getTimeValue(nodes, beginOrEnd: 'begin' | 'end'): Date {
+        let dateNode = CswMapper.select('./gml:' + beginOrEnd + 'Position', nodes[0], true);
+        if (!dateNode) {
+            dateNode = CswMapper.select('./gml:' + beginOrEnd + '/*/gml:timePosition', nodes[0], true);
         }
-        if (nodes.length > 0) {
-            let begin = CswMapper.select('./gml:beginPosition', nodes[0], true);
-            if (!begin) {
-                begin = CswMapper.select('./gml:begin/*/gml:timePosition', nodes[0], true);
-            }
-            try {
-                if (!begin.hasAttribute('indeterminatePosition')) {
-                    let text = begin.textContent;
-                    let date = Date.parse(text);
-                    if (date) {
-                        return text;
-                    } else {
-                        this.log.warn(`Error parsing begin date, which was '${text}'. It will be ignored.`);
-                    }
+        try {
+            if (!dateNode.hasAttribute('indeterminatePosition')) {
+                let text = dateNode.textContent;
+                let date = new Date(Date.parse(text));
+                if (date) {
+                    return date;
+                } else {
+                    this.log.warn(`Error parsing begin date, which was '${text}'. It will be ignored.`);
                 }
-            } catch (e) {
-                this.log.error(`Cannot extract time range. ${suffix}`, e);
             }
+        } catch (e) {
+            this.log.error(`Cannot extract time range.`, e);
         }
-        return undefined;
-    }
-
-    getTemporalEnd(): Date {
-        let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
-
-        let nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', this.idInfo);
-        if (nodes.length > 1) {
-            this.log.warn(`Multiple time extents defined. Using only the first one. ${suffix}`);
-        }
-        if (nodes.length > 0) {
-            let end = CswMapper.select('./gml:endPosition', nodes[0], true);
-            if (!end) {
-                end = CswMapper.select('./gml:end/*/gml:timePosition', nodes[0], true);
-            }
-            try {
-                if (!end.hasAttribute('indeterminatePosition')) {
-                    let text = end.textContent;
-                    let date = Date.parse(text);
-                    if (date) {
-                        return text;
-                    } else {
-                        this.log.warn(`Error parsing end date, which was '${text}'. It will be ignored.`);
-                    }
-                }
-            } catch (e) {
-                this.log.error(`Cannot extract time range. ${suffix}`, e);
-            }
-        }
-        return undefined;
     }
 
     getThemes() {
