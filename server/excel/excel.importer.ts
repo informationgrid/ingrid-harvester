@@ -1,19 +1,19 @@
 import {IndexDocument} from '../model/index.document';
-import {ElasticSearchUtils, ElasticSettings} from '../utils/elastic.utils';
+import {DefaultElasticsearchSettings, ElasticSearchUtils, ElasticSettings} from '../utils/elastic.utils';
 import {ExcelMapper} from "./excel.mapper";
 import {Worksheet} from "exceljs";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {elasticsearchSettings} from "../elastic.settings";
 import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
-import {Importer, ImporterSettings} from "../importer";
+import {DefaultImporterSettings, Importer, ImporterSettings} from "../importer";
 import Excel = require('exceljs');
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary');
 
 export type ExcelSettings = {
-    filePath
+    filePath: string
 } & ElasticSettings & ImporterSettings;
 
 export class ExcelImporter implements Importer {
@@ -22,8 +22,18 @@ export class ExcelImporter implements Importer {
     elastic: ElasticSearchUtils;
     excelFilepath: string;
     names = {};
+
+    defaultSettings: ExcelSettings = {
+        ...DefaultElasticsearchSettings,
+        ...DefaultImporterSettings,
+        ...{
+            filePath: './data'
+        }
+    };
+
     summary: Summary = {
         appErrors: [],
+        elasticErrors: [],
         numDocs: 0,
         numErrors: 0,
         print: () => {
@@ -33,8 +43,12 @@ export class ExcelImporter implements Importer {
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);
             logSummary.info(`App-Errors: ${this.summary.appErrors.length}`);
-            if (this.summary.appErrors.length > 0) {
-                logSummary.info(`\t${this.summary.appErrors.map( e => e + '\n\t')}`);
+            if (logSummary.isDebugEnabled() && this.summary.appErrors.length > 0) {
+                logSummary.debug(`\n\t${this.summary.appErrors.join('\n\t')}`);
+            }
+            logSummary.info(`Elasticsearch-Errors: ${this.summary.elasticErrors.length}`);
+            if (logSummary.isDebugEnabled() && this.summary.elasticErrors.length > 0) {
+                logSummary.debug(`\n\t${this.summary.elasticErrors.join('\n\t')}`);
             }
         }
     };
@@ -44,8 +58,11 @@ export class ExcelImporter implements Importer {
      * @param { {filePath, mapper} }settings
      */
     constructor(settings) {
+        // merge default settings with configured ones
+        settings = {...this.defaultSettings, ...settings};
+
         this.settings = settings;
-        this.elastic = new ElasticSearchUtils(settings);
+        this.elastic = new ElasticSearchUtils(settings, this.summary);
         this.excelFilepath = settings.filePath;
     }
 

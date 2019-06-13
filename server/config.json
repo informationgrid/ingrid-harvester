@@ -6,32 +6,74 @@
     "index": "excel",
     "alias": "mcloud",
     "filePath": "./data.xlsx",
-    "includeTimestamp": true,
-    "defaultDCATCategory": "TRAN"
+    "defaultDCATCategory": "TRAN",
+    "disable": false
+  },
+  {
+    "type": "CKAN",
+    "description": "!Offene Daten Köln: last_modified invalid",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "ckan_opendata_koeln",
+    "alias": "mcloud",
+    "ckanBaseUrl": "https://offenedaten-koeln.de",
+    "defaultMcloudSubgroup": "railway",
+    "defaultDCATCategory": "TRAN",
+    "disable": false
+  },
+  {
+    "type": "CKAN",
+    "description": "!Offene Daten Bonn: parameters wrong",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "ckan_opendata_bonn",
+    "alias": "mcloud",
+    "ckanBaseUrl": "https://opendata.bonn.de",
+    "defaultMcloudSubgroup": "railway",
+    "defaultDCATCategory": "TRAN",
+    "disable": false
+  },
+  {
+    "type": "CKAN",
+    "description": "!Offene Daten Düsseldorf: resources.created invalid",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "ckan_opendata_duesseldorf",
+    "alias": "mcloud",
+    "ckanBaseUrl": "https://opendata.duesseldorf.de",
+    "defaultMcloudSubgroup": "railway",
+    "defaultDCATCategory": "TRAN",
+    "disable": false
+  },
+  {
+    "type": "CKAN",
+    "description": "Offene Daten Wuppertal",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "ckan_opendata_wuppertal",
+    "alias": "mcloud",
+    "ckanBaseUrl": "https://offenedaten-wuppertal.de",
+    "defaultMcloudSubgroup": "railway",
+    "defaultDCATCategory": "TRAN",
+    "disable": false
   },
   {
     "type": "CKAN",
     "description": "Deutsche Bahn Datenportal",
     "elasticSearchUrl": "http://localhost:9200",
-    "proxy": null,
     "index": "ckan_db",
     "alias": "mcloud",
     "ckanBaseUrl": "https://data.deutschebahn.com",
     "defaultMcloudSubgroup": "railway",
     "defaultDCATCategory": "TRAN",
-    "includeTimestamp": true
+    "disable": false
   },
   {
     "type": "CKAN",
     "description": "OpenData Rostock",
     "elasticSearchUrl": "http://localhost:9200",
-    "proxy": null,
     "index": "ckan_opendata_hro",
     "alias": "mcloud",
     "ckanBaseUrl": "https://www.opendata-hro.de",
     "defaultMcloudSubgroup": "infrastructure",
     "defaultDCATCategory": "REGI",
-    "includeTimestamp": true
+    "disable": false
   },
   {
     "type": "CKAN",
@@ -42,7 +84,7 @@
     "ckanBaseUrl": "https://www.offenesdatenportal.de",
     "defaultMcloudSubgroup": "infrastructure",
     "defaultDCATCategory": "REGI",
-    "includeTimestamp": true
+    "disable": false
   },
   {
     "type": "CKAN",
@@ -53,11 +95,22 @@
     "ckanBaseUrl": "http://suche.transparenz.hamburg.de",
     "defaultMcloudSubgroup": "infrastructure",
     "defaultDCATCategory": "REGI",
-    "includeTimestamp": true,
     "disable": true
   },
   {
+    "type": "CKAN",
+    "description": "!Open-Data-Portal der Rhein-Neckar-Verkehrs (RNV): resources.created invalid",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "ckan_opendata_rnv",
+    "alias": "mcloud",
+    "ckanBaseUrl": "https://opendata.rnv-online.de",
+    "defaultMcloudSubgroup": "infrastructure",
+    "defaultDCATCategory": "REGI",
+    "disable": false
+  },
+  {
     "type": "WSV-CSW",
+    "startPosition": 1,
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_wsv",
     "alias": "mcloud",
@@ -69,10 +122,11 @@
     "defaultDCATCategory": "TRAN",
     "defaultAttribution": "WSV.Geokatalog CSW",
     "defaultAttributionLink": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2",
-    "includeTimestamp": true
+    "disable": false
   },
   {
     "type": "MDI-CSW",
+    "startPosition": 1,
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_mdi",
     "alias": "mcloud",
@@ -84,10 +138,11 @@
     "defaultDCATCategory": "ENVI",
     "defaultAttribution": "MDI-DE",
     "defaultAttributionLink": "https://www.mdi-de.org/",
-    "includeTimestamp": true
+    "disable": false
   },
   {
     "type": "BFG-CSW",
+    "startPosition": 1,
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_bfg",
     "alias": "mcloud",
@@ -98,10 +153,11 @@
     "defaultDCATCategory": "ENVI",
     "defaultAttribution": "Bundesanstalt für Gewässerkunde",
     "defaultAttributionLink": "https://geoportal.bafg.de/",
-    "includeTimestamp": true
+    "disable": false
   },
   {
     "type": "DWD-CSW",
+    "startPosition": 1,
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_dwd",
     "alias": "mcloud",
@@ -115,23 +171,28 @@
     "defaultDCATCategory": "ENVI",
     "defaultAttribution": "Climate Data Centre (CDC) Katalog des DWD",
     "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/csw",
-    "includeTimestamp": true
+    "disable": false
   },
   {
     "type": "CODEDE-CSW",
+    "startPosition": 1,
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_codede",
     "alias": "mcloud",
     "getRecordsUrl": "https://catalog.code-de.org/discovery/srv/en/csw",
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>opendata</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
+    "eitherKeywords": [
+      "opendata"
+    ],
     "defaultMcloudSubgroup": "aviation",
     "defaultDCATCategory": "TECH",
     "defaultAttribution": "CODE-DE Catalogue",
     "defaultAttributionLink": "https://code-de.org/de/marketplace",
-    "includeTimestamp": true
+    "disable": false
   },
   {
     "type": "BSH-CSW",
+    "startPosition": 1,
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_bsh",
     "alias": "mcloud",
@@ -146,6 +207,6 @@
     "defaultDCATCategory": "ENVI",
     "defaultAttribution": "GeoSeaPortal (BSH)",
     "defaultAttributionLink": "https://www.geoseaportal.de/",
-    "includeTimestamp": true
+    "disable": false
   }
 ]

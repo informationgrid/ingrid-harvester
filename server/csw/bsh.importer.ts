@@ -8,6 +8,8 @@ export class BshImporter implements Importer {
     private readonly cswUtil: CswImporter;
 
     constructor(settings: CswSettings) {
+        // merge default settings with configured ones
+        settings = {...CswImporter.defaultSettings, ...settings};
 
         let requestConfig = CswImporter.createRequestConfig(settings);
 

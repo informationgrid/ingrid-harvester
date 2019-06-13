@@ -1,11 +1,11 @@
-import {ElasticSearchUtils, ElasticSettings} from "../utils/elastic.utils";
+import {DefaultElasticsearchSettings, ElasticSearchUtils, ElasticSettings} from "../utils/elastic.utils";
 import {elasticsearchSettings} from "../elastic.settings";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {CkanMapper} from "./ckan.mapper";
 import {IndexDocument} from "../model/index.document";
 import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
-import {Importer, ImporterSettings} from "../importer";
+import {DefaultImporterSettings, Importer, ImporterSettings} from "../importer";
 import {RequestDelegate} from "../utils/http-request.utils";
 
 let log = require( 'log4js' ).getLogger( __filename ),
@@ -13,16 +13,26 @@ let log = require( 'log4js' ).getLogger( __filename ),
 
 export type CkanSettings = {
     ckanBaseUrl: string,
-    maxRecords?: number,
-    startPosition?: number
+    requestType?: 'ListWithResources' | 'Search';
 } & ElasticSettings & ImporterSettings;
 
 export class CkanImporter implements Importer {
     private readonly settings: CkanSettings;
     elastic: ElasticSearchUtils;
     private requestDelegate: RequestDelegate;
+
+    defaultSettings: CkanSettings = {
+        ...DefaultElasticsearchSettings,
+        ...DefaultImporterSettings,
+        ...{
+            ckanBaseUrl: '',
+            requestType: 'ListWithResources'
+        }
+    };
+
     summary: Summary = {
         appErrors: [],
+        elasticErrors: [],
         numDocs: 0,
         numErrors: 0,
         print: () => {
@@ -32,8 +42,12 @@ export class CkanImporter implements Importer {
             logSummary.info(`Number of records: ${this.summary.numDocs}`);
             logSummary.info(`Number of errors: ${this.summary.numErrors}`);
             logSummary.info(`App-Errors: ${this.summary.appErrors.length}`);
-            if (this.summary.appErrors.length > 0) {
-                logSummary.info(`\t${this.summary.appErrors.map( e => e + '\n\t')}`);
+            if (logSummary.isDebugEnabled() && this.summary.appErrors.length > 0) {
+                logSummary.debug(`\n\t${this.summary.appErrors.join('\n\t')}`);
+            }
+            logSummary.info(`Elasticsearch-Errors: ${this.summary.elasticErrors.length}`);
+            if (logSummary.isDebugEnabled() && this.summary.elasticErrors.length > 0) {
+                logSummary.debug(`\n\t${this.summary.elasticErrors.join('\n\t')}`);
             }
         }
     };
@@ -43,13 +57,16 @@ export class CkanImporter implements Importer {
      * @param { {ckanBaseUrl, defaultMcloudSubgroup, mapper} }settings
      */
     constructor(settings: CkanSettings) {
+        // merge default settings with configured ones
+        settings = {...this.defaultSettings, ...settings};
+
         // Trim trailing slash
         let url = settings.ckanBaseUrl;
         if (url.charAt(url.length-1) === '/') {
             settings.ckanBaseUrl = url.substring(0, url.length-1);
         }
         this.settings = settings;
-        this.elastic = new ElasticSearchUtils(settings);
+        this.elastic = new ElasticSearchUtils(settings, this.summary);
 
         let requestConfig = CkanMapper.createRequestConfig(settings);
 
@@ -79,11 +96,12 @@ export class CkanImporter implements Importer {
                 source: source
             });
 
-            let doc = await IndexDocument.create(mapper).catch( e => {
-                log.error('Error creating index document', e);
-                this.summary.appErrors.push(e.toString());
-                mapper.skipped = true;
-            });
+            let doc = await IndexDocument.create(mapper)
+                .catch( e => {
+                    log.error('Error creating index document', e);
+                    this.summary.appErrors.push(e.toString());
+                    mapper.skipped = true;
+                });
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 return this.elastic.addDocToBulk(doc, source.id);
@@ -102,12 +120,21 @@ export class CkanImporter implements Importer {
             }
             let promises = [];
             let total = 0;
+            let page = this.settings.startPosition;
 
             // Fetch datasets 'qs.rows' at a time
             while(true) {
                 let json = await this.requestDelegate.doRequest();
                 let now = new Date(Date.now());
-                let results = json.result.results;
+                let results = this.settings.requestType === 'ListWithResources' ? json.result : json.result.results;
+
+                // if offset is too high, then there should be an error and we are finished
+                if (!results) break;
+
+                // Workaround if results are contained with another array (https://offenedaten-koeln.de)
+                if (results.length === 1 && results[0] instanceof Array) {
+                    results = results[0];
+                }
 
                 log.info(`Received ${results.length} records from ${this.settings.ckanBaseUrl}`);
                 total += results.length;
@@ -117,16 +144,25 @@ export class CkanImporter implements Importer {
                 // issued dates are those showing the date of the first harvesting
                 let timestamps = await this.elastic.getIssuedDates(ids);
 
-                results.forEach((dataset, idx) => promises.push(this.importDataset({
-                    data: dataset,
-                    issued: timestamps[idx],
-                    harvestTime: now
-                })));
+                results.forEach((dataset, idx) => promises.push(
+                    this.importDataset({
+                        data: dataset,
+                        issued: timestamps[idx],
+                        harvestTime: now
+                    })
+                ));
 
-                if (results.length < 1) {
+                if (results.length < this.settings.maxRecords) {
                     break;
                 } else {
-                    this.requestDelegate.incrementStartRecordIndex();
+                    // this.requestDelegate.incrementStartRecordIndex();
+                    this.requestDelegate.updateConfig({
+                        qs: {
+                            offset: page * this.settings.maxRecords,
+                            limit: this.settings.maxRecords
+                        }
+                    });
+                    page++;
                 }
             }
 
@@ -148,6 +184,8 @@ export class CkanImporter implements Importer {
             }
         } catch (err) {
             log.error( 'error:', err );
+            this.summary.appErrors.push(err.message);
+            return this.summary;
         }
     }
 }

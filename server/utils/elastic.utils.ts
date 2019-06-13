@@ -1,9 +1,18 @@
+import {Summary} from "../model/summary";
+
 let elasticsearch = require('elasticsearch'),
     log = require('log4js').getLogger(__filename);
 
 export type ElasticSettings = {
     elasticSearchUrl: string, index: string, indexType?: string, alias: string, deduplicationAlias?: string, includeTimestamp: boolean
 }
+
+export const DefaultElasticsearchSettings: ElasticSettings = {
+    elasticSearchUrl: 'localhost:9200',
+    index: '',
+    alias: '',
+    includeTimestamp: true
+};
 
 export class ElasticSearchUtils {
 
@@ -15,8 +24,11 @@ export class ElasticSearchUtils {
     indexName;
     deduplicationAlias;
 
-    constructor(settings) {
+    summary: Summary;
+
+    constructor(settings, summary: Summary) {
         this.settings = settings;
+        this.summary = summary;
 
         // the elasticsearch client for access the cluster
         this.client = new elasticsearch.Client({
@@ -42,6 +54,7 @@ export class ElasticSearchUtils {
                 .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve))
                 .then(() => this.addAlias(this.indexName, this.deduplicationAlias))
                 .catch(err => {
+                    this.summary.elasticErrors.push(err);
                     if (err.message.indexOf( 'index_already_exists_exception' ) !== -1) {
                         log.info( 'Index ' + this.indexName + ' not created, since it already exists.' );
                     } else {
@@ -83,6 +96,7 @@ export class ElasticSearchUtils {
                 name: alias
             }, err => {
                 if (err) {
+                    this.summary.elasticErrors.push(err);
                     log.error('Error occurred adding alias', err);
                     reject(err);
                     return;
@@ -106,7 +120,8 @@ export class ElasticSearchUtils {
                 h: ['index']
             }, (err, body) => {
                 if (err) {
-                    log.error('Error occurred geting index names', err);
+                    this.summary.elasticErrors.push(err);
+                    log.error('Error occurred getting index names', err);
                     reject();
                     return;
                 }
@@ -125,6 +140,7 @@ export class ElasticSearchUtils {
                         index: lines
                     }, err => {
                         if (err) {
+                            this.summary.elasticErrors.push(err);
                             log.error('Error occurred deleting indeces', err);
                             reject();
                             return;
@@ -167,7 +183,10 @@ export class ElasticSearchUtils {
                 index: index,
                 body: settings
             }, err => {
-                if (err) log.error( 'Error occurred adding settings', err );
+                if (err) {
+                    this.summary.elasticErrors.push(err);
+                    log.error( 'Error occurred adding settings', err );
+                }
                 else handleMapping(); //this.client.indices.open({ index: index });
             } );
         };
@@ -179,9 +198,15 @@ export class ElasticSearchUtils {
                 type: type || 'base',
                 body: mapping
             }, err => {
-                if (err) log.error( 'Error occurred adding mapping', err );
+                if (err) {
+                    this.summary.elasticErrors.push(err);
+                    log.error( 'Error occurred adding mapping', err );
+                }
                 else this.client.indices.open({ index: index }, errOpen => {
-                    if (errOpen) log.error('Error opening index', errOpen);
+                    if (errOpen) {
+                        this.summary.elasticErrors.push(err);
+                        log.error('Error opening index', errOpen);
+                    }
                     callback();
                 });
             } );
@@ -212,11 +237,14 @@ export class ElasticSearchUtils {
                     body: data
                 })
                 .then(response => {
+                    let errors = [];
                     if (response.errors) {
                         response.items.forEach(item => {
                             let err = item.index.error;
                             if (err) {
-                                log.error(`Error during bulk indexing for item with id '${item.index._id}' was: ${JSON.stringify(err)}`);
+                                let message = `Error during indexing on index '${this.indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`;
+                                log.error(message);
+                                this.summary.elasticErrors.push(message);
                             }
                         });
                     }
@@ -228,6 +256,7 @@ export class ElasticSearchUtils {
                     resolve(response);
                 })
                 .catch(err => {
+                    this.summary.elasticErrors.push(err);
                     log.error('Error occurred during bulk index of #items: ' + data.length, err);
                     if (closeAfterBulk) {
                         this.client.close();
@@ -235,6 +264,7 @@ export class ElasticSearchUtils {
                     reject(err);
                 });
             } catch(e) {
+                this.summary.elasticErrors.push(e);
                 log.error('Error during bulk indexing of #items: ' + data.length, e);
             }
         });
@@ -246,7 +276,7 @@ export class ElasticSearchUtils {
      * @param doc
      * @param {string|number} id
      */
-    addDocToBulk(doc, id) {
+    addDocToBulk(doc, id): Promise<any> {
         this._bulkData.push({
             index: {
                 _id: id
@@ -260,6 +290,8 @@ export class ElasticSearchUtils {
         // TODO: don't use document size but bytes instead
         if (this._bulkData.length > this.maxBulkSize) {
             return this.sendBulkData();
+        } else {
+            return new Promise(resolve => resolve());
         }
     }
 
@@ -268,9 +300,9 @@ export class ElasticSearchUtils {
      *
      * @param {boolean=} closeAfterBulk
      */
-    sendBulkData(closeAfterBulk?) {
+    sendBulkData(closeAfterBulk?): Promise<any> {
         if (this._bulkData.length > 0) {
-            log.debug('Sending BULK message with ' + this._bulkData.length + ' items to index ' + this.indexName);
+            log.debug('Sending BULK message with ' + (this._bulkData.length/2) + ' items to index ' + this.indexName);
             let promise = this.bulk(this._bulkData, closeAfterBulk);
             this._bulkData = [];
             return promise;
@@ -355,6 +387,7 @@ export class ElasticSearchUtils {
                     });
                 }
             } catch (e) {
+                this.summary.elasticErrors.push(e);
                 log.error('Error during deduplication', e);
             }
         }
@@ -422,6 +455,7 @@ export class ElasticSearchUtils {
                         let response = result.responses[j];
 
                         if (response.error) {
+                            this.summary.elasticErrors.push(response.error);
                             log.error("Error in one of the search responses:", response.error);
                             continue;
                         }
@@ -437,6 +471,7 @@ export class ElasticSearchUtils {
                     log.debug('No result.reponse after msearch', result);
                 }
             } catch (e) {
+                this.summary.elasticErrors.push(e);
                 log.error('Error during search', e);
             }
         }
@@ -603,11 +638,13 @@ export class ElasticSearchUtils {
                     }
                     return count;
                 } catch (err) {
+                    this.summary.elasticErrors.push(err);
                     log.error(`Error deduplicating hits for URL ${bucket.key}`, err);
                 }
             });
             log.info(`${count} duplicates found using the aggregates query will be deleted from index '${this.indexName}'.`);
         } catch (err) {
+            this.summary.elasticErrors.push(err);
             log.error('Error processing results of aggregate query for duplicates', err);
         }
         await this.sendBulkData(false);

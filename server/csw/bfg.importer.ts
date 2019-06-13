@@ -9,6 +9,9 @@ export class BfgImporter implements Importer {
     bfgUtil: BfgUtils;
 
     constructor(settings) {
+        // merge default settings with configured ones
+        settings = {...CswImporter.defaultSettings, ...settings};
+
         let requestConfig = CswImporter.createRequestConfig(settings);
 
         let requestDelegate: RequestDelegate = new RequestDelegate(requestConfig, CswImporter.createPaging(settings));
