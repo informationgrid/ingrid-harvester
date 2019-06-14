@@ -23,10 +23,28 @@ export type CswSettings = {
     recordFilter?: string
 } & ElasticSettings & ImporterSettings;
 
+export class CswSummary extends Summary {
+    opendata = 0;
+    missingLinks = 0;
+    missingPublishers = 0;
+    missingLicense = 0;
+    ok = 0;
+
+    additionalSummary() {
+        logSummary.info(`Number of records with at least one mandatory keyword: ${this.opendata}`);
+        logSummary.info(`Number of records with missing links: ${this.missingLinks}`);
+        logSummary.info(`Number of records with missing license: ${this.missingLicense}`);
+        logSummary.info(`Number of records with missing publishers: ${this.missingPublishers}`);
+        logSummary.info(`Number of records imported as valid: ${this.ok}`);
+    }
+}
+
 export class CswImporter {
     private readonly settings: CswSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
+
+    private readonly summary: CswSummary;
 
     static defaultSettings: CswSettings = {
         ...DefaultElasticsearchSettings,
@@ -38,43 +56,23 @@ export class CswImporter {
         }
     };
 
-    private summary: Summary = {
-        appErrors: [],
-        elasticErrors: [],
-        numDocs: 0,
-        numErrors: 0,
-        numMatched: 0,
-        opendata: 0,
-        missingLinks: 0,
-        missingPublishers: 0,
-        missingLicense: 0,
-        ok: 0,
-        print: () => {
-            logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.description || this.settings.defaultAttribution} (${this.settings.type})`);
-            logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Number of records: ${this.summary.numDocs}`);
-            logSummary.info(`Number of errors: ${this.summary.numErrors}`);
-            logSummary.info(`Number of records with at least one mandatory keyword: ${this.summary.opendata}`);
-            logSummary.info(`Number of records with missing links: ${this.summary.missingLinks}`);
-            logSummary.info(`Number of records with missing license: ${this.summary.missingLicense}`);
-            logSummary.info(`Number of records with missing publishers: ${this.summary.missingPublishers}`);
-            logSummary.info(`Number of records imported as valid: ${this.summary.ok}`);
-            logSummary.info(`App-Errors: ${this.summary.appErrors.length}`);
-            if (logSummary.isDebugEnabled() && this.summary.appErrors.length > 0) {
-                logSummary.debug(`\n\t${this.summary.appErrors.join('\n\t')}`);
-            }
-            logSummary.info(`Elasticsearch-Errors: ${this.summary.elasticErrors.length}`);
-            if (logSummary.isDebugEnabled() && this.summary.elasticErrors.length > 0) {
-                logSummary.debug(`\n\t${this.summary.elasticErrors.join('\n\t')}`);
-            }
-        }
-    };
 
-    constructor(settings, requestDelegate: RequestDelegate) {
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        // merge default settings with configured ones
+        settings = {...CswImporter.defaultSettings, ...settings};
+
+        if (requestDelegate) {
+            this.requestDelegate = requestDelegate;
+        } else {
+            let requestConfig = CswImporter.createRequestConfig(settings);
+            this.requestDelegate = new RequestDelegate(requestConfig, CswImporter.createPaging(settings));
+        }
+
         this.settings = settings;
+
+        this.summary = new CswSummary(settings);
+
         this.elastic = new ElasticSearchUtils(settings, this.summary);
-        this.requestDelegate = requestDelegate;
     }
 
     async run(): Promise<Summary> {
@@ -162,11 +160,13 @@ export class CswImporter {
 
             const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');
             let mapper = this.getMapper(this.settings, records[i], harvestTime, issued[i], this.summary);
+
             let doc: any = await IndexDocument.create(mapper).catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
             });
+
             if (!mapper.shouldBeSkipped()) {
 
                 if (doc.extras.metadata.isValid && doc.distribution.length > 0) {

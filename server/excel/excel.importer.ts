@@ -31,27 +31,7 @@ export class ExcelImporter implements Importer {
         }
     };
 
-    summary: Summary = {
-        appErrors: [],
-        elasticErrors: [],
-        numDocs: 0,
-        numErrors: 0,
-        print: () => {
-            logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.description || ''} (${this.settings.type})`);
-            logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Number of records: ${this.summary.numDocs}`);
-            logSummary.info(`Number of errors: ${this.summary.numErrors}`);
-            logSummary.info(`App-Errors: ${this.summary.appErrors.length}`);
-            if (logSummary.isDebugEnabled() && this.summary.appErrors.length > 0) {
-                logSummary.debug(`\n\t${this.summary.appErrors.join('\n\t')}`);
-            }
-            logSummary.info(`Elasticsearch-Errors: ${this.summary.elasticErrors.length}`);
-            if (logSummary.isDebugEnabled() && this.summary.elasticErrors.length > 0) {
-                logSummary.debug(`\n\t${this.summary.elasticErrors.join('\n\t')}`);
-            }
-        }
-    };
+    summary: Summary;
 
     /**
      * Create the importer and initialize with settings.
@@ -60,6 +40,8 @@ export class ExcelImporter implements Importer {
     constructor(settings) {
         // merge default settings with configured ones
         settings = {...this.defaultSettings, ...settings};
+
+        this.summary = new Summary(settings);
 
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings, this.summary);

@@ -7,7 +7,7 @@ import {getLogger} from "log4js";
 import {UrlUtils} from "../utils/url.utils";
 import {Summary} from "../model/summary";
 import {RequestDelegate} from "../utils/http-request.utils";
-import {CswSettings} from "./csw.importer";
+import {CswSettings, CswSummary} from "./csw.importer";
 import {OptionsWithUri} from "request-promise";
 
 let xpath = require('xpath');
@@ -36,7 +36,7 @@ export class CswMapper extends GenericMapper {
     protected readonly idInfo: SelectedValue;
     private settings: CswSettings;
     private readonly uuid: string;
-    private summary: Summary;
+    private summary: CswSummary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {

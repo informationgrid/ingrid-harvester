@@ -8,7 +8,7 @@ import {getLogger} from "log4js";
 import {DefaultImporterSettings, Importer, ImporterSettings} from "../importer";
 import {RequestDelegate} from "../utils/http-request.utils";
 
-let log = require( 'log4js' ).getLogger( __filename ),
+let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary');
 
 export type CkanSettings = {
@@ -34,27 +34,7 @@ export class CkanImporter implements Importer {
         }
     };
 
-    summary: Summary = {
-        appErrors: [],
-        elasticErrors: [],
-        numDocs: 0,
-        numErrors: 0,
-        print: () => {
-            logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.description} (${this.settings.type})`);
-            logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Number of records: ${this.summary.numDocs}`);
-            logSummary.info(`Number of errors: ${this.summary.numErrors}`);
-            logSummary.info(`App-Errors: ${this.summary.appErrors.length}`);
-            if (logSummary.isDebugEnabled() && this.summary.appErrors.length > 0) {
-                logSummary.debug(`\n\t${this.summary.appErrors.join('\n\t')}`);
-            }
-            logSummary.info(`Elasticsearch-Errors: ${this.summary.elasticErrors.length}`);
-            if (logSummary.isDebugEnabled() && this.summary.elasticErrors.length > 0) {
-                logSummary.debug(`\n\t${this.summary.elasticErrors.join('\n\t')}`);
-            }
-        }
-    };
+    summary: Summary;
 
     /**
      * Create the importer and initialize with settings.
@@ -64,10 +44,12 @@ export class CkanImporter implements Importer {
         // merge default settings with configured ones
         settings = {...this.defaultSettings, ...settings};
 
+        this.summary = new Summary(settings);
+
         // Trim trailing slash
         let url = settings.ckanBaseUrl;
-        if (url.charAt(url.length-1) === '/') {
-            settings.ckanBaseUrl = url.substring(0, url.length-1);
+        if (url.charAt(url.length - 1) === '/') {
+            settings.ckanBaseUrl = url.substring(0, url.length - 1);
         }
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings, this.summary);
@@ -101,7 +83,7 @@ export class CkanImporter implements Importer {
             });
 
             let doc = await IndexDocument.create(mapper)
-                .catch( e => {
+                .catch(e => {
                     log.error('Error creating index document', e);
                     this.summary.appErrors.push(e.toString());
                     mapper.skipped = true;
@@ -124,10 +106,10 @@ export class CkanImporter implements Importer {
             }
             let promises = [];
             let total = 0;
-            let page = this.settings.startPosition;
+            let offset = this.settings.startPosition;
 
             // Fetch datasets 'qs.rows' at a time
-            while(true) {
+            while (true) {
                 let json = await this.requestDelegate.doRequest();
                 let now = new Date(Date.now());
                 let results = this.settings.requestType === 'ListWithResources' ? json.result : json.result.results;
@@ -162,14 +144,13 @@ export class CkanImporter implements Importer {
                 if (results.length < this.settings.maxRecords) {
                     break;
                 } else {
-                    // this.requestDelegate.incrementStartRecordIndex();
+                    offset += this.settings.maxRecords;
                     this.requestDelegate.updateConfig({
                         qs: {
-                            offset: page * this.settings.maxRecords,
+                            offset: offset,
                             limit: this.settings.maxRecords
                         }
                     });
-                    page++;
                 }
             }
 
@@ -186,11 +167,11 @@ export class CkanImporter implements Importer {
                             return this.elastic.finishIndex();
                         }
                     })
-                    .then( () => this.summary)
+                    .then(() => this.summary)
                     .catch(err => log.error('Error indexing data', err));
             }
         } catch (err) {
-            log.error( 'error:', err );
+            log.error('error:', err);
             this.summary.appErrors.push(err.message);
             return this.summary;
         }

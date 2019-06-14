@@ -463,12 +463,12 @@ export class ElasticSearchUtils {
                             let firstHit = response.hits.hits[0];
                             dates.push(firstHit._source.extras.metadata.issued);
                         } catch (e) {
-                            log.info(`Did not find an existing issued date for dataset with id ${ids[j]}`);
+                            log.debug(`Did not find an existing issued date for dataset with id ${ids[j]}`);
                             dates.push(null);
                         }
                     }
                 } else {
-                    log.debug('No result.reponse after msearch', result);
+                    log.debug('No result. Reponse after msearch', result);
                 }
             } catch (e) {
                 this.summary.elasticErrors.push(e);

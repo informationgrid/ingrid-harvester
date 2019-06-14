@@ -12,6 +12,7 @@
   {
     "type": "CKAN",
     "description": "!Offene Daten Köln: last_modified invalid",
+    "filterTags": ["Transport und Verkehr"],
     "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_koeln",
     "alias": "mcloud",
@@ -23,17 +24,19 @@
   {
     "type": "CKAN",
     "description": "!Offene Daten Bonn: parameters wrong",
+    "filterTags": ["Transport und Verkehr"],
     "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_bonn",
     "alias": "mcloud",
     "ckanBaseUrl": "https://opendata.bonn.de",
     "defaultMcloudSubgroup": "railway",
     "defaultDCATCategory": "TRAN",
-    "disable": false
+    "disable": true
   },
   {
     "type": "CKAN",
     "description": "!Offene Daten Düsseldorf: resources.created invalid",
+    "filterTags": ["Transport und Verkehr"],
     "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_duesseldorf",
     "alias": "mcloud",
@@ -45,6 +48,7 @@
   {
     "type": "CKAN",
     "description": "Offene Daten Wuppertal",
+    "filterTags": ["Transport und Verkehr"],
     "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_wuppertal",
     "alias": "mcloud",
@@ -67,34 +71,37 @@
   {
     "type": "CKAN",
     "description": "OpenData Rostock",
+    "filterGroups": ["transport_verkehr"],
     "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_hro",
     "alias": "mcloud",
     "ckanBaseUrl": "https://www.opendata-hro.de",
     "defaultMcloudSubgroup": "infrastructure",
-    "defaultDCATCategory": "REGI",
+    "defaultDCATCategory": "TRAN",
     "disable": false
   },
   {
     "type": "CKAN",
     "description": "Offenesdatenportal",
+    "filterGroups": ["transport-verkehr"],
     "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_offenesdatenportal",
     "alias": "mcloud",
     "ckanBaseUrl": "https://www.offenesdatenportal.de",
     "defaultMcloudSubgroup": "infrastructure",
-    "defaultDCATCategory": "REGI",
+    "defaultDCATCategory": "TRAN",
     "disable": false
   },
   {
     "type": "CKAN",
     "description": "Transparenzportal Hamburg",
+    "filterGroups": ["transport-und-verkehr"],
     "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_portal_hamburg",
     "alias": "mcloud",
     "ckanBaseUrl": "http://suche.transparenz.hamburg.de",
     "defaultMcloudSubgroup": "infrastructure",
-    "defaultDCATCategory": "REGI",
+    "defaultDCATCategory": "TRAN",
     "disable": true
   },
   {
@@ -105,11 +112,25 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://opendata.rnv-online.de",
     "defaultMcloudSubgroup": "infrastructure",
-    "defaultDCATCategory": "REGI",
+    "defaultDCATCategory": "TRAN",
     "disable": false
   },
   {
-    "type": "WSV-CSW",
+    "type": "CKAN",
+    "filterTags": ["Offene Daten Bonn"],
+    "filterGroups": ["tran"],
+    "description": "NRW Portal",
+    "elasticSearchUrl": "http://localhost:9200",
+    "index": "ckan_opendata_nrw",
+    "alias": "mcloud",
+    "ckanBaseUrl": "https://open.nrw",
+    "defaultMcloudSubgroup": "infrastructure",
+    "defaultDCATCategory": "TRAN",
+    "disable": true
+  },
+  {
+    "type": "CSW",
+    "description": "WSV: Wasserstraßen- und Schifffahrtsverwaltung des Bundes",
     "startPosition": 1,
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_wsv",
@@ -125,7 +146,8 @@
     "disable": false
   },
   {
-    "type": "MDI-CSW",
+    "type": "CSW",
+    "description": "MDI",
     "startPosition": 1,
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_mdi",
@@ -142,6 +164,7 @@
   },
   {
     "type": "BFG-CSW",
+    "description": "BFG",
     "startPosition": 1,
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_bfg",
@@ -156,7 +179,8 @@
     "disable": false
   },
   {
-    "type": "DWD-CSW",
+    "type": "CSW",
+    "description": "DWD",
     "startPosition": 1,
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_dwd",
@@ -175,6 +199,7 @@
   },
   {
     "type": "CODEDE-CSW",
+    "description": "CODEDE",
     "startPosition": 1,
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_codede",
@@ -191,7 +216,8 @@
     "disable": false
   },
   {
-    "type": "BSH-CSW",
+    "type": "CSW",
+    "description": "BSH",
     "startPosition": 1,
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_bsh",
