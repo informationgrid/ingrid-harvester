@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import {configure, getLogger} from 'log4js';
-import {CkanSettings, CkanImporter} from '../server/ckan/ckan.importer';
+import {CkanSettings, CkanImporter} from '../server/importer/ckan/ckan.importer';
 import * as sinon from 'sinon';
 import {IndexDocument} from '../server/model/index.document';
 import {TestUtils} from './utils/test-utils';

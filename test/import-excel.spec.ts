@@ -1,11 +1,11 @@
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
-import {ExcelImporter, ExcelSettings} from "../server/excel/excel.importer";
+import {ExcelImporter, ExcelSettings} from "../server/importer/excel/excel.importer";
 import {configure, getLogger} from "log4js";
 import {IndexDocument} from "../server/model/index.document";
 import {TestUtils} from "./utils/test-utils";
-import {ExcelMapper} from "../server/excel/excel.mapper";
+import {ExcelMapper} from "../server/importer/excel/excel.mapper";
 
 let log = getLogger();
 configure('./log4js.json');

@@ -44,9 +44,13 @@ export class HarvesterComponent implements OnInit {
   }
 
   startImport(id: string) {
+
+    this.harvesterService.runImport(id).subscribe();
+
     this.snackBar.openFromComponent(ImportNotifyComponent, {
       duration: 3 * 1000,
     });
+
   }
 
   edit(harvester: Harvester) {

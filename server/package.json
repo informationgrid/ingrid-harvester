@@ -24,7 +24,7 @@
     "express": "^4.16.4",
     "express-session": "^1.16.1",
     "find-port": "^2.0.1",
-    "log4js": "^4.0.1",
+    "log4js": "^4.3.1",
     "markdown": "^0.5.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",

@@ -1,12 +1,12 @@
 /**
  * A mapper for CKAN documents.
  */
-import {DateRange, GenericMapper, Organization, Person} from "../model/generic.mapper";
-import {UrlUtils} from "../utils/url.utils";
 import {getLogger} from "log4js";
-import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from "../utils/http-request.utils";
 import {OptionsWithUri} from "request-promise";
 import {CkanSettings} from "./ckan.importer";
+import {DateRange, GenericMapper, Organization, Person} from "../../model/generic.mapper";
+import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from "../../utils/http-request.utils";
+import {UrlUtils} from "../../utils/url.utils";
 
 let markdown = require('markdown').markdown;
 

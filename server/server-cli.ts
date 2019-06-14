@@ -1,15 +1,11 @@
-import {ExcelImporter, ExcelSettings} from './excel/excel.importer';
-import {CkanImporter, CkanSettings} from "./ckan/ckan.importer";
-import {WsvImporter} from "./csw/wsv.importer";
-import {DwdImporter} from "./csw/dwd.importer";
-import {BfgImporter} from "./csw/bfg.importer";
-import {MdiImporter} from "./csw/mdi.importer";
-import {configure, getLogger} from 'log4js';
+import {ExcelImporter, ExcelSettings} from './importer/excel/excel.importer';
+import {CkanImporter, CkanSettings} from "./importer/ckan/ckan.importer";
+import {BfgImporter} from "./importer/csw/bfg.importer";
 import {Summary} from "./model/summary";
 import * as fs from "fs";
-import {BshImporter} from "./csw/bsh.importer";
-import {CodedeImporter} from "./csw/codede.importer";
-import {CswSettings} from "./csw/csw.importer";
+import {CodedeImporter} from "./importer/csw/codede.importer";
+import {CswImporter, CswSettings} from "./importer/csw/csw.importer";
+import {configure, getLogger} from "log4js";
 
 let config: (CkanSettings | CswSettings | ExcelSettings)[] = require( './config.json' ),
     process = require('process'),
@@ -41,11 +37,8 @@ function getImporter(importerConfig) {
     const type = importerConfig.type;
     if (type === 'CKAN') return new CkanImporter(importerConfig);
     if (type === 'EXCEL') return new ExcelImporter(importerConfig);
-    if (type === 'WSV-CSW') return new WsvImporter(importerConfig);
-    if (type === 'DWD-CSW') return new DwdImporter(importerConfig);
+    if (type === 'CSW') return new CswImporter(importerConfig);
     if (type === 'BFG-CSW') return new BfgImporter(importerConfig);
-    if (type === 'MDI-CSW') return new MdiImporter(importerConfig);
-    if (type === 'BSH-CSW') return new BshImporter(importerConfig);
     if (type === 'CODEDE-CSW') return new CodedeImporter(importerConfig);
 }
 
@@ -78,7 +71,7 @@ async function startProcess() {
         if (importerConfig.disable) continue;
 
         // Include relevant CLI args
-        importerConfig.dryRun = args.includes('-n') || args.includes('--dry-run') || importerConfig.dryRun === true;
+        importerConfig.dryRun = myArgs.includes('-n') || myArgs.includes('--dry-run') || importerConfig.dryRun === true;
 
         // Set the same elasticsearch alias for deduplication for all importers
         importerConfig.deduplicationAlias = deduplicationAlias;
@@ -115,7 +108,7 @@ let pid = process.pid;
 let dt = getDateString();
 let deduplicationAlias = `dedupe_${dt}_${pid}`;
 
-let args = process.argv.slice(2);
-runAsync = args.includes('--async');
+let myArgs = process.argv.slice(2);
+runAsync = myArgs.includes('--async');
 
 startProcess();

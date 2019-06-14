@@ -1,7 +1,7 @@
 import {HarvesterSummary} from './HarvesterSummary';
-import {ExcelSettings} from '../../../../../server/excel/excel.importer';
-import {CkanSettings} from '../../../../../server/ckan/ckan.importer';
-import {CswSettings} from '../../../../../server/csw/csw.importer';
+import {ExcelSettings} from '../../../../../server/importer/excel/excel.importer';
+import {CkanSettings} from '../../../../../server/importer/ckan/ckan.importer';
+import {CswSettings} from '../../../../../server/importer/csw/csw.importer';
 
 export type Harvester = ExcelSettings | CkanSettings | CswSettings;
 

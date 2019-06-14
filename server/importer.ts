@@ -1,7 +1,7 @@
 import {Summary} from "./model/summary";
 
 export type ImporterSettings = {
-    description?: string, type: string, proxy?: string, dryRun?: boolean, disable?: boolean,
+    id?: number, description?: string, type: string, proxy?: string, dryRun?: boolean, disable?: boolean,
     maxRecords?: number,
     startPosition?: number,
     defaultMcloudSubgroup?: string,
