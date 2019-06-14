@@ -19,6 +19,11 @@ export interface License {
     title: string;
     url: string;
 }
+export interface DateRange {
+    start?: Date,
+    end?: Date,
+    custom?: string
+}
 
 
 export abstract class GenericMapper {
@@ -57,7 +62,7 @@ export abstract class GenericMapper {
 
     abstract isRealtime(): boolean;
 
-    abstract getTemporal(): string;
+    abstract getTemporal(): DateRange;
 
     abstract getCitation(): string;
 
@@ -124,11 +129,6 @@ export abstract class GenericMapper {
     abstract getCreator(): Person[] | Person;
 
     abstract getHarvestedData(): string;
-
-
-    abstract getTemporalStart(): Date;
-
-    abstract getTemporalEnd(): Date;
 
     getHarvestErrors() {
         return this.errors.length === 0 ? undefined : this.errors;

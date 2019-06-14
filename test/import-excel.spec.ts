@@ -5,6 +5,7 @@ import {ExcelImporter, ExcelSettings} from "../server/excel/excel.importer";
 import {configure, getLogger} from "log4js";
 import {IndexDocument} from "../server/model/index.document";
 import {TestUtils} from "./utils/test-utils";
+import {ExcelMapper} from "../server/excel/excel.mapper";
 
 let log = getLogger();
 configure('./log4js.json');
@@ -48,6 +49,27 @@ describe('Import Excel', function () {
 
     }).timeout(10000);
 
-    after(() => indexDocumentCreateSpy.restore());
+    it('should handle date range', function() {
+       let mapper = new ExcelMapper(null, {});
+       mapper.columnMap = { Zeitraum: 22 };
+       mapper.columnValues = [];
+
+       mapper.columnValues[22] = "12.08.2018";
+       chai.expect(mapper.getTemporal()).to.deep.equal({ start: new Date("08/12/2018"), end: new Date("08/12/2018") });
+
+        mapper.columnValues[22] = "heute";
+        chai.expect(mapper.getTemporal().custom).to.equal("heute");
+
+        mapper.columnValues[22] = "12.08.2018 - 25.09.2018";
+        chai.expect(mapper.getTemporal()).to.deep.equal({ start: new Date("08/12/2018"), end: new Date("09/25/2018") });
+
+        mapper.columnValues[22] = "12.08.2018 - heute";
+        chai.expect(mapper.getTemporal()).to.deep.equal({ custom: "12.08.2018 - heute" });
+
+        mapper.columnValues[22] = "2017";
+        chai.expect(mapper.getTemporal()).to.deep.equal({ custom: "2017" });
+    });
+
+    after(() => indexDocumentCreateSpy && indexDocumentCreateSpy.restore());
 
 });

@@ -276,13 +276,18 @@ export const elasticsearchMapping = {
                     }
                 },
                 'temporal': {
-                    'type': 'string'
-                },
-                'temporal_start': {
-                    'type': 'date'
-                },
-                'temporal_end': {
-                    'type': 'date'
+                    'properties': {
+                        'start': {
+                            'type': 'date'
+                        },
+                        'end': {
+                            'type': 'date'
+                        },
+                        'custom': {
+                            'type': 'string',
+                            'index': 'not_analyzed'
+                        }
+                    }
                 },
                 'groups': {
                     'type': 'string',

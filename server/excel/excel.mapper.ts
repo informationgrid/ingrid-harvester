@@ -1,5 +1,5 @@
 import {UrlUtils} from "../utils/url.utils";
-import {Distribution, GenericMapper, License, Organization, Person} from "../model/generic.mapper";
+import {DateRange, Distribution, GenericMapper, License, Organization, Person} from "../model/generic.mapper";
 import {Summary} from "../model/summary";
 import {ExcelSettings} from "./excel.importer";
 import {RequestDelegate} from "../utils/http-request.utils";
@@ -44,7 +44,7 @@ export class ExcelMapper extends GenericMapper {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
         const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
-        return publishers.map( p => GenericMapper.createPublisher(p.name, p.url));
+        return publishers.map(p => GenericMapper.createPublisher(p.name, p.url));
     }
 
     getThemes() {
@@ -52,9 +52,9 @@ export class ExcelMapper extends GenericMapper {
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
         const dcatCategoriesString: string = this.columnValues[this.columnMap.DCATKategorie];
         if (dcatCategoriesString) {
-            return dcatCategoriesString.split(',').map( cat => GenericMapper.DCAT_CATEGORY_URL + cat);
+            return dcatCategoriesString.split(',').map(cat => GenericMapper.DCAT_CATEGORY_URL + cat);
         } else {
-            return [ GenericMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory];
+            return [GenericMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory];
         }
 
     }
@@ -106,12 +106,42 @@ export class ExcelMapper extends GenericMapper {
         return this.columnMap.Echtzeitdaten === 1;
     }
 
-    getTemporal() {
-        return this.columnValues[this.columnMap.Zeitraum];
+    getTemporal(): DateRange {
+        let range: string = this.columnValues[this.columnMap.Zeitraum];
+        if (range) {
+            try {
+                if (range.includes('-')) {
+                    let splitted = range.split('-');
+                    if (splitted.length === 2) {
+                        let dateFrom = this.parseDate(splitted[0]);
+                        let dateTo = this.parseDate(splitted[1]);
+                        return dateFrom && dateTo && !isNaN(dateFrom.getTime()) && !isNaN(dateTo.getTime()) ? {
+                            start: dateFrom,
+                            end: dateTo
+                        } : { custom: range };
+                    }
+                }
+
+                let date = this.parseDate(range);
+
+                if (date === null || isNaN(date.getTime())) {
+                    return {custom: range};
+                } else {
+                    return {
+                        start: date,
+                        end: date
+                    };
+                }
+            } catch {
+                return {custom: range};
+            }
+        }
     }
 
     getCategories() {
-        return this.mapCategories(this.columnValues[this.columnMap.Kategorie].split(','));
+        let categories = this.mapCategories(this.columnValues[this.columnMap.Kategorie].split(','));
+        if (!categories || categories.length === 0) categories = [this.settings.defaultMcloudSubgroup];
+        return categories;
     }
 
     getCitation() {
@@ -122,7 +152,7 @@ export class ExcelMapper extends GenericMapper {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
         const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
-        return publishers.map( p => <Person>{name: p.name, homepage: p.url});
+        return publishers.map(p => <Person>{name: p.name, homepage: p.url});
     }
 
     getMFundFKZ() {
@@ -181,13 +211,13 @@ export class ExcelMapper extends GenericMapper {
      * @param type
      * @param urlsString
      */
-    async addDownloadUrls(type: string, urlsString): Promise<Distribution[]> {
+    async addDownloadUrls(type: string, urlsString: string | any): Promise<Distribution[]> {
         // Check if the cell contains just text or hyperlinked text
         if (urlsString.text) urlsString = urlsString.text;
         const distributions: Distribution[] = [];
 
-        let downloads: string[] = urlsString.split(/,[\r\n]+/); // comma followed by one or more (carriage returns or newlines)
-        await Promise.all(downloads.map( async (downloadUrl) => {
+        let downloads: string[] = urlsString.split(/,[\s]+/); // comma followed by one or more (spaces, carriage returns or newlines)
+        await Promise.all(downloads.map(async (downloadUrl) => {
 
             // skip if downloadURL is empty
             if (downloadUrl.trim().length === 0) return;
@@ -216,16 +246,23 @@ export class ExcelMapper extends GenericMapper {
      * @param {string[]} categories
      */
     mapCategories(categories) {
-        return categories.map( cat => {
+        return categories.map(cat => {
             switch (cat) {
-            case 'Infrastruktur': return 'infrastructure';
-            case 'Bahn': return 'railway';
-            case 'Klima': return 'climate';
-            case 'Gewässer': return 'waters';
-            case 'Straßen': return 'roads';
-            case 'Luftfahrt':
-            case 'Luftverkehr': return 'aviation';
-            case 'Data-Run': return 'data-run';
+                case 'Infrastruktur':
+                    return 'infrastructure';
+                case 'Bahn':
+                    return 'railway';
+                case 'Klima':
+                    return 'climate';
+                case 'Gewässer':
+                    return 'waters';
+                case 'Straßen':
+                    return 'roads';
+                case 'Luftfahrt':
+                case 'Luftverkehr':
+                    return 'aviation';
+                case 'Data-Run':
+                    return 'data-run';
             }
         });
     }
@@ -237,7 +274,7 @@ export class ExcelMapper extends GenericMapper {
 
         let license: License;
 
-        for (let i=2; i<=numLicenses; i++) {
+        for (let i = 2; i <= numLicenses; i++) {
             const row = licenseSheet.getRow(i);
             if (row.values[1].toLowerCase() === licenseId) {
                 license = {
@@ -271,14 +308,6 @@ export class ExcelMapper extends GenericMapper {
         return undefined;
     }
 
-    getTemporalEnd(): Date {
-        return undefined;
-    }
-
-    getTemporalStart(): Date {
-        return undefined;
-    }
-
     getGroups(): string[] {
         return undefined;
     }
@@ -304,7 +333,7 @@ export class ExcelMapper extends GenericMapper {
             organization: this.columnValues[this.columnMap.Quellenvermerk]
         };
 
-        if (originator.organization === 'keinen') {
+        if (!originator.organization || originator.organization === 'keinen') {
             return undefined;
         }
 
@@ -326,6 +355,20 @@ export class ExcelMapper extends GenericMapper {
         }
 
         return config;
+    }
+
+    /**
+     * Parse a string of format "dd.mm.yyyy" and convert it to a date object.
+     * @param input
+     */
+    private parseDate(input): Date {
+        var parts = input.match(/(\d+)/g);
+        // note parts[1]-1
+        try {
+            return new Date(parts[2], parts[1] - 1, parts[0]);
+        } catch (e) {
+            return null;
+        }
     }
 
 }

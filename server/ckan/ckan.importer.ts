@@ -1,54 +1,58 @@
-import {ElasticSearchUtils, ElasticSettings} from "../utils/elastic.utils";
+import {DefaultElasticsearchSettings, ElasticSearchUtils, ElasticSettings} from "../utils/elastic.utils";
 import {elasticsearchSettings} from "../elastic.settings";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {IndexDocument} from "../model/index.document";
 import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
-import {Importer, ImporterSettings} from "../importer";
+import {DefaultImporterSettings, Importer, ImporterSettings} from "../importer";
 import {RequestDelegate} from "../utils/http-request.utils";
 import {CkanMapper} from "../importer/ckan/ckan.mapper";
 
-let log = require( 'log4js' ).getLogger( __filename ),
+let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary');
 
 export type CkanSettings = {
-    description?, ckanBaseUrl,
-    defaultMcloudSubgroup, defaultDCATCategory, maxRecords?: number, startPosition?: number
+    ckanBaseUrl: string,
+    filterTags?: string[],
+    filterGroups?: string[],
+    requestType?: 'ListWithResources' | 'Search';
 } & ElasticSettings & ImporterSettings;
 
 export class CkanImporter implements Importer {
     private readonly settings: CkanSettings;
     elastic: ElasticSearchUtils;
     private requestDelegate: RequestDelegate;
-    summary: Summary = {
-        appErrors: [],
-        numDocs: 0,
-        numErrors: 0,
-        print: () => {
-            logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.type}`);
-            logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Number of records: ${this.summary.numDocs}`);
-            logSummary.info(`Number of errors: ${this.summary.numErrors}`);
-            logSummary.info(`App-Errors: ${this.summary.appErrors.length}`);
-            if (this.summary.appErrors.length > 0) {
-                logSummary.info(`\t${this.summary.appErrors.map( e => e + '\n\t')}`);
-            }
+
+    defaultSettings: CkanSettings = {
+        ...DefaultElasticsearchSettings,
+        ...DefaultImporterSettings,
+        ...{
+            ckanBaseUrl: '',
+            filterTags: [],
+            filterGroups: [],
+            requestType: 'ListWithResources'
         }
     };
+
+    summary: Summary;
 
     /**
      * Create the importer and initialize with settings.
      * @param { {ckanBaseUrl, defaultMcloudSubgroup, mapper} }settings
      */
     constructor(settings: CkanSettings) {
+        // merge default settings with configured ones
+        settings = {...this.defaultSettings, ...settings};
+
+        this.summary = new Summary(settings);
+
         // Trim trailing slash
         let url = settings.ckanBaseUrl;
-        if (url.charAt(url.length-1) === '/') {
-            settings.ckanBaseUrl = url.substring(0, url.length-1);
+        if (url.charAt(url.length - 1) === '/') {
+            settings.ckanBaseUrl = url.substring(0, url.length - 1);
         }
         this.settings = settings;
-        this.elastic = new ElasticSearchUtils(settings);
+        this.elastic = new ElasticSearchUtils(settings, this.summary);
 
         let requestConfig = CkanMapper.createRequestConfig(settings);
 
@@ -78,11 +82,12 @@ export class CkanImporter implements Importer {
                 source: source
             });
 
-            let doc = await IndexDocument.create(mapper).catch( e => {
-                log.error('Error creating index document', e);
-                this.summary.appErrors.push(e.toString());
-                mapper.skipped = true;
-            });
+            let doc = await IndexDocument.create(mapper)
+                .catch(e => {
+                    log.error('Error creating index document', e);
+                    this.summary.appErrors.push(e.toString());
+                    mapper.skipped = true;
+                });
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 return this.elastic.addDocToBulk(doc, source.id);
@@ -101,12 +106,21 @@ export class CkanImporter implements Importer {
             }
             let promises = [];
             let total = 0;
+            let offset = this.settings.startPosition;
 
             // Fetch datasets 'qs.rows' at a time
-            while(true) {
+            while (true) {
                 let json = await this.requestDelegate.doRequest();
                 let now = new Date(Date.now());
-                let results = json.result.results;
+                let results = this.settings.requestType === 'ListWithResources' ? json.result : json.result.results;
+
+                // if offset is too high, then there should be an error and we are finished
+                if (!results) break;
+
+                // Workaround if results are contained with another array (https://offenedaten-koeln.de)
+                if (results.length === 1 && results[0] instanceof Array) {
+                    results = results[0];
+                }
 
                 log.info(`Received ${results.length} records from ${this.settings.ckanBaseUrl}`);
                 total += results.length;
@@ -116,16 +130,27 @@ export class CkanImporter implements Importer {
                 // issued dates are those showing the date of the first harvesting
                 let timestamps = await this.elastic.getIssuedDates(ids);
 
-                results.forEach((dataset, idx) => promises.push(this.importDataset({
-                    data: dataset,
-                    issued: timestamps[idx],
-                    harvestTime: now
-                })));
+                results
+                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'tags' , this.settings.filterTags))
+                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'groups', this.settings.filterGroups))
+                    .forEach((dataset, idx) => promises.push(
+                        this.importDataset({
+                            data: dataset,
+                            issued: timestamps[idx],
+                            harvestTime: now
+                        })
+                    ));
 
-                if (results.length < 1) {
+                if (results.length < this.settings.maxRecords) {
                     break;
                 } else {
-                    this.requestDelegate.incrementStartRecordIndex();
+                    offset += this.settings.maxRecords;
+                    this.requestDelegate.updateConfig({
+                        qs: {
+                            offset: offset,
+                            limit: this.settings.maxRecords
+                        }
+                    });
                 }
             }
 
@@ -142,11 +167,32 @@ export class CkanImporter implements Importer {
                             return this.elastic.finishIndex();
                         }
                     })
-                    .then( () => this.summary)
+                    .then(() => this.summary)
                     .catch(err => log.error('Error indexing data', err));
             }
         } catch (err) {
-            log.error( 'error:', err );
+            log.error('error:', err);
+            this.summary.appErrors.push(err.message);
+            return this.summary;
         }
+    }
+
+    /**
+     * Check if a dataset has at least one of the defined tags/groups. If no tag/group has been
+     * defined, then the dataset also will be used.
+     *
+     * @param dataset is the dataset to be checked
+     * @param field defines if we want to check for tags or groups
+     * @param filteredItems are the tags/groups to be checked against the dataset
+     */
+    private hasValidTagsOrGroups(dataset: any, field: 'tags' | 'groups', filteredItems: string[]) {
+        if (filteredItems.length === 0 || (!dataset[field] && filteredItems.length === 0)) return true;
+
+        let hasAtLeastOneGroup = dataset[field] && dataset[field].some(field => filteredItems.includes(field.name));
+        if (!hasAtLeastOneGroup) {
+            this.summary.skippedDocs.push(dataset.id);
+            // log.debug(`Skip dataset because of filtered tag`);
+        }
+        return hasAtLeastOneGroup;
     }
 }
