@@ -13,6 +13,8 @@ let log = require( 'log4js' ).getLogger( __filename ),
 
 export type CkanSettings = {
     ckanBaseUrl: string,
+    filterTags?: string[],
+    filterGroups?: string[],
     requestType?: 'ListWithResources' | 'Search';
 } & ElasticSettings & ImporterSettings;
 
@@ -26,6 +28,8 @@ export class CkanImporter implements Importer {
         ...DefaultImporterSettings,
         ...{
             ckanBaseUrl: '',
+            filterTags: [],
+            filterGroups: [],
             requestType: 'ListWithResources'
         }
     };
@@ -144,13 +148,16 @@ export class CkanImporter implements Importer {
                 // issued dates are those showing the date of the first harvesting
                 let timestamps = await this.elastic.getIssuedDates(ids);
 
-                results.forEach((dataset, idx) => promises.push(
-                    this.importDataset({
-                        data: dataset,
-                        issued: timestamps[idx],
-                        harvestTime: now
-                    })
-                ));
+                results
+                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'tags' , this.settings.filterTags))
+                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'groups', this.settings.filterGroups))
+                    .forEach((dataset, idx) => promises.push(
+                        this.importDataset({
+                            data: dataset,
+                            issued: timestamps[idx],
+                            harvestTime: now
+                        })
+                    ));
 
                 if (results.length < this.settings.maxRecords) {
                     break;
@@ -187,5 +194,24 @@ export class CkanImporter implements Importer {
             this.summary.appErrors.push(err.message);
             return this.summary;
         }
+    }
+
+    /**
+     * Check if a dataset has at least one of the defined tags/groups. If no tag/group has been
+     * defined, then the dataset also will be used.
+     *
+     * @param dataset is the dataset to be checked
+     * @param field defines if we want to check for tags or groups
+     * @param filteredItems are the tags/groups to be checked against the dataset
+     */
+    private hasValidTagsOrGroups(dataset: any, field: 'tags' | 'groups', filteredItems: string[]) {
+        if (filteredItems.length === 0 || (!dataset[field] && filteredItems.length === 0)) return true;
+
+        let hasAtLeastOneGroup = dataset[field] && dataset[field].some(field => filteredItems.includes(field.name));
+        if (!hasAtLeastOneGroup) {
+            this.summary.skippedDocs.push(dataset.id);
+            // log.debug(`Skip dataset because of filtered tag`);
+        }
+        return hasAtLeastOneGroup;
     }
 }
