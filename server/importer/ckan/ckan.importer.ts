@@ -1,15 +1,15 @@
-import {DefaultElasticsearchSettings, ElasticSearchUtils, ElasticSettings} from "../../utils/elastic.utils";
-import {elasticsearchSettings} from "../../elastic.settings";
-import {elasticsearchMapping} from "../../elastic.mapping";
-import {IndexDocument} from "../../model/index.document";
-import {Summary} from "../../model/summary";
-import {getLogger} from "log4js";
-import {DefaultImporterSettings, Importer, ImporterSettings} from "../../importer";
-import {RequestDelegate} from "../../utils/http-request.utils";
-import {CkanMapper} from "./ckan.mapper";
+import {DefaultElasticsearchSettings, ElasticSearchUtils, ElasticSettings} from '../../utils/elastic.utils';
+import {elasticsearchSettings} from '../../elastic.settings';
+import {elasticsearchMapping} from '../../elastic.mapping';
+import {IndexDocument} from '../../model/index.document';
+import {Summary} from '../../model/summary';
+import {DefaultImporterSettings, Importer, ImporterSettings} from '../../importer';
+import {RequestDelegate} from '../../utils/http-request.utils';
+import {CkanMapper} from './ckan.mapper';
+import {Observable, Observer} from 'rxjs';
+import {ImportResult, ImportResultValues} from '../../model/import.result';
 
-let log = require('log4js').getLogger(__filename),
-    logSummary = getLogger('summary');
+let log = require('log4js').getLogger(__filename);
 
 export type CkanSettings = {
     ckanBaseUrl: string,
@@ -35,6 +35,15 @@ export class CkanImporter implements Importer {
     };
 
     summary: Summary;
+
+    run = new Observable<ImportResultValues>(observer => {
+        this.observer = observer;
+        this.exec(observer);
+    });
+
+    private observer: Observer<ImportResultValues>;
+
+    private numIndexDocs = 0;
 
     /**
      * Create the importer and initialize with settings.
@@ -90,14 +99,21 @@ export class CkanImporter implements Importer {
                 });
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                return this.elastic.addDocToBulk(doc, source.id);
+                return this.elastic.addDocToBulk(doc, source.id)
+                    .then(response => {
+                        if (!response.queued) {
+                            //let currentPos = this.summary.numDocs++;
+                            this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                            this.observer.next(ImportResult.running(this.numIndexDocs, null));
+                        }
+                    })
             }
         } catch (e) {
             log.error("Error: " + e);
         }
     }
 
-    async run(): Promise<Summary> {
+    async exec(observer: Observer<ImportResultValues>): Promise<void> {
         try {
             if (this.settings.dryRun) {
                 log.debug('Dry run option enabled. Skipping index creation.');
@@ -155,9 +171,11 @@ export class CkanImporter implements Importer {
             }
 
             if (total === 0) {
-                log.warn(`Could not harvest any datasets from ${this.settings.ckanBaseUrl}`);
+                let warnMessage = `Could not harvest any datasets from ${this.settings.ckanBaseUrl}`;
+                log.warn(warnMessage);
                 await this.elastic.abortCurrentIndex();
-                return this.summary;
+                observer.next(ImportResult.complete(this.summary, warnMessage));
+                observer.complete();
             } else {
                 return Promise.all(promises)
                     .then(() => {
@@ -167,13 +185,17 @@ export class CkanImporter implements Importer {
                             return this.elastic.finishIndex();
                         }
                     })
-                    .then(() => this.summary)
+                    .then(() => {
+                        observer.next(ImportResult.complete(this.summary));
+                        observer.complete();
+                    })
                     .catch(err => log.error('Error indexing data', err));
             }
         } catch (err) {
             log.error('error:', err);
             this.summary.appErrors.push(err.message);
-            return this.summary;
+            observer.next(ImportResult.complete(this.summary));
+            observer.complete();
         }
     }
 

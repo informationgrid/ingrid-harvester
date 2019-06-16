@@ -1,11 +1,13 @@
 import {ExcelImporter, ExcelSettings} from './importer/excel/excel.importer';
-import {CkanImporter, CkanSettings} from "./importer/ckan/ckan.importer";
-import {BfgImporter} from "./importer/csw/bfg.importer";
-import {Summary} from "./model/summary";
-import * as fs from "fs";
-import {CodedeImporter} from "./importer/csw/codede.importer";
-import {CswImporter, CswSettings} from "./importer/csw/csw.importer";
-import {configure, getLogger} from "log4js";
+import {CkanImporter, CkanSettings} from './importer/ckan/ckan.importer';
+import {BfgImporter} from './importer/csw/bfg.importer';
+import {Summary} from './model/summary';
+import * as fs from 'fs';
+import {CodedeImporter} from './importer/csw/codede.importer';
+import {CswImporter, CswSettings} from './importer/csw/csw.importer';
+import {configure, getLogger} from 'log4js';
+import {concat, Observable} from 'rxjs';
+import {ImportResultValues} from './model/import.result';
 
 let config: (CkanSettings | CswSettings | ExcelSettings)[] = require( './config.json' ),
     process = require('process'),
@@ -64,6 +66,7 @@ async function startProcess() {
 
     const processes = [];
     let summaries: Summary[] = [];
+    let importers: Observable<ImportResultValues>[] = [];
 
     for (let importerConfig of config) {
 
@@ -84,9 +87,10 @@ async function startProcess() {
         log.info("Starting import ...");
         try {
             if (runAsync) {
-                processes.push(importer.run());
+                processes.push(importer.run.toPromise());
             } else {
-                summaries.push(await importer.run());
+                importers.push(importer.run);
+                //summaries.push(await importer.run.subscribe());
             }
         } catch (e) {
             console.error(`Importer ${importerConfig.type} failed: `, e);
@@ -98,7 +102,14 @@ async function startProcess() {
             processes.map(p => p.catch(e => console.error('Error for harvester occurred: ', e)))
         ).then( showSummaries );
     } else {
-        showSummaries(summaries);
+        let summaries: Summary[] = [];
+        concat(...importers).subscribe( result => {
+            result.complete ? summaries.push(result.summary) : console.log(result.progress);
+            // showSummaries(summaries);
+        }).add( () => {
+            summaries.forEach( summary => summary.print())
+        });
+
     }
 
 }
@@ -109,6 +120,6 @@ let dt = getDateString();
 let deduplicationAlias = `dedupe_${dt}_${pid}`;
 
 let myArgs = process.argv.slice(2);
-runAsync = myArgs.includes('--async');
+runAsync = false; //myArgs.includes('--async');
 
 startProcess();

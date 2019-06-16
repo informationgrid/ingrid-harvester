@@ -1,16 +1,16 @@
 import {IndexDocument} from '../../model/index.document';
 import {DefaultElasticsearchSettings, ElasticSearchUtils, ElasticSettings} from '../../utils/elastic.utils';
-import {ExcelMapper} from "./excel.mapper";
-import {Worksheet} from "exceljs";
-import {elasticsearchMapping} from "../../elastic.mapping";
-import {elasticsearchSettings} from "../../elastic.settings";
-import {Summary} from "../../model/summary";
-import {getLogger} from "log4js";
-import {DefaultImporterSettings, Importer, ImporterSettings} from "../../importer";
+import {ExcelMapper} from './excel.mapper';
+import {Worksheet} from 'exceljs';
+import {elasticsearchMapping} from '../../elastic.mapping';
+import {elasticsearchSettings} from '../../elastic.settings';
+import {Summary} from '../../model/summary';
+import {DefaultImporterSettings, Importer, ImporterSettings} from '../../importer';
+import {Observable, Observer} from 'rxjs';
+import {ImportResult, ImportResultValues} from '../../model/import.result';
 import Excel = require('exceljs');
 
-let log = require('log4js').getLogger(__filename),
-    logSummary = getLogger('summary');
+let log = require('log4js').getLogger(__filename);
 
 export type ExcelSettings = {
     filePath: string
@@ -33,6 +33,8 @@ export class ExcelImporter implements Importer {
 
     summary: Summary;
 
+    run = new Observable<ImportResultValues>(observer => {this.exec(observer)});
+
     /**
      * Create the importer and initialize with settings.
      * @param { {filePath, mapper} }settings
@@ -48,7 +50,10 @@ export class ExcelImporter implements Importer {
         this.excelFilepath = settings.filePath;
     }
 
-    async run(): Promise<Summary> {
+    async exec(observer: Observer<ImportResultValues>): Promise<void> {
+
+        observer.next(ImportResult.message('Starting Excel Importer'));
+
         // map of the column index to a name
         let columnMap = {
             'Daten': 1,
@@ -109,9 +114,12 @@ export class ExcelImporter implements Importer {
             // get all issued dates from IDs
             let timestamps = await this.elastic.getIssuedDates(ids);
 
-            // Attention: forEach does not work with async/await! using Promise.all for sequence
-            await Promise.all(workUnits.map(async (unit, idx) => {
+            let numIndexDocs = 0;
 
+            // Attention: forEach does not work with async/await! using Promise.all for sequence
+            // await Promise.all(workUnits.map(async (unit, idx) => {
+            for (let idx=0; idx<workUnits.length; idx++) {
+                let unit = workUnits[idx];
                 this.summary.numDocs++;
 
                 // create json document and create values with ExcelMapper
@@ -124,35 +132,46 @@ export class ExcelImporter implements Importer {
                     currentIndexName: this.elastic.indexName,
                     summary: this.summary
                 });
-                let doc = await IndexDocument.create(mapper).catch( e => {
-                    log.error('Error creating index document', e);
-                    this.summary.appErrors.push(e.toString());
-                    mapper.skipped = true;
-                });
+                let doc = await IndexDocument.create(mapper)
+                    .catch(e => this.handleIndexDocError(e, mapper));
+
+                // observer.next(ImportResult.running(currentPos, workUnits.length));
 
                 // add document to buffer and send to elasticsearch if full
                 if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                    promises.push(this.elastic.addDocToBulk(doc, unit.id));
+                    promises.push(
+                        this.elastic.addDocToBulk(doc, unit.id).then(response => {
+                            if (!response.queued) {
+                                //let currentPos = this.summary.numDocs++;
+                                numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                                observer.next(ImportResult.running(numIndexDocs, workUnits.length));
+                            }
+                        })
+                    );
                 }
-            }));
+
+            }
 
             log.debug('Waiting for #promises to finish: ' + promises.length);
-            return Promise.all(promises)
-                .then(() => {
-                    if (this.settings.dryRun) {
-                        log.debug('Skipping finalisation of index for dry run.');
-                    } else {
-                        log.debug('All promises finished ... continue');
-                        return this.elastic.finishIndex();
-                    }
-                })
-                .then( () => this.summary )
+            Promise.all(promises)
+                .then(() => this.elastic.finishIndex())
+                .then( () => {
+                    observer.next(ImportResult.complete(this.summary));
+                    observer.complete();
+                } )
                 .catch(err => log.error('Error importing excel row', err));
         } catch(error) {
             log.error('Error reading excel workbook', error);
             this.summary.numErrors++;
-            return this.summary;
+            observer.next(ImportResult.complete(this.summary));
+            observer.complete();
         }
+    }
+
+    private handleIndexDocError(e, mapper) {
+        log.error('Error creating index document', e);
+        this.summary.appErrors.push(e.toString());
+        mapper.skipped = true;
     }
 
     /**

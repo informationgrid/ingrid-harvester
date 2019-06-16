@@ -1,13 +1,15 @@
-import {DefaultElasticsearchSettings, ElasticSearchUtils, ElasticSettings} from "../../utils/elastic.utils";
-import {elasticsearchMapping} from "../../elastic.mapping";
-import {elasticsearchSettings} from "../../elastic.settings";
-import {IndexDocument} from "../../model/index.document";
-import {CswMapper} from "./csw.mapper";
-import {Summary} from "../../model/summary";
-import {getLogger} from "log4js";
-import {CswParameters, RequestDelegate} from "../../utils/http-request.utils";
-import {OptionsWithUri} from "request-promise";
-import {DefaultImporterSettings, ImporterSettings} from "../../importer";
+import {DefaultElasticsearchSettings, ElasticSearchUtils, ElasticSettings} from '../../utils/elastic.utils';
+import {elasticsearchMapping} from '../../elastic.mapping';
+import {elasticsearchSettings} from '../../elastic.settings';
+import {IndexDocument} from '../../model/index.document';
+import {CswMapper} from './csw.mapper';
+import {Summary} from '../../model/summary';
+import {getLogger} from 'log4js';
+import {CswParameters, RequestDelegate} from '../../utils/http-request.utils';
+import {OptionsWithUri} from 'request-promise';
+import {DefaultImporterSettings, ImporterSettings} from '../../importer';
+import {Observable, Observer} from 'rxjs';
+import {ImportResult, ImportResultValues} from '../../model/import.result';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -44,8 +46,6 @@ export class CswImporter {
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
 
-    private readonly summary: CswSummary;
-
     static defaultSettings: CswSettings = {
         ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
@@ -56,6 +56,14 @@ export class CswImporter {
         }
     };
 
+    private readonly summary: CswSummary;
+
+    run = new Observable<ImportResultValues>(observer => {
+        this.observer = observer;
+        this.exec(observer);
+    });
+
+    private observer: Observer<ImportResultValues>;
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         // merge default settings with configured ones
@@ -75,22 +83,27 @@ export class CswImporter {
         this.elastic = new ElasticSearchUtils(settings, this.summary);
     }
 
-    async run(): Promise<Summary> {
+    async exec(observer: Observer<ImportResultValues>): Promise<void> {
         if (this.settings.dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
             await this.harvest();
             log.debug('Skipping finalisation of index for dry run.');
-            return this.summary;
+            observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
+            observer.complete();
         } else {
-            return this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings)
+            this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings)
                 .then(() => this.harvest())
                 .then(() => this.elastic.sendBulkData(false))
                 .then(() => this.elastic.finishIndex())
-                .then(() => this.summary)
+                .then(() => {
+                    observer.next(ImportResult.complete(this.summary));
+                    observer.complete();
+                })
                 .catch(err => {
                     this.summary.appErrors.push(err);
                     log.error('Error during CSW import', err);
-                    return this.summary;
+                    observer.next(ImportResult.complete(this.summary, 'Error happened'));
+                    observer.complete();
                 });
         }
     }
@@ -146,11 +159,14 @@ export class CswImporter {
 
         let now = new Date(Date.now());
         let issued;
+        let numIndexDocs = 0;
+
         if (this.settings.dryRun) {
             issued = ids.map(() => now);
         } else {
             issued = this.elastic.getIssuedDates(ids);
         }
+
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
 
@@ -172,9 +188,18 @@ export class CswImporter {
                 if (doc.extras.metadata.isValid && doc.distribution.length > 0) {
                     this.summary.ok++;
                 }
-                promises.push(
-                    this.importDataset(doc, uuid)
-                );
+
+                if (!this.settings.dryRun) {
+                    promises.push(
+                        this.elastic.addDocToBulk(doc, uuid)
+                            .then(response => {
+                                if (!response.queued) {
+                                    numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                                    this.observer.next(ImportResult.running(numIndexDocs, records.length));
+                                }
+                            })
+                    );
+                }
             }
         }
         await Promise.all(promises)
@@ -183,12 +208,6 @@ export class CswImporter {
 
     getMapper(settings, record, harvestTime, issuedTime, summary): CswMapper {
         return new CswMapper(settings, record, harvestTime, issuedTime, summary);
-    }
-
-    async importDataset(doc: any, uuid: string) {
-        if (!this.settings.dryRun) {
-            return this.elastic.addDocToBulk(doc, uuid);
-        }
     }
 
     static createRequestConfig(settings: CswSettings): OptionsWithUri {

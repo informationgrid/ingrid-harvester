@@ -1,4 +1,4 @@
-import {OptionsWithUri} from "request-promise";
+import {OptionsWithUri} from 'request-promise';
 
 export interface Distribution {
     format: string;
@@ -124,7 +124,7 @@ export abstract class GenericMapper {
 
     abstract getAccrualPeriodicity(): string;
 
-    abstract getContactPoint(): any;
+    abstract async getContactPoint(): Promise<any>;
 
     abstract getCreator(): Person[] | Person;
 
