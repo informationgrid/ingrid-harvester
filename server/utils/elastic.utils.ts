@@ -317,11 +317,14 @@ export class ElasticSearchUtils {
         }));
     }
 
+    // FIXME: Refactor deduplication in own file
+    // FIXME: deduplication must work differently when import is not started for all harvesters
     async _deduplicate() {
         await this._deduplicateByTitle();
         await this._deduplicateUsingQuery();
     }
 
+    // FIXME: deduplication must work differently when import is not started for all harvesters
     async _deduplicateUsingQuery() {
         log.debug(`Looking for duplicates for items in index '${this.indexName}`);
         // TODO: make sure the index was refreshed to get the updated results (e.g. previous deletion of duplicated items)
@@ -565,6 +568,7 @@ export class ElasticSearchUtils {
         });
     }
 
+    // FIXME: deduplication must work differently when import is not started for all harvesters
     async _deduplicateByTitle() {
         // By default elasticsearch limits the count of aggregates to 10. Ask it
         // to return a lot more results!

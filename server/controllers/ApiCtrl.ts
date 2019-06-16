@@ -1,12 +1,10 @@
 import {BodyParams, Controller, Get, PathParams, Post} from '@tsed/common';
 import {Harvester} from '../../client/src/app/harvester/model/harvester';
 import {ConfigService} from '../services/config/ConfigService';
-import {ExcelImporter} from "../importer/excel/excel.importer";
+import {ExcelImporter} from '../importer/excel/excel.importer';
 
 @Controller("/api")
 export class ApiCtrl {
-
-    // constructor(private configService: ConfigService) {}
 
     @Get("/harvester")
     // @Authenticated()
@@ -21,7 +19,13 @@ export class ApiCtrl {
 
     @Post("/import/:id")
     importFromHarvester(@PathParams('id') id: number, @BodyParams('config') config: Harvester) {
-        let configData = ConfigService.get().filter(config => config.id === id);
-        new ExcelImporter(configData).run().then( response => response.print());
+        let configData = ConfigService.get().filter(config => config.id === id)[0];
+        // FIXME: deduplication must work differently when import is not started for all harvesters
+        configData.deduplicationAlias = configData.index + 'dedup';
+        new ExcelImporter(configData).run.subscribe( response => {
+            if (response.complete) {
+                response.summary.print();
+            }
+        });
     }
 }
