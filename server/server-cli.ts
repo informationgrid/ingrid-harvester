@@ -7,7 +7,8 @@ import {CodedeImporter} from './importer/csw/codede.importer';
 import {CswImporter, CswSettings} from './importer/csw/csw.importer';
 import {configure, getLogger} from 'log4js';
 import {concat, Observable} from 'rxjs';
-import {ImportResultValues} from './model/import.result';
+import {ImportLogMessage} from './model/import.result';
+import {ImporterFactory} from "./importer/importer.factory";
 
 let config: (CkanSettings | CswSettings | ExcelSettings)[] = require( './config.json' ),
     process = require('process'),
@@ -35,15 +36,6 @@ let runAsync = false;
 
 // listen for incoming messages, which can be "import" with parameter <type>
 
-function getImporter(importerConfig) {
-    const type = importerConfig.type;
-    if (type === 'CKAN') return new CkanImporter(importerConfig);
-    if (type === 'EXCEL') return new ExcelImporter(importerConfig);
-    if (type === 'CSW') return new CswImporter(importerConfig);
-    if (type === 'BFG-CSW') return new BfgImporter(importerConfig);
-    if (type === 'CODEDE-CSW') return new CodedeImporter(importerConfig);
-}
-
 function getDateString() {
     let dt = new Date(Date.now());
     let year = dt.getFullYear();
@@ -66,7 +58,7 @@ async function startProcess() {
 
     const processes = [];
     let summaries: Summary[] = [];
-    let importers: Observable<ImportResultValues>[] = [];
+    let importers: Observable<ImportLogMessage>[] = [];
 
     for (let importerConfig of config) {
 
@@ -79,7 +71,7 @@ async function startProcess() {
         // Set the same elasticsearch alias for deduplication for all importers
         importerConfig.deduplicationAlias = deduplicationAlias;
 
-        let importer = getImporter( importerConfig );
+        let importer = ImporterFactory.get( importerConfig );
         if (!importer) {
             log.error( 'Importer not defined for: ' + importerConfig.type );
             return;

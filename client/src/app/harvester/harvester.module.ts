@@ -9,7 +9,9 @@ import {
   MatInputModule,
   MatSelectModule,
   MatSlideToggleModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule
 } from "@angular/material";
 import {CommonModule} from "@angular/common";
 import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.component';
@@ -21,6 +23,7 @@ import {FormsModule} from "@angular/forms";
 import {ExcelHarvesterComponent} from './dialog-edit/excel-harvester/excel-harvester.component';
 import {CkanHarvesterComponent} from './dialog-edit/ckan-harvester/ckan-harvester.component';
 import {CswHarvesterComponent} from './dialog-edit/csw-harvester/csw-harvester.component';
+import { ImporterDetailComponent } from './importer-detail/importer-detail.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +34,8 @@ import {CswHarvesterComponent} from './dialog-edit/csw-harvester/csw-harvester.c
     ImportNotifyComponent,
     ExcelHarvesterComponent,
     CkanHarvesterComponent,
-    CswHarvesterComponent
+    CswHarvesterComponent,
+    ImporterDetailComponent
   ],
   imports: [
     CommonModule,
@@ -45,6 +49,8 @@ import {CswHarvesterComponent} from './dialog-edit/csw-harvester/csw-harvester.c
     MatSnackBarModule,
     MatSelectModule,
     MatSlideToggleModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
     CronEditorModule
   ],
   entryComponents: [

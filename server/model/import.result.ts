@@ -1,6 +1,8 @@
 import {Summary} from './summary';
 
-export interface ImportResultValues {
+export interface ImportLogMessage {
+    id?: number;
+
     complete: boolean;
 
     message?: string;
@@ -11,6 +13,10 @@ export interface ImportResultValues {
         current: number;
         total: number;
     };
+
+    duration?: number;
+
+    lastExecution?: Date;
 }
 
 export class ImportResult {
@@ -22,7 +28,7 @@ export class ImportResult {
         }
     }
 
-    static running(current: number, total: number, message?: string): ImportResultValues {
+    static running(current: number, total: number, message?: string): ImportLogMessage {
         return {
             complete: false,
             progress: {
@@ -33,7 +39,7 @@ export class ImportResult {
         };
     }
 
-    static complete(summary: Summary, message?: string): ImportResultValues {
+    static complete(summary: Summary, message?: string): ImportLogMessage {
         return {
             complete: true,
             summary: summary,

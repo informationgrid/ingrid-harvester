@@ -9,7 +9,7 @@ import {CswParameters, RequestDelegate} from '../../utils/http-request.utils';
 import {OptionsWithUri} from 'request-promise';
 import {DefaultImporterSettings, ImporterSettings} from '../../importer';
 import {Observable, Observer} from 'rxjs';
-import {ImportResult, ImportResultValues} from '../../model/import.result';
+import {ImportResult, ImportLogMessage} from '../../model/import.result';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -46,6 +46,9 @@ export class CswImporter {
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
 
+    private totalRecords = 0;
+    private numIndexDocs = 0;
+
     static defaultSettings: CswSettings = {
         ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
@@ -58,12 +61,12 @@ export class CswImporter {
 
     private readonly summary: CswSummary;
 
-    run = new Observable<ImportResultValues>(observer => {
+    run = new Observable<ImportLogMessage>(observer => {
         this.observer = observer;
         this.exec(observer);
     });
 
-    private observer: Observer<ImportResultValues>;
+    private observer: Observer<ImportLogMessage>;
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         // merge default settings with configured ones
@@ -83,7 +86,7 @@ export class CswImporter {
         this.elastic = new ElasticSearchUtils(settings, this.summary);
     }
 
-    async exec(observer: Observer<ImportResultValues>): Promise<void> {
+    async exec(observer: Observer<ImportLogMessage>): Promise<void> {
         if (this.settings.dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
             await this.harvest();
@@ -111,7 +114,6 @@ export class CswImporter {
     async harvest() {
         let promises = [];
 
-        let numMatched = 0;
         while (true) {
             let response = await this.requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
@@ -120,7 +122,7 @@ export class CswImporter {
             let resultsNode = responseDom.getElementsByTagNameNS(CswMapper.CSW, 'SearchResults')[0];
             if (resultsNode) {
                 let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
-                numMatched = resultsNode.getAttribute('numberOfRecordsMatched');
+                this.totalRecords = resultsNode.getAttribute('numberOfRecordsMatched');
 
                 log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
 
@@ -141,7 +143,7 @@ export class CswImporter {
               * updated. The easiest solution would be to set numMatched to
               * maxRecords * numRetries
               */
-            if (numMatched < this.requestDelegate.getStartRecordIndex()) break;
+            if (this.totalRecords < this.requestDelegate.getStartRecordIndex()) break;
         }
         await Promise.all(promises)
             .catch(err => log.error('Error extracting records from CSW reply', err));
@@ -159,7 +161,6 @@ export class CswImporter {
 
         let now = new Date(Date.now());
         let issued;
-        let numIndexDocs = 0;
 
         if (this.settings.dryRun) {
             issued = ids.map(() => now);
@@ -194,12 +195,14 @@ export class CswImporter {
                         this.elastic.addDocToBulk(doc, uuid)
                             .then(response => {
                                 if (!response.queued) {
-                                    numIndexDocs += ElasticSearchUtils.maxBulkSize;
-                                    this.observer.next(ImportResult.running(numIndexDocs, records.length));
+                                    // numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                                    // this.observer.next(ImportResult.running(numIndexDocs, records.length));
                                 }
                             })
                     );
                 }
+
+                this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
             }
         }
         await Promise.all(promises)

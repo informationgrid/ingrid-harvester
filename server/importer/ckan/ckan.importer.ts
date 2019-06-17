@@ -7,7 +7,7 @@ import {DefaultImporterSettings, Importer, ImporterSettings} from '../../importe
 import {RequestDelegate} from '../../utils/http-request.utils';
 import {CkanMapper} from './ckan.mapper';
 import {Observable, Observer} from 'rxjs';
-import {ImportResult, ImportResultValues} from '../../model/import.result';
+import {ImportResult, ImportLogMessage} from '../../model/import.result';
 
 let log = require('log4js').getLogger(__filename);
 
@@ -36,12 +36,12 @@ export class CkanImporter implements Importer {
 
     summary: Summary;
 
-    run = new Observable<ImportResultValues>(observer => {
+    run = new Observable<ImportLogMessage>(observer => {
         this.observer = observer;
         this.exec(observer);
     });
 
-    private observer: Observer<ImportResultValues>;
+    private observer: Observer<ImportLogMessage>;
 
     private numIndexDocs = 0;
 
@@ -113,7 +113,7 @@ export class CkanImporter implements Importer {
         }
     }
 
-    async exec(observer: Observer<ImportResultValues>): Promise<void> {
+    async exec(observer: Observer<ImportLogMessage>): Promise<void> {
         try {
             if (this.settings.dryRun) {
                 log.debug('Dry run option enabled. Skipping index creation.');

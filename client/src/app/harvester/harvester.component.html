@@ -18,35 +18,26 @@
 <div class="example-headers-align">
   <mat-expansion-panel *ngFor="let harvester of harvesters | async" hideToggle>
     <mat-expansion-panel-header>
+
       <mat-panel-title>
         <mat-slide-toggle color="primary" [checked]="!harvester.disable" (click)="stopPropagation($event)"></mat-slide-toggle>
         <p>{{harvester.type}}</p>
+        <mat-progress-spinner *ngIf="importDetail[harvester.id]?.complete === false"></mat-progress-spinner>
       </mat-panel-title>
+
       <mat-panel-description>
         {{harvester.description || harvester.defaultAttribution}}
         <mat-icon *ngIf="harvester.summary?.numberOfErrors > 0" color="warn">error_outline</mat-icon>
         <mat-icon *ngIf="harvester.summary?.numberOfErrors === 0" class="success">check_circle_outline</mat-icon>
       </mat-panel-description>
+
     </mat-expansion-panel-header>
 
-    <div class="lastExecution" title="Letzte Ausführung">
-      {{harvester.summary?.lastExecution | date:'short'}}
-    </div>
-    <div class="nextExecution" title="Nächste Ausführung">
-      <mat-icon [inline]="true">alarm</mat-icon> {{harvester.summary?.nextExecution | date:'short'}}
-    </div>
-    <div class="clearfix"></div>
-
-    <ul>
-      <li>Dokumente: {{harvester.summary?.numberOfDocs}}</li>
-      <li>Warnungen: {{harvester.summary?.numberOfWarnings}}</li>
-      <li>Fehler: {{harvester.summary?.numberOfErrors}}</li>
-    </ul>
-
+    <app-importer-detail [data]="importDetail[harvester.id]"></app-importer-detail>
 
     <mat-action-row>
       <button mat-button (click)="showLog(harvester.id)"><mat-icon [inline]="true">description</mat-icon> Log</button>
-      <button mat-button (click)="startImport(harvester.id)"><mat-icon [inline]="true">import_export</mat-icon> Import starten</button>
+      <button mat-button (click)="startImport(harvester.id)" [disabled]="importDetail[harvester.id]?.complete === false"><mat-icon [inline]="true">import_export</mat-icon> Import starten</button>
       <button mat-button (click)="schedule(harvester.id)"><mat-icon [inline]="true">schedule</mat-icon> Planen</button>
       <div class="flex-space"></div>
       <button mat-button color="primary" (click)="edit(harvester)"><mat-icon [inline]="true">edit</mat-icon> Bearbeiten</button>

@@ -1,14 +1,13 @@
 import {IndexDocument} from '../../model/index.document';
 import {DefaultElasticsearchSettings, ElasticSearchUtils, ElasticSettings} from '../../utils/elastic.utils';
 import {ExcelMapper} from './excel.mapper';
-import {Worksheet} from 'exceljs';
+import {Workbook, Worksheet} from 'exceljs';
 import {elasticsearchMapping} from '../../elastic.mapping';
 import {elasticsearchSettings} from '../../elastic.settings';
 import {Summary} from '../../model/summary';
 import {DefaultImporterSettings, Importer, ImporterSettings} from '../../importer';
 import {Observable, Observer} from 'rxjs';
-import {ImportResult, ImportResultValues} from '../../model/import.result';
-import Excel = require('exceljs');
+import {ImportResult, ImportLogMessage} from '../../model/import.result';
 
 let log = require('log4js').getLogger(__filename);
 
@@ -33,7 +32,7 @@ export class ExcelImporter implements Importer {
 
     summary: Summary;
 
-    run = new Observable<ImportResultValues>(observer => {this.exec(observer)});
+    run = new Observable<ImportLogMessage>(observer => {this.exec(observer)});
 
     /**
      * Create the importer and initialize with settings.
@@ -50,7 +49,7 @@ export class ExcelImporter implements Importer {
         this.excelFilepath = settings.filePath;
     }
 
-    async exec(observer: Observer<ImportResultValues>): Promise<void> {
+    async exec(observer: Observer<ImportLogMessage>): Promise<void> {
 
         observer.next(ImportResult.message('Starting Excel Importer'));
 
@@ -89,7 +88,7 @@ export class ExcelImporter implements Importer {
             'DCATKategorie': 32
         };
 
-        let workbook = new Excel.Workbook();
+        let workbook = new Workbook();
 
         let promises = [];
         try {

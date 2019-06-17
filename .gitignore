@@ -40,6 +40,6 @@ jspm_packages
 
 .idea
 dist
-data.xlsx*
+server/data.xlsx
 FinaleImportExcel*
 node/

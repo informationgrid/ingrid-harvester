@@ -7,6 +7,8 @@ import {DialogSchedulerComponent} from "./dialog-scheduler/dialog-scheduler.comp
 import {DialogLogComponent} from "./dialog-log/dialog-log.component";
 import {DialogEditComponent} from "./dialog-edit/dialog-edit.component";
 import {ImportNotifyComponent} from "./notifications/import-notify.component";
+import {Socket} from 'ngx-socket-io';
+import {ImportLogMessage} from "../../../../server/model/import.result";
 
 @Component({
   selector: 'app-harvester',
@@ -17,10 +19,21 @@ export class HarvesterComponent implements OnInit {
 
   harvesters: Observable<Harvester[]>;
 
-  constructor(public dialog: MatDialog, private snackBar: MatSnackBar, private harvesterService: HarvesterService) { }
+  importInfo = this.socket.fromEvent<ImportLogMessage>('/log');
+
+  importDetail: { [x: number]: ImportLogMessage } = {};
+
+  constructor(private socket: Socket, public dialog: MatDialog, private snackBar: MatSnackBar, private harvesterService: HarvesterService) { }
 
   ngOnInit() {
+
+    this.importInfo.subscribe(data => {
+      console.log('Received from socket: ', data);
+      this.importDetail[data.id] = data;
+    });
+
     this.harvesters = this.harvesterService.getHarvester();
+
   }
 
   schedule(id: string) {
@@ -50,6 +63,8 @@ export class HarvesterComponent implements OnInit {
     this.snackBar.openFromComponent(ImportNotifyComponent, {
       duration: 3 * 1000,
     });
+
+    this.importDetail[id] = { complete: false };
 
   }
 

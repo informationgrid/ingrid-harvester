@@ -18,6 +18,7 @@
     "@tsed/common": "^5.17.1",
     "@tsed/core": "^5.17.1",
     "@tsed/di": "^5.17.1",
+    "@tsed/socketio": "^5.17.1",
     "async": "^2.6.1",
     "body-parser": "^1.19.0",
     "elasticsearch": "^15.2.0",
@@ -33,6 +34,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "rxjs": "^6.5.2",
+    "socket.io": "^2.2.0",
     "xmldom": "^0.1.27",
     "xpath": "0.0.27"
   },
@@ -47,6 +49,7 @@
     "@types/passport-local": "^1.0.33",
     "@types/request-promise": "^4.1.43",
     "@types/sinon": "^7.0.3",
+    "@types/socket.io": "^2.1.2",
     "browserify": "^16.2.3",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",

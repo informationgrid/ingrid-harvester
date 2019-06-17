@@ -11,8 +11,12 @@ configure('./log4js.json');
 
 @ServerSettings({
     rootDir,
+    socketIO: {},
     acceptMimes: ["application/json"],
-    passport: {}
+    passport: {},
+    logger: {
+        logRequest: false
+    }
 })
 export class Server extends ServerLoader {
     /**

@@ -1,0 +1,51 @@
+<ng-container *ngIf="data">
+
+    <ng-container *ngIf="!data.complete">
+        <mat-progress-bar
+                class="example-margin"
+                [mode]="'determinate'"
+                color="accent"
+                [value]="getProgressValue()">
+        </mat-progress-bar>
+        <div class="align-center">
+            {{data.progress?.current}} / {{data.progress?.total}} ({{data.duration}}s)
+            <div>{{data.message}}</div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="data.complete">
+        <div class="lastExecution" title="Letzte Ausführung">
+            {{data.lastExecution | date:'short'}}
+        </div>
+        <div class="nextExecution" title="Nächste Ausführung">
+            <mat-icon [inline]="true">alarm</mat-icon>
+<!--            {{data.nextExecution | date:'short'}}-->
+        </div>
+        <div class="clearfix"></div>
+
+        <div fxLayout="column">
+            <div>
+                <div class="numberCircle">{{data.summary?.numDocs}}</div>
+                Dokumente
+            </div>
+
+            <div>
+                <div class="numberCircle error">{{data.summary?.numErrors}}</div>
+                Fehler
+            </div>
+        </div>
+
+
+        <ul>
+            <li>Dokumente: {{data.summary?.numDocs}}</li>
+            <li>Warnungen: {{data.summary?.numWarnings}}</li>
+            <li>Fehler: {{data.summary?.numErrors}}</li>
+            <li>Dauer: {{data.duration}}s</li>
+        </ul>
+    </ng-container>
+
+</ng-container>
+
+<ng-container *ngIf="!data">
+    There's no Info right now.
+</ng-container>

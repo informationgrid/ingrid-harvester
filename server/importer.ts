@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs';
-import {ImportResultValues} from './model/import.result';
+import {ImportLogMessage} from './model/import.result';
 
 export type ImporterSettings = {
     id?: number, description?: string, type: string, proxy?: string, dryRun?: boolean, disable?: boolean,
@@ -16,5 +16,5 @@ export const DefaultImporterSettings: ImporterSettings = {
 };
 
 export interface Importer {
-    run: Observable<ImportResultValues>;
+    run: Observable<ImportLogMessage>;
 }

@@ -53,7 +53,7 @@ export class ElasticSearchUtils {
      * @param settings
      */
     prepareIndex(mapping, settings) {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp( new Date() );
             this.client.indices.create({ index: this.indexName, waitForActiveShards: '1' })
                 .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve))
@@ -64,6 +64,7 @@ export class ElasticSearchUtils {
                         message = 'Index ' + this.indexName + ' not created, since it already exists.';
                     }
                     this.handleError(message, err);
+                    reject(message);
                 });
         });
     }
@@ -254,21 +255,21 @@ export class ElasticSearchUtils {
                         log.debug('Closing client connection to Elasticsearch');
                         this.client.close();
                     }
-                    log.debug('Bulk finished of data #items: ' + data.length);
+                    log.debug('Bulk finished of data #items: ' + data.length/2);
                     resolve({
                         queued: false,
                         response: response
                     });
                 })
                 .catch(err => {
-                    this.handleError('Error occurred during bulk index of #items: ' + data.length, err);
+                    this.handleError('Error occurred during bulk index of #items: ' + data.length/2, err);
                     if (closeAfterBulk) {
                         this.client.close();
                     }
                     reject(err);
                 });
             } catch(e) {
-                this.handleError('Error during bulk indexing of #items: ' + data.length, e);
+                this.handleError('Error during bulk indexing of #items: ' + data.length/2, e);
             }
         });
     }
