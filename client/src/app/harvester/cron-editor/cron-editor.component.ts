@@ -2,7 +2,7 @@ import { Component, Input, Output, OnInit, OnChanges, SimpleChanges, EventEmitte
 
 import { CronOptions } from "./CronOptions";
 import { Days, MonthWeeks, Months } from "./enums";
-import { MatTabChangeEvent } from "@angular/material";
+import { MatTabChangeEvent } from "@angular/material/tabs";
 
 @Component({
     selector: "cron-editor",

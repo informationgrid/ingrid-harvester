@@ -3,7 +3,10 @@ import {LOCALE_ID, NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule} from "@angular/material";
+import { MatIconModule } from "@angular/material/icon";
+import { MatListModule } from "@angular/material/list";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatToolbarModule } from "@angular/material/toolbar";
 import {HarvesterModule} from "./harvester/harvester.module";
 import {registerLocaleData} from "@angular/common";
 import localeDe from '@angular/common/locales/de'
