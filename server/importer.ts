@@ -4,8 +4,10 @@ export type ImporterSettings = {
     description?: string, type: string, proxy?: string, dryRun?: boolean, disable?: boolean,
     maxRecords?: number,
     startPosition?: number,
-    defaultMcloudSubgroup?: string,
-    defaultDCATCategory?: string
+    defaultMcloudSubgroup?: string[],
+    defaultDCATCategory?: string[],
+    defaultAttribution?: string,
+    defaultAttributionLink?: string
 }
 
 export const DefaultImporterSettings: ImporterSettings = {

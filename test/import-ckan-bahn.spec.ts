@@ -24,9 +24,9 @@ describe('Import CKAN Bahn', function () {
         var settings: CkanSettings = {
             alias: undefined,
             ckanBaseUrl: 'https://data.deutschebahn.com',
-            description: 'Deutsche Bahn Datenportal',
-            defaultDCATCategory: 'TRAN',
-            defaultMcloudSubgroup: 'railway',
+            defaultAttribution: 'Deutsche Bahn Datenportal',
+            defaultDCATCategory: ['TRAN'],
+            defaultMcloudSubgroup: ['railway'],
             dryRun: true,
             elasticSearchUrl: undefined,
             type: undefined,

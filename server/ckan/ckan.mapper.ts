@@ -42,7 +42,7 @@ export class CkanMapper extends GenericMapper {
     }
 
     getCategories() {
-        return [this.settings.defaultMcloudSubgroup];
+        return this.settings.defaultMcloudSubgroup;
     }
 
     getCitation() {
@@ -138,7 +138,7 @@ export class CkanMapper extends GenericMapper {
         return {
             raw_data_source: rawSource,
             portal_link: portalSource,
-            attribution: this.settings.description
+            attribution: this.settings.defaultAttribution
         };
     }
 

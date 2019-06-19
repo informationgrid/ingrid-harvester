@@ -140,7 +140,7 @@ export class ExcelMapper extends GenericMapper {
 
     getCategories() {
         let categories = this.mapCategories(this.columnValues[this.columnMap.Kategorie].split(','));
-        if (!categories || categories.length === 0) categories = [this.settings.defaultMcloudSubgroup];
+        if (!categories || categories.length === 0) categories = this.settings.defaultMcloudSubgroup;
         return categories;
     }
 

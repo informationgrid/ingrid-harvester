@@ -32,8 +32,8 @@ describe('Import CSW DWD', function () {
             alias: "mcloud",
             getRecordsUrl: "https://cdc.dwd.de/catalogue/srv/en/csw",
             proxy: null,
-            defaultMcloudSubgroup: "climate",
-            defaultDCATCategory: "TRAN",
+            defaultMcloudSubgroup: ["climate"],
+            defaultDCATCategory: ["TRAN"],
             defaultAttribution: "Climate Data Centre (CDC) Katalog des DWD",
             includeTimestamp: true,
             recordFilter: `
