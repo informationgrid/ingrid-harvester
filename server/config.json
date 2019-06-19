@@ -27,6 +27,7 @@
     "defaultDCATCategory": [
       "TRAN"
     ],
+    "defaultAttribution": "Offene Daten Köln",
     "disable": false,
     "id": 2
   },
@@ -46,6 +47,7 @@
     "defaultDCATCategory": [
       "TRAN"
     ],
+    "defaultAttribution": "Offene Daten Bonn",
     "disable": true,
     "id": 3
   },
@@ -65,6 +67,7 @@
     "defaultDCATCategory": [
       "TRAN"
     ],
+    "defaultAttribution": "Offene Daten Düsseldorf",
     "disable": false,
     "id": 4
   },
@@ -84,6 +87,7 @@
     "defaultDCATCategory": [
       "TRAN"
     ],
+    "defaultAttribution": "Offene Daten Wuppertal",
     "disable": false,
     "id": 5
   },
@@ -100,6 +104,7 @@
     "defaultDCATCategory": [
       "TRAN"
     ],
+    "defaultAttribution": "Deutsche Bahn Datenportal",
     "disable": false,
     "id": 6
   },
@@ -119,6 +124,7 @@
     "defaultDCATCategory": [
       "TRAN"
     ],
+    "defaultAttribution": "OpenData Rostock",
     "disable": false,
     "id": 7
   },
@@ -138,6 +144,7 @@
     "defaultDCATCategory": [
       "TRAN"
     ],
+    "defaultAttribution": "Offenesdatenportal",
     "disable": false,
     "id": 8
   },
@@ -157,6 +164,7 @@
     "defaultDCATCategory": [
       "TRAN"
     ],
+    "defaultAttribution": "Transparenzportal Hamburg",
     "disable": true,
     "id": 9
   },
@@ -173,6 +181,7 @@
     "defaultDCATCategory": [
       "TRAN"
     ],
+    "defaultAttribution": "Open-Data-Portal RNV",
     "disable": false,
     "id": 10
   },
@@ -195,6 +204,7 @@
     "defaultDCATCategory": [
       "TRAN"
     ],
+    "defaultAttribution": "NRW Portal",
     "disable": true,
     "id": 11
   },
