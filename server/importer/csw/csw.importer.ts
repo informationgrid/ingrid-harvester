@@ -20,8 +20,6 @@ export type CswSettings = {
     getRecordsUrl: string,
     eitherKeywords: string[],
     httpMethod: "GET" | "POST",
-    defaultAttribution?: string,
-    defaultAttributionLink?: string,
     recordFilter?: string
 } & ElasticSettings & ImporterSettings;
 
@@ -52,11 +50,9 @@ export class CswImporter {
     static defaultSettings: CswSettings = {
         ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
-        ...{
-            getRecordsUrl: '',
-            eitherKeywords: [],
-            httpMethod: "GET"
-        }
+        getRecordsUrl: '',
+        eitherKeywords: [],
+        httpMethod: "GET"
     };
 
     private readonly summary: CswSummary;

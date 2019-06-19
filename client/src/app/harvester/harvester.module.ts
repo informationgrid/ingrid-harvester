@@ -22,6 +22,8 @@ import {ExcelHarvesterComponent} from './dialog-edit/excel-harvester/excel-harve
 import {CkanHarvesterComponent} from './dialog-edit/ckan-harvester/ckan-harvester.component';
 import {CswHarvesterComponent} from './dialog-edit/csw-harvester/csw-harvester.component';
 import { ImporterDetailComponent } from './importer-detail/importer-detail.component';
+import {FlexLayoutModule} from "@angular/flex-layout";
+import {MatCardModule, MatChipsModule, MatListModule} from "@angular/material";
 
 @NgModule({
   declarations: [
@@ -37,18 +39,22 @@ import { ImporterDetailComponent } from './importer-detail/importer-detail.compo
   ],
   imports: [
     CommonModule,
+    FlexLayoutModule,
     NoopAnimationsModule,
     FormsModule,
     MatDialogModule,
     MatButtonModule,
+    MatCardModule,
     MatExpansionModule,
     MatIconModule,
     MatInputModule,
+    MatListModule,
     MatSnackBarModule,
     MatSelectModule,
     MatSlideToggleModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatChipsModule,
     CronEditorModule
   ],
   entryComponents: [

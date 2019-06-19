@@ -26,12 +26,11 @@ export class CkanImporter implements Importer {
     defaultSettings: CkanSettings = {
         ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
-        ...{
-            ckanBaseUrl: '',
-            filterTags: [],
-            filterGroups: [],
-            requestType: 'ListWithResources'
-        }
+        ckanBaseUrl: '',
+        filterTags: [],
+        filterGroups: [],
+        requestType: 'ListWithResources'
+
     };
 
     summary: Summary;

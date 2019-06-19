@@ -42,7 +42,7 @@ export class CkanMapper extends GenericMapper {
     }
 
     getCategories() {
-        return [this.settings.defaultMcloudSubgroup];
+        return this.settings.defaultMcloudSubgroup;
     }
 
     getCitation() {
@@ -138,7 +138,7 @@ export class CkanMapper extends GenericMapper {
         return {
             raw_data_source: rawSource,
             portal_link: portalSource,
-            attribution: this.settings.description
+            attribution: this.settings.defaultAttribution
         };
     }
 
@@ -186,6 +186,7 @@ export class CkanMapper extends GenericMapper {
 
     getThemes() {
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
+        // TODO: map ckan category to DCAT
         return this.settings.defaultDCATCategory ? [GenericMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory] : undefined;
     }
 

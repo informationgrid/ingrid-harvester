@@ -4,7 +4,7 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .form-wrapper {
-  padding-top: 40px;
+  //padding-top: 40px;
   margin: 0 10%;
   max-width: 700px;
 
@@ -29,4 +29,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .half {
   width: 50%;
+}
+
+.mat-card-header-text {
+  padding-top: 22px;
 }

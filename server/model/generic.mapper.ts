@@ -85,42 +85,11 @@ export abstract class GenericMapper {
         };
     }
 
-    static createDisplayContact(name, url) {
-        return {
-            name: name,
-            homepage: url
-        };
-    }
-
     static createSourceAttribution(name) {
         return {
             attribution: name
         };
     }
-
-    static createLicense(description, abbreviation, link) {
-        return {
-            description: description,
-            abbreviation: abbreviation,
-            link: link
-        };
-    }
-
-    static createCreator(name, email) {
-        return {
-            name: name,
-            mbox: email
-        };
-    }
-
-    static createAgent(name: string, url?: string, about?: string) {
-        return {
-            name: name,
-            homepage: url,
-            about: about
-        };
-    }
-
 
     abstract getAccrualPeriodicity(): string;
 

@@ -292,7 +292,7 @@ export class ElasticSearchUtils {
 
         // send data to elasticsearch if limit is reached
         // TODO: don't use document size but bytes instead
-        if (this._bulkData.length > (ElasticSearchUtils.maxBulkSize*2)) {
+        if (this._bulkData.length >= (ElasticSearchUtils.maxBulkSize*2)) {
             return this.sendBulkData();
         } else {
             return new Promise(resolve => resolve({

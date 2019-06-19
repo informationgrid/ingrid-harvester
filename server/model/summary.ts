@@ -7,6 +7,8 @@ export class Summary {
 
     numErrors: number = 0;
 
+    warnings: string[][] = [];
+
     skippedDocs: string[] = [];
 
     elasticErrors: string[] = [];
@@ -18,7 +20,7 @@ export class Summary {
     private headerTitle: string;
 
     constructor(settings: {description?, type}) {
-        this.headerTitle = `Summary of: ${settings.description} (${settings.type})`;
+        this.headerTitle = `${settings.description} (${settings.type})`;
     }
 
     print() {
@@ -28,6 +30,10 @@ export class Summary {
         logSummary.info(`Number of records: ${this.numDocs}`);
         logSummary.info(`Skipped records: ${this.skippedDocs.length}`);
         logSummary.info(`Record-Errors: ${this.numErrors}`);
+        logSummary.info(`Warnings: ${this.warnings.length}`);
+        if (logSummary.isDebugEnabled() && this.warnings.length > 0) {
+            logSummary.debug(`\n\t${this.warnings.join('\n\t')}`);
+        }
         logSummary.info(`App-Errors: ${this.appErrors.length}`);
         if (logSummary.isDebugEnabled() && this.appErrors.length > 0) {
             logSummary.debug(`\n\t${this.appErrors.join('\n\t')}`);

@@ -6,9 +6,9 @@
       <mat-form-field>
         <mat-label>Typ</mat-label>
         <mat-select #harvesterType [(ngModel)]="harvester.type" [disabled]="harvester.id" name="type">
-          <mat-option value="excel">EXCEL</mat-option>
-          <mat-option value="ckan">CKAN</mat-option>
-          <mat-option value="csw">CSW</mat-option>
+          <mat-option value="EXCEL">EXCEL</mat-option>
+          <mat-option value="CKAN">CKAN</mat-option>
+          <mat-option value="CSW">CSW</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -42,7 +42,7 @@
         </mat-form-field>
 
         <mat-form-field class="flex-space" style="padding-left: 10px;">
-          <mat-select placeholder="Standard mCLOUD-Kategorien" multiple [(ngModel)]="harvester.defaultmCLOUDCategory"
+          <mat-select placeholder="Standard mCLOUD-Kategorien" multiple [(ngModel)]="harvester.defaultMcloudSubgroup"
                       name="defaultmCLOUDCategory">
             <mat-option value="roads">Straßen</mat-option>
             <mat-option value="climate">Klima und Wetter</mat-option>
@@ -54,11 +54,11 @@
         </mat-form-field>
       </div>
 
-      <app-excel-harvester *ngIf="harvesterType.value === 'excel'" [model]="harvester" class="flex-column"></app-excel-harvester>
+      <app-excel-harvester *ngIf="harvester.type === 'EXCEL'" [model]="harvester" class="flex-column"></app-excel-harvester>
 
-      <app-ckan-harvester *ngIf="harvesterType.value === 'ckan'" [model]="harvester" class="flex-column"></app-ckan-harvester>
+      <app-ckan-harvester *ngIf="harvester.type === 'CKAN'" [model]="harvester" class="flex-column"></app-ckan-harvester>
 
-      <app-csw-harvester *ngIf="harvesterType.value === 'csw'" [model]="harvester" class="flex-column"></app-csw-harvester>
+      <app-csw-harvester *ngIf="harvester.type === 'CSW'" [model]="harvester" class="flex-column"></app-csw-harvester>
 
       <span class="mat-small">{{harvester | json}}</span>
     </form>
@@ -69,5 +69,5 @@
   <button mat-button mat-dialog-close>Abbrechen</button>
   <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
   <div class="flex-space"></div>
-  <button mat-button color="primary" [mat-dialog-close]="harvester">Anlegen</button>
+  <button mat-button color="primary" [mat-dialog-close]="harvester">{{harvester.id ? 'Aktualisieren' : 'Anlegen'}}</button>
 </mat-dialog-actions>

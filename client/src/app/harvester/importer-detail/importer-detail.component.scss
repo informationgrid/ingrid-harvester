@@ -1,5 +1,12 @@
+// Import _variables.css to the component's sass file where you want to use it.
+@import "~src/variables";
+
 .align-center {
   text-align: center;
+}
+
+.progress-description {
+  padding-top: 10px;
 }
 
 .numberCircle {
@@ -17,8 +24,11 @@
   line-height: 2em;
   box-sizing: content-box;
 }
-
 .error {
-  background-color: #f44336;
+  background-color: $error;
+  color: white;
+}
+.warning {
+  background-color: $warn;
   color: white;
 }

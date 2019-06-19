@@ -16,3 +16,22 @@
 <mat-form-field>
   <input matInput placeholder="Default Attribution Link" [(ngModel)]="model.defaultAttributionLink" name="defaultAttributionLink">
 </mat-form-field>
+
+<mat-form-field>
+  <textarea matInput placeholder="Record Filter" [(ngModel)]="model.recordFilter" name="recordFilter"></textarea>
+</mat-form-field>
+
+<mat-form-field>
+  <mat-chip-list #chipList>
+    <mat-chip *ngFor="let keyword of model.eitherKeywords" [selectable]="false"
+              [removable]="true" (removed)="remove(keyword)">
+      {{keyword}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input placeholder="Either keywords"
+           [matChipInputFor]="chipList"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           [matChipInputAddOnBlur]="true"
+           (matChipInputTokenEnd)="add($event)">
+  </mat-chip-list>
+</mat-form-field>

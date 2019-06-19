@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HarvesterService} from "./harvester.service";
-import {Observable} from "rxjs";
+import {of, zip} from "rxjs";
 import {Harvester} from "./model/harvester";
-import { MatDialog } from "@angular/material/dialog";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import {MatDialog} from "@angular/material/dialog";
+import {MatSnackBar} from "@angular/material/snack-bar";
 import {DialogSchedulerComponent} from "./dialog-scheduler/dialog-scheduler.component";
 import {DialogLogComponent} from "./dialog-log/dialog-log.component";
 import {DialogEditComponent} from "./dialog-edit/dialog-edit.component";
 import {ImportNotifyComponent} from "./notifications/import-notify.component";
 import {Socket} from 'ngx-socket-io';
 import {ImportLogMessage} from "../../../../server/model/import.result";
+import {flatMap, groupBy, mergeMap, toArray} from 'rxjs/operators';
 
 @Component({
   selector: 'app-harvester',
@@ -18,13 +19,17 @@ import {ImportLogMessage} from "../../../../server/model/import.result";
 })
 export class HarvesterComponent implements OnInit {
 
-  harvesters: Observable<Harvester[]>;
+  harvesters: {[x:string]: Harvester[]} = {};
 
   importInfo = this.socket.fromEvent<ImportLogMessage>('/log');
 
   importDetail: { [x: number]: ImportLogMessage } = {};
 
-  constructor(private socket: Socket, public dialog: MatDialog, private snackBar: MatSnackBar, private harvesterService: HarvesterService) { }
+  constructor(private socket: Socket,
+              public dialog: MatDialog,
+              private snackBar: MatSnackBar,
+              private harvesterService: HarvesterService) {
+  }
 
   ngOnInit() {
 
@@ -33,11 +38,21 @@ export class HarvesterComponent implements OnInit {
       this.importDetail[data.id] = data;
     });
 
-    this.harvesters = this.harvesterService.getHarvester();
+    this.harvesterService.getHarvester().pipe(
+      flatMap(items => of(...items)),
+      groupBy(harvester => harvester.type.endsWith('CSW') ? 'CSW' : harvester.type),
+      mergeMap(group => zip(of(group.key), group.pipe(toArray())))
+    ).subscribe( data => {
+      this.harvesters[data[0]] = data[1].sort((a, b) => a.description.localeCompare(b.description));
+    });
+
+    this.harvesterService.getLastLogs().subscribe(logs => {
+      logs.forEach(log => this.importDetail[log.id] = log);
+    });
 
   }
 
-  schedule(id: string) {
+  schedule(id: number) {
     const dialogRef = this.dialog.open(DialogSchedulerComponent, {
       width: '900px'
     });
@@ -48,7 +63,7 @@ export class HarvesterComponent implements OnInit {
     });
   }
 
-  showLog(id: string) {
+  showLog(id: number) {
     const dialogRef = this.dialog.open(DialogLogComponent, {
       width: '900px',
       data: {
@@ -57,15 +72,15 @@ export class HarvesterComponent implements OnInit {
     });
   }
 
-  startImport(id: string) {
+  startImport(id: number) {
 
     this.harvesterService.runImport(id).subscribe();
 
     this.snackBar.openFromComponent(ImportNotifyComponent, {
-      duration: 3 * 1000,
+      duration: 3 * 1000
     });
 
-    this.importDetail[id] = { complete: false };
+    this.importDetail[id] = {complete: false};
 
   }
 
@@ -76,8 +91,10 @@ export class HarvesterComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      // this.animal = result;
+      console.log('The dialog was closed', result);
+      if (result) {
+        this.harvesterService.updateHarvester(result).subscribe();
+      }
     });
   }
 

@@ -79,6 +79,7 @@ export class ExcelMapper extends GenericMapper {
             this.valid = false;
             let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.id}', index: '${this.currentIndexName}'.`;
             log.warn(msg);
+            this.summary.warnings.push(['Invalid URLs', msg]);
         }
 
         return distributions;
@@ -140,7 +141,7 @@ export class ExcelMapper extends GenericMapper {
 
     getCategories() {
         let categories = this.mapCategories(this.columnValues[this.columnMap.Kategorie].split(','));
-        if (!categories || categories.length === 0) categories = [this.settings.defaultMcloudSubgroup];
+        if (!categories || categories.length === 0) categories = this.settings.defaultMcloudSubgroup;
         return categories;
     }
 
@@ -200,7 +201,9 @@ export class ExcelMapper extends GenericMapper {
                 }
             }
             if (!found) {
-                log.warn('Could not find abbreviation of "Datenhaltende Stelle": ' + abbr);
+                let message = 'Could not find abbreviation of "Datenhaltende Stelle": ' + abbr;
+                log.warn(message);
+                this.summary.warnings.push(['No Publisher found', message]);
             }
         });
         return publishers;
@@ -233,8 +236,9 @@ export class ExcelMapper extends GenericMapper {
             } else {
                 let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.currentIndexName}'.`;
                 log.warn(msg);
-                this.errors.push(msg);
-                this.summary.numErrors++;
+                this.summary.warnings.push(['Invalid URL', msg]);
+                //this.errors.push(msg);
+                //this.summary.numErrors++;
             }
         }));
 
@@ -286,7 +290,9 @@ export class ExcelMapper extends GenericMapper {
         }
 
         if (!license) {
-            log.warn('Could not find abbreviation of "License": ' + licenseId);
+            let message = 'Could not find abbreviation of "License": ' + licenseId;
+            log.warn(message);
+            this.summary.warnings.push(['Invalid License', message]);
         }
 
         return license;

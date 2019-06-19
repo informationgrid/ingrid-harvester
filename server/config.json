@@ -5,8 +5,9 @@
     "elasticSearchUrl": "http://localhost:9200",
     "index": "excel",
     "alias": "mcloud",
-    "filePath": "./data.xlsx",
-    "defaultDCATCategory": "TRAN",
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
     "disable": false,
     "id": 1
   },
@@ -20,8 +21,12 @@
     "index": "ckan_opendata_koeln",
     "alias": "mcloud",
     "ckanBaseUrl": "https://offenedaten-koeln.de",
-    "defaultMcloudSubgroup": "railway",
-    "defaultDCATCategory": "TRAN",
+    "defaultMcloudSubgroup": [
+      "railway"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
     "disable": false,
     "id": 2
   },
@@ -35,8 +40,12 @@
     "index": "ckan_opendata_bonn",
     "alias": "mcloud",
     "ckanBaseUrl": "https://opendata.bonn.de",
-    "defaultMcloudSubgroup": "railway",
-    "defaultDCATCategory": "TRAN",
+    "defaultMcloudSubgroup": [
+      "railway"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
     "disable": true,
     "id": 3
   },
@@ -50,8 +59,12 @@
     "index": "ckan_opendata_duesseldorf",
     "alias": "mcloud",
     "ckanBaseUrl": "https://opendata.duesseldorf.de",
-    "defaultMcloudSubgroup": "railway",
-    "defaultDCATCategory": "TRAN",
+    "defaultMcloudSubgroup": [
+      "railway"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
     "disable": false,
     "id": 4
   },
@@ -65,8 +78,12 @@
     "index": "ckan_opendata_wuppertal",
     "alias": "mcloud",
     "ckanBaseUrl": "https://offenedaten-wuppertal.de",
-    "defaultMcloudSubgroup": "railway",
-    "defaultDCATCategory": "TRAN",
+    "defaultMcloudSubgroup": [
+      "railway"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
     "disable": false,
     "id": 5
   },
@@ -77,8 +94,12 @@
     "index": "ckan_db",
     "alias": "mcloud",
     "ckanBaseUrl": "https://data.deutschebahn.com",
-    "defaultMcloudSubgroup": "railway",
-    "defaultDCATCategory": "TRAN",
+    "defaultMcloudSubgroup": [
+      "railway"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
     "disable": false,
     "id": 6
   },
@@ -92,8 +113,12 @@
     "index": "ckan_opendata_hro",
     "alias": "mcloud",
     "ckanBaseUrl": "https://www.opendata-hro.de",
-    "defaultMcloudSubgroup": "infrastructure",
-    "defaultDCATCategory": "TRAN",
+    "defaultMcloudSubgroup": [
+      "infrastructure"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
     "disable": false,
     "id": 7
   },
@@ -107,8 +132,12 @@
     "index": "ckan_offenesdatenportal",
     "alias": "mcloud",
     "ckanBaseUrl": "https://www.offenesdatenportal.de",
-    "defaultMcloudSubgroup": "infrastructure",
-    "defaultDCATCategory": "TRAN",
+    "defaultMcloudSubgroup": [
+      "infrastructure"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
     "disable": false,
     "id": 8
   },
@@ -122,8 +151,12 @@
     "index": "ckan_portal_hamburg",
     "alias": "mcloud",
     "ckanBaseUrl": "http://suche.transparenz.hamburg.de",
-    "defaultMcloudSubgroup": "infrastructure",
-    "defaultDCATCategory": "TRAN",
+    "defaultMcloudSubgroup": [
+      "infrastructure"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
     "disable": true,
     "id": 9
   },
@@ -134,8 +167,12 @@
     "index": "ckan_opendata_rnv",
     "alias": "mcloud",
     "ckanBaseUrl": "https://opendata.rnv-online.de",
-    "defaultMcloudSubgroup": "infrastructure",
-    "defaultDCATCategory": "TRAN",
+    "defaultMcloudSubgroup": [
+      "infrastructure"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
     "disable": false,
     "id": 10
   },
@@ -152,8 +189,12 @@
     "index": "ckan_opendata_nrw",
     "alias": "mcloud",
     "ckanBaseUrl": "https://open.nrw",
-    "defaultMcloudSubgroup": "infrastructure",
-    "defaultDCATCategory": "TRAN",
+    "defaultMcloudSubgroup": [
+      "infrastructure"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
     "disable": true,
     "id": 11
   },
@@ -170,8 +211,12 @@
     "eitherKeywords": [
       "opendata"
     ],
-    "defaultMcloudSubgroup": "waters",
-    "defaultDCATCategory": "TRAN",
+    "defaultMcloudSubgroup": [
+      "waters"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
     "defaultAttribution": "WSV.Geokatalog CSW",
     "defaultAttributionLink": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2",
     "disable": false,
@@ -190,8 +235,12 @@
     "eitherKeywords": [
       "opendata"
     ],
-    "defaultMcloudSubgroup": "waters",
-    "defaultDCATCategory": "ENVI",
+    "defaultMcloudSubgroup": [
+      "waters"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
     "defaultAttribution": "MDI-DE",
     "defaultAttributionLink": "https://www.mdi-de.org/",
     "disable": false,
@@ -209,8 +258,12 @@
     "eitherKeywords": [
       "opendata"
     ],
-    "defaultMcloudSubgroup": "waters",
-    "defaultDCATCategory": "ENVI",
+    "defaultMcloudSubgroup": [
+      "waters"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
     "defaultAttribution": "Bundesanstalt für Gewässerkunde",
     "defaultAttributionLink": "https://geoportal.bafg.de/",
     "disable": false,
@@ -229,8 +282,12 @@
       "opendata",
       "inspireidentifiziert"
     ],
-    "defaultMcloudSubgroup": "climate",
-    "defaultDCATCategory": "ENVI",
+    "defaultMcloudSubgroup": [
+      "climate"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
     "defaultAttribution": "Climate Data Centre (CDC) Katalog des DWD",
     "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/csw",
     "disable": false,
@@ -248,8 +305,12 @@
     "eitherKeywords": [
       "opendata"
     ],
-    "defaultMcloudSubgroup": "aviation",
-    "defaultDCATCategory": "TECH",
+    "defaultMcloudSubgroup": [
+      "aviation"
+    ],
+    "defaultDCATCategory": [
+      "TECH"
+    ],
     "defaultAttribution": "CODE-DE Catalogue",
     "defaultAttributionLink": "https://code-de.org/de/marketplace",
     "disable": false,
@@ -269,8 +330,12 @@
       "inspireidentifiziert"
     ],
     "httpMethod": "POST",
-    "defaultMcloudSubgroup": "waters",
-    "defaultDCATCategory": "ENVI",
+    "defaultMcloudSubgroup": [
+      "waters"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
     "defaultAttribution": "GeoSeaPortal (BSH)",
     "defaultAttributionLink": "https://www.geoseaportal.de/",
     "disable": false,

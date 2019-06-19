@@ -23,4 +23,8 @@ export class ImporterDetailComponent implements OnInit {
       return 0;
     }
   }
+
+  getNextExecutionTime(data: ImportLogMessage) {
+    return null;
+  }
 }

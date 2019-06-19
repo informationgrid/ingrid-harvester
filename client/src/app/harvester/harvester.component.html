@@ -16,39 +16,59 @@
   </mat-card-actions>
 </mat-card>-->
 <div class="example-headers-align">
-  <mat-expansion-panel *ngFor="let harvester of harvesters | async" hideToggle>
-    <mat-expansion-panel-header>
+    <ng-container *ngFor="let item of harvesters | keyvalue">
 
-      <mat-panel-title>
-        <mat-slide-toggle color="primary" [checked]="!harvester.disable" (click)="stopPropagation($event)"></mat-slide-toggle>
-        <p>{{harvester.type}}</p>
-        <mat-progress-spinner *ngIf="importDetail[harvester.id]?.complete === false"></mat-progress-spinner>
-      </mat-panel-title>
+        <h3>{{item.key}}</h3>
 
-      <mat-panel-description>
-        {{harvester.description || harvester.defaultAttribution}}
-        <mat-icon *ngIf="harvester.summary?.numberOfErrors > 0" color="warn">error_outline</mat-icon>
-        <mat-icon *ngIf="harvester.summary?.numberOfErrors === 0" class="success">check_circle_outline</mat-icon>
-      </mat-panel-description>
+        <mat-expansion-panel *ngFor="let harvester of item.value" hideToggle>
+            <mat-expansion-panel-header>
 
-    </mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-slide-toggle color="primary" [checked]="!harvester.disable"
+                                      (click)="stopPropagation($event)"></mat-slide-toggle>
+                    <p>{{harvester.description || harvester.defaultAttribution}}</p>
+                    <mat-spinner *ngIf="importDetail[harvester.id]?.complete === false" diameter="20"></mat-spinner>
+                </mat-panel-title>
 
-    <app-importer-detail [data]="importDetail[harvester.id]"></app-importer-detail>
+                <mat-panel-description>
+                    &nbsp;
+                    <mat-icon *ngIf="importDetail[harvester.id]?.summary?.numErrors > 0" color="warn">error_outline</mat-icon>
+                    <mat-icon *ngIf="importDetail[harvester.id]?.summary?.numErrors === 0" class="success">check_circle_outline
+                    </mat-icon>
+                </mat-panel-description>
 
-    <mat-action-row>
-      <button mat-button (click)="showLog(harvester.id)"><mat-icon [inline]="true">description</mat-icon> Log</button>
-      <button mat-button (click)="startImport(harvester.id)" [disabled]="importDetail[harvester.id]?.complete === false"><mat-icon [inline]="true">import_export</mat-icon> Import starten</button>
-      <button mat-button (click)="schedule(harvester.id)"><mat-icon [inline]="true">schedule</mat-icon> Planen</button>
-      <div class="flex-space"></div>
-      <button mat-button color="primary" (click)="edit(harvester)"><mat-icon [inline]="true">edit</mat-icon> Bearbeiten</button>
-    </mat-action-row>
+            </mat-expansion-panel-header>
 
-  </mat-expansion-panel>
+            <app-importer-detail [data]="importDetail[harvester.id]"></app-importer-detail>
 
-  <button mat-fab
-          color="primary"
-          (click)="addHarvester()"
-          id="btnAddHarvester">
-    <mat-icon aria-label="Add Harvester">add</mat-icon>
-  </button>
+            <mat-action-row>
+                <button mat-button (click)="showLog(harvester.id)">
+                    <mat-icon [inline]="true">description</mat-icon>
+                    Log
+                </button>
+                <button mat-button (click)="startImport(harvester.id)"
+                        [disabled]="importDetail[harvester.id]?.complete === false">
+                    <mat-icon [inline]="true">import_export</mat-icon>
+                    Import starten
+                </button>
+                <button mat-button (click)="schedule(harvester.id)">
+                    <mat-icon [inline]="true">schedule</mat-icon>
+                    Planen
+                </button>
+                <div class="flex-space"></div>
+                <button mat-button color="primary" (click)="edit(harvester)">
+                    <mat-icon [inline]="true">edit</mat-icon>
+                    Bearbeiten
+                </button>
+            </mat-action-row>
+
+        </mat-expansion-panel>
+    </ng-container>
+
+    <button mat-fab
+            color="primary"
+            (click)="addHarvester()"
+            id="btnAddHarvester">
+        <mat-icon aria-label="Add Harvester">add</mat-icon>
+    </button>
 </div>

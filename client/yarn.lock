@@ -4340,6 +4340,13 @@ ngx-cron-editor@^0.4.0:
   dependencies:
     tslib "^1.9.0"
 
+ngx-cron-jobs@7.x.x:
+  version "7.4.10"
+  resolved "https://registry.yarnpkg.com/ngx-cron-jobs/-/ngx-cron-jobs-7.4.10.tgz#242803e9f8c2b05d60167800ecb884414a2ae083"
+  integrity sha512-Qrbn3/YeeylMwU/y2edlcJJs8OEBUvcqI98MrsxCNhCZBrgvAvU/SVpNbC2esZvAcIn85tzD8F8GP1rln7P4cg==
+  dependencies:
+    tslib "^1.9.0"
+
 ngx-socket-io@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ngx-socket-io/-/ngx-socket-io-2.1.1.tgz#abf61f6f50fd5e56344f8559026a0d2333a72684"

@@ -2,10 +2,14 @@ import {Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession} from 
 import * as SocketIO from "socket.io";
 import {ConfigService} from "../services/config/ConfigService";
 import {ImporterFactory} from "../importer/importer.factory";
+import {SummaryService} from '../services/config/SummaryService';
 
 @SocketService('/import')
 export class ImportSocketService {
     @Nsp nsp: Namespace;
+
+    constructor(private summaryService: SummaryService) {
+    }
 
     /**
      * Triggered when a new client connects to the Namespace.
@@ -24,22 +28,22 @@ export class ImportSocketService {
     @Input('runImport')
     @Emit('/log')
     runImport(id: number) {
-        console.log('in runImport()');
         let lastExecution = new Date();
         let configData = ConfigService.get().filter(config => config.id === id)[0];
         configData.deduplicationAlias = configData.index + 'dedup';
 
         let importer = ImporterFactory.get(configData);
 
-        importer.run.subscribe( response => {
-            // if (response.complete) {
-            //     response.summary.print();
-            // } else {
-                response.id = id;
-                response.lastExecution = lastExecution;
-                response.duration = (new Date().getTime() - lastExecution.getTime())/1000;
-                this.nsp.emit('/log', response);
-            // }
+        importer.run.subscribe(response => {
+            response.id = id;
+            response.lastExecution = lastExecution;
+            response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;
+            this.nsp.emit('/log', response);
+
+            // when complete then write information log to file
+            if (response.complete) {
+                this.summaryService.update(response);
+            }
         }, error => {
             console.error('There was an error:', error);
         });

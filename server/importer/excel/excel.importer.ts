@@ -25,9 +25,7 @@ export class ExcelImporter implements Importer {
     defaultSettings: ExcelSettings = {
         ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
-        ...{
-            filePath: './data'
-        }
+        filePath: './data.xlsx'
     };
 
     summary: Summary;
@@ -111,6 +109,7 @@ export class ExcelImporter implements Importer {
             let ids = workUnits.map(unit => unit.id);
 
             // get all issued dates from IDs
+            observer.next(ImportResult.message('Getting previous issued dates'));
             let timestamps = await this.elastic.getIssuedDates(ids);
 
             let numIndexDocs = 0;
@@ -153,6 +152,7 @@ export class ExcelImporter implements Importer {
 
             log.debug('Waiting for #promises to finish: ' + promises.length);
             Promise.all(promises)
+                .then(() => observer.next(ImportResult.message('Running post operations')))
                 .then(() => this.elastic.finishIndex())
                 .then( () => {
                     observer.next(ImportResult.complete(this.summary));

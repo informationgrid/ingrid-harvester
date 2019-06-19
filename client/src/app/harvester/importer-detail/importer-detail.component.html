@@ -1,47 +1,59 @@
 <ng-container *ngIf="data">
 
     <ng-container *ngIf="!data.complete">
+        Import läuft
         <mat-progress-bar
-                class="example-margin"
-                [mode]="'determinate'"
-                color="accent"
                 [value]="getProgressValue()">
         </mat-progress-bar>
-        <div class="align-center">
-            {{data.progress?.current}} / {{data.progress?.total}} ({{data.duration}}s)
+        <div class="progress-description align-center">
+            <span *ngIf="data.progress">{{data.progress.current}} / {{data.progress.total}} ({{data.duration}}s)</span>
             <div>{{data.message}}</div>
         </div>
     </ng-container>
 
     <ng-container *ngIf="data.complete">
-        <div class="lastExecution" title="Letzte Ausführung">
-            {{data.lastExecution | date:'short'}}
+
+        <div fxLayout="row" fxLayoutAlign="space-around">
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="numberCircle">{{data.summary?.numDocs}}</div>
+                    <mat-card-title>Dokumente</mat-card-title>
+                </mat-card-header>
+            </mat-card>
+
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="numberCircle" [class.error]="data.summary?.numErrors > 0">{{data.summary?.numErrors}}</div>
+                    <mat-card-title>Fehler</mat-card-title>
+                </mat-card-header>
+            </mat-card>
+
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="numberCircle" [class.warning]="data.summary?.warnings?.length > 0">{{data.summary?.warnings?.length}}</div>
+                    <mat-card-title>Warnungen</mat-card-title>
+                </mat-card-header>
+            </mat-card>
         </div>
-        <div class="nextExecution" title="Nächste Ausführung">
-            <mat-icon [inline]="true">alarm</mat-icon>
-<!--            {{data.nextExecution | date:'short'}}-->
-        </div>
-        <div class="clearfix"></div>
 
-        <div fxLayout="column">
-            <div>
-                <div class="numberCircle">{{data.summary?.numDocs}}</div>
-                Dokumente
-            </div>
+        <mat-list>
+            <mat-list-item>
+                <mat-icon mat-list-icon>access_time</mat-icon>
+                <h4 mat-line>Letzte Ausführung</h4>
+                <p mat-line> {{data.lastExecution | date}} </p>
+            </mat-list-item>
+            <mat-list-item>
+                <mat-icon mat-list-icon>timer</mat-icon>
+                <h4 mat-line>Dauer der Ausführung</h4>
+                <p mat-line> {{data.duration}}s </p>
+            </mat-list-item>
+            <mat-list-item >
+                <mat-icon mat-list-icon>snooze</mat-icon>
+                <h4 mat-line>Nächste Ausführung</h4>
+                <p mat-line> {{getNextExecutionTime(data) | date}} </p>
+            </mat-list-item>
+        </mat-list>
 
-            <div>
-                <div class="numberCircle error">{{data.summary?.numErrors}}</div>
-                Fehler
-            </div>
-        </div>
-
-
-        <ul>
-            <li>Dokumente: {{data.summary?.numDocs}}</li>
-            <li>Warnungen: {{data.summary?.numWarnings}}</li>
-            <li>Fehler: {{data.summary?.numErrors}}</li>
-            <li>Dauer: {{data.duration}}s</li>
-        </ul>
     </ng-container>
 
 </ng-container>
