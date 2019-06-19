@@ -23,7 +23,7 @@ export class CkanImporter implements Importer {
     elastic: ElasticSearchUtils;
     private requestDelegate: RequestDelegate;
 
-    defaultSettings: CkanSettings = {
+    static defaultSettings: CkanSettings = {
         ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         ckanBaseUrl: '',
@@ -50,7 +50,7 @@ export class CkanImporter implements Importer {
      */
     constructor(settings: CkanSettings) {
         // merge default settings with configured ones
-        settings = {...this.defaultSettings, ...settings};
+        settings = {...CkanImporter.defaultSettings, ...settings};
 
         this.summary = new Summary(settings);
 

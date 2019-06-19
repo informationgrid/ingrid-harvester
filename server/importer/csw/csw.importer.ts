@@ -52,7 +52,7 @@ export class CswImporter {
         ...DefaultImporterSettings,
         getRecordsUrl: '',
         eitherKeywords: [],
-        httpMethod: "GET"
+        httpMethod: 'GET'
     };
 
     private readonly summary: CswSummary;

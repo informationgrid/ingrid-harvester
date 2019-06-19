@@ -20,8 +20,8 @@
         <input matInput placeholder="Indexname" [(ngModel)]="harvester.index" name="index">
       </mat-form-field>
 
-      <div style="display: flex; flex-direction: row; place-content: stretch space-between; align-items: stretch;">
-        <mat-form-field class="flex-space" style="padding-right: 10px;">
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex="50">
           <mat-select placeholder="Standard DCAT-Kategorien" multiple [(ngModel)]="harvester.defaultDCATCategory"
                       name="defaultDCATCategory">
             <mat-option value="AGRI">Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel</mat-option>
@@ -41,7 +41,7 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field class="flex-space" style="padding-left: 10px;">
+        <mat-form-field fxFlex>
           <mat-select placeholder="Standard mCLOUD-Kategorien" multiple [(ngModel)]="harvester.defaultMcloudSubgroup"
                       name="defaultmCLOUDCategory">
             <mat-option value="roads">Straßen</mat-option>
@@ -52,15 +52,40 @@
             <mat-option value="aviation">Luft- und Raumfahrt</mat-option>
           </mat-select>
         </mat-form-field>
+
+      </div>
+
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex="50">
+          <input matInput placeholder="Attribution-Name" [(ngModel)]="harvester.defaultAttribution"
+                 name="defaultAttribution">
+        </mat-form-field>
+
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Attribution-Link" [(ngModel)]="harvester.defaultAttributionLink"
+                 name="defaultAttributionLink">
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex="50">
+          <input matInput type="number" placeholder="Max. Datensätze pro Anfrage" [(ngModel)]="harvester.maxRecords"
+                 name="maxRecords">
+        </mat-form-field>
+
+        <mat-form-field fxFlex>
+          <input matInput type="number" placeholder="Start Datensatz" [(ngModel)]="harvester.startPosition"
+                 name="startPosition">
+        </mat-form-field>
       </div>
 
       <app-excel-harvester *ngIf="harvester.type === 'EXCEL'" [model]="harvester" class="flex-column"></app-excel-harvester>
 
       <app-ckan-harvester *ngIf="harvester.type === 'CKAN'" [model]="harvester" class="flex-column"></app-ckan-harvester>
 
-      <app-csw-harvester *ngIf="harvester.type === 'CSW'" [model]="harvester" class="flex-column"></app-csw-harvester>
+      <app-csw-harvester *ngIf="harvester.type.endsWith('CSW')" [model]="harvester" class="flex-column"></app-csw-harvester>
 
-      <span class="mat-small">{{harvester | json}}</span>
+<!--      <span class="mat-small">{{harvester | json}}</span>-->
     </form>
   </div>
 </mat-dialog-content>

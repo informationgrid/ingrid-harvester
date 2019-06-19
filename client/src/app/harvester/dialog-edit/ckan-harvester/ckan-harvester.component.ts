@@ -1,4 +1,7 @@
 import {Component, Input, OnDestroy} from '@angular/core';
+import {CkanSettings} from '../../../../../../server/importer/ckan/ckan.importer';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {MatChipInputEvent} from '@angular/material';
 
 @Component({
   selector: 'app-ckan-harvester',
@@ -7,12 +10,36 @@ import {Component, Input, OnDestroy} from '@angular/core';
 })
 export class CkanHarvesterComponent implements OnDestroy {
 
-  @Input() model: any;
+  @Input() model: CkanSettings;
+
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor() { }
 
   ngOnDestroy(): void {
-    delete this.model.ckanBaseUrl;
+  }
+
+  add(type: 'filterTags' | 'filterGroups', event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+
+    // Add keyword
+    if ((value || '').trim()) {
+      this.model[type].push(value.trim());
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  remove(type: 'filterTags' | 'filterGroups', keyword: string): void {
+    const index = this.model[type].indexOf(keyword);
+
+    if (index >= 0) {
+      this.model[type].splice(index, 1);
+    }
   }
 
 }

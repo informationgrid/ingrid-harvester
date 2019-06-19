@@ -1,5 +1,8 @@
 import {Harvester} from '../../../client/src/app/harvester/model/harvester';
 import * as fs from 'fs';
+import {CkanImporter} from '../../importer/ckan/ckan.importer';
+import {ExcelImporter} from '../../importer/excel/excel.importer';
+import {CswImporter} from '../../importer/csw/csw.importer';
 
 export class ConfigService {
 
@@ -37,7 +40,12 @@ export class ConfigService {
     static get(): Harvester[] {
 
         let contents = fs.readFileSync("config.json");
-        return JSON.parse(contents.toString())
+        let configs:Harvester[] = JSON.parse(contents.toString());
+        return configs.map( config => {
+            if (config.type === 'EXCEL') return {...ExcelImporter.defaultSettings, ...config};
+            else if (config.type === 'CKAN') return {...CkanImporter.defaultSettings, ...config};
+            else if (config.type.endsWith('CSW')) return {...CswImporter.defaultSettings, ...config};
+        });
 
     }
 

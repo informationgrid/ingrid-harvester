@@ -18,10 +18,6 @@ export class CswHarvesterComponent implements OnDestroy {
   constructor() { }
 
   ngOnDestroy(): void {
-    delete this.model.getRecordsUrl;
-    delete this.model.httpMethod;
-    delete this.model.defaultAttribution;
-    delete this.model.defaultAttributionLink;
   }
 
   add(event: MatChipInputEvent): void {

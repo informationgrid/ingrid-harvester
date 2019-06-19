@@ -12,7 +12,6 @@ export class ExcelHarvesterComponent implements OnDestroy {
   constructor() { }
 
   ngOnDestroy(): void {
-    delete this.model.filePath;
   }
 
 }

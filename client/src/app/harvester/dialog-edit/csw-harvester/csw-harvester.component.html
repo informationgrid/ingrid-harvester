@@ -1,24 +1,18 @@
-<mat-form-field>
-  <input matInput placeholder="getRecords URL" [(ngModel)]="model.getRecordsUrl" name="getRecordsUrl">
-</mat-form-field>
+<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+  <mat-form-field fxFlex="20">
+    <mat-select placeholder="HTTP Method" [(ngModel)]="model.httpMethod" name="httpMethod">
+      <mat-option value="GET">GET</mat-option>
+      <mat-option value="POST">POST</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field fxFlex>
+    <input matInput placeholder="getRecords URL" [(ngModel)]="model.getRecordsUrl" name="getRecordsUrl">
+  </mat-form-field>
+</div>
 
 <mat-form-field>
-  <mat-select placeholder="HTTP Method" [(ngModel)]="model.httpMethod" name="httpMethod">
-    <mat-option value="get">GET</mat-option>
-    <mat-option value="post">POST</mat-option>
-  </mat-select>
-</mat-form-field>
-
-<mat-form-field>
-  <input matInput placeholder="Default Attribution" [(ngModel)]="model.defaultAttribution" name="defaultAttribution">
-</mat-form-field>
-
-<mat-form-field>
-  <input matInput placeholder="Default Attribution Link" [(ngModel)]="model.defaultAttributionLink" name="defaultAttributionLink">
-</mat-form-field>
-
-<mat-form-field>
-  <textarea matInput placeholder="Record Filter" [(ngModel)]="model.recordFilter" name="recordFilter"></textarea>
+  <textarea matInput rows="6" class="code" placeholder="Record Filter" [(ngModel)]="model.recordFilter" name="recordFilter"></textarea>
 </mat-form-field>
 
 <mat-form-field>

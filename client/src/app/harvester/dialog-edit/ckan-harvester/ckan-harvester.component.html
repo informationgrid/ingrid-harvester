@@ -1,3 +1,35 @@
 <mat-form-field>
   <input matInput placeholder="CKAN Basis URL" [(ngModel)]="model.ckanBaseUrl" name="ckanBaseUrl">
 </mat-form-field>
+
+<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+  <mat-form-field fxFlex="50">
+    <mat-chip-list #chipListTags>
+      <mat-chip *ngFor="let tag of model.filterTags" [selectable]="false"
+                [removable]="true" (removed)="remove('filterTags', tag)">
+        {{tag}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Filter Tags"
+             [matChipInputFor]="chipListTags"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             [matChipInputAddOnBlur]="true"
+             (matChipInputTokenEnd)="add('filterTags', $event)">
+    </mat-chip-list>
+  </mat-form-field>
+
+  <mat-form-field fxFlex>
+    <mat-chip-list #chipListGroups>
+      <mat-chip *ngFor="let group of model.filterGroups" [selectable]="false"
+                [removable]="true" (removed)="remove('filterGroups', group)">
+        {{group}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Filter Groups"
+             [matChipInputFor]="chipListGroups"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             [matChipInputAddOnBlur]="true"
+             (matChipInputTokenEnd)="add('filterGroups', $event)">
+    </mat-chip-list>
+  </mat-form-field>
+</div>

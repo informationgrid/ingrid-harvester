@@ -87,7 +87,7 @@ export class HarvesterComponent implements OnInit {
   edit(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogEditComponent, {
       data: harvester,
-      width: '900px'
+      width: '950px'
     });
 
     dialogRef.afterClosed().subscribe(result => {

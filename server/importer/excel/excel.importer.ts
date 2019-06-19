@@ -22,7 +22,7 @@ export class ExcelImporter implements Importer {
     excelFilepath: string;
     names = {};
 
-    defaultSettings: ExcelSettings = {
+    static defaultSettings: ExcelSettings = {
         ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         filePath: './data.xlsx'
@@ -38,7 +38,7 @@ export class ExcelImporter implements Importer {
      */
     constructor(settings) {
         // merge default settings with configured ones
-        settings = {...this.defaultSettings, ...settings};
+        settings = {...ExcelImporter.defaultSettings, ...settings};
 
         this.summary = new Summary(settings);
 
