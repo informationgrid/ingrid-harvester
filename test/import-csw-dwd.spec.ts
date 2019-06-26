@@ -4,8 +4,7 @@ import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
 import {IndexDocument} from "../server/model/index.document";
 import {TestUtils} from "./utils/test-utils";
-import {DwdImporter} from "../server/csw/dwd.importer";
-import {CswSettings} from "../server/csw/csw.importer";
+import {CswImporter, CswSettings} from "../server/csw/csw.importer";
 
 let log = getLogger();
 configure('./log4js.json');
@@ -25,7 +24,8 @@ describe('Import CSW DWD', function () {
         // @ts-ignore
         const settings: CswSettings = {
             dryRun: true,
-            type: "DWD-CSW",
+            type: "CSW",
+            startPosition: 1,
             elasticSearchUrl: "http://localhost:9200",
             index: "csw_dwd",
             indexType: "base",
@@ -44,9 +44,9 @@ describe('Import CSW DWD', function () {
                     </ogc:PropertyIsEqualTo>
                 </ogc:Filter>`
         };
-        let importer = new DwdImporter(settings);
+        let importer = new CswImporter(settings);
 
-        sinon.stub(importer.cswUtil.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
+        sinon.stub(importer.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
 
         indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
 

@@ -31,7 +31,8 @@ describe('Import CKAN Bahn', function () {
             elasticSearchUrl: undefined,
             type: undefined,
             includeTimestamp: true,
-            index: undefined
+            index: undefined,
+            filterTags: ['Fernverkehr', 'Wagenreihung']
         };
         let importer = new CkanImporter(settings);
 
