@@ -27,7 +27,7 @@ export class ExcelImporter implements Importer {
         ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         ...{
-            filePath: './data'
+            filePath: './data.xlsx'
         }
     };
 
