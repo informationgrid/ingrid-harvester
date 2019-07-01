@@ -50,7 +50,11 @@ export class CkanMapper extends GenericMapper {
     }
 
     getDescription() {
-        return this.source.notes ? markdown.toHTML(this.source.notes) : undefined;
+        if (this.source.notes) {
+            return this.settings.markdownAsDescription ? markdown.toHTML(this.source.notes) : this.source.notes;
+        } else {
+            return undefined;
+        }
     }
 
     async getDisplayContacts() {

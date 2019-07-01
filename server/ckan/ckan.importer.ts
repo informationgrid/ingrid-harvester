@@ -15,7 +15,8 @@ export type CkanSettings = {
     ckanBaseUrl: string,
     filterTags?: string[],
     filterGroups?: string[],
-    requestType?: 'ListWithResources' | 'Search';
+    requestType?: 'ListWithResources' | 'Search',
+    markdownAsDescription?: boolean
 } & ElasticSettings & ImporterSettings;
 
 export class CkanImporter implements Importer {
@@ -30,7 +31,8 @@ export class CkanImporter implements Importer {
             ckanBaseUrl: '',
             filterTags: [],
             filterGroups: [],
-            requestType: 'ListWithResources'
+            requestType: 'ListWithResources',
+            markdownAsDescription: true
         }
     };
 

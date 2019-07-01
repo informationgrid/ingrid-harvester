@@ -27,6 +27,7 @@
       "TRAN"
     ],
     "defaultAttribution": "Offene Daten Köln",
+    "markdownAsDescription": false,
     "disable": false
   },
   {
@@ -65,6 +66,7 @@
       "TRAN"
     ],
     "defaultAttribution": "Offene Daten Düsseldorf",
+    "markdownAsDescription": false,
     "disable": false
   },
   {
@@ -84,6 +86,7 @@
       "TRAN"
     ],
     "defaultAttribution": "Offene Daten Wuppertal",
+    "markdownAsDescription": false,
     "disable": false
   },
   {
@@ -173,6 +176,7 @@
       "TRAN"
     ],
     "defaultAttribution": "Open-Data-Portal RNV",
+    "markdownAsDescription": false,
     "disable": false
   },
   {
