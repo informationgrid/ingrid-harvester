@@ -12,7 +12,7 @@
   },
   {
     "type": "CKAN",
-    "description": "!Offene Daten Köln: last_modified invalid",
+    "description": "Offene Daten Köln",
     "filterTags": [
       "Transport und Verkehr"
     ],
@@ -46,11 +46,11 @@
       "TRAN"
     ],
     "defaultAttribution": "Offene Daten Bonn",
-    "disable": true
+    "disable": false
   },
   {
     "type": "CKAN",
-    "description": "!Offene Daten Düsseldorf: resources.created invalid",
+    "description": "Offene Daten Düsseldorf",
     "filterTags": [
       "Transport und Verkehr"
     ],
@@ -161,7 +161,7 @@
   },
   {
     "type": "CKAN",
-    "description": "!Open-Data-Portal der Rhein-Neckar-Verkehrs (RNV): resources.created invalid",
+    "description": "Open-Data-Portal des Rhein-Neckar-Verkehrs (RNV)",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_rnv",
     "alias": "mcloud",
@@ -177,13 +177,13 @@
   },
   {
     "type": "CKAN",
+    "description": "NRW Portal",
     "filterTags": [
       "Offene Daten Bonn"
     ],
     "filterGroups": [
       "tran"
     ],
-    "description": "NRW Portal",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_nrw",
     "alias": "mcloud",

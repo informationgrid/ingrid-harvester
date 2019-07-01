@@ -79,7 +79,8 @@ export class CkanImporter implements Importer {
                 harvestTime: harvestTime,
                 issuedDate: issuedExisting,
                 currentIndexName: this.elastic.indexName,
-                source: source
+                source: source,
+                summary: this.summary
             });
 
             let doc = await IndexDocument.create(mapper)
