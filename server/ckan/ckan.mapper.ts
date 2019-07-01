@@ -402,7 +402,7 @@ export class CkanMapper extends GenericMapper {
             return undefined;
         }
 
-        return size;
+        return size === '' ? undefined : size;
     }
 }
 
