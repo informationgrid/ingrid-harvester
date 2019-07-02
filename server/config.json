@@ -47,7 +47,7 @@
       "REGI"
     ],
     "defaultAttribution": "Offene Daten Bonn",
-    "disable": false
+    "disable": true
   },
   {
     "type": "CKAN",
@@ -160,7 +160,7 @@
       "REGI"
     ],
     "defaultAttribution": "Transparenzportal Hamburg",
-    "disable": true
+    "disable": false
   },
   {
     "type": "CKAN",
@@ -199,7 +199,8 @@
       "REGI"
     ],
     "defaultAttribution": "NRW Portal",
-    "disable": true
+    "markdownAsDescription": false,
+    "disable": false
   },
   {
     "type": "CSW",
