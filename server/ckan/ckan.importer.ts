@@ -128,15 +128,17 @@ export class CkanImporter implements Importer {
                 log.info(`Received ${results.length} records from ${this.settings.ckanBaseUrl}`);
                 total += results.length;
 
-                let ids = results.map(result => result.id);
+                let filteredResults = results
+                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'tags' , this.settings.filterTags))
+                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'groups', this.settings.filterGroups));
+
+
+                let ids = filteredResults.map(result => result.id);
 
                 // issued dates are those showing the date of the first harvesting
                 let timestamps = await this.elastic.getIssuedDates(ids);
 
-                results
-                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'tags' , this.settings.filterTags))
-                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'groups', this.settings.filterGroups))
-                    .forEach((dataset, idx) => promises.push(
+                filteredResults.forEach((dataset, idx) => promises.push(
                         this.importDataset({
                             data: dataset,
                             issued: timestamps[idx],

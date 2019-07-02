@@ -21,7 +21,7 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://offenedaten-koeln.de",
     "defaultMcloudSubgroup": [
-      "railway"
+      "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
@@ -41,7 +41,7 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://opendata.bonn.de",
     "defaultMcloudSubgroup": [
-      "railway"
+      "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
@@ -60,7 +60,7 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://opendata.duesseldorf.de",
     "defaultMcloudSubgroup": [
-      "railway"
+      "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
@@ -80,7 +80,7 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://offenedaten-wuppertal.de",
     "defaultMcloudSubgroup": [
-      "railway"
+      "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
@@ -116,7 +116,7 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://www.opendata-hro.de",
     "defaultMcloudSubgroup": [
-      "infrastructure"
+      "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
@@ -135,7 +135,7 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://www.offenesdatenportal.de",
     "defaultMcloudSubgroup": [
-      "infrastructure"
+      "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
@@ -154,7 +154,7 @@
     "alias": "mcloud",
     "ckanBaseUrl": "http://suche.transparenz.hamburg.de",
     "defaultMcloudSubgroup": [
-      "infrastructure"
+      "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
@@ -170,7 +170,7 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://opendata.rnv-online.de",
     "defaultMcloudSubgroup": [
-      "infrastructure"
+      "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
@@ -193,7 +193,7 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://open.nrw",
     "defaultMcloudSubgroup": [
-      "infrastructure"
+      "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
