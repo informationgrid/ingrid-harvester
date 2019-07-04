@@ -334,7 +334,7 @@ export class CswMapper extends GenericMapper {
     }
 
     getGeneratedId(): string {
-        return undefined;
+        return this.uuid;
     }
 
     /**
