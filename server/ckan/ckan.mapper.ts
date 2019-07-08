@@ -118,7 +118,7 @@ export class CkanMapper extends GenericMapper {
     }
 
     getGeneratedId() {
-        return this.source.name;
+        return this.source.id;
     }
 
     getMFundFKZ() {
