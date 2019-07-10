@@ -1,4 +1,4 @@
-import {ElasticSearchUtils, ElasticSettings} from "../utils/elastic.utils";
+import {DefaultElasticsearchSettings, ElasticSearchUtils, ElasticSettings} from "../utils/elastic.utils";
 import {elasticsearchMapping} from "../elastic.mapping";
 import {elasticsearchSettings} from "../elastic.settings";
 import {IndexDocument} from "../model/index.document";
@@ -7,7 +7,7 @@ import {Summary} from "../model/summary";
 import {getLogger} from "log4js";
 import {CswParameters, RequestDelegate} from "../utils/http-request.utils";
 import {OptionsWithUri} from "request-promise";
-import {ImporterSettings} from "../importer";
+import {DefaultImporterSettings, ImporterSettings} from "../importer";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -18,49 +18,61 @@ export type CswSettings = {
     getRecordsUrl: string,
     eitherKeywords: string[],
     httpMethod: "GET" | "POST",
-    defaultAttribution: string,
-    defaultAttributionLink: string,
-    maxRecords: number,
-    startPosition: number,
-    recordFilter: string
+    defaultAttribution?: string,
+    defaultAttributionLink?: string,
+    recordFilter?: string
 } & ElasticSettings & ImporterSettings;
+
+export class CswSummary extends Summary {
+    opendata = 0;
+    missingLinks = 0;
+    missingPublishers = 0;
+    missingLicense = 0;
+    ok = 0;
+
+    additionalSummary() {
+        logSummary.info(`Number of records with at least one mandatory keyword: ${this.opendata}`);
+        logSummary.info(`Number of records with missing links: ${this.missingLinks}`);
+        logSummary.info(`Number of records with missing license: ${this.missingLicense}`);
+        logSummary.info(`Number of records with missing publishers: ${this.missingPublishers}`);
+        logSummary.info(`Number of records imported as valid: ${this.ok}`);
+    }
+}
 
 export class CswImporter {
     private readonly settings: CswSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
-    private summary: Summary = {
-        appErrors: [],
-        numDocs: 0,
-        numErrors: 0,
-        numMatched: 0,
-        opendata: 0,
-        missingLinks: 0,
-        missingPublishers: 0,
-        missingLicense: 0,
-        ok: 0,
-        print: () => {
-            logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Summary of: ${this.settings.description || this.settings.defaultAttribution} (${this.settings.type})`);
-            logSummary.info(`---------------------------------------------------------`);
-            logSummary.info(`Number of records: ${this.summary.numDocs}`);
-            logSummary.info(`Number of errors: ${this.summary.numErrors}`);
-            logSummary.info(`Number of records with at least one mandatory keyword: ${this.summary.opendata}`);
-            logSummary.info(`Number of records with missing links: ${this.summary.missingLinks}`);
-            logSummary.info(`Number of records with missing license: ${this.summary.missingLicense}`);
-            logSummary.info(`Number of records with missing publishers: ${this.summary.missingPublishers}`);
-            logSummary.info(`Number of records imported as valid: ${this.summary.ok}`);
-            logSummary.info(`App-Errors: ${this.summary.appErrors.length}`);
-            if (this.summary.appErrors.length > 0) {
-                logSummary.info(`\t${this.summary.appErrors.map(e => e + '\n\t')}`);
-            }
+
+    private readonly summary: CswSummary;
+
+    static defaultSettings: CswSettings = {
+        ...DefaultElasticsearchSettings,
+        ...DefaultImporterSettings,
+        ...{
+            getRecordsUrl: '',
+            eitherKeywords: [],
+            httpMethod: "GET"
         }
     };
 
-    constructor(settings, requestDelegate: RequestDelegate) {
+
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        // merge default settings with configured ones
+        settings = {...CswImporter.defaultSettings, ...settings};
+
+        if (requestDelegate) {
+            this.requestDelegate = requestDelegate;
+        } else {
+            let requestConfig = CswImporter.createRequestConfig(settings);
+            this.requestDelegate = new RequestDelegate(requestConfig, CswImporter.createPaging(settings));
+        }
+
         this.settings = settings;
-        this.elastic = new ElasticSearchUtils(settings);
-        this.requestDelegate = requestDelegate;
+
+        this.summary = new CswSummary(settings);
+
+        this.elastic = new ElasticSearchUtils(settings, this.summary);
     }
 
     async run(): Promise<Summary> {
@@ -75,7 +87,11 @@ export class CswImporter {
                 .then(() => this.elastic.sendBulkData(false))
                 .then(() => this.elastic.finishIndex())
                 .then(() => this.summary)
-                .catch(err => log.error('Error during CSW import', err));
+                .catch(err => {
+                    this.summary.appErrors.push(err);
+                    log.error('Error during CSW import', err);
+                    return this.summary;
+                });
         }
     }
 
@@ -144,11 +160,13 @@ export class CswImporter {
 
             const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');
             let mapper = this.getMapper(this.settings, records[i], harvestTime, issued[i], this.summary);
+
             let doc: any = await IndexDocument.create(mapper).catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
             });
+
             if (!mapper.shouldBeSkipped()) {
 
                 if (doc.extras.metadata.isValid && doc.distribution.length > 0) {
@@ -195,8 +213,8 @@ export class CswImporter {
                         resultType="results"
                         outputFormat="application/xml"
                         outputSchema="http://www.isotc211.org/2005/gmd"
-                        startPosition="${settings.startPosition || 1}"
-                        maxRecords="${settings.maxRecords || 25}">
+                        startPosition="${settings.startPosition}"
+                        maxRecords="${settings.maxRecords}">
                 <Query typeNames="gmd:MD_Metadata">
                     <ElementSetName typeNames="">full</ElementSetName>
                     ${settings.recordFilter ? `
@@ -216,8 +234,8 @@ export class CswImporter {
                 outputSchema: 'http://www.isotc211.org/2005/gmd',
                 typeNames: 'gmd:MD_Metadata',
                 CONSTRAINTLANGUAGE: 'FILTER',
-                startPosition: settings.startPosition || 1,
-                maxRecords: settings.maxRecords || 25,
+                startPosition: settings.startPosition,
+                maxRecords: settings.maxRecords,
                 CONSTRAINT_LANGUAGE_VERSION: '1.1.0',
                 elementSetName: 'full',
                 constraint: settings.recordFilter
@@ -230,8 +248,8 @@ export class CswImporter {
     static createPaging(settings: CswSettings) {
         return {
             startFieldName: 'startPosition',
-            startPosition: settings.startPosition || 1,
-            numRecords: settings.maxRecords || 25
+            startPosition: settings.startPosition,
+            numRecords: settings.maxRecords
         }
     }
 }

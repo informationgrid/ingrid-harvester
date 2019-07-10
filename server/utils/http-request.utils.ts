@@ -38,6 +38,11 @@ export interface CkanParameters {
     rows?: number
 }
 
+export interface CkanParametersListWithResources {
+    limit?: number,
+    offset?: number
+}
+
 export interface RequestPaging {
     // the query parameter to be used for setting the start record
     startFieldName: string;
@@ -54,7 +59,7 @@ export interface RequestPaging {
  * Delegate class for handling HTTP-requests.
  */
 export class RequestDelegate {
-    private readonly config: OptionsWithUri;
+    private config: OptionsWithUri;
     private readonly postBodyXml: any;
     private paging: RequestPaging;
 
@@ -124,6 +129,10 @@ export class RequestDelegate {
             // update query parameter
             this.config.qs[this.paging.startFieldName] = this.paging.startPosition;
         }
+    }
+
+    updateConfig(partialConfig: any): void {
+        this.config = {...this.config, ...partialConfig};
     }
 
     /**

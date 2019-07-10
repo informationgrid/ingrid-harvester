@@ -1,12 +1,13 @@
 /**
  * A mapper for CKAN documents.
  */
-import {GenericMapper, Organization, Person} from "../model/generic.mapper";
+import {DateRange, GenericMapper, Organization, Person} from "../model/generic.mapper";
 import {UrlUtils} from "../utils/url.utils";
 import {getLogger} from "log4js";
-import {CkanParameters, RequestDelegate, RequestPaging} from "../utils/http-request.utils";
+import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from "../utils/http-request.utils";
 import {OptionsWithUri} from "request-promise";
 import {CkanSettings} from "./ckan.importer";
+import {Summary} from '../model/summary';
 
 let markdown = require('markdown').markdown;
 
@@ -15,6 +16,7 @@ interface CkanMapperData {
     issuedDate: Date;
     source: any;
     currentIndexName: string;
+    summary: Summary;
 }
 
 export class CkanMapper extends GenericMapper {
@@ -25,16 +27,14 @@ export class CkanMapper extends GenericMapper {
     private readonly data: CkanMapperData;
     private resourcesDate: Date[] = null;
     private settings: CkanSettings;
+    private summary: Summary;
 
     constructor(settings: CkanSettings, data: CkanMapperData) {
         super();
         this.settings = settings;
         this.source = data.source;
         this.data = data;
-    }
-
-    getErrors() {
-        return this.errors;
+        this.summary = data.summary;
     }
 
     getAccessRights() {
@@ -42,7 +42,7 @@ export class CkanMapper extends GenericMapper {
     }
 
     getCategories() {
-        return [this.settings.defaultMcloudSubgroup];
+        return this.settings.defaultMcloudSubgroup;
     }
 
     getCitation() {
@@ -50,7 +50,11 @@ export class CkanMapper extends GenericMapper {
     }
 
     getDescription() {
-        return this.source.notes ? markdown.toHTML(this.source.notes) : undefined;
+        if (this.source.notes) {
+            return this.settings.markdownAsDescription ? markdown.toHTML(this.source.notes) : this.source.notes;
+        } else {
+            return undefined;
+        }
     }
 
     async getDisplayContacts() {
@@ -90,9 +94,9 @@ export class CkanMapper extends GenericMapper {
                         description: res.description,
                         accessURL: accessURL,
                         format: res.format,
-                        issued: res.created,
-                        modified: res.last_modified,
-                        byteSize: res.size
+                        issued: this.handleDate(res.created),
+                        modified: this.handleDate(res.last_modified),
+                        byteSize: this.handleByteSize(res.size)
                     };
                     distributions.push(dist);
                 } else {
@@ -114,7 +118,7 @@ export class CkanMapper extends GenericMapper {
     }
 
     getGeneratedId() {
-        return this.source.name;
+        return this.source.id;
     }
 
     getMFundFKZ() {
@@ -138,7 +142,7 @@ export class CkanMapper extends GenericMapper {
         return {
             raw_data_source: rawSource,
             portal_link: portalSource,
-            attribution: this.settings.description
+            attribution: this.settings.defaultAttribution
         };
     }
 
@@ -148,53 +152,38 @@ export class CkanMapper extends GenericMapper {
 
     async getPublisher(): Promise<Organization[]> {
         let publisher: Organization;
-        if (this.source.organization !== null) {
-            if (this.source.organization.title !== null) {
-                let homepage = this.source.organization.description;
-                let match = homepage.match(/]\(([^)]+)/); // Square bracket followed by text in parentheses
-                publisher = {
-                    organization: this.source.organization.title,
-                    homepage: match ? match[1] : undefined
-                };
-            }
+        if (this.source.organization && this.source.organization.title) {
+            let homepage = this.source.organization.description;
+            let match = homepage.match(/]\(([^)]+)/); // Square bracket followed by text in parentheses
+            publisher = {
+                organization: this.source.organization.title,
+                homepage: match ? match[1] : undefined
+            };
         }
 
         return publisher ? [publisher] : [];
     }
 
-    getTemporal() {
+    getTemporal(): DateRange {
         let dates = this.getResourcesData();
         let minDate = new Date(Math.min(...dates)); // Math.min and Math.max convert items to numbers
         let maxDate = new Date(Math.max(...dates));
 
-        if (minDate.toISOString() !== maxDate.toISOString()) {
-            return undefined;
+        if (minDate && maxDate) {
+            return {
+                start: minDate,
+                end: maxDate
+            };
         } else if (maxDate) {
-            return maxDate.toISOString();
+            return {
+                start: maxDate,
+                end: maxDate
+            };
         } else if (minDate) {
-            return minDate.toISOString();
-        }
-        return undefined;
-    }
-
-    getTemporalStart() {
-        let dates = this.getResourcesData();
-        let minDate = new Date(Math.min(...dates)); // Math.min and Math.max convert items to numbers
-        let maxDate = new Date(Math.max(...dates));
-
-        if (minDate && maxDate && minDate.getTime() != maxDate.getTime()) {
-            return minDate; // Math.min and Math.max convert items to numbers
-        }
-        return undefined;
-    }
-
-    getTemporalEnd() {
-        let dates = this.getResourcesData();
-        let minDate = new Date(Math.min(...dates)); // Math.min and Math.max convert items to numbers
-        let maxDate = new Date(Math.max(...dates));
-
-        if (minDate && maxDate && minDate.getTime() != maxDate.getTime()) {
-            return maxDate;
+            return {
+                start: minDate,
+                end: minDate
+            };
         }
         return undefined;
     }
@@ -218,7 +207,7 @@ export class CkanMapper extends GenericMapper {
 
     getKeywords(): string[] {
         let keywords = [];
-        if (this.source.tags !== null) {
+        if (this.source.tags) {
             this.source.tags.forEach(tag => {
                 if (tag.display_name !== null) {
                     keywords.push(tag.display_name);
@@ -278,7 +267,7 @@ export class CkanMapper extends GenericMapper {
         let groups = [];
 
         // Groups
-        if (this.source.groups !== null) {
+        if (this.source.groups) {
             groups = [];
             this.source.groups.forEach(group => {
                 groups.push(group.display_name);
@@ -360,28 +349,64 @@ export class CkanMapper extends GenericMapper {
 
     static createRequestConfig(settings: CkanSettings): OptionsWithUri {
 
-        return {
-            method: 'GET',
-            uri: settings.ckanBaseUrl + "/api/3/action/package_search", // See http://docs.ckan.org/en/ckan-2.7.3/api/
-            json: true,
-            headers: RequestDelegate.defaultRequestHeaders(),
-            proxy: settings.proxy || null,
-            qs: <CkanParameters>{
-                sort: "id asc",
-                start: 0,
-                rows: 100
-            }
-        };
+        if (settings.requestType === 'ListWithResources') {
+            return {
+                method: 'GET',
+                uri: settings.ckanBaseUrl + "/api/3/action/current_package_list_with_resources",
+                json: true,
+                headers: RequestDelegate.defaultRequestHeaders(),
+                proxy: settings.proxy || null,
+                qs: <CkanParametersListWithResources>{
+                    offset: settings.startPosition,
+                    limit: settings.maxRecords
+                }
+            };
+        } else {
+            return {
+                method: 'GET',
+                uri: settings.ckanBaseUrl + "/api/action/package_search", // See http://docs.ckan.org/en/ckan-2.7.3/api/
+                json: true,
+                headers: RequestDelegate.defaultRequestHeaders(),
+                proxy: settings.proxy,
+                qs: <CkanParameters>{
+                    sort: "id asc",
+                    start: settings.startPosition,
+                    rows: settings.maxRecords/*,
+                    fq: 'groups:transport_verkehr'*/
+                }
+            };
+        }
 
     }
 
     static createPaging(settings: CkanSettings): RequestPaging {
         return {
-            startFieldName: 'start',
-            startPosition: settings.startPosition || 0,
-            numRecords: settings.maxRecords || 100
+            startFieldName: settings.requestType === "ListWithResources" ? 'offset' : 'start',
+            startPosition: settings.startPosition,
+            numRecords: settings.maxRecords
         };
     }
 
+    private handleDate(date: string) {
+        if (isNaN(new Date(date).getTime())) {
+            let message = `Date has incorrect format: ${date}`;
+            this.summary.numErrors++; //.push(message);
+            this.log.warn(message);
+            return undefined;
+        }
+
+        return date;
+    }
+
+    private handleByteSize(size: any): number {
+        if (isNaN(size)) {
+            let message = `Byte size has incorrect format: ${size}`;
+            this.summary.numErrors++; //.push(message);
+            this.log.warn(message);
+            return undefined;
+        }
+
+        return size === '' ? undefined : size;
+    }
 }
 
