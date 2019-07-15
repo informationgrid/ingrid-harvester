@@ -67,7 +67,7 @@ export class HarvesterComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogLogComponent, {
       width: '900px',
       data: {
-        content: 'xxx'
+        content: this.importDetail[id]
       }
     });
   }

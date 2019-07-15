@@ -1,3 +1,5 @@
-<p>
-  log works!!!
-</p>
+<div *ngIf="isLoading">Loading log file ...</div>
+
+<div #logContent class="code">
+  <div [class]="determineClass(line)" *ngFor="let line of logdata.split('\n')">{{line}}</div>
+</div>

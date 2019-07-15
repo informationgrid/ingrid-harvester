@@ -1,0 +1,18 @@
+.code {
+  white-space: pre;
+  padding-left: 20px;
+  overflow: auto;
+  height: 100%;
+}
+
+.debug {
+  color: #d2d2d2;
+}
+
+.warn {
+  color: darkorange;
+}
+
+.error {
+  color: crimson;
+}

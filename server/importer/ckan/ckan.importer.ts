@@ -37,6 +37,7 @@ export class CkanImporter implements Importer {
     private observer: Observer<ImportLogMessage>;
 
     private numIndexDocs = 0;
+    private requestDelegateCount: RequestDelegate;
 
     /**
      * Create the importer and initialize with settings.
@@ -57,8 +58,10 @@ export class CkanImporter implements Importer {
         this.elastic = new ElasticSearchUtils(settings, this.summary);
 
         let requestConfig = CkanMapper.createRequestConfig(settings);
+        let requestConfigCount = CkanMapper.createRequestConfigCount(settings);
 
         this.requestDelegate = new RequestDelegate(requestConfig, CkanMapper.createPaging(settings));
+        this.requestDelegateCount = new RequestDelegate(requestConfigCount, CkanMapper.createPaging(settings));
     }
 
     /**
@@ -70,11 +73,12 @@ export class CkanImporter implements Importer {
     async importDataset(args) {
         let source = args.data;
         let issuedExisting = args.issued;
+        let totalCount = args.totalCount;
+
         let harvestTime = args.harvestTime;
         try {
             log.debug("Processing CKAN dataset: " + source.name + " from data-source: " + this.settings.ckanBaseUrl);
 
-            this.summary.numDocs++;
 
             // Execute the mappers
             let mapper = new CkanMapper(this.settings, {
@@ -92,13 +96,17 @@ export class CkanImporter implements Importer {
                     mapper.skipped = true;
                 });
 
+            this.summary.numDocs++;
+            const currentDocPostion = this.summary.numDocs + this.summary.skippedDocs.length;
+            this.observer.next(ImportResult.running(currentDocPostion, totalCount));
+
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 return this.elastic.addDocToBulk(doc, source.id)
                     .then(response => {
                         if (!response.queued) {
                             //let currentPos = this.summary.numDocs++;
                             this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
-                            this.observer.next(ImportResult.running(this.numIndexDocs, null));
+                            // this.observer.next(ImportResult.running(this.numIndexDocs, totalCount));
                         }
                     })
             }
@@ -117,6 +125,10 @@ export class CkanImporter implements Importer {
             let promises = [];
             let total = 0;
             let offset = this.settings.startPosition;
+
+            // get total number of documents
+            let countJson = await this.requestDelegateCount.doRequest();
+            const totalCount = countJson.result.length;
 
             // Fetch datasets 'qs.rows' at a time
             while (true) {
@@ -149,7 +161,8 @@ export class CkanImporter implements Importer {
                         this.importDataset({
                             data: dataset,
                             issued: timestamps[idx],
-                            harvestTime: now
+                            harvestTime: now,
+                            totalCount
                         })
                     ));
 

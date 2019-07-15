@@ -11,7 +11,7 @@ import {SharedModule} from '../../shared/shared.module';
 
 @NgModule({
     imports: [CommonModule, SharedModule, MatTabsModule, MatOptionModule, MatRadioModule, MatCheckboxModule],
-    exports: [CronGenComponent, TimePickerComponent],
+    exports: [CronGenComponent, TimePickerComponent, MatTabsModule],
     declarations: [CronGenComponent, TimePickerComponent]
 })
 export class CronEditorModule {

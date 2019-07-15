@@ -3,7 +3,7 @@
  */
 import {getLogger} from "log4js";
 import {OptionsWithUri} from "request-promise";
-import {CkanSettings} from "./ckan.importer";
+import {CkanSettings} from "./ckan.settings";
 import {DateRange, GenericMapper, Organization, Person} from "../../model/generic.mapper";
 import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from "../../utils/http-request.utils";
 import {UrlUtils} from "../../utils/url.utils";
@@ -380,6 +380,16 @@ export class CkanMapper extends GenericMapper {
 
     }
 
+    static createRequestConfigCount(settings: CkanSettings): OptionsWithUri {
+        return {
+            method: 'GET',
+            uri: settings.ckanBaseUrl + "/api/3/action/package_list", // See http://docs.ckan.org/en/ckan-2.7.3/api/
+            json: true,
+            headers: RequestDelegate.defaultRequestHeaders(),
+            proxy: settings.proxy
+        };
+    }
+
     static createPaging(settings: CkanSettings): RequestPaging {
         return {
             startFieldName: settings.requestType === "ListWithResources" ? 'offset' : 'start',
@@ -392,6 +402,7 @@ export class CkanMapper extends GenericMapper {
         if (isNaN(new Date(date).getTime())) {
             let message = `Date has incorrect format: ${date}`;
             this.summary.numErrors++; //.push(message);
+            this.summary.appErrors.push(message);
             this.log.warn(message);
             return undefined;
         }
@@ -403,6 +414,7 @@ export class CkanMapper extends GenericMapper {
         if (isNaN(size)) {
             let message = `Byte size has incorrect format: ${size}`;
             this.summary.numErrors++; //.push(message);
+            this.summary.appErrors.push(message);
             this.log.warn(message);
             return undefined;
         }

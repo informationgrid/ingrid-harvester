@@ -1,3 +1,12 @@
-<p>
-  {{logText}}
-</p>
+<mat-tab-group [animationDuration]="'0ms'" [dynamicHeight]="false">
+  <mat-tab label="Errors">
+    <div class="logContainer">
+      <div *ngFor="let error of appErrors">{{error}}</div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Warnings">
+    <div class="logContainer">
+      <div *ngFor="let warning of appWarnings">{{warning}}</div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

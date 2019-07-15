@@ -7,8 +7,9 @@ import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
 import {Summary} from "../../model/summary";
 import {RequestDelegate} from "../../utils/http-request.utils";
-import {CswSettings, CswSummary} from "./csw.importer";
+import {CswSummary} from "./csw.importer";
 import {OptionsWithUri} from "request-promise";
+import {CswSettings} from './csw.settings';
 
 let xpath = require('xpath');
 

@@ -1,9 +1,12 @@
 import {Importer} from "../importer";
-import {CkanImporter, CkanSettings} from "./ckan/ckan.importer";
-import {ExcelImporter, ExcelSettings} from "./excel/excel.importer";
-import {CswImporter, CswSettings} from "./csw/csw.importer";
+import {CkanImporter} from "./ckan/ckan.importer";
+import {ExcelImporter} from "./excel/excel.importer";
+import {CswImporter} from "./csw/csw.importer";
 import {BfgImporter} from "./csw/bfg.importer";
 import {CodedeImporter} from "./csw/codede.importer";
+import {CkanSettings} from './ckan/ckan.settings';
+import {ExcelSettings} from './excel/excel.settings';
+import {CswSettings} from './csw/csw.settings';
 
 export class ImporterFactory {
 

@@ -4,11 +4,12 @@ import {ConfigService} from '../services/config/ConfigService';
 import {ImportSocketService} from "../sockets/import.socket.service";
 import {SummaryService} from '../services/config/SummaryService';
 import {ImportLogMessage} from '../model/import.result';
+import {LogService} from '../services/storage/LogService';
 
 @Controller("/api")
 export class ApiCtrl {
 
-    constructor(private importSocketService: ImportSocketService, private summaryService: SummaryService) {
+    constructor(private importSocketService: ImportSocketService, private summaryService: SummaryService, private logService: LogService) {
     }
 
     @Get("/harvester")
@@ -30,5 +31,10 @@ export class ApiCtrl {
     @Get('/lastLogs')
     getLastLogs(): ImportLogMessage[] {
         return this.summaryService.getAll();
+    }
+
+    @Get('/log')
+    getLog(): string {
+        return this.logService.get();
     }
 }

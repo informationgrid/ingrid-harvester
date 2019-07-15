@@ -1,7 +1,7 @@
 import {UrlUtils} from '../../utils/url.utils';
 import {DateRange, Distribution, GenericMapper, License, Organization, Person} from '../../model/generic.mapper';
 import {Summary} from '../../model/summary';
-import {ExcelSettings} from './excel.importer';
+import {ExcelSettings} from './excel.settings';
 import {RequestDelegate} from '../../utils/http-request.utils';
 import {OptionsWithUri} from 'request-promise';
 
