@@ -1,4 +1,4 @@
-import {DefaultElasticsearchSettings, ElasticSearchUtils, ElasticSettings} from '../../utils/elastic.utils';
+import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
 import {elasticsearchMapping} from '../../elastic.mapping';
 import {elasticsearchSettings} from '../../elastic.settings';
 import {IndexDocument} from '../../model/index.document';
@@ -7,21 +7,15 @@ import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
 import {CswParameters, RequestDelegate} from '../../utils/http-request.utils';
 import {OptionsWithUri} from 'request-promise';
-import {DefaultImporterSettings, ImporterSettings} from '../../importer';
+import {DefaultImporterSettings} from '../../importer';
 import {Observable, Observer} from 'rxjs';
-import {ImportResult, ImportLogMessage} from '../../model/import.result';
+import {ImportLogMessage, ImportResult} from '../../model/import.result';
+import {CswSettings} from './csw.settings';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
     logRequest = getLogger('requests'),
     DomParser = require('xmldom').DOMParser;
-
-export type CswSettings = {
-    getRecordsUrl: string,
-    eitherKeywords: string[],
-    httpMethod: "GET" | "POST",
-    recordFilter?: string
-} & ElasticSettings & ImporterSettings;
 
 export class CswSummary extends Summary {
     opendata = 0;

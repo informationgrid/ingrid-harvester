@@ -1,7 +1,3 @@
-import {getLogger} from "log4js";
-
-let logSummary = getLogger('summary');
-
 export class Summary {
     numDocs: number = 0;
 
@@ -23,24 +19,24 @@ export class Summary {
         this.headerTitle = `${settings.description} (${settings.type})`;
     }
 
-    print() {
-        logSummary.info(`---------------------------------------------------------`);
-        logSummary.info(this.headerTitle);
-        logSummary.info(`---------------------------------------------------------`);
-        logSummary.info(`Number of records: ${this.numDocs}`);
-        logSummary.info(`Skipped records: ${this.skippedDocs.length}`);
-        logSummary.info(`Record-Errors: ${this.numErrors}`);
-        logSummary.info(`Warnings: ${this.warnings.length}`);
-        if (logSummary.isDebugEnabled() && this.warnings.length > 0) {
-            logSummary.debug(`\n\t${this.warnings.join('\n\t')}`);
+    print(logger) {
+        logger.info(`---------------------------------------------------------`);
+        logger.info(this.headerTitle);
+        logger.info(`---------------------------------------------------------`);
+        logger.info(`Number of records: ${this.numDocs}`);
+        logger.info(`Skipped records: ${this.skippedDocs.length}`);
+        logger.info(`Record-Errors: ${this.numErrors}`);
+        logger.info(`Warnings: ${this.warnings.length}`);
+        if (logger.isDebugEnabled() && this.warnings.length > 0) {
+            logger.debug(`\n\t${this.warnings.join('\n\t')}`);
         }
-        logSummary.info(`App-Errors: ${this.appErrors.length}`);
-        if (logSummary.isDebugEnabled() && this.appErrors.length > 0) {
-            logSummary.debug(`\n\t${this.appErrors.join('\n\t')}`);
+        logger.info(`App-Errors: ${this.appErrors.length}`);
+        if (logger.isDebugEnabled() && this.appErrors.length > 0) {
+            logger.debug(`\n\t${this.appErrors.join('\n\t')}`);
         }
-        logSummary.info(`Elasticsearch-Errors: ${this.elasticErrors.length}`);
-        if (logSummary.isDebugEnabled() && this.elasticErrors.length > 0) {
-            logSummary.debug(`\n\t${this.elasticErrors.join('\n\t')}`);
+        logger.info(`Elasticsearch-Errors: ${this.elasticErrors.length}`);
+        if (logger.isDebugEnabled() && this.elasticErrors.length > 0) {
+            logger.debug(`\n\t${this.elasticErrors.join('\n\t')}`);
         }
         this.additionalSummary();
     }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {Socket} from 'ngx-socket-io';
 
 @Component({
   selector: 'app-log',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LogComponent implements OnInit {
 
-  constructor() { }
+  importInfo = this.socket.fromEvent<any>('/log');
+
+  constructor(private socket: Socket) { }
 
   ngOnInit() {
+    this.importInfo.subscribe(data => {
+      console.log('Received from socket: ', data);
+      // this.importDetail[data.id] = data;
+    });
   }
 
 }

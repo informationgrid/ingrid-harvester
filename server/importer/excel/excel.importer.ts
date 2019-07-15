@@ -1,19 +1,16 @@
 import {IndexDocument} from '../../model/index.document';
-import {DefaultElasticsearchSettings, ElasticSearchUtils, ElasticSettings} from '../../utils/elastic.utils';
+import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
 import {ExcelMapper} from './excel.mapper';
 import {Workbook, Worksheet} from 'exceljs';
 import {elasticsearchMapping} from '../../elastic.mapping';
 import {elasticsearchSettings} from '../../elastic.settings';
 import {Summary} from '../../model/summary';
-import {DefaultImporterSettings, Importer, ImporterSettings} from '../../importer';
+import {DefaultImporterSettings, Importer} from '../../importer';
 import {Observable, Observer} from 'rxjs';
-import {ImportResult, ImportLogMessage} from '../../model/import.result';
+import {ImportLogMessage, ImportResult} from '../../model/import.result';
+import {ExcelSettings} from './excel.settings';
 
 let log = require('log4js').getLogger(__filename);
-
-export type ExcelSettings = {
-    filePath: string
-} & ElasticSettings & ImporterSettings;
 
 export class ExcelImporter implements Importer {
 

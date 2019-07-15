@@ -19,7 +19,7 @@
       "dom"
     ],
     "paths": {
-      "@server/*": ["../server/*"]
+//      "@server/*": ["../server/*"]
     }
   }
 }

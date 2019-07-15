@@ -1,23 +1,16 @@
-import {DefaultElasticsearchSettings, ElasticSearchUtils, ElasticSettings} from '../../utils/elastic.utils';
+import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
 import {elasticsearchSettings} from '../../elastic.settings';
 import {elasticsearchMapping} from '../../elastic.mapping';
 import {IndexDocument} from '../../model/index.document';
 import {Summary} from '../../model/summary';
-import {DefaultImporterSettings, Importer, ImporterSettings} from '../../importer';
+import {DefaultImporterSettings, Importer} from '../../importer';
 import {RequestDelegate} from '../../utils/http-request.utils';
 import {CkanMapper} from './ckan.mapper';
 import {Observable, Observer} from 'rxjs';
-import {ImportResult, ImportLogMessage} from '../../model/import.result';
+import {ImportLogMessage, ImportResult} from '../../model/import.result';
+import {CkanSettings} from './ckan.settings';
 
 let log = require('log4js').getLogger(__filename);
-
-export type CkanSettings = {
-    ckanBaseUrl: string,
-    filterTags?: string[],
-    filterGroups?: string[],
-    requestType?: 'ListWithResources' | 'Search',
-    markdownAsDescription?: boolean
-} & ElasticSettings & ImporterSettings;
 
 export class CkanImporter implements Importer {
     private readonly settings: CkanSettings;

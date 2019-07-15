@@ -1,14 +1,12 @@
-import {ExcelImporter, ExcelSettings} from './importer/excel/excel.importer';
-import {CkanImporter, CkanSettings} from './importer/ckan/ckan.importer';
-import {BfgImporter} from './importer/csw/bfg.importer';
 import {Summary} from './model/summary';
 import * as fs from 'fs';
-import {CodedeImporter} from './importer/csw/codede.importer';
-import {CswImporter, CswSettings} from './importer/csw/csw.importer';
 import {configure, getLogger} from 'log4js';
 import {concat, Observable} from 'rxjs';
 import {ImportLogMessage} from './model/import.result';
 import {ImporterFactory} from "./importer/importer.factory";
+import {CkanSettings} from './importer/ckan/ckan.settings';
+import {CswSettings} from './importer/csw/csw.settings';
+import {ExcelSettings} from './importer/excel/excel.settings';
 
 let config: (CkanSettings | CswSettings | ExcelSettings)[] = require( './config.json' ),
     process = require('process'),
@@ -50,7 +48,7 @@ function showSummaries(summaries: Summary[]) {
     logSummary.info('#######################################');
     logSummary.info('Import started at: ' + start);
     logSummary.info('Import took: ' + duration + 's\n');
-    summaries.forEach(summary => summary ? summary.print() : '');
+    summaries.forEach(summary => summary ? summary.print(logSummary) : '');
     logSummary.info('#######################################');
 }
 
@@ -99,7 +97,7 @@ async function startProcess() {
             result.complete ? summaries.push(result.summary) : console.log(result.progress);
             // showSummaries(summaries);
         }).add( () => {
-            summaries.forEach( summary => summary.print())
+            summaries.forEach( summary => summary.print(logSummary))
         });
 
     }

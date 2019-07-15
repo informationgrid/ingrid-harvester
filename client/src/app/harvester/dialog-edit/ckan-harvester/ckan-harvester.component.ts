@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy} from '@angular/core';
-import {CkanSettings} from '../../../../../../server/importer/ckan/ckan.importer';
+import {CkanSettings} from '../../../../../../server/importer/ckan/ckan.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material';
 
