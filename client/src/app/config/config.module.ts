@@ -1,18 +1,23 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ConfigComponent } from './config.component';
-import { MatButtonModule } from "@angular/material/button";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import {FormsModule} from "@angular/forms";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ConfigComponent} from './config.component';
+import {MatButtonModule} from "@angular/material/button";
+import {RouterModule, Routes} from '@angular/router';
+import {SharedModule} from '../shared/shared.module';
+
+const configRoutes: Routes = [
+  {
+    path: '',
+    component: ConfigComponent
+  }
+];
 
 @NgModule({
   declarations: [ConfigComponent],
   imports: [
     CommonModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
+    RouterModule.forChild(configRoutes),
+    SharedModule,
     MatButtonModule
   ],
   exports: [

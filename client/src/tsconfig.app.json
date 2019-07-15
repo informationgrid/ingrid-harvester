@@ -2,7 +2,8 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
-    "types": []
+    "module": "esnext",
+    "types": ["node"]
   },
   "exclude": [
     "test.ts",

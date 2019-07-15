@@ -10,14 +10,17 @@
 <mat-sidenav-container class="navigation">
   <mat-sidenav mode="side" opened>
     <mat-action-list>
-      <button mat-list-item (click)="page = 'config'"> Konfiguration </button>
-      <button mat-list-item (click)="page = 'harvester'"> Harvester </button>
+      <button mat-list-item routerLink="/config"> Konfiguration </button>
+      <button mat-list-item routerLink="/harvester"> Harvester </button>
+      <button mat-list-item routerLink="/log"> Log </button>
     </mat-action-list>
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <app-config *ngIf="page === 'config'"></app-config>
+    <router-outlet></router-outlet>
+    <!--<app-config *ngIf="page === 'config'"></app-config>
     <app-harvester *ngIf="page === 'harvester'"></app-harvester>
+    <app-log *ngIf="page === 'log'"></app-log>-->
   </mat-sidenav-content>
 
 </mat-sidenav-container>

@@ -1,20 +1,16 @@
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { CronGenComponent } from './cron-editor.component';
-import { TimePickerComponent } from './cron-time-picker.component';
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatOptionModule } from "@angular/material/core";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatRadioModule } from "@angular/material/radio";
-import { MatSelectModule } from "@angular/material/select";
-import { MatTabsModule } from "@angular/material/tabs";
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {CronGenComponent} from './cron-editor.component';
+import {TimePickerComponent} from './cron-time-picker.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatOptionModule} from "@angular/material/core";
+import {MatRadioModule} from "@angular/material/radio";
+import {MatTabsModule} from "@angular/material/tabs";
+import {SharedModule} from '../../shared/shared.module';
 
 @NgModule({
-    imports: [CommonModule, FormsModule, MatTabsModule, MatSelectModule, MatOptionModule, MatFormFieldModule, MatRadioModule, MatCheckboxModule, MatInputModule, BrowserAnimationsModule],
+    imports: [CommonModule, SharedModule, MatTabsModule, MatOptionModule, MatRadioModule, MatCheckboxModule],
     exports: [CronGenComponent, TimePickerComponent],
     declarations: [CronGenComponent, TimePickerComponent]
 })
