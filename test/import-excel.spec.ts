@@ -27,7 +27,7 @@ describe('Import Excel', function () {
         var settings: ExcelSettings = {
             dryRun: true,
             filePath: 'test/data/data-test.xlsx',
-            defaultDCATCategory: 'DEFAULT_TRAN',
+            defaultDCATCategory: ['DEFAULT_TRAN'],
             alias: undefined,
             elasticSearchUrl: undefined,
             type: undefined,

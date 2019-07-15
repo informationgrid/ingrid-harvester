@@ -15,7 +15,8 @@ export type CkanSettings = {
     ckanBaseUrl: string,
     filterTags?: string[],
     filterGroups?: string[],
-    requestType?: 'ListWithResources' | 'Search';
+    requestType?: 'ListWithResources' | 'Search',
+    markdownAsDescription?: boolean
 } & ElasticSettings & ImporterSettings;
 
 export class CkanImporter implements Importer {
@@ -29,8 +30,8 @@ export class CkanImporter implements Importer {
         ckanBaseUrl: '',
         filterTags: [],
         filterGroups: [],
-        requestType: 'ListWithResources'
-
+        requestType: 'ListWithResources',
+        markdownAsDescription: true
     };
 
     summary: Summary;
@@ -87,7 +88,8 @@ export class CkanImporter implements Importer {
                 harvestTime: harvestTime,
                 issuedDate: issuedExisting,
                 currentIndexName: this.elastic.indexName,
-                source: source
+                source: source,
+                summary: this.summary
             });
 
             let doc = await IndexDocument.create(mapper)
@@ -140,15 +142,17 @@ export class CkanImporter implements Importer {
                 log.info(`Received ${results.length} records from ${this.settings.ckanBaseUrl}`);
                 total += results.length;
 
-                let ids = results.map(result => result.id);
+                let filteredResults = results
+                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'tags' , this.settings.filterTags))
+                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'groups', this.settings.filterGroups));
+
+
+                let ids = filteredResults.map(result => result.id);
 
                 // issued dates are those showing the date of the first harvesting
                 let timestamps = await this.elastic.getIssuedDates(ids);
 
-                results
-                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'tags' , this.settings.filterTags))
-                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'groups', this.settings.filterGroups))
-                    .forEach((dataset, idx) => promises.push(
+                filteredResults.forEach((dataset, idx) => promises.push(
                         this.importDataset({
                             data: dataset,
                             issued: timestamps[idx],

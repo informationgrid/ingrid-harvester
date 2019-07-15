@@ -24,14 +24,15 @@ describe('Import CKAN Bahn', function () {
         var settings: CkanSettings = {
             alias: undefined,
             ckanBaseUrl: 'https://data.deutschebahn.com',
-            description: 'Deutsche Bahn Datenportal',
-            defaultDCATCategory: 'TRAN',
-            defaultMcloudSubgroup: 'railway',
+            defaultAttribution: 'Deutsche Bahn Datenportal',
+            defaultDCATCategory: ['TRAN'],
+            defaultMcloudSubgroup: ['railway'],
             dryRun: true,
             elasticSearchUrl: undefined,
             type: undefined,
             includeTimestamp: true,
-            index: undefined
+            index: undefined,
+            filterTags: ['Fernverkehr', 'Wagenreihung']
         };
         let importer = new CkanImporter(settings);
 

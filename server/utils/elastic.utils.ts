@@ -506,7 +506,6 @@ export class ElasticSearchUtils {
 
         // Make sure there are no nulls
         if (!generatedId) generatedId = '';
-        if (!modified) modified = '';
 
         let urls = [];
         doc.distribution.forEach(dist => {
@@ -531,7 +530,7 @@ export class ElasticSearchUtils {
          * - given timestamp is not equal to the document's modified (date) field
          *   (don't compare this document to itself)
          */
-        let query = {
+        let query: any = {
             query: {
                 bool: {
                     must: [
@@ -555,12 +554,24 @@ export class ElasticSearchUtils {
                         }
                     ],
                     must_not: [
-                        { term: { 'extras.metadata.isValid': false } },
-                        { term : { modified: modified } }
+                        { term: { 'extras.metadata.isValid': false } }
                     ]
                 }
             }
         };
+
+        // if modified date does not exist then it should exist for another (do not compare doc to itself!)
+        if (!modified || isNaN(modified)) {
+            query.query.bool.must.push({
+                exists : { field: "modified" }
+            });
+        } else {
+            // otherwise the modified date must be different
+            query.query.bool.must_not.push({
+                term : { modified: modified }
+            });
+        }
+
         this.duplicateStaging.push({
             id: id,
             modified: modified,

@@ -25,10 +25,11 @@ describe('Import CSW BFG', function () {
         // @ts-ignore
         const settings: CswSettings = {
             dryRun: true,
+            startPosition: 1,
             getRecordsUrl: "https://geoportal.bafg.de/soapServices/CSWStartup",
             proxy: null,
-            defaultMcloudSubgroup: "waters",
-            defaultDCATCategory: "TRAN",
+            defaultMcloudSubgroup: ["waters"],
+            defaultDCATCategory: ["TRAN"],
             defaultAttribution: "Bundesanstalt für Gewässerkunde",
             defaultAttributionLink: "https://www.bafg.de/",
             includeTimestamp: true,
@@ -47,11 +48,11 @@ describe('Import CSW BFG', function () {
 
         let importer = new BfgImporter(settings);
 
-        sinon.stub(importer.bfgUtil.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
+        sinon.stub(importer.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, "2019-01-09T17:51:38.934Z"));
 
         indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
 
-        await importer.bfgUtil.run();
+        await importer.run();
 
         chai.expect(indexDocumentCreateSpy.called).to.be.true;
         let extraChecks = (actual, expected) => {

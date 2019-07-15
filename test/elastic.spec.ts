@@ -1,5 +1,7 @@
 import {ElasticSearchUtils} from "../server/utils/elastic.utils";
 import {expect} from "chai";
+import {Summary} from '../server/model/summary';
+import {ImporterSettings} from '../server/importer';
 
 
 describe('Elasticsearch Utils', function () {
@@ -7,7 +9,10 @@ describe('Elasticsearch Utils', function () {
     let elastic = null;
 
     beforeEach(() => {
-        elastic = new ElasticSearchUtils({});
+        let settings: ImporterSettings = {
+            type: 'XXX'
+        };
+        elastic = new ElasticSearchUtils(settings, new Summary(settings));
     });
 
     it('generated the correct timestamp', function () {

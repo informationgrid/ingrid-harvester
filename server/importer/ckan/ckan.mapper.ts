@@ -4,6 +4,7 @@
 import {getLogger} from "log4js";
 import {OptionsWithUri} from "request-promise";
 import {CkanSettings} from "./ckan.importer";
+import {Summary} from '../model/summary';
 import {DateRange, GenericMapper, Organization, Person} from "../../model/generic.mapper";
 import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from "../../utils/http-request.utils";
 import {UrlUtils} from "../../utils/url.utils";
@@ -15,6 +16,7 @@ interface CkanMapperData {
     issuedDate: Date;
     source: any;
     currentIndexName: string;
+    summary: Summary;
 }
 
 export class CkanMapper extends GenericMapper {
@@ -25,16 +27,14 @@ export class CkanMapper extends GenericMapper {
     private readonly data: CkanMapperData;
     private resourcesDate: Date[] = null;
     private settings: CkanSettings;
+    private summary: Summary;
 
     constructor(settings: CkanSettings, data: CkanMapperData) {
         super();
         this.settings = settings;
         this.source = data.source;
         this.data = data;
-    }
-
-    getErrors() {
-        return this.errors;
+        this.summary = data.summary;
     }
 
     getAccessRights() {
@@ -50,7 +50,11 @@ export class CkanMapper extends GenericMapper {
     }
 
     getDescription() {
-        return this.source.notes ? markdown.toHTML(this.source.notes) : undefined;
+        if (this.source.notes) {
+            return this.settings.markdownAsDescription ? markdown.toHTML(this.source.notes) : this.source.notes;
+        } else {
+            return undefined;
+        }
     }
 
     async getDisplayContacts() {
@@ -90,9 +94,9 @@ export class CkanMapper extends GenericMapper {
                         description: res.description,
                         accessURL: accessURL,
                         format: res.format,
-                        issued: res.created,
-                        modified: res.last_modified,
-                        byteSize: res.size
+                        issued: this.handleDate(res.created),
+                        modified: this.handleDate(res.last_modified),
+                        byteSize: this.handleByteSize(res.size)
                     };
                     distributions.push(dist);
                 } else {
@@ -114,7 +118,7 @@ export class CkanMapper extends GenericMapper {
     }
 
     getGeneratedId() {
-        return this.source.name;
+        return this.source.id;
     }
 
     getMFundFKZ() {
@@ -384,5 +388,26 @@ export class CkanMapper extends GenericMapper {
         };
     }
 
+    private handleDate(date: string) {
+        if (isNaN(new Date(date).getTime())) {
+            let message = `Date has incorrect format: ${date}`;
+            this.summary.numErrors++; //.push(message);
+            this.log.warn(message);
+            return undefined;
+        }
+
+        return date;
+    }
+
+    private handleByteSize(size: any): number {
+        if (isNaN(size)) {
+            let message = `Byte size has incorrect format: ${size}`;
+            this.summary.numErrors++; //.push(message);
+            this.log.warn(message);
+            return undefined;
+        }
+
+        return size === '' ? undefined : size;
+    }
 }
 

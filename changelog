@@ -1,3 +1,10 @@
+* Wed Jul 10 2019 André Wallat <andre.wallat@wemove.com> - 1.6.0
+- New strategy to get CKAN records (#2154)
+- Add filter for tags und groups in CKAN (#2151)
+- Option to interpret description as markdown (#2114)
+- Fix DCAT category of regional providers (#2114 #2152)
+- Improve CKAN harvesting and configuration (#2187)
+
 * Fri Jun 07 2019 André Wallat <andre.wallat@wemove.com> - 1.5.3
 - Make CSW keywords and filter configurable (#2104)
 - Fix separation of download URLs (#2115)

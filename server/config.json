@@ -8,12 +8,11 @@
     "defaultDCATCategory": [
       "TRAN"
     ],
-    "disable": false,
-    "id": 1
+    "disable": false
   },
   {
     "type": "CKAN",
-    "description": "!Offene Daten Köln: last_modified invalid",
+    "description": "Offene Daten Köln",
     "filterTags": [
       "Transport und Verkehr"
     ],
@@ -22,14 +21,14 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://offenedaten-koeln.de",
     "defaultMcloudSubgroup": [
-      "railway"
+      "roads"
     ],
     "defaultDCATCategory": [
-      "TRAN"
+      "REGI"
     ],
     "defaultAttribution": "Offene Daten Köln",
-    "disable": false,
-    "id": 2
+    "markdownAsDescription": false,
+    "disable": false
   },
   {
     "type": "CKAN",
@@ -42,18 +41,17 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://opendata.bonn.de",
     "defaultMcloudSubgroup": [
-      "railway"
+      "roads"
     ],
     "defaultDCATCategory": [
-      "TRAN"
+      "REGI"
     ],
     "defaultAttribution": "Offene Daten Bonn",
-    "disable": true,
-    "id": 3
+    "disable": true
   },
   {
     "type": "CKAN",
-    "description": "!Offene Daten Düsseldorf: resources.created invalid",
+    "description": "Offene Daten Düsseldorf",
     "filterTags": [
       "Transport und Verkehr"
     ],
@@ -62,14 +60,14 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://opendata.duesseldorf.de",
     "defaultMcloudSubgroup": [
-      "railway"
+      "roads"
     ],
     "defaultDCATCategory": [
-      "TRAN"
+      "REGI"
     ],
     "defaultAttribution": "Offene Daten Düsseldorf",
-    "disable": false,
-    "id": 4
+    "markdownAsDescription": false,
+    "disable": false
   },
   {
     "type": "CKAN",
@@ -82,14 +80,14 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://offenedaten-wuppertal.de",
     "defaultMcloudSubgroup": [
-      "railway"
+      "roads"
     ],
     "defaultDCATCategory": [
-      "TRAN"
+      "REGI"
     ],
     "defaultAttribution": "Offene Daten Wuppertal",
-    "disable": false,
-    "id": 5
+    "markdownAsDescription": false,
+    "disable": false
   },
   {
     "type": "CKAN",
@@ -105,8 +103,7 @@
       "TRAN"
     ],
     "defaultAttribution": "Deutsche Bahn Datenportal",
-    "disable": false,
-    "id": 6
+    "disable": false
   },
   {
     "type": "CKAN",
@@ -119,14 +116,13 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://www.opendata-hro.de",
     "defaultMcloudSubgroup": [
-      "infrastructure"
+      "roads"
     ],
     "defaultDCATCategory": [
-      "TRAN"
+      "REGI"
     ],
     "defaultAttribution": "OpenData Rostock",
-    "disable": false,
-    "id": 7
+    "disable": false
   },
   {
     "type": "CKAN",
@@ -139,14 +135,13 @@
     "alias": "mcloud",
     "ckanBaseUrl": "https://www.offenesdatenportal.de",
     "defaultMcloudSubgroup": [
-      "infrastructure"
+      "roads"
     ],
     "defaultDCATCategory": [
-      "TRAN"
+      "REGI"
     ],
     "defaultAttribution": "Offenesdatenportal",
-    "disable": false,
-    "id": 8
+    "disable": false
   },
   {
     "type": "CKAN",
@@ -159,54 +154,53 @@
     "alias": "mcloud",
     "ckanBaseUrl": "http://suche.transparenz.hamburg.de",
     "defaultMcloudSubgroup": [
-      "infrastructure"
+      "roads"
     ],
     "defaultDCATCategory": [
-      "TRAN"
+      "REGI"
     ],
     "defaultAttribution": "Transparenzportal Hamburg",
-    "disable": true,
-    "id": 9
+    "disable": false
   },
   {
     "type": "CKAN",
-    "description": "!Open-Data-Portal der Rhein-Neckar-Verkehrs (RNV): resources.created invalid",
+    "description": "Open-Data-Portal des Rhein-Neckar-Verkehrs (RNV)",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_rnv",
     "alias": "mcloud",
     "ckanBaseUrl": "https://opendata.rnv-online.de",
     "defaultMcloudSubgroup": [
-      "infrastructure"
+      "roads"
     ],
     "defaultDCATCategory": [
-      "TRAN"
+      "REGI"
     ],
     "defaultAttribution": "Open-Data-Portal RNV",
-    "disable": false,
-    "id": 10
+    "markdownAsDescription": false,
+    "disable": false
   },
   {
     "type": "CKAN",
+    "description": "NRW Portal",
     "filterTags": [
       "Offene Daten Bonn"
     ],
     "filterGroups": [
       "tran"
     ],
-    "description": "NRW Portal",
     "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_nrw",
     "alias": "mcloud",
     "ckanBaseUrl": "https://open.nrw",
     "defaultMcloudSubgroup": [
-      "infrastructure"
+      "roads"
     ],
     "defaultDCATCategory": [
-      "TRAN"
+      "REGI"
     ],
     "defaultAttribution": "NRW Portal",
-    "disable": true,
-    "id": 11
+    "markdownAsDescription": false,
+    "disable": false
   },
   {
     "type": "CSW",
@@ -229,8 +223,7 @@
     ],
     "defaultAttribution": "WSV.Geokatalog CSW",
     "defaultAttributionLink": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2",
-    "disable": false,
-    "id": 12
+    "disable": false
   },
   {
     "type": "CSW",
@@ -253,8 +246,7 @@
     ],
     "defaultAttribution": "MDI-DE",
     "defaultAttributionLink": "https://www.mdi-de.org/",
-    "disable": false,
-    "id": 13
+    "disable": false
   },
   {
     "type": "BFG-CSW",
@@ -276,8 +268,7 @@
     ],
     "defaultAttribution": "Bundesanstalt für Gewässerkunde",
     "defaultAttributionLink": "https://geoportal.bafg.de/",
-    "disable": false,
-    "id": 14
+    "disable": false
   },
   {
     "type": "CSW",
@@ -300,8 +291,7 @@
     ],
     "defaultAttribution": "Climate Data Centre (CDC) Katalog des DWD",
     "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/csw",
-    "disable": false,
-    "id": 15
+    "disable": false
   },
   {
     "type": "CODEDE-CSW",
@@ -323,8 +313,7 @@
     ],
     "defaultAttribution": "CODE-DE Catalogue",
     "defaultAttributionLink": "https://code-de.org/de/marketplace",
-    "disable": false,
-    "id": 16
+    "disable": false
   },
   {
     "type": "CSW",
@@ -348,7 +337,6 @@
     ],
     "defaultAttribution": "GeoSeaPortal (BSH)",
     "defaultAttributionLink": "https://www.geoseaportal.de/",
-    "disable": false,
-    "id": 17
+    "disable": false
   }
 ]

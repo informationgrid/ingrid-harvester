@@ -279,7 +279,7 @@ export class CswMapper extends GenericMapper {
                 if (k === 'mcloud_category_aviation') subgroups.push('aviation');
             });
         }
-        if (subgroups.length === 0) subgroups = this.settings.defaultMcloudSubgroup;
+        if (subgroups.length === 0) subgroups.push(...this.settings.defaultMcloudSubgroup);
         return subgroups;
     }
 
@@ -334,7 +334,7 @@ export class CswMapper extends GenericMapper {
     }
 
     getGeneratedId(): string {
-        return undefined;
+        return this.uuid;
     }
 
     /**
