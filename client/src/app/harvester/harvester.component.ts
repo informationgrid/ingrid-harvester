@@ -19,7 +19,7 @@ import {flatMap, groupBy, mergeMap, toArray} from 'rxjs/operators';
 })
 export class HarvesterComponent implements OnInit {
 
-  harvesters: {[x:string]: Harvester[]} = {};
+  harvesters: { [x: string]: Harvester[] } = {};
 
   importInfo = this.socket.fromEvent<ImportLogMessage>('/log');
 
@@ -42,7 +42,7 @@ export class HarvesterComponent implements OnInit {
       flatMap(items => of(...items)),
       groupBy(harvester => harvester.type.endsWith('CSW') ? 'CSW' : harvester.type),
       mergeMap(group => zip(of(group.key), group.pipe(toArray())))
-    ).subscribe( data => {
+    ).subscribe(data => {
       this.harvesters[data[0]] = data[1].sort((a, b) => a.description.localeCompare(b.description));
     });
 
@@ -54,18 +54,23 @@ export class HarvesterComponent implements OnInit {
 
   schedule(id: number) {
     const dialogRef = this.dialog.open(DialogSchedulerComponent, {
-      width: '900px'
+      width: '500px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      // this.animal = result;
+      if (result) {
+        console.log('The dialog was closed', result);
+        this.harvesterService.schedule(id, result).subscribe({
+          error: (error: Error) => this.showError(error)
+        });
+      }
     });
   }
 
   showLog(id: number) {
     const dialogRef = this.dialog.open(DialogLogComponent, {
       width: '900px',
+      height: '600px',
       data: {
         content: this.importDetail[id]
       }
@@ -111,5 +116,10 @@ export class HarvesterComponent implements OnInit {
 
   stopPropagation($event: MouseEvent) {
     $event.stopImmediatePropagation();
+  }
+
+  private showError(error: Error) {
+    console.error('Error occurred', error);
+    this.snackBar.open(error.message, null, {panelClass: 'error', duration: 10000});
   }
 }

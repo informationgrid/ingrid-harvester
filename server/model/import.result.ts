@@ -17,6 +17,8 @@ export interface ImportLogMessage {
     duration?: number;
 
     lastExecution?: Date;
+
+    nextExecution?: Date;
 }
 
 export class ImportResult {

@@ -9,7 +9,8 @@ import {ImportLogMessage} from "../../../../server/model/import.result";
 })
 export class HarvesterService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   getHarvester(): Observable<Harvester[]> {
 
@@ -29,7 +30,11 @@ export class HarvesterService {
 
   }
 
-  updateHarvester(result: Harvester) {
+  updateHarvester(result: Harvester): Observable<void> {
     return this.http.post<void>('rest/api/harvester/' + (result.id || -1), result);
+  }
+
+  schedule(id: number, cronExpression: string): Observable<void> {
+    return this.http.post<void>('rest/api/schedule/' + id, {cron: cronExpression});
   }
 }

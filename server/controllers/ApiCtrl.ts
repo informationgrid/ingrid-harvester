@@ -5,11 +5,16 @@ import {ImportSocketService} from "../sockets/import.socket.service";
 import {SummaryService} from '../services/config/SummaryService';
 import {ImportLogMessage} from '../model/import.result';
 import {LogService} from '../services/storage/LogService';
+import {ScheduleService} from '../services/ScheduleService';
+import {GeneralSettings} from '../../shared/general-config.settings';
 
 @Controller("/api")
 export class ApiCtrl {
 
-    constructor(private importSocketService: ImportSocketService, private summaryService: SummaryService, private logService: LogService) {
+    constructor(private importSocketService: ImportSocketService,
+                private summaryService: SummaryService,
+                private logService: LogService,
+                private scheduleService: ScheduleService) {
     }
 
     @Get("/harvester")
@@ -36,5 +41,36 @@ export class ApiCtrl {
     @Get('/log')
     getLog(): string {
         return this.logService.get();
+    }
+
+    @Post('/schedule/:id')
+    schedule(@PathParams('id') id: number, @BodyParams('cron') cronExpression: string): void {
+        console.log('Body:', cronExpression);
+        this.scheduleService.set(id, cronExpression);
+    }
+
+
+    @Get('/config/general')
+    getGeneralConfig(): GeneralSettings {
+        let aHarvester = ConfigService.get()[0];
+        return {
+            elasticSearchUrl: aHarvester.elasticSearchUrl,
+            alias: aHarvester.alias,
+            proxy: aHarvester.proxy
+        };
+    }
+
+    @Post('/config/general')
+    setGeneralConfig(@BodyParams() body: GeneralSettings): void {
+        console.log('Body:', body);
+        let updatedHarvesters = ConfigService.get()
+            .map(config => {
+                config.elasticSearchUrl = body.elasticSearchUrl;
+                config.alias = body.alias;
+                config.proxy = body.proxy;
+                return config;
+            });
+
+        ConfigService.updateAll(updatedHarvesters);
     }
 }

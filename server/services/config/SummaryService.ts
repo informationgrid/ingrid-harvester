@@ -1,6 +1,8 @@
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'fs';
 import {ImportLogMessage} from '../../model/import.result';
 import {Service} from '@tsed/di';
+import {CronJob} from 'cron';
+import {ConfigService} from './ConfigService';
 
 /**
  * This service handles access to a file which contains the last import summary
@@ -38,7 +40,17 @@ export class SummaryService {
      * Get all import summaries from each harvester.
      */
     getAll(): ImportLogMessage[] {
-        return this.summaries;
+        let harvesters = ConfigService.get();
+
+        return this.summaries
+            .map(summary => {
+                let harvester = harvesters.find(h => h.id === summary.id);
+                if (harvester.cronPattern && harvester.cronPattern.length > 0) {
+                    let cronJob = new CronJob(harvester.cronPattern, () => {}, null, false);
+                    summary.nextExecution = cronJob.nextDate().toDate();
+                }
+                return summary;
+            } );
     }
 
     /**

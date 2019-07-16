@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {CronOptions} from "ngx-cron-editor/CronOptions";
+import {Component, Inject, OnInit, SimpleChanges} from '@angular/core';
+import cronstrue from 'cronstrue/i18n';
+import {MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
   selector: 'app-dialog-scheduler',
@@ -7,34 +8,30 @@ import {CronOptions} from "ngx-cron-editor/CronOptions";
   styleUrls: ['./dialog-scheduler.component.scss']
 })
 export class DialogSchedulerComponent implements OnInit {
-  public cronExpression = '0 0 1/1 * *';
-  public cronOptions: CronOptions = {
-    formInputClass: 'form-control cron-editor-input',
-    formSelectClass: 'form-control cron-editor-select',
-    formRadioClass: 'cron-editor-radio',
-    formCheckboxClass: 'cron-editor-checkbox',
+  cronTranslation: string;
+  cronValue = '';
+  validExpression = true;
+  showInfo = false;
 
-    defaultTime: "00:00:00",
 
-    hideMinutesTab: false,
-    hideHourlyTab: false,
-    hideDailyTab: false,
-    hideWeeklyTab: false,
-    hideMonthlyTab: false,
-    hideYearlyTab: false,
-    hideAdvancedTab: false,
-    hideSpecificWeekDayTab : false,
-    hideSpecificMonthWeekTab : false,
+  constructor(@Inject(MAT_DIALOG_DATA) public data) {
+    if (data) {
+      this.cronValue = data;
+    }
+  }
 
-    use24HourTime: true,
-    hideSeconds: false,
+  ngOnInit(): void {
+    this.translate(this.cronValue);
+  }
 
-    cronFlavor: "standard"
-  };
-
-  constructor() { }
-
-  ngOnInit() {
+  translate(cronExpression: string) {
+    try {
+      this.cronTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
+      this.validExpression = true;
+    } catch (e) {
+      this.cronTranslation = 'Kein gültiger Ausdruck'
+      this.validExpression = false;
+    }
   }
 
 }

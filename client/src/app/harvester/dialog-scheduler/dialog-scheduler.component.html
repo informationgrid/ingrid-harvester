@@ -1,1 +1,33 @@
-<cron-editor [(cron)]="cronExpression" [options]="cronOptions"></cron-editor>
+<h2 mat-dialog-title>Ausführung planen</h2>
+
+<mat-dialog-content>
+
+  <mat-form-field class="full-width padding-below">
+    <mat-label>Cron Expression</mat-label>
+    <input matInput placeholder="* * * * *" [(ngModel)]="cronValue" (keyup)="translate(cronValue)">
+    <button mat-button *ngIf="cronValue" matSuffix mat-icon-button aria-label="Clear" (click)="cronValue=''">
+      <mat-icon>close</mat-icon>
+    </button>
+    <mat-icon matSuffix (click)="showInfo = !showInfo">info_outline</mat-icon>
+    <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
+  </mat-form-field>
+
+  <mat-card class="info" *ngIf="showInfo">
+    <div><span>*/5 * * * *</span>Alle 5 Minuten</div>
+    <div><span>45 8 * * *</span>Täglich um 8:45 Uhr</div>
+    <div><span>0 6-18/2 * * *</span>Täglich zwischen 6 und 18 Uhr, alle 2h</div>
+    <div><span>30 4 1 * 0,6</span>Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So</div>
+  </mat-card>
+
+  <mat-divider></mat-divider>
+
+  <h3>{{cronTranslation}}</h3>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Abbrechen</button>
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+  <div class="flex-space"></div>
+  <button mat-button color="primary" [disabled]="cronValue !== '' && !validExpression" [mat-dialog-close]="cronValue">Planen</button>
+</mat-dialog-actions>

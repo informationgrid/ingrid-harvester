@@ -3,6 +3,7 @@ import * as SocketIO from "socket.io";
 import {ConfigService} from "../services/config/ConfigService";
 import {ImporterFactory} from "../importer/importer.factory";
 import {SummaryService} from '../services/config/SummaryService';
+import {CronJob} from 'cron';
 
 @SocketService('/import')
 export class ImportSocketService {
@@ -15,14 +16,14 @@ export class ImportSocketService {
      * Triggered when a new client connects to the Namespace.
      */
     $onConnection(@Socket socket: Socket, @SocketSession session: SocketSession) {
-        console.log('SOCKETIO: on connection');
+        console.log('SOCKETIO: A client is connected');
     }
 
     /**
      * Triggered when a client disconnects from the Namespace.
      */
     $onDisconnect(@Socket socket: SocketIO.Socket) {
-        console.log('SOCKETIO: on disconnect');
+        console.log('SOCKETIO: A client disconnected');
     }
 
     @Input('runImport')
@@ -37,6 +38,7 @@ export class ImportSocketService {
         importer.run.subscribe(response => {
             response.id = id;
             response.lastExecution = lastExecution;
+            response.nextExecution = new CronJob(configData.cronPattern, () => {}).nextDate().toDate();
             response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;
             this.nsp.emit('/log', response);
 

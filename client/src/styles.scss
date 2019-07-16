@@ -34,3 +34,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-card-header-text {
   padding-top: 22px;
 }
+
+snack-bar-container.error {
+  background-color: #b24747 !important;
+  color: white;
+}

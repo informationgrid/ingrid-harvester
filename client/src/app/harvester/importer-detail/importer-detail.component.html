@@ -41,7 +41,7 @@
             <mat-list-item>
                 <mat-icon mat-list-icon>access_time</mat-icon>
                 <h4 mat-line>Letzte Ausführung</h4>
-                <p mat-line> {{data.lastExecution | date}} </p>
+                <p mat-line> {{data.lastExecution | date:'short'}} </p>
             </mat-list-item>
             <mat-list-item>
                 <mat-icon mat-list-icon>timer</mat-icon>
@@ -51,7 +51,7 @@
             <mat-list-item >
                 <mat-icon mat-list-icon>snooze</mat-icon>
                 <h4 mat-line>Nächste Ausführung</h4>
-                <p mat-line> {{getNextExecutionTime(data) | date}} </p>
+                <p mat-line> {{data.nextExecution | date:'short'}} </p>
             </mat-list-item>
         </mat-list>
 

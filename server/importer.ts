@@ -8,7 +8,8 @@ export type ImporterSettings = {
     defaultMcloudSubgroup?: string[],
     defaultDCATCategory?: string[],
     defaultAttribution?: string,
-    defaultAttributionLink?: string
+    defaultAttributionLink?: string,
+    cronPattern?: string
 }
 
 export const DefaultImporterSettings: ImporterSettings = {

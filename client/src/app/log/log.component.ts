@@ -18,10 +18,9 @@ export class LogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.importInfo.subscribe(data => {
+    /*this.importInfo.subscribe(data => {
       console.log('Received from socket: ', data);
-      // this.importDetail[data.id] = data;
-    });
+    });*/
 
     this.logService.getLog().subscribe(data => {
       this.logdata = data;

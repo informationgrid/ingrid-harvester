@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ConfigService} from "./config.service";
+import {GeneralSettings} from "../../../../shared/general-config.settings";
 
 @Component({
   selector: 'app-config',
@@ -7,7 +8,8 @@ import {ConfigService} from "./config.service";
   styleUrls: ['./config.component.scss']
 })
 export class ConfigComponent implements OnInit {
-  config: any = {};
+  // @ts-ignore
+  config: GeneralSettings = {};
 
   constructor(private configService: ConfigService) { }
 
@@ -16,7 +18,7 @@ export class ConfigComponent implements OnInit {
   }
 
   save() {
-    this.configService.save(this.config);
+    this.configService.save(this.config).subscribe();
   }
 
   reset() {

@@ -10,7 +10,6 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {CommonModule} from "@angular/common";
 import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.component';
-import {CronEditorModule} from "./cron-editor/cron-editor.module";
 import {DialogLogComponent} from './dialog-log/dialog-log.component';
 import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
 import {ImportNotifyComponent} from "./notifications/import-notify.component";
@@ -19,7 +18,7 @@ import {CkanHarvesterComponent} from './dialog-edit/ckan-harvester/ckan-harveste
 import {CswHarvesterComponent} from './dialog-edit/csw-harvester/csw-harvester.component';
 import {ImporterDetailComponent} from './importer-detail/importer-detail.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
-import {MatCardModule, MatChipsModule, MatListModule} from "@angular/material";
+import {MatCardModule, MatChipsModule, MatListModule, MatTabsModule} from "@angular/material";
 import {RouterModule, Routes} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
 
@@ -58,7 +57,7 @@ const harvesterRoutes: Routes = [
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatChipsModule,
-    CronEditorModule
+    MatTabsModule
   ],
   entryComponents: [
     DialogSchedulerComponent,

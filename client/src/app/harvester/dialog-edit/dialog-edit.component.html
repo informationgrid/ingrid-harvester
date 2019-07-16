@@ -5,7 +5,7 @@
     <form class="example-container">
       <mat-form-field>
         <mat-label>Typ</mat-label>
-        <mat-select #harvesterType [(ngModel)]="harvester.type" [disabled]="harvester.id" name="type">
+        <mat-select #harvesterType [(ngModel)]="harvester.type" [disabled]="harvester.id > -1" name="type">
           <mat-option value="EXCEL">EXCEL</mat-option>
           <mat-option value="CKAN">CKAN</mat-option>
           <mat-option value="CSW">CSW</mat-option>
@@ -83,7 +83,7 @@
 
       <app-ckan-harvester *ngIf="harvester.type === 'CKAN'" [model]="harvester" class="flex-column"></app-ckan-harvester>
 
-      <app-csw-harvester *ngIf="harvester.type.endsWith('CSW')" [model]="harvester" class="flex-column"></app-csw-harvester>
+      <app-csw-harvester *ngIf="harvester.type?.endsWith('CSW')" [model]="harvester" class="flex-column"></app-csw-harvester>
 
 <!--      <span class="mat-small">{{harvester | json}}</span>-->
     </form>

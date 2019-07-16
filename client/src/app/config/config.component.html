@@ -1,13 +1,13 @@
 <div class="form-wrapper">
 
-  <form>
+  <form #configForm="ngForm">
 
     <mat-form-field>
-      <input matInput type="url" placeholder="Elasticsearch-URL" [(ngModel)]="config.elasticsearchUrl" name="elasticsearchUrl">
+      <input matInput type="url" placeholder="Elasticsearch-URL" [(ngModel)]="config.elasticSearchUrl" name="elasticsearchUrl" required>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput placeholder="Alias-Name" [(ngModel)]="config.alias" name="alias">
+      <input matInput placeholder="Alias-Name" [(ngModel)]="config.alias" name="alias" required>
     </mat-form-field>
 
     <mat-form-field>
@@ -19,7 +19,7 @@
   <div class="form-buttons">
     <button mat-button (click)="reset()">Zurücksetzen</button>
     <div class="flex-space"></div>
-    <button mat-button color="primary" (click)="save()">Speichern</button>
+    <button mat-button color="primary" (click)="save()" [disabled]="!configForm.form.valid">Speichern</button>
   </div>
 
 </div>
