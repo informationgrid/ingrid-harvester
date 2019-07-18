@@ -25,7 +25,9 @@
 
                 <mat-panel-title>
                     <mat-slide-toggle color="primary" [checked]="!harvester.disable"
-                                      (click)="stopPropagation($event)"></mat-slide-toggle>
+                                      title="An- / Ausschalten"
+                                      (change)="handleActivation($event, harvester)"
+                                      (click)="$event.stopImmediatePropagation()"></mat-slide-toggle>
                     <p>{{harvester.description || harvester.defaultAttribution}}</p>
                     <mat-spinner *ngIf="importDetail[harvester.id]?.complete === false" diameter="20"></mat-spinner>
                 </mat-panel-title>
@@ -39,7 +41,7 @@
 
             </mat-expansion-panel-header>
 
-            <app-importer-detail [data]="importDetail[harvester.id]"></app-importer-detail>
+            <app-importer-detail [data]="importDetail[harvester.id]" [enabled]="!harvester.disable"></app-importer-detail>
 
             <mat-action-row>
                 <button mat-button (click)="showLog(harvester.id)">

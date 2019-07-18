@@ -23,6 +23,10 @@ mat-expansion-panel-header {
   padding: 0 20px;
 }
 
+::ng-deep mat-slide-toggle .mat-slide-toggle-thumb-container {
+  cursor: pointer;
+}
+
 .example-headers-align .mat-expansion-panel-header-title,
 .example-headers-align .mat-expansion-panel-header-description {
   flex-basis: 0;

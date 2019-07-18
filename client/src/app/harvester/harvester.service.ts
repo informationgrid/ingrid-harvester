@@ -30,8 +30,8 @@ export class HarvesterService {
 
   }
 
-  updateHarvester(result: Harvester): Observable<void> {
-    return this.http.post<void>('rest/api/harvester/' + (result.id || -1), result);
+  updateHarvester(harvester: Harvester): Observable<void> {
+    return this.http.post<void>('rest/api/harvester/' + (harvester.id || -1), harvester);
   }
 
   schedule(id: number, cronExpression: string): Observable<void> {

@@ -9,6 +9,7 @@ import {ImportLogMessage} from "../../../../../server/model/import.result";
 export class ImporterDetailComponent implements OnInit {
 
   @Input() data: ImportLogMessage;
+  @Input() enabled = false;
 
   constructor() {
   }

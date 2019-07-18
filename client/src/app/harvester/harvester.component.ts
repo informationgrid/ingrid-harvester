@@ -11,6 +11,7 @@ import {ImportNotifyComponent} from "./notifications/import-notify.component";
 import {Socket} from 'ngx-socket-io';
 import {ImportLogMessage} from "../../../../server/model/import.result";
 import {flatMap, groupBy, mergeMap, toArray} from 'rxjs/operators';
+import {MatSlideToggleChange} from '@angular/material';
 
 @Component({
   selector: 'app-harvester',
@@ -114,8 +115,9 @@ export class HarvesterComponent implements OnInit {
     });
   }
 
-  stopPropagation($event: MouseEvent) {
-    $event.stopImmediatePropagation();
+  handleActivation($event: MatSlideToggleChange, harvester: Harvester) {
+    harvester.disable = !$event.checked;
+    this.harvesterService.updateHarvester(harvester).subscribe();
   }
 
   private showError(error: Error) {

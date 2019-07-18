@@ -3,15 +3,18 @@ import {ConfigService} from './config/ConfigService';
 import {ImportSocketService} from '../sockets/import.socket.service';
 import {CronJob} from 'cron';
 
+let log = require('log4js').getLogger(__filename);
 
 @Service()
 export class ScheduleService {
 
-    //
+    // remember the scheduled jobs
     jobs: { [x: number]: CronJob } = {};
 
     constructor(private socketService: ImportSocketService) {
+
         this.initialize();
+
     }
 
     /**
@@ -19,9 +22,11 @@ export class ScheduleService {
      */
     initialize() {
 
+        // activate scheduler for all harvester that have a cron pattern
+        // but only run those immediately that actually are enabled
         ConfigService.get()
             .filter(config => config.cronPattern && config.cronPattern.length > 0)
-            .forEach(config => this.runJob(config.id, config.cronPattern));
+            .forEach(config => this.scheduleJob(config.id, config.cronPattern, !config.disable));
 
     }
 
@@ -37,19 +42,19 @@ export class ScheduleService {
         configData.cronPattern = cronExpression;
         ConfigService.update(id, configData);
 
-        // set up cron job
-        this.runJob(id, cronExpression);
+        // set up cron job if harvester is enabled
+        this.scheduleJob(id, cronExpression, !configData.disable);
 
     }
 
     /**
      * Run a cron job
      */
-    private runJob(id: number, cronExpression: string): void {
+    private scheduleJob(id: number, cronExpression: string, startImmediately: boolean): void {
 
         this.jobs[id] = new CronJob(cronExpression, () => {
             this.socketService.runImport(id);
-        }, null, true, 'Europe/Berlin');
+        }, null, startImmediately, 'Europe/Berlin');
 
     }
 
@@ -57,6 +62,18 @@ export class ScheduleService {
      * Stop a cron job
      */
     stopJob(id: number) {
+
         this.jobs[id] && this.jobs[id].stop();
+
+    }
+
+    startJob(id: number) {
+
+        if (this.jobs[id]) {
+            this.jobs[id].start();
+        } else {
+            log.error(`Job "${id}" could not be started.`);
+        }
+
     }
 }

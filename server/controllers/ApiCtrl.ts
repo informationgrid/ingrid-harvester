@@ -26,6 +26,12 @@ export class ApiCtrl {
     @Post("/harvester/:id")
     updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Harvester) {
         ConfigService.update(id, config);
+
+        if (config.disable) {
+            this.scheduleService.stopJob(id);
+        } else {
+            this.scheduleService.startJob(id);
+        }
     }
 
     @Post("/import/:id")
