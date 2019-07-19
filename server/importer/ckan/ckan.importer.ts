@@ -29,7 +29,7 @@ export class CkanImporter implements Importer {
 
     summary: Summary;
 
-    run = new Observable<ImportLogMessage>(observer => {
+    run: Observable<ImportLogMessage> = new Observable<ImportLogMessage>(observer => {
         this.observer = observer;
         this.exec(observer);
     });
@@ -225,5 +225,9 @@ export class CkanImporter implements Importer {
             // log.debug(`Skip dataset because of filtered tag`);
         }
         return hasAtLeastOneGroup;
+    }
+
+    getSummary(): Summary {
+        return this.summary;
     }
 }

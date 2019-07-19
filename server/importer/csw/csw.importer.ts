@@ -7,7 +7,7 @@ import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
 import {CswParameters, RequestDelegate} from '../../utils/http-request.utils';
 import {OptionsWithUri} from 'request-promise';
-import {DefaultImporterSettings} from '../../importer';
+import {DefaultImporterSettings, Importer} from '../../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {CswSettings} from './csw.settings';
@@ -33,7 +33,7 @@ export class CswSummary extends Summary {
     }
 }
 
-export class CswImporter {
+export class CswImporter implements Importer {
     private readonly settings: CswSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
@@ -192,8 +192,10 @@ export class CswImporter {
                     );
                 }
 
-                this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
+            } else {
+                this.summary.skippedDocs.push(uuid);
             }
+            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
         await Promise.all(promises)
             .catch(err => log.error('Error indexing CSW record', err));
@@ -263,5 +265,9 @@ export class CswImporter {
             startPosition: settings.startPosition,
             numRecords: settings.maxRecords
         }
+    }
+
+    getSummary(): Summary {
+        return this.summary;
     }
 }

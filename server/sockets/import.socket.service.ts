@@ -4,10 +4,13 @@ import {ConfigService} from "../services/config/ConfigService";
 import {ImporterFactory} from "../importer/importer.factory";
 import {SummaryService} from '../services/config/SummaryService';
 import {CronJob} from 'cron';
+import {getLogger} from 'log4js';
 
 @SocketService('/import')
 export class ImportSocketService {
     @Nsp nsp: Namespace;
+
+    log = getLogger();
 
     constructor(private summaryService: SummaryService) {
     }
@@ -38,12 +41,16 @@ export class ImportSocketService {
         importer.run.subscribe(response => {
             response.id = id;
             response.lastExecution = lastExecution;
-            response.nextExecution = new CronJob(configData.cronPattern, () => {}).nextDate().toDate();
+            if (configData.cronPattern) {
+                response.nextExecution = new CronJob(configData.cronPattern, () => {
+                }).nextDate().toDate();
+            }
             response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;
             this.nsp.emit('/log', response);
 
             // when complete then write information log to file
             if (response.complete) {
+                importer.getSummary().print(this.log);
                 this.summaryService.update(response);
             }
         }, error => {

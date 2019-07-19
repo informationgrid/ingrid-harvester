@@ -220,4 +220,8 @@ export class ExcelImporter implements Importer {
         });
         return workUnits;
     }
+
+    getSummary(): Summary {
+        return this.summary;
+    }
 }

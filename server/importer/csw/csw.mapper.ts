@@ -5,7 +5,6 @@ import {Agent, DateRange, Distribution, GenericMapper, License, Organization, Pe
 import {SelectedValue} from "xpath";
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
-import {Summary} from "../../model/summary";
 import {RequestDelegate} from "../../utils/http-request.utils";
 import {CswSummary} from "./csw.importer";
 import {OptionsWithUri} from "request-promise";
@@ -64,9 +63,9 @@ export class CswMapper extends GenericMapper {
     getDescription() {
         let abstract = CswMapper.getCharacterStringContent(this.idInfo, 'abstract');
         if (!abstract) {
-            let msg = 'Dataset doesn\'t have an abstract.';
-            this.log.warn(`${msg} It will not be displayed in the portal. Id: '${this.uuid}', title: '${this.getTitle()}', source: '${this.settings.getRecordsUrl}'`);
-            this.errors.push(msg);
+            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.getRecordsUrl}\'`;
+            this.log.warn(msg);
+            this.summary.warnings.push(['No description', msg]);
             this.valid = false;
             this.summary.numErrors++;
         }
@@ -128,12 +127,12 @@ export class CswMapper extends GenericMapper {
         }
 
         if (dists.length === 0) {
-            let msg = 'Dataset has no links for download/access.';
+            let msg = `Dataset has no links for download/access. It will not be displayed in the portal. Id: \'${this.uuid}\', source: \'${this.settings.getRecordsUrl}\'`;
             this.summary.missingLinks++;
-            this.log.warn(`${msg} It will not be displayed in the portal. Id: '${this.uuid}', source: '${this.settings.getRecordsUrl}'`);
+            this.log.warn(msg);
 
             this.valid = false;
-            this.errors.push(msg);
+            this.summary.warnings.push(['No links', msg]);
             this.summary.numErrors++;
         }
 
@@ -567,12 +566,12 @@ export class CswMapper extends GenericMapper {
         }
 
         if (!license) {
-            let msg = 'No license detected for dataset.';
+            let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
             this.summary.missingLicense++;
-            this.summary.numErrors++;
+            // this.summary.numErrors++;
 
-            this.log.warn(`${msg} ${this.getErrorSuffix(this.uuid, this.getTitle())}`);
-            this.errors.push(msg);
+            this.log.warn(msg);
+            this.summary.warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',
                 title: 'Unbekannt',
