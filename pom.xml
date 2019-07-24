@@ -44,7 +44,7 @@
               <directory>/opt/ingrid/ingrid-excel-import</directory>
               <sources>
                 <source>
-                  <location>server/dist</location>
+                  <location>server/build</location>
                 </source>
               </sources>
             </mapping>
