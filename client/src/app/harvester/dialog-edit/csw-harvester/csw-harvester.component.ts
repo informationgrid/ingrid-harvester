@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy} from '@angular/core';
-import {CswSettings} from '../../../../../../server/importer/csw/csw.settings';
+import {CswSettings} from '../../../../../../server/app/importer/csw/csw.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material';
 // import {CswSettings} from '@server/importer/csw/csw.importer';

@@ -50,9 +50,10 @@
             </mat-list-item>
             <mat-list-item >
                 <mat-icon mat-list-icon>snooze</mat-icon>
-                <h4 mat-line>Nächste Ausführung</h4>
+                <h4 mat-line>Nächste Ausführung</h4> {{data.nextExecution}}
                 <p mat-line *ngIf="!enabled" [title]="'Wenn aktiviert, dann: ' + (data.nextExecution | date:'short')"> deaktiviert </p>
-                <p mat-line *ngIf="enabled"> {{data.nextExecution | date:'short'}} </p>
+                <p mat-line *ngIf="enabled && data.nextExecution !== null"> {{data.nextExecution | date:'short'}} </p>
+                <p mat-line *ngIf="enabled && data.nextExecution === undefined" title="Seite neuladen, um korrekte nächste Ausführung anzuzeigen"> wurde geändert </p>
             </mat-list-item>
         </mat-list>
 

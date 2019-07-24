@@ -6,6 +6,7 @@
     "start": "ng serve",
     "hmr": "ng serve --configuration hmr",
     "build": "ng build",
+    "prod": "ng build --prod",
     "update": "ng update @angular/cli @angular/core @angular/flex-layout @angular/material --allow-dirty",
     "test": "ng test",
     "lint": "ng lint",

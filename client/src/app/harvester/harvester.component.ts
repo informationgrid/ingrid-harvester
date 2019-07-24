@@ -9,7 +9,7 @@ import {DialogLogComponent} from "./dialog-log/dialog-log.component";
 import {DialogEditComponent} from "./dialog-edit/dialog-edit.component";
 import {ImportNotifyComponent} from "./notifications/import-notify.component";
 import {Socket} from 'ngx-socket-io';
-import {ImportLogMessage} from "../../../../server/model/import.result";
+import {ImportLogMessage} from "../../../../server/app/model/import.result";
 import {flatMap, groupBy, mergeMap, toArray} from 'rxjs/operators';
 import {MatSlideToggleChange} from '@angular/material';
 
@@ -53,15 +53,25 @@ export class HarvesterComponent implements OnInit {
 
   }
 
-  schedule(id: number) {
+  schedule(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogSchedulerComponent, {
-      width: '500px'
+      width: '500px',
+      data: harvester.cronPattern
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('The dialog was closed', result);
-        this.harvesterService.schedule(id, result).subscribe({
+        const cronExpression = result === 'DISABLE' ? null : result;
+
+        // update immediately component cronpattern
+        harvester.cronPattern = cronExpression;
+
+        // update immediately next execution time which is only calculated to the server
+        this.importDetail[harvester.id].nextExecution = undefined;
+
+        // TODO: get updated schedule info and set next execution time
+        this.harvesterService.schedule(harvester.id, cronExpression).subscribe({
           error: (error: Error) => this.showError(error)
         });
       }

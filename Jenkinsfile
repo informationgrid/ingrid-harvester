@@ -25,6 +25,7 @@ pipeline {
 
         stage('Create') {
             steps {
+                sh './gradlew clean bundle'
                 sh './mvnw clean package -Dmaven.test.failure.ignore=true -s .mvn/settings.xml'
             }
         }

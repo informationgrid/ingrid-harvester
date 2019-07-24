@@ -29,7 +29,7 @@ export class DialogSchedulerComponent implements OnInit {
       this.cronTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
       this.validExpression = true;
     } catch (e) {
-      this.cronTranslation = 'Kein gültiger Ausdruck'
+      this.cronTranslation = 'Kein gültiger Ausdruck';
       this.validExpression = false;
     }
   }

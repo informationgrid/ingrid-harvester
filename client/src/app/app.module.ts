@@ -21,7 +21,8 @@ registerLocaleData(localeDe);
 const appRoutes: Routes = [
   {path: 'config', loadChildren: () => import('./config/config.module').then(mod => mod.ConfigModule)},
   {path: 'harvester', loadChildren: () => import('./harvester/harvester.module').then(mod => mod.HarvesterModule)},
-  {path: 'log', loadChildren: () => import('./log/log.module').then(mod => mod.LogModule)}
+  {path: 'log', loadChildren: () => import('./log/log.module').then(mod => mod.LogModule)},
+  {path: '', redirectTo: '/harvester', pathMatch: 'full'}
 ];
 
 @NgModule({

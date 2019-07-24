@@ -1,5 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {ImportLogMessage} from "../../../../../server/model/import.result";
+import {ImportLogMessage} from "../../../../../server/app/model/import.result";
 
 @Component({
   selector: 'app-importer-detail',

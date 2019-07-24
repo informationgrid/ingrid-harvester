@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {Harvester} from "./model/harvester";
 import {HttpClient} from "@angular/common/http";
-import {ImportLogMessage} from "../../../../server/model/import.result";
+import {ImportLogMessage} from "../../../../server/app/model/import.result";
 
 @Injectable({
   providedIn: 'root'

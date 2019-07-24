@@ -1,10 +1,11 @@
-import {Summary} from '../model/summary';
+import {Summary} from '../app/model/summary';
 import {expect} from "chai";
-import {ElasticSearchUtils, ElasticSettings} from '../utils/elastic.utils';
 import {configure} from 'log4js';
 import {doc1, doc3, doc4} from './data/docs.deduplication';
-import {elasticsearchMapping} from '../elastic.mapping';
-import {elasticsearchSettings} from '../elastic.settings';
+import {elasticsearchMapping} from '../app/elastic.mapping';
+import {elasticsearchSettings} from '../app/elastic.settings';
+import {ElasticSettings} from '../app/utils/elastic.setting';
+import {ElasticSearchUtils} from '../app/utils/elastic.utils';
 
 let elasticsearch = require('elasticsearch');
 configure('./test/log4js-test.json');

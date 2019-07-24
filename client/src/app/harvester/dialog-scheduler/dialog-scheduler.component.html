@@ -21,7 +21,8 @@
 
   <mat-divider></mat-divider>
 
-  <h3>{{cronTranslation}}</h3>
+  <h3 *ngIf="cronValue">{{cronTranslation}}</h3>
+  <h3 *ngIf="!cronValue">Planung ausschalten</h3>
 
 </mat-dialog-content>
 
@@ -29,5 +30,5 @@
   <button mat-button mat-dialog-close>Abbrechen</button>
   <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
   <div class="flex-space"></div>
-  <button mat-button color="primary" [disabled]="cronValue !== '' && !validExpression" [mat-dialog-close]="cronValue">Planen</button>
+  <button mat-button color="primary" [disabled]="cronValue !== '' && !validExpression" [mat-dialog-close]="cronValue || 'DISABLE'">Planen</button>
 </mat-dialog-actions>
