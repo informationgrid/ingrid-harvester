@@ -9,7 +9,7 @@
     "start-cli": "nodemon --watch '**/*.ts' --ignore 'node_modules/**/*' --exec ts-node app/server-cli.ts",
     "build": "tsc --outDir build",
     "install-production": "npm install --production",
-    "test": "mocha -r ts-node/register test/deduplication-utils.spec.ts",
+    "test": "mocha -r ts-node/register test/**/*.ts",
     "test-jenkins": "JUNIT_REPORT_PATH=report.xml mocha -r ts-node/register test/*.spec.ts --colors --reporter mocha-jenkins-reporter"
   },
   "author": "",

@@ -3,6 +3,7 @@ import {ConfigService} from './services/config/ConfigService';
 import {configure} from 'log4js';
 // const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const serverConfig = require('./server-config.json');
 // const compress = require('compression');
 // const methodOverride = require('method-override');
 const rootDir = __dirname;
@@ -11,6 +12,7 @@ configure('./log4js.json');
 
 @ServerSettings({
     rootDir,
+    httpPort: serverConfig.httpPort,
     socketIO: {},
     acceptMimes: ["application/json"],
     passport: {},

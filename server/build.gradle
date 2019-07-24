@@ -15,7 +15,7 @@ node {
 }
 
 task copyResources(type: Copy) {
-    from 'config.json', 'log4js.json', 'package.json'
+    from 'config.json', 'log4js.json', 'package.json', 'package-lock.json', 'app/server-config.json'
     into 'build'
 }
 task copyWebapp(type: Copy) {
@@ -33,7 +33,11 @@ task build(type: NpmTask) {
     args = ['run', 'build']
 }
 
-task bundle(dependsOn: [build, copyResources, copyWebapp]) {
+task test(type: NpmTask) {
+    args = ['run', 'test']
+}
+
+task bundle(dependsOn: [build, test, copyResources, copyWebapp]) {
 
 }
 
