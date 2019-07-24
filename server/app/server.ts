@@ -14,10 +14,11 @@ configure('./log4js.json');
     rootDir,
     httpPort: serverConfig.httpPort,
     socketIO: {},
-    acceptMimes: ["application/json"],
+    acceptMimes: ['application/json'],
     passport: {},
     statics: {
-        "/": `${rootDir}/webapp`
+        '/': `${rootDir}/webapp`,
+        '/*': `${rootDir}/webapp/index.html`
     },
     logger: {
         logRequest: false
@@ -28,9 +29,9 @@ export class Server extends ServerLoader {
      * This method let you configure the express middleware required by your application to works.
      * @returns {Server}
      */
-    public $onMountingMiddlewares(): void|Promise<any> {
+    public $onMountingMiddlewares(): void | Promise<any> {
 
-        const session = require("express-session");
+        const session = require('express-session');
 
         // on startup make sure the configuration has IDs for each harvester
         ConfigService.fixIDs();
@@ -45,12 +46,12 @@ export class Server extends ServerLoader {
                 extended: true
             }))
             .use(session({
-                secret: "mysecretkey",
+                secret: 'mysecretkey',
                 resave: true,
                 saveUninitialized: true,
                 maxAge: 36000,
                 cookie: {
-                    path: "/",
+                    path: '/',
                     httpOnly: true,
                     secure: false,
                     maxAge: null

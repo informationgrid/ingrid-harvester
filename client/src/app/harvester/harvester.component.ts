@@ -1,17 +1,18 @@
 import {Component, OnInit} from '@angular/core';
-import {HarvesterService} from "./harvester.service";
-import {of, zip} from "rxjs";
-import {Harvester} from "./model/harvester";
-import {MatDialog} from "@angular/material/dialog";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {DialogSchedulerComponent} from "./dialog-scheduler/dialog-scheduler.component";
-import {DialogLogComponent} from "./dialog-log/dialog-log.component";
-import {DialogEditComponent} from "./dialog-edit/dialog-edit.component";
-import {ImportNotifyComponent} from "./notifications/import-notify.component";
+import {HarvesterService} from './harvester.service';
+import {of, zip} from 'rxjs';
+import {Harvester} from './model/harvester';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.component';
+import {DialogLogComponent} from './dialog-log/dialog-log.component';
+import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
+import {ImportNotifyComponent} from './notifications/import-notify.component';
 import {Socket} from 'ngx-socket-io';
-import {ImportLogMessage} from "../../../../server/app/model/import.result";
+import {ImportLogMessage} from '../../../../server/app/model/import.result';
 import {flatMap, groupBy, mergeMap, toArray} from 'rxjs/operators';
 import {MatSlideToggleChange} from '@angular/material';
+import {ConfigService} from '../config.service';
 
 @Component({
   selector: 'app-harvester',
@@ -29,7 +30,13 @@ export class HarvesterComponent implements OnInit {
   constructor(private socket: Socket,
               public dialog: MatDialog,
               private snackBar: MatSnackBar,
-              private harvesterService: HarvesterService) {
+              private harvesterService: HarvesterService,
+              private configService: ConfigService) {
+
+    this.socket.ioSocket.io.uri = configService.config.backendUrl + '/import';
+    //window.socker = this.socket;
+    //debugger;
+    //this.importInfo = this.socket.fromEvent<ImportLogMessage>('/log');
   }
 
   ngOnInit() {
