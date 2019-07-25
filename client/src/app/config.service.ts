@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
 export class Configuration {
-  constructor(public backendUrl: string) {
+  constructor(public contextPath: string, public url?: string) {
   }
 }
 

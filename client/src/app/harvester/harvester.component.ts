@@ -34,10 +34,16 @@ export class HarvesterComponent implements OnInit {
               private configService: ConfigService) {
 
     if (configService.config) {
-      this.socket.disconnect();
-      this.socket.ioSocket.io.uri = configService.config.backendUrl + '/import';
-      this.socket.connect();
+      let contextPath = configService.config.contextPath;
+      console.log('modifiying socket URL to: ' + contextPath);
+      if (configService.config.url) {
+        this.socket.ioSocket.io.uri = configService.config.url + '/import';
+      }
+      if (contextPath) {
+        this.socket.ioSocket.io.opts.path = (contextPath === '/' ? '' : contextPath) + '/socket.io';
+      }
     }
+    this.socket.ioSocket.open();
   }
 
   ngOnInit() {

@@ -50,6 +50,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "baseHref": "/importer/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
