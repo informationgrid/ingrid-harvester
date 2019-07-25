@@ -215,11 +215,11 @@ export class ElasticSearchUtils {
         // in order to update settings the index has to be closed
         const handleClose = () => {
             this.client.cluster.health({waitForStatus: 'yellow'})
-                .then(() => this.client.indices.close({ index: index }, handleSettings));
+                .then(() => this.client.indices.close({ index: index }, handleSettings))
+                .catch(() => log.error('Cluster state didn\'t change to yellow'));
         };
 
         this.client.indices.create({ index: index }, () => setTimeout(handleClose, 1000));
-        // handleSettings();
 
     }
 
@@ -288,7 +288,7 @@ export class ElasticSearchUtils {
 
         // send data to elasticsearch if limit is reached
         // TODO: don't use document size but bytes instead
-        if (this._bulkData.length > this.maxBulkSize) {
+        if (this._bulkData.length >= this.maxBulkSize) {
             return this.sendBulkData();
         } else {
             return new Promise(resolve => resolve());

@@ -96,10 +96,10 @@ export class CswImporter {
     }
 
     async harvest() {
-        let promises = [];
 
         let numMatched = 0;
         while (true) {
+            log.debug('Requesting documents ...');
             let response = await this.requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
 
@@ -110,10 +110,7 @@ export class CswImporter {
                 numMatched = resultsNode.getAttribute('numberOfRecordsMatched');
 
                 log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
-
-                promises.push(
-                    this.extractRecords(response, harvestTime)
-                );
+                await this.extractRecords(response, harvestTime)
             } else {
                 log.error(`Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`);
             }
@@ -130,8 +127,6 @@ export class CswImporter {
               */
             if (numMatched < this.requestDelegate.getStartRecordIndex()) break;
         }
-        await Promise.all(promises)
-            .catch(err => log.error('Error extracting records from CSW reply', err));
 
     }
 
@@ -149,11 +144,14 @@ export class CswImporter {
         if (this.settings.dryRun) {
             issued = ids.map(() => now);
         } else {
-            issued = this.elastic.getIssuedDates(ids);
+            issued = await this.elastic.getIssuedDates(ids);
         }
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
 
+            if (log.isDebugEnabled()) {
+                log.debug(`Import document ${i + 1} from ${records.length}`);
+            }
             if (logRequest.isDebugEnabled()) {
                 logRequest.debug("Record content: ", records[i].toString());
             }
