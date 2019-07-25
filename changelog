@@ -1,3 +1,8 @@
+* Thu Jul 25 2019 André Wallat <andre.wallat@wemove.com> - 1.6.1
+- Fix bulk indexing when document mapping takes too long (#2078)
+- Add cache for URL checks
+- Show number of duplicates in summary
+
 * Wed Jul 10 2019 André Wallat <andre.wallat@wemove.com> - 1.6.0
 - New strategy to get CKAN records (#2154)
 - Add filter for tags und groups in CKAN (#2151)
