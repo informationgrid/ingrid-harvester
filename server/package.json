@@ -4,7 +4,7 @@
   "description": "",
   "main": "server/server.ts",
   "scripts": {
-    "start": "NODE_ENV=production node ./server/app/index.js",
+    "start": "NODE_ENV=production pm2 start ./server/app/index.js",
     "start-dev": "ts-node-dev app/index.ts",
     "start-cli": "nodemon --watch '**/*.ts' --ignore 'node_modules/**/*' --exec ts-node app/server-cli.ts",
     "build": "tsc --outDir build",

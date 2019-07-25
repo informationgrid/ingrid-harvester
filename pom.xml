@@ -65,7 +65,7 @@
           </preinstallScriptlet>
           <postinstallScriptlet>
             <script>npm run install-production</script>
-            <script>pm2 start server/app/index.js</script>
+            <script>npm start</script>
           </postinstallScriptlet>
         </configuration>
         <executions>
