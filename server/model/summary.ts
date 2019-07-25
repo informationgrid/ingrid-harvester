@@ -7,6 +7,8 @@ export class Summary {
 
     numErrors: number = 0;
 
+    numDuplicates: number = 0;
+
     skippedDocs: string[] = [];
 
     elasticErrors: string[] = [];
@@ -27,6 +29,7 @@ export class Summary {
         logSummary.info(`---------------------------------------------------------`);
         logSummary.info(`Number of records: ${this.numDocs}`);
         logSummary.info(`Skipped records: ${this.skippedDocs.length}`);
+        logSummary.info(`Duplicates: ${this.numDuplicates}`);
         logSummary.info(`Record-Errors: ${this.numErrors}`);
         logSummary.info(`App-Errors: ${this.appErrors.length}`);
         if (logSummary.isDebugEnabled() && this.appErrors.length > 0) {

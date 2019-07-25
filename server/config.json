@@ -160,7 +160,7 @@
       "REGI"
     ],
     "defaultAttribution": "Transparenzportal Hamburg",
-    "disable": false
+    "disable": true
   },
   {
     "type": "CKAN",
@@ -322,11 +322,10 @@
     "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_bsh",
     "alias": "mcloud",
-    "getRecordsUrl": "https://www.geoseaportal.de/soapServices/CSWStartup",
-    "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
+    "getRecordsUrl": "https://www.geoseaportal.de/geonetwork/srv/ger/csw",
+    "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>opendata</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
     "eitherKeywords": [
-      "opendata",
-      "inspireidentifiziert"
+      "opendata"
     ],
     "httpMethod": "POST",
     "defaultMcloudSubgroup": [
