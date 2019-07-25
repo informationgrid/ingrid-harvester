@@ -11,7 +11,7 @@ let elasticsearch = require('elasticsearch');
 configure('./test/log4js-test.json');
 
 
-describe('deduplication by similar title', function () {
+xdescribe('deduplication by similar title', function () {
     this.timeout(10000);
 
     // @ts-ignore
