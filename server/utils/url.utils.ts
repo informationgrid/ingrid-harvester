@@ -7,6 +7,8 @@ let log = require('log4js').getLogger( __filename );
 
 export class UrlUtils {
 
+    static cache: { [url: string]: boolean } = {};
+
     /**
      * Rudimentary checks for URL validity. This method extracts the request
      * URI from the given configuration, and returns
@@ -55,12 +57,18 @@ export class UrlUtils {
      * @private
      */
     private static async checkUrlWithProtocol(requestConfig: OptionsWithUri): Promise<boolean> {
+        let urlResult = UrlUtils.cache[<string>requestConfig.uri];
+        if (urlResult !== undefined) {
+            return urlResult;
+        }
+
         let found = false;
         try {
             let delegate = new RequestDelegate(requestConfig);
             let callback = (err, resp) => found = resp && resp.statusCode === 200;
 
             await delegate.doRequest(callback);
+            UrlUtils.cache[<string>requestConfig.uri] = found;
             return found;
         } catch(err) {
             let message = err.message;
@@ -69,6 +77,7 @@ export class UrlUtils {
                 && !message.includes('ENOTFOUND')) {
                 log.warn(`Error occured while testing URL '${requestConfig.uri}'. Original error message was: ${message}`);
             }
+            UrlUtils.cache[<string>requestConfig.uri] = false;
         }
     }
 }

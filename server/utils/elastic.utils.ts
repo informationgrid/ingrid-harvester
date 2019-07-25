@@ -394,6 +394,7 @@ export class ElasticSearchUtils {
 
         // Perform bulk delete and resolve/reject the promise
         log.debug(`${count} duplicates found using the duplicates query will be deleted from the index '${this.indexName}'.`);
+        this.summary.numDuplicates += count;
         await this.sendBulkData(false);
         log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.indexName}`);
     }
@@ -654,6 +655,7 @@ export class ElasticSearchUtils {
                 }
             });
             log.info(`${count} duplicates found using the aggregates query will be deleted from index '${this.indexName}'.`);
+            this.summary.numDuplicates += count;
         } catch (err) {
             this.summary.elasticErrors.push(err);
             log.error('Error processing results of aggregate query for duplicates', err);
