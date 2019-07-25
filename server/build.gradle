@@ -15,7 +15,7 @@ node {
 }
 
 task copyResources(type: Copy) {
-    from 'config.json', 'log4js.json', 'package.json', 'package-lock.json'
+    from 'config.json', 'log4js.json', 'package.json', 'package-lock.json', '../rpm/post_install.sh'
     into 'build'
 }
 task copyServerConfig(type: Copy) {
