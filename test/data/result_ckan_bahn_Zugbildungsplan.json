@@ -91,6 +91,16 @@
       "issued": "2019-04-26T13:29:28.792512",
       "modified": null,
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - Sm B1"
+    },
+    {
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR Sm_B2_Freigabe.pdf",
+      "byteSize": null,
+      "description": "Sommerfahrplan 2019 - Gültigkeit: 07.10.2019 – 14.12.2019 (Stand: 12.07.2019)",
+      "format": "PDF",
+      "id": "65585dcd-e447-475b-8009-df655fe646a5",
+      "issued": "2019-07-15T10:31:51.862977",
+      "modified": null,
+      "title": "Zugbildungsplan A-Reihung- (ZpAR) - Sm B2"
     }
   ],
   "extras": {
@@ -120,7 +130,7 @@
     ],
     "temporal": {
       "start": "2018-11-26T13:30:42.834Z",
-      "end": "2019-04-26T11:29:28.792Z"
+      "end": "2019-07-15T08:31:51.862Z"
     },
     "groups": [
       "Datensätze"
