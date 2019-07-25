@@ -38,7 +38,7 @@ task build(type: NpmTask) {
 }
 
 task test(type: NpmTask) {
-    args = ['run', 'test']
+    args = ['run', 'test-jenkins']
 }
 
 task bundle(dependsOn: [build, test, copyResources, copyServerConfig, copyWebapp]) {

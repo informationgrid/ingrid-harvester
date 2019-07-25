@@ -33,10 +33,11 @@ export class HarvesterComponent implements OnInit {
               private harvesterService: HarvesterService,
               private configService: ConfigService) {
 
-    this.socket.ioSocket.io.uri = configService.config.backendUrl + '/import';
-    //window.socker = this.socket;
-    //debugger;
-    //this.importInfo = this.socket.fromEvent<ImportLogMessage>('/log');
+    if (configService.config) {
+      this.socket.disconnect();
+      this.socket.ioSocket.io.uri = configService.config.backendUrl + '/import';
+      this.socket.connect();
+    }
   }
 
   ngOnInit() {

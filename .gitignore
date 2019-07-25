@@ -43,3 +43,4 @@ dist
 server/data.xlsx
 FinaleImportExcel*
 node/
+/.gradle/
