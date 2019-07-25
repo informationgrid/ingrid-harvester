@@ -64,6 +64,7 @@
             <script>rm -rf %{mcloud_dir}/ingrid-iplug-csw-dsc_wsv/webapp/WEB-INF/work/*</script>
           </preinstallScriptlet>
           <postinstallScriptlet>
+            <script>cd %{mcloud_dir}</script>
             <script>npm run install-production</script>
             <script>npm start</script>
           </postinstallScriptlet>
