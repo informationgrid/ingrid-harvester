@@ -21,7 +21,7 @@ task buildRpm(type: Rpm) {
     os LINUX
     addParentDirs false
     createDirectoryEntry false
-    // obsoletes('mcloud-ingrid')
+    obsoletes('mcloud-ingrid')
     vendor 'wemove digital solutions GmbH'
     packager 'wemove digital solutions GmbH'
     url 'https://www.wemove.com'
@@ -29,7 +29,7 @@ task buildRpm(type: Rpm) {
 
     postInstall file('rpm/post_install.sh')
 
-    into '/opt/ingrid/mcloud-importer/app'
+    into '/opt/ingrid/mcloud-importer'
 
     from 'server/build'
 }
