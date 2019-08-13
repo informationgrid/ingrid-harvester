@@ -27,8 +27,10 @@ task buildRpm(type: Rpm) {
 
     postInstall file('rpm/post_install.sh')
 
-    into '/opt/ingrid/mcloud-importer'
+    into '/opt/ingrid'
 
-    from('server/build')
+    from('server/build') {
+        into 'mcloud-importer'
+    }
 }
 
