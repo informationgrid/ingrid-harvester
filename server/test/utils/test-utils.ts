@@ -23,6 +23,7 @@ export class TestUtils {
 
             // check extras displayContact
             if (expected.extras.displayContact) {
+                debugger;
                 chai.expect(actual.extras.displayContact).to.eql(expected.extras.displayContact);
                 delete expected.extras.displayContact;
             }

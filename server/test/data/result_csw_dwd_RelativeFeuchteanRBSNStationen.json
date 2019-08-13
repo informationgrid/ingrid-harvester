@@ -49,9 +49,6 @@
       "issued": "2019-02-06T15:54:44.822Z",
       "modified": "2019-02-06T15:55:00.365Z",
       "harvested": "2019-02-06T15:55:00.365Z",
-      "harvesting_errors": [
-        "No license detected for dataset."
-      ],
       "isValid": true
     },
     "subgroups": [

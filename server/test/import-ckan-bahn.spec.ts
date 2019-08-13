@@ -18,7 +18,7 @@ describe('Import CKAN Bahn', function () {
 
     let indexDocumentCreateSpy;
 
-    it('correct import of CKAN data', async function () {
+    it('correct import of CKAN data', function (done) {
 
         log.info('Start test ...');
 
@@ -48,7 +48,15 @@ describe('Import CKAN Bahn', function () {
                     chai.expect(actual.extras.metadata.harvested).not.to.be.null.and.empty;
                 };
 
-                await indexDocumentCreateSpy.getCall(0).returnValue.then(value => TestUtils.compareDocuments(value, resultZugbildungsplan, extraChecks));
+                // get correct dataset
+                let index = indexDocumentCreateSpy.args.findIndex(arg => arg[0].source.title === 'Zugbildungsplan A -Reihung- (ZpAR)');
+
+                try {
+                    await indexDocumentCreateSpy.getCall(index).returnValue.then(value => TestUtils.compareDocuments(value, resultZugbildungsplan, extraChecks));
+                    done();
+                } catch (e) {
+                    done(e);
+                }
             }
         });
 

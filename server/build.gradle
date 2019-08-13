@@ -41,12 +41,14 @@ task test(type: NpmTask) {
     args = ['run', 'test-jenkins']
 }
 
-task bundle(dependsOn: [build, test, copyResources, copyServerConfig, copyWebapp]) {
+task bundle(dependsOn: [build, copyResources, copyServerConfig, copyWebapp]) {
 
 }
 
 task clean {
-    delete 'build'
+    doLast {
+        delete 'build'
+    }
 }
 
 // assemble.dependsOn bundle

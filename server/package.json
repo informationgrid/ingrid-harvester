@@ -10,7 +10,7 @@
     "build": "tsc --outDir build",
     "install-production": "npm install --production",
     "test": "mocha -r ts-node/register test/**/*.ts",
-    "test-jenkins": "JUNIT_REPORT_PATH=report.xml mocha -r ts-node/register test/*.spec.ts --colors --reporter mocha-jenkins-reporter"
+    "test-jenkins": "mocha -r ts-node/register test/*.spec.ts --colors --reporter mocha-jenkins-reporter"
   },
   "author": "",
   "license": "ISC",

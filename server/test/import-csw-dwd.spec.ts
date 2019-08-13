@@ -17,7 +17,7 @@ describe('Import CSW DWD', function () {
 
     let indexDocumentCreateSpy;
 
-    it('correct import of CSW-DWD data', async function () {
+    it('correct import of CSW-DWD data', function (done) {
 
         log.info('Start test ...');
 
@@ -59,7 +59,12 @@ describe('Import CSW DWD', function () {
 
                 // await chai.expect(indexDocumentCreateSpy.getCall(0).returnValue).to.eventually.deep.include(resultFlussgebietseinheiten);
 
-                await indexDocumentCreateSpy.getCall(0).returnValue.then(value => TestUtils.compareDocuments(value, resultFlussgebietseinheiten, extraChecks));
+                try {
+                    await indexDocumentCreateSpy.getCall(0).returnValue.then(value => TestUtils.compareDocuments(value, resultFlussgebietseinheiten, extraChecks));
+                    done();
+                } catch (e) {
+                    done(e);
+                }
             }
         });
 
