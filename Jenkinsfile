@@ -25,7 +25,10 @@ pipeline {
 
         stage('Create') {
             steps {
-                sh './gradlew clean bundle buildRpm test'
+                sh './gradlew clean bundle buildRpm'
+                try {
+                    sh './gradlew :server:test'
+                }
             }
         }
         stage('Sign') {
