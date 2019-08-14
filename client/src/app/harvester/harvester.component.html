@@ -1,21 +1,4 @@
-<!--<mat-card *ngFor="let harvester of harvesters | async" class="harvester-card">
-  <mat-card-header>
-    <div mat-card-avatar class="example-header-image"></div>
-    <mat-card-title>{{harvester.name}}</mat-card-title>
-    <mat-card-subtitle>{{harvester.description}}</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <p>
-      Dokumente: {{harvester.summary.numberOfDocs}}
-    </p>
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-button>Import starten</button>
-    <button mat-button (click)="schedule(harvester.id)">Planen</button>
-    <button mat-button>Bearbeiten</button>
-  </mat-card-actions>
-</mat-card>-->
-<div class="example-headers-align">
+<div *ngIf="harvesterLoaded" class="example-headers-align">
     <ng-container *ngFor="let item of harvesters | keyvalue">
 
         <h3>{{item.key}}</h3>
@@ -74,4 +57,8 @@
             id="btnAddHarvester">
         <mat-icon aria-label="Add Harvester">add</mat-icon>
     </button>
+</div>
+
+<div *ngIf="!harvesterLoaded" class="no-harvester">
+  <mat-spinner diameter="100"></mat-spinner>
 </div>

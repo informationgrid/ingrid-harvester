@@ -1,14 +1,7 @@
-import {
-    AfterRoutesInit,
-    BeforeRoutesInit,
-    ExpressApplication,
-    Inject,
-    ServerSettingsService,
-    Service
-} from "@tsed/common";
+import {AfterRoutesInit, BeforeRoutesInit, ExpressApplication, Inject, ServerSettingsService, Service} from "@tsed/common";
 import * as Passport from "passport";
 import {Strategy} from "passport-local";
-import {BadRequest, NotFound} from "ts-httpexceptions";
+import {NotFound} from "ts-httpexceptions";
 import {UsersService} from "../users/UsersService";
 import {IUser} from "../../model/User";
 
@@ -35,7 +28,6 @@ export class PassportLocalService implements BeforeRoutesInit, AfterRoutesInit {
     }
 
     $afterRoutesInit() {
-        this.initializeSignup();
         this.initializeLogin();
     }
 
@@ -44,8 +36,9 @@ export class PassportLocalService implements BeforeRoutesInit, AfterRoutesInit {
      * @param user
      * @param done
      */
-    static serialize(user, done) {
-        done(null, user._id);
+    static serialize(user: IUser, done) {
+        delete user.password;
+        done(null, user.username);
     }
 
     /**
@@ -57,59 +50,6 @@ export class PassportLocalService implements BeforeRoutesInit, AfterRoutesInit {
         done(null, this.usersService.find(id));
     };
 
-    // =========================================================================
-    // LOCAL SIGNUP ============================================================
-    // =========================================================================
-    // we are using named strategies since we have one for login and one for signup
-    // by default, if there was no name, it would just be called 'local'
-    public initializeSignup() {
-
-        Passport
-            .use("signup", new Strategy({
-                    // by default, local strategy uses username and password, we will override with email
-                    usernameField: "email",
-                    passwordField: "password",
-                    passReqToCallback: true // allows us to pass back the entire request to the callback
-                },
-                (req, email, password, done) => {
-                    const {firstName, lastName} = req.body;
-                    // asynchronous
-                    // User.findOne wont fire unless data is sent back
-                    process.nextTick(() => {
-                        this.signup({
-                            firstName,
-                            lastName,
-                            email,
-                            password
-                        })
-                            .then((user) => done(null, user))
-                            .catch((err) => done(err));
-                    });
-                }));
-
-    }
-
-    /**
-     *
-     * @param user
-     * @returns {Promise<any>}
-     */
-    async signup(user: IUser) {
-
-        const exists = await this.usersService.findByEmail(user.email);
-
-        if (exists) { //User exists
-            throw new BadRequest("Email is already registered");
-        }
-
-        // Create new User
-        return await this.usersService.create(<any>{
-            email: user.email,
-            password: user.password,
-            firstName: user.firstName,
-            lastName: user.lastName
-        });
-    }
 
     // =========================================================================
     // LOCAL LOGIN =============================================================
@@ -119,12 +59,9 @@ export class PassportLocalService implements BeforeRoutesInit, AfterRoutesInit {
 
     public initializeLogin() {
         Passport.use("login", new Strategy({
-            // by default, local strategy uses username and password, we will override with email
-            usernameField: "email",
-            passwordField: "password",
             passReqToCallback: true // allows us to pass back the entire request to the callback
-        }, (req, email, password, done) => {
-            this.login(email, password)
+        }, (req, username, password, done) => {
+            this.login(username, password)
                 .then((user) => done(null, user))
                 .catch((err) => done(err));
         }));
@@ -132,12 +69,12 @@ export class PassportLocalService implements BeforeRoutesInit, AfterRoutesInit {
 
     /**
      *
-     * @param email
+     * @param username
      * @param password
      * @returns {Promise<boolean>}
      */
-    async login(email: string, password: string): Promise<IUser> {
-        const user = await this.usersService.findByCredential(email, password);
+    async login(username: string, password: string): Promise<IUser> {
+        const user = await this.usersService.findByCredential(username, password);
         if (user) {
             return user;
         }

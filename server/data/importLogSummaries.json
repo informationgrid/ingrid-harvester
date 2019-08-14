@@ -1199,23 +1199,27 @@
   {
     "complete": true,
     "summary": {
-      "numDocs": 11,
-      "numErrors": 11,
+      "numDocs": 0,
+      "numErrors": 0,
       "warnings": [],
       "skippedDocs": [],
-      "elasticErrors": [],
-      "appErrors": [],
+      "elasticErrors": [
+        "[mapper_parsing_exception] No handler for type [string] declared on field [title] :: {\"path\":\"/csw_dwd_20190814181023387/_mapping/base\",\"query\":{},\"body\":\"{\\\"properties\\\":{\\\"title\\\":{\\\"type\\\":\\\"string\\\",\\\"store\\\":true,\\\"fields\\\":{\\\"raw\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\",\\\"store\\\":true}}},\\\"description\\\":{\\\"type\\\":\\\"string\\\",\\\"analyzer\\\":\\\"decomp\\\",\\\"fields\\\":{\\\"decomp_german\\\":{\\\"type\\\":\\\"string\\\",\\\"analyzer\\\":\\\"decomp_german\\\",\\\"search_analyzer\\\":\\\"german_simple\\\"},\\\"decomp_shingles\\\":{\\\"type\\\":\\\"string\\\",\\\"analyzer\\\":\\\"decomp_shingles\\\"},\\\"suggest_shingles\\\":{\\\"type\\\":\\\"string\\\",\\\"analyzer\\\":\\\"suggest_shingles\\\"}}},\\\"creator\\\":{\\\"properties\\\":{\\\"name\\\":{\\\"type\\\":\\\"string\\\",\\\"fields\\\":{\\\"raw\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"}}},\\\"mbox\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"}}},\\\"publisher\\\":{\\\"properties\\\":{\\\"name\\\":{\\\"type\\\":\\\"string\\\",\\\"fields\\\":{\\\"raw\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"}}},\\\"homepage\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"organization\\\":{\\\"type\\\":\\\"string\\\",\\\"fields\\\":{\\\"raw\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"}}}}},\\\"contactPoint\\\":{\\\"properties\\\":{\\\"hasUID\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"fn\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"organization-name\\\":{\\\"type\\\":\\\"string\\\",\\\"fields\\\":{\\\"raw\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"}}},\\\"street-address\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"region\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"country-name\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"postal-code\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"hasEmail\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"hasTelephone\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"hasURL\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"}}},\\\"type\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"keywords\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"theme\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"issued\\\":{\\\"type\\\":\\\"date\\\"},\\\"modified\\\":{\\\"type\\\":\\\"date\\\"},\\\"accrualPeriodicity\\\":{\\\"type\\\":\\\"string\\\"},\\\"accessRights\\\":{\\\"type\\\":\\\"string\\\"},\\\"distribution\\\":{\\\"properties\\\":{\\\"id\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"title\\\":{\\\"type\\\":\\\"string\\\",\\\"analyzer\\\":\\\"decomp\\\"},\\\"description\\\":{\\\"type\\\":\\\"string\\\",\\\"analyzer\\\":\\\"decomp\\\"},\\\"format\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"accessURL\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"issued\\\":{\\\"type\\\":\\\"date\\\"},\\\"modified\\\":{\\\"type\\\":\\\"date\\\"},\\\"byteSize\\\":{\\\"type\\\":\\\"long\\\"}}},\\\"extras\\\":{\\\"properties\\\":{\\\"metadata\\\":{\\\"properties\\\":{\\\"harvested\\\":{\\\"type\\\":\\\"date\\\"},\\\"issued\\\":{\\\"type\\\":\\\"date\\\"},\\\"modified\\\":{\\\"type\\\":\\\"date\\\"},\\\"source\\\":{\\\"properties\\\":{\\\"raw_data_source\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"no\\\"},\\\"portal_link\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"no\\\"},\\\"attribution\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"}}},\\\"isValid\\\":{\\\"type\\\":\\\"boolean\\\",\\\"null_value\\\":true},\\\"harvesting_errors\\\":{\\\"type\\\":\\\"string\\\"}}},\\\"generated_id\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"displayContact\\\":{\\\"properties\\\":{\\\"name\\\":{\\\"type\\\":\\\"string\\\",\\\"fields\\\":{\\\"raw\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"}}},\\\"url\\\":{\\\"type\\\":\\\"string\\\"}}},\\\"license\\\":{\\\"properties\\\":{\\\"id\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\",\\\"fields\\\":{\\\"analyzed\\\":{\\\"type\\\":\\\"string\\\"}}},\\\"title\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\",\\\"fields\\\":{\\\"analyzed\\\":{\\\"type\\\":\\\"string\\\"}}},\\\"url\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"}}},\\\"temporal\\\":{\\\"properties\\\":{\\\"start\\\":{\\\"type\\\":\\\"date\\\"},\\\"end\\\":{\\\"type\\\":\\\"date\\\"},\\\"custom\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"}}},\\\"groups\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"subgroups\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"harvested_data\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"no\\\"},\\\"mfund_fkz\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"},\\\"mfund_project_title\\\":{\\\"type\\\":\\\"string\\\",\\\"analyzer\\\":\\\"decomp\\\",\\\"fields\\\":{\\\"raw\\\":{\\\"type\\\":\\\"string\\\",\\\"index\\\":\\\"not_analyzed\\\"}}},\\\"subsection\\\":{\\\"properties\\\":{\\\"title\\\":{\\\"type\\\":\\\"string\\\",\\\"analyzer\\\":\\\"decomp\\\"},\\\"description\\\":{\\\"type\\\":\\\"string\\\",\\\"analyzer\\\":\\\"decomp\\\"}}},\\\"all\\\":{\\\"type\\\":\\\"string\\\",\\\"analyzer\\\":\\\"decomp\\\"}}}}}\",\"statusCode\":400,\"response\":\"{\\\"error\\\":{\\\"root_cause\\\":[{\\\"type\\\":\\\"mapper_parsing_exception\\\",\\\"reason\\\":\\\"No handler for type [string] declared on field [title]\\\"}],\\\"type\\\":\\\"mapper_parsing_exception\\\",\\\"reason\\\":\\\"No handler for type [string] declared on field [title]\\\"},\\\"status\\\":400}\"}"
+      ],
+      "appErrors": [
+        "Mapping error"
+      ],
       "headerTitle": "DWD (CSW)",
-      "opendata": 11,
+      "opendata": 0,
       "missingLinks": 0,
-      "missingPublishers": 9,
-      "missingLicense": 11,
-      "ok": 11
+      "missingPublishers": 0,
+      "missingLicense": 0,
+      "ok": 0
     },
+    "message": "Error happened",
     "id": 15,
-    "lastExecution": "2019-06-18T13:05:35.510Z",
-    "duration": 5.139,
-    "nextExecution": null
+    "lastExecution": "2019-08-14T16:10:23.336Z",
+    "duration": 1.889
   },
   {
     "complete": true,
@@ -1459,8 +1463,9 @@
       "headerTitle": "Deutsche Bahn Datenportal (CKAN)"
     },
     "id": 6,
-    "lastExecution": "2019-07-24T10:09:00.004Z",
-    "duration": 5.264
+    "lastExecution": "2019-07-25T12:29:19.743Z",
+    "duration": 4.493,
+    "nextExecution": null
   },
   {
     "complete": true,

@@ -27,6 +27,8 @@ export class HarvesterComponent implements OnInit {
 
   importDetail: { [x: number]: ImportLogMessage } = {};
 
+  harvesterLoaded = false;
+
   constructor(private socket: Socket,
               public dialog: MatDialog,
               private snackBar: MatSnackBar,
@@ -53,13 +55,17 @@ export class HarvesterComponent implements OnInit {
       this.importDetail[data.id] = data;
     });
 
-    this.harvesterService.getHarvester().pipe(
+    let a = this.harvesterService.getHarvester().pipe(
       flatMap(items => of(...items)),
       groupBy(harvester => harvester.type.endsWith('CSW') ? 'CSW' : harvester.type),
       mergeMap(group => zip(of(group.key), group.pipe(toArray())))
-    ).subscribe(data => {
-      this.harvesters[data[0]] = data[1].sort((a, b) => a.description.localeCompare(b.description));
-    });
+    ).subscribe(
+      data => {
+        this.harvesters[data[0]] = data[1].sort((a, b) => a.description.localeCompare(b.description));
+      },
+      (error) => console.error(error),
+      () => this.harvesterLoaded = true
+    );
 
     this.harvesterService.getLastLogs().subscribe(logs => {
       logs.forEach(log => this.importDetail[log.id] = log);

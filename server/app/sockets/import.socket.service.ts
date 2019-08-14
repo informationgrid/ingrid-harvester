@@ -38,23 +38,27 @@ export class ImportSocketService {
 
         let importer = ImporterFactory.get(configData);
 
-        importer.run.subscribe(response => {
-            response.id = id;
-            response.lastExecution = lastExecution;
-            if (configData.cronPattern) {
-                response.nextExecution = new CronJob(configData.cronPattern, () => {
-                }).nextDate().toDate();
-            }
-            response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;
-            this.nsp.emit('/log', response);
+        try {
+            importer.run.subscribe(response => {
+                response.id = id;
+                response.lastExecution = lastExecution;
+                if (configData.cronPattern) {
+                    response.nextExecution = new CronJob(configData.cronPattern, () => {
+                    }).nextDate().toDate();
+                }
+                response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;
+                this.nsp.emit('/log', response);
 
-            // when complete then write information log to file
-            if (response.complete) {
-                importer.getSummary().print(this.log);
-                this.summaryService.update(response);
-            }
-        }, error => {
-            console.error('There was an error:', error);
-        });
+                // when complete then write information log to file
+                if (response.complete) {
+                    importer.getSummary().print(this.log);
+                    this.summaryService.update(response);
+                }
+            }, error => {
+                console.error('There was an error:', error);
+            });
+        } catch (e) {
+            console.error('An error: ', e);
+        }
     }
 }

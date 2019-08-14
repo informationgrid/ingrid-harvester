@@ -4,11 +4,16 @@
   <!-- This fills the remaining space of the current row -->
   <span class="toolbar"></span>
 
-  <mat-icon class="example-icon" aria-hidden="false" aria-label="Example user verified icon">verified_user</mat-icon>
+  <span *ngIf="isLoggedIn">
+    {{authService.currentUserValue.firstName}} {{authService.currentUserValue.lastName}}
+    <a (click)="logout()">
+      <mat-icon class="example-icon" aria-hidden="false" title="Logout" aria-label="authenticated_user">exit_to_app</mat-icon>
+    </a>
+  </span>
 </mat-toolbar>
 
 <mat-sidenav-container class="navigation">
-  <mat-sidenav mode="side" opened>
+  <mat-sidenav mode="side" opened *ngIf="isLoggedIn">
     <mat-action-list>
       <button mat-list-item routerLink="/config"> Konfiguration </button>
       <button mat-list-item routerLink="/harvester"> Harvester </button>
@@ -18,9 +23,6 @@
 
   <mat-sidenav-content>
     <router-outlet></router-outlet>
-    <!--<app-config *ngIf="page === 'config'"></app-config>
-    <app-harvester *ngIf="page === 'harvester'"></app-harvester>
-    <app-log *ngIf="page === 'log'"></app-log>-->
   </mat-sidenav-content>
 
 </mat-sidenav-container>

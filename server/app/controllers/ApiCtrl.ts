@@ -1,4 +1,4 @@
-import {BodyParams, Controller, Get, PathParams, Post} from '@tsed/common';
+import {Authenticated, BodyParams, Controller, Get, PathParams, Post} from '@tsed/common';
 import {Harvester} from '../../../client/src/app/harvester/model/harvester';
 import {ConfigService} from '../services/config/ConfigService';
 import {ImportSocketService} from "../sockets/import.socket.service";
@@ -18,6 +18,7 @@ export class ApiCtrl {
     }
 
     @Get("/harvester")
+    @Authenticated()
     // @Authenticated()
     async getHarvesterConfig(): Promise<Harvester[]> {
         return ConfigService.get();

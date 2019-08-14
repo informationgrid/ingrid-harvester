@@ -6,7 +6,7 @@ import {IUser} from "../../model/User";
 export class UsersService {
 
     constructor(private memoryStorage: MemoryStorage) {
-        // this.memoryStorage.set("users", require("../../../../users.json"));
+        this.memoryStorage.set("users", require("../../../../users.json"));
     }
 
     /**
@@ -19,14 +19,14 @@ export class UsersService {
         return users.find((value: IUser) => value._id === id);
     }
 
-    async findByEmail(email: string) {
+    async findByEmail(username: string) {
         const users: IUser[] = await this.query();
-        return users.find((value: IUser) => value.email === email);
+        return users.find((value: IUser) => value.username === username);
     }
 
-    async findByCredential(email: string, password: string) {
+    async findByCredential(username: string, password: string) {
         const users: IUser[] = await this.query();
-        return users.find((value: IUser) => value.email === email && value.password === password);
+        return users.find((value: IUser) => value.username === username && value.password === password);
     }
 
     /**

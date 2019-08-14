@@ -55,7 +55,7 @@ export class ElasticSearchUtils {
         return new Promise((resolve, reject) => {
             if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp( new Date() );
             this.client.indices.create({ index: this.indexName, waitForActiveShards: '1' })
-                .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve))
+                .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
                 .then(() => this.addAlias(this.indexName, this.deduplicationAlias))
                 .catch(err => {
                     let message = 'Error occurred creating index';
@@ -182,7 +182,7 @@ export class ElasticSearchUtils {
      * @param {object} settings
      * @param callback
      */
-    addMapping(index, type, mapping, settings, callback) {
+    addMapping(index, type, mapping, settings, callback, errorCallback) {
 
         // set settings
         const handleSettings = () => {
@@ -206,6 +206,7 @@ export class ElasticSearchUtils {
             }, err => {
                 if (err) {
                     this.handleError( 'Error occurred adding mapping', err );
+                    errorCallback('Mapping error');
                 }
                 else this.client.indices.open({ index: index }, errOpen => {
                     if (errOpen) {

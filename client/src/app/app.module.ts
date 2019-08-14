@@ -9,13 +9,20 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {registerLocaleData} from '@angular/common';
 import localeDe from '@angular/common/locales/de';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {Socket, SocketIoConfig, SocketIoModule} from 'ngx-socket-io';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ConfigService} from './config.service';
 import {tap} from 'rxjs/operators';
 import {environment} from '../environments/environment';
+import {UnauthorizedInterceptor} from './security/unauthorized.interceptor';
+import {LoginComponent} from './security/login.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
 
 let config: SocketIoConfig = {
   url: '/import', options: {
@@ -46,24 +53,30 @@ const appRoutes: Routes = [
   {path: 'config', loadChildren: () => import('./config/config.module').then(mod => mod.ConfigModule)},
   {path: 'harvester', loadChildren: () => import('./harvester/harvester.module').then(mod => mod.HarvesterModule)},
   {path: 'log', loadChildren: () => import('./log/log.module').then(mod => mod.LogModule)},
+  {path: 'login', component: LoginComponent},
   {path: '', redirectTo: '/harvester', pathMatch: 'full'}
 ];
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent, LoginComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes),
     SocketIoModule.forRoot(config),
+    ReactiveFormsModule,
     FlexLayoutModule,
     HttpClientModule,
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
   ],
   providers: [
     {
@@ -73,6 +86,11 @@ const appRoutes: Routes = [
       provide: APP_INITIALIZER,
       useFactory: ConfigLoader,
       deps: [ConfigService, Socket],
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: UnauthorizedInterceptor,
       multi: true
     }
     /*{

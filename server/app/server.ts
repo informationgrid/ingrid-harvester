@@ -1,12 +1,14 @@
 import {GlobalAcceptMimesMiddleware, ServerLoader, ServerSettings} from '@tsed/common';
 import {ConfigService} from './services/config/ConfigService';
 import {configure} from 'log4js';
-// const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const serverConfig = require('./server-config.json');
-// const compress = require('compression');
-// const methodOverride = require('method-override');
+const methodOverride = require('method-override');
+const compress = require("compression");
 const rootDir = __dirname;
+const session = require('express-session');
+import './middlewares/auth/AuthMiddleware';
 
 configure('./log4js.json');
 
@@ -31,16 +33,14 @@ export class Server extends ServerLoader {
      */
     public $onMountingMiddlewares(): void | Promise<any> {
 
-        const session = require('express-session');
-
         // on startup make sure the configuration has IDs for each harvester
         ConfigService.fixIDs();
 
         this
             .use(GlobalAcceptMimesMiddleware)
-            // .use(cookieParser())
-            // .use(compress({}))
-            // .use(methodOverride())
+            .use(cookieParser())
+            .use(compress({}))
+            .use(methodOverride())
             .use(bodyParser.json())
             .use(bodyParser.urlencoded({
                 extended: true
@@ -59,5 +59,13 @@ export class Server extends ServerLoader {
             }));
 
         return null;
+    }
+
+    $onReady() {
+        console.log("Server initialized");
+    }
+
+    $onServerInitError(error): any {
+        console.error("Server encounter an error =>", error);
     }
 }

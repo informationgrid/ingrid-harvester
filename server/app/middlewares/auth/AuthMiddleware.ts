@@ -1,21 +1,20 @@
-import {EndpointInfo, EndpointMetadata, Middleware, Req} from "@tsed/common";
-import {$log} from "ts-log-debug";
+import {AuthenticatedMiddleware, EndpointInfo, EndpointMetadata, IMiddleware, OverrideProvider, Req} from "@tsed/common";
+import {Unauthorized} from 'ts-httpexceptions';
 
-@Middleware()
-export class AuthenticatedMiddleware {
+@OverrideProvider(AuthenticatedMiddleware)
+export class AuthMiddleware implements IMiddleware {
     constructor() {
     }
 
-    use(@EndpointInfo() endpoint: EndpointMetadata,
-        @Req() request: Express.Request) {
+    use(@Req() request: Express.Request, @EndpointInfo() endpoint: EndpointMetadata) {
 
         //retrieve Options passed to the Authenticated() decorators.
         const options = endpoint.store.get(AuthenticatedMiddleware) || {};
-        $log.debug("AuthMiddleware =>", options);
-        $log.debug("AuthMiddleware isAuthenticated ? =>", request.isAuthenticated());
+        //$log.debug("AuthMiddleware =>", options);
+        //$log.debug("AuthMiddleware isAuthenticated ? =>", request.isAuthenticated());
 
         if (!request.isAuthenticated()) {
-            // throw new Forbidden("Forbidden");
+            throw new Unauthorized("Unauthorized");
         }
     }
 }
