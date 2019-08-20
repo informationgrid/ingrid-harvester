@@ -24,7 +24,15 @@ configure('./log4js.json');
     },
     logger: {
         logRequest: false
-    }
+    },
+    mount: {
+        '/rest': `${rootDir}/controllers/**/*.ts`
+    },
+    componentsScan: [
+        `${rootDir}/middlewares/**/*.ts`,
+        `${rootDir}/services/**/*.ts`,
+        `${rootDir}/converters/**/*.ts`
+    ],
 })
 export class Server extends ServerLoader {
     /**

@@ -11,7 +11,6 @@ export class PassportCtrl {
      * @param password
      * @param request
      * @param response
-     * @param next
      */
     @Post("/login")
     async login(@Required() @BodyParams("username") username: string,
@@ -37,7 +36,6 @@ export class PassportCtrl {
                     });
 
                 })(request, response, () => {
-
                 });
         });
 

@@ -128,10 +128,6 @@
         "description": "Dieser Datenbestand kann Fehler enthalten und/oder unvollständig sein. DB Fernverkehr AG übernimmt keine Haftung und leistet keinerlei Gewähr."
       }
     ],
-    "temporal": {
-      "start": "2018-11-26T13:30:42.834Z",
-      "end": "2019-07-15T08:31:51.862Z"
-    },
     "groups": [
       "Datensätze"
     ],
