@@ -227,7 +227,7 @@
       "REGI"
     ],
     "defaultAttribution": "Transparenzportal Hamburg",
-    "disable": false,
+    "disable": true,
     "id": 9,
     "proxy": ""
   },
@@ -281,7 +281,7 @@
       "REGI"
     ],
     "defaultAttribution": "NRW Portal",
-    "disable": false,
+    "disable": true,
     "id": 11,
     "proxy": ""
   },
