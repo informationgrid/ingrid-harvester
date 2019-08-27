@@ -1,0 +1,14 @@
+[Unit]
+Description=InGrid mCLOUD-Importer Service
+After=network.target
+
+[Service]
+Environment=NODE_ENV=production
+User=ingrid
+WorkingDirectory=/opt/ingrid/mcloud-importer
+ExecStart=pm2 start ./server/app/index.js
+ExecStop=pm2 stop ./server/app/index.js
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

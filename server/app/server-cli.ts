@@ -4,11 +4,9 @@ import {configure, getLogger} from 'log4js';
 import {concat, Observable} from 'rxjs';
 import {ImportLogMessage} from './model/import.result';
 import {ImporterFactory} from "./importer/importer.factory";
-import {CkanSettings} from './importer/ckan/ckan.settings';
-import {CswSettings} from './importer/csw/csw.settings';
-import {ExcelSettings} from './importer/excel/excel.settings';
+import {ConfigService} from './services/config/ConfigService';
 
-let config: (CkanSettings | CswSettings | ExcelSettings)[] = require( '../config.json' ),
+let config = ConfigService.get(),
     process = require('process'),
     log = getLogger(),
     logSummary = getLogger('summary'),
@@ -23,16 +21,6 @@ configure('./log4js.json');
 
 const start = new Date();
 let runAsync = false;
-
-// create a server which finds a random free port
-// scan a range
-/*findPort('127.0.0.1', 80, 83, function(ports) {
-    console.log(ports);
-});*/
-
-// notify chosen port to java process via config file or similar
-
-// listen for incoming messages, which can be "import" with parameter <type>
 
 function getDateString() {
     let dt = new Date(Date.now());
@@ -55,7 +43,7 @@ function showSummaries(summaries: Summary[]) {
 async function startProcess() {
 
     const processes = [];
-    let summaries: Summary[] = [];
+    // let summaries: Summary[] = [];
     let importers: Observable<ImportLogMessage>[] = [];
 
     for (let importerConfig of config) {

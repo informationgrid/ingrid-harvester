@@ -5,8 +5,9 @@
   "main": "server/server.ts",
   "scripts": {
     "start": "NODE_ENV=production pm2 start ./server/app/index.js",
+    "start-cli": "pm2 start ./server/app/server-cli.js --no-autorestart",
     "start-dev": "ts-node-dev app/index.ts",
-    "start-cli": "nodemon --watch '**/*.ts' --ignore 'node_modules/**/*' --exec ts-node app/server-cli.ts",
+    "start-cli-dev": "ts-node app/server-cli.ts",
     "build": "tsc --outDir build",
     "install-production": "npm install --production",
     "test": "mocha -r ts-node/register test/**/*.ts",
