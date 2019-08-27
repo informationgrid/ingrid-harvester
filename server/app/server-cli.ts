@@ -9,13 +9,7 @@ import {ConfigService} from './services/config/ConfigService';
 let config = ConfigService.get(),
     process = require('process'),
     log = getLogger(),
-    logSummary = getLogger('summary'),
-    lastExecutionLogFile = './logs/last-execution.log';
-
-// remove log file to only log current execution
-if (fs.existsSync(lastExecutionLogFile)) {
-    fs.unlinkSync(lastExecutionLogFile);
-}
+    logSummary = getLogger('summary');
 
 configure('./log4js.json');
 

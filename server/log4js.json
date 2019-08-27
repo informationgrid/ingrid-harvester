@@ -3,9 +3,11 @@
     "console": {
       "type": "console"
     },
-    "lastLog": {
+    "appLog": {
       "type": "file",
-      "filename": "logs/last-execution.log"
+      "filename": "logs/app.log",
+      "maxLogSize": 10485760,
+      "backups": 5
     },
     "summaryFile": {
       "type": "file",
@@ -16,15 +18,15 @@
   },
   "categories": {
     "default": {
-      "appenders": [ "console", "lastLog" ],
+      "appenders": [ "console", "appLog" ],
       "level": "DEBUG"
     },
     "summary": {
-      "appenders": [ "console", "summaryFile", "lastLog" ],
+      "appenders": [ "console", "summaryFile", "appLog" ],
       "level": "INFO"
     },
     "requests": {
-      "appenders": [ "console", "lastLog" ],
+      "appenders": [ "console", "appLog" ],
       "level": "INFO"
     }
   }
