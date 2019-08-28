@@ -31,7 +31,6 @@ task buildRpm(type: Rpm) {
     from('server/build') {
         user='ingrid'
         permissionGroup='ingrid'
-        createDirectoryEntry true
         into '/opt/ingrid/mcloud-importer'
     }
 
