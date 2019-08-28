@@ -1,4 +1,9 @@
 <div *ngIf="harvesterLoaded" class="example-headers-align">
+    <div fxLayout="row">
+      <div fxFlex></div>
+      <button mat-flat-button (click)="importAll()">Alle importieren</button>
+    </div>
+
     <ng-container *ngFor="let item of harvesters | keyvalue">
 
         <h3>{{item.key}}</h3>

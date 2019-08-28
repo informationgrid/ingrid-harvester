@@ -19,8 +19,9 @@ export class HarvesterService {
   }
 
   runImport(id: number): Observable<void> {
-
-    return this.http.post<void>('rest/api/import/' + id, null);
+    return id === null
+      ? this.http.post<void>('rest/api/importAll', null)
+      : this.http.post<void>('rest/api/import/' + id, null);
 
   }
 

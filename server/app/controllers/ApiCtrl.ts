@@ -10,6 +10,7 @@ import {GeneralSettings} from '../../../shared/general-config.settings';
 
 @Controller("/api")
 export class ApiCtrl {
+    private importAllProcessIsRunning = false;
 
     constructor(private importSocketService: ImportSocketService,
                 private summaryService: SummaryService,
@@ -19,7 +20,6 @@ export class ApiCtrl {
 
     @Get("/harvester")
     @Authenticated()
-    // @Authenticated()
     async getHarvesterConfig(): Promise<Harvester[]> {
         return ConfigService.get();
     }
@@ -38,6 +38,22 @@ export class ApiCtrl {
     @Post("/import/:id")
     importFromHarvester(@PathParams('id') id: number) {
         this.importSocketService.runImport(+id);
+    }
+
+    @Post("/importAll")
+    async importAllFromHarvester() {
+        if (!this.importAllProcessIsRunning) {
+            this.importAllProcessIsRunning = true;
+
+            let activeConfigs = ConfigService.get()
+                .filter(config => !config.disable);
+
+            for (var i = 0; i < activeConfigs.length; i++) {
+                await this.importSocketService.runImport(activeConfigs[i].id);
+            }
+
+            this.importAllProcessIsRunning = false;
+        }
     }
 
     @Get('/lastLogs')

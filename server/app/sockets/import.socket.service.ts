@@ -31,35 +31,40 @@ export class ImportSocketService {
 
     @Input('runImport')
     @Emit('/log')
-    runImport(id: number) {
-        let lastExecution = new Date();
-        let configData = ConfigService.get().filter(config => config.id === id)[0];
-        configData.deduplicationAlias = configData.index + 'dedup';
+    runImport(id: number): Promise<null> {
+        return new Promise(resolve => {
 
-        let importer = ImporterFactory.get(configData);
-        this.log.info('>> Running importer: ' + configData.description);
+            let lastExecution = new Date();
+            let configData = ConfigService.get().filter(config => config.id === id)[0];
+            configData.deduplicationAlias = configData.index + 'dedup';
 
-        try {
-            importer.run.subscribe(response => {
-                response.id = id;
-                response.lastExecution = lastExecution;
-                if (configData.cronPattern) {
-                    response.nextExecution = new CronJob(configData.cronPattern, () => {
-                    }).nextDate().toDate();
-                }
-                response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;
-                this.nsp.emit('/log', response);
+            let importer = ImporterFactory.get(configData);
+            this.log.info('>> Running importer: ' + configData.description);
 
-                // when complete then write information log to file
-                if (response.complete) {
-                    importer.getSummary().print(this.log);
-                    this.summaryService.update(response);
-                }
-            }, error => {
-                console.error('There was an error:', error);
-            });
-        } catch (e) {
-            console.error('An error: ', e);
-        }
+            try {
+                importer.run.subscribe(response => {
+                    response.id = id;
+                    response.lastExecution = lastExecution;
+                    if (configData.cronPattern) {
+                        response.nextExecution = new CronJob(configData.cronPattern, () => {
+                        }).nextDate().toDate();
+                    }
+                    response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;
+                    this.nsp.emit('/log', response);
+
+                    // when complete then write information log to file
+                    if (response.complete) {
+                        importer.getSummary().print(this.log);
+                        this.summaryService.update(response);
+                        resolve();
+                    }
+                }, error => {
+                    console.error('There was an error:', error);
+                });
+            } catch (e) {
+                console.error('An error: ', e);
+            }
+
+        });
     }
 }

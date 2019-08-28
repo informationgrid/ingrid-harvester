@@ -8,7 +8,6 @@ import {Router} from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  page = 'harvester';
   isLoggedIn = false;
 
   constructor(private router: Router, private authService: AuthenticationService) {

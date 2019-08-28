@@ -55,7 +55,7 @@ export class HarvesterComponent implements OnInit {
       this.importDetail[data.id] = data;
     });
 
-    let a = this.harvesterService.getHarvester().pipe(
+    this.harvesterService.getHarvester().pipe(
       flatMap(items => of(...items)),
       groupBy(harvester => harvester.type.endsWith('CSW') ? 'CSW' : harvester.type),
       mergeMap(group => zip(of(group.key), group.pipe(toArray())))
@@ -153,5 +153,9 @@ export class HarvesterComponent implements OnInit {
   private showError(error: Error) {
     console.error('Error occurred', error);
     this.snackBar.open(error.message, null, {panelClass: 'error', duration: 10000});
+  }
+
+  importAll() {
+    this.harvesterService.runImport(null).subscribe();
   }
 }

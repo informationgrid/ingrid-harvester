@@ -6,7 +6,7 @@
                 [value]="getProgressValue()">
         </mat-progress-bar>
         <div class="progress-description align-center">
-            <span *ngIf="data.progress">{{data.progress.current}} / {{data.progress.total}} ({{data.duration}}s)</span>
+            <span *ngIf="data.progress">{{data.progress.current}} / {{data.progress.total}} ({{data.duration | number:'1.0-0'}}s)</span>
             <div>{{data.message}}</div>
         </div>
     </ng-container>
