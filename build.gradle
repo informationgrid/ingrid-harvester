@@ -20,6 +20,7 @@ task buildRpm(type: Rpm) {
     arch I386
     os LINUX
     user 'ingrid'
+    permissionGroup 'ingrid'
     addParentDirs false
     createDirectoryEntry false
     obsoletes('mcloud-ingrid')
@@ -30,8 +31,11 @@ task buildRpm(type: Rpm) {
 
     postInstall file('rpm/post_install.sh')
 
-    into '/opt/ingrid/mcloud-importer'
-    from 'server/build'
+    from('server/build') {
+        user 'ingrid'
+        permissionGroup 'ingrid'
+        into '/opt/ingrid/mcloud-importer'
+    }
 
     from('rpm/mcloud-importer.service') {
         into '/etc/systemd/system'
