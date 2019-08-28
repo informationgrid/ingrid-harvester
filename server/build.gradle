@@ -45,6 +45,7 @@ task bundle(dependsOn: [build, copyResources, copyServerConfig, copyWebapp]) {
     doLast {
         // create logs directory to prevent permission problems during creation after RPM installation
         mkdir "build/logs"
+        new File(buildDir,"/logs/.empty").text = ""
     }
 }
 
