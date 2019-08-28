@@ -3,7 +3,7 @@
  */
 
 plugins {
-    id "nebula.rpm" version "6.2.1"
+    id "nebula.rpm" version "7.0.3"
     id "fr.brouillard.oss.gradle.jgitver" version "0.9.1"
 }
 
@@ -17,12 +17,11 @@ description = 'InGrid mCLOUD Importer'
 task buildRpm(type: Rpm) {
     packageName 'mcloud-importer'
     release '1'
-    arch I386
+    arch 'noarch'
     os LINUX
-    user 'ingrid'
-    permissionGroup 'ingrid'
+    user = 'ingrid'
+    permissionGroup = 'ingrid'
     addParentDirs false
-    createDirectoryEntry true
     obsoletes('mcloud-ingrid')
     vendor 'wemove digital solutions GmbH'
     packager 'wemove digital solutions GmbH'
@@ -32,8 +31,8 @@ task buildRpm(type: Rpm) {
     postInstall file('rpm/post_install.sh')
 
     from('server/build') {
-        user 'ingrid'
-        permissionGroup 'ingrid'
+        user = 'ingrid'
+        permissionGroup = 'ingrid'
         createDirectoryEntry true
         into '/opt/ingrid/mcloud-importer'
     }
