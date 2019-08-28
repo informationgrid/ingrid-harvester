@@ -22,7 +22,7 @@ task buildRpm(type: Rpm) {
     user 'ingrid'
     permissionGroup 'ingrid'
     addParentDirs false
-    createDirectoryEntry false
+    createDirectoryEntry true
     obsoletes('mcloud-ingrid')
     vendor 'wemove digital solutions GmbH'
     packager 'wemove digital solutions GmbH'
@@ -34,6 +34,7 @@ task buildRpm(type: Rpm) {
     from('server/build') {
         user 'ingrid'
         permissionGroup 'ingrid'
+        createDirectoryEntry true
         into '/opt/ingrid/mcloud-importer'
     }
 

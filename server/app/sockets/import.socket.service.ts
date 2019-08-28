@@ -37,6 +37,7 @@ export class ImportSocketService {
         configData.deduplicationAlias = configData.index + 'dedup';
 
         let importer = ImporterFactory.get(configData);
+        this.log.info('>> Running importer: ' + configData.description);
 
         try {
             importer.run.subscribe(response => {
