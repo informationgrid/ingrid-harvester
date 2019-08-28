@@ -19,8 +19,6 @@ task buildRpm(type: Rpm) {
     release '1'
     arch 'noarch'
     os LINUX
-    user = 'ingrid'
-    permissionGroup = 'ingrid'
     addParentDirs false
     obsoletes('mcloud-ingrid')
     vendor 'wemove digital solutions GmbH'
@@ -31,8 +29,8 @@ task buildRpm(type: Rpm) {
     postInstall file('rpm/post_install.sh')
 
     from('server/build') {
-        user = 'ingrid'
-        permissionGroup = 'ingrid'
+        user='ingrid'
+        permissionGroup='ingrid'
         createDirectoryEntry true
         into '/opt/ingrid/mcloud-importer'
     }

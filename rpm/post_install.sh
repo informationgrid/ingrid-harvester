@@ -1,4 +1,5 @@
 cd /opt/ingrid/mcloud-importer
 npm install -g pm2
 npm run install-production
-npm start
+systemctl enable mcloud-importer
+systemctl start mcloud-importer
