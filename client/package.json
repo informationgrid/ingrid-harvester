@@ -27,7 +27,9 @@
     "@angular/router": "~8.2.2",
     "core-js": "^2.5.4",
     "cronstrue": "^1.81.0",
+    "material-icons": "^0.3.1",
     "ngx-socket-io": "^3.0.1",
+    "roboto-fontface": "^0.10.0",
     "rxjs": "~6.5.2",
     "tslib": "^1.9.3",
     "zone.js": "~0.9.1"
