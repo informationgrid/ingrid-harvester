@@ -1,4 +1,7 @@
 import {OptionsWithUri} from 'request-promise';
+import * as moment from 'moment';
+
+moment.locale('de');
 
 export interface Distribution {
     format: string;
@@ -27,6 +30,22 @@ export interface DateRange {
 
 
 export abstract class GenericMapper {
+
+    protected moment = moment;
+
+    protected sizeMap = {
+        byte: 1,
+        bytes: 1,
+        kilobyte: 1000,
+        kilobytes: 1000,
+        kb: 1000,
+        megabyte: 10000000,
+        megabytes: 10000000,
+        mb: 10000000,
+        gigabyte: 10000000000,
+        gigabytes: 10000000000,
+        gb: 10000000000,
+    };
 
     protected static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
 

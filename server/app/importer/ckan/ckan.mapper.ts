@@ -147,7 +147,7 @@ export class CkanMapper extends GenericMapper {
     }
 
     getModifiedDate() {
-        return this.source.metadata_modified instanceof Date ? this.source.metadata_modified : new Date(this.source.metadata_modified);
+        return this.handleDate(this.source.metadata_modified);
     }
 
     async getPublisher(): Promise<Organization[]> {
@@ -210,8 +210,9 @@ export class CkanMapper extends GenericMapper {
         let keywords = [];
         if (this.source.tags) {
             this.source.tags.forEach(tag => {
-                if (tag.display_name !== null) {
-                    keywords.push(tag.display_name);
+                const tagName = tag.display_name || tag.name;
+                if (tagName) {
+                    keywords.push(tagName);
                 }
             });
         }
@@ -279,7 +280,7 @@ export class CkanMapper extends GenericMapper {
     }
 
     getIssued(): Date {
-        return this.source.metadata_created instanceof Date ? this.source.metadata_created : new Date(this.source.metadata_created);
+        return this.handleDate(this.source.metadata_created);
     }
 
     getMetadataHarvested(): Date {
@@ -328,7 +329,7 @@ export class CkanMapper extends GenericMapper {
         return {
             id: this.source.license_id ? this.source.license_id : 'unknown',
             title: this.source.license_title,
-            url: this.source.license_url
+            url: this.source.license_url || this.source.license_title
         };
     }
 
@@ -398,20 +399,50 @@ export class CkanMapper extends GenericMapper {
         };
     }
 
-    private handleDate(date: string) {
-        if (isNaN(new Date(date).getTime())) {
+    private handleDate(date: string|Date): Date {
+
+        let logDateError = () => {
             let message = `Date has incorrect format: ${date}`;
-            this.summary.numErrors++; //.push(message);
+            this.summary.numErrors++;
             this.summary.appErrors.push(message);
             this.log.warn(message);
-            return undefined;
-        }
+        };
 
-        return date;
+        if (date instanceof Date) {
+            return date;
+        } else {
+            if (this.settings.dateSourceFormats && this.settings.dateSourceFormats.length > 0) {
+                let dateObj = this.moment(date, this.settings.dateSourceFormats);
+
+                if (dateObj.isValid()) {
+                    return dateObj.toDate();
+                } else {
+                    logDateError();
+                    return undefined;
+                }
+            } else {
+                let convertedDate = new Date(date);
+                if (isNaN(convertedDate.getTime())) {
+                    logDateError();
+                    return undefined;
+                } else {
+                    return convertedDate;
+                }
+            }
+        }
     }
 
     private handleByteSize(size: any): number {
         if (isNaN(size)) {
+
+            const splittedSize = size.split(' ');
+            if (splittedSize.length > 1 && !isNaN(splittedSize[0])) {
+                const sizeType = splittedSize[1].toLocaleLowerCase();
+                if (this.sizeMap[sizeType] !== undefined) {
+                    return splittedSize[0] * this.sizeMap[sizeType];
+                }
+            }
+
             let message = `Byte size has incorrect format: ${size}`;
             this.summary.numErrors++; //.push(message);
             this.summary.appErrors.push(message);

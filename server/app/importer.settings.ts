@@ -6,5 +6,6 @@ export type ImporterSettings = {
     defaultDCATCategory?: string[],
     defaultAttribution?: string,
     defaultAttributionLink?: string,
-    cronPattern?: string
+    cronPattern?: string,
+    dateSourceFormats?: string[]
 }

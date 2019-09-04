@@ -13,7 +13,7 @@
 
                 <mat-panel-title>
                     <mat-slide-toggle color="primary" [checked]="!harvester.disable"
-                                      title="An- / Ausschalten"
+                                      title="Für Planung an- / ausschalten"
                                       (change)="handleActivation($event, harvester)"
                                       (click)="$event.stopImmediatePropagation()"></mat-slide-toggle>
                     <p>{{harvester.description || harvester.defaultAttribution}}</p>
