@@ -1,13 +1,13 @@
 <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
   <mat-form-field fxFlex="20">
-    <mat-select placeholder="HTTP Method" [(ngModel)]="model.httpMethod" name="httpMethod">
+    <mat-select placeholder="HTTP Method" [(ngModel)]="model.httpMethod" name="httpMethod" required>
       <mat-option value="GET">GET</mat-option>
       <mat-option value="POST">POST</mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field fxFlex>
-    <input matInput placeholder="getRecords URL" [(ngModel)]="model.getRecordsUrl" name="getRecordsUrl">
+    <input matInput placeholder="getRecords URL" [(ngModel)]="model.getRecordsUrl" name="getRecordsUrl" required>
   </mat-form-field>
 </div>
 

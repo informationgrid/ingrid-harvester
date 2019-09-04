@@ -10,11 +10,11 @@ export class ConfigService {
 
     static fixIDs() {
         let harvesters = ConfigService.get();
-        if (harvesters.some( h => !h.id)) {
+        if (harvesters.some(h => !h.id)) {
             // get highest ID from all harvester
             ConfigService.highestID = harvesters
                 .map(h => h.id)
-                .reduce( (id, acc) => id && id > acc ? id : acc) || 0;
+                .reduce((id, acc) => id && id > acc ? id : acc) || 0;
 
             // add a new ID to those harvester, who need an ID
             let harvestersWithId = harvesters
@@ -25,7 +25,7 @@ export class ConfigService {
 
             ConfigService.updateAll(harvestersWithId);
         } else {
-            harvesters.forEach( h => {
+            harvesters.forEach(h => {
                 if (h.id > ConfigService.highestID) ConfigService.highestID = h.id;
             });
         }
@@ -40,12 +40,14 @@ export class ConfigService {
     static get(): Harvester[] {
 
         let contents = fs.readFileSync("config.json");
-        let configs:Harvester[] = JSON.parse(contents.toString());
-        return configs.map( config => {
-            if (config.type === 'EXCEL') return {...ExcelImporter.defaultSettings, ...config};
-            else if (config.type === 'CKAN') return {...CkanImporter.defaultSettings, ...config};
-            else if (config.type.endsWith('CSW')) return {...CswImporter.defaultSettings, ...config};
-        });
+        let configs: Harvester[] = JSON.parse(contents.toString());
+        return configs
+            .map(config => {
+                if (config.type === 'EXCEL') return {...ExcelImporter.defaultSettings, ...config};
+                else if (config.type === 'CKAN') return {...CkanImporter.defaultSettings, ...config};
+                else if (config.type && config.type.endsWith('CSW')) return {...CswImporter.defaultSettings, ...config};
+            })
+            .filter(config => config); // remove all invalid configurations
 
     }
 

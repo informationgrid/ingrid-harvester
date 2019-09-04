@@ -10,10 +10,14 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class DialogEditComponent implements OnInit {
   // @ts-ignore
   harvester: Harvester = {};
+  dialogTitle = 'Neuen Harvester anlegen';
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Harvester) {
     if (data) {
       this.harvester = data;
+      if (data.id !== -1) {
+        this.dialogTitle = 'Harvester bearbeiten';
+      }
     }
   }
 

@@ -55,17 +55,7 @@ export class HarvesterComponent implements OnInit {
       this.importDetail[data.id] = data;
     });
 
-    this.harvesterService.getHarvester().pipe(
-      flatMap(items => of(...items)),
-      groupBy(harvester => harvester.type.endsWith('CSW') ? 'CSW' : harvester.type),
-      mergeMap(group => zip(of(group.key), group.pipe(toArray())))
-    ).subscribe(
-      data => {
-        this.harvesters[data[0]] = data[1].sort((a, b) => a.description.localeCompare(b.description));
-      },
-      (error) => console.error(error),
-      () => this.harvesterLoaded = true
-    );
+    this.fetchHarvester();
 
     this.harvesterService.getLastLogs().subscribe(logs => {
       logs.forEach(log => this.importDetail[log.id] = log);
@@ -136,12 +126,13 @@ export class HarvesterComponent implements OnInit {
 
   addHarvester() {
     const dialogRef = this.dialog.open(DialogEditComponent, {
-      width: '900px'
+      width: '900px',
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      // this.animal = result;
+      console.log('The dialog was closed', result);
+      this.harvesterService.updateHarvester(result).subscribe(this.fetchHarvester);
     });
   }
 
@@ -157,5 +148,20 @@ export class HarvesterComponent implements OnInit {
 
   importAll() {
     this.harvesterService.runImport(null).subscribe();
+    this.snackBar.open('Import von allen Harvestern gestartet', null, {duration: 10000});
+  }
+
+  private fetchHarvester() {
+    this.harvesterService.getHarvester().pipe(
+      flatMap(items => of(...items)),
+      groupBy(harvester => harvester.type.endsWith('CSW') ? 'CSW' : harvester.type),
+      mergeMap(group => zip(of(group.key), group.pipe(toArray())))
+    ).subscribe(
+      data => {
+        this.harvesters[data[0]] = data[1].sort((a, b) => a.description.localeCompare(b.description));
+      },
+      (error) => console.error(error),
+      () => this.harvesterLoaded = true
+    );
   }
 }

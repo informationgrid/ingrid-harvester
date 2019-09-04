@@ -1,11 +1,11 @@
-<h2 mat-dialog-title>Neuen Harvester anlegen</h2>
+<h2 mat-dialog-title>{{dialogTitle}}</h2>
 
 <mat-dialog-content>
   <div class="form-wrapper">
-    <form class="example-container">
+    <form #form class="example-container">
       <mat-form-field>
         <mat-label>Typ</mat-label>
-        <mat-select #harvesterType [(ngModel)]="harvester.type" [disabled]="harvester.id > -1" name="type">
+        <mat-select #harvesterType [(ngModel)]="harvester.type" [disabled]="harvester.id > -1" name="type" required>
           <mat-option value="EXCEL">EXCEL</mat-option>
           <mat-option value="CKAN">CKAN</mat-option>
           <mat-option value="CSW">CSW</mat-option>
@@ -17,7 +17,7 @@
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="Indexname" [(ngModel)]="harvester.index" name="index">
+        <input matInput placeholder="Indexname" [(ngModel)]="harvester.index" name="index" required>
       </mat-form-field>
 
       <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
@@ -94,5 +94,5 @@
   <button mat-button mat-dialog-close>Abbrechen</button>
   <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
   <div class="flex-space"></div>
-  <button mat-button color="primary" [mat-dialog-close]="harvester">{{harvester.id ? 'Aktualisieren' : 'Anlegen'}}</button>
+  <button mat-button color="primary" [mat-dialog-close]="harvester" [disabled]="!form.checkValidity()">{{harvester.id > -1 ? 'Aktualisieren' : 'Anlegen'}}</button>
 </mat-dialog-actions>
