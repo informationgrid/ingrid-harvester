@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {Harvester} from '../model/harvester';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dialog-edit',
@@ -9,7 +9,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class DialogEditComponent implements OnInit {
   // @ts-ignore
-  harvester: Harvester = {};
+  harvester: Harvester = {disable: true};
   dialogTitle = 'Neuen Harvester anlegen';
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Harvester) {

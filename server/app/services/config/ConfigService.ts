@@ -59,12 +59,19 @@ export class ConfigService {
     static update(id: number, updatedHarvester: Harvester) {
         let newConfig = ConfigService.get();
 
+        // add general configuration
+        updatedHarvester = {
+            ...updatedHarvester,
+            ...this.getGeneralSettings()
+        };
+
         if (id === -1) {
             updatedHarvester.id = ++ConfigService.highestID;
             newConfig.push(updatedHarvester);
         } else {
             newConfig = newConfig.map(harvester => harvester.id === updatedHarvester.id ? updatedHarvester : harvester);
         }
+
         fs.writeFileSync("config.json", JSON.stringify(newConfig, null, 2));
 
     }
@@ -73,5 +80,14 @@ export class ConfigService {
 
         fs.writeFileSync("config.json", JSON.stringify(updatedHarvesters, null, 2));
 
+    }
+
+    static getGeneralSettings() {
+        let aHarvester = ConfigService.get()[0];
+        return {
+            elasticSearchUrl: aHarvester.elasticSearchUrl,
+            alias: aHarvester.alias,
+            proxy: aHarvester.proxy
+        };
     }
 }

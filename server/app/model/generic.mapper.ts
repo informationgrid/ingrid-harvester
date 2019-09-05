@@ -160,6 +160,7 @@ export abstract class GenericMapper {
 
     abstract getUrlCheckRequestConfig(uri: string): OptionsWithUri;
 
+    // TODO: refactor into a mapping file
     static dcatThemeUriFromKeyword(keyword: string): string {
         // Check falsy values first
         if (!keyword) return null;

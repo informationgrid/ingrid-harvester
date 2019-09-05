@@ -113,7 +113,8 @@ export class HarvesterComponent implements OnInit {
   edit(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogEditComponent, {
       data: harvester,
-      width: '950px'
+      width: '950px',
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -132,7 +133,7 @@ export class HarvesterComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
-      this.harvesterService.updateHarvester(result).subscribe(this.fetchHarvester);
+      this.harvesterService.updateHarvester(result).subscribe(() => this.fetchHarvester());
     });
   }
 

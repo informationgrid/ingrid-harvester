@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Inject, OnInit, Optional, SimpleChanges} from '@angular/core';
 import cronstrue from 'cronstrue/i18n';
 import {MAT_DIALOG_DATA} from '@angular/material';
 
@@ -14,7 +14,7 @@ export class DialogSchedulerComponent implements OnInit {
   showInfo = false;
 
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data) {
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data) {
     if (data) {
       this.cronValue = data;
     }

@@ -75,12 +75,7 @@ export class ApiCtrl {
 
     @Get('/config/general')
     getGeneralConfig(): GeneralSettings {
-        let aHarvester = ConfigService.get()[0];
-        return {
-            elasticSearchUrl: aHarvester.elasticSearchUrl,
-            alias: aHarvester.alias,
-            proxy: aHarvester.proxy
-        };
+        return ConfigService.getGeneralSettings();
     }
 
     @Post('/config/general')
