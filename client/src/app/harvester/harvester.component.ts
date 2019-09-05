@@ -159,10 +159,28 @@ export class HarvesterComponent implements OnInit {
       mergeMap(group => zip(of(group.key), group.pipe(toArray())))
     ).subscribe(
       data => {
-        this.harvesters[data[0]] = data[1].sort((a, b) => a.description.localeCompare(b.description));
+        this.harvesters[data[0]] = <Harvester[]>data[1].sort((a, b) => a.description.localeCompare(b.description));
       },
       (error) => console.error(error),
       () => this.harvesterLoaded = true
     );
+  }
+
+  hasAnyErrors(id: number) {
+    let detail = this.importDetail[id];
+
+    if (detail && detail.summary) {
+      return detail.summary.numErrors === 0 && detail.summary.warnings.length === 0;
+    } else {
+      return true;
+    }
+  }
+
+  hasOnlyWarnings(id: number) {
+    let detail = this.importDetail[id];
+
+    if (detail && detail.summary) {
+      return detail.summary.warnings.length > 0 && detail.summary.numErrors === 0;
+    }
   }
 }
