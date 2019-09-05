@@ -66,7 +66,6 @@ export class CswMapper extends GenericMapper {
             this.log.warn(msg);
             this.summary.warnings.push(['No description', msg]);
             this.valid = false;
-            this.summary.numErrors++;
         }
 
         return abstract;
@@ -132,7 +131,6 @@ export class CswMapper extends GenericMapper {
 
             this.valid = false;
             this.summary.warnings.push(['No links', msg]);
-            this.summary.numErrors++;
         }
 
         return dists;
@@ -567,7 +565,6 @@ export class CswMapper extends GenericMapper {
         if (!license) {
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
             this.summary.missingLicense++;
-            // this.summary.numErrors++;
 
             this.log.warn(msg);
             this.summary.warnings.push(['Missing license', msg]);

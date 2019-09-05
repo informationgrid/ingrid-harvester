@@ -129,6 +129,11 @@
     "defaultDCATCategory": [
       "REGI"
     ],
+    "defaultLicense": {
+      "id": "cc-by-4.0",
+      "title": "Creative Commons Namensnennung – 4.0 International (CC BY 4.0)",
+      "url": "http://creativecommons.org/licenses/by/4.0/"
+    },
     "defaultAttribution": "Offene Daten Wuppertal",
     "disable": false,
     "id": 5,
@@ -264,6 +269,11 @@
     "defaultDCATCategory": [
       "REGI"
     ],
+    "defaultLicense": {
+      "id": "dl-de-by-2.0",
+      "title": "Datenlizenz Deutschland Namensnennung 2.0",
+      "url": "https://www.govdata.de/dl-de/by-2-0"
+    },
     "defaultAttribution": "Open-Data-Portal RNV",
     "disable": false,
     "id": 10,

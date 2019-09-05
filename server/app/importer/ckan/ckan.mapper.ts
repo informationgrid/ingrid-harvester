@@ -326,11 +326,26 @@ export class CkanMapper extends GenericMapper {
     }
 
     async getLicense() {
-        return {
-            id: this.source.license_id ? this.source.license_id : 'unknown',
-            title: this.source.license_title,
-            url: this.source.license_url || this.source.license_title
-        };
+        const hasNoLicense = !this.source.license_id && !this.source.license_title && !this.source.license_url;
+
+        if (this.settings.defaultLicense && hasNoLicense) {
+            this.summary.missingLicense++;
+            this.log.warn(`Missing license for ${this.getGeneratedId()} using default one.`);
+
+            return this.settings.defaultLicense;
+        } else if (hasNoLicense) {
+            let msg = `No license detected for dataset: ${this.getGeneratedId()} -> ${this.getTitle()}`;
+            this.summary.missingLicense++;
+
+            this.log.warn(msg);
+            this.summary.warnings.push(['Missing license', msg]);
+        } else {
+            return {
+                id: this.source.license_id ? this.source.license_id : 'unknown',
+                title: this.source.license_title,
+                url: this.source.license_url || this.source.license_title
+            };
+        }
     }
 
     getUrlCheckRequestConfig(uri: string): OptionsWithUri {
