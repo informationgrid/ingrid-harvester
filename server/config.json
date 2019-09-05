@@ -464,11 +464,11 @@
   {
     "elasticSearchUrl": "localhost:9200",
     "index": "csw_bsh_inspire",
-    "alias": "",
+    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CSW",
     "maxRecords": 100,
-    "startPosition": null,
+    "startPosition": 1,
     "getRecordsUrl": "https://www.geoseaportal.de/soapServices/CSWStartup",
     "eitherKeywords": [
       "inspireidentifiziert"
