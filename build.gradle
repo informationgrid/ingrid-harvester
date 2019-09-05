@@ -26,6 +26,7 @@ task buildRpm(type: Rpm) {
     url 'https://www.wemove.com'
     changeLogFile project.file("${project.projectDir}/changelog")
 
+    preInstall file('rpm/pre_install.sh')
     postInstall file('rpm/post_install.sh')
 
     from('server/build') {
