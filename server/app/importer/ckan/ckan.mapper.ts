@@ -439,7 +439,8 @@ export class CkanMapper extends GenericMapper {
             if (splittedSize.length > 1 && !isNaN(splittedSize[0])) {
                 const sizeType = splittedSize[1].toLocaleLowerCase();
                 if (this.sizeMap[sizeType] !== undefined) {
-                    return splittedSize[0] * this.sizeMap[sizeType];
+                    // round calculated value to prevent floating numbers (e.g. 2.01 * 20 = 20.0999...)
+                    return Math.round(splittedSize[0] * this.sizeMap[sizeType]);
                 }
             }
 
