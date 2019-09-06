@@ -38,6 +38,8 @@ task buildRpm(type: Rpm) {
     }
 
     from('rpm/mcloud-importer.service') {
+        user='root'
+        permissionGroup='root'
         into '/etc/systemd/system'
     }
 }
