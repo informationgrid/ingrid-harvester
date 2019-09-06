@@ -5,7 +5,7 @@
   <span class="toolbar"></span>
 
   <span *ngIf="isLoggedIn">
-    <button mat-raised-button color="primary" title="Logout" (click)="logout()">
+    <button id="btnLogout" mat-raised-button color="primary" title="Logout" (click)="logout()">
       <mat-icon class="example-icon" aria-hidden="false" aria-label="logout">lock</mat-icon>
       {{authService.currentUserValue.firstName}} {{authService.currentUserValue.lastName}}
     </button>

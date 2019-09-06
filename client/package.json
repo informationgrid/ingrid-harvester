@@ -10,7 +10,8 @@
     "update": "ng update @angular/cli @angular/core --allow-dirty",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "cypress": "cypress open"
   },
   "private": true,
   "dependencies": {
@@ -55,5 +56,8 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~3.5.3"
+  },
+  "optionalDependencies": {
+    "cypress": "^3.4.1"
   }
 }
