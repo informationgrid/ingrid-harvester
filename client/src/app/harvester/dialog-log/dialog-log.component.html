@@ -4,6 +4,11 @@
       <div *ngFor="let error of appErrors">{{error}}</div>
     </div>
   </mat-tab>
+  <mat-tab label="Elasticsearch-Errors">
+    <div class="logContainer">
+      <div *ngFor="let error of elasticSearchErrors">{{error}}</div>
+    </div>
+  </mat-tab>
   <mat-tab label="Warnings">
     <div class="logContainer">
       <div *ngFor="let warning of appWarnings">{{warning}}</div>

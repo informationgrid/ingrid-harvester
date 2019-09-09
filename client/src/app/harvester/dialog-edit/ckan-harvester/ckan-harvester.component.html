@@ -32,4 +32,20 @@
              (matChipInputTokenEnd)="add('filterGroups', $event)">
     </mat-chip-list>
   </mat-form-field>
+
 </div>
+
+<mat-form-field fxFlex>
+  <mat-chip-list #chipListDateFormats>
+    <mat-chip *ngFor="let format of model.dateSourceFormats" [selectable]="false"
+              [removable]="true" (removed)="remove('dateSourceFormats', format)">
+      {{format}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input placeholder="Datumsformate"
+           [matChipInputFor]="chipListDateFormats"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           [matChipInputAddOnBlur]="true"
+           (matChipInputTokenEnd)="add('dateSourceFormats', $event)">
+  </mat-chip-list>
+</mat-form-field>

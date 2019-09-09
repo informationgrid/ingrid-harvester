@@ -22,8 +22,8 @@
 
                 <mat-panel-description>
                     &nbsp;
-                    <mat-icon *ngIf="importDetail[harvester.id]?.summary?.numErrors > 0" color="warn">error_outline</mat-icon>
-                    <mat-icon *ngIf="hasAnyErrors(harvester.id)" class="success">check_circle_outline</mat-icon>
+                    <mat-icon *ngIf="!hasNotAnyErrors(harvester.id, false)" color="warn">error_outline</mat-icon>
+                    <mat-icon *ngIf="hasNotAnyErrors(harvester.id, true)" class="success">check_circle_outline</mat-icon>
                     <mat-icon *ngIf="hasOnlyWarnings(harvester.id)" class="warning">error_outline
                     </mat-icon>
                 </mat-panel-description>
@@ -33,7 +33,7 @@
             <app-importer-detail [data]="importDetail[harvester.id]" [enabled]="!harvester.disable"></app-importer-detail>
 
             <mat-action-row>
-                <button mat-button (click)="showLog(harvester.id)" [disabled]="hasAnyErrors(harvester.id)">
+                <button mat-button (click)="showLog(harvester.id)" [disabled]="hasNotAnyErrors(harvester.id)">
                     <mat-icon [inline]="true">description</mat-icon>
                     Log
                 </button>

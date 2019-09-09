@@ -19,7 +19,7 @@ export class CkanHarvesterComponent implements OnDestroy {
   ngOnDestroy(): void {
   }
 
-  add(type: 'filterTags' | 'filterGroups', event: MatChipInputEvent): void {
+  add(type: 'filterTags' | 'filterGroups' | 'dateSourceFormats', event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
 
@@ -34,7 +34,7 @@ export class CkanHarvesterComponent implements OnDestroy {
     }
   }
 
-  remove(type: 'filterTags' | 'filterGroups', keyword: string): void {
+  remove(type: 'filterTags' | 'filterGroups' | 'dateSourceFormats', keyword: string): void {
     const index = this.model[type].indexOf(keyword);
 
     if (index >= 0) {

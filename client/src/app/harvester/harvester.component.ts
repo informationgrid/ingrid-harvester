@@ -36,7 +36,7 @@ export class HarvesterComponent implements OnInit {
               private configService: ConfigService) {
 
     if (configService.config) {
-      let contextPath = configService.config.contextPath;
+      const contextPath = configService.config.contextPath;
       console.log('modifiying socket URL to: ' + contextPath);
       if (configService.config.url) {
         this.socket.ioSocket.io.uri = configService.config.url + '/import';
@@ -51,7 +51,7 @@ export class HarvesterComponent implements OnInit {
   ngOnInit() {
 
     this.importInfo.subscribe(data => {
-      console.log('Received from socket: ', data);
+      // console.log('Received from socket: ', data);
       this.importDetail[data.id] = data;
     });
 
@@ -159,28 +159,31 @@ export class HarvesterComponent implements OnInit {
       mergeMap(group => zip(of(group.key), group.pipe(toArray())))
     ).subscribe(
       data => {
-        this.harvesters[data[0]] = <Harvester[]>data[1].sort((a, b) => a.description.localeCompare(b.description));
+        this.harvesters[data[0]] = data[1].sort((a, b) => a.description.localeCompare(b.description)) as Harvester[];
       },
       (error) => console.error(error),
       () => this.harvesterLoaded = true
     );
   }
 
-  hasAnyErrors(id: number) {
-    let detail = this.importDetail[id];
+  hasNotAnyErrors(id: number, includeWarnings: boolean ) {
+    const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.numErrors === 0 && detail.summary.warnings.length === 0;
+      let result = detail.summary.numErrors === 0 && detail.summary.elasticErrors.length === 0;
+      if (includeWarnings) {
+        result = result && detail.summary.warnings.length === 0;
+      }
     } else {
       return true;
     }
   }
 
   hasOnlyWarnings(id: number) {
-    let detail = this.importDetail[id];
+    const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.warnings.length > 0 && detail.summary.numErrors === 0;
+      return detail.summary.warnings.length > 0 && detail.summary.numErrors === 0 && detail.summary.elasticErrors.length === 0;
     }
   }
 }

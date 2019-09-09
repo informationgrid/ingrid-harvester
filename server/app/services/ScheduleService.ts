@@ -76,7 +76,13 @@ export class ScheduleService {
         if (this.jobs[id]) {
             this.jobs[id].start();
         } else {
-            log.error(`Job "${id}" could not be started.`);
+            let config = ConfigService.get()
+                .filter(config => config.id === id && config.cronPattern && config.cronPattern.length > 0)[0];
+
+            if (config) {
+                this.scheduleJob(id, config.cronPattern, false);
+            }
+            // log.error(`Job "${id}" could not be started.`);
         }
 
     }

@@ -1,16 +1,21 @@
-import { AppPage } from './app.po';
-import { browser, logging } from 'protractor';
+import {AppPage} from './app.po';
+import {browser, by, element, logging} from 'protractor';
 
 describe('workspace-project App', () => {
   let page: AppPage;
 
   beforeEach(() => {
     page = new AppPage();
+    page.navigateTo();
+    page.login();
   });
 
-  it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getTitleText()).toEqual('Welcome to client!');
+  it('should open harvester page on login', () => {
+    /*browser.getCurrentUrl().then(url => {
+      expect(url).toEqual('/harvester');
+    });*/
+    // browser.waitForAngularEnabled(false);
+    expect(element.all(by.css('button')).get(0).getText()).toEqual('xxx');
   });
 
   afterEach(async () => {

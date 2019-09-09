@@ -1,8 +1,14 @@
-import { browser, by, element } from 'protractor';
+import {browser, by, element} from 'protractor';
 
 export class AppPage {
   navigateTo() {
-    return browser.get(browser.baseUrl) as Promise<any>;
+    return browser.get(browser.baseUrl + 'login') as Promise<any>;
+  }
+
+  login() {
+    element(by.css('[formcontrolname="username"]')).sendKeys('admin');
+    element(by.css('[formcontrolname="password"]')).sendKeys('admin');
+    element(by.css('.mat-button')).click();
   }
 
   getTitleText() {

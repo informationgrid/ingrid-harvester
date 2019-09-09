@@ -139,6 +139,10 @@
           "configurations": {
             "production": {
               "devServerTarget": "client:serve:production"
+            },
+            "remote": {
+              "baseUrl": "https://mcloud-qs.wemove.com/importer/",
+              "devServerTarget": ""
             }
           }
         },
