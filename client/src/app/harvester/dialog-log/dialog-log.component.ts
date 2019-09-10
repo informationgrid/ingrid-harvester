@@ -1,5 +1,5 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {ImportLogMessage} from "../../../../../server/app/model/import.result";
 
 @Component({
@@ -11,7 +11,7 @@ export class DialogLogComponent implements OnInit {
 
   logText: string;
   appErrors: string[] = [];
-  private elasticSearchErrors: string[] = [];
+  elasticSearchErrors: string[] = [];
   appWarnings: string[][] = [];
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
