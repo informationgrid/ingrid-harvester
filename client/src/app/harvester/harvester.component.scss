@@ -37,6 +37,15 @@ mat-expansion-panel-header {
   align-items: center;
 }
 
+.material-icons.inline-valigned {
+  font-size: inherit;
+  line-height: inherit;
+  vertical-align: middle;
+  height: auto;
+  width: auto;
+  margin-bottom: 0.15em;
+}
+
 .success {
   color: #5dc57b;
 }

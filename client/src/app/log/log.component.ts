@@ -1,6 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Socket} from 'ngx-socket-io';
 import {LogService} from './log.service';
+import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-log',
@@ -8,28 +9,24 @@ import {LogService} from './log.service';
   styleUrls: ['./log.component.scss']
 })
 export class LogComponent implements OnInit {
-  logdata = '';
-  importInfo = this.socket.fromEvent<any>('/log');
+  logdata = [];
 
-  @ViewChild('logContent', {static: true}) private logContainer: ElementRef;
+  @ViewChild(CdkVirtualScrollViewport, {static: false}) viewPort: CdkVirtualScrollViewport;
   isLoading = true;
 
   constructor(private socket: Socket, private logService: LogService) {
   }
 
   ngOnInit() {
-    /*this.importInfo.subscribe(data => {
-      console.log('Received from socket: ', data);
-    });*/
 
     this.logService.getLog().subscribe(data => {
-      this.logdata = data;
+      this.logdata = data.split('\n');
       this.isLoading = false;
 
       // wait for content to be rendered
       setTimeout(() => {
-        this.logContainer.nativeElement.scrollTop = this.logContainer.nativeElement.scrollHeight;
-      }, 100);
+        this.viewPort.scrollToIndex(this.logdata.length);
+      }, 0);
 
     }, (error => console.error('Error getting log:', error)));
   }

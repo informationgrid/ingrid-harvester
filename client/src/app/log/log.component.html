@@ -1,7 +1,7 @@
 <div *ngIf="isLoading">Loading log file ...</div>
 
-<div #logContent class="code">
+<div class="code">
   <cdk-virtual-scroll-viewport itemSize="19" class="viewport">
-    <div [class]="determineClass(line)" *cdkVirtualFor="let line of logdata.split('\n')">{{line}}</div>
+    <div [class]="determineClass(line)" *cdkVirtualFor="let line of logdata">{{line}}</div>
   </cdk-virtual-scroll-viewport>
 </div>

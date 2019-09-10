@@ -166,16 +166,13 @@ export class HarvesterComponent implements OnInit {
     );
   }
 
-  hasNotAnyErrors(id: number, includeWarnings: boolean ) {
+  hasAnyErrors(id: number) {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      let result = detail.summary.numErrors === 0 && detail.summary.elasticErrors.length === 0;
-      if (includeWarnings) {
-        result = result && detail.summary.warnings.length === 0;
-      }
+      return detail.summary.numErrors > 0 || detail.summary.elasticErrors.length > 0;
     } else {
-      return true;
+      return false;
     }
   }
 
@@ -184,6 +181,16 @@ export class HarvesterComponent implements OnInit {
 
     if (detail && detail.summary) {
       return detail.summary.warnings.length > 0 && detail.summary.numErrors === 0 && detail.summary.elasticErrors.length === 0;
+    }
+  }
+
+  hasAnyProblems(id: number) {
+    const detail = this.importDetail[id];
+
+    if (detail && detail.summary) {
+      return detail.summary.numErrors > 0 || detail.summary.elasticErrors.length > 0 || detail.summary.warnings.length > 0;
+    } else {
+      return false;
     }
   }
 }
