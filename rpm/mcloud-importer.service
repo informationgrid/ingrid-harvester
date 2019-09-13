@@ -8,6 +8,7 @@ User=ingrid
 WorkingDirectory=/opt/ingrid/mcloud-importer
 ExecStart=/usr/bin/scl enable rh-nodejs10 "pm2 start ./server/app/index.js"
 ExecStop=/usr/bin/scl enable rh-nodejs10 "pm2 delete ./server/app/index.js"
+ExecReload=/usr/bin/scl enable rh-nodejs10 "pm2 restart ./server/app/index.js"
 RemainAfterExit=yes
 
 [Install]

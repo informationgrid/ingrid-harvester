@@ -1,3 +1,8 @@
+* Mon Sep 16 2019 André Wallat <andre.wallat@wemove.com> - 1.7.0
+- Add admin GUI for managing harvester (#1952)
+- Add option to harvest from NRW to get datasets from Bonn (#2164)
+- Fix licenses, dates and byteSize (#2187)
+
 * Wed Jul 10 2019 André Wallat <andre.wallat@wemove.com> - 1.6.0
 - New strategy to get CKAN records (#2154)
 - Add filter for tags und groups in CKAN (#2151)
