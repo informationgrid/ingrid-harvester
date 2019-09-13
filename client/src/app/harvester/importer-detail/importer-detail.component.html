@@ -1,0 +1,66 @@
+<ng-container *ngIf="data">
+
+    <ng-container *ngIf="!data.complete">
+        Import läuft
+        <mat-progress-bar
+                [value]="getProgressValue()">
+        </mat-progress-bar>
+        <div class="progress-description align-center">
+            <span *ngIf="data.progress">{{data.progress.current}} / {{data.progress.total}} ({{data.duration | number:'1.0-0'}}s)</span>
+            <div>{{data.message}}</div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="data.complete">
+
+        <div fxLayout="row" fxLayoutAlign="space-around">
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="numberCircle">{{data.summary?.numDocs}}</div>
+                    <mat-card-title>Dokumente</mat-card-title>
+                    <mat-card-subtitle>{{data.summary?.skippedDocs.length}} übersprungen</mat-card-subtitle>
+                </mat-card-header>
+            </mat-card>
+
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="numberCircle" [class.error]="data.summary?.numErrors > 0 || data.summary?.elasticErrors.length > 0">{{data.summary?.numErrors + data.summary?.elasticErrors.length}}</div>
+                    <mat-card-title>Fehler</mat-card-title>
+                </mat-card-header>
+            </mat-card>
+
+            <mat-card class="example-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="numberCircle" [class.warning]="data.summary?.warnings?.length > 0">{{data.summary?.warnings?.length}}</div>
+                    <mat-card-title>Warnungen</mat-card-title>
+                </mat-card-header>
+            </mat-card>
+        </div>
+
+        <mat-list>
+            <mat-list-item>
+                <mat-icon mat-list-icon>access_time</mat-icon>
+                <h4 mat-line>Letzte Ausführung</h4>
+                <p mat-line> {{data.lastExecution | date:'short'}} </p>
+            </mat-list-item>
+            <mat-list-item>
+                <mat-icon mat-list-icon>timer</mat-icon>
+                <h4 mat-line>Dauer der Ausführung</h4>
+                <p mat-line> {{data.duration}}s </p>
+            </mat-list-item>
+            <mat-list-item >
+                <mat-icon mat-list-icon>snooze</mat-icon>
+                <h4 mat-line>Nächste Ausführung</h4>
+                <p mat-line *ngIf="!enabled" [title]="'Wenn aktiviert, dann: ' + (data.nextExecution | date:'short')"> deaktiviert </p>
+                <p mat-line *ngIf="enabled && data.nextExecution !== null"> {{data.nextExecution | date:'short'}} </p>
+                <p mat-line *ngIf="enabled && data.nextExecution === undefined" title="Seite neuladen, um korrekte nächste Ausführung anzuzeigen"> wurde geändert </p>
+            </mat-list-item>
+        </mat-list>
+
+    </ng-container>
+
+</ng-container>
+
+<ng-container *ngIf="!data">
+    There's no Info right now.
+</ng-container>

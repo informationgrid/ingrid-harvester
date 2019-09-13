@@ -1,0 +1,52 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.form-wrapper {
+  //padding-top: 40px;
+  margin: 0 10%;
+  max-width: 700px;
+
+  form, .flex-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-buttons {
+    display: flex;
+    flex-direction: row;
+  }
+
+  & > * {
+    width: 100%;
+  }
+}
+
+.flex-space {
+  flex: 1 1 auto;
+}
+
+.half {
+  width: 50%;
+}
+
+.mat-card-header-text {
+  padding-top: 22px;
+}
+
+snack-bar-container.error {
+  background-color: #b24747 !important;
+  color: white;
+}
+
+
+/* Embedded material icons and Roboto font */
+
+// for npm roboto-fontface package (to load local files)
+$roboto-font-path: "~roboto-fontface/fonts" !default;
+@import "~roboto-fontface/css/roboto/sass/roboto-fontface";
+
+// for npm material-icons package (to load local files)
+$material-icons-font-path: '~material-icons/iconfont/';
+@import '~material-icons/iconfont/material-icons.scss';

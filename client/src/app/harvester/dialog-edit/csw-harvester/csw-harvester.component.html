@@ -1,0 +1,31 @@
+<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+  <mat-form-field fxFlex="20">
+    <mat-select placeholder="HTTP Method" [(ngModel)]="model.httpMethod" name="httpMethod" required>
+      <mat-option value="GET">GET</mat-option>
+      <mat-option value="POST">POST</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field fxFlex>
+    <input matInput placeholder="getRecords URL" [(ngModel)]="model.getRecordsUrl" name="getRecordsUrl" required>
+  </mat-form-field>
+</div>
+
+<mat-form-field>
+  <textarea matInput rows="6" class="code" placeholder="Record Filter" [(ngModel)]="model.recordFilter" name="recordFilter"></textarea>
+</mat-form-field>
+
+<mat-form-field>
+  <mat-chip-list #chipList>
+    <mat-chip *ngFor="let keyword of model.eitherKeywords" [selectable]="false"
+              [removable]="true" (removed)="remove(keyword)">
+      {{keyword}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input placeholder="Either keywords"
+           [matChipInputFor]="chipList"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           [matChipInputAddOnBlur]="true"
+           (matChipInputTokenEnd)="add($event)">
+  </mat-chip-list>
+</mat-form-field>

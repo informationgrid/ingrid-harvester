@@ -1,0 +1,28 @@
+<mat-toolbar color="primary">
+  <span>Harvester Admin GUI</span>
+
+  <!-- This fills the remaining space of the current row -->
+  <span class="toolbar"></span>
+
+  <span *ngIf="isLoggedIn">
+    <button id="btnLogout" mat-raised-button color="primary" title="Logout" (click)="logout()">
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="logout">lock</mat-icon>
+      {{authService.currentUserValue.firstName}} {{authService.currentUserValue.lastName}}
+    </button>
+  </span>
+</mat-toolbar>
+
+<mat-sidenav-container class="navigation">
+  <mat-sidenav mode="side" opened *ngIf="isLoggedIn">
+    <mat-action-list>
+      <button mat-list-item routerLink="/config"> Konfiguration </button>
+      <button mat-list-item routerLink="/harvester"> Harvester </button>
+      <button mat-list-item routerLink="/log"> Log </button>
+    </mat-action-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

@@ -1,0 +1,69 @@
+<div *ngIf="harvesterLoaded" class="example-headers-align">
+    <div fxLayout="row">
+      <div fxFlex></div>
+      <button mat-flat-button (click)="importAll()">Alle importieren</button>
+    </div>
+
+    <ng-container *ngFor="let item of harvesters | keyvalue">
+
+        <h3>{{item.key}}</h3>
+
+        <mat-expansion-panel *ngFor="let harvester of item.value" hideToggle>
+            <mat-expansion-panel-header>
+
+                <mat-panel-title>
+                    <mat-slide-toggle color="primary" [checked]="!harvester.disable"
+                                      title="Für Planung an- / ausschalten"
+                                      (change)="handleActivation($event, harvester)"
+                                      (click)="$event.stopImmediatePropagation()"></mat-slide-toggle>
+                    <p>{{harvester.description || harvester.defaultAttribution}}</p>
+                    <mat-spinner *ngIf="importDetail[harvester.id]?.complete === false" diameter="20"></mat-spinner>
+                </mat-panel-title>
+
+                <mat-panel-description *ngIf="importDetail[harvester.id]?.summary">
+                    &nbsp;
+                    <mat-icon *ngIf="hasAnyErrors(harvester.id)" color="warn">error_outline</mat-icon>
+                    <mat-icon *ngIf="!hasAnyProblems(harvester.id)" class="success">check_circle_outline</mat-icon>
+                    <mat-icon *ngIf="hasOnlyWarnings(harvester.id)" class="warning">error_outline</mat-icon>
+                </mat-panel-description>
+
+            </mat-expansion-panel-header>
+
+            <app-importer-detail [data]="importDetail[harvester.id]" [enabled]="!harvester.disable"></app-importer-detail>
+
+            <mat-action-row>
+                <button mat-button (click)="showLog(harvester.id)" [disabled]="!hasAnyProblems(harvester.id)">
+                    <mat-icon class="inline-valigned">description</mat-icon>
+                    Error-Log
+                </button>
+                <button mat-button (click)="startImport(harvester.id)"
+                        [disabled]="importDetail[harvester.id]?.complete === false">
+                    <mat-icon class="inline-valigned">import_export</mat-icon>
+                    Import starten
+                </button>
+                <button mat-button (click)="schedule(harvester)">
+                    <mat-icon class="inline-valigned">schedule</mat-icon>
+                    Planen
+                </button>
+                <div class="flex-space"></div>
+                <button mat-button color="primary" (click)="edit(harvester)">
+                    <mat-icon class="inline-valigned">edit</mat-icon>
+                    Bearbeiten
+                </button>
+            </mat-action-row>
+
+        </mat-expansion-panel>
+    </ng-container>
+
+    <button mat-fab
+            color="primary"
+            (click)="addHarvester()"
+            class="mat-fab-bottom-right"
+            id="btnAddHarvester">
+        <mat-icon aria-label="Add Harvester">add</mat-icon>
+    </button>
+</div>
+
+<div *ngIf="!harvesterLoaded" class="no-harvester">
+  <mat-spinner diameter="100"></mat-spinner>
+</div>
