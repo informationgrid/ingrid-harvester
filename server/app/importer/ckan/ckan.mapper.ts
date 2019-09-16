@@ -425,6 +425,8 @@ export class CkanMapper extends GenericMapper {
 
         if (date instanceof Date) {
             return date;
+        } else if (date === null) {
+            return null;
         } else {
             if (this.settings.dateSourceFormats && this.settings.dateSourceFormats.length > 0) {
                 let dateObj = this.moment(date, this.settings.dateSourceFormats);
