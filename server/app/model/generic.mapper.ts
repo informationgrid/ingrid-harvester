@@ -1,4 +1,5 @@
 import {OptionsWithUri} from 'request-promise';
+import {License} from '../../../shared/license.model';
 import * as moment from 'moment';
 
 moment.locale('de');
@@ -16,11 +17,6 @@ export interface Person extends Agent {
 }
 export interface Organization extends Agent {
     organization: string;
-}
-export interface License {
-    id: string;
-    title: string;
-    url: string;
 }
 export interface DateRange {
     start?: Date,
