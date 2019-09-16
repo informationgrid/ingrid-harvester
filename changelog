@@ -2,6 +2,7 @@
 - Add admin GUI for managing harvester (#1952)
 - Add option to harvest from NRW to get datasets from Bonn (#2164)
 - Fix licenses, dates and byteSize (#2187)
+- Other small fixes and improvements
 
 * Thu Jul 25 2019 André Wallat <andre.wallat@wemove.com> - 1.6.1
 - Fix bulk indexing when document mapping takes too long (#2078)
