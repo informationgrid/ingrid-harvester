@@ -1,0 +1,22 @@
+.full-width {
+  width: 100%;
+}
+
+.padding-below {
+  padding-bottom: 20px;
+}
+
+.info {
+  padding-bottom: 20px;
+  font-size: small;
+
+  & div span {
+    display: inline-block;
+    width: 100px;
+    white-space: pre;
+  }
+}
+
+mat-icon {
+  cursor: pointer;
+}

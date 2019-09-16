@@ -1,0 +1,19 @@
+.navigation {
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+
+  .mat-sidenav {
+    min-width: 200px;
+  }
+}
+
+.toolbar {
+  flex: 1 1 auto;
+}
+
+.example-icon {
+  //padding: 0 14px;
+}

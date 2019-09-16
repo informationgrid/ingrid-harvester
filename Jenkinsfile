@@ -25,7 +25,12 @@ pipeline {
 
         stage('Create') {
             steps {
-                sh './mvnw clean package -Dmaven.test.failure.ignore=true -s .mvn/settings.xml'
+                sh './gradlew clean bundle buildRpm'
+                script {
+                    try {
+                        sh './gradlew :server:test'
+                    } catch(error) {}
+                }
             }
         }
         stage('Sign') {
@@ -34,19 +39,19 @@ pipeline {
                 withCredentials([file(credentialsId: 'mcloud-rpm-public', variable: 'rpm-key-public')]) {
                     sh 'gpg --import $RPM_PUBLIC_KEY'
                     sh 'gpg --import $RPM_PRIVATE_KEY'
-                    sh 'expect /rpm-sign.exp target/rpm/mcloud-ingrid/RPMS/noarch/*.rpm'
+                    sh 'expect /rpm-sign.exp build/distributions/*.rpm'
                 }
             }
         }
         stage('Archive') {
             steps {
-                archiveArtifacts artifacts: 'target/rpm/mcloud-ingrid/RPMS/noarch/*.rpm'
+                archiveArtifacts artifacts: 'build/distributions/*.rpm'
             }
         }
         stage('Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'ingrid_mcloud-dev', passwordVariable: 'SSHPASS', usernameVariable: 'username')]) {
-                    sh 'sshpass -ve scp -o StrictHostKeyChecking=no target/rpm/mcloud-ingrid/RPMS/noarch/*.rpm ingrid@mcloud-dev-1.wemove.com:/var/www/mcloud-deploy-develop/'
+                    sh 'sshpass -ve scp -o StrictHostKeyChecking=no build/distributions/*.rpm ingrid@mcloud-dev-1.wemove.com:/var/www/mcloud-deploy-develop/'
                     sh 'sshpass -ve ssh -o StrictHostKeyChecking=no ingrid@mcloud-dev-1.wemove.com createrepo --update /var/www/mcloud-deploy-develop/'
                 }
             }
@@ -54,7 +59,7 @@ pipeline {
     }
     post {
         always {
-            junit 'report.xml'
+            junit 'server/report.xml'
             //deleteDir() /* clean up our workspace */
         }
     }

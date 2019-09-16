@@ -1,3 +1,9 @@
+* Mon Sep 16 2019 André Wallat <andre.wallat@wemove.com> - 1.7.0
+- Add admin GUI for managing harvester (#1952)
+- Add option to harvest from NRW to get datasets from Bonn (#2164)
+- Fix licenses, dates and byteSize (#2187)
+- Other small fixes and improvements
+
 * Thu Jul 25 2019 André Wallat <andre.wallat@wemove.com> - 1.6.1
 - Fix bulk indexing when document mapping takes too long (#2078)
 - Add cache for URL checks
@@ -51,7 +57,7 @@
 - Deduplication of metadata-sets from different sources
 - Bugfixes and other minor improvements in indexing of metadata-sets
 
-* Tue Jun 27 2018 Vikram Notay <vikram.notay@wemove.com> - 1.2.0
+* Wed Jun 27 2018 Vikram Notay <vikram.notay@wemove.com> - 1.2.0
 - elasticsearch: updated mapping based on DCAT-AP DE
 - excel-importer: update importer for new elasticsearch mapping
 - Deutsche Bahn: new importer for Deutsche Bahn's open data interface (CKAN)
@@ -80,10 +86,10 @@
 - excel-importer: add WCS download link
 - excel-importer: support decompound plugin for stemming
 
-* Thu Jan 27 2017 André Wallat <andre.wallat@wemove.com> - 1.0.4
+* Fri Jan 27 2017 André Wallat <andre.wallat@wemove.com> - 1.0.4
 - excel-importer: fixed import of multiple download URLs
 
-* Fri Dec 22 2016 Joachim Mueller <joachim.mueller@wemove.com> - 1.0.3
+* Thu Dec 22 2016 Joachim Mueller <joachim.mueller@wemove.com> - 1.0.3
 - excel-importer: update new excel data from 2016-12-20
 
 * Fri Dec 16 2016 Joachim Mueller <joachim.mueller@wemove.com> - 1.0.2
