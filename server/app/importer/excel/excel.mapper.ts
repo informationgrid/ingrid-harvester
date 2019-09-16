@@ -1,5 +1,6 @@
 import {UrlUtils} from '../../utils/url.utils';
-import {DateRange, Distribution, GenericMapper, License, Organization, Person} from '../../model/generic.mapper';
+import {DateRange, Distribution, GenericMapper, Organization, Person} from '../../model/generic.mapper';
+import {License} from '../../../../shared/license.model';
 import {Summary} from '../../model/summary';
 import {ExcelSettings} from './excel.settings';
 import {RequestDelegate} from '../../utils/http-request.utils';
