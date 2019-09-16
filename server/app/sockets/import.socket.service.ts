@@ -35,18 +35,21 @@ export class ImportSocketService {
         return new Promise(resolve => {
 
             let lastExecution = new Date();
+            let configGeneral = ConfigService.getGeneralSettings();
             let configData = ConfigService.get().filter(config => config.id === id)[0];
             configData.deduplicationAlias = configData.index + 'dedup';
 
-            let importer = ImporterFactory.get(configData);
-            this.log.info('>> Running importer: ' + configData.description);
+            let configHarvester = {...configData, ...configGeneral};
+
+            let importer = ImporterFactory.get(configHarvester);
+            this.log.info('>> Running importer: ' + configHarvester.description);
 
             try {
                 importer.run.subscribe(response => {
                     response.id = id;
                     response.lastExecution = lastExecution;
-                    if (configData.cronPattern) {
-                        response.nextExecution = new CronJob(configData.cronPattern, () => {
+                    if (configHarvester.cronPattern) {
+                        response.nextExecution = new CronJob(configHarvester.cronPattern, () => {
                         }).nextDate().toDate();
                     }
                     response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;

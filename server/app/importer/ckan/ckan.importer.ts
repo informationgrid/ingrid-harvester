@@ -23,6 +23,7 @@ export class CkanImporter implements Importer {
         ckanBaseUrl: '',
         filterTags: [],
         filterGroups: [],
+        dateSourceFormats: [],
         requestType: 'ListWithResources',
         markdownAsDescription: true
     };

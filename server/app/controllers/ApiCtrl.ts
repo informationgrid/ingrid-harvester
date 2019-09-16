@@ -9,6 +9,7 @@ import {ScheduleService} from '../services/ScheduleService';
 import {GeneralSettings} from '../../../shared/general-config.settings';
 
 @Controller("/api")
+@Authenticated()
 export class ApiCtrl {
     private importAllProcessIsRunning = false;
 
@@ -19,7 +20,6 @@ export class ApiCtrl {
     }
 
     @Get("/harvester")
-    @Authenticated()
     async getHarvesterConfig(): Promise<Harvester[]> {
         return ConfigService.get();
     }
@@ -75,20 +75,26 @@ export class ApiCtrl {
 
     @Get('/config/general')
     getGeneralConfig(): GeneralSettings {
-        return ConfigService.getGeneralSettings();
+
+        const generalSettings = ConfigService.getGeneralSettings();
+        return {
+            elasticSearchUrl: generalSettings.elasticsearch.url,
+            alias: generalSettings.elasticsearch.alias,
+            proxy: generalSettings.proxy
+        }
+
     }
 
     @Post('/config/general')
     setGeneralConfig(@BodyParams() body: GeneralSettings): void {
-        console.log('Body:', body);
-        let updatedHarvesters = ConfigService.get()
-            .map(config => {
-                config.elasticSearchUrl = body.elasticSearchUrl;
-                config.alias = body.alias;
-                config.proxy = body.proxy;
-                return config;
-            });
 
-        ConfigService.updateAll(updatedHarvesters);
+        ConfigService.setGeneralConfig({
+            elasticsearch: {
+                url: body.elasticSearchUrl,
+                alias: body.alias
+            },
+            proxy: body.proxy
+        });
+
     }
 }

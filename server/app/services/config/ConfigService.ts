@@ -3,8 +3,23 @@ import * as fs from 'fs';
 import {CkanImporter} from '../../importer/ckan/ckan.importer';
 import {ExcelImporter} from '../../importer/excel/excel.importer';
 import {CswImporter} from '../../importer/csw/csw.importer';
+import {getLogger} from "log4js";
+
+const log = getLogger();
+
+interface GeneralConfig {
+    elasticsearch?: {
+        url: string,
+        alias: string
+    };
+    proxy?: string;
+}
 
 export class ConfigService {
+
+    private static GENERAL_CONFIG_FILE = "config-general.json";
+
+    private static HARVESTER_CONFIG_FILE = "config.json";
 
     static highestID: number = 0;
 
@@ -39,31 +54,32 @@ export class ConfigService {
      */
     static get(): Harvester[] {
 
-        let contents = fs.readFileSync("config.json");
-        let configs: Harvester[] = JSON.parse(contents.toString());
-        return configs
-            .map(config => {
-                if (config.type === 'EXCEL') return {...ExcelImporter.defaultSettings, ...config};
-                else if (config.type === 'CKAN') return {...CkanImporter.defaultSettings, ...config};
-                else if (config.type && config.type.endsWith('CSW')) return {...CswImporter.defaultSettings, ...config};
-            })
-            .filter(config => config); // remove all invalid configurations
+        const configExists = fs.existsSync(this.HARVESTER_CONFIG_FILE);
+
+        if (configExists) {
+            let contents = fs.readFileSync(this.HARVESTER_CONFIG_FILE);
+            let configs: Harvester[] = JSON.parse(contents.toString());
+            return configs
+                .map(config => {
+                    if (config.type === 'EXCEL') return {...ExcelImporter.defaultSettings, ...config};
+                    else if (config.type === 'CKAN') return {...CkanImporter.defaultSettings, ...config};
+                    else if (config.type && config.type.endsWith('CSW')) return {...CswImporter.defaultSettings, ...config};
+                })
+                .filter(config => config); // remove all invalid configurations
+        } else {
+            log.warn("No config.json file found. Please configure using the admin GUI.")
+            return [];
+        }
 
     }
 
     /**
-     * Update a harvester and write to file "config.json"
+     * Update a harvester and write to file this.HARVESTER_CONFIG_FILE
      * @param id
      * @param updatedHarvester
      */
     static update(id: number, updatedHarvester: Harvester) {
         let newConfig = ConfigService.get();
-
-        // add general configuration
-        updatedHarvester = {
-            ...updatedHarvester,
-            ...this.getGeneralSettings()
-        };
 
         if (id === -1) {
             updatedHarvester.id = ++ConfigService.highestID;
@@ -72,22 +88,39 @@ export class ConfigService {
             newConfig = newConfig.map(harvester => harvester.id === updatedHarvester.id ? updatedHarvester : harvester);
         }
 
-        fs.writeFileSync("config.json", JSON.stringify(newConfig, null, 2));
+        fs.writeFileSync(this.HARVESTER_CONFIG_FILE, JSON.stringify(newConfig, null, 2));
 
     }
 
     static updateAll(updatedHarvesters: Harvester[]) {
 
-        fs.writeFileSync("config.json", JSON.stringify(updatedHarvesters, null, 2));
+        fs.writeFileSync(this.HARVESTER_CONFIG_FILE, JSON.stringify(updatedHarvesters, null, 2));
 
     }
 
-    static getGeneralSettings() {
-        let aHarvester = ConfigService.get()[0];
-        return {
-            elasticSearchUrl: aHarvester.elasticSearchUrl,
-            alias: aHarvester.alias,
-            proxy: aHarvester.proxy
-        };
+    static getGeneralSettings(): GeneralConfig {
+
+        const configExists = fs.existsSync(this.GENERAL_CONFIG_FILE);
+
+        if (configExists) {
+            let contents = fs.readFileSync(this.GENERAL_CONFIG_FILE);
+            return JSON.parse(contents.toString());
+        } else {
+            log.warn("No general config file found (config-general.json). Using default config");
+            return {
+                elasticsearch: {
+                    url: "http://localhost:9200",
+                    alias: "mcloud"
+                },
+                proxy: ""
+            };
+        }
+
+    }
+
+    static setGeneralConfig(config: GeneralConfig) {
+
+        fs.writeFileSync(this.GENERAL_CONFIG_FILE, JSON.stringify(config, null, 2));
+
     }
 }

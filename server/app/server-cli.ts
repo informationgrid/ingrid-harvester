@@ -7,6 +7,7 @@ import {ImporterFactory} from "./importer/importer.factory";
 import {ConfigService} from './services/config/ConfigService';
 
 let config = ConfigService.get(),
+    configGeneral = ConfigService.getGeneralSettings(),
     process = require('process'),
     log = getLogger(),
     logSummary = getLogger('summary');
@@ -51,9 +52,11 @@ async function startProcess() {
         // Set the same elasticsearch alias for deduplication for all importers
         importerConfig.deduplicationAlias = deduplicationAlias;
 
-        let importer = ImporterFactory.get( importerConfig );
+        let configHarvester = {...importerConfig, ...configGeneral};
+
+        let importer = ImporterFactory.get( configHarvester );
         if (!importer) {
-            log.error( 'Importer not defined for: ' + importerConfig.type );
+            log.error( 'Importer not defined for: ' + configHarvester.type );
             return;
         }
         log.info("Starting import ...");
@@ -65,7 +68,7 @@ async function startProcess() {
                 //summaries.push(await importer.run.subscribe());
             }
         } catch (e) {
-            console.error(`Importer ${importerConfig.type} failed: `, e);
+            console.error(`Importer ${configHarvester.type} failed: `, e);
         }
     }
 

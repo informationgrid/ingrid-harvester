@@ -1,0 +1,7 @@
+{
+  "elasticsearch": {
+    "url": "http://localhost:9200",
+    "alias": "mcloud"
+  },
+  "proxy": ""
+}

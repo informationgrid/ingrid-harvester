@@ -10,7 +10,7 @@ import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
 import {ImportNotifyComponent} from './notifications/import-notify.component';
 import {Socket} from 'ngx-socket-io';
 import {ImportLogMessage} from '../../../../server/app/model/import.result';
-import {flatMap, groupBy, mergeMap, toArray} from 'rxjs/operators';
+import {flatMap, groupBy, mergeMap, tap, toArray} from 'rxjs/operators';
 import {MatSlideToggleChange} from '@angular/material';
 import {ConfigService} from '../config.service';
 
@@ -28,6 +28,8 @@ export class HarvesterComponent implements OnInit {
   importDetail: { [x: number]: ImportLogMessage } = {};
 
   harvesterLoaded = false;
+
+  numberOfHarvesters: number;
 
   constructor(private socket: Socket,
               public dialog: MatDialog,
@@ -154,11 +156,11 @@ export class HarvesterComponent implements OnInit {
 
   private fetchHarvester() {
     this.harvesterService.getHarvester().pipe(
+      tap(items => this.numberOfHarvesters = items.length),
       flatMap(items => of(...items)),
       groupBy(harvester => harvester.type.endsWith('CSW') ? 'CSW' : harvester.type),
       mergeMap(group => zip(of(group.key), group.pipe(toArray())))
-    ).subscribe(
-      data => {
+    ).subscribe(data => {
         this.harvesters[data[0]] = data[1].sort((a, b) => a.description.localeCompare(b.description)) as Harvester[];
       },
       (error) => console.error(error),
