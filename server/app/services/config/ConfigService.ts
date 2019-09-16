@@ -1,4 +1,5 @@
 import {Harvester} from '../../../../client/src/app/harvester/model/harvester';
+import {GeneralSettings} from '../../../../shared/general-config.settings';
 import * as fs from 'fs';
 import {CkanImporter} from '../../importer/ckan/ckan.importer';
 import {ExcelImporter} from '../../importer/excel/excel.importer';
@@ -6,14 +7,6 @@ import {CswImporter} from '../../importer/csw/csw.importer';
 import {getLogger} from "log4js";
 
 const log = getLogger();
-
-interface GeneralConfig {
-    elasticsearch?: {
-        url: string,
-        alias: string
-    };
-    proxy?: string;
-}
 
 export class ConfigService {
 
@@ -98,7 +91,7 @@ export class ConfigService {
 
     }
 
-    static getGeneralSettings(): GeneralConfig {
+    static getGeneralSettings(): GeneralSettings {
 
         const configExists = fs.existsSync(this.GENERAL_CONFIG_FILE);
 
@@ -108,17 +101,15 @@ export class ConfigService {
         } else {
             log.warn("No general config file found (config-general.json). Using default config");
             return {
-                elasticsearch: {
-                    url: "http://localhost:9200",
-                    alias: "mcloud"
-                },
+                elasticSearchUrl: "http://localhost:9200",
+                alias: "mcloud",
                 proxy: ""
             };
         }
 
     }
 
-    static setGeneralConfig(config: GeneralConfig) {
+    static setGeneralConfig(config: GeneralSettings) {
 
         fs.writeFileSync(this.GENERAL_CONFIG_FILE, JSON.stringify(config, null, 2));
 

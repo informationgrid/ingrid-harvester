@@ -76,25 +76,14 @@ export class ApiCtrl {
     @Get('/config/general')
     getGeneralConfig(): GeneralSettings {
 
-        const generalSettings = ConfigService.getGeneralSettings();
-        return {
-            elasticSearchUrl: generalSettings.elasticsearch.url,
-            alias: generalSettings.elasticsearch.alias,
-            proxy: generalSettings.proxy
-        }
+        return ConfigService.getGeneralSettings();
 
     }
 
     @Post('/config/general')
     setGeneralConfig(@BodyParams() body: GeneralSettings): void {
 
-        ConfigService.setGeneralConfig({
-            elasticsearch: {
-                url: body.elasticSearchUrl,
-                alias: body.alias
-            },
-            proxy: body.proxy
-        });
+        ConfigService.setGeneralConfig(body);
 
     }
 }

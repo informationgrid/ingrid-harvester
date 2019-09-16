@@ -1,8 +1,6 @@
 [
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "excel",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "EXCEL",
     "maxRecords": 100,
@@ -13,13 +11,10 @@
       "TRAN"
     ],
     "disable": false,
-    "id": 1,
-    "proxy": ""
+    "id": 1
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_koeln",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CKAN",
     "maxRecords": 100,
@@ -29,11 +24,11 @@
       "Transport und Verkehr"
     ],
     "filterGroups": [],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": false,
     "dateSourceFormats": [
       "YYYY-MM-DDThh:mm:ss"
     ],
+    "requestType": "ListWithResources",
+    "markdownAsDescription": false,
     "description": "Offene Daten Köln",
     "defaultMcloudSubgroup": [
       "roads"
@@ -43,13 +38,10 @@
     ],
     "defaultAttribution": "Offene Daten Köln",
     "disable": false,
-    "id": 2,
-    "proxy": ""
+    "id": 2
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_bonn",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CKAN",
     "maxRecords": 100,
@@ -59,6 +51,7 @@
       "Transport und Verkehr"
     ],
     "filterGroups": [],
+    "dateSourceFormats": [],
     "requestType": "ListWithResources",
     "markdownAsDescription": true,
     "description": "!Offene Daten Bonn: parameters wrong",
@@ -70,13 +63,10 @@
     ],
     "defaultAttribution": "Offene Daten Bonn",
     "disable": true,
-    "id": 3,
-    "proxy": ""
+    "id": 3
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_duesseldorf",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CKAN",
     "maxRecords": 100,
@@ -86,12 +76,12 @@
       "Transport und Verkehr"
     ],
     "filterGroups": [],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": false,
     "dateSourceFormats": [
       "YYYY-MM-DDThh:mm:ss",
       "DD MMMM, YYYY - hh:mm"
     ],
+    "requestType": "ListWithResources",
+    "markdownAsDescription": false,
     "description": "Offene Daten Düsseldorf",
     "defaultMcloudSubgroup": [
       "roads"
@@ -101,13 +91,10 @@
     ],
     "defaultAttribution": "Offene Daten Düsseldorf",
     "disable": false,
-    "id": 4,
-    "proxy": ""
+    "id": 4
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_wuppertal",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CKAN",
     "maxRecords": 100,
@@ -117,11 +104,11 @@
       "Transport und Verkehr"
     ],
     "filterGroups": [],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": false,
     "dateSourceFormats": [
       "YYYY-MM-DDThh:mm:ss"
     ],
+    "requestType": "ListWithResources",
+    "markdownAsDescription": false,
     "description": "Offene Daten Wuppertal",
     "defaultMcloudSubgroup": [
       "roads"
@@ -136,13 +123,10 @@
     },
     "defaultAttribution": "Offene Daten Wuppertal",
     "disable": false,
-    "id": 5,
-    "proxy": ""
+    "id": 5
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_db",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CKAN",
     "maxRecords": 100,
@@ -150,6 +134,7 @@
     "ckanBaseUrl": "https://data.deutschebahn.com",
     "filterTags": [],
     "filterGroups": [],
+    "dateSourceFormats": [],
     "requestType": "ListWithResources",
     "markdownAsDescription": true,
     "description": "Deutsche Bahn Datenportal",
@@ -162,13 +147,10 @@
     "defaultAttribution": "Deutsche Bahn Datenportal",
     "disable": false,
     "id": 6,
-    "cronPattern": null,
-    "proxy": ""
+    "cronPattern": null
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_hro",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CKAN",
     "maxRecords": 100,
@@ -178,6 +160,7 @@
     "filterGroups": [
       "transport_verkehr"
     ],
+    "dateSourceFormats": [],
     "requestType": "ListWithResources",
     "markdownAsDescription": true,
     "description": "OpenData Rostock",
@@ -189,13 +172,10 @@
     ],
     "defaultAttribution": "OpenData Rostock",
     "disable": false,
-    "id": 7,
-    "proxy": ""
+    "id": 7
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_offenesdatenportal",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CKAN",
     "maxRecords": 100,
@@ -205,6 +185,7 @@
     "filterGroups": [
       "transport-verkehr"
     ],
+    "dateSourceFormats": [],
     "requestType": "ListWithResources",
     "markdownAsDescription": true,
     "description": "Offenesdatenportal",
@@ -216,13 +197,10 @@
     ],
     "defaultAttribution": "Offenesdatenportal",
     "disable": false,
-    "id": 8,
-    "proxy": ""
+    "id": 8
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_portal_hamburg",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CKAN",
     "maxRecords": 100,
@@ -232,6 +210,7 @@
     "filterGroups": [
       "transport-und-verkehr"
     ],
+    "dateSourceFormats": [],
     "requestType": "ListWithResources",
     "markdownAsDescription": true,
     "description": "Transparenzportal Hamburg",
@@ -243,13 +222,10 @@
     ],
     "defaultAttribution": "Transparenzportal Hamburg",
     "disable": true,
-    "id": 9,
-    "proxy": ""
+    "id": 9
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_rnv",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CKAN",
     "maxRecords": 100,
@@ -257,11 +233,11 @@
     "ckanBaseUrl": "https://opendata.rnv-online.de",
     "filterTags": [],
     "filterGroups": [],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": false,
     "dateSourceFormats": [
       "MM/DD/YYYY - hh:mm"
     ],
+    "requestType": "ListWithResources",
+    "markdownAsDescription": false,
     "description": "Open-Data-Portal des Rhein-Neckar-Verkehrs (RNV)",
     "defaultMcloudSubgroup": [
       "roads"
@@ -276,13 +252,10 @@
     },
     "defaultAttribution": "Open-Data-Portal RNV",
     "disable": false,
-    "id": 10,
-    "proxy": ""
+    "id": 10
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "ckan_opendata_nrw",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CKAN",
     "maxRecords": 100,
@@ -294,6 +267,7 @@
     "filterGroups": [
       "tran"
     ],
+    "dateSourceFormats": [],
     "requestType": "ListWithResources",
     "markdownAsDescription": false,
     "description": "NRW Portal",
@@ -305,13 +279,10 @@
     ],
     "defaultAttribution": "NRW Portal",
     "disable": true,
-    "id": 11,
-    "proxy": ""
+    "id": 11
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_wsv",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CSW",
     "maxRecords": 100,
@@ -332,13 +303,10 @@
     "defaultAttribution": "WSV.Geokatalog CSW",
     "defaultAttributionLink": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2",
     "disable": false,
-    "id": 12,
-    "proxy": ""
+    "id": 12
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_mdi",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CSW",
     "maxRecords": 100,
@@ -359,13 +327,10 @@
     "defaultAttribution": "MDI-DE",
     "defaultAttributionLink": "https://www.mdi-de.org/",
     "disable": false,
-    "id": 13,
-    "proxy": ""
+    "id": 13
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_bfg",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "BFG-CSW",
     "maxRecords": 100,
@@ -386,13 +351,10 @@
     "defaultAttribution": "Bundesanstalt für Gewässerkunde",
     "defaultAttributionLink": "https://geoportal.bafg.de/",
     "disable": false,
-    "id": 14,
-    "proxy": ""
+    "id": 14
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_dwd",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CSW",
     "maxRecords": 100,
@@ -414,13 +376,10 @@
     "defaultAttribution": "Climate Data Centre (CDC) Katalog des DWD",
     "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/csw",
     "disable": false,
-    "id": 15,
-    "proxy": ""
+    "id": 15
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_codede",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CODEDE-CSW",
     "maxRecords": 100,
@@ -441,13 +400,10 @@
     "defaultAttribution": "CODE-DE Catalogue",
     "defaultAttributionLink": "https://code-de.org/de/marketplace",
     "disable": false,
-    "id": 16,
-    "proxy": ""
+    "id": 16
   },
   {
-    "elasticSearchUrl": "http://localhost:9200",
     "index": "csw_bsh",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CSW",
     "maxRecords": 100,
@@ -468,13 +424,10 @@
     "defaultAttribution": "GeoSeaPortal (BSH)",
     "defaultAttributionLink": "https://www.geoseaportal.de/",
     "disable": false,
-    "id": 17,
-    "proxy": ""
+    "id": 17
   },
   {
-    "elasticSearchUrl": "localhost:9200",
     "index": "csw_bsh_inspire",
-    "alias": "mcloud",
     "includeTimestamp": true,
     "type": "CSW",
     "maxRecords": 100,

@@ -7,9 +7,9 @@ let elasticsearch = require('elasticsearch'),
     log = require('log4js').getLogger(__filename);
 
 export const DefaultElasticsearchSettings: ElasticSettings = {
-    elasticSearchUrl: 'localhost:9200',
+    // elasticSearchUrl: 'localhost:9200',
     index: '',
-    alias: '',
+    // alias: '',
     includeTimestamp: true
 };
 
