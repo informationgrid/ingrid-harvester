@@ -159,6 +159,7 @@ export class ExcelImporter implements Importer {
         } catch(error) {
             log.error('Error reading excel workbook', error);
             this.summary.numErrors++;
+            this.summary.appErrors.push('Error reading excel workbook: ' + error);
             observer.next(ImportResult.complete(this.summary));
             observer.complete();
         }

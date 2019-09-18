@@ -117,7 +117,9 @@ export class CswImporter implements Importer {
                 log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
                 await this.extractRecords(response, harvestTime)
             } else {
-                log.error(`Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`);
+                const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`;
+                log.error(message);
+                this.summary.appErrors.push(message);
             }
             this.requestDelegate.incrementStartRecordIndex();
             /*

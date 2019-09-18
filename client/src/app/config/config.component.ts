@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ConfigService} from "./config.service";
-import {GeneralSettings} from "../../../../shared/general-config.settings";
+import {GeneralSettings} from "@shared/general-config.settings";
 
 @Component({
   selector: 'app-config',

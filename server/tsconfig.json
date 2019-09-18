@@ -9,7 +9,11 @@
     "moduleResolution": "node",
     "experimentalDecorators":true,
     "emitDecoratorMetadata": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./app",
+    "paths": {
+      "@shared/*": ["../../shared/*"]
+    }
   },
   "exclude": [
     "node_modules"

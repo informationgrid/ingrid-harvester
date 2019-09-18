@@ -523,7 +523,7 @@ export class CswMapper extends GenericMapper {
             }
         } else {
             let node = CswMapper.select('./gco:CharacterString', element, true);
-            return node.textContent;
+            return node ? node.textContent : null;
         }
     }
 

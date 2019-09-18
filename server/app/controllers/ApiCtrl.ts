@@ -6,7 +6,7 @@ import {SummaryService} from '../services/config/SummaryService';
 import {ImportLogMessage} from '../model/import.result';
 import {LogService} from '../services/storage/LogService';
 import {ScheduleService} from '../services/ScheduleService';
-import {GeneralSettings} from '../../../shared/general-config.settings';
+import {GeneralSettings} from '@shared/general-config.settings';
 
 @Controller("/api")
 @Authenticated()

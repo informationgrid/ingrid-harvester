@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {GeneralSettings} from "../../../../shared/general-config.settings";
+import {GeneralSettings} from "@shared/general-config.settings";
 
 @Injectable({
   providedIn: 'root'

@@ -1,5 +1,5 @@
 import {Harvester} from '../../../../client/src/app/harvester/model/harvester';
-import {GeneralSettings} from '../../../../shared/general-config.settings';
+import {GeneralSettings} from '@shared/general-config.settings';
 import * as fs from 'fs';
 import {CkanImporter} from '../../importer/ckan/ckan.importer';
 import {ExcelImporter} from '../../importer/excel/excel.importer';

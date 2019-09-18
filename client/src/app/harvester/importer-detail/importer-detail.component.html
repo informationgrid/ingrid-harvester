@@ -14,22 +14,22 @@
     <ng-container *ngIf="data.complete">
 
         <div fxLayout="row" fxLayoutAlign="space-around">
-            <mat-card class="example-card">
+            <mat-card>
                 <mat-card-header>
-                    <div mat-card-avatar class="numberCircle">{{data.summary?.numDocs}}</div>
+                    <div mat-card-avatar class="numberCircle">{{data.summary?.numDocs - data.summary?.skippedDocs.length}}</div>
                     <mat-card-title>Dokumente</mat-card-title>
                     <mat-card-subtitle>{{data.summary?.skippedDocs.length}} übersprungen</mat-card-subtitle>
                 </mat-card-header>
             </mat-card>
 
-            <mat-card class="example-card">
+            <mat-card>
                 <mat-card-header>
                     <div mat-card-avatar class="numberCircle" [class.error]="data.summary?.numErrors > 0 || data.summary?.elasticErrors.length > 0">{{data.summary?.numErrors + data.summary?.elasticErrors.length}}</div>
                     <mat-card-title>Fehler</mat-card-title>
                 </mat-card-header>
             </mat-card>
 
-            <mat-card class="example-card">
+            <mat-card>
                 <mat-card-header>
                     <div mat-card-avatar class="numberCircle" [class.warning]="data.summary?.warnings?.length > 0">{{data.summary?.warnings?.length}}</div>
                     <mat-card-title>Warnungen</mat-card-title>
