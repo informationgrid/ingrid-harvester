@@ -17,9 +17,9 @@
   </form>
 
   <div class="form-buttons">
-    <button mat-button (click)="reset()">Zurücksetzen</button>
+    <button mat-button (click)="reset()" data-test="reset">Zurücksetzen</button>
     <div class="flex-space"></div>
-    <button mat-button color="primary" (click)="save()" [disabled]="!configForm.form.valid">Speichern</button>
+    <button mat-button color="primary" (click)="save()" [disabled]="!configForm.form.valid" data-test="save">Speichern</button>
   </div>
 
 </div>

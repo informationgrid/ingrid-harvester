@@ -8,7 +8,7 @@ describe('Login', () => {
 
   it('should show the login page', () => {
     cy.get('mat-card-title').contains('Login');
-    cy.get('.mat-button').contains('Login');
+    cy.get('[data-test=login]').contains('Login');
   });
 
   it('should be able to login', () => {

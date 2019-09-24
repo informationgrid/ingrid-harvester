@@ -39,14 +39,6 @@ export function ConfigLoader(configService: ConfigService, socket: Socket) {
     return configService.load('assets/' + environment.configFile)
       .pipe(tap(() => socket.disconnect()))
       .subscribe();
-    /*.then(json => {
-      debugger;
-      config = {url: json.backendUrl + '/ttt/import', options: {}};
-      socket.ioSocket.io.uri = config.url;
-      // socket.disconnect(true);
-      // socket.connect();
-      return config;
-    });*/
   };
 }
 

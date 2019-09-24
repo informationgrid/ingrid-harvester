@@ -8,7 +8,7 @@
 
         <h3>{{item.key}}</h3>
 
-        <mat-expansion-panel *ngFor="let harvester of item.value" hideToggle>
+        <mat-expansion-panel *ngFor="let harvester of item.value" hideToggle [id]="'harvester-' + harvester.id">
             <mat-expansion-panel-header>
 
                 <mat-panel-title>
@@ -21,7 +21,6 @@
                 </mat-panel-title>
 
                 <mat-panel-description *ngIf="importDetail[harvester.id]?.summary">
-                    &nbsp;
                     <mat-icon *ngIf="hasAnyErrors(harvester.id)" color="warn">error_outline</mat-icon>
                     <mat-icon *ngIf="!hasAnyProblems(harvester.id)" class="success">check_circle_outline</mat-icon>
                     <mat-icon *ngIf="hasOnlyWarnings(harvester.id)" class="warning">error_outline</mat-icon>
@@ -32,21 +31,22 @@
             <app-importer-detail [data]="importDetail[harvester.id]" [enabled]="!harvester.disable"></app-importer-detail>
 
             <mat-action-row>
-                <button mat-button (click)="showLog(harvester.id)" [disabled]="!hasAnyProblems(harvester.id)">
+                <button mat-button (click)="showLog(harvester.id)" [disabled]="!hasAnyProblems(harvester.id)" data-test="log">
                     <mat-icon class="inline-valigned">description</mat-icon>
                     Error-Log
                 </button>
                 <button mat-button (click)="startImport(harvester.id)"
+                        data-test="import"
                         [disabled]="importDetail[harvester.id]?.complete === false">
                     <mat-icon class="inline-valigned">import_export</mat-icon>
                     Import starten
                 </button>
-                <button mat-button (click)="schedule(harvester)">
+                <button mat-button (click)="schedule(harvester)" data-test="schedule">
                     <mat-icon class="inline-valigned">schedule</mat-icon>
                     Planen
                 </button>
                 <div class="flex-space"></div>
-                <button mat-button color="primary" (click)="edit(harvester)">
+                <button mat-button color="primary" (click)="edit(harvester)" data-test="edit">
                     <mat-icon class="inline-valigned">edit</mat-icon>
                     Bearbeiten
                 </button>
