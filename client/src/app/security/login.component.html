@@ -14,12 +14,12 @@
         </mat-form-field>
       </p>
 
-      <p *ngIf="error" class="error">
-        {{ error }}
+      <p *ngIf="showErrorMessage" class="error">
+        Benutzername oder Passwort falsch
       </p>
 
       <div class="button">
-        <button id="btnSubmit" type="submit" mat-button>Login</button>
+        <button id="btnSubmit" type="submit" mat-button data-test="login">Login</button>
       </div>
 
     </form>

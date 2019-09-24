@@ -98,7 +98,7 @@ export class CkanImporter implements Importer {
                 });
 
             this.summary.numDocs++;
-            const currentDocPostion = this.summary.numDocs + this.summary.skippedDocs.length;
+            const currentDocPostion = this.summary.numDocs;
             this.observer.next(ImportResult.running(currentDocPostion, totalCount));
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
@@ -107,7 +107,6 @@ export class CkanImporter implements Importer {
                         if (!response.queued) {
                             //let currentPos = this.summary.numDocs++;
                             this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
-                            // this.observer.next(ImportResult.running(this.numIndexDocs, totalCount));
                         }
                     })
             }
@@ -152,6 +151,11 @@ export class CkanImporter implements Importer {
                     .filter(dataset => this.hasValidTagsOrGroups(dataset, 'tags' , this.settings.filterTags))
                     .filter(dataset => this.hasValidTagsOrGroups(dataset, 'groups', this.settings.filterGroups));
 
+                // add skipped documents to count
+                const filteredLength = results.length - filteredResults.length;
+                if (filteredLength > 0) {
+                    this.summary.numDocs += filteredLength;
+                }
 
                 let ids = filteredResults.map(result => result.id);
 
