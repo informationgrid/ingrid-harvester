@@ -3,6 +3,10 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.no-wrap {
+  white-space: nowrap;
+}
+
 .form-wrapper {
   //padding-top: 40px;
   margin: 0 10%;

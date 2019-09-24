@@ -6,6 +6,10 @@ import {TestUtils} from './utils/test-utils';
 import {IndexDocument} from '../app/model/index.document';
 import {CkanSettings} from '../app/importer/ckan/ckan.settings';
 import {CkanImporter} from '../app/importer/ckan/ckan.importer';
+import {CkanMapper} from '../app/importer/ckan/ckan.mapper';
+import {Organization} from '../app/model/generic.mapper';
+
+const ckanDoc = require('./data/ckan_doc.json');
 
 let log = getLogger();
 configure('./log4js.json');
@@ -62,6 +66,36 @@ describe('Import CKAN Bahn', function () {
 
 
     }).timeout(10000);
+
+    it('should map ckan to index correctly', async () => {
+        const mapper = new CkanMapper({
+            ckanBaseUrl: 'https://data.deutschebahn.com',
+            index: 'xxx',
+            includeTimestamp: true,
+            type: ''
+        }, {
+            source: ckanDoc,
+            harvestTime: null,
+            issuedDate: null,
+            currentIndexName: 'test',
+            summary: null
+        });
+        const result = await IndexDocument.create(mapper);
+        chai.expect(result.title).to.eq('Reisezentren');
+        chai.expect(result.description).to.eq('Die Reisezentren enthalten eine Liste der Verkaufsstellen inkl. Adressen, Koordinaten und Öffnungszeiten.');
+        chai.expect(result.modified.toString()).to.eq(new Date('2019-09-11T07:16:44.317Z').toString());
+        chai.expect(result.keywords.length).to.eq(1);
+        chai.expect(result.keywords[0]).to.eq('Koordinaten');
+        chai.expect(result.publisher.length).to.eq(1);
+        chai.expect((<Organization>result.publisher[0]).organization).to.eq('DB Vertrieb GmbH');
+        chai.expect(result.distribution.length).to.eq(1);
+        chai.expect(result.distribution[0].title).to.eq('Reisezentrenliste (Stand: 09/2018)');
+        chai.expect(result.distribution[0].accessURL).to.eq('http://download-data.deutschebahn.com/static/datasets/reisezentren/VSRz201703.csv');
+        chai.expect(result.distribution[0].format).to.eq('CSV');
+        chai.expect(result.distribution[0].description).to.eq('Reisezentrenliste der DB Vertrieb GmbH');
+        chai.expect(result.distribution[0].modified.toString()).to.eq(new Date('2018-09-24T09:12:55.1358119').toString());
+        chai.expect(result.distribution[0].byteSize).to.eq(10325);
+    });
 
     after(() => indexDocumentCreateSpy.restore());
 

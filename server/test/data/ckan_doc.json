@@ -1,0 +1,49 @@
+{
+  "title": "Reisezentren",
+  "notes": "Die Reisezentren enthalten eine Liste der Verkaufsstellen inkl. Adressen, Koordinaten und Öffnungszeiten.",
+  "id": "bec58a38-b471-4f2d-bc32-610fd07e023e",
+  "metadata_created": "2016-06-08T06:17:38.205378",
+  "metadata_modified": "2019-09-11T09:16:44.317302",
+  "organization": {
+    "id": "731a14d2-9aa4-426a-8170-deeb2ee2f034",
+    "title": "DB Vertrieb GmbH",
+    "description": "[Webseite](http://www.db-vertrieb.com/db_vertrieb/view/index.shtml)",
+    "name": "db-vertrieb",
+    "created": "2016-06-08T06:15:42.263999"
+  },
+  "license_id": "cc-by",
+  "license_title": "Creative Commons Attribution",
+  "license_url": "http://www.opendefinition.org/licenses/cc-by",
+  "author": "Michael Binzen",
+  "author_email": "DBOpenData@deutschebahn.com",
+  "resources": [
+    {
+      "id": "ccd0fbac-582a-4fdd-825b-478c034a3e30",
+      "description": "Reisezentrenliste der DB Vertrieb GmbH",
+      "name": "Reisezentrenliste (Stand: 09/2018)",
+      "format": "CSV",
+      "url": "http://download-data.deutschebahn.com/static/datasets/reisezentren/VSRz201703.csv",
+      "created": "2017-03-15T15:03:18.306433",
+      "last_modified": "2018-09-24T09:12:55.1358119",
+      "size": 10325
+    }
+  ],
+  "description": "Dies ist eine Beschreibung",
+  "tags": [
+    {
+      "id": "e8622aa4-5a89-48ef-b78b-45aa60d6b122",
+      "display_name": "Koordinaten",
+      "name": "Koordinaten"
+    }
+  ],
+  "groups": [
+    {
+      "id": "85e11ae2-f595-448a-8945-820282df603d",
+      "display_name": "Datensätze",
+      "description": "",
+      "title": "Datensätze",
+      "name": "datasets"
+    }
+  ],
+  "update_cycle": "once_per_month"
+}

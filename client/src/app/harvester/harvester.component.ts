@@ -7,7 +7,6 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.component';
 import {DialogLogComponent} from './dialog-log/dialog-log.component';
 import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
-import {ImportNotifyComponent} from './notifications/import-notify.component';
 import {Socket} from 'ngx-socket-io';
 import {ImportLogMessage} from '../../../../server/app/model/import.result';
 import {flatMap, groupBy, mergeMap, tap, toArray} from 'rxjs/operators';
@@ -104,7 +103,7 @@ export class HarvesterComponent implements OnInit {
 
     this.harvesterService.runImport(id).subscribe();
 
-    this.snackBar.openFromComponent(ImportNotifyComponent, {
+    this.snackBar.open('Import gestartet', null, {
       duration: 3 * 1000
     });
 

@@ -7,6 +7,12 @@ moment.locale('de');
 export interface Distribution {
     format: string;
     accessURL: string;
+    id?: string;
+    title?: string;
+    description?: string;
+    issued?: Date;
+    modified?: Date;
+    byteSize?: number;
 }
 export interface Agent {
     homepage?: string;
@@ -63,7 +69,7 @@ export abstract class GenericMapper {
 
     abstract getAccessRights(): string[];
 
-    abstract async getDistributions(): Promise<any[]>;
+    abstract async getDistributions(): Promise<Distribution[]>;
 
     abstract getGeneratedId(): string;
 

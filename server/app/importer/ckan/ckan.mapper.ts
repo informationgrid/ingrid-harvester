@@ -4,7 +4,7 @@
 import {getLogger} from "log4js";
 import {OptionsWithUri} from "request-promise";
 import {CkanSettings} from "./ckan.settings";
-import {DateRange, GenericMapper, Organization, Person} from "../../model/generic.mapper";
+import {DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
 import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from "../../utils/http-request.utils";
 import {UrlUtils} from "../../utils/url.utils";
 import {Summary} from '../../model/summary';
@@ -76,7 +76,7 @@ export class CkanMapper extends GenericMapper {
         return [contact];
     }
 
-    async getDistributions(): Promise<any[]> {
+    async getDistributions(): Promise<Distribution[]> {
         let urlErrors = [];
         let distributions = [];
         let resources = this.source.resources;

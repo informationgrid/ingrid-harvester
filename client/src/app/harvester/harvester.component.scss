@@ -33,8 +33,9 @@ mat-expansion-panel-header {
 }
 
 .example-headers-align .mat-expansion-panel-header-description {
-  justify-content: space-between;
   align-items: center;
+  flex-grow: 0;
+  margin-right: 0;
 }
 
 .material-icons.inline-valigned {
