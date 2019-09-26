@@ -1,7 +1,7 @@
 /**
  * press button for adding a new harvester
  */
-function newHarvester() {
+function addNewHarvester() {
   cy.get('#btnAddHarvester').click()
 }
 
@@ -10,13 +10,14 @@ function newHarvester() {
  */
 function openHarvester(harvesterId) {
   cy.get('#harvester-' + harvesterId).click();
-  cy.get('data-test="edit"').click();
+  // cy.get('#harvester-' + harvesterId).click();
+  cy.get('[data-test="edit"]').filter(':visible').click();
 }
 
 /**
  * press button to lay a new harvester
  */
-function layHarvester() {
+function saveHarvesterConfig() {
   cy.get('.mat-button').contains('Anlegen').click();
 }
 
@@ -39,7 +40,9 @@ describe('Harvester', () => {
     });
     xit('should plan an import, activate the auto-planning and check it is performed', () => {
     });
-    xit('should import all at once', () => {
+    it('should import all harvesters at once', () => {
+      cy.importAll();
+      cy.get('.mat-simple-snackbar').contains('Import von allen Harvestern gestartet');
     });
     xit('should show an error-log if an import error/warning occurred', () => {
     });
@@ -69,42 +72,62 @@ describe('Harvester', () => {
     });
     xit('should show last import info after page refresh', () => {
     });
+    xit('should show last import info after page refresh', () => {
+    });
+
   });
 
   describe('Add/Update', () => {
     it('should add a harvester of type CKAN', () => {
-      newHarvester();
+      addNewHarvester();
       cy.fillCkanHarvester({
         description: 'Testing CKAN Harvester',
         indexName: 'Testing CKAN Harvester',
         ckanBasisUrl: 'testme'
       });
-      layHarvester()
+      saveHarvesterConfig()
     });
 
     it('should add a harvester of type CSW', () => {
-      newHarvester();
+      addNewHarvester();
       cy.fillCswHarvester({
         description: 'Testing CSW Harvester',
         indexName: 'Testing CSW Harvester',
         httpMethod: 'GET',
         getRecordsUrl: './testme'
       });
-      layHarvester();
+      saveHarvesterConfig();
     });
 
     it('should add a harvester of type EXCEL', () => {
-      newHarvester();
+      addNewHarvester();
       cy.fillExcelHarvester({
         description: 'Testing Excel Harvester',
         indexName: 'Testing Excel Harvester',
         path: './data.xlsx'
       });
-      layHarvester();
+      saveHarvesterConfig();
     });
 
     xit('should update a harvester of type CKAN', () => {
+      openHarvester('37');
+      //must also pass the required variables
+      cy.fillExistingCkanHarvester({
+        description: 'Testing update ckan Harvester',
+        indexName: 'Testing update ckan Harvester',
+        defaultDCATCategory: 'Energie',
+        defaultmCLOUDCategory: 'Infrastruktur',
+        defaultAttribution: '1'
+      });
+      updateHarvester();
+
+      //checks that the entered data has been saved
+      openHarvester('37');
+      cy.get('[name="defaultDCATCategory"]').should('contain', 'Energie');
+      cy.get('[name="defaultmCLOUDCategory"]').should('contain', 'Infrastruktur');
+      cy.get('[name="defaultAttribution"]').should('have.value', '1');
     });
+
     xit('should update a harvester of type CSW', () => {
     });
     xit('should update a harvester of type Excel', () => {
@@ -117,7 +140,20 @@ describe('Harvester', () => {
     });
     xit('should not be possible to set maxRecords below 0', () => {
     });
-    xit('should complete a harvester of type Excel', () => {
+
+    it('should complete a harvester of type Excel', () => {
+      addNewHarvester();
+      cy.fillExcelHarvester({
+        description: 'Testing Excel Harvester',
+        indexName: 'Testing Excel Harvester',
+        path: './data.xlsx',
+        defaultDCATCategory: 'Bevölkerung und Gesellschaft',
+        defaultmCLOUDCategory: 'Bahn',
+        defaultAttribution: '100',
+        defaultAttributionLink: '23',
+        maxRecords: 'capa'
+      });
+      saveHarvesterConfig();
     });
 
   });

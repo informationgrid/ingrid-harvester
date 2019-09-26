@@ -18,41 +18,45 @@ describe('Configuration', () => {
     cy.visit('');
     cy.login('admin', 'admin');
     cy.goToConfig();
-  });
 
-  after( () => {
+    //clean up state should be done before tests as to best practices
     cy.get('[name="elasticsearchUrl"]').clear().type('http://localhost:9200');
     cy.get('[name="alias"]').clear().type('mcloud');
     cy.get('[name="proxy"]').clear();
     pressSaveButton();
   });
 
-  it('should update elastic search-url, alias and proxy and reset to default', () =>{
-    cy.get('[name="elasticsearchUrl"]').clear().type('http://localhost:92000000');
-    cy.get('[name="alias"]').clear().type('eman-saila');
-    cy.get('[name="proxy"]').clear().type('yxorp');
-
-    pressResetButton();
-
-    cy.get('[name="elasticsearchUrl"]').should('have.value','http://localhost:9200');
-    cy.get('[name="alias"]').should('have.value','mcloud');
-    cy.get('[name="proxy"]').should('have.value','');
-  });
-
-  it('should update elastic search-url, alias and proxy and save', () =>{
+  it('should update elastic search-url, alias and proxy and save', () => {
     cy.get('[name="elasticsearchUrl"]').clear().type('http://localhost:92000000');
     cy.get('[name="alias"]').clear().type('eman-saila');
     cy.get('[name="proxy"]').clear().type('yxorp');
 
     pressSaveButton();
 
-    cy.get('[name="elasticsearchUrl"]').should('have.value','http://localhost:92000000');
-    cy.get('[name="alias"]').should('have.value','eman-saila');
-    cy.get('[name="proxy"]').should('have.value','yxorp');
+    cy.get('[name="elasticsearchUrl"]').should('have.value', 'http://localhost:92000000');
+    cy.get('[name="alias"]').should('have.value', 'eman-saila');
+    cy.get('[name="proxy"]').should('have.value', 'yxorp');
 
   });
 
-  xit('should not allow elasticsearch port higher than 65535?', () =>{});
-  xit('should not allow chars als port ? ', () =>{});
+  it('should update elastic search-url, alias and proxy and reset to default', () => {
+    cy.get('[name="elasticsearchUrl"]').clear().type('http://localhost:92000000');
+    cy.get('[name="alias"]').clear().type('eman-saila');
+    cy.get('[name="proxy"]').clear().type('yxorp');
+
+    pressResetButton();
+
+    cy.get('[name="elasticsearchUrl"]').should('have.value', 'http://localhost:9200');
+    cy.get('[name="alias"]').should('have.value', 'mcloud');
+    cy.get('[name="proxy"]').should('have.value', '');
+  });
+
+  xit('should not allow to press save button if elasticsearch port value is not valid', () => {
+  });
+
+  xit('should not allow elasticsearch port higher than 65535?', () => {
+  });
+  xit('should not allow chars als port ? ', () => {
+  });
 
 });

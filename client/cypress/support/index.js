@@ -18,6 +18,8 @@
 // Import commands.js using ES2015 syntax:
 import './general';
 import './harvester';
+import './import';
+import './index';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

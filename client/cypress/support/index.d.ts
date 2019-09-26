@@ -7,6 +7,8 @@ declare namespace Cypress {
      */
     login(username: string, password: string): Chainable
 
+    fastLogin(username: string, password: string): Chainable
+
     /**
      * log out
      */
@@ -37,9 +39,16 @@ declare namespace Cypress {
 
     fillExcelHarvester(options: HarvesterCommonOptions & HarvesterExcelOptions): Chainable
 
+    fillExistingCkanHarvester(options: HarvesterCommonOptions & HarvesterCkanOptions): Chainable
+
     /**
      * update / modify harvester
      */
+
+    /**
+     * import commands
+     */
+    importAll(): Chainable
 
   }
 }
@@ -59,8 +68,8 @@ interface HarvesterCommonOptions {
   defaultmCLOUDCategory?: 'Bahn' | 'Infrastruktur' | 'Klima und Wetter' | 'Gesundheit' | 'Luft- und Raumfahrt' | 'Straßen' | 'Wasserstraßen und Gewässer';
   defaultAttribution?: string;
   defaultAttributionLink?: string;
-  maxRecords?: number;
-  startPosition?: number;
+  maxRecords?: string;
+  startPosition?: string;
 }
 
 /**

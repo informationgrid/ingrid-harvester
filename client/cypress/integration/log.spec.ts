@@ -1,14 +1,15 @@
-import {throwError} from "rxjs";
-
 describe('Log', () => {
 
   beforeEach(() => {
     cy.visit('');
     cy.login('admin', 'admin');
-    cy.goToLog();
+    //cy.goToLog();
   });
 
-  xit('should do something with the log', () => {
-
+  it('should show information when all the harvester are imported', () => {
+    //cy.goToHarvester();
+    cy.importAll();
+    cy.goToLog();
+    cy.get('.code').contains('[INFO] default - >> Running importer:');
   });
 });

@@ -4,7 +4,15 @@ describe('Login', () => {
     cy.visit('');
   });
 
+  //TODO login wihtout GUI <- cy.task() https://github.com/cypress-io/cypress-example-recipes/blob/master/examples/logging-in__single-sign-on/cypress/integration/logging-in-single-sign-on-spec.js
+
   // https://on.cypress.io/interacting-with-elements
+
+  xit('should be able to log in without using the gui', () => {
+    cy.fastLogin('admin', 'admin');
+    cy.url().should('include', '/harvester');
+    cy.get('mat-toolbar button').contains('Max Muster');
+  });
 
   it('should show the login page', () => {
     cy.get('mat-card-title').contains('Login');
