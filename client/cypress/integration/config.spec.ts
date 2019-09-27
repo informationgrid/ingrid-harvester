@@ -51,7 +51,19 @@ describe('Configuration', () => {
     cy.get('[name="proxy"]').should('have.value', '');
   });
 
-  xit('should not allow to press save button if elasticsearch port value is not valid', () => {
+  xit('should write wrong port values and not be able to save', () => {
+    // TODO functionality must be implemented
+    //value is too big
+    cy.get('[name="elasticsearchUrl"]').clear().type('http://localhost:92000000');
+    cy.get('.mat-button').contains('Speichern').should('not.be.visible');
+
+    //value is NaN
+    cy.get('[name="elasticsearchUrl"]').clear().type('http://localhost:porttout');
+    cy.get('.mat-button').contains('Speichern').should('not.be.visible');
+
+    //value is negative
+    cy.get('[name="elasticsearchUrl"]').clear().type('http://localhost:-42');
+    cy.get('.mat-button').contains('Speichern').should('not.be.visible');
   });
 
   xit('should not allow elasticsearch port higher than 65535?', () => {

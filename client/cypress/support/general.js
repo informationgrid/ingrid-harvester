@@ -1,34 +1,16 @@
 /**
  * Login command
  */
-Cypress.Commands.add("login", (username, password) =>  {
+Cypress.Commands.add("login", (username, password) => {
   cy.get('input[formcontrolname="username"]').type(username);
   cy.get('input[formcontrolname="password"]').type(password);
 
   cy.get('[data-test=login]').click();
 });
 
-/*Cypress.Commands.add("fastLogin", (username, password) =>  {
-  const options = {
-    method: 'POST',
-    url: 'http://mcloud-qs.wemove.com/importer/login',
-    qs: {
-      //sets  query string to the url that creates
-    },
-
-    form: true, // submitting a regular form body
-    body: {
-      username: username,
-      password: password,
-    }
-  };
-
-  //       _.extend(options, overrides);
-
-  cy.request(options);
-
-
-});*/
+Cypress.Commands.add("fastLogin", (user, psw) => {
+ cy.request('POST', 'rest/passport/login', {username: user, password: psw});
+});
 
 /**
  * Logout Command

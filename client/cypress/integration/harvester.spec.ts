@@ -36,13 +36,29 @@ describe('Harvester', () => {
   });
 
   describe('Import', () => {
-    xit('should start an import and check it is successful', () => {
+    it.only('should start an import and check it is successful', () => {
+      //opens "Deutsche Bahn Datenportal"
+      cy.get('#harvester-6').click();
+      cy.get('[data-test=import]:visible').click();
+      cy.get('.mat-simple-snackbar').should('contain','Import gestartet');
+
+      cy.get('[data-test="next-execution"]').should('contain', ' wurde geändert ');
+
     });
-    xit('should plan an import, activate the auto-planning and check it is performed', () => {
+
+    it.only('should plan an import, activate the auto-planning and check it is performed', () => {
+      cy.get('#harvester-6').click();
+      cy.get('[data-test=schedule]:visible').click(); //
+      cy.get('[placeholder="* * * * *"]').clear().type('* * * * *');
+
+      cy.get('.mat-button:visible').contains('Planen').click();
+
+      //TODO
+
     });
     it('should import all harvesters at once', () => {
       cy.importAll();
-      cy.get('.mat-simple-snackbar').contains('Import von allen Harvestern gestartet');
+      cy.get('.mat-simple-snackbar').should('contain','Import von allen Harvestern gestartet');
     });
     xit('should show an error-log if an import error/warning occurred', () => {
     });
