@@ -31,39 +31,82 @@ function updateHarvester() {
 describe('Harvester', () => {
 
   beforeEach(() => {
-    cy.visit('');
-    cy.login('admin', 'admin');
+    cy.apiLogin('admin', 'admin');
   });
 
   describe('Import', () => {
-    it.only('should start an import and check it is successful', () => {
-      //opens "Deutsche Bahn Datenportal"
-      cy.get('#harvester-6').click();
+    it('should start an import and check it is successful', () => {
+      //opens "Offene Daten Bonn: parameters wrong"
+      cy.get('#harvester-3').click();
       cy.get('[data-test=import]:visible').click();
-      cy.get('.mat-simple-snackbar').should('contain','Import gestartet');
-
-      cy.get('[data-test="next-execution"]').should('contain', ' wurde geändert ');
-
+      cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
+      cy.get('app-importer-detail').should('contain', ' Import läuft ');
     });
 
-    it.only('should plan an import, activate the auto-planning and check it is performed', () => {
+    it('should plan an import, activate the auto-planning, check it is executed and turn off the auto-planning', () => {
       cy.get('#harvester-6').click();
       cy.get('[data-test=schedule]:visible').click(); //
       cy.get('[placeholder="* * * * *"]').clear().type('* * * * *');
 
-      cy.get('.mat-button:visible').contains('Planen').click();
+      cy.get('.mat-dialog-actions > .mat-primary > .mat-button-wrapper').contains('Planen').click();
 
-      //TODO
+      cy.get('[data-test="next-execution"]').should('contain', ' wurde geändert ');
 
+      //turn off pattern too
+      cy.get('[data-test=schedule]:visible').click();
+      cy.get('.mat-form-field-suffix > .mat-button > .mat-button-wrapper > .mat-icon').click();
+      cy.get('.mat-dialog-actions > .mat-primary > .mat-button-wrapper').contains('Planen').click();
     });
+
     it('should import all harvesters at once', () => {
       cy.importAll();
-      cy.get('.mat-simple-snackbar').should('contain','Import von allen Harvestern gestartet');
+      cy.get('.mat-simple-snackbar').should('contain', 'Import von allen Harvestern gestartet');
     });
-    xit('should show an error-log if an import error/warning occurred', () => {
+
+    it('should show an error-log if an import error/warning occurred', () => {
+      //creates an excel harvester with wrong path if not existing already
+/*      addNewHarvester();
+      cy.fillExcelHarvester({
+        description: 'Testing Excel Harvester',
+        indexName: 'Testing Excel Harvester',
+        path: './data.xlsx'
+      });
+      saveHarvesterConfig();*/
+      cy.get('#harvester-22').click();
+      cy.get('[data-test=import]:visible').click();
+      cy.get('[data-test=log]:visible').click();
+      cy.get('.logContainer').should('contain', 'Error reading excel workbook: Error occurred creating index');
+      cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
+      cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name');
     });
-    xit('should not show an error-log if import was successful', () => {
-    });
+
+    /*it.only('should not show an error-log if import was successful', () => {
+      cy.get('#harvester-7').click();
+      cy.get('[data-test=import]:visible').click();
+      cy.wait(700);
+      cy.get('[data-test=num-errors]:visible').invoke('text').then((numErr) => {
+        //no errors
+        if(numErr.toString() === '0'){
+          cy.get('[data-test=num-warnings]:visible').invoke('text').then((numWarnings) => {
+            //no warnings
+            if(numWarnings.text() === '0'){
+              cy.get('[data-test=log]:visible').should('be.disabled');
+            }
+            //there are warnings
+            else {
+              //check log that there are no errors, only warnings
+              cy.get('[data-test=log]:visible').click();
+              cy.get('.logContainer').should('contain', '');
+              cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
+              cy.get('.logContainer').should('contain', '');
+            }
+          })
+        }
+
+
+        });
+    });*/
+
     xit('should show an error if CKAN URL is not valid', () => {
     });
     xit('should show an error if CSW URL is not valid', () => {

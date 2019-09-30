@@ -5,14 +5,15 @@ declare namespace Cypress {
      * Login as a user
      * @example cy.login('max', 'mustermann')
      */
-    login(username: string, password: string): Chainable
+    guiLogin(username: string, password: string): Chainable
 
-    fastLogin(username: string, password: string): Chainable
+    apiLogin(username: string, password: string): Chainable
 
     /**
      * log out
      */
-    logout(): Chainable
+    guiLogout(): Chainable
+    apiLogout(): Chainable
 
     /**
      * changes tab

@@ -15,8 +15,7 @@ function pressResetButton() {
 describe('Configuration', () => {
 
   beforeEach(() => {
-    cy.visit('');
-    cy.login('admin', 'admin');
+    cy.apiLogin('admin', 'admin');
     cy.goToConfig();
 
     //clean up state should be done before tests as to best practices

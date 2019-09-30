@@ -1,23 +1,45 @@
 /**
  * Login command
  */
-Cypress.Commands.add("login", (username, password) => {
+Cypress.Commands.add("guiLogin", (username, password) => {
+  //visit must be done before the log in
+  cy.visit('');
   cy.get('input[formcontrolname="username"]').type(username);
   cy.get('input[formcontrolname="password"]').type(password);
 
   cy.get('[data-test=login]').click();
 });
 
-Cypress.Commands.add("fastLogin", (user, psw) => {
- cy.request('POST', 'rest/passport/login', {username: user, password: psw});
+Cypress.Commands.add("apiLogin", (user, psw) => {
+  cy.request({
+    method:'POST',
+    url: 'rest/passport/login',
+    body: {username: user, password: psw},
+    failOnStatusCode: false
+  }).then((response) => {
+      if(response.body !== 'User not found'){
+        window.localStorage.setItem('currentUser', JSON.stringify(response.body))}
+    });
+
+  //should have a cookie session
+  cy.getCookie('connect.sid').should('exist');
+  cy.visit('');
 });
 
 /**
  * Logout Command
  */
-Cypress.Commands.add("logout", () => {
+Cypress.Commands.add("guiLogout", () => {
   cy.get('[data-test=logout]').click();
 });
+
+Cypress.Commands.add("apiLogout", () => {
+  cy.request({
+    method: 'GET',
+    url: 'rest/passport/logout'});
+  cy.reload();
+});
+
 
 /**
  * change to configuration page

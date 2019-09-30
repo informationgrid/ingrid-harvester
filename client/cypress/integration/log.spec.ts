@@ -1,8 +1,7 @@
 describe('Log', () => {
 
   beforeEach(() => {
-    cy.visit('');
-    cy.login('admin', 'admin');
+    cy.apiLogin('admin', 'admin');
     //cy.goToLog();
   });
 
