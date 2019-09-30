@@ -56,9 +56,13 @@ export class ScheduleService {
      */
     private scheduleJob(id: number, cronExpression: string, startImmediately: boolean): void {
 
-        this.jobs[id] = new CronJob(cronExpression, () => {
-            this.socketService.runImport(id);
-        }, null, startImmediately, 'Europe/Berlin');
+        try {
+            this.jobs[id] = new CronJob(cronExpression, () => {
+                this.socketService.runImport(id);
+            }, null, startImmediately, 'Europe/Berlin');
+        } catch (e) {
+            log.error('Could not schedule job with ID: ' + id, e);
+        }
 
     }
 
