@@ -1,11 +1,11 @@
-describe('Log', () => {
+describe('LOG TAB TESTS', () => {
 
   beforeEach(() => {
     cy.apiLogin('admin', 'admin');
     //cy.goToLog();
   });
 
-  xit('should show information when all the harvester are imported', () => {
+  it('should show information when all the harvester are imported', () => {
     //cy.goToHarvester();
     cy.importAll();
     cy.goToLog();

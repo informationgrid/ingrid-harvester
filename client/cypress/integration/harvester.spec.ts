@@ -15,7 +15,7 @@ function openHarvester(harvesterId) {
 }
 
 /**
- * press button to lay a new harvester
+ * press button for harvester update
  */
 function saveHarvesterConfig() {
   cy.get('.mat-button').contains('Anlegen').click();
@@ -28,118 +28,15 @@ function updateHarvester() {
   cy.get('.mat-button').contains('Aktualisieren').click();
 }
 
-describe('Harvester', () => {
-
+describe('TEST HARVESTER OPERATIONS', () => {
   beforeEach(() => {
     cy.apiLogin('admin', 'admin');
   });
 
-  describe('Import', () => {
-    it('should start an import and check it is successful', () => {
-      //opens "Offene Daten Bonn: parameters wrong"
-      cy.get('#harvester-3').click();
-      cy.get('[data-test=import]:visible').click();
-      cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
-      cy.get('app-importer-detail').should('contain', ' Import läuft ');
-    });
-
-    it('should plan an import, activate the auto-planning, check it is executed and turn off the auto-planning', () => {
-      cy.get('#harvester-6').click();
-      cy.get('[data-test=schedule]:visible').click(); //
-      cy.get('[placeholder="* * * * *"]').clear().type('* * * * *');
-
-      cy.get('.mat-dialog-actions > .mat-primary > .mat-button-wrapper').contains('Planen').click();
-
-      cy.get('[data-test="next-execution"]').should('contain', ' wurde geändert ');
-
-      //turn off pattern too
-      cy.get('[data-test=schedule]:visible').click();
-      cy.get('.mat-form-field-suffix > .mat-button > .mat-button-wrapper > .mat-icon').click();
-      cy.get('.mat-dialog-actions > .mat-primary > .mat-button-wrapper').contains('Planen').click();
-    });
-
-    it('should import all harvesters at once', () => {
-      cy.importAll();
-      cy.get('.mat-simple-snackbar').should('contain', 'Import von allen Harvestern gestartet');
-    });
-
-    it('should show an error-log if an import error/warning occurred', () => {
-      //creates an excel harvester with wrong path if not existing already
-/*      addNewHarvester();
-      cy.fillExcelHarvester({
-        description: 'Testing Excel Harvester',
-        indexName: 'Testing Excel Harvester',
-        path: './data.xlsx'
-      });
-      saveHarvesterConfig();*/
-      cy.get('#harvester-22').click();
-      cy.get('[data-test=import]:visible').click();
-      cy.get('[data-test=log]:visible').click();
-      cy.get('.logContainer').should('contain', 'Error reading excel workbook: Error occurred creating index');
-      cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
-      cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name');
-    });
-
-    /*it.only('should not show an error-log if import was successful', () => {
-      cy.get('#harvester-7').click();
-      cy.get('[data-test=import]:visible').click();
-      cy.wait(700);
-      cy.get('[data-test=num-errors]:visible').invoke('text').then((numErr) => {
-        //no errors
-        if(numErr.toString() === '0'){
-          cy.get('[data-test=num-warnings]:visible').invoke('text').then((numWarnings) => {
-            //no warnings
-            if(numWarnings.text() === '0'){
-              cy.get('[data-test=log]:visible').should('be.disabled');
-            }
-            //there are warnings
-            else {
-              //check log that there are no errors, only warnings
-              cy.get('[data-test=log]:visible').click();
-              cy.get('.logContainer').should('contain', '');
-              cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
-              cy.get('.logContainer').should('contain', '');
-            }
-          })
-        }
-
-
-        });
-    });*/
-
-    xit('should show an error if CKAN URL is not valid', () => {
-    });
-    xit('should show an error if CSW URL is not valid', () => {
-    });
-    xit('should show an error if Excel path is not valid', () => {
-    });
-    xit('show not allow to add cron pattern "* *? * * *"', () => {
-    });
-    xit('should disable scheduling for a harvester', () => {
-    });
-    xit('should have a valid value if scheduling is active', () => {
-    });
-    xit('should activate a scheduled importer', () => {
-    });
-    xit('should deactivate a scheduled importer', () => {
-    });
-    xit('should not be able to activate an importer without scheduling', () => {
-    });
-    xit('should show reset cron expression if right cancel button is pressed', () => {
-    });
-    xit('should show information when info button is pressed', () => {
-    });
-    xit('should show last import info after page refresh', () => {
-    });
-    xit('should show last import info after page refresh', () => {
-    });
-
-  });
-
-  describe('Add/Update', () => {
-    it('should add a harvester of type CKAN', () => {
+  describe('ADD', () => {
+    it('add a harvester of type CKAN', () => {
       addNewHarvester();
-      cy.fillCkanHarvester({
+      cy.newCkanHarvester({
         description: 'Testing CKAN Harvester',
         indexName: 'Testing CKAN Harvester',
         ckanBasisUrl: 'testme'
@@ -147,9 +44,10 @@ describe('Harvester', () => {
       saveHarvesterConfig()
     });
 
-    it('should add a harvester of type CSW', () => {
+    //TODO cant add csw url if type is not given
+    it('add a harvester of type CSW', () => {
       addNewHarvester();
-      cy.fillCswHarvester({
+      cy.newCswHarvester({
         description: 'Testing CSW Harvester',
         indexName: 'Testing CSW Harvester',
         httpMethod: 'GET',
@@ -158,9 +56,9 @@ describe('Harvester', () => {
       saveHarvesterConfig();
     });
 
-    it('should add a harvester of type EXCEL', () => {
+    it('add a harvester of type EXCEL', () => {
       addNewHarvester();
-      cy.fillExcelHarvester({
+      cy.newExcelHarvester({
         description: 'Testing Excel Harvester',
         indexName: 'Testing Excel Harvester',
         path: './data.xlsx'
@@ -168,41 +66,9 @@ describe('Harvester', () => {
       saveHarvesterConfig();
     });
 
-    xit('should update a harvester of type CKAN', () => {
-      openHarvester('37');
-      //must also pass the required variables
-      cy.fillExistingCkanHarvester({
-        description: 'Testing update ckan Harvester',
-        indexName: 'Testing update ckan Harvester',
-        defaultDCATCategory: 'Energie',
-        defaultmCLOUDCategory: 'Infrastruktur',
-        defaultAttribution: '1'
-      });
-      updateHarvester();
-
-      //checks that the entered data has been saved
-      openHarvester('37');
-      cy.get('[name="defaultDCATCategory"]').should('contain', 'Energie');
-      cy.get('[name="defaultmCLOUDCategory"]').should('contain', 'Infrastruktur');
-      cy.get('[name="defaultAttribution"]').should('have.value', '1');
-    });
-
-    xit('should update a harvester of type CSW', () => {
-    });
-    xit('should update a harvester of type Excel', () => {
-    });
-
-    xit('should not be possible to change type during update', () => {
-    });
-
-    xit('should not be possible to set startPosition below 0', () => {
-    });
-    xit('should not be possible to set maxRecords below 0', () => {
-    });
-
-    it('should complete a harvester of type Excel', () => {
+    it('add a new harvester of type Excel with all options', () => {
       addNewHarvester();
-      cy.fillExcelHarvester({
+      cy.newExcelHarvester({
         description: 'Testing Excel Harvester',
         indexName: 'Testing Excel Harvester',
         path: './data.xlsx',
@@ -216,5 +82,98 @@ describe('Harvester', () => {
     });
 
   });
-});
 
+  describe('UPDATE', () => {
+    it('update a harvester of type CKAN', () => {
+      openHarvester('42');
+
+      //if dcatCategory value to input already selected then deselect it
+      cy.get('[name=defaultDCATCategory]')
+        .then((dcatCat) => {
+          if(dcatCat.text().includes('Energie')){
+            cy.get('[name="defaultDCATCategory"]').click();
+            cy.get('.mat-option-text').contains('Energie').click();
+            cy.get('[name="defaultDCATCategory"]').type('{esc}');
+          }
+        });
+      //if mcloudCategory value to input already selected then deselect it
+      cy.get('[name=defaultmCLOUDCategory]')
+        .then((mcloudCat) => {
+          if(mcloudCat.text().includes('Infrastruktur')){
+            cy.get('[name="defaultmCLOUDCategory"]').click();
+            cy.get('.mat-option-text').contains('Infrastruktur').click();
+            cy.get('[name="defaultmCLOUDCategory"]').type('{esc}');
+          }
+        });
+
+      cy.setHarvesterFields({
+        indexName: 'Testing update ckan Harvester',
+        defaultDCATCategory: 'Energie', //elements must not be already selected
+        defaultmCLOUDCategory: 'Infrastruktur',
+        defaultAttribution: '1'
+      });
+      updateHarvester();
+      cy.reload();
+      //checks data was saved
+      openHarvester('42');
+      cy.get('[name="defaultDCATCategory"]').should('contain', 'Energie');
+      cy.get('[name="defaultmCLOUDCategory"]').should('contain', 'Infrastruktur');
+      cy.get('[name="defaultAttribution"]').should('have.value', '1');
+    });
+
+    xit('update a harvester of type CSW', () => {
+    });
+    xit('update a harvester of type Excel', () => {
+    });
+
+    //button supposed to be disable but it is not
+    xit('cannot change type during an update', () => {
+      // not working
+      openHarvester('42');
+      cy.get('[name=type]').should('be.disabled');
+    });
+
+    //TODO implement input control.
+    it('startPosition cannot be negative or a character', () => {
+      openHarvester('42');
+
+      cy.setHarvesterFields({startPosition: 'ffm'});
+      cy.get('[name=startPosition]').should('not.contain', 'ffm');
+
+      // cy.setHarvesterFields({startPosition: '0'});
+      // cy.get('[name=startPosition]').focus();
+      // cy.get('[name=startPosition]').click();
+      cy.setHarvesterFields({startPosition: '-7'});
+
+      cy.get('[name=startPosition]').invoke('val')
+        .then((value)=> {
+          expect(value).to.be.greaterThan(-1);
+        })
+    });
+
+    it('maxRecords cannot be negative or a character', () => {
+      openHarvester('42');
+
+      cy.setHarvesterFields({maxRecords: 'ffm'});
+      cy.get('[name=maxRecords]').should('contain', '');
+
+      cy.setHarvesterFields({maxRecords: '-7'});
+
+      cy.get('[name=maxRecords]').invoke('val')
+        .then((value)=> {
+          expect(value).to.be.greaterThan(-1);
+        })
+    });
+
+    //TODO to implement
+    it('maxRecords and startPosition can have at most 4 digits', () => {
+      openHarvester('42');
+
+      cy.setHarvesterFields({maxRecords: '1234567', startPosition: '1234567'});
+
+      cy.get('[name=maxRecords]').should('contain', '1234');
+      cy.get('[name=startPosition]').should('contain', '1234');
+    });
+
+  });
+});

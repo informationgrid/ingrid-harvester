@@ -6,7 +6,6 @@ declare namespace Cypress {
      * @example cy.login('max', 'mustermann')
      */
     guiLogin(username: string, password: string): Chainable
-
     apiLogin(username: string, password: string): Chainable
 
     /**
@@ -19,45 +18,46 @@ declare namespace Cypress {
      * changes tab
      */
     goToConfig(): Chainable
-
     goToHarvester(): Chainable
-
     goToLog(): Chainable
 
     /**
-     *adds harvester
-     */
-    addCommonFieldsHarvester(options: HarvesterCommonOptions): Chainable
-
-    /**
-     * Fill form with data for a CKAN harvester. If an option field is not set
-     * then the form field is also not set.
+     * Fill form with data for a harvester.
+     * If an option field is not set then the form field is also not set.
      * @param options
      */
-    fillCkanHarvester(options: HarvesterCommonOptions & HarvesterCkanOptions): Chainable
-
-    fillCswHarvester(options: HarvesterCommonOptions & HarvesterCswOptions): Chainable
-
-    fillExcelHarvester(options: HarvesterCommonOptions & HarvesterExcelOptions): Chainable
-
-    fillExistingCkanHarvester(options: HarvesterCommonOptions & HarvesterCkanOptions): Chainable
+    newCkanHarvester(options: HarvesterOptions): Chainable
+    newCswHarvester(options: HarvesterOptions): Chainable
+    newExcelHarvester(options: HarvesterOptions): Chainable
 
     /**
-     * update / modify harvester
+     * update a harvester
      */
+    setHarvesterFields(options: HarvesterOptions): Chainable
 
     /**
      * import commands
      */
     importAll(): Chainable
-
   }
 }
 
 /**
  * common options for all types of harvesters
  */
-interface HarvesterCommonOptions {
+interface HarvesterOptions {
+  path?: string; //excel
+
+  ckanBasisUrl?: string; //ckan
+  filterTag?: string;
+  filterGroup?: string;
+  dateFormat?: string;
+
+  httpMethod?: 'GET' | 'POST'; //csw
+  getRecordsUrl?: string;
+  recordFilter?: string;
+  keywords?: string;
+
   //required fields
   description?: string;
   indexName?: string;
@@ -71,33 +71,6 @@ interface HarvesterCommonOptions {
   defaultAttributionLink?: string;
   maxRecords?: string;
   startPosition?: string;
-}
-
-/**
- * required option for excel harvester
- */
-interface HarvesterExcelOptions {
-  path?: string;
-}
-
-/**
- * required options for ckan harvester
- */
-interface HarvesterCkanOptions {
-  ckanBasisUrl?: string;
-  filterTag?: string;
-  filterGroup?: string;
-  dateFormat?: string;
-}
-
-/**
- * required options for csw harvester
- */
-interface HarvesterCswOptions {
-  httpMethod?: 'GET' | 'POST';
-  getRecordsUrl?: string;
-  recordFilter?: string;
-  keywords?: string;
 }
 
 // Convert this to a module instead of script (allows import/export)

@@ -1,105 +1,144 @@
 /**
- * adds common fields
+ * sets harvesters type
  */
-function addCommon(options) {
-  cy.get('[name="description"]').clear().type(options.description);
-  cy.get('[name="index"]').clear().type(options.indexName);
+function setCkanType() {
+  cy.get('[name="type"]').click();
+  cy.get('.mat-option-text').contains('CKAN').click();
+}
 
-  //if an option exists, it is added
+function setCswType() {
+  cy.get('[name="type"]').click();
+  cy.get('.mat-option-text').contains('CSW').click();
+}
+
+function setExcelType() {
+  cy.get('[name="type"]').click();
+  cy.get('.mat-option-text').contains('EXCEL').click();
+}
+
+/**
+ * set all harvesters fields
+ * required and non required fields are checked to ensure more flexibility in the tests
+ */
+function setHarvesterFields(options) {
+
+  //required fields for every harvester
+  if(options.description){
+    cy.get('[name="description"]').clear().type(options.description);
+  }
+  if(options.indexName){
+    cy.get('[name="index"]').clear().type(options.indexName);
+  }
+
+  //required fields depending on type
+  if (options.ckanBasisUrl) { //ckan
+    setCkanBasisUrl(options.ckanBasisUrl);
+  }
+
+  if (options.httpMethod) { //csw
+    setCswHttpMethod(options.httpMethod);
+  }
+  if (options.getRecordsUrl) {
+    setGetRecordsUrl(options.getRecordsUrl);
+  }
+
+  if (options.path) { //excel
+    setExcelPath(options.path);
+  }
+
+  //non required fields
   if (options.defaultDCATCategory) {
-    addDefaultDCATCategory(options.defaultDCATCategory);
+    setDefaultDCATCategory(options.defaultDCATCategory);
   }
   if (options.defaultmCLOUDCategory) {
-    addDefaultmCLOUDCategory(options.defaultmCLOUDCategory);
+    setDefaultmCLOUDCategory(options.defaultmCLOUDCategory);
   }
   if (options.defaultAttribution) {
-    addDefaultAttribution(options.defaultAttribution);
+    setDefaultAttribution(options.defaultAttribution);
   }
   if (options.defaultAttributionLink) {
-    addDefaultAttributionLink(options.defaultAttributionLink);
+    setDefaultAttributionLink(options.defaultAttributionLink);
   }
   if (options.maxRecords) {
-    addMaxRecords(options.maxRecords);
+    setMaxRecords(options.maxRecords);
   }
   if (options.startPosition) {
-    addStartPosition(options.startPosition);
+    setStartPosition(options.startPosition);
   }
 }
 
-//TODO what if more options exist
-function addDefaultDCATCategory(defaultDCATCategory) {
+//setters for common fields
+function setDefaultDCATCategory(defaultDCATCategory) {
   //not to click but selected
   cy.get('[name="defaultDCATCategory"]').click();
   cy.get('.mat-option-text').contains(defaultDCATCategory).click();
   cy.get('[name="defaultDCATCategory"]').type('{esc}');
 }
 
-function addDefaultmCLOUDCategory(defaultmCLOUDCategory) {
+function setDefaultmCLOUDCategory(defaultmCLOUDCategory) {
   //not to click but selected
   cy.get('[name="defaultmCLOUDCategory"]').click();
   cy.get('.mat-option-text').contains(defaultmCLOUDCategory).click();
   cy.get('[name="defaultmCLOUDCategory"]').type('{esc}');
 }
 
-function addDefaultAttribution(defaultAttribution) {
+function setDefaultAttribution(defaultAttribution) {
   cy.get('[name="defaultAttribution"]').clear().type(defaultAttribution);
 }
 
-function addDefaultAttributionLink(defaultAttributionLink) {
+function setDefaultAttributionLink(defaultAttributionLink) {
   cy.get('[name="defaultAttributionLink"]').clear().type(defaultAttributionLink);
 }
 
-function addMaxRecords(maxRecords) {
+function setMaxRecords(maxRecords) {
   cy.get('[name="maxRecords"]').clear().type(maxRecords);
 }
 
-function addStartPosition(startPosition) {
+function setStartPosition(startPosition) {
   cy.get('[name="startPosition"]').clear().type(startPosition);
 }
 
-/**
- * sets harvesters type and their own special required options
- */
-function setCkanType(options) {
-  cy.get('[name="type"]').click();
-  cy.get('.mat-option-text').contains('CKAN').click();
-
-  cy.get('[name="ckanBaseUrl"]').clear().type(options.ckanBasisUrl);
+//setters for required fields depending on harvester-type
+function setCkanBasisUrl(ckanBasisUrl) {
+  cy.get('[name="ckanBaseUrl"]').clear().type(ckanBasisUrl);
 }
 
-function setCswType(options) {
-  cy.get('[name="type"]').click();
-  cy.get('.mat-option-text').contains('CSW').click();
+function setCswHttpMethod(httpMethod) {
   cy.get('[name="httpMethod"]').click();
-  cy.get('.mat-option-text').contains(options.httpMethod).click();
-  cy.get('[name="getRecordsUrl"]').clear().type(options.getRecordsUrl);
+  cy.get('.mat-option-text').contains(httpMethod).click();
 }
 
-function setExcelType(options) {
-  cy.get('[name="type"]').click();
-  cy.get('.mat-option-text').contains('EXCEL').click();
-  cy.get('[name="filepath"]').clear().type(options.path);
+function setGetRecordsUrl(getRecordsUrl) {
+  cy.get('[name="getRecordsUrl"]').clear().type(getRecordsUrl);
+}
+
+function setExcelPath(path) {
+  cy.get('[name="filepath"]').clear().type(path);
 }
 
 /**
- * fills the fields of the harvesters
+ * create a new harvester of given type
  */
-Cypress.Commands.add('fillCkanHarvester', (options) => {
+Cypress.Commands.add('newCkanHarvester', (options) => {
   setCkanType(options);
-  addCommon(options);
+  setHarvesterFields(options);
 });
 
-Cypress.Commands.add('fillCswHarvester', (options) => {
+Cypress.Commands.add('newCswHarvester', (options) => {
   setCswType(options);
-  addCommon(options);
+  setHarvesterFields(options);
 });
 
-//little temporary workaround, update an existing ckan without setting the type
-Cypress.Commands.add('fillExistingCkanHarvester', (options) => {
-  addCommon(options);
-});
-
-Cypress.Commands.add('fillExcelHarvester', (options) => {
+Cypress.Commands.add('newExcelHarvester', (options) => {
   setExcelType(options);
-  addCommon(options);
+  setHarvesterFields(options);
 });
+
+/**
+ * sets harvester values
+ */
+Cypress.Commands.add('setHarvesterFields', (options) => {
+  setHarvesterFields(options);
+});
+
+

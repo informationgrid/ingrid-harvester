@@ -2,72 +2,83 @@
  * press save button
  */
 function pressSaveButton() {
-  cy.get('.mat-button').contains('Speichern').click();
+  cy.get('[data-test=save]').click();
 }
 
 /**
  * press reset button
  */
 function pressResetButton() {
-  cy.get('.mat-button').contains('Zurücksetzen').click();
+  cy.get('[data-test=reset]').contains('Zurücksetzen').click();
 }
 
-describe('Configuration', () => {
-
+describe('CONFIGURATION TAB OPERATIONS', () => {
   beforeEach(() => {
     cy.apiLogin('admin', 'admin');
     cy.goToConfig();
 
-    //clean up state should be done before tests as to best practices
-    cy.get('[name="elasticsearchUrl"]').clear().type('http://localhost:9200');
-    cy.get('[name="alias"]').clear().type('mcloud');
-    cy.get('[name="proxy"]').clear();
+    //clean up state
+    cy.get('[name=elasticsearchUrl]').clear().type('http://localhost:9200');
+    cy.get('[name=alias]').clear().type('mcloud');
+    cy.get('[name=proxy]').clear();
     pressSaveButton();
   });
 
-  it('should update elastic search-url, alias and proxy and save', () => {
-    cy.get('[name="elasticsearchUrl"]').clear().type('http://localhost:92000000');
-    cy.get('[name="alias"]').clear().type('eman-saila');
-    cy.get('[name="proxy"]').clear().type('yxorp');
+  it('update elastic search-url, alias and proxy values and save', () => {
+    cy.get('[name=elasticsearchUrl]').clear().type('http://localhost:92000000');
+    cy.get('[name=alias]').clear().type('eman-saila');
+    cy.get('[name=proxy]').clear().type('yxorp');
 
     pressSaveButton();
+    cy.reload();
 
-    cy.get('[name="elasticsearchUrl"]').should('have.value', 'http://localhost:92000000');
-    cy.get('[name="alias"]').should('have.value', 'eman-saila');
-    cy.get('[name="proxy"]').should('have.value', 'yxorp');
+    //checks
+    cy.get('[name=elasticsearchUrl]').should('have.value', 'http://localhost:92000000');
+    cy.get('[name=alias]').should('have.value', 'eman-saila');
+    cy.get('[name=proxy]').should('have.value', 'yxorp');
 
   });
 
-  it('should update elastic search-url, alias and proxy and reset to default', () => {
-    cy.get('[name="elasticsearchUrl"]').clear().type('http://localhost:92000000');
-    cy.get('[name="alias"]').clear().type('eman-saila');
-    cy.get('[name="proxy"]').clear().type('yxorp');
+  it('update elastic search-url, alias and proxy and reset to default', () => {
+    cy.get('[name=elasticsearchUrl]').clear().type('http://localhost:92000000');
+    cy.get('[name=alias]').clear().type('eman-saila');
+    cy.get('[name=proxy]').clear().type('yxorp');
 
     pressResetButton();
 
-    cy.get('[name="elasticsearchUrl"]').should('have.value', 'http://localhost:9200');
-    cy.get('[name="alias"]').should('have.value', 'mcloud');
-    cy.get('[name="proxy"]').should('have.value', '');
+    //checks
+    cy.get('[name=elasticsearchUrl]').should('have.value', 'http://localhost:9200');
+    cy.get('[name=alias]').should('have.value', 'mcloud');
+    cy.get('[name=proxy]').should('have.value', '');
   });
 
-  xit('should write wrong port values and not be able to save', () => {
+  it('save button is disabled if only spaces or special characters are inserted', () => {
+    //no value
+    cy.get('[name=elasticsearchUrl]').clear().type(' _');
+    cy.get('[name=alias]').clear().type(' ');
+    cy.get('[data-test=save]').should('be.disabled');
+
+    cy.get('[name=alias]').clear().type('!');
+    cy.get('[name=elasticsearchUrl]').clear().type('!');
+    cy.get('[data-test=save]').should('be.disabled');
+  });
+
+  it('save button is disabled if wrong port values are inserted', () => {
+    //no value
+    cy.get('[name=elasticsearchUrl]').clear();
+    cy.get('[data-test=save]').should('be.disabled');
+
     // TODO functionality must be implemented
     //value is too big
-    cy.get('[name="elasticsearchUrl"]').clear().type('http://localhost:92000000');
-    cy.get('.mat-button').contains('Speichern').should('not.be.visible');
+    cy.get('[name=elasticsearchUrl]').clear().type('http://localhost:92000000');
+    cy.get('[data-test=save]').should('be.disabled');
 
     //value is NaN
-    cy.get('[name="elasticsearchUrl"]').clear().type('http://localhost:porttout');
-    cy.get('.mat-button').contains('Speichern').should('not.be.visible');
+    cy.get('[name=elasticsearchUrl]').clear().type('http://localhost:porttout');
+    cy.get('[data-test=save]').should('be.disabled');
 
     //value is negative
-    cy.get('[name="elasticsearchUrl"]').clear().type('http://localhost:-42');
-    cy.get('.mat-button').contains('Speichern').should('not.be.visible');
+    cy.get('[name=elasticsearchUrl]').clear().type('http://localhost:-42');
+    cy.get('[data-test=save]').should('be.disabled');
   });
-
-  xit('should not allow elasticsearch port higher than 65535?', () => {
-  });
-  xit('should not allow chars als port ? ', () => {
-  });
-
 });

@@ -1,10 +1,10 @@
-describe('Logout tests', () => {
+describe('LOGOUT TESTS', () => {
 
   beforeEach(() => {
     cy.apiLogin('admin', 'admin');
   });
 
-  describe('GUI Logout', () => {
+  describe('GUI LOGOUT', () => {
     it('logs out, shows the login page and checks the log out message', () => {
       cy.guiLogout();
 
@@ -15,7 +15,7 @@ describe('Logout tests', () => {
     });
   });
 
-  describe('API Logout', () => {
+  describe('API LOGOUT', () => {
     it('logs out and shows the login page', () => {
       cy.apiLogout();
 
