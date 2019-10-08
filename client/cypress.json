@@ -1,3 +1,12 @@
 {
-  "baseUrl": "http://mcloud-qs.wemove.com/importer/"
+  "baseUrl": "http://mcloud-qs.wemove.com/importer/",
+  "reporter": "mochawesome",
+  "reporterOptions": {
+    "reportDir": "cypress/mochawesome-reports",
+    "overwrite": false,
+    "html": false,
+    "json": true,
+    "timestamp": "yyyymmdd_HHMMss"
+  }
+
 }

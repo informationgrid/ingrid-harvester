@@ -1,10 +1,13 @@
 describe('TEST IMPORT OPERATIONS', () => {
   beforeEach(() => {
-    cy.apiLogin('admin', 'admin');
+    if(!(window.localStorage.getItem('currentUser'))){
+      //user is not already logged in send request to log in
+      cy.apiLogin('admin', 'admin');
+    }
   });
 
   describe('IMPORT', () => {
-    it('should start an import and check it is successful', () => {
+    it.only('should start an import and check it is successful', () => {
       //opens "Offene Daten Bonn: parameters wrong"
       cy.get('#harvester-3').click();
       cy.get('[data-test=import]:visible').click();

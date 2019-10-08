@@ -25,7 +25,7 @@ describe('LOGIN TESTS', () => {
 
   //tests using the gui
   describe('GUI LOGIN', () => {
-    it('logs in, is redirected and shows the name of the user', () => {
+    it.only('logs in, is redirected and shows the name of the user', () => {
       cy.guiLogin('admin', 'admin');
       cy.url().should('include', '/harvester');
       cy.get('mat-toolbar button').contains('Max Muster');
@@ -42,7 +42,7 @@ describe('LOGIN TESTS', () => {
 
   //Without GUI - working but there are no side buttons or tabs
   describe('API LOGIN', () => {
-    it.only('logs in, cookies are created, is redirected and shows the name of the user', () => {
+    it('logs in, cookies are created, is redirected and shows the name of the user', () => {
       cy.apiLogin('admin', 'admin');
 
       //should have a cookie session

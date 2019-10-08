@@ -30,11 +30,13 @@ function updateHarvester() {
 
 describe('TEST HARVESTER OPERATIONS', () => {
   beforeEach(() => {
-    cy.apiLogin('admin', 'admin');
+    if(window.localStorage.getItem('currentUser') !== 'undefined'){
+      //user is not already logged in send request to log in
+      cy.apiLogin('admin', 'admin');
+    }
   });
-
   describe('ADD', () => {
-    it('add a harvester of type CKAN', () => {
+    it.only('add a harvester of type CKAN', () => {
       addNewHarvester();
       cy.newCkanHarvester({
         description: 'Testing CKAN Harvester',

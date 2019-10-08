@@ -12,23 +12,34 @@ Cypress.Commands.add("guiLogin", (username, password) => {
 
 Cypress.Commands.add("apiLogin", (user, psw) => {
   cy.request({
-    method:'POST',
+    method: 'POST',
     url: 'rest/passport/login',
     body: {username: user, password: psw},
     failOnStatusCode: false
   }).then((response) => {
-      if(response.body !== 'User not found'){
-        window.localStorage.setItem('currentUser', JSON.stringify(response.body))}
-    });
-
-  //flaky tests because of this?? >> Cypress BUG (?)
-  //TODO xhr request after a successful login redirects to first login page causing the user the log out and test to fail
+    if (response.body !== 'User not found') {
+      window.localStorage.setItem('currentUser', JSON.stringify(response.body))
+    }
+  });
   cy.visit('');
 });
 
 /**
  * handle local storage (workaround) - https://github.com/cypress-io/cypress/issues/461
  */
+let LOCAL_STORAGE_MEMORY = {};
+
+Cypress.Commands.add("saveLocalStorage", () => {
+  Object.keys(localStorage).forEach(key => {
+    LOCAL_STORAGE_MEMORY[key] = localStorage[key];
+  });
+});
+
+Cypress.Commands.add("restoreLocalStorage", () => {
+  Object.keys(LOCAL_STORAGE_MEMORY).forEach(key => {
+    localStorage.setItem(key, LOCAL_STORAGE_MEMORY[key]);
+  });
+});
 
 /**
  * Logout Command
@@ -40,7 +51,8 @@ Cypress.Commands.add("guiLogout", () => {
 Cypress.Commands.add("apiLogout", () => {
   cy.request({
     method: 'GET',
-    url: 'rest/passport/logout'});
+    url: 'rest/passport/logout'
+  });
   cy.reload();
 });
 
