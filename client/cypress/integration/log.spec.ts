@@ -12,7 +12,7 @@ describe('LOG TAB TESTS', () => {
     cy.get('.code').contains('[INFO] default - >> Running importer:');
   });
 
-  xit('should show information after a harvester is imported', () => {
+  it('should show information after a harvester is imported', () => {
     //opens "Deutsche Bahn Datenportal"
     cy.get('#harvester-6').click();
     cy.get('[data-test=import]:visible').click();

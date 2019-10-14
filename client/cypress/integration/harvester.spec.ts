@@ -47,7 +47,7 @@ describe('TEST HARVESTER OPERATIONS', () => {
   });
 
   //TODO cant add csw url if type is not given
-  xit('add a harvester of type CSW', () => {
+  it('add a harvester of type CSW', () => {
     addNewHarvester();
     cy.newCswHarvester({
       description: 'Testing CSW Harvester',
@@ -58,7 +58,7 @@ describe('TEST HARVESTER OPERATIONS', () => {
     saveHarvesterConfig();
   });
 
-  xit('add a harvester of type EXCEL', () => {
+  it('add a harvester of type EXCEL', () => {
     addNewHarvester();
     cy.newExcelHarvester({
       description: 'Testing Excel Harvester',

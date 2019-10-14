@@ -22,7 +22,7 @@ describe('LOGIN TESTS', () => {
   });
 
 //tests using the gui
-  it.only('logs in, is redirected and shows the name of the user', () => {
+  it('logs in, is redirected and shows the name of the user', () => {
     cy.guiLogin('admin', 'admin');
     cy.url().should('include', '/harvester');
     cy.get('mat-toolbar button').contains('Max Muster');
@@ -54,4 +54,3 @@ describe('LOGIN TESTS', () => {
     cy.url().should('include', 'login');
   });
 });
-

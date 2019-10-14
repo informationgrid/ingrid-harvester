@@ -7,6 +7,8 @@
     "html": false,
     "json": true,
     "timestamp": "yyyymmdd_HHMMss"
-  }
-
+  },
+  "screenshotsFolder": "cypress/mochawesome-reports/assets",
+  "videosFolder": "cypress/mochawesome-reports/assets",
+  "videoUploadOnPasses": false
 }
