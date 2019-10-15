@@ -52,7 +52,7 @@ describe('TEST IMPORT OPERATIONS', () => {
     cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name');
   });
 
-  /*it.only('should not show an error-log if import was successful', () => {
+  xit('should not show an error-log if import was successful', () => {
     cy.get('#harvester-7').click();
     cy.get('[data-test=import]:visible').click();
     cy.wait(700);
@@ -74,16 +74,24 @@ describe('TEST IMPORT OPERATIONS', () => {
           }
         })
       }
-
-
-      });
-  });*/
+    });
+  });
 
   xit('should show an error if CKAN URL is not valid', () => {
   });
   xit('should show an error if CSW URL is not valid', () => {
   });
-  xit('should show an error if Excel path is not valid', () => {
+  it('should show an error if Excel path is not valid', () => {
+    cy.get('#harvester-20').click();
+    // check
+    cy.wait(19);
+    cy.get('.mat-drawer-content').scrollTo('bottom');
+
+    cy.get('[data-test=import]:visible').click({force:true});
+    cy.get('[data-test=log]:visible').click();
+    cy.get('.logContainer').should('contain', 'Error occurred creating index');
+    cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
+    cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name ');
   });
   xit('show not allow to add cron pattern "* *? * * *"', () => {
   });
