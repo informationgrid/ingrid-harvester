@@ -54,12 +54,10 @@ describe('Import CSW BFG', function () {
 
         importer.run.subscribe({
             complete: async () => {
-                chai.expect(indexDocumentCreateSpy.called).to.be.true;
+                chai.expect(indexDocumentCreateSpy.called, 'Create method of index document has not been called').to.be.true;
                 let extraChecks = (actual, expected) => {
                     // chai.expect(actual.extras.metadata.harvested).not.to.be.null.and.empty;
                 };
-
-                // await chai.expect(indexDocumentCreateSpy.getCall(0).returnValue).to.eventually.deep.include(resultFlussgebietseinheiten);
 
                 try {
                     await indexDocumentCreateSpy.getCall(0).returnValue.then(value => TestUtils.compareDocuments(value, resultFlussgebietseinheiten, extraChecks));

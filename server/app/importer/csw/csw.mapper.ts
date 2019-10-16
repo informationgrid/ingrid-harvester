@@ -387,8 +387,7 @@ export class CswMapper extends GenericMapper {
         // Detect mFund properties
         let keywords = this.getKeywords();
         if (keywords) {
-            let fkzKeyword: string = keywords.map(kw => kw.toLowerCase())
-                .find(kw => kw.startsWith('mfund-fkz:'));
+            let fkzKeyword = keywords.find(kw => kw.toLowerCase().startsWith('mfund-fkz:'));
 
             if (fkzKeyword) {
                 let idx = fkzKeyword.indexOf(':');
@@ -404,8 +403,7 @@ export class CswMapper extends GenericMapper {
         // Detect mFund properties
         let keywords = this.getKeywords();
         if (keywords) {
-            let mfKeyword: string = keywords.map(kw => kw.toLowerCase())
-                .find(kw => kw.startsWith('mfund-projekt:'));
+            let mfKeyword: string = keywords.find(kw => kw.toLowerCase().startsWith('mfund-projekt:'));
 
             if (mfKeyword) {
                 let idx = mfKeyword.indexOf(':');
