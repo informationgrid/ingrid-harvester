@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ConfigService} from "./config.service";
 import {GeneralSettings} from "@shared/general-config.settings";
+import {HarvesterService} from '../harvester/harvester.service';
 
 @Component({
   selector: 'app-config',
@@ -11,7 +12,8 @@ export class ConfigComponent implements OnInit {
   // @ts-ignore
   config: GeneralSettings = {};
 
-  constructor(private configService: ConfigService) { }
+  constructor(private configService: ConfigService, private harvesterService: HarvesterService) {
+  }
 
   ngOnInit() {
     this.reset();
@@ -22,7 +24,13 @@ export class ConfigComponent implements OnInit {
   }
 
   reset() {
-    this.configService.fetch().subscribe( data => this.config = data);
+    this.configService.fetch().subscribe(data => this.config = data);
+  }
+
+  exportHarvesterConfig() {
+    this.harvesterService.getHarvester().subscribe(data => {
+      ConfigService.downLoadFile(JSON.stringify(data, null, 2));
+    });
   }
 
 }

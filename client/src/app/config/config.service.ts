@@ -18,4 +18,23 @@ export class ConfigService {
   save(data: GeneralSettings): Observable<void> {
     return this.http.post<void>('rest/api/config/general', data);
   }
+
+  /**
+   * Download a file.
+   * @param data - Array Buffer data
+   */
+  static downLoadFile(data: any) {
+    let blob = new Blob([data], {type: 'application/octet-stream'});
+    let url = window.URL.createObjectURL(blob);
+
+    // create a temporary link to download data with a given file name
+    let a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style.display = "none";
+    a.href = url;
+    a.download = 'config.json';
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  }
 }
