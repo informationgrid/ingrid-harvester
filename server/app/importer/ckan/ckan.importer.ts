@@ -25,7 +25,8 @@ export class CkanImporter implements Importer {
         filterGroups: [],
         dateSourceFormats: [],
         requestType: 'ListWithResources',
-        markdownAsDescription: true
+        markdownAsDescription: true,
+        defaultLicense: null
     };
 
     summary: Summary;

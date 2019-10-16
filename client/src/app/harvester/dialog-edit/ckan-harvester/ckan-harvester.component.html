@@ -49,3 +49,16 @@
            (matChipInputTokenEnd)="add('dateSourceFormats', $event)">
   </mat-chip-list>
 </mat-form-field>
+
+<h4>Default-Lizenz</h4>
+<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+  <mat-form-field fxFlex="10">
+    <input matInput placeholder="ID" [(ngModel)]="model.defaultLicense.id" name="id">
+  </mat-form-field>
+  <mat-form-field fxFlex="45">
+    <input matInput placeholder="Titel" [(ngModel)]="model.defaultLicense.title" name="title">
+  </mat-form-field>
+  <mat-form-field fxFlex="45">
+    <input matInput placeholder="URL" [(ngModel)]="model.defaultLicense.url" name="url">
+  </mat-form-field>
+</div>

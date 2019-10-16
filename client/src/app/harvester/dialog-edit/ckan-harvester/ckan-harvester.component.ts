@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CkanSettings} from '../../../../../../server/app/importer/ckan/ckan.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material';
@@ -8,13 +8,23 @@ import {MatChipInputEvent} from '@angular/material';
   templateUrl: './ckan-harvester.component.html',
   styleUrls: ['./ckan-harvester.component.scss']
 })
-export class CkanHarvesterComponent implements OnDestroy {
+export class CkanHarvesterComponent implements OnInit, OnDestroy {
 
   @Input() model: CkanSettings;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor() { }
+
+  ngOnInit(): void {
+    if (!this.model.defaultLicense) {
+      this.model.defaultLicense = {
+        id: '',
+        title: '',
+        url: ''
+      };
+    }
+  }
 
   ngOnDestroy(): void {
   }
