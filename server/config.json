@@ -448,5 +448,32 @@
     "defaultAttributionLink": "https://www.geoseaportal.de/",
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
     "id": 19
+  },
+  {
+    "index": "csw_geoservice_dlr",
+    "includeTimestamp": true,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "defaultMcloudSubgroup": [
+      "aviation",
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "TECH"
+    ],
+    "dateSourceFormats": [],
+    "getRecordsUrl": "https://geoservice.dlr.de/catalogue/srv/eng/csw",
+    "eitherKeywords": [
+      "opendata"
+    ],
+    "httpMethod": "GET",
+    "disable": false,
+    "description": "EOC Geoservice DLR",
+    "defaultAttribution": "EOC Geoservice DLR",
+    "defaultAttributionLink": "https://geoservice.dlr.de",
+    "id": 20,
+    "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>opendata</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
+    "cronPattern": "0 2 * * *"
   }
 ]
