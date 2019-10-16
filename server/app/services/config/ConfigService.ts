@@ -103,7 +103,8 @@ export class ConfigService {
             return {
                 elasticSearchUrl: "http://localhost:9200",
                 alias: "mcloud",
-                proxy: ""
+                proxy: "",
+                sessionSecret: "mysecretkey"
             };
         }
 

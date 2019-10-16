@@ -54,7 +54,7 @@ export class Server extends ServerLoader {
                 extended: true
             }))
             .use(session({
-                secret: 'mysecretkey',
+                secret: ConfigService.getGeneralSettings().sessionSecret,
                 resave: true,
                 saveUninitialized: true,
                 maxAge: 36000,
