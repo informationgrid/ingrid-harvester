@@ -29,7 +29,7 @@ describe('Import CSW BFG', function () {
             getRecordsUrl: "https://geoportal.bafg.de/soapServices/CSWStartup",
             proxy: null,
             defaultMcloudSubgroup: ["waters"],
-            defaultDCATCategory: ["TRAN"],
+            defaultDCATCategory: ["TRAN", "TECH"],
             defaultAttribution: "Bundesanstalt für Gewässerkunde",
             defaultAttributionLink: "https://www.bafg.de/",
             includeTimestamp: true,

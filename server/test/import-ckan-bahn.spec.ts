@@ -27,10 +27,11 @@ describe('Import CKAN Bahn', function () {
         log.info('Start test ...');
 
         var settings: CkanSettings = {
+            ...CkanImporter.defaultSettings,
             alias: undefined,
             ckanBaseUrl: 'https://data.deutschebahn.com',
             defaultAttribution: 'Deutsche Bahn Datenportal',
-            defaultDCATCategory: ['TRAN'],
+            defaultDCATCategory: ['TRAN', 'TECH'],
             defaultMcloudSubgroup: ['railway'],
             dryRun: true,
             elasticSearchUrl: undefined,
@@ -69,10 +70,11 @@ describe('Import CKAN Bahn', function () {
 
     it('should map ckan to index correctly', async () => {
         const mapper = new CkanMapper({
+            ...CkanImporter.defaultSettings,
             ckanBaseUrl: 'https://data.deutschebahn.com',
             index: 'xxx',
             includeTimestamp: true,
-            type: ''
+            markdownAsDescription: false
         }, {
             source: ckanDoc,
             harvestTime: null,

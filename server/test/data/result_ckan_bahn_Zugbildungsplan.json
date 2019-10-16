@@ -2,7 +2,8 @@
   "title": "Zugbildungsplan A -Reihung- (ZpAR)",
   "description": "<p>Darstellung der Wagenreihung der Züge der DB Fernverkehr AG</p>",
   "theme": [
-    "http://publications.europa.eu/resource/authority/data-theme/TRAN"
+    "http://publications.europa.eu/resource/authority/data-theme/TRAN",
+    "http://publications.europa.eu/resource/authority/data-theme/TECH"
   ],
   "issued": "2018-10-26T15:21:38.358Z",
   "modified": "2018-11-26T15:07:40.316406",

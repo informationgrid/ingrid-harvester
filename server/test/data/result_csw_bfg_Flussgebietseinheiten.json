@@ -49,7 +49,8 @@
       "inspireidentifiziert",
       "opendata",
       "umwelt_klima",
-      "geo"
+      "geo",
+      "National"
     ]
   },
   "creator": [
@@ -88,10 +89,12 @@
     "inspireidentifiziert",
     "opendata",
     "umwelt_klima",
-    "geo"
+    "geo",
+    "National"
   ],
   "theme": [
-    "http://publications.europa.eu/resource/authority/data-theme/TRAN"
+    "http://publications.europa.eu/resource/authority/data-theme/TRAN",
+    "http://publications.europa.eu/resource/authority/data-theme/TECH"
   ],
   "modified": "2019-01-08",
   "accrualPeriodicity": "irregular",

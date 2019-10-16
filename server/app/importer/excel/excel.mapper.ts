@@ -48,14 +48,15 @@ export class ExcelMapper extends GenericMapper {
         return publishers.map(p => GenericMapper.createPublisher(p.name, p.url));
     }
 
-    getThemes() {
+    getThemes(): string[] {
 
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
         const dcatCategoriesString: string = this.columnValues[this.columnMap.DCATKategorie];
         if (dcatCategoriesString) {
             return dcatCategoriesString.split(',').map(cat => GenericMapper.DCAT_CATEGORY_URL + cat);
         } else {
-            return [GenericMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory];
+            return this.settings.defaultDCATCategory
+                .map( category => GenericMapper.DCAT_CATEGORY_URL + category);
         }
 
     }

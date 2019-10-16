@@ -504,7 +504,8 @@ export class CswMapper extends GenericMapper {
 
         if (!themes || themes.length === 0) {
             // Fall back to default value
-            themes = this.settings.defaultDCATCategory ? [ CswMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory] : undefined;
+            themes = this.settings.defaultDCATCategory
+                .map( category => GenericMapper.DCAT_CATEGORY_URL + category);
         }
 
         this.fetched.themes = themes;

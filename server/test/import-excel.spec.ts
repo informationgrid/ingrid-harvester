@@ -25,10 +25,10 @@ describe('Import Excel', function () {
 
         log.info('Start test ...');
 
-        var settings: ExcelSettings = {
+        let settings: ExcelSettings = {
             dryRun: true,
             filePath: 'test/data/data-test.xlsx',
-            defaultDCATCategory: ['DEFAULT_TRAN'],
+            defaultDCATCategory: ['DEFAULT_TRAN', "XXX"],
             alias: undefined,
             elasticSearchUrl: undefined,
             type: undefined,

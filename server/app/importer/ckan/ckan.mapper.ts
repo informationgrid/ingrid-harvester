@@ -188,10 +188,11 @@ export class CkanMapper extends GenericMapper {
         return undefined;
     }
 
-    getThemes() {
+    getThemes(): string[] {
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
         // TODO: map ckan category to DCAT
-        return this.settings.defaultDCATCategory ? [GenericMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory] : undefined;
+        return this.settings.defaultDCATCategory
+            .map( category => GenericMapper.DCAT_CATEGORY_URL + category);
     }
 
     getTitle() {
