@@ -16,6 +16,13 @@ export class ConfigService {
 
     static highestID: number = 0;
 
+    private static readonly defaultSettings = {
+        elasticSearchUrl: "http://localhost:9200",
+        alias: "mcloud",
+        proxy: "",
+        sessionSecret: "mysecretkey"
+    };
+
     static fixIDs() {
         let harvesters = ConfigService.get();
         if (harvesters.some(h => !h.id)) {
@@ -97,15 +104,14 @@ export class ConfigService {
 
         if (configExists) {
             let contents = fs.readFileSync(this.GENERAL_CONFIG_FILE);
-            return JSON.parse(contents.toString());
+            const settingsFromFile = JSON.parse(contents.toString());
+            return {
+                ...this.defaultSettings,
+                ...settingsFromFile
+            };
         } else {
             log.warn("No general config file found (config-general.json). Using default config");
-            return {
-                elasticSearchUrl: "http://localhost:9200",
-                alias: "mcloud",
-                proxy: "",
-                sessionSecret: "mysecretkey"
-            };
+            return this.defaultSettings;
         }
 
     }
