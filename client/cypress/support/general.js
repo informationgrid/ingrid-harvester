@@ -25,23 +25,6 @@ Cypress.Commands.add("apiLogin", (user, psw) => {
 });
 
 /**
- * handle local storage (workaround) - https://github.com/cypress-io/cypress/issues/461
- */
-let LOCAL_STORAGE_MEMORY = {};
-
-Cypress.Commands.add("saveLocalStorage", () => {
-  Object.keys(localStorage).forEach(key => {
-    LOCAL_STORAGE_MEMORY[key] = localStorage[key];
-  });
-});
-
-Cypress.Commands.add("restoreLocalStorage", () => {
-  Object.keys(LOCAL_STORAGE_MEMORY).forEach(key => {
-    localStorage.setItem(key, LOCAL_STORAGE_MEMORY[key]);
-  });
-});
-
-/**
  * Logout Command
  */
 Cypress.Commands.add("guiLogout", () => {

@@ -11,7 +11,7 @@ function addNewHarvester() {
 function openHarvester(harvesterId) {
   cy.get('#harvester-' + harvesterId).click();
   // cy.get('#harvester-' + harvesterId).click();
-  cy.get('[data-test="edit"]').filter(':visible').click();
+  cy.get('#harvester-' + harvesterId + ' [data-test=edit]').click();
 }
 
 /**
@@ -30,7 +30,7 @@ function updateHarvester() {
 
 describe('TEST HARVESTER OPERATIONS', () => {
   beforeEach(() => {
-    if(window.localStorage.getItem('currentUser') !== 'undefined'){
+    if (window.localStorage.getItem('currentUser') !== 'undefined') {
       //user is not already logged in send request to log in
       cy.apiLogin('admin', 'admin');
     }
@@ -46,7 +46,6 @@ describe('TEST HARVESTER OPERATIONS', () => {
     saveHarvesterConfig()
   });
 
-  //TODO cant add csw url if type is not given
   it('add a harvester of type CSW', () => {
     addNewHarvester();
     cy.newCswHarvester({
@@ -89,7 +88,7 @@ describe('TEST HARVESTER OPERATIONS', () => {
     //if dcatCategory value to input already selected then deselect it
     cy.get('[name=defaultDCATCategory]')
       .then((dcatCat) => {
-        if(dcatCat.text().includes('Energie')){
+        if (dcatCat.text().includes('Energie')) {
           cy.get('[name="defaultDCATCategory"]').click();
           cy.get('.mat-option-text').contains('Energie').click();
           cy.get('[name="defaultDCATCategory"]').type('{esc}');
@@ -98,7 +97,7 @@ describe('TEST HARVESTER OPERATIONS', () => {
     //if mcloudCategory value to input already selected then deselect it
     cy.get('[name=defaultmCLOUDCategory]')
       .then((mcloudCat) => {
-        if(mcloudCat.text().includes('Infrastruktur')){
+        if (mcloudCat.text().includes('Infrastruktur')) {
           cy.get('[name="defaultmCLOUDCategory"]').click();
           cy.get('.mat-option-text').contains('Infrastruktur').click();
           cy.get('[name="defaultmCLOUDCategory"]').type('{esc}');
@@ -115,9 +114,9 @@ describe('TEST HARVESTER OPERATIONS', () => {
     cy.reload();
     //checks data was saved
     openHarvester('3');
-    cy.get('[name="defaultDCATCategory"]').should('contain', 'Energie');
-    cy.get('[name="defaultmCLOUDCategory"]').should('contain', 'Infrastruktur');
-    cy.get('[name="defaultAttribution"]').should('have.value', '1');
+    cy.get('[name=defaultDCATCategory]').should('contain', 'Energie');
+    cy.get('[name=defaultmCLOUDCategory]').should('contain', 'Infrastruktur');
+    cy.get('[name=defaultAttribution]').should('have.value', '1');
   });
 
   it('update a harvester of type CSW', () => {
@@ -125,19 +124,19 @@ describe('TEST HARVESTER OPERATIONS', () => {
     //if dcatCategory value to input already selected then deselect it
     cy.get('[name=defaultDCATCategory]')
       .then((dcatCat) => {
-        if(dcatCat.text().includes('Verkehr')){
-          cy.get('[name="defaultDCATCategory"]').click();
+        if (dcatCat.text().includes('Verkehr')) {
+          cy.get('[name=defaultDCATCategory]').click();
           cy.get('.mat-option-text').contains('Verkehr').click();
-          cy.get('[name="defaultDCATCategory"]').type('{esc}');
+          cy.get('[name=defaultDCATCategory]').type('{esc}');
         }
       });
     //if mcloudCategory value to input already selected then deselect it
     cy.get('[name=defaultmCLOUDCategory]')
       .then((mcloudCat) => {
-        if(mcloudCat.text().includes('Infrastruktur')){
-          cy.get('[name="defaultmCLOUDCategory"]').click();
+        if (mcloudCat.text().includes('Infrastruktur')) {
+          cy.get('[name=defaultmCLOUDCategory]').click();
           cy.get('.mat-option-text').contains('Infrastruktur').click();
-          cy.get('[name="defaultmCLOUDCategory"]').type('{esc}');
+          cy.get('[name=defaultmCLOUDCategory]').type('{esc}');
         }
       });
 
@@ -151,9 +150,9 @@ describe('TEST HARVESTER OPERATIONS', () => {
     cy.reload();
     //checks data was saved
     openHarvester('3');
-    cy.get('[name="defaultDCATCategory"]').should('contain', 'Verkehr');
-    cy.get('[name="defaultmCLOUDCategory"]').should('contain', 'Infrastruktur');
-    cy.get('[name="defaultAttribution"]').should('have.value', '7');
+    cy.get('[name=defaultDCATCategory]').should('contain', 'Verkehr');
+    cy.get('[name=defaultmCLOUDCategory]').should('contain', 'Infrastruktur');
+    cy.get('[name=defaultAttribution]').should('have.value', '7');
   });
 
   it('update a harvester of type Excel', () => {
@@ -161,19 +160,19 @@ describe('TEST HARVESTER OPERATIONS', () => {
     //if dcatCategory value to input already selected then deselect it
     cy.get('[name=defaultDCATCategory]')
       .then((dcatCat) => {
-        if(dcatCat.text().includes('Wirtschaft und Finanzen')){
-          cy.get('[name="defaultDCATCategory"]').click();
+        if (dcatCat.text().includes('Wirtschaft und Finanzen')) {
+          cy.get('[name=defaultDCATCategory]').click();
           cy.get('.mat-option-text').contains('Wirtschaft und Finanzen').click();
-          cy.get('[name="defaultDCATCategory"]').type('{esc}');
+          cy.get('[name=defaultDCATCategory]').type('{esc}');
         }
       });
     //if mcloudCategory value to input already selected then deselect it
     cy.get('[name=defaultmCLOUDCategory]')
       .then((mcloudCat) => {
-        if(mcloudCat.text().includes('Klima und Wetter')){
-          cy.get('[name="defaultmCLOUDCategory"]').click();
+        if (mcloudCat.text().includes('Klima und Wetter')) {
+          cy.get('[name=defaultmCLOUDCategory]').click();
           cy.get('.mat-option-text').contains('Klima und Wetter').click();
-          cy.get('[name="defaultmCLOUDCategory"]').type('{esc}');
+          cy.get('[name=defaultmCLOUDCategory]').type('{esc}');
         }
       });
 
@@ -187,13 +186,13 @@ describe('TEST HARVESTER OPERATIONS', () => {
     cy.reload();
     //checks data was saved
     openHarvester('1');
-    cy.get('[name="defaultDCATCategory"]').should('contain', 'Wirtschaft und Finanzen');
-    cy.get('[name="defaultmCLOUDCategory"]').should('contain', 'Klima und Wetter');
-    cy.get('[name="defaultAttribution"]').should('have.value', '7');
+    cy.get('[name=defaultDCATCategory]').should('contain', 'Wirtschaft und Finanzen');
+    cy.get('[name=defaultmCLOUDCategory]').should('contain', 'Klima und Wetter');
+    cy.get('[name=defaultAttribution]').should('have.value', '7');
   });
 
   //button supposed to be disable but it is not
-  xit('cannot change type during an update', () => {
+  xit('cannot change type of a harvester during an update', () => {
     // not working
     openHarvester('3');
     cy.get('[name=type]').should('be.disabled');
@@ -209,7 +208,7 @@ describe('TEST HARVESTER OPERATIONS', () => {
     cy.setHarvesterFields({startPosition: '-7'});
 
     cy.get('[name=startPosition]').invoke('val')
-      .then((value)=> {
+      .then((value) => {
         expect(value).to.be.greaterThan(-1);
       })
   });
@@ -223,7 +222,7 @@ describe('TEST HARVESTER OPERATIONS', () => {
     cy.setHarvesterFields({maxRecords: '-7'});
 
     cy.get('[name=maxRecords]').invoke('val')
-      .then((value)=> {
+      .then((value) => {
         expect(value).to.be.greaterThan(-1);
       })
   });

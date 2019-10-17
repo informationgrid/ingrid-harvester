@@ -4,7 +4,7 @@ describe('LOGOUT TESTS', () => {
     cy.apiLogin('admin', 'admin');
   });
 
-  it('logs out, shows the login page and checks the log out message', () => {
+  it('log out, show login page and check log out message', () => {
     cy.guiLogout();
 
     cy.get('mat-card-title').should('contain','Login');
@@ -13,7 +13,7 @@ describe('LOGOUT TESTS', () => {
     cy.get('.mat-simple-snackbar').should('contain', 'Sie wurden ausgeloggt');
   });
 
-  it('logs out and shows the login page', () => {
+  it('log out and show the login page', () => {
     cy.apiLogout();
 
     cy.get('mat-card-title').should('contain','Login');

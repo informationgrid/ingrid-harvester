@@ -68,7 +68,7 @@ describe('CONFIGURATION TAB OPERATIONS', () => {
     cy.get('[name=elasticsearchUrl]').clear();
     cy.get('[data-test=save]').should('be.disabled');
 
-    // TODO functionality must be implemented
+    // TODO input check functionality must be implemented
     //value is too big
     cy.get('[name=elasticsearchUrl]').clear().type('http://localhost:92000000');
     cy.get('[data-test=save]').should('be.disabled');

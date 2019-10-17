@@ -1,73 +1,90 @@
+/**
+ * open harvester and start import process
+ * @param harvesterId
+ */
+function openAndImportHarvester(harvesterId) {
+  cy.get('#harvester-' + harvesterId).click();
+  cy.get('#harvester-' + harvesterId + ' [data-test=import]').click();
+}
+
+/**
+ * open harvester and schedule page
+ * @param harvesterId
+ */
+function openScheduleHarvester(harvesterId) {
+  cy.get('#harvester-' + harvesterId).click();
+  cy.get('#harvester-' + harvesterId + ' [data-test=schedule]').click();
+}
+
+/**
+ * ONLY open log page of a harvester, an harvester should already be opened
+ * @param harvesterId
+ */
+function openLog(harvesterId) {
+  cy.get('#harvester-' + harvesterId + ' [data-test=log]').click();
+}
+
 describe('TEST IMPORT OPERATIONS', () => {
   beforeEach(() => {
-    if(!(window.localStorage.getItem('currentUser'))){
-      //user is not already logged in send request to log in
+    if (!(window.localStorage.getItem('currentUser'))) {
       cy.apiLogin('admin', 'admin');
     }
   });
 
-  it('should start an import and check it is successful', () => {
+  it('open a harvester, start an import and check it is successful', () => {
     //opens "Offene Daten Bonn: parameters wrong"
-    cy.get('#harvester-3').click();
-    cy.get('[data-test=import]:visible').click();
+    openAndImportHarvester(3);
+
     cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
     cy.get('app-importer-detail').should('contain', ' Import läuft ');
   });
 
-  it('should plan an import, activate the auto-planning, check it is executed and turn off the auto-planning', () => {
-    cy.get('#harvester-6').click();
-    cy.get('[data-test=schedule]:visible').click(); //
+  it('plan an import, activate the auto-planning, check its execution and turn off the auto-planning', () => {
+    openScheduleHarvester(6);
+
     cy.get('[placeholder="* * * * *"]').clear().type('* * * * *');
 
     cy.get('.mat-dialog-actions > .mat-primary > .mat-button-wrapper').contains('Planen').click();
 
-    cy.get('[data-test="next-execution"]').should('not.contain', 'wurde geändert');
-    cy.get('[data-test="next-execution"]').should('not.contain', '');
+    cy.get('[data-test=next-execution]').should('not.contain', 'wurde geändert');
+    cy.get('[data-test=next-execution]').should('not.contain', '');
 
-    //turn off pattern too
-    cy.get('[data-test=schedule]:visible').click();
+    //turn off pattern
+    cy.get('#harvester-6 [data-test=schedule]').click();
+    //press little x
     cy.get('.mat-form-field-suffix > .mat-button > .mat-button-wrapper > .mat-icon').click();
     cy.get('.mat-dialog-actions > .mat-primary > .mat-button-wrapper').contains('Planen').click();
   });
 
-  it('should import all harvesters at once', () => {
+  it('import all harvesters at once and check a message is shown', () => {
     cy.importAll();
     cy.get('.mat-simple-snackbar').should('contain', 'Import von allen Harvestern gestartet');
   });
 
-  it('should show an error-log if an import error/warning occurred', () => {
-    //creates an excel harvester with wrong path if not existing already
-    /*      addNewHarvester();
-          cy.fillExcelHarvester({
-            description: 'Testing Excel Harvester',
-            indexName: 'Testing Excel Harvester',
-            path: './data.xlsx'
-          });
-          saveHarvesterConfig();*/
-    cy.get('#harvester-22').click();
-    cy.get('[data-test=import]:visible').click();
-    cy.get('[data-test=log]:visible').click();
-    cy.get('.logContainer').should('contain', 'Error reading excel workbook: Error occurred creating index');
+  it('show errors in the error-log if error/warning occurred during an import', () => {
+    openAndImportHarvester(22);
+    openLog(22);
+
+    cy.get('.logContainer').should('contain', 'Error occurred creating index');
     cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
     cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name');
   });
 
-  xit('should not show an error-log if import was successful', () => {
-    cy.get('#harvester-7').click();
-    cy.get('[data-test=import]:visible').click();
-    cy.wait(700);
-    cy.get('[data-test=num-errors]:visible').invoke('text').then((numErr) => {
+  xit('after a successful import there is no error in the logs', () => {
+    openAndImportHarvester(7);
+
+    cy.get('[#harvester-7 data-test=num-errors]').invoke('text').then((numErr) => {
       //no errors
-      if(numErr.toString() === '0'){
-        cy.get('[data-test=num-warnings]:visible').invoke('text').then((numWarnings) => {
+      if (numErr.toString() === '0') {
+        cy.get('[#harvester-7 data-test=num-warnings]').invoke('text').then((numWarnings) => {
           //no warnings
-          if(numWarnings.text() === '0'){
-            cy.get('[data-test=log]:visible').should('be.disabled');
+          if (numWarnings.text() === '0') {
+            cy.get('#harvester-7 [data-test=log]').should('be.disabled');
           }
           //there are warnings
           else {
             //check log that there are no errors, only warnings
-            cy.get('[data-test=log]:visible').click();
+            openLog(7);
             cy.get('.logContainer').should('contain', '');
             cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
             cy.get('.logContainer').should('contain', '');
@@ -77,40 +94,61 @@ describe('TEST IMPORT OPERATIONS', () => {
     });
   });
 
-  xit('should show an error if CKAN URL is not valid', () => {
-  });
-  xit('should show an error if CSW URL is not valid', () => {
-  });
-  it('should show an error if Excel path is not valid', () => {
-    cy.get('#harvester-20').click();
-    // check
-    cy.wait(19);
-    cy.get('.mat-drawer-content').scrollTo('bottom');
+  xit('if the CKAN URL is not valid an error in the harvester logs is shown', () => {
+    openAndImportHarvester(21);
+    openLog(21);
 
-    cy.get('[data-test=import]:visible').click({force:true});
-    cy.get('[data-test=log]:visible').click();
     cy.get('.logContainer').should('contain', 'Error occurred creating index');
     cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
     cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name ');
   });
-  xit('show not allow to add cron pattern "* *? * * *"', () => {
+
+  it('if the CSW URL is not valid an error in the harvester logs is shown', () => {
+    openAndImportHarvester(22);
+    openLog(22);
+
+    cy.get('.logContainer').should('contain', 'Error occurred creating index');
+    cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
+    cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name ');
   });
-  xit('should disable scheduling for a harvester', () => {
+
+  it('if the Excel path is not valid an error in the harvester logs is shown', () => {
+    openAndImportHarvester(20);
+    openLog(20);
+
+    cy.get('.logContainer').should('contain', 'Error occurred creating index');
+    cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
+    cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name ');
   });
-  xit('should have a valid value if scheduling is active', () => {
+
+  it('cron pattern "* *? * * *" is not a valid input and the planning button should be disabled', () => {
+    openScheduleHarvester(20);
+
+    cy.get('[placeholder="* * * * *"]').clear().type('* *? * * *');
+    cy.get('.mat-dialog-actions > .mat-primary > .mat-button-wrapper').contains('Planen').should('be.disabled')
   });
-  xit('should activate a scheduled importer', () => {
+
+  xit('disable scheduling for a harvester', () => {
+
   });
-  xit('should deactivate a scheduled importer', () => {
+  xit('if scheduling is active its value is valid', () => {
   });
-  xit('should not be able to activate an importer without scheduling', () => {
+  xit('activate a scheduled importer', () => {
   });
-  xit('should show reset cron expression if right cancel button is pressed', () => {
+  xit('deactivate a scheduled importer', () => {
   });
-  xit('should show information when info button is pressed', () => {
+  xit('cannot activate a schedule import without an active auto-scheduling', () => {
   });
-  xit('should show last import info after page refresh', () => {
+  xit('show reset cron expression if right cancel button is pressed', () => {
   });
-  xit('should show last import info after page refresh', () => {
+  xit('when info button is pressed the informations are shown', () => {
+  });
+  xit('last import info of an harvester is shown after page refresh', () => {
   });
 });
+
+//TODO data-test attribute for following elements:
+// Button containing "Planen" inside auto-schedule planning window
+// Little x-Button used for deleting inserted cron expression (same window as ↑)
+// Button "Anlegen" for saving harvester
+// Button "Aktualisieren" for updating an existing harvester

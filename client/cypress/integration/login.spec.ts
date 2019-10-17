@@ -9,7 +9,7 @@ describe('LOGIN TESTS', () => {
     cy.get('[data-test=login]').contains('Login');
   });
 
-  it('is redirected to login page when crawling for pages behind login', () => {
+  it('crawling for pages behind the login-wall redirects to the log in page', () => {
     cy.visit('');
     //visits a page that can be only viewed after login
     cy.visit('harvester');
@@ -21,14 +21,14 @@ describe('LOGIN TESTS', () => {
     cy.url().should('include', 'login');
   });
 
-//tests using the gui
-  it('logs in, is redirected and shows the name of the user', () => {
+//With GUI
+  it('after successful log in, is redirected and shows the name of the user', () => {
     cy.guiLogin('admin', 'admin');
     cy.url().should('include', '/harvester');
-    cy.get('mat-toolbar button').contains('Max Muster');
+    cy.get('data-test=logout').contains('Max Muster');
   });
 
-  it('cannot log in with wrong credentials', () => {
+  it('cannot log in (GUI) with wrong credentials', () => {
     cy.guiLogin('test', 'test');
     //checks error msg
     cy.get('.error').should('contain', 'Benutzername oder Passwort falsch');
@@ -36,20 +36,20 @@ describe('LOGIN TESTS', () => {
     cy.url().should('include', 'login');
   });
 
-//Without GUI - working but there are no side buttons or tabs
-  it('logs in, cookies are created, is redirected and shows the name of the user', () => {
+//Without GUI
+  it('after successful log in, cookies are created, is redirected and shows the name of the user', () => {
     cy.apiLogin('admin', 'admin');
 
     //should have a cookie session
     cy.getCookie('connect.sid').should('exist');
 
     cy.url().should('include', 'harvester');
-    cy.get('mat-toolbar button').should('contain','Max Muster');
+    cy.get('data-test=logout').should('contain','Max Muster');
 
-    //TODO why is it redirected again
+    //why is it redirected again (sometimes)
   });
 
-  it('cannot log in with wrong credentials', () => {
+  it('cannot log in (API) with wrong credentials', () => {
     cy.apiLogin('test', 'test');
     cy.url().should('include', 'login');
   });
