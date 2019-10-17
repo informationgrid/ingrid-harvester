@@ -68,14 +68,14 @@ xdescribe('deduplication by similar title', function () {
         });
     });
 
-    it('should remove document by similar title', async function () {
+    xit('should remove document by similar title', async function () {
         // add same document to two different indices
         await index(doc1, doc3);
         await index(null, doc4);
 
         // deduplicate
-        deduplicateUtils._queueForDuplicateSearch(doc1, 'xxx');
-        await deduplicateUtils._deduplicateUsingQuery();
+        // deduplicateUtils._queueForDuplicateSearch(doc1, 'xxx');
+        // await deduplicateUtils._deduplicateUsingQuery();
 
         // check only one document exists
         await flush();

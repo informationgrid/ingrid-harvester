@@ -2,19 +2,19 @@ import {Summary} from '../model/summary';
 import {ElasticSettings} from './elastic.setting';
 import {ImporterSettings} from '../importer.settings';
 import {ElasticSearchUtils} from './elastic.utils';
+import {ElasticQueries} from './elastic.queries';
 
 let log = require('log4js').getLogger(__filename);
 
 
 export class DeduplicateUtils {
 
-    indexName: string;
-    duplicateStaging: {
+    /*duplicateStaging: {
         id: string,
         modified: Date,
         title: string,
         query: any
-    }[];
+    }[];*/
     deduplicationIndices: string[];
 
     settings: ElasticSettings & ImporterSettings;
@@ -28,7 +28,8 @@ export class DeduplicateUtils {
         this.summary = summary;
         this.elastic = elasticUtils;
         this.client = elasticUtils.client;
-        this.duplicateStaging = [];
+        this.settings = settings;
+        // this.duplicateStaging = [];
     }
 
     // FIXME: deduplication must work differently when import is not started for all harvesters
@@ -38,8 +39,8 @@ export class DeduplicateUtils {
     }
 
     // FIXME: deduplication must work differently when import is not started for all harvesters
-    async _deduplicateUsingQuery() {
-        log.debug(`Looking for duplicates for items in index '${this.indexName}`);
+    /*async _deduplicateUsingQuery() {
+        log.debug(`Looking for duplicates for items in index '${this.elastic.indexName}`);
         // TODO: make sure the index was refreshed to get the updated results (e.g. previous deletion of duplicated items)
 
         // Send data in chunks. Don't send too much at once.
@@ -88,7 +89,7 @@ export class DeduplicateUtils {
                         let retained = '';
                         if (hitDate > myDate) {
                             // Hit is newer. Delete document from current index.
-                            q.delete._index = this.indexName;
+                            q.delete._index = this.elastic.indexName;
                             q.delete._type = this.settings.indexType;
                             q.delete._id = item.id;
 
@@ -99,7 +100,7 @@ export class DeduplicateUtils {
                             q.delete._id = hit._id;
 
                             title = hit._source.title;
-                            retained = `Item to retain -> ID: '${item.id}', Title: '${title}', Index: '${this.indexName};`;
+                            retained = `Item to retain -> ID: '${item.id}', Title: '${title}', Index: '${this.elastic.indexName};`;
                         }
 
                         let deleted = `Item to delete -> ID: '${q.delete._id}', Title: '${title}', Index: '${q.delete._index}'`;
@@ -115,10 +116,10 @@ export class DeduplicateUtils {
         }
 
         // Perform bulk delete and resolve/reject the promise
-        log.debug(`${count} duplicates found using the duplicates query will be deleted from the index '${this.indexName}'.`);
+        log.debug(`${count} duplicates found using the duplicates query will be deleted from the index '${this.elastic.indexName}'.`);
         await this.elastic.sendBulkData(false);
-        log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.indexName}`);
-    }
+        log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.elastic.indexName}`);
+    }*/
 
     /**
      * Create a query for searching for duplicates of the given document and add
@@ -127,7 +128,7 @@ export class DeduplicateUtils {
      * @param doc document for which to search duplicates
      * @param id value to be assigned to the _id field of the document above
      */
-    _queueForDuplicateSearch(doc, id) {
+    /*_queueForDuplicateSearch(doc, id) {
         // Don't search duplicates for invalid documents. Firstly, it is not
         // strictly necessarily and secondly, don't delete valid duplicates of
         // an invalid document
@@ -147,58 +148,7 @@ export class DeduplicateUtils {
             }
         });
 
-        /*
-         * Should query needs to be wrapped in a must query so that if the
-         * should query returns no hits, the must query doesn't match almost all
-         * the documents in the index. The query looks for documents, where all
-         * of the following are true:
-         * - Either one of the following is true
-         *     - The given id matches the document's id OR extras.generated_id
-         *     - The given generated_id matches the document's id OR extras.generated_id
-         *     - The given title matches up to 80% with the document's title AND
-         *       at least one of the distribution.accessURL is the same
-         * - extras.metadata.isValid is not false (true or missing values)
-         *   (make sure we aren't deleting valid documents because of duplicates
-         *   that aren't valid)
-         * - given timestamp is not equal to the document's modified (date) field
-         *   (don't compare this document to itself)
-         */
-        let query: any = {
-            query: {
-                bool: {
-                    must: [
-                        {
-                            bool: {
-                                should: [
-                                    {term: {'extras.generated_id': id}},
-                                    {term: {'extras.generated_id': generatedId}},
-                                    {term: {'_id': id}},
-                                    {term: {'_id': generatedId}},
-                                    {
-                                        bool: {
-                                            must: [
-                                                {terms: {'distribution.accessURL': urls}},
-                                                {
-                                                    match: {
-                                                        'title.raw': {
-                                                            query: title,
-                                                            minimum_should_match: '3<80%'
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ],
-                    must_not: [
-                        {term: {'extras.metadata.isValid': false}}
-                    ]
-                }
-            }
-        };
+        const query = ElasticQueries.findSameIdTitleUrls(id, generatedId, urls, title);
 
         // if modified date does not exist then it should exist for another (do not compare doc to itself!)
         if (!modified || isNaN(modified)) {
@@ -218,43 +168,17 @@ export class DeduplicateUtils {
             title: doc.title,
             query: query
         });
-    }
+    }*/
 
     // FIXME: deduplication must work differently when import is not started for all harvesters
     async _deduplicateByTitle() {
+
         // By default elasticsearch limits the count of aggregates to 10. Ask it
         // to return a lot more results!
-        let maxAggregates = 10000;
-        let query = {
-            size: 0,
-            query: {
-                bool: {
-                    must_not: {term: {'extras.metadata.isValid': false}}
-                }
-            },
-            aggregations: {
-                duplicates: {
-                    terms: {
-                        field: 'title.raw',
-                        min_doc_count: 2,
-                        size: maxAggregates
-                    },
-                    aggregations: {
-                        duplicates: {
-                            top_hits: {
-                                sort: [{'modified': {order: 'desc'}}],
-                                _source: {include: ['title', 'distribution', 'modified']}
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
         try {
             let response = await this.client.search({
-                index: ['mcloud', this.indexName],
-                body: query,
+                index: [this.settings.alias],
+                body: ElasticQueries.findSameTitle(),
                 size: 50
             });
 
@@ -267,6 +191,11 @@ export class DeduplicateUtils {
                  */
                 try {
                     let hits = bucket.duplicates.hits.hits;
+
+                    // FIXME: if more than two hits (with the same title) then we probably delete the second item
+                    //        in the first round, which we compare with the third item in the second round
+                    //        I guess we don't compare all docs with the same title correctly, e.g. 1st and 3rd doc
+                    //        are dublicates ... then we wouldn't detect them!
                     for (let i = 1; i < hits.length; i++) {
                         let hit0 = hits[i - i];
                         let hit1 = hits[i];
@@ -301,12 +230,18 @@ export class DeduplicateUtils {
                     this.handleError(`Error deduplicating hits for URL ${bucket.key}`, err);
                 }
             });
-            log.info(`${count} duplicates found using the aggregates query will be deleted from index '${this.indexName}'.`);
+            log.info(`${count} duplicates found using the aggregates query will be deleted from index '${this.elastic.indexName}'.`);
         } catch (err) {
             this.handleError('Error processing results of aggregate query for duplicates', err);
         }
         await this.elastic.sendBulkData(false);
-        log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.indexName}`);
+
+        // TODO: send flush request to immediately remove documents from index
+        try {
+            await this.client.indices.flush();
+        } catch (e) { log.error('Error occurred during flush', e) }
+
+        log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.elastic.indexName}`);
     }
 
     private handleError(message: string, error: any) {
