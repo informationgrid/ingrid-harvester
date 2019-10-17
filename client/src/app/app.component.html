@@ -15,9 +15,9 @@
 <mat-sidenav-container class="navigation">
   <mat-sidenav mode="side" opened *ngIf="isLoggedIn">
     <mat-action-list>
-      <button mat-list-item routerLink="/config" data-test="menu-config"> Konfiguration </button>
-      <button mat-list-item routerLink="/harvester" data-test="menu-harvester"> Harvester </button>
-      <button mat-list-item routerLink="/log" data-test="menu-log"> Log </button>
+      <button mat-list-item routerLink="/config" routerLinkActive="active-link" data-test="menu-config"> Konfiguration </button>
+      <button mat-list-item routerLink="/harvester" routerLinkActive="active-link" data-test="menu-harvester"> Harvester </button>
+      <button mat-list-item routerLink="/log" routerLinkActive="active-link" data-test="menu-log"> Log </button>
     </mat-action-list>
   </mat-sidenav>
 

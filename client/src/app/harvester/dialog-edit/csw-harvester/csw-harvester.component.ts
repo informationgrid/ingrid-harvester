@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CswSettings} from '../../../../../../server/app/importer/csw/csw.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material';
@@ -9,13 +9,19 @@ import {MatChipInputEvent} from '@angular/material';
   templateUrl: './csw-harvester.component.html',
   styleUrls: ['./csw-harvester.component.scss']
 })
-export class CswHarvesterComponent implements OnDestroy {
+export class CswHarvesterComponent implements OnInit, OnDestroy {
 
   @Input() model: CswSettings;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor() { }
+
+  ngOnInit() {
+    if (!this.model.eitherKeywords) {
+      this.model.eitherKeywords = [];
+    }
+  }
 
   ngOnDestroy(): void {
   }

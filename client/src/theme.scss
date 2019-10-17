@@ -30,3 +30,15 @@ input.custom-autofill {
   @include cdk-text-field-autofill-color(transparent, red);
 }*/
 
+
+@mixin importer-components-theme($theme) {
+  // Extract the palettes you need from the theme definition.
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+
+  // Define any styles affected by the theme.
+  .active-link {
+    border-left: 3px solid mat-color($primary);
+  }
+}
+@include importer-components-theme($candy-app-theme);

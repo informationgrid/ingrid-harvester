@@ -35,6 +35,7 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
 
     // Add keyword
     if ((value || '').trim()) {
+      if (!this.model[type]) this.model[type] = [];
       this.model[type].push(value.trim());
     }
 
