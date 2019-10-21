@@ -171,7 +171,7 @@ export class HarvesterComponent implements OnInit {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.numErrors > 0 || detail.summary.elasticErrors.length > 0;
+      return detail.summary.numErrors > 0 || detail.summary.elasticErrors.length > 0 || detail.summary.appErrors.length > 0;
     } else {
       return false;
     }
@@ -189,7 +189,7 @@ export class HarvesterComponent implements OnInit {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.numErrors > 0 || detail.summary.elasticErrors.length > 0 || detail.summary.warnings.length > 0;
+      return detail.summary.numErrors > 0 || detail.summary.elasticErrors.length > 0 || detail.summary.warnings.length > 0 || detail.summary.appErrors.length > 0;
     } else {
       return false;
     }

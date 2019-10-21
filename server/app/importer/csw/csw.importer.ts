@@ -251,9 +251,11 @@ export class CswImporter implements Importer {
                 startPosition: settings.startPosition,
                 maxRecords: settings.maxRecords,
                 CONSTRAINT_LANGUAGE_VERSION: '1.1.0',
-                elementSetName: 'full',
-                constraint: settings.recordFilter
+                elementSetName: 'full'
             };
+            if (settings.recordFilter) {
+                requestConfig.qs.constraint = settings.recordFilter;
+            }
         }
 
         return requestConfig;
