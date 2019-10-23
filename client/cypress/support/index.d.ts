@@ -6,6 +6,8 @@ declare namespace Cypress {
      * @example cy.login('max', 'mustermann')
      */
     guiLogin(username: string, password: string): Chainable
+    apiLogin(): Chainable
+    // @DEPRECATED
     apiLogin(username: string, password: string): Chainable
 
     /**
@@ -39,6 +41,17 @@ declare namespace Cypress {
      * import commands
      */
     importAll(): Chainable
+
+    /**
+     * Help functions for harvesters operations
+     */
+    addNewHarvester(): Chainable
+    openHarvester(harvesterId: string): Chainable
+    saveHarvesterConfig(): Chainable
+    updateHarvester(): Chainable
+    openAndImportHarvester(harvesterId: string): Chainable
+    openScheduleHarvester(harvesterId: string): Chainable
+    openLog(harvesterId: string): Chainable
   }
 }
 

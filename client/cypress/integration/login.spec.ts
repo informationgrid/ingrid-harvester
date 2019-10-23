@@ -1,17 +1,17 @@
-describe('LOGIN TESTS', () => {
+describe('Login', () => {
   beforeEach(() => {
     cy.apiLogout();
   });
 
-  it('login page is shown to begin with', () => {
+  it('should show the login page to begin with', () => {
     cy.visit('');
-    cy.get('mat-card-title').contains('Login');
-    cy.get('[data-test=login]').contains('Login');
+    cy.get('mat-card-title').should('contain', 'Login');
+    cy.get('[data-test=login]').should('contain', 'Login');
   });
 
-  it('crawling for pages behind the login-wall redirects to the log in page', () => {
+  it('should not be possible to access pages without a login', () => {
     cy.visit('');
-    //visits a page that can be only viewed after login
+    //visit pages that can be only viewed after login
     cy.visit('harvester');
     //is redirected
     cy.url().should('include', 'login');
@@ -22,13 +22,13 @@ describe('LOGIN TESTS', () => {
   });
 
 //With GUI
-  it('after successful log in, is redirected and shows the name of the user', () => {
+  it('should show the name of the user after a successful log in', () => {
     cy.guiLogin('admin', 'admin');
     cy.url().should('include', '/harvester');
-    cy.get('data-test=logout').contains('Max Muster');
+    cy.get('data-test="logout"').contains('Max Muster');
   });
 
-  it('cannot log in (GUI) with wrong credentials', () => {
+  it('should not be able to log in (GUI) with wrong credentials', () => {
     cy.guiLogin('test', 'test');
     //checks error msg
     cy.get('.error').should('contain', 'Benutzername oder Passwort falsch');
@@ -37,19 +37,21 @@ describe('LOGIN TESTS', () => {
   });
 
 //Without GUI
-  it('after successful log in, cookies are created, is redirected and shows the name of the user', () => {
-    cy.apiLogin('admin', 'admin');
+  it('should create cookies and show the name of the user after successful log in', () => {
+    cy.getCookie('connect.sid').should('not.exist');
+
+    cy.apiLogin();
 
     //should have a cookie session
     cy.getCookie('connect.sid').should('exist');
 
     cy.url().should('include', 'harvester');
-    cy.get('data-test=logout').should('contain','Max Muster');
+    cy.get('data-test="logout"').should('contain','Max Muster');
 
     //why is it redirected again (sometimes)
   });
 
-  it('cannot log in (API) with wrong credentials', () => {
+  xit('should not be able to log in (API) with wrong credentials', () => {
     cy.apiLogin('test', 'test');
     cy.url().should('include', 'login');
   });

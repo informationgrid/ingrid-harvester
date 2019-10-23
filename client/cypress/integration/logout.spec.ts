@@ -1,10 +1,11 @@
-describe('LOGOUT TESTS', () => {
+describe('Logout', () => {
 
   beforeEach(() => {
-    cy.apiLogin('admin', 'admin');
+    cy.apiLogin();
+    cy.url().should('include', '/harvester');
   });
 
-  it('log out, show login page and check log out message', () => {
+  it('should log out successfully, show the login page and check the log out message', () => {
     cy.guiLogout();
 
     cy.get('mat-card-title').should('contain','Login');
@@ -13,7 +14,7 @@ describe('LOGOUT TESTS', () => {
     cy.get('.mat-simple-snackbar').should('contain', 'Sie wurden ausgeloggt');
   });
 
-  it('log out and show the login page', () => {
+  it('should log out successfully and show the login page', () => {
     cy.apiLogout();
 
     cy.get('mat-card-title').should('contain','Login');

@@ -12,7 +12,7 @@ function pressResetButton() {
   cy.get('[data-test=reset]').contains('Zurücksetzen').click();
 }
 
-describe('CONFIGURATION TAB OPERATIONS', () => {
+describe('configuration tab operations', () => {
   beforeEach(() => {
     cy.apiLogin('admin', 'admin');
     cy.goToConfig();
@@ -24,7 +24,7 @@ describe('CONFIGURATION TAB OPERATIONS', () => {
     pressSaveButton();
   });
 
-  it('update elastic search-url, alias and proxy values and save', () => {
+  it('should update the elastic search-url, the alias and proxy values, save and check the saved data', () => {
     cy.get('[name=elasticsearchUrl]').clear().type('http://localhost:92000000');
     cy.get('[name=alias]').clear().type('eman-saila');
     cy.get('[name=proxy]').clear().type('yxorp');
@@ -39,7 +39,7 @@ describe('CONFIGURATION TAB OPERATIONS', () => {
 
   });
 
-  it('update elastic search-url, alias and proxy and reset to default', () => {
+  it('should update elastic search-url, alias and proxy, reset to default and check the reset is successful', () => {
     cy.get('[name=elasticsearchUrl]').clear().type('http://localhost:92000000');
     cy.get('[name=alias]').clear().type('eman-saila');
     cy.get('[name=proxy]').clear().type('yxorp');
@@ -52,7 +52,7 @@ describe('CONFIGURATION TAB OPERATIONS', () => {
     cy.get('[name=proxy]').should('have.value', '');
   });
 
-  it('save button is disabled if only spaces or special characters are inserted', () => {
+  it('should check that the save button is disabled if only spaces or special characters are inserted', () => {
     //no value
     cy.get('[name=elasticsearchUrl]').clear().type(' _');
     cy.get('[name=alias]').clear().type(' ');
@@ -63,12 +63,11 @@ describe('CONFIGURATION TAB OPERATIONS', () => {
     cy.get('[data-test=save]').should('be.disabled');
   });
 
-  it('save button is disabled if wrong port values are inserted', () => {
+  it('should check that the save button is disabled if wrong port values are inserted', () => {
     //no value
     cy.get('[name=elasticsearchUrl]').clear();
     cy.get('[data-test=save]').should('be.disabled');
 
-    // TODO input check functionality must be implemented
     //value is too big
     cy.get('[name=elasticsearchUrl]').clear().type('http://localhost:92000000');
     cy.get('[data-test=save]').should('be.disabled');

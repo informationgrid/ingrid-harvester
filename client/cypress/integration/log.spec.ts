@@ -1,20 +1,20 @@
-describe('LOG TAB TESTS', () => {
+describe('Log tab operations', () => {
 
   beforeEach(() => {
     cy.apiLogin('admin', 'admin');
     //cy.goToLog();
   });
 
-  it('show information in the logs when all the harvester are imported', () => {
+  it('should show information in the logs when all the harvester are imported', () => {
     //cy.goToHarvester();
     cy.importAll();
     cy.goToLog();
     cy.get('.code').contains('[INFO] default - >> Running importer:');
   });
 
-  it('show the right information in the logs after a harvester is imported', () => {
+  it('should show the right information in the logs after a single harvester is imported', () => {
     //opens "Deutsche Bahn Datenportal"
-    openAndImportHarvester(6);
+    cy.openAndImportHarvester("6");
     cy.get('#harvester-6 [data-test="next-execution"]').should('contain', ' wurde geändert ');
 
     cy.goToLog();
