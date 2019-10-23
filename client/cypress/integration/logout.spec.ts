@@ -19,6 +19,5 @@ describe('Logout', () => {
 
     cy.get('mat-card-title').should('contain','Login');
     cy.get('[data-test=login]').should('contain', 'Login');
-    //no error message is shown
   });
 });

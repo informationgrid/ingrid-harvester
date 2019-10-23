@@ -5,14 +5,6 @@ describe('Import operations', () => {
     }
   });
 
-  //CSW operation
-  it('should successfully harvest after deleting an existing filter-label', () => {
-    cy.openHarvester('20'); // EOC Geoservice DLR
-    cy.get('[name=recordFilter]').clear();
-    cy.saveHarvesterConfig();
-    cy.openAndImportHarvester("20");
-  });
-
   it('should open a harvester, start an import and check it is successful', () => {
     //opens "Offene Daten Bonn: parameters wrong"
     cy.openAndImportHarvester("3");

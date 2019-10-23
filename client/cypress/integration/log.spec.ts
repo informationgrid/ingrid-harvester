@@ -15,7 +15,8 @@ describe('Log tab operations', () => {
   it('should show the right information in the logs after a single harvester is imported', () => {
     //opens "Deutsche Bahn Datenportal"
     cy.openAndImportHarvester("6");
-    cy.get('#harvester-6 [data-test="next-execution"]').should('contain', ' wurde geändert ');
+
+    cy.get('#harvester-6 [data-test="next-execution"]', {timeout: 6000}).should('contain', ' wurde geändert ');
 
     cy.goToLog();
     cy.get('.info').should('contain', '[INFO] default - Deutsche Bahn Datenportal (CKAN)');

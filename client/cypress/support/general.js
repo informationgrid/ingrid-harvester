@@ -19,8 +19,8 @@ Cypress.Commands.add("apiLogin", (user, psw) => {
   cy.request({
     method: 'POST',
     url: 'rest/passport/login',
-    body: {username: user, password: psw},
-    failOnStatusCode: false
+    body: {username: user, password: psw}
+    // failOnStatusCode: false
   }).then((response) => {
     if (response.body !== 'User not found') {
       window.localStorage.setItem('currentUser', JSON.stringify(response.body))
@@ -122,5 +122,5 @@ Cypress.Commands.add("openScheduleHarvester", (harvesterId) => {
  * @param harvesterId
  */
 Cypress.Commands.add("openLog", (harvesterId) => {
-  cy.get('#harvester-' + harvesterId + ' [data-test=log]').click();
+  cy.get('#harvester-' + harvesterId + ' [data-test=log]', {timeout: 6000}).click();
 });
