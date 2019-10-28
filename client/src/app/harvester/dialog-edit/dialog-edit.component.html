@@ -94,5 +94,8 @@
   <button mat-button mat-dialog-close>Abbrechen</button>
   <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
   <div class="flex-space"></div>
-  <button mat-button color="primary" [mat-dialog-close]="harvester" [disabled]="!form.checkValidity()">{{harvester.id > -1 ? 'Aktualisieren' : 'Anlegen'}}</button>
+  <button mat-button color="primary"
+          [mat-dialog-close]="harvester"
+          [disabled]="!form.checkValidity()"
+          data-test="dlg-update">{{harvester.id > -1 ? 'Aktualisieren' : 'Anlegen'}}</button>
 </mat-dialog-actions>
