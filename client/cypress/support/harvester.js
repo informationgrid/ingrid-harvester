@@ -141,4 +141,60 @@ Cypress.Commands.add('setHarvesterFields', (options) => {
   setHarvesterFields(options);
 });
 
+/**
+ * press button for adding a new harvester
+ */
+Cypress.Commands.add("addNewHarvester", () => {
+  cy.get('#btnAddHarvester').click();
+});
+
+/**
+ * press button for opening an existing harvester with given ID and updates it
+ */
+Cypress.Commands.add("openHarvester", (harvesterId) => {
+  cy.get('#harvester-' + harvesterId).click();
+  // cy.get('#harvester-' + harvesterId).click();
+  cy.get('#harvester-' + harvesterId + ' [data-test=edit]').click();
+});
+
+/**
+ * press button for harvester update
+ */
+Cypress.Commands.add("saveHarvesterConfig", () => {
+  cy.get('[data-test=dlg-update]').click();
+  cy.wait(500);
+});
+
+/**
+ * press button to update an old harvester
+ */
+Cypress.Commands.add("updateHarvester",() => {
+  cy.get('[data-test=dlg-update]').click();
+});
+
+/**
+ * open harvester and start import process
+ * @param harvesterId
+ */
+Cypress.Commands.add("openAndImportHarvester", (harvesterId) => {
+  cy.get('#harvester-' + harvesterId).click();
+  cy.get('#harvester-' + harvesterId + ' [data-test=import]').click();
+});
+
+/**
+ * open harvester and schedule page
+ * @param harvesterId
+ */
+Cypress.Commands.add("openScheduleHarvester", (harvesterId) => {
+  cy.get('#harvester-' + harvesterId).click();
+  cy.get('#harvester-' + harvesterId + ' [data-test=schedule]').click();
+});
+
+/**
+ * ONLY open log page of a harvester, an harvester should already be opened
+ * @param harvesterId
+ */
+Cypress.Commands.add("openLog", (harvesterId) => {
+  cy.get('#harvester-' + harvesterId + ' [data-test=log]', {timeout: 6000}).click();
+});
 
