@@ -52,7 +52,7 @@ describe('configuration tab operations', () => {
     cy.get('[name=proxy]').should('have.value', '');
   });
 
-  it('should check that the save button is disabled if only spaces or special characters are inserted', () => {
+  it('should check that the save button is disabled if only spaces or special characters are inserted [INPUT CONTROL]', () => {
     //no value
     cy.get('[name=elasticsearchUrl]').clear().type(' _');
     cy.get('[name=alias]').clear().type(' ');
@@ -63,7 +63,7 @@ describe('configuration tab operations', () => {
     cy.get('[data-test=save]').should('be.disabled');
   });
 
-  it('should check that the save button is disabled if wrong port values are inserted', () => {
+  it('should check that the save button is disabled if wrong port values are inserted [INPUT CONTROL]', () => {
     //no value
     cy.get('[name=elasticsearchUrl]').clear();
     cy.get('[data-test=save]').should('be.disabled');
@@ -79,5 +79,17 @@ describe('configuration tab operations', () => {
     //value is negative
     cy.get('[name=elasticsearchUrl]').clear().type('http://localhost:-42');
     cy.get('[data-test=save]').should('be.disabled');
+  });
+
+  it('should export the harvester configuration if the button is pressed', () => {
+    cy.goToConfig();
+    cy.request({
+      headers: {accept: 'application/json, text/plain, */*', referer: '/config'},
+      method: 'GET',
+      url: '/rest/api/harvester'
+      }).then((response) => {
+    expect(response.headers).to.have.property('content-type', 'application/json; charset=utf-8');
+    expect(response.headers).to.have.property('etag','W/"2a9f-USauWrs3LCxpb1XmwD43Ummi50Y"');
+    });
   });
 });

@@ -65,6 +65,9 @@ interface HarvesterOptions {
   filterTag?: string;
   filterGroup?: string;
   dateFormat?: string;
+  licenseId?: string;
+  titleId?: string;
+  licenseUrl?: string;
 
   httpMethod?: 'GET' | 'POST'; //csw
   getRecordsUrl?: string;

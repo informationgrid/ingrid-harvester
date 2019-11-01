@@ -27,7 +27,6 @@ describe('Excel-Harvester operations', () => {
       defaultmCLOUDCategory: 'Bahn',
       defaultAttribution: '100',
       defaultAttributionLink: '23',
-      maxRecords: 'capa'
     });
     cy.saveHarvesterConfig();
   });

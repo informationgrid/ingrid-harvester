@@ -21,7 +21,6 @@ function setExcelType() {
  * required and non required fields are checked to ensure more flexibility in the tests
  */
 function setHarvesterFields(options) {
-
   //required fields for every harvester
   if(options.description){
     cy.get('[name="description"]').clear().type(options.description);
@@ -65,6 +64,24 @@ function setHarvesterFields(options) {
   if (options.startPosition) {
     setStartPosition(options.startPosition);
   }
+  if (options.filterTag) {
+    setFilterTags(options.filterTag);
+  }
+  if(options.filterGroup) {
+    setFilterGroups(options.filterGroup);
+  }
+  if(options.licenseId) {
+    setDefaultLicenseId(options.licenseId);
+  }
+  if(options.titleId) {
+    setDefaultLicenseTitle(options.titleId);
+  }
+  if(options.licenseUrl) {
+    setDefaultLicenseUrl(options.licenseUrl);
+  }
+  if(options.dateFormat) {
+    setDataFormats(options.dateFormat);
+  }
 }
 
 //setters for common fields
@@ -98,6 +115,29 @@ function setStartPosition(startPosition) {
   cy.get('[name="startPosition"]').clear().type(startPosition);
 }
 
+function setFilterTags(filterTag) {
+  cy.get('[placeholder="Filter Tags"]').type(filterTag);
+}
+
+function setFilterGroups(filterGroup) {
+  cy.get('[placeholder="Filter Groups"]').type(filterGroup);
+}
+
+function setDataFormats(dataFormat) {
+  cy.get('[placeholder="Datumsformate"]').type(dataFormat);
+}
+
+function setDefaultLicenseId(licenseId) {
+  cy.get('[placeholder="ID"]').type(licenseId);
+}
+
+function setDefaultLicenseTitle(titleId) {
+  cy.get('[placeholder="Titel"]').type(titleId);
+}
+
+function setDefaultLicenseUrl(urlId) {
+  cy.get('[placeholder="URL"]').type(urlId);
+}
 //setters for required fields depending on harvester-type
 function setCkanBasisUrl(ckanBasisUrl) {
   cy.get('[name="ckanBaseUrl"]').clear().type(ckanBasisUrl);
@@ -197,4 +237,3 @@ Cypress.Commands.add("openScheduleHarvester", (harvesterId) => {
 Cypress.Commands.add("openLog", (harvesterId) => {
   cy.get('#harvester-' + harvesterId + ' [data-test=log]', {timeout: 6000}).click();
 });
-

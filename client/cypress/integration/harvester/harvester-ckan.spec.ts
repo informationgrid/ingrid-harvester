@@ -6,7 +6,7 @@ describe('Ckan-Harvester operations', () => {
     }
   });
   //CKAN Harvesters operations
-  it('add a harvester of type CKAN', () => {
+  it('should add a harvester of type CKAN', () => {
     cy.addNewHarvester();
     cy.newCkanHarvester({
       description: 'Testing CKAN Harvester',
@@ -16,4 +16,45 @@ describe('Ckan-Harvester operations', () => {
     cy.saveHarvesterConfig();
   });
 
+  it('should add a harvester of type CKAN with all options', () => {
+    cy.addNewHarvester();
+    cy.newCkanHarvester({
+      description: 'Testing full CKAN Harvester',
+      indexName: 'Testing full CKAN Harvester',
+      ckanBasisUrl: 'test me',
+      defaultDCATCategory: 'Bevölkerung und Gesellschaft',
+      defaultmCLOUDCategory: 'Bahn',
+      defaultAttribution: 'Offene Testdaten',
+      defaultAttributionLink: 'AttributionLink',
+      maxRecords: '10',
+      startPosition: '1',
+      filterTag: 'ckan_test',
+      filterGroup: 'ckan_test',
+      dateFormat: 'YYYY-MM-DD',
+      licenseId: '325',
+      titleId: 'titleID',
+      licenseUrl: 'wwwdedede'
+    });
+    cy.saveHarvesterConfig();
+  });
+
+  it('should update an existing CKAN harvester', () => {
+    cy.openHarvester('21');
+
+    cy.setHarvesterFields({
+      indexName: 'Testing update ckan Harvester',
+      defaultAttribution: 'ffm',
+      filterTag: 'ckan_test1',
+      filterGroup: 'ckan_test1',
+      dateFormat: '',
+    });
+    cy.updateHarvester();
+
+    //checks data was saved
+    cy.openHarvester('21');
+    cy.get('[name=index]').should('have.value', 'Testing update ckan Harvester');
+    cy.get('[name=defaultAttribution]').should('have.value', 'ffm');
+    cy.get(' .mat-chip-list-wrapper [role="option"]').should('contain', 'ckan_test1');
+    cy.get(' .mat-chip-list-wrapper [role="option"]').should('contain', 'ckan_test1');
+  })
 });

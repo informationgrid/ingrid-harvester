@@ -41,7 +41,7 @@ describe('Csw-Harvester operations', () => {
       });
 
     cy.setHarvesterFields({
-      indexName: 'Testing update ckan Harvester',
+      indexName: 'Testing update csw Harvester',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'
