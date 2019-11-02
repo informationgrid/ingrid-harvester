@@ -1,5 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Socket} from 'ngx-socket-io';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {LogService} from './log.service';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 
@@ -14,7 +13,7 @@ export class LogComponent implements OnInit {
   @ViewChild(CdkVirtualScrollViewport, {static: false}) viewPort: CdkVirtualScrollViewport;
   isLoading = true;
 
-  constructor(private socket: Socket, private logService: LogService) {
+  constructor(private logService: LogService) {
   }
 
   ngOnInit() {

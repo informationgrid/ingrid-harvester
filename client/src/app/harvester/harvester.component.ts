@@ -1,60 +1,42 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HarvesterService} from './harvester.service';
-import {of, zip} from 'rxjs';
+import {of, Subscription, zip} from 'rxjs';
 import {Harvester} from './model/harvester';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.component';
 import {DialogLogComponent} from './dialog-log/dialog-log.component';
 import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
-import {Socket} from 'ngx-socket-io';
 import {ImportLogMessage} from '../../../../server/app/model/import.result';
 import {flatMap, groupBy, mergeMap, tap, toArray} from 'rxjs/operators';
 import {MatSlideToggleChange} from '@angular/material';
-import {ConfigService} from '../config.service';
+import {SocketService} from './socket.service';
 
 @Component({
   selector: 'app-harvester',
   templateUrl: './harvester.component.html',
   styleUrls: ['./harvester.component.scss']
 })
-export class HarvesterComponent implements OnInit {
+export class HarvesterComponent implements OnInit, OnDestroy {
 
   harvesters: { [x: string]: Harvester[] } = {};
-
-  importInfo = this.socket.fromEvent<ImportLogMessage>('/log');
 
   importDetail: { [x: number]: ImportLogMessage } = {};
 
   harvesterLoaded = false;
 
   numberOfHarvesters: number;
+  private subscription: Subscription;
 
-  constructor(private socket: Socket,
-              public dialog: MatDialog,
+  constructor(public dialog: MatDialog,
               private snackBar: MatSnackBar,
               private harvesterService: HarvesterService,
-              private configService: ConfigService) {
-
-    if (configService.config) {
-      const contextPath = configService.config.contextPath;
-      console.log('modifiying socket URL to: ' + contextPath);
-      if (configService.config.url) {
-        this.socket.ioSocket.io.uri = configService.config.url + '/import';
-      }
-      if (contextPath) {
-        this.socket.ioSocket.io.opts.path = (contextPath === '/' ? '' : contextPath) + '/socket.io';
-      }
-    }
-    this.socket.ioSocket.open();
+              private socketService: SocketService) {
   }
 
   ngOnInit() {
 
-    this.importInfo.subscribe(data => {
-      // console.log('Received from socket: ', data);
-      this.importDetail[data.id] = data;
-    });
+    this.subscription = this.socketService.log$.subscribe(data => this.importDetail[data.id] = data);
 
     this.fetchHarvester();
 
@@ -62,6 +44,10 @@ export class HarvesterComponent implements OnInit {
       logs.forEach(log => this.importDetail[log.id] = log);
     });
 
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   schedule(harvester: Harvester) {
@@ -93,7 +79,7 @@ export class HarvesterComponent implements OnInit {
   }
 
   showLog(id: number) {
-    const dialogRef = this.dialog.open(DialogLogComponent, {
+    this.dialog.open(DialogLogComponent, {
       width: '900px',
       height: '600px',
       data: {
@@ -192,7 +178,10 @@ export class HarvesterComponent implements OnInit {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.numErrors > 0 || detail.summary.elasticErrors.length > 0 || detail.summary.warnings.length > 0 || detail.summary.appErrors.length > 0;
+      return detail.summary.numErrors > 0
+        || detail.summary.elasticErrors.length > 0
+        || detail.summary.warnings.length > 0
+        || detail.summary.appErrors.length > 0;
     } else {
       return false;
     }

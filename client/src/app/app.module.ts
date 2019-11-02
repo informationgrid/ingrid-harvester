@@ -10,11 +10,9 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {registerLocaleData} from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {Socket, SocketIoConfig, SocketIoModule} from 'ngx-socket-io';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ConfigService} from './config.service';
-import {tap} from 'rxjs/operators';
 import {environment} from '../environments/environment';
 import {UnauthorizedInterceptor} from './security/unauthorized.interceptor';
 import {LoginComponent} from './security/login.component';
@@ -25,19 +23,11 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 
-const config: SocketIoConfig = {
-  url: '/import', options: {
-    path: environment.production ? '/importer/socket.io' : undefined,
-    autoConnect: false
-  }
-};
-
 registerLocaleData(localeDe);
 
-export function ConfigLoader(configService: ConfigService, socket: Socket) {
+export function ConfigLoader(configService: ConfigService) {
   return () => {
     return configService.load('assets/' + environment.configFile)
-      .pipe(tap(() => socket.disconnect()))
       .subscribe();
   };
 }
@@ -59,7 +49,6 @@ const appRoutes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes),
-    SocketIoModule.forRoot(config),
     ReactiveFormsModule,
     FlexLayoutModule,
     HttpClientModule,
@@ -80,7 +69,7 @@ const appRoutes: Routes = [
     }, {
       provide: APP_INITIALIZER,
       useFactory: ConfigLoader,
-      deps: [ConfigService, Socket],
+      deps: [ConfigService],
       multi: true
     },
     {
@@ -88,11 +77,6 @@ const appRoutes: Routes = [
       useClass: UnauthorizedInterceptor,
       multi: true
     }
-    /*{
-      provide: WrappedSocket,
-      useFactory: MySocketFactory,
-      deps: []
-    }*/
   ],
   bootstrap: [AppComponent]
 })
