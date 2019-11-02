@@ -79,7 +79,10 @@ export class HarvesterComponent implements OnInit {
         harvester.cronPattern = cronExpression;
 
         // update immediately next execution time which is only calculated to the server
-        this.importDetail[harvester.id].nextExecution = undefined;
+        const detailElement = this.importDetail[harvester.id];
+        if (detailElement) {
+          detailElement.nextExecution = undefined;
+        }
 
         // TODO: get updated schedule info and set next execution time
         this.harvesterService.schedule(harvester.id, cronExpression).subscribe({

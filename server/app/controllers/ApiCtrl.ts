@@ -7,6 +7,7 @@ import {ImportLogMessage} from '../model/import.result';
 import {LogService} from '../services/storage/LogService';
 import {ScheduleService} from '../services/ScheduleService';
 import {GeneralSettings} from '@shared/general-config.settings';
+import {IndexService} from '../services/IndexService';
 
 @Controller("/api")
 @Authenticated()
@@ -16,6 +17,7 @@ export class ApiCtrl {
     constructor(private importSocketService: ImportSocketService,
                 private summaryService: SummaryService,
                 private logService: LogService,
+                private indexService: IndexService,
                 private scheduleService: ScheduleService) {
     }
 
@@ -30,8 +32,11 @@ export class ApiCtrl {
 
         if (config.disable) {
             this.scheduleService.stopJob(+id);
+            this.indexService.removeFromAlias(+id);
         } else {
             this.scheduleService.startJob(+id);
+
+            this.indexService.addToAlias(+id);
         }
     }
 

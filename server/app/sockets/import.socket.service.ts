@@ -1,7 +1,7 @@
-import {Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession} from "@tsed/socketio";
-import * as SocketIO from "socket.io";
-import {ConfigService} from "../services/config/ConfigService";
-import {ImporterFactory} from "../importer/importer.factory";
+import {Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession} from '@tsed/socketio';
+import * as SocketIO from 'socket.io';
+import {ConfigService} from '../services/config/ConfigService';
+import {ImporterFactory} from '../importer/importer.factory';
 import {SummaryService} from '../services/config/SummaryService';
 import {CronJob} from 'cron';
 import {getLogger} from 'log4js';

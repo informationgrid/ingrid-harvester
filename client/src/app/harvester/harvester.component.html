@@ -13,9 +13,12 @@
 
                 <mat-panel-title>
                     <mat-slide-toggle color="primary" [checked]="!harvester.disable"
-                                      title="Für Planung an- / ausschalten"
+                                      title="Für Suche und Planung an- / ausschalten"
                                       (change)="handleActivation($event, harvester)"
                                       (click)="$event.stopImmediatePropagation()"></mat-slide-toggle>
+                    <mat-icon *ngIf="harvester.cronPattern" inline class="scheduled">
+                      {{harvester.disable ? 'alarm_off' : 'alarm_on'}}
+                    </mat-icon>
                     <p class="no-wrap">{{harvester.description || harvester.defaultAttribution}}</p>
                     <mat-spinner *ngIf="importDetail[harvester.id]?.complete === false" diameter="20"></mat-spinner>
                 </mat-panel-title>

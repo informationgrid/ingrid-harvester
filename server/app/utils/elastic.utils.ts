@@ -56,7 +56,6 @@ export class ElasticSearchUtils {
             if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
             this.client.indices.create({index: this.indexName, waitForActiveShards: '1'})
                 .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
-                .then(() => this.addAlias(this.indexName, this.deduplicationAlias))
                 .catch(err => {
                     let message = 'Error occurred creating index';
                     if (err.message.indexOf('index_already_exists_exception') !== -1) {
@@ -104,29 +103,35 @@ export class ElasticSearchUtils {
         });
     }
 
+    /**
+     * Remove the specified alias from an index.
+     *
+     * @param {string} index
+     * @param {string} alias
+     */
+    removeAlias(index, alias) {
+        return this.client.indices.deleteAlias({
+            index: index,
+            name: alias
+        });
+    }
+
 
     /**
      * Delete all indices starting with indexBaseName but not indexName .
      *
      * @param {string} indexBaseName
-     * @param {string} indexName
+     * @param {string} ignoreIndexName
      */
-    deleteOldIndices(indexBaseName, indexName) {
+    deleteOldIndices(indexBaseName, ignoreIndexName) {
 
-        return this.client.cat.indices({
-            h: ['index'],
-            format: 'json'
-        }).then(body => {
+        //  match index to be deleted with indexBaseName_timestamp!
+        //  otherwise other indices with same prefix will be removed
+        return this.getIndicesFromBasename(indexBaseName)
+            .then(indices => {
 
-            // TODO: match index to be deleted with indexBaseName_timestamp!
-            //       otherwise other indices with same prefix will be removed
-            let indicesToDelete = body
-                .map(item => item.index)
-                .filter(index => {
-                    if (index.startsWith(indexBaseName)) {
-                        if (index !== indexName) return true;
-                    }
-                });
+            let indicesToDelete = indices
+                .filter(index => index !== ignoreIndexName);
 
             if (indicesToDelete.length > 0) {
                 log.debug('Deleting indices: ' + indicesToDelete);
@@ -136,6 +141,21 @@ export class ElasticSearchUtils {
             }
         }).catch(err => {
             this.handleError('Error occurred getting index names', err);
+        });
+    }
+
+    getIndicesFromBasename(baseName: string): Promise<String[]> {
+        return this.client.cat.indices({
+            h: ['index'],
+            format: 'json'
+        }).then(body => {
+            return body
+                .map(item => item.index)
+                .filter(index => {
+                    // the index name must consist of the base name + the date string which is
+                    // 18 characters long
+                    return index.startsWith(baseName) && index.length === baseName.length + 18;
+                });
         });
     }
 
@@ -323,6 +343,13 @@ export class ElasticSearchUtils {
      */
     async getIssuedDates(ids) {
         if (ids.length < 1) return [];
+
+        const aliasExists = await this.client.indices.existsAlias({
+            name: this.settings.alias
+        });
+        if (!aliasExists) {
+            return [];
+        }
 
         let data = [];
         ids.forEach(id => {
