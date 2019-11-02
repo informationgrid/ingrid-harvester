@@ -25,7 +25,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 
-let config: SocketIoConfig = {
+const config: SocketIoConfig = {
   url: '/import', options: {
     path: environment.production ? '/importer/socket.io' : undefined,
     autoConnect: false
@@ -45,6 +45,7 @@ export function ConfigLoader(configService: ConfigService, socket: Socket) {
 const appRoutes: Routes = [
   {path: 'config', loadChildren: () => import('./config/config.module').then(mod => mod.ConfigModule)},
   {path: 'harvester', loadChildren: () => import('./harvester/harvester.module').then(mod => mod.HarvesterModule)},
+  {path: 'indices', loadChildren: () => import('./indices/indices.module').then(mod => mod.IndicesModule)},
   {path: 'log', loadChildren: () => import('./log/log.module').then(mod => mod.LogModule)},
   {path: 'login', component: LoginComponent},
   {path: '', redirectTo: '/harvester', pathMatch: 'full'}

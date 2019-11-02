@@ -3,6 +3,7 @@ import {ConfigService} from './config/ConfigService';
 import {ElasticSearchUtils} from '../utils/elastic.utils';
 import {ElasticSettings} from '../utils/elastic.setting';
 import {Summary} from '../model/summary';
+import {Index} from '@shared/index.model';
 
 let log = require('log4js').getLogger(__filename);
 
@@ -64,5 +65,14 @@ export class IndexService {
             return null;
         }
         return indices[0];
+    }
+
+    async getIndices(): Promise<Index[]> {
+        const indices = await this.elasticUtils.getIndicesFromBasename('')
+        return indices.map( index => ({name: index}));
+    }
+
+    deleteIndex(name: string) {
+        this.elasticUtils.deleteIndex(name);
     }
 }

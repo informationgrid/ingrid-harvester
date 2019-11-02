@@ -134,17 +134,14 @@ export class ElasticSearchUtils {
                 .filter(index => index !== ignoreIndexName);
 
             if (indicesToDelete.length > 0) {
-                log.debug('Deleting indices: ' + indicesToDelete);
-                return this.client.indices.delete({
-                    index: indicesToDelete
-                });
+                return this.deleteIndex(indicesToDelete);
             }
         }).catch(err => {
             this.handleError('Error occurred getting index names', err);
         });
     }
 
-    getIndicesFromBasename(baseName: string): Promise<String[]> {
+    getIndicesFromBasename(baseName: string): Promise<string[]> {
         return this.client.cat.indices({
             h: ['index'],
             format: 'json'
@@ -154,7 +151,8 @@ export class ElasticSearchUtils {
                 .filter(index => {
                     // the index name must consist of the base name + the date string which is
                     // 18 characters long
-                    return index.startsWith(baseName) && index.length === baseName.length + 18;
+                    // in case we want to get all indices just request with an empty baseName
+                    return baseName === '' || (index.startsWith(baseName) && index.length === baseName.length + 18);
                 });
         });
     }
@@ -406,5 +404,12 @@ export class ElasticSearchUtils {
     private handleError(message: string, error: any) {
         this.summary.elasticErrors.push(error.toString());
         log.error(message, error);
+    }
+
+    deleteIndex(indicesToDelete: string|string[]): Promise<any> {
+        log.debug('Deleting indices: ' + indicesToDelete);
+        return this.client.indices.delete({
+            index: indicesToDelete
+        });
     }
 }

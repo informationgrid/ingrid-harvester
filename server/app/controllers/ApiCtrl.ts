@@ -1,4 +1,4 @@
-import {Authenticated, BodyParams, Controller, Get, PathParams, Post} from '@tsed/common';
+import {Authenticated, BodyParams, Controller, Delete, Get, PathParams, Post} from '@tsed/common';
 import {Harvester} from '../../../client/src/app/harvester/model/harvester';
 import {ConfigService} from '../services/config/ConfigService';
 import {ImportSocketService} from "../sockets/import.socket.service";
@@ -7,6 +7,7 @@ import {ImportLogMessage} from '../model/import.result';
 import {LogService} from '../services/storage/LogService';
 import {ScheduleService} from '../services/ScheduleService';
 import {GeneralSettings} from '@shared/general-config.settings';
+import {Index} from '@shared/index.model';
 import {IndexService} from '../services/IndexService';
 
 @Controller("/api")
@@ -89,6 +90,21 @@ export class ApiCtrl {
     setGeneralConfig(@BodyParams() body: GeneralSettings): void {
 
         ConfigService.setGeneralConfig(body);
+
+    }
+
+
+    @Get('/indices')
+    async getIndices(): Promise<Index[]> {
+
+        return this.indexService.getIndices();
+
+    }
+
+    @Delete('/indices/:name')
+    async deleteIndex(@PathParams('name') name: string): Promise<void> {
+
+        return this.indexService.deleteIndex(name);
 
     }
 }
