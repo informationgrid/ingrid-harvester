@@ -3,6 +3,7 @@
 import {RequestDelegate} from "./http-request.utils";
 import {OptionsWithUri} from "request-promise";
 
+let mapping = require("../../mappings");
 let log = require('log4js').getLogger( __filename );
 
 export class UrlUtils {
@@ -79,5 +80,26 @@ export class UrlUtils {
             }
             UrlUtils.cache[<string>requestConfig.uri] = false;
         }
+    }
+
+    /**
+     * Map a distribution format to a conform value
+     * @param format
+     * @param warnings
+     */
+    static mapFormat(format: string, warnings?: string[][]) {
+
+        const value = mapping.format[format];
+
+        if (!value) {
+            log.warn('Distribution format unknown: ' + format);
+            if (warnings) {
+                warnings.push(['Distribution format unknown', format]);
+            }
+            return format;
+        }
+
+        return value;
+
     }
 }

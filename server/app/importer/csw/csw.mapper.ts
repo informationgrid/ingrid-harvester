@@ -2,7 +2,7 @@
  * A mapper for ISO-XML documents harvested over CSW.
  */
 import {Agent, DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
-import {License} from '../../../../shared/license.model';
+import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
@@ -89,40 +89,48 @@ export class CswMapper extends GenericMapper {
             if (!id) id = distNode.getAttribute('uuid');
 
             let formats = [];
-            let urls = [];
+            let urls: Distribution[] = [];
 
             CswMapper.select('.//gmd:MD_Format/gmd:name/gco:CharacterString', distNode).forEach(fmt => {
                 if (!formats.includes(fmt.textContent)) formats.push(fmt.textContent);
             });
-            let urlNodes = CswMapper.select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/*/gmd:linkage/gmd:URL', distNode);
-            for(let j=0; j<urlNodes.length; j++) {
-                let urlNode = urlNodes[j];
-
-                let url = null;
-                if (urlNode) {
-                    let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig);
-                }
-                if (url && !urls.includes(url)) urls.push(url);
-            }
 
             // Combine formats in a single slash-separated string
             let distributionFormat = formats.join(',');
             if (!distributionFormat) distributionFormat = 'Unbekannt';
+
+            let onlineResources = CswMapper.select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource', distNode);
+            for(let j=0; j<onlineResources.length; j++) {
+                let onlineResource = onlineResources[j];
+
+                let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource);
+                let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource);
+
+                let url = null;
+                if (urlNode.length > 0) {
+                    let requestConfig = this.getUrlCheckRequestConfig(urlNode[0].textContent);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig);
+                }
+                if (url && !urls.includes(url)) {
+                    const format = protocolNode.length > 0 && protocolNode[0].textContent
+                        ? protocolNode[0].textContent
+                        : distributionFormat;
+
+                    urls.push({
+                        accessURL: url,
+                        format: UrlUtils.mapFormat(format, this.summary.warnings)
+                    });
+                }
+            }
+
             // Filter out URLs that have already been found
-            urls = urls.filter(item => !urlsFound.includes(item));
+            urls = urls.filter(item => !urlsFound.includes(item.accessURL));
 
-            urls.forEach(url => {
-                let dist: any = {};
+            // Set id only if there is a single resource
+            if (urls.length === 1 && id) urls[0].id = id;
 
-                // Set id only if there is a single resource
-                if (urls.length === 1 && id) dist.id = id;
-
-                dist.format = distributionFormat;
-                dist.accessURL = url;
-
-                dists.push(dist);
-            });
+            // add distributions to all
+            dists.push(...urls);
         }
 
         if (dists.length === 0) {
@@ -146,7 +154,8 @@ export class CswMapper extends GenericMapper {
             true);
         let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
         let serviceFormat = CswMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true).textContent;
-        let serviceLinks = [];
+        let serviceLinks: Distribution[] = [];
+
         if (getCapablitiesUrl) {
             let lowercase = getCapablitiesUrl.toLowerCase();
             if (lowercase.match(/\bwms\b/)) serviceFormat = 'WMS';
@@ -154,23 +163,28 @@ export class CswMapper extends GenericMapper {
             if (lowercase.match(/\bwcs\b/)) serviceFormat = 'WCS';
             if (lowercase.match(/\bwmts\b/)) serviceFormat = 'WMTS';
         }
-        let urls = CswMapper.select('./srv:containsOperations/*/srv:connectPoint/*/gmd:linkage/gmd:URL', srvIdent);
-        for (let i=0; i<urls.length; i++) {
-            let node = urls[i];
 
-            let requestConfig = this.getUrlCheckRequestConfig(node.textContent);
+        let onlineResources = CswMapper
+            .select('./srv:containsOperations/*/srv:connectPoint/*/gmd:CI_OnlineResource', srvIdent);
+
+        for (let i=0; i<onlineResources.length; i++) {
+            let onlineResource = onlineResources[i];
+
+            let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource);
+            let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource);
+
+            let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
             let url = await UrlUtils.urlWithProtocolFor(requestConfig);
-            if (url && !serviceLinks.includes(url)) {
-                serviceLinks.push(url);
+            if (url && !urlsFound.includes(url)) {
+                serviceLinks.push({
+                    accessURL: url,
+                    format: protocolNode.textContent ? protocolNode.textContent : serviceFormat
+                });
                 urlsFound.push(url);
             }
         }
 
-        return serviceLinks.map(url => ({
-                format: serviceFormat,
-                accessURL: url
-            })
-        );
+        return serviceLinks;
 
    }
 
