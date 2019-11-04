@@ -102,6 +102,16 @@
       "issued": "2019-07-15T08:31:51.862Z",
       "modified": null,
       "title": "Zugbildungsplan A-Reihung- (ZpAR) - Sm B2"
+    },
+    {
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2020_ZpAR Wi_Endstück.pdf",
+      "byteSize": null,
+      "description": "Endstück Winterfahrplan 2020 Gültigkeit: 09.12.2019 – 10.06.2020",
+      "format": "PDF",
+      "id": "9250e2ac-7be9-4c52-915f-06b6ae5b684c",
+      "issued": "2019-10-25T13:38:59.135Z",
+      "modified": null,
+      "title": "Zugbildungsplan A -Reihung- (ZpAR) - 2020"
     }
   ],
   "extras": {
