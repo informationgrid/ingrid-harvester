@@ -18,6 +18,10 @@ task copyResources(type: Copy) {
     from 'package.json', 'package-lock.json'
     into 'build'
 }
+task copyMappingConfig(type: Copy) {
+    from 'mappings.json'
+    into 'build/server'
+}
 task copyServerConfig(type: Copy) {
     from 'app/server-config.json'
     into 'build/server/app'
