@@ -81,7 +81,7 @@ describe('configuration tab operations', () => {
     cy.get('[data-test=save]').should('be.disabled');
   });
 
-  it('should export the harvester configuration if the button is pressed', () => {
+  it('should export the harvester configuration if the right request in made', () => {
     cy.goToConfig();
     cy.request({
       headers: {accept: 'application/json, text/plain, */*', referer: '/config'},
@@ -90,6 +90,19 @@ describe('configuration tab operations', () => {
       }).then((response) => {
     expect(response.headers).to.have.property('content-type', 'application/json; charset=utf-8');
     expect(response.headers).to.have.property('etag','W/"2a9f-USauWrs3LCxpb1XmwD43Ummi50Y"');
+    });
+  });
+
+  it('should export the harvester configuration if the button is pressed', () => {
+    cy.server();
+    cy.route('GET', 'http://192.168.0.228/importer/rest/api/harvester').as('download');
+    cy.goToConfig();
+
+    cy.get('.mat-flat-button').contains('Export der Harvester-Konfiguration').click();
+
+    cy.wait('@download').then((xhr) => {
+      expect(xhr.responseHeaders).to.have.property('content-type', 'application/json; charset=utf-8');
+      expect(xhr.responseHeaders).to.have.property('etag', 'W/"2a9f-USauWrs3LCxpb1XmwD43Ummi50Y"');
     });
   });
 });
