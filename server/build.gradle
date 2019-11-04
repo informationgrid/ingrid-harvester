@@ -45,7 +45,7 @@ task test(type: NpmTask) {
     args = ['run', 'test-jenkins']
 }
 
-task bundle(dependsOn: [build, copyResources, copyServerConfig, copyWebapp]) {
+task bundle(dependsOn: [build, copyResources, copyMappingConfig, copyServerConfig, copyWebapp]) {
     /*doLast {
         // create logs directory to prevent permission problems during creation after RPM installation
         mkdir "build/logs"
