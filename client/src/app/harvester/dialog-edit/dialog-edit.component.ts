@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Harvester} from '../model/harvester';
+import {Harvester} from '@shared/harvester';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @Component({

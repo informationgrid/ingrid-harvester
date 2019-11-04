@@ -1,4 +1,4 @@
-import {Harvester} from '../../../../client/src/app/harvester/model/harvester';
+import {Harvester} from '@shared/harvester';
 import {GeneralSettings} from '@shared/general-config.settings';
 import * as fs from 'fs';
 import {CkanImporter} from '../../importer/ckan/ckan.importer';

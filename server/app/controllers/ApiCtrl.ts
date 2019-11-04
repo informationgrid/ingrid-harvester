@@ -1,5 +1,5 @@
 import {Authenticated, BodyParams, Controller, Delete, Get, PathParams, Post} from '@tsed/common';
-import {Harvester} from '../../../client/src/app/harvester/model/harvester';
+import {Harvester} from '@shared/harvester';
 import {ConfigService} from '../services/config/ConfigService';
 import {ImportSocketService} from "../sockets/import.socket.service";
 import {SummaryService} from '../services/config/SummaryService';

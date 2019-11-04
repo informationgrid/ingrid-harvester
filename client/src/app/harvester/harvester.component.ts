@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HarvesterService} from './harvester.service';
 import {of, Subscription, zip} from 'rxjs';
-import {Harvester} from './model/harvester';
+import {Harvester} from '@shared/harvester';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.component';

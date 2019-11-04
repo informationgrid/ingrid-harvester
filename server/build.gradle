@@ -14,17 +14,12 @@ node {
     download = true
 }
 
-task copyResources(type: Copy) {
-    from 'package.json', 'package-lock.json'
-    into 'build'
-}
-task copyMappingConfig(type: Copy) {
-    from 'mappings.json'
+task copyConfigs(type: Copy) {
+    from ('.') {
+        include '*.json'
+        exclude 'tsconfig.json'
+    }
     into 'build/server'
-}
-task copyServerConfig(type: Copy) {
-    from 'app/server-config.json'
-    into 'build/server/app'
 }
 task copyWebapp(type: Copy) {
     from '../client/dist/webapp'
@@ -45,12 +40,7 @@ task test(type: NpmTask) {
     args = ['run', 'test-jenkins']
 }
 
-task bundle(dependsOn: [build, copyResources, copyMappingConfig, copyServerConfig, copyWebapp]) {
-    /*doLast {
-        // create logs directory to prevent permission problems during creation after RPM installation
-        mkdir "build/logs"
-        new File(buildDir,"/logs/.empty").text = ""
-    }*/
+task bundle(dependsOn: [build, copyConfigs, copyWebapp]) {
 }
 
 task clean {
