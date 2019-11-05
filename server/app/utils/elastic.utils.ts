@@ -189,6 +189,7 @@ export class ElasticSearchUtils {
             }, err => {
                 if (err) {
                     this.handleError('Error occurred adding settings', err);
+                    errorCallback(err);
                 } else handleMapping(); //this.client.indices.open({ index: index });
             });
         };
@@ -216,7 +217,10 @@ export class ElasticSearchUtils {
         const handleClose = () => {
             this.client.cluster.health({waitForStatus: 'yellow'})
                 .then(() => this.client.indices.close({index: index}, handleSettings))
-                .catch(() => log.error('Cluster state did not become yellow'));
+                .catch(() => {
+                    log.error('Cluster state did not become yellow');
+                    errorCallback('Elasticsearch cluster state did not become yellow');
+                });
         };
 
         this.client.indices.create({index: index}, () => setTimeout(handleClose, 1000));

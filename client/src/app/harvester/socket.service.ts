@@ -15,7 +15,9 @@ export class SocketService {
 
   constructor(private configService: ConfigService) {
     if (configService.config) {
-      this.socket = io.connect(configService.config.url + '/import');
+      this.socket = io.connect(configService.config.url + '/import', {
+        'path': configService.config.contextPath + '/socket.io'
+      });
 
       this.socket.on('/log', data => this.log$.next(data));
 
