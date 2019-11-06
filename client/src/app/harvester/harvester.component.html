@@ -48,6 +48,10 @@
                     <mat-icon class="inline-valigned">schedule</mat-icon>
                     Planen
                 </button>
+                <button mat-button color="warn" (click)="deleteHarvester(harvester)" data-test="delete">
+                    <mat-icon class="inline-valigned">delete</mat-icon>
+                    Entfernen
+                </button>
                 <div class="flex-space"></div>
                 <button mat-button color="primary" (click)="edit(harvester)" data-test="edit">
                     <mat-icon class="inline-valigned">edit</mat-icon>

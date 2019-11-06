@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Index} from '@shared/index.model';
 
@@ -7,7 +7,8 @@ import {Index} from '@shared/index.model';
 })
 export class IndicesService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   get() {
     return this.http.get<Index[]>('rest/api/indices');

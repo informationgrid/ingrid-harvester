@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IndicesListComponent } from './indices-list/indices-list.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {IndicesListComponent} from './indices-list/indices-list.component';
 import {RouterModule, Routes} from '@angular/router';
-import {HarvesterComponent} from '../harvester/harvester.component';
-import {MatButtonModule, MatIconModule, MatListModule} from '@angular/material';
+import {MatIconModule, MatListModule} from '@angular/material';
+import {SharedModule} from '../shared/shared.module';
 
 const routes: Routes = [
   {
@@ -19,7 +19,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     MatListModule,
     MatIconModule,
-    MatButtonModule,
+    SharedModule
   ]
 })
-export class IndicesModule { }
+export class IndicesModule {
+}

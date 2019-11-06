@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Bestätigung</h2>
+
+<mat-dialog-content>
+
+  <p>{{message}}</p>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Abbrechen</button>
+  <div class="flex-space"></div>
+  <button mat-button color="primary"
+          [mat-dialog-close]="true"
+          data-test="dlg-schedule">Löschen</button>
+</mat-dialog-actions>

@@ -11,6 +11,7 @@ import {ImportLogMessage} from '../../../../server/app/model/import.result';
 import {flatMap, groupBy, mergeMap, tap, toArray} from 'rxjs/operators';
 import {MatSlideToggleChange} from '@angular/material';
 import {SocketService} from './socket.service';
+import {ConfirmDialogComponent} from '../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-harvester',
@@ -102,15 +103,17 @@ export class HarvesterComponent implements OnInit, OnDestroy {
 
   edit(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogEditComponent, {
-      data: harvester,
+      data: JSON.parse(JSON.stringify(harvester)),
       width: '950px',
       disableClose: true
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
+    dialogRef.afterClosed().subscribe((result: Harvester) => {
       if (result) {
-        this.harvesterService.updateHarvester(result).subscribe();
+        this.harvesterService.updateHarvester(result).subscribe(() => {
+          // update view by modifying original object
+          Object.keys(harvester).forEach(key => harvester[key] = result[key]);
+        });
       }
     });
   }
@@ -185,5 +188,13 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     } else {
       return false;
     }
+  }
+
+  deleteHarvester(harvester: Harvester) {
+    this.dialog.open(ConfirmDialogComponent, {data: 'Wollen Sie diesen Harvester wirklich löschen?'}).afterClosed().subscribe(result => {
+      if (result) {
+        this.harvesterService.delete(harvester.id).subscribe(() => this.fetchHarvester());
+      }
+    });
   }
 }

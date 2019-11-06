@@ -52,4 +52,8 @@ export class HarvesterService {
   schedule(id: number, cronExpression: string): Observable<void> {
     return this.http.post<void>('rest/api/schedule/' + id, {cron: cronExpression});
   }
+
+  delete(id: number) {
+    return this.http.delete('rest/api/harvester/' + id);
+  }
 }

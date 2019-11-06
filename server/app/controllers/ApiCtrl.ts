@@ -41,6 +41,22 @@ export class ApiCtrl {
         }
     }
 
+    @Delete("/harvester/:id")
+    deleteHarvesterConfig(@PathParams('id') id: number) {
+
+        // update config without the selected harvester
+        const filtered = ConfigService.get()
+            .filter( harvester => harvester.id !== +id);
+
+        ConfigService.updateAll(filtered);
+
+        // remove from scheduler
+        this.scheduleService.stopJob(+id);
+
+        // remove from search index/alias
+        this.indexService.removeFromAlias(+id);
+    }
+
     @Post("/import/:id")
     importFromHarvester(@PathParams('id') id: number) {
         this.importSocketService.runImport(+id);
