@@ -56,4 +56,15 @@ describe('Harvester operations', () => {
     cy.get('[name=maxRecords]').should('contain', '1234');
     cy.get('[name=startPosition]').should('contain', '1234');
   });
+
+  it('should show the old values if an update operation is aborted and the page is not refreshed', () => {
+    cy.openHarvester('6');
+    cy.setHarvesterFields({description: ' ', indexName: ' ', defaultAttribution: ' '});
+    cy.get('.mat-button-wrapper').contains('Abbrechen').click();
+
+    cy.get('#harvester-6 .no-wrap').should('contain','Deutsche Bahn Datenportal');
+
+    cy.reload();
+    cy.get('#harvester-6 .no-wrap').should('contain','Deutsche Bahn Datenportal');
+  });
 });
