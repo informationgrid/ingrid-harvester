@@ -39,22 +39,21 @@ describe('Ckan-Harvester operations', () => {
   });
 
   it('should update an existing CKAN harvester', () => {
-    cy.openHarvester('21');
+    cy.openHarvester('3');
 
     cy.setHarvesterFields({
-      indexName: 'Testing update ckan Harvester',
+      indexName: 'Update ckan Harvester',
       defaultAttribution: 'ffm',
       filterTag: 'ckan_test1',
       filterGroup: 'ckan_test1',
-      dateFormat: '',
+      dateFormat: 'YYYY-MM-DD',
     });
     cy.updateHarvester();
 
     //checks data was saved
-    cy.openHarvester('21');
-    cy.get('[name=index]').should('have.value', 'Testing update ckan Harvester');
+    cy.openHarvester('3');
+    cy.get('[name=index]').should('have.value', 'Update ckan Harvester');
     cy.get('[name=defaultAttribution]').should('have.value', 'ffm');
-    cy.get(' .mat-chip-list-wrapper [role="option"]').should('contain', 'ckan_test1');
     cy.get(' .mat-chip-list-wrapper [role="option"]').should('contain', 'ckan_test1');
   })
 });

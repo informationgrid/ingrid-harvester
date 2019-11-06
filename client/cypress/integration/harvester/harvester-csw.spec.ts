@@ -55,19 +55,18 @@ describe('Csw-Harvester operations', () => {
     cy.get('[name=defaultAttribution]').should('have.value', 'ffm');
   });
 
-  //CSW (import) operation
+  //CSW operation
   it('should successfully harvest after deleting an existing filter-label', () => {
     cy.openHarvester('16'); // EOC Geoservice DLR
     cy.get('[name=recordFilter]').clear();
     cy.updateHarvester();
     cy.openAndImportHarvester("16");
 
-    //import started & running
+    //import started
     cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
     cy.get('app-importer-detail').should('contain', ' Import läuft ');
 
-    cy.reload();
     cy.get('#harvester-16').click();
-    cy.get('#harvester-16 [data-test="next-execution"]', {timeout: 10000}).should('contain', ' wurde geändert ');
+    cy.get('#harvester-16 [data-test="next-execution"]', {timeout: 15000}).should('contain', ' wurde geändert ');
   });
 });

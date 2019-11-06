@@ -89,7 +89,7 @@ describe('configuration tab operations', () => {
       url: '/rest/api/harvester'
       }).then((response) => {
     expect(response.headers).to.have.property('content-type', 'application/json; charset=utf-8');
-    expect(response.headers).to.have.property('etag','W/"2a9f-USauWrs3LCxpb1XmwD43Ummi50Y"');
+    expect(response.headers).to.have.property('etag');
     });
   });
 
@@ -102,7 +102,7 @@ describe('configuration tab operations', () => {
 
     cy.wait('@download').then((xhr) => {
       expect(xhr.responseHeaders).to.have.property('content-type', 'application/json; charset=utf-8');
-      expect(xhr.responseHeaders).to.have.property('etag', 'W/"2a9f-USauWrs3LCxpb1XmwD43Ummi50Y"');
+      expect(xhr.responseHeaders).to.have.property('etag'); //etag value to check 
     });
   });
 });

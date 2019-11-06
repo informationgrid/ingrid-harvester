@@ -59,6 +59,7 @@ describe('Excel-Harvester operations', () => {
       defaultAttribution: '7'
     });
     cy.updateHarvester();
+
     cy.reload();
     //checks data was saved
     cy.openHarvester('1');

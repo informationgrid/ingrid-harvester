@@ -8,15 +8,15 @@ describe('Indices operations', () => {
 
   it('should click the slide toggle bar', () => {
     //conditional testing
-    cy.get('#harvester-9 .mat-slide-toggle-bar').dblclick();
+    cy.get('#harvester-9 .mat-slide-toggle-bar').click({force: true});
     cy.get('#harvester-9 .mat-slide-toggle-input').should('be.checked');
 
     //turn off again
-    cy.get('#harvester-9 .mat-slide-toggle-bar').dblclick();
+    cy.get('#harvester-9 .mat-slide-toggle-bar').click({force: true});
   });
 
   it('should not find an harvester whose search is not activated', () => {
-    cy.get('#harvester-9 .mat-slide-toggle-bar').dblclick();
+    cy.get('#harvester-9 .mat-slide-toggle-bar').click({force: true});
     cy.goToIndices();
     cy.reload();
     cy.get('.mat-line').invoke('text').should('not.contain', 'ckan_portal_hamburg');
@@ -38,10 +38,9 @@ describe('Indices operations', () => {
     //check icon
     cy.get('#harvester-21 .mat-icon').should('contain', 'alarm_off');
     //activate auto planning and check the right status of the icon
-    cy.get('#harvester-21 .mat-slide-toggle-bar').dblclick();
+    cy.get('#harvester-21 .mat-slide-toggle-bar').click({force: true});
     cy.get('#harvester-21 .mat-icon').should('contain', 'alarm_on');
     //deactivate again
-    cy.get('#harvester-21 .mat-slide-toggle-bar').dblclick();
+    cy.get('#harvester-21 .mat-slide-toggle-bar').click({force: true});
   });
-
 });

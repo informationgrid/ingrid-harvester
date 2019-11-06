@@ -10,13 +10,13 @@ describe('Import log operations', () => {
     cy.openLog("21");
 
     // cy.get('.logContainer').should('contain', 'Error occurred creating index');
-    cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
+    cy.get('.mat-tab-label-content', {timeout:10000}).contains('Elasticsearch-Errors').click();
     cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name');
   });
 
   it('should show no error in the logs after a successful import', () => {
     cy.openAndImportHarvester("7");
-    cy.get('#harvester-7 [data-test=num-errors]').scrollIntoView({timeout:7000});
+    cy.get('#harvester-7 [data-test=num-errors]', {timeout:10000}).scrollIntoView();
     cy.get('#harvester-7 [data-test=num-errors]').invoke('text').then((numErr) => {
       //no errors
       if (numErr.toString() === '0') {
@@ -38,7 +38,7 @@ describe('Import log operations', () => {
     });
   });
 
-  it('should show an error in the harvester logs if the CKAN URL is not valid', () => {
+  it('should show an error in the harvester logs if the CKAN index name is invalid', () => {
     cy.openAndImportHarvester("21");
     cy.openLog("21");
 
@@ -47,20 +47,31 @@ describe('Import log operations', () => {
     cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name ');
   });
 
+  it('should show an error in the harvester logs if the CKAN url is invalid', () => {
+    cy.openHarvester('21');
+    cy.setHarvesterFields({indexName: 'ckan_test'});
+    cy.updateHarvester();
+
+    cy.openAndImportHarvester("21");
+    cy.openLog("21");
+
+    cy.get('.logContainer').should('contain', 'Error: Invalid URI');
+  });
+
   it('should show an error in the harvester logs if the CSW URL is not valid ', () => {
-    cy.openAndImportHarvester("22");
-    cy.openLog("22");
+    cy.openAndImportHarvester("23");
+    cy.openLog("23");
 
     cy.get('.logContainer').should('contain', 'Error occurred creating index');
     cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
-    cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name ');
+    cy.get('.logContainer').should('contain', '[invalid_index_name_exception]');
   });
 
   it('should show an error in the harvester logs if the Excel path is not valid', () => {
     cy.openAndImportHarvester("1");
     cy.openLog("1");
 
-    cy.get('.logContainer').should('contain', 'Error occurred creating index');
+    cy.get('.logContainer').should('contain', 'Error reading excel workbook');
     cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
     cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name ');
   });
