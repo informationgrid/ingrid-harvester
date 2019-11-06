@@ -22,6 +22,7 @@ declare namespace Cypress {
     goToConfig(): Chainable
     goToHarvester(): Chainable
     goToLog(): Chainable
+    goToIndices(): Chainable
 
     /**
      * Fill form with data for a harvester.

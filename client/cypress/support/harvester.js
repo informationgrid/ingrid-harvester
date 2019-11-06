@@ -25,6 +25,7 @@ function setHarvesterFields(options) {
   if(options.description){
     cy.get('[name="description"]').clear().type(options.description);
   }
+
   if(options.indexName){
     cy.get('[name="index"]').clear().type(options.indexName);
   }
@@ -37,6 +38,7 @@ function setHarvesterFields(options) {
   if (options.httpMethod) { //csw
     setCswHttpMethod(options.httpMethod);
   }
+
   if (options.getRecordsUrl) {
     setGetRecordsUrl(options.getRecordsUrl);
   }
@@ -49,36 +51,47 @@ function setHarvesterFields(options) {
   if (options.defaultDCATCategory) {
     setDefaultDCATCategory(options.defaultDCATCategory);
   }
+
   if (options.defaultmCLOUDCategory) {
     setDefaultmCLOUDCategory(options.defaultmCLOUDCategory);
   }
+
   if (options.defaultAttribution) {
     setDefaultAttribution(options.defaultAttribution);
   }
+
   if (options.defaultAttributionLink) {
     setDefaultAttributionLink(options.defaultAttributionLink);
   }
+
   if (options.maxRecords) {
     setMaxRecords(options.maxRecords);
   }
+
   if (options.startPosition) {
     setStartPosition(options.startPosition);
   }
+
   if (options.filterTag) {
     setFilterTags(options.filterTag);
   }
+
   if(options.filterGroup) {
     setFilterGroups(options.filterGroup);
   }
+
   if(options.licenseId) {
     setDefaultLicenseId(options.licenseId);
   }
+
   if(options.titleId) {
     setDefaultLicenseTitle(options.titleId);
   }
+
   if(options.licenseUrl) {
     setDefaultLicenseUrl(options.licenseUrl);
   }
+
   if(options.dateFormat) {
     setDataFormats(options.dateFormat);
   }
