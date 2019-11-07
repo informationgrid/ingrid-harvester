@@ -93,7 +93,7 @@ describe('configuration tab operations', () => {
     });
   });
 
-  it('should export the harvester configuration if the button is pressed', () => {
+  xit('should export the harvester configuration if the button is pressed', () => {
     cy.server();
     cy.route('GET', 'http://192.168.0.228/importer/rest/api/harvester').as('download');
     cy.goToConfig();
@@ -102,7 +102,7 @@ describe('configuration tab operations', () => {
 
     cy.wait('@download').then((xhr) => {
       expect(xhr.responseHeaders).to.have.property('content-type', 'application/json; charset=utf-8');
-      expect(xhr.responseHeaders).to.have.property('etag'); //etag value to check 
+      expect(xhr.responseHeaders).to.have.property('etag'); //etag value to check
     });
   });
 });
