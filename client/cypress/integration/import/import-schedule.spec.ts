@@ -8,7 +8,7 @@ describe('Import cron pattern operations', () => {
   it('should plan an import, activate the auto-planning, check its execution and turn off the auto-planning', () => {
     cy.openScheduleHarvester("6");
 
-    cy.get('[placeholder="* * * * *"]').clear().type('* * * * *');
+    cy.get('[data-test="cron-input"]').clear().type('* * * * *');
     cy.get('[data-test=dlg-schedule]').click();
 
     cy.reload();
@@ -25,14 +25,14 @@ describe('Import cron pattern operations', () => {
   it('should not be able to input the cron pattern "* *? * * *" (the planning button should be disabled) [INPUT CONTROL]', () => {
     cy.openScheduleHarvester("20");
 
-    cy.get('[placeholder="* * * * *"]').clear().type('* *? * * *');
+    cy.get('[data-test="cron-input"]').clear().type('* *? * * *');
     cy.get('[data-test=dlg-schedule]').should('be.disabled')
   });
 
   it('should reset cron expression if the right cancel button is pressed', () => {
     cy.get('#harvester-20').click();
     cy.get('#harvester-20 [data-test=schedule]').click();
-    cy.get('[placeholder="* * * * *"]').clear().type('*');
+    cy.get('[data-test="cron-input"]').clear().type('*');
     cy.get('[data-test=cron-reset]').click();
 
     cy.get(' .ng-star-inserted').should('contain', 'Planung ausschalten');
@@ -45,10 +45,8 @@ describe('Import cron pattern operations', () => {
 
   it('should show cron pattern´s syntax examples when the info button in the planning page is pressed', () => {
     cy.get('#harvester-20').click();
-
     cy.get('#harvester-20 [data-test=schedule]').click();
-    //need data-test attribute
-    cy.get('.mat-form-field-suffix > .mat-icon-no-color').click();
+    cy.get('[data-test="cron-info"]').click();
 
     cy.get('.info > :nth-child(1) > span').should('contain', '*/5 * * * *');
     cy.get('.info > :nth-child(1)').should('contain', 'Alle 5 Minuten');

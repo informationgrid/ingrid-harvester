@@ -10,7 +10,7 @@ describe('Ckan-Harvester operations', () => {
     cy.addNewHarvester();
     cy.newCkanHarvester({
       description: 'Testing CKAN Harvester',
-      indexName: 'Testing CKAN Harvester',
+      indexName: 'ckan_indice',
       ckanBasisUrl: 'testme'
     });
     cy.saveHarvesterConfig();
@@ -20,7 +20,7 @@ describe('Ckan-Harvester operations', () => {
     cy.addNewHarvester();
     cy.newCkanHarvester({
       description: 'Testing full CKAN Harvester',
-      indexName: 'Testing full CKAN Harvester',
+      indexName: 'full_ckan_indice',
       ckanBasisUrl: 'test me',
       defaultDCATCategory: 'Bevölkerung und Gesellschaft',
       defaultmCLOUDCategory: 'Bahn',
@@ -42,7 +42,7 @@ describe('Ckan-Harvester operations', () => {
     cy.openHarvester('3');
 
     cy.setHarvesterFields({
-      indexName: 'Update ckan Harvester',
+      indexName: 'ckan_indice',
       defaultAttribution: 'ffm',
       filterTag: 'ckan_test1',
       filterGroup: 'ckan_test1',
@@ -52,7 +52,7 @@ describe('Ckan-Harvester operations', () => {
 
     //checks data was saved
     cy.openHarvester('3');
-    cy.get('[name=index]').should('have.value', 'Update ckan Harvester');
+    cy.get('[name=index]').should('have.value', 'ckan_indice');
     cy.get('[name=defaultAttribution]').should('have.value', 'ffm');
     cy.get(' .mat-chip-list-wrapper [role="option"]').should('contain', 'ckan_test1');
   })

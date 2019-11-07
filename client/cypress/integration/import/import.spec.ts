@@ -32,9 +32,23 @@ describe('Import operations', () => {
     cy.reload();
     cy.get('#harvester-6 [data-test=last-execution]').should('contain', importsDate)
   });
+
+  it('should show an icon if a harvester has an import schedule', () => {
+    // set schedule
+    cy.openScheduleHarvester("21");
+    cy.get('[data-test="cron-input"]').clear().type('30 4 1 * 0,6');
+    cy.get('[data-test=dlg-schedule]').click();
+
+    //check icon
+    cy.get('#harvester-21 .mat-icon').should('contain', 'alarm_off');
+    //activate auto planning and check the right status of the icon
+    cy.get('#harvester-21 .mat-slide-toggle-bar').click({force: true});
+    cy.get('#harvester-21 .mat-icon').should('contain', 'alarm_on');
+    //deactivate again
+    cy.get('#harvester-21 .mat-slide-toggle-bar').click({force: true});
+  });
 });
 
 //TODO data-test attribute for following elements:
-// Button containing "Alle importieren" at "../importer/harvester"
 // Field for inserting cron pattern
-// Info button in cron pattern, it shows cron pattern syntax
+//

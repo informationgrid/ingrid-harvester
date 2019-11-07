@@ -11,7 +11,7 @@ describe('Csw-Harvester operations', () => {
     cy.addNewHarvester();
     cy.newCswHarvester({
       description: 'Testing CSW Harvester',
-      indexName: 'Testing CSW Harvester',
+      indexName: 'csw_indice',
       httpMethod: 'GET',
       getRecordsUrl: './testme'
     });
@@ -41,7 +41,7 @@ describe('Csw-Harvester operations', () => {
       });
 
     cy.setHarvesterFields({
-      indexName: 'Testing update csw Harvester',
+      indexName: 'full_csw_indice',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'

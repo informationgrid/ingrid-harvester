@@ -11,7 +11,7 @@ describe('Excel-Harvester operations', () => {
     cy.addNewHarvester();
     cy.newExcelHarvester({
       description: 'Testing Excel Harvester',
-      indexName: 'Testing Excel Harvester',
+      indexName: 'excel_indice',
       path: './data.xlsx'
     });
     cy.saveHarvesterConfig();
@@ -21,7 +21,7 @@ describe('Excel-Harvester operations', () => {
     cy.addNewHarvester();
     cy.newExcelHarvester({
       description: 'Testing Excel Harvester',
-      indexName: 'Testing Excel Harvester',
+      indexName: 'full_excel_indice',
       path: './data.xlsx',
       defaultDCATCategory: 'Bevölkerung und Gesellschaft',
       defaultmCLOUDCategory: 'Bahn',
