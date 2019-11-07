@@ -5,10 +5,14 @@
     <form #form class="example-container">
       <mat-form-field>
         <mat-label>Typ</mat-label>
-        <mat-select #harvesterType [(ngModel)]="harvester.type" [disabled]="harvester.id > -1" name="type" required>
+        <mat-select [(ngModel)]="harvester.type" [disabled]="harvester.id > -1" name="type" required>
           <mat-option value="EXCEL">EXCEL</mat-option>
           <mat-option value="CKAN">CKAN</mat-option>
           <mat-option value="CSW">CSW</mat-option>
+          <ng-container *ngIf="harvester.id != -1">
+            <mat-option value="BFG-CSW">CSW (BFG)</mat-option>
+            <mat-option value="CODEDE-CSW">CSW (CODEDE)</mat-option>
+          </ng-container>
         </mat-select>
       </mat-form-field>
 
@@ -69,12 +73,12 @@
 
       <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
         <mat-form-field fxFlex="50">
-          <input matInput type="number" placeholder="Max. Datensätze pro Anfrage" [(ngModel)]="harvester.maxRecords"
+          <input matInput type="number" min="1" max="1000" minlength="1" placeholder="Max. Datensätze pro Anfrage" [(ngModel)]="harvester.maxRecords"
                  name="maxRecords">
         </mat-form-field>
 
         <mat-form-field fxFlex>
-          <input matInput type="number" placeholder="Start Datensatz" [(ngModel)]="harvester.startPosition"
+          <input matInput type="number" min="0" placeholder="Start Datensatz" [(ngModel)]="harvester.startPosition"
                  name="startPosition">
         </mat-form-field>
       </div>

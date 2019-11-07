@@ -10,6 +10,8 @@ import {GeneralSettings} from '@shared/general-config.settings';
 import {Index} from '@shared/index.model';
 import {IndexService} from '../services/IndexService';
 
+let log = require('log4js').getLogger(__filename);
+
 @Controller("/api")
 @Authenticated()
 export class ApiCtrl {
@@ -33,11 +35,13 @@ export class ApiCtrl {
 
         if (config.disable) {
             this.scheduleService.stopJob(+id);
-            this.indexService.removeFromAlias(+id);
+            this.indexService.removeFromAlias(+id)
+                .catch(e => log.error('Error removing alias', e));
         } else {
             this.scheduleService.startJob(+id);
 
-            this.indexService.addToAlias(+id);
+            this.indexService.addToAlias(+id)
+                .catch(e => log.error('Error adding alias', e));
         }
     }
 

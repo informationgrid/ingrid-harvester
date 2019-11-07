@@ -27,10 +27,10 @@ describe('Harvester operations', () => {
 
     cy.setHarvesterFields({startPosition: '-7'});
 
-    cy.get('[name=startPosition]').invoke('val')
-      .then((value) => {
-        expect(value).to.be.greaterThan(-1);
-      })
+    cy.get('[data-test=dlg-update]').should('be.disabled');
+
+    cy.setHarvesterFields({startPosition: '10'});
+    cy.get('[data-test=dlg-update]').should('be.enabled');
   });
 
   it('maxRecords cannot be negative or a character [INPUT CONTROL]', () => {
@@ -41,10 +41,10 @@ describe('Harvester operations', () => {
 
     cy.setHarvesterFields({maxRecords: '-7'});
 
-    cy.get('[name=maxRecords]').invoke('val')
-      .then((value) => {
-        expect(value).to.be.greaterThan(-1);
-      })
+    cy.get('[data-test=dlg-update]').should('be.disabled');
+
+    cy.setHarvesterFields({maxRecords: '10'});
+    cy.get('[data-test=dlg-update]').should('be.enabled');
   });
 
   //input control
@@ -53,8 +53,7 @@ describe('Harvester operations', () => {
 
     cy.setHarvesterFields({maxRecords: '1234567', startPosition: '1234567'});
 
-    cy.get('[name=maxRecords]').should('contain', '1234');
-    cy.get('[name=startPosition]').should('contain', '1234');
+    cy.get('[data-test=dlg-update]').should('be.disabled');
   });
 
   it('should show the old values if an update operation is aborted and the page is not refreshed', () => {

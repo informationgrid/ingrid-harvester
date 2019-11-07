@@ -4,6 +4,7 @@ import {ConfigComponent} from './config.component';
 import {MatButtonModule} from "@angular/material/button";
 import {RouterModule, Routes} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
+import {ReactiveFormsModule} from '@angular/forms';
 
 const configRoutes: Routes = [
   {
@@ -14,12 +15,13 @@ const configRoutes: Routes = [
 
 @NgModule({
   declarations: [ConfigComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(configRoutes),
-    SharedModule,
-    MatButtonModule
-  ],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(configRoutes),
+        SharedModule,
+        MatButtonModule,
+        ReactiveFormsModule
+    ],
   exports: [
     ConfigComponent
   ]

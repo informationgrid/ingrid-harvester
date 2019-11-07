@@ -2,18 +2,30 @@
 
 <div class="form-wrapper">
 
-  <form #configForm="ngForm">
+  <form [formGroup]="configForm">
 
     <mat-form-field>
-      <input matInput type="url" placeholder="Elasticsearch-URL" [(ngModel)]="config.elasticSearchUrl" name="elasticsearchUrl" required>
+      <input matInput type="url" placeholder="Elasticsearch-URL" formControlName="elasticSearchUrl" required>
+      <mat-error *ngIf="configForm.get('elasticSearchUrl').hasError('required')">
+        Dies ist ein Pflichtfeld
+      </mat-error>
+      <mat-error *ngIf="configForm.get('elasticSearchUrl').hasError('elasticUrl')">
+        Dies ist keine gültige Elasticsearch-URL (Bsp: http://localhost:9200)
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput placeholder="Alias-Name" [(ngModel)]="config.alias" name="alias" required>
+      <input matInput placeholder="Alias-Name" formControlName="alias" required>
+      <mat-error *ngIf="configForm.get('alias').hasError('whitespace')">
+        Es dürfen nicht nur Leerzeichen eingegeben sein
+      </mat-error>
+      <mat-error *ngIf="configForm.get('alias').hasError('required')">
+        Dies ist ein Pflichtfeld
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput placeholder="Proxy" [(ngModel)]="config.proxy" name="proxy">
+      <input matInput placeholder="Proxy" formControlName="proxy">
     </mat-form-field>
 
   </form>
@@ -21,7 +33,7 @@
   <div class="form-buttons">
     <button mat-button (click)="reset()" data-test="reset">Zurücksetzen</button>
     <div class="flex-space"></div>
-    <button mat-button color="primary" (click)="save()" [disabled]="!configForm.form.valid" data-test="save">Speichern</button>
+    <button mat-button color="primary" (click)="save()" [disabled]="!configForm.valid" data-test="save">Speichern</button>
   </div>
 
 </div>

@@ -38,7 +38,7 @@ task buildRpm(type: Rpm) {
     }
 
     from('server') {
-        include 'log4js.json', 'config.json'
+        include 'log4js.json', 'config.json', 'mappings.json'
         user='ingrid'
         permissionGroup='ingrid'
         fileType CONFIG | NOREPLACE
