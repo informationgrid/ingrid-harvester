@@ -12,7 +12,7 @@ import {of} from 'rxjs';
 })
 export class ConfigComponent implements OnInit {
 
-  private configForm: FormGroup;
+  configForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder, private configService: ConfigService, private harvesterService: HarvesterService) {
   }
