@@ -16,7 +16,7 @@
     "license": {
       "id": "geonutzv-de-2013-03-19",
       "title": "Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes",
-      "url": "http://www.geodatenzentrum.de/docpdf/geonutzv.pdf"
+      "url": "http://www.gesetze-im-internet.de/geonutzv/GeoNutzV.pdf"
     },
     "displayContact": [
       {
@@ -56,11 +56,7 @@
   "creator": [
     {
       "name": "Bundesanstalt für Gewässerkunde",
-      "mbox": "busskamp@bafg.de"
-    },
-    {
-      "mbox": "fretter@bafg.de",
-      "name": "Bundesanstalt für Gewässerkunde"
+      "mbox": "geoportal@bafg.de"
     }
   ],
   "keywords": [
@@ -100,7 +96,7 @@
   "accrualPeriodicity": "irregular",
   "accessRights": [
     "Nutzungsbedingungen: Die Bundesanstalt für Gewässerkunde stellt die Geodaten im Rahmen der Geodatennutzungsverordnung des Bundes (GeoNutzV) bereit. Die Daten sind für alle Zwecke kommerzieller und nicht kommerzieller Nutzung geldleistungsfrei verfügbar. Die bundesweite Flächendeckung des Datenbestandes ist nicht in jedem Fall gewährleistet. Einzelne Bundesländer belegen ihren Datenbestand im Berichtsportal WasserBLIcK mit Zugriffsbeschränkungen, die mit Verweis auf §2 der GeoNutzV bei der Bereitstellung des nationalen Gesamtdatenbestandes berücksichtigt werden. Seitens der Bundesanstalt für Gewässerkunde wird keine Haftung für die Aktualität, Richtigkeit und Vollständigkeit der zur Verfügung gestellten Informationen und Daten übernommen. Für die Bereitstellung der Informationen und Daten kann kein Gewohnheitsrecht abgeleitet werden. Die Datenquelle ist ergänzt um das Datum des Datenbezugs wie folgt anzugeben: \"WasserBLIcK/BfG & Zuständige Behörden der Länder Datum\".",
-    "Nutzungsbedingungen: Dieser Datensatz kann gemäß der „Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes“ (http://www.geodatenzentrum.de/docpdf/geonutzv.pdf) genutzt werden."
+    "Nutzungsbedingungen: Dieser Datensatz kann gemäß der „Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes“ (https://www.gesetze-im-internet.de/geonutzv/GeoNutzV.pdf) genutzt werden."
   ],
   "distribution": [
     {
