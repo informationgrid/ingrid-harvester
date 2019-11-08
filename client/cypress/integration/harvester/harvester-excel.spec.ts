@@ -17,7 +17,7 @@ describe('Excel-Harvester operations', () => {
     cy.saveHarvesterConfig();
   });
 
-  it('add a new harvester of type Excel with all options', () => {
+  it('should add a new harvester of type Excel with all options', () => {
     cy.addNewHarvester();
     cy.newExcelHarvester({
       description: 'Testing Excel Harvester',
@@ -31,24 +31,24 @@ describe('Excel-Harvester operations', () => {
     cy.saveHarvesterConfig();
   });
 
-  it('update a harvester of type Excel', () => {
+  it('should update a harvester of type Excel', () => {
     cy.openHarvester('1');
     //if dcatCategory value to input already selected then deselect it
-    cy.get('[name=defaultDCATCategory]')
+    cy.get('[name="defaultDCATCategory"]')
       .then((dcatCat) => {
         if (dcatCat.text().includes('Wirtschaft und Finanzen')) {
-          cy.get('[name=defaultDCATCategory]').click();
+          cy.get('[name="defaultDCATCategory"]').click();
           cy.get('.mat-option-text').contains('Wirtschaft und Finanzen').click();
-          cy.get('[name=defaultDCATCategory]').type('{esc}');
+          cy.get('[name="defaultDCATCategory"]').type('{esc}');
         }
       });
     //if mcloudCategory value to input already selected then deselect it
     cy.get('[name=defaultmCLOUDCategory]')
       .then((mcloudCat) => {
         if (mcloudCat.text().includes('Klima und Wetter')) {
-          cy.get('[name=defaultmCLOUDCategory]').click();
+          cy.get('[name="defaultmCLOUDCategory"]').click();
           cy.get('.mat-option-text').contains('Klima und Wetter').click();
-          cy.get('[name=defaultmCLOUDCategory]').type('{esc}');
+          cy.get('[name="defaultmCLOUDCategory"]').type('{esc}');
         }
       });
 
@@ -63,9 +63,9 @@ describe('Excel-Harvester operations', () => {
     cy.reload();
     //checks data was saved
     cy.openHarvester('1');
-    cy.get('[name=defaultDCATCategory]').should('contain', 'Wirtschaft und Finanzen');
-    cy.get('[name=defaultmCLOUDCategory]').should('contain', 'Klima und Wetter');
-    cy.get('[name=defaultAttribution]').should('have.value', '7');
+    cy.get('[name="defaultDCATCategory"]').should('contain', 'Wirtschaft und Finanzen');
+    cy.get('[name="defaultmCLOUDCategory"]').should('contain', 'Klima und Wetter');
+    cy.get('[name="defaultAttribution"]').should('have.value', '7');
   });
 
 });

@@ -169,6 +169,84 @@ function setExcelPath(path) {
   cy.get('[name="filepath"]').clear().type(path);
 }
 
+function seedCkanHarvester(){
+  cy.request({
+    method: 'POST',
+    url: 'rest/api/harvester/-1',
+    body: {
+      "id": 97,
+      "disable":true,
+      "type":"CKAN",
+      "description":"ckan_test_api",
+      "ckanBasisUrl": "ckan_basis_url",
+      "index":"ckan_index",
+      "defaultDCATCategory":["SOCI"],
+      "defaultMcloudSubgroup":["railway"],
+      "defaultAttribution":"attr_name",
+      "defaultAttributionLink":"attr_link",
+      "maxRecords":50,
+      "startPosition":1,
+      "filterTag": "ckan_test",
+      "filterGroup": "ckan_test",
+      "dateFormat": "YYYY-MM-DD",
+      "licenseId": "123",
+      "titleId": "ckan_titleID",
+      "licenseUrl": "testing"}
+  });
+}
+function seedCswHarvester(){
+  cy.request({
+    method: 'POST',
+    url: 'rest/api/harvester/98',
+    body: {
+      "id": 98,
+      "disable":true,
+      "type":"CSW",
+      "description":"csw_test_api",
+      "index":"csw_index",
+      "httpMethod": "GET",
+      "getRecordsUrl": "./testme",
+      "defaultDCATCategory":["SOCI"],
+      "defaultMcloudSubgroup":["railway"],
+      "defaultAttribution":"attr_name",
+      "defaultAttributionLink":"attr_link",
+      "maxRecords":150,
+      "startPosition":1
+    }
+  });
+}
+function seedExcelHarvester(){
+  cy.request({
+    method: 'POST',
+    url: 'rest/api/harvester/-1',
+    body: {
+      "id": 99,
+      "disable":true,
+      "type":"EXCEL",
+      "description":"excel_test_api",
+      "index":"excel_index",
+      "defaultDCATCategory":["SOCI"],
+      "defaultMcloudSubgroup":["railway"],
+      "defaultAttribution":"attr_name",
+      "defaultAttributionLink":"attr_link",
+      "maxRecords":50,
+      "startPosition":1,
+      "filePath":"./data.xlsx"
+    }
+  });
+}
+
+Cypress.Commands.add('seedHarvester', () => {
+  seedCkanHarvester();
+  seedCswHarvester();
+  seedExcelHarvester();
+
+  cy.request({
+    method: 'GET',
+    url: 'rest/api/harvester'
+  });
+});
+
 /**
  * create a new harvester of given type
  */
@@ -207,14 +285,14 @@ Cypress.Commands.add("addNewHarvester", () => {
 Cypress.Commands.add("openHarvester", (harvesterId) => {
   cy.get('#harvester-' + harvesterId).click();
   // cy.get('#harvester-' + harvesterId).click();
-  cy.get('#harvester-' + harvesterId + ' [data-test=edit]').click();
+  cy.get('#harvester-' + harvesterId + ' [data-test="edit"]').click();
 });
 
 /**
  * press button for harvester update
  */
 Cypress.Commands.add("saveHarvesterConfig", () => {
-  cy.get('[data-test=dlg-update]').click();
+  cy.get('[data-test="dlg-update"]').click();
   cy.wait(500);
 });
 
@@ -222,7 +300,7 @@ Cypress.Commands.add("saveHarvesterConfig", () => {
  * press button to update an old harvester
  */
 Cypress.Commands.add("updateHarvester",() => {
-  cy.get('[data-test=dlg-update]').click();
+  cy.get('[data-test="dlg-update"]').click();
 });
 
 /**
@@ -231,7 +309,7 @@ Cypress.Commands.add("updateHarvester",() => {
  */
 Cypress.Commands.add("openAndImportHarvester", (harvesterId) => {
   cy.get('#harvester-' + harvesterId).click();
-  cy.get('#harvester-' + harvesterId + ' [data-test=import]').click();
+  cy.get('#harvester-' + harvesterId + ' [data-test="import"]').click();
 });
 
 /**
@@ -240,7 +318,7 @@ Cypress.Commands.add("openAndImportHarvester", (harvesterId) => {
  */
 Cypress.Commands.add("openScheduleHarvester", (harvesterId) => {
   cy.get('#harvester-' + harvesterId).click();
-  cy.get('#harvester-' + harvesterId + ' [data-test=schedule]').click();
+  cy.get('#harvester-' + harvesterId + ' [data-test="schedule"]').click();
 });
 
 /**
@@ -248,5 +326,5 @@ Cypress.Commands.add("openScheduleHarvester", (harvesterId) => {
  * @param harvesterId
  */
 Cypress.Commands.add("openLog", (harvesterId) => {
-  cy.get('#harvester-' + harvesterId + ' [data-test=log]', {timeout: 6000}).click();
+  cy.get('#harvester-' + harvesterId + ' [data-test="log"]', {timeout: 6000}).click();
 });

@@ -1,4 +1,12 @@
 describe('Harvester operations', () => {
+  /**
+   * seed db with 3 harvesters, one for each type: ckan, csw, excel
+   */
+  before(() => {
+    cy.apiLogin('admin', 'admin');
+    cy.seedHarvester();
+  });
+
   beforeEach(() => {
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
       //user is not already logged in send request to log in
@@ -8,7 +16,7 @@ describe('Harvester operations', () => {
 
   //General options testing
   //button supposed to be disabled but it is not
-  it('cannot change type of a harvester during an update', () => {
+  it('should check that the type of a harvester cannot be changed during an update', () => {
     // not working
     cy.openHarvester('3');
     // cy.get('[name=type]').should('be.disabled');
@@ -18,7 +26,7 @@ describe('Harvester operations', () => {
     });
   });
 
-  it('startPosition cannot be negative or a character [INPUT CONTROL]', () => {
+  it('should check that startPosition cannot be negative or a character [INPUT CONTROL]', () => {
     //input control is needed
     cy.openHarvester('3');
 
@@ -33,7 +41,7 @@ describe('Harvester operations', () => {
     cy.get('[data-test=dlg-update]').should('be.enabled');
   });
 
-  it('maxRecords cannot be negative or a character [INPUT CONTROL]', () => {
+  it('should check that maxRecords cannot be negative or a character [INPUT CONTROL]', () => {
     cy.openHarvester('3');
 
     cy.setHarvesterFields({maxRecords: 'ffm'});
@@ -65,5 +73,20 @@ describe('Harvester operations', () => {
 
     cy.reload();
     cy.get('#harvester-6 .no-wrap').should('contain','Deutsche Bahn Datenportal');
+  });
+
+  it('should not be able to save a harvester without selecting a type', () => {
+    cy.addNewHarvester();
+
+    cy.setHarvesterFields({
+      description: 'Testing harvester with no type',
+      indexName: 'just an index'
+    });
+
+    cy.get('[data-test="dlg-update"]').should('be.disabled');
+  });
+
+  xit('should delete an harvester (by name)', () => {
+
   });
 });

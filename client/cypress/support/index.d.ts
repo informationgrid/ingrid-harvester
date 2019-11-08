@@ -46,6 +46,7 @@ declare namespace Cypress {
     /**
      * Help functions for harvesters operations
      */
+    seedHarvester(): Chainable
     addNewHarvester(): Chainable
     openHarvester(harvesterId: string): Chainable
     saveHarvesterConfig(): Chainable

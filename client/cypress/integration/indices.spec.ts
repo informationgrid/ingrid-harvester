@@ -34,7 +34,7 @@ describe('Indices operations', () => {
     cy.openAndImportHarvester('36');
     cy.goToIndices();
     cy.wait(500);
-    cy.get('.mat-line').invoke('text').should('contain', 'testing_excel_indice');
+    cy.get('.mat-line').invoke('text').should('contain', 'testing_excel_index');
 
     cy.goToHarvester();
     cy.openHarvester('36');
@@ -46,5 +46,11 @@ describe('Indices operations', () => {
     cy.goToIndices();
     cy.wait(500);
     cy.get('.mat-line').invoke('text').should('not.contain', 'testing_excel_indice');
+  });
+
+  xit('should show only one index per harvester', () =>{
+  });
+
+  xit('should delete an index if its harvester is deleted', () =>{
   });
 });

@@ -7,26 +7,29 @@ describe('Csw-Harvester operations', () => {
   });
 
   //CSW Harvesters operations
-  it('add a harvester of type CSW', () => {
+  it('should add a harvester of type CSW', () => {
     cy.addNewHarvester();
     cy.newCswHarvester({
       description: 'Testing CSW Harvester',
-      indexName: 'csw_indice',
+      indexName: 'csw_index',
       httpMethod: 'GET',
       getRecordsUrl: './testme'
     });
     cy.saveHarvesterConfig();
   });
 
-  it('update a harvester of type CSW', () => {
+  xit('should add a new harvester of type CSW with all options', () => {
+  });
+
+  it('should update a harvester of type CSW', () => {
     cy.openHarvester('14');
     //if dcatCategory value to input already selected then deselect it
     cy.get('[name=defaultDCATCategory]')
       .then((dcatCat) => {
         if (dcatCat.text().includes('Verkehr')) {
-          cy.get('[name=defaultDCATCategory]').click();
+          cy.get('[name="defaultDCATCategory"]').click();
           cy.get('.mat-option-text').contains('Verkehr').click();
-          cy.get('[name=defaultDCATCategory]').type('{esc}');
+          cy.get('[name="defaultDCATCategory"]').type('{esc}');
         }
       });
 
@@ -34,9 +37,9 @@ describe('Csw-Harvester operations', () => {
     cy.get('[name=defaultmCLOUDCategory]')
       .then((mcloudCat) => {
         if (mcloudCat.text().includes('Infrastruktur')) {
-          cy.get('[name=defaultmCLOUDCategory]').click();
+          cy.get('[name="defaultmCLOUDCategory"]').click();
           cy.get('.mat-option-text').contains('Infrastruktur').click();
-          cy.get('[name=defaultmCLOUDCategory]').type('{esc}');
+          cy.get('[name="defaultmCLOUDCategory"]').type('{esc}');
         }
       });
 
@@ -50,15 +53,15 @@ describe('Csw-Harvester operations', () => {
 
     //checks data was saved
     cy.openHarvester('14');
-    cy.get('[name=defaultDCATCategory]').should('contain', 'Verkehr');
-    cy.get('[name=defaultmCLOUDCategory]').should('contain', 'Infrastruktur');
-    cy.get('[name=defaultAttribution]').should('have.value', 'ffm');
+    cy.get('[name="defaultDCATCategory"]').should('contain', 'Verkehr');
+    cy.get('[name="defaultmCLOUDCategory"]').should('contain', 'Infrastruktur');
+    cy.get('[name="defaultAttribution"]').should('have.value', 'ffm');
   });
 
   //CSW operation
   it('should successfully harvest after deleting an existing filter-label', () => {
     cy.openHarvester('16'); // EOC Geoservice DLR
-    cy.get('[name=recordFilter]').clear();
+    cy.get('[name="recordFilter"]').clear();
     cy.updateHarvester();
     cy.openAndImportHarvester("16");
 
