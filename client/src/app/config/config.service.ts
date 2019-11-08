@@ -33,6 +33,13 @@ export class ConfigService {
     a.style.display = "none";
     a.href = url;
     a.download = 'config.json';
+
+    // do not actually download file during test
+    // @ts-ignore
+    if (window.Cypress) {
+      return;
+    }
+
     a.click();
     window.URL.revokeObjectURL(url);
     a.remove();
