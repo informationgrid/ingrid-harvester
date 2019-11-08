@@ -20,6 +20,7 @@ import {MatCardModule, MatChipsModule, MatListModule, MatTabsModule} from "@angu
 import {RouterModule, Routes} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {ReactiveFormsModule} from '@angular/forms';
 
 const harvesterRoutes: Routes = [
   {
@@ -39,24 +40,25 @@ const harvesterRoutes: Routes = [
     CswHarvesterComponent,
     ImporterDetailComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(harvesterRoutes),
-    FlexLayoutModule,
-    SharedModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatCardModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatListModule,
-    MatSnackBarModule,
-    MatSlideToggleModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatChipsModule,
-    MatTabsModule
-  ],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(harvesterRoutes),
+        FlexLayoutModule,
+        SharedModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatCardModule,
+        MatExpansionModule,
+        MatIconModule,
+        MatListModule,
+        MatSnackBarModule,
+        MatSlideToggleModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule,
+        MatChipsModule,
+        MatTabsModule,
+        ReactiveFormsModule
+    ],
   entryComponents: [
     DialogSchedulerComponent,
     DialogLogComponent,

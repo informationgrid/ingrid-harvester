@@ -2,6 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CswSettings} from '../../../../../../server/app/importer/csw/csw.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material';
+import {FormControl, FormGroup} from '@angular/forms';
 // import {CswSettings} from '@server/importer/csw/csw.importer';
 
 @Component({
@@ -11,6 +12,7 @@ import {MatChipInputEvent} from '@angular/material';
 })
 export class CswHarvesterComponent implements OnInit, OnDestroy {
 
+  @Input() form: FormGroup;
   @Input() model: CswSettings;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -18,6 +20,10 @@ export class CswHarvesterComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
+    this.form.addControl('httpMethod', new FormControl(this.model.httpMethod));
+    this.form.addControl('getRecordsUrl', new FormControl(this.model.getRecordsUrl));
+    this.form.addControl('recordFilter', new FormControl(this.model.recordFilter));
+
     if (!this.model.eitherKeywords) {
       this.model.eitherKeywords = [];
     }

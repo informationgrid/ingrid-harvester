@@ -1,64 +1,66 @@
-<mat-form-field>
-  <input matInput placeholder="CKAN Basis URL" [(ngModel)]="model.ckanBaseUrl" name="ckanBaseUrl" required>
-</mat-form-field>
-
-<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-  <mat-form-field fxFlex="50">
-    <mat-chip-list #chipListTags>
-      <mat-chip *ngFor="let tag of model.filterTags" [selectable]="false"
-                [removable]="true" (removed)="remove('filterTags', tag)">
-        {{tag}}
-        <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
-      <input placeholder="Filter Tags"
-             [matChipInputFor]="chipListTags"
-             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             [matChipInputAddOnBlur]="true"
-             (matChipInputTokenEnd)="add('filterTags', $event)">
-    </mat-chip-list>
+<form [formGroup]="form">
+  <mat-form-field>
+    <input matInput placeholder="CKAN Basis URL" formControlName="ckanBaseUrl" required>
   </mat-form-field>
+
+  <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+    <mat-form-field fxFlex="50">
+      <mat-chip-list #chipListTags>
+        <mat-chip *ngFor="let tag of model.filterTags" [selectable]="false"
+                  [removable]="true" (removed)="remove('filterTags', tag)">
+          {{tag}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Filter Tags"
+               [matChipInputFor]="chipListTags"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="true"
+               (matChipInputTokenEnd)="add('filterTags', $event)">
+      </mat-chip-list>
+    </mat-form-field>
+
+    <mat-form-field fxFlex>
+      <mat-chip-list #chipListGroups>
+        <mat-chip *ngFor="let group of model.filterGroups" [selectable]="false"
+                  [removable]="true" (removed)="remove('filterGroups', group)">
+          {{group}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Filter Groups"
+               [matChipInputFor]="chipListGroups"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="true"
+               (matChipInputTokenEnd)="add('filterGroups', $event)">
+      </mat-chip-list>
+    </mat-form-field>
+
+  </div>
 
   <mat-form-field fxFlex>
-    <mat-chip-list #chipListGroups>
-      <mat-chip *ngFor="let group of model.filterGroups" [selectable]="false"
-                [removable]="true" (removed)="remove('filterGroups', group)">
-        {{group}}
+    <mat-chip-list #chipListDateFormats>
+      <mat-chip *ngFor="let format of model.dateSourceFormats" [selectable]="false"
+                [removable]="true" (removed)="remove('dateSourceFormats', format)">
+        {{format}}
         <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>
-      <input placeholder="Filter Groups"
-             [matChipInputFor]="chipListGroups"
+      <input placeholder="Datumsformate"
+             [matChipInputFor]="chipListDateFormats"
              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
              [matChipInputAddOnBlur]="true"
-             (matChipInputTokenEnd)="add('filterGroups', $event)">
+             (matChipInputTokenEnd)="add('dateSourceFormats', $event)">
     </mat-chip-list>
   </mat-form-field>
 
-</div>
-
-<mat-form-field fxFlex>
-  <mat-chip-list #chipListDateFormats>
-    <mat-chip *ngFor="let format of model.dateSourceFormats" [selectable]="false"
-              [removable]="true" (removed)="remove('dateSourceFormats', format)">
-      {{format}}
-      <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
-    <input placeholder="Datumsformate"
-           [matChipInputFor]="chipListDateFormats"
-           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-           [matChipInputAddOnBlur]="true"
-           (matChipInputTokenEnd)="add('dateSourceFormats', $event)">
-  </mat-chip-list>
-</mat-form-field>
-
-<h4>Default-Lizenz</h4>
-<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-  <mat-form-field fxFlex="10">
-    <input matInput placeholder="ID" [(ngModel)]="model.defaultLicense.id" name="id">
-  </mat-form-field>
-  <mat-form-field fxFlex="45">
-    <input matInput placeholder="Titel" [(ngModel)]="model.defaultLicense.title" name="title">
-  </mat-form-field>
-  <mat-form-field fxFlex="45">
-    <input matInput placeholder="URL" [(ngModel)]="model.defaultLicense.url" name="url">
-  </mat-form-field>
-</div>
+  <h4>Default-Lizenz</h4>
+  <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between" formGroupName="defaultLicense">
+    <mat-form-field fxFlex="10">
+      <input matInput placeholder="ID" formControlName="id">
+    </mat-form-field>
+    <mat-form-field fxFlex="45">
+      <input matInput placeholder="Titel" formControlName="title">
+    </mat-form-field>
+    <mat-form-field fxFlex="45">
+      <input matInput placeholder="URL" formControlName="url">
+    </mat-form-field>
+  </div>
+</form>

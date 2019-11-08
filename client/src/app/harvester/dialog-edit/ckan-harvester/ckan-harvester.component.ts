@@ -2,6 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CkanSettings} from '../../../../../../server/app/importer/ckan/ckan.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-ckan-harvester',
@@ -10,20 +11,22 @@ import {MatChipInputEvent} from '@angular/material';
 })
 export class CkanHarvesterComponent implements OnInit, OnDestroy {
 
+  @Input() form: FormGroup;
   @Input() model: CkanSettings;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
-    if (!this.model.defaultLicense) {
-      this.model.defaultLicense = {
-        id: '',
-        title: '',
-        url: ''
-      };
-    }
+    this.form.addControl('ckanBaseUrl', new FormControl(this.model ? this.model.ckanBaseUrl : '', Validators.required));
+    this.form.addControl('defaultLicense', new FormGroup({
+        id: new FormControl(this.model && this.model.defaultLicense ? this.model.defaultLicense.id : ''),
+        title: new FormControl(this.model && this.model.defaultLicense ? this.model.defaultLicense.title : ''),
+        url: new FormControl(this.model && this.model.defaultLicense ? this.model.defaultLicense.url : '')
+      })
+    );
   }
 
   ngOnDestroy(): void {

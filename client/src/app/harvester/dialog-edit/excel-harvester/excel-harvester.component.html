@@ -1,3 +1,5 @@
-<mat-form-field>
-  <input matInput placeholder="Dateipfad" [(ngModel)]="model.filePath" name="filepath" required>
-</mat-form-field>
+<ng-container [formGroup]="form">
+  <mat-form-field>
+    <input matInput placeholder="Dateipfad" formControlName="filePath" required>
+  </mat-form-field>
+</ng-container>
