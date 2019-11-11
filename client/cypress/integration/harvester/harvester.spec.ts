@@ -21,8 +21,8 @@ describe('Harvester operations', () => {
     cy.openHarvester('3');
     // cy.get('[formcontrolname=type]').should('be.disabled');
     cy.get('[formcontrolname=type]').click({force: true});
-    cy.once('fail',() => {
-    //  make the test pass because it cant click it.
+    cy.once('fail', () => {
+      //  make the test pass because it cant click it.
     });
   });
 
@@ -55,24 +55,15 @@ describe('Harvester operations', () => {
     cy.get('[data-test=dlg-update]').should('be.enabled');
   });
 
-  // TODO: why check for a maximum number here?
-  xit('maxRecords and startPosition can have at most 4 digits [INPUT CONTROL]', () => {
-    cy.openHarvester('3');
-
-    cy.setHarvesterFields({maxRecords: '1234567', startPosition: '1234567'});
-
-    cy.get('[data-test=dlg-update]').should('be.disabled');
-  });
-
   it('should show the old values if an update operation is aborted and the page is not refreshed', () => {
     cy.openHarvester('6');
     cy.setHarvesterFields({description: ' ', indexName: ' ', defaultAttribution: ' '});
     cy.get('.mat-button-wrapper').contains('Abbrechen').click();
 
-    cy.get('#harvester-6 .no-wrap').should('contain','Deutsche Bahn Datenportal');
+    cy.get('#harvester-6 .no-wrap').should('contain', 'Deutsche Bahn Datenportal');
 
     cy.reload();
-    cy.get('#harvester-6 .no-wrap').should('contain','Deutsche Bahn Datenportal');
+    cy.get('#harvester-6 .no-wrap').should('contain', 'Deutsche Bahn Datenportal');
   });
 
   it('should not be able to save a harvester without selecting a type', () => {

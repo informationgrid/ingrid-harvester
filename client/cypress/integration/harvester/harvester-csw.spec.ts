@@ -10,40 +10,73 @@ describe('Csw-Harvester operations', () => {
   it('should add a harvester of type CSW', () => {
     cy.addNewHarvester();
     cy.newCswHarvester({
-      description: 'Testing CSW Harvester',
+      description: 'Testing partial CSW Harvester',
       indexName: 'csw_index',
       httpMethod: 'GET',
       getRecordsUrl: './testme'
     });
     cy.saveHarvesterConfig();
 
-    // TODO: check harvester was really added with all data
+    //TODO function for getting harvester by name
+    //get harvester by name
+    cy.get('.no-wrap').contains('Testing partial CSW Harvester').click();
+    cy.get('[data-test="edit"]:visible').click();
+
+    cy.checkFields({
+      description: 'Testing partial CSW Harvester',
+      indexName: 'csw_index',
+      httpMethod: 'GET',
+      getRecordsUrl: './testme'
+    });
+
+    cy.get('.mat-button-wrapper').contains('Abbrechen').click();
+    cy.get('[data-test="delete"]:visible').click();
+    cy.get('.mat-button-wrapper').contains('Löschen').click();
   });
 
-  xit('should add a new harvester of type CSW with all options', () => {
+  it('should add a new harvester of type CSW with all options', () => {
+    cy.addNewHarvester();
+    cy.newCswHarvester({
+      description: 'Testing CSW Harvester',
+      indexName: 'full_csw_index',
+      httpMethod: 'POST',
+      getRecordsUrl: './testme',
+      defaultDCATCategory: 'Wissenschaft und Technologie',
+      defaultmCLOUDCategory: 'Straßen',
+      defaultAttribution: 'testing_csw',
+      defaultAttributionLink: 'https://sike.fake',
+      maxRecords: '50',
+      startPosition: '0',
+      recordFilter: 'opendata',
+      keywords: 'this_is_a_test'
+    });
+    cy.saveHarvesterConfig();
+
+    cy.get('.no-wrap').contains('Testing CSW Harvester').click();
+    cy.get('[data-test="edit"]:visible').click();
+
+    cy.checkFields({
+      description: 'Testing CSW Harvester',
+      indexName: 'full_csw_index',
+      httpMethod: 'POST',
+      getRecordsUrl: './testme',
+      defaultDCATCategory: 'Wissenschaft und Technologie',
+      defaultmCLOUDCategory: 'Straßen',
+      defaultAttribution: 'testing_csw',
+      defaultAttributionLink: 'https://sike.fake',
+      maxRecords: '50',
+      startPosition: '0'
+    });
+
+    cy.get('.mat-button-wrapper').contains('Abbrechen').click();
+    cy.get('[data-test="delete"]:visible').click();
+    cy.get('.mat-button-wrapper').contains('Löschen').click();
   });
 
   it('should update a harvester of type CSW', () => {
     cy.openHarvester('14');
-    //if dcatCategory value to input already selected then deselect it
-    cy.get('[formcontrolname=defaultDCATCategory]')
-      .then((dcatCat) => {
-        if (dcatCat.text().includes('Verkehr')) {
-          cy.get('[formcontrolname="defaultDCATCategory"]').click();
-          cy.get('.mat-option-text').contains('Verkehr').click();
-          cy.get('[formcontrolname="defaultDCATCategory"]').type('{esc}');
-        }
-      });
-
-    //if mcloudCategory value to input already selected then deselect it
-    cy.get('[formcontrolname=defaultMcloudSubgroup]')
-      .then((mcloudCat) => {
-        if (mcloudCat.text().includes('Infrastruktur')) {
-          cy.get('[formcontrolname="defaultMcloudSubgroup"]').click();
-          cy.get('.mat-option-text').contains('Infrastruktur').click();
-          cy.get('[formcontrolname="defaultMcloudSubgroup"]').type('{esc}');
-        }
-      });
+    cy.deselectDCATCategory('Verkehr');
+    cy.deselectMcloudCategory('Infrastruktur');
 
     cy.setHarvesterFields({
       indexName: 'full_csw_indice',
@@ -51,13 +84,18 @@ describe('Csw-Harvester operations', () => {
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'
     });
+
     cy.updateHarvester();
+    cy.reload();
+    cy.openHarvester('14');
 
     //checks data was saved
-    cy.openHarvester('14');
-    cy.get('[formcontrolname="defaultDCATCategory"]').should('contain', 'Verkehr');
-    cy.get('[formcontrolname="defaultMcloudSubgroup"]').should('contain', 'Infrastruktur');
-    cy.get('[formcontrolname="defaultAttribution"]').should('have.value', 'ffm');
+    cy.checkFields({
+      indexName: 'full_csw_indice',
+      defaultDCATCategory: 'Verkehr',
+      defaultmCLOUDCategory: 'Infrastruktur',
+      defaultAttribution: 'ffm'
+    });
   });
 
   //CSW operation
@@ -72,7 +110,8 @@ describe('Csw-Harvester operations', () => {
     cy.get('app-importer-detail').should('contain', ' Import läuft ');
 
     cy.get('#harvester-16').click();
-    // TODO: why should next-execution contain "wurde geändert"? Was there any scheduler set?
+    // TODO: why should next-execution contain "wurde geändert"? Was there any scheduler set?#
+    // it's a bug! new ticket!
     cy.get('#harvester-16 [data-test="next-execution"]', {timeout: 15000}).should('contain', ' wurde geändert ');
   });
 });

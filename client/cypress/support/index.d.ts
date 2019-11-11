@@ -54,6 +54,19 @@ declare namespace Cypress {
     openAndImportHarvester(harvesterId: string): Chainable
     openScheduleHarvester(harvesterId: string): Chainable
     openLog(harvesterId: string): Chainable
+
+    /**
+     * check if the given options have the same values as the ones set in the harvester
+     * @param options
+     */
+    checkFields(options: HarvesterOptions): Chainable
+
+    /**
+     * check if a given category is selected then deselect it
+     */
+    deselectDCATCategory(category: string): Chainable
+    deselectMcloudCategory(category: string): Chainable
+
   }
 }
 

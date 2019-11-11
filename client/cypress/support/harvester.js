@@ -22,11 +22,11 @@ function setExcelType() {
  */
 function setHarvesterFields(options) {
   //required fields for every harvester
-  if(options.description){
+  if (options.description) {
     cy.get('[formcontrolname="description"]').clear().type(options.description);
   }
 
-  if(options.indexName){
+  if (options.indexName) {
     cy.get('[formcontrolname="index"]').clear().type(options.indexName);
   }
 
@@ -41,6 +41,14 @@ function setHarvesterFields(options) {
 
   if (options.getRecordsUrl) {
     setGetRecordsUrl(options.getRecordsUrl);
+  }
+
+  if (options.recordFilter) {
+    setRecordFilter(options.recordFilter);
+  }
+
+  if (options.keywords) {
+    setKeywords(options.keywords);
   }
 
   if (options.path) { //excel
@@ -76,23 +84,23 @@ function setHarvesterFields(options) {
     setFilterTags(options.filterTag);
   }
 
-  if(options.filterGroup) {
+  if (options.filterGroup) {
     setFilterGroups(options.filterGroup);
   }
 
-  if(options.licenseId) {
+  if (options.licenseId) {
     setDefaultLicenseId(options.licenseId);
   }
 
-  if(options.titleId) {
+  if (options.titleId) {
     setDefaultLicenseTitle(options.titleId);
   }
 
-  if(options.licenseUrl) {
+  if (options.licenseUrl) {
     setDefaultLicenseUrl(options.licenseUrl);
   }
 
-  if(options.dateFormat) {
+  if (options.dateFormat) {
     setDataFormats(options.dateFormat);
   }
 }
@@ -151,6 +159,7 @@ function setDefaultLicenseTitle(titleId) {
 function setDefaultLicenseUrl(urlId) {
   cy.get('[placeholder="URL"]').type(urlId);
 }
+
 //setters for required fields depending on harvester-type
 function setCkanBasisUrl(ckanBasisUrl) {
   cy.get('[formcontrolname="ckanBaseUrl"]').clear().type(ckanBasisUrl);
@@ -165,76 +174,208 @@ function setGetRecordsUrl(getRecordsUrl) {
   cy.get('[formcontrolname="getRecordsUrl"]').clear().type(getRecordsUrl);
 }
 
+function setRecordFilter(recordFilter) {
+  cy.get('[formcontrolname="recordFilter"]').type(recordFilter);
+}
+
+function setKeywords(keywords) {
+  cy.get('[placeholder="Either keywords"]').type(keywords);
+}
+
 function setExcelPath(path) {
   cy.get('[formcontrolname="filePath"]').clear().type(path);
 }
 
-function seedCkanHarvester(){
+/**
+ * field-check of an harvester
+ */
+function checkFields(options) {
+
+  if (options.description) {
+    cy.get('[formcontrolname="description"]').should('have.value', options.description);
+  }
+
+  if (options.indexName) {
+    cy.get('[formcontrolname="index"]').should('have.value', options.indexName);
+  }
+
+  if (options.ckanBasisUrl) {
+    cy.get('[formcontrolname="ckanBaseUrl"]').should('have.value', options.ckanBasisUrl);
+  }
+
+  if (options.httpMethod) { //csw
+    cy.get('[formcontrolname="httpMethod"] .ng-star-inserted').should('contain', options.httpMethod);
+  }
+
+  if (options.getRecordsUrl) {
+    cy.get('[formcontrolname="getRecordsUrl"]').should('have.value', options.getRecordsUrl);
+  }
+
+  if (options.recordFilter){
+    cy.get('[formcontrolname="recordFilter"]').should('have.value', options.recordFilter);
+  }
+
+  if (options.keywords){
+    cy.get('[placeholder="Either keywords"]').should('contain', options.keywords);
+  }
+
+  if (options.path) { //excel
+    cy.get('[formcontrolname="filePath"]').should('have.value', options.path);
+  }
+
+  //non required fields
+  if (options.defaultDCATCategory) {
+    cy.get('[formcontrolname="defaultDCATCategory"]').should('contain', options.defaultDCATCategory);
+  }
+
+  if (options.defaultmCLOUDCategory) {
+    cy.get('[formcontrolname="defaultMcloudSubgroup"]').should('contain', options.defaultmCLOUDCategory);
+  }
+
+  if (options.defaultAttribution) {
+    cy.get('[formcontrolname="defaultAttribution"]').should('have.value', options.defaultAttribution);
+  }
+
+  if (options.defaultAttributionLink) {
+    cy.get('[formcontrolname="defaultAttributionLink"]').should('have.value', options.defaultAttributionLink);
+  }
+
+  if (options.maxRecords) {
+    cy.get('[formcontrolname="maxRecords"]').should('have.value', options.maxRecords);
+  }
+
+  if (options.startPosition) {
+    cy.get('[formcontrolname="startPosition"]').should('have.value', options.startPosition);
+  }
+
+  // if (options.filterTag) {
+  //   cy.get('.mat-chip-list-wrapper').should('contain', options.filterTag);
+  // }
+
+  // if (options.filterGroup) {
+  //   cy.get('.mat-chip-list-wrapper').should('have.value', options.filterGroup);
+  // }
+
+  if (options.licenseId) {
+    cy.get('[placeholder="ID"]').should('have.value', options.licenseId);
+  }
+
+  if (options.titleId) {
+    cy.get('[placeholder="Titel"]').should('have.value', options.titleId);
+  }
+
+  if (options.licenseUrl) {
+    cy.get('[placeholder="URL"]').should('have.value', options.licenseUrl);
+  }
+
+  if (options.dateFormat) {
+    cy.get('[placeholder="Datumsformate"]').should('have.value', options.dateFormat);
+  }
+}
+
+function seedCkanHarvester() {
   cy.request({
     method: 'POST',
     url: 'rest/api/harvester/-1',
     body: {
       "id": 97,
-      "disable":true,
-      "type":"CKAN",
-      "description":"ckan_test_api",
+      "disable": true,
+      "type": "CKAN",
+      "description": "ckan_test_api",
       "ckanBasisUrl": "ckan_basis_url",
-      "index":"ckan_index",
-      "defaultDCATCategory":["SOCI"],
-      "defaultMcloudSubgroup":["railway"],
-      "defaultAttribution":"attr_name",
-      "defaultAttributionLink":"attr_link",
-      "maxRecords":50,
-      "startPosition":1,
+      "index": "ckan_index",
+      "defaultDCATCategory": ["SOCI"],
+      "defaultMcloudSubgroup": ["railway"],
+      "defaultAttribution": "attr_name",
+      "defaultAttributionLink": "attr_link",
+      "maxRecords": 50,
+      "startPosition": 1,
       "filterTag": "ckan_test",
       "filterGroup": "ckan_test",
       "dateFormat": "YYYY-MM-DD",
       "licenseId": "123",
       "titleId": "ckan_titleID",
-      "licenseUrl": "testing"}
-  });
-}
-function seedCswHarvester(){
-  cy.request({
-    method: 'POST',
-    url: 'rest/api/harvester/98',
-    body: {
-      "id": 98,
-      "disable":true,
-      "type":"CSW",
-      "description":"csw_test_api",
-      "index":"csw_index",
-      "httpMethod": "GET",
-      "getRecordsUrl": "./testme",
-      "defaultDCATCategory":["SOCI"],
-      "defaultMcloudSubgroup":["railway"],
-      "defaultAttribution":"attr_name",
-      "defaultAttributionLink":"attr_link",
-      "maxRecords":150,
-      "startPosition":1
+      "licenseUrl": "testing"
     }
   });
 }
-function seedExcelHarvester(){
+
+function seedCswHarvester() {
+  cy.request({
+    method: 'POST',
+    url: 'rest/api/harvester/-1',
+    body: {
+      "id": 98,
+      "disable": true,
+      "type": "CSW",
+      "description": "csw_test_api",
+      "index": "csw_index",
+      "httpMethod": "GET",
+      "getRecordsUrl": "./testme",
+      "defaultDCATCategory": ["SOCI"],
+      "defaultMcloudSubgroup": ["railway"],
+      "defaultAttribution": "attr_name",
+      "defaultAttributionLink": "attr_link",
+      "maxRecords": 150,
+      "startPosition": 1
+    }
+  });
+}
+
+function seedExcelHarvester() {
   cy.request({
     method: 'POST',
     url: 'rest/api/harvester/-1',
     body: {
       "id": 99,
-      "disable":true,
-      "type":"EXCEL",
-      "description":"excel_test_api",
-      "index":"excel_index",
-      "defaultDCATCategory":["SOCI"],
-      "defaultMcloudSubgroup":["railway"],
-      "defaultAttribution":"attr_name",
-      "defaultAttributionLink":"attr_link",
-      "maxRecords":50,
-      "startPosition":1,
-      "filePath":"./data.xlsx"
+      "disable": true,
+      "type": "EXCEL",
+      "description": "excel_test_api",
+      "index": "excel_index",
+      "defaultDCATCategory": ["SOCI"],
+      "defaultMcloudSubgroup": ["railway"],
+      "defaultAttribution": "attr_name",
+      "defaultAttributionLink": "attr_link",
+      "maxRecords": 50,
+      "startPosition": 1,
+      "filePath": "./data.xlsx"
     }
   });
 }
+
+function deselectDCATCategory(category) {
+  cy.get('[formcontrolname="defaultDCATCategory"]')
+    .then((dcatCat) => {
+      if (dcatCat.text().includes(category)) {
+        cy.get('[formcontrolname="defaultDCATCategory"]').click();
+        cy.get('.mat-option-text').contains(category).click();
+        cy.get('[formcontrolname="defaultDCATCategory"]').type('{esc}');
+      }
+    });
+}
+
+function deselectMcloudCategory(category) {
+  cy.get('[formcontrolname=defaultMcloudSubgroup]')
+    .then((mcloudCat) => {
+      if (mcloudCat.text().includes(category)) {
+        cy.get('[formcontrolname="defaultMcloudSubgroup"]').click();
+        cy.get('.mat-option-text').contains(category).click();
+        cy.get('[formcontrolname="defaultMcloudSubgroup"]').type('{esc}');
+      }
+    })
+}
+
+Cypress.Commands.add('deselectDCATCategory', (category) => {
+  deselectDCATCategory(category);
+});
+
+Cypress.Commands.add('deselectMcloudCategory', (category) => {
+  deselectMcloudCategory(category);
+});
+
+Cypress.Commands.add('checkFields', (options) => {
+  checkFields(options);
+});
 
 Cypress.Commands.add('seedHarvester', () => {
   seedCkanHarvester();
@@ -299,7 +440,7 @@ Cypress.Commands.add("saveHarvesterConfig", () => {
 /**
  * press button to update an old harvester
  */
-Cypress.Commands.add("updateHarvester",() => {
+Cypress.Commands.add("updateHarvester", () => {
   cy.get('[data-test="dlg-update"]').click();
 });
 
