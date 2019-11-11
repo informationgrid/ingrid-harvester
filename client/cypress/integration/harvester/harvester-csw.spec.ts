@@ -16,6 +16,8 @@ describe('Csw-Harvester operations', () => {
       getRecordsUrl: './testme'
     });
     cy.saveHarvesterConfig();
+
+    // TODO: check harvester was really added with all data
   });
 
   xit('should add a new harvester of type CSW with all options', () => {
@@ -24,22 +26,22 @@ describe('Csw-Harvester operations', () => {
   it('should update a harvester of type CSW', () => {
     cy.openHarvester('14');
     //if dcatCategory value to input already selected then deselect it
-    cy.get('[name=defaultDCATCategory]')
+    cy.get('[formcontrolname=defaultDCATCategory]')
       .then((dcatCat) => {
         if (dcatCat.text().includes('Verkehr')) {
-          cy.get('[name="defaultDCATCategory"]').click();
+          cy.get('[formcontrolname="defaultDCATCategory"]').click();
           cy.get('.mat-option-text').contains('Verkehr').click();
-          cy.get('[name="defaultDCATCategory"]').type('{esc}');
+          cy.get('[formcontrolname="defaultDCATCategory"]').type('{esc}');
         }
       });
 
     //if mcloudCategory value to input already selected then deselect it
-    cy.get('[name=defaultmCLOUDCategory]')
+    cy.get('[formcontrolname=defaultMcloudSubgroup]')
       .then((mcloudCat) => {
         if (mcloudCat.text().includes('Infrastruktur')) {
-          cy.get('[name="defaultmCLOUDCategory"]').click();
+          cy.get('[formcontrolname="defaultMcloudSubgroup"]').click();
           cy.get('.mat-option-text').contains('Infrastruktur').click();
-          cy.get('[name="defaultmCLOUDCategory"]').type('{esc}');
+          cy.get('[formcontrolname="defaultMcloudSubgroup"]').type('{esc}');
         }
       });
 
@@ -53,15 +55,15 @@ describe('Csw-Harvester operations', () => {
 
     //checks data was saved
     cy.openHarvester('14');
-    cy.get('[name="defaultDCATCategory"]').should('contain', 'Verkehr');
-    cy.get('[name="defaultmCLOUDCategory"]').should('contain', 'Infrastruktur');
-    cy.get('[name="defaultAttribution"]').should('have.value', 'ffm');
+    cy.get('[formcontrolname="defaultDCATCategory"]').should('contain', 'Verkehr');
+    cy.get('[formcontrolname="defaultMcloudSubgroup"]').should('contain', 'Infrastruktur');
+    cy.get('[formcontrolname="defaultAttribution"]').should('have.value', 'ffm');
   });
 
   //CSW operation
   it('should successfully harvest after deleting an existing filter-label', () => {
     cy.openHarvester('16'); // EOC Geoservice DLR
-    cy.get('[name="recordFilter"]').clear();
+    cy.get('[formcontrolname="recordFilter"]').clear();
     cy.updateHarvester();
     cy.openAndImportHarvester("16");
 
@@ -70,6 +72,7 @@ describe('Csw-Harvester operations', () => {
     cy.get('app-importer-detail').should('contain', ' Import läuft ');
 
     cy.get('#harvester-16').click();
+    // TODO: why should next-execution contain "wurde geändert"? Was there any scheduler set?
     cy.get('#harvester-16 [data-test="next-execution"]', {timeout: 15000}).should('contain', ' wurde geändert ');
   });
 });

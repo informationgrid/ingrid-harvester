@@ -2,17 +2,17 @@
  * sets harvesters type
  */
 function setCkanType() {
-  cy.get('[name="type"]').click();
+  cy.get('[formcontrolname="type"]').click();
   cy.get('.mat-option-text').contains('CKAN').click();
 }
 
 function setCswType() {
-  cy.get('[name="type"]').click();
+  cy.get('[formcontrolname="type"]').click();
   cy.get('.mat-option-text').contains('CSW').click();
 }
 
 function setExcelType() {
-  cy.get('[name="type"]').click();
+  cy.get('[formcontrolname="type"]').click();
   cy.get('.mat-option-text').contains('EXCEL').click();
 }
 
@@ -23,11 +23,11 @@ function setExcelType() {
 function setHarvesterFields(options) {
   //required fields for every harvester
   if(options.description){
-    cy.get('[name="description"]').clear().type(options.description);
+    cy.get('[formcontrolname="description"]').clear().type(options.description);
   }
 
   if(options.indexName){
-    cy.get('[name="index"]').clear().type(options.indexName);
+    cy.get('[formcontrolname="index"]').clear().type(options.indexName);
   }
 
   //required fields depending on type
@@ -100,32 +100,32 @@ function setHarvesterFields(options) {
 //setters for common fields
 function setDefaultDCATCategory(defaultDCATCategory) {
   //not to click but selected
-  cy.get('[name="defaultDCATCategory"]').click();
+  cy.get('[formcontrolname="defaultDCATCategory"]').click();
   cy.get('.mat-option-text').contains(defaultDCATCategory).click();
-  cy.get('[name="defaultDCATCategory"]').type('{esc}');
+  cy.get('[formcontrolname="defaultDCATCategory"]').type('{esc}');
 }
 
 function setDefaultmCLOUDCategory(defaultmCLOUDCategory) {
   //not to click but selected
-  cy.get('[name="defaultmCLOUDCategory"]').click();
+  cy.get('[formcontrolname="defaultMcloudSubgroup"]').click();
   cy.get('.mat-option-text').contains(defaultmCLOUDCategory).click();
-  cy.get('[name="defaultmCLOUDCategory"]').type('{esc}');
+  cy.get('[formcontrolname="defaultMcloudSubgroup"]').type('{esc}');
 }
 
 function setDefaultAttribution(defaultAttribution) {
-  cy.get('[name="defaultAttribution"]').clear().type(defaultAttribution);
+  cy.get('[formcontrolname="defaultAttribution"]').clear().type(defaultAttribution);
 }
 
 function setDefaultAttributionLink(defaultAttributionLink) {
-  cy.get('[name="defaultAttributionLink"]').clear().type(defaultAttributionLink);
+  cy.get('[formcontrolname="defaultAttributionLink"]').clear().type(defaultAttributionLink);
 }
 
 function setMaxRecords(maxRecords) {
-  cy.get('[name="maxRecords"]').clear().type(maxRecords);
+  cy.get('[formcontrolname="maxRecords"]').clear().type(maxRecords);
 }
 
 function setStartPosition(startPosition) {
-  cy.get('[name="startPosition"]').clear().type(startPosition);
+  cy.get('[formcontrolname="startPosition"]').clear().type(startPosition);
 }
 
 function setFilterTags(filterTag) {
@@ -153,20 +153,20 @@ function setDefaultLicenseUrl(urlId) {
 }
 //setters for required fields depending on harvester-type
 function setCkanBasisUrl(ckanBasisUrl) {
-  cy.get('[name="ckanBaseUrl"]').clear().type(ckanBasisUrl);
+  cy.get('[formcontrolname="ckanBaseUrl"]').clear().type(ckanBasisUrl);
 }
 
 function setCswHttpMethod(httpMethod) {
-  cy.get('[name="httpMethod"]').click();
+  cy.get('[formcontrolname="httpMethod"]').click();
   cy.get('.mat-option-text').contains(httpMethod).click();
 }
 
 function setGetRecordsUrl(getRecordsUrl) {
-  cy.get('[name="getRecordsUrl"]').clear().type(getRecordsUrl);
+  cy.get('[formcontrolname="getRecordsUrl"]').clear().type(getRecordsUrl);
 }
 
 function setExcelPath(path) {
-  cy.get('[name="filepath"]').clear().type(path);
+  cy.get('[formcontrolname="filePath"]').clear().type(path);
 }
 
 function seedCkanHarvester(){

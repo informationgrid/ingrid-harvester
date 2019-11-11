@@ -15,6 +15,8 @@ describe('Excel-Harvester operations', () => {
       path: './data.xlsx'
     });
     cy.saveHarvesterConfig();
+
+    // TODO: check harvester was really added with all data
   });
 
   it('should add a new harvester of type Excel with all options', () => {
@@ -29,26 +31,30 @@ describe('Excel-Harvester operations', () => {
       defaultAttributionLink: '23',
     });
     cy.saveHarvesterConfig();
+
+    // TODO: check harvester was really added with all data
   });
 
   it('should update a harvester of type Excel', () => {
     cy.openHarvester('1');
     //if dcatCategory value to input already selected then deselect it
-    cy.get('[name="defaultDCATCategory"]')
+    // TODO: create general function to select from a select box
+    cy.get('[formcontrolname="defaultDCATCategory"]')
       .then((dcatCat) => {
         if (dcatCat.text().includes('Wirtschaft und Finanzen')) {
-          cy.get('[name="defaultDCATCategory"]').click();
+          cy.get('[formcontrolname="defaultDCATCategory"]').click();
           cy.get('.mat-option-text').contains('Wirtschaft und Finanzen').click();
-          cy.get('[name="defaultDCATCategory"]').type('{esc}');
+          cy.get('[formcontrolname="defaultDCATCategory"]').type('{esc}');
         }
       });
     //if mcloudCategory value to input already selected then deselect it
-    cy.get('[name=defaultmCLOUDCategory]')
+    // TODO: create general function to select from a select box (see above)
+    cy.get('[formcontrolname=defaultMcloudSubgroup]')
       .then((mcloudCat) => {
         if (mcloudCat.text().includes('Klima und Wetter')) {
-          cy.get('[name="defaultmCLOUDCategory"]').click();
+          cy.get('[formcontrolname="defaultMcloudSubgroup"]').click();
           cy.get('.mat-option-text').contains('Klima und Wetter').click();
-          cy.get('[name="defaultmCLOUDCategory"]').type('{esc}');
+          cy.get('[formcontrolname="defaultMcloudSubgroup"]').type('{esc}');
         }
       });
 
@@ -63,9 +69,9 @@ describe('Excel-Harvester operations', () => {
     cy.reload();
     //checks data was saved
     cy.openHarvester('1');
-    cy.get('[name="defaultDCATCategory"]').should('contain', 'Wirtschaft und Finanzen');
-    cy.get('[name="defaultmCLOUDCategory"]').should('contain', 'Klima und Wetter');
-    cy.get('[name="defaultAttribution"]').should('have.value', '7');
+    cy.get('[formcontrolname="defaultDCATCategory"]').should('contain', 'Wirtschaft und Finanzen');
+    cy.get('[formcontrolname="defaultMcloudSubgroup"]').should('contain', 'Klima und Wetter');
+    cy.get('[formcontrolname="defaultAttribution"]').should('have.value', '7');
   });
 
 });

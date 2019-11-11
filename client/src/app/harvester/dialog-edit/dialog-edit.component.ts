@@ -36,8 +36,8 @@ export class DialogEditComponent implements OnInit {
       defaultMcloudSubgroup: [harvester.defaultMcloudSubgroup],
       defaultAttribution: [harvester.defaultAttribution],
       defaultAttributionLink: [harvester.defaultAttributionLink],
-      maxRecords: [harvester.maxRecords],
-      startPosition: [harvester.startPosition]
+      maxRecords: [harvester.maxRecords, Validators.min(1)],
+      startPosition: [harvester.startPosition, Validators.min(0)]
     });
   }
 

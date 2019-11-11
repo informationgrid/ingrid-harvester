@@ -36,6 +36,8 @@ describe('Ckan-Harvester operations', () => {
       licenseUrl: 'wwwdedede'
     });
     cy.saveHarvesterConfig();
+
+    // TODO: where is the check that the harvester was added correctly (with all information)?
   });
 
   it('should update an existing CKAN harvester', () => {
@@ -52,8 +54,10 @@ describe('Ckan-Harvester operations', () => {
 
     //checks data was saved
     cy.openHarvester('3');
-    cy.get('[name=index]').should('have.value', 'ckan_indice');
-    cy.get('[name=defaultAttribution]').should('have.value', 'ffm');
+    cy.get('[formcontrolname=index]').should('have.value', 'ckan_indice');
+    cy.get('[formcontrolname=defaultAttribution]').should('have.value', 'ffm');
     cy.get(' .mat-chip-list-wrapper [role="option"]').should('contain', 'ckan_test1');
+
+    // TODO: also check other fields even the ones we didn't change, since we want to make sure that all data is still present
   })
 });
