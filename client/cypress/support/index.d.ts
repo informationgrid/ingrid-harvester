@@ -49,6 +49,7 @@ declare namespace Cypress {
     seedHarvester(): Chainable
     addNewHarvester(): Chainable
     openHarvester(harvesterId: string): Chainable
+    openHarvesterByName(harvesterName: string): Chainable
     saveHarvesterConfig(): Chainable
     updateHarvester(): Chainable
     openAndImportHarvester(harvesterId: string): Chainable
@@ -66,7 +67,6 @@ declare namespace Cypress {
      */
     deselectDCATCategory(category: string): Chainable
     deselectMcloudCategory(category: string): Chainable
-
   }
 }
 

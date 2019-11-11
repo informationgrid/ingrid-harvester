@@ -17,10 +17,8 @@ describe('Csw-Harvester operations', () => {
     });
     cy.saveHarvesterConfig();
 
-    //TODO function for getting harvester by name
     //get harvester by name
-    cy.get('.no-wrap').contains('Testing partial CSW Harvester').click();
-    cy.get('[data-test="edit"]:visible').click();
+    cy.openHarvesterByName('Testing partial CSW Harvester');
 
     cy.checkFields({
       description: 'Testing partial CSW Harvester',

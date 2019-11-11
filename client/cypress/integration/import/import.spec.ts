@@ -6,11 +6,15 @@ describe('Import operations', () => {
   });
 
   it('should open a harvester, start an import and check it is successful', () => {
-    //opens "Offene Daten Bonn: parameters wrong"
-    cy.openAndImportHarvester("3");
+    cy.openAndImportHarvester("6");
+    const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
 
     cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
     cy.get('app-importer-detail').should('contain', ' Import läuft ');
+    cy.wait(5000);
+    cy.reload();
+
+    cy.get('#harvester-3 [data-test=last-execution]').should('contain', importsDate)
   });
 
   it('should import all harvesters at once and check a message is shown', () => {
@@ -35,17 +39,17 @@ describe('Import operations', () => {
 
   it('should show an icon if a harvester has an import schedule', () => {
     // set schedule
-    cy.openScheduleHarvester("21");
+    cy.openScheduleHarvester("3");
     cy.get('[data-test="cron-input"]').clear().type('30 4 1 * 0,6');
     cy.get('[data-test=dlg-schedule]').click();
 
     //check icon
-    cy.get('#harvester-21 .mat-icon').should('contain', 'alarm_off');
+    cy.get('#harvester-3 .mat-icon').should('contain', 'alarm_off');
     //activate auto planning and check the right status of the icon
-    cy.get('#harvester-21 .mat-slide-toggle-bar').click({force: true});
-    cy.get('#harvester-21 .mat-icon').should('contain', 'alarm_on');
+    cy.get('#harvester-3 .mat-slide-toggle-bar').click({force: true});
+    cy.get('#harvester-3 .mat-icon').should('contain', 'alarm_on');
     //deactivate again
-    cy.get('#harvester-21 .mat-slide-toggle-bar').click({force: true});
+    cy.get('#harvester-3 .mat-slide-toggle-bar').click({force: true});
   });
 });
 

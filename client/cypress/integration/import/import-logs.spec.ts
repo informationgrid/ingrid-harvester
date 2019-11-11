@@ -4,7 +4,7 @@ describe('Import log operations', () => {
     cy.seedHarvester();
     cy.reload();
   });
-  
+
   beforeEach(() => {
     if (!(window.localStorage.getItem('currentUser'))) {
       cy.apiLogin('admin', 'admin');

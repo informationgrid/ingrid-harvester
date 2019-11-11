@@ -429,6 +429,11 @@ Cypress.Commands.add("openHarvester", (harvesterId) => {
   cy.get('#harvester-' + harvesterId + ' [data-test="edit"]').click();
 });
 
+Cypress.Commands.add('openHarvesterByName', (harvesterName) => {
+  cy.get('.no-wrap').contains(harvesterName).click();
+  cy.get('[data-test="edit"]:visible').click();
+});
+
 /**
  * press button for harvester update
  */

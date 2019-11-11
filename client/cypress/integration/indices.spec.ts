@@ -6,20 +6,20 @@ describe('Indices operations', () => {
     }
   });
 
-  it('should click the slide toggle bar', () => {
+  it('should be able to click the slide toggle bar', () => {
     //conditional testing
-    cy.get('#harvester-9 .mat-slide-toggle-bar').click({force: true});
-    cy.get('#harvester-9 .mat-slide-toggle-input').should('be.checked');
+    cy.get('#harvester-3 .mat-slide-toggle-bar').click({force: true});
+    cy.get('#harvester-3 .mat-slide-toggle-input').should('be.checked');
 
     //turn off again
-    cy.get('#harvester-9 .mat-slide-toggle-bar').click({force: true});
+    cy.get('#harvester-3 .mat-slide-toggle-bar').click({force: true});
   });
 
   it('should not find an harvester whose search is not activated', () => {
-    cy.get('#harvester-9 .mat-slide-toggle-bar').click({force: true});
+    cy.get('#harvester-3 .mat-slide-toggle-bar').click({force: true});
     cy.goToIndices();
     cy.reload();
-    cy.get('.mat-line').invoke('text').should('not.contain', 'ckan_portal_hamburg');
+    cy.get('.mat-line').invoke('text').should('not.contain', 'ckan_indice');
   });
 
   it('should find an harvester whose search is activated', () => {

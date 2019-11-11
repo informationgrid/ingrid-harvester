@@ -17,8 +17,7 @@ describe('Excel-Harvester operations', () => {
     cy.saveHarvesterConfig();
 
     //get harvester by name
-    cy.get('.no-wrap').contains('Testing partial Excel Harvester').click();
-    cy.get('[data-test="edit"]:visible').click();
+    cy.openHarvesterByName('Testing partial Excel Harvester');
 
     cy.checkFields({
       description: 'Testing partial Excel Harvester',
@@ -46,8 +45,7 @@ describe('Excel-Harvester operations', () => {
     cy.saveHarvesterConfig();
 
     //get harvester by name
-    cy.get('.no-wrap').contains('Testing Excel Harvester').click();
-    cy.get('[data-test="edit"]:visible').click();
+    cy.openHarvesterByName('Testing Excel Harvester');
 
     //check input is right
     cy.checkFields({
