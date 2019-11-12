@@ -89,7 +89,7 @@ export class UrlUtils {
      */
     static mapFormat(format: string, warnings?: string[][]) {
 
-        const value = mapping.format[format];
+        const value = mapping.format[format.toLowerCase()];
 
         if (!value) {
             log.warn('Distribution format unknown: ' + format);

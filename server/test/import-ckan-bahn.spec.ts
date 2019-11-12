@@ -80,7 +80,8 @@ describe('Import CKAN Bahn', function () {
             harvestTime: null,
             issuedDate: null,
             currentIndexName: 'test',
-            summary: null
+            // @ts-ignore
+            summary: {warnings: []}
         });
         const result = await IndexDocument.create(mapper);
         chai.expect(result.title).to.eq('Reisezentren');

@@ -93,7 +93,7 @@ export class CkanMapper extends GenericMapper {
                         title: res.name,
                         description: res.description,
                         accessURL: accessURL,
-                        format: res.format,
+                        format: UrlUtils.mapFormat(res.format, this.summary.warnings),
                         issued: this.handleDate(res.created),
                         modified: this.handleDate(res.last_modified),
                         byteSize: this.handleByteSize(res.size)

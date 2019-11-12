@@ -21,7 +21,7 @@
       "id": "ccd0fbac-582a-4fdd-825b-478c034a3e30",
       "description": "Reisezentrenliste der DB Vertrieb GmbH",
       "name": "Reisezentrenliste (Stand: 09/2018)",
-      "format": "CSV",
+      "format": "http://publications.europa.eu/resource/authority/file-type/CSV",
       "url": "http://download-data.deutschebahn.com/static/datasets/reisezentren/VSRz201703.csv",
       "created": "2017-03-15T15:03:18.306433",
       "last_modified": "2018-09-24T09:12:55.1358119",
