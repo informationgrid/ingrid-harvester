@@ -2,6 +2,7 @@ import {Summary} from '../model/summary';
 import {ImporterSettings} from '../importer.settings';
 import {DeduplicateUtils} from './deduplicate.utils';
 import {ElasticSettings} from './elastic.setting';
+import {Index} from '@shared/index.model';
 
 let elasticsearch = require('elasticsearch'),
     log = require('log4js').getLogger(__filename);
@@ -131,29 +132,36 @@ export class ElasticSearchUtils {
             .then(indices => {
 
             let indicesToDelete = indices
-                .filter(index => index !== ignoreIndexName);
+                .filter(index => index.name !== ignoreIndexName);
 
             if (indicesToDelete.length > 0) {
-                return this.deleteIndex(indicesToDelete);
+                return this.deleteIndex(indicesToDelete.map(i => i.name));
             }
         }).catch(err => {
             this.handleError('Error occurred getting index names', err);
         });
     }
 
-    getIndicesFromBasename(baseName: string): Promise<string[]> {
+    getIndicesFromBasename(baseName: string): Promise<Index[]> {
         return this.client.cat.indices({
-            h: ['index'],
+            h: ['index', 'docs.count', 'health', 'status'],
             format: 'json'
         }).then(body => {
             return body
-                .map(item => item.index)
-                .filter(index => {
+                .filter(json => {
                     // the index name must consist of the base name + the date string which is
                     // 18 characters long
                     // in case we want to get all indices just request with an empty baseName
-                    return baseName === '' || (index.startsWith(baseName) && index.length === baseName.length + 18);
-                });
+                    return baseName === '' || (json.index.startsWith(baseName) && json.index.length === baseName.length + 18);
+                })
+                .map(item => {
+                    return {
+                        name: item.index,
+                        numDocs: item['docs.count'],
+                        health: item.health,
+                        status: item.status
+                    } as Index;
+                })
         });
     }
 

@@ -64,12 +64,11 @@ export class IndexService {
             log.warn('Is there a harvest going on, where a temporary nex index is created?');
             return null;
         }
-        return indices[0];
+        return indices[0].name;
     }
 
     async getIndices(): Promise<Index[]> {
-        const indices = await this.elasticUtils.getIndicesFromBasename('')
-        return indices.map( index => ({name: index}));
+        return await this.elasticUtils.getIndicesFromBasename('')
     }
 
     deleteIndex(name: string) {
