@@ -22,13 +22,6 @@ describe('Import cron pattern operations', () => {
     cy.get('[data-test=dlg-schedule]').click();
   });
 
-  it('should not be able to input the cron pattern "* *? * * *" (the planning button should be disabled) [INPUT CONTROL]', () => {
-    cy.openScheduleHarvester("20");
-
-    cy.get('[data-test="cron-input"]').clear().type('* *? * * *');
-    cy.get('[data-test=dlg-schedule]').should('be.disabled')
-  });
-
   it('should reset cron expression if the right cancel button is pressed', () => {
     cy.get('#harvester-20').click();
     cy.get('#harvester-20 [data-test=schedule]').click();

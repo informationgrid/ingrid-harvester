@@ -8,23 +8,25 @@ describe('Indices operations', () => {
 
   it('should be able to click the slide toggle bar', () => {
     //conditional testing
-    cy.get('#harvester-3 .mat-slide-toggle-bar').click({force: true});
-    cy.get('#harvester-3 .mat-slide-toggle-input').should('be.checked');
+    cy.deactivateToggleBar('19');
+    cy.get('#harvester-19 .mat-icon').should('contain', 'alarm_off');
 
-    //turn off again
-    cy.get('#harvester-3 .mat-slide-toggle-bar').click({force: true});
+    cy.activateToggleBar('19');
+    cy.get('#harvester-19 .mat-icon').should('contain', 'alarm_on');
   });
 
   it('should not find an harvester whose search is not activated', () => {
-    cy.get('#harvester-3 .mat-slide-toggle-bar').click({force: true});
-    cy.goToIndices();
+    //if search is on turn it off
+    cy.deactivateToggleBar('3');
+
     cy.reload();
-    cy.get('.mat-line').invoke('text').should('not.contain', 'ckan_indice');
+    cy.goToIndices();
+    cy.get('.mat-line').invoke('text').should('not.contain', 'ckan_index');
   });
 
   it('should find an harvester whose search is activated', () => {
     // cy.get('#harvester-6 .mat-slide-toggle-bar').click({force: true});
-    cy.openAndImportHarvester('21');
+    cy.openAndImportHarvester('6');
     // cy.wait(5000);
     cy.goToIndices();
     cy.wait(500);
@@ -50,9 +52,17 @@ describe('Indices operations', () => {
     cy.get('.mat-line').invoke('text').should('not.contain', 'testing_excel_indice');
   });
 
-  xit('should show only one index per harvester', () =>{
+  it('should show only one index per harvester', () => {
+    cy.openAndImportHarvester('6');
+    cy.goToIndices();
+    cy.wait(500);
+
+    cy.get('.mat-line').then((allIndex) => {
+      const partialIndex = allIndex.text().replace('ckan_db', '');
+      expect(partialIndex).not.contain('ckan_db');
+      });
   });
 
-  xit('should delete an index if its harvester is deleted', () =>{
+  xit('should delete an index if its harvester is deleted', () => {
   });
 });

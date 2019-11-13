@@ -11,7 +11,7 @@ describe('Ckan-Harvester operations', () => {
     cy.addNewHarvester();
     cy.newCkanHarvester({
       description: 'Testing CKAN Harvester',
-      indexName: 'ckan_indice',
+      indexName: 'ckan_index',
       ckanBasisUrl: 'testme'
     });
     cy.saveHarvesterConfig();
@@ -20,7 +20,7 @@ describe('Ckan-Harvester operations', () => {
 
     cy.checkFields({
       description: 'Testing CKAN Harvester',
-      indexName: 'ckan_indice',
+      indexName: 'ckan_index',
       ckanBasisUrl: 'testme'
     });
 
@@ -82,7 +82,7 @@ describe('Ckan-Harvester operations', () => {
     cy.openHarvester('3');
 
     cy.setHarvesterFields({
-      indexName: 'ckan_indice',
+      indexName: 'updated_ckan',
       defaultAttribution: 'ffm',
       filterTag: 'ckan_test1',
       filterGroup: 'ckan_test1',
@@ -93,7 +93,7 @@ describe('Ckan-Harvester operations', () => {
     //checks data was saved
     cy.openHarvester('3');
     cy.checkFields({
-      indexName: 'ckan_indice',
+      indexName: 'updated_ckan',
       defaultAttribution: 'ffm',
       // filterTag: 'ckan_test1',
       // filterGroup: 'ckan_test1',

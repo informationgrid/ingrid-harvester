@@ -474,3 +474,25 @@ Cypress.Commands.add("openScheduleHarvester", (harvesterId) => {
 Cypress.Commands.add("openLog", (harvesterId) => {
   cy.get('#harvester-' + harvesterId + ' [data-test="log"]', {timeout: 6000}).click();
 });
+
+/**
+ * activate search and scheduling of the given harvester
+ */
+Cypress.Commands.add('activateToggleBar', (harvesterId) => {
+  cy.get('#harvester-' + harvesterId + ' .mat-icon').then((value) => {
+    if (value.text().includes('alarm_off')) {
+      cy.get('#harvester-' + harvesterId + ' .mat-slide-toggle-bar').click({force: true});
+    }
+  });
+});
+
+/**
+ * deactivate toggle bar
+ */
+Cypress.Commands.add('deactivateToggleBar', (harvesterId) => {
+  cy.get('#harvester-' + harvesterId + ' .mat-icon').then((value) => {
+    if (value.text().includes('alarm_on')) {
+      cy.get('#harvester-3 .mat-slide-toggle-bar').click({force: true});
+    }
+  });
+});

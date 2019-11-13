@@ -67,6 +67,12 @@ declare namespace Cypress {
      */
     deselectDCATCategory(category: string): Chainable
     deselectMcloudCategory(category: string): Chainable
+
+    /**
+     * activate or deactive the toggle bar that activates the search and scheduling of an harvester
+     */
+    activateToggleBar(harvesterId: string): Chainable
+    deactivateToggleBar(harvesterId: string): Chainable
   }
 }
 

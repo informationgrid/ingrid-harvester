@@ -6,9 +6,8 @@ describe('Log tab operations', () => {
 
   it('should show information in the logs when all the harvester are imported', () => {
     cy.importAll();
-    cy.goToLog();
     cy.reload();
-    cy.wait(500);
+    cy.goToLog();
     cy.get('.code').contains('[INFO] default - >> Running importer:');
   });
 
