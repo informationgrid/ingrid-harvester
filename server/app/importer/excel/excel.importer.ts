@@ -162,6 +162,9 @@ export class ExcelImporter implements Importer {
             this.summary.appErrors.push('Error reading excel workbook: ' + error);
             observer.next(ImportResult.complete(this.summary));
             observer.complete();
+
+            // clean up index
+            await this.elastic.deleteIndex(this.elastic.indexName);
         }
     }
 

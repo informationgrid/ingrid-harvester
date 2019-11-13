@@ -74,24 +74,20 @@ export class ElasticSearchUtils {
             return;
         }
 
-        // Deduplication alias doesn't need to be deleted. It will stop existing
-        // once all the old indices it points to are deleted.
-        if (this.settings.alias) {
-            return this.client.cluster.health({waitForStatus: 'yellow'})
-                .then(() => this.sendBulkData(false))
-                .then(() => this.deleteOldIndices(this.settings.index, this.indexName))
-                .then(() => {
-                    if (!this.settings.disable) {
-                        return this.addAlias(this.indexName, this.settings.alias)
-                    }
-                })
-                .then(() => this.deduplicationUtils.deduplicate())
-                .then(() => {
-                    this.client.close();
-                    log.info('Successfully added data into new index: ' + this.indexName);
-                })
-                .catch(err => log.error('Error finishing index', err));
-        }
+        return this.client.cluster.health({waitForStatus: 'yellow'})
+            .then(() => this.sendBulkData(false))
+            .then(() => this.deleteOldIndices(this.settings.index, this.indexName))
+            .then(() => {
+                if (!this.settings.disable) {
+                    return this.addAlias(this.indexName, this.settings.alias)
+                }
+            })
+            .then(() => this.deduplicationUtils.deduplicate())
+            .then(() => {
+                this.client.close();
+                log.info('Successfully added data into new index: ' + this.indexName);
+            })
+            .catch(err => log.error('Error finishing index', err));
     }
 
 

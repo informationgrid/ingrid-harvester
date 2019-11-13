@@ -97,6 +97,9 @@ export class CswImporter implements Importer {
                     log.error('Error during CSW import', err);
                     observer.next(ImportResult.complete(this.summary, 'Error happened'));
                     observer.complete();
+
+                    // clean up index
+                    this.elastic.deleteIndex(this.elastic.indexName);
                 });
         }
     }
