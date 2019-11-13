@@ -80,7 +80,11 @@ export class ElasticSearchUtils {
             return this.client.cluster.health({waitForStatus: 'yellow'})
                 .then(() => this.sendBulkData(false))
                 .then(() => this.deleteOldIndices(this.settings.index, this.indexName))
-                .then(() => this.addAlias(this.indexName, this.settings.alias))
+                .then(() => {
+                    if (!this.settings.disable) {
+                        return this.addAlias(this.indexName, this.settings.alias)
+                    }
+                })
                 .then(() => this.deduplicationUtils.deduplicate())
                 .then(() => {
                     this.client.close();
