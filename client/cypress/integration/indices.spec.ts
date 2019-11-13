@@ -23,10 +23,12 @@ describe('Indices operations', () => {
   });
 
   it('should find an harvester whose search is activated', () => {
-    //cy.get('#harvester-6 .mat-slide-toggle-bar').dblclick();
+    // cy.get('#harvester-6 .mat-slide-toggle-bar').click({force: true});
+    cy.openAndImportHarvester('21');
+    // cy.wait(5000);
     cy.goToIndices();
     cy.wait(500);
-    cy.get('.mat-line').invoke('text').should('contain', 'ckan_portal_hamburg');
+    cy.get('.mat-line').invoke('text').should('contain', 'ckan_test');
   });
 
   //harvester index must be clearer

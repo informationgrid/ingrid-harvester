@@ -28,12 +28,12 @@ describe('Import operations', () => {
 
     cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
     cy.get('app-importer-detail').should('contain', ' Import läuft ');
-    //check today's date und hour
-    const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
 
     //antipattern
     cy.wait(5000);
     cy.reload();
+    //check today's date und hour
+    const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
     cy.get('#harvester-6 [data-test=last-execution]').should('contain', importsDate)
   });
 
