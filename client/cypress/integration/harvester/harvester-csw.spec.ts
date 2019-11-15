@@ -1,13 +1,12 @@
 describe('Csw-Harvester operations', () => {
   beforeEach(() => {
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      //user is not already logged in send request to log in
       cy.apiLogin('admin', 'admin');
     }
   });
 
-  //CSW Harvesters operations
   it('should add a harvester of type CSW', () => {
+    //add harvester, check fields and delete it
     cy.addNewHarvester();
     cy.newCswHarvester({
       description: 'Testing partial CSW Harvester',
@@ -17,7 +16,6 @@ describe('Csw-Harvester operations', () => {
     });
     cy.saveHarvesterConfig();
 
-    //get harvester by name
     cy.openHarvesterByName('Testing partial CSW Harvester');
 
     cy.checkFields({
@@ -73,22 +71,25 @@ describe('Csw-Harvester operations', () => {
 
   it('should update a harvester of type CSW', () => {
     cy.openHarvester('14');
+    //deselect categories for test state
     cy.deselectDCATCategory('Verkehr');
     cy.deselectMcloudCategory('Infrastruktur');
 
     cy.setHarvesterFields({
+      description: 'BFG',
       indexName: 'full_csw_indice',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'
     });
-
     cy.updateHarvester();
+
     cy.reload();
     cy.openHarvester('14');
 
-    //checks data was saved
+    //check fields
     cy.checkFields({
+      description: 'BFG',
       indexName: 'full_csw_indice',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
@@ -96,9 +97,10 @@ describe('Csw-Harvester operations', () => {
     });
   });
 
-  //CSW operation
   it('should successfully harvest after deleting an existing filter-label', () => {
-    cy.openHarvester('16'); // EOC Geoservice DLR
+    cy.openHarvester('16'); // CODEDE harvester
+    cy.wait(500);
+
     cy.get('[formcontrolname="recordFilter"]').clear();
     cy.updateHarvester();
     cy.openAndImportHarvester("16");
@@ -107,9 +109,8 @@ describe('Csw-Harvester operations', () => {
     cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
     cy.get('app-importer-detail').should('contain', ' Import läuft ');
 
-    cy.get('#harvester-16').click();
-    // TODO: why should next-execution contain "wurde geändert"? Was there any scheduler set?#
-    // it's a bug! new ticket!
-    cy.get('#harvester-16 [data-test="next-execution"]', {timeout: 15000}).should('contain', ' wurde geändert ');
+    //import is successful
+    const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
+    cy.get('#harvester-16 [data-test=last-execution]', {timeout: 15000}).should('contain', importsDate)
   });
 });

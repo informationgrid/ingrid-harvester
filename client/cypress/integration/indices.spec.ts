@@ -1,22 +1,25 @@
 describe('Indices operations', () => {
   beforeEach(() => {
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      //user is not already logged in send request to log in
       cy.apiLogin('admin', 'admin');
     }
   });
 
-  it('should be able to click the slide toggle bar', () => {
-    //conditional testing
-    cy.deactivateToggleBar('19');
-    cy.get('#harvester-19 .mat-icon').should('contain', 'alarm_off');
+  it('should be able to click the slide toggle bar and check the right icon is shown if scheduling is on', () => {
+    // create a schedule for harvester
+    cy.openScheduleHarvester("3");
+    cy.get('[data-test="cron-input"]').clear().type('30 4 1 * 0,6');
+    cy.get('[data-test=dlg-schedule]').click();
 
-    cy.activateToggleBar('19');
-    cy.get('#harvester-19 .mat-icon').should('contain', 'alarm_on');
+    cy.deactivateToggleBar('3');
+    cy.get('#harvester-3 .mat-icon').should('contain', 'alarm_off');
+
+    cy.activateToggleBar('3');
+    cy.get('#harvester-3 .mat-icon').should('contain', 'alarm_on');
   });
 
   it('should not find an harvester whose search is not activated', () => {
-    //if search is on turn it off
+    //if search is on, turn it off
     cy.deactivateToggleBar('3');
 
     cy.reload();
@@ -25,12 +28,12 @@ describe('Indices operations', () => {
   });
 
   it('should find an harvester whose search is activated', () => {
-    // cy.get('#harvester-6 .mat-slide-toggle-bar').click({force: true});
+    cy.activateToggleBar('6');
     cy.openAndImportHarvester('6');
-    // cy.wait(5000);
+
     cy.goToIndices();
     cy.wait(500);
-    cy.get('.mat-line').invoke('text').should('contain', 'ckan_test');
+    cy.get('.mat-line').invoke('text').should('contain', 'ckan_db');
   });
 
   //harvester index must be clearer
@@ -58,11 +61,14 @@ describe('Indices operations', () => {
     cy.wait(500);
 
     cy.get('.mat-line').then((allIndex) => {
+      //remove index of given harvester
       const partialIndex = allIndex.text().replace('ckan_db', '');
+      //index of the harvester should not be in the modified list of indices, unless it is present two times
       expect(partialIndex).not.contain('ckan_db');
       });
   });
 
   xit('should delete an index if its harvester is deleted', () => {
+  //  TODO: is it supposed to be like this ?
   });
 });

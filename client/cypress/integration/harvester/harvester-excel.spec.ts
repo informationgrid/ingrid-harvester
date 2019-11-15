@@ -1,31 +1,28 @@
 describe('Excel-Harvester operations', () => {
   beforeEach(() => {
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      //user is not already logged in send request to log in
       cy.apiLogin('admin', 'admin');
     }
   });
 
-  //Excel Harvesters operations
   it('should add a harvester of type EXCEL', () => {
+    //add harvester, check fields, delete it
     cy.addNewHarvester();
     cy.newExcelHarvester({
-      description: 'Testing partial Excel Harvester',
-      indexName: 'excel_indice',
+      description: 'Excel partial opts Harvester',
+      indexName: 'excel_index',
       path: './data.xlsx'
     });
     cy.saveHarvesterConfig();
 
-    //get harvester by name
-    cy.openHarvesterByName('Testing partial Excel Harvester');
+    cy.openHarvesterByName('Excel partial opts Harvester');
 
     cy.checkFields({
-      description: 'Testing partial Excel Harvester',
-      indexName: 'excel_indice',
+      description: 'Excel partial opts Harvester',
+      indexName: 'excel_index',
       path: './data.xlsx'
     });
 
-    //delete the harvester
     cy.get('.mat-button-wrapper').contains('Abbrechen').click();
     cy.get('[data-test="delete"]:visible').click();
     cy.get('.mat-button-wrapper').contains('Löschen').click();
@@ -34,7 +31,7 @@ describe('Excel-Harvester operations', () => {
   it('should add a new harvester of type Excel with all options', () => {
     cy.addNewHarvester();
     cy.newExcelHarvester({
-      description: 'Testing Excel Harvester',
+      description: 'Excel full opts Harvester',
       indexName: 'full_excel_indice',
       path: './data.xlsx',
       defaultDCATCategory: 'Bevölkerung und Gesellschaft',
@@ -44,12 +41,9 @@ describe('Excel-Harvester operations', () => {
     });
     cy.saveHarvesterConfig();
 
-    //get harvester by name
-    cy.openHarvesterByName('Testing Excel Harvester');
-
-    //check input is right
+    cy.openHarvesterByName('Excel full opts Harvester');
     cy.checkFields({
-      description: 'Testing Excel Harvester',
+      description: 'Excel full opts Harvester',
       indexName: 'full_excel_indice',
       path: './data.xlsx',
       defaultDCATCategory: 'Bevölkerung und Gesellschaft',
@@ -70,21 +64,24 @@ describe('Excel-Harvester operations', () => {
     cy.deselectMcloudCategory('Klima und Wetter');
 
     cy.setHarvesterFields({
-      indexName: 'Testing update ckan Harvester',
+      description: 'mCLOUD Excel Datei',
+      indexName: 'update_excel_harvester',
       defaultDCATCategory: 'Wirtschaft und Finanzen',
       defaultmCLOUDCategory: 'Klima und Wetter',
       defaultAttribution: '7'
     });
-
     cy.updateHarvester();
-    cy.reload();
-    cy.openHarvester('1');
 
-    //check the data was saved
+    cy.reload();
+
+    cy.openHarvester('1');
     cy.checkFields({
+      description: 'mCLOUD Excel Datei',
+      indexName: 'update_excel_harvester',
       defaultDCATCategory: 'Wirtschaft und Finanzen',
       defaultmCLOUDCategory: 'Klima und Wetter',
-      defaultAttribution: '7'
+      defaultAttribution: '7',
+      path: './data.xlsx'
     });
   });
 });

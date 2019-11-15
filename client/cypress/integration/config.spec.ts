@@ -25,7 +25,9 @@ function sendConfigToApi() {
 
 describe('configuration tab operations', () => {
   beforeEach(() => {
-    cy.apiLogin('admin', 'admin');
+    if (window.localStorage.getItem('currentUser') !== 'undefined') {
+      cy.apiLogin('admin', 'admin');
+    }
     cy.goToConfig();
   });
 
@@ -44,13 +46,10 @@ describe('configuration tab operations', () => {
     pressSaveButton();
     cy.reload();
 
-    //checks
+    //check values have been modified
     cy.get('[formcontrolname="elasticSearchUrl"]').should('have.value', 'http://localhost:9209');
     cy.get('[formcontrolname="alias"]').should('have.value', 'eman-saila');
     cy.get('[formcontrolname="proxy"]').should('have.value', 'yxorp');
-
-    sendConfigToApi();
-
   });
 
   it('should update elastic search-url, alias and proxy, reset to default and check the reset is successful', () => {
@@ -60,18 +59,20 @@ describe('configuration tab operations', () => {
 
     pressResetButton();
 
-    //checks
+    //check values have NOT been modified
     cy.get('[formcontrolname="elasticSearchUrl"]').should('have.value', 'http://localhost:9200');
     cy.get('[formcontrolname="alias"]').should('have.value', 'mcloud');
     cy.get('[formcontrolname="proxy"]').should('have.value', '');
   });
 
   it('should check that the save button is disabled if only spaces are inserted [INPUT CONTROL]', () => {
-    //no value
+    //no value in the url field
     cy.get('[formcontrolname="elasticSearchUrl"]').clear().type(' ');
     cy.get('[data-test="save"]').should('be.disabled');
 
     cy.get('[formcontrolname="elasticSearchUrl"]').clear().type('http://localhost:9200');
+
+    //no value in the alias field
     cy.get('[formcontrolname="alias"]').clear().type(' ');
     cy.get('[data-test="save"]').should('be.disabled');
 

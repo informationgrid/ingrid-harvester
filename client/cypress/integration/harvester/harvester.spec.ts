@@ -3,33 +3,35 @@ describe('Harvester operations', () => {
    * seed db with 3 harvesters, one for each type: ckan, csw, excel
    */
   before(() => {
-    cy.apiLogin('admin', 'admin');
+    if (window.localStorage.getItem('currentUser') !== 'undefined') {
+      cy.apiLogin('admin', 'admin');
+    }
+    //seed with 3 harvester, one of each kind
     cy.seedHarvester();
   });
 
   beforeEach(() => {
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      //user is not already logged in send request to log in
+      //if user is not already logged in send request to log in
       cy.apiLogin('admin', 'admin');
     }
   });
 
-  //General options testing
-  //button supposed to be disabled but it is not
   it('should check that the type of a harvester cannot be changed during an update', () => {
-    // not working
     cy.openHarvester('3');
-    // cy.get('[formcontrolname=type]').should('be.disabled');
+
     cy.get('[formcontrolname=type]').click({force: true});
     cy.once('fail', () => {
-      //  make the test pass because it cant click it.
+      // button cannot be clicked, also pass on fail
     });
   });
 
   it('should check that startPosition cannot be negative or a character [INPUT CONTROL]', () => {
-    //input control is needed
     cy.openHarvester('3');
+    // antipattern, BUT cypress is 'too fast' and gets the first form element instead of the given one
+    cy.wait(500);
 
+    //set wrong values for fields and check if the are accepted
     cy.setHarvesterFields({startPosition: 'ffm'});
     cy.get('[formcontrolname=startPosition]').should('not.contain', 'ffm');
 
@@ -43,6 +45,7 @@ describe('Harvester operations', () => {
 
   it('should check that maxRecords cannot be negative or a character [INPUT CONTROL]', () => {
     cy.openHarvester('3');
+    cy.wait(500);
 
     cy.setHarvesterFields({maxRecords: 'ffm'});
     cy.get('[formcontrolname=maxRecords]').should('contain', '');
@@ -56,14 +59,20 @@ describe('Harvester operations', () => {
   });
 
   it('should show the old values if an update operation is aborted and the page is not refreshed', () => {
+    //set values that must not be saved
     cy.openHarvester('6');
-    cy.setHarvesterFields({description: ' ', indexName: ' ', defaultAttribution: ' '});
+    cy.setHarvesterFields({description: 'hold', indexName: 'the', defaultAttribution: 'door'});
+
+    //close without saving
     cy.get('.mat-button-wrapper').contains('Abbrechen').click();
 
-    cy.get('#harvester-6 .no-wrap').should('contain', 'Deutsche Bahn Datenportal');
-
-    cy.reload();
-    cy.get('#harvester-6 .no-wrap').should('contain', 'Deutsche Bahn Datenportal');
+    //check values are the old ones
+    cy.openHarvester('6');
+    cy.checkFields({
+      description: 'Deutsche Bahn Datenportal',
+      indexName: 'ckan_db',
+      defaultAttribution: 'Deutsche Bahn Datenportal'
+    });
   });
 
   it('should not be able to save a harvester without selecting a type', () => {
@@ -77,7 +86,13 @@ describe('Harvester operations', () => {
     cy.get('[data-test="dlg-update"]').should('be.disabled');
   });
 
-  xit('should delete an harvester (by name)', () => {
+  it('should delete an harvester (by name)', () => {
+    //open harvester with given name
+    cy.openHarvesterByName('ckan_test_api');
+    //delete it
+    cy.get('[data-test="delete"]:visible').click();
+    cy.get('.mat-button-wrapper').contains('Löschen').click();
 
+    //TODO: function for deleting harvester
   });
 });

@@ -8,6 +8,7 @@ describe('Import cron pattern operations', () => {
   it('should plan an import, activate the auto-planning, check its execution and turn off the auto-planning', () => {
     cy.openScheduleHarvester("6");
 
+    //schedule import to: every minute
     cy.get('[data-test="cron-input"]').clear().type('* * * * *');
     cy.get('[data-test=dlg-schedule]').click();
 
@@ -15,9 +16,8 @@ describe('Import cron pattern operations', () => {
     cy.get('#harvester-6 [data-test=next-execution]').should('not.contain', 'wurde geändert');
     cy.get('#harvester-6 [data-test=next-execution]').should('not.contain', '');
 
-    //turn off pattern
+    //turn off schedule
     cy.openScheduleHarvester("6");
-    //press little x
     cy.get('[data-test=cron-reset]').click();
     cy.get('[data-test=dlg-schedule]').click();
   });
@@ -28,9 +28,11 @@ describe('Import cron pattern operations', () => {
     cy.get('[data-test="cron-input"]').clear().type('*');
     cy.get('[data-test=cron-reset]').click();
 
+    //next-execution is turned off
     cy.get(' .ng-star-inserted').should('contain', 'Planung ausschalten');
     cy.get('[data-test=dlg-schedule]').click();
 
+    //no next-execution should be planned
     cy.reload();
     cy.get('#harvester-20').click();
     cy.get('#harvester-20 [data-test=next-execution]').should('not.exist');
@@ -53,6 +55,8 @@ describe('Import cron pattern operations', () => {
     cy.get('.info > :nth-child(4) > span').should('contain', '30 4 1 * 0,6');
     cy.get('.info > :nth-child(4)').should('contain', 'Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So');
   });
+
+  xit('should not import if schedule is off', () => {});
 
   xit('should disable scheduling for a harvester', () => {
   });

@@ -10,13 +10,16 @@ describe('Import log operations', () => {
     cy.openAndImportHarvester("21");
     cy.openLog("21");
 
-    // cy.get('.logContainer').should('contain', 'Error occurred creating index');
-    cy.get('.mat-tab-label-content', {timeout:10000}).contains('Elasticsearch-Errors').click();
-    cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name');
+    //check error log
+    cy.get('.logContainer').should('contain', 'Error:');
+    //check elastic-search error log
+    // cy.get('.mat-tab-label-content', {timeout:10000}).contains('Elasticsearch-Errors').click();
+    // cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name');
   });
 
   it('should show no error in the logs after a successful import', () => {
     cy.openAndImportHarvester("7");
+
     cy.get('#harvester-7 [data-test=num-errors]', {timeout:10000}).scrollIntoView();
     cy.get('#harvester-7 [data-test=num-errors]').invoke('text').then((numErr) => {
       //no errors
@@ -34,7 +37,7 @@ describe('Import log operations', () => {
             cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
             cy.get('.logContainer').should('contain', '');
           }
-        })
+        });
       }
     });
   });
@@ -74,8 +77,8 @@ describe('Import log operations', () => {
     cy.openAndImportHarvester("1");
     cy.openLog("1");
 
-    cy.get('.logContainer').should('contain', 'Error reading excel workbook');
-    cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
-    cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name ');
+    cy.get('.logContainer').should('contain', 'Error reading excel workbook: Error: ');
+    // cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();
+    // cy.get('.logContainer').should('contain', '[invalid_index_name_exception] Invalid index name ');
   });
 });

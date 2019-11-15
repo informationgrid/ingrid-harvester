@@ -1,13 +1,12 @@
 describe('Ckan-Harvester operations', () => {
   beforeEach(() => {
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      //user is not already logged in send request to log in
       cy.apiLogin('admin', 'admin');
     }
   });
 
-  //CKAN Harvesters operations
   it('should add a harvester of type CKAN', () => {
+    //harvester is created and after a check on the fields deleted
     cy.addNewHarvester();
     cy.newCkanHarvester({
       description: 'Testing CKAN Harvester',
@@ -28,7 +27,6 @@ describe('Ckan-Harvester operations', () => {
     cy.get('.mat-button-wrapper').contains('Abbrechen').click();
     cy.get('[data-test="delete"]:visible').click();
     cy.get('.mat-button-wrapper').contains('Löschen').click();
-
   });
 
   it('should add a harvester of type CKAN with all options', () => {
@@ -80,8 +78,8 @@ describe('Ckan-Harvester operations', () => {
 
   it('should update an existing CKAN harvester', () => {
     cy.openHarvester('3');
-
     cy.setHarvesterFields({
+      description: '!Offene Daten Bonn: parameters wrong',
       indexName: 'updated_ckan',
       defaultAttribution: 'ffm',
       filterTag: 'ckan_test1',
@@ -90,14 +88,10 @@ describe('Ckan-Harvester operations', () => {
     });
     cy.updateHarvester();
 
-    //checks data was saved
     cy.openHarvester('3');
     cy.checkFields({
       indexName: 'updated_ckan',
       defaultAttribution: 'ffm',
-      // filterTag: 'ckan_test1',
-      // filterGroup: 'ckan_test1',
-      // dateFormat: 'YYYY-MM-DD',
       description: '!Offene Daten Bonn: parameters wrong',
       ckanBasisUrl: 'https://opendata.bonn.de',
       defaultDCATCategory: 'Regionen und Städte',
