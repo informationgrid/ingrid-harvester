@@ -19,7 +19,7 @@ describe('Log tab operations', () => {
     cy.importAll();
     cy.reload();
     cy.goToLog();
-    cy.get('.code').contains('[INFO] default - >> Running importer:');
+    cy.get('.code', {timeout: 3000}).contains('[INFO] default - >> Running importer:');
   });
 
 });

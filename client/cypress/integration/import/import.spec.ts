@@ -32,7 +32,7 @@ describe('Import operations', () => {
     cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
     cy.get('app-importer-detail').should('contain', ' Import läuft ');
 
-    //antipattern, BUT wait for import to finish, AVG time: <3 sec
+    //anti-pattern, BUT wait for import to finish, AVG time: <3 sec
     cy.wait(5000);
     cy.reload();
 
@@ -47,13 +47,11 @@ describe('Import operations', () => {
     cy.get('[data-test="cron-input"]').clear().type('30 4 1 * 0,6');
     cy.get('[data-test=dlg-schedule]').click();
 
+    cy.deactivateToggleBar('3');
     cy.get('#harvester-3 .mat-icon').should('contain', 'alarm_off');
+    cy.activateToggleBar('3');
     cy.get('#harvester-3 .mat-icon').should('contain', 'alarm_on');
-    
+
     cy.deactivateToggleBar('3');
   });
 });
-
-//TODO data-test attribute for following elements:
-// Field for inserting cron pattern
-//

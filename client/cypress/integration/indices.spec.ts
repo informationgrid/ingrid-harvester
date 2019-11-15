@@ -5,19 +5,6 @@ describe('Indices operations', () => {
     }
   });
 
-  it('should be able to click the slide toggle bar and check the right icon is shown if scheduling is on', () => {
-    // create a schedule for harvester
-    cy.openScheduleHarvester("3");
-    cy.get('[data-test="cron-input"]').clear().type('30 4 1 * 0,6');
-    cy.get('[data-test=dlg-schedule]').click();
-
-    cy.deactivateToggleBar('3');
-    cy.get('#harvester-3 .mat-icon').should('contain', 'alarm_off');
-
-    cy.activateToggleBar('3');
-    cy.get('#harvester-3 .mat-icon').should('contain', 'alarm_on');
-  });
-
   it('should not find an harvester whose search is not activated', () => {
     //if search is on, turn it off
     cy.deactivateToggleBar('3');
@@ -36,30 +23,13 @@ describe('Indices operations', () => {
     cy.get('.mat-line').invoke('text').should('contain', 'ckan_db');
   });
 
-  //harvester index must be clearer
-  xit('should not show indices of a deleted harvester', () => {
-    cy.openAndImportHarvester('36');
-    cy.goToIndices();
-    cy.wait(500);
-    cy.get('.mat-line').invoke('text').should('contain', 'testing_excel_index');
-
-    cy.goToHarvester();
-    cy.openHarvester('36');
-    cy.get('#harvester-36 [data-test="delete"]').click();
-    cy.get('.mat-button-wrapper').contains('Löschen').click();
-    cy.get('.mat-button-wrapper').contains('Abbrechen').click();
-    cy.wait(1000);
-
-    cy.goToIndices();
-    cy.wait(500);
-    cy.get('.mat-line').invoke('text').should('not.contain', 'testing_excel_indice');
-  });
-
   it('should show only one index per harvester', () => {
     cy.openAndImportHarvester('6');
-    cy.goToIndices();
-    cy.wait(500);
 
+    //wait for import to finish
+    cy.wait(5000);
+
+    cy.goToIndices();
     cy.get('.mat-line').then((allIndex) => {
       //remove index of given harvester
       const partialIndex = allIndex.text().replace('ckan_db', '');
@@ -68,7 +38,26 @@ describe('Indices operations', () => {
       });
   });
 
-  xit('should delete an index if its harvester is deleted', () => {
-  //  TODO: is it supposed to be like this ?
+  it('should delete an index if its harvester is deleted', () => {
+    cy.get('.no-wrap').contains('csw_test_api').click();
+    //import it to create index
+    cy.get('[data-test="import"]:visible').click();
+    //check index is created
+    cy.goToIndices();
+    cy.wait(500);
+    cy.reload();
+    cy.get('.mat-line').invoke('text').should('contain', 'csw_index');
+
+    //delete
+    cy.goToHarvester();
+    cy.get('.no-wrap').contains('csw_test_api').click();
+    cy.get('[data-test="delete"]:visible').click();
+    cy.get('.mat-button-wrapper').contains('Löschen').click();
+
+    cy.goToIndices();
+    cy.wait(500);
+    cy.reload();
+    //index should be deleted
+    cy.get('.mat-line').invoke('text').should('not.contain', 'csw_index');
   });
 });

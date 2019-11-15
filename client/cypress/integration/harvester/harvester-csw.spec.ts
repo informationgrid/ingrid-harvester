@@ -70,13 +70,14 @@ describe('Csw-Harvester operations', () => {
   });
 
   it('should update a harvester of type CSW', () => {
-    cy.openHarvester('14');
+    cy.openHarvesterByName('csw_test_api');
+
     //deselect categories for test state
     cy.deselectDCATCategory('Verkehr');
     cy.deselectMcloudCategory('Infrastruktur');
 
     cy.setHarvesterFields({
-      description: 'BFG',
+      description: 'csw_update',
       indexName: 'full_csw_indice',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
@@ -85,11 +86,11 @@ describe('Csw-Harvester operations', () => {
     cy.updateHarvester();
 
     cy.reload();
-    cy.openHarvester('14');
+    cy.openHarvesterByName('csw_test_api');
 
     //check fields
     cy.checkFields({
-      description: 'BFG',
+      description: 'csw_update',
       indexName: 'full_csw_indice',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',

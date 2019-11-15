@@ -56,12 +56,61 @@ describe('Import cron pattern operations', () => {
     cy.get('.info > :nth-child(4)').should('contain', 'Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So');
   });
 
-  xit('should not import if schedule is off', () => {});
+  it('should not import if schedule is off', () => {
+    cy.get('#harvester-6').click();
 
-  xit('should disable scheduling for a harvester', () => {
+    //no schedule is set
+    cy.get('#harvester-6 [data-test=next-execution]').should('contain', 'deaktiviert');
+
+    const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
+    const nextImport = Cypress.moment(importsDate).add(1, 'minute');
+    //check no import is executed during a minute
+    cy.get('#harvester-6 [data-test=last-execution]', {timeout: 60000}).should('not.contain', nextImport);
   });
 
+  it('should disable scheduling for a harvester', () => {
+    cy.openScheduleHarvester('6');
+
+    //by clearing the cron input
+    cy.get('[data-test="cron-input"]').clear();
+    cy.get('[data-test="dlg-schedule"]').click();
+    cy.get('[data-test="next-execution"]').should('contain', 'deaktiviert');
+
+    //set schedule
+    cy.openScheduleHarvester('6');
+    cy.get('[data-test="cron-input"]').clear().type('* * * * *');
+    cy.get('[data-test=dlg-schedule]').click();
+
+    //by pressing the reset button
+    cy.openScheduleHarvester('6');
+    cy.get('[data-test=cron-reset]').click();
+    cy.get('[data-test="next-execution"]').should('contain', 'deaktiviert');
+  });
+
+  it('should be able to click the slide toggle bar and check the right icon is shown if scheduling is on', () => {
+    // create a schedule for harvester
+    cy.openScheduleHarvester("3");
+    cy.get('[data-test="cron-input"]').clear().type('30 4 1 * 0,6');
+    cy.get('[data-test=dlg-schedule]').click();
+
+    cy.deactivateToggleBar('3');
+    cy.get('#harvester-3 .mat-icon').should('contain', 'alarm_off');
+
+    cy.activateToggleBar('3');
+    cy.get('#harvester-3 .mat-icon').should('contain', 'alarm_on');
+  });
+
+
   xit('should have a valid scheduling value if scheduling is active', () => {
+    //scheduling button is also used for search >> wait for clarification
+    cy.activateToggleBar('7');
+
+    cy.get('#harvester-7 .mat-icon').then((value) => {
+      if (value.text().includes('alarm_on')){
+        cy.openScheduleHarvester('7');
+        cy.get('[data-test="cron-input"]').should('not.contain', '');
+        }
+    });
   });
 
   xit('should activate a scheduled importer', () => {
