@@ -6,7 +6,7 @@ describe('Harvester operations', () => {
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
       cy.apiLogin('admin', 'admin');
     }
-    //seed with 3 harvester, one of each kind
+    // seed with 3 harvester, one of each kind
     cy.seedHarvester();
   });
 
@@ -88,11 +88,9 @@ describe('Harvester operations', () => {
 
   it('should delete an harvester (by name)', () => {
     //open harvester with given name
-    cy.openHarvesterByName('ckan_test_api');
+    cy.get('.no-wrap').contains('ckan_test_api').click();
     //delete it
     cy.get('[data-test="delete"]:visible').click();
     cy.get('.mat-button-wrapper').contains('Löschen').click();
-
-    //TODO: function for deleting harvester
   });
 });

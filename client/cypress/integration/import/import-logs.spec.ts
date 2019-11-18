@@ -54,6 +54,9 @@ describe('Import log operations', () => {
 
   it('should show an error in the harvester logs if the CKAN url is invalid', () => {
     cy.openHarvester('21');
+
+    cy.wait(500);
+
     cy.setHarvesterFields({indexName: 'ckan_test'});
     cy.updateHarvester();
 

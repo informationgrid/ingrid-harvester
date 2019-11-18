@@ -56,16 +56,31 @@ describe('Import cron pattern operations', () => {
     cy.get('.info > :nth-child(4)').should('contain', 'Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So');
   });
 
-  it('should not import if schedule is off', () => {
-    cy.get('#harvester-6').click();
+  it('should not import if the schedule is planned but off', () => {
+    //deactivate auto import
+    cy.openScheduleHarvester("6");
 
-    //no schedule is set
+    //schedule import to: every minute  | (every 10 sec 0/10 0 0 ? * * *)
+    cy.get('[data-test="cron-input"]').clear().type('* * * * *');
+    cy.get('[data-test=dlg-schedule]').click();
+
+    cy.wait(500);
+    cy.deactivateToggleBar('6');
+
+    //no schedule should be executed
     cy.get('#harvester-6 [data-test=next-execution]').should('contain', 'deaktiviert');
 
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    const nextImport = Cypress.moment(importsDate).add(1, 'minute');
+    const nextImport = Cypress.moment(importsDate, 'DD.MM.YY, HH:mm').add(1, 'minute').format('DD.MM.YY, HH:mm');
     //check no import is executed during a minute
-    cy.get('#harvester-6 [data-test=last-execution]', {timeout: 60000}).should('not.contain', nextImport);
+    cy.wait(60000);
+    cy.get('#harvester-6 [data-test=last-execution]').should('not.contain', nextImport);
+
+    //delete schedule
+    cy.openScheduleHarvester("6");
+    //schedule import to: every minute  | (every 10 sec 0/10 0 0 ? * * *)
+    cy.get('[data-test="cron-input"]').clear();
+    cy.get('[data-test=dlg-schedule]').click();
   });
 
   it('should disable scheduling for a harvester', () => {
@@ -113,10 +128,7 @@ describe('Import cron pattern operations', () => {
     });
   });
 
-  xit('should activate a scheduled importer', () => {
-  });
-
-  xit('should deactivate a scheduled importer', () => {
+  xit('should activate and deactivate a scheduled importer', () => {
   });
 
   xit('should not be able to activate a scheduled import without an active auto-scheduling', () => {

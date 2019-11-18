@@ -1,4 +1,11 @@
 describe('Excel-Harvester operations', () => {
+  before(() => {
+    if (window.localStorage.getItem('currentUser') !== 'undefined') {
+      cy.apiLogin('admin', 'admin');
+    }
+    cy.seedExcelHarvester();
+  });
+
   beforeEach(() => {
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
       cy.apiLogin('admin', 'admin');
@@ -59,29 +66,30 @@ describe('Excel-Harvester operations', () => {
   });
 
   it('should update a harvester of type Excel', () => {
-    cy.openHarvester('1');
+    cy.openHarvesterByName('excel_test_api');
     cy.deselectDCATCategory('Wirtschaft und Finanzen');
-    cy.deselectMcloudCategory('Klima und Wetter');
 
     cy.setHarvesterFields({
-      description: 'mCLOUD Excel Datei',
+      description: 'excel_update',
       indexName: 'update_excel_harvester',
       defaultDCATCategory: 'Wirtschaft und Finanzen',
-      defaultmCLOUDCategory: 'Klima und Wetter',
       defaultAttribution: '7'
     });
     cy.updateHarvester();
 
-    cy.reload();
-
-    cy.openHarvester('1');
     cy.checkFields({
-      description: 'mCLOUD Excel Datei',
+      description: 'excel_update',
       indexName: 'update_excel_harvester',
       defaultDCATCategory: 'Wirtschaft und Finanzen',
-      defaultmCLOUDCategory: 'Klima und Wetter',
+      defaultmCLOUDCategory: 'Bahn',
       defaultAttribution: '7',
-      path: './data.xlsx'
+      path: './data.xlsx',
+      startPosition: '1',
+      maxRecords: '50'
     });
+
+    //delete it
+    cy.reload();
+    cy.deleteHarvesterByName('excel_update');
   });
 });

@@ -32,7 +32,7 @@ describe('Import operations', () => {
     cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
     cy.get('app-importer-detail').should('contain', ' Import läuft ');
 
-    //anti-pattern, BUT wait for import to finish, AVG time: <3 sec
+    //wait for import to finish, AVG time: <3 sec
     cy.wait(5000);
     cy.reload();
 

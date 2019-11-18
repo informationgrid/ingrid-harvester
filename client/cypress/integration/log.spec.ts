@@ -12,14 +12,15 @@ describe('Log tab operations', () => {
     cy.goToLog();
     cy.reload();
     cy.get('.info').should('contain', '[INFO] default - Deutsche Bahn Datenportal (CKAN)');
-    cy.get('.code').should('contain', '[INFO] default - Number of records: 42');
+    cy.get('.info').should('contain', '[INFO] default - Number of records: 42');
   });
 
   it('should show information in the logs when all the harvester are imported', () => {
     cy.importAll();
-    cy.reload();
     cy.goToLog();
-    cy.get('.code', {timeout: 3000}).contains('[INFO] default - >> Running importer:');
+    cy.wait(5000);
+    cy.reload();
+    cy.get('.info', {timeout: 3000}).contains('[INFO] default - >> Running importer:');
   });
 
 });

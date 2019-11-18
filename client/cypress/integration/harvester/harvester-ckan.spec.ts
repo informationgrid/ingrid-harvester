@@ -1,4 +1,11 @@
 describe('Ckan-Harvester operations', () => {
+  before(() => {
+    if (window.localStorage.getItem('currentUser') !== 'undefined') {
+      cy.apiLogin('admin', 'admin');
+    }
+    cy.seedCkanHarvester();
+  });
+
   beforeEach(() => {
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
       cy.apiLogin('admin', 'admin');
@@ -77,9 +84,9 @@ describe('Ckan-Harvester operations', () => {
   });
 
   it('should update an existing CKAN harvester', () => {
-    cy.openHarvester('3');
+    cy.openHarvesterByName('ckan_test_api');
     cy.setHarvesterFields({
-      description: '!Offene Daten Bonn: parameters wrong',
+      description: 'ckan_updated',
       indexName: 'updated_ckan',
       defaultAttribution: 'ffm',
       filterTag: 'ckan_test1',
@@ -88,16 +95,20 @@ describe('Ckan-Harvester operations', () => {
     });
     cy.updateHarvester();
 
-    cy.openHarvester('3');
+    // cy.openHarvesterByName('ckan_updated');
     cy.checkFields({
       indexName: 'updated_ckan',
       defaultAttribution: 'ffm',
-      description: '!Offene Daten Bonn: parameters wrong',
-      ckanBasisUrl: 'https://opendata.bonn.de',
-      defaultDCATCategory: 'Regionen und Städte',
-      defaultmCLOUDCategory: 'Straßen',
-      maxRecords: '100',
-      startPosition: '0'
+      defaultAttributionLink: "attr_link",
+      ckanBasisUrl: './testme',
+      defaultDCATCategory: 'Bevölkerung und Gesellschaft',
+      defaultmCLOUDCategory: 'Bahn',
+      maxRecords: '50',
+      startPosition: '1'
     });
-  })
+
+    //delete it
+    cy.reload();
+    cy.deleteHarvesterByName('ckan_updated');
+  });
 });

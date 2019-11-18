@@ -66,6 +66,7 @@ describe('configuration tab operations', () => {
   });
 
   it('should check that the save button is disabled if only spaces are inserted [INPUT CONTROL]', () => {
+    cy.wait(500);
     //no value in the url field
     cy.get('[formcontrolname="elasticSearchUrl"]').clear().type(' ');
     cy.get('[data-test="save"]').should('be.disabled');

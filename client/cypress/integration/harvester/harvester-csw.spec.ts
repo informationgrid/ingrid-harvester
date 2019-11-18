@@ -1,4 +1,11 @@
 describe('Csw-Harvester operations', () => {
+  before(() => {
+    if (window.localStorage.getItem('currentUser') !== 'undefined') {
+      cy.apiLogin('admin', 'admin');
+    }
+    cy.seedCswHarvester();
+  });
+
   beforeEach(() => {
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
       cy.apiLogin('admin', 'admin');
@@ -85,9 +92,6 @@ describe('Csw-Harvester operations', () => {
     });
     cy.updateHarvester();
 
-    cy.reload();
-    cy.openHarvesterByName('csw_test_api');
-
     //check fields
     cy.checkFields({
       description: 'csw_update',
@@ -96,6 +100,10 @@ describe('Csw-Harvester operations', () => {
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'
     });
+
+    //delete it
+    cy.reload();
+    cy.deleteHarvesterByName('csw_update');
   });
 
   it('should successfully harvest after deleting an existing filter-label', () => {

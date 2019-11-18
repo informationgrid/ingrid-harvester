@@ -42,11 +42,15 @@ declare namespace Cypress {
      * import commands
      */
     importAll(): Chainable
+    deactivateSchedule(): Chainable
 
     /**
      * Help functions for harvesters operations
      */
     seedHarvester(): Chainable
+    seedCkanHarvester(): Chainable
+    seedCswHarvester(): Chainable
+    seedExcelHarvester(): Chainable
     addNewHarvester(): Chainable
     openHarvester(harvesterId: string): Chainable
     openHarvesterByName(harvesterName: string): Chainable
@@ -55,6 +59,7 @@ declare namespace Cypress {
     openAndImportHarvester(harvesterId: string): Chainable
     openScheduleHarvester(harvesterId: string): Chainable
     openLog(harvesterId: string): Chainable
+    deleteHarvesterByName(harvesterName: string): Chainable
 
     /**
      * check if the given options have the same values as the ones set in the harvester

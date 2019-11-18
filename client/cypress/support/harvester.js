@@ -282,7 +282,7 @@ function seedCkanHarvester() {
       "disable": true,
       "type": "CKAN",
       "description": "ckan_test_api",
-      "ckanBasisUrl": "ckan_basis_url",
+      "ckanBaseUrl": "./testme",
       "index": "ckan_index",
       "defaultDCATCategory": ["SOCI"],
       "defaultMcloudSubgroup": ["railway"],
@@ -388,6 +388,30 @@ Cypress.Commands.add('seedHarvester', () => {
   });
 });
 
+Cypress.Commands.add('seedCkanHarvester', () => {
+  seedCkanHarvester();
+  cy.request({
+    method: 'GET',
+    url: 'rest/api/harvester'
+  });
+});
+
+Cypress.Commands.add('seedCswHarvester', () => {
+  seedCswHarvester();
+  cy.request({
+    method: 'GET',
+    url: 'rest/api/harvester'
+  });
+});
+
+Cypress.Commands.add('seedExcelHarvester', () => {
+  seedExcelHarvester();
+  cy.request({
+    method: 'GET',
+    url: 'rest/api/harvester'
+  });
+});
+
 /**
  * create a new harvester of given type
  */
@@ -450,24 +474,6 @@ Cypress.Commands.add("updateHarvester", () => {
 });
 
 /**
- * open harvester and start import process
- * @param harvesterId
- */
-Cypress.Commands.add("openAndImportHarvester", (harvesterId) => {
-  cy.get('#harvester-' + harvesterId).click();
-  cy.get('#harvester-' + harvesterId + ' [data-test="import"]').click();
-});
-
-/**
- * open harvester and schedule page
- * @param harvesterId
- */
-Cypress.Commands.add("openScheduleHarvester", (harvesterId) => {
-  cy.get('#harvester-' + harvesterId).click();
-  cy.get('#harvester-' + harvesterId + ' [data-test="schedule"]').click();
-});
-
-/**
  * ONLY open log page of a harvester, an harvester should already be opened
  * @param harvesterId
  */
@@ -476,23 +482,10 @@ Cypress.Commands.add("openLog", (harvesterId) => {
 });
 
 /**
- * activate search and scheduling of the given harvester
+ * delete harvester by name
  */
-Cypress.Commands.add('activateToggleBar', (harvesterId) => {
-  cy.get('#harvester-' + harvesterId + ' .mat-icon').then((value) => {
-    if (value.text().includes('alarm_off')) {
-      cy.get('#harvester-' + harvesterId + ' .mat-slide-toggle-bar').click({force: true});
-    }
-  });
-});
-
-/**
- * deactivate toggle bar
- */
-Cypress.Commands.add('deactivateToggleBar', (harvesterId) => {
-  cy.get('#harvester-' + harvesterId + ' .mat-icon').then((value) => {
-    if (value.text().includes('alarm_on')) {
-      cy.get('#harvester-3 .mat-slide-toggle-bar').click({force: true});
-    }
-  });
+Cypress.Commands.add('deleteHarvesterByName', (harvesterName) => {
+  cy.get('.no-wrap').contains(harvesterName).click();
+  cy.get('[data-test="delete"]:visible').click();
+  cy.get('.mat-button-wrapper').contains('Löschen').click();
 });

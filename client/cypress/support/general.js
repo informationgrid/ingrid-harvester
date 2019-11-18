@@ -71,4 +71,3 @@ Cypress.Commands.add("goToLog", () => {
 Cypress.Commands.add("goToIndices", () => {
   cy.get('[data-test=menu-indices]').click();
 });
-
