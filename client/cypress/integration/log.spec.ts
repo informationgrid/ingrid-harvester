@@ -1,4 +1,7 @@
 describe('Log tab operations', () => {
+  let Constants = require("../support/constants");
+  const constants = new Constants();
+
   beforeEach(() => {
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
       cy.apiLogin('admin', 'admin');
@@ -6,10 +9,10 @@ describe('Log tab operations', () => {
   });
 
   it('should show the right information in the logs after a single harvester is imported', () => {
-    //opens "Deutsche Bahn Datenportal"
-    cy.openAndImportHarvester("6");
+    cy.openAndImportHarvester(constants.CKAN_DB_ID);
 
     cy.goToLog();
+    cy.wait(3000);
     cy.reload();
     cy.get('.info').should('contain', '[INFO] default - Deutsche Bahn Datenportal (CKAN)');
     cy.get('.info').should('contain', '[INFO] default - Number of records: 42');
@@ -18,9 +21,9 @@ describe('Log tab operations', () => {
   it('should show information in the logs when all the harvester are imported', () => {
     cy.importAll();
     cy.goToLog();
-    cy.wait(5000);
+    cy.wait(7000);
     cy.reload();
-    cy.get('.info', {timeout: 3000}).contains('[INFO] default - >> Running importer:');
+    cy.get('.info').contains('[INFO] default - >> Running importer:');
   });
 
 });

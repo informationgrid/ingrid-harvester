@@ -1,4 +1,7 @@
 describe('Indices operations', () => {
+  let Constants = require("../support/constants");
+  const constants = new Constants();
+
   beforeEach(() => {
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
       cy.apiLogin('admin', 'admin');
@@ -7,16 +10,16 @@ describe('Indices operations', () => {
 
   it('should not find an harvester whose search is not activated', () => {
     //if search is on, turn it off
-    cy.deactivateToggleBar('3');
+    cy.deactivateToggleBar(constants.CKAN_TEST_ID);
 
     cy.reload();
     cy.goToIndices();
-    cy.get('.mat-line').invoke('text').should('not.contain', 'ckan_index');
+    cy.get('.mat-line').invoke('text').should('not.contain', 'ckan_test');
   });
 
   it('should find an harvester whose search is activated', () => {
-    cy.activateToggleBar('6');
-    cy.openAndImportHarvester('6');
+    cy.activateToggleBar(constants.CKAN_DB_ID);
+    cy.openAndImportHarvester(constants.CKAN_DB_ID);
 
     cy.goToIndices();
     cy.wait(500);
@@ -24,7 +27,7 @@ describe('Indices operations', () => {
   });
 
   it('should show only one index per harvester', () => {
-    cy.openAndImportHarvester('6');
+    cy.openAndImportHarvester(constants.CKAN_DB_ID);
 
     //wait for import to finish
     cy.wait(5000);

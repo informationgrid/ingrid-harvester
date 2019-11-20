@@ -39,6 +39,7 @@ describe('configuration tab operations', () => {
   });
 
   it('should update the elastic search-url, the alias and proxy values, save and check the saved data', () => {
+    cy.wait(500);
     cy.get('[formcontrolname="elasticSearchUrl"]').clear().type('http://localhost:9209');
     cy.get('[formcontrolname="alias"]').clear().type('eman-saila');
     cy.get('[formcontrolname="proxy"]').clear().type('yxorp');

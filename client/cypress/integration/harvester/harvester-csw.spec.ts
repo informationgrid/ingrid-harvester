@@ -1,4 +1,7 @@
 describe('Csw-Harvester operations', () => {
+  let Constants = require("../../support/constants");
+  const constants = new Constants();
+
   before(() => {
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
       cy.apiLogin('admin', 'admin');
@@ -107,12 +110,12 @@ describe('Csw-Harvester operations', () => {
   });
 
   it('should successfully harvest after deleting an existing filter-label', () => {
-    cy.openHarvester('16'); // CODEDE harvester
+    cy.openHarvester(constants.CSW_CODEDE_ID); // CODEDE harvester
     cy.wait(500);
 
     cy.get('[formcontrolname="recordFilter"]').clear();
     cy.updateHarvester();
-    cy.openAndImportHarvester("16");
+    cy.openAndImportHarvester(constants.CSW_CODEDE_ID);
 
     //import started
     cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
@@ -120,6 +123,6 @@ describe('Csw-Harvester operations', () => {
 
     //import is successful
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    cy.get('#harvester-16 [data-test=last-execution]', {timeout: 15000}).should('contain', importsDate)
+    cy.get('#harvester-' + constants.CSW_CODEDE_ID +' [data-test=last-execution]', {timeout: 15000}).should('contain', importsDate)
   });
 });

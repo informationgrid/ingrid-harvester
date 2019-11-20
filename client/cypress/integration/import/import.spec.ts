@@ -1,4 +1,7 @@
 describe('Import operations', () => {
+  let Constants = require("../../support/constants");
+  const constants = new Constants();
+
   beforeEach(() => {
     if (!(window.localStorage.getItem('currentUser'))) {
       cy.apiLogin('admin', 'admin');
@@ -6,7 +9,7 @@ describe('Import operations', () => {
   });
 
   it('should open a harvester, start an import and check it is successful', () => {
-    cy.openAndImportHarvester("6");
+    cy.openAndImportHarvester(constants.CKAN_DB_ID);
 
     //import should be executing
     cy.get('.mat-simple-snackbar', {timeout: 3000}).should('contain', 'Import gestartet');
@@ -16,8 +19,8 @@ describe('Import operations', () => {
 
     //check import is successful
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    cy.get('#harvester-6').click();
-    cy.get('#harvester-6 [data-test=last-execution]').should('contain', importsDate);
+    cy.get('#harvester-' + constants.CKAN_DB_ID).click();
+    cy.get('#harvester-' + constants.CKAN_DB_ID + ' [data-test=last-execution]').should('contain', importsDate);
   });
 
   it('should import all harvesters at once and check a message is shown', () => {
@@ -27,7 +30,7 @@ describe('Import operations', () => {
 
   it('should show last import info of an harvester after page refresh', () => {
     //harvester: Deutsche Bahn Datenportal
-    cy.openAndImportHarvester("6");
+    cy.openAndImportHarvester(constants.CKAN_DB_ID);
 
     cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
     cy.get('app-importer-detail').should('contain', ' Import läuft ');
@@ -38,20 +41,20 @@ describe('Import operations', () => {
 
     //import is successful
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    cy.get('#harvester-6 [data-test=last-execution]').should('contain', importsDate)
+    cy.get('#harvester-' + constants.CKAN_DB_ID + ' [data-test=last-execution]').should('contain', importsDate)
   });
 
   it('should show an icon if a harvester has an import schedule', () => {
     //set schedule
-    cy.openScheduleHarvester("3");
+    cy.openScheduleHarvester(constants.CKAN_TEST_ID);
     cy.get('[data-test="cron-input"]').clear().type('30 4 1 * 0,6');
     cy.get('[data-test=dlg-schedule]').click();
 
-    cy.deactivateToggleBar('3');
-    cy.get('#harvester-3 .mat-icon').should('contain', 'alarm_off');
-    cy.activateToggleBar('3');
-    cy.get('#harvester-3 .mat-icon').should('contain', 'alarm_on');
+    cy.deactivateToggleBar(constants.CKAN_TEST_ID);
+    cy.get('#harvester-' + constants.CKAN_TEST_ID + ' .mat-icon').should('contain', 'alarm_off');
+    cy.activateToggleBar(constants.CKAN_TEST_ID);
+    cy.get('#harvester-' + constants.CKAN_TEST_ID + ' .mat-icon').should('contain', 'alarm_on');
 
-    cy.deactivateToggleBar('3');
+    cy.deactivateToggleBar(constants.CKAN_TEST_ID);
   });
 });
