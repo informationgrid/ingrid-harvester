@@ -129,8 +129,10 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-      this.harvesterService.updateHarvester(result).subscribe(() => this.fetchHarvester());
+      if (result) {
+        console.log('The dialog was closed', result);
+        this.harvesterService.updateHarvester(result).subscribe(() => this.fetchHarvester());
+      }
     });
   }
 

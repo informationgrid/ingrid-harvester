@@ -85,7 +85,13 @@ export class ConfigService {
             updatedHarvester.id = ++ConfigService.highestID;
             newConfig.push(updatedHarvester);
         } else {
-            newConfig = newConfig.map(harvester => harvester.id === updatedHarvester.id ? updatedHarvester : harvester);
+            const itemIndex = newConfig.findIndex(harvester => harvester.id === updatedHarvester.id);
+            if (itemIndex === -1) {
+                log.warn('ID was not found for harvester. Creating new harvester with given ID: ' + updatedHarvester.id);
+                newConfig.push(updatedHarvester);
+            } else {
+                newConfig.splice(itemIndex, 1, updatedHarvester);
+            }
         }
 
         fs.writeFileSync(this.HARVESTER_CONFIG_FILE, JSON.stringify(newConfig, null, 2));
