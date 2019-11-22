@@ -1,9 +1,6 @@
 describe('Logout', () => {
   beforeEach(() => {
-    if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      cy.apiLogin('admin', 'admin');
-    }
-    cy.url().should('include', '/harvester');
+    cy.apiLoginUserCheck();
   });
 
   it('should log out successfully, show the login page and check the log out message', () => {

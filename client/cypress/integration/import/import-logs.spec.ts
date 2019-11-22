@@ -80,7 +80,7 @@ describe('Import log operations', () => {
 
   it('should show an error in the harvester logs if the Excel path is not valid', () => {
     cy.openAndImportHarvester(constants.EXCEL_TEST_ID);
-    cy.openLog("constants.EXCEL_TEST_ID");
+    cy.openLog(constants.EXCEL_TEST_ID);
 
     cy.get('.logContainer').should('contain', 'Error reading excel workbook: Error: ');
     // cy.get('.mat-tab-label-content').contains('Elasticsearch-Errors').click();

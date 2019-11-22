@@ -2,22 +2,8 @@ describe('Harvester operations', () => {
   let Constants = require("../../support/constants");
   const constants = new Constants();
 
-  /**
-   * seed db with 3 harvesters, one for each type: ckan, csw, excel
-   */
-  before(() => {
-    if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      cy.apiLogin('admin', 'admin');
-    }
-    // seed with 3 harvester, one of each kind
-    cy.seedHarvester();
-  });
-
   beforeEach(() => {
-    if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      //if user is not already logged in send request to log in
-      cy.apiLogin('admin', 'admin');
-    }
+    cy.apiLoginUserCheck();
   });
 
   it('should check that the type of a harvester cannot be changed during an update', () => {

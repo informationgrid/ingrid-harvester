@@ -25,10 +25,7 @@ function sendConfigToApi() {
 
 describe('configuration tab operations', () => {
   beforeEach(() => {
-    if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      cy.apiLogin('admin', 'admin');
-    }
-    cy.goToConfig();
+    cy.apiLoginUserCheck();
   });
 
   /**

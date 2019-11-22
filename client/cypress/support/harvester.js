@@ -190,7 +190,6 @@ function setExcelPath(path) {
  * field-check of an harvester
  */
 function checkFields(options) {
-
   if (options.description) {
     cy.get('[formcontrolname="description"]').should('have.value', options.description);
   }

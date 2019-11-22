@@ -3,9 +3,7 @@ describe('Indices operations', () => {
   const constants = new Constants();
 
   beforeEach(() => {
-    if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      cy.apiLogin('admin', 'admin');
-    }
+    cy.apiLoginUserCheck();
   });
 
   it('should not find an harvester whose search is not activated', () => {

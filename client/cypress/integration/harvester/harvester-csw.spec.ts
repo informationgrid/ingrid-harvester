@@ -2,17 +2,8 @@ describe('Csw-Harvester operations', () => {
   let Constants = require("../../support/constants");
   const constants = new Constants();
 
-  before(() => {
-    if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      cy.apiLogin('admin', 'admin');
-    }
-    cy.seedCswHarvester();
-  });
-
   beforeEach(() => {
-    if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      cy.apiLogin('admin', 'admin');
-    }
+    cy.apiLoginUserCheck();
   });
 
   it('should add a harvester of type CSW', () => {

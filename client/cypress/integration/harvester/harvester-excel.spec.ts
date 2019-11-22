@@ -1,15 +1,6 @@
 describe('Excel-Harvester operations', () => {
-  before(() => {
-    if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      cy.apiLogin('admin', 'admin');
-    }
-    cy.seedExcelHarvester();
-  });
-
   beforeEach(() => {
-    if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      cy.apiLogin('admin', 'admin');
-    }
+    cy.apiLoginUserCheck();
   });
 
   it('should add a harvester of type EXCEL', () => {

@@ -7,6 +7,7 @@ declare namespace Cypress {
      */
     guiLogin(username: string, password: string): Chainable
     apiLogin(): Chainable
+    apiLoginUserCheck(): Chainable
     // @DEPRECATED
     apiLogin(username: string, password: string): Chainable
 

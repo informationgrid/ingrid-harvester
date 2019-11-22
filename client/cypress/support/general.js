@@ -48,26 +48,42 @@ Cypress.Commands.add("apiLogout", () => {
 });
 
 /**
- * change to configuration page
+ * go to configuration page
  */
 Cypress.Commands.add("goToConfig", () => {
   cy.get('[data-test=menu-config]').click();
 });
 
 /**
- * change to harvester page
+ * go to harvester page
  */
 Cypress.Commands.add("goToHarvester", () => {
   cy.get('[data-test=menu-harvester]').click();
 });
 
 /**
- * change to log page
+ * go to log page
  */
 Cypress.Commands.add("goToLog", () => {
   cy.get('[data-test=menu-log]').click();
 });
 
+/**
+ * go to indices page
+ */
 Cypress.Commands.add("goToIndices", () => {
   cy.get('[data-test=menu-indices]').click();
+});
+
+/**
+ * if the user is not already logged in (currentUser in localStorage is checked)
+ * then log in
+ */
+Cypress.Commands.add('apiLoginUserCheck',() => {
+  //check user is set
+  if (window.localStorage.getItem('currentUser') !== 'undefined') {
+    cy.apiLogin();
+  }
+  //log in is successful
+  cy.url().should('include', '/harvester');
 });

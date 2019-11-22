@@ -3,9 +3,7 @@ describe('Log tab operations', () => {
   const constants = new Constants();
 
   beforeEach(() => {
-    if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      cy.apiLogin('admin', 'admin');
-    }
+    cy.apiLoginUserCheck();
   });
 
   it('should show the right information in the logs after a single harvester is imported', () => {
