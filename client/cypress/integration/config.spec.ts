@@ -1,104 +1,77 @@
-/**
- * press save button
- */
-function pressSaveButton() {
-  cy.get('[data-test=save]').click();
-}
-
-/**
- * press reset button
- */
-function pressResetButton() {
-  cy.get('[data-test=reset]').contains('Zurücksetzen').click();
-}
-
-function sendConfigToApi() {
-  cy.request({
-    method: 'POST',
-    url: 'rest/api/config/general',
-    body: {"elasticSearchUrl":"http://localhost:9200",
-      "alias":"mcloud",
-      "proxy":"",
-      "sessionSecret":"mysecretkey"}
-  });
-  }
 
 describe('configuration tab operations', () => {
+  const ConfigurationPage = require("../support/pageObjects/configuration");
+  const configPage = new ConfigurationPage();
+
   beforeEach(() => {
     cy.apiLoginUserCheck();
+    configPage.visit();
   });
 
   /**
    * clean up after the tests'
    */
   afterEach(() => {
-    sendConfigToApi();
+    configPage.resetConfigApi();
   });
 
   it('should update the elastic search-url, the alias and proxy values, save and check the saved data', () => {
-    cy.wait(500);
-    cy.get('[formcontrolname="elasticSearchUrl"]').clear().type('http://localhost:9209');
-    cy.get('[formcontrolname="alias"]').clear().type('eman-saila');
-    cy.get('[formcontrolname="proxy"]').clear().type('yxorp');
+    configPage.wait(500);
 
-    pressSaveButton();
-    cy.reload();
+    configPage.setElasticSearchUrl('http://localhost:9209');
+    configPage.setAlias('eman-saila');
+    configPage.setProxy('yxorp');
 
-    //check values have been modified
-    cy.get('[formcontrolname="elasticSearchUrl"]').should('have.value', 'http://localhost:9209');
-    cy.get('[formcontrolname="alias"]').should('have.value', 'eman-saila');
-    cy.get('[formcontrolname="proxy"]').should('have.value', 'yxorp');
+    configPage.saveConfig();
+
+    configPage.reload();
+
+    configPage.checkElasticSearchUrl('http://localhost:9209');
+    configPage.checkAlias('eman-saila');
+    configPage.checkProxy('yxorp');
   });
 
   it('should update elastic search-url, alias and proxy, reset to default and check the reset is successful', () => {
-    cy.get('[formcontrolname="elasticSearchUrl"]').clear().type('http://localhost:92000000');
-    cy.get('[formcontrolname="alias"]').clear().type('eman-saila');
-    cy.get('[formcontrolname="proxy"]').clear().type('yxorp');
+    configPage.setElasticSearchUrl('http://localhost:92000000');
+    configPage.setAlias('eman-saila');
+    configPage.setProxy('yxorp');
 
-    pressResetButton();
+    configPage.resetConfig();
 
-    //check values have NOT been modified
-    cy.get('[formcontrolname="elasticSearchUrl"]').should('have.value', 'http://localhost:9200');
-    cy.get('[formcontrolname="alias"]').should('have.value', 'mcloud');
-    cy.get('[formcontrolname="proxy"]').should('have.value', '');
+    //values have NOT been modified
+    configPage.checkElasticSearchUrl('http://localhost:9200');
+    configPage.checkAlias('mcloud');
+    configPage.checkProxy('');
   });
 
   it('should check that the save button is disabled if only spaces are inserted [INPUT CONTROL]', () => {
-    cy.wait(500);
+    configPage.wait(500);
     //no value in the url field
-    cy.get('[formcontrolname="elasticSearchUrl"]').clear().type(' ');
-    cy.get('[data-test="save"]').should('be.disabled');
+    configPage.setElasticSearchUrl('http://localhost:92000000');
+    configPage.saveButtonIsDisabled();
 
-    cy.get('[formcontrolname="elasticSearchUrl"]').clear().type('http://localhost:9200');
+    configPage.resetConfig();
 
     //no value in the alias field
-    cy.get('[formcontrolname="alias"]').clear().type(' ');
-    cy.get('[data-test="save"]').should('be.disabled');
-
-    cy.get('[formcontrolname="alias"]').clear().type('mcloud');
-    cy.get('[data-test="save"]').should('be.enabled');
+    configPage.setAlias(' ');
+    configPage.saveButtonIsDisabled();
   });
 
   it('should check that the save button is disabled if wrong port values are inserted [INPUT CONTROL]', () => {
-    //no value
-    cy.get('[formcontrolname="elasticSearchUrl"]').clear();
-    cy.get('[data-test="save"]').should('be.disabled');
-
     //value is too big
-    cy.get('[formcontrolname="elasticSearchUrl"]').clear().type('http://localhost:92000000');
-    cy.get('[data-test="save"]').should('be.disabled');
+    configPage.setElasticSearchUrl('http://localhost:92000000');
+    configPage.saveButtonIsDisabled();
 
     //value is NaN
-    cy.get('[formcontrolname="elasticSearchUrl"]').clear().type('http://localhost:porttout');
-    cy.get('[data-test="save"]').should('be.disabled');
+    configPage.setElasticSearchUrl('http://localhost:porttout');
+    configPage.saveButtonIsDisabled();
 
     //value is negative
-    cy.get('[formcontrolname="elasticSearchUrl"]').clear().type('http://localhost:-42');
-    cy.get('[data-test="save"]').should('be.disabled');
+    configPage.setElasticSearchUrl('http://localhost:-42');
+    configPage.saveButtonIsDisabled();
   });
 
   it('should export the harvester configuration if the right request in made', () => {
-    cy.goToConfig();
     cy.request({
       headers: {accept: 'application/json, text/plain, */*', referer: '/config'},
       method: 'GET',

@@ -1,6 +1,7 @@
 describe('Excel-Harvester operations', () => {
   beforeEach(() => {
     cy.apiLoginUserCheck();
+    cy.seedExcelHarvester();
   });
 
   it('should add a harvester of type EXCEL', () => {
@@ -21,9 +22,8 @@ describe('Excel-Harvester operations', () => {
       path: './data.xlsx'
     });
 
-    cy.get('.mat-button-wrapper').contains('Abbrechen').click();
-    cy.get('[data-test="delete"]:visible').click();
-    cy.get('.mat-button-wrapper').contains('Löschen').click();
+    cy.reload();
+    cy.deleteHarvesterByName('Excel partial opts Harvester');
   });
 
   it('should add a new harvester of type Excel with all options', () => {
@@ -50,10 +50,8 @@ describe('Excel-Harvester operations', () => {
       defaultAttributionLink: '23'
     });
 
-    //delete the harvester
-    cy.get('.mat-button-wrapper').contains('Abbrechen').click();
-    cy.get('[data-test="delete"]:visible').click();
-    cy.get('.mat-button-wrapper').contains('Löschen').click();
+    cy.reload();
+    cy.deleteHarvesterByName('Excel full opts Harvester');
   });
 
   it('should update a harvester of type Excel', () => {
@@ -79,7 +77,6 @@ describe('Excel-Harvester operations', () => {
       maxRecords: '50'
     });
 
-    //delete it
     cy.reload();
     cy.deleteHarvesterByName('excel_update');
   });

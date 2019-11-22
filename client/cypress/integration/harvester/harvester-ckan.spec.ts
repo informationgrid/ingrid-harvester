@@ -1,6 +1,7 @@
 describe('Ckan-Harvester operations', () => {
   beforeEach(() => {
     cy.apiLoginUserCheck();
+    cy.seedCkanHarvester();
   });
 
   it('should add a harvester of type CKAN', () => {
@@ -21,10 +22,8 @@ describe('Ckan-Harvester operations', () => {
       ckanBasisUrl: 'testme'
     });
 
-    //delete the harvester
-    cy.get('.mat-button-wrapper').contains('Abbrechen').click();
-    cy.get('[data-test="delete"]:visible').click();
-    cy.get('.mat-button-wrapper').contains('Löschen').click();
+    cy.reload();
+    cy.deleteHarvesterByName('Testing CKAN Harvester');
   });
 
   it('should add a harvester of type CKAN with all options', () => {
@@ -68,10 +67,8 @@ describe('Ckan-Harvester operations', () => {
       licenseUrl: 'wwwdedede'
     });
 
-    //delete the harvester
-    cy.get('.mat-button-wrapper').contains('Abbrechen').click();
-    cy.get('[data-test="delete"]:visible').click();
-    cy.get('.mat-button-wrapper').contains('Löschen').click();
+    cy.reload();
+    cy.deleteHarvesterByName('Testing full CKAN Harvester');
   });
 
   it('should update an existing CKAN harvester', () => {

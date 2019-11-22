@@ -4,6 +4,7 @@ describe('Csw-Harvester operations', () => {
 
   beforeEach(() => {
     cy.apiLoginUserCheck();
+    cy.seedCswHarvester()
   });
 
   it('should add a harvester of type CSW', () => {
@@ -26,9 +27,8 @@ describe('Csw-Harvester operations', () => {
       getRecordsUrl: './testme'
     });
 
-    cy.get('.mat-button-wrapper').contains('Abbrechen').click();
-    cy.get('[data-test="delete"]:visible').click();
-    cy.get('.mat-button-wrapper').contains('Löschen').click();
+    cy.reload();
+    cy.deleteHarvesterByName('Testing partial CSW Harvester');
   });
 
   it('should add a new harvester of type CSW with all options', () => {
@@ -65,9 +65,8 @@ describe('Csw-Harvester operations', () => {
       startPosition: '0'
     });
 
-    cy.get('.mat-button-wrapper').contains('Abbrechen').click();
-    cy.get('[data-test="delete"]:visible').click();
-    cy.get('.mat-button-wrapper').contains('Löschen').click();
+    cy.reload();
+    cy.deleteHarvesterByName('Testing CSW Harvester');
   });
 
   it('should update a harvester of type CSW', () => {
@@ -86,7 +85,6 @@ describe('Csw-Harvester operations', () => {
     });
     cy.updateHarvester();
 
-    //check fields
     cy.checkFields({
       description: 'csw_update',
       indexName: 'full_csw_indice',
@@ -95,7 +93,6 @@ describe('Csw-Harvester operations', () => {
       defaultAttribution: 'ffm'
     });
 
-    //delete it
     cy.reload();
     cy.deleteHarvesterByName('csw_update');
   });

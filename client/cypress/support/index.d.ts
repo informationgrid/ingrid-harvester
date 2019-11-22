@@ -83,7 +83,7 @@ declare namespace Cypress {
 }
 
 /**
- * common options for all types of harvesters
+ * options for all harvesters
  */
 interface HarvesterOptions {
   path?: string; //excel

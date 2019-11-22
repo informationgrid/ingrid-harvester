@@ -16,6 +16,7 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
+import './authentication';
 import './general';
 import './harvester';
 import './import';
