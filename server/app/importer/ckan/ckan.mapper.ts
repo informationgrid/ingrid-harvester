@@ -59,6 +59,12 @@ export class CkanMapper extends GenericMapper {
 
     async getDisplayContacts() {
 
+        let maintainer = this.getMaintainer();
+
+        if (maintainer) {
+            return [maintainer];
+        }
+
         let publisher = await this.getPublisher();
 
         let contact: Person;
@@ -162,6 +168,18 @@ export class CkanMapper extends GenericMapper {
         }
 
         return publisher ? [publisher] : [];
+    }
+
+    private getMaintainer(): Person {
+        let maintainer: Person;
+        if (this.source.maintainer) {
+            maintainer = {
+                name: this.source.maintainer,
+                mbox: this.source.maintainer_email
+            };
+        }
+
+        return maintainer;
     }
 
     getTemporal(): DateRange {
