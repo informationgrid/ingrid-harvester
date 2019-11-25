@@ -21,6 +21,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {ReactiveFormsModule} from '@angular/forms';
+import { ChipListComponent } from './dialog-edit/chip-list/chip-list.component';
 
 const harvesterRoutes: Routes = [
   {
@@ -38,7 +39,8 @@ const harvesterRoutes: Routes = [
     ExcelHarvesterComponent,
     CkanHarvesterComponent,
     CswHarvesterComponent,
-    ImporterDetailComponent
+    ImporterDetailComponent,
+    ChipListComponent
   ],
     imports: [
         CommonModule,

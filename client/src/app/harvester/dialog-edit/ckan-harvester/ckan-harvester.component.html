@@ -4,52 +4,19 @@
   </mat-form-field>
 
   <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-    <mat-form-field fxFlex="50">
-      <mat-chip-list #chipListTags>
-        <mat-chip *ngFor="let tag of model.filterTags" [selectable]="false"
-                  [removable]="true" (removed)="remove('filterTags', tag)">
-          {{tag}}
-          <mat-icon matChipRemove>cancel</mat-icon>
-        </mat-chip>
-        <input placeholder="Filter Tags"
-               [matChipInputFor]="chipListTags"
-               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-               [matChipInputAddOnBlur]="true"
-               (matChipInputTokenEnd)="add('filterTags', $event)">
-      </mat-chip-list>
-    </mat-form-field>
+    <app-chip-list [list]="model.filterTags"
+                   placeholder="Filter Tags"
+                   (update)="model.filterTags = $event"></app-chip-list>
 
-    <mat-form-field fxFlex>
-      <mat-chip-list #chipListGroups>
-        <mat-chip *ngFor="let group of model.filterGroups" [selectable]="false"
-                  [removable]="true" (removed)="remove('filterGroups', group)">
-          {{group}}
-          <mat-icon matChipRemove>cancel</mat-icon>
-        </mat-chip>
-        <input placeholder="Filter Groups"
-               [matChipInputFor]="chipListGroups"
-               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-               [matChipInputAddOnBlur]="true"
-               (matChipInputTokenEnd)="add('filterGroups', $event)">
-      </mat-chip-list>
-    </mat-form-field>
 
+    <app-chip-list [list]="model.filterGroups"
+                   placeholder="Filter Groups"
+                   (update)="model.filterGroups = $event"></app-chip-list>
   </div>
 
-  <mat-form-field fxFlex>
-    <mat-chip-list #chipListDateFormats>
-      <mat-chip *ngFor="let format of model.dateSourceFormats" [selectable]="false"
-                [removable]="true" (removed)="remove('dateSourceFormats', format)">
-        {{format}}
-        <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
-      <input placeholder="Datumsformate"
-             [matChipInputFor]="chipListDateFormats"
-             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             [matChipInputAddOnBlur]="true"
-             (matChipInputTokenEnd)="add('dateSourceFormats', $event)">
-    </mat-chip-list>
-  </mat-form-field>
+  <app-chip-list [list]="model.dateSourceFormats"
+                 placeholder="Datumsformate"
+                 (update)="model.dateSourceFormats = $event"></app-chip-list>
 
   <h4>Default-Lizenz</h4>
   <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between" formGroupName="defaultLicense">

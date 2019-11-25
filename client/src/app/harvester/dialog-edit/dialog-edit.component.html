@@ -89,7 +89,11 @@
 
       <app-csw-harvester *ngIf="harvesterForm.get('type').value?.endsWith('CSW')" [form]="harvesterForm" [model]="harvester" class="flex-column"></app-csw-harvester>
 
-<!--      <span class="mat-small">{{harvester | json}}</span>-->
+      <app-chip-list [list]="harvester.blacklistedIds"
+                     placeholder="Ausgeschlossene IDs"
+                     (update)="harvester.blacklistedIds = $event"></app-chip-list>
+
+<!--       <span class="mat-small">{{harvester | json}}</span>-->
     </form>
   </div>
 </mat-dialog-content>

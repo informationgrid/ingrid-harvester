@@ -1,7 +1,5 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {CkanSettings} from '../../../../../../server/app/importer/ckan/ckan.settings';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatChipInputEvent} from '@angular/material';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
@@ -13,8 +11,6 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
 
   @Input() form: FormGroup;
   @Input() model: CkanSettings;
-
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor() {
   }
@@ -30,30 +26,6 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-  }
-
-  add(type: 'filterTags' | 'filterGroups' | 'dateSourceFormats', event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-
-    // Add keyword
-    if ((value || '').trim()) {
-      if (!this.model[type]) this.model[type] = [];
-      this.model[type].push(value.trim());
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
-  }
-
-  remove(type: 'filterTags' | 'filterGroups' | 'dateSourceFormats', keyword: string): void {
-    const index = this.model[type].indexOf(keyword);
-
-    if (index >= 0) {
-      this.model[type].splice(index, 1);
-    }
   }
 
 }

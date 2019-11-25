@@ -9,6 +9,8 @@ import {ImportLogMessage} from '../../../../server/app/model/import.result';
 })
 export class SocketService {
 
+  connectionLost$ = new Subject<boolean>();
+
   private socket: SocketIOClient.Socket;
 
   log$ = new Subject<ImportLogMessage>();
@@ -16,7 +18,7 @@ export class SocketService {
   constructor(private configService: ConfigService) {
     if (configService.config) {
       this.socket = io.connect(configService.config.url + '/import', {
-        'path': configService.config.contextPath + '/socket.io'
+        path: configService.config.contextPath + '/socket.io'
       });
 
       this.socket.on('/log', data => this.log$.next(data));
@@ -26,12 +28,14 @@ export class SocketService {
       });
       this.socket.on('connect', () => {
         console.log('Connected to server via websocket');
+        this.connectionLost$.next(false);
       });
       this.socket.on('error', (error) => {
         console.error('A websocket error occurred', error);
       });
       this.socket.on('connect_error', (error) => {
         console.error('A connection error occurred to: ' + configService.config.url + '/import');
+        this.connectionLost$.next(true);
       });
     }
   }

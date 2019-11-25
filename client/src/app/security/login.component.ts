@@ -5,7 +5,6 @@ import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
-  selector: 'my-login-form',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -31,10 +30,10 @@ export class LoginComponent implements OnInit {
   submit() {
     if (this.form.valid) {
       this.authService.login(this.form.get('username').value, this.form.get('password').value).subscribe(response => {
-        console.log("Response", response);
+        console.log('Response', response);
         this.router.navigate(['/']);
       }, (error: HttpErrorResponse) => {
-        console.log("Error logging in:", error);
+        console.log('Error logging in:', error);
         if (error.status === 404) {
           this.showErrorMessage = true;
         }

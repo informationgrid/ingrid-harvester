@@ -161,6 +161,12 @@ export class CswImporter implements Importer {
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
 
+            const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');
+            if (!this.isIdAllowed(uuid)) {
+                this.summary.skippedDocs.push(uuid);
+                continue;
+            }
+
             if (log.isDebugEnabled()) {
                 log.debug(`Import document ${i + 1} from ${records.length}`);
             }
@@ -168,7 +174,6 @@ export class CswImporter implements Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');
             let mapper = this.getMapper(this.settings, records[i], harvestTime, issued[i], this.summary);
 
             let doc: any = await IndexDocument.create(mapper).catch(e => {
@@ -274,5 +279,12 @@ export class CswImporter implements Importer {
 
     getSummary(): Summary {
         return this.summary;
+    }
+
+    private isIdAllowed(id: string) {
+        if (this.settings.blacklistedIds) {
+            return this.settings.blacklistedIds.indexOf(id) === -1;
+        }
+        return true;
     }
 }

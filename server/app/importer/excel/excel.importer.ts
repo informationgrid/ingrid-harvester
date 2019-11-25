@@ -117,6 +117,11 @@ export class ExcelImporter implements Importer {
                 let unit = workUnits[idx];
                 this.summary.numDocs++;
 
+                if (!this.isIdAllowed(unit.id)) {
+                    this.summary.skippedDocs.push(unit.id);
+                    continue;
+                }
+
                 // create json document and create values with ExcelMapper
                 let mapper = new ExcelMapper(this.settings, {
                     id: unit.id,
@@ -129,8 +134,6 @@ export class ExcelImporter implements Importer {
                 });
                 let doc = await IndexDocument.create(mapper)
                     .catch(e => this.handleIndexDocError(e, mapper));
-
-                // observer.next(ImportResult.running(currentPos, workUnits.length));
 
                 // add document to buffer and send to elasticsearch if full
                 if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
@@ -227,5 +230,12 @@ export class ExcelImporter implements Importer {
 
     getSummary(): Summary {
         return this.summary;
+    }
+
+    private isIdAllowed(id: string) {
+        if (this.settings.blacklistedIds) {
+            return this.settings.blacklistedIds.indexOf(id) === -1;
+        }
+        return true;
     }
 }

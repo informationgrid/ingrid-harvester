@@ -148,15 +148,10 @@ export class CkanImporter implements Importer {
                 log.info(`Received ${results.length} records from ${this.settings.ckanBaseUrl}`);
                 total += results.length;
 
-                let filteredResults = results
-                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'tags' , this.settings.filterTags))
-                    .filter(dataset => this.hasValidTagsOrGroups(dataset, 'groups', this.settings.filterGroups));
+                let filteredResults = this.filterDatasets(results);
 
                 // add skipped documents to count
-                const filteredLength = results.length - filteredResults.length;
-                if (filteredLength > 0) {
-                    this.summary.numDocs += filteredLength;
-                }
+                this.updateFetchedDatasets(results, filteredResults);
 
                 let ids = filteredResults.map(result => result.id);
 
@@ -176,45 +171,66 @@ export class CkanImporter implements Importer {
                     break;
                 } else {
                     offset += this.settings.maxRecords;
-                    this.requestDelegate.updateConfig({
-                        qs: {
-                            offset: offset,
-                            limit: this.settings.maxRecords
-                        }
-                    });
+                    this.updateRequestMethod(offset);
                 }
             }
 
             if (total === 0) {
                 let warnMessage = `Could not harvest any datasets from ${this.settings.ckanBaseUrl}`;
                 log.warn(warnMessage);
-                await this.elastic.abortCurrentIndex();
-                observer.next(ImportResult.complete(this.summary, warnMessage));
-                observer.complete();
+                this.sendFinishMessage(observer, warnMessage);
+
+                await this.elastic.deleteIndex(this.elastic.indexName);
             } else {
                 return Promise.all(promises)
-                    .then(() => {
-                        if (this.settings.dryRun) {
-                            log.debug('Skipping finalisation of index for dry run.');
-                        } else {
-                            return this.elastic.finishIndex();
-                        }
-                    })
-                    .then(() => {
-                        observer.next(ImportResult.complete(this.summary));
-                        observer.complete();
-                    })
+                    .then(() => this.postIndexActions())
+                    .then(() => this.sendFinishMessage(observer))
                     .catch(err => log.error('Error indexing data', err));
             }
         } catch (err) {
             log.error('error:', err);
             this.summary.appErrors.push(err.message);
-            observer.next(ImportResult.complete(this.summary));
-            observer.complete();
+            this.sendFinishMessage(observer, err.message);
 
             // clean up index
             await this.elastic.deleteIndex(this.elastic.indexName);
         }
+    }
+
+    private postIndexActions() {
+        if (this.settings.dryRun) {
+            log.debug('Skipping finalisation of index for dry run.');
+        } else {
+            return this.elastic.finishIndex();
+        }
+    }
+
+    private sendFinishMessage(observer: Observer<ImportLogMessage>, message?: string) {
+        observer.next(ImportResult.complete(this.summary, message));
+        observer.complete();
+    }
+
+    private updateFetchedDatasets(results, filteredResults) {
+        const filteredLength = results.length - filteredResults.length;
+        if (filteredLength > 0) {
+            this.summary.numDocs += filteredLength;
+        }
+    }
+
+    private filterDatasets(results) {
+        return results
+            .filter(dataset => this.hasValidTagsOrGroups(dataset, 'tags', this.settings.filterTags))
+            .filter(dataset => this.hasValidTagsOrGroups(dataset, 'groups', this.settings.filterGroups))
+            .filter(dataset => this.isIdAllowed(dataset.id));
+    }
+
+    private updateRequestMethod(offset: number) {
+        this.requestDelegate.updateConfig({
+            qs: {
+                offset: offset,
+                limit: this.settings.maxRecords
+            }
+        });
     }
 
     /**
@@ -238,5 +254,17 @@ export class CkanImporter implements Importer {
 
     getSummary(): Summary {
         return this.summary;
+    }
+
+    private isIdAllowed(id: string) {
+        if (this.settings.blacklistedIds) {
+            const isValid = this.settings.blacklistedIds.indexOf(id) === -1;
+            if (!isValid) {
+                this.summary.skippedDocs.push(id);
+            }
+
+            return isValid;
+        }
+        return true;
     }
 }

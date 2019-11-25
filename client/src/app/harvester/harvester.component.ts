@@ -12,6 +12,7 @@ import {flatMap, groupBy, mergeMap, tap, toArray} from 'rxjs/operators';
 import {MatSlideToggleChange} from '@angular/material';
 import {SocketService} from './socket.service';
 import {ConfirmDialogComponent} from '../shared/confirm-dialog/confirm-dialog.component';
+import {untilDestroyed} from 'ngx-take-until-destroy';
 
 @Component({
   selector: 'app-harvester',
@@ -37,14 +38,29 @@ export class HarvesterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.subscription = this.socketService.log$.subscribe(data => this.importDetail[data.id] = data);
+    this.subscription = this.socketService.log$
+      .pipe(untilDestroyed(this))
+      .subscribe(data => this.importDetail[data.id] = data);
 
     this.fetchHarvester();
 
+    this.socketService.connectionLost$
+      .pipe(untilDestroyed(this))
+      .subscribe(isLost => {
+        if (isLost) {
+          this.snackBar.open('Verbindung zum Backend verloren');
+        } else {
+          this.snackBar.open('Verbindung zum Backend hergestellt', null, {duration: 1000});
+          this.fetchLastImportInformation();
+        }
+      });
+
+  }
+
+  private fetchLastImportInformation() {
     this.harvesterService.getLastLogs().subscribe(logs => {
       logs.forEach(log => this.importDetail[log.id] = log);
     });
-
   }
 
   ngOnDestroy(): void {

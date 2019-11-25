@@ -166,18 +166,6 @@ export class ElasticSearchUtils {
     }
 
     /**
-     * Deletes the current index, if for example there was an error during
-     * harvesting from the data source.
-     *
-     * @returns {Promise} a promise for the action deleting the current index
-     */
-    abortCurrentIndex() {
-        log.info(`Deleting index: ${this.indexName}`);
-        return this.client.indices.delete({index: this.indexName});
-    }
-
-
-    /**
      * Add the specified mapping to an index and type.
      *
      * @param {string} index
