@@ -43,6 +43,7 @@ export class HarvesterComponent implements OnInit, OnDestroy {
       .subscribe(data => this.importDetail[data.id] = data);
 
     this.fetchHarvester();
+    this.fetchLastImportInformation();
 
     this.socketService.connectionLost$
       .pipe(untilDestroyed(this))
@@ -64,7 +65,6 @@ export class HarvesterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   schedule(harvester: Harvester) {

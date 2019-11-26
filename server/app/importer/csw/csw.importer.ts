@@ -84,23 +84,23 @@ export class CswImporter implements Importer {
             observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
             observer.complete();
         } else {
-            this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings)
-                .then(() => this.harvest())
-                .then(() => this.elastic.sendBulkData(false))
-                .then(() => this.elastic.finishIndex())
-                .then(() => {
-                    observer.next(ImportResult.complete(this.summary));
-                    observer.complete();
-                })
-                .catch(err => {
-                    this.summary.appErrors.push(err);
-                    log.error('Error during CSW import', err);
-                    observer.next(ImportResult.complete(this.summary, 'Error happened'));
-                    observer.complete();
+            try {
+                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                await this.harvest();
+                await this.elastic.sendBulkData(false);
+                await this.elastic.finishIndex();
+                observer.next(ImportResult.complete(this.summary));
+                observer.complete();
 
-                    // clean up index
-                    this.elastic.deleteIndex(this.elastic.indexName);
-                });
+            } catch (err) {
+                this.summary.appErrors.push(err.message ? err.message : err);
+                log.error('Error during CSW import', err);
+                observer.next(ImportResult.complete(this.summary, 'Error happened'));
+                observer.complete();
+
+                // clean up index
+                this.elastic.deleteIndex(this.elastic.indexName);
+            }
         }
     }
 

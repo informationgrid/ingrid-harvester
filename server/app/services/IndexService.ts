@@ -74,4 +74,9 @@ export class IndexService {
     deleteIndex(name: string) {
         this.elasticUtils.deleteIndex(name);
     }
+
+    async search(indexName: string): Promise<any> {
+        const response = await this.elasticUtils.search(indexName);
+        return response.hits.hits;
+    }
 }

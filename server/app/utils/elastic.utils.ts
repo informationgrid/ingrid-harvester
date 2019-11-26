@@ -412,4 +412,8 @@ export class ElasticSearchUtils {
             index: indicesToDelete
         });
     }
+
+    search(indexName: string): Promise<any> {
+        return this.client.search({ index: indexName });
+    }
 }

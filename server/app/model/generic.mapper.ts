@@ -1,5 +1,5 @@
 import {OptionsWithUri} from 'request-promise';
-import {License} from '../../../shared/license.model';
+import {License} from '@shared/license.model';
 import * as moment from 'moment';
 
 moment.locale('de');

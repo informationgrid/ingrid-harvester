@@ -13,6 +13,7 @@ import {MatDialog} from '@angular/material';
 })
 export class IndicesListComponent implements OnInit {
   indices: Observable<Index[]>;
+  searchResult = this.indicesService.searchResponse$;
 
   constructor(private dialog: MatDialog, private indicesService: IndicesService) {
   }
@@ -36,5 +37,9 @@ export class IndicesListComponent implements OnInit {
       .pipe(
         tap(indices => indices.sort((a, b) => a.name.localeCompare(b.name)))
       );
+  }
+
+  sendSearchRequest(indexName: string) {
+    this.indicesService.search(indexName);
   }
 }
