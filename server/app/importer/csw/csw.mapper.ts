@@ -119,7 +119,7 @@ export class CswMapper extends GenericMapper {
 
                     urls.push({
                         accessURL: url,
-                        title: title[0].textContent,
+                        title: title.length > 0 ? title[0].textContent : undefined,
                         format: UrlUtils.mapFormat(format, this.summary.warnings)
                     });
                 }
