@@ -22,7 +22,7 @@ export class IndicesListComponent implements OnInit {
   }
 
   deleteIndex(name: string) {
-    this.dialog.open(ConfirmDialogComponent, {data: 'Wollen Sie diesen Index wirklich löschen?'}).afterClosed().subscribe(result => {
+    this.dialog.open(ConfirmDialogComponent, {data: 'Wollen Sie den Index "' + name + '" wirklich löschen?'}).afterClosed().subscribe(result => {
       if (result) {
         this.indicesService.deleteIndex(name).subscribe(() => {
           this.updateIndices();
