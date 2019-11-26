@@ -104,6 +104,7 @@ export class CswMapper extends GenericMapper {
                 let onlineResource = onlineResources[j];
 
                 let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource);
+                let title = CswMapper.select('gmd:name/gco:CharacterString', onlineResource);
                 let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource);
 
                 let url = null;
@@ -118,6 +119,7 @@ export class CswMapper extends GenericMapper {
 
                     urls.push({
                         accessURL: url,
+                        title: title[0].textContent,
                         format: UrlUtils.mapFormat(format, this.summary.warnings)
                     });
                 }
