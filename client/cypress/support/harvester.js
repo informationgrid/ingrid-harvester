@@ -92,8 +92,8 @@ function setHarvesterFields(options) {
     setDefaultLicenseId(options.licenseId);
   }
 
-  if (options.titleId) {
-    setDefaultLicenseTitle(options.titleId);
+  if (options.licenseTitle) {
+    setDefaultLicenseTitle(options.licenseTitle);
   }
 
   if (options.licenseUrl) {
@@ -152,8 +152,8 @@ function setDefaultLicenseId(licenseId) {
   cy.get('[placeholder="ID"]').type(licenseId);
 }
 
-function setDefaultLicenseTitle(titleId) {
-  cy.get('[placeholder="Titel"]').type(titleId);
+function setDefaultLicenseTitle(licenseTitle) {
+  cy.get('[placeholder="Titel"]').type(licenseTitle);
 }
 
 function setDefaultLicenseUrl(urlId) {
@@ -259,8 +259,8 @@ function checkFields(options) {
     cy.get('[placeholder="ID"]').should('have.value', options.licenseId);
   }
 
-  if (options.titleId) {
-    cy.get('[placeholder="Titel"]').should('have.value', options.titleId);
+  if (options.licenseTitle) {
+    cy.get('[placeholder="Titel"]').should('have.value', options.licenseTitle);
   }
 
   if (options.licenseUrl) {
@@ -293,7 +293,7 @@ function seedCkanHarvester() {
       "filterGroup": "ckan_test",
       "dateFormat": "YYYY-MM-DD",
       "licenseId": "123",
-      "titleId": "ckan_titleID",
+      "licenseTitle": "ckan_titleID",
       "licenseUrl": "testing"
     }
   });

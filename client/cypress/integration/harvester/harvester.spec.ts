@@ -2,63 +2,59 @@ describe('Harvester operations', () => {
   let Constants = require("../../support/constants");
   const constants = new Constants();
 
+  const Authentication = require("../../support/pageObjects/auth");
+  const auth = new Authentication();
+  const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
+  const hPage = new HarvesterPage();
+  const HarvesterForm = require("../../support/pageObjects/harvester/harvesterForm");
+  const hForm = new HarvesterForm();
+
   beforeEach(() => {
-    cy.apiLoginUserCheck();
+    auth.apiLoginWithUserCheck();
   });
 
   it('should check that the type of a harvester cannot be changed during an update', () => {
-    cy.openHarvester(constants.CKAN_TEST_ID);
+    hPage.openFormById(constants.CKAN_TEST_ID);
 
-    // TODO: check disabled state by CSS class name "mat-form-field-disabled"
-    cy.get('[formcontrolname=type]').should('have.class', 'mat-select-disabled');
-
-    // isSelectboxDisabled(harvesterForm.type);
-    // isEnabled(harvesterForm.type);
+    hForm.fieldIsDisabled(hForm.type);
   });
 
   it('should check that startPosition cannot be negative or a character [INPUT CONTROL]', () => {
-    cy.openHarvester(constants.CKAN_TEST_ID);
-    // antipattern, BUT cypress is 'too fast' and gets the first form element instead of the given one
-    cy.wait(500);
+    hPage.openFormById(constants.CKAN_TEST_ID);
+    hPage.wait(500);
 
-    //set wrong values for fields and check if the are accepted
-    cy.setHarvesterFields({startPosition: 'ffm'});
-    cy.get('[formcontrolname=startPosition]').should('not.contain', 'ffm');
+    hForm.setFields({startPosition: 'ffm'});
+    hForm.fieldContains(hForm.startPos, 'ffm', false);
 
-    cy.setHarvesterFields({startPosition: '-7'});
+    hForm.setFields({startPosition: '-7'});
+    hForm.btnIsEnabled(hForm.saveHarvesterBtn, false);
 
-    cy.get('[data-test=dlg-update]').should('be.disabled');
-
-    cy.setHarvesterFields({startPosition: '10'});
-    cy.get('[data-test=dlg-update]').should('be.enabled');
+    hForm.setFields({startPosition: '10'});
+    hForm.btnIsEnabled(hForm.saveHarvesterBtn, true);
   });
 
   it('should check that maxRecords cannot be negative or a character [INPUT CONTROL]', () => {
-    cy.openHarvester(constants.CKAN_TEST_ID);
-    cy.wait(500);
+    hPage.openFormById(constants.CKAN_TEST_ID);
+    hPage.wait(500);
 
-    cy.setHarvesterFields({maxRecords: 'ffm'});
-    cy.get('[formcontrolname=maxRecords]').should('contain', '');
+    hForm.setFields({maxRecords: 'ffm'});
+    hForm.fieldContains(hForm.maxRec, '', true);
 
-    cy.setHarvesterFields({maxRecords: '-7'});
+    hForm.setFields({maxRecords: '-7'});
+    hForm.btnIsEnabled(hForm.saveHarvesterBtn, false);
 
-    cy.get('[data-test=dlg-update]').should('be.disabled');
-
-    cy.setHarvesterFields({maxRecords: '10'});
-    cy.get('[data-test=dlg-update]').should('be.enabled');
+    hForm.setFields({maxRecords: '10'});
+    hForm.btnIsEnabled(hForm.saveHarvesterBtn, true);
   });
 
   it('should show the old values if an update operation is aborted and the page is not refreshed', () => {
-    //set values that must not be saved
-    cy.openHarvester(constants.CKAN_DB_ID);
-    cy.setHarvesterFields({description: 'hold', indexName: 'the', defaultAttribution: 'door'});
+    hPage.openFormById(constants.CKAN_DB_ID);
+    hForm.setFields({description: 'hold', indexName: 'the', defaultAttribution: 'door'});
 
-    //close without saving
-    cy.get('.mat-button-wrapper').contains('Abbrechen').click();
+    hForm.closeFormWithoutSaving();
 
-    //check values are the old ones
-    cy.openHarvester(constants.CKAN_DB_ID);
-    cy.checkFields({
+    hPage.openFormById(constants.CKAN_DB_ID);
+    hForm.checkFields({
       description: 'Deutsche Bahn Datenportal',
       indexName: 'ckan_db',
       defaultAttribution: 'Deutsche Bahn Datenportal'
@@ -66,21 +62,17 @@ describe('Harvester operations', () => {
   });
 
   it('should not be able to save a harvester without selecting a type', () => {
-    cy.addNewHarvester();
-
-    cy.setHarvesterFields({
+    hPage.addNewHarvester();
+    hForm.setFields({
       description: 'Testing harvester with no type',
       indexName: 'just an index'
     });
 
-    cy.get('[data-test="dlg-update"]').should('be.disabled');
+    hForm.btnIsEnabled(hForm.saveHarvesterBtn, false);
   });
 
   it('should delete an harvester (by name)', () => {
-    //open harvester with given name
-    cy.get('.no-wrap').contains('ckan_test_api').click();
-    //delete it
-    cy.get('[data-test="delete"]:visible').click();
-    cy.get('.mat-button-wrapper').contains('Löschen').click();
+    hPage.deleteHarvesterByName('ckan_test_api');
   });
+
 });

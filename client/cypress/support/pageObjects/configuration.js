@@ -6,6 +6,7 @@ class ConfigurationPage {
     this.aliasField = '[formcontrolname="alias"]';
     this.proxyField = '[formcontrolname="proxy"]';
   }
+  //TODO: export all button data-tests att
 
   visit() {
     cy.visit('config');
@@ -64,6 +65,21 @@ class ConfigurationPage {
 
   setProxy(proxy) {
     cy.get(this.proxyField).clear().type(proxy);
+  }
+
+  exportAndCheckConfigDownloadApi(){
+    cy.request({
+      headers: {accept: 'application/json, text/plain, */*', referer: '/config'},
+      method: 'GET',
+      url: '/rest/api/harvester'
+    }).then((response) => {
+      expect(response.headers).to.have.property('content-type', 'application/json; charset=utf-8');
+      expect(response.headers).to.have.property('etag');
+    });
+  }
+
+  pressDownloadConfigButton(){
+    cy.get('.mat-flat-button').contains('Export der Harvester-Konfiguration').click();
   }
 }
 

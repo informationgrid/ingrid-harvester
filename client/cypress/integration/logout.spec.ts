@@ -1,20 +1,20 @@
 describe('Logout', () => {
+  const HarvesterPage = require("../support/pageObjects/harvester/harvester");
+  const hPage = new HarvesterPage();
+  const Authentication = require("../support/pageObjects/auth");
+  const auth = new Authentication();
+
   beforeEach(() => {
-    cy.apiLoginUserCheck();
+    auth.apiLoginWithUserCheck();
   });
 
   it('should log out successfully, show the login page and check the log out message', () => {
-    cy.guiLogout();
-
-    cy.get('.mat-simple-snackbar').should('contain', 'Sie wurden ausgeloggt');
-    cy.get('mat-card-title').should('contain','Login');
-    cy.get('[data-test=login]').should('contain', 'Login');
+    auth.guiLogOut();
+    auth.checkLogOutMessage();
   });
 
   it('should log out successfully and show the login page', () => {
-    cy.apiLogout();
-
-    cy.get('mat-card-title').should('contain','Login');
-    cy.get('[data-test=login]').should('contain', 'Login');
+    auth.apiLogOut();
+    auth.checkLogInPage();
   });
 });

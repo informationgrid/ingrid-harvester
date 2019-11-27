@@ -2,10 +2,11 @@ describe('Import operations', () => {
   let Constants = require("../../support/constants");
   const constants = new Constants();
 
+  const Authentication = require("../../support/pageObjects/auth");
+  const auth = new Authentication();
+
   beforeEach(() => {
-    if (!(window.localStorage.getItem('currentUser'))) {
-      cy.apiLogin('admin', 'admin');
-    }
+    auth.apiLoginWithUserCheck();
   });
 
   it('should open a harvester, start an import and check it is successful', () => {

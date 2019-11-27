@@ -2,38 +2,50 @@ describe('Csw-Harvester operations', () => {
   let Constants = require("../../support/constants");
   const constants = new Constants();
 
+  const Authentication = require("../../support/pageObjects/auth");
+  const auth = new Authentication();
+  const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
+  const hPage = new HarvesterPage();
+  const HarvesterForm = require("../../support/pageObjects/harvester/harvesterForm");
+  const hForm = new HarvesterForm();
+
+
+  // before(() => {
+  //   cy.seedCswHarvester()
+  // });
+
   beforeEach(() => {
-    cy.apiLoginUserCheck();
-    cy.seedCswHarvester()
+    auth.apiLoginWithUserCheck();
   });
 
   it('should add a harvester of type CSW', () => {
-    //add harvester, check fields and delete it
-    cy.addNewHarvester();
-    cy.newCswHarvester({
+    hPage.addNewHarvester();
+    hForm.setFields({
+      type: 'CSW',
       description: 'Testing partial CSW Harvester',
       indexName: 'csw_index',
       httpMethod: 'GET',
       getRecordsUrl: './testme'
     });
-    cy.saveHarvesterConfig();
+    hForm.saveHarvesterConfig();
+    hPage.wait(500);
 
-    cy.openHarvesterByName('Testing partial CSW Harvester');
-
-    cy.checkFields({
+    hPage.openHarvesterByName('Testing partial CSW Harvester');
+    hForm.checkFields({
       description: 'Testing partial CSW Harvester',
       indexName: 'csw_index',
       httpMethod: 'GET',
       getRecordsUrl: './testme'
     });
 
-    cy.reload();
-    cy.deleteHarvesterByName('Testing partial CSW Harvester');
+    hPage.reload();
+    hPage.deleteHarvesterByName('Testing partial CSW Harvester');
   });
 
   it('should add a new harvester of type CSW with all options', () => {
-    cy.addNewHarvester();
-    cy.newCswHarvester({
+    hPage.addNewHarvester();
+    hForm.setFields({
+      type: 'CSW',
       description: 'Testing CSW Harvester',
       indexName: 'full_csw_index',
       httpMethod: 'POST',
@@ -47,12 +59,12 @@ describe('Csw-Harvester operations', () => {
       recordFilter: 'opendata',
       keywords: 'this_is_a_test'
     });
-    cy.saveHarvesterConfig();
+    hForm.saveHarvesterConfig();
+    hPage.wait(500);
+    hPage.reload();
 
-    cy.get('.no-wrap').contains('Testing CSW Harvester').click();
-    cy.get('[data-test="edit"]:visible').click();
-
-    cy.checkFields({
+    hPage.openHarvesterByName('Testing CSW Harvester');
+    hForm.checkFields({
       description: 'Testing CSW Harvester',
       indexName: 'full_csw_index',
       httpMethod: 'POST',
@@ -65,52 +77,50 @@ describe('Csw-Harvester operations', () => {
       startPosition: '0'
     });
 
-    cy.reload();
-    cy.deleteHarvesterByName('Testing CSW Harvester');
+    hPage.reload();
+    hPage.deleteHarvesterByName('Testing CSW Harvester');
   });
 
   it('should update a harvester of type CSW', () => {
-    cy.openHarvesterByName('csw_test_api');
+    hPage.openHarvesterByName('csw_test_api');
 
-    //deselect categories for test state
-    cy.deselectDCATCategory('Verkehr');
-    cy.deselectMcloudCategory('Infrastruktur');
-
-    cy.setHarvesterFields({
+    hForm.setFields({
       description: 'csw_update',
-      indexName: 'full_csw_indice',
+      indexName: 'full_csw_index',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'
     });
-    cy.updateHarvester();
+    hForm.saveHarvesterConfig();
+    hPage.wait(500);
+    hPage.reload();
 
-    cy.checkFields({
+    hPage.openHarvesterByName('csw_update');
+    hForm.checkFields({
       description: 'csw_update',
-      indexName: 'full_csw_indice',
+      indexName: 'full_csw_index',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'
     });
 
-    cy.reload();
-    cy.deleteHarvesterByName('csw_update');
+    // hPage.reload();
+    // hPage.deleteHarvesterByName('csw_update');
   });
 
   it('should successfully harvest after deleting an existing filter-label', () => {
-    cy.openHarvester(constants.CSW_CODEDE_ID); // CODEDE harvester
-    cy.wait(500);
+    hPage.openFormById(constants.CSW_CODEDE_ID);
+    hPage.wait(500);
 
-    cy.get('[formcontrolname="recordFilter"]').clear();
-    cy.updateHarvester();
-    cy.openAndImportHarvester(constants.CSW_CODEDE_ID);
+    hForm.clearFilterField();
 
-    //import started
-    cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
-    cy.get('app-importer-detail').should('contain', ' Import läuft ');
+    hForm.saveHarvesterConfig();
+    hPage.wait(500);
+    hPage.importHarvesterById(constants.CSW_CODEDE_ID);
 
-    //import is successful
+    hPage.checkImportHasStarted();
+
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    cy.get('#harvester-' + constants.CSW_CODEDE_ID +' [data-test=last-execution]', {timeout: 15000}).should('contain', importsDate)
+    hPage.checkImportDate(constants.CSW_CODEDE_ID, importsDate);
   });
 });

@@ -1,10 +1,12 @@
-
 describe('configuration tab operations', () => {
   const ConfigurationPage = require("../support/pageObjects/configuration");
   const configPage = new ConfigurationPage();
 
+  const Authentication = require("../support/pageObjects/auth");
+  const auth = new Authentication();
+
   beforeEach(() => {
-    cy.apiLoginUserCheck();
+    auth.apiLoginWithUserCheck();
     configPage.visit();
   });
 
@@ -38,7 +40,6 @@ describe('configuration tab operations', () => {
 
     configPage.resetConfig();
 
-    //values have NOT been modified
     configPage.checkElasticSearchUrl('http://localhost:9200');
     configPage.checkAlias('mcloud');
     configPage.checkProxy('');
@@ -72,14 +73,7 @@ describe('configuration tab operations', () => {
   });
 
   it('should export the harvester configuration if the right request in made', () => {
-    cy.request({
-      headers: {accept: 'application/json, text/plain, */*', referer: '/config'},
-      method: 'GET',
-      url: '/rest/api/harvester'
-      }).then((response) => {
-    expect(response.headers).to.have.property('content-type', 'application/json; charset=utf-8');
-    expect(response.headers).to.have.property('etag');
-    });
+    configPage.exportAndCheckConfigDownloadApi();
   });
 
   /**
@@ -89,9 +83,8 @@ describe('configuration tab operations', () => {
   it('should export the harvester configuration if the button is pressed', () => {
     cy.server();
     cy.route('GET', 'http://192.168.0.228/importer/rest/api/harvester').as('download');
-    cy.goToConfig();
-
-    cy.get('.mat-flat-button').contains('Export der Harvester-Konfiguration').click();
+    configPage.visit();
+    configPage.pressDownloadConfigButton();
 
     cy.wait('@download').then((xhr) => {
       expect(xhr.responseHeaders).to.have.property('content-type', 'application/json; charset=utf-8');

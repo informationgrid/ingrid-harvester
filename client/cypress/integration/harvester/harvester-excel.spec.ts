@@ -1,83 +1,92 @@
 describe('Excel-Harvester operations', () => {
+  const Authentication = require("../../support/pageObjects/auth");
+  const auth = new Authentication();
+  const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
+  const hPage = new HarvesterPage();
+  const HarvesterForm = require("../../support/pageObjects/harvester/harvesterForm");
+  const hForm = new HarvesterForm();
+
   beforeEach(() => {
-    cy.apiLoginUserCheck();
-    cy.seedExcelHarvester();
+    auth.apiLoginWithUserCheck();
+    // cy.seedExcelHarvester();
   });
 
   it('should add a harvester of type EXCEL', () => {
-    //add harvester, check fields, delete it
-    cy.addNewHarvester();
-    cy.newExcelHarvester({
+    hPage.addNewHarvester();
+    hForm.setFields({
+      type: 'EXCEL',
       description: 'Excel partial opts Harvester',
       indexName: 'excel_index',
-      path: './data.xlsx'
+      excelFilePath: './data.xlsx'
     });
-    cy.saveHarvesterConfig();
+    hForm.saveHarvesterConfig();
+    hPage.wait(500);
 
-    cy.openHarvesterByName('Excel partial opts Harvester');
+    hPage.openHarvesterByName('Excel partial opts Harvester');
 
-    cy.checkFields({
+    hForm.checkFields({
       description: 'Excel partial opts Harvester',
       indexName: 'excel_index',
-      path: './data.xlsx'
+      excelFilePath: './data.xlsx'
     });
-
-    cy.reload();
-    cy.deleteHarvesterByName('Excel partial opts Harvester');
+    hPage.reload();
+    hPage.deleteHarvesterByName('Excel partial opts Harvester');
   });
 
   it('should add a new harvester of type Excel with all options', () => {
-    cy.addNewHarvester();
-    cy.newExcelHarvester({
+    hPage.addNewHarvester();
+    hForm.setFields({
+      type: 'EXCEL',
       description: 'Excel full opts Harvester',
-      indexName: 'full_excel_indice',
-      path: './data.xlsx',
+      indexName: 'full_excel_index',
+      excelFilePath: './data.xlsx',
       defaultDCATCategory: 'Bevölkerung und Gesellschaft',
       defaultmCLOUDCategory: 'Bahn',
       defaultAttribution: '100',
       defaultAttributionLink: '23',
     });
-    cy.saveHarvesterConfig();
+    hForm.saveHarvesterConfig();
+    hPage.wait(500);
+    hPage.reload();
 
-    cy.openHarvesterByName('Excel full opts Harvester');
-    cy.checkFields({
+    hPage.openHarvesterByName('Excel full opts Harvester');
+    hForm.checkFields({
       description: 'Excel full opts Harvester',
-      indexName: 'full_excel_indice',
-      path: './data.xlsx',
+      indexName: 'full_excel_index',
+      excelFilePath: './data.xlsx',
       defaultDCATCategory: 'Bevölkerung und Gesellschaft',
       defaultmCLOUDCategory: 'Bahn',
       defaultAttribution: '100',
       defaultAttributionLink: '23'
     });
-
-    cy.reload();
-    cy.deleteHarvesterByName('Excel full opts Harvester');
+    hPage.reload();
+    hPage.deleteHarvesterByName('Excel full opts Harvester');
   });
 
   it('should update a harvester of type Excel', () => {
-    cy.openHarvesterByName('excel_test_api');
-    cy.deselectDCATCategory('Wirtschaft und Finanzen');
-
-    cy.setHarvesterFields({
+    hPage.openHarvesterByName('excel_test_api');
+    hForm.setFields({
       description: 'excel_update',
       indexName: 'update_excel_harvester',
       defaultDCATCategory: 'Wirtschaft und Finanzen',
       defaultAttribution: '7'
     });
-    cy.updateHarvester();
+    hForm.saveHarvesterConfig();
+    hPage.wait(500);
+    hPage.reload();
 
-    cy.checkFields({
+    hPage.openHarvesterByName('excel_update');
+    hForm.checkFields({
       description: 'excel_update',
       indexName: 'update_excel_harvester',
       defaultDCATCategory: 'Wirtschaft und Finanzen',
       defaultmCLOUDCategory: 'Bahn',
       defaultAttribution: '7',
-      path: './data.xlsx',
+      excelFilePath: './data.xlsx',
       startPosition: '1',
       maxRecords: '50'
     });
-
-    cy.reload();
-    cy.deleteHarvesterByName('excel_update');
+    // hPage.reload();
+    // hPage.deleteHarvesterByName('excel_update');
   });
 });

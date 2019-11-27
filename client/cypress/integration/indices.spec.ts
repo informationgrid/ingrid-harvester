@@ -2,8 +2,13 @@ describe('Indices operations', () => {
   let Constants = require("../support/constants");
   const constants = new Constants();
 
+  const Authentication = require("../support/pageObjects/auth");
+  const auth = new Authentication();
+  const IndicesPage = require('../support/pageObjects/indices');
+  const indicesPage = new IndicesPage();
+
   beforeEach(() => {
-    cy.apiLoginUserCheck();
+    auth.apiLoginWithUserCheck();
   });
 
   it('should not find an harvester whose search is not activated', () => {

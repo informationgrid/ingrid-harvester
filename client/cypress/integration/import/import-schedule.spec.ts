@@ -2,10 +2,11 @@ describe('Import cron pattern operations', () => {
   let Constants = require("../../support/constants");
   const constants = new Constants();
 
+  const Authentication = require("../../support/pageObjects/auth");
+  const auth = new Authentication();
+
   beforeEach(() => {
-    if (!(window.localStorage.getItem('currentUser'))) {
-      cy.apiLogin('admin', 'admin');
-    }
+    auth.apiLoginWithUserCheck();
   });
 
   it('should plan an import, activate the auto-planning, check its execution and turn off the auto-planning', () => {
@@ -60,7 +61,7 @@ describe('Import cron pattern operations', () => {
     cy.get('.info > :nth-child(4)').should('contain', 'Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So');
   });
 
-  it('should not import if the schedule is planned but off', () => {
+  it('should not import if the schedule is planned but off [BUG]', () => {
     //deactivate auto import
     cy.openScheduleHarvester(constants.CKAN_DB_ID);
 

@@ -2,10 +2,11 @@ describe('Import log operations', () => {
   let Constants = require("../../support/constants");
   const constants = new Constants();
 
+  const Authentication = require("../../support/pageObjects/auth");
+  const auth = new Authentication();
+
   beforeEach(() => {
-    if (!(window.localStorage.getItem('currentUser'))) {
-      cy.apiLogin('admin', 'admin');
-    }
+    auth.apiLoginWithUserCheck();
   });
 
   it('should show errors in the error-log if error/warning occurred during an import', () => {

@@ -1,34 +1,41 @@
 describe('Ckan-Harvester operations', () => {
+  const Authentication = require("../../support/pageObjects/auth");
+  const auth = new Authentication();
+  const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
+  const hPage = new HarvesterPage();
+  const HarvesterForm = require("../../support/pageObjects/harvester/harvesterForm");
+  const hForm = new HarvesterForm();
+
   beforeEach(() => {
-    cy.apiLoginUserCheck();
-    cy.seedCkanHarvester();
+    auth.apiLoginWithUserCheck();
   });
 
   it('should add a harvester of type CKAN', () => {
-    //harvester is created and after a check on the fields deleted
-    cy.addNewHarvester();
-    cy.newCkanHarvester({
+    hPage.addNewHarvester();
+    hForm.setFields({
+      type: 'CKAN',
       description: 'Testing CKAN Harvester',
       indexName: 'ckan_index',
       ckanBasisUrl: 'testme'
     });
-    cy.saveHarvesterConfig();
+    hForm.saveHarvesterConfig();
+    hPage.wait(500);
 
-    cy.openHarvesterByName('Testing CKAN Harvester');
-
-    cy.checkFields({
+    hPage.openHarvesterByName('Testing CKAN Harvester');
+    hForm.checkFields({
       description: 'Testing CKAN Harvester',
       indexName: 'ckan_index',
       ckanBasisUrl: 'testme'
     });
 
-    cy.reload();
-    cy.deleteHarvesterByName('Testing CKAN Harvester');
+    hPage.reload();
+    hPage.deleteHarvesterByName('Testing CKAN Harvester');
   });
 
   it('should add a harvester of type CKAN with all options', () => {
-    cy.addNewHarvester();
-    cy.newCkanHarvester({
+    hPage.addNewHarvester();
+    hForm.setFields({
+      type: 'CKAN',
       description: 'Testing full CKAN Harvester',
       indexName: 'full_ckan_indice',
       ckanBasisUrl: 'test me',
@@ -42,14 +49,15 @@ describe('Ckan-Harvester operations', () => {
       filterGroup: 'ckan_test',
       dateFormat: 'YYYY-MM-DD',
       licenseId: '325',
-      titleId: 'titleID',
+      licenseTitle: 'titleID',
       licenseUrl: 'wwwdedede'
     });
-    cy.saveHarvesterConfig();
+    hForm.saveHarvesterConfig();
+    hPage.wait(500);
+    hPage.reload();
 
-    cy.openHarvesterByName('Testing full CKAN Harvester');
-
-    cy.checkFields({
+    hPage.openHarvesterByName('Testing full CKAN Harvester');
+    hForm.checkFields({
       description: 'Testing full CKAN Harvester',
       indexName: 'full_ckan_indice',
       ckanBasisUrl: 'test me',
@@ -59,21 +67,19 @@ describe('Ckan-Harvester operations', () => {
       defaultAttributionLink: 'AttributionLink',
       maxRecords: '10',
       startPosition: '1',
-      // filterTag: 'ckan_test',
-      // filterGroup: 'ckan_test',
-      // dateFormat: 'YYYY-MM-DD',
       licenseId: '325',
       titleId: 'titleID',
       licenseUrl: 'wwwdedede'
     });
 
-    cy.reload();
-    cy.deleteHarvesterByName('Testing full CKAN Harvester');
+    hPage.reload();
+    hPage.deleteHarvesterByName('Testing CKAN Harvester');
   });
 
   it('should update an existing CKAN harvester', () => {
-    cy.openHarvesterByName('ckan_test_api');
-    cy.setHarvesterFields({
+    hPage.openHarvesterByName('ckan_test_api');
+
+    hForm.setFields({
       description: 'ckan_updated',
       indexName: 'updated_ckan',
       defaultAttribution: 'ffm',
@@ -81,10 +87,12 @@ describe('Ckan-Harvester operations', () => {
       filterGroup: 'ckan_test1',
       dateFormat: 'YYYY-MM-DD'
     });
-    cy.updateHarvester();
+    hForm.saveHarvesterConfig();
+    hPage.wait(500);
+    hPage.reload();
 
-    // cy.openHarvesterByName('ckan_updated');
-    cy.checkFields({
+    hPage.openHarvesterByName('ckan_updated');
+    hForm.checkFields({
       indexName: 'updated_ckan',
       defaultAttribution: 'ffm',
       defaultAttributionLink: "attr_link",
@@ -95,8 +103,7 @@ describe('Ckan-Harvester operations', () => {
       startPosition: '1'
     });
 
-    //delete it
-    cy.reload();
-    cy.deleteHarvesterByName('ckan_updated');
+    // hPage.reload();
+    // hPage.deleteHarvesterByName('ckan_updated');
   });
 });
