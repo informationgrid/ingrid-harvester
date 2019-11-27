@@ -22,6 +22,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {AuthenticationService} from './security/authentication.service';
 
 registerLocaleData(localeDe);
 
@@ -75,6 +76,7 @@ const appRoutes: Routes = [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: UnauthorizedInterceptor,
+      deps: [RouterModule, AuthenticationService],
       multi: true
     }
   ],
