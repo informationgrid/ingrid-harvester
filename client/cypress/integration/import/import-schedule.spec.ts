@@ -12,8 +12,8 @@ describe('Import cron pattern operations', () => {
   });
 
   it('should plan an import, activate the auto-planning, check its execution and turn off the auto-planning', () => {
+    hPage.activateToggleBar(constants.CKAN_DB_ID);
     hPage.setSchedule(constants.CKAN_DB_ID, '* * * * *');
-
     hPage.reload();
 
     hPage.nextExecutionContains(constants.CKAN_DB_ID, 'wurde geändert', false);
@@ -21,6 +21,7 @@ describe('Import cron pattern operations', () => {
 
     hPage.openSchedule(constants.CKAN_DB_ID);
     hPage.turnOffSchedule();
+    hPage.deactivateToggleBar(constants.CKAN_DB_ID);
   });
 
   it('should reset cron expression if the right cancel button is pressed', () => {
@@ -57,14 +58,14 @@ describe('Import cron pattern operations', () => {
   });
 
   it('should disable scheduling for a harvester', () => {
-    hPage.openSchedule(constants.CKAN_DB_ID);
+    hPage.openSchedule(constants.CKAN_TEST_ID);
 
-    hPage.clearCronInput(constants.CKAN_DB_ID);
-    hPage.nextExecutionContains(constants.CKAN_DB_ID, 'deaktiviert', true);
+    hPage.clearCronInput(constants.CKAN_TEST_ID);
+    hPage.nextExecutionContains(constants.CKAN_TEST_ID, 'deaktiviert', true);
 
-    hPage.setSchedule(constants.CKAN_DB_ID, '* * * * *');
+    hPage.setSchedule(constants.CKAN_TEST_ID, '* * * * *');
 
-    hPage.openSchedule(constants.CKAN_DB_ID);
+    hPage.openSchedule(constants.CKAN_TEST_ID);
     hPage.turnOffSchedule();
   });
 

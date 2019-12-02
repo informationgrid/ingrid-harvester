@@ -82,7 +82,7 @@ describe('Excel-Harvester operations', () => {
       defaultDCATCategory: 'Wirtschaft und Finanzen',
       defaultmCLOUDCategory: 'Bahn',
       defaultAttribution: '7',
-      excelFilePath: './data.xlsx',
+      excelFilePath: './test-data.xlsx',
       startPosition: '1',
       maxRecords: '50'
     });

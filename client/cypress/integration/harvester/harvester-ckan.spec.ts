@@ -73,7 +73,7 @@ describe('Ckan-Harvester operations', () => {
     });
 
     hPage.reload();
-    hPage.deleteHarvesterByName('Testing CKAN Harvester');
+    hPage.deleteHarvesterByName('Testing full CKAN Harvester');
   });
 
   it('should update an existing CKAN harvester', () => {
