@@ -86,7 +86,7 @@ class Authentication {
   apiLoginWithUserCheck() {
     //check user is set
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      cy.apiLogin();
+      this.apiLogIn();
     }
     //login is successful
     cy.url().should('include', '/harvester');

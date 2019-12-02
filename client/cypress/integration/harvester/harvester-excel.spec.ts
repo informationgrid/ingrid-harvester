@@ -16,7 +16,7 @@ describe('Excel-Harvester operations', () => {
     hForm.setFields({
       type: 'EXCEL',
       description: 'Excel partial opts Harvester',
-      indexName: 'excel_index',
+      indexName: 'part_excel',
       excelFilePath: './data.xlsx'
     });
     hForm.saveHarvesterConfig();
@@ -26,7 +26,7 @@ describe('Excel-Harvester operations', () => {
 
     hForm.checkFields({
       description: 'Excel partial opts Harvester',
-      indexName: 'excel_index',
+      indexName: 'part_excel',
       excelFilePath: './data.xlsx'
     });
     hPage.reload();
@@ -38,7 +38,7 @@ describe('Excel-Harvester operations', () => {
     hForm.setFields({
       type: 'EXCEL',
       description: 'Excel full opts Harvester',
-      indexName: 'full_excel_index',
+      indexName: 'full_excel',
       excelFilePath: './data.xlsx',
       defaultDCATCategory: 'Bevölkerung und Gesellschaft',
       defaultmCLOUDCategory: 'Bahn',
@@ -52,7 +52,7 @@ describe('Excel-Harvester operations', () => {
     hPage.openHarvesterByName('Excel full opts Harvester');
     hForm.checkFields({
       description: 'Excel full opts Harvester',
-      indexName: 'full_excel_index',
+      indexName: 'full_excel',
       excelFilePath: './data.xlsx',
       defaultDCATCategory: 'Bevölkerung und Gesellschaft',
       defaultmCLOUDCategory: 'Bahn',
@@ -67,7 +67,7 @@ describe('Excel-Harvester operations', () => {
     hPage.openHarvesterByName('excel_test');
     hForm.setFields({
       description: 'excel_update',
-      indexName: 'update_excel_harvester',
+      indexName: 'updated_ex_harvester',
       defaultDCATCategory: 'Wirtschaft und Finanzen',
       defaultAttribution: '7'
     });
@@ -78,7 +78,7 @@ describe('Excel-Harvester operations', () => {
     hPage.openHarvesterByName('excel_update');
     hForm.checkFields({
       description: 'excel_update',
-      indexName: 'update_excel_harvester',
+      indexName: 'updated_ex_harvester',
       defaultDCATCategory: 'Wirtschaft und Finanzen',
       defaultmCLOUDCategory: 'Bahn',
       defaultAttribution: '7',
@@ -86,7 +86,5 @@ describe('Excel-Harvester operations', () => {
       startPosition: '1',
       maxRecords: '50'
     });
-    // hPage.reload();
-    // hPage.deleteHarvesterByName('excel_update');
   });
 });

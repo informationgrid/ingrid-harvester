@@ -4,58 +4,46 @@ describe('Import operations', () => {
 
   const Authentication = require("../../support/pageObjects/auth");
   const auth = new Authentication();
+  const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
+  const hPage = new HarvesterPage();
 
   beforeEach(() => {
     auth.apiLoginWithUserCheck();
   });
 
   it('should open a harvester, start an import and check it is successful', () => {
-    cy.openAndImportHarvester(constants.CKAN_DB_ID);
+    hPage.importHarvesterById(constants.CKAN_DB_ID);
+    hPage.checkImportHasStarted();
 
-    //import should be executing
-    cy.get('.mat-simple-snackbar', {timeout: 3000}).should('contain', 'Import gestartet');
-    cy.get('app-importer-detail', {timeout: 3000}).should('contain', ' Import läuft ');
-
-    cy.reload();
-
-    //check import is successful
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    cy.get('#harvester-' + constants.CKAN_DB_ID).click();
-    cy.get('#harvester-' + constants.CKAN_DB_ID + ' [data-test=last-execution]').should('contain', importsDate);
+    hPage.checkImportDate(constants.CKAN_DB_ID, importsDate);
   });
 
   it('should import all harvesters at once and check a message is shown', () => {
-    cy.importAll();
-    cy.get('.mat-simple-snackbar').should('contain', 'Import von allen Harvestern gestartet');
+    hPage.importAllHarvester();
+    hPage.checkImportAllMsg();
   });
 
   it('should show last import info of an harvester after page refresh', () => {
-    //harvester: Deutsche Bahn Datenportal
-    cy.openAndImportHarvester(constants.CKAN_DB_ID);
+    hPage.importHarvesterById(constants.CKAN_DB_ID);
+    hPage.checkImportHasStarted();
 
-    cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
-    cy.get('app-importer-detail').should('contain', ' Import läuft ');
+    hPage.wait(4500); //wait for import to finish, AVG time: <3 sec
+    hPage.reload();
 
-    //wait for import to finish, AVG time: <3 sec
-    cy.wait(5000);
-    cy.reload();
-
-    //import is successful
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    cy.get('#harvester-' + constants.CKAN_DB_ID + ' [data-test=last-execution]').should('contain', importsDate)
+    hPage.checkImportDate(constants.CKAN_DB_ID, importsDate);
   });
 
   it('should show an icon if a harvester has an import schedule', () => {
-    //set schedule
-    cy.openScheduleHarvester(constants.CKAN_TEST_ID);
-    cy.get('[data-test="cron-input"]').clear().type('30 4 1 * 0,6');
-    cy.get('[data-test=dlg-schedule]').click();
+    hPage.setSchedule(constants.CKAN_TEST_ID, '30 4 1 * 0,6');
 
-    cy.deactivateToggleBar(constants.CKAN_TEST_ID);
-    cy.get('#harvester-' + constants.CKAN_TEST_ID + ' .mat-icon').should('contain', 'alarm_off');
-    cy.activateToggleBar(constants.CKAN_TEST_ID);
-    cy.get('#harvester-' + constants.CKAN_TEST_ID + ' .mat-icon').should('contain', 'alarm_on');
+    hPage.deactivateToggleBar(constants.CKAN_TEST_ID);
+    hPage.alarmOffIconIsShown(constants.CKAN_TEST_ID);
 
-    cy.deactivateToggleBar(constants.CKAN_TEST_ID);
+    hPage.activateToggleBar(constants.CKAN_TEST_ID);
+    hPage.alarmOnIconIsShown(constants.CKAN_TEST_ID);
+
+    hPage.deactivateToggleBar(constants.CKAN_TEST_ID);
   });
 });

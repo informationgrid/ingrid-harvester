@@ -46,7 +46,7 @@ describe('Ckan-Harvester operations', () => {
       maxRecords: '10',
       startPosition: '1',
       filterTag: 'ckan_test',
-      filterGroup: 'ckan_test',
+      filterGroups: 'ckan_test',
       dateFormat: 'YYYY-MM-DD',
       licenseId: '325',
       licenseTitle: 'titleID',
@@ -68,7 +68,7 @@ describe('Ckan-Harvester operations', () => {
       maxRecords: '10',
       startPosition: '1',
       licenseId: '325',
-      titleId: 'titleID',
+      licenseTitle: 'titleID',
       licenseUrl: 'wwwdedede'
     });
 
