@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {RouterModule, Routes} from '@angular/router';
+import {Router, RouterModule, Routes} from '@angular/router';
 import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
@@ -76,7 +76,7 @@ const appRoutes: Routes = [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: UnauthorizedInterceptor,
-      deps: [RouterModule, AuthenticationService],
+      deps: [Router, AuthenticationService],
       multi: true
     }
   ],
