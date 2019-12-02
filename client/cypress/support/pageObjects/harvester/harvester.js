@@ -80,7 +80,6 @@ class HarvesterPage {
 
   checkImportDate(id, importsDate) {
     cy.get('#harvester-' + id + ' [data-test=last-execution]', {timeout: 15000}).should('contain', importsDate)
-
   }
 
 }

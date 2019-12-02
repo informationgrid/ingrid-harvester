@@ -14,7 +14,7 @@ describe('Log tab operations', () => {
   });
 
   it('should show the right information in the logs after a single harvester is imported', () => {
-    hPage.openAndImportHarvester(constants.CKAN_DB_ID);
+    hPage.importHarvesterById(constants.CKAN_DB_ID);
 
     logPage.visit();
     logPage.wait(5000);
@@ -25,7 +25,7 @@ describe('Log tab operations', () => {
   });
 
   it('should show information in the logs when all the harvester are imported', () => {
-    hPage.importAll();
+    hPage.importAllHarvester();
 
     logPage.visit();
     logPage.wait(5000);

@@ -64,7 +64,7 @@ describe('Excel-Harvester operations', () => {
   });
 
   it('should update a harvester of type Excel', () => {
-    hPage.openHarvesterByName('excel_test_api');
+    hPage.openHarvesterByName('excel_test');
     hForm.setFields({
       description: 'excel_update',
       indexName: 'update_excel_harvester',

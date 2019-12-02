@@ -77,14 +77,14 @@ describe('Ckan-Harvester operations', () => {
   });
 
   it('should update an existing CKAN harvester', () => {
-    hPage.openHarvesterByName('ckan_test_api');
+    hPage.openHarvesterByName('ckan_test');
 
     hForm.setFields({
       description: 'ckan_updated',
       indexName: 'updated_ckan',
       defaultAttribution: 'ffm',
       filterTag: 'ckan_test1',
-      filterGroup: 'ckan_test1',
+      filterGroups: 'ckan_test1',
       dateFormat: 'YYYY-MM-DD'
     });
     hForm.saveHarvesterConfig();

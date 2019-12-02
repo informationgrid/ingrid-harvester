@@ -38,7 +38,7 @@ describe('Harvester operations', () => {
     hPage.wait(500);
 
     hForm.setFields({maxRecords: 'ffm'});
-    hForm.fieldContains(hForm.maxRec, '', true);
+    hForm.fieldContains(hForm.maxRecords, '', true);
 
     hForm.setFields({maxRecords: '-7'});
     hForm.btnIsEnabled(hForm.saveHarvesterBtn, false);
@@ -72,7 +72,7 @@ describe('Harvester operations', () => {
   });
 
   it('should delete an harvester (by name)', () => {
-    hPage.deleteHarvesterByName('ckan_test_api');
+    hPage.deleteHarvesterByName('DWD');
   });
 
 });
