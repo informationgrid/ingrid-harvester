@@ -96,8 +96,7 @@ export class CswMapper extends GenericMapper {
             });
 
             // Combine formats in a single slash-separated string
-            let distributionFormat = formats.join(',');
-            if (!distributionFormat) distributionFormat = 'Unbekannt';
+            if (formats.length === 0) formats.push('Unbekannt');
 
             let onlineResources = CswMapper.select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource', distNode);
             for(let j=0; j<onlineResources.length; j++) {
@@ -113,14 +112,14 @@ export class CswMapper extends GenericMapper {
                     url = await UrlUtils.urlWithProtocolFor(requestConfig);
                 }
                 if (url && !urls.includes(url)) {
-                    const format = protocolNode.length > 0 && protocolNode[0].textContent
-                        ? protocolNode[0].textContent
-                        : distributionFormat;
+                    const formatArray = protocolNode.length > 0 && protocolNode[0].textContent
+                        ? [protocolNode[0].textContent]
+                        : formats;
 
                     urls.push({
                         accessURL: url,
                         title: title.length > 0 ? title[0].textContent : undefined,
-                        format: UrlUtils.mapFormat(format, this.summary.warnings)
+                        format: UrlUtils.mapFormat(formatArray, this.summary.warnings)
                     });
                 }
             }

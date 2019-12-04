@@ -232,7 +232,7 @@ export class ExcelMapper extends GenericMapper {
 
             if (checkedUrl) {
                 distributions.push({
-                    format: type,
+                    format: [type],
                     accessURL: downloadUrl.trim()
                 });
             } else {

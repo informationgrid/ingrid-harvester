@@ -84,7 +84,7 @@ export class CkanMapper extends GenericMapper {
 
     async getDistributions(): Promise<Distribution[]> {
         let urlErrors = [];
-        let distributions = [];
+        let distributions: Distribution[] = [];
         let resources = this.source.resources;
         if (resources !== null) {
             for (let i = 0; i < resources.length; i++) {
@@ -99,7 +99,7 @@ export class CkanMapper extends GenericMapper {
                         title: res.name,
                         description: res.description,
                         accessURL: accessURL,
-                        format: UrlUtils.mapFormat(res.format, this.summary.warnings),
+                        format: UrlUtils.mapFormat([res.format], this.summary.warnings),
                         issued: this.handleDate(res.created),
                         modified: this.handleDate(res.last_modified),
                         byteSize: this.handleByteSize(res.size)

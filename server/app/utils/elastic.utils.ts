@@ -22,6 +22,8 @@ export interface BulkResponse {
 export class ElasticSearchUtils {
     public static maxBulkSize = 100;
 
+    private static readonly LENGTH_OF_TIMESTAMP = 18;
+
     settings: ElasticSettings & ImporterSettings;
     client: any;
     _bulkData: any[];
@@ -152,7 +154,7 @@ export class ElasticSearchUtils {
                     // the index name must consist of the base name + the date string which is
                     // 18 characters long
                     // in case we want to get all indices just request with an empty baseName
-                    return baseName === '' || (json.index.startsWith(baseName) && json.index.length === baseName.length + 18);
+                    return baseName === '' || (json.index.startsWith(baseName) && json.index.length === baseName.length + ElasticSearchUtils.LENGTH_OF_TIMESTAMP);
                 })
                 .map(item => {
                     return {

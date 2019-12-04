@@ -87,19 +87,21 @@ export class UrlUtils {
      * @param format
      * @param warnings
      */
-    static mapFormat(format: string, warnings?: string[][]) {
+    static mapFormat(formatArray: string[], warnings?: string[][]): string[] {
 
-        const value = mapping.format[format.toLowerCase()];
+        return formatArray.map(format => {
+            const value = mapping.format[format.toLowerCase()];
 
-        if (!value) {
-            log.warn('Distribution format unknown: ' + format);
-            if (warnings) {
-                warnings.push(['Distribution format unknown', format]);
+            if (!value) {
+                log.warn('Distribution format unknown: ' + format);
+                if (warnings) {
+                    warnings.push(['Distribution format unknown', format]);
+                }
+                return format;
             }
-            return format;
-        }
 
-        return value;
+            return value;
+        });
 
     }
 }

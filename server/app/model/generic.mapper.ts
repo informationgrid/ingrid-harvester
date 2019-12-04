@@ -5,7 +5,7 @@ import * as moment from 'moment';
 moment.locale('de');
 
 export interface Distribution {
-    format: string;
+    format: string[];
     accessURL: string;
     id?: string;
     title?: string;
