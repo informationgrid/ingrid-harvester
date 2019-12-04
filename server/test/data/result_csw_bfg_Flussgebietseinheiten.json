@@ -100,19 +100,31 @@
   ],
   "distribution": [
     {
-      "format": "Geography Markup Language (GML),ESRI Shapefile",
+      "format": [
+        "Geography Markup Language (GML)",
+        "Shape"
+      ],
       "accessURL": "https://registry.gdi-de.org/id/de.bund.bfg.csw/a3d7dc07-cee6-4481-8d56-19e4a1d215a4"
     },
     {
-      "format": "Geography Markup Language (GML),ESRI Shapefile",
+      "format": [
+        "Geography Markup Language (GML)",
+        "Shape"
+      ],
       "accessURL": "https://registry.gdi-de.org/id/de.bund.bfg.csw/5177683d-5c40-42e5-9a58-f20fa98f0d78"
     },
     {
-      "format": "Geography Markup Language (GML),ESRI Shapefile",
+      "format": [
+        "Geography Markup Language (GML)",
+        "Shape"
+      ],
       "accessURL": "https://geoportal.bafg.de/wmsproxy/INSPIRE/WFDReportingUnits"
     },
     {
-      "format": "Geography Markup Language (GML),ESRI Shapefile",
+      "format": [
+        "Geography Markup Language (GML)",
+        "Shape"
+      ],
       "accessURL": "https://geoportal.bafg.de/inspire/download/reporting_units/servicefeed.xml"
     }
   ]

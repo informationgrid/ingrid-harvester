@@ -35,7 +35,7 @@
   "theme" : [ "http://publications.europa.eu/resource/authority/data-theme/TRAN" ],
   "modified" : "2018-12-01T00:00:00.000Z",
   "distribution" : [ {
-    "format" : "Dateidownload",
+    "format" : ["Dateidownload"],
     "accessURL" : "http://www.mauttabelle.de/2018-12-01_Mauttabelle.zip"
   } ]
 }
