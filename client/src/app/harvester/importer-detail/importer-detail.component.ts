@@ -9,7 +9,7 @@ import {ImportLogMessage} from "../../../../../server/app/model/import.result";
 export class ImporterDetailComponent implements OnInit {
 
   @Input() data: ImportLogMessage;
-  @Input() enabled = false;
+  @Input() cronActive = false;
 
   constructor() {
   }

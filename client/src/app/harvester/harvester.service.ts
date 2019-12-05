@@ -4,6 +4,7 @@ import {Harvester} from '@shared/harvester';
 import {HttpClient} from '@angular/common/http';
 import {ImportLogMessage} from '../../../../server/app/model/import.result';
 import {CkanSettings} from '../../../../server/app/importer/ckan/ckan.settings';
+import {CronData} from '../../../../server/app/importer.settings';
 
 @Injectable({
   providedIn: 'root'
@@ -49,8 +50,8 @@ export class HarvesterService {
     return this.http.post<void>('rest/api/harvester/' + (harvester.id || -1), harvester);
   }
 
-  schedule(id: number, cronExpression: string): Observable<void> {
-    return this.http.post<void>('rest/api/schedule/' + id, {cron: cronExpression});
+  schedule(id: number, cron: CronData): Observable<Date> {
+    return this.http.post<Date>('rest/api/schedule/' + id, {cron: cron});
   }
 
   delete(id: number) {

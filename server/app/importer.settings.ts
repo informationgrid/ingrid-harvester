@@ -1,6 +1,11 @@
+export interface CronData {
+    pattern: string;
+    active: boolean;
+}
+
 export type ImporterSettings = {
     blacklistedIds?: string[],
-    cronPattern?: string,
+    cron?: CronData,
     dateSourceFormats?: string[],
     defaultAttribution?: string,
     defaultAttributionLink?: string,

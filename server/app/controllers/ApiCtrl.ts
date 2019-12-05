@@ -9,6 +9,7 @@ import {ScheduleService} from '../services/ScheduleService';
 import {GeneralSettings} from '@shared/general-config.settings';
 import {Index} from '@shared/index.model';
 import {IndexService} from '../services/IndexService';
+import {CronData} from '../importer.settings';
 
 let log = require('log4js').getLogger(__filename);
 
@@ -38,7 +39,9 @@ export class ApiCtrl {
             this.indexService.removeFromAlias(+id)
                 .catch(e => log.error('Error removing alias', e));
         } else {
-            this.scheduleService.startJob(+id);
+            if (config.cron && config.cron.active) {
+                this.scheduleService.startJob(+id);
+            }
 
             this.indexService.addToAlias(+id)
                 .catch(e => log.error('Error adding alias', e));
@@ -93,9 +96,9 @@ export class ApiCtrl {
     }
 
     @Post('/schedule/:id')
-    schedule(@PathParams('id') id: number, @BodyParams('cron') cronExpression: string): void {
+    schedule(@PathParams('id') id: number, @BodyParams('cron') cronExpression: CronData): Date {
         console.log('Body:', cronExpression);
-        this.scheduleService.set(+id, cronExpression);
+        return this.scheduleService.set(+id, cronExpression);
     }
 
 

@@ -48,8 +48,8 @@ export class ImportSocketService {
                 importer.run.subscribe(response => {
                     response.id = id;
                     response.lastExecution = lastExecution;
-                    if (configHarvester.cronPattern) {
-                        response.nextExecution = new CronJob(configHarvester.cronPattern, () => {
+                    if (configHarvester.cron && configHarvester.cron.active) {
+                        response.nextExecution = new CronJob(configHarvester.cron.pattern, () => {
                         }).nextDate().toDate();
                     }
                     response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;

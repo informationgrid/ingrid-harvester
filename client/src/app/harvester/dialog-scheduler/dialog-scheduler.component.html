@@ -2,15 +2,22 @@
 
 <mat-dialog-content>
 
-  <mat-form-field class="full-width padding-below">
-    <mat-label>Cron Expression</mat-label>
-    <input matInput placeholder="* * * * *" [(ngModel)]="cronValue" (keyup)="translate(cronValue)" data-test="cron-input">
-    <button mat-button *ngIf="cronValue" matSuffix mat-icon-button aria-label="Clear" (click)="cronValue=''" data-test="cron-reset">
-      <mat-icon>close</mat-icon>
-    </button>
-    <mat-icon matSuffix (click)="showInfo = !showInfo" data-test="cron-info">info_outline</mat-icon>
-    <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
-  </mat-form-field>
+  <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center" class="padding-below">
+    <mat-slide-toggle color="primary"
+                      [(ngModel)]="cron.active"
+                      (change)="translate(cron.pattern)"
+                      title="Planung an- / ausschalten"></mat-slide-toggle>
+
+    <mat-form-field fxFlex>
+      <mat-label>Cron Expression</mat-label>
+      <input matInput placeholder="* * * * *" [(ngModel)]="cron.pattern" (keyup)="translate(cron.pattern)" data-test="cron-input">
+      <button mat-button *ngIf="cron.pattern" matSuffix mat-icon-button aria-label="Clear" (click)="cron.pattern=''" data-test="cron-reset">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon" data-test="cron-info">info_outline</mat-icon>
+      <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
+    </mat-form-field>
+  </div>
 
   <mat-card class="info" *ngIf="showInfo">
     <div><span>*/5 * * * *</span>Alle 5 Minuten</div>
@@ -21,8 +28,7 @@
 
   <mat-divider></mat-divider>
 
-  <h3 *ngIf="cronValue">{{cronTranslation}}</h3>
-  <h3 *ngIf="!cronValue">Planung ausschalten</h3>
+  <h3>{{cronTranslation}}</h3>
 
 </mat-dialog-content>
 
@@ -31,7 +37,7 @@
   <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
   <div class="flex-space"></div>
   <button mat-button color="primary"
-          [disabled]="cronValue !== '' && !validExpression"
-          [mat-dialog-close]="cronValue || 'DISABLE'"
-          data-test="dlg-schedule">Planen</button>
+          [disabled]="cron.pattern !== '' && !validExpression"
+          [mat-dialog-close]="cron || null"
+          data-test="dlg-schedule">Aktualisieren</button>
 </mat-dialog-actions>

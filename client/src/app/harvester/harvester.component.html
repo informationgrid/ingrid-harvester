@@ -16,8 +16,8 @@
                                       title="Für Suche und Planung an- / ausschalten"
                                       (change)="handleActivation($event, harvester)"
                                       (click)="$event.stopImmediatePropagation()"></mat-slide-toggle>
-                    <mat-icon *ngIf="harvester.cronPattern" inline class="scheduled">
-                      {{harvester.disable ? 'alarm_off' : 'alarm_on'}}
+                    <mat-icon *ngIf="harvester.cron?.pattern" inline class="scheduled">
+                      {{harvester.disable || !harvester.cron.active ? 'alarm_off' : 'alarm_on'}}
                     </mat-icon>
                     <p class="no-wrap">{{harvester.description || harvester.defaultAttribution}}</p>
                     <mat-spinner *ngIf="importDetail[harvester.id]?.complete === false" diameter="20"></mat-spinner>
@@ -31,7 +31,8 @@
 
             </mat-expansion-panel-header>
 
-            <app-importer-detail [data]="importDetail[harvester.id]" [enabled]="!harvester.disable"></app-importer-detail>
+            <app-importer-detail [data]="importDetail[harvester.id]"
+                                 [cronActive]="!harvester.disable && harvester.cron?.active"></app-importer-detail>
 
             <mat-action-row>
                 <button mat-button (click)="showLog(harvester.id)" [disabled]="!hasAnyProblems(harvester.id)" data-test="log">

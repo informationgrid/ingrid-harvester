@@ -70,27 +70,25 @@ export class HarvesterComponent implements OnInit, OnDestroy {
   schedule(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogSchedulerComponent, {
       width: '500px',
-      data: harvester.cronPattern
+      data: {...harvester.cron}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('The dialog was closed', result);
-        const cronExpression = result === 'DISABLE' ? null : result;
 
         // update immediately component cronpattern
-        harvester.cronPattern = cronExpression;
+        harvester.cron = result;
 
-        // update immediately next execution time which is only calculated to the server
-        const detailElement = this.importDetail[harvester.id];
-        if (detailElement) {
-          detailElement.nextExecution = undefined;
-        }
-
-        // TODO: get updated schedule info and set next execution time
-        this.harvesterService.schedule(harvester.id, cronExpression).subscribe({
-          error: (error: Error) => this.showError(error)
-        });
+        // update schedule and set next execution time
+        this.harvesterService.schedule(harvester.id, harvester.cron)
+          .subscribe(nextExecution => {
+            // update immediately next execution time which is only calculated to the server
+            const detailElement = this.importDetail[harvester.id];
+            if (detailElement) {
+              detailElement.nextExecution = nextExecution;
+            }
+          }, (error: Error) => this.showError(error));
       }
     });
   }
