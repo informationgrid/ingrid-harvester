@@ -3,7 +3,7 @@
  */
 import {getLogger} from "log4js";
 import {OptionsWithUri} from "request-promise";
-import {CkanSettings} from "./ckan.settings";
+import {CkanSettings, ProviderField} from "./ckan.settings";
 import {DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
 import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from "../../utils/http-request.utils";
 import {UrlUtils} from "../../utils/url.utils";
@@ -58,28 +58,15 @@ export class CkanMapper extends GenericMapper {
     }
 
     async getDisplayContacts() {
+        let person = await this.getDisplayContactByField(this.settings.providerField);
 
-        let maintainer = this.getMaintainer();
-
-        if (maintainer) {
-            return [maintainer];
+        if (person.length === 0) {
+            return [{
+                name: this.settings.providerPrefix + this.settings.description
+            }];
         }
 
-        let publisher = await this.getPublisher();
-
-        let contact: Person;
-        if (publisher.length === 0) {
-            contact = {
-                name: this.settings.description
-            }
-        } else {
-            contact = {
-                name: publisher[0].organization ? publisher[0].organization : this.settings.description,
-                homepage: publisher[0].homepage ? publisher[0].homepage : undefined
-            }
-        }
-
-        return [contact];
+        return person;
     }
 
     async getDistributions(): Promise<Distribution[]> {
@@ -170,16 +157,28 @@ export class CkanMapper extends GenericMapper {
         return publisher ? [publisher] : [];
     }
 
-    private getMaintainer(): Person {
+    private getMaintainer(): Person[] {
         let maintainer: Person;
         if (this.source.maintainer) {
             maintainer = {
-                name: this.source.maintainer,
+                name: this.settings.providerPrefix + this.source.maintainer,
                 mbox: this.source.maintainer_email
             };
         }
 
-        return maintainer;
+        return maintainer ? [maintainer] : [];
+    }
+
+    private getAuthor(): Person[] {
+        let author: Person;
+        if (this.source.author) {
+            author = {
+                name: this.settings.providerPrefix + this.source.author,
+                mbox: this.source.author_email
+            };
+        }
+
+        return author ? [author] : [];
     }
 
     getTemporal(): DateRange {
@@ -488,6 +487,25 @@ export class CkanMapper extends GenericMapper {
         }
 
         return size === '' ? undefined : size;
+    }
+
+    private async getDisplayContactByField(providerField: ProviderField): Promise<Person[]> {
+        switch (providerField) {
+            case 'organization':
+                const publisher = await this.getPublisher();
+                if (publisher.length > 0) {
+                    return [{
+                        name: this.settings.providerPrefix + (publisher[0].organization ? publisher[0].organization : this.settings.description),
+                        homepage: publisher[0].homepage ? publisher[0].homepage : undefined
+                    }];
+                } else {
+                    return [];
+                }
+            case 'author':
+                return this.getAuthor();
+            default:
+                return this.getMaintainer();
+        }
     }
 }
 

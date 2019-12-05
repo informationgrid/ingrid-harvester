@@ -23,6 +23,8 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
         url: new FormControl(this.model && this.model.defaultLicense ? this.model.defaultLicense.url : '')
       })
     );
+    this.form.addControl('providerPrefix', new FormControl(this.model ? this.model.providerPrefix : ''));
+    this.form.addControl('providerField', new FormControl(this.model ? this.model.providerField : 'maintainer'));
   }
 
   ngOnDestroy(): void {

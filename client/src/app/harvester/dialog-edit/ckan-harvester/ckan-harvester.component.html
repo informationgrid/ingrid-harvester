@@ -14,6 +14,20 @@
                    (update)="model.filterGroups = $event"></app-chip-list>
   </div>
 
+  <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+    <mat-form-field fxFlex>
+      <input matInput placeholder="Bereitgestellt durch (Präfix)" formControlName="providerPrefix" autocomplete="off">
+    </mat-form-field>
+    <mat-form-field fxFlex>
+      <mat-label>Bereitgestellt durch (CKAN-Feld)</mat-label>
+      <mat-select formControlName="providerField">
+        <mat-option value="maintainer">maintainer</mat-option>
+        <mat-option value="organization">organization</mat-option>
+        <mat-option value="author">author</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
   <app-chip-list [list]="model.dateSourceFormats"
                  placeholder="Datumsformate"
                  (update)="model.dateSourceFormats = $event"></app-chip-list>
