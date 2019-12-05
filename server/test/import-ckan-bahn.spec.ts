@@ -33,6 +33,7 @@ describe('Import CKAN Bahn', function () {
             defaultAttribution: 'Deutsche Bahn Datenportal',
             defaultDCATCategory: ['TRAN', 'TECH'],
             defaultMcloudSubgroup: ['railway'],
+            providerField: 'organization',
             dryRun: true,
             elasticSearchUrl: undefined,
             type: undefined,
