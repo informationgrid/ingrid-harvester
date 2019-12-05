@@ -10,6 +10,8 @@ export class UrlUtils {
 
     static cache: { [url: string]: boolean } = {};
 
+    private static formatMapping = UrlUtils.getFormatMapping();
+
     /**
      * Rudimentary checks for URL validity. This method extracts the request
      * URI from the given configuration, and returns
@@ -84,13 +86,13 @@ export class UrlUtils {
 
     /**
      * Map a distribution format to a conform value
-     * @param format
+     * @param formatArray
      * @param warnings
      */
     static mapFormat(formatArray: string[], warnings?: string[][]): string[] {
 
         return formatArray.map(format => {
-            const value = mapping.format[format.toLowerCase()];
+            const value = UrlUtils.formatMapping[format.toLowerCase()];
 
             if (!value) {
                 log.warn('Distribution format unknown: ' + format);
@@ -103,5 +105,14 @@ export class UrlUtils {
             return value;
         });
 
+    }
+
+    private static getFormatMapping() {
+
+        return Object.keys(mapping.format)
+            .reduce((prev, curr) => {
+                mapping.format[curr].forEach(value => prev[value] = curr);
+                return prev;
+            }, {});
     }
 }

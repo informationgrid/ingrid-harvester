@@ -91,8 +91,12 @@ export class CswMapper extends GenericMapper {
             let formats = [];
             let urls: Distribution[] = [];
 
-            CswMapper.select('.//gmd:MD_Format/gmd:name/gco:CharacterString', distNode).forEach(fmt => {
-                if (!formats.includes(fmt.textContent)) formats.push(fmt.textContent);
+            CswMapper.select('.//gmd:MD_Format/gmd:name/gco:CharacterString', distNode).forEach(format => {
+                format.textContent.split(',').forEach(formatItem => {
+                    if (!formats.includes(formatItem)) {
+                        formats.push(formatItem.trim());
+                    }
+                });
             });
 
             // Combine formats in a single slash-separated string
