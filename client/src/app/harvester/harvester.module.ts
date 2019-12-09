@@ -16,7 +16,7 @@ import {CkanHarvesterComponent} from './dialog-edit/ckan-harvester/ckan-harveste
 import {CswHarvesterComponent} from './dialog-edit/csw-harvester/csw-harvester.component';
 import {ImporterDetailComponent} from './importer-detail/importer-detail.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
-import {MatCardModule, MatChipsModule, MatListModule, MatTabsModule} from "@angular/material";
+import {MatCardModule, MatCheckboxModule, MatChipsModule, MatListModule, MatTabsModule} from '@angular/material';
 import {RouterModule, Routes} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -42,25 +42,26 @@ const harvesterRoutes: Routes = [
     ImporterDetailComponent,
     ChipListComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(harvesterRoutes),
-    FlexLayoutModule,
-    SharedModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatCardModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatListModule,
-    MatSnackBarModule,
-    MatSlideToggleModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatChipsModule,
-    MatTabsModule,
-    ReactiveFormsModule
-  ],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(harvesterRoutes),
+        FlexLayoutModule,
+        SharedModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatCardModule,
+        MatExpansionModule,
+        MatIconModule,
+        MatListModule,
+        MatSnackBarModule,
+        MatSlideToggleModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule,
+        MatChipsModule,
+        MatTabsModule,
+        ReactiveFormsModule,
+        MatCheckboxModule
+    ],
   entryComponents: [
     DialogSchedulerComponent,
     DialogLogComponent,

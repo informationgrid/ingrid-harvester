@@ -91,3 +91,8 @@ mat-spinner {
   align-self: center;
   padding-right: 10px;
 }
+
+::ng-deep h4 {
+  padding-top: 10px;
+  margin-bottom: 10px;
+}

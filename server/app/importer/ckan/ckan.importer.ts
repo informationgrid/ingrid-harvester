@@ -195,7 +195,8 @@ export class CkanImporter implements Importer {
             this.sendFinishMessage(observer, err.message);
 
             // clean up index
-            await this.elastic.deleteIndex(this.elastic.indexName);
+            await this.elastic.deleteIndex(this.elastic.indexName)
+                .catch(e => log.error(e.message));
         }
     }
 

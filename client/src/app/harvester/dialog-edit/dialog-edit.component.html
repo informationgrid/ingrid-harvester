@@ -93,7 +93,7 @@
                      placeholder="Ausgeschlossene IDs"
                      (update)="harvester.blacklistedIds = $event"></app-chip-list>
 
-<!--       <span class="mat-small">{{harvester | json}}</span>-->
+       <span class="mat-small">{{harvesterForm.value | json}}</span>
     </form>
   </div>
 </mat-dialog-content>

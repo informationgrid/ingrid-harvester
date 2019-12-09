@@ -16,17 +16,35 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.form.addControl('ckanBaseUrl', new FormControl(this.model ? this.model.ckanBaseUrl : '', Validators.required));
+    this.form.addControl('ckanBaseUrl', new FormControl(this.getModelField('ckanBaseUrl', ''), Validators.required));
     this.form.addControl('defaultLicense', new FormGroup({
-        id: new FormControl(this.model && this.model.defaultLicense ? this.model.defaultLicense.id : ''),
-        title: new FormControl(this.model && this.model.defaultLicense ? this.model.defaultLicense.title : ''),
-        url: new FormControl(this.model && this.model.defaultLicense ? this.model.defaultLicense.url : '')
+        id: new FormControl(this.getModelField('defaultLicense.id', '')),
+        title: new FormControl(this.getModelField('defaultLicense.title', '')),
+        url: new FormControl(this.getModelField('defaultLicense.url', ''))
       })
     );
     this.form.addControl('providerPrefix',
-      new FormControl(this.model && this.model.providerPrefix ? this.model.providerPrefix : ''));
+      new FormControl(this.getModelField('providerPrefix', '')));
     this.form.addControl('providerField',
-      new FormControl(this.model && this.model.providerField ? this.model.providerField : 'organization'));
+      new FormControl(this.getModelField('providerField', 'organization')));
+
+    const rule = new FormControl(this.getModelField('rules.containsDocumentsWithData', false));
+
+    this.form.addControl('rules', new FormGroup({
+      containsDocumentsWithData: rule
+    }));
+  }
+
+  private getModelField(field: string, defaultValue: any) {
+    let current = this.model;
+    const items = field.split('.');
+
+    const exists = items.every(item => {
+      current = current[item];
+      return current;
+    });
+
+    return exists ? current : defaultValue;
   }
 
   ngOnDestroy(): void {

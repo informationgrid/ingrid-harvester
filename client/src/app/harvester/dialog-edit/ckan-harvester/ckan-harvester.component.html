@@ -3,6 +3,7 @@
     <input matInput placeholder="CKAN Basis URL" formControlName="ckanBaseUrl" required>
   </mat-form-field>
 
+  <h4>Filter und Regeln</h4>
   <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
     <app-chip-list [list]="model.filterTags"
                    placeholder="Filter Tags"
@@ -14,12 +15,17 @@
                    (update)="model.filterGroups = $event"></app-chip-list>
   </div>
 
+  <div formGroupName="rules">
+    <mat-checkbox formControlName="containsDocumentsWithData">Enthält Daten-Downloads</mat-checkbox>
+  </div>
+
+  <h4>Bereitgestellt durch</h4>
   <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
     <mat-form-field fxFlex>
-      <input matInput placeholder="Bereitgestellt durch (Präfix)" formControlName="providerPrefix" autocomplete="off">
+      <input matInput placeholder="Präfix" formControlName="providerPrefix" autocomplete="off">
     </mat-form-field>
     <mat-form-field fxFlex>
-      <mat-label>Bereitgestellt durch (CKAN-Feld)</mat-label>
+      <mat-label>CKAN-Feld</mat-label>
       <mat-select formControlName="providerField">
         <mat-option value="maintainer">maintainer</mat-option>
         <mat-option value="organization">organization</mat-option>

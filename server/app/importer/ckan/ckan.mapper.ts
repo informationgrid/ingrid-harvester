@@ -8,6 +8,7 @@ import {DateRange, Distribution, GenericMapper, Organization, Person} from "../.
 import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from "../../utils/http-request.utils";
 import {UrlUtils} from "../../utils/url.utils";
 import {Summary} from '../../model/summary';
+import {CkanRules} from './ckan.rules';
 
 let markdown = require('markdown').markdown;
 
@@ -101,13 +102,21 @@ export class CkanMapper extends GenericMapper {
         }
         this.errors.push(...urlErrors);
 
+        this.validateDistributions(distributions);
+
+        return distributions;
+    }
+
+    private validateDistributions(distributions: Distribution[]) {
         if (distributions.length === 0) {
             this.valid = false;
             let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.source.id}', index: '${this.data.currentIndexName}'.`;
             this.log.warn(msg);
         }
 
-        return distributions;
+        if (this.settings.rules && this.settings.rules.containsDocumentsWithData) {
+            CkanRules.containsDocumentsWithData(distributions, this);
+        }
     }
 
     getGeneratedId() {
