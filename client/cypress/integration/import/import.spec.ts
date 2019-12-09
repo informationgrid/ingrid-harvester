@@ -36,7 +36,10 @@ describe('Import operations', () => {
   });
 
   it('should show an icon if a harvester has an import schedule', () => {
-    hPage.setSchedule(constants.CKAN_TEST_ID, '30 4 1 * 0,6');
+    hPage.setScheduleTo(constants.CKAN_TEST_ID, '30 4 1 * 0,6');
+    hPage.openSchedule(constants.CKAN_TEST_ID);
+    hPage.clickCronToggleBar();
+    hPage.closeOpenSchedule();
 
     hPage.deactivateToggleBar(constants.CKAN_TEST_ID);
     hPage.alarmOffIconIsShown(constants.CKAN_TEST_ID);

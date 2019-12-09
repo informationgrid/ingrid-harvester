@@ -8,15 +8,16 @@ class HarvesterPage {
     this.importBtn = ' [data-test="import"]';
     this.scheduleBtn = '[data-test="schedule"]';
     this.cronInputBtn = '[data-test="cron-input"]';
-    this.cronReset = '[data-test=cron-reset]';
+    this.cronReset = '[data-test="cron-reset"]';
     this.setScheduleBtn = '[data-test="dlg-schedule"]';
     this.icon = ' .mat-icon';
     this.logContainer = ' .logContainer';
     this.labelContent = ' .mat-tab-label-content';
     this.numErrors = '[data-test="num-errors"]';
     this.nextExecution = '[data-test="next-execution"]';
-    this.lastExecution = '[data-test=last-execution]';
+    this.lastExecution = '[data-test="last-execution"]';
     this.cronInfo = '[data-test="cron-info"]';
+    this.cronToggleBar = '[title="Planung an- / ausschalten"]';
   }
 
   visit() {
@@ -49,6 +50,10 @@ class HarvesterPage {
     cy.get('.no-wrap', {timeout: 3000}).contains(name).click();
   }
 
+  clickHarvesterById(id) {
+    cy.get('#harvester-' + id).click();
+  }
+
   deleteHarvesterByName(name) {
     this.clickHarvesterByName(name);
     cy.get(this.deleteHarvesterBtn + ':visible').click();
@@ -79,6 +84,10 @@ class HarvesterPage {
     });
   }
 
+  clickCronToggleBar() {
+    cy.get(this.cronToggleBar).click();
+  }
+
   importHarvesterById(id) {
     cy.get('#harvester-' + id).click();
     cy.get('#harvester-' + id + ' ' + this.importBtn).click();
@@ -91,7 +100,7 @@ class HarvesterPage {
   }
 
   checkImportHasStarted() {
-    cy.get('.mat-simple-snackbar').should('contain', 'Import gestartet');
+    cy.get('.mat-simple-snackbar', {timeout: 60000}).should('contain', 'Import gestartet');
     cy.get('app-importer-detail').should('contain', ' Import läuft ');
   }
 
@@ -105,18 +114,30 @@ class HarvesterPage {
 
   openSchedule(id) {
     cy.get('#harvester-' + id).click();
+    cy.wait(500);
     cy.get('#harvester-' + id + ' ' + this.scheduleBtn).click();
   }
 
-  setSchedule(id, pattern) {
+  closeOpenSchedule() {
+    cy.get(this.setScheduleBtn + ' :visible').click();
+  }
+
+  setScheduleTo(id, pattern) {
     this.openSchedule(id);
     cy.get(this.cronInputBtn).clear().type(pattern);
+    this.clickCronToggleBar();
     cy.get(this.setScheduleBtn).click();
   }
 
-  turnOffSchedule() {
+  clickCronResetBtn() {
     cy.get(this.cronReset).click();
+  }
+
+  scheduleIsDeactivated() {
     cy.get(' .ng-star-inserted').should('contain', 'Planung ausschalten');
+  }
+
+  clickSetScheduleBtn() {
     cy.get(this.setScheduleBtn).click();
   }
 
@@ -140,7 +161,6 @@ class HarvesterPage {
     cy.get(this.cronInputBtn).clear();
     cy.get(this.setScheduleBtn).click();
   }
-
 
   checkNoErrors(id) {
     cy.get('#harvester-' + id + ' ' + this.numErrors, {timeout: 10000})

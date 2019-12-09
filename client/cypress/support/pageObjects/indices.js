@@ -18,7 +18,7 @@ class IndicesPage {
   }
 
   indexIsContained(index, bool) {
-    if (bool) {
+    if (bool ) {
       this.getAllIndices().should('contain', index);
     } else {
       this.getAllIndices().should('not.contain', index);
@@ -31,7 +31,6 @@ class IndicesPage {
       expect(partialList).not.contain(index);
     });
   }
-
 }
 
 export default IndicesPage;

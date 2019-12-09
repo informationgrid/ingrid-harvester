@@ -17,7 +17,7 @@ describe('Log tab operations', () => {
     hPage.importHarvesterById(constants.CKAN_DB_ID);
 
     logPage.visit();
-    logPage.wait(5000);
+    logPage.wait(4500);
     logPage.reload();
 
     logPage.infoIsContained('[INFO] default - Deutsche Bahn Datenportal (CKAN)');
@@ -25,6 +25,9 @@ describe('Log tab operations', () => {
   });
 
   it('should show information in the logs when all the harvester are imported', () => {
+    //wait a bit for log status to be cleaner
+    hPage.wait(10000);
+
     hPage.importAllHarvester();
 
     logPage.visit();

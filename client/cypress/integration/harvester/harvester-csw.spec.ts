@@ -23,7 +23,7 @@ describe('Csw-Harvester operations', () => {
     hForm.setFields({
       type: 'CSW',
       description: 'Testing partial CSW Harvester',
-      indexName: 'csw_index',
+      indexName: 'part_csw',
       httpMethod: 'GET',
       getRecordsUrl: './testme'
     });
@@ -33,7 +33,7 @@ describe('Csw-Harvester operations', () => {
     hPage.openHarvesterByName('Testing partial CSW Harvester');
     hForm.checkFields({
       description: 'Testing partial CSW Harvester',
-      indexName: 'csw_index',
+      indexName: 'part_csw',
       httpMethod: 'GET',
       getRecordsUrl: './testme'
     });
@@ -47,7 +47,7 @@ describe('Csw-Harvester operations', () => {
     hForm.setFields({
       type: 'CSW',
       description: 'Testing CSW Harvester',
-      indexName: 'full_csw_index',
+      indexName: 'full_csw',
       httpMethod: 'POST',
       getRecordsUrl: './testme',
       defaultDCATCategory: 'Wissenschaft und Technologie',
@@ -66,7 +66,7 @@ describe('Csw-Harvester operations', () => {
     hPage.openHarvesterByName('Testing CSW Harvester');
     hForm.checkFields({
       description: 'Testing CSW Harvester',
-      indexName: 'full_csw_index',
+      indexName: 'full_csw',
       httpMethod: 'POST',
       getRecordsUrl: './testme',
       defaultDCATCategory: 'Wissenschaft und Technologie',
@@ -86,7 +86,7 @@ describe('Csw-Harvester operations', () => {
 
     hForm.setFields({
       description: 'csw_update',
-      indexName: 'full_csw_index',
+      indexName: 'full_csw',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'
@@ -98,7 +98,7 @@ describe('Csw-Harvester operations', () => {
     hPage.openHarvesterByName('csw_update');
     hForm.checkFields({
       description: 'csw_update',
-      indexName: 'full_csw_index',
+      indexName: 'full_csw',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'
