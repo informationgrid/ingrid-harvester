@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {CkanSettings} from '../../../../../../server/app/importer/ckan/ckan.settings';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
@@ -11,6 +11,7 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
 
   @Input() form: FormGroup;
   @Input() model: CkanSettings;
+  @Input() rulesTemplate: TemplateRef<any>;
 
   constructor() {
   }
@@ -29,9 +30,11 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
       new FormControl(this.getModelField('providerField', 'organization')));
 
     const rule = new FormControl(this.getModelField('rules.containsDocumentsWithData', false));
+    const ruleBlacklist = new FormControl(this.getModelField('rules.containsDocumentsWithDataBlacklist', ''));
 
     this.form.addControl('rules', new FormGroup({
-      containsDocumentsWithData: rule
+      containsDocumentsWithData: rule,
+      containsDocumentsWithDataBlacklist: ruleBlacklist
     }));
   }
 

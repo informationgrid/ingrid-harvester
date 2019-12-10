@@ -104,7 +104,12 @@ export class CkanImporter implements Importer {
             const currentDocPostion = this.summary.numDocs;
             this.observer.next(ImportResult.running(currentDocPostion, totalCount));
 
-            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+            if (mapper.shouldBeSkipped()) {
+                this.summary.skippedDocs.push(source.id);
+                return;
+            }
+
+            if (!this.settings.dryRun) {
                 return this.elastic.addDocToBulk(doc, source.id)
                     .then(response => {
                         if (!response.queued) {

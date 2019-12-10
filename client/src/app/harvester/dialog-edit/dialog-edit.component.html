@@ -3,97 +3,115 @@
 <mat-dialog-content>
   <div class="form-wrapper">
     <form class="example-container" [formGroup]="harvesterForm">
-      <mat-form-field>
-        <mat-label>Typ</mat-label>
-        <mat-select formControlName="type" required>
-          <mat-option value="EXCEL">EXCEL</mat-option>
-          <mat-option value="CKAN">CKAN</mat-option>
-          <mat-option value="CSW">CSW</mat-option>
-          <ng-container *ngIf="harvester.id != -1">
-            <mat-option value="BFG-CSW">CSW (BFG)</mat-option>
-            <mat-option value="CODEDE-CSW">CSW (CODEDE)</mat-option>
-          </ng-container>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field>
-        <input matInput placeholder="Beschreibung" formControlName="description" required>
-      </mat-form-field>
-
-      <mat-form-field>
-        <input matInput placeholder="Indexname" formControlName="index" required>
-      </mat-form-field>
-
       <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex="50">
-          <mat-select placeholder="Standard DCAT-Kategorien" multiple
-                      formControlName="defaultDCATCategory">
-            <mat-option value="SOCI">Bevölkerung und Gesellschaft</mat-option>
-            <mat-option value="EDUC">Bildung, Kultur und Sport</mat-option>
-            <mat-option value="ENER">Energie</mat-option>
-            <mat-option value="HEAL">Gesundheit</mat-option>
-            <mat-option value="INTR">Internationale Themen</mat-option>
-            <mat-option value="JUST">Justiz, Rechtssystem und öffentliche Sicherheit</mat-option>
-            <mat-option value="AGRI">Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel</mat-option>
-            <mat-option value="GOVE">Regierung und öffentlicher Sektor</mat-option>
-            <mat-option value="REGI">Regionen und Städte</mat-option>
-            <mat-option value="ENVI">Umwelt</mat-option>
-            <mat-option value="TRAN">Verkehr</mat-option>
-            <mat-option value="OP_DATPRO">Vorläufige Daten</mat-option>
-            <mat-option value="ECON">Wirtschaft und Finanzen</mat-option>
-            <mat-option value="TECH">Wissenschaft und Technologie</mat-option>
+        <mat-form-field fxFlex="20">
+          <mat-label>Typ</mat-label>
+          <mat-select formControlName="type" required>
+            <mat-option value="EXCEL">EXCEL</mat-option>
+            <mat-option value="CKAN">CKAN</mat-option>
+            <mat-option value="CSW">CSW</mat-option>
+            <ng-container *ngIf="harvester.id != -1">
+              <mat-option value="BFG-CSW">CSW (BFG)</mat-option>
+              <mat-option value="CODEDE-CSW">CSW (CODEDE)</mat-option>
+            </ng-container>
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field fxFlex>
-          <mat-select placeholder="Standard mCLOUD-Kategorien" multiple
-                      formControlName="defaultMcloudSubgroup">
-            <mat-option value="railway">Bahn</mat-option>
-            <mat-option value="infrastructure">Infrastruktur</mat-option>
-            <mat-option value="climate">Klima und Wetter</mat-option>
-            <mat-option value="aviation">Luft- und Raumfahrt</mat-option>
-            <mat-option value="roads">Straßen</mat-option>
-            <mat-option value="waters">Wasserstraßen und Gewässer</mat-option>
-          </mat-select>
+        <mat-form-field fxFlex="20">
+          <input matInput placeholder="Indexname" formControlName="index" required>
         </mat-form-field>
 
-      </div>
-
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex="50">
-          <input matInput placeholder="Attribution-Name"
-                 formControlName="defaultAttribution">
-        </mat-form-field>
-
-        <mat-form-field fxFlex>
-          <input matInput placeholder="Attribution-Link"
-                 formControlName="defaultAttributionLink">
+        <mat-form-field fxFlex="60">
+          <input matInput placeholder="Beschreibung" formControlName="description" required>
         </mat-form-field>
       </div>
 
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex="50">
-          <input matInput type="number" min="1" max="1000" minlength="1" placeholder="Max. Datensätze pro Anfrage"
-                 formControlName="maxRecords">
-        </mat-form-field>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Allgemeine Einstellungen</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+            <mat-form-field fxFlex="50">
+              <mat-select placeholder="Standard DCAT-Kategorien" multiple
+                          formControlName="defaultDCATCategory">
+                <mat-option value="SOCI">Bevölkerung und Gesellschaft</mat-option>
+                <mat-option value="EDUC">Bildung, Kultur und Sport</mat-option>
+                <mat-option value="ENER">Energie</mat-option>
+                <mat-option value="HEAL">Gesundheit</mat-option>
+                <mat-option value="INTR">Internationale Themen</mat-option>
+                <mat-option value="JUST">Justiz, Rechtssystem und öffentliche Sicherheit</mat-option>
+                <mat-option value="AGRI">Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel</mat-option>
+                <mat-option value="GOVE">Regierung und öffentlicher Sektor</mat-option>
+                <mat-option value="REGI">Regionen und Städte</mat-option>
+                <mat-option value="ENVI">Umwelt</mat-option>
+                <mat-option value="TRAN">Verkehr</mat-option>
+                <mat-option value="OP_DATPRO">Vorläufige Daten</mat-option>
+                <mat-option value="ECON">Wirtschaft und Finanzen</mat-option>
+                <mat-option value="TECH">Wissenschaft und Technologie</mat-option>
+              </mat-select>
+            </mat-form-field>
 
-        <mat-form-field fxFlex>
-          <input matInput type="number" min="0" placeholder="Start Datensatz"
-                 formControlName="startPosition">
-        </mat-form-field>
-      </div>
+            <mat-form-field fxFlex>
+              <mat-select placeholder="Standard mCLOUD-Kategorien" multiple
+                          formControlName="defaultMcloudSubgroup">
+                <mat-option value="railway">Bahn</mat-option>
+                <mat-option value="infrastructure">Infrastruktur</mat-option>
+                <mat-option value="climate">Klima und Wetter</mat-option>
+                <mat-option value="aviation">Luft- und Raumfahrt</mat-option>
+                <mat-option value="roads">Straßen</mat-option>
+                <mat-option value="waters">Wasserstraßen und Gewässer</mat-option>
+              </mat-select>
+            </mat-form-field>
 
-      <app-excel-harvester *ngIf="harvesterForm.get('type').value === 'EXCEL'" [form]="harvesterForm" [model]="harvester" class="flex-column"></app-excel-harvester>
+          </div>
 
-      <app-ckan-harvester *ngIf="harvesterForm.get('type').value === 'CKAN'" [form]="harvesterForm" [model]="harvester" class="flex-column"></app-ckan-harvester>
+          <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+            <mat-form-field fxFlex="50">
+              <input matInput placeholder="Attribution-Name"
+                     formControlName="defaultAttribution">
+            </mat-form-field>
 
-      <app-csw-harvester *ngIf="harvesterForm.get('type').value?.endsWith('CSW')" [form]="harvesterForm" [model]="harvester" class="flex-column"></app-csw-harvester>
+            <mat-form-field fxFlex>
+              <input matInput placeholder="Attribution-Link"
+                     formControlName="defaultAttributionLink">
+            </mat-form-field>
+          </div>
 
-      <app-chip-list [list]="harvester.blacklistedIds"
-                     placeholder="Ausgeschlossene IDs"
-                     (update)="harvester.blacklistedIds = $event"></app-chip-list>
+          <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+            <mat-form-field fxFlex="50">
+              <input matInput type="number" min="1" max="1000" minlength="1" placeholder="Max. Datensätze pro Anfrage"
+                     formControlName="maxRecords">
+            </mat-form-field>
 
-       <span class="mat-small">{{harvesterForm.value | json}}</span>
+            <mat-form-field fxFlex>
+              <input matInput type="number" min="0" placeholder="Start Datensatz"
+                     formControlName="startPosition">
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <app-excel-harvester *ngIf="harvesterForm.get('type').value === 'EXCEL'" [form]="harvesterForm" [model]="harvester"
+                           [rulesTemplate]="rules"
+                           class="flex-column"></app-excel-harvester>
+
+      <app-ckan-harvester *ngIf="harvesterForm.get('type').value === 'CKAN'" [form]="harvesterForm" [model]="harvester"
+                          [rulesTemplate]="rules"
+                          class="flex-column">
+      </app-ckan-harvester>
+
+      <app-csw-harvester *ngIf="harvesterForm.get('type').value?.endsWith('CSW')" [form]="harvesterForm" [model]="harvester"
+                         [rulesTemplate]="rules"
+                         class="flex-column"></app-csw-harvester>
+
+      <ng-template #rules>
+        <app-chip-list [list]="harvester.blacklistedIds"
+                       placeholder="Ausgeschlossene IDs"
+                       (update)="harvester.blacklistedIds = $event"></app-chip-list>
+      </ng-template>
+
+      <!--      <span class="mat-small">{{harvesterForm.value | json}}</span>-->
     </form>
   </div>
 </mat-dialog-content>

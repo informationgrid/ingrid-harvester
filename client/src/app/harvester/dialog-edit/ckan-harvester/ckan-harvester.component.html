@@ -1,53 +1,79 @@
 <form [formGroup]="form">
-  <mat-form-field>
-    <input matInput placeholder="CKAN Basis URL" formControlName="ckanBaseUrl" required>
-  </mat-form-field>
 
-  <h4>Filter und Regeln</h4>
-  <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-    <app-chip-list [list]="model.filterTags"
-                   placeholder="Filter Tags"
-                   (update)="model.filterTags = $event"></app-chip-list>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Allgemeine CKAN Einstellungen</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="CKAN Basis URL" formControlName="ckanBaseUrl" required>
+        </mat-form-field>
+      </div>
+
+      <h4>Bereitgestellt durch</h4>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Präfix" formControlName="providerPrefix" autocomplete="off">
+        </mat-form-field>
+        <mat-form-field fxFlex>
+          <mat-label>CKAN-Feld</mat-label>
+          <mat-select formControlName="providerField">
+            <mat-option value="maintainer">maintainer</mat-option>
+            <mat-option value="organization">organization</mat-option>
+            <mat-option value="author">author</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <app-chip-list [list]="model.dateSourceFormats"
+                     placeholder="Datumsformate"
+                     (update)="model.dateSourceFormats = $event"></app-chip-list>
+
+      <h4>Default-Lizenz</h4>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between" formGroupName="defaultLicense">
+        <mat-form-field fxFlex="10">
+          <input matInput placeholder="ID" formControlName="id">
+        </mat-form-field>
+        <mat-form-field fxFlex="45">
+          <input matInput placeholder="Titel" formControlName="title">
+        </mat-form-field>
+        <mat-form-field fxFlex="45">
+          <input matInput placeholder="URL" formControlName="url">
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Filter und Regeln</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ng-container [ngTemplateOutlet]="rulesTemplate"></ng-container>
+
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <app-chip-list [list]="model.filterTags"
+                       placeholder="Filter Tags"
+                       (update)="model.filterTags = $event"></app-chip-list>
 
 
-    <app-chip-list [list]="model.filterGroups"
-                   placeholder="Filter Groups"
-                   (update)="model.filterGroups = $event"></app-chip-list>
-  </div>
+        <app-chip-list [list]="model.filterGroups"
+                       placeholder="Filter Groups"
+                       (update)="model.filterGroups = $event"></app-chip-list>
+      </div>
 
-  <div formGroupName="rules">
-    <mat-checkbox formControlName="containsDocumentsWithData">Enthält Daten-Downloads</mat-checkbox>
-  </div>
+      <div formGroupName="rules" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between baseline">
+        <mat-checkbox #containsDocumentsWithData formControlName="containsDocumentsWithData">Muss Daten-Download enthalten</mat-checkbox>
+        <mat-form-field fxFlex>
+          <mat-label>Datenformat ausschließen</mat-label>
+          <input matInput placeholder="rss,doc,..." formControlName="containsDocumentsWithDataBlacklist"
+                 [attr.disabled]="containsDocumentsWithData.checked ? null : true"
+                 autocomplete="off">
+        </mat-form-field>
+      </div>
 
-  <h4>Bereitgestellt durch</h4>
-  <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-    <mat-form-field fxFlex>
-      <input matInput placeholder="Präfix" formControlName="providerPrefix" autocomplete="off">
-    </mat-form-field>
-    <mat-form-field fxFlex>
-      <mat-label>CKAN-Feld</mat-label>
-      <mat-select formControlName="providerField">
-        <mat-option value="maintainer">maintainer</mat-option>
-        <mat-option value="organization">organization</mat-option>
-        <mat-option value="author">author</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
+    </mat-card-content>
+  </mat-card>
 
-  <app-chip-list [list]="model.dateSourceFormats"
-                 placeholder="Datumsformate"
-                 (update)="model.dateSourceFormats = $event"></app-chip-list>
-
-  <h4>Default-Lizenz</h4>
-  <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between" formGroupName="defaultLicense">
-    <mat-form-field fxFlex="10">
-      <input matInput placeholder="ID" formControlName="id">
-    </mat-form-field>
-    <mat-form-field fxFlex="45">
-      <input matInput placeholder="Titel" formControlName="title">
-    </mat-form-field>
-    <mat-form-field fxFlex="45">
-      <input matInput placeholder="URL" formControlName="url">
-    </mat-form-field>
-  </div>
 </form>

@@ -13,7 +13,7 @@
 
     <ng-container *ngIf="data.complete">
 
-        <div fxLayout="row" fxLayoutAlign="space-around">
+        <div fxLayout="row" fxLayoutAlign="space-around" class="info-cards">
             <mat-card>
                 <mat-card-header>
                     <div mat-card-avatar class="numberCircle" data-test="num-docs">{{data.summary?.numDocs - data.summary?.skippedDocs.length}}</div>

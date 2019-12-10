@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
@@ -10,6 +10,7 @@ export class ExcelHarvesterComponent implements OnInit, OnDestroy {
 
   @Input() form: FormGroup;
   @Input() model: any;
+  @Input() rulesTemplate: TemplateRef<any>;
 
   constructor() {
   }

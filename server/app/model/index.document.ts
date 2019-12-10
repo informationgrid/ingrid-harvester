@@ -43,7 +43,7 @@ export class IndexDocument {
         };
 
         result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
-        result.extras.metadata.isValid = mapper.isValid();
+        result.extras.metadata.isValid = mapper.isValid(result);
         return result;
     }
 }

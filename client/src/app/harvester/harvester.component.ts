@@ -53,6 +53,9 @@ export class HarvesterComponent implements OnInit, OnDestroy {
         } else {
           this.snackBar.open('Verbindung zum Backend hergestellt', null, {duration: 1000});
           this.fetchLastImportInformation();
+          if (!this.harvesterLoaded) {
+            this.fetchHarvester();
+          }
         }
       });
 

@@ -33,3 +33,7 @@
   background-color: $warn;
   color: white;
 }
+
+.info-cards ::ng-deep .mat-card-header-text {
+  padding-top: 22px;
+}

@@ -9,6 +9,7 @@ import {CkanParameters, CkanParametersListWithResources, RequestDelegate, Reques
 import {UrlUtils} from "../../utils/url.utils";
 import {Summary} from '../../model/summary';
 import {CkanRules} from './ckan.rules';
+import {IndexDocument} from '../../model/index.document';
 
 let markdown = require('markdown').markdown;
 
@@ -102,21 +103,7 @@ export class CkanMapper extends GenericMapper {
         }
         this.errors.push(...urlErrors);
 
-        this.validateDistributions(distributions);
-
         return distributions;
-    }
-
-    private validateDistributions(distributions: Distribution[]) {
-        if (distributions.length === 0) {
-            this.valid = false;
-            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.source.id}', index: '${this.data.currentIndexName}'.`;
-            this.log.warn(msg);
-        }
-
-        if (this.settings.rules && this.settings.rules.containsDocumentsWithData) {
-            CkanRules.containsDocumentsWithData(distributions, this);
-        }
     }
 
     getGeneratedId() {
@@ -218,7 +205,7 @@ export class CkanMapper extends GenericMapper {
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
         // TODO: map ckan category to DCAT
         return this.settings.defaultDCATCategory
-            .map( category => GenericMapper.DCAT_CATEGORY_URL + category);
+            .map(category => GenericMapper.DCAT_CATEGORY_URL + category);
     }
 
     getTitle() {
@@ -391,6 +378,26 @@ export class CkanMapper extends GenericMapper {
         return config;
     }
 
+    isValid(doc?: any): boolean {
+        if (doc.distribution.length === 0) {
+            this.valid = false;
+            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.source.id}', index: '${this.data.currentIndexName}'.`;
+            this.log.warn(msg);
+        }
+
+        if (this.settings.rules && this.settings.rules.containsDocumentsWithData) {
+            const result = CkanRules.containsDocumentsWithData(doc.distribution, this, this.settings.rules.containsDocumentsWithDataBlacklist);
+            if (result.skipped) {
+                this.summary.skippedDocs.push(`${this.source.title} (${this.source.id})`);
+                this.summary.warnings.push(['No data document', `${this.source.title} (${this.source.id})`]);
+            }
+            if (!result.valid) {
+                this.valid = false;
+            }
+        }
+        return super.isValid();
+    }
+
     static createRequestConfig(settings: CkanSettings): OptionsWithUri {
 
         if (settings.requestType === 'ListWithResources') {
@@ -441,7 +448,7 @@ export class CkanMapper extends GenericMapper {
         };
     }
 
-    private handleDate(date: string|Date): Date {
+    private handleDate(date: string | Date): Date {
 
         let logDateError = () => {
             let message = `Date has incorrect format: ${date}`;
@@ -515,6 +522,10 @@ export class CkanMapper extends GenericMapper {
             default:
                 return this.getMaintainer();
         }
+    }
+
+    getSummary(): Summary {
+        return this.summary;
     }
 }
 

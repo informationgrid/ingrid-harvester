@@ -9,8 +9,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .form-wrapper {
   //padding-top: 40px;
-  margin: 0 10%;
-  max-width: 700px;
+  margin: 0 20px;
+  //max-width: 700px;
 
   form, .flex-column {
     display: flex;
@@ -33,10 +33,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .half {
   width: 50%;
-}
-
-.mat-card-header-text {
-  padding-top: 22px;
 }
 
 snack-bar-container.error {

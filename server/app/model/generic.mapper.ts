@@ -1,6 +1,7 @@
 import {OptionsWithUri} from 'request-promise';
 import {License} from '@shared/license.model';
 import * as moment from 'moment';
+import {IndexDocument} from './index.document';
 
 moment.locale('de');
 
@@ -148,7 +149,7 @@ export abstract class GenericMapper {
         return all;
     }
 
-    isValid() {
+    isValid(doc?: any) {
         return this.valid;
     }
 

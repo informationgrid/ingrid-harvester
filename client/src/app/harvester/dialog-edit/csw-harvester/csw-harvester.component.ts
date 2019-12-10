@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {CswSettings} from '../../../../../../server/app/importer/csw/csw.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material';
@@ -14,6 +14,7 @@ export class CswHarvesterComponent implements OnInit, OnDestroy {
 
   @Input() form: FormGroup;
   @Input() model: CswSettings;
+  @Input() rulesTemplate: TemplateRef<any>;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 

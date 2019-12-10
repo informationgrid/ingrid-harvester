@@ -14,6 +14,7 @@ export type CkanSettings = {
     markdownAsDescription?: boolean,
     defaultLicense?: License;
     rules?: {
-        containsDocumentsWithData?: boolean
+        containsDocumentsWithData?: boolean,
+        containsDocumentsWithDataBlacklist?: string
     }
 } & ElasticSettings & ImporterSettings;

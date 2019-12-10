@@ -2,29 +2,36 @@ import {Distribution} from '../../model/generic.mapper';
 import {CkanMapper} from './ckan.mapper';
 import {getLogger} from 'log4js';
 
+export class RuleResult {
+    constructor(
+        public valid: boolean,
+        public skipped: boolean
+    ) {
+    }
+}
+
 export class CkanRules {
 
     private static log = getLogger();
 
-    private static NON_DATA_FORMATS = ['rss', 'pdf', 'doc'];
-
-    static containsDocumentsWithData(distributions: Distribution[], mapper: CkanMapper): boolean {
-        this.log.debug('Executing rule: containsDocumentsWithData');
-        const valid = distributions.some(dist => this.isDataDocument(dist));
+    static containsDocumentsWithData(distributions: Distribution[], mapper: CkanMapper, blacklist: string): RuleResult {
+        // this.log.debug('Executing rule: containsDocumentsWithData');
+        const blacklistedFormats = blacklist.split(',');
+        const valid = distributions.some(dist => this.isDataDocument(dist, blacklistedFormats));
         if (!valid) {
             this.log.warn('Document does not contain data links');
-            mapper.skipped = true;
-            return false;
+            return new RuleResult(false, true);
         }
-        return true;
+        return new RuleResult(true, false);
     }
 
     /**
      * A distribution containing at least one format which belongs to non-data is defined
      * as not a data document.
      * @param dist
+     * @param blacklistedFormats
      */
-    private static isDataDocument(dist: Distribution) {
-        return dist.format.every(format => this.NON_DATA_FORMATS.indexOf(format) === -1);
+    private static isDataDocument(dist: Distribution, blacklistedFormats: string[]) {
+        return dist.format.every(format => blacklistedFormats.indexOf(format.toLowerCase()) === -1);
     }
 }
