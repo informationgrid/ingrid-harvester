@@ -35,4 +35,8 @@ export class DialogSchedulerComponent implements OnInit {
     }
   }
 
+  clearInput() {
+    this.cron.pattern = '';
+    this.translate('');
+  }
 }
