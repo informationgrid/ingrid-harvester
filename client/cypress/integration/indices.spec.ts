@@ -14,7 +14,7 @@ describe('Indices operations', () => {
   });
 
   it('should not find an harvester whose search is not activated', () => {
-    hPage.deactivateToggleBar(constants.EXCEL_TEST_ID);
+    hPage.activateForSearch(constants.EXCEL_TEST_ID);
 
     indicesPage.visit();
     indicesPage.reload();
@@ -23,7 +23,7 @@ describe('Indices operations', () => {
   });
 
   it('should find an harvester whose search is activated', () => {
-    hPage.activateToggleBar(constants.CKAN_DB_ID);
+    hPage.activateForSearch(constants.CKAN_DB_ID);
     hPage.importHarvesterById(constants.CKAN_DB_ID);
 
     indicesPage.visit();

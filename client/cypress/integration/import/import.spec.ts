@@ -36,17 +36,18 @@ describe('Import operations', () => {
   });
 
   it('should show an icon if a harvester has an import schedule', () => {
+    // TODO: overhead since dialog is opened, data entered and closed and then again opened
     hPage.setScheduleTo(constants.CKAN_TEST_ID, '30 4 1 * 0,6');
-    hPage.openSchedule(constants.CKAN_TEST_ID);
-    hPage.clickCronToggleBar();
-    hPage.closeOpenSchedule();
 
-    hPage.deactivateToggleBar(constants.CKAN_TEST_ID);
-    hPage.alarmOffIconIsShown(constants.CKAN_TEST_ID);
+    // TODO: combine opened dialog with config above OR write a smart function which can configure completely the dialog
+    hPage.openScheduleDialog(constants.CKAN_TEST_ID);
+    hPage.activateScheduler();
+    hPage.applyScheduleDialog();
 
-    hPage.activateToggleBar(constants.CKAN_TEST_ID);
+    hPage.activateForSearch(constants.CKAN_TEST_ID);
     hPage.alarmOnIconIsShown(constants.CKAN_TEST_ID);
 
-    hPage.deactivateToggleBar(constants.CKAN_TEST_ID);
+    hPage.deactivateForSearch(constants.CKAN_TEST_ID);
+    hPage.alarmOffIconIsShown(constants.CKAN_TEST_ID);
   });
 });

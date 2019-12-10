@@ -1,33 +1,33 @@
 class HarvesterPage {
-  constructor() {
-    this.addHarvesterBtn = '#btnAddHarvester';
-    this.editHarvesterBtn = '[data-test="edit"]';
-    this.deleteHarvesterBtn = '[data-test="delete"]';
-    this.importAllBtn = '[data-test="import-all"]';
-    this.logTab = '[data-test="log"]';
-    this.importBtn = ' [data-test="import"]';
-    this.scheduleBtn = '[data-test="schedule"]';
-    this.cronInputBtn = '[data-test="cron-input"]';
-    this.cronReset = '[data-test="cron-reset"]';
-    this.setScheduleBtn = '[data-test="dlg-schedule"]';
-    this.icon = ' .mat-icon';
-    this.logContainer = ' .logContainer';
-    this.labelContent = ' .mat-tab-label-content';
-    this.numErrors = '[data-test="num-errors"]';
-    this.nextExecution = '[data-test="next-execution"]';
-    this.lastExecution = '[data-test="last-execution"]';
-    this.cronInfo = '[data-test="cron-info"]';
-    this.cronToggleBar = '[title="Planung an- / ausschalten"]';
-  }
+  addHarvesterBtn = '#btnAddHarvester';
+  editHarvesterBtn = '[data-test="edit"]';
+  deleteHarvesterBtn = '[data-test="delete"]';
+  importAllBtn = '[data-test="import-all"]';
+  logTab = '[data-test="log"]';
+  importBtn = ' [data-test="import"]';
+  scheduleBtn = '[data-test="schedule"]';
+  cronInputField = '[data-test="cron-input"]';
+  cronReset = '[data-test="cron-reset"]';
+  setScheduleBtn = '[data-test="dlg-schedule"]';
+  icon = ' .mat-icon';
+  logContainer = ' .logContainer';
+  labelContent = ' .mat-tab-label-content';
+  numErrors = '[data-test="num-errors"]';
+  nextExecution = '[data-test="next-execution"]';
+  lastExecution = '[data-test="last-execution"]';
+  cronInfo = '[data-test="cron-info"]';
+  cronToggleBar = '[title="Planung an- / ausschalten"]';
 
   visit() {
     cy.visit('harvester');
   }
 
+  // TODO: why another function? Can be used directly in test
   wait(ms) {
     cy.wait(ms);
   }
 
+  // TODO: why another function? Can be used directly in test
   reload() {
     cy.reload();
   }
@@ -68,24 +68,20 @@ class HarvesterPage {
     cy.get('#harvester-' + id + ' ' + this.logTab, {timeout: 6000}).click();
   }
 
-  activateToggleBar(id) {
-    cy.get('#harvester-' + id + ' .mat-icon').then((value) => {
-      if (value.text().includes('alarm_off')) {
+  activateForSearch(id) {
+    cy.get('#harvester-' + id + ' .mat-slide-toggle').then((toggle) => {
+      if (!toggle.hasClass('mat-checked')) {
         cy.get('#harvester-' + id + ' .mat-slide-toggle-bar').click({force: true});
       }
     });
   }
 
-  deactivateToggleBar(id) {
-    cy.get('#harvester-' + id + ' .mat-icon').then((value) => {
-      if (value.text().includes('alarm_on')) {
+  deactivateForSearch(id) {
+    cy.get('#harvester-' + id + ' .mat-slide-toggle').then((toggle) => {
+      if (toggle.hasClass('mat-checked')) {
         cy.get('#harvester-' + id + ' .mat-slide-toggle-bar').click({force: true});
       }
     });
-  }
-
-  clickCronToggleBar() {
-    cy.get(this.cronToggleBar).click();
   }
 
   importHarvesterById(id) {
@@ -112,21 +108,40 @@ class HarvesterPage {
     cy.get('.mat-simple-snackbar').should('contain', 'Import von allen Harvestern gestartet');
   }
 
-  openSchedule(id) {
+  // TODO: too complex! This should only open the dialog but not expand the harvester. When we call this function we don't expect
+  //       the harvester to be expanded.
+  openScheduleDialog(id) {
     cy.get('#harvester-' + id).click();
     cy.wait(500);
     cy.get('#harvester-' + id + ' ' + this.scheduleBtn).click();
   }
 
-  closeOpenSchedule() {
-    cy.get(this.setScheduleBtn + ' :visible').click();
+  applyScheduleDialog() {
+    cy.get(this.setScheduleBtn).click();
+    this.wait(500); // give time to save settings
   }
 
   setScheduleTo(id, pattern) {
-    this.openSchedule(id);
-    cy.get(this.cronInputBtn).clear().type(pattern);
-    this.clickCronToggleBar();
-    cy.get(this.setScheduleBtn).click();
+    this.openScheduleDialog(id);
+    cy.get(this.cronInputField).clear().type(pattern);
+    this.activateScheduler();
+    this.applyScheduleDialog();
+  }
+
+  activateScheduler() {
+    cy.get(this.cronToggleBar).then(toggle => {
+      if (!toggle.hasClass('mat-checked')) {
+        cy.get(toggle).click();
+      }
+    })
+  }
+
+  deactivateScheduler() {
+    cy.get(this.cronToggleBar).then(toggle => {
+      if (toggle.hasClass('mat-checked')) {
+        cy.get(toggle).click();
+      }
+    })
   }
 
   clickCronResetBtn() {
@@ -135,10 +150,6 @@ class HarvesterPage {
 
   scheduleIsDeactivated() {
     cy.get(' .ng-star-inserted').should('contain', 'Planung ausschalten');
-  }
-
-  clickSetScheduleBtn() {
-    cy.get(this.setScheduleBtn).click();
   }
 
   alarmOffIconIsShown(id) {
@@ -157,8 +168,9 @@ class HarvesterPage {
     cy.get(this.labelContent).contains('Elasticsearch-Errors').click();
   }
 
+  // TODO: too complex! We don't expect from this function that the dialog will be closed
   clearCronInput(id) {
-    cy.get(this.cronInputBtn).clear();
+    cy.get(this.cronInputField).clear();
     cy.get(this.setScheduleBtn).click();
   }
 
@@ -171,16 +183,16 @@ class HarvesterPage {
       )
   }
 
-  nextExecutionContains(id, msg, bool) {
-    if (bool) {
+  nextExecutionContains(id, msg, mustContain) {
+    if (mustContain) {
       cy.get('#harvester-' + id + ' ' + this.nextExecution).should('contain', msg);
     } else {
       cy.get('#harvester-' + id + ' ' + this.nextExecution).should('not.contain', msg);
     }
   }
 
-  lastExecutionContains(id, msg, bool) {
-    if (bool) {
+  lastExecutionContains(id, msg, mustContain) {
+    if (mustContain) {
       cy.get('#harvester-' + id + ' ' + this.lastExecution).should('contain', msg);
     } else {
       cy.get('#harvester-' + id + ' ' + this.lastExecution).should('not.contain', msg);
@@ -188,10 +200,12 @@ class HarvesterPage {
   }
 
   getCronInfo(id) {
-    this.openSchedule(id);
+    this.openScheduleDialog(id);
     cy.get(this.cronInfo).click();
   }
 
+  // TODO: too detailed! If one example changes the whole test will fail. It is enough to just check that some info is shown
+  //       and then we probably don't need this function anymore and can be included in the ONE test
   checkCronInfos() {
     cy.get('.info > :nth-child(1) > span').should('contain', '*/5 * * * *');
     cy.get('.info > :nth-child(1)').should('contain', 'Alle 5 Minuten');
