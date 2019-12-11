@@ -5,10 +5,9 @@ describe('Csw-Harvester operations', () => {
   const Authentication = require("../../support/pageObjects/auth");
   const auth = new Authentication();
   const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
-  const hPage = new HarvesterPage();
+  const harvester = new HarvesterPage();
   const HarvesterForm = require("../../support/pageObjects/harvester/harvesterForm");
-  const hForm = new HarvesterForm();
-
+  const form = new HarvesterForm();
 
   // before(() => {
   //   cy.seedCswHarvester()
@@ -19,32 +18,31 @@ describe('Csw-Harvester operations', () => {
   });
 
   it('should add a harvester of type CSW', () => {
-    hPage.addNewHarvester();
-    hForm.setFields({
+    harvester.addNewHarvester();
+    form.setFields({
       type: 'CSW',
       description: 'Testing partial CSW Harvester',
       indexName: 'part_csw',
       httpMethod: 'GET',
       getRecordsUrl: './testme'
     });
-    hForm.saveHarvesterConfig();
-    hPage.wait(500);
+    form.saveHarvesterConfig();
 
-    hPage.openHarvesterByName('Testing partial CSW Harvester');
-    hForm.checkFields({
+    harvester.openFormByName('Testing partial CSW Harvester');
+    form.checkFields({
       description: 'Testing partial CSW Harvester',
       indexName: 'part_csw',
       httpMethod: 'GET',
       getRecordsUrl: './testme'
     });
 
-    hPage.reload();
-    hPage.deleteHarvesterByName('Testing partial CSW Harvester');
+    cy.reload();
+    harvester.deleteHarvesterByName('Testing partial CSW Harvester');
   });
 
   it('should add a new harvester of type CSW with all options', () => {
-    hPage.addNewHarvester();
-    hForm.setFields({
+    harvester.addNewHarvester();
+    form.setFields({
       type: 'CSW',
       description: 'Testing CSW Harvester',
       indexName: 'full_csw',
@@ -59,12 +57,11 @@ describe('Csw-Harvester operations', () => {
       recordFilter: 'opendata',
       keywords: 'this_is_a_test'
     });
-    hForm.saveHarvesterConfig();
-    hPage.wait(500);
-    hPage.reload();
+    form.saveHarvesterConfig();
+    cy.reload();
 
-    hPage.openHarvesterByName('Testing CSW Harvester');
-    hForm.checkFields({
+    harvester.openFormByName('Testing CSW Harvester');
+    form.checkFields({
       description: 'Testing CSW Harvester',
       indexName: 'full_csw',
       httpMethod: 'POST',
@@ -77,26 +74,24 @@ describe('Csw-Harvester operations', () => {
       startPosition: '0'
     });
 
-    hPage.reload();
-    hPage.deleteHarvesterByName('Testing CSW Harvester');
+    cy.reload();
+    harvester.deleteHarvesterByName('Testing CSW Harvester');
   });
 
   it('should update a harvester of type CSW', () => {
-    hPage.openHarvesterByName('csw_test_api');
-
-    hForm.setFields({
+    harvester.openFormByName('csw_test_api');
+    form.setFields({
       description: 'csw_update',
       indexName: 'full_csw',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'
     });
-    hForm.saveHarvesterConfig();
-    hPage.wait(500);
-    hPage.reload();
+    form.saveHarvesterConfig();
+    cy.reload();
 
-    hPage.openHarvesterByName('csw_update');
-    hForm.checkFields({
+    harvester.openFormByName('csw_update');
+    form.checkFields({
       description: 'csw_update',
       indexName: 'full_csw',
       defaultDCATCategory: 'Verkehr',
@@ -109,18 +104,15 @@ describe('Csw-Harvester operations', () => {
   });
 
   it('should successfully harvest after deleting an existing filter-label', () => {
-    hPage.openFormById(constants.CSW_CODEDE_ID);
-    hPage.wait(500);
+    harvester.openFormById(constants.CSW_CODEDE_ID);
 
-    hForm.clearFilterField();
+    form.clearFilterField();
+    form.saveHarvesterConfig();
 
-    hForm.saveHarvesterConfig();
-    hPage.wait(500);
-    hPage.importHarvesterById(constants.CSW_CODEDE_ID);
-
-    hPage.checkImportHasStarted();
+    harvester.importHarvesterById(constants.CSW_CODEDE_ID);
+    harvester.checkImportHasStarted();
 
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    hPage.checkImportDate(constants.CSW_CODEDE_ID, importsDate);
+    harvester.checkImportDate(constants.CSW_CODEDE_ID, importsDate);
   });
 });

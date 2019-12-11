@@ -1,6 +1,4 @@
 describe('Logout', () => {
-  const HarvesterPage = require("../support/pageObjects/harvester/harvester");
-  const hPage = new HarvesterPage();
   const Authentication = require("../support/pageObjects/auth");
   const auth = new Authentication();
 

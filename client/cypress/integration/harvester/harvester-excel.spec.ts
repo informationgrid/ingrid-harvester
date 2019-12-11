@@ -2,9 +2,9 @@ describe('Excel-Harvester operations', () => {
   const Authentication = require("../../support/pageObjects/auth");
   const auth = new Authentication();
   const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
-  const hPage = new HarvesterPage();
+  const harvester = new HarvesterPage();
   const HarvesterForm = require("../../support/pageObjects/harvester/harvesterForm");
-  const hForm = new HarvesterForm();
+  const form = new HarvesterForm();
 
   beforeEach(() => {
     auth.apiLoginWithUserCheck();
@@ -12,30 +12,30 @@ describe('Excel-Harvester operations', () => {
   });
 
   it('should add a harvester of type EXCEL', () => {
-    hPage.addNewHarvester();
-    hForm.setFields({
+    harvester.addNewHarvester();
+    form.setFields({
       type: 'EXCEL',
       description: 'Excel partial opts Harvester',
       indexName: 'part_excel',
       excelFilePath: './data.xlsx'
     });
-    hForm.saveHarvesterConfig();
-    hPage.wait(500);
+    form.saveHarvesterConfig();
+    cy.wait(500);
 
-    hPage.openHarvesterByName('Excel partial opts Harvester');
+    harvester.openFormByName('Excel partial opts Harvester');
 
-    hForm.checkFields({
+    form.checkFields({
       description: 'Excel partial opts Harvester',
       indexName: 'part_excel',
       excelFilePath: './data.xlsx'
     });
-    hPage.reload();
-    hPage.deleteHarvesterByName('Excel partial opts Harvester');
+    cy.reload();
+    harvester.deleteHarvesterByName('Excel partial opts Harvester');
   });
 
   it('should add a new harvester of type Excel with all options', () => {
-    hPage.addNewHarvester();
-    hForm.setFields({
+    harvester.addNewHarvester();
+    form.setFields({
       type: 'EXCEL',
       description: 'Excel full opts Harvester',
       indexName: 'full_excel',
@@ -45,12 +45,12 @@ describe('Excel-Harvester operations', () => {
       defaultAttribution: '100',
       defaultAttributionLink: '23',
     });
-    hForm.saveHarvesterConfig();
-    hPage.wait(500);
-    hPage.reload();
+    form.saveHarvesterConfig();
+    cy.wait(500);
+    cy.reload();
 
-    hPage.openHarvesterByName('Excel full opts Harvester');
-    hForm.checkFields({
+    harvester.openFormByName('Excel full opts Harvester');
+    form.checkFields({
       description: 'Excel full opts Harvester',
       indexName: 'full_excel',
       excelFilePath: './data.xlsx',
@@ -59,24 +59,24 @@ describe('Excel-Harvester operations', () => {
       defaultAttribution: '100',
       defaultAttributionLink: '23'
     });
-    hPage.reload();
-    hPage.deleteHarvesterByName('Excel full opts Harvester');
+    cy.reload();
+    harvester.deleteHarvesterByName('Excel full opts Harvester');
   });
 
   it('should update a harvester of type Excel', () => {
-    hPage.openHarvesterByName('excel_test');
-    hForm.setFields({
+    harvester.openFormByName('excel_test');
+    form.setFields({
       description: 'excel_update',
       indexName: 'updated_ex_harvester',
       defaultDCATCategory: 'Wirtschaft und Finanzen',
       defaultAttribution: '7'
     });
-    hForm.saveHarvesterConfig();
-    hPage.wait(500);
-    hPage.reload();
+    form.saveHarvesterConfig();
+    cy.wait(500);
+    cy.reload();
 
-    hPage.openHarvesterByName('excel_update');
-    hForm.checkFields({
+    harvester.openFormByName('excel_update');
+    form.checkFields({
       description: 'excel_update',
       indexName: 'updated_ex_harvester',
       defaultDCATCategory: 'Wirtschaft und Finanzen',

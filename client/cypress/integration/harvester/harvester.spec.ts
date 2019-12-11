@@ -5,56 +5,56 @@ describe('Harvester operations', () => {
   const Authentication = require("../../support/pageObjects/auth");
   const auth = new Authentication();
   const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
-  const hPage = new HarvesterPage();
+  const harvester = new HarvesterPage();
   const HarvesterForm = require("../../support/pageObjects/harvester/harvesterForm");
-  const hForm = new HarvesterForm();
+  const form = new HarvesterForm();
 
   beforeEach(() => {
     auth.apiLoginWithUserCheck();
   });
 
   it('should check that the type of a harvester cannot be changed during an update', () => {
-    hPage.openFormById(constants.CKAN_TEST_ID);
+    harvester.openFormById(constants.CKAN_TEST_ID);
 
-    hForm.fieldIsDisabled(hForm.type);
+    form.fieldIsDisabled(form.type);
   });
 
-  it('should check that startPosition cannot be negative or a character [INPUT CONTROL]', () => {
-    hPage.openFormById(constants.CKAN_TEST_ID);
-    hPage.wait(500);
+  it('should check that startPosition cannot be negative or a character', () => {
+    harvester.openFormById(constants.CKAN_TEST_ID);
+    cy.wait(500);
 
-    hForm.setFields({startPosition: 'ffm'});
-    hForm.fieldContains(hForm.startPos, 'ffm', false);
+    form.setFields({startPosition: 'ffm'});
+    form.fieldValueIsNot(form.startPosition, 'ffm');
 
-    hForm.setFields({startPosition: '-7'});
-    hForm.btnIsEnabled(hForm.saveHarvesterBtn, false);
+    form.setFields({startPosition: '-7'});
+    form.btnIsDisabled(form.saveHarvesterBtn);
 
-    hForm.setFields({startPosition: '10'});
-    hForm.btnIsEnabled(hForm.saveHarvesterBtn, true);
+    form.setFields({startPosition: '10'});
+    form.btnIsEnabled(form.saveHarvesterBtn);
   });
 
-  it('should check that maxRecords cannot be negative or a character [INPUT CONTROL]', () => {
-    hPage.openFormById(constants.CKAN_TEST_ID);
-    hPage.wait(500);
+  it('should check that maxRecords cannot be negative or a character', () => {
+    harvester.openFormById(constants.CKAN_TEST_ID);
+      cy.wait(500);
 
-    hForm.setFields({maxRecords: 'ffm'});
-    hForm.fieldContains(hForm.maxRecords, '', true);
+    form.setFields({maxRecords: 'ffm'});
+    form.fieldValueIs(form.maxRecords, '');
 
-    hForm.setFields({maxRecords: '-7'});
-    hForm.btnIsEnabled(hForm.saveHarvesterBtn, false);
+    form.setFields({maxRecords: '-7'});
+    form.btnIsDisabled(form.saveHarvesterBtn);
 
-    hForm.setFields({maxRecords: '10'});
-    hForm.btnIsEnabled(hForm.saveHarvesterBtn, true);
+    form.setFields({maxRecords: '10'});
+    form.btnIsEnabled(form.saveHarvesterBtn);
   });
 
   it('should show the old values if an update operation is aborted and the page is not refreshed', () => {
-    hPage.openFormById(constants.CKAN_DB_ID);
-    hForm.setFields({description: 'hold', indexName: 'the', defaultAttribution: 'door'});
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.setFields({description: 'hold', indexName: 'the', defaultAttribution: 'door'});
 
-    hForm.closeFormWithoutSaving();
+    form.closeFormWithoutSaving();
 
-    hPage.openFormById(constants.CKAN_DB_ID);
-    hForm.checkFields({
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.checkFields({
       description: 'Deutsche Bahn Datenportal',
       indexName: 'ckan_db',
       defaultAttribution: 'Deutsche Bahn Datenportal'
@@ -62,17 +62,19 @@ describe('Harvester operations', () => {
   });
 
   it('should not be able to save a harvester without selecting a type', () => {
-    hPage.addNewHarvester();
-    hForm.setFields({
+    harvester.addNewHarvester();
+    form.setFields({
       description: 'Testing harvester with no type',
       indexName: 'just an index'
     });
 
-    hForm.btnIsEnabled(hForm.saveHarvesterBtn, false);
+    form.btnIsDisabled(form.saveHarvesterBtn);
   });
 
-  it('should delete an harvester (by name)', () => {
-    hPage.deleteHarvesterByName('DWD');
+  it('should delete an harvester', () => {
+    harvester.deleteHarvesterByName('BFG');
+
+    cy.get('.no-wrap').should('not.contain', 'BFG');
   });
 
 });

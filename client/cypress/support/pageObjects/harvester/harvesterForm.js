@@ -27,6 +27,7 @@ class HarvesterForm {
 
   saveHarvesterConfig() {
     cy.get(this.saveHarvesterBtn).click();
+    cy.wait(500);
   }
 
   setFields(options) {
@@ -81,12 +82,20 @@ class HarvesterForm {
     }
   }
 
-  btnIsEnabled(btn, bool) {
-    if (bool) {
-      cy.get(btn).should('be.enabled');
-    } else {
-      cy.get(btn).should('be.disabled');
-    }
+  fieldValueIs(field, value){
+    cy.get(field).should('have.value', value);
+  }
+
+  fieldValueIsNot(field, value){
+    cy.get(field).should('not.have.value', value);
+  }
+
+  btnIsEnabled(btn) {
+    cy.get(btn).should('be.enabled');
+  }
+
+  btnIsDisabled(btn){
+  cy.get(btn).should('be.disabled');
   }
 
   closeFormWithoutSaving() {

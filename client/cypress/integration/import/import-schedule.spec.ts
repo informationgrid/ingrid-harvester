@@ -5,65 +5,71 @@ describe('Import cron pattern operations', () => {
   const Authentication = require("../../support/pageObjects/auth");
   const auth = new Authentication();
   const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
-  const hPage = new HarvesterPage();
+  const harvester = new HarvesterPage();
 
   beforeEach(() => {
     auth.apiLoginWithUserCheck();
   });
 
   it('should plan an import, activate the auto-planning, check its execution and turn off the auto-planning', () => {
-    hPage.setScheduleTo(constants.CKAN_DB_ID, '* * * * *');
-    hPage.reload();
+    harvester.toggleHarvesterById(constants.CKAN_DB_ID);
+    harvester.openScheduleDialog(constants.CKAN_DB_ID);
+    harvester.setCronPatternTo('* * * * *');
+    harvester.activateScheduler();
+    harvester.applyScheduleDialog();
+    cy.reload();
 
-    hPage.clickHarvesterById(constants.CKAN_DB_ID);
+    harvester.toggleHarvesterById(constants.CKAN_DB_ID);
     const nextImport = Cypress.moment(new Date(), 'DD.MM.YY, HH:mm').add(1, 'minute').format('DD.MM.YY, HH:mm');
-    hPage.nextExecutionContains(constants.CKAN_DB_ID, nextImport, true);
+    harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.nextExecution, nextImport);
 
-    cy.get('#harvester-' + constants.CKAN_DB_ID + ' [data-test="last-execution"]', {timeout: 65000}).should('contain', nextImport);
+    // harvester.getHarvesterElement(constants.CKAN_DB_ID, harvester.lastExecution).should('contain', nextImport);
   });
 
   it('should reset cron expression if the input clear button is pressed', () => {
-    hPage.setScheduleTo(constants.CKAN_DB_ID, '* * * * *');
+    //TODO: to check again, button is as now not deactivated if an empty schedule is given
+    harvester.toggleHarvesterById(constants.CKAN_DB_ID);
+    harvester.openScheduleDialog(constants.CKAN_DB_ID);
+    harvester.setCronPatternTo('* * * * *');
+    harvester.deactivateScheduler();
+    harvester.clickCronResetBtn();
 
-    hPage.openScheduleDialog(constants.CKAN_DB_ID);
-    hPage.clickCronResetBtn();
-
-    cy.get(hPage.setScheduleBtn).should('be.disabled');
+    cy.get(harvester.setScheduleBtn).should('be.disabled');
   });
 
   it('should show cron pattern´s syntax examples when the info button in the planning page is pressed', () => {
-    hPage.getCronInfo(constants.CKAN_DB_ID);
+    harvester.toggleHarvesterById(constants.CKAN_DB_ID);
+    harvester.openScheduleDialog(constants.CKAN_DB_ID);
 
-    hPage.checkCronInfos();
+    cy.get('.info').should('not.exist');
+
+    cy.get(harvester.cronInfo).click();
+
+    cy.get('.info').should('contain', 'Täglich um 8:45 Uhr');
   });
 
   it('should not import if the schedule is planned but off', () => {
-    hPage.setScheduleTo(constants.CKAN_DB_ID, '* * * * *');
+    harvester.toggleHarvesterById(constants.CKAN_DB_ID);
+    harvester.openScheduleDialog(constants.CKAN_DB_ID);
+    harvester.setCronPatternTo('* * * * *');
+    harvester.deactivateScheduler();
+    harvester.applyScheduleDialog();
 
-    hPage.openScheduleDialog(constants.CKAN_DB_ID);
-    hPage.deactivateScheduler();
-    hPage.applyScheduleDialog();
-
-    hPage.nextExecutionContains(constants.CKAN_DB_ID, 'deaktiviert', true);
+    harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.nextExecution,'deaktiviert');
 
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
     const nextImport = Cypress.moment(importsDate, 'DD.MM.YY, HH:mm').add(1, 'minute').format('DD.MM.YY, HH:mm');
 
-    // check no import is executed in a minute
-    hPage.wait(60000);
-    hPage.lastExecutionContains(constants.CKAN_DB_ID, nextImport, false);
-
-    hPage.openScheduleDialog(constants.CKAN_DB_ID);
-    hPage.activateScheduler();
-    hPage.applyScheduleDialog();
+    cy.wait(65000);
+    harvester.checkFieldValueIsNot(constants.CKAN_DB_ID, harvester.lastExecution, nextImport);
   });
 
   it('should disable scheduling for a harvester', () => {
-    hPage.openScheduleDialog(constants.CKAN_TEST_ID);
+    harvester.toggleHarvesterById(constants.CKAN_TEST_ID);
+    harvester.openScheduleDialog(constants.CKAN_TEST_ID);
+    harvester.deactivateScheduler();
+    harvester.applyScheduleDialog();
 
-    hPage.deactivateScheduler(constants.CKAN_TEST_ID);
-    hPage.applyScheduleDialog();
-
-    hPage.nextExecutionContains(constants.CKAN_TEST_ID, 'deaktiviert', true);
+    harvester.checkFieldValueIs(constants.CKAN_TEST_ID, harvester.nextExecution, 'deaktiviert');
   });
 });
