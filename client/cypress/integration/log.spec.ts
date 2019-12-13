@@ -15,24 +15,23 @@ describe('Log tab operations', () => {
 
   it('should show the right information in the logs after a single harvester is imported', () => {
     harvester.importHarvesterById(constants.CKAN_DB_ID);
+    cy.wait(2500);
 
     logPage.visit();
-    logPage.wait(4500);
-    logPage.reload();
-
+    cy.reload();
     logPage.infoIsContained('[INFO] default - Deutsche Bahn Datenportal (CKAN)');
     logPage.infoIsContained('[INFO] default - Number of records: 42');
   });
 
-  it('should show information in the logs when all the harvester are imported', () => {
+  xit('should show information in the logs when all the harvester are imported', () => {
     //wait a bit for log status to be cleaner
     cy.wait(10000);
 
     harvester.importAllHarvesters();
 
     logPage.visit();
-    logPage.wait(5000);
-    logPage.reload();
+    cy.wait(5000);
+    cy.reload();
     logPage.infoIsContained('[INFO] default - >> Running importer:');
   });
 

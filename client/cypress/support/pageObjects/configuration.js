@@ -12,14 +12,6 @@ class ConfigurationPage {
     cy.visit('config');
   }
 
-  wait(ms){
-    cy.wait(ms);
-  }
-
-  reload(){
-    cy.reload();
-  }
-
   resetConfigApi() {
     cy.request({
       method: 'POST',

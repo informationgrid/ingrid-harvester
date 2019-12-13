@@ -17,7 +17,7 @@ describe('Indices operations', () => {
     harvester.activateForSearch(constants.EXCEL_TEST_ID);
 
     indicesPage.visit();
-    indicesPage.reload();
+    cy.reload();
 
     indicesPage.indexIsContained('excel_index', false);
   });
@@ -27,7 +27,7 @@ describe('Indices operations', () => {
     harvester.importHarvesterById(constants.CKAN_DB_ID);
 
     indicesPage.visit();
-    indicesPage.wait(500);
+    cy.wait(500);
 
     indicesPage.indexIsContained('ckan_db', true);
   });
@@ -44,16 +44,16 @@ describe('Indices operations', () => {
     harvester.importHarvesterById(constants.CSW_TEST_ID);
 
     indicesPage.visit();
-    indicesPage.wait(500);
-    indicesPage.reload();
+    cy.wait(500);
+    cy.reload();
     indicesPage.indexIsContained('csw_index', true);
 
     harvester.visit();
     harvester.deleteHarvesterById(constants.CSW_TEST_ID);
 
     indicesPage.visit();
-    indicesPage.wait(500);
-    indicesPage.reload();
+    cy.wait(500);
+    cy.reload();
     indicesPage.indexIsContained('csw_index', false);
   });
 });

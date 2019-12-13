@@ -106,11 +106,11 @@ class HarvesterPage {
   }
 
   checkFieldValueIs(id, field, value){
-    cy.get('#harvester-' + id + ' ' + field).should('contain', value);
+    cy.get('#harvester-' + id + ' ' + field, {timeout: 7000}).should('contain', value);
   }
 
   checkFieldValueIsNot(id, field, value){
-    cy.get('#harvester-' + id + ' ' + field).should('not.contain', value);
+    cy.get('#harvester-' + id + ' ' + field, {timeout: 7000}).should('not.contain', value);
   }
 
   checkImportDate(id, importsDate) {

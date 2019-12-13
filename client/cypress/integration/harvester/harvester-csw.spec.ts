@@ -79,10 +79,9 @@ describe('Csw-Harvester operations', () => {
   });
 
   it('should update a harvester of type CSW', () => {
-    harvester.openFormByName('csw_test_api');
+    harvester.openFormById(constants.CSW_TEST_ID);
     form.setFields({
       description: 'csw_update',
-      indexName: 'full_csw',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'
@@ -93,7 +92,6 @@ describe('Csw-Harvester operations', () => {
     harvester.openFormByName('csw_update');
     form.checkFields({
       description: 'csw_update',
-      indexName: 'full_csw',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'
@@ -113,6 +111,6 @@ describe('Csw-Harvester operations', () => {
     harvester.checkImportHasStarted();
 
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    harvester.checkImportDate(constants.CSW_CODEDE_ID, importsDate);
+    harvester.checkFieldValueIs(constants.CSW_CODEDE_ID, harvester.lastExecution, importsDate);
   });
 });

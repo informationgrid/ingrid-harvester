@@ -18,7 +18,7 @@ describe('configuration tab operations', () => {
   });
 
   it('should update the elastic search-url, the alias and proxy values, save and check the saved data', () => {
-    configPage.wait(500);
+    cy.wait(500);
 
     configPage.setElasticSearchUrl('http://localhost:9209');
     configPage.setAlias('eman-saila');
@@ -26,7 +26,7 @@ describe('configuration tab operations', () => {
 
     configPage.saveConfig();
 
-    configPage.reload();
+    cy.reload();
 
     configPage.checkElasticSearchUrl('http://localhost:9209');
     configPage.checkAlias('eman-saila');
@@ -46,7 +46,7 @@ describe('configuration tab operations', () => {
   });
 
   it('should check that the save button is disabled if only spaces are inserted [INPUT CONTROL]', () => {
-    configPage.wait(500);
+    cy.wait(500);
     //no value in the url field
     configPage.setElasticSearchUrl('http://localhost:92000000');
     configPage.saveButtonIsDisabled();

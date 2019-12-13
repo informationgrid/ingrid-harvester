@@ -5,14 +5,6 @@ class IndicesPage {
     cy.visit('indices');
   }
 
-  wait(ms) {
-    cy.wait(ms);
-  }
-
-  reload() {
-    cy.reload();
-  }
-
   getAllIndices() {
     return cy.get(this.line).invoke('text');
   }
