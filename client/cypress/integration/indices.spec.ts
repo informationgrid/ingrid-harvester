@@ -56,4 +56,23 @@ describe('Indices operations', () => {
     cy.reload();
     indicesPage.indexIsContained('csw_index', false);
   });
+
+  it('should show the content of an index when it is clicked', () => {
+    let dbIndexContent = "\"_type\": \"base\",\n" +
+      "    \"_id\": \"7e526b8c-16bd-4f2c-a02b-8d4d0a29d310\",\n" +
+      "    \"_score\": 1,\n" +
+      "    \"_source\": {\n" +
+      "      \"accrualPeriodicity\": \"once_per_year\",\n" +
+      "      \"creator\": {\n" +
+      "        \"name\": \"Hannah Richta\",\n" +
+      "        \"mbox\": \"hannah.richta@deutschebahn.com\"\n" +
+      "      },\n" +
+      "      \"description\": ";
+
+    indicesPage.visit();
+    cy.wait(500);
+
+    indicesPage.selectIndex('ckan_db_');
+    indicesPage.checkContentIs(dbIndexContent)
+  })
 });

@@ -1,5 +1,6 @@
 class IndicesPage {
   line = '.mat-line';
+  content = 'pre';
 
   visit() {
     cy.visit('indices');
@@ -22,6 +23,14 @@ class IndicesPage {
       const partialList = indicesList.text().replace(index, '');
       expect(partialList).not.contain(index);
     });
+  }
+
+  selectIndex(index) {
+    cy.get(this.line).contains(index).click();
+  }
+
+  checkContentIs(content) {
+    cy.get(this.content).should("contain", content);
   }
 }
 
