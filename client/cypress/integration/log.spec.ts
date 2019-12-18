@@ -18,7 +18,6 @@ describe('Log tab operations', () => {
     cy.wait(2500);
 
     logPage.visit();
-    cy.reload();
     logPage.infoIsContained('[INFO] default - Deutsche Bahn Datenportal (CKAN)');
     logPage.infoIsContained('[INFO] default - Number of records: 42');
   });

@@ -17,7 +17,7 @@ describe('Import cron pattern operations', () => {
     harvester.setCronPatternTo('* * * * *');
     harvester.activateScheduler();
     harvester.applyScheduleDialog();
-    cy.reload();
+    // cy.reload();
 
     harvester.toggleHarvesterById(constants.CKAN_DB_ID);
     const nextImport = Cypress.moment(new Date(), 'DD.MM.YY, HH:mm').add(1, 'minute').format('DD.MM.YY, HH:mm');
@@ -61,6 +61,7 @@ describe('Import cron pattern operations', () => {
     const nextImport = Cypress.moment(importsDate, 'DD.MM.YY, HH:mm').add(1, 'minute').format('DD.MM.YY, HH:mm');
 
     cy.wait(65000);
+    cy.get('#harvester-' + constants.CKAN_DB_ID + ' ' + harvester.lastExecution).scrollIntoView();
     harvester.checkFieldValueIsNot(constants.CKAN_DB_ID, harvester.lastExecution, nextImport);
   });
 
