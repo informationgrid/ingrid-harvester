@@ -30,7 +30,10 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
       new FormControl(this.getModelField('providerField', 'organization')));
 
     const rule = new FormControl(this.getModelField('rules.containsDocumentsWithData', false));
-    const ruleBlacklist = new FormControl(this.getModelField('rules.containsDocumentsWithDataBlacklist', ''));
+    const ruleBlacklist = new FormControl({
+      value: this.getModelField('rules.containsDocumentsWithDataBlacklist', ''),
+      disabled: !rule.value
+    });
 
     this.form.addControl('rules', new FormGroup({
       containsDocumentsWithData: rule,
@@ -53,4 +56,11 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
+  toggleDisableRule(isChecked) {
+    if (isChecked) {
+      this.form.get('rules.containsDocumentsWithDataBlacklist').enable();
+    } else {
+      this.form.get('rules.containsDocumentsWithDataBlacklist').disable();
+    }
+  }
 }

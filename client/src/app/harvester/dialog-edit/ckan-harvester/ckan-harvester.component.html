@@ -64,11 +64,10 @@
       </div>
 
       <div formGroupName="rules" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between baseline">
-        <mat-checkbox #containsDocumentsWithData formControlName="containsDocumentsWithData">Muss Daten-Download enthalten</mat-checkbox>
+        <mat-checkbox formControlName="containsDocumentsWithData" (change)="toggleDisableRule($event.checked)">Muss Daten-Download enthalten</mat-checkbox>
         <mat-form-field fxFlex>
           <mat-label>Datenformat ausschließen</mat-label>
           <input matInput placeholder="rss,doc,..." formControlName="containsDocumentsWithDataBlacklist"
-                 [attr.disabled]="containsDocumentsWithData.checked ? null : true"
                  autocomplete="off">
         </mat-form-field>
       </div>
