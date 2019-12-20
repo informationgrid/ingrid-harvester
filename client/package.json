@@ -38,7 +38,7 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.803.19",
+    "@angular-devkit/build-angular": "^0.803.21",
     "@angular/cli": "~8.3.19",
     "@angular/compiler-cli": "~8.2.14",
     "@angular/language-service": "~8.2.14",
@@ -48,6 +48,7 @@
     "@types/node": "~8.9.4",
     "@types/socket.io-client": "^1.4.32",
     "codelyzer": "~5.1.0",
+    "cypress": "^3.8.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.0.0",
@@ -61,7 +62,6 @@
     "typescript": "~3.5.3"
   },
   "optionalDependencies": {
-    "cypress": "^3.7.0",
     "mocha": "5.2.0",
     "mochawesome": "^4.1.0",
     "mochawesome-merge": "^2.0.1",

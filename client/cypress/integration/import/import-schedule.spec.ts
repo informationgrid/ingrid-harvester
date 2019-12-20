@@ -19,7 +19,8 @@ describe('Import cron pattern operations', () => {
     harvester.applyScheduleDialog();
     // cy.reload();
 
-    harvester.toggleHarvesterById(constants.CKAN_DB_ID);
+    // harvester.toggleHarvesterById(constants.CKAN_DB_ID);
+    cy.get("#harvester-" + constants.CKAN_DB_ID + " " + harvester.nextExecution).scrollIntoView();
     const nextImport = Cypress.moment(new Date(), 'DD.MM.YY, HH:mm').add(1, 'minute').format('DD.MM.YY, HH:mm');
     harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.nextExecution, nextImport);
 
@@ -55,7 +56,7 @@ describe('Import cron pattern operations', () => {
     harvester.deactivateScheduler();
     harvester.applyScheduleDialog();
 
-    harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.nextExecution,'deaktiviert');
+    harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.nextExecution, 'deaktiviert');
 
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
     const nextImport = Cypress.moment(importsDate, 'DD.MM.YY, HH:mm').add(1, 'minute').format('DD.MM.YY, HH:mm');

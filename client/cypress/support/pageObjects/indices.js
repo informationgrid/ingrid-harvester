@@ -11,7 +11,7 @@ class IndicesPage {
   }
 
   indexIsContained(index, bool) {
-    if (bool ) {
+    if (bool) {
       this.getAllIndices().should('contain', index);
     } else {
       this.getAllIndices().should('not.contain', index);
@@ -26,7 +26,7 @@ class IndicesPage {
   }
 
   selectIndex(index) {
-    cy.get(this.line).contains(index).click();
+    cy.get(this.line).contains(index).click({force: true});
   }
 
   checkContentIs(content) {

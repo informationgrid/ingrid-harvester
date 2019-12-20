@@ -105,11 +105,11 @@ class HarvesterPage {
     cy.get('app-importer-detail').should('contain', ' Import läuft ');
   }
 
-  checkFieldValueIs(id, field, value){
+  checkFieldValueIs(id, field, value) {
     cy.get('#harvester-' + id + ' ' + field, {timeout: 15000}).should('contain', value);
   }
 
-  checkFieldValueIsNot(id, field, value){
+  checkFieldValueIsNot(id, field, value) {
     cy.get('#harvester-' + id + ' ' + field, {timeout: 15000}).should('not.contain', value);
   }
 
