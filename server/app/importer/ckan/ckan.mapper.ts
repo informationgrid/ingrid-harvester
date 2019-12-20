@@ -9,8 +9,8 @@ import {CkanParameters, CkanParametersListWithResources, RequestDelegate, Reques
 import {UrlUtils} from "../../utils/url.utils";
 import {Summary} from '../../model/summary';
 import {CkanRules} from './ckan.rules';
-import {IndexDocument} from '../../model/index.document';
 
+let mapping = require('../../../mappings.json');
 let markdown = require('markdown').markdown;
 
 interface CkanMapperData {
@@ -203,8 +203,19 @@ export class CkanMapper extends GenericMapper {
 
     getThemes(): string[] {
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
-        // TODO: map ckan category to DCAT
-        return this.settings.defaultDCATCategory
+        // map ckan category to DCAT
+        let mappedThemes = [];
+        if (this.source.groups) {
+            mappedThemes = this.source.groups
+                .map(group => group.name)
+                .map(groupName => mapping.ckan_dcat[groupName])
+                .filter(dcatTheme => dcatTheme !== null && dcatTheme !== undefined);
+        }
+
+        if (mappedThemes.length === 0) {
+            mappedThemes = this.settings.defaultDCATCategory;
+        }
+        return mappedThemes
             .map(category => GenericMapper.DCAT_CATEGORY_URL + category);
     }
 

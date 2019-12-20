@@ -1,4 +1,20 @@
 {
+  "ckan_dcat": {
+    "bevoelkerung": "SOCI",
+    "bildung_wissenschaft": ["EDUC", "TECH"],
+    "geo": null,
+    "gesetze_justiz": "JUST",
+    "gesundheit": "HEAL",
+    "infrastruktur_bauen_wohnen": null,
+    "kultur_freizeit_sport_tourismus": "EDUC",
+    "politik_wahlen": "GOVE",
+    "soziales": "SOCI",
+    "transport_verkehr": "TRAN",
+    "umwelt_klima": "ENVI",
+    "verbraucher": null,
+    "verwaltung": "GOVE",
+    "wirtschaft_arbeit": "ECON"
+  },
   "format": {
     "ATOM": [
       "http://publications.europa.eu/resource/authority/file-type/atom",
