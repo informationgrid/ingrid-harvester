@@ -36,13 +36,16 @@ class HarvesterForm {
       switch (type) {
         case 'input':
           // for text inputs
+          cy.wait(500);
           cy.get(this[key]).clear().type(options[key]);
           break;
         case 'select':
+          cy.wait(500);
           cy.get(this[key]).click();
           cy.get('.mat-option-text').contains(options[key]).click();
           break;
         case 'multiselect':
+          cy.wait(500);
           cy.get(this[key]).click();
           cy.get('.mat-option-text').contains(options[key]).click();
           cy.get(this[key]).type('{esc}');

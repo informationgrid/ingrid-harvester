@@ -17,6 +17,7 @@ describe('Log tab operations', () => {
     harvester.importHarvesterById(constants.CKAN_DB_ID);
 
     logPage.visit();
+    cy.wait(500);
     logPage.infoIsContained('[INFO] default - Deutsche Bahn Datenportal (CKAN)');
     logPage.infoIsContained('[INFO] default - Number of records: 42');
   });
