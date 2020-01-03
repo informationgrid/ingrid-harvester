@@ -27,6 +27,8 @@ describe('Csw-Harvester operations', () => {
       getRecordsUrl: './testme'
     });
     form.saveHarvesterConfig();
+    cy.wait(500);
+    cy.reload();
 
     harvester.openFormByName('Testing partial CSW Harvester');
     form.checkFields({

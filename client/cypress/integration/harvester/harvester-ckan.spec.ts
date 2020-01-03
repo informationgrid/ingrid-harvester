@@ -19,6 +19,7 @@ describe('Ckan-Harvester operations', () => {
       ckanBasisUrl: 'testme'
     });
     form.saveHarvesterConfig();
+    cy.reload();
 
     harvester.openFormByName('Testing CKAN Harvester');
     form.checkFields({
