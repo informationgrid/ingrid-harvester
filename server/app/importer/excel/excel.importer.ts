@@ -9,6 +9,7 @@ import {DefaultImporterSettings, Importer} from '../../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {ExcelSettings} from './excel.settings';
+import {FilterUtils} from "../../utils/filter.utils";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -26,6 +27,7 @@ export class ExcelImporter implements Importer {
     };
 
     summary: Summary;
+    private filterUtils: FilterUtils;
 
     run = new Observable<ImportLogMessage>(observer => {this.exec(observer)});
 
@@ -38,6 +40,7 @@ export class ExcelImporter implements Importer {
         settings = {...ExcelImporter.defaultSettings, ...settings};
 
         this.summary = new Summary(settings);
+        this.filterUtils = new FilterUtils(settings);
 
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings, this.summary);
@@ -117,7 +120,7 @@ export class ExcelImporter implements Importer {
                 let unit = workUnits[idx];
                 this.summary.numDocs++;
 
-                if (!this.isIdAllowed(unit.id)) {
+                if (!this.filterUtils.isIdAllowed(unit.id)) {
                     this.summary.skippedDocs.push(unit.id);
                     continue;
                 }
@@ -232,10 +235,4 @@ export class ExcelImporter implements Importer {
         return this.summary;
     }
 
-    private isIdAllowed(id: string) {
-        if (this.settings.blacklistedIds) {
-            return this.settings.blacklistedIds.indexOf(id) === -1;
-        }
-        return true;
-    }
 }

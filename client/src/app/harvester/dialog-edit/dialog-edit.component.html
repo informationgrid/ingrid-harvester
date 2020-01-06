@@ -92,7 +92,8 @@
         </mat-card-content>
       </mat-card>
 
-      <app-excel-harvester *ngIf="harvesterForm.get('type').value === 'EXCEL'" [form]="harvesterForm" [model]="harvester"
+      <app-excel-harvester *ngIf="harvesterForm.get('type').value === 'EXCEL'" [form]="harvesterForm"
+                           [model]="harvester"
                            [rulesTemplate]="rules"
                            class="flex-column"></app-excel-harvester>
 
@@ -101,14 +102,20 @@
                           class="flex-column">
       </app-ckan-harvester>
 
-      <app-csw-harvester *ngIf="harvesterForm.get('type').value?.endsWith('CSW')" [form]="harvesterForm" [model]="harvester"
+      <app-csw-harvester *ngIf="harvesterForm.get('type').value?.endsWith('CSW')" [form]="harvesterForm"
+                         [model]="harvester"
                          [rulesTemplate]="rules"
                          class="flex-column"></app-csw-harvester>
 
       <ng-template #rules>
-        <app-chip-list [list]="harvester.blacklistedIds"
-                       placeholder="Ausgeschlossene IDs"
-                       (update)="harvester.blacklistedIds = $event"></app-chip-list>
+        <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+          <app-chip-list [list]="harvester.blacklistedIds"
+                         placeholder="Ausgeschlossene IDs"
+                         (update)="harvester.blacklistedIds = $event"></app-chip-list>
+          <app-chip-list [list]="harvester.whitelistedIds"
+                         placeholder="Nicht auszuschließende IDs"
+                         (update)="harvester.whitelistedIds = $event"></app-chip-list>
+        </div>
       </ng-template>
 
       <!--      <span class="mat-small">{{harvesterForm.value | json}}</span>-->

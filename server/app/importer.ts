@@ -10,7 +10,8 @@ export const DefaultImporterSettings: ImporterSettings = {
     defaultMcloudSubgroup: [],
     defaultDCATCategory: [],
     dateSourceFormats: [],
-    blacklistedIds: []
+    blacklistedIds: [],
+    whitelistedIds: []
 };
 
 export interface Importer {

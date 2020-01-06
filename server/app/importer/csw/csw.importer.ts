@@ -11,6 +11,7 @@ import {DefaultImporterSettings, Importer} from '../../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {CswSettings} from './csw.settings';
+import {FilterUtils} from "../../utils/filter.utils";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -50,6 +51,7 @@ export class CswImporter implements Importer {
     };
 
     private readonly summary: CswSummary;
+    private filterUtils: FilterUtils;
 
     run = new Observable<ImportLogMessage>(observer => {
         this.observer = observer;
@@ -70,6 +72,7 @@ export class CswImporter implements Importer {
         }
 
         this.settings = settings;
+        this.filterUtils = new FilterUtils(settings);
 
         this.summary = new CswSummary(settings);
 
@@ -162,7 +165,7 @@ export class CswImporter implements Importer {
             this.summary.numDocs++;
 
             const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');
-            if (!this.isIdAllowed(uuid)) {
+            if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;
             }
@@ -281,10 +284,4 @@ export class CswImporter implements Importer {
         return this.summary;
     }
 
-    private isIdAllowed(id: string) {
-        if (this.settings.blacklistedIds) {
-            return this.settings.blacklistedIds.indexOf(id) === -1;
-        }
-        return true;
-    }
 }
