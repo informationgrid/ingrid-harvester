@@ -70,9 +70,12 @@ describe('Indices operations', () => {
       "      \"description\": ";
 
     harvester.importHarvesterById(constants.CKAN_DB_ID);
+    cy.wait(4000); // wait for harvester to be fully imported
+
     indicesPage.visit();
+    cy.wait(500);
 
     indicesPage.selectIndex('ckan_db');
-    indicesPage.checkContentIs(dbIndexContent)
+    indicesPage.checkContentIs(dbIndexContent);
   })
 });

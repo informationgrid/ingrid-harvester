@@ -33,6 +33,8 @@ describe('Ckan-Harvester operations', () => {
   });
 
   it('should add a harvester of type CKAN with all options', () => {
+    auth.apiLoginWithUserCheck();  //temporary workaround, test was always redirected to login-page
+
     harvester.addNewHarvester();
     form.setFields({
       type: 'CKAN',
