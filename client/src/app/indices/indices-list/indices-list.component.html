@@ -1,5 +1,5 @@
 <div fxLayout="row">
-  <mat-list fxFlex="50">
+  <mat-list fxFlex="50" class="list-hover">
     <h3 mat-subheader>Existierende Indizes</h3>
     <mat-list-item *ngFor="let index of indices | async" (click)="sendSearchRequest(index.name)">
       <h4 mat-line>{{index.name}}</h4>

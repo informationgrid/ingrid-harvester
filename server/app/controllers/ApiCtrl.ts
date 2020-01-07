@@ -6,7 +6,6 @@ import {SummaryService} from '../services/config/SummaryService';
 import {ImportLogMessage} from '../model/import.result';
 import {LogService} from '../services/storage/LogService';
 import {ScheduleService} from '../services/ScheduleService';
-import {GeneralSettings} from '@shared/general-config.settings';
 import {Index} from '@shared/index.model';
 import {IndexService} from '../services/IndexService';
 import {CronData} from '../importer.settings';
@@ -99,21 +98,6 @@ export class ApiCtrl {
     schedule(@PathParams('id') id: number, @BodyParams('cron') cronExpression: CronData): Date {
         console.log('Body:', cronExpression);
         return this.scheduleService.set(+id, cronExpression);
-    }
-
-
-    @Get('/config/general')
-    getGeneralConfig(): GeneralSettings {
-
-        return ConfigService.getGeneralSettings();
-
-    }
-
-    @Post('/config/general')
-    setGeneralConfig(@BodyParams() body: GeneralSettings): void {
-
-        ConfigService.setGeneralConfig(body);
-
     }
 
 

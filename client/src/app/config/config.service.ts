@@ -1,7 +1,13 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {GeneralSettings} from "@shared/general-config.settings";
+import {MappingItem} from '@shared/mapping.model';
+
+export interface MappingDistribution {
+  name: string;
+  items: string[];
+}
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +19,23 @@ export class ConfigService {
 
   fetch(): Observable<GeneralSettings> {
     return this.http.get<any>('rest/api/config/general');
+  }
+
+  getMapping(): Observable<MappingDistribution[]> {
+    return this.http.get<MappingDistribution[]>('rest/api/config/mapping/distribution');
+  }
+
+  addMapping(mapping: MappingItem) {
+    return this.http.post<any>('rest/api/config/mapping/distribution', mapping);
+  }
+
+  removeMapping(mapping: MappingItem) {
+    let httpParams = new HttpParams()
+      .set('source', mapping.source)
+      .set('target', mapping.target);
+
+    let options = {params: httpParams};
+    return this.http.delete('rest/api/config/mapping/distribution', options);
   }
 
   save(data: GeneralSettings): Observable<void> {

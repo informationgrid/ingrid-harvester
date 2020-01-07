@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Mapping hinzufügen</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput placeholder="Quelle" [(ngModel)]="data.source">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Ziel" [(ngModel)]="data.target">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Abbrechen</button>
+  <div class="flex-space"></div>
+  <button mat-button [mat-dialog-close]="data">Hinzufügen</button>
+</div>

@@ -5,6 +5,7 @@ import {CkanImporter} from '../../importer/ckan/ckan.importer';
 import {ExcelImporter} from '../../importer/excel/excel.importer';
 import {CswImporter} from '../../importer/csw/csw.importer';
 import {getLogger} from "log4js";
+import {MappingDistribution, MappingItem} from '@shared/mapping.model';
 
 const log = getLogger();
 
@@ -14,6 +15,10 @@ export class ConfigService {
 
     private static HARVESTER_CONFIG_FILE = "config.json";
 
+    private static MAPPINGS_FILE = "mappings.json";
+
+    private static mappingDistribution: MappingDistribution[] = ConfigService.initDistributionMapping();
+
     static highestID: number = 0;
 
     private static readonly defaultSettings = {
@@ -22,6 +27,19 @@ export class ConfigService {
         proxy: "",
         sessionSecret: "mysecretkey"
     };
+
+    private static initDistributionMapping(): MappingDistribution[] {
+        let content: any = fs.readFileSync(this.MAPPINGS_FILE);
+        let mapping = JSON.parse(content.toString());
+        return Object.keys(mapping.format)
+            .reduce((prev, curr) => {
+                prev.push({
+                    name: curr,
+                    items: mapping.format[curr]
+                });
+                return prev;
+            }, []);
+    }
 
     static fixIDs() {
         let harvesters = ConfigService.get();
@@ -67,7 +85,7 @@ export class ConfigService {
                 })
                 .filter(config => config); // remove all invalid configurations
         } else {
-            log.warn("No config.json file found. Please configure using the admin GUI.")
+            log.warn("No config.json file found. Please configure using the admin GUI.");
             return [];
         }
 
@@ -126,5 +144,55 @@ export class ConfigService {
 
         fs.writeFileSync(this.GENERAL_CONFIG_FILE, JSON.stringify(config, null, 2));
 
+    }
+
+    static getMappingDistribution(): MappingDistribution[] {
+
+        return this.mappingDistribution;
+
+    }
+
+    static addMappingDistribution(item: MappingItem): void {
+
+        const itemIndex = this.mappingDistribution.findIndex(map => map.name === item.target);
+
+        if (itemIndex === -1) {
+            this.mappingDistribution.push({
+                name: item.target,
+                items: [item.source]
+            });
+        } else {
+            this.mappingDistribution[itemIndex].items.push(item.source);
+        }
+
+        this.saveMappingDistribution();
+
+    }
+
+    static removeMappingDistribution(item: MappingItem): void {
+
+        const itemIndex = this.mappingDistribution.findIndex(map => map.name === item.target);
+        const itemMapIndex = this.mappingDistribution[itemIndex].items.findIndex(source => source === item.source);
+        this.mappingDistribution[itemIndex].items.splice(itemMapIndex, 1);
+
+        this.saveMappingDistribution();
+
+    }
+
+    private static saveMappingDistribution() {
+        let content: any = fs.readFileSync(this.MAPPINGS_FILE);
+        let mapping = JSON.parse(content.toString());
+
+        mapping.format = this.convertMappingForFile();
+
+        fs.writeFileSync(this.MAPPINGS_FILE, JSON.stringify(mapping, null, 2));
+    }
+
+    private static convertMappingForFile() {
+        return this.mappingDistribution
+            .reduce((prev, curr) => {
+                prev[curr.name] = curr.items;
+                return prev;
+            }, {})
     }
 }

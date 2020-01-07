@@ -1,0 +1,19 @@
+<mat-list dense class="list-hover">
+  <ng-container *ngFor="let type of types | async">
+  <h3 matSubheader>{{type.name}}</h3>
+  <mat-list-item *ngFor="let item of type.items">
+    <h4 matLine>{{item}}</h4>
+    <button mat-icon-button (click)="deleteItem(type.name, item)">
+      <mat-icon mat-list-icon>delete</mat-icon>
+    </button>
+  </mat-list-item>
+  </ng-container>
+</mat-list>
+
+<button mat-fab
+        color="primary"
+        (click)="addItem()"
+        class="mat-fab-bottom-right"
+        id="btnAddMapping">
+  <mat-icon aria-label="Add Mapping">add</mat-icon>
+</button>

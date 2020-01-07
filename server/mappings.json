@@ -1,7 +1,10 @@
 {
   "ckan_dcat": {
     "bevoelkerung": "SOCI",
-    "bildung_wissenschaft": ["EDUC", "TECH"],
+    "bildung_wissenschaft": [
+      "EDUC",
+      "TECH"
+    ],
     "geo": null,
     "gesetze_justiz": "JUST",
     "gesundheit": "HEAL",
