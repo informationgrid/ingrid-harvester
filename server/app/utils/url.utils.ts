@@ -2,11 +2,13 @@
 
 import {RequestDelegate} from "./http-request.utils";
 import {OptionsWithUri} from "request-promise";
+import * as fs from "fs";
 
-let mapping = require("../../mappings");
 let log = require('log4js').getLogger( __filename );
 
 export class UrlUtils {
+
+    private static MAPPINGS_FILE = "mappings.json";
 
     static cache: { [url: string]: boolean } = {};
 
@@ -107,11 +109,17 @@ export class UrlUtils {
 
     }
 
+    static updateFormatMapping() {
+        this.formatMapping = this.getFormatMapping();
+    }
+
     private static getFormatMapping() {
+        let content: any = fs.readFileSync(this.MAPPINGS_FILE);
+        let mapping = JSON.parse(content.toString());
 
         return Object.keys(mapping.format)
             .reduce((prev, curr) => {
-                mapping.format[curr].forEach(value => prev[value] = curr);
+                mapping.format[curr].forEach(value => prev[value.toLowerCase()] = curr);
                 return prev;
             }, {});
     }

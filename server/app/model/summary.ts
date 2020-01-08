@@ -25,6 +25,9 @@ export class Summary {
         logger.info(`---------------------------------------------------------`);
         logger.info(`Number of records: ${this.numDocs}`);
         logger.info(`Skipped records: ${this.skippedDocs.length}`);
+        if (logger.isDebugEnabled() && this.skippedDocs.length > 0) {
+            logger.debug(`\n\t${this.skippedDocs.join('\n\t')}`);
+        }
         logger.info(`Record-Errors: ${this.numErrors}`);
         logger.info(`Warnings: ${this.warnings.length}`);
         if (logger.isDebugEnabled() && this.warnings.length > 0) {

@@ -6,6 +6,7 @@ import {ExcelImporter} from '../../importer/excel/excel.importer';
 import {CswImporter} from '../../importer/csw/csw.importer';
 import {getLogger} from "log4js";
 import {MappingDistribution, MappingItem} from '@shared/mapping.model';
+import {UrlUtils} from "../../utils/url.utils";
 
 const log = getLogger();
 
@@ -174,6 +175,7 @@ export class ConfigService {
 
         this.saveMappingDistribution();
 
+        UrlUtils.updateFormatMapping();
     }
 
     static removeMappingDistribution(item: MappingItem): void {
@@ -188,6 +190,7 @@ export class ConfigService {
 
         this.saveMappingDistribution();
 
+        UrlUtils.updateFormatMapping();
     }
 
     private static saveMappingDistribution() {
