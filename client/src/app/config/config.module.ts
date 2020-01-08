@@ -11,6 +11,8 @@ import { ConfigGeneralComponent } from './config-general/config-general.componen
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
 import { AddMappingItemComponent } from './config-mapping/add-mapping-item/add-mapping-item.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {FlexModule} from "@angular/flex-layout";
 
 const configRoutes: Routes = [
   {
@@ -29,7 +31,9 @@ const configRoutes: Routes = [
     ReactiveFormsModule,
     MatTabsModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    MatAutocompleteModule,
+    FlexModule
   ],
   exports: [
     ConfigComponent

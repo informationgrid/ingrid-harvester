@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {ConfigService} from "../config.service";
+import {ConfigService, MappingDistribution} from "../config.service";
 import {MatDialog} from "@angular/material/dialog";
 import {AddMappingItemComponent} from "./add-mapping-item/add-mapping-item.component";
+import {map, tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-config-mapping',
@@ -10,7 +11,12 @@ import {AddMappingItemComponent} from "./add-mapping-item/add-mapping-item.compo
 })
 export class ConfigMappingComponent implements OnInit {
 
-  types = this.configService.getMapping();
+  types = this.configService.getMapping().pipe(
+    // map(items => items.sort(this.compareFunction)),
+    tap(result => this.formatOptions = result.map( item => item.name))
+  );
+  private formatOptions: string[];
+  private compareFunction = (a: MappingDistribution, b: MappingDistribution) => a.name.localeCompare(b.name);
 
   constructor(private configService: ConfigService, private dialog: MatDialog) { }
 
@@ -27,10 +33,13 @@ export class ConfigMappingComponent implements OnInit {
   }
 
   addItem() {
-    this.dialog.open(AddMappingItemComponent).afterClosed().subscribe(result => {
+    this.dialog.open(AddMappingItemComponent, {
+      data: this.formatOptions
+    }).afterClosed().subscribe(result => {
       this.configService.addMapping(result).subscribe( () => {
         this.types = this.configService.getMapping();
       });
     })
   }
+
 }

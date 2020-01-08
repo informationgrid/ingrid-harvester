@@ -396,11 +396,17 @@ export class CkanMapper extends GenericMapper {
             this.log.warn(msg);
         }
 
+        const isWhitelisted = this.settings.whitelistedIds.indexOf(doc.extras.generated_id) !== -1;
+
         if (this.settings.rules && this.settings.rules.containsDocumentsWithData) {
             const result = CkanRules.containsDocumentsWithData(doc.distribution, this, this.settings.rules.containsDocumentsWithDataBlacklist);
             if (result.skipped) {
-                this.summary.skippedDocs.push(`${this.source.title} (${this.source.id})`);
                 this.summary.warnings.push(['No data document', `${this.source.title} (${this.source.id})`]);
+                if (isWhitelisted) {
+                    this.log.info('Document not skipped, since whitelisted: ' + this.source.id)
+                } else {
+                    this.skipped = true;
+                }
             }
             if (!result.valid) {
                 this.valid = false;

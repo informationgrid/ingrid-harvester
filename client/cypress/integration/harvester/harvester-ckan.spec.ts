@@ -105,4 +105,23 @@ describe('Ckan-Harvester operations', () => {
     // hPage.reload();
     // hPage.deleteHarvesterByName('ckan_updated');
   });
+
+  xit('should filter blacklisted IDs', function () {
+
+  });
+
+  xit('should exclude documents which have no data downloads (e.g. "rest")', function () {
+    // example: CKAN-DB, "Muss Daten-Download enthalten": X, "Datenformat ausschließen": "rest"
+  });
+
+  xit('should import whitelisted IDs even if excluded by no data downloads', function () {
+    // example: CKAN-DB, "Muss Daten-Download enthalten": X, "Datenformat ausschließen": "rest"
+    //          "nicht auszuschließende IDs": "7e526b8c-16bd-4f2c-a02b-8d4d0a29d310"
+
+  });
+
+  xit('should import whitelisted IDs even if excluded by tag or group', function () {
+
+  });
+
 });

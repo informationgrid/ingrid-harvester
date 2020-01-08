@@ -63,4 +63,11 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
       this.form.get('rules.containsDocumentsWithDataBlacklist').disable();
     }
   }
+
+  toLowerCase(text: string) {
+    const field = this.form.get('rules.containsDocumentsWithDataBlacklist');
+    if (field.value !== text.toLowerCase()) {
+      field.setValue(text.toLowerCase());
+    }
+  }
 }

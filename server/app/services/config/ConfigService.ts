@@ -27,6 +27,12 @@ export class ConfigService {
         proxy: "",
         sessionSecret: "mysecretkey"
     };
+    private static ignoreCaseSort = (a: string, b: string) => {
+        return a.toLowerCase().localeCompare(b.toLowerCase());
+    };
+    private static sortMappingDistribution = (a: MappingDistribution, b: MappingDistribution) => {
+        return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    };
 
     private static initDistributionMapping(): MappingDistribution[] {
         let content: any = fs.readFileSync(this.MAPPINGS_FILE);
@@ -161,6 +167,7 @@ export class ConfigService {
                 name: item.target,
                 items: [item.source]
             });
+            this.mappingDistribution = this.mappingDistribution.sort(this.sortMappingDistribution);
         } else {
             this.mappingDistribution[itemIndex].items.push(item.source);
         }
@@ -174,6 +181,10 @@ export class ConfigService {
         const itemIndex = this.mappingDistribution.findIndex(map => map.name === item.target);
         const itemMapIndex = this.mappingDistribution[itemIndex].items.findIndex(source => source === item.source);
         this.mappingDistribution[itemIndex].items.splice(itemMapIndex, 1);
+
+        if (this.mappingDistribution[itemIndex].items.length === 0) {
+            this.mappingDistribution.splice(itemIndex, 1);
+        }
 
         this.saveMappingDistribution();
 
@@ -189,10 +200,17 @@ export class ConfigService {
     }
 
     private static convertMappingForFile() {
-        return this.mappingDistribution
+        const unorderedResult = this.mappingDistribution
             .reduce((prev, curr) => {
                 prev[curr.name] = curr.items;
                 return prev;
-            }, {})
+            }, {});
+
+        const ordered = {};
+        Object.keys(unorderedResult).sort(this.ignoreCaseSort).forEach(function (key) {
+            ordered[key] = unorderedResult[key];
+        });
+
+        return ordered;
     }
 }

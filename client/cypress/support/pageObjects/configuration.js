@@ -71,7 +71,7 @@ class ConfigurationPage {
   }
 
   pressDownloadConfigButton(){
-    cy.get('.mat-flat-button').contains('Export der Harvester-Konfiguration').click();
+    cy.get('[data-test=export]').click();
   }
 }
 
