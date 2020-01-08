@@ -1,12 +1,11 @@
 class Authentication {
-  constructor() {
-    this.logInBtn = '[data-test=login]';
-    this.title = 'mat-card-title';
-    this.logOutBtn = '[data-test=logout]';
-    this.errorMsg = '.error';
-    this.inputUser = 'input[formcontrolname="username"]';
-    this.inputPsw = 'input[formcontrolname="password"]';
-  }
+
+   logInBtn = '[data-test=login]';
+   title = 'mat-card-title';
+   logOutBtn = '[data-test=logout]';
+   errorMsg = '.error';
+   inputUser = 'input[formcontrolname="username"]';
+   inputPsw = 'input[formcontrolname="password"]';
 
   reload(){
     cy.reload();

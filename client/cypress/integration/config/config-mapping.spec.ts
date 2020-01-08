@@ -5,28 +5,43 @@ describe('Configuration of Mapping-Formats', () => {
   const Authentication = require("../../support/pageObjects/auth");
   const auth = new Authentication();
 
+  let mapSource = 'mapping_source';
+  let mapDest = 'mapping_destination';
+
   beforeEach(() => {
     auth.apiLoginWithUserCheck();
     configPage.visit();
-    // configPage.selectTab(MAPPING);
+    configPage.selectTab(configPage.MAPPING);
   });
 
-  /**
-   * clean up after the tests'
-   */
-  afterEach(() => {
+  it('should show a list of mapped values', () => {
+    let mapList = configPage.getAllMappings();
+
+    mapList.should('contain', 'html')
+      .and('contain', 'json')
+      .and('contain', 'pdf')
+      .and('contain', 'png')
+      .and('contain', 'csv')
+      .and('contain', 'download')
+      .and('contain', 'zip');
   });
 
-  xit('should show a list of mapped values', () => {
+  it('should add a new mapped value', () => {
+    configPage.addNewMapping();
+    configPage.fillMappingValues(mapSource, mapDest);
+    configPage.saveMapping();
+    cy.wait(500);
+    cy.reload();
+    configPage.selectTab(configPage.MAPPING);
 
+    //  check mapping has been inserted
+    configPage.checkMappingExists(mapSource, true);
   });
 
-  xit('should add a new mapped value', () => {
-
-  });
-
-  xit('should delete a new mapped value', () => {
-
+  it('should delete a mapped value', () => {
+    configPage.deleteMapping(mapSource);
+    cy.wait(500);
+    configPage.checkMappingExists(mapSource, false);
   });
 
 });

@@ -1,7 +1,6 @@
 class LogPage {
-  constructor() {
-    this.info = '.info'
-  }
+  info = '.info'
+
 
   visit() {
     cy.visit('log');
