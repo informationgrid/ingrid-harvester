@@ -36,9 +36,11 @@ export class ConfigMappingComponent implements OnInit {
     this.dialog.open(AddMappingItemComponent, {
       data: this.formatOptions
     }).afterClosed().subscribe(result => {
-      this.configService.addMapping(result).subscribe( () => {
-        this.types = this.configService.getMapping();
-      });
+      if (result) {
+        this.configService.addMapping(result).subscribe(() => {
+          this.types = this.configService.getMapping();
+        });
+      }
     })
   }
 

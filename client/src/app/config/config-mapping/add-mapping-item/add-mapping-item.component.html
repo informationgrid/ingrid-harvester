@@ -2,11 +2,11 @@
 <div mat-dialog-content>
   <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
     <mat-form-field>
-      <input matInput placeholder="Quelle" [(ngModel)]="data.source">
+      <input matInput placeholder="Quelle" [(ngModel)]="data.source" required>
     </mat-form-field>
     <mat-form-field>
       <input matInput placeholder="Ziel" [(ngModel)]="data.target" [matAutocomplete]="auto"
-             (ngModelChange)="filterOptions($event)">
+             (ngModelChange)="filterOptions($event)" required>
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option *ngFor="let option of filteredOptions" [value]="option">
           {{option}}
@@ -18,5 +18,5 @@
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>Abbrechen</button>
   <div class="flex-space"></div>
-  <button mat-button [mat-dialog-close]="data">Hinzufügen</button>
+  <button mat-button color="primary" [mat-dialog-close]="data" [disabled]="!data.source || !data.target">Hinzufügen</button>
 </div>
