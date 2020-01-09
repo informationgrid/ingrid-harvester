@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {ImportLogMessage} from "../../../../../server/app/model/import.result";
 
 @Component({
@@ -10,6 +10,8 @@ export class ImporterDetailComponent implements OnInit {
 
   @Input() data: ImportLogMessage;
   @Input() cronActive = false;
+
+  @Output() showLog = new EventEmitter();
 
   constructor() {
   }

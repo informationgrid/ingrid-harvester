@@ -22,6 +22,7 @@ import {SharedModule} from '../shared/shared.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ChipListComponent} from './dialog-edit/chip-list/chip-list.component';
+import {MatBadgeModule} from "@angular/material/badge";
 
 const harvesterRoutes: Routes = [
   {
@@ -60,7 +61,8 @@ const harvesterRoutes: Routes = [
         MatChipsModule,
         MatTabsModule,
         ReactiveFormsModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MatBadgeModule
     ],
   entryComponents: [
     DialogSchedulerComponent,

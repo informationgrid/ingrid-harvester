@@ -1,15 +1,24 @@
-<mat-tab-group [animationDuration]="'0ms'" [dynamicHeight]="false">
-  <mat-tab label="Errors">
+<mat-tab-group [animationDuration]="'0ms'" [dynamicHeight]="false" mat-align-tabs="center" [selectedIndex]="getInitialIndex()">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span [matBadge]="appErrors.length" [matBadgeColor]="appErrors.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Fehler</span>
+    </ng-template>
     <div class="logContainer">
       <div *ngFor="let error of appErrors">{{error}}</div>
     </div>
   </mat-tab>
-  <mat-tab label="Elasticsearch-Errors">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span [matBadge]="elasticSearchErrors.length" [matBadgeColor]="elasticSearchErrors.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Elasticsearch-Fehler</span>
+    </ng-template>
     <div class="logContainer">
       <div *ngFor="let error of elasticSearchErrors">{{error}}</div>
     </div>
   </mat-tab>
-  <mat-tab label="Warnings">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span [matBadge]="appWarnings.length" [matBadgeColor]="appWarnings.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Warnungen</span>
+    </ng-template>
     <div class="logContainer">
       <div *ngFor="let warning of appWarnings">{{warning}}</div>
     </div>

@@ -40,8 +40,12 @@ snack-bar-container.error {
   color: white;
 }
 
-.list-hover .mat-list-item:hover {
-  background: rgba(255, 255, 255, 0.04)
+.list-hover .mat-list-item:hover, .clickable:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 

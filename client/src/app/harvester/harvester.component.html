@@ -32,6 +32,7 @@
             </mat-expansion-panel-header>
 
             <app-importer-detail [data]="importDetail[harvester.id]"
+                                 (showLog)="showLog(harvester.id)"
                                  [cronActive]="!harvester.disable && harvester.cron?.active"></app-importer-detail>
 
             <mat-action-row>
