@@ -15,6 +15,8 @@ describe('Log tab operations', () => {
 
   it('should show the right information in the logs after a single harvester is imported', () => {
     harvester.importHarvesterById(constants.CKAN_DB_ID);
+    // TODO: wait for finish condition instead of wait
+    cy.wait(7000);
 
     logPage.visit();
     cy.wait(500);
@@ -24,11 +26,13 @@ describe('Log tab operations', () => {
 
   xit('should show information in the logs when all the harvester are imported', () => {
     //wait a bit for log status to be cleaner
+    // TODO: what does this mean?
     cy.wait(10000);
 
     harvester.importAllHarvesters();
 
     logPage.visit();
+    // TODO: why wait so long? nothing will happen since logging is not realtime
     cy.wait(5000);
     cy.reload();
     logPage.infoIsContained('[INFO] default - >> Running importer:');
