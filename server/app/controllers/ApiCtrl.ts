@@ -31,24 +31,27 @@ export class ApiCtrl {
 
     @Post("/harvester/:id")
     updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Harvester) {
-        ConfigService.update(+id, config);
+        const updatedID = ConfigService.update(+id, config);
 
         if (config.disable) {
-            this.scheduleService.stopJob(+id);
-            this.indexService.removeFromAlias(+id)
+            this.scheduleService.stopJob(updatedID);
+            this.indexService.removeFromAlias(updatedID)
                 .catch(e => log.error('Error removing alias', e));
         } else {
             if (config.cron && config.cron.active) {
-                this.scheduleService.startJob(+id);
+                this.scheduleService.startJob(updatedID);
             }
 
-            this.indexService.addToAlias(+id)
+            this.indexService.addToAlias(updatedID)
                 .catch(e => log.error('Error adding alias', e));
         }
     }
 
     @Delete("/harvester/:id")
     deleteHarvesterConfig(@PathParams('id') id: number) {
+
+        // remove from search index/alias
+        this.indexService.removeFromAlias(+id);
 
         // update config without the selected harvester
         const filtered = ConfigService.get()
@@ -59,8 +62,6 @@ export class ApiCtrl {
         // remove from scheduler
         this.scheduleService.stopJob(+id);
 
-        // remove from search index/alias
-        this.indexService.removeFromAlias(+id);
     }
 
     @Post("/import/:id")

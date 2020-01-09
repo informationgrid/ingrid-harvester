@@ -59,9 +59,9 @@ export class IndexService {
 
         // if multiple indices, then there might be an indexing process
         // we should be able to ignore adding an alias, since it should happen automatically after indexing
-        if (indices.length > 1) {
-            log.warn('The index cannot be identified by its basename in a unique name' + JSON.stringify(indices));
-            log.warn('Is there a harvest going on, where a temporary nex index is created?');
+        if (indices.length !== 1) {
+            log.warn('The index cannot be identified by its basename in a unique name ' + JSON.stringify(indices));
+            log.warn('Is there a harvest going on, where a temporary new index is created?');
             return null;
         }
         return indices[0].name;

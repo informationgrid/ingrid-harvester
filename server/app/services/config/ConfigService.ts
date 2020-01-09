@@ -103,11 +103,12 @@ export class ConfigService {
      * @param id
      * @param updatedHarvester
      */
-    static update(id: number, updatedHarvester: Harvester) {
+    static update(id: number, updatedHarvester: Harvester): number {
         let newConfig = ConfigService.get();
 
         if (id === -1) {
-            updatedHarvester.id = ++ConfigService.highestID;
+            id = ++ConfigService.highestID;
+            updatedHarvester.id = id;
             newConfig.push(updatedHarvester);
         } else {
             const itemIndex = newConfig.findIndex(harvester => harvester.id === updatedHarvester.id);
@@ -120,7 +121,7 @@ export class ConfigService {
         }
 
         fs.writeFileSync(this.HARVESTER_CONFIG_FILE, JSON.stringify(newConfig, null, 2));
-
+        return id;
     }
 
     static updateAll(updatedHarvesters: Harvester[]) {
