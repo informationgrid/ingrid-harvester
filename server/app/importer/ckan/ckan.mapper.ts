@@ -13,7 +13,7 @@ import {CkanRules} from './ckan.rules';
 let mapping = require('../../../mappings.json');
 let markdown = require('markdown').markdown;
 
-interface CkanMapperData {
+export interface CkanMapperData {
     harvestTime: Date;
     issuedDate: Date;
     source: any;
@@ -396,19 +396,14 @@ export class CkanMapper extends GenericMapper {
             this.log.warn(msg);
         }
 
-        const isWhitelisted = this.settings.whitelistedIds.indexOf(doc.extras.generated_id) !== -1;
-
         if (this.settings.rules && this.settings.rules.containsDocumentsWithData) {
             const result = CkanRules.containsDocumentsWithData(doc.distribution, this, this.settings.rules.containsDocumentsWithDataBlacklist);
             if (result.skipped) {
                 this.summary.warnings.push(['No data document', `${this.source.title} (${this.source.id})`]);
-                if (isWhitelisted) {
-                    this.log.info('Document not skipped, since whitelisted: ' + this.source.id)
-                } else {
-                    this.skipped = true;
-                }
+                this.skipped = true;
             }
             if (!result.valid) {
+                this.log.warn(`Document does not contain data links: ${this.source.id}`);
                 this.valid = false;
             }
         }

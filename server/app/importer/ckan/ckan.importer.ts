@@ -5,7 +5,7 @@ import {IndexDocument} from '../../model/index.document';
 import {Summary} from '../../model/summary';
 import {DefaultImporterSettings, Importer} from '../../importer';
 import {RequestDelegate} from '../../utils/http-request.utils';
-import {CkanMapper} from './ckan.mapper';
+import {CkanMapper, CkanMapperData} from './ckan.mapper';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {CkanSettings} from './ckan.settings';
@@ -74,27 +74,16 @@ export class CkanImporter implements Importer {
     /**
      * Requests a dataset with the given ID and imports it to Elasticsearch.
      *
-     * @param args { issuedExisting, harvestTime }
      * @returns {Promise<*|Promise>}
+     * @param data
      */
-    async importDataset(args) {
-        let source = args.data;
-        let issuedExisting = args.issued;
-        let totalCount = args.totalCount;
+    async importDataset(data: CkanMapperData) {
 
-        let harvestTime = args.harvestTime;
         try {
-            log.debug("Processing CKAN dataset: " + source.name + " from data-source: " + this.settings.ckanBaseUrl);
-
+            log.debug("Processing CKAN dataset: " + data.source.name + " from data-source: " + this.settings.ckanBaseUrl);
 
             // Execute the mappers
-            let mapper = new CkanMapper(this.settings, {
-                harvestTime: harvestTime,
-                issuedDate: issuedExisting,
-                currentIndexName: this.elastic.indexName,
-                source: source,
-                summary: this.summary
-            });
+            let mapper = new CkanMapper(this.settings, data);
 
             let doc = await IndexDocument.create(mapper)
                 .catch(e => {
@@ -103,36 +92,34 @@ export class CkanImporter implements Importer {
                     mapper.skipped = true;
                 });
 
-            this.summary.numDocs++;
-            const currentDocPostion = this.summary.numDocs;
-            this.observer.next(ImportResult.running(currentDocPostion, totalCount));
-
             if (mapper.shouldBeSkipped()) {
-                this.summary.skippedDocs.push(source.id);
+                this.summary.skippedDocs.push(data.source.id);
                 return;
             }
 
-            if (!this.settings.dryRun) {
-                return this.elastic.addDocToBulk(doc, source.id)
-                    .then(response => {
-                        if (!response.queued) {
-                            this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
-                        }
-                    })
-            }
+            return this.indexDocument(doc, data.source.id);
+
         } catch (e) {
             log.error("Error: " + e);
         }
     }
 
+    private indexDocument(doc, sourceID) {
+        if (!this.settings.dryRun) {
+            return this.elastic.addDocToBulk(doc, sourceID)
+                .then(response => {
+                    if (!response.queued) {
+                        this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                    }
+                })
+        }
+    }
+
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
+        let promises = [];
+
         try {
-            if (this.settings.dryRun) {
-                log.debug('Dry run option enabled. Skipping index creation.');
-            } else {
-                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
-            }
-            let promises = [];
+            await this.prepareIndex();
 
             // get total number of documents
             let countJson = await this.requestDelegateCount.doRequest();
@@ -142,24 +129,38 @@ export class CkanImporter implements Importer {
 
             if (total === 0) {
                 let warnMessage = `Could not harvest any datasets from ${this.settings.ckanBaseUrl}`;
-                log.warn(warnMessage);
-                this.sendFinishMessage(observer, warnMessage);
-
-                await this.elastic.deleteIndex(this.elastic.indexName);
+                await this.handleImportError(warnMessage, observer);
             } else {
-                return Promise.all(promises)
-                    .then(() => this.postIndexActions())
-                    .then(() => this.sendFinishMessage(observer))
-                    .catch(err => log.error('Error indexing data', err));
+                return this.finishImport(promises, observer);
             }
-        } catch (err) {
-            log.error('error:', err);
-            this.summary.appErrors.push(err.message);
-            this.sendFinishMessage(observer, err.message);
 
-            // clean up index
-            await this.elastic.deleteIndex(this.elastic.indexName)
-                .catch(e => log.error(e.message));
+        } catch (err) {
+            await this.handleImportError(err.message, observer);
+        }
+    }
+
+    private async handleImportError(message, observer: Observer<ImportLogMessage>) {
+        log.error('error:', message);
+        this.summary.appErrors.push(message);
+        this.sendFinishMessage(observer, message);
+
+        // clean up index
+        await this.elastic.deleteIndex(this.elastic.indexName)
+            .catch(e => log.error(e.message));
+    }
+
+    private finishImport(promises: any[], observer: Observer<ImportLogMessage>) {
+        return Promise.all(promises)
+            .then(() => this.postIndexActions())
+            .then(() => this.sendFinishMessage(observer))
+            .catch(err => log.error('Error indexing data', err));
+    }
+
+    private async prepareIndex() {
+        if (this.settings.dryRun) {
+            log.debug('Dry run option enabled. Skipping index creation.');
+        } else {
+            await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
         }
     }
 
@@ -168,15 +169,11 @@ export class CkanImporter implements Importer {
         let offset = this.settings.startPosition;
 
         while (true) {
-            let {now, results} = await this.requestDocuments();
+            let now = new Date();
+            let results = await this.requestDocuments();
 
             // if offset is too high, then there should be an error and we are finished
             if (!results) break;
-
-            // Workaround if results are contained with another array (https://offenedaten-koeln.de)
-            if (results.length === 1 && results[0] instanceof Array) {
-                results = results[0];
-            }
 
             log.info(`Received ${results.length} records from ${this.settings.ckanBaseUrl}`);
             total += results.length;
@@ -184,37 +181,51 @@ export class CkanImporter implements Importer {
             let filteredResults = this.filterDatasets(results);
 
             // add skipped documents to count
-            this.updateFetchedDatasets(results, filteredResults);
+            this.summary.numDocs += results.length - filteredResults.length;
 
-            let ids = filteredResults.map(result => result.id);
+            let timestamps = await this.getIssuedDates(filteredResults);
 
-            // issued dates are those showing the date of the first harvesting
-            let timestamps = await this.elastic.getIssuedDates(ids);
-
-            filteredResults.forEach((dataset, idx) => promises.push(
-                this.importDataset({
-                    data: dataset,
-                    issued: timestamps[idx],
-                    harvestTime: now,
-                    totalCount
-                })
-            ));
-
-            if (results.length < this.settings.maxRecords) {
-                break;
-            } else {
-                offset += this.settings.maxRecords;
-                this.updateRequestMethod(offset);
+            for (let i=0; i<filteredResults.length; i++) {
+                promises.push(
+                    this.importDataset({
+                        source: filteredResults[i],
+                        issuedDate: timestamps[i],
+                        harvestTime: now,
+                        currentIndexName: this.elastic.indexName,
+                        summary: this.summary
+                    }).then(() => this.observer.next(ImportResult.running(++this.summary.numDocs, totalCount)))
+                );
             }
+
+            const isLastPage = results.length < this.settings.maxRecords;
+            if (isLastPage) {
+                break;
+            }
+
+            offset += this.settings.maxRecords;
+            this.updateRequestMethod(offset);
+
         }
         return total;
     }
 
+    private async getIssuedDates(filteredResults: any[]) {
+        let ids = filteredResults.map(result => result.id);
+
+        // issued dates are those showing the date of the first harvesting
+        return await this.elastic.getIssuedDates(ids);
+    }
+
     private async requestDocuments() {
         let json = await this.requestDelegate.doRequest();
-        let now = new Date(Date.now());
         let results = this.settings.requestType === 'ListWithResources' ? json.result : json.result.results;
-        return {now, results};
+
+        // Workaround if results are contained with another array (https://offenedaten-koeln.de)
+        if (results && results.length === 1 && results[0] instanceof Array) {
+            results = results[0];
+        }
+
+        return results;
     }
 
     private postIndexActions() {
@@ -230,17 +241,10 @@ export class CkanImporter implements Importer {
         observer.complete();
     }
 
-    private updateFetchedDatasets(results, filteredResults) {
-        const filteredLength = results.length - filteredResults.length;
-        if (filteredLength > 0) {
-            this.summary.numDocs += filteredLength;
-        }
-    }
-
     private filterDatasets(results) {
         const filteredResult: any[] = results
-            .filter(dataset => this.hasValidTagsOrGroups(dataset, 'tags', this.settings.filterTags))
-            .filter(dataset => this.hasValidTagsOrGroups(dataset, 'groups', this.settings.filterGroups))
+            .filter(dataset => this.filterUtils.hasValidTagsOrGroups(dataset, 'tags', this.settings.filterTags))
+            .filter(dataset => this.filterUtils.hasValidTagsOrGroups(dataset, 'groups', this.settings.filterGroups))
             .filter(dataset => this.filterUtils.isIdAllowed(dataset.id));
 
         const skippedIDs = results.filter(item => !filteredResult.some(filtered => filtered.id === item.id));
@@ -260,25 +264,6 @@ export class CkanImporter implements Importer {
                 limit: this.settings.maxRecords
             }
         });
-    }
-
-    /**
-     * Check if a dataset has at least one of the defined tags/groups. If no tag/group has been
-     * defined, then the dataset also will be used.
-     *
-     * @param dataset is the dataset to be checked
-     * @param field defines if we want to check for tags or groups
-     * @param filteredItems are the tags/groups to be checked against the dataset
-     */
-    private hasValidTagsOrGroups(dataset: any, field: 'tags' | 'groups', filteredItems: string[]) {
-        const isWhitelisted = this.settings.whitelistedIds.indexOf(dataset.id) !== -1;
-        if (isWhitelisted) {
-            return true;
-        }
-
-        if (filteredItems.length === 0 || (!dataset[field] && filteredItems.length === 0)) return true;
-
-        return dataset[field] && dataset[field].some(field => filteredItems.includes(field.name));
     }
 
     getSummary(): Summary {

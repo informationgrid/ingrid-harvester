@@ -19,7 +19,6 @@ export class CkanRules {
         const blacklistedFormats = blacklist.split(',');
         const valid = distributions.some(dist => this.isDataDocument(dist, blacklistedFormats));
         if (!valid) {
-            this.log.warn('Document does not contain data links');
             return new RuleResult(false, true);
         }
         return new RuleResult(true, false);
