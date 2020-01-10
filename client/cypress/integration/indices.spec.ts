@@ -34,16 +34,12 @@ describe('Indices operations', () => {
     harvester.importHarvesterById(constants.CKAN_DB_ID);
 
     indicesPage.visit();
-    // TODO: why wait
-    cy.wait(500);
-
     indicesPage.indexIsContained('ckan_db', true);
   });
 
   it('should show only one index per harvester', () => {
     harvester.importHarvesterById(constants.CKAN_DB_ID);
-    // TODO: wait for finish condition instead of wait
-    cy.wait(5000); //wait for import to finish
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
     indicesPage.visit();
     indicesPage.indexHasNoDuplicate('ckan_db');
@@ -51,21 +47,15 @@ describe('Indices operations', () => {
 
   it('should delete an index if its harvester is deleted', () => {
     harvester.importHarvesterById(constants.CSW_TEST_ID);
+    harvester.waitForImportToFinish(constants.CSW_TEST_ID);
 
     indicesPage.visit();
-
-    // TODO: why wait and then reload? just wait before visiting indices page, but better to wait for end of import
-    cy.wait(500);
-    cy.reload();
     indicesPage.indexIsContained('csw_index', true);
 
     harvester.visit();
     harvester.deleteHarvesterById(constants.CSW_TEST_ID);
 
     indicesPage.visit();
-    // TODO: why wait and then reload? just wait before visiting indices page
-    cy.wait(500);
-    cy.reload();
     indicesPage.indexIsContained('csw_index', false);
   });
 
@@ -82,12 +72,9 @@ describe('Indices operations', () => {
       "      \"description\": ";
 
     harvester.importHarvesterById(constants.CKAN_DB_ID);
-    // TODO: wait for finish condition instead of wait
-    cy.wait(4000); // wait for harvester to be fully imported
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
     indicesPage.visit();
-    // TODO: why wait?
-    cy.wait(500);
 
     indicesPage.selectIndex('ckan_db');
     indicesPage.checkContentIs(dbIndexContent);

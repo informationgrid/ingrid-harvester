@@ -35,7 +35,7 @@ class ConfigurationPage {
   }
 
   addNewMapping() {
-    cy.get(this.addMappingBtn).click();
+    cy.get(this.addMappingBtn).click({force: true});
   }
 
   fillMappingValues(source, dest) {

@@ -36,8 +36,7 @@ describe('Import operations', () => {
     harvester.importHarvesterById(constants.CKAN_DB_ID);
     harvester.checkImportHasStarted();
 
-    // TODO: wait for finish condition instead of wait
-    cy.wait(4500); //wait for import to finish, AVG time: <3 sec
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
     cy.reload();
 
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');

@@ -70,15 +70,30 @@ class HarvesterPage {
   }
 
   deleteHarvesterById(id) {
+    cy.server();
+    cy.route({
+      url: 'http://192.168.0.228/importer/rest/api/harvester/*',
+      method: 'DELETE'
+    }).as('deleteHarvester');
+
     cy.get('#harvester-' + id).click();
     cy.get('#harvester-' + id + ' ' + this.deleteHarvesterBtn).click();
     cy.get('.mat-button-wrapper').contains('Löschen').click();
+
+    cy.wait('@deleteHarvester');
   }
 
   deleteHarvesterByName(name) {
+    cy.server();
+    cy.route({
+      url: 'http://192.168.0.228/importer/rest/api/harvester/*',
+      method: 'DELETE'
+    }).as('deleteHarvester');
+
     this.toggleHarvesterByName(name);
     cy.get(this.deleteHarvesterBtn + ':visible').click();
     cy.get('.mat-button-wrapper').contains('Löschen').click();
+    cy.wait('@deleteHarvester');
   }
 
   openScheduleDialog(id) {
@@ -175,6 +190,11 @@ class HarvesterPage {
 
   openElasticSearchLog() {
     cy.get(this.labelContent).contains('Elasticsearch-Errors').click();
+  }
+
+  waitForImportToFinish(id) {
+    const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
+    this.checkFieldValueIs(id, this.lastExecution, importsDate);
   }
 
   // SEEDS
