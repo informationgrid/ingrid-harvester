@@ -7,18 +7,24 @@ describe('Import operations', () => {
   const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
   const harvester = new HarvesterPage();
 
+  before(()=>{
+    auth.apiLogIn();
+  });
+
   beforeEach(() => {
-    auth.apiLoginWithUserCheck();
+    cy.restoreLocalStorageCache();
+    Cypress.Cookies.preserveOnce('connect.sid');
+  });
+
+  afterEach(() => {
+    cy.saveLocalStorageCache();
   });
 
   it('should open a harvester, start an import and check it is successful', () => {
     harvester.importHarvesterById(constants.CKAN_DB_ID);
     harvester.checkImportHasStarted();
-    // TODO: wait for finish condition instead of wait
-    cy.wait(7000);
 
-    const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.lastExecution, importsDate);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
   });
 
   it('should import all harvesters at once and check a message is shown', () => {

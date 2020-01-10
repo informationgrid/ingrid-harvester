@@ -6,8 +6,17 @@ describe('Ckan-Harvester operations', () => {
   const HarvesterForm = require("../../support/pageObjects/harvester/harvesterForm");
   const form = new HarvesterForm();
 
+  before(()=>{
+    auth.apiLogIn();
+  });
+
   beforeEach(() => {
-    auth.apiLoginWithUserCheck();
+    cy.restoreLocalStorageCache();
+    Cypress.Cookies.preserveOnce('connect.sid');
+  });
+
+  afterEach(() => {
+    cy.saveLocalStorageCache();
   });
 
   it('should add a harvester of type CKAN', () => {

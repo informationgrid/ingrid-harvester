@@ -13,8 +13,17 @@ describe('Csw-Harvester operations', () => {
   //   cy.seedCswHarvester()
   // });
 
+  before(()=>{
+    auth.apiLogIn();
+  });
+
   beforeEach(() => {
-    auth.apiLoginWithUserCheck();
+    cy.restoreLocalStorageCache();
+    Cypress.Cookies.preserveOnce('connect.sid');
+  });
+
+  afterEach(() => {
+    cy.saveLocalStorageCache();
   });
 
   it('should add a harvester of type CSW', () => {

@@ -9,17 +9,23 @@ describe('Indices operations', () => {
   const IndicesPage = require('../support/pageObjects/indices');
   const indicesPage = new IndicesPage();
 
+  before(()=>{
+    auth.apiLogIn();
+  });
+
   beforeEach(() => {
-    auth.apiLoginWithUserCheck();
+    cy.restoreLocalStorageCache();
+    Cypress.Cookies.preserveOnce('connect.sid');
+  });
+
+  afterEach(() => {
+    cy.saveLocalStorageCache();
   });
 
   it('should not find an harvester whose search is not activated', () => {
     harvester.activateForSearch(constants.EXCEL_TEST_ID);
 
     indicesPage.visit();
-    // TODO: why reload?
-    cy.reload();
-
     indicesPage.indexIsContained('excel_index', false);
   });
 

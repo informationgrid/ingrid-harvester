@@ -8,10 +8,19 @@ describe('Configuration of Mapping-Formats', () => {
   let mapSource = 'mapping_source';
   let mapDest = 'mapping_destination';
 
+  before(()=>{
+    auth.apiLogIn();
+  });
+
   beforeEach(() => {
-    auth.apiLoginWithUserCheck();
+    cy.restoreLocalStorageCache();
+    Cypress.Cookies.preserveOnce('connect.sid');
     configPage.visit();
     configPage.selectTab(configPage.MAPPING);
+  });
+
+  afterEach(() => {
+    cy.saveLocalStorageCache();
   });
 
   it('should show a list of mapped values', () => {

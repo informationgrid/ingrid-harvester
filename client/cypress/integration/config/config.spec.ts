@@ -5,16 +5,19 @@ describe('Configuration of general settings', () => {
   const Authentication = require("../../support/pageObjects/auth");
   const auth = new Authentication();
 
+  before(()=>{
+    auth.apiLogIn();
+  });
+
   beforeEach(() => {
-    auth.apiLoginWithUserCheck();
+    cy.restoreLocalStorageCache();
+    Cypress.Cookies.preserveOnce('connect.sid');
     configPage.visit();
   });
 
-  /**
-   * clean up after the tests'
-   */
   afterEach(() => {
     configPage.resetConfigApi();
+    cy.saveLocalStorageCache();
   });
 
   it('should update the elastic search-url, the alias and proxy values, save and check the saved data', () => {

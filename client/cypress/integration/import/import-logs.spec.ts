@@ -7,8 +7,17 @@ describe('Import log operations', () => {
   const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
   const harvester = new HarvesterPage();
 
+  before(()=>{
+    auth.apiLogIn();
+  });
+
   beforeEach(() => {
-    auth.apiLoginWithUserCheck();
+    cy.restoreLocalStorageCache();
+    Cypress.Cookies.preserveOnce('connect.sid');
+  });
+
+  afterEach(() => {
+    cy.saveLocalStorageCache();
   });
 
   it('should show errors in the error-log if error/warning occurred during an import', () => {

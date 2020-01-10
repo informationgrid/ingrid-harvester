@@ -9,32 +9,32 @@ describe('Log tab operations', () => {
   const LogPage = require('../support/pageObjects/log');
   const logPage = new LogPage();
 
+  before(()=>{
+    auth.apiLogIn();
+  });
+
   beforeEach(() => {
-    auth.apiLoginWithUserCheck();
+    cy.restoreLocalStorageCache();
+    Cypress.Cookies.preserveOnce('connect.sid');
+  });
+
+  afterEach(() => {
+    cy.saveLocalStorageCache();
   });
 
   it('should show the right information in the logs after a single harvester is imported', () => {
     harvester.importHarvesterById(constants.CKAN_DB_ID);
-    // TODO: wait for finish condition instead of wait
-    cy.wait(7000);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
     logPage.visit();
-    cy.wait(500);
     logPage.infoIsContained('[INFO] default - Deutsche Bahn Datenportal (CKAN)');
     logPage.infoIsContained('[INFO] default - Number of records: 42');
   });
 
-  xit('should show information in the logs when all the harvester are imported', () => {
-    //wait a bit for log status to be cleaner
-    // TODO: what does this mean?
-    cy.wait(10000);
-
+  it('should show information in the logs when all the harvester are imported', () => {
     harvester.importAllHarvesters();
 
     logPage.visit();
-    // TODO: why wait so long? nothing will happen since logging is not realtime
-    cy.wait(5000);
-    cy.reload();
     logPage.infoIsContained('[INFO] default - >> Running importer:');
   });
 

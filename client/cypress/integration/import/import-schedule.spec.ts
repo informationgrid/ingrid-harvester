@@ -7,8 +7,17 @@ describe('Import cron pattern operations', () => {
   const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
   const harvester = new HarvesterPage();
 
+  before(()=>{
+    auth.apiLogIn();
+  });
+
   beforeEach(() => {
-    auth.apiLoginWithUserCheck();
+    cy.restoreLocalStorageCache();
+    Cypress.Cookies.preserveOnce('connect.sid');
+  });
+
+  afterEach(() => {
+    cy.saveLocalStorageCache();
   });
 
   it('should plan an import, activate the auto-planning, check its execution and turn off the auto-planning', () => {

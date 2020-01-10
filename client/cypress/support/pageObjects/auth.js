@@ -83,7 +83,8 @@ class Authentication {
   }
 
   apiLoginWithUserCheck() {
-    //check user is set
+    // check user is set
+    // FIXME: localstorage and cookies are cleared after each test!
     if (window.localStorage.getItem('currentUser') !== 'undefined') {
       this.apiLogIn();
     }
