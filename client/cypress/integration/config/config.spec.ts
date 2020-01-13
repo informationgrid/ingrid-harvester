@@ -7,6 +7,7 @@ describe('Configuration of general settings', () => {
 
   beforeEach(() => {
     auth.apiLogIn();
+    configPage.visit();
   });
 
   it('should update the elastic search-url, the alias and proxy values, save and check the saved data', () => {
