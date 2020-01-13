@@ -12,6 +12,7 @@ class HarvesterPage {
   icon = ' .mat-icon';
   logContainer = ' .logContainer';
   labelContent = ' .mat-tab-label-content';
+  docsNumber = '[data-test="num-docs"]';
   numErrors = '[data-test="num-errors"]';
   nextExecution = '[data-test="next-execution"]';
   lastExecution = '[data-test="last-execution"]';
@@ -195,6 +196,10 @@ class HarvesterPage {
   waitForImportToFinish(id) {
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
     this.checkFieldValueIs(id, this.lastExecution, importsDate);
+  }
+
+  getDocNumber(id) {
+    return cy.get('#harvester-' + id + ' ' + this.docsNumber).invoke('text');
   }
 
   // SEEDS

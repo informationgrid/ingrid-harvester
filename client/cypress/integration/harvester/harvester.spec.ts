@@ -78,5 +78,4 @@ describe('Harvester operations', () => {
 
     cy.get('.no-wrap').should('not.contain', 'excel_test_api');
   });
-
 });

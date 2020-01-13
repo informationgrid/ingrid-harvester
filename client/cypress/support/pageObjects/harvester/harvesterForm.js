@@ -25,8 +25,10 @@ class HarvesterForm {
   keywords = '[placeholder="Either keywords"]';
   excelFilePath = '[formcontrolname="filePath"]';
 
+  blacklistedId = 'input[placeholder="Ausgeschlossene IDs"]';
+  whitelistedId = 'input[placeholder="Nicht auszuschließende IDs"]';
   dataDownload = '[formcontrolname="containsDocumentsWithData"]';
-  excludedDataFormat = '[formcontrolname="containsDocumentsWithDataBlacklist"]';
+  blacklistedDataFormat = '[formcontrolname="containsDocumentsWithDataBlacklist"]';
 
   saveHarvesterConfig() {
     cy.get(this.saveHarvesterBtn).click();
@@ -119,6 +121,10 @@ class HarvesterForm {
       default:
         return 'input';
     }
+  }
+
+  deleteListedIds(field) {
+    cy.get(field).click().type('{backspace}{backspace}');
   }
 
   clearFilterField(){

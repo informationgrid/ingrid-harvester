@@ -115,21 +115,72 @@ describe('Ckan-Harvester operations', () => {
     harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
   });
 
-  xit('should filter blacklisted IDs', function () {
+  it('should filter blacklisted IDs', () => {
+    let toBlacklist = '7e526b8c-16bd-4f2c-a02b-8d4d0a29d310';
 
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.setFields({
+      blacklistedId: toBlacklist
+    });
+    form.saveHarvesterConfig();
+
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+
+    let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
+    importedDocNumber.should('be.below' ,42);
+
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.deleteListedIds(form.blacklistedId);
+    form.saveHarvesterConfig();
   });
 
-  xit('should exclude documents which have no data downloads (e.g. "rest")', function () {
+  it('should exclude documents which have no data downloads (e.g. "rest")', () => {
     // example: CKAN-DB, "Muss Daten-Download enthalten": X, "Datenformat ausschließen": "rest"
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.activateContainsDataDownload();
+    form.setFields({
+      blacklistedDataFormat: 'rest'
+    });
+    form.saveHarvesterConfig();
+
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+
+    let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
+    importedDocNumber.should('be.below' ,42);
+    importedDocNumber.should('be' ,38);
+
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.activateContainsDataDownload();
+    form.saveHarvesterConfig();
+
   });
 
-  xit('should not import whitelisted IDs even if excluded by no data downloads', function () {
-    // example: CKAN-DB, "Muss Daten-Download enthalten": X, "Datenformat ausschließen": "rest"
-    //          "nicht auszuschließende IDs": "7e526b8c-16bd-4f2c-a02b-8d4d0a29d310"
+  it('should not import whitelisted IDs if excluded by no data downloads', () => {
+    let toWhitelist = '7e526b8c-16bd-4f2c-a02b-8d4d0a29d310';
 
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.activateContainsDataDownload();
+    form.setFields({
+      whitelistedId: toWhitelist,
+      blacklistedDataFormat: 'rest'
+    });
+    form.saveHarvesterConfig();
+
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+
+    let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
+    importedDocNumber.should('be' ,38);
+
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.deleteListedIds(form.whitelistedId);
+    form.activateContainsDataDownload();
+    form.saveHarvesterConfig();
   });
 
-  xit('should import whitelisted IDs even if excluded by tag or group', function () {
+  xit('should import whitelisted IDs even if excluded by tag or group', () => {
 
   });
 

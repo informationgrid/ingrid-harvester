@@ -38,6 +38,10 @@ interface HarvesterOptions {
   defaultAttributionLink?: string;
   maxRecords?: string;
   startPosition?: string;
+
+  blacklistedId?: string;
+  whitelistedId?: string;
+  blacklistedDataFormat?: string;
 }
 
 // Convert this to a module instead of script (allows import/export)
