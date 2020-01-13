@@ -9,18 +9,8 @@ describe('Log tab operations', () => {
   const LogPage = require('../support/pageObjects/log');
   const logPage = new LogPage();
 
-  before(()=>{
-    auth.apiLogIn();
-  });
-
   beforeEach(() => {
-    cy.reload();
-    cy.restoreLocalStorageCache();
-    Cypress.Cookies.preserveOnce('connect.sid');
-  });
-
-  afterEach(() => {
-    cy.saveLocalStorageCache();
+    auth.apiLogIn();
   });
 
   it('should show the right information in the logs after a single harvester is imported', () => {

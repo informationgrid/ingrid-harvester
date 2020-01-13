@@ -1,4 +1,7 @@
 describe('Excel-Harvester operations', () => {
+  let Constants = require("../../support/constants");
+  const constants = new Constants();
+
   const Authentication = require("../../support/pageObjects/auth");
   const auth = new Authentication();
   const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
@@ -6,18 +9,8 @@ describe('Excel-Harvester operations', () => {
   const HarvesterForm = require("../../support/pageObjects/harvester/harvesterForm");
   const form = new HarvesterForm();
 
-  before(()=>{
-    auth.apiLogIn();
-  });
-
   beforeEach(() => {
-    cy.reload();
-    cy.restoreLocalStorageCache();
-    Cypress.Cookies.preserveOnce('connect.sid');
-  });
-
-  afterEach(() => {
-    cy.saveLocalStorageCache();
+    auth.apiLogIn();
   });
 
   it('should add a harvester of type EXCEL', () => {
@@ -73,27 +66,40 @@ describe('Excel-Harvester operations', () => {
   });
 
   it('should update a harvester of type Excel', () => {
-    harvester.openFormByName('excel_test');
+    harvester.seedExcelHarvester(constants.SEED_EXCEL_ID);
+    cy.reload();
+
+    harvester.openFormById(constants.SEED_EXCEL_ID);
+    form.checkFields({
+      description: 'excel_test_api',
+      indexName: 'excel_index_api',
+      defaultDCATCategory: 'Bevölkerung und Gesellschaft',
+      defaultmCLOUDCategory: 'Bahn'
+    });
+
     form.setFields({
-      description: 'excel_update',
+      description: 'excel_updated',
       indexName: 'updated_ex_harvester',
       defaultDCATCategory: 'Wirtschaft und Finanzen',
       defaultAttribution: '7'
     });
+
     form.saveHarvesterConfig();
-    cy.wait(500);
     cy.reload();
 
-    harvester.openFormByName('excel_update');
+    harvester.openFormById(constants.SEED_EXCEL_ID);
     form.checkFields({
-      description: 'excel_update',
+      description: 'excel_updated',
       indexName: 'updated_ex_harvester',
       defaultDCATCategory: 'Wirtschaft und Finanzen',
       defaultmCLOUDCategory: 'Bahn',
       defaultAttribution: '7',
-      excelFilePath: './test-data.xlsx',
+      excelFilePath: './data.xlsx',
       startPosition: '1',
       maxRecords: '50'
     });
+    form.closeFormWithoutSaving();
+
+    harvester.deleteHarvesterById(constants.SEED_EXCEL_ID);
   });
 });

@@ -9,18 +9,8 @@ describe('Indices operations', () => {
   const IndicesPage = require('../support/pageObjects/indices');
   const indicesPage = new IndicesPage();
 
-  before(()=>{
-    auth.apiLogIn();
-  });
-
   beforeEach(() => {
-    cy.reload();
-    cy.restoreLocalStorageCache();
-    Cypress.Cookies.preserveOnce('connect.sid');
-  });
-
-  afterEach(() => {
-    cy.saveLocalStorageCache();
+    auth.apiLogIn();
   });
 
   it('should not find an harvester whose search is not activated', () => {

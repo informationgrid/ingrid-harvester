@@ -25,16 +25,12 @@ class HarvesterForm {
   keywords = '[placeholder="Either keywords"]';
   excelFilePath = '[formcontrolname="filePath"]';
 
+  dataDownload = '[formcontrolname="containsDocumentsWithData"]';
+  excludedDataFormat = '[formcontrolname="containsDocumentsWithDataBlacklist"]';
+
   saveHarvesterConfig() {
     cy.get(this.saveHarvesterBtn).click();
     cy.wait(500);
-  }
-
-  /**
-   * close the form without saving
-   */
-  closeHarvesterForm() {
-    cy.get(this.type).type('{esc}');
   }
 
   setFields(options) {
@@ -127,6 +123,10 @@ class HarvesterForm {
 
   clearFilterField(){
     cy.get(this.recordFilter).clear();
+  }
+
+  activateContainsDataDownload() {
+    cy.get(this.dataDownload).click();
   }
 }
 

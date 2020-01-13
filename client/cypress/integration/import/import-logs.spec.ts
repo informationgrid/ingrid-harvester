@@ -7,18 +7,8 @@ describe('Import log operations', () => {
   const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
   const harvester = new HarvesterPage();
 
-  before(()=>{
-    auth.apiLogIn();
-  });
-
   beforeEach(() => {
-    cy.reload();
-    cy.restoreLocalStorageCache();
-    Cypress.Cookies.preserveOnce('connect.sid');
-  });
-
-  afterEach(() => {
-    cy.saveLocalStorageCache();
+    auth.apiLogIn();
   });
 
   it('should show errors in the error-log if error/warning occurred during an import', () => {
@@ -29,9 +19,6 @@ describe('Import log operations', () => {
     // hPage.openElasticSearchLog();
     // hPage.errorLogHasMsg('INSERT RIGHT MSG');
   });
-
-  //TODO:
-  //  Check for elastic search errors
 
   it('should show no error in the logs after a successful import', () => {
     harvester.importHarvesterById(constants.CKAN_RNV_ID);

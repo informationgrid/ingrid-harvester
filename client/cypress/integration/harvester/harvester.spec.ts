@@ -9,18 +9,8 @@ describe('Harvester operations', () => {
   const HarvesterForm = require("../../support/pageObjects/harvester/harvesterForm");
   const form = new HarvesterForm();
 
-  before(()=>{
-    auth.apiLogIn();
-  });
-
   beforeEach(() => {
-    cy.reload();
-    cy.restoreLocalStorageCache();
-    Cypress.Cookies.preserveOnce('connect.sid');
-  });
-
-  afterEach(() => {
-    cy.saveLocalStorageCache();
+    auth.apiLogIn();
   });
 
   it('should check that the type of a harvester cannot be changed during an update', () => {

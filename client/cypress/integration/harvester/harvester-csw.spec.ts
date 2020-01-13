@@ -9,22 +9,8 @@ describe('Csw-Harvester operations', () => {
   const HarvesterForm = require("../../support/pageObjects/harvester/harvesterForm");
   const form = new HarvesterForm();
 
-  // before(() => {
-  //   cy.seedCswHarvester()
-  // });
-
-  before(()=>{
-    auth.apiLogIn();
-  });
-
   beforeEach(() => {
-    cy.reload();
-    cy.restoreLocalStorageCache();
-    Cypress.Cookies.preserveOnce('connect.sid');
-  });
-
-  afterEach(() => {
-    cy.saveLocalStorageCache();
+    auth.apiLogIn();
   });
 
   it('should add a harvester of type CSW', () => {
@@ -91,9 +77,19 @@ describe('Csw-Harvester operations', () => {
   });
 
   it('should update a harvester of type CSW', () => {
-    harvester.openFormById(constants.CSW_TEST_ID);
+    harvester.seedCswHarvester(constants.SEED_CSW_ID);
+    cy.reload();
+
+    harvester.openFormById(constants.SEED_CSW_ID);
+    form.checkFields({
+      description: 'csw_test_api',
+      defaultDCATCategory: 'Bevölkerung und Gesellschaft',
+      defaultmCLOUDCategory: 'Bahn',
+      defaultAttribution: 'attr_name',
+    });
+
     form.setFields({
-      description: 'csw_update',
+      description: 'csw_updated',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'
@@ -101,16 +97,16 @@ describe('Csw-Harvester operations', () => {
     form.saveHarvesterConfig();
     cy.reload();
 
-    harvester.openFormByName('csw_update');
+    harvester.openFormById(constants.SEED_CSW_ID);
     form.checkFields({
-      description: 'csw_update',
+      description: 'csw_updated',
       defaultDCATCategory: 'Verkehr',
       defaultmCLOUDCategory: 'Infrastruktur',
       defaultAttribution: 'ffm'
     });
 
-    // hPage.reload();
-    // hPage.deleteHarvesterByName('csw_update');
+    cy.reload();
+    harvester.deleteHarvesterById(constants.SEED_CSW_ID);
   });
 
   it('should successfully harvest after deleting an existing filter-label', () => {

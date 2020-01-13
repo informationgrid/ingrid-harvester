@@ -80,15 +80,6 @@ class Authentication {
       }
     });
     this.visitBaseUrl();
-  }
-
-  apiLoginWithUserCheck() {
-    // check user is set
-    // FIXME: localstorage and cookies are cleared after each test!
-    if (window.localStorage.getItem('currentUser') !== 'undefined') {
-      this.apiLogIn();
-    }
-    //login is successful
     cy.url().should('include', '/harvester');
   }
 

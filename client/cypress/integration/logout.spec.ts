@@ -3,7 +3,7 @@ describe('Logout', () => {
   const auth = new Authentication();
 
   beforeEach(() => {
-    auth.apiLoginWithUserCheck();
+    auth.apiLogIn();
   });
 
   it('should log out successfully, show the login page and check the log out message', () => {

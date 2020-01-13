@@ -198,25 +198,25 @@ class HarvesterPage {
   }
 
   // SEEDS
-  seedCkanHarvester() {
+  seedCkanHarvester(id) {
     cy.request({
       method: 'POST',
-      url: 'rest/api/harvester/-1',
+      url: 'rest/api/harvester/'+ id,
       body: {
-        "id": 97,
+        "id": parseInt(id),
         "disable": true,
         "type": "CKAN",
         "description": "ckan_test_api",
         "ckanBaseUrl": "./testme",
-        "index": "ckan_index",
+        "index": "ckan_api_index",
         "defaultDCATCategory": ["SOCI"],
         "defaultMcloudSubgroup": ["railway"],
         "defaultAttribution": "attr_name",
         "defaultAttributionLink": "attr_link",
         "maxRecords": 50,
         "startPosition": 1,
-        "filterTag": "ckan_test",
-        "filterGroup": "ckan_test",
+        // "filterTags": ["ckan_test"],
+        // "filterGroups": ["ckan_test"],
         "dateFormat": "YYYY-MM-DD",
         "licenseId": "123",
         "licenseTitle": "ckan_titleID",
@@ -225,12 +225,12 @@ class HarvesterPage {
     });
   }
 
-  seedCswHarvester() {
+  seedCswHarvester(id) {
     cy.request({
       method: 'POST',
-      url: 'rest/api/harvester/-1',
+      url: 'rest/api/harvester/'+ id,
       body: {
-        "id": 98,
+        "id": parseInt(id),
         "disable": true,
         "type": "CSW",
         "description": "csw_test_api",
@@ -247,16 +247,16 @@ class HarvesterPage {
     });
   }
 
-  seedExcelHarvester() {
+  seedExcelHarvester(id) {
     cy.request({
       method: 'POST',
-      url: 'rest/api/harvester/-1',
+      url: 'rest/api/harvester/'+ id,
       body: {
-        "id": 99,
+        "id": parseInt(id),
         "disable": true,
         "type": "EXCEL",
         "description": "excel_test_api",
-        "index": "excel_index",
+        "index": "excel_index_api",
         "defaultDCATCategory": ["SOCI"],
         "defaultMcloudSubgroup": ["railway"],
         "defaultAttribution": "attr_name",
