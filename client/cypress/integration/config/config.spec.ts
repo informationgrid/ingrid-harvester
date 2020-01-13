@@ -10,6 +10,10 @@ describe('Configuration of general settings', () => {
     configPage.visit();
   });
 
+  afterEach(() => {
+    configPage.resetConfigApi();
+  });
+
   it('should update the elastic search-url, the alias and proxy values, save and check the saved data', () => {
     cy.wait(500);
 

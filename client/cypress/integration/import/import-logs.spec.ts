@@ -15,9 +15,7 @@ describe('Import log operations', () => {
     harvester.importHarvesterById(constants.EXCEL_TEST_ID);
     harvester.openHarvesterLog(constants.EXCEL_TEST_ID);
 
-    harvester.errorLogHasMsg('Error:');
-    // hPage.openElasticSearchLog();
-    // hPage.errorLogHasMsg('INSERT RIGHT MSG');
+    harvester.errorLogHasMsg('Error reading excel workbook: Error occurred creating index');
   });
 
   it('should show no error in the logs after a successful import', () => {
@@ -46,6 +44,6 @@ describe('Import log operations', () => {
   it('should show an error in the harvester logs if the Excel path is not valid', () => {
     harvester.importHarvesterById(constants.EXCEL_TEST_ID);
     harvester.openHarvesterLog(constants.EXCEL_TEST_ID);
-    harvester.errorLogHasMsg('Error reading excel workbook: Error: ');
+    harvester.errorLogHasMsg('Error reading excel workbook: Error');
   });
 });

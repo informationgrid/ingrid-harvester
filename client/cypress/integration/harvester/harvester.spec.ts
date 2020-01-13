@@ -72,9 +72,11 @@ describe('Harvester operations', () => {
   });
 
   it('should delete an harvester', () => {
-    harvester.deleteHarvesterByName('BFG');
+    harvester.seedExcelHarvester(constants.SEED_EXCEL_ID);
+    cy.reload();
+    harvester.deleteHarvesterById(constants.SEED_EXCEL_ID);
 
-    cy.get('.no-wrap').should('not.contain', 'BFG');
+    cy.get('.no-wrap').should('not.contain', 'excel_test_api');
   });
 
 });
