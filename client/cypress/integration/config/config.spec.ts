@@ -10,6 +10,7 @@ describe('Configuration of general settings', () => {
   });
 
   beforeEach(() => {
+    cy.reload();
     cy.restoreLocalStorageCache();
     Cypress.Cookies.preserveOnce('connect.sid');
     configPage.visit();

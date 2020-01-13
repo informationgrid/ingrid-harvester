@@ -14,6 +14,7 @@ describe('Log tab operations', () => {
   });
 
   beforeEach(() => {
+    cy.reload();
     cy.restoreLocalStorageCache();
     Cypress.Cookies.preserveOnce('connect.sid');
   });

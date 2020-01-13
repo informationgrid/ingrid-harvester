@@ -13,6 +13,7 @@ describe('Configuration of Mapping-Formats', () => {
   });
 
   beforeEach(() => {
+    cy.reload();
     cy.restoreLocalStorageCache();
     Cypress.Cookies.preserveOnce('connect.sid');
     configPage.visit();

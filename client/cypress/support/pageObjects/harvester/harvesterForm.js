@@ -30,6 +30,13 @@ class HarvesterForm {
     cy.wait(500);
   }
 
+  /**
+   * close the form without saving
+   */
+  closeHarvesterForm() {
+    cy.get(this.type).type('{esc}');
+  }
+
   setFields(options) {
     Object.keys(options).forEach(key => {
       const type = this.getTypeFromOptionKey(key);

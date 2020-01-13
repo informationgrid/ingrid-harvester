@@ -18,6 +18,7 @@ describe('Csw-Harvester operations', () => {
   });
 
   beforeEach(() => {
+    cy.reload();
     cy.restoreLocalStorageCache();
     Cypress.Cookies.preserveOnce('connect.sid');
   });
