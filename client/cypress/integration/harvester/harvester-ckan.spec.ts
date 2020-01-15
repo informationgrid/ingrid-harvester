@@ -127,7 +127,7 @@ describe('Ckan-Harvester operations', () => {
     harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
     let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
-    importedDocNumber.should('be.below', 42);
+    importedDocNumber.should('equal', '41');
 
     harvester.openFormById(constants.CKAN_DB_ID);
     form.deleteListedIds(form.blacklistedId);
@@ -147,8 +147,8 @@ describe('Ckan-Harvester operations', () => {
     harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
     let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
-    importedDocNumber.should('be.below', 42);
-    importedDocNumber.should('be', 38);
+    importedDocNumber.should('be.below', '42');
+    importedDocNumber.should('equal', '38');
 
     harvester.openFormById(constants.CKAN_DB_ID);
     form.activateContainsDataDownload();
@@ -171,7 +171,7 @@ describe('Ckan-Harvester operations', () => {
     harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
     let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
-    importedDocNumber.should('be', 38);
+    importedDocNumber.should('equal', '38');
 
     harvester.openFormById(constants.CKAN_DB_ID);
     form.deleteListedIds(form.whitelistedId);
@@ -179,8 +179,26 @@ describe('Ckan-Harvester operations', () => {
     form.saveHarvesterConfig();
   });
 
-  xit('should import whitelisted IDs even if excluded by tag or group', () => {
+  it('should import whitelisted IDs even if excluded by tag or group', () => {
+    let toWhitelist = 'a98ef34f-8f8e-487b-b2ea-b2ddb54a41de';
 
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.setFields({
+      whitelistedId: toWhitelist,
+      filterGroups: 'Datensätze'
+    });
+    form.saveHarvesterConfig();
+
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+
+    let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
+    importedDocNumber.should('equal', '1');
+
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.deleteListedIds(form.whitelistedId);
+    form.deleteListedIds(form.filterGroups);
+    form.saveHarvesterConfig();
   });
 
 });
