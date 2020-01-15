@@ -122,11 +122,11 @@ class HarvesterPage {
   }
 
   checkFieldValueIs(id, field, value) {
-    cy.get('#harvester-' + id + ' ' + field, {timeout: 15000}).should('contain', value);
+    cy.get('#harvester-' + id + ' ' + field, {timeout: 30000}).should('contain', value);
   }
 
   checkFieldValueIsNot(id, field, value) {
-    cy.get('#harvester-' + id + ' ' + field, {timeout: 15000}).should('not.contain', value);
+    cy.get('#harvester-' + id + ' ' + field, {timeout: 30000}).should('not.contain', value);
   }
 
   checkImportAllMsg() {
@@ -264,7 +264,7 @@ class HarvesterPage {
       url: 'rest/api/harvester/' + id,
       body: {
         "id": parseInt(id),
-        "disable": true,
+        "disable": false,
         "type": "EXCEL",
         "description": "excel_test_api",
         "index": "excel_index_api",

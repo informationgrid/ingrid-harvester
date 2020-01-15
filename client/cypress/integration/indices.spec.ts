@@ -37,18 +37,18 @@ describe('Indices operations', () => {
   });
 
   it('should delete an index if its harvester is deleted', () => {
-    harvester.seedCswHarvester(constants.SEED_CSW_ID);
-    harvester.importHarvesterById(constants.SEED_CSW_ID);
-    harvester.waitForImportToFinish(constants.SEED_CSW_ID);
+    harvester.seedExcelHarvester(constants.SEED_EXCEL_ID);
+    harvester.importHarvesterById(constants.SEED_EXCEL_ID);
+    harvester.waitForImportToFinish(constants.SEED_EXCEL_ID);
 
     indicesPage.visit();
-    indicesPage.indexIsContained('csw_index', true);
+    indicesPage.indexIsContained('excel_index_api', true);
 
     harvester.visit();
-    harvester.deleteHarvesterById(constants.SEED_CSW_ID);
+    harvester.deleteHarvesterById(constants.SEED_EXCEL_ID);
 
     indicesPage.visit();
-    indicesPage.indexIsContained('csw_index', false);
+    indicesPage.indexIsContained('excel_index_api', false);
   });
 
   it('should show the content of an index when it is clicked', () => {
