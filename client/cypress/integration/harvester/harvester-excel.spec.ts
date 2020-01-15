@@ -67,7 +67,6 @@ describe('Excel-Harvester operations', () => {
 
   it('should update a harvester of type Excel', () => {
     harvester.seedExcelHarvester(constants.SEED_EXCEL_ID);
-    cy.reload();
 
     harvester.openFormById(constants.SEED_EXCEL_ID);
     form.checkFields({

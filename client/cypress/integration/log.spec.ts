@@ -22,7 +22,7 @@ describe('Log tab operations', () => {
     logPage.infoIsContained('[INFO] default - Number of records: 42');
   });
 
-  it('should show information in the logs when all the harvester are imported', () => {
+  xit('should show information in the logs when all the harvester are imported', () => {
     harvester.importAllHarvesters();
 
     logPage.visit();

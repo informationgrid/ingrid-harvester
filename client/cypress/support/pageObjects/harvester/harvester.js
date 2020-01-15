@@ -189,13 +189,17 @@ class HarvesterPage {
     cy.get(this.logContainer).should('contain', msg);
   }
 
+  closeErrorLog() {
+    cy.get(this.logContainer).type('{esc}');
+  }
+
   openElasticSearchLog() {
     cy.get(this.labelContent).contains('Elasticsearch-Errors').click();
   }
 
   waitForImportToFinish(id) {
-    const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    this.checkFieldValueIs(id, this.lastExecution, importsDate);
+    // const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
+    this.checkFieldValueIs(id, this.lastExecution, Cypress.moment().format('DD.MM.YY, HH:mm'));
   }
 
   getDocNumber(id) {
@@ -206,7 +210,7 @@ class HarvesterPage {
   seedCkanHarvester(id) {
     cy.request({
       method: 'POST',
-      url: 'rest/api/harvester/'+ id,
+      url: 'rest/api/harvester/' + id,
       body: {
         "id": parseInt(id),
         "disable": true,
@@ -228,15 +232,16 @@ class HarvesterPage {
         "licenseUrl": "testing"
       }
     });
+    cy.reload();
   }
 
   seedCswHarvester(id) {
     cy.request({
       method: 'POST',
-      url: 'rest/api/harvester/'+ id,
+      url: 'rest/api/harvester/' + id,
       body: {
         "id": parseInt(id),
-        "disable": true,
+        "disable": false,
         "type": "CSW",
         "description": "csw_test_api",
         "index": "csw_index",
@@ -250,12 +255,13 @@ class HarvesterPage {
         "startPosition": 1
       }
     });
+    cy.reload();
   }
 
   seedExcelHarvester(id) {
     cy.request({
       method: 'POST',
-      url: 'rest/api/harvester/'+ id,
+      url: 'rest/api/harvester/' + id,
       body: {
         "id": parseInt(id),
         "disable": true,
@@ -271,6 +277,7 @@ class HarvesterPage {
         "filePath": "./data.xlsx"
       }
     });
+    cy.reload();
   }
 
 }

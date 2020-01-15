@@ -78,7 +78,6 @@ describe('Csw-Harvester operations', () => {
 
   it('should update a harvester of type CSW', () => {
     harvester.seedCswHarvester(constants.SEED_CSW_ID);
-    cy.reload();
 
     harvester.openFormById(constants.SEED_CSW_ID);
     form.checkFields({
@@ -118,7 +117,6 @@ describe('Csw-Harvester operations', () => {
     harvester.importHarvesterById(constants.CSW_CODEDE_ID);
     harvester.checkImportHasStarted();
 
-    const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    harvester.checkFieldValueIs(constants.CSW_CODEDE_ID, harvester.lastExecution, importsDate);
+    harvester.checkFieldValueIs(constants.CSW_CODEDE_ID, harvester.lastExecution, Cypress.moment().format('DD.MM.YY, HH:mm'));
   });
 });

@@ -37,30 +37,26 @@ describe('Indices operations', () => {
   });
 
   it('should delete an index if its harvester is deleted', () => {
-    harvester.importHarvesterById(constants.CSW_TEST_ID);
-    harvester.waitForImportToFinish(constants.CSW_TEST_ID);
+    harvester.seedCswHarvester(constants.SEED_CSW_ID);
+    harvester.importHarvesterById(constants.SEED_CSW_ID);
+    harvester.waitForImportToFinish(constants.SEED_CSW_ID);
 
     indicesPage.visit();
     indicesPage.indexIsContained('csw_index', true);
 
     harvester.visit();
-    harvester.deleteHarvesterById(constants.CSW_TEST_ID);
+    harvester.deleteHarvesterById(constants.SEED_CSW_ID);
 
     indicesPage.visit();
     indicesPage.indexIsContained('csw_index', false);
   });
 
   it('should show the content of an index when it is clicked', () => {
-    let dbIndexContent = "\"_type\": \"base\",\n" +
-      "    \"_id\": \"7e526b8c-16bd-4f2c-a02b-8d4d0a29d310\",\n" +
-      "    \"_score\": 1,\n" +
-      "    \"_source\": {\n" +
-      "      \"accrualPeriodicity\": \"once_per_year\",\n" +
-      "      \"creator\": {\n" +
-      "        \"name\": \"Hannah Richta\",\n" +
-      "        \"mbox\": \"hannah.richta@deutschebahn.com\"\n" +
-      "      },\n" +
-      "      \"description\": ";
+    let dbIndexContent = "{\n" +
+      "    \"_index\": \"ckan_db_";
+    let indexDescription = "\"description\": " +
+      "\"Die hier gelieferten Daten stellen die Anzahl der Zugfahrten und Verspätungsminuten pro Tag und Betriebsstelle dar. " +
+      "Berücksichtigt wurden alle Bst, über die mindestens 10 Zugfahrten stattfanden.\"";
 
     harvester.importHarvesterById(constants.CKAN_DB_ID);
     harvester.waitForImportToFinish(constants.CKAN_DB_ID);
@@ -69,5 +65,6 @@ describe('Indices operations', () => {
 
     indicesPage.selectIndex('ckan_db');
     indicesPage.checkContentIs(dbIndexContent);
+    indicesPage.checkContentIs(indexDescription);
   })
 });

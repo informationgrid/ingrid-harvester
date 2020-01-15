@@ -30,8 +30,7 @@ describe('Import operations', () => {
     harvester.waitForImportToFinish(constants.CKAN_DB_ID);
     cy.reload();
 
-    const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.lastExecution, importsDate);
+    harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.lastExecution, Cypress.moment().format('DD.MM.YY, HH:mm'));
   });
 
   it('should show an icon if a harvester has an import schedule', () => {

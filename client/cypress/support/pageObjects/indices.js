@@ -26,7 +26,7 @@ class IndicesPage {
   }
 
   selectIndex(index) {
-    cy.get(this.line).contains(index).click();
+    cy.get(this.line).contains(index).click({force: true});
   }
 
   checkContentIs(content) {

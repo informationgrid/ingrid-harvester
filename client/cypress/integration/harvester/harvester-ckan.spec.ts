@@ -80,7 +80,6 @@ describe('Ckan-Harvester operations', () => {
 
   it('should update an existing CKAN harvester', () => {
     harvester.seedCkanHarvester(constants.SEED_CKAN_ID);
-    cy.reload();
 
     harvester.openFormById(constants.SEED_CKAN_ID);
     form.checkFields(
@@ -128,7 +127,7 @@ describe('Ckan-Harvester operations', () => {
     harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
     let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
-    importedDocNumber.should('be.below' ,42);
+    importedDocNumber.should('be.below', 42);
 
     harvester.openFormById(constants.CKAN_DB_ID);
     form.deleteListedIds(form.blacklistedId);
@@ -148,8 +147,8 @@ describe('Ckan-Harvester operations', () => {
     harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
     let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
-    importedDocNumber.should('be.below' ,42);
-    importedDocNumber.should('be' ,38);
+    importedDocNumber.should('be.below', 42);
+    importedDocNumber.should('be', 38);
 
     harvester.openFormById(constants.CKAN_DB_ID);
     form.activateContainsDataDownload();
@@ -172,7 +171,7 @@ describe('Ckan-Harvester operations', () => {
     harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
     let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
-    importedDocNumber.should('be' ,38);
+    importedDocNumber.should('be', 38);
 
     harvester.openFormById(constants.CKAN_DB_ID);
     form.deleteListedIds(form.whitelistedId);
