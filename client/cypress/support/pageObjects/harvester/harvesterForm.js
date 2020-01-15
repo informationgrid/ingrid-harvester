@@ -132,7 +132,19 @@ class HarvesterForm {
   }
 
   activateContainsDataDownload() {
-    cy.get(this.dataDownload).click();
+    cy.get(this.dataDownload).then((isBtnActive) => {
+      if (!isBtnActive.hasClass('mat-checkbox-checked')) {
+        cy.get(this.dataDownload).click();
+      }
+    });
+  }
+
+  deactivateContainsDataDownload() {
+    cy.get(this.dataDownload).then((isBtnActive) => {
+      if (isBtnActive.hasClass('mat-checkbox-checked')) {
+        cy.get(this.dataDownload).click();
+      }
+    });
   }
 }
 

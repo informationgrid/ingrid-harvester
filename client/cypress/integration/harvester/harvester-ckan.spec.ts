@@ -151,7 +151,7 @@ describe('Ckan-Harvester operations', () => {
     importedDocNumber.should('equal', '38');
 
     harvester.openFormById(constants.CKAN_DB_ID);
-    form.activateContainsDataDownload();
+    form.deactivateContainsDataDownload();
     form.saveHarvesterConfig();
 
   });
@@ -175,7 +175,7 @@ describe('Ckan-Harvester operations', () => {
 
     harvester.openFormById(constants.CKAN_DB_ID);
     form.deleteListedIds(form.whitelistedId);
-    form.activateContainsDataDownload();
+    form.deactivateContainsDataDownload();
     form.saveHarvesterConfig();
   });
 
