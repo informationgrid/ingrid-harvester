@@ -179,7 +179,7 @@ describe('Ckan-Harvester operations', () => {
     form.saveHarvesterConfig();
   });
 
-  it('should import whitelisted IDs even if excluded by tag or group', () => {
+  it('should import whitelisted IDs even if excluded by group', () => {
     let toWhitelist = 'a98ef34f-8f8e-487b-b2ea-b2ddb54a41de';
 
     harvester.openFormById(constants.CKAN_DB_ID);
@@ -201,4 +201,25 @@ describe('Ckan-Harvester operations', () => {
     form.saveHarvesterConfig();
   });
 
+  it('should import whitelisted IDs even if excluded by tag', () => {
+    let toWhitelist = 'a98ef34f-8f8e-487b-b2ea-b2ddb54a41de';
+
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.setFields({
+      filterTag: 'Sensor',
+      whitelistedId: toWhitelist
+    });
+    form.saveHarvesterConfig();
+
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+
+    let importedDocNumberSnd = harvester.getDocNumber(constants.CKAN_DB_ID);
+    importedDocNumberSnd.should('equal', '2');
+
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.deleteListedIds(form.whitelistedId);
+    form.deleteListedIds(form.filterTag);
+    form.saveHarvesterConfig();
+  });
 });
