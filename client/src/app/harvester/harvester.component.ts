@@ -130,7 +130,7 @@ export class HarvesterComponent implements OnInit, OnDestroy {
         this.harvesterService.updateHarvester(result).subscribe(() => {
           // update view by modifying original object
           Object.keys(harvester).forEach(key => harvester[key] = result[key]);
-        });
+        }, err => alert(err.message));
       }
     });
   }
@@ -148,14 +148,19 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('The dialog was closed', result);
-        this.harvesterService.updateHarvester(result).subscribe(() => this.fetchHarvester());
+        this.harvesterService.updateHarvester(result).subscribe(
+          () => this.fetchHarvester(),
+          err => alert(err.message));
       }
     });
   }
 
   handleActivation($event: MatSlideToggleChange, harvester: Harvester) {
     harvester.disable = !$event.checked;
-    this.harvesterService.updateHarvester(harvester).subscribe();
+    this.harvesterService.updateHarvester(harvester).subscribe(
+      () => {
+      },
+      err => alert(err.message));
   }
 
   private showError(error: Error) {
