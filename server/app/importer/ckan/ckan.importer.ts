@@ -247,7 +247,10 @@ export class CkanImporter implements Importer {
             .filter(dataset => this.filterUtils.hasValidTagsOrGroups(dataset, 'groups', this.settings.filterGroups))
             .filter(dataset => this.filterUtils.isIdAllowed(dataset.id));
 
-        const skippedIDs = results.filter(item => !filteredResult.some(filtered => filtered.id === item.id));
+        const skippedIDs = results
+            .filter(item => !filteredResult.some(filtered => filtered.id === item.id))
+            .map(item => item.id);
+
         this.markSkipped(skippedIDs);
 
         return filteredResult;
