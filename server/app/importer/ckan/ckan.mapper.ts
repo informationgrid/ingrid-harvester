@@ -396,7 +396,15 @@ export class CkanMapper extends GenericMapper {
             this.log.warn(msg);
         }
 
+        const isWhitelisted = this.settings.whitelistedIds.indexOf(doc.extras.generated_id) !== -1;
+
         if (this.settings.rules && this.settings.rules.containsDocumentsWithData) {
+
+            if (isWhitelisted) {
+                this.log.info(`Document is whitelisted and not checked: ${this.source.id}`);
+                return super.isValid();
+            }
+
             const result = CkanRules.containsDocumentsWithData(doc.distribution, this, this.settings.rules.containsDocumentsWithDataBlacklist);
             if (result.skipped) {
                 this.summary.warnings.push(['No data document', `${this.source.title} (${this.source.id})`]);

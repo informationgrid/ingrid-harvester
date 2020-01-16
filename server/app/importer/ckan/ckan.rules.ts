@@ -15,7 +15,6 @@ export class CkanRules {
     private static log = getLogger();
 
     static containsDocumentsWithData(distributions: Distribution[], mapper: CkanMapper, blacklist: string): RuleResult {
-        // this.log.debug('Executing rule: containsDocumentsWithData');
         const blacklistedFormats = blacklist.split(',');
         const valid = distributions.some(dist => this.isDataDocument(dist, blacklistedFormats));
         if (!valid) {
