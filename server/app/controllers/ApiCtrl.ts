@@ -52,15 +52,16 @@ export class ApiCtrl {
 
         // remove from search index/alias
         this.indexService.removeFromAlias(+id);
+        this.indexService.deleteIndexFromHarvester(+id);
+
+        // remove from scheduler
+        this.scheduleService.stopJob(+id);
 
         // update config without the selected harvester
         const filtered = ConfigService.get()
             .filter( harvester => harvester.id !== +id);
 
         ConfigService.updateAll(filtered);
-
-        // remove from scheduler
-        this.scheduleService.stopJob(+id);
 
     }
 

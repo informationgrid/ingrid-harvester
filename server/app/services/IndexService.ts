@@ -53,7 +53,7 @@ export class IndexService {
         }
     }
 
-    private async getIndexFromHarvesterID(id: number): Promise<String> {
+    private async getIndexFromHarvesterID(id: number): Promise<string> {
         const harvester = ConfigService.get().find(h => h.id === id);
         let indices = await this.elasticUtils.getIndicesFromBasename(harvester.index);
 
@@ -73,6 +73,11 @@ export class IndexService {
 
     deleteIndex(name: string) {
         this.elasticUtils.deleteIndex(name);
+    }
+
+    async deleteIndexFromHarvester(id: number) {
+        const indexName = await this.getIndexFromHarvesterID(id);
+        this.elasticUtils.deleteIndex(indexName);
     }
 
     async search(indexName: string): Promise<any> {
