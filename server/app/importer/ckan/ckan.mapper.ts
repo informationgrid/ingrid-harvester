@@ -9,6 +9,7 @@ import {CkanParameters, CkanParametersListWithResources, RequestDelegate, Reques
 import {UrlUtils} from '../../utils/url.utils';
 import {Summary} from '../../model/summary';
 import {CkanRules} from './ckan.rules';
+import {throwError} from 'rxjs';
 
 let mapping = require('../../../mappings.json');
 let markdown = require('markdown').markdown;
@@ -39,7 +40,11 @@ export class CkanMapper extends GenericMapper {
         this.data = data;
         this.summary = data.summary;
 
-        if (this.settings.rules && this.settings.rules.containsDocumentsWithData) {
+        let hasDataDownloadRule = this.settings.rules
+            && this.settings.rules.containsDocumentsWithData
+            && this.settings.rules.containsDocumentsWithDataBlacklist;
+
+        if (hasDataDownloadRule) {
             this.blacklistedFormats = this.settings.rules.containsDocumentsWithDataBlacklist
                 .split(',')
                 .map(item => item.trim());
@@ -552,6 +557,16 @@ export class CkanMapper extends GenericMapper {
                 return this.getAuthor();
             default:
                 return this.getMaintainer();
+        }
+    }
+
+    executeCustomCode(doc: any) {
+        try {
+            if (this.settings.customCode) {
+                eval(this.settings.customCode);
+            }
+        } catch (error) {
+            throwError('An error occurred in custom code: ' + error.message);
         }
     }
 

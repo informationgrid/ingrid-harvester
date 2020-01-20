@@ -37,7 +37,8 @@ export class DialogEditComponent implements OnInit {
       defaultAttribution: [harvester.defaultAttribution],
       defaultAttributionLink: [harvester.defaultAttributionLink],
       maxRecords: [harvester.maxRecords, Validators.min(1)],
-      startPosition: [harvester.startPosition, Validators.min(0)]
+      startPosition: [harvester.startPosition, Validators.min(0)],
+      customCode: [harvester.customCode]
     });
   }
 

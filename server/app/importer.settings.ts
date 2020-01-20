@@ -5,8 +5,8 @@ export interface CronData {
 
 export type ImporterSettings = {
     blacklistedIds?: string[],
-    whitelistedIds?: string[],
     cron?: CronData,
+    customCode?: string,
     dateSourceFormats?: string[],
     defaultAttribution?: string,
     defaultAttributionLink?: string,
@@ -18,6 +18,8 @@ export type ImporterSettings = {
     id?: number,
     maxRecords?: number,
     proxy?: string,
+    showCompleteSummaryInfo?: boolean;
     startPosition?: number,
-    type: string
+    type: string,
+    whitelistedIds?: string[]
 }

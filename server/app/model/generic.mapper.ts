@@ -230,6 +230,9 @@ export abstract class GenericMapper {
         return code ? GenericMapper.DCAT_CATEGORY_URL + code : null;
     }
 
+    executeCustomCode(doc: any) {
+
+    }
 }
 
 
