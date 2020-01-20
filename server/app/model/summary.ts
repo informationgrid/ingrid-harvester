@@ -1,6 +1,8 @@
+import {ImporterSettings} from '../importer.settings';
+
 export class Summary {
 
-    private static readonly MAX_ITEMS_TO_SHOW = 10;
+    private MAX_ITEMS_TO_SHOW = 10;
 
     numDocs: number = 0;
 
@@ -18,8 +20,11 @@ export class Summary {
 
     private readonly headerTitle: string;
 
-    constructor(settings: {description?, type}) {
+    constructor(settings: ImporterSettings) {
         this.headerTitle = `${settings.description} (${settings.type})`;
+        if (settings.showCompleteSummaryInfo) {
+            this.MAX_ITEMS_TO_SHOW = 1000000;
+        }
     }
 
     print(logger) {
@@ -28,22 +33,22 @@ export class Summary {
         logger.info(`---------------------------------------------------------`);
         logger.info(`Number of records: ${this.numDocs}`);
         logger.info(`Skipped records: ${this.skippedDocs.length}`);
-        Summary.logArray(logger, this.skippedDocs);
+        this.logArray(logger, this.skippedDocs);
 
         logger.info(`Record-Errors: ${this.numErrors}`);
         logger.info(`Warnings: ${this.warnings.length}`);
-        Summary.logArray(logger, this.warnings);
+        this.logArray(logger, this.warnings);
 
         logger.info(`App-Errors: ${this.appErrors.length}`);
-        Summary.logArray(logger, this.appErrors);
+        this.logArray(logger, this.appErrors);
 
         logger.info(`Elasticsearch-Errors: ${this.elasticErrors.length}`);
-        Summary.logArray(logger, this.elasticErrors);
+        this.logArray(logger, this.elasticErrors);
 
         this.additionalSummary();
     }
 
-    private static logArray(logger, list: any) {
+    private logArray(logger, list: any) {
         if (logger.isDebugEnabled() && list.length > 0) {
             let listString = `\n\t${list.slice(0, this.MAX_ITEMS_TO_SHOW).join('\n\t')}`;
             if (list.length > this.MAX_ITEMS_TO_SHOW) {
@@ -53,5 +58,6 @@ export class Summary {
         }
     }
 
-    additionalSummary() {}
+    additionalSummary() {
+    }
 }
