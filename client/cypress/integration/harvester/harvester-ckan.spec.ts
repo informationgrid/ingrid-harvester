@@ -103,11 +103,11 @@ describe('Ckan-Harvester operations', () => {
       indexName: 'updated_ckan',
       defaultAttribution: 'ffm',
       defaultAttributionLink: "attr_link",
-      ckanBasisUrl: './testme',
+      ckanBasisUrl: 'https://data.deutschebahn.com',
       defaultDCATCategory: 'Bevölkerung und Gesellschaft',
       defaultmCLOUDCategory: 'Bahn',
-      maxRecords: '50',
-      startPosition: '1'
+      maxRecords: '100',
+      startPosition: '0'
     });
 
     cy.reload();
@@ -117,49 +117,47 @@ describe('Ckan-Harvester operations', () => {
   it('should filter blacklisted IDs', () => {
     let toBlacklist = '7e526b8c-16bd-4f2c-a02b-8d4d0a29d310';
 
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.seedCkanHarvester(constants.SEED_CKAN_ID);
+    harvester.openFormById(constants.SEED_CKAN_ID);
     form.setFields({
       blacklistedId: toBlacklist
     });
     form.saveHarvesterConfig();
 
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterById(constants.SEED_CKAN_ID);
+    harvester.waitForImportToFinish(constants.SEED_CKAN_ID);
 
-    let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
+    let importedDocNumber = harvester.getDocNumber(constants.SEED_CKAN_ID);
     importedDocNumber.should('equal', '41');
 
-    harvester.openFormById(constants.CKAN_DB_ID);
-    form.deleteListedIds(form.blacklistedId);
-    form.saveHarvesterConfig();
+    harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
   });
 
   it('should exclude documents which have no data downloads (e.g. "rest")', () => {
     // example: CKAN-DB, "Muss Daten-Download enthalten": X, "Datenformat ausschließen": "rest"
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.seedCkanHarvester(constants.SEED_CKAN_ID);
+    harvester.openFormById(constants.SEED_CKAN_ID);
     form.activateContainsDataDownload();
     form.setFields({
       blacklistedDataFormat: 'rest'
     });
     form.saveHarvesterConfig();
 
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterById(constants.SEED_CKAN_ID);
+    harvester.waitForImportToFinish(constants.SEED_CKAN_ID);
 
-    let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
+    let importedDocNumber = harvester.getDocNumber(constants.SEED_CKAN_ID);
     importedDocNumber.should('be.below', '42');
     importedDocNumber.should('equal', '38');
 
-    harvester.openFormById(constants.CKAN_DB_ID);
-    form.deactivateContainsDataDownload();
-    form.saveHarvesterConfig();
-
+    harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
   });
 
   it('should import whitelisted IDs if excluded by no data downloads', () => {
     let toWhitelist = '7e526b8c-16bd-4f2c-a02b-8d4d0a29d310';
 
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.seedCkanHarvester(constants.SEED_CKAN_ID);
+    harvester.openFormById(constants.SEED_CKAN_ID);
     form.activateContainsDataDownload();
     form.setFields({
       whitelistedId: toWhitelist,
@@ -167,59 +165,52 @@ describe('Ckan-Harvester operations', () => {
     });
     form.saveHarvesterConfig();
 
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterById(constants.SEED_CKAN_ID);
+    harvester.waitForImportToFinish(constants.SEED_CKAN_ID);
 
-    let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
+    let importedDocNumber = harvester.getDocNumber(constants.SEED_CKAN_ID);
     importedDocNumber.should('equal', '39');
 
-    harvester.openFormById(constants.CKAN_DB_ID);
-    form.deleteListedIds(form.whitelistedId);
-    form.deactivateContainsDataDownload();
-    form.saveHarvesterConfig();
+    harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
   });
 
   it('should import whitelisted IDs even if excluded by group', () => {
     let toWhitelist = 'a98ef34f-8f8e-487b-b2ea-b2ddb54a41de';
 
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.seedCkanHarvester(constants.SEED_CKAN_ID);
+    harvester.openFormById(constants.SEED_CKAN_ID);
     form.setFields({
       whitelistedId: toWhitelist,
       filterGroups: 'Datensätze'
     });
     form.saveHarvesterConfig();
 
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterById(constants.SEED_CKAN_ID);
+    harvester.waitForImportToFinish(constants.SEED_CKAN_ID);
 
-    let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
+    let importedDocNumber = harvester.getDocNumber(constants.SEED_CKAN_ID);
     importedDocNumber.should('equal', '1');
 
-    harvester.openFormById(constants.CKAN_DB_ID);
-    form.deleteListedIds(form.whitelistedId);
-    form.deleteListedIds(form.filterGroups);
-    form.saveHarvesterConfig();
+    harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
   });
 
   it('should import whitelisted IDs even if excluded by tag', () => {
     let toWhitelist = 'a98ef34f-8f8e-487b-b2ea-b2ddb54a41de';
 
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.seedCkanHarvester(constants.SEED_CKAN_ID);
+    harvester.openFormById(constants.SEED_CKAN_ID);
     form.setFields({
       filterTag: 'Sensor',
       whitelistedId: toWhitelist
     });
     form.saveHarvesterConfig();
 
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterById(constants.SEED_CKAN_ID);
+    harvester.waitForImportToFinish(constants.SEED_CKAN_ID);
 
-    let importedDocNumberSnd = harvester.getDocNumber(constants.CKAN_DB_ID);
+    let importedDocNumberSnd = harvester.getDocNumber(constants.SEED_CKAN_ID);
     importedDocNumberSnd.should('equal', '2');
 
-    harvester.openFormById(constants.CKAN_DB_ID);
-    form.deleteListedIds(form.whitelistedId);
-    form.deleteListedIds(form.filterTag);
-    form.saveHarvesterConfig();
+    harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
   });
 });
