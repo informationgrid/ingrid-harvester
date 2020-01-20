@@ -134,7 +134,7 @@ class HarvesterPage {
   }
 
   setCronPatternTo(pattern) {
-    cy.get(this.cronInputField).clear().type(pattern);
+    cy.get(this.cronInputField).click().clear().type(pattern);
   }
 
   activateScheduler() {
