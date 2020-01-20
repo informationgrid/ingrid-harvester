@@ -1,4 +1,7 @@
 export class Summary {
+
+    private static readonly MAX_ITEMS_TO_SHOW = 10;
+
     numDocs: number = 0;
 
     numErrors: number = 0;
@@ -13,7 +16,7 @@ export class Summary {
 
     [x: string]: any;
 
-    private headerTitle: string;
+    private readonly headerTitle: string;
 
     constructor(settings: {description?, type}) {
         this.headerTitle = `${settings.description} (${settings.type})`;
@@ -25,23 +28,29 @@ export class Summary {
         logger.info(`---------------------------------------------------------`);
         logger.info(`Number of records: ${this.numDocs}`);
         logger.info(`Skipped records: ${this.skippedDocs.length}`);
-        if (logger.isDebugEnabled() && this.skippedDocs.length > 0) {
-            logger.debug(`\n\t${this.skippedDocs.join('\n\t')}`);
-        }
+        Summary.logArray(logger, this.skippedDocs);
+
         logger.info(`Record-Errors: ${this.numErrors}`);
         logger.info(`Warnings: ${this.warnings.length}`);
-        if (logger.isDebugEnabled() && this.warnings.length > 0) {
-            logger.debug(`\n\t${this.warnings.join('\n\t')}`);
-        }
+        Summary.logArray(logger, this.warnings);
+
         logger.info(`App-Errors: ${this.appErrors.length}`);
-        if (logger.isDebugEnabled() && this.appErrors.length > 0) {
-            logger.debug(`\n\t${this.appErrors.join('\n\t')}`);
-        }
+        Summary.logArray(logger, this.appErrors);
+
         logger.info(`Elasticsearch-Errors: ${this.elasticErrors.length}`);
-        if (logger.isDebugEnabled() && this.elasticErrors.length > 0) {
-            logger.debug(`\n\t${this.elasticErrors.join('\n\t')}`);
-        }
+        Summary.logArray(logger, this.elasticErrors);
+
         this.additionalSummary();
+    }
+
+    private static logArray(logger, list: any) {
+        if (logger.isDebugEnabled() && list.length > 0) {
+            let listString = `\n\t${list.slice(0, this.MAX_ITEMS_TO_SHOW).join('\n\t')}`;
+            if (list.length > this.MAX_ITEMS_TO_SHOW) {
+                listString += '\n\t...';
+            }
+            logger.debug(listString);
+        }
     }
 
     additionalSummary() {}
