@@ -1,12 +1,12 @@
 /**
  * A mapper for CKAN documents.
  */
-import {getLogger} from "log4js";
-import {OptionsWithUri} from "request-promise";
-import {CkanSettings, ProviderField} from "./ckan.settings";
-import {DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
-import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from "../../utils/http-request.utils";
-import {UrlUtils} from "../../utils/url.utils";
+import {getLogger} from 'log4js';
+import {OptionsWithUri} from 'request-promise';
+import {CkanSettings, ProviderField} from './ckan.settings';
+import {DateRange, Distribution, GenericMapper, Organization, Person} from '../../model/generic.mapper';
+import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from '../../utils/http-request.utils';
+import {UrlUtils} from '../../utils/url.utils';
 import {Summary} from '../../model/summary';
 import {CkanRules} from './ckan.rules';
 
@@ -30,6 +30,7 @@ export class CkanMapper extends GenericMapper {
     private resourcesDate: Date[] = null;
     private settings: CkanSettings;
     private summary: Summary;
+    private blacklistedFormats: string[] = [];
 
     constructor(settings: CkanSettings, data: CkanMapperData) {
         super();
@@ -37,6 +38,12 @@ export class CkanMapper extends GenericMapper {
         this.source = data.source;
         this.data = data;
         this.summary = data.summary;
+
+        if (this.settings.rules && this.settings.rules.containsDocumentsWithData) {
+            this.blacklistedFormats = this.settings.rules.containsDocumentsWithDataBlacklist
+                .split(',')
+                .map(item => item.trim());
+        }
     }
 
     getAccessRights() {
@@ -125,7 +132,7 @@ export class CkanMapper extends GenericMapper {
     getMetadataSource() {
         // Metadata
         // The harvest source
-        let rawSource = this.settings.ckanBaseUrl + "/api/3/action/package_show?id=" + this.source.name;
+        let rawSource = this.settings.ckanBaseUrl + '/api/3/action/package_show?id=' + this.source.name;
         let portalSource = this.settings.ckanBaseUrl + '/dataset/' + this.source.name;
 
         return {
@@ -265,8 +272,12 @@ export class CkanMapper extends GenericMapper {
                 let created = res.created;
                 let modified = res.modified;
 
-                if (created) created = new Date(Date.parse(created));
-                if (modified) modified = new Date(Date.parse(modified));
+                if (created) {
+                    created = new Date(Date.parse(created));
+                }
+                if (modified) {
+                    modified = new Date(Date.parse(modified));
+                }
 
                 if (created && modified) {
                     dates.push(Math.max(created, modified));
@@ -398,14 +409,14 @@ export class CkanMapper extends GenericMapper {
 
         const isWhitelisted = this.settings.whitelistedIds.indexOf(doc.extras.generated_id) !== -1;
 
-        if (this.settings.rules && this.settings.rules.containsDocumentsWithData) {
+        if (this.blacklistedFormats.length > 0) {
 
             if (isWhitelisted) {
                 this.log.info(`Document is whitelisted and not checked: ${this.source.id}`);
                 return super.isValid();
             }
 
-            const result = CkanRules.containsDocumentsWithData(doc.distribution, this, this.settings.rules.containsDocumentsWithDataBlacklist);
+            const result = CkanRules.containsDocumentsWithData(doc.distribution, this.blacklistedFormats);
             if (result.skipped) {
                 this.summary.warnings.push(['No data document', `${this.source.title} (${this.source.id})`]);
                 this.skipped = true;
@@ -423,11 +434,11 @@ export class CkanMapper extends GenericMapper {
         if (settings.requestType === 'ListWithResources') {
             return {
                 method: 'GET',
-                uri: settings.ckanBaseUrl + "/api/3/action/current_package_list_with_resources",
+                uri: settings.ckanBaseUrl + '/api/3/action/current_package_list_with_resources',
                 json: true,
                 headers: RequestDelegate.defaultRequestHeaders(),
                 proxy: settings.proxy || null,
-                qs: <CkanParametersListWithResources>{
+                qs: <CkanParametersListWithResources> {
                     offset: settings.startPosition,
                     limit: settings.maxRecords
                 }
@@ -435,12 +446,12 @@ export class CkanMapper extends GenericMapper {
         } else {
             return {
                 method: 'GET',
-                uri: settings.ckanBaseUrl + "/api/action/package_search", // See http://docs.ckan.org/en/ckan-2.7.3/api/
+                uri: settings.ckanBaseUrl + '/api/action/package_search', // See http://docs.ckan.org/en/ckan-2.7.3/api/
                 json: true,
                 headers: RequestDelegate.defaultRequestHeaders(),
                 proxy: settings.proxy,
-                qs: <CkanParameters>{
-                    sort: "id asc",
+                qs: <CkanParameters> {
+                    sort: 'id asc',
                     start: settings.startPosition,
                     rows: settings.maxRecords/*,
                     fq: 'groups:transport_verkehr'*/
@@ -453,7 +464,7 @@ export class CkanMapper extends GenericMapper {
     static createRequestConfigCount(settings: CkanSettings): OptionsWithUri {
         return {
             method: 'GET',
-            uri: settings.ckanBaseUrl + "/api/3/action/package_list", // See http://docs.ckan.org/en/ckan-2.7.3/api/
+            uri: settings.ckanBaseUrl + '/api/3/action/package_list', // See http://docs.ckan.org/en/ckan-2.7.3/api/
             json: true,
             headers: RequestDelegate.defaultRequestHeaders(),
             proxy: settings.proxy
@@ -462,7 +473,7 @@ export class CkanMapper extends GenericMapper {
 
     static createPaging(settings: CkanSettings): RequestPaging {
         return {
-            startFieldName: settings.requestType === "ListWithResources" ? 'offset' : 'start',
+            startFieldName: settings.requestType === 'ListWithResources' ? 'offset' : 'start',
             startPosition: settings.startPosition,
             numRecords: settings.maxRecords
         };

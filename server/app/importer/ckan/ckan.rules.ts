@@ -1,6 +1,4 @@
 import {Distribution} from '../../model/generic.mapper';
-import {CkanMapper} from './ckan.mapper';
-import {getLogger} from 'log4js';
 
 export class RuleResult {
     constructor(
@@ -12,10 +10,7 @@ export class RuleResult {
 
 export class CkanRules {
 
-    private static log = getLogger();
-
-    static containsDocumentsWithData(distributions: Distribution[], mapper: CkanMapper, blacklist: string): RuleResult {
-        const blacklistedFormats = blacklist.split(',');
+    static containsDocumentsWithData(distributions: Distribution[], blacklistedFormats: string[]): RuleResult {
         const valid = distributions.some(dist => this.isDataDocument(dist, blacklistedFormats));
         if (!valid) {
             return new RuleResult(false, true);
