@@ -33,7 +33,7 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
     const ruleBlacklist = new FormControl({
       value: this.getModelField('rules.containsDocumentsWithDataBlacklist', ''),
       disabled: !rule.value
-    });
+    }, Validators.required);
 
     this.form.addControl('rules', new FormGroup({
       containsDocumentsWithData: rule,

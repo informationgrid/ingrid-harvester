@@ -68,7 +68,7 @@
         <mat-form-field fxFlex>
           <mat-label>Datenformat ausschließen</mat-label>
           <input matInput placeholder="rss,doc,..." formControlName="containsDocumentsWithDataBlacklist"
-                 autocomplete="off" (ngModelChange)="toLowerCase($event)">
+                 autocomplete="off" (ngModelChange)="toLowerCase($event)" required>
         </mat-form-field>
       </div>
 
