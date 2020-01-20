@@ -156,7 +156,7 @@ describe('Ckan-Harvester operations', () => {
 
   });
 
-  it('should not import whitelisted IDs if excluded by no data downloads', () => {
+  it('should import whitelisted IDs if excluded by no data downloads', () => {
     let toWhitelist = '7e526b8c-16bd-4f2c-a02b-8d4d0a29d310';
 
     harvester.openFormById(constants.CKAN_DB_ID);
@@ -171,7 +171,7 @@ describe('Ckan-Harvester operations', () => {
     harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
     let importedDocNumber = harvester.getDocNumber(constants.CKAN_DB_ID);
-    importedDocNumber.should('equal', '38');
+    importedDocNumber.should('equal', '39');
 
     harvester.openFormById(constants.CKAN_DB_ID);
     form.deleteListedIds(form.whitelistedId);

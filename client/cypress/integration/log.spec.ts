@@ -19,7 +19,7 @@ describe('Log tab operations', () => {
 
     logPage.visit();
     logPage.infoIsContained('[INFO] default - Deutsche Bahn Datenportal (CKAN)');
-    logPage.infoIsContained('[INFO] default - Number of records: 42');
+    logPage.infoIsContained('[INFO] default - Number of records:');
   });
 
   xit('should show information in the logs when all the harvester are imported', () => {

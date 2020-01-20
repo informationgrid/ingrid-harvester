@@ -180,7 +180,7 @@ class HarvesterPage {
     cy.get('#harvester-' + id + ' ' + this.numErrors, {timeout: 10000})
       .invoke('text')
       .then((numErr) => {
-          expect(numErr).to.equal('0');
+          expect(numErr).to.equal(' 0 ');
         }
       )
   }
