@@ -21,7 +21,10 @@
   "format": {
     "ATOM": [
       "http://publications.europa.eu/resource/authority/file-type/atom",
-      "atom"
+      "atom",
+      "predefined ATOM",
+      "Atom Feed",
+      "AtomFeed"
     ],
     "CSV": [
       "http://publications.europa.eu/resource/authority/file-type/csv",
@@ -31,13 +34,20 @@
       "www:download-1.0-http--download",
       "download"
     ],
+    "DBF": [
+      "http://publications.europa.eu/resource/authority/file-type/dbf"
+    ],
+    "DOC": [
+      "http://publications.europa.eu/resource/authority/file-type/doc"
+    ],
     "GEOJSON": [
       "http://publications.europa.eu/resource/authority/file-type/geojson",
       "geojson"
     ],
     "GML": [
       "http://publications.europa.eu/resource/authority/file-type/gml",
-      "gml"
+      "gml",
+      "Geographic Markup Language (GML)"
     ],
     "HTML": [
       "http://publications.europa.eu/resource/authority/file-type/html",
@@ -45,7 +55,9 @@
     ],
     "JSON": [
       "http://publications.europa.eu/resource/authority/file-type/json",
-      "json"
+      "json",
+      "JSON (REST Webservice)",
+      "JSON/GeoJSON (REST Webservice)"
     ],
     "KML": [
       "http://publications.europa.eu/resource/authority/file-type/kml",
@@ -63,12 +75,17 @@
       "http://publications.europa.eu/resource/authority/file-type/png",
       "png"
     ],
+    "RSS": [
+      "http://publications.europa.eu/resource/authority/file-type/rss"
+    ],
     "Shape": [
       "http://publications.europa.eu/resource/authority/file-type/shp",
       "shapefile",
       "shape",
       "esri shape",
-      "esri shapefile"
+      "esri shapefile",
+      "gezippte shape",
+      "shp"
     ],
     "TIFF": [
       "http://publications.europa.eu/resource/authority/file-type/tiff",
@@ -78,6 +95,10 @@
       "http://publications.europa.eu/resource/authority/file-type/txt",
       "txt"
     ],
+    "WCS": [
+      "ogc:wcs",
+      "wcs"
+    ],
     "WFS": [
       "ogc:wfs",
       "ogc:wfs-2.0.0-http-get-feature"
@@ -85,7 +106,9 @@
     "WMS": [
       "ogc:wms",
       "ogc:wms-1.3.0-http-get-map",
-      "ogc:wms-1.3.0-http-get-capabilities"
+      "ogc:wms-1.3.0-http-get-capabilities",
+      "wms",
+      "view"
     ],
     "WWW": [
       "http",
