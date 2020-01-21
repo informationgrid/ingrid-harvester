@@ -7,6 +7,7 @@ export const DefaultImporterSettings: ImporterSettings = {
     type: '',
     maxRecords: 100,
     startPosition: 0,
+    customCode: '',
     defaultMcloudSubgroup: [],
     defaultDCATCategory: [],
     dateSourceFormats: [],
