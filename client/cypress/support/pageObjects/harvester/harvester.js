@@ -199,6 +199,7 @@ class HarvesterPage {
 
   waitForImportToFinish(id) {
     // const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
+    cy.get('#harvester-' + id + ' ' + this.lastExecution, {timeout: 30000}).scrollIntoView();
     this.checkFieldValueIs(id, this.lastExecution, Cypress.moment().format('DD.MM.YY, HH:mm'));
   }
 
