@@ -3,7 +3,7 @@ import {IndexService} from '../services/IndexService';
 
 @Controller("/api/search")
 @Authenticated()
-export class ApiCtrl {
+export class SearchCtrl {
 
     constructor(private indexService: IndexService) {
     }

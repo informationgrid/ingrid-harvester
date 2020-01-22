@@ -36,8 +36,7 @@ export class ConfigService {
     };
 
     private static initDistributionMapping(): MappingDistribution[] {
-        let content: any = fs.readFileSync(this.MAPPINGS_FILE);
-        let mapping = JSON.parse(content.toString());
+        let mapping = this.getMappingFileContent();
         return Object.keys(mapping.format)
             .reduce((prev, curr) => {
                 prev.push({
@@ -195,12 +194,16 @@ export class ConfigService {
     }
 
     private static saveMappingDistribution() {
-        let content: any = fs.readFileSync(this.MAPPINGS_FILE);
-        let mapping = JSON.parse(content.toString());
+        let mapping = this.getMappingFileContent();
 
         mapping.format = this.convertMappingForFile();
 
         fs.writeFileSync(this.MAPPINGS_FILE, JSON.stringify(mapping, null, 2));
+    }
+
+    static getMappingFileContent(): any {
+        const content = fs.readFileSync(this.MAPPINGS_FILE);
+        return JSON.parse(content.toString());
     }
 
     private static convertMappingForFile() {

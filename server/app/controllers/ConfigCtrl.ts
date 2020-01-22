@@ -5,7 +5,7 @@ import {MappingDistribution, MappingItem} from '@shared/mapping.model';
 
 @Controller("/api/config")
 @Authenticated()
-export class ApiCtrl {
+export class ConfigCtrl {
 
     constructor() {
     }
@@ -31,6 +31,13 @@ export class ApiCtrl {
 
     }
 
+    @Get('/mapping/filecontent')
+    getMappingFile(): any {
+
+        return ConfigService.getMappingFileContent();
+
+    }
+
     @Post('/mapping/distribution')
     addMappingDistribution(@BodyParams() item: MappingItem): void {
 
@@ -39,7 +46,9 @@ export class ApiCtrl {
     }
 
     @Delete('/mapping/distribution')
-    deleteMappingDistribution(@QueryParams('source') source: string, @QueryParams('target') target: string): void {
+    deleteMappingDistribution(
+        @QueryParams('source') source: string,
+        @QueryParams('target') target: string): void {
 
         ConfigService.removeMappingDistribution({source, target});
 

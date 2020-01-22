@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {GeneralSettings} from "@shared/general-config.settings";
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {GeneralSettings} from '@shared/general-config.settings';
 import {MappingItem} from '@shared/mapping.model';
 
 export interface MappingDistribution {
@@ -25,16 +25,20 @@ export class ConfigService {
     return this.http.get<MappingDistribution[]>('rest/api/config/mapping/distribution');
   }
 
+  getMappingFileContent(): Observable<any> {
+    return this.http.get<any>('rest/api/config/mapping/filecontent');
+  }
+
   addMapping(mapping: MappingItem) {
     return this.http.post<any>('rest/api/config/mapping/distribution', mapping);
   }
 
   removeMapping(mapping: MappingItem) {
-    let httpParams = new HttpParams()
+    const httpParams = new HttpParams()
       .set('source', mapping.source)
       .set('target', mapping.target);
 
-    let options = {params: httpParams};
+    const options = {params: httpParams};
     return this.http.delete('rest/api/config/mapping/distribution', options);
   }
 
@@ -46,16 +50,16 @@ export class ConfigService {
    * Download a file.
    * @param data - Array Buffer data
    */
-  static downLoadFile(data: any) {
-    let blob = new Blob([data], {type: 'application/octet-stream'});
-    let url = window.URL.createObjectURL(blob);
+  static downLoadFile(fileName: string, data: any) {
+    const blob = new Blob([data], {type: 'application/octet-stream'});
+    const url = window.URL.createObjectURL(blob);
 
     // create a temporary link to download data with a given file name
-    let a = document.createElement("a");
-    document.body.appendChild(a);
-    a.style.display = "none";
-    a.href = url;
-    a.download = 'config.json';
+    const linkElement = document.createElement('a');
+    document.body.appendChild(linkElement);
+    linkElement.style.display = 'none';
+    linkElement.href = url;
+    linkElement.download = fileName;
 
     // do not actually download file during test
     // @ts-ignore
@@ -63,8 +67,8 @@ export class ConfigService {
       return;
     }
 
-    a.click();
+    linkElement.click();
     window.URL.revokeObjectURL(url);
-    a.remove();
+    linkElement.remove();
   }
 }

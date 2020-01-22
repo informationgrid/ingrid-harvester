@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {ConfigService} from "../config.service";
-import {HarvesterService} from "../../harvester/harvester.service";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {of} from "rxjs";
-import {GeneralSettings} from "@shared/general-config.settings";
+import {ConfigService} from '../config.service';
+import {HarvesterService} from '../../harvester/harvester.service';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {forkJoin, of} from 'rxjs';
+import {GeneralSettings} from '@shared/general-config.settings';
 
 @Component({
   selector: 'app-config-general',
@@ -26,19 +26,25 @@ export class ConfigGeneralComponent implements OnInit {
   }
 
   exportHarvesterConfig() {
-    this.harvesterService.getHarvester().subscribe(data => {
-      ConfigService.downLoadFile(JSON.stringify(data, null, 2));
+    forkJoin([
+      this.harvesterService.getHarvester(),
+      this.configService.getMappingFileContent()
+    ]).subscribe(result => {
+      ConfigService.downLoadFile('config.json', JSON.stringify(result[0], null, 2));
+      ConfigService.downLoadFile('mappings.json', JSON.stringify(result[1], null, 2));
     });
   }
 
   private static noWhitespaceValidator(control: FormControl) {
-    const isWhitespace = (control.value || "").trim().length === 0;
+    const isWhitespace = (control.value || '').trim().length === 0;
     const isValid = !isWhitespace;
-    return of(isValid ? null : {"whitespace": true});
+    return of(isValid ? null : {'whitespace': true});
   }
 
   private static elasticUrlValidator(control: FormControl) {
-    if (!control.value) return of(null);
+    if (!control.value) {
+      return of(null);
+    }
 
     let isValid = false;
 
@@ -50,7 +56,7 @@ export class ConfigGeneralComponent implements OnInit {
         isValid = !isNaN(port) && port > 0 && port < 10000;
       }
     }
-    return of(isValid ? null : {"elasticUrl": true});
+    return of(isValid ? null : {'elasticUrl': true});
   }
 
   save() {
