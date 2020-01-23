@@ -1,5 +1,6 @@
 export type GeneralSettings = {
 	elasticSearchUrl: string,
 	alias: string,
-	proxy: string
+	proxy: string,
+	sessionSecret: string
 };

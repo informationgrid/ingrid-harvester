@@ -12,7 +12,13 @@ export class ImporterFactory {
 
     public static get(config: ExcelSettings | CkanSettings | CswSettings): Importer {
         switch (config.type) {
-            case 'CKAN': return new CkanImporter(<CkanSettings>config);
+            case 'CKAN':
+                // remove trailing slash from CKAN URL
+                let ckanConfig = config as CkanSettings;
+                if (ckanConfig.ckanBaseUrl.endsWith('/')) {
+                    ckanConfig.ckanBaseUrl = ckanConfig.ckanBaseUrl.slice(0, -1);
+                }
+                return new CkanImporter(ckanConfig);
             case 'EXCEL': return new ExcelImporter(config);
             case 'CSW': return new CswImporter(config);
             case 'BFG-CSW': return new BfgImporter(config);

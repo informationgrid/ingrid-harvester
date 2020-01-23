@@ -5,19 +5,20 @@
   <span class="toolbar"></span>
 
   <span *ngIf="isLoggedIn">
-    <button id="btnLogout" mat-raised-button color="primary" title="Logout" (click)="logout()">
-      <mat-icon class="example-icon" aria-hidden="false" aria-label="logout">lock</mat-icon>
+    <button mat-raised-button color="primary" title="Logout" (click)="logout()" data-test="logout">
+      <mat-icon aria-hidden="false" aria-label="logout">lock</mat-icon>
       {{authService.currentUserValue.firstName}} {{authService.currentUserValue.lastName}}
     </button>
   </span>
 </mat-toolbar>
 
 <mat-sidenav-container class="navigation">
-  <mat-sidenav mode="side" opened *ngIf="isLoggedIn">
+  <mat-sidenav mode="side" disableClose opened *ngIf="isLoggedIn">
     <mat-action-list>
-      <button mat-list-item routerLink="/config"> Konfiguration </button>
-      <button mat-list-item routerLink="/harvester"> Harvester </button>
-      <button mat-list-item routerLink="/log"> Log </button>
+      <button mat-list-item routerLink="/config" routerLinkActive="active-link" data-test="menu-config"> Konfiguration </button>
+      <button mat-list-item routerLink="/harvester" routerLinkActive="active-link" data-test="menu-harvester"> Harvester </button>
+      <button mat-list-item routerLink="/indices" routerLinkActive="active-link" data-test="menu-indices"> Indizes </button>
+      <button mat-list-item routerLink="/log" routerLinkActive="active-link" data-test="menu-log"> Log </button>
     </mat-action-list>
   </mat-sidenav>
 

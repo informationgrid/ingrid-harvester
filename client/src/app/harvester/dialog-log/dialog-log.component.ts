@@ -25,4 +25,13 @@ export class DialogLogComponent implements OnInit {
   ngOnInit() {
   }
 
+  getInitialIndex() {
+    if (this.appErrors.length > 0) {
+      return 0;
+    } else if (this.elasticSearchErrors.length > 0) {
+      return 1;
+    } else {
+      return 2;
+    }
+  }
 }

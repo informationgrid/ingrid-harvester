@@ -11,6 +11,7 @@ import {DefaultImporterSettings, Importer} from '../../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {CswSettings} from './csw.settings';
+import {FilterUtils} from "../../utils/filter.utils";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -50,6 +51,7 @@ export class CswImporter implements Importer {
     };
 
     private readonly summary: CswSummary;
+    private filterUtils: FilterUtils;
 
     run = new Observable<ImportLogMessage>(observer => {
         this.observer = observer;
@@ -70,6 +72,7 @@ export class CswImporter implements Importer {
         }
 
         this.settings = settings;
+        this.filterUtils = new FilterUtils(settings);
 
         this.summary = new CswSummary(settings);
 
@@ -84,20 +87,23 @@ export class CswImporter implements Importer {
             observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
             observer.complete();
         } else {
-            this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings)
-                .then(() => this.harvest())
-                .then(() => this.elastic.sendBulkData(false))
-                .then(() => this.elastic.finishIndex())
-                .then(() => {
-                    observer.next(ImportResult.complete(this.summary));
-                    observer.complete();
-                })
-                .catch(err => {
-                    this.summary.appErrors.push(err);
-                    log.error('Error during CSW import', err);
-                    observer.next(ImportResult.complete(this.summary, 'Error happened'));
-                    observer.complete();
-                });
+            try {
+                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                await this.harvest();
+                await this.elastic.sendBulkData(false);
+                await this.elastic.finishIndex();
+                observer.next(ImportResult.complete(this.summary));
+                observer.complete();
+
+            } catch (err) {
+                this.summary.appErrors.push(err.message ? err.message : err);
+                log.error('Error during CSW import', err);
+                observer.next(ImportResult.complete(this.summary, 'Error happened'));
+                observer.complete();
+
+                // clean up index
+                this.elastic.deleteIndex(this.elastic.indexName);
+            }
         }
     }
 
@@ -117,7 +123,9 @@ export class CswImporter implements Importer {
                 log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
                 await this.extractRecords(response, harvestTime)
             } else {
-                log.error(`Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`);
+                const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`;
+                log.error(message);
+                this.summary.appErrors.push(message);
             }
             this.requestDelegate.incrementStartRecordIndex();
             /*
@@ -156,6 +164,12 @@ export class CswImporter implements Importer {
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
 
+            const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');
+            if (!this.filterUtils.isIdAllowed(uuid)) {
+                this.summary.skippedDocs.push(uuid);
+                continue;
+            }
+
             if (log.isDebugEnabled()) {
                 log.debug(`Import document ${i + 1} from ${records.length}`);
             }
@@ -163,7 +177,6 @@ export class CswImporter implements Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');
             let mapper = this.getMapper(this.settings, records[i], harvestTime, issued[i], this.summary);
 
             let doc: any = await IndexDocument.create(mapper).catch(e => {
@@ -249,9 +262,11 @@ export class CswImporter implements Importer {
                 startPosition: settings.startPosition,
                 maxRecords: settings.maxRecords,
                 CONSTRAINT_LANGUAGE_VERSION: '1.1.0',
-                elementSetName: 'full',
-                constraint: settings.recordFilter
+                elementSetName: 'full'
             };
+            if (settings.recordFilter) {
+                requestConfig.qs.constraint = settings.recordFilter;
+            }
         }
 
         return requestConfig;
@@ -268,4 +283,5 @@ export class CswImporter implements Importer {
     getSummary(): Summary {
         return this.summary;
     }
+
 }

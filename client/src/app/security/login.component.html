@@ -4,22 +4,22 @@
     <form [formGroup]="form" (ngSubmit)="submit()">
       <p>
         <mat-form-field>
-          <input type="text" matInput autocomplete="username" placeholder="Username" formControlName="username">
+          <input type="text" matInput autocomplete="username" placeholder="Benutzername" formControlName="username">
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field>
-          <input type="password" matInput autocomplete="current-password" placeholder="Password" formControlName="password">
+          <input type="password" matInput autocomplete="current-password" placeholder="Passwort" formControlName="password">
         </mat-form-field>
       </p>
 
-      <p *ngIf="error" class="error">
-        {{ error }}
+      <p *ngIf="showErrorMessage" class="error">
+        Benutzername oder Passwort falsch
       </p>
 
       <div class="button">
-        <button id="btnSubmit" type="submit" mat-button>Login</button>
+        <button id="btnSubmit" type="submit" mat-button data-test="login">Login</button>
       </div>
 
     </form>

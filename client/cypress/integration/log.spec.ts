@@ -1,0 +1,32 @@
+describe('Log tab operations', () => {
+  let Constants = require("../support/constants");
+  const constants = new Constants();
+
+  const Authentication = require("../support/pageObjects/auth");
+  const auth = new Authentication();
+  const HarvesterPage = require("../support/pageObjects/harvester/harvester");
+  const harvester = new HarvesterPage();
+  const LogPage = require('../support/pageObjects/log');
+  const logPage = new LogPage();
+
+  beforeEach(() => {
+    auth.apiLogIn();
+  });
+
+  it('should show the right information in the logs after a single harvester is imported', () => {
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+
+    logPage.visit();
+    logPage.infoIsContained('[INFO] default - Deutsche Bahn Datenportal (CKAN)');
+    logPage.infoIsContained('[INFO] default - Number of records:');
+  });
+
+  xit('should show information in the logs when all the harvester are imported', () => {
+    harvester.importAllHarvesters();
+
+    logPage.visit();
+    logPage.infoIsContained('[INFO] default - >> Running importer:');
+  });
+
+});

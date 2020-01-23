@@ -5,6 +5,8 @@ import {RequestDelegate} from '../app/utils/http-request.utils';
 
 describe('validateUrl()', function () {
 
+    this.timeout(10000);
+
     it('should return same string for links containing "://"', function () {
         let input = 'abc://defghi';
         let config = getRequestConfigFor(input);

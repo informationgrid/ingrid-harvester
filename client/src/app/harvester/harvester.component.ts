@@ -1,97 +1,103 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HarvesterService} from './harvester.service';
-import {of, zip} from 'rxjs';
-import {Harvester} from './model/harvester';
+import {of, Subscription, zip} from 'rxjs';
+import {Harvester} from '@shared/harvester';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.component';
 import {DialogLogComponent} from './dialog-log/dialog-log.component';
 import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
-import {ImportNotifyComponent} from './notifications/import-notify.component';
-import {Socket} from 'ngx-socket-io';
 import {ImportLogMessage} from '../../../../server/app/model/import.result';
 import {flatMap, groupBy, mergeMap, tap, toArray} from 'rxjs/operators';
 import {MatSlideToggleChange} from '@angular/material';
-import {ConfigService} from '../config.service';
+import {SocketService} from './socket.service';
+import {ConfirmDialogComponent} from '../shared/confirm-dialog/confirm-dialog.component';
+import {untilDestroyed} from 'ngx-take-until-destroy';
 
 @Component({
   selector: 'app-harvester',
   templateUrl: './harvester.component.html',
   styleUrls: ['./harvester.component.scss']
 })
-export class HarvesterComponent implements OnInit {
+export class HarvesterComponent implements OnInit, OnDestroy {
 
   harvesters: { [x: string]: Harvester[] } = {};
-
-  importInfo = this.socket.fromEvent<ImportLogMessage>('/log');
 
   importDetail: { [x: number]: ImportLogMessage } = {};
 
   harvesterLoaded = false;
 
   numberOfHarvesters: number;
+  private subscription: Subscription;
 
-  constructor(private socket: Socket,
-              public dialog: MatDialog,
+  constructor(public dialog: MatDialog,
               private snackBar: MatSnackBar,
               private harvesterService: HarvesterService,
-              private configService: ConfigService) {
-
-    if (configService.config) {
-      const contextPath = configService.config.contextPath;
-      console.log('modifiying socket URL to: ' + contextPath);
-      if (configService.config.url) {
-        this.socket.ioSocket.io.uri = configService.config.url + '/import';
-      }
-      if (contextPath) {
-        this.socket.ioSocket.io.opts.path = (contextPath === '/' ? '' : contextPath) + '/socket.io';
-      }
-    }
-    this.socket.ioSocket.open();
+              private socketService: SocketService) {
   }
 
   ngOnInit() {
 
-    this.importInfo.subscribe(data => {
-      // console.log('Received from socket: ', data);
-      this.importDetail[data.id] = data;
-    });
+    this.subscription = this.socketService.log$
+      .pipe(untilDestroyed(this))
+      .subscribe(data => this.importDetail[data.id] = data);
 
     this.fetchHarvester();
+    this.fetchLastImportInformation();
 
+    this.socketService.connectionLost$
+      .pipe(untilDestroyed(this))
+      .subscribe(isLost => {
+        if (isLost) {
+          this.snackBar.open('Verbindung zum Backend verloren');
+        } else {
+          this.snackBar.open('Verbindung zum Backend hergestellt', null, {duration: 1000});
+          this.fetchLastImportInformation();
+          if (!this.harvesterLoaded) {
+            this.fetchHarvester();
+          }
+        }
+      });
+
+  }
+
+  private fetchLastImportInformation() {
     this.harvesterService.getLastLogs().subscribe(logs => {
       logs.forEach(log => this.importDetail[log.id] = log);
     });
+  }
 
+  ngOnDestroy(): void {
   }
 
   schedule(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogSchedulerComponent, {
       width: '500px',
-      data: harvester.cronPattern
+      data: {...harvester.cron}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('The dialog was closed', result);
-        const cronExpression = result === 'DISABLE' ? null : result;
 
         // update immediately component cronpattern
-        harvester.cronPattern = cronExpression;
+        harvester.cron = result;
 
-        // update immediately next execution time which is only calculated to the server
-        this.importDetail[harvester.id].nextExecution = undefined;
-
-        // TODO: get updated schedule info and set next execution time
-        this.harvesterService.schedule(harvester.id, cronExpression).subscribe({
-          error: (error: Error) => this.showError(error)
-        });
+        // update schedule and set next execution time
+        this.harvesterService.schedule(harvester.id, harvester.cron)
+          .subscribe(nextExecution => {
+            // update immediately next execution time which is only calculated to the server
+            const detailElement = this.importDetail[harvester.id];
+            if (detailElement) {
+              detailElement.nextExecution = nextExecution;
+            }
+          }, (error: Error) => this.showError(error));
       }
     });
   }
 
   showLog(id: number) {
-    const dialogRef = this.dialog.open(DialogLogComponent, {
+    this.dialog.open(DialogLogComponent, {
       width: '900px',
       height: '600px',
       data: {
@@ -104,7 +110,7 @@ export class HarvesterComponent implements OnInit {
 
     this.harvesterService.runImport(id).subscribe();
 
-    this.snackBar.openFromComponent(ImportNotifyComponent, {
+    this.snackBar.open('Import gestartet', null, {
       duration: 3 * 1000
     });
 
@@ -114,34 +120,47 @@ export class HarvesterComponent implements OnInit {
 
   edit(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogEditComponent, {
-      data: harvester,
+      data: JSON.parse(JSON.stringify(harvester)),
       width: '950px',
       disableClose: true
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
+    dialogRef.afterClosed().subscribe((result: Harvester) => {
       if (result) {
-        this.harvesterService.updateHarvester(result).subscribe();
+        this.harvesterService.updateHarvester(result).subscribe(() => {
+          // update view by modifying original object
+          Object.keys(harvester).forEach(key => harvester[key] = result[key]);
+        }, err => alert(err.message));
       }
     });
   }
 
   addHarvester() {
     const dialogRef = this.dialog.open(DialogEditComponent, {
+      data: {
+        id: -1,
+        disabled: true
+      },
       width: '900px',
       disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-      this.harvesterService.updateHarvester(result).subscribe(() => this.fetchHarvester());
+      if (result) {
+        console.log('The dialog was closed', result);
+        this.harvesterService.updateHarvester(result).subscribe(
+          () => this.fetchHarvester(),
+          err => alert(err.message));
+      }
     });
   }
 
   handleActivation($event: MatSlideToggleChange, harvester: Harvester) {
     harvester.disable = !$event.checked;
-    this.harvesterService.updateHarvester(harvester).subscribe();
+    this.harvesterService.updateHarvester(harvester).subscribe(
+      () => {
+      },
+      err => alert(err.message));
   }
 
   private showError(error: Error) {
@@ -172,7 +191,7 @@ export class HarvesterComponent implements OnInit {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.numErrors > 0 || detail.summary.elasticErrors.length > 0;
+      return detail.summary.numErrors > 0 || detail.summary.elasticErrors.length > 0 || detail.summary.appErrors.length > 0;
     } else {
       return false;
     }
@@ -190,9 +209,20 @@ export class HarvesterComponent implements OnInit {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.numErrors > 0 || detail.summary.elasticErrors.length > 0 || detail.summary.warnings.length > 0;
+      return detail.summary.numErrors > 0
+        || detail.summary.elasticErrors.length > 0
+        || detail.summary.warnings.length > 0
+        || detail.summary.appErrors.length > 0;
     } else {
       return false;
     }
+  }
+
+  deleteHarvester(harvester: Harvester) {
+    this.dialog.open(ConfirmDialogComponent, {data: 'Wollen Sie diesen Harvester wirklich löschen?'}).afterClosed().subscribe(result => {
+      if (result) {
+        this.harvesterService.delete(harvester.id).subscribe(() => this.fetchHarvester());
+      }
+    });
   }
 }

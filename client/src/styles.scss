@@ -3,10 +3,14 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.no-wrap {
+  white-space: nowrap;
+}
+
 .form-wrapper {
   //padding-top: 40px;
-  margin: 0 10%;
-  max-width: 700px;
+  margin: 0 20px;
+  //max-width: 700px;
 
   form, .flex-column {
     display: flex;
@@ -31,13 +35,17 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   width: 50%;
 }
 
-.mat-card-header-text {
-  padding-top: 22px;
-}
-
 snack-bar-container.error {
   background-color: #b24747 !important;
   color: white;
+}
+
+.list-hover .mat-list-item:hover, .clickable:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 

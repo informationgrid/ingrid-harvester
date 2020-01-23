@@ -16,8 +16,20 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './general';
-import './harvester';
+import './index';
+import './commands';
+
+//add screenshot for failed tests in the mochawesome-report
+const addContext = require('mochawesome/addContext');
+
+Cypress.on('test:after:run', (test, runnable) => {
+  if (test.state === 'failed') {
+    const screenshotFileName = `${runnable.parent.title} -- ${test.title} (failed).png`;
+
+    addContext({test}, `assets/${Cypress.spec.name}/${screenshotFileName}`);
+    addContext({test}, `assets/${Cypress.spec.name}.mp4`);
+  }
+});
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

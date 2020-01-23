@@ -1,12 +1,19 @@
 import {OptionsWithUri} from 'request-promise';
-import {License} from '../../../shared/license.model';
+import {License} from '@shared/license.model';
 import * as moment from 'moment';
+import {IndexDocument} from './index.document';
 
 moment.locale('de');
 
 export interface Distribution {
-    format: string;
+    format: string[];
     accessURL: string;
+    id?: string;
+    title?: string;
+    description?: string;
+    issued?: Date;
+    modified?: Date;
+    byteSize?: number;
 }
 export interface Agent {
     homepage?: string;
@@ -63,7 +70,7 @@ export abstract class GenericMapper {
 
     abstract getAccessRights(): string[];
 
-    abstract async getDistributions(): Promise<any[]>;
+    abstract async getDistributions(): Promise<Distribution[]>;
 
     abstract getGeneratedId(): string;
 
@@ -142,7 +149,7 @@ export abstract class GenericMapper {
         return all;
     }
 
-    isValid() {
+    isValid(doc?: any) {
         return this.valid;
     }
 
@@ -223,6 +230,9 @@ export abstract class GenericMapper {
         return code ? GenericMapper.DCAT_CATEGORY_URL + code : null;
     }
 
+    executeCustomCode(doc: any) {
+
+    }
 }
 
 

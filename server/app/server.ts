@@ -3,7 +3,7 @@ import {ConfigService} from './services/config/ConfigService';
 import {configure} from 'log4js';
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const serverConfig = require('./server-config.json');
+const serverConfig = require('../server-config.json');
 const methodOverride = require('method-override');
 const compress = require("compression");
 const rootDir = __dirname;
@@ -54,7 +54,7 @@ export class Server extends ServerLoader {
                 extended: true
             }))
             .use(session({
-                secret: 'mysecretkey',
+                secret: ConfigService.getGeneralSettings().sessionSecret,
                 resave: true,
                 saveUninitialized: true,
                 maxAge: 36000,

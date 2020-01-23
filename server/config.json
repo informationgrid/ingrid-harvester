@@ -5,11 +5,15 @@
     "type": "EXCEL",
     "maxRecords": 100,
     "startPosition": 0,
-    "filePath": "./data.xlsx",
-    "description": "mCLOUD Excel Datei",
+    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [
       "TRAN"
     ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "filePath": "./data.xlsx",
+    "description": "mCLOUD Excel Datei",
     "disable": false,
     "id": 1
   },
@@ -19,25 +23,30 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "ckanBaseUrl": "https://offenedaten-koeln.de",
-    "filterTags": [
-      "Transport und Verkehr"
-    ],
-    "filterGroups": [],
-    "dateSourceFormats": [
-      "YYYY-MM-DDThh:mm:ss"
-    ],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": false,
-    "description": "Offene Daten Köln",
     "defaultMcloudSubgroup": [
       "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
     ],
+    "dateSourceFormats": [
+      "YYYY-MM-DDThh:mm:ss"
+    ],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://offenedaten-koeln.de",
+    "filterTags": [
+      "Transport und Verkehr"
+    ],
+    "filterGroups": [],
+    "providerPrefix": "",
+    "providerField": "maintainer",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "description": "Offene Daten Köln",
     "defaultAttribution": "Offene Daten Köln",
-    "disable": false,
+    "disable": true,
     "id": 2
   },
   {
@@ -46,21 +55,26 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "ckanBaseUrl": "https://opendata.bonn.de",
-    "filterTags": [
-      "Transport und Verkehr"
-    ],
-    "filterGroups": [],
-    "dateSourceFormats": [],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": true,
-    "description": "!Offene Daten Bonn: parameters wrong",
     "defaultMcloudSubgroup": [
       "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
     ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://opendata.bonn.de",
+    "filterTags": [
+      "Transport und Verkehr"
+    ],
+    "filterGroups": [],
+    "providerPrefix": "",
+    "providerField": "maintainer",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": true,
+    "defaultLicense": null,
+    "description": "!Offene Daten Bonn: parameters wrong",
     "defaultAttribution": "Offene Daten Bonn",
     "disable": true,
     "id": 3
@@ -71,26 +85,31 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "ckanBaseUrl": "https://opendata.duesseldorf.de",
-    "filterTags": [
-      "Transport und Verkehr"
-    ],
-    "filterGroups": [],
-    "dateSourceFormats": [
-      "YYYY-MM-DDThh:mm:ss",
-      "DD MMMM, YYYY - hh:mm"
-    ],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": false,
-    "description": "Offene Daten Düsseldorf",
     "defaultMcloudSubgroup": [
       "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
     ],
+    "dateSourceFormats": [
+      "YYYY-MM-DDThh:mm:ss",
+      "DD MMMM, YYYY - hh:mm"
+    ],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://opendata.duesseldorf.de",
+    "filterTags": [
+      "Transport und Verkehr"
+    ],
+    "filterGroups": [],
+    "providerPrefix": "",
+    "providerField": "maintainer",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "description": "Offene Daten Düsseldorf",
     "defaultAttribution": "Offene Daten Düsseldorf",
-    "disable": false,
+    "disable": true,
     "id": 4
   },
   {
@@ -99,30 +118,30 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "ckanBaseUrl": "https://offenedaten-wuppertal.de",
-    "filterTags": [
-      "Transport und Verkehr"
-    ],
-    "filterGroups": [],
-    "dateSourceFormats": [
-      "YYYY-MM-DDThh:mm:ss"
-    ],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": false,
-    "description": "Offene Daten Wuppertal",
     "defaultMcloudSubgroup": [
       "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
     ],
-    "defaultLicense": {
-      "id": "cc-by-4.0",
-      "title": "Creative Commons Namensnennung – 4.0 International (CC BY 4.0)",
-      "url": "http://creativecommons.org/licenses/by/4.0/"
-    },
+    "dateSourceFormats": [
+      "YYYY-MM-DDThh:mm:ss"
+    ],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://offenedaten-wuppertal.de",
+    "filterTags": [
+      "Transport und Verkehr"
+    ],
+    "filterGroups": [],
+    "providerPrefix": "",
+    "providerField": "maintainer",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "description": "Offene Daten Wuppertal",
     "defaultAttribution": "Offene Daten Wuppertal",
-    "disable": false,
+    "disable": true,
     "id": 5
   },
   {
@@ -131,23 +150,36 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "ckanBaseUrl": "https://data.deutschebahn.com",
-    "filterTags": [],
-    "filterGroups": [],
-    "dateSourceFormats": [],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": true,
-    "description": "Deutsche Bahn Datenportal",
     "defaultMcloudSubgroup": [
       "railway"
     ],
     "defaultDCATCategory": [
       "TRAN"
     ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [
+      "7e526b8c-16bd-4f2c-a02b-8d4d0a29d310"
+    ],
+    "whitelistedIds": [
+      "7e526b8c-16bd-4f2c-a02b-8d4d0a29d310"
+    ],
+    "ckanBaseUrl": "https://data.deutschebahn.com",
+    "filterTags": [],
+    "filterGroups": [],
+    "providerPrefix": "",
+    "providerField": "organization",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": true,
+    "defaultLicense": null,
+    "description": "Deutsche Bahn Datenportal",
     "defaultAttribution": "Deutsche Bahn Datenportal",
     "disable": false,
     "id": 6,
-    "cronPattern": null
+    "cronPattern": null,
+    "defaultAttributionLink": null,
+    "rules": {
+      "containsDocumentsWithData": false
+    }
   },
   {
     "index": "ckan_opendata_hro",
@@ -155,24 +187,30 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "ckanBaseUrl": "https://www.opendata-hro.de",
-    "filterTags": [],
-    "filterGroups": [
-      "transport_verkehr"
-    ],
-    "dateSourceFormats": [],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": true,
-    "description": "OpenData Rostock",
     "defaultMcloudSubgroup": [
       "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
     ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://www.opendata-hro.de",
+    "filterTags": [],
+    "filterGroups": [
+      "transport_verkehr"
+    ],
+    "providerPrefix": "",
+    "providerField": "organization",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": true,
+    "defaultLicense": null,
+    "description": "OpenData Rostock",
     "defaultAttribution": "OpenData Rostock",
     "disable": false,
-    "id": 7
+    "id": 7,
+    "defaultAttributionLink": null
   },
   {
     "index": "ckan_offenesdatenportal",
@@ -180,24 +218,30 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "ckanBaseUrl": "https://www.offenesdatenportal.de",
-    "filterTags": [],
-    "filterGroups": [
-      "transport-verkehr"
-    ],
-    "dateSourceFormats": [],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": true,
-    "description": "Offenesdatenportal",
     "defaultMcloudSubgroup": [
       "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
     ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://www.offenesdatenportal.de",
+    "filterTags": [],
+    "filterGroups": [
+      "transport-verkehr"
+    ],
+    "providerPrefix": "",
+    "providerField": "organization",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": true,
+    "defaultLicense": null,
+    "description": "Offenesdatenportal",
     "defaultAttribution": "Offenesdatenportal",
     "disable": false,
-    "id": 8
+    "id": 8,
+    "defaultAttributionLink": null
   },
   {
     "index": "ckan_portal_hamburg",
@@ -205,21 +249,26 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "ckanBaseUrl": "http://suche.transparenz.hamburg.de",
-    "filterTags": [],
-    "filterGroups": [
-      "transport-und-verkehr"
-    ],
-    "dateSourceFormats": [],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": true,
-    "description": "Transparenzportal Hamburg",
     "defaultMcloudSubgroup": [
       "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
     ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "http://suche.transparenz.hamburg.de",
+    "filterTags": [],
+    "filterGroups": [
+      "transport-und-verkehr"
+    ],
+    "providerPrefix": "",
+    "providerField": "maintainer",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": true,
+    "defaultLicense": null,
+    "description": "Transparenzportal Hamburg",
     "defaultAttribution": "Transparenzportal Hamburg",
     "disable": true,
     "id": 9
@@ -230,29 +279,44 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "ckanBaseUrl": "https://opendata.rnv-online.de",
-    "filterTags": [],
-    "filterGroups": [],
-    "dateSourceFormats": [
-      "MM/DD/YYYY - hh:mm"
-    ],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": false,
-    "description": "Open-Data-Portal des Rhein-Neckar-Verkehrs (RNV)",
     "defaultMcloudSubgroup": [
       "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
     ],
+    "dateSourceFormats": [
+      "MM/DD/YYYY - hh:mm"
+    ],
+    "blacklistedIds": [],
+    "whitelistedIds": [
+      "56e641a7-2219-4281-bb9b-adb1001f2869"
+    ],
+    "ckanBaseUrl": "https://opendata.rnv-online.de",
+    "filterTags": [],
+    "filterGroups": [],
+    "providerPrefix": "",
+    "providerField": "organization",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": false,
     "defaultLicense": {
       "id": "dl-de-by-2.0",
       "title": "Datenlizenz Deutschland Namensnennung 2.0",
       "url": "https://www.govdata.de/dl-de/by-2-0"
     },
+    "description": "Open-Data-Portal des Rhein-Neckar-Verkehrs (RNV)",
     "defaultAttribution": "Open-Data-Portal RNV",
     "disable": false,
-    "id": 10
+    "id": 10,
+    "defaultAttributionLink": null,
+    "cron": {
+      "pattern": "*/2 * * * *",
+      "active": false
+    },
+    "rules": {
+      "containsDocumentsWithData": true,
+      "containsDocumentsWithDataBlacklist": "zip"
+    }
   },
   {
     "index": "ckan_opendata_nrw",
@@ -260,26 +324,38 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "ckanBaseUrl": "https://open.nrw",
-    "filterTags": [
-      "Offene Daten Bonn"
-    ],
-    "filterGroups": [
-      "tran"
-    ],
-    "dateSourceFormats": [],
-    "requestType": "ListWithResources",
-    "markdownAsDescription": false,
-    "description": "NRW Portal",
     "defaultMcloudSubgroup": [
       "roads"
     ],
     "defaultDCATCategory": [
       "REGI"
     ],
+    "dateSourceFormats": [
+      "DD MMMM, YYYY - hh:mm",
+      "YYYY-MM-DDThh:mm:ss"
+    ],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://open.nrw",
+    "filterTags": [],
+    "filterGroups": [
+      "tran"
+    ],
+    "providerPrefix": "Open NRW: ",
+    "providerField": "organization",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "description": "NRW Portal",
     "defaultAttribution": "NRW Portal",
-    "disable": true,
-    "id": 11
+    "disable": false,
+    "id": 11,
+    "defaultAttributionLink": null,
+    "rules": {
+      "containsDocumentsWithData": true,
+      "containsDocumentsWithDataBlacklist": "rss,html,doc,pdf"
+    },
+    "customCode": "const modifiedDate = this.source.extras\n            .filter(extra => extra.key === 'modified')\n            .map(modifiedHash => this.handleDate(modifiedHash.value));\n        \n        if (modifiedDate && modifiedDate.length > 0) {\n            doc.modified = modifiedDate[0];\n}\n\nconst issuedDate = this.source.extras\n            .filter(extra => extra.key === 'issued')\n            .map(issuedHash => this.handleDate(issuedHash.value));\n        \n        if (issuedDate && issuedDate.length > 0) {\n            doc.issued = issuedDate[0];\n            doc.extras.temporal.start = issuedDate[0];\n            doc.extras.temporal.end = issuedDate[0];\n}"
   },
   {
     "index": "csw_wsv",
@@ -287,6 +363,15 @@
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
+    "defaultMcloudSubgroup": [
+      "waters"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
     "getRecordsUrl": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup",
     "eitherKeywords": [
       "opendata"
@@ -294,12 +379,6 @@
     "httpMethod": "POST",
     "description": "WSV: Wasserstraßen- und Schifffahrtsverwaltung des Bundes",
     "recordFilter": "<ogc:Filter> <ogc:PropertyIsEqualTo> <ogc:PropertyName>subject</ogc:PropertyName> <ogc:Literal>opendata</ogc:Literal> </ogc:PropertyIsEqualTo> </ogc:Filter>",
-    "defaultMcloudSubgroup": [
-      "waters"
-    ],
-    "defaultDCATCategory": [
-      "TRAN"
-    ],
     "defaultAttribution": "WSV.Geokatalog CSW",
     "defaultAttributionLink": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2",
     "disable": false,
@@ -311,6 +390,15 @@
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
+    "defaultMcloudSubgroup": [
+      "waters"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
     "getRecordsUrl": "http://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecords$Post$XML",
     "eitherKeywords": [
       "opendata"
@@ -318,12 +406,6 @@
     "httpMethod": "POST",
     "description": "MDI",
     "getRecordByIdUrl": "http://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecordByIdServant$Get",
-    "defaultMcloudSubgroup": [
-      "waters"
-    ],
-    "defaultDCATCategory": [
-      "ENVI"
-    ],
     "defaultAttribution": "MDI-DE",
     "defaultAttributionLink": "https://www.mdi-de.org/",
     "disable": false,
@@ -335,6 +417,15 @@
     "type": "BFG-CSW",
     "maxRecords": 100,
     "startPosition": 1,
+    "defaultMcloudSubgroup": [
+      "waters"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
     "getRecordsUrl": "https://geoportal.bafg.de/soapServices/CSWStartup",
     "eitherKeywords": [
       "opendata"
@@ -342,12 +433,6 @@
     "httpMethod": "GET",
     "description": "BFG",
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>opendata</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
-    "defaultMcloudSubgroup": [
-      "waters"
-    ],
-    "defaultDCATCategory": [
-      "ENVI"
-    ],
     "defaultAttribution": "Bundesanstalt für Gewässerkunde",
     "defaultAttributionLink": "https://geoportal.bafg.de/",
     "disable": false,
@@ -359,6 +444,15 @@
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
+    "defaultMcloudSubgroup": [
+      "climate"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
     "getRecordsUrl": "https://cdc.dwd.de/catalogue/srv/en/csw",
     "eitherKeywords": [
       "opendata",
@@ -367,12 +461,6 @@
     "httpMethod": "GET",
     "description": "DWD",
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
-    "defaultMcloudSubgroup": [
-      "climate"
-    ],
-    "defaultDCATCategory": [
-      "ENVI"
-    ],
     "defaultAttribution": "Climate Data Centre (CDC) Katalog des DWD",
     "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/csw",
     "disable": false,
@@ -384,6 +472,15 @@
     "type": "CODEDE-CSW",
     "maxRecords": 100,
     "startPosition": 1,
+    "defaultMcloudSubgroup": [
+      "aviation"
+    ],
+    "defaultDCATCategory": [
+      "TECH"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
     "getRecordsUrl": "https://catalog.code-de.org/discovery/srv/en/csw",
     "eitherKeywords": [
       "opendata"
@@ -391,12 +488,6 @@
     "httpMethod": "GET",
     "description": "CODEDE",
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>opendata</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
-    "defaultMcloudSubgroup": [
-      "aviation"
-    ],
-    "defaultDCATCategory": [
-      "TECH"
-    ],
     "defaultAttribution": "CODE-DE Catalogue",
     "defaultAttributionLink": "https://code-de.org/de/marketplace",
     "disable": false,
@@ -408,6 +499,15 @@
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
+    "defaultMcloudSubgroup": [
+      "waters"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
     "getRecordsUrl": "https://www.geoseaportal.de/geonetwork/srv/ger/csw",
     "eitherKeywords": [
       "opendata"
@@ -415,12 +515,6 @@
     "httpMethod": "POST",
     "description": "BSH",
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>opendata</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
-    "defaultMcloudSubgroup": [
-      "waters"
-    ],
-    "defaultDCATCategory": [
-      "ENVI"
-    ],
     "defaultAttribution": "GeoSeaPortal (BSH)",
     "defaultAttributionLink": "https://www.geoseaportal.de/",
     "disable": false,
@@ -432,21 +526,206 @@
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
+    "defaultMcloudSubgroup": [
+      "waters"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
     "getRecordsUrl": "https://www.geoseaportal.de/soapServices/CSWStartup",
     "eitherKeywords": [
       "inspireidentifiziert"
     ],
     "httpMethod": "POST",
     "description": "BSH inspireidentifiziert",
-    "defaultDCATCategory": [
-      "ENVI"
-    ],
-    "defaultMcloudSubgroup": [
-      "waters"
-    ],
     "defaultAttribution": "GeoSeaPortal (BSH) INSPIRE",
     "defaultAttributionLink": "https://www.geoseaportal.de/",
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
     "id": 19
+  },
+  {
+    "index": "csw_geoservice_dlr",
+    "includeTimestamp": true,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "defaultMcloudSubgroup": [
+      "aviation",
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "TECH"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "getRecordsUrl": "https://geoservice.dlr.de/catalogue/srv/eng/csw",
+    "eitherKeywords": [
+      "opendata"
+    ],
+    "httpMethod": "GET",
+    "disable": false,
+    "description": "EOC Geoservice DLR",
+    "defaultAttribution": "EOC Geoservice DLR",
+    "defaultAttributionLink": "https://geoservice.dlr.de",
+    "id": 20,
+    "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>mCLOUD</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
+    "cronPattern": "0 2 * * *"
+  },
+  {
+    "index": "Testing CKAN Harvester",
+    "includeTimestamp": true,
+    "type": "CKAN",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "testme",
+    "filterTags": [],
+    "filterGroups": [],
+    "providerPrefix": "",
+    "providerField": "maintainer",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": true,
+    "defaultLicense": null,
+    "disable": true,
+    "description": "Testing CKAN Harvester",
+    "id": 21
+  },
+  {
+    "index": "csw_ils_geonode",
+    "includeTimestamp": true,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "defaultMcloudSubgroup": [
+      "infrastructure"
+    ],
+    "defaultDCATCategory": [
+      "REGI",
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "getRecordsUrl": "https://ils-geomonitoring.de/catalogue/csw",
+    "eitherKeywords": [
+      "incora"
+    ],
+    "httpMethod": "GET",
+    "disable": false,
+    "defaultAttribution": "GeoNode Catalogue",
+    "defaultAttributionLink": "https://ils-geomonitoring.de",
+    "description": "ILS GeoNode Catalogue",
+    "id": 22,
+    "cronPattern": "*/30 7-18 * * *",
+    "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>apiso:AnyText</ogc:PropertyName><ogc:Literal>incora</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>"
+  },
+  {
+    "index": "csw_geonet_mrn",
+    "includeTimestamp": true,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "REGI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "getRecordsUrl": "http://daten.geonet-mrn.de/catalogue/csw",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "disable": false,
+    "description": "GeoNet.MRN",
+    "defaultAttribution": "GeoNet.MRN",
+    "defaultAttributionLink": "http://daten.geonet-mrn.de",
+    "id": 23
+  },
+  {
+    "index": "ckan_nrw_wuppertal",
+    "includeTimestamp": true,
+    "type": "CKAN",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "REGI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://open.nrw",
+    "filterTags": [
+      "Offene Daten Wuppertal"
+    ],
+    "filterGroups": [
+      "tran"
+    ],
+    "providerPrefix": "",
+    "providerField": "maintainer",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "disable": true,
+    "description": "NRW Wuppertal",
+    "defaultAttribution": "NRW Wuppertal",
+    "id": 24,
+    "defaultAttributionLink": null,
+    "rules": {
+      "containsDocumentsWithData": true,
+      "containsDocumentsWithDataBlacklist": "rss"
+    }
+  },
+  {
+    "index": "ckan_opendata_filtered_nrw",
+    "includeTimestamp": true,
+    "type": "CKAN",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "REGI"
+    ],
+    "dateSourceFormats": [
+      "DD MMMM, YYYY - hh:mm",
+      "YYYY-MM-DDThh:mm:ss"
+    ],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://open.nrw",
+    "filterTags": [],
+    "filterGroups": [
+      "tran"
+    ],
+    "providerPrefix": "Open NRW: ",
+    "providerField": "organization",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": true,
+    "defaultLicense": null,
+    "id": 25,
+    "disabled": true,
+    "description": "NRW Portal filtered",
+    "defaultAttribution": "filtered NRW Portal",
+    "defaultAttributionLink": null,
+    "rules": {
+      "containsDocumentsWithData": true,
+      "containsDocumentsWithDataBlacklist": "rss,html,doc,pdf"
+    },
+    "disable": true,
+    "customCode": "const modifiedDate = this.source.extras\n            .filter(extra => extra.key === 'modified')\n            .map(modifiedHash => this.handleDate(modifiedHash.value));\n        \n        if (modifiedDate && modifiedDate.length > 0) {\n            doc.modified = modifiedDate[0];\n}\n\nconst issuedDate = this.source.extras\n            .filter(extra => extra.key === 'issued')\n            .map(issuedHash => this.handleDate(issuedHash.value));\n        \n        if (issuedDate && issuedDate.length > 0) {\n            doc.issued = issuedDate[0];\n            doc.extras.temporal.start = issuedDate[0];\n            doc.extras.temporal.end = issuedDate[0];\n}"
   }
 ]

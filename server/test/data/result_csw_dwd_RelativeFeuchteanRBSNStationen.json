@@ -32,12 +32,14 @@
   ],
   "distribution": [
     {
-      "format": "null, Datenbank",
-      "accessURL": "https://maps.dwd.de/geoserver/dwd/RBSN_RH/ows?service=wms&version=1.3.0&request=GetCapabilities"
+      "format": ["WMS"],
+      "accessURL": "https://maps.dwd.de/geoserver/dwd/RBSN_RH/ows?service=wms&version=1.3.0&request=GetCapabilities",
+      "title": "WMS Capabilities für RBSN_RH"
     },
     {
-      "format": "null, Datenbank",
-      "accessURL": "https://maps.dwd.de/geoserver/dwd/RBSN_RH/ows?service=wfs&version=2.0.0&request=GetFeature&typeNames=RBSN_RH&outputFormat=csv&count=100&sortBy=M_DATE%20D"
+      "format": ["WFS"],
+      "accessURL": "https://maps.dwd.de/geoserver/dwd/RBSN_RH/ows?service=wfs&version=2.0.0&request=GetFeature&typeNames=RBSN_RH&outputFormat=csv&count=100&sortBy=M_DATE%20D",
+      "title": "WFS Abfrage für RBSN_RH"
     }
   ],
   "extras": {

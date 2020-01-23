@@ -1,31 +1,53 @@
-<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-  <mat-form-field fxFlex="20">
-    <mat-select placeholder="HTTP Method" [(ngModel)]="model.httpMethod" name="httpMethod" required>
-      <mat-option value="GET">GET</mat-option>
-      <mat-option value="POST">POST</mat-option>
-    </mat-select>
-  </mat-form-field>
+<form [formGroup]="form">
 
-  <mat-form-field fxFlex>
-    <input matInput placeholder="getRecords URL" [(ngModel)]="model.getRecordsUrl" name="getRecordsUrl" required>
-  </mat-form-field>
-</div>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Allgemeine CSW Einstellungen</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex="20">
+          <mat-select placeholder="HTTP Method" formControlName="httpMethod" required>
+            <mat-option value="GET">GET</mat-option>
+            <mat-option value="POST">POST</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-<mat-form-field>
-  <textarea matInput rows="6" class="code" placeholder="Record Filter" [(ngModel)]="model.recordFilter" name="recordFilter"></textarea>
-</mat-form-field>
+        <mat-form-field fxFlex>
+          <input matInput placeholder="getRecords URL" formControlName="getRecordsUrl" required>
+        </mat-form-field>
+      </div>
 
-<mat-form-field>
-  <mat-chip-list #chipList>
-    <mat-chip *ngFor="let keyword of model.eitherKeywords" [selectable]="false"
-              [removable]="true" (removed)="remove(keyword)">
-      {{keyword}}
-      <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
-    <input placeholder="Either keywords"
-           [matChipInputFor]="chipList"
-           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-           [matChipInputAddOnBlur]="true"
-           (matChipInputTokenEnd)="add($event)">
-  </mat-chip-list>
-</mat-form-field>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Filter und Regeln</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ng-container [ngTemplateOutlet]="rulesTemplate"></ng-container>
+
+      <div fxLayout="column">
+        <mat-form-field fxFlex>
+          <textarea matInput rows="6" class="code" placeholder="Record Filter" formControlName="recordFilter"></textarea>
+        </mat-form-field>
+
+        <mat-form-field fxFlex>
+          <mat-chip-list #chipList>
+            <mat-chip *ngFor="let keyword of model.eitherKeywords" [selectable]="false"
+                      [removable]="true" (removed)="remove(keyword)">
+              {{keyword}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="Either keywords"
+                   [matChipInputFor]="chipList"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   [matChipInputAddOnBlur]="true"
+                   (matChipInputTokenEnd)="add($event)">
+          </mat-chip-list>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>

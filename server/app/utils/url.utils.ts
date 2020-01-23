@@ -2,12 +2,17 @@
 
 import {RequestDelegate} from "./http-request.utils";
 import {OptionsWithUri} from "request-promise";
+import * as fs from "fs";
 
 let log = require('log4js').getLogger( __filename );
 
 export class UrlUtils {
 
+    private static MAPPINGS_FILE = "mappings.json";
+
     static cache: { [url: string]: boolean } = {};
+
+    private static formatMapping = UrlUtils.getFormatMapping();
 
     /**
      * Rudimentary checks for URL validity. This method extracts the request
@@ -79,5 +84,43 @@ export class UrlUtils {
             }
             UrlUtils.cache[<string>requestConfig.uri] = false;
         }
+    }
+
+    /**
+     * Map a distribution format to a conform value
+     * @param formatArray
+     * @param warnings
+     */
+    static mapFormat(formatArray: string[], warnings?: string[][]): string[] {
+
+        return formatArray.map(format => {
+            const value = UrlUtils.formatMapping[format.toLowerCase()];
+
+            if (!value) {
+                log.warn('Distribution format unknown: ' + format);
+                if (warnings) {
+                    warnings.push(['Distribution format unknown', format]);
+                }
+                return format;
+            }
+
+            return value;
+        });
+
+    }
+
+    static updateFormatMapping() {
+        this.formatMapping = this.getFormatMapping();
+    }
+
+    private static getFormatMapping() {
+        let content: any = fs.readFileSync(this.MAPPINGS_FILE);
+        let mapping = JSON.parse(content.toString());
+
+        return Object.keys(mapping.format)
+            .reduce((prev, curr) => {
+                mapping.format[curr].forEach(value => prev[value.toLowerCase()] = curr);
+                return prev;
+            }, {});
     }
 }

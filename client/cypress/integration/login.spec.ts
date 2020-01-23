@@ -1,19 +1,39 @@
 describe('Login', () => {
+  const Authentication = require("../support/pageObjects/auth");
+  const auth = new Authentication();
 
   beforeEach(() => {
-    cy.visit('');
+    auth.apiLogOut();
   });
 
-  // https://on.cypress.io/interacting-with-elements
-
-  it('should show the login page', () => {
-    cy.get('mat-card-title').contains('Login');
-    cy.get('.mat-button').contains('Login');
+  it('should show the login page to begin with', () => {
+    auth.visitBaseUrl();
+    auth.checkLogInPage();
   });
 
-  it('should be able to login', () => {
-    cy.login('admin', 'admin');
-    cy.url().should('include', '/harvester');
-    cy.get('mat-toolbar button').contains('Max Muster');
+  it('should not be possible to access pages without a login', () => {
+    auth.visitBaseUrl();
+
+    auth.visitConfig();
+    auth.urlIsLogIn();
+
+    auth.visitHarvester();
+    auth.urlIsLogIn();
+
+    auth.visitLog();
+    auth.urlIsLogIn();
+  });
+
+  //GUI
+  it('should show the name of the user after a successful log in', () => {
+    auth.apiLogIn();
+    auth.checkHomepage();
+    auth.checkTestUser('Max Muster');
+  });
+
+  it('should not be able to log in (GUI) with wrong credentials', () => {
+    auth.guiLogIn('test', 'test');
+    auth.checkInvalidLoginMsg();
+    auth.checkLogInPage();
   });
 });

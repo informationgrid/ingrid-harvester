@@ -29,10 +29,19 @@ task buildRpm(type: Rpm) {
     postInstall file('rpm/post_install.sh')
     preUninstall file('rpm/pre_uninstall.sh')
 
-    from('server/build') {
+    from('server/build/server') {
         user='ingrid'
         permissionGroup='ingrid'
         createDirectoryEntry true
+        exclude 'test'
+        into '/opt/ingrid/mcloud-importer'
+    }
+
+    from('server') {
+        include 'log4js.json', 'config.json', 'mappings.json'
+        user='ingrid'
+        permissionGroup='ingrid'
+        fileType CONFIG | NOREPLACE
         into '/opt/ingrid/mcloud-importer'
     }
 

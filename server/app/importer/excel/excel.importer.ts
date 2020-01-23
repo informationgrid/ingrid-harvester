@@ -9,6 +9,7 @@ import {DefaultImporterSettings, Importer} from '../../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {ExcelSettings} from './excel.settings';
+import {FilterUtils} from "../../utils/filter.utils";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -26,6 +27,7 @@ export class ExcelImporter implements Importer {
     };
 
     summary: Summary;
+    private filterUtils: FilterUtils;
 
     run = new Observable<ImportLogMessage>(observer => {this.exec(observer)});
 
@@ -38,6 +40,7 @@ export class ExcelImporter implements Importer {
         settings = {...ExcelImporter.defaultSettings, ...settings};
 
         this.summary = new Summary(settings);
+        this.filterUtils = new FilterUtils(settings);
 
         this.settings = settings;
         this.elastic = new ElasticSearchUtils(settings, this.summary);
@@ -117,6 +120,11 @@ export class ExcelImporter implements Importer {
                 let unit = workUnits[idx];
                 this.summary.numDocs++;
 
+                if (!this.filterUtils.isIdAllowed(unit.id)) {
+                    this.summary.skippedDocs.push(unit.id);
+                    continue;
+                }
+
                 // create json document and create values with ExcelMapper
                 let mapper = new ExcelMapper(this.settings, {
                     id: unit.id,
@@ -129,8 +137,6 @@ export class ExcelImporter implements Importer {
                 });
                 let doc = await IndexDocument.create(mapper)
                     .catch(e => this.handleIndexDocError(e, mapper));
-
-                // observer.next(ImportResult.running(currentPos, workUnits.length));
 
                 // add document to buffer and send to elasticsearch if full
                 if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
@@ -159,8 +165,12 @@ export class ExcelImporter implements Importer {
         } catch(error) {
             log.error('Error reading excel workbook', error);
             this.summary.numErrors++;
+            this.summary.appErrors.push('Error reading excel workbook: ' + error);
             observer.next(ImportResult.complete(this.summary));
             observer.complete();
+
+            // clean up index
+            await this.elastic.deleteIndex(this.elastic.indexName);
         }
     }
 
@@ -224,4 +234,5 @@ export class ExcelImporter implements Importer {
     getSummary(): Summary {
         return this.summary;
     }
+
 }

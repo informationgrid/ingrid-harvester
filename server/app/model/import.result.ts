@@ -3,7 +3,7 @@ import {Summary} from './summary';
 export interface ImportLogMessage {
     id?: number;
 
-    complete: boolean;
+    complete?: boolean;
 
     message?: string;
 

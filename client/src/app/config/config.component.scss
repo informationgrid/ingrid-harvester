@@ -1,3 +1,11 @@
-.form-wrapper {
-  padding-top: 30px;
+::ng-deep .mat-tab-group .mat-tab-body-wrapper {
+  padding-top: 20px;
+}
+
+mat-tab-group {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }

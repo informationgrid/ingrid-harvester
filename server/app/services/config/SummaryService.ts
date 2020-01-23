@@ -45,8 +45,8 @@ export class SummaryService {
         return this.summaries
             .map(summary => {
                 let harvester = harvesters.find(h => h.id === summary.id);
-                if (harvester && harvester.cronPattern && harvester.cronPattern.length > 0) {
-                    let cronJob = new CronJob(harvester.cronPattern, () => {}, null, false);
+                if (harvester && harvester.cron && harvester.cron.active) {
+                    let cronJob = new CronJob(harvester.cron.pattern, () => {}, null, false);
                     summary.nextExecution = cronJob.nextDate().toDate();
                 } else {
                     summary.nextExecution = null;

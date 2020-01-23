@@ -6,7 +6,13 @@ import {ImporterSettings} from './importer.settings';
 export const DefaultImporterSettings: ImporterSettings = {
     type: '',
     maxRecords: 100,
-    startPosition: 0
+    startPosition: 0,
+    customCode: '',
+    defaultMcloudSubgroup: [],
+    defaultDCATCategory: [],
+    dateSourceFormats: [],
+    blacklistedIds: [],
+    whitelistedIds: []
 };
 
 export interface Importer {

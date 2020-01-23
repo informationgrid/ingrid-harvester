@@ -1,51 +1,80 @@
-<mat-form-field>
-  <input matInput placeholder="CKAN Basis URL" [(ngModel)]="model.ckanBaseUrl" name="ckanBaseUrl" required>
-</mat-form-field>
+<form [formGroup]="form">
 
-<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-  <mat-form-field fxFlex="50">
-    <mat-chip-list #chipListTags>
-      <mat-chip *ngFor="let tag of model.filterTags" [selectable]="false"
-                [removable]="true" (removed)="remove('filterTags', tag)">
-        {{tag}}
-        <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
-      <input placeholder="Filter Tags"
-             [matChipInputFor]="chipListTags"
-             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             [matChipInputAddOnBlur]="true"
-             (matChipInputTokenEnd)="add('filterTags', $event)">
-    </mat-chip-list>
-  </mat-form-field>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Allgemeine CKAN Einstellungen</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="CKAN Basis URL" formControlName="ckanBaseUrl" required>
+        </mat-form-field>
+      </div>
 
-  <mat-form-field fxFlex>
-    <mat-chip-list #chipListGroups>
-      <mat-chip *ngFor="let group of model.filterGroups" [selectable]="false"
-                [removable]="true" (removed)="remove('filterGroups', group)">
-        {{group}}
-        <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
-      <input placeholder="Filter Groups"
-             [matChipInputFor]="chipListGroups"
-             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             [matChipInputAddOnBlur]="true"
-             (matChipInputTokenEnd)="add('filterGroups', $event)">
-    </mat-chip-list>
-  </mat-form-field>
+      <mat-checkbox formControlName="markdownAsDescription"> Beschreibung als Markdown</mat-checkbox>
 
-</div>
+      <h4>Bereitgestellt durch</h4>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Präfix" formControlName="providerPrefix" autocomplete="off">
+        </mat-form-field>
+        <mat-form-field fxFlex>
+          <mat-label>CKAN-Feld</mat-label>
+          <mat-select formControlName="providerField">
+            <mat-option value="maintainer">maintainer</mat-option>
+            <mat-option value="organization">organization</mat-option>
+            <mat-option value="author">author</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
-<mat-form-field fxFlex>
-  <mat-chip-list #chipListDateFormats>
-    <mat-chip *ngFor="let format of model.dateSourceFormats" [selectable]="false"
-              [removable]="true" (removed)="remove('dateSourceFormats', format)">
-      {{format}}
-      <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
-    <input placeholder="Datumsformate"
-           [matChipInputFor]="chipListDateFormats"
-           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-           [matChipInputAddOnBlur]="true"
-           (matChipInputTokenEnd)="add('dateSourceFormats', $event)">
-  </mat-chip-list>
-</mat-form-field>
+      <app-chip-list [list]="model.dateSourceFormats"
+                     placeholder="Datumsformate"
+                     (update)="model.dateSourceFormats = $event"></app-chip-list>
+
+      <h4>Default-Lizenz</h4>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between" formGroupName="defaultLicense">
+        <mat-form-field fxFlex="10">
+          <input matInput placeholder="ID" formControlName="id">
+        </mat-form-field>
+        <mat-form-field fxFlex="45">
+          <input matInput placeholder="Titel" formControlName="title">
+        </mat-form-field>
+        <mat-form-field fxFlex="45">
+          <input matInput placeholder="URL" formControlName="url">
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Filter und Regeln</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ng-container [ngTemplateOutlet]="rulesTemplate"></ng-container>
+
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <app-chip-list [list]="model.filterTags"
+                       placeholder="Filter Tags"
+                       (update)="model.filterTags = $event"></app-chip-list>
+
+
+        <app-chip-list [list]="model.filterGroups"
+                       placeholder="Filter Groups"
+                       (update)="model.filterGroups = $event"></app-chip-list>
+      </div>
+
+      <div formGroupName="rules" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between baseline">
+        <mat-checkbox formControlName="containsDocumentsWithData" (change)="toggleDisableRule($event.checked)">Muss Daten-Download enthalten</mat-checkbox>
+        <mat-form-field fxFlex>
+          <mat-label>Datenformat ausschließen</mat-label>
+          <input matInput placeholder="rss,doc,..." formControlName="containsDocumentsWithDataBlacklist"
+                 autocomplete="off" (ngModelChange)="toLowerCase($event)" required>
+        </mat-form-field>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+
+</form>

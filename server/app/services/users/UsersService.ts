@@ -6,7 +6,7 @@ import {IUser} from "../../model/User";
 export class UsersService {
 
     constructor(private memoryStorage: MemoryStorage) {
-        this.memoryStorage.set("users", require("../../../../users.json"));
+        this.memoryStorage.set("users", require("../../../users.json"));
     }
 
     /**

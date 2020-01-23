@@ -2,6 +2,7 @@ import {Service} from '@tsed/di';
 import {ConfigService} from './config/ConfigService';
 import {ImportSocketService} from '../sockets/import.socket.service';
 import {CronJob} from 'cron';
+import {CronData} from '../importer.settings';
 
 let log = require('log4js').getLogger(__filename);
 
@@ -25,28 +26,32 @@ export class ScheduleService {
         // activate scheduler for all harvester that have a cron pattern
         // but only run those immediately that actually are enabled
         ConfigService.get()
-            .filter(config => config.cronPattern && config.cronPattern.length > 0)
-            .forEach(config => this.scheduleJob(config.id, config.cronPattern, !config.disable));
+            .filter(config => config.cron && config.cron.active)
+            .forEach(config => this.scheduleJob(config.id, config.cron.pattern, !config.disable));
 
     }
 
     /**
      * Save a cronjob and activate scheduler.
      * @param id
-     * @param cronExpression
+     * @param cron
      */
-    set(id: number, cronExpression: string): void {
+    set(id: number, cron: CronData): Date {
 
         // update cron pattern in configuration
         let configData = ConfigService.get().filter(config => config.id === id)[0];
-        configData.cronPattern = cronExpression;
+        configData.cron = cron;
         ConfigService.update(id, configData);
 
-        // set up cron job if harvester is enabled
-        if (cronExpression !== null) {
-            this.scheduleJob(id, cronExpression, !configData.disable);
+        // set up cron job if harvester is enabled and cron active
+        const schedulingIsActive = !configData.disable && cron.active;
+        if (schedulingIsActive) {
+            this.scheduleJob(id, cron.pattern, !configData.disable);
+            let cronJob = new CronJob(cron.pattern, () => {}, null, false);
+            return cronJob.nextDate().toDate();
         } else {
             this.stopJob(id);
+            return null;
         }
 
     }
@@ -55,10 +60,15 @@ export class ScheduleService {
      * Run a cron job
      */
     private scheduleJob(id: number, cronExpression: string, startImmediately: boolean): void {
+        this.stopJob(id);
 
-        this.jobs[id] = new CronJob(cronExpression, () => {
-            this.socketService.runImport(id);
-        }, null, startImmediately, 'Europe/Berlin');
+        try {
+            this.jobs[id] = new CronJob(cronExpression, () => {
+                this.socketService.runImport(id);
+            }, null, startImmediately, 'Europe/Berlin');
+        } catch (e) {
+            log.error('Could not schedule job with ID: ' + id, e);
+        }
 
     }
 
@@ -67,7 +77,10 @@ export class ScheduleService {
      */
     stopJob(id: number) {
 
-        this.jobs[id] && this.jobs[id].stop();
+        if (this.jobs[id]) {
+            this.jobs[id].stop();
+            delete this.jobs[id];
+        }
 
     }
 
@@ -77,11 +90,10 @@ export class ScheduleService {
             this.jobs[id].start();
         } else {
             let config = ConfigService.get()
-                .filter(config => config.id === id && config.cronPattern && config.cronPattern.length > 0)[0];
+                .filter(config => config.id === id && config.cron && config.cron.active)[0];
 
-            if (config) {
-                this.scheduleJob(id, config.cronPattern, false);
-            }
+
+                this.scheduleJob(id, config.cron.pattern, false);
             // log.error(`Job "${id}" could not be started.`);
         }
 

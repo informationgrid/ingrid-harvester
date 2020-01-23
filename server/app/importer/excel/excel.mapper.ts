@@ -1,6 +1,6 @@
 import {UrlUtils} from '../../utils/url.utils';
 import {DateRange, Distribution, GenericMapper, Organization, Person} from '../../model/generic.mapper';
-import {License} from '../../../../shared/license.model';
+import {License} from '@shared/license.model';
 import {Summary} from '../../model/summary';
 import {ExcelSettings} from './excel.settings';
 import {RequestDelegate} from '../../utils/http-request.utils';
@@ -48,14 +48,15 @@ export class ExcelMapper extends GenericMapper {
         return publishers.map(p => GenericMapper.createPublisher(p.name, p.url));
     }
 
-    getThemes() {
+    getThemes(): string[] {
 
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
         const dcatCategoriesString: string = this.columnValues[this.columnMap.DCATKategorie];
         if (dcatCategoriesString) {
             return dcatCategoriesString.split(',').map(cat => GenericMapper.DCAT_CATEGORY_URL + cat);
         } else {
-            return [GenericMapper.DCAT_CATEGORY_URL + this.settings.defaultDCATCategory];
+            return this.settings.defaultDCATCategory
+                .map( category => GenericMapper.DCAT_CATEGORY_URL + category);
         }
 
     }
@@ -231,7 +232,7 @@ export class ExcelMapper extends GenericMapper {
 
             if (checkedUrl) {
                 distributions.push({
-                    format: type,
+                    format: [type],
                     accessURL: downloadUrl.trim()
                 });
             } else {
@@ -369,7 +370,7 @@ export class ExcelMapper extends GenericMapper {
      * @param input
      */
     private parseDate(input): Date {
-        var parts = input.match(/(\d+)/g);
+        const parts = input.match(/(\d+)/g);
         // note parts[1]-1
         try {
             return new Date(parts[2], parts[1] - 1, parts[0]);

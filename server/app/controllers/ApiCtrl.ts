@@ -1,14 +1,15 @@
 import {Authenticated, BodyParams, Controller, Get, PathParams, Post} from '@tsed/common';
-import {Harvester} from '../../../client/src/app/harvester/model/harvester';
 import {ConfigService} from '../services/config/ConfigService';
-import {ImportSocketService} from "../sockets/import.socket.service";
+import {ImportSocketService} from '../sockets/import.socket.service';
 import {SummaryService} from '../services/config/SummaryService';
 import {ImportLogMessage} from '../model/import.result';
 import {LogService} from '../services/storage/LogService';
 import {ScheduleService} from '../services/ScheduleService';
-import {GeneralSettings} from '../../../shared/general-config.settings';
+import {CronData} from '../importer.settings';
 
-@Controller("/api")
+let log = require('log4js').getLogger(__filename);
+
+@Controller('/api')
 @Authenticated()
 export class ApiCtrl {
     private importAllProcessIsRunning = false;
@@ -19,28 +20,12 @@ export class ApiCtrl {
                 private scheduleService: ScheduleService) {
     }
 
-    @Get("/harvester")
-    async getHarvesterConfig(): Promise<Harvester[]> {
-        return ConfigService.get();
-    }
-
-    @Post("/harvester/:id")
-    updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Harvester) {
-        ConfigService.update(+id, config);
-
-        if (config.disable) {
-            this.scheduleService.stopJob(+id);
-        } else {
-            this.scheduleService.startJob(+id);
-        }
-    }
-
-    @Post("/import/:id")
+    @Post('/import/:id')
     importFromHarvester(@PathParams('id') id: number) {
         this.importSocketService.runImport(+id);
     }
 
-    @Post("/importAll")
+    @Post('/importAll')
     async importAllFromHarvester() {
         if (!this.importAllProcessIsRunning) {
             this.importAllProcessIsRunning = true;
@@ -67,23 +52,9 @@ export class ApiCtrl {
     }
 
     @Post('/schedule/:id')
-    schedule(@PathParams('id') id: number, @BodyParams('cron') cronExpression: string): void {
+    schedule(@PathParams('id') id: number, @BodyParams('cron') cronExpression: CronData): Date {
         console.log('Body:', cronExpression);
-        this.scheduleService.set(+id, cronExpression);
+        return this.scheduleService.set(+id, cronExpression);
     }
 
-
-    @Get('/config/general')
-    getGeneralConfig(): GeneralSettings {
-
-        return ConfigService.getGeneralSettings();
-
-    }
-
-    @Post('/config/general')
-    setGeneralConfig(@BodyParams() body: GeneralSettings): void {
-
-        ConfigService.setGeneralConfig(body);
-
-    }
 }

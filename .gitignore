@@ -44,3 +44,11 @@ server/data.xlsx
 FinaleImportExcel*
 node/
 **/.gradle/
+
+# Screenshot and video folders
+client/cypress/videos
+client/cypress/screenshots
+
+# Reports' files, but keep the folder
+client/cypress/mochawesome-reports/*
+!client/cypress/mochawesome-reports/.gitkeep

@@ -33,8 +33,9 @@ mat-expansion-panel-header {
 }
 
 .example-headers-align .mat-expansion-panel-header-description {
-  justify-content: space-between;
   align-items: center;
+  flex-grow: 0;
+  margin-right: 0;
 }
 
 .material-icons.inline-valigned {
@@ -86,3 +87,12 @@ mat-spinner {
   }
 }
 
+.scheduled {
+  align-self: center;
+  padding-right: 10px;
+}
+
+::ng-deep h4 {
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
