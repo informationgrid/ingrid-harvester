@@ -1,3 +1,19 @@
+* Thu Jan 23 2020 André Wallat <andre.wallat@wemove.com> - 1.7.1
+- Maintain distribution format in GUI (#2346)
+- Switch to disable harvesting (#2365)
+- Harvesting of CKAN categories (#2152)
+- Map distribution format to a managed name (#2327)
+- mFUND information must not be imported as lowercase (#2302)
+- Get name of link for CSW-Harvester (#2313)
+- Get format from gmd:protocol for CSW (#2312)
+- Define maintainer field for CKAN (#2383)
+- Add field for custom code to extract special information (#2363)
+- Option to skip documents with no data download (#2364)
+- Fix index clean up on import error (#2339)
+- Fix IE11 bug (#2362)
+- Download of the harvester configuration (#2310)
+- Configuration of default license in GUI (#2311)
+
 * Mon Sep 16 2019 André Wallat <andre.wallat@wemove.com> - 1.7.0
 - Add admin GUI for managing harvester (#1952)
 - Add option to harvest from NRW to get datasets from Bonn (#2164)
