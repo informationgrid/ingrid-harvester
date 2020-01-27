@@ -365,7 +365,11 @@
     "providerField": "organization",
     "requestType": "ListWithResources",
     "markdownAsDescription": false,
-    "defaultLicense": null,
+    "defaultLicense": {
+      "id": "dl-de-by-2.0",
+      "title": "Datenlizenz Deutschland Namensnennung 2.0",
+      "url": "https://www.govdata.de/dl-de/by-2-0"
+    },
     "description": "NRW Portal",
     "defaultAttribution": "NRW Portal",
     "disable": false,
