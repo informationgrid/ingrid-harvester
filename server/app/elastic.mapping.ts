@@ -1,31 +1,30 @@
 export const elasticsearchMapping = {
     properties: {
         'title': {
-            'type': 'string',
+            'type': 'text',
             'store': true,
             'fields': {
                 'raw': {
-                    'type': 'string',
-                    'index': 'not_analyzed',
+                    'type': 'keyword',
                     'store': true,
                 }
             }
         },
         'description': {
-            'type': 'string',
+            'type': 'text',
             'analyzer': 'decomp',
             'fields': {
                 'decomp_german': {
-                    'type': 'string',
+                    'type': 'text',
                     'analyzer': 'decomp_german',
                     'search_analyzer': 'german_simple'
                 },
                 'decomp_shingles': {
-                    'type': 'string',
+                    'type': 'text',
                     'analyzer': 'decomp_shingles'
                 },
                 'suggest_shingles': {
-                    'type': 'string',
+                    'type': 'text',
                     'analyzer': 'suggest_shingles'
                 }
             }
@@ -33,41 +32,36 @@ export const elasticsearchMapping = {
         'creator': {
             'properties': {
                 'name': {
-                    'type': 'string',
+                    'type': 'text',
                     'fields': {
                         'raw': {
-                            'type': 'string',
-                            'index': 'not_analyzed'
+                            'type': 'keyword'
                         }
                     }
                 },
                 'mbox': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 }
             }
         },
         'publisher': {
             'properties': {
                 'name': {
-                    'type': 'string',
+                    'type': 'text',
                     'fields': {
                         'raw': {
-                            'type': 'string',
-                            'index': 'not_analyzed'
+                            'type': 'keyword'
                         }
                     }
                 },
                 'homepage': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'organization': {
-                    'type': 'string',
+                    'type': 'text',
                     'fields': {
                         'raw': {
-                            'type': 'string',
-                            'index': 'not_analyzed'
+                            'type': 'keyword'
                         }
                     }
                 }
@@ -76,63 +70,50 @@ export const elasticsearchMapping = {
         'contactPoint': {
             'properties': {
                 'hasUID': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'fn': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'organization-name': {
-                    'type': 'string',
+                    'type': 'text',
                     'fields': {
                         'raw': {
-                            'type': 'string',
-                            'index': 'not_analyzed'
+                            'type': 'keyword'
                         }
                     }
                 },
                 'street-address': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'region': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'country-name': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'postal-code': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'hasEmail': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'hasTelephone': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'hasURL': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 }
             }
         },
         'type': {
-            'type': 'string',
-            'index': 'not_analyzed'
+            'type': 'keyword'
         },
         'keywords': {
-            'type': 'string',
-            'index': 'not_analyzed'
+            'type': 'keyword'
         },
         'theme': {
-            'type': 'string',
-            'index': 'not_analyzed'
+            'type': 'keyword'
         },
         'issued': {
             'type': 'date'
@@ -141,32 +122,29 @@ export const elasticsearchMapping = {
             'type': 'date'
         },
         'accrualPeriodicity': {
-            'type': 'string'
+            'type': 'text'
         },
         'accessRights': {
-            'type': 'string'
+            'type': 'text'
         },
         'distribution': {
             'properties': {
                 'id': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'title': {
-                    'type': 'string',
+                    'type': 'text',
                     'analyzer': 'decomp'
                 },
                 'description': {
-                    'type': 'string',
+                    'type': 'text',
                     'analyzer': 'decomp'
                 },
                 'format': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'accessURL': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'issued': {
                     'type': 'date'
@@ -195,16 +173,15 @@ export const elasticsearchMapping = {
                         'source': {
                             'properties': {
                                 'raw_data_source': {
-                                    'type': 'string',
-                                    'index': 'no'
+                                    'type': 'text',
+                                    'index': false
                                 },
                                 'portal_link': {
-                                    'type': 'string',
-                                    'index': 'no'
+                                    'type': 'text',
+                                    'index': false
                                 },
                                 'attribution': {
-                                    'type': 'string',
-                                    'index': 'not_analyzed'
+                                    'type': 'keyword'
                                 }
                             }
                         },
@@ -213,53 +190,48 @@ export const elasticsearchMapping = {
                             'null_value': true
                         },
                         'harvesting_errors': {
-                            'type': 'string'
+                            'type': 'text'
                         }
                     }
                 },
                 'generated_id': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'displayContact': {
                     'properties': {
                         'name': {
-                            'type': 'string',
+                            'type': 'text',
                             'fields': {
                                 'raw': {
-                                    'type': 'string',
-                                    'index': 'not_analyzed'
+                                    'type': 'keyword'
                                 }
                             }
                         },
                         'url': {
-                            'type': 'string'
+                            'type': 'text'
                         }
                     }
                 },
                 'license': {
                     'properties': {
                         'id': {
-                            'type': 'string',
-                            'index': 'not_analyzed',
+                            'type': 'keyword',
                             'fields': {
                                 'analyzed': {
-                                    'type': 'string'
+                                    'type': 'text'
                                 }
                             }
                         },
                         'title': {
-                            'type': 'string',
-                            'index': 'not_analyzed',
+                            'type': 'keyword',
                             'fields': {
                                 'analyzed': {
-                                    'type': 'string'
+                                    'type': 'text'
                                 }
                             }
                         },
                         'url': {
-                            'type': 'string',
-                            'index': 'not_analyzed'
+                            'type': 'keyword'
                         }
                     }
                 },
@@ -272,51 +244,46 @@ export const elasticsearchMapping = {
                             'type': 'date'
                         },
                         'custom': {
-                            'type': 'string',
-                            'index': 'not_analyzed'
+                            'type': 'keyword'
                         }
                     }
                 },
                 'groups': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'subgroups': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'harvested_data': {
-                    'type': 'string',
-                    'index': 'no'
+                    'type': 'text',
+                    'index': false
                 },
                 'mfund_fkz': {
-                    'type': 'string',
-                    'index': 'not_analyzed'
+                    'type': 'keyword'
                 },
                 'mfund_project_title': {
-                    'type': 'string',
+                    'type': 'text',
                     'analyzer': 'decomp',
                     'fields': {
                         'raw': {
-                            'type': 'string',
-                            'index': 'not_analyzed'
+                            'type': 'keyword'
                         }
                     }
                 },
                 'subsection': {
                     'properties': {
                         'title': {
-                            'type': 'string',
+                            'type': 'text',
                             'analyzer': 'decomp'
                         },
                         'description': {
-                            'type': 'string',
+                            'type': 'text',
                             'analyzer': 'decomp'
                         }
                     }
                 },
                 'all': {
-                    'type': 'string',
+                    'type': 'text',
                     'analyzer': 'decomp'
                 }
             }
