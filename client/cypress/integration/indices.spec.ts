@@ -32,6 +32,7 @@ describe('Indices operations', () => {
     harvester.importHarvesterById(constants.CKAN_DB_ID);
     harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
+    cy.wait(1000);
     indicesPage.visit();
     indicesPage.indexHasNoDuplicate('ckan_db');
   });
