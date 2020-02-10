@@ -1,9 +1,4 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker-registry.wemove.com/ingrid-rpmbuilder'
-        }
-    }
 
     environment {
         RPM_PUBLIC_KEY  = credentials('mcloud-rpm-public')
@@ -34,6 +29,11 @@ pipeline {
             }
         }
         stage('Sign') {
+            agent {
+                docker {
+                    image 'docker-registry.wemove.com/ingrid-rpmbuilder'
+                }
+            }
             steps {
                 sh 'echo "%_gpg_name wemove digital solutions GmbH <contact@wemove.com>" > ~/.rpmmacros'
                 withCredentials([file(credentialsId: 'mcloud-rpm-public', variable: 'rpm-key-public')]) {
