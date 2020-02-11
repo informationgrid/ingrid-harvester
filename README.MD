@@ -105,19 +105,26 @@ Acess http://localhost:5601/
 Edit the file config.js to define the location of the excel file to be imported ('filePath'). You can also
 configure the address of the elasticsearch URL where the data shall be indexed to ('elasticSearchUrl').
 
+To disable authentication during development, comment the following line in "AuthMiddleware.ts"
+>// throw new Unauthorized("Unauthorized");
+
 # Run
 
 Execute the following command to run a single import:
 
-> npm start
+For the server:
+> npm run start-dev
 
-# Debug
+For the client:
+> npm run start
 
-Get all dependencies:
+# Test
 
-> npm install
+> npm run test
 
-In visual studio code hit 5.
+oder 
+
+> mocha -r ts-node/register test/*.spec.ts
 
 # Development
 
