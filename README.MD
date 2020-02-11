@@ -15,15 +15,15 @@ Run the following command to install all necessary dependencies:
 > npm install
 
 
-## Installation elastic search
+## Installation Elasticsearch
 
-Download elastic search 2.4.6 here:
+Download Elasticsearch 2.4.6 here:
 
 https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/zip/elasticsearch/2.4.6/elasticsearch-2.4.6.zip
 
 unzip in folder.
 
-Go to elasticsearch folder and execute
+Go to Elasticsearch folder and execute
 
 ```
 bin/plugin install https://nexus.informationgrid.eu/repository/maven-releases/de/ingrid/elasticsearch/decompound-plugin/2.4.6.0/decompound-plugin-2.4.6.0.zip
@@ -35,7 +35,7 @@ or if downloaded before
 bin/plugin install file:///decompound-plugin-2.4.6.0.zip
 ```
 
-Start elasticsearch
+Start Elasticsearch
 
 ```
 bin/elasticsearch
@@ -43,7 +43,7 @@ bin/elasticsearch
 
 
 
-## Installation elastic search as ubuntu 16.04 service
+## Installation Elasticsearch as ubuntu 16.04 service
 
 ```
 wget https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.4.6/elasticsearch-2.4.6.deb
@@ -103,7 +103,7 @@ Acess http://localhost:5601/
 # Configuration
 
 Edit the file config.js to define the location of the excel file to be imported ('filePath'). You can also
-configure the address of the elasticsearch URL where the data shall be indexed to ('elasticSearchUrl').
+configure the address of the Elasticsearch URL where the data shall be indexed to ('elasticSearchUrl').
 
 To disable authentication during development, comment the following line in "AuthMiddleware.ts"
 >// throw new Unauthorized("Unauthorized");
@@ -111,6 +111,9 @@ To disable authentication during development, comment the following line in "Aut
 # Run
 
 Execute the following command to run a single import:
+
+Run Elasticsearch:
+> docker-compose up -d
 
 For the server:
 > npm run start-dev
