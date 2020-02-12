@@ -17,6 +17,8 @@ Run the following command to install all necessary dependencies:
 
 ## Installation Elasticsearch
 
+Use docker-compose.yml to start up configured docker container or install manually as described below.
+
 Download Elasticsearch 2.4.6 here:
 
 https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/zip/elasticsearch/2.4.6/elasticsearch-2.4.6.zip
