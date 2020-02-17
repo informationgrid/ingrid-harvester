@@ -1,4 +1,7 @@
-* Thu Jan 23 2020 André Wallat <andre.wallat@wemove.com> - 1.7.1
+* Mon Feb 17 2020 André Wallat <andre.wallat@wemove.com> - 1.8.1
+- Fix mapping of title field to be searchable correctly
+
+* Thu Jan 23 2020 André Wallat <andre.wallat@wemove.com> - 1.7.1/1.8.0
 - Maintain distribution format in GUI (#2346)
 - Switch to disable harvesting (#2365)
 - Harvesting of CKAN categories (#2152)

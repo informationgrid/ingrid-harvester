@@ -101,14 +101,16 @@
     ],
     "WFS": [
       "ogc:wfs",
-      "ogc:wfs-2.0.0-http-get-feature"
+      "ogc:wfs-2.0.0-http-get-feature",
+      "http://publications.europa.eu/resource/authority/file-type/WFS_SRVC"
     ],
     "WMS": [
       "ogc:wms",
       "ogc:wms-1.3.0-http-get-map",
       "ogc:wms-1.3.0-http-get-capabilities",
       "wms",
-      "view"
+      "view",
+      "http://publications.europa.eu/resource/authority/file-type/WMS_SRVC"
     ],
     "WWW": [
       "http",
