@@ -122,6 +122,18 @@
       "issued": "2019-11-18T07:21:55.849Z",
       "modified": null,
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - B1"
+    },
+    {
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2020_ZpAR_Wi_B2.pdf",
+      "byteSize": null,
+      "description": "Endstück Winterfahrplan 2020 - B2 - Gültigkeit: 06.04.2020 - 13.06.2020",
+      "format": [
+        "PDF"
+      ],
+      "id": "718bc260-e371-44eb-8a36-a442455db5f8",
+      "issued": "2020-01-21T08:12:40.972Z",
+      "modified": null,
+      "title": "Zugbildungsplan A -Reihung- (ZpAR) - B2"
     }
   ],
   "extras": {

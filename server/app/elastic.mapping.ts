@@ -4,6 +4,19 @@ export const elasticsearchMapping = {
             'type': 'text',
             'store': true,
             'fields': {
+                'decomp_german': {
+                    'type': 'string',
+                    'analyzer': 'decomp_german',
+                    'search_analyzer': 'german_simple'
+                },
+                'decomp_shingles': {
+                    'type': 'string',
+                    'analyzer': 'decomp_shingles'
+                },
+                'suggest_shingles': {
+                    'type': 'string',
+                    'analyzer': 'suggest_shingles'
+                },
                 'raw': {
                     'type': 'keyword',
                     'store': true,
