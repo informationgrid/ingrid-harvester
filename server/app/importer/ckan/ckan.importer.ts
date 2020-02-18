@@ -261,12 +261,21 @@ export class CkanImporter implements Importer {
     }
 
     private updateRequestMethod(offset: number) {
-        this.requestDelegate.updateConfig({
-            qs: {
-                offset: offset,
-                limit: this.settings.maxRecords
-            }
-        });
+        if (this.settings.requestType === 'ListWithResources') {
+            this.requestDelegate.updateConfig({
+                qs: {
+                    offset: offset,
+                    limit: this.settings.maxRecords
+                }
+            });
+        } else {
+            this.requestDelegate.updateConfig({
+                qs: {
+                    start: offset,
+                    rows: this.settings.maxRecords
+                }
+            });
+        }
     }
 
     getSummary(): Summary {
