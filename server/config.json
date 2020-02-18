@@ -873,5 +873,43 @@
     "rules": {
       "containsDocumentsWithData": false
     }
+  },
+  {
+    "index": "ckan_govdata",
+    "includeTimestamp": true,
+    "type": "CKAN",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "infrastructure"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [
+      "YYYY-MM-DDThh:mm:ss"
+    ],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://ckan.govdata.de",
+    "filterTags": [],
+    "filterGroups": [
+      "tran"
+    ],
+    "providerPrefix": "GovData: ",
+    "providerField": "organization",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "id": 29,
+    "disabled": true,
+    "description": "GovData",
+    "defaultAttribution": "GovData",
+    "defaultAttributionLink": null,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
+    "disable": true
   }
 ]
