@@ -762,5 +762,154 @@
       "containsDocumentsWithDataBlacklist": "rss,html,doc,pdf"
     },
     "disable": true
+  },
+  {
+    "index": "ckan_berlin",
+    "includeTimestamp": true,
+    "type": "CKAN",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "customCode": "doc.extras.metadata.source.portal_link = 'https://daten.berlin.de/datensaetze/' + this.source.name;",
+    "defaultMcloudSubgroup": [
+      "infrastructure"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [
+      "YYYY-MM-DDThh:mm:ss"
+    ],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://datenregister.berlin.de",
+    "filterTags": [
+      "Verkehr"
+    ],
+    "filterGroups": [],
+    "providerPrefix": "OpenData Berlin: ",
+    "providerField": "organization",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": true,
+    "defaultLicense": null,
+    "id": 26,
+    "disabled": true,
+    "description": "OpenData Berlin",
+    "defaultAttribution": "OpenData Berlin",
+    "defaultAttributionLink": null,
+    "rules": {
+      "containsDocumentsWithData": false
+    }
+  },
+  {
+    "index": "ckan_rlp",
+    "includeTimestamp": true,
+    "type": "CKAN",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "infrastructure"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [
+      "YYYY-MM-DDThh:mm:ss"
+    ],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://daten.rlp.de/",
+    "filterTags": [
+      "Verkehr"
+    ],
+    "filterGroups": [],
+    "providerPrefix": "OpenData Rheinland-Pfalz: ",
+    "providerField": "organization",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "id": 28,
+    "disabled": true,
+    "description": "OpenData Rheinland-Pfalz",
+    "defaultAttribution": "OpenData Rheinland-Pfalz",
+    "defaultAttributionLink": null,
+    "rules": {
+      "containsDocumentsWithData": false
+    }
+  },
+  {
+    "index": "ckan_schleswig_holstein",
+    "includeTimestamp": true,
+    "type": "CKAN",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "infrastructure"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [
+      "YYYY-MM-DDThh:mm:ss"
+    ],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://opendata.schleswig-holstein.de",
+    "filterTags": [],
+    "filterGroups": [
+      "tran"
+    ],
+    "providerPrefix": "OpenData Schleswig-Holstein: ",
+    "providerField": "organization",
+    "requestType": "Search",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "id": 30,
+    "disabled": true,
+    "description": "OpenData Schleswig-Holstein",
+    "defaultAttribution": "OpenData Schleswig-Holstein",
+    "defaultAttributionLink": null,
+    "rules": {
+      "containsDocumentsWithData": false
+    }
+  },
+  {
+    "index": "ckan_govdata",
+    "includeTimestamp": true,
+    "type": "CKAN",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "infrastructure"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [
+      "YYYY-MM-DDThh:mm:ss"
+    ],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "https://ckan.govdata.de",
+    "filterTags": [],
+    "filterGroups": [
+      "tran"
+    ],
+    "providerPrefix": "GovData: ",
+    "providerField": "organization",
+    "requestType": "ListWithResources",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "id": 29,
+    "disabled": true,
+    "description": "GovData",
+    "defaultAttribution": "GovData",
+    "defaultAttributionLink": null,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
+    "disable": true
   }
 ]
