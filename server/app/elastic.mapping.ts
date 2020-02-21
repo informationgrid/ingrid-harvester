@@ -5,16 +5,16 @@ export const elasticsearchMapping = {
             'store': true,
             'fields': {
                 'decomp_german': {
-                    'type': 'string',
+                    'type': 'text',
                     'analyzer': 'decomp_german',
                     'search_analyzer': 'german_simple'
                 },
                 'decomp_shingles': {
-                    'type': 'string',
+                    'type': 'text',
                     'analyzer': 'decomp_shingles'
                 },
                 'suggest_shingles': {
-                    'type': 'string',
+                    'type': 'text',
                     'analyzer': 'suggest_shingles'
                 },
                 'raw': {
