@@ -71,7 +71,22 @@ export class ConfigGeneralComponent implements OnInit {
     this.configForm = this.formBuilder.group({
       elasticSearchUrl: [settings.elasticSearchUrl, Validators.required, ConfigGeneralComponent.elasticUrlValidator],
       alias: [settings.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
-      proxy: [settings.proxy]
+      proxy: [settings.proxy],
+      mail: this.formBuilder.group({
+        enabled: [settings.mail.enabled],
+        mailServer: this.formBuilder.group({
+          host: [settings.mail.mailServer.host],
+          port: [settings.mail.mailServer.port],
+          secure: [settings.mail.mailServer.secure],
+          auth: this.formBuilder.group({
+            user: [settings.mail.mailServer.auth.user],
+            pass: [settings.mail.mailServer.auth.pass]
+          })
+        }),
+        from: [settings.mail.from],
+        to: [settings.mail.to]
+      }),
+      maxDiff: [settings.maxDiff]
     })
   }
 }
