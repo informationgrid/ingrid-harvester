@@ -7,6 +7,7 @@ import {CswImporter} from '../../importer/csw/csw.importer';
 import {getLogger} from "log4js";
 import {MappingDistribution, MappingItem} from '@shared/mapping.model';
 import {UrlUtils} from "../../utils/url.utils";
+import {DcatImporter} from "../../importer/dcat/dcat.importer";
 
 const log = getLogger();
 
@@ -88,6 +89,7 @@ export class ConfigService {
                     if (config.type === 'EXCEL') return {...ExcelImporter.defaultSettings, ...config};
                     else if (config.type === 'CKAN') return {...CkanImporter.defaultSettings, ...config};
                     else if (config.type && config.type.endsWith('CSW')) return {...CswImporter.defaultSettings, ...config};
+                    else if (config.type === 'DCAT') return {...DcatImporter.defaultSettings, ...config};
                 })
                 .filter(config => config); // remove all invalid configurations
         } else {

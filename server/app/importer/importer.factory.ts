@@ -7,6 +7,7 @@ import {CodedeImporter} from "./csw/codede.importer";
 import {CkanSettings} from './ckan/ckan.settings';
 import {ExcelSettings} from './excel/excel.settings';
 import {CswSettings} from './csw/csw.settings';
+import {DcatImporter} from "./dcat/dcat.importer";
 
 export class ImporterFactory {
 
@@ -23,6 +24,7 @@ export class ImporterFactory {
             case 'CSW': return new CswImporter(config);
             case 'BFG-CSW': return new BfgImporter(config);
             case 'CODEDE-CSW': return new CodedeImporter(config);
+            case 'DCAT': return new DcatImporter(config);
             default: {
                 console.error('Importer not found: ' + config.type);
             }

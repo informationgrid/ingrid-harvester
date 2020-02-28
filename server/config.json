@@ -911,5 +911,32 @@
       "containsDocumentsWithData": false
     },
     "disable": true
+  },
+  {
+    "index": "dcat_govdata",
+    "includeTimestamp": true,
+    "type": "DCAT",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "httpMethod": "GET",
+    "id": 31,
+    "disabled": true,
+    "description": "GovData",
+    "defaultAttribution": "Govdata",
+    "defaultAttributionLink": null,
+    "filterGroups": [
+      "TRAN"
+    ],
+    "catalogUrl": "https://www.govdata.de/ckan/catalog/catalog.rdf"
   }
 ]
