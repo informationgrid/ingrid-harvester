@@ -13,6 +13,9 @@ import {MatIconModule} from "@angular/material/icon";
 import { AddMappingItemComponent } from './config-mapping/add-mapping-item/add-mapping-item.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {FlexModule} from "@angular/flex-layout";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatCardModule} from "@angular/material/card";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 const configRoutes: Routes = [
   {
@@ -33,7 +36,10 @@ const configRoutes: Routes = [
     MatListModule,
     MatIconModule,
     MatAutocompleteModule,
-    FlexModule
+    FlexModule,
+    MatSlideToggleModule,
+    MatCardModule,
+    MatCheckboxModule
   ],
   exports: [
     ConfigComponent
