@@ -9,6 +9,7 @@ import {RequestDelegate} from "../../utils/http-request.utils";
 import {DcatSummary} from "./dcat.importer";
 import {OptionsWithUri} from "request-promise";
 import {DcatSettings} from './dcat.settings';
+import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 
 let xpath = require('xpath');
 
@@ -100,22 +101,24 @@ export class DcatMapper extends GenericMapper {
                     }
                 }
 
-                let url: string = DcatMapper.select('./dcat:accessURL', this.linkedDistributions[i], true).getAttribute('rdf:resource');
+                let url = DcatMapper.select('./dcat:accessURL', this.linkedDistributions[i], true);
                 let title = DcatMapper.select('./dct:title', this.linkedDistributions[i], true);
                 let issued = DcatMapper.select('./dct:issued', this.linkedDistributions[i], true);
                 let modified = DcatMapper.select('./dct:modified', this.linkedDistributions[i], true);
                 let size = DcatMapper.select('./dcat:byteSize', this.linkedDistributions[i], true);
 
-                let distribution = {
-                    format: UrlUtils.mapFormat([format], this.summary.warnings),
-                    accessURL: url,
-                    title: title ? title.textContent : undefined,
-                    issued: issued ? new Date(issued.textContent) : undefined,
-                    modified: modified ? new Date(modified.textContent) : undefined,
-                    byteSize: size ? Number(size.textContent) : undefined
-                }
+                if(url) {
+                    let distribution = {
+                        format: UrlUtils.mapFormat([format], this.summary.warnings),
+                        accessURL: url.getAttribute('rdf:resource'),
+                        title: title ? title.textContent : undefined,
+                        issued: issued ? new Date(issued.textContent) : undefined,
+                        modified: modified ? new Date(modified.textContent) : undefined,
+                        byteSize: size ? Number(size.textContent) : undefined
+                    }
 
-                dists.push(distribution);
+                    dists.push(distribution);
+                }
             }
         }
 
@@ -366,12 +369,6 @@ export class DcatMapper extends GenericMapper {
             .map(node => node.getAttribute('rdf:resource'))
             .filter(theme => theme); // Filter out falsy values
 
-        if (!themes || themes.length === 0) {
-            // Fall back to default value
-            themes = this.settings.defaultDCATCategory
-                .map(category => GenericMapper.DCAT_CATEGORY_URL + category);
-        }
-
         if(this.settings.filterGroups && this.settings.filterGroups.length > 0 && !themes.some(theme => this.settings.filterGroups.includes(theme.substr(theme.lastIndexOf('/')+1)))){
             this.skipped = true;
         }
@@ -396,6 +393,34 @@ export class DcatMapper extends GenericMapper {
     async getLicense() {
         let license: License;
 
+        let accessRights = DcatMapper.select('./dct:accessRights', this.record);
+        if(accessRights){
+            for(let i=0; i < accessRights.length; i++){
+                try {
+                    let json = JSON.parse(accessRights[i]);
+
+                    if (!json.id || !json.url) continue;
+
+                    let requestConfig = this.getUrlCheckRequestConfig(json.url);
+                    license = {
+                        id: json.id,
+                        title: json.name,
+                        url: await UrlUtils.urlWithProtocolFor(requestConfig)
+                    };
+
+                } catch(ignored) {}
+
+            }
+        }
+        if(!license){
+            for(let i = 0; i < this.linkedDistributions.length; i++) {
+                let licenseResource = DcatMapper.select('dct:license', this.linkedDistributions[i], true);
+                if(licenseResource) {
+                    license = await DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
+                    break;
+                }
+            }
+        }
 
         if (!license) {
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
@@ -492,8 +517,8 @@ export class DcatMapper extends GenericMapper {
             let name = DcatMapper.select('./vcard:Organization/vcard:fn', contact, true);
             let org = DcatMapper.select('./vcard:Organization/organization-name', contact, true);
             let region = DcatMapper.select('./vcard:Organization/vcard:region', contact, true);
-            let country = DcatMapper.select('./vcard:Organization/vcard:country-name', contact, true);
-            let postCode = DcatMapper.select('./vcard:Organization/vcard:postal-code', contact, true);
+            let country = DcatMapper.select('./vcard:Organization/vcard:hasCountryName', contact, true);
+            let postCode = DcatMapper.select('./vcard:Organization/vcard:hasPostalCode', contact, true);
             let email = DcatMapper.select('./vcard:Organization/vcard:hasEmail', contact, true);
             let phone = DcatMapper.select('./vcard:Organization/vcard:hasTelephone', contact, true);
             let urlNode = DcatMapper.select('./vcard:Organization/vcard:hasURL', contact, true);
@@ -511,10 +536,10 @@ export class DcatMapper extends GenericMapper {
             if (org) infos['organization-name'] = org.textContent;
 
             if (region) infos.region = region.textContent;
-            if (country) infos['country-name'] = country.textContent;
+            if (country) infos['country-name'] = country.textContent.trim();
             if (postCode) infos['postal-code'] = postCode.textContent;
-            if (email) infos.hasEmail = email.getAttribute('rdf:resource');
-            if (phone) infos.hasTelephone = phone.textContent;
+            if (email) infos.hasEmail = email.getAttribute('rdf:resource').replace('mailto:','');
+            if (phone) infos.hasTelephone = phone.getAttribute('rdf:resource').replace('tel:','');
             if (url) infos.hasURL = url;
 
         }
