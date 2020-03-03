@@ -2,15 +2,7 @@ import * as nodemailer from 'nodemailer';
 import {ConfigService} from "../services/config/ConfigService";
 
 
-export interface MailServerConfiguration {
-    host: string,
-    port: number,
-    secure?: boolean,
-    auth: {
-        user: string,
-        pass: string
-    }
-}
+
 
 export interface Mail {
     from: string,

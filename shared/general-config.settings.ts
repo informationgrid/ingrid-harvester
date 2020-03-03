@@ -1,5 +1,3 @@
-import {MailServerConfiguration} from '../server/app/utils/nodemailer.utils';
-
 export type GeneralSettings = {
     elasticSearchUrl: string,
     alias: string,
@@ -13,3 +11,13 @@ export type GeneralSettings = {
     },
     maxDiff?: number
 };
+
+export interface MailServerConfiguration {
+    host: string,
+    port: number,
+    secure?: boolean,
+    auth: {
+        user: string,
+        pass: string
+    }
+}
