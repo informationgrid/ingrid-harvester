@@ -787,7 +787,7 @@
     ],
     "filterGroups": [],
     "providerPrefix": "OpenData Berlin: ",
-    "providerField": "organization",
+    "providerField": "author",
     "requestType": "ListWithResources",
     "markdownAsDescription": true,
     "defaultLicense": null,
