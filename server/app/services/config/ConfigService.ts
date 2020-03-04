@@ -78,10 +78,12 @@ export class ConfigService {
      */
     static get(): Harvester[] {
 
-        const configExists = fs.existsSync(this.HARVESTER_CONFIG_FILE);
+        const harvesterConfigFile = this.getHarvesterConfigFile();
+
+        const configExists = fs.existsSync(harvesterConfigFile);
 
         if (configExists) {
-            let contents = fs.readFileSync(this.HARVESTER_CONFIG_FILE);
+            let contents = fs.readFileSync(harvesterConfigFile);
             let configs: Harvester[] = JSON.parse(contents.toString());
             return configs
                 .map(config => {
@@ -119,13 +121,13 @@ export class ConfigService {
             }
         }
 
-        fs.writeFileSync(this.HARVESTER_CONFIG_FILE, JSON.stringify(newConfig, null, 2));
+        fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(newConfig, null, 2));
         return id;
     }
 
     static updateAll(updatedHarvesters: Harvester[]) {
 
-        fs.writeFileSync(this.HARVESTER_CONFIG_FILE, JSON.stringify(updatedHarvesters, null, 2));
+        fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(updatedHarvesters, null, 2));
 
     }
 
@@ -219,5 +221,12 @@ export class ConfigService {
         });
 
         return ordered;
+    }
+
+    private static getHarvesterConfigFile() {
+        const configDir = process.env.MCLOUD_IMPORTER_CONFIG_DIR;
+        return configDir
+            ? configDir + '/' + this.HARVESTER_CONFIG_FILE
+            : this.HARVESTER_CONFIG_FILE;
     }
 }
