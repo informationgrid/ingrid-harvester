@@ -47,7 +47,7 @@ export class DcatImporter implements Importer {
         ...DefaultImporterSettings,
         catalogUrl: '',
         filterTags: [],
-        filterGroups: []
+        filterThemes: []
     };
 
     private readonly summary: DcatSummary;

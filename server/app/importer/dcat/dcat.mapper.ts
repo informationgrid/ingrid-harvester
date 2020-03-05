@@ -274,12 +274,35 @@ export class DcatMapper extends GenericMapper {
         return keywords;
     }
 
-
     getMFundFKZ(): string {
+        // Detect mFund properties
+        let keywords = this.getKeywords();
+        if (keywords) {
+            let fkzKeyword = keywords.find(kw => kw.toLowerCase().startsWith('mfund-fkz:'));
+
+            if (fkzKeyword) {
+                let idx = fkzKeyword.indexOf(':');
+                let fkz = fkzKeyword.substr(idx + 1);
+
+                if (fkz) return fkz.trim();
+            }
+        }
         return undefined;
     }
 
     getMFundProjectTitle(): string {
+        // Detect mFund properties
+        let keywords = this.getKeywords();
+        if (keywords) {
+            let mfKeyword: string = keywords.find(kw => kw.toLowerCase().startsWith('mfund-projekt:'));
+
+            if (mfKeyword) {
+                let idx = mfKeyword.indexOf(':');
+                let mfName = mfKeyword.substr(idx + 1);
+
+                if (mfName) return mfName.trim();
+            }
+        }
         return undefined;
     }
 
@@ -288,8 +311,7 @@ export class DcatMapper extends GenericMapper {
     }
 
     getMetadataSource(): any {
-        let dcatLink;
-        ; //=  DcatMapper.select('.//dct:creator', this.record);
+        let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');
         return {
             raw_data_source: dcatLink,
@@ -303,62 +325,9 @@ export class DcatMapper extends GenericMapper {
     }
 
     getTemporal(): DateRange {
-        if (true) return undefined;
-        let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
-
-        let nodes = DcatMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', this.record);
-        if (nodes.length > 1) {
-            this.log.warn(`Multiple time extents defined. Using only the first one. ${suffix}`);
-        }
-        if (nodes.length > 0) {
-            let begin = this.getTimeValue(nodes, 'begin');
-            let end = this.getTimeValue(nodes, 'end');
-
-            if (begin || end) {
-                return {
-                    start: begin ? begin : undefined,
-                    end: end ? end : undefined
-                }
-            }
-        }
-
-        // otherwise
-
-        nodes = DcatMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimeInstant/gml:timePosition', this.record);
-        let times = nodes.map(node => node.textContent);
-        if (times.length === 1) {
-            return {
-                start: new Date(times[0]),
-                end: new Date(times[0])
-            };
-        } else if (times.length > 1) {
-            this.log.warn(`Multiple time instants defined: [${times.join(', ')}]. ${suffix}`);
-            return {
-                custom: times
-            };
-        }
         return undefined;
     }
 
-    getTimeValue(nodes, beginOrEnd: 'begin' | 'end'): Date {
-        let dateNode = DcatMapper.select('./gml:' + beginOrEnd + 'Position', nodes[0], true);
-        if (!dateNode) {
-            dateNode = DcatMapper.select('./gml:' + beginOrEnd + '/*/gml:timePosition', nodes[0], true);
-        }
-        try {
-            if (!dateNode.hasAttribute('indeterminatePosition')) {
-                let text = dateNode.textContent;
-                let date = new Date(Date.parse(text));
-                if (date) {
-                    return date;
-                } else {
-                    this.log.warn(`Error parsing begin date, which was '${text}'. It will be ignored.`);
-                }
-            }
-        } catch (e) {
-            this.log.error(`Cannot extract time range.`, e);
-        }
-    }
 
     getThemes() {
         // Return cached value, if present
@@ -369,7 +338,7 @@ export class DcatMapper extends GenericMapper {
             .map(node => node.getAttribute('rdf:resource'))
             .filter(theme => theme); // Filter out falsy values
 
-        if(this.settings.filterGroups && this.settings.filterGroups.length > 0 && !themes.some(theme => this.settings.filterGroups.includes(theme.substr(theme.lastIndexOf('/')+1)))){
+        if(this.settings.filterThemes && this.settings.filterThemes.length > 0 && !themes.some(theme => this.settings.filterThemes.includes(theme.substr(theme.lastIndexOf('/')+1)))){
             this.skipped = true;
         }
 
@@ -382,10 +351,10 @@ export class DcatMapper extends GenericMapper {
     }
 
     getAccrualPeriodicity(): string {
-        // Multiple resourceMaintenance elements are allowed. If present, use the first one
-        let freq = [];//DcatMapper.select('./*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode', this.record);
-        if (freq.length > 0) {
-            return freq[0].getAttribute('codeListValue');
+        let accrualPeriodicity = DcatMapper.select('./dct:accrualPeriodicity', this.record, true);
+        if (accrualPeriodicity) {
+            let res = accrualPeriodicity.getAttribute('rdf:resource');
+            return res.substr(res.lastIndexOf('/')+1);
         }
         return undefined;
     }

@@ -934,7 +934,7 @@
     "description": "GovData",
     "defaultAttribution": "Govdata",
     "defaultAttributionLink": null,
-    "filterGroups": [
+    "filterThemes": [
       "TRAN"
     ],
     "catalogUrl": "https://www.govdata.de/ckan/catalog/catalog.rdf"

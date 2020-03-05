@@ -4,6 +4,6 @@ import {ImporterSettings} from '../../importer.settings';
 export type DcatSettings = {
     catalogUrl: string,
     filterTags?: string[],
-    filterGroups?: string[],
+    filterThemes?: string[],
     providerPrefix?: string
 } & ElasticSettings & ImporterSettings;
