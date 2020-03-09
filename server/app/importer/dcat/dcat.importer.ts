@@ -121,20 +121,27 @@ export class DcatImporter implements Importer {
             let pagedCollection = responseDom.getElementsByTagNameNS(DcatMapper.HYDRA, 'PagedCollection')[0];
             if (pagedCollection) {
                 let numReturned = responseDom.getElementsByTagNameNS(DcatMapper.DCAT, 'Dataset').length;
-                //this.numIndexDocs = DcatMapper.select('./hydra:itemsPerPage', pagedCollection, true).textContent;
+                let itemsPerPage = DcatMapper.select('./hydra:itemsPerPage', pagedCollection, true).textContent;
                 this.totalRecords = DcatMapper.select('./hydra:totalItems', pagedCollection, true).textContent;
 
-                let nextPageUrl = DcatMapper.select('./hydra:nextPage', pagedCollection, true).textContent;
-                let lastPageUrl = DcatMapper.select('./hydra:lastPage', pagedCollection, true).textContent;
                 let thisPageUrl = pagedCollection.getAttribute('rdf:about');
 
-                let nextPage = Number(DcatImporter.getPageFromUrl(nextPageUrl));
-                let lastPage = 15;//Number(DcatImporter.getPageFromUrl(lastPageUrl));
                 let thisPage = Number(DcatImporter.getPageFromUrl(thisPageUrl));
 
-                this.requestDelegate.updateConfig({qs: {page: nextPage}});
+                let lastPage = this.totalRecords/itemsPerPage;
+                let lastPageUrlElement = DcatMapper.select('./hydra:lastPage', pagedCollection, true);
+                if(lastPageUrlElement){
+                    let lastPageUrl = lastPageUrlElement.textContent;
+                    lastPage = Number(DcatImporter.getPageFromUrl(lastPageUrl));
+                }
+
 
                 isLastPage = thisPage >= lastPage;
+                if(!isLastPage){
+                    let nextPageUrl = DcatMapper.select('./hydra:nextPage', pagedCollection, true).textContent;
+                    let nextPage = Number(DcatImporter.getPageFromUrl(nextPageUrl));
+                    this.requestDelegate.updateConfig({qs: {page: nextPage}});
+                }
 
                 log.debug(`Received ${numReturned} records from ${this.settings.catalogUrl} - Page: ${thisPage}`);
                 await this.extractRecords(response, harvestTime)
@@ -153,7 +160,7 @@ export class DcatImporter implements Importer {
         let promises = [];
         let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
         let rootNode = xml.getElementsByTagNameNS(DcatMapper.RDF, 'RDF')[0];
-        let records =  DcatMapper.select('.//dcat:Dataset', rootNode);
+        let records =  DcatMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
 
         let distributions = DcatMapper.select('./dcat:Distribution', rootNode);
 

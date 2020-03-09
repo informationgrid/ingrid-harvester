@@ -1,7 +1,10 @@
 import {DcatMapper} from "../importer/dcat/dcat.mapper";
 import {License} from '@shared/license.model';
+import {getLogger} from "log4js";
 
 export class DcatLicensesUtils {
+
+    private static log = getLogger();
 
     private static licenses: License[];
 
@@ -41,17 +44,15 @@ export class DcatLicensesUtils {
     }
 
     static async get(dcatUrl) {
-        if (!DcatLicensesUtils.licenses) await DcatLicensesUtils.import();
+        if (!DcatLicensesUtils.licenses) DcatLicensesUtils.import();
         return DcatLicensesUtils.licenses[dcatUrl];
 
     }
 
-    static async import() {
+    static import() {
         let fs = require('fs');
-        await fs.readFile('def_licenses.rdf', function (err, data) {
-            if (err) {
-                return console.error(err);
-            }
+        try {
+            const data = fs.readFileSync('def_licenses.rdf');
 
             let DomParser = require('xmldom').DOMParser;
             let responseDom = new DomParser().parseFromString(data.toString());
@@ -59,7 +60,7 @@ export class DcatLicensesUtils {
             let concepts = responseDom.getElementsByTagNameNS(DcatLicensesUtils.SKOS, 'Concept');
 
             if (concepts) {
-                DcatLicensesUtils.licenses = []
+                DcatLicensesUtils.licenses = [];
                 for (let i = 0; i < concepts.length; i++) {
                     let dcatURL = concepts[i].getAttribute('rdf:about');
                     let id = DcatLicensesUtils.select('./dc:identifier', concepts[i], true);
@@ -75,7 +76,9 @@ export class DcatLicensesUtils {
                     }
                 }
             }
+        } catch (err) {
+            DcatLicensesUtils.log.error(err);
+        }
 
-        });
     }
 }

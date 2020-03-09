@@ -918,7 +918,7 @@
     "type": "DCAT",
     "maxRecords": null,
     "startPosition": null,
-    "customCode": null,
+    "customCode": "if(doc.extras.metadata.source.portal_link.startsWith('https://mcloud.de/')) this.skipped=true;",
     "defaultMcloudSubgroup": [
       "roads"
     ],
@@ -928,15 +928,35 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "catalogUrl": "https://www.govdata.de/ckan/catalog/catalog.rdf",
+    "filterTags": [],
+    "filterThemes": [
+      "TRAN"
+    ],
     "httpMethod": "GET",
     "id": 31,
     "disabled": true,
     "description": "GovData",
     "defaultAttribution": "Govdata",
-    "defaultAttributionLink": null,
-    "filterThemes": [
+    "defaultAttributionLink": null
+  },
+  {
+    "id": 32,
+    "disabled": true,
+    "type": "DCAT",
+    "description": "mCloud",
+    "index": "dcat_mcloud",
+    "defaultDCATCategory": [
       "TRAN"
     ],
-    "catalogUrl": "https://www.govdata.de/ckan/catalog/catalog.rdf"
+    "defaultMcloudSubgroup": [
+      "infrastructure"
+    ],
+    "defaultAttribution": "mCloud",
+    "defaultAttributionLink": null,
+    "maxRecords": 10,
+    "startPosition": 0,
+    "customCode": null,
+    "catalogUrl": "https://mcloud.de/export/datasets"
   }
 ]

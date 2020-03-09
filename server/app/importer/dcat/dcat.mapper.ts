@@ -10,6 +10,7 @@ import {DcatSummary} from "./dcat.importer";
 import {OptionsWithUri} from "request-promise";
 import {DcatSettings} from './dcat.settings';
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
+import {throwError} from "rxjs";
 
 let xpath = require('xpath');
 
@@ -134,11 +135,13 @@ export class DcatMapper extends GenericMapper {
             let organization = DcatMapper.select('.//foaf:Organization', creators[i], true);
             if (organization) {
                 let name = DcatMapper.select('.//foaf:name', organization, true);
-                let infos: any = {
-                    organization: name.textContent
-                };
+                if(name) {
+                    let infos: any = {
+                        organization: name.textContent
+                    };
 
-                publishers.push(infos);
+                    publishers.push(infos);
+                }
             }
         }
 
@@ -321,7 +324,8 @@ export class DcatMapper extends GenericMapper {
     }
 
     getModifiedDate() {
-        return new Date(DcatMapper.select('./dct:modified', this.record, true).textContent);
+        let modified = DcatMapper.select('./dct:modified', this.record, true);
+        return modified?new Date(modified.textContent):undefined;
     }
 
     getTemporal(): DateRange {
@@ -424,12 +428,14 @@ export class DcatMapper extends GenericMapper {
             if (organization) {
                 let name = DcatMapper.select('.//foaf:name', organization, true);
                 let mbox = DcatMapper.select('.//foaf:mbox', organization, true);
-                let infos: any = {
-                    organization: name.textContent
-                };
-                if(mbox) infos.mbox = mbox.textContent;
+                if(name) {
+                    let infos: any = {
+                        organization: name.textContent
+                    };
+                    if (mbox) infos.mbox = mbox.textContent;
 
-                creators.push(infos);
+                    creators.push(infos);
+                }
             }
         }
 
@@ -442,7 +448,8 @@ export class DcatMapper extends GenericMapper {
     }
 
     getIssued(): Date {
-        return new Date(DcatMapper.select('./dct:modified', this.record, true).textContent);
+        let modified = DcatMapper.select('./dct:modified', this.record, true);
+        return modified?new Date(modified.textContent):undefined;
     }
 
     getMetadataHarvested(): Date {
@@ -535,6 +542,16 @@ export class DcatMapper extends GenericMapper {
 
     protected getUuid(): string {
         return this.uuid;
+    }
+
+    executeCustomCode(doc: any) {
+        try {
+            if (this.settings.customCode) {
+                eval(this.settings.customCode);doc
+            }
+        } catch (error) {
+            throwError('An error occurred in custom code: ' + error.message);
+        }
     }
 
 }
