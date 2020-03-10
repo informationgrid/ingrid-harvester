@@ -185,6 +185,10 @@
     "defaultAttributionLink": null,
     "rules": {
       "containsDocumentsWithData": false
+    },
+    "cron": {
+      "active": true,
+      "pattern": "0 2 * * *"
     }
   },
   {
@@ -217,7 +221,11 @@
     "defaultAttribution": "OpenData Rostock",
     "disable": false,
     "id": 7,
-    "defaultAttributionLink": null
+    "defaultAttributionLink": null,
+    "cron": {
+      "active": true,
+      "pattern": "5 2 * * *"
+    }
   },
   {
     "index": "ckan_offenesdatenportal",
@@ -249,7 +257,11 @@
     "defaultAttribution": "Offenesdatenportal",
     "disable": false,
     "id": 8,
-    "defaultAttributionLink": null
+    "defaultAttributionLink": null,
+    "cron": {
+      "active": true,
+      "pattern": "10 2 * * *"
+    }
   },
   {
     "index": "ckan_portal_hamburg",
@@ -320,8 +332,8 @@
     "id": 10,
     "defaultAttributionLink": null,
     "cron": {
-      "pattern": "*/2 * * * *",
-      "active": false
+      "pattern": "0 2 * * *",
+      "active": true
     },
     "rules": {
       "containsDocumentsWithData": true,
@@ -378,6 +390,10 @@
     "rules": {
       "containsDocumentsWithData": true,
       "containsDocumentsWithDataBlacklist": "rss,html,doc,pdf"
+    },
+    "cron": {
+      "pattern": "15 2 * * *",
+      "active": true
     }
   },
   {
@@ -406,7 +422,11 @@
     "defaultAttribution": "WSV.Geokatalog CSW",
     "defaultAttributionLink": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2",
     "disable": false,
-    "id": 12
+    "id": 12,
+    "cron": {
+      "pattern": "40 2 * * *",
+      "active": true
+    }
   },
   {
     "index": "csw_mdi",
@@ -434,7 +454,11 @@
     "defaultAttribution": "MDI-DE",
     "defaultAttributionLink": "https://www.mdi-de.org/",
     "disable": false,
-    "id": 13
+    "id": 13,
+    "cron": {
+      "active": true,
+      "pattern": "45 2 * * *"
+    }
   },
   {
     "index": "csw_bfg",
@@ -462,7 +486,11 @@
     "defaultAttribution": "Bundesanstalt für Gewässerkunde",
     "defaultAttributionLink": "https://geoportal.bafg.de/",
     "disable": false,
-    "id": 14
+    "id": 14,
+    "cron": {
+      "active": true,
+      "pattern": "30 2 * * *"
+    }
   },
   {
     "index": "csw_dwd",
@@ -491,7 +519,11 @@
     "defaultAttribution": "Climate Data Centre (CDC) Katalog des DWD",
     "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/csw",
     "disable": false,
-    "id": 15
+    "id": 15,
+    "cron": {
+      "pattern": "35 2 * * *",
+      "active": true
+    }
   },
   {
     "index": "csw_codede",
@@ -519,7 +551,11 @@
     "defaultAttribution": "CODE-DE Catalogue",
     "defaultAttributionLink": "https://code-de.org/de/marketplace",
     "disable": false,
-    "id": 16
+    "id": 16,
+    "cron": {
+      "pattern": "35 2 * * *",
+      "active": true
+    }
   },
   {
     "index": "csw_bsh",
@@ -547,7 +583,11 @@
     "defaultAttribution": "GeoSeaPortal (BSH)",
     "defaultAttributionLink": "https://www.geoseaportal.de/",
     "disable": false,
-    "id": 17
+    "id": 17,
+    "cron": {
+      "pattern": "30 2 * * *",
+      "active": true
+    }
   },
   {
     "index": "csw_bsh_inspire",
@@ -604,7 +644,11 @@
     "defaultAttributionLink": "https://geoservice.dlr.de",
     "id": 20,
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>mCLOUD</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
-    "cronPattern": "0 2 * * *"
+    "cronPattern": "0 2 * * *",
+    "cron": {
+      "active": true,
+      "pattern": "35 2 * * *"
+    }
   },
   {
     "index": "Testing CKAN Harvester",
@@ -652,7 +696,7 @@
       "incora"
     ],
     "httpMethod": "GET",
-    "disable": false,
+    "disable": true,
     "defaultAttribution": "GeoNode Catalogue",
     "defaultAttributionLink": "https://ils-geomonitoring.de",
     "description": "ILS GeoNode Catalogue",
@@ -683,7 +727,11 @@
     "description": "GeoNet.MRN",
     "defaultAttribution": "GeoNet.MRN",
     "defaultAttributionLink": "http://daten.geonet-mrn.de",
-    "id": 23
+    "id": 23,
+    "cron": {
+      "active": true,
+      "pattern": "40 2 * * *"
+    }
   },
   {
     "index": "ckan_nrw_wuppertal",
@@ -798,6 +846,10 @@
     "defaultAttributionLink": null,
     "rules": {
       "containsDocumentsWithData": false
+    },
+    "cron": {
+      "pattern": "5 2 * * *",
+      "active": true
     }
   },
   {
@@ -835,6 +887,10 @@
     "defaultAttributionLink": null,
     "rules": {
       "containsDocumentsWithData": false
+    },
+    "cron": {
+      "active": true,
+      "pattern": "5 2 * * *"
     }
   },
   {
@@ -872,6 +928,10 @@
     "defaultAttributionLink": null,
     "rules": {
       "containsDocumentsWithData": false
+    },
+    "cron": {
+      "active": true,
+      "pattern": "10 2 * * *"
     }
   },
   {
