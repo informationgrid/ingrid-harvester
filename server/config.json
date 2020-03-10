@@ -817,9 +817,9 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "customCode": "doc.extras.metadata.source.portal_link = 'https://daten.berlin.de/datensaetze/' + this.source.name;",
+    "customCode": "doc.extras.metadata.source.portal_link = 'https://daten.berlin.de/datensaetze/' + this.source.name;\n\ndoc.extras.subgroups = ['infrastructure'];\n\nif(doc.keywords.indexOf('emobility') !== -1) {\n  doc.extras.subgroups = ['roads', 'infrastructure'];\n}\n\nif(doc.keywords.indexOf('breitband') !== -1) {\n  doc.extras.subgroups = ['infrastructure'];\n}\n\n\nlet publisher = doc.extras.displayContact[0].name.substr(this.settings.providerPrefix.length);\n\nswitch(publisher){\n\tcase 'Senatsverwaltung für Umwelt, Verkehr und Klimaschutz Berlin':\n\t\tdoc.extras.subgroups = ['roads'];\n\t\tbreak;\n\tcase 'Senatsverwaltung für Stadtentwicklung und Wohnen Berlin':\n\t\tdoc.extras.subgroups = ['infrastructure'];\n\t\tbreak;\n\tcase 'VBB - Verkehrsverbund Berlin-Brandenburg GmbH':\n\t\tdoc.extras.subgroups = ['roads', 'railway'];\n\t\tbreak;\n\tcase 'Gemeinsame Landesplanungsabteilung Berlin-Brandenburg':\n\t\tdoc.extras.subgroups = ['roads', 'railway'];\n\t\tbreak;\n\tcase 'DAI-Labor/TU-Berlin':\n\t\tdoc.extras.subgroups = ['roads'];\n\t\tbreak;\n}\n\nconst railwayAdditionalIDs = ['e4504444-2011-436d-8f5b-4c90c0b0b540',\n\t'ce54c74c-0e65-4f27-8178-9901411cb06f',\n\t'97e83926-3a86-4015-b93a-a6dfe5314855',\n\t'41a15066-5bfd-479d-9943-d277487c5b37',\n\t'a35bedfb-6c45-4e0a-a9f6-9c43adf798da',\n\t'ef2defcc-20ff-417d-a05e-299f099f7033',\n\t'676231d3-5b9b-4172-8ef7-6e3747bd19d7',\n\t'3a9f5e10-5ecc-4910-a3e3-012f14f8d3f4',\n\t'33e3d20d-0e5b-4728-b5c1-eaab5c11c25b',\n\t'181add76-a8c5-4c69-b715-be83e07c7574',\n\t'918d493f-04ce-45d2-a85b-7e482bea61a0',\n\t'6d06b54c-3429-4855-a2ff-27651489dfbc',\n\t'e3cae5ff-725e-4704-b357-26a4ee3df413',\n\t'4f0894f6-f42b-4a81-9034-c38016f76721',\n\t'116f91fa-52b5-4007-a050-a204a0ebf5fb',\n\t'a83e70bc-2922-4a92-8c94-a9debe326f9f',\n\t'a5023f76-759b-4b45-bc4e-5a8060119803',\n\t'370253a5-8004-4675-9fbe-038678022350'];\n\t\t\nconst aviationAdditionalIDs = ['181add76-a8c5-4c69-b715-be83e07c7574',\n\t'918d493f-04ce-45d2-a85b-7e482bea61a0',\n\t'2f41315a-9aba-41cc-8c98-ecb6467772f8',\n\t'4d163868-c451-4355-881d-a227be5ec856',\n\t'72f0078b-0475-42bb-bd64-272d18d4faca',\n\t'a83e70bc-2922-4a92-8c94-a9debe326f9f',\n\t'a5023f76-759b-4b45-bc4e-5a8060119803',\n\t'370253a5-8004-4675-9fbe-038678022350'];\n\nconst climateAdditionalIDs =['8b289abb-decd-4887-98c5-ee80381c21b4',\n\t'2ab0227e-6c6e-4441-b1a9-f0d1c8560a25',\n\t'1830dd65-76f2-47f1-8916-1d21fd80127e',\n\t'08e002be-37d4-4ad9-803c-c0a5b452bbfd',\n\t'82113feb-84a1-4e36-9c56-6235b9e31543',\n\t'60115464-39a7-43eb-b675-76030ef8570d',\n\t'da8f803c-e745-43c0-8c94-9ee295145a86',\n\t'd8516433-37b6-463a-afc2-3ecbaa1fab41',\n\t'dc126af9-9e22-4e00-9fca-804e30ea49ab',\n\t'e4b06b31-cc9e-4b3e-978e-8c276dd5e991',\n\t'0efd73aa-9d7d-4cba-96c0-608c194fba40',\n\t'084a03e9-9c54-40ea-bd0f-ae1e0d340a8a',\n\t'063d0b96-0796-4c20-926b-af7330eaec7b',\n\t'71a5da70-5567-48da-90c0-8f9d44c7fa48'];\n\nconst watersAdditionalIDs = ['c70763b1-4f86-4128-8da4-6caf783ebda1',\n\t'4255c7e5-a318-4ab8-b08e-d05cc2e4643b',\n\t'e27d7350-dde1-4a45-8020-2bbdc779d1d1',\n\t'a4bfd86a-75d4-46b0-b416-d783c9c0472a',\n\t'ff5c67e9-95c3-43f2-9895-17b1339add57',\n\t'a83e70bc-2922-4a92-8c94-a9debe326f9f',\n\t'a5023f76-759b-4b45-bc4e-5a8060119803',\n\t'370253a5-8004-4675-9fbe-038678022350'];\n\t\t\nconst roadsAdditionalIDs = ['f5efd167-ea1b-4b87-baa3-ae06bb4d7499',\n\t'84a678a7-a197-457e-8ca1-f04cbb157f42',\n\t'7aac7ced-8df7-44d1-8897-8d1a9764adaa',\n\t'059f7694-4940-4ee9-9f03-ac67eb65dd34',\n\t'8cbfbfc5-fa55-4e08-ace5-5aff735557f7',\n\t'8ea61d91-8759-4383-b92c-1cda5aa1d657',\n\t'9573fe92-0482-4bd8-b0dd-8dcf031d7d42',\n\t'c3f99292-25c8-4d64-9514-e493b0fb5ff9',\n\t'883bc929-94f3-4585-9d3d-374d2ae1c720',\n\t'ec4a828f-aecd-47bf-8eeb-697c9efc9378',\n\t'a83e70bc-2922-4a92-8c94-a9debe326f9f',\n\t'a5023f76-759b-4b45-bc4e-5a8060119803',\n\t'370253a5-8004-4675-9fbe-038678022350'];\n\nconst aviationOnlyIDs = ['b99003fa-3f3c-40e5-b2df-b316f257a2fc',\n\t'3afbc3aa-befa-4ae1-8821-b6094c0747cc',\n\t'4f9ef71d-d0e0-45cb-b716-21a714744252',\n\t'962c7b9a-cc85-48bb-99b2-a1c06c4b792b',\n\t'638c6b17-b0af-4208-a7c8-cb28614e000e',\n\t'ac89e40a-d6f7-439d-8c52-50202686efdd'];\n\nconst climateOnlyIDs =['3f9ef3d1-9618-4045-a385-dcc79c40a378'];\n\t\t\nconst climateAndWaterOnly = ['b9ca3d00-a512-47c3-8bbb-179c629bed51',\n\t'36d9cf15-43da-4b40-8470-2227ec9c3456',\n\t'c3b0cd66-3558-4af4-8ece-49ead068df1d',\n\t'b06da9f0-67e0-439c-a5e8-d79c6d3252e7'];\n\nif (railwayAdditionalIDs.indexOf(this.source.id) !== -1) {\n\tdoc.extras.subgroups.push('railway');\n}\nif (aviationAdditionalIDs.indexOf(this.source.id) !== -1) {\n\tdoc.extras.subgroups.push('aviation');\n}\nif (climateAdditionalIDs.indexOf(this.source.id) !== -1) {\n\tdoc.extras.subgroups.push('climate');\n}\nif (watersAdditionalIDs.indexOf(this.source.id) !== -1) {\n\tdoc.extras.subgroups.push('waters');\n}\nif (roadsAdditionalIDs.indexOf(this.source.id) !== -1) {\n  doc.extras.subgroups.push('roads');\n}\nif (aviationOnlyIDs.indexOf(this.source.id) !== -1) {\n\tdoc.extras.subgroups = ['aviation'];\n}\nif (climateOnlyIDs.indexOf(this.source.id) !== -1) {\n\tdoc.extras.subgroups = ['climate'];\n}\nif (climateAndWaterOnly.indexOf(this.source.id) !== -1) {\n\tdoc.extras.subgroups = ['climate', 'waters'];\n}\n",
     "defaultMcloudSubgroup": [
-      "infrastructure"
+      "roads"
     ],
     "defaultDCATCategory": [
       "TRAN"
@@ -831,6 +831,9 @@
     "whitelistedIds": [],
     "ckanBaseUrl": "https://datenregister.berlin.de",
     "filterTags": [
+      "emobility",
+      "breitband",
+      "verkehr",
       "Verkehr"
     ],
     "filterGroups": [],
@@ -858,7 +861,7 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "customCode": null,
+    "customCode": "const railwayOnlyIDs = ['10388c98-a909-406a-9445-6e8219650e7f'];\nconst railwayAdditionalIDs = ['618b3cdc-1393-4a34-b8cd-1407d3d3cf08'];\nconst infrastructureIDs = ['5b8e1a97-1b5c-465f-8578-5e1bf4971f0b',\n\t'60b0e7aa-1d98-4f07-924d-feac7a8f7eae',\n\t'882d452a-8f2d-4344-a46b-4cf37f960cec',];\n\nif (railwayOnlyIDs.indexOf(this.source.id) !== -1) {\n  doc.extras.subgroups = ['railway'];\n}\nelse if (railwayAdditionalIDs.indexOf(this.source.id) !== -1) {\n  doc.extras.subgroups = ['roads', 'railway'];\n}\nelse if (infrastructureIDs.indexOf(this.source.id) !== -1) {\n  doc.extras.subgroups = ['infrastructure'];\n}\n",
     "defaultMcloudSubgroup": [
       "roads"
     ],
@@ -869,7 +872,11 @@
       "YYYY-MM-DDThh:mm:ss"
     ],
     "blacklistedIds": [],
-    "whitelistedIds": [],
+    "whitelistedIds": [
+      "5b8e1a97-1b5c-465f-8578-5e1bf4971f0b",
+      "60b0e7aa-1d98-4f07-924d-feac7a8f7eae",
+      "882d452a-8f2d-4344-a46b-4cf37f960cec"
+    ],
     "ckanBaseUrl": "https://daten.rlp.de/",
     "filterTags": [
       "Verkehr"
@@ -899,9 +906,9 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 1,
-    "customCode": null,
+    "customCode": "const infrastructureIDs = ['8cd4543a-8a38-45dd-8f79-5e0e8253ff08'];\nconst aviationIDs = ['5b0bedba-f10a-30f6-9cb1-6d9796f8ef70'];\nconst watersAndRoadsIDs = ['618b3cdc-1393-4a34-b8cd-1407d3d3cf08',\n\t'49e939f6-08f8-38ad-a85c-9861d2ec99ac',\n\t'77105e46-e23b-3c1e-b84a-59b77b032d89',\n\t'370adec3-d38a-30e3-a89b-cf1d7350f926',\n\t'adcdfdeb-9520-3cf4-b3d5-a134f4f97881',\n\t'0f9bfd90-b532-35d0-8d6d-51527454b9ee',\n\t'9a7015e8-704f-3d06-a3ae-6b5c11a50162'];\nconst watersIDs = ['b06b3f9e-b220-3a9e-a956-7a46077b396b',\n\t'2658b8a7-5d2b-3c4a-91c1-9c405078c6ce',\n\t'a51a65b7-097f-3946-8825-35f193964320',\n\t'c209bc9a-7950-32fb-88b2-b9c29054f458',\n\t'7d520332-65a2-3c9a-a792-090987ff81b2',\n\t'4be7d97c-7ca6-37b1-a276-4aff60c97fc0',\n\t'7f907139-b383-3dae-84bb-7d483cbc83c5',\n\t'4c586654-4659-319c-aab7-ee87629b1f01',\n\t'c4cc34d5-6e1f-385e-8ebb-bd043250bd14',\n\t'b64b796f-243d-3131-91d5-fe0c21ac48e8'];\n\nif (infrastructureIDs.indexOf(this.source.id) !== -1) {\n\tdoc.extras.subgroups = ['infrastructure'];\n}\nif (aviationIDs.indexOf(this.source.id) !== -1) {\n\tdoc.extras.subgroups = ['aviation'];\n}\nif (watersAndRoadsIDs.indexOf(this.source.id) !== -1) {\n\tdoc.extras.subgroups = ['waters', 'roads'];\n}\t\nif (watersIDs.indexOf(this.source.id) !== -1 || doc.title.indexOf('schifffahrt') !== -1) {\n\tdoc.extras.subgroups = ['waters'];\n}",
     "defaultMcloudSubgroup": [
-      "infrastructure"
+      "roads"
     ],
     "defaultDCATCategory": [
       "TRAN"
@@ -910,7 +917,9 @@
       "YYYY-MM-DDThh:mm:ss"
     ],
     "blacklistedIds": [],
-    "whitelistedIds": [],
+    "whitelistedIds": [
+      "8cd4543a-8a38-45dd-8f79-5e0e8253ff08"
+    ],
     "ckanBaseUrl": "https://opendata.schleswig-holstein.de",
     "filterTags": [],
     "filterGroups": [
