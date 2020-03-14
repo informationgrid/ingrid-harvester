@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from './security/authentication.service';
 import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {ConfigService} from "./config.service";
 
 @Component({
   selector: 'app-root',
@@ -10,8 +11,10 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 })
 export class AppComponent implements OnInit {
   isLoggedIn = false;
+  version = this.configService.config$;
 
-  constructor(private router: Router, private authService: AuthenticationService, private snack: MatSnackBar) {
+  constructor(private router: Router, private authService: AuthenticationService, private snack: MatSnackBar,
+              private configService: ConfigService) {
 
   }
 

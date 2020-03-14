@@ -1,4 +1,5 @@
 {
   "url": "",
-  "contextPath": "/importer"
+  "contextPath": "/importer",
+  "version": "@@VERSION@@"
 }

@@ -1,12 +1,16 @@
 import {Service} from "@tsed/common";
 import {MemoryStorage} from "../storage/MemoryStorage";
 import {IUser} from "../../model/User";
+import * as fs from "fs";
 
 @Service()
 export class UsersService {
 
+    private USERS_CONFIG_FILE = 'users.json';
+
     constructor(private memoryStorage: MemoryStorage) {
-        this.memoryStorage.set("users", require("../../../users.json"));
+        const users = fs.readFileSync(this.getUserConfig());
+        this.memoryStorage.set("users", JSON.parse(users.toString()));
     }
 
     /**
@@ -69,5 +73,12 @@ export class UsersService {
         this.memoryStorage.set("users", users);
 
         return user;
+    }
+
+    private getUserConfig(): string {
+        const configDir = process.env.MCLOUD_IMPORTER_CONFIG_DIR;
+        return configDir
+            ? configDir + '/' + this.USERS_CONFIG_FILE
+            : this.USERS_CONFIG_FILE;
     }
 }
