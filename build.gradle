@@ -14,6 +14,10 @@ repositories {
 version = 'MANAGED_BY_JGITVER'
 description = 'InGrid mCLOUD Importer'
 
+jgitver {
+    nonQualifierBranches = 'master,develop'
+}
+
 task buildRpm(type: Rpm) {
     packageName 'mcloud-importer'
     release '1'
