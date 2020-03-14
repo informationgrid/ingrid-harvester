@@ -134,6 +134,18 @@
       "issued": "2020-01-21T08:12:40.972Z",
       "modified": null,
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - B2"
+    },
+    {
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2020_ZpAR Sm_Endstück.pdf",
+      "byteSize": null,
+      "description": "Endstück Sommerfahrplan 2020 - B1 - Gültigkeit: 14.06.2020 - 12.12.2020",
+      "format": [
+        "PDF"
+      ],
+      "id": "864bb453-4882-417b-b892-58c3e7f7b84b",
+      "issued": "2020-03-09T06:16:36.206Z",
+      "modified": null,
+      "title": "Zugbildungsplan A -Reihung- (ZpAR)"
     }
   ],
   "extras": {
