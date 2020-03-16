@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
 export class Configuration {
@@ -14,7 +14,7 @@ export class Configuration {
 export class ConfigService {
 
   config: Configuration;
-  config$ = new Subject();
+  config$ = new BehaviorSubject({});
 
   constructor(private http: HttpClient) {
   }
