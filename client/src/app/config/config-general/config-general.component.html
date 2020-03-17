@@ -68,9 +68,10 @@
           <input matInput placeholder="Empfänger" formControlName="to" required>
         </mat-form-field>
         <br/><br/>
-        <mat-form-field>
-          <mat-label>Benachrichtigungs-Schwelle</mat-label>
-          <input matInput type="number" formControlName="maxDiff" min="0">
+        <mat-form-field style="width: 250px">
+          <mat-label matPrefix>Benachrichtigungs-Schwelle:</mat-label>
+          <input matInput type="number" min="1" max="100" style="text-align: right; width: 50px" formControlName="maxDiff">
+          <mat-icon [inline]="true" style="padding-left: 1px" matSuffix>%</mat-icon>
         </mat-form-field>
       </mat-card-content>
     </mat-card>

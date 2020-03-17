@@ -16,5 +16,5 @@
     "from": "test@example.com",
     "to": "test@example.com"
   },
-  "maxDiff": 0
+  "maxDiff": 10
 }
