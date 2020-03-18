@@ -975,5 +975,35 @@
       "containsDocumentsWithData": false
     },
     "disable": true
+  },
+  {
+    "index": "csw_geomis_sachsen",
+    "includeTimestamp": true,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": "doc.extras.subgroups = ['roads'];\n\nif(doc.title.indexOf('Verkehrsnetze') !== -1){\n\tdoc.extras.subgroups.push('railway');\n\tdoc.extras.subgroups.push('waters');\n\tdoc.extras.subgroups.push('aviation');\n\tdoc.extras.subgroups.push('infrastructure');\n}\nif((doc.title.indexOf('Topographische Karte') !== -1) || (doc.title.indexOf('Landschaftsmodell') !== -1)){\n\tdoc.extras.subgroups.push('railway');\n\tdoc.extras.subgroups.push('waters');\n\tdoc.extras.subgroups.push('aviation');\n}\nif(doc.title.indexOf('Straßenknotennetz') !== -1){\n\tdoc.extras.subgroups.push('infrastructure');\n}\nif(doc.title.indexOf('Wetter') !== -1){\n\tdoc.extras.subgroups.push('climate');\n}\nif(doc.title.indexOf('Wirtschaft') !== -1){\n\tdoc.extras.subgroups.push('aviation');\n}\nif(doc.title.indexOf('Landeplätze') !== -1){\n\tdoc.extras.subgroups = ['aviation'];\n}",
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "getRecordsUrl": "https://geomis.sachsen.de/soapServices/CSWStartup",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 31,
+    "disabled": true,
+    "description": "GeoMIS.Sachsen",
+    "defaultAttribution": "GeoMIS Sachsen",
+    "defaultAttributionLink": "",
+    "recordFilter": "        <ogc:Filter>\n            <ogc:And>\n                <ogc:PropertyIsEqualTo>\n                    <ogc:PropertyName>subject</ogc:PropertyName>\n                    <ogc:Literal>opendata</ogc:Literal>\n                </ogc:PropertyIsEqualTo>\n                <ogc:Or>\n                    <ogc:PropertyIsEqualTo>\n                        <ogc:PropertyName>HierarchyLevelName</ogc:PropertyName>\n                        <ogc:Literal>transportation</ogc:Literal>\n                    </ogc:PropertyIsEqualTo>\n                    <ogc:PropertyIsEqualTo>\n                        <ogc:PropertyName>TopicCategory</ogc:PropertyName>\n                        <ogc:Literal>transportation</ogc:Literal>\n                    </ogc:PropertyIsEqualTo>\n                </ogc:Or>\n            </ogc:And>\n        </ogc:Filter>",
+    "cron": {
+      "active": true,
+      "pattern": "40 2 * * *"
+    }
   }
 ]
