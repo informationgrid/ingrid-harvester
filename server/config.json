@@ -999,7 +999,7 @@
     "disabled": true,
     "description": "GeoMIS.Sachsen",
     "defaultAttribution": "GeoMIS Sachsen",
-    "defaultAttributionLink": "",
+    "defaultAttributionLink": "https://geomis.sachsen.de",
     "recordFilter": "        <ogc:Filter>\n            <ogc:And>\n                <ogc:PropertyIsEqualTo>\n                    <ogc:PropertyName>subject</ogc:PropertyName>\n                    <ogc:Literal>opendata</ogc:Literal>\n                </ogc:PropertyIsEqualTo>\n                <ogc:Or>\n                    <ogc:PropertyIsEqualTo>\n                        <ogc:PropertyName>HierarchyLevelName</ogc:PropertyName>\n                        <ogc:Literal>transportation</ogc:Literal>\n                    </ogc:PropertyIsEqualTo>\n                    <ogc:PropertyIsEqualTo>\n                        <ogc:PropertyName>TopicCategory</ogc:PropertyName>\n                        <ogc:Literal>transportation</ogc:Literal>\n                    </ogc:PropertyIsEqualTo>\n                </ogc:Or>\n            </ogc:And>\n        </ogc:Filter>",
     "cron": {
       "active": true,
