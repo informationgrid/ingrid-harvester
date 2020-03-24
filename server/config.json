@@ -269,7 +269,7 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "customCode": "",
+    "customCode": "if(this.source.type !== 'dataset'){\n  this.skipped = true;\n}\n\nconst latestVersion = this.source.extras\n            .filter(extra => extra.key === 'latestVersion').map(extra => extra.value);\n        \n        if (latestVersion && latestVersion.length > 0 && latestVersion[0] === 'false') {\n            this.skipped = true;\n}\n\nif(['Brücken', 'ZEB-Netz', 'Straßenverkehrsnetz', 'Straßen- und Wegenetz', 'Verkehrsnetze', 'dwista', 'Lichtsignalanlagen', 'Parkhäuser', 'Straßennetz', 'Fahrradluftstationen', 'Parkscheinautomaten', 'Ladestandorte']\n\t.some(s => doc.title.indexOf(s) !== -1)){\n\tdoc.extras.subgroups = ['roads', 'infrastructure'];\n}\nif(doc.title.indexOf('Ride') !== -1){\n\tdoc.extras.subgroups = ['roads', 'railway', 'infrastructure'];\n}\nif(doc.title.indexOf('SWIS') !== -1){\n\tdoc.extras.subgroups = ['roads', 'climate'];\n}\nif(doc.title.indexOf('HOCHBAHN') !== -1){\n\tdoc.extras.subgroups = ['railway'];\n}\nif(['Flughafen', 'Fluglärmbeschwerden'].some(s => doc.title.indexOf(s) !== -1)){\n\tdoc.extras.subgroups = ['aviation'];\n}",
     "defaultMcloudSubgroup": [
       "roads"
     ],
@@ -285,14 +285,18 @@
       "transport-und-verkehr"
     ],
     "providerPrefix": "",
-    "providerField": "maintainer",
+    "providerField": "author",
     "requestType": "ListWithResources",
     "markdownAsDescription": true,
     "defaultLicense": null,
     "description": "Transparenzportal Hamburg",
     "defaultAttribution": "Transparenzportal Hamburg",
-    "disable": true,
-    "id": 9
+    "disable": false,
+    "id": 9,
+    "defaultAttributionLink": null,
+    "rules": {
+      "containsDocumentsWithData": false
+    }
   },
   {
     "index": "ckan_opendata_rnv",
