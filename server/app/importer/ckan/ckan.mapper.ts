@@ -406,6 +406,10 @@ export class CkanMapper extends GenericMapper {
     }
 
     isValid(doc?: any): boolean {
+        if(this.source.private) {
+            this.skipped = true;
+        }
+
         if (doc.distribution.length === 0) {
             this.valid = false;
             let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.source.id}', index: '${this.data.currentIndexName}'.`;
