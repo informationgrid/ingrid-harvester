@@ -174,7 +174,7 @@
     "filterGroups": [],
     "providerPrefix": "",
     "providerField": "organization",
-    "requestType": "ListWithResources",
+    "requestType": "Search",
     "markdownAsDescription": true,
     "defaultLicense": null,
     "description": "Deutsche Bahn Datenportal",
@@ -189,7 +189,8 @@
     "cron": {
       "active": true,
       "pattern": "0 2 * * *"
-    }
+    },
+    "additionalSearchFilter": ""
   },
   {
     "index": "ckan_opendata_hro",
@@ -214,7 +215,7 @@
     ],
     "providerPrefix": "",
     "providerField": "organization",
-    "requestType": "ListWithResources",
+    "requestType": "Search",
     "markdownAsDescription": true,
     "defaultLicense": null,
     "description": "OpenData Rostock",
@@ -225,6 +226,10 @@
     "cron": {
       "active": true,
       "pattern": "5 2 * * *"
+    },
+    "additionalSearchFilter": "",
+    "rules": {
+      "containsDocumentsWithData": false
     }
   },
   {
@@ -250,7 +255,7 @@
     ],
     "providerPrefix": "",
     "providerField": "organization",
-    "requestType": "ListWithResources",
+    "requestType": "Search",
     "markdownAsDescription": true,
     "defaultLicense": null,
     "description": "Offenesdatenportal",
@@ -261,6 +266,10 @@
     "cron": {
       "active": true,
       "pattern": "10 2 * * *"
+    },
+    "additionalSearchFilter": "",
+    "rules": {
+      "containsDocumentsWithData": false
     }
   },
   {
@@ -269,7 +278,7 @@
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "customCode": "if(this.source.type !== 'dataset'){\n  this.skipped = true;\n}\n\nconst latestVersion = this.source.extras\n            .filter(extra => extra.key === 'latestVersion').map(extra => extra.value);\n        \n        if (latestVersion && latestVersion.length > 0 && latestVersion[0] === 'false') {\n            this.skipped = true;\n}\n\nif(['Brücken', 'ZEB-Netz', 'Straßenverkehrsnetz', 'Straßen- und Wegenetz', 'Verkehrsnetze', 'dwista', 'Lichtsignalanlagen', 'Parkhäuser', 'Straßennetz', 'Fahrradluftstationen', 'Parkscheinautomaten', 'Ladestandorte']\n\t.some(s => doc.title.indexOf(s) !== -1)){\n\tdoc.extras.subgroups = ['roads', 'infrastructure'];\n}\nif(doc.title.indexOf('Ride') !== -1){\n\tdoc.extras.subgroups = ['roads', 'railway', 'infrastructure'];\n}\nif(doc.title.indexOf('SWIS') !== -1){\n\tdoc.extras.subgroups = ['roads', 'climate'];\n}\nif(doc.title.indexOf('Hochbahn') !== -1){\n\tdoc.extras.subgroups = ['railway'];\n}\nif(['Flughafen', 'Fluglärmbeschwerden'].some(s => doc.title.indexOf(s) !== -1)){\n\tdoc.extras.subgroups = ['aviation'];\n}\n\n// Set different mcloud category for whitelist IDs\nconst watersIDs = ['d988b206-0425-42a7-820a-81e8e2c6ca40',\n  'e11af766-005d-4583-a39d-eac6336c4eb2',\n  '20ab493a-1772-4b77-a08e-8867168f791a',\n  '4dd38b65-a2dc-4535-8fd1-4b3be0c9f756',\n  '9840138b-0d45-47d5-bf75-6b609422e282',\n  'd01720ae-c665-49a7-b1dc-7e211474be63',\n  '2bc917c1-d976-4793-83f4-b7c153df3f2d',\n  'b8f1c00a-2f52-4767-98f9-9e9aee0afcb2',\n  '74458796-4d33-47c3-83e6-ff332bc4a303',\n  '17753800-c152-4b07-b197-13ff478fc19a',\n  '410610c0-bc4e-437f-9837-71764c93ed51',\n  'b661cd3b-0eeb-4054-9242-94af19001247',\n  'ded4d0b6-1482-4d47-9450-dcfcf6ef9da8'];\n\nif (watersIDs.indexOf(this.source.id) !== -1) {\n  doc.extras.subgroups = ['waters'];\n}\n\nconst aviationIDs = ['35bf62f3-4e94-45ba-92b6-e34a4ed7c1c2'];\n\nif (aviationIDs.indexOf(this.source.id) !== -1) {\n  doc.extras.subgroups = ['aviation'];\n}",
+    "customCode": "const latestVersion = this.source.extras\n            .filter(extra => extra.key === 'latestVersion').map(extra => extra.value);\n        \n        if (latestVersion && latestVersion.length > 0 && latestVersion[0] === 'false') {\n            this.skipped = true;\n}\n\nif(['Brücken', 'ZEB-Netz', 'Straßenverkehrsnetz', 'Straßen- und Wegenetz', 'Verkehrsnetze', 'dwista', 'Lichtsignalanlagen', 'Parkhäuser', 'Straßennetz', 'Fahrradluftstationen', 'Parkscheinautomaten', 'Ladestandorte']\n\t.some(s => doc.title.indexOf(s) !== -1)){\n\tdoc.extras.subgroups = ['roads', 'infrastructure'];\n}\nif(doc.title.indexOf('Ride') !== -1){\n\tdoc.extras.subgroups = ['roads', 'railway', 'infrastructure'];\n}\nif(doc.title.indexOf('SWIS') !== -1){\n\tdoc.extras.subgroups = ['roads', 'climate'];\n}\nif(doc.title.indexOf('Hochbahn') !== -1){\n\tdoc.extras.subgroups = ['railway'];\n}\nif(['Flughafen', 'Fluglärmbeschwerden'].some(s => doc.title.indexOf(s) !== -1)){\n\tdoc.extras.subgroups = ['aviation'];\n}\n\n// Set different mcloud category for whitelist IDs\nconst watersIDs = ['d988b206-0425-42a7-820a-81e8e2c6ca40',\n  'e11af766-005d-4583-a39d-eac6336c4eb2',\n  '20ab493a-1772-4b77-a08e-8867168f791a',\n  '4dd38b65-a2dc-4535-8fd1-4b3be0c9f756',\n  '9840138b-0d45-47d5-bf75-6b609422e282',\n  'd01720ae-c665-49a7-b1dc-7e211474be63',\n  '2bc917c1-d976-4793-83f4-b7c153df3f2d',\n  'b8f1c00a-2f52-4767-98f9-9e9aee0afcb2',\n  '74458796-4d33-47c3-83e6-ff332bc4a303',\n  '17753800-c152-4b07-b197-13ff478fc19a',\n  '410610c0-bc4e-437f-9837-71764c93ed51',\n  'b661cd3b-0eeb-4054-9242-94af19001247',\n  'ded4d0b6-1482-4d47-9450-dcfcf6ef9da8'];\n\nif (watersIDs.indexOf(this.source.id) !== -1) {\n  doc.extras.subgroups = ['waters'];\n}\n\nconst aviationIDs = ['35bf62f3-4e94-45ba-92b6-e34a4ed7c1c2'];\n\nif (aviationIDs.indexOf(this.source.id) !== -1) {\n  doc.extras.subgroups = ['aviation'];\n}",
     "defaultMcloudSubgroup": [
       "roads"
     ],
@@ -306,7 +315,7 @@
     ],
     "providerPrefix": "Transparenzportal Hamburg: ",
     "providerField": "author",
-    "requestType": "ListWithResources",
+    "requestType": "Search",
     "markdownAsDescription": true,
     "defaultLicense": null,
     "description": "Transparenzportal Hamburg",
@@ -316,7 +325,8 @@
     "defaultAttributionLink": null,
     "rules": {
       "containsDocumentsWithData": false
-    }
+    },
+    "additionalSearchFilter": "type:dataset"
   },
   {
     "index": "ckan_opendata_rnv",
@@ -362,7 +372,8 @@
     "rules": {
       "containsDocumentsWithData": true,
       "containsDocumentsWithDataBlacklist": "zip"
-    }
+    },
+    "additionalSearchFilter": ""
   },
   {
     "index": "ckan_opendata_nrw",
@@ -399,7 +410,7 @@
     ],
     "providerPrefix": "Open NRW: ",
     "providerField": "organization",
-    "requestType": "ListWithResources",
+    "requestType": "Search",
     "markdownAsDescription": false,
     "defaultLicense": {
       "id": "dl-de-by-2.0",
@@ -418,7 +429,8 @@
     "cron": {
       "pattern": "15 2 * * *",
       "active": true
-    }
+    },
+    "additionalSearchFilter": ""
   },
   {
     "index": "csw_wsv",
@@ -858,7 +870,7 @@
     "filterGroups": [],
     "providerPrefix": "OpenData Berlin: ",
     "providerField": "author",
-    "requestType": "ListWithResources",
+    "requestType": "Search",
     "markdownAsDescription": true,
     "defaultLicense": null,
     "id": 26,
@@ -872,7 +884,8 @@
     "cron": {
       "pattern": "5 2 * * *",
       "active": true
-    }
+    },
+    "additionalSearchFilter": ""
   },
   {
     "index": "ckan_rlp",
@@ -903,7 +916,7 @@
     "filterGroups": [],
     "providerPrefix": "OpenData Rheinland-Pfalz: ",
     "providerField": "organization",
-    "requestType": "ListWithResources",
+    "requestType": "Search",
     "markdownAsDescription": false,
     "defaultLicense": null,
     "id": 28,
@@ -917,7 +930,8 @@
     "cron": {
       "active": true,
       "pattern": "5 2 * * *"
-    }
+    },
+    "additionalSearchFilter": ""
   },
   {
     "index": "ckan_schleswig_holstein",

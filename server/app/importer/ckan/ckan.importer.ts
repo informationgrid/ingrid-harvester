@@ -269,10 +269,29 @@ export class CkanImporter implements Importer {
                 }
             });
         } else {
+            let fq;
+            if(this.settings.filterGroups.length > 0 || this.settings.filterTags.length > 0 || this.settings.additionalSearchFilter)
+            {
+                fq = '';
+                if(this.settings.filterGroups.length > 0) {
+                    fq += '+groups:(' + this.settings.filterGroups.join(' OR ') + ')';
+                }
+                if(this.settings.filterTags.length > 0) {
+                    fq += '+tags:(' + this.settings.filterTags.join(' OR ') + ')';
+                }
+                if(this.settings.additionalSearchFilter){
+                    fq += '+'+this.settings.additionalSearchFilter;
+                }
+                if(this.settings.whitelistedIds.length > 0){
+                    fq = '(('+fq+ ') OR id:('+this.settings.whitelistedIds.join(' OR ')+'))'
+                }
+            }
             this.requestDelegate.updateConfig({
                 qs: {
+                    sort: 'id asc',
                     start: offset,
-                    rows: this.settings.maxRecords
+                    rows: this.settings.maxRecords,
+                    fq: fq
                 }
             });
         }

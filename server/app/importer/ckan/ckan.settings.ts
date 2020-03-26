@@ -11,6 +11,7 @@ export type CkanSettings = {
     providerPrefix?: string,
     providerField?: ProviderField,
     requestType?: 'ListWithResources' | 'Search',
+    additionalSearchFilter?: string,
     markdownAsDescription?: boolean,
     defaultLicense?: License;
     rules?: {

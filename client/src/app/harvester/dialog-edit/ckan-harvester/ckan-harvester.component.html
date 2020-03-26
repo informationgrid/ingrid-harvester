@@ -11,6 +11,20 @@
         </mat-form-field>
       </div>
 
+      <h4>API</h4>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex>
+          <mat-label>API Funktion</mat-label>
+          <mat-select formControlName="requestType">
+            <mat-option value="ListWithResources">ListWithResources</mat-option>
+            <mat-option value="Search">Search</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Zusätzlicher Filter Search-API" formControlName="additionalSearchFilter" autocomplete="off">
+        </mat-form-field>
+      </div>
+
       <mat-checkbox formControlName="markdownAsDescription"> Beschreibung als Markdown</mat-checkbox>
 
       <h4>Bereitgestellt durch</h4>

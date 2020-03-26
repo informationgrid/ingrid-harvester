@@ -453,6 +453,23 @@ export class CkanMapper extends GenericMapper {
                 }
             };
         } else {
+            let fq;
+            if(settings.filterGroups.length > 0 || settings.filterTags.length > 0 || settings.additionalSearchFilter)
+            {
+                fq = '';
+                if(settings.filterGroups.length > 0) {
+                    fq += '+groups:(' + settings.filterGroups.join(' OR ') + ')';
+                }
+                if(settings.filterTags.length > 0) {
+                    fq += '+tags:(' + settings.filterTags.join(' OR ') + ')';
+                }
+                if(settings.additionalSearchFilter){
+                    fq += '+'+settings.additionalSearchFilter;
+                }
+                if(settings.whitelistedIds.length > 0){
+                    fq = '(('+fq+ ') OR id:('+settings.whitelistedIds.join(' OR ')+'))'
+                }
+            }
             return {
                 method: 'GET',
                 uri: settings.ckanBaseUrl + '/api/action/package_search', // See http://docs.ckan.org/en/ckan-2.7.3/api/
@@ -462,8 +479,8 @@ export class CkanMapper extends GenericMapper {
                 qs: <CkanParameters> {
                     sort: 'id asc',
                     start: settings.startPosition,
-                    rows: settings.maxRecords/*,
-                    fq: 'groups:transport_verkehr'*/
+                    rows: settings.maxRecords,
+                    fq: fq
                 }
             };
         }
