@@ -26,7 +26,22 @@ export class ConfigService {
         elasticSearchUrl: "http://localhost:9200",
         alias: "mcloud",
         proxy: "",
-        sessionSecret: "mysecretkey"
+        sessionSecret: "mysecretkey",
+        mail: {
+            enabled: false,
+            mailServer: {
+                host: "localhost",
+                port: 465,
+                secure: false,
+                auth: {
+                    user: "",
+                    pass: ""
+                }
+            },
+            from: "test@example.com",
+            to: "test@example.com"
+        },
+        maxDiff: 10
     };
     private static ignoreCaseSort = (a: string, b: string) => {
         return a.toLowerCase().localeCompare(b.toLowerCase());
