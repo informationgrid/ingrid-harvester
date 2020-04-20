@@ -1090,5 +1090,35 @@
       "pattern": "15 2 * * *",
       "active": true
     }
+  },
+  {
+    "index": "csw_bkg",
+    "includeTimestamp": true,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": "if(doc.title.indexOf('Landschaftsmodell') != -1 || doc.title.indexOf('Topographische Karte') != -1){\n  doc.extras.subgroups = ['roads', 'waters', 'railway', 'infrastructure', 'aviation'];\n}",
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "getRecordsUrl": "https://mis.bkg.bund.de/csw",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 33,
+    "disabled": true,
+    "description": "BKG",
+    "defaultAttribution": "BKG",
+    "defaultAttributionLink": "https://mis.bkg.bund.de/portal/",
+    "recordFilter": "\n            <ogc:Filter>\n                <ogc:And>\n                    <ogc:PropertyIsEqualTo>\n                        <ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n                        <ogc:Literal>Datenlizenz Deutschland</ogc:Literal>\n                    </ogc:PropertyIsEqualTo>\n                    <ogc:Or>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>subject</ogc:PropertyName>\n                            <ogc:Literal>Verkehrswesen</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>subject</ogc:PropertyName>\n                            <ogc:Literal>Verkehr</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>subject</ogc:PropertyName>\n                            <ogc:Literal>Kfz</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                    </ogc:Or>\n                </ogc:And>\n            </ogc:Filter>",
+    "cron": {
+      "pattern": "45 2 * * *",
+      "active": true
+    }
   }
 ]
