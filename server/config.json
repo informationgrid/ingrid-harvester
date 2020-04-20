@@ -326,7 +326,11 @@
     "rules": {
       "containsDocumentsWithData": false
     },
-    "additionalSearchFilter": "type:dataset"
+    "additionalSearchFilter": "type:dataset",
+    "cron": {
+      "pattern": "10 2 * * *",
+      "active": true
+    }
   },
   {
     "index": "ckan_opendata_rnv",
