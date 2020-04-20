@@ -763,7 +763,7 @@
     "getRecordsUrl": "http://daten.geonet-mrn.de/catalogue/csw",
     "eitherKeywords": [],
     "httpMethod": "GET",
-    "disable": false,
+    "disable": true,
     "description": "GeoNet.MRN",
     "defaultAttribution": "GeoNet.MRN",
     "defaultAttributionLink": "http://daten.geonet-mrn.de",
@@ -1046,6 +1046,49 @@
     "cron": {
       "active": true,
       "pattern": "40 2 * * *"
+    }
+  },
+  {
+    "index": "ckan_geonet_mrn",
+    "includeTimestamp": true,
+    "type": "CKAN",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "customCode": "if(doc.keywords.indexOf(\"ÖPNV\") != -1 || doc.keywords.indexOf(\"Eisenbahn\") != -1){\n  doc.extras.subgroups = [\"railway\"];\n}\nif(doc.keywords.indexOf(\"Luftverkehr\") != -1){\n  doc.extras.subgroups = [\"aviation\"];\n}",
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "REGI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "ckanBaseUrl": "http://ckan.geonet-mrn.de",
+    "filterTags": [
+      "Verkehr",
+      "Luftverkehr",
+      "ÖPNV",
+      "Eisenbahn"
+    ],
+    "filterGroups": [],
+    "providerPrefix": "",
+    "providerField": "organization",
+    "requestType": "Search",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "id": 32,
+    "disabled": true,
+    "description": "GeoNet.MRN",
+    "defaultAttribution": "GeoNet.MRN",
+    "defaultAttributionLink": "http://ckan.geonet-mrn.de",
+    "additionalSearchFilter": "",
+    "rules": {
+      "containsDocumentsWithData": false
+    },
+    "cron": {
+      "pattern": "15 2 * * *",
+      "active": true
     }
   }
 ]
