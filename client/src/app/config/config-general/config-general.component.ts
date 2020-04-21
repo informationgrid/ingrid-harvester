@@ -25,16 +25,6 @@ export class ConfigGeneralComponent implements OnInit {
 
   }
 
-  exportHarvesterConfig() {
-    forkJoin([
-      this.harvesterService.getHarvester(),
-      this.configService.getMappingFileContent()
-    ]).subscribe(result => {
-      ConfigService.downLoadFile('config.json', JSON.stringify(result[0], null, 2));
-      ConfigService.downLoadFile('mappings.json', JSON.stringify(result[1], null, 2));
-    });
-  }
-
   private static noWhitespaceValidator(control: FormControl) {
     const isWhitespace = (control.value || '').trim().length === 0;
     const isValid = !isWhitespace;
@@ -68,6 +58,24 @@ export class ConfigGeneralComponent implements OnInit {
   }
 
   private buildForm(settings: GeneralSettings) {
+    if(!settings.mail)
+    {
+      settings.mail={
+        enabled: false,
+        mailServer: {
+          host: "",
+          port: 451,
+          secure: false,
+          auth: {
+            user: "",
+            pass: ""
+          }
+        },
+        from: "",
+        to: ""
+      }
+    }
+
     this.configForm = this.formBuilder.group({
       elasticSearchUrl: [settings.elasticSearchUrl, Validators.required, ConfigGeneralComponent.elasticUrlValidator],
       alias: [settings.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],

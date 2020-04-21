@@ -8,6 +8,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {MatTabsModule} from "@angular/material/tabs";
 import { ConfigMappingComponent } from './config-mapping/config-mapping.component';
 import { ConfigGeneralComponent } from './config-general/config-general.component';
+import { ConfigImportExportComponent } from './config-import-export/config-import-export.component';
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
 import { AddMappingItemComponent } from './config-mapping/add-mapping-item/add-mapping-item.component';
@@ -25,7 +26,7 @@ const configRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ConfigComponent, ConfigMappingComponent, ConfigGeneralComponent, AddMappingItemComponent],
+  declarations: [ConfigComponent, ConfigMappingComponent, ConfigGeneralComponent, ConfigImportExportComponent, AddMappingItemComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(configRoutes),

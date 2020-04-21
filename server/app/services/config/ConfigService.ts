@@ -114,6 +114,11 @@ export class ConfigService {
 
     }
 
+
+    static importHarvester(filecontent: any) {
+        fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(filecontent, null, 2));
+    }
+
     /**
      * Update a harvester and write to file this.HARVESTER_CONFIG_FILE
      * @param id
@@ -216,11 +221,17 @@ export class ConfigService {
         mapping.format = this.convertMappingForFile();
 
         fs.writeFileSync(this.MAPPINGS_FILE, JSON.stringify(mapping, null, 2));
+        this.mappingDistribution = ConfigService.initDistributionMapping();
     }
 
     static getMappingFileContent(): any {
         const content = fs.readFileSync(this.MAPPINGS_FILE);
         return JSON.parse(content.toString());
+    }
+
+    static importMappingFileContent(mapping) {
+        fs.writeFileSync(this.MAPPINGS_FILE, JSON.stringify(mapping, null, 2));
+        this.mappingDistribution = ConfigService.initDistributionMapping();
     }
 
     private static convertMappingForFile() {

@@ -33,6 +33,10 @@ export class ConfigService {
     return this.http.post<any>('rest/api/config/mapping/distribution', mapping);
   }
 
+  uploadMappings(file: File): Observable<void> {
+    return this.http.post<void>('/rest/api/config/mapping/filecontent ', file);
+  }
+
   removeMapping(mapping: MappingItem) {
     const httpParams = new HttpParams()
       .set('source', mapping.source)
@@ -45,6 +49,11 @@ export class ConfigService {
   save(data: GeneralSettings): Observable<void> {
     return this.http.post<void>('rest/api/config/general', data);
   }
+
+  uploadGeneralConfig(file: File): Observable<void> {
+    return this.http.post<void>('/rest/api/config/general', file);
+  }
+
 
   /**
    * Download a file.
