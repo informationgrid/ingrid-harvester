@@ -1,6 +1,8 @@
 export type GeneralSettings = {
     elasticSearchUrl: string,
     alias: string,
+    numberOfShards?: number,
+    numberOfReplicas?: number,
     proxy: string,
     sessionSecret: string,
     mail?: {

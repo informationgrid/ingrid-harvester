@@ -11,7 +11,9 @@ export const DefaultElasticsearchSettings: ElasticSettings = {
     // elasticSearchUrl: 'localhost:9200',
     index: '',
     // alias: '',
-    includeTimestamp: true
+    includeTimestamp: true,
+    numberOfShards: 1,
+    numberOfReplicas: 0
 };
 
 export interface BulkResponse {
@@ -55,9 +57,13 @@ export class ElasticSearchUtils {
      * @param settings
      */
     prepareIndex(mapping, settings) {
+        let body = {
+            number_of_shards: this.settings.numberOfShards,
+            number_of_replicas: this.settings.numberOfReplicas
+        }
         return new Promise((resolve, reject) => {
             if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
-            this.client.indices.create({index: this.indexName, waitForActiveShards: '1'})
+            this.client.indices.create({index: this.indexName, waitForActiveShards: '1', body:body})
                 .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
                 .catch(err => {
                     let message = 'Error occurred creating index';
