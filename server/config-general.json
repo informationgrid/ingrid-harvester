@@ -1,6 +1,8 @@
 {
   "elasticSearchUrl": "http://localhost:9200",
   "alias": "mcloud",
+  "numberOfShards": 1,
+  "numberOfReplicas": 0,
   "proxy": "",
   "mail": {
     "enabled": false,
