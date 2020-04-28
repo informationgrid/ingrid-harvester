@@ -5,12 +5,13 @@
     "http://publications.europa.eu/resource/authority/data-theme/TRAN",
     "http://publications.europa.eu/resource/authority/data-theme/TECH"
   ],
-  "issued": "2018-10-26T15:21:38.358Z",
+  "issued": "2020-03-20T12:26:34.015Z",
   "modified": "2018-11-26T15:07:40.316406",
   "accrualPeriodicity": "once_per_quarter",
   "keywords": [
     "Fernverkehr",
-    "Wagenreihung"
+    "Wagenreihung",
+    "Zug"
   ],
   "creator": {
     "name": "Sebastian Sooth",
@@ -24,43 +25,43 @@
   ],
   "distribution": [
     {
-      "id": "3fa5e589-60f8-48fb-8219-d91bfffd2095",
+      "id": "a306f97c-fc51-4e6b-976b-40c34f573dbf",
+      "title": "Zugbildungsplan A -Reihung- (ZpAR)",
+      "description": "Endstück Winterfahrplan 2018 Gültigkeit: 09.12.2018 – 10.06.2019",
+      "accessURL": "URL: http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR_Wi_Endstueck.pdf",
+      "format": ["PDF"],
+      "issued": "2020-03-20T12:28:48.220Z",
+      "modified": null,
+      "byteSize": null
+    },
+    {
+      "id": "397c4bf1-10e0-4a1b-8950-e2bff1636ea6",
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - B1",
       "description": "Endstück Winterfahrplan 2018 - B1 - Gültigkeit: 04.02.2019 – 10.06.2019",
       "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR Wi_B1.pdf",
       "format": ["PDF"],
-      "issued": "2018-11-26T13:30:42.834Z",
+      "issued": "2020-03-20T12:27:56.878Z",
       "modified": null,
       "byteSize": null
     },
     {
-      "id": "084f76a9-4538-4d47-a4ee-b34fa321a92d",
-      "title": "Zugbildungsplan A -Reihung- (ZpAR)",
-      "description": "Endstück Winterfahrplan 2018 Gültigkeit: 09.12.2018 – 10.06.2019",
-      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR_Wi_Endstueck.pdf",
-      "format": ["PDF"],
-      "issued": "2018-11-26T14:04:35.550Z",
-      "modified": null,
-      "byteSize": null
-    },
-    {
-      "id": "0cef9665-72d7-4e24-9629-1d52ecf3491d",
-      "title": "Zugbildungsplan A -Reihung- (ZpAR) - Wi_B1_Korrektur ",
+      "id": "10a6279a-0b0b-491c-999a-d43a4aac0ba9",
+      "title": "Zugbildungsplan A -Reihung- (ZpAR) - B1 Korrektur",
+      "description": "Endstück Winterfahrplan 2018 - B1 Korrektur - Gültigkeit: 04.02.2019 – 10.06.2019 (Vom 19.12.2018)",
       "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR_Wi_B1_Korrektur_Version_Open_Data.pdf",
       "byteSize": null,
-      "description": "Endstück Winterfahrplan 2018 - B1 Korrektur - Gültigkeit: 04.02.2019 – 10.06.2019 (Vom 19.12.2018)",
       "format": ["PDF"],
-      "issued": "2019-01-30T07:29:44.149Z",
+      "issued": "2020-03-20T12:29:33.507Z",
       "modified": null
     },
     {
-      "id": "7383691c-f68a-4a7c-8037-b51db61325c6",
+      "id": "4df85823-1382-4c97-8c03-da05deac0931",
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - B2",
       "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR_Wi_B2_.pdf",
       "byteSize": null,
       "description": "Endstück Winterfahrplan 2018 - B2 - Gültigkeit: 01.04.2019 – 10.06.2019 (vom 11.1.2019)",
       "format": ["PDF"],
-      "issued": "2019-01-30T07:32:08.292Z",
+      "issued": "2020-03-23T16:02:11.420Z",
       "modified": null
     },
     {
@@ -68,58 +69,58 @@
       "byteSize": null,
       "description": "Endstück Winterfahrplan 2018 - B2 - Gültigkeit: 01.04.2019 – 10.06.2019 (vom 12.2.2019)",
       "format": ["PDF"],
-      "id": "65d76bb6-b4ea-4445-94eb-83d2980ad6cb",
-      "issued": "2019-02-13T12:01:35.334Z",
+      "id": "b59e6794-397b-4940-b989-0a92ee4c06a1",
+      "issued": "2020-03-23T16:03:31.780Z",
       "modified": null,
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - B2 Korrektur"
     },
     {
-      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR Sm_Endstück_Open Data.pdf",
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR%20Sm_Endst%C3%BCck_Open%20Data.pdf",
       "byteSize": null,
       "description": "Endstück Sommerfahrplan 2019 - Gültigkeit: 09.06.2019 – 14.12.2019 (Stand: 8.3.2019)",
       "format": ["PDF"],
-      "id": "448aa7b4-7a18-4341-a5b7-a7a64bafcc95",
-      "issued": "2019-03-15T08:33:33.724Z",
+      "id": "69ecca41-4f70-4b61-93f7-bffb907ed2e1",
+      "issued": "2020-03-23T16:04:21.738Z",
       "modified": null,
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - Sm"
     },
     {
-      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR Sm_B1.pdf",
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR%20Sm_B1.pdf",
       "byteSize": null,
       "description": "Endstück Sommerfahrplan 2019 B1 - Gültigkeit: 09.06.2019 – 14.12.2019 (Stand: 26.4.2019)",
       "format": ["PDF"],
-      "id": "05e9d7ae-66c2-49b8-b242-222575264667",
-      "issued": "2019-04-26T11:29:28.792Z",
+      "id": "60c0f7ad-5c58-4c17-8b68-93c77abde8d8",
+      "issued": "2020-03-23T16:04:56.625Z",
       "modified": null,
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - Sm B1"
     },
     {
-      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR Sm_B2_Freigabe.pdf",
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR%20Sm_B2_Freigabe.pdf",
       "byteSize": null,
       "description": "Sommerfahrplan 2019 - Gültigkeit: 07.10.2019 – 14.12.2019 (Stand: 12.07.2019)",
       "format": ["PDF"],
-      "id": "65585dcd-e447-475b-8009-df655fe646a5",
-      "issued": "2019-07-15T08:31:51.862Z",
+      "id": "ac2a8413-b408-4988-bd65-f7497949390d",
+      "issued": "2020-03-23T16:05:32.027Z",
       "modified": null,
       "title": "Zugbildungsplan A-Reihung- (ZpAR) - Sm B2"
     },
     {
-      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2020_ZpAR Wi_Endstück.pdf",
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2020_ZpAR%20Wi_Endst%C3%BCck.pdf",
       "byteSize": null,
       "description": "Endstück Winterfahrplan 2020 Gültigkeit: 09.12.2019 – 10.06.2020",
       "format": ["PDF"],
-      "id": "9250e2ac-7be9-4c52-915f-06b6ae5b684c",
-      "issued": "2019-10-25T13:38:59.135Z",
+      "id": "17d2cde6-0dab-4b48-9154-2f7345127fa6",
+      "issued": "2020-03-23T15:56:28.465Z",
       "modified": null,
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - 2020"
     },
     {
-      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2020_ZpAR Wi_B1.pdf",
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2020_ZpAR%20Wi_B1.pdf",
       "byteSize": null,
       "description": "Endstück Winterfahrplan 2020 - B1 - Gültigkeit: 03.02.2020 - 13.06.2020",
       "format": ["PDF"],
-      "id": "b3a5eaf3-658a-4cbe-9271-9ec94d655586",
-      "issued": "2019-11-18T07:21:55.849Z",
+      "id": "4a7f0baf-c6f5-4359-a9db-d7798c27bef8",
+      "issued": "2020-03-23T15:54:55.468Z",
       "modified": null,
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - B1"
     },
@@ -130,26 +131,26 @@
       "format": [
         "PDF"
       ],
-      "id": "718bc260-e371-44eb-8a36-a442455db5f8",
-      "issued": "2020-01-21T08:12:40.972Z",
+      "id": "bf483df0-27f9-48c9-a3c5-9162668b67e2",
+      "issued": "2020-03-23T15:52:39.059Z",
       "modified": null,
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - B2"
     },
     {
-      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2020_ZpAR Sm_Endstück.pdf",
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2020_ZpAR%20Sm_Endst%C3%BCck.pdf",
       "byteSize": null,
       "description": "Endstück Sommerfahrplan 2020 - B1 - Gültigkeit: 14.06.2020 - 12.12.2020",
       "format": [
         "PDF"
       ],
-      "id": "864bb453-4882-417b-b892-58c3e7f7b84b",
-      "issued": "2020-03-09T06:16:36.206Z",
+      "id": "ca022457-0293-464a-80f3-d2371110f1eb",
+      "issued": "2020-03-23T15:50:37.284Z",
       "modified": null,
       "title": "Zugbildungsplan A -Reihung- (ZpAR)"
     }
   ],
   "extras": {
-    "generated_id": "0381572e-92c3-46c7-b413-b18162d37442",
+    "generated_id": "ac071784-cae2-4c8e-b4d7-e66d563d7f64",
     "subgroups": [
       "railway"
     ],
@@ -162,7 +163,7 @@
     "subsection": [
       {
         "title": "Langbeschreibung",
-        "description": "<p>Das PDF enthält die Angaben zu Reihungen der fahrplanmäßig eingesetzten Züge im Fernverkehr. </p>\n\n<p>Die Erläuterungen zur Darstellung der Zugbildungen befinden sich am Anfang des PDF-Dokumentes.</p>\n\n<p>Beispiel: \nICE-A 582</p>\n\n<p>München (16:40) - Nürnberg - Würzburg - Kassel-Wilhelmshöhe - Hannover Messe/Laatzen - Hamburg-Altona</p>\n\n<p>(23:44)</p>\n\n<p>München - Hamburg-Altona, tgl. 01.-07.X.</p>\n\n<p>München - Hamburg-Altona, Mo-Fr 08.-12.X.</p>\n\n<p>München - Hamburg-Altona, 13., 14.X.</p>\n\n<p>MH a) Tfz1:401 Hg280 922t BrH194 359m EB a (WC); )p(</p>\n\n<p>MH aa) Tfz1:402 Hg280 907t BrH187 412m EB a (p)</p>\n\n<p>HG a) Tfz1:402 Hg280 907t BrH187 412m EB a (WC); )p(</p>\n\n<p>a) tgl. bis 07.X.</p>\n\n<p>aa) tgl. ab 08.X.</p>\n\n<p>OE; 4</p>\n\n<p>401.0 F1 250 a) 787 MH AA 2617</p>\n\n<p>Bvmz 1 591 78094</p>\n\n<p>Bvmz 2</p>\n\n<p>Bvmz 3</p>\n\n<p>Bvmz 4</p>\n\n<p>Bvmz 5</p>\n\n<p>Bpmz 6</p>\n\n<p>Bvmz 7</p>\n\n<p>WRmz 8</p>\n\n<p>Apmbsz 9</p>\n\n<p>Avmz 11</p>\n\n<p>Avmz 12</p>\n\n<p>Avmz 14</p>\n\n<p>401.5</p>\n\n<p>401.0 F1 230 13.X. 703 MH AA 78094</p>\n\n<p>Bvmz 1</p>\n\n<p>Bvmz 2</p>\n\n<p>Bvmz 3</p>\n\n<p>Bvmz 4</p>\n\n<p>Bvmz 5</p>\n\n<p>Bpmz 6</p>\n\n<p>Bvmz 7</p>\n\n<p>WRmz 8</p>\n\n<p>Apmbsz 9</p>\n\n<p>Avmz 11</p>\n\n<p>Avmz 12</p>\n\n<p>Avmz 14</p>\n\n<p>401.5</p>\n\n<p>495</p>\n\n<p>a) tgl. 01.-14.X., nicht 13.X.</p>"
+        "description": "<p>Das PDF enthält die Angaben zu Reihungen der fahrplanmäßig eingesetzten Züge im Fernverkehr.</p>\n\n<p>Die Erläuterungen zur Darstellung der Zugbildungen befinden sich am Anfang des PDF-Dokumentes.</p>\n\n<p>Beispiel: ICE-A 582</p>\n\n<p>München (16:40) - Nürnberg - Würzburg - Kassel-Wilhelmshöhe - Hannover Messe/Laatzen - Hamburg-Altona</p>\n\n<p>(23:44)</p>\n\n<p>München - Hamburg-Altona, tgl. 01.-07.X.</p>\n\n<p>München - Hamburg-Altona, Mo-Fr 08.-12.X.</p>\n\n<p>München - Hamburg-Altona, 13., 14.X.</p>\n\n<p>MH a) Tfz1:401 Hg280 922t BrH194 359m EB a (WC); )p(</p>\n\n<p>MH aa) Tfz1:402 Hg280 907t BrH187 412m EB a (p)</p>\n\n<p>HG a) Tfz1:402 Hg280 907t BrH187 412m EB a (WC); )p(</p>\n\n<p>a) tgl. bis 07.X.</p>\n\n<p>aa) tgl. ab 08.X.</p>\n\n<p>OE; 4</p>\n\n<p>401.0 F1 250 a) 787 MH AA 2617</p>\n\n<p>Bvmz 1 591 78094</p>\n\n<p>Bvmz 2</p>\n\n<p>Bvmz 3</p>\n\n<p>Bvmz 4</p>\n\n<p>Bvmz 5</p>\n\n<p>Bpmz 6</p>\n\n<p>Bvmz 7</p>\n\n<p>WRmz 8</p>\n\n<p>Apmbsz 9</p>\n\n<p>Avmz 11</p>\n\n<p>Avmz 12</p>\n\n<p>Avmz 14</p>\n\n<p>401.5</p>\n\n<p>401.0 F1 230 13.X. 703 MH AA 78094</p>\n\n<p>Bvmz 1</p>\n\n<p>Bvmz 2</p>\n\n<p>Bvmz 3</p>\n\n<p>Bvmz 4</p>\n\n<p>Bvmz 5</p>\n\n<p>Bpmz 6</p>\n\n<p>Bvmz 7</p>\n\n<p>WRmz 8</p>\n\n<p>Apmbsz 9</p>\n\n<p>Avmz 11</p>\n\n<p>Avmz 12</p>\n\n<p>Avmz 14</p>\n\n<p>401.5</p>\n\n<p>495</p>\n\n<p>a) tgl. 01.-14.X., nicht 13.X.</p>"
       },
       {
         "title": "Lizenzbeschreibung",
@@ -178,8 +179,8 @@
     ],
     "metadata": {
       "source": {
-        "raw_data_source": "https://data.deutschebahn.com/api/3/action/package_show?id=zugbildungsplan-zpar",
-        "portal_link": "https://data.deutschebahn.com/dataset/zugbildungsplan-zpar",
+        "raw_data_source": "https://data.deutschebahn.com/api/3/action/package_show?id=zugbildungsplanzugbildungsplan-zpar",
+        "portal_link": "https://data.deutschebahn.com/dataset/zugbildungsplanzugbildungsplan-zpar",
         "attribution": "Deutsche Bahn Datenportal"
       },
       "issued": "2019-01-09T17:51:38.934Z"
@@ -192,7 +193,8 @@
     ],
     "all": [
       "Fernverkehr",
-      "Wagenreihung"
+      "Wagenreihung",
+      "Zug"
     ]
   }
 }
