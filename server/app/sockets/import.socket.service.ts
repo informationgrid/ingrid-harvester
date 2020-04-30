@@ -79,8 +79,8 @@ export class ImportSocketService {
                                 + importer.getSummary().toString();
                             if (summaryLastRun) {
                                 text += `\n\n`
-                                    + `Last Run:\n`
-                                    + summaryLastRun.summary.toString();
+                                    + `Last Run (`+summaryLastRun.lastExecution+`):\n`
+                                    + this.summaryToString(summaryLastRun.summary);
                             }
                             MailServer.getInstance().send(subject, text);
                         }
@@ -97,5 +97,22 @@ export class ImportSocketService {
             }
 
         });
+    }
+
+    summaryToString(summary) : string {
+        let result =`---------------------------------------------------------\n`;
+        result += summary.headerTitle+"\n";
+        result += `---------------------------------------------------------\n`;
+        result += `Number of records: ${summary.numDocs}\n`;
+        result += `Skipped records: ${summary.skippedDocs.length}\n`;
+
+        result += `Record-Errors: ${summary.numErrors}\n`;
+        result += `Warnings: ${summary.warnings.length}\n`;
+
+        result += `App-Errors: ${summary.appErrors.length}\n`;
+
+        result += `Elasticsearch-Errors: ${summary.elasticErrors.length}\n`;
+
+        return result;
     }
 }
