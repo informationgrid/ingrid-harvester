@@ -9,6 +9,8 @@ import {RequestDelegate} from "../../utils/http-request.utils";
 import {CswSummary} from "./csw.importer";
 import {OptionsWithUri} from "request-promise";
 import {CswSettings} from './csw.settings';
+import {throwError} from "rxjs";
+import doc = Mocha.reporters.doc;
 
 let xpath = require('xpath');
 
@@ -796,6 +798,15 @@ export class CswMapper extends GenericMapper {
         return this.uuid;
     }
 
+    executeCustomCode(doc: any) {
+        try {
+            if (this.settings.customCode) {
+                eval(this.settings.customCode);
+            }
+        } catch (error) {
+            throwError('An error occurred in custom code: ' + error.message);
+        }
+    }
 }
 
 // Private interface. Do not export

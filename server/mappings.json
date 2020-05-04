@@ -131,7 +131,8 @@
     ],
     "ZIP": [
       "http://publications.europa.eu/resource/authority/file-type/zip",
-      "zip"
+      "zip",
+      ".zip"
     ]
   }
 }

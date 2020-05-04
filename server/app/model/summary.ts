@@ -48,6 +48,23 @@ export class Summary {
         this.additionalSummary();
     }
 
+    toString() : string {
+        let result =`---------------------------------------------------------\n`;
+        result += this.headerTitle+"\n";
+        result += `---------------------------------------------------------\n`;
+        result += `Number of records: ${this.numDocs}\n`;
+        result += `Skipped records: ${this.skippedDocs.length}\n`;
+
+        result += `Record-Errors: ${this.numErrors}\n`;
+        result += `Warnings: ${this.warnings.length}\n`;
+
+        result += `App-Errors: ${this.appErrors.length}\n`;
+
+        result += `Elasticsearch-Errors: ${this.elasticErrors.length}\n`;
+
+        return result;
+    }
+
     private logArray(logger, list: any) {
         if (logger.isDebugEnabled() && list.length > 0) {
             let listString = `\n\t${list.slice(0, this.MAX_ITEMS_TO_SHOW).join('\n\t')}`;

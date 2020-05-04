@@ -25,6 +25,12 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
         url: new FormControl(this.getModelField('defaultLicense.url', ''))
       })
     );
+
+    this.form.addControl('requestType',
+      new FormControl(this.getModelField('requestType', 'ListWithResources')));
+    this.form.addControl('additionalSearchFilter',
+      new FormControl(this.getModelField('additionalSearchFilter', '')));
+
     this.form.addControl('providerPrefix',
       new FormControl(this.getModelField('providerPrefix', '')));
     this.form.addControl('providerField',

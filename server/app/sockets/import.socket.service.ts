@@ -5,6 +5,8 @@ import {ImporterFactory} from '../importer/importer.factory';
 import {SummaryService} from '../services/config/SummaryService';
 import {CronJob} from 'cron';
 import {getLogger} from 'log4js';
+import {Mail, MailServer} from "../utils/nodemailer.utils";
+import {ImportLogMessage} from "../model/import.result";
 
 @SocketService('/import')
 export class ImportSocketService {
@@ -57,17 +59,60 @@ export class ImportSocketService {
 
                     // when complete then write information log to file
                     if (response.complete) {
+                        // save old summary to compare
+                        let summaryLastRun: ImportLogMessage = this.summaryService.get(id);
+
                         importer.getSummary().print(this.log);
                         this.summaryService.update(response);
+
+                        // when less results send mail
+                        let importedLastRun = (summaryLastRun) ? summaryLastRun.summary.numDocs - summaryLastRun.summary.skippedDocs.length : 0;
+                        let imported = importer.getSummary().numDocs - importer.getSummary().skippedDocs.length;
+                        let maxDiff = (configGeneral.maxDiff) ? configGeneral.maxDiff : 10;
+                        if ((importedLastRun - (importedLastRun*maxDiff/100) >= imported) || (imported === 0)) {
+                            let subject: string;
+                            if (imported === 0)
+                                subject = `[mCloud] Importer "${configData.description}" ohne Ergebnisse!`;
+                            else
+                                subject = `[mCloud] Importer "${configData.description}" mit weniger Ergebnissen!`;
+                            let text = `Current Run:\n`
+                                + importer.getSummary().toString();
+                            if (summaryLastRun) {
+                                text += `\n\n`
+                                    + `Last Run (`+summaryLastRun.lastExecution+`):\n`
+                                    + this.summaryToString(summaryLastRun.summary);
+                            }
+                            MailServer.getInstance().send(subject, text);
+                        }
+
                         resolve();
                     }
                 }, error => {
                     console.error('There was an error:', error);
+
+                    MailServer.getInstance().send(`[mCloud] Importer ${configData.description} failed`, error.toString());
                 });
             } catch (e) {
                 console.error('An error: ', e);
             }
 
         });
+    }
+
+    summaryToString(summary) : string {
+        let result =`---------------------------------------------------------\n`;
+        result += summary.headerTitle+"\n";
+        result += `---------------------------------------------------------\n`;
+        result += `Number of records: ${summary.numDocs}\n`;
+        result += `Skipped records: ${summary.skippedDocs.length}\n`;
+
+        result += `Record-Errors: ${summary.numErrors}\n`;
+        result += `Warnings: ${summary.warnings.length}\n`;
+
+        result += `App-Errors: ${summary.appErrors.length}\n`;
+
+        result += `Elasticsearch-Errors: ${summary.elasticErrors.length}\n`;
+
+        return result;
     }
 }

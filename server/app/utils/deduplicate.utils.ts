@@ -192,37 +192,36 @@ export class DeduplicateUtils {
                 try {
                     let hits = bucket.duplicates.hits.hits;
 
-                    // FIXME: if more than two hits (with the same title) then we probably delete the second item
-                    //        in the first round, which we compare with the third item in the second round
-                    //        I guess we don't compare all docs with the same title correctly, e.g. 1st and 3rd doc
-                    //        are dublicates ... then we wouldn't detect them!
                     for (let i = 1; i < hits.length; i++) {
-                        let hit0 = hits[i - i];
-                        let hit1 = hits[i];
+                        for (let j = 0; j < i; j++) {
+                            let hit0 = hits[j];
+                            let hit1 = hits[i];
 
-                        // collect URLs from hits we want to compare
-                        let urlsFromHit = [];
-                        let urlsFromOtherHit = [];
-                        hit0._source.distribution.forEach(dist => urlsFromHit.push(dist.accessURL));
-                        hit1._source.distribution.forEach(dist => urlsFromOtherHit.push(dist.accessURL));
+                            // collect URLs from hits we want to compare
+                            let urlsFromHit = [];
+                            let urlsFromOtherHit = [];
+                            hit0._source.distribution.forEach(dist => urlsFromHit.push(dist.accessURL));
+                            hit1._source.distribution.forEach(dist => urlsFromOtherHit.push(dist.accessURL));
 
-                        // only if all URLs are the same in both hits, we expect them to be equal AND have the same length
-                        let remove =
-                            urlsFromHit.length === urlsFromOtherHit.length
-                            && urlsFromHit.every(url => urlsFromOtherHit.includes(url));
+                            // only if all URLs are the same in both hits, we expect them to be equal AND have the same length
+                            let remove =
+                                urlsFromHit.length === urlsFromOtherHit.length
+                                && urlsFromHit.every(url => urlsFromOtherHit.includes(url));
 
-                        if (remove) {
-                            let deleted = `Item to delete -> ID: '${hit1._id}', Title: '${hit1._source.title}', Index: '${hit1._index}'`;
-                            let retained = `Item to retain -> ID: '${hit0._id}', Title: '${hit0._source.title}', Index: '${hit0._index}'`;
-                            log.warn(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${retained}`);
-                            this.elastic._bulkData.push({
-                                delete: {
-                                    _index: hit1._index,
-                                    _type: hit1._type,
-                                    _id: hit1._id
-                                }
-                            });
-                            count++;
+                            if (remove) {
+                                let deleted = `Item to delete -> ID: '${hit1._id}', Title: '${hit1._source.title}', Index: '${hit1._index}'`;
+                                let retained = `Item to retain -> ID: '${hit0._id}', Title: '${hit0._source.title}', Index: '${hit0._index}'`;
+                                log.warn(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${retained}`);
+                                this.elastic._bulkData.push({
+                                    delete: {
+                                        _index: hit1._index,
+                                        _type: hit1._type,
+                                        _id: hit1._id
+                                    }
+                                });
+                                count++;
+                                break; // If we already deleted hit1 we don't have to compare it with any other hits.
+                            }
                         }
                     }
                     return count;

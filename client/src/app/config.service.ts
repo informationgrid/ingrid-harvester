@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
 export class Configuration {
-  constructor(public contextPath: string, public url?: string) {
+  constructor(public contextPath: string, public url?: string, public version?: string) {
   }
 }
 
@@ -14,6 +14,7 @@ export class Configuration {
 export class ConfigService {
 
   config: Configuration;
+  config$ = new BehaviorSubject({});
 
   constructor(private http: HttpClient) {
   }
@@ -23,7 +24,10 @@ export class ConfigService {
 
     return this.http.get<Configuration>(url)
       .pipe(
-        tap((json => this.config = json))
+        tap((json => {
+          this.config = json;
+          this.config$.next(json);
+        }))
       );
 
   }

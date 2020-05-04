@@ -57,4 +57,8 @@ export class HarvesterService {
   delete(id: number) {
     return this.http.delete('rest/api/harvester/' + id);
   }
+
+  uploadHarvesterConfig(file: File): Observable<void> {
+    return this.http.post<void>('/rest/api/harvester/filecontent', file);
+  }
 }

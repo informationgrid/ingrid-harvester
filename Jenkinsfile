@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'docker-registry.wemove.com/ingrid-rpmbuilder'
-            args '-v ${PWD}/.gradle:${PWD}/.gradle -v ${PWD}/gradle:${PWD}/gradle'
+            args '-v $HOME/.grade:/root/.gradle'
         }
     }
 

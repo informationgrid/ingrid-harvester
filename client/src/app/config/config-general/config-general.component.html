@@ -26,13 +26,62 @@
       <input matInput placeholder="Proxy" formControlName="proxy">
     </mat-form-field>
 
+    <mat-card>
+      <div [formGroup]="configForm.get('mail')">
+      Email-Benachrichtigungen &nbsp;
+      <mat-slide-toggle color="primary" [checked]="configForm.get('mail.enabled')"
+                        title="Email-Benachrichtigungen an- / ausschalten" formControlName="enabled"
+                        (click)="$event.stopImmediatePropagation()"
+      >
+      </mat-slide-toggle></div>
+      <br/><br/>
+
+      <mat-card-content>
+        <mat-form-field [formGroup]="configForm.get('mail.mailServer')">
+          <input matInput placeholder="Mail-Server" formControlName="host" required>
+        </mat-form-field>
+        &nbsp;:&nbsp;
+        <mat-form-field [formGroup]="configForm.get('mail.mailServer')">
+          <input matInput placeholder="Port" formControlName="port" required>
+        </mat-form-field>
+        <br/>
+        <div [formGroup]="configForm.get('mail.mailServer')">
+          <mat-checkbox color="primary"
+                        formControlName="secure">
+            Secured Connection
+          </mat-checkbox>
+        </div>
+        <br/>
+        <mat-form-field [formGroup]="configForm.get('mail.mailServer.auth')">
+          <input matInput placeholder="User" formControlName="user">
+        </mat-form-field>
+        &nbsp;&nbsp;
+        <mat-form-field [formGroup]="configForm.get('mail.mailServer.auth')">
+          <input type="password" matInput placeholder="Passwort" formControlName="pass">
+        </mat-form-field>
+        <br/>
+        <mat-form-field [formGroup]="configForm.get('mail')">
+          <input matInput placeholder="Absender" formControlName="from" required>
+        </mat-form-field>
+        &nbsp;&nbsp;
+        <mat-form-field [formGroup]="configForm.get('mail')">
+          <input matInput placeholder="Empfänger" formControlName="to" required>
+        </mat-form-field>
+        <br/><br/>
+        <mat-form-field style="width: 250px">
+          <mat-label matPrefix>Benachrichtigungs-Schwelle:</mat-label>
+          <input matInput type="number" min="1" max="100" style="text-align: right; width: 50px" formControlName="maxDiff">
+          <mat-icon [inline]="true" style="padding-left: 1px" matSuffix>%</mat-icon>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
   </form>
 
   <div class="form-buttons">
     <button mat-button (click)="reset()" data-test="reset">Zurücksetzen</button>
-    <button mat-button (click)="exportHarvesterConfig()" data-test="export">Export</button>
     <div class="flex-space"></div>
-    <button mat-button color="primary" (click)="save()" [disabled]="!configForm.valid" data-test="save">Speichern</button>
+    <button mat-button color="primary" (click)="save()" [disabled]="!configForm.valid" data-test="save">Speichern
+    </button>
   </div>
-
 </div>

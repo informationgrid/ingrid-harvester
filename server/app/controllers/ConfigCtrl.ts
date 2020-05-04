@@ -2,6 +2,7 @@ import {Authenticated, BodyParams, Controller, Delete, Get, Post, QueryParams} f
 import {ConfigService} from "../services/config/ConfigService";
 import {GeneralSettings} from '@shared/general-config.settings';
 import {MappingDistribution, MappingItem} from '@shared/mapping.model';
+import * as fs from "fs";
 
 @Controller("/api/config")
 @Authenticated()
@@ -19,8 +20,8 @@ export class ConfigCtrl {
 
     @Post('/general')
     setGeneralConfig(@BodyParams() body: GeneralSettings): void {
-
-        ConfigService.setGeneralConfig(body);
+        if(body.elasticSearchUrl && body.alias)
+            ConfigService.setGeneralConfig(body);
 
     }
 
@@ -43,6 +44,12 @@ export class ConfigCtrl {
 
         ConfigService.addMappingDistribution(item);
 
+    }
+
+    @Post('/mapping/filecontent')
+    importMappingFile(@BodyParams() file: any): void {
+        if(file.format && file.ckan_dcat)
+            ConfigService.importMappingFileContent(file);
     }
 
     @Delete('/mapping/distribution')

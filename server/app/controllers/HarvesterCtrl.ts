@@ -20,6 +20,12 @@ export class HarvesterCtrl {
         return ConfigService.get();
     }
 
+    @Post('/filecontent')
+    importHarvesterConfigs(@BodyParams() config: Harvester[]) {
+        if(config && config.length > 0 && config[0].type)
+            ConfigService.importHarvester(config);
+    }
+
     @Post('/:id')
     updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Harvester) {
         const updatedID = ConfigService.update(+id, config);

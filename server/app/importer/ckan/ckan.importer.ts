@@ -44,6 +44,7 @@ export class CkanImporter implements Importer {
 
     private numIndexDocs = 0;
     private requestDelegateCount: RequestDelegate;
+    private totalCount: number = -1;
 
     /**
      * Create the importer and initialize with settings.
@@ -123,9 +124,9 @@ export class CkanImporter implements Importer {
 
             // get total number of documents
             let countJson = await this.requestDelegateCount.doRequest();
-            const totalCount = countJson.result.length;
+            this.totalCount = countJson.result.length;
 
-            const total = await this.fetchFilterAndIndexDocuments(promises, totalCount);
+            const total = await this.fetchFilterAndIndexDocuments(promises);
 
             if (total === 0) {
                 let warnMessage = `Could not harvest any datasets from ${this.settings.ckanBaseUrl}`;
@@ -164,7 +165,7 @@ export class CkanImporter implements Importer {
         }
     }
 
-    private async fetchFilterAndIndexDocuments(promises: any[], totalCount: number) {
+    private async fetchFilterAndIndexDocuments(promises: any[]) {
         let total = 0;
         let offset = this.settings.startPosition;
 
@@ -193,7 +194,7 @@ export class CkanImporter implements Importer {
                         harvestTime: now,
                         currentIndexName: this.elastic.indexName,
                         summary: this.summary
-                    }).then(() => this.observer.next(ImportResult.running(++this.summary.numDocs, totalCount)))
+                    }).then(() => this.observer.next(ImportResult.running(++this.summary.numDocs, this.totalCount)))
                 );
             }
 
@@ -220,6 +221,9 @@ export class CkanImporter implements Importer {
         let json = await this.requestDelegate.doRequest();
         let results = this.settings.requestType === 'ListWithResources' ? json.result : json.result.results;
 
+        if(json.result.count) {
+            this.totalCount = json.result.count;
+        }
         // Workaround if results are contained with another array (https://offenedaten-koeln.de)
         if (results && results.length === 1 && results[0] instanceof Array) {
             results = results[0];
@@ -261,12 +265,40 @@ export class CkanImporter implements Importer {
     }
 
     private updateRequestMethod(offset: number) {
-        this.requestDelegate.updateConfig({
-            qs: {
-                offset: offset,
-                limit: this.settings.maxRecords
+        if (this.settings.requestType === 'ListWithResources') {
+            this.requestDelegate.updateConfig({
+                qs: {
+                    offset: offset,
+                    limit: this.settings.maxRecords
+                }
+            });
+        } else {
+            let fq;
+            if(this.settings.filterGroups.length > 0 || this.settings.filterTags.length > 0 || this.settings.additionalSearchFilter)
+            {
+                fq = '';
+                if(this.settings.filterGroups.length > 0) {
+                    fq += '+groups:(' + this.settings.filterGroups.join(' OR ') + ')';
+                }
+                if(this.settings.filterTags.length > 0) {
+                    fq += '+tags:(' + this.settings.filterTags.join(' OR ') + ')';
+                }
+                if(this.settings.additionalSearchFilter){
+                    fq += '+'+this.settings.additionalSearchFilter;
+                }
+                if(this.settings.whitelistedIds.length > 0){
+                    fq = '(('+fq+ ') OR id:('+this.settings.whitelistedIds.join(' OR ')+'))'
+                }
             }
-        });
+            this.requestDelegate.updateConfig({
+                qs: {
+                    sort: 'id asc',
+                    start: offset,
+                    rows: this.settings.maxRecords,
+                    fq: fq
+                }
+            });
+        }
     }
 
     getSummary(): Summary {

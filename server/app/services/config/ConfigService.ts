@@ -25,8 +25,25 @@ export class ConfigService {
     private static readonly defaultSettings = {
         elasticSearchUrl: "http://localhost:9200",
         alias: "mcloud",
+        numberOfShards: 1,
+        numberOfReplicas: 0,
         proxy: "",
-        sessionSecret: "mysecretkey"
+        sessionSecret: "mysecretkey",
+        mail: {
+            enabled: false,
+            mailServer: {
+                host: "localhost",
+                port: 465,
+                secure: false,
+                auth: {
+                    user: "",
+                    pass: ""
+                }
+            },
+            from: "test@example.com",
+            to: "test@example.com"
+        },
+        maxDiff: 10
     };
     private static ignoreCaseSort = (a: string, b: string) => {
         return a.toLowerCase().localeCompare(b.toLowerCase());
@@ -78,10 +95,12 @@ export class ConfigService {
      */
     static get(): Harvester[] {
 
-        const configExists = fs.existsSync(this.HARVESTER_CONFIG_FILE);
+        const harvesterConfigFile = this.getHarvesterConfigFile();
+
+        const configExists = fs.existsSync(harvesterConfigFile);
 
         if (configExists) {
-            let contents = fs.readFileSync(this.HARVESTER_CONFIG_FILE);
+            let contents = fs.readFileSync(harvesterConfigFile);
             let configs: Harvester[] = JSON.parse(contents.toString());
             return configs
                 .map(config => {
@@ -95,6 +114,11 @@ export class ConfigService {
             return [];
         }
 
+    }
+
+
+    static importHarvester(filecontent: any) {
+        fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(filecontent, null, 2));
     }
 
     /**
@@ -119,13 +143,13 @@ export class ConfigService {
             }
         }
 
-        fs.writeFileSync(this.HARVESTER_CONFIG_FILE, JSON.stringify(newConfig, null, 2));
+        fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(newConfig, null, 2));
         return id;
     }
 
     static updateAll(updatedHarvesters: Harvester[]) {
 
-        fs.writeFileSync(this.HARVESTER_CONFIG_FILE, JSON.stringify(updatedHarvesters, null, 2));
+        fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(updatedHarvesters, null, 2));
 
     }
 
@@ -199,11 +223,17 @@ export class ConfigService {
         mapping.format = this.convertMappingForFile();
 
         fs.writeFileSync(this.MAPPINGS_FILE, JSON.stringify(mapping, null, 2));
+        this.mappingDistribution = ConfigService.initDistributionMapping();
     }
 
     static getMappingFileContent(): any {
         const content = fs.readFileSync(this.MAPPINGS_FILE);
         return JSON.parse(content.toString());
+    }
+
+    static importMappingFileContent(mapping) {
+        fs.writeFileSync(this.MAPPINGS_FILE, JSON.stringify(mapping, null, 2));
+        this.mappingDistribution = ConfigService.initDistributionMapping();
     }
 
     private static convertMappingForFile() {
@@ -219,5 +249,12 @@ export class ConfigService {
         });
 
         return ordered;
+    }
+
+    private static getHarvesterConfigFile() {
+        const configDir = process.env.MCLOUD_IMPORTER_CONFIG_DIR;
+        return configDir
+            ? configDir + '/' + this.HARVESTER_CONFIG_FILE
+            : this.HARVESTER_CONFIG_FILE;
     }
 }

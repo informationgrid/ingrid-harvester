@@ -1,3 +1,10 @@
+* Mon May 04 2020 Jan Bücher <jan.buecher@wemove.com> - 2.0.0
+- Import of configurations (#2481)
+- Send mail for failed harvesting (#2384)
+- Harvesting CKAN by Search (#2382)
+- Configure number_of_shards and number_of_replicas for Elasticsearch (#2376)
+- New Datasources (#2504)
+
 * Mon Feb 17 2020 André Wallat <andre.wallat@wemove.com> - 1.8.1
 - Fix mapping of title field to be searchable correctly
 

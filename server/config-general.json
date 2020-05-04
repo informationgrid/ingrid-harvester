@@ -1,5 +1,22 @@
 {
   "elasticSearchUrl": "http://localhost:9200",
   "alias": "mcloud",
-  "proxy": ""
+  "numberOfShards": 1,
+  "numberOfReplicas": 0,
+  "proxy": "",
+  "mail": {
+    "enabled": false,
+    "mailServer": {
+      "host": "localhost",
+      "port": 465,
+      "secure": false,
+      "auth": {
+        "user": "",
+        "pass": ""
+      }
+    },
+    "from": "test@example.com",
+    "to": "test@example.com"
+  },
+  "maxDiff": 10
 }

@@ -147,7 +147,6 @@ describe('Ckan-Harvester operations', () => {
     harvester.waitForImportToFinish(constants.SEED_CKAN_ID);
 
     let importedDocNumber = harvester.getDocNumber(constants.SEED_CKAN_ID);
-    importedDocNumber.should('be.below', '42');
     importedDocNumber.should('equal', '38');
 
     harvester.deleteHarvesterById(constants.SEED_CKAN_ID);

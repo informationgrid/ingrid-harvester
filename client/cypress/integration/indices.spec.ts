@@ -55,9 +55,7 @@ describe('Indices operations', () => {
   it('should show the content of an index when it is clicked', () => {
     let dbIndexContent = "{\n" +
       "    \"_index\": \"ckan_db_";
-    let indexDescription = "\"description\": " +
-      "\"Die hier gelieferten Daten stellen die Anzahl der Zugfahrten und Verspätungsminuten pro Tag und Betriebsstelle dar. " +
-      "Berücksichtigt wurden alle Bst, über die mindestens 10 Zugfahrten stattfanden.\"";
+    let indexType = "\"_type\": \"base\"";
 
     harvester.importHarvesterById(constants.CKAN_DB_ID);
     harvester.waitForImportToFinish(constants.CKAN_DB_ID);
@@ -66,6 +64,6 @@ describe('Indices operations', () => {
 
     indicesPage.selectIndex('ckan_db');
     indicesPage.checkContentIs(dbIndexContent);
-    indicesPage.checkContentIs(indexDescription);
+    indicesPage.checkContentIs(indexType);
   })
 });

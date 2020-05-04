@@ -139,7 +139,6 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(DialogEditComponent, {
       data: {
         id: -1,
-        disabled: true
       },
       width: '900px',
       disableClose: true

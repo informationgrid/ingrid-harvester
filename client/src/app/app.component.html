@@ -14,12 +14,23 @@
 
 <mat-sidenav-container class="navigation">
   <mat-sidenav mode="side" disableClose opened *ngIf="isLoggedIn">
-    <mat-action-list>
-      <button mat-list-item routerLink="/config" routerLinkActive="active-link" data-test="menu-config"> Konfiguration </button>
-      <button mat-list-item routerLink="/harvester" routerLinkActive="active-link" data-test="menu-harvester"> Harvester </button>
-      <button mat-list-item routerLink="/indices" routerLinkActive="active-link" data-test="menu-indices"> Indizes </button>
-      <button mat-list-item routerLink="/log" routerLinkActive="active-link" data-test="menu-log"> Log </button>
-    </mat-action-list>
+    <div fxFlex fxLayout="column">
+      <mat-action-list>
+        <button mat-list-item routerLink="/config" routerLinkActive="active-link" data-test="menu-config">
+          Konfiguration
+        </button>
+        <button mat-list-item routerLink="/harvester" routerLinkActive="active-link" data-test="menu-harvester">
+          Harvester
+        </button>
+        <button mat-list-item routerLink="/indices" routerLinkActive="active-link" data-test="menu-indices"> Indizes
+        </button>
+        <button mat-list-item routerLink="/log" routerLinkActive="active-link" data-test="menu-log"> Log</button>
+      </mat-action-list>
+
+      <div fxFlex></div>
+
+      <div class="version">Version: {{(version | async)?.version}}</div>
+    </div>
   </mat-sidenav>
 
   <mat-sidenav-content>

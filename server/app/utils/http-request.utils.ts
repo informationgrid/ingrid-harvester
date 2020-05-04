@@ -35,7 +35,8 @@ export interface CkanParameters {
     readonly sort?: "id asc", // Hardcoded to the only used value currently being used
 
     start?: number,
-    rows?: number
+    rows?: number,
+    fq?: string
 }
 
 export interface CkanParametersListWithResources {
