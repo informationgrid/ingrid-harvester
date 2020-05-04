@@ -19,137 +19,6 @@
     "id": 1
   },
   {
-    "index": "ckan_opendata_koeln",
-    "includeTimestamp": true,
-    "type": "CKAN",
-    "maxRecords": 100,
-    "startPosition": 0,
-    "customCode": "",
-    "defaultMcloudSubgroup": [
-      "roads"
-    ],
-    "defaultDCATCategory": [
-      "REGI"
-    ],
-    "dateSourceFormats": [
-      "YYYY-MM-DDThh:mm:ss"
-    ],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "ckanBaseUrl": "https://offenedaten-koeln.de",
-    "filterTags": [
-      "Transport und Verkehr"
-    ],
-    "filterGroups": [],
-    "providerPrefix": "",
-    "providerField": "maintainer",
-    "requestType": "ListWithResources",
-    "markdownAsDescription": false,
-    "defaultLicense": null,
-    "description": "Offene Daten Köln",
-    "defaultAttribution": "Offene Daten Köln",
-    "disable": true,
-    "id": 2
-  },
-  {
-    "index": "ckan_opendata_bonn",
-    "includeTimestamp": true,
-    "type": "CKAN",
-    "maxRecords": 100,
-    "startPosition": 0,
-    "customCode": "",
-    "defaultMcloudSubgroup": [
-      "roads"
-    ],
-    "defaultDCATCategory": [
-      "REGI"
-    ],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "ckanBaseUrl": "https://opendata.bonn.de",
-    "filterTags": [
-      "Transport und Verkehr"
-    ],
-    "filterGroups": [],
-    "providerPrefix": "",
-    "providerField": "maintainer",
-    "requestType": "ListWithResources",
-    "markdownAsDescription": true,
-    "defaultLicense": null,
-    "description": "!Offene Daten Bonn: parameters wrong",
-    "defaultAttribution": "Offene Daten Bonn",
-    "disable": true,
-    "id": 3
-  },
-  {
-    "index": "ckan_opendata_duesseldorf",
-    "includeTimestamp": true,
-    "type": "CKAN",
-    "maxRecords": 100,
-    "startPosition": 0,
-    "customCode": "",
-    "defaultMcloudSubgroup": [
-      "roads"
-    ],
-    "defaultDCATCategory": [
-      "REGI"
-    ],
-    "dateSourceFormats": [
-      "YYYY-MM-DDThh:mm:ss",
-      "DD MMMM, YYYY - hh:mm"
-    ],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "ckanBaseUrl": "https://opendata.duesseldorf.de",
-    "filterTags": [
-      "Transport und Verkehr"
-    ],
-    "filterGroups": [],
-    "providerPrefix": "",
-    "providerField": "maintainer",
-    "requestType": "ListWithResources",
-    "markdownAsDescription": false,
-    "defaultLicense": null,
-    "description": "Offene Daten Düsseldorf",
-    "defaultAttribution": "Offene Daten Düsseldorf",
-    "disable": true,
-    "id": 4
-  },
-  {
-    "index": "ckan_opendata_wuppertal",
-    "includeTimestamp": true,
-    "type": "CKAN",
-    "maxRecords": 100,
-    "startPosition": 0,
-    "customCode": "",
-    "defaultMcloudSubgroup": [
-      "roads"
-    ],
-    "defaultDCATCategory": [
-      "REGI"
-    ],
-    "dateSourceFormats": [
-      "YYYY-MM-DDThh:mm:ss"
-    ],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "ckanBaseUrl": "https://offenedaten-wuppertal.de",
-    "filterTags": [
-      "Transport und Verkehr"
-    ],
-    "filterGroups": [],
-    "providerPrefix": "",
-    "providerField": "maintainer",
-    "requestType": "ListWithResources",
-    "markdownAsDescription": false,
-    "defaultLicense": null,
-    "description": "Offene Daten Wuppertal",
-    "defaultAttribution": "Offene Daten Wuppertal",
-    "disable": true,
-    "id": 5
-  },
-  {
     "index": "ckan_db",
     "includeTimestamp": true,
     "type": "CKAN",
@@ -691,30 +560,6 @@
     }
   },
   {
-    "index": "Testing CKAN Harvester",
-    "includeTimestamp": true,
-    "type": "CKAN",
-    "maxRecords": 100,
-    "startPosition": 0,
-    "customCode": "",
-    "defaultMcloudSubgroup": [],
-    "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "ckanBaseUrl": "testme",
-    "filterTags": [],
-    "filterGroups": [],
-    "providerPrefix": "",
-    "providerField": "maintainer",
-    "requestType": "ListWithResources",
-    "markdownAsDescription": true,
-    "defaultLicense": null,
-    "disable": true,
-    "description": "Testing CKAN Harvester",
-    "id": 21
-  },
-  {
     "index": "csw_ils_geonode",
     "includeTimestamp": true,
     "type": "CSW",
@@ -745,113 +590,6 @@
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>apiso:AnyText</ogc:PropertyName><ogc:Literal>incora</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>"
   },
   {
-    "index": "csw_geonet_mrn",
-    "includeTimestamp": true,
-    "type": "CSW",
-    "maxRecords": 100,
-    "startPosition": 1,
-    "customCode": "",
-    "defaultMcloudSubgroup": [
-      "roads"
-    ],
-    "defaultDCATCategory": [
-      "REGI"
-    ],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "getRecordsUrl": "http://daten.geonet-mrn.de/catalogue/csw",
-    "eitherKeywords": [],
-    "httpMethod": "GET",
-    "disable": true,
-    "description": "GeoNet.MRN",
-    "defaultAttribution": "GeoNet.MRN",
-    "defaultAttributionLink": "http://daten.geonet-mrn.de",
-    "id": 23,
-    "cron": {
-      "active": true,
-      "pattern": "40 2 * * *"
-    }
-  },
-  {
-    "index": "ckan_nrw_wuppertal",
-    "includeTimestamp": true,
-    "type": "CKAN",
-    "maxRecords": 100,
-    "startPosition": 1,
-    "customCode": "",
-    "defaultMcloudSubgroup": [
-      "roads"
-    ],
-    "defaultDCATCategory": [
-      "REGI"
-    ],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "ckanBaseUrl": "https://open.nrw",
-    "filterTags": [
-      "Offene Daten Wuppertal"
-    ],
-    "filterGroups": [
-      "tran"
-    ],
-    "providerPrefix": "",
-    "providerField": "maintainer",
-    "requestType": "ListWithResources",
-    "markdownAsDescription": false,
-    "defaultLicense": null,
-    "disable": true,
-    "description": "NRW Wuppertal",
-    "defaultAttribution": "NRW Wuppertal",
-    "id": 24,
-    "defaultAttributionLink": null,
-    "rules": {
-      "containsDocumentsWithData": true,
-      "containsDocumentsWithDataBlacklist": "rss"
-    }
-  },
-  {
-    "index": "ckan_opendata_filtered_nrw",
-    "includeTimestamp": true,
-    "type": "CKAN",
-    "maxRecords": 100,
-    "startPosition": 0,
-    "customCode": "const modifiedDate = this.source.extras\n            .filter(extra => extra.key === 'modified')\n            .map(modifiedHash => this.handleDate(modifiedHash.value));\n        \n        if (modifiedDate && modifiedDate.length > 0) {\n            doc.modified = modifiedDate[0];\n}\n\nconst issuedDate = this.source.extras\n            .filter(extra => extra.key === 'issued')\n            .map(issuedHash => this.handleDate(issuedHash.value));\n        \n        if (issuedDate && issuedDate.length > 0) {\n            doc.issued = issuedDate[0];\n            doc.extras.temporal.start = issuedDate[0];\n            doc.extras.temporal.end = issuedDate[0];\n}",
-    "defaultMcloudSubgroup": [
-      "roads"
-    ],
-    "defaultDCATCategory": [
-      "REGI"
-    ],
-    "dateSourceFormats": [
-      "DD MMMM, YYYY - hh:mm",
-      "YYYY-MM-DDThh:mm:ss"
-    ],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "ckanBaseUrl": "https://open.nrw",
-    "filterTags": [],
-    "filterGroups": [
-      "tran"
-    ],
-    "providerPrefix": "Open NRW: ",
-    "providerField": "organization",
-    "requestType": "ListWithResources",
-    "markdownAsDescription": true,
-    "defaultLicense": null,
-    "id": 25,
-    "disabled": true,
-    "description": "NRW Portal filtered",
-    "defaultAttribution": "filtered NRW Portal",
-    "defaultAttributionLink": null,
-    "rules": {
-      "containsDocumentsWithData": true,
-      "containsDocumentsWithDataBlacklist": "rss,html,doc,pdf"
-    },
-    "disable": true
-  },
-  {
     "index": "ckan_berlin",
     "includeTimestamp": true,
     "type": "CKAN",
@@ -878,7 +616,6 @@
     "markdownAsDescription": true,
     "defaultLicense": null,
     "id": 26,
-    "disabled": true,
     "description": "OpenData Berlin",
     "defaultAttribution": "OpenData Berlin",
     "defaultAttributionLink": null,
@@ -924,7 +661,6 @@
     "markdownAsDescription": false,
     "defaultLicense": null,
     "id": 28,
-    "disabled": true,
     "description": "OpenData Rheinland-Pfalz",
     "defaultAttribution": "OpenData Rheinland-Pfalz",
     "defaultAttributionLink": null,
@@ -968,7 +704,6 @@
     "markdownAsDescription": false,
     "defaultLicense": null,
     "id": 30,
-    "disabled": true,
     "description": "OpenData Schleswig-Holstein",
     "defaultAttribution": "OpenData Schleswig-Holstein",
     "defaultAttributionLink": null,
@@ -1009,7 +744,6 @@
     "markdownAsDescription": false,
     "defaultLicense": null,
     "id": 29,
-    "disabled": true,
     "description": "GovData",
     "defaultAttribution": "GovData",
     "defaultAttributionLink": null,
@@ -1038,7 +772,6 @@
     "eitherKeywords": [],
     "httpMethod": "POST",
     "id": 31,
-    "disabled": true,
     "description": "GeoMIS.Sachsen",
     "defaultAttribution": "GeoMIS Sachsen",
     "defaultAttributionLink": "https://geomis.sachsen.de",
@@ -1078,7 +811,6 @@
     "markdownAsDescription": false,
     "defaultLicense": null,
     "id": 32,
-    "disabled": true,
     "description": "GeoNet.MRN",
     "defaultAttribution": "GeoNet.MRN",
     "defaultAttributionLink": "http://ckan.geonet-mrn.de",
@@ -1111,7 +843,6 @@
     "eitherKeywords": [],
     "httpMethod": "POST",
     "id": 33,
-    "disabled": true,
     "description": "BKG",
     "defaultAttribution": "BKG",
     "defaultAttributionLink": "https://mis.bkg.bund.de/portal/",
