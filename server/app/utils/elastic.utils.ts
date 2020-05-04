@@ -11,9 +11,7 @@ export const DefaultElasticsearchSettings: ElasticSettings = {
     // elasticSearchUrl: 'localhost:9200',
     index: '',
     // alias: '',
-    includeTimestamp: true,
-    numberOfShards: 1,
-    numberOfReplicas: 0
+    includeTimestamp: true
 };
 
 export interface BulkResponse {

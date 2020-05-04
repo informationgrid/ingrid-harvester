@@ -25,6 +25,8 @@ export class ConfigService {
     private static readonly defaultSettings = {
         elasticSearchUrl: "http://localhost:9200",
         alias: "mcloud",
+        numberOfShards: 1,
+        numberOfReplicas: 0,
         proxy: "",
         sessionSecret: "mysecretkey",
         mail: {
