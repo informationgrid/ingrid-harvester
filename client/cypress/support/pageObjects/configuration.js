@@ -14,6 +14,8 @@ class ConfigurationPage {
   sourceContent = '.mat-list-item';
   MAPPING = 'Mapping (Datenformate)';
   CONFIG = 'Konfiguration';
+  EXPORT = 'Import/Export';
+  configExportDownloadBtn = '.form-wrapper :nth-child(1) > :nth-child(4)';
 
 
   //TODO: export all button data-tests att, Mapping-Tab Btn, input fields source and dest
@@ -30,6 +32,9 @@ class ConfigurationPage {
         break;
       case this.CONFIG:
         cy.get(this.tab).contains(this.CONFIG).click({force: true});
+        break;
+      case this.EXPORT:
+        cy.get(this.tab).contains(this.EXPORT).click({force: true});
         break;
     }
   }
@@ -127,8 +132,9 @@ class ConfigurationPage {
     });
   }
 
+  //TODO fix data-test attributes
   pressDownloadConfigButton() {
-    cy.get('[data-test=export]').click();
+    cy.get(this.configExportDownloadBtn).click();
   }
 }
 
