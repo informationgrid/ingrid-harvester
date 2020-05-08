@@ -59,6 +59,6 @@ export class HarvesterService {
   }
 
   uploadHarvesterConfig(file: File): Observable<void> {
-    return this.http.post<void>('/rest/api/harvester/filecontent', file);
+    return this.http.post<void>('rest/api/harvester/filecontent', file);
   }
 }
