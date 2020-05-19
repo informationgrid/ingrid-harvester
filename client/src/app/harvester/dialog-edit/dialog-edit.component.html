@@ -14,6 +14,7 @@
               <mat-option value="BFG-CSW">CSW (BFG)</mat-option>
               <mat-option value="CODEDE-CSW">CSW (CODEDE)</mat-option>
             </ng-container>
+            <mat-option value="OAI">OAI</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -106,6 +107,11 @@
                          [model]="harvester"
                          [rulesTemplate]="rules"
                          class="flex-column"></app-csw-harvester>
+
+      <app-oai-harvester *ngIf="harvesterForm.get('type').value?.endsWith('OAI')" [form]="harvesterForm"
+                         [model]="harvester"
+                         [rulesTemplate]="rules"
+                         class="flex-column"></app-oai-harvester>
 
       <ng-template #rules>
         <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">

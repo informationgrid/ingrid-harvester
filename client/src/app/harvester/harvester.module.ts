@@ -14,6 +14,7 @@ import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
 import {ExcelHarvesterComponent} from './dialog-edit/excel-harvester/excel-harvester.component';
 import {CkanHarvesterComponent} from './dialog-edit/ckan-harvester/ckan-harvester.component';
 import {CswHarvesterComponent} from './dialog-edit/csw-harvester/csw-harvester.component';
+import {OaiHarvesterComponent} from './dialog-edit/oai-harvester/oai-harvester.component';
 import {ImporterDetailComponent} from './importer-detail/importer-detail.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatCardModule, MatCheckboxModule, MatChipsModule, MatListModule, MatTabsModule} from '@angular/material';
@@ -40,6 +41,7 @@ const harvesterRoutes: Routes = [
     ExcelHarvesterComponent,
     CkanHarvesterComponent,
     CswHarvesterComponent,
+    OaiHarvesterComponent,
     ImporterDetailComponent,
     ChipListComponent
   ],
