@@ -31,6 +31,7 @@ export class IndexDocument {
                 realtime: mapper.isRealtime(),
                 subgroups: mapper.getCategories(),
                 subsection: mapper.getSubSections(),
+                spatial: mapper.getSpatial(),
                 temporal: mapper.getTemporal()
             },
             issued: mapper.getIssued(),

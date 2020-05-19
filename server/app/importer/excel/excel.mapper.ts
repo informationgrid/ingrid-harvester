@@ -109,6 +109,10 @@ export class ExcelMapper extends GenericMapper {
         return this.columnMap.Echtzeitdaten === 1;
     }
 
+    getSpatial(): any {
+        return undefined;
+    }
+
     getTemporal(): DateRange {
         let range: string = this.columnValues[this.columnMap.Zeitraum];
         if (range) {

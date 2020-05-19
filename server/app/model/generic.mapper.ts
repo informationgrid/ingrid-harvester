@@ -84,6 +84,8 @@ export abstract class GenericMapper {
 
     abstract isRealtime(): boolean;
 
+    abstract getSpatial(): any;
+
     abstract getTemporal(): DateRange;
 
     abstract getCitation(): string;

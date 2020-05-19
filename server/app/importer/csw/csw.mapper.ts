@@ -85,7 +85,7 @@ export class CswMapper extends GenericMapper {
         }
 
         let distNodes = CswMapper.select('./gmd:distributionInfo/gmd:MD_Distribution', this.record);
-        for (let i=0; i<distNodes.length; i++) {
+        for (let i = 0; i < distNodes.length; i++) {
             let distNode = distNodes[i];
             let id = distNode.getAttribute('id');
             if (!id) id = distNode.getAttribute('uuid');
@@ -105,7 +105,7 @@ export class CswMapper extends GenericMapper {
             if (formats.length === 0) formats.push('Unbekannt');
 
             let onlineResources = CswMapper.select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource', distNode);
-            for(let j=0; j<onlineResources.length; j++) {
+            for (let j = 0; j < onlineResources.length; j++) {
                 let onlineResource = onlineResources[j];
 
                 let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource);
@@ -174,7 +174,7 @@ export class CswMapper extends GenericMapper {
         let onlineResources = CswMapper
             .select('./srv:containsOperations/*/srv:connectPoint/*/gmd:CI_OnlineResource', srvIdent);
 
-        for (let i=0; i<onlineResources.length; i++) {
+        for (let i = 0; i < onlineResources.length; i++) {
             let onlineResource = onlineResources[i];
 
             let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource);
@@ -193,7 +193,7 @@ export class CswMapper extends GenericMapper {
 
         return serviceLinks;
 
-   }
+    }
 
     async getPublisher(): Promise<any[]> {
         let publishers = [];
@@ -403,7 +403,6 @@ export class CswMapper extends GenericMapper {
     }
 
 
-
     getMFundFKZ(): string {
         // Detect mFund properties
         let keywords = this.getKeywords();
@@ -452,6 +451,35 @@ export class CswMapper extends GenericMapper {
 
     getModifiedDate() {
         return new Date(CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent);
+    }
+
+    getSpatial(): any {
+        let geographicBoundingBox = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo, true);
+        if (geographicBoundingBox) {
+            let west = parseFloat(CswMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let east = parseFloat(CswMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let south = parseFloat(CswMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+
+            if (west === east && north === south) {
+                return {
+                    'type': 'point',
+                    'coordinates': [west, north]
+                }
+            } else if (west === east || north === south) {
+                return {
+                    'type': 'linestring',
+                    'coordinates': [[west, north], [east, south]]
+                }
+            } else {
+                return {
+                    'type': 'envelope',
+                    'coordinates': [[west, north], [east, south]]
+                }
+            }
+        }
+
+        return undefined;
     }
 
     getTemporal(): DateRange {
@@ -524,7 +552,7 @@ export class CswMapper extends GenericMapper {
         if (!themes || themes.length === 0) {
             // Fall back to default value
             themes = this.settings.defaultDCATCategory
-                .map( category => GenericMapper.DCAT_CATEGORY_URL + category);
+                .map(category => GenericMapper.DCAT_CATEGORY_URL + category);
         }
 
         this.fetched.themes = themes;
@@ -561,7 +589,7 @@ export class CswMapper extends GenericMapper {
         let constraints = CswMapper.select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license" or ./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="otherRestrictions"]', this.idInfo);
 
         if (constraints && constraints.length > 0) {
-            for(let j=0; j<constraints.length; j++) {
+            for (let j = 0; j < constraints.length; j++) {
                 let c = constraints[j];
                 let nodes = CswMapper.select('./gmd:otherConstraints', c);
                 for (let i = 0; i < nodes.length; i++) {
@@ -578,7 +606,8 @@ export class CswMapper extends GenericMapper {
                             url: await UrlUtils.urlWithProtocolFor(requestConfig)
                         };
 
-                    } catch(ignored) {}
+                    } catch (ignored) {
+                    }
                 }
             }
         }
@@ -614,7 +643,7 @@ export class CswMapper extends GenericMapper {
             './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
-        for (let i=0; i<queries.length; i++) {
+        for (let i = 0; i < queries.length; i++) {
             let contacts = CswMapper.select(queries[i], this.record);
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
@@ -625,14 +654,14 @@ export class CswMapper extends GenericMapper {
                 let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
 
                 if (role === 'originator' || role === 'author') {
-                    let creator : creatorType = {};
+                    let creator: creatorType = {};
                     /*
                      * Creator has only one field for name. Use either the name
                      * of the organisation or the person for this field. The
                      * organisation name has a higher priority.
                      */
                     if (organisation) {
-                        creator.name =  organisation.textContent;
+                        creator.name = organisation.textContent;
                     } else if (name) {
                         creator.name = name.textContent;
                     }
@@ -673,7 +702,7 @@ export class CswMapper extends GenericMapper {
             './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
-        for (let i=0; i<queries.length; i++) {
+        for (let i = 0; i < queries.length; i++) {
             let contacts = CswMapper.select(queries[i], this.record);
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
@@ -726,7 +755,7 @@ export class CswMapper extends GenericMapper {
             './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
-        for (let i=0; i<queries.length; i++) {
+        for (let i = 0; i < queries.length; i++) {
             let contacts = CswMapper.select(queries[i], this.record);
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
@@ -811,6 +840,6 @@ export class CswMapper extends GenericMapper {
 
 // Private interface. Do not export
 interface creatorType {
-    name? : string;
-    mbox? : string;
+    name?: string;
+    mbox?: string;
 }

@@ -405,6 +405,19 @@ export class CkanMapper extends GenericMapper {
         return config;
     }
 
+    getSpatial(): any {
+        let extras = this.source.extras;
+        if (extras) {
+            for (let i = 0; i < extras.length; i++) {
+                let extra = extras[i];
+                if(extra.key === 'spatial') {
+                    return JSON.parse(extra.value);
+                }
+            }
+        }
+        return undefined;
+    }
+
     isValid(doc?: any): boolean {
         if (doc.distribution.length === 0) {
             this.valid = false;
