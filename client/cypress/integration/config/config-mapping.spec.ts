@@ -1,8 +1,8 @@
-describe('Configuration of Mapping-Formats', () => {
-  const ConfigurationPage = require("../../support/pageObjects/configuration");
-  const configPage = new ConfigurationPage();
+import ConfigurationPage from "../../support/pageObjects/configuration";
+import Authentication from "../../support/pageObjects/auth";
 
-  const Authentication = require("../../support/pageObjects/auth");
+describe('Configuration of Mapping-Formats', () => {
+  const configPage = new ConfigurationPage();
   const auth = new Authentication();
 
   let mapSource = 'mapping_source';

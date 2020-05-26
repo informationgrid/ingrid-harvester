@@ -1,12 +1,12 @@
-describe('Csw-Harvester operations', () => {
-  let Constants = require("../../support/constants");
-  const constants = new Constants();
+import Authentication from "../../support/pageObjects/auth";
+import Constants from "../../support/constants";
+import HarvesterPage from "../../support/pageObjects/harvester/harvester";
+import HarvesterForm from "../../support/pageObjects/harvester/harvesterForm";
 
-  const Authentication = require("../../support/pageObjects/auth");
+describe('Csw-Harvester operations', () => {
+  const constants = new Constants();
   const auth = new Authentication();
-  const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
   const harvester = new HarvesterPage();
-  const HarvesterForm = require("../../support/pageObjects/harvester/harvesterForm");
   const form = new HarvesterForm();
 
   beforeEach(() => {
