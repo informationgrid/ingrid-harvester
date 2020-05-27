@@ -76,7 +76,7 @@ export class CkanMapper extends GenericMapper {
 
         if (person.length === 0) {
             return [{
-                name: this.settings.providerPrefix + this.settings.description
+                name: this.settings.providerPrefix + this.settings.description.trim()
             }];
         }
 
@@ -564,7 +564,7 @@ export class CkanMapper extends GenericMapper {
                 const publisher = await this.getPublisher();
                 if (publisher.length > 0) {
                     return [{
-                        name: this.settings.providerPrefix + (publisher[0].organization ? publisher[0].organization : this.settings.description),
+                        name: this.settings.providerPrefix + (publisher[0].organization ? publisher[0].organization.trim() : this.settings.description.trim()),
                         homepage: publisher[0].homepage ? publisher[0].homepage : undefined
                     }];
                 } else {

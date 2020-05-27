@@ -337,14 +337,14 @@ export class CswMapper extends GenericMapper {
                 }
 
                 displayContact = {
-                    name: displayName,
+                    name: displayName.trim(),
                     homepage: publisher[0].homepage
                 };
             } else {
                 let creator = this.getCreator();
 
                 displayContact = {
-                    name: creator[0].name,
+                    name: creator[0].name.trim(),
                     homepage: creator[0].homepage
                 };
             }
