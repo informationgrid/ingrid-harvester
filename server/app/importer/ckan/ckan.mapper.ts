@@ -415,6 +415,9 @@ export class CkanMapper extends GenericMapper {
                 }
             }
         }
+        else if (this.source.spatial) {
+            return JSON.parse(this.source.spatial);
+        }
         return undefined;
     }
 
