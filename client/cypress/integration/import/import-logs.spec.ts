@@ -1,10 +1,10 @@
-import Authentication from "../../support/pageObjects/auth";
-import Constants from "../../support/constants";
-import HarvesterPage from "../../support/pageObjects/harvester/harvester";
-
 describe('Import log operations', () => {
+  let Constants = require("../../support/constants");
   const constants = new Constants();
+
+  const Authentication = require("../../support/pageObjects/auth");
   const auth = new Authentication();
+  const HarvesterPage = require("../../support/pageObjects/harvester/harvester");
   const harvester = new HarvesterPage();
 
   beforeEach(() => {

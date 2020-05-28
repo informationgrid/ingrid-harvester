@@ -1,6 +1,5 @@
-import Authentication from "../support/pageObjects/auth";
-
 describe('Login', () => {
+  const Authentication = require("../support/pageObjects/auth");
   const auth = new Authentication();
 
   beforeEach(() => {

@@ -1,12 +1,12 @@
-import Authentication from "../support/pageObjects/auth";
-import Constants from "../support/constants";
-import HarvesterPage from "../support/pageObjects/harvester/harvester";
-import IndicesPage from "../support/pageObjects/indices";
-
 describe('Indices operations', () => {
+  let Constants = require("../support/constants");
   const constants = new Constants();
+
+  const Authentication = require("../support/pageObjects/auth");
   const auth = new Authentication();
+  const HarvesterPage = require("../support/pageObjects/harvester/harvester");
   const harvester = new HarvesterPage();
+  const IndicesPage = require('../support/pageObjects/indices');
   const indicesPage = new IndicesPage();
 
   beforeEach(() => {
