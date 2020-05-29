@@ -86,6 +86,8 @@ export abstract class GenericMapper {
 
     abstract getSpatial(): any;
 
+    abstract getSpatialText(): string;
+
     abstract getTemporal(): DateRange;
 
     abstract getCitation(): string;

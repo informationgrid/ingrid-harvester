@@ -32,6 +32,7 @@ export class IndexDocument {
                 subgroups: mapper.getCategories(),
                 subsection: mapper.getSubSections(),
                 spatial: mapper.getSpatial(),
+                spatialText: mapper.getSpatialText(),
                 temporal: mapper.getTemporal()
             },
             issued: mapper.getIssued(),

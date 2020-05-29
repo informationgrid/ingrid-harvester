@@ -440,6 +440,19 @@ export class CkanMapper extends GenericMapper {
         return undefined;
     }
 
+    getSpatialText(): string {
+        let extras = this.source.extras;
+        if (extras) {
+            for (let i = 0; i < extras.length; i++) {
+                let extra = extras[i];
+                if(extra.key === 'opennrw_spatial' || extra.key === 'spatial_text' || extra.key === 'spatial-text') {
+                    return extra.value;
+                }
+            }
+        }
+        return undefined;
+    }
+
     isValid(doc?: any): boolean {
         if (doc.distribution.length === 0) {
             this.valid = false;

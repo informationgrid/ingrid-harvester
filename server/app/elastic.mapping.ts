@@ -252,6 +252,9 @@ export const elasticsearchMapping = {
                     'type': 'geo_shape',
                     'ignore_malformed': true
                 },
+                'spatialText': {
+                    'type': 'text'
+                },
                 'temporal': {
                     'properties': {
                         'start': {

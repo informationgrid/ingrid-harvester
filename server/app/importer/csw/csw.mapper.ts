@@ -482,6 +482,19 @@ export class CswMapper extends GenericMapper {
         return undefined;
     }
 
+    getSpatialText(): string {
+        let geoGraphicDescription = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription', this.idInfo, true);
+
+        if(geoGraphicDescription)
+        {
+            let geoGraphicCode = CswMapper.select('./gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', geoGraphicDescription, true);
+            if(geoGraphicCode)
+                return geoGraphicCode.textContent;
+        }
+
+        return undefined;
+    }
+
     getTemporal(): DateRange {
         let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
 

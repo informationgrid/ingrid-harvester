@@ -113,6 +113,10 @@ export class ExcelMapper extends GenericMapper {
         return undefined;
     }
 
+    getSpatialText(): string {
+        return undefined;
+    }
+
     getTemporal(): DateRange {
         let range: string = this.columnValues[this.columnMap.Zeitraum];
         if (range) {
