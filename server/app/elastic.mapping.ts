@@ -249,8 +249,7 @@ export const elasticsearchMapping = {
                     }
                 },
                 'spatial': {
-                    'type': 'geo_shape',
-                    'ignore_malformed': true
+                    'type': 'geo_shape'
                 },
                 'spatialText': {
                     'type': 'text'
