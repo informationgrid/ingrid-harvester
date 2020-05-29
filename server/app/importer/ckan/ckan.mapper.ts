@@ -76,7 +76,7 @@ export class CkanMapper extends GenericMapper {
 
         if (person.length === 0) {
             return [{
-                name: this.settings.providerPrefix + this.settings.description
+                name: this.settings.providerPrefix + this.settings.description.trim()
             }];
         }
 
@@ -99,7 +99,7 @@ export class CkanMapper extends GenericMapper {
                         id: res.id,
                         title: res.name,
                         description: res.description,
-                        accessURL: accessURL,
+                        accessURL: this.cleanupURL(accessURL),
                         format: UrlUtils.mapFormat([res.format], this.summary.warnings),
                         issued: this.handleDate(res.created),
                         modified: this.handleDate(res.last_modified),
@@ -116,6 +116,25 @@ export class CkanMapper extends GenericMapper {
         this.errors.push(...urlErrors);
 
         return distributions;
+    }
+
+    private cleanupURL(url: string):string {
+        if(url.indexOf('<') !== -1 && url.indexOf('>') !== -1 ){
+            let pos1 = url.indexOf('>http');
+            if(pos1 !== -1){
+                let pos2 = url.indexOf('<', pos1);
+                if(pos2 > pos1){
+                    url = url.substring(pos1+1, pos2);
+                }
+            }
+        }
+
+        if(url.indexOf('\\') !== -1)
+        {
+            url = url.replace('\\', '/')
+        }
+
+        return url;
     }
 
     getGeneratedId() {
@@ -580,7 +599,7 @@ export class CkanMapper extends GenericMapper {
                 const publisher = await this.getPublisher();
                 if (publisher.length > 0) {
                     return [{
-                        name: this.settings.providerPrefix + (publisher[0].organization ? publisher[0].organization : this.settings.description),
+                        name: this.settings.providerPrefix + (publisher[0].organization ? publisher[0].organization.trim() : this.settings.description.trim()),
                         homepage: publisher[0].homepage ? publisher[0].homepage : undefined
                     }];
                 } else {

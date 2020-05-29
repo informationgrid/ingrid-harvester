@@ -159,7 +159,7 @@ export class ExcelMapper extends GenericMapper {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
         const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
-        return publishers.map(p => <Person>{name: p.name, homepage: p.url});
+        return publishers.map(p => <Person>{name: p.name.trim(), homepage: p.url});
     }
 
     getMFundFKZ() {

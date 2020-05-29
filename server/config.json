@@ -57,7 +57,7 @@
     },
     "cron": {
       "active": true,
-      "pattern": "0 2 * * *"
+      "pattern": "3 2 * * *"
     },
     "additionalSearchFilter": ""
   },
