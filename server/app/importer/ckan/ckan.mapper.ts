@@ -514,7 +514,10 @@ export class CkanMapper extends GenericMapper {
             uri: settings.ckanBaseUrl + '/api/3/action/package_list', // See http://docs.ckan.org/en/ckan-2.7.3/api/
             json: true,
             headers: RequestDelegate.defaultRequestHeaders(),
-            proxy: settings.proxy
+            proxy: settings.proxy,
+            agentOptions: {
+                maxCachedSessions: 0
+            }
         };
     }
 
