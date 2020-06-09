@@ -465,6 +465,7 @@ export class CkanMapper extends GenericMapper {
                 agentOptions: {
                     rejectUnauthorized: false
                 },
+                rejectUnauthorized: false,
                 qs: <CkanParametersListWithResources> {
                     offset: settings.startPosition,
                     limit: settings.maxRecords
@@ -497,6 +498,7 @@ export class CkanMapper extends GenericMapper {
                 agentOptions: {
                     rejectUnauthorized: false
                 },
+                rejectUnauthorized: false,
                 qs: <CkanParameters> {
                     sort: 'id asc',
                     start: settings.startPosition,
@@ -517,7 +519,8 @@ export class CkanMapper extends GenericMapper {
             proxy: settings.proxy,
             agentOptions: {
                 rejectUnauthorized: false
-            }
+            },
+            rejectUnauthorized: false
         };
     }
 
