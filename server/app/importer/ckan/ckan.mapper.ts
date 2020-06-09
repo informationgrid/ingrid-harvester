@@ -463,9 +463,9 @@ export class CkanMapper extends GenericMapper {
                 headers: RequestDelegate.defaultRequestHeaders(),
                 proxy: settings.proxy || null,
                 agentOptions: {
-                    rejectUnauthorized: false
+                    rejectUnauthorized: settings.rejectUnauthorizedSSL
                 },
-                rejectUnauthorized: false,
+                rejectUnauthorized: settings.rejectUnauthorizedSSL,
                 qs: <CkanParametersListWithResources> {
                     offset: settings.startPosition,
                     limit: settings.maxRecords
@@ -496,9 +496,9 @@ export class CkanMapper extends GenericMapper {
                 headers: RequestDelegate.defaultRequestHeaders(),
                 proxy: settings.proxy,
                 agentOptions: {
-                    rejectUnauthorized: false
+                    rejectUnauthorized: settings.rejectUnauthorizedSSL
                 },
-                rejectUnauthorized: false,
+                rejectUnauthorized: settings.rejectUnauthorizedSSL,
                 qs: <CkanParameters> {
                     sort: 'id asc',
                     start: settings.startPosition,
@@ -518,9 +518,9 @@ export class CkanMapper extends GenericMapper {
             headers: RequestDelegate.defaultRequestHeaders(),
             proxy: settings.proxy,
             agentOptions: {
-                rejectUnauthorized: false
+                rejectUnauthorized: settings.rejectUnauthorizedSSL
             },
-            rejectUnauthorized: false
+            rejectUnauthorized: settings.rejectUnauthorizedSSL
         };
     }
 
