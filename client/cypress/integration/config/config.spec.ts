@@ -1,8 +1,8 @@
-describe('Configuration of general settings', () => {
-  const ConfigurationPage = require("../../support/pageObjects/configuration");
-  const configPage = new ConfigurationPage();
+import ConfigurationPage from "../../support/pageObjects/configuration";
+import Authentication from "../../support/pageObjects/auth";
 
-  const Authentication = require("../../support/pageObjects/auth");
+describe('Configuration of general settings', () => {
+  const configPage = new ConfigurationPage();
   const auth = new Authentication();
 
   beforeEach(() => {
@@ -79,8 +79,9 @@ describe('Configuration of general settings', () => {
    */
   it('should export the harvester configuration if the button is pressed', () => {
     cy.server();
-    cy.route('GET', 'http://192.168.0.228/importer/rest/api/harvester').as('download');
+    cy.route('GET', 'http://192.168.0.228/importer/rest/api/config/general').as('download');
     configPage.visit();
+    configPage.selectTab(configPage.EXPORT);
     configPage.pressDownloadConfigButton();
 
     cy.wait('@download').then((xhr) => {

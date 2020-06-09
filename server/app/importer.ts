@@ -12,7 +12,8 @@ export const DefaultImporterSettings: ImporterSettings = {
     defaultDCATCategory: [],
     dateSourceFormats: [],
     blacklistedIds: [],
-    whitelistedIds: []
+    whitelistedIds: [],
+    rejectUnauthorizedSSL: true
 };
 
 export interface Importer {

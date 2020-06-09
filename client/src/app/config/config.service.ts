@@ -34,7 +34,7 @@ export class ConfigService {
   }
 
   uploadMappings(file: File): Observable<void> {
-    return this.http.post<void>('/rest/api/config/mapping/filecontent ', file);
+    return this.http.post<void>('rest/api/config/mapping/filecontent ', file);
   }
 
   removeMapping(mapping: MappingItem) {
@@ -51,7 +51,7 @@ export class ConfigService {
   }
 
   uploadGeneralConfig(file: File): Observable<void> {
-    return this.http.post<void>('/rest/api/config/general', file);
+    return this.http.post<void>('rest/api/config/general', file);
   }
 
 

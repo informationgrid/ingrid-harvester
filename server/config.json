@@ -57,7 +57,7 @@
     },
     "cron": {
       "active": true,
-      "pattern": "0 2 * * *"
+      "pattern": "3 2 * * *"
     },
     "additionalSearchFilter": ""
   },
@@ -246,7 +246,8 @@
       "containsDocumentsWithData": true,
       "containsDocumentsWithDataBlacklist": "zip"
     },
-    "additionalSearchFilter": ""
+    "additionalSearchFilter": "",
+    "rejectUnauthorizedSSL": false
   },
   {
     "index": "ckan_opendata_nrw",

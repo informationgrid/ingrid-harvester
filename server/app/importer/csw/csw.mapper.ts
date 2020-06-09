@@ -337,14 +337,14 @@ export class CswMapper extends GenericMapper {
                 }
 
                 displayContact = {
-                    name: displayName,
+                    name: displayName.trim(),
                     homepage: publisher[0].homepage
                 };
             } else {
                 let creator = this.getCreator();
 
                 displayContact = {
-                    name: creator[0].name,
+                    name: creator[0].name.trim(),
                     homepage: creator[0].homepage
                 };
             }
@@ -558,7 +558,7 @@ export class CswMapper extends GenericMapper {
 
     async getLicense() {
         let license: License;
-        let constraints = CswMapper.select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license"]', this.idInfo);
+        let constraints = CswMapper.select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license" or ./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="otherRestrictions"]', this.idInfo);
 
         if (constraints && constraints.length > 0) {
             for(let j=0; j<constraints.length; j++) {
