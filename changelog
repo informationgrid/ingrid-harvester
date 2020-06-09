@@ -1,3 +1,8 @@
+* Tue Jun 09 2020 Jan Bücher <jan.buecher@wemove.com> - 2.0.1
+- Fix License parsing for CSW (#2705)
+- Trim DisplayContact-Name to prevent trailing space (#2708)
+- Fix SSL Problems with expired Root-CA (#2749)
+
 * Mon May 04 2020 Jan Bücher <jan.buecher@wemove.com> - 2.0.0
 - Import of configurations (#2481)
 - Send mail for failed harvesting (#2384)
