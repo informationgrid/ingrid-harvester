@@ -515,6 +515,10 @@ export class CkanMapper extends GenericMapper {
                 json: true,
                 headers: RequestDelegate.defaultRequestHeaders(),
                 proxy: settings.proxy || null,
+                agentOptions: {
+                    rejectUnauthorized: settings.rejectUnauthorizedSSL
+                },
+                rejectUnauthorized: settings.rejectUnauthorizedSSL,
                 qs: <CkanParametersListWithResources> {
                     offset: settings.startPosition,
                     limit: settings.maxRecords
@@ -544,6 +548,10 @@ export class CkanMapper extends GenericMapper {
                 json: true,
                 headers: RequestDelegate.defaultRequestHeaders(),
                 proxy: settings.proxy,
+                agentOptions: {
+                    rejectUnauthorized: settings.rejectUnauthorizedSSL
+                },
+                rejectUnauthorized: settings.rejectUnauthorizedSSL,
                 qs: <CkanParameters> {
                     sort: 'id asc',
                     start: settings.startPosition,
@@ -561,7 +569,11 @@ export class CkanMapper extends GenericMapper {
             uri: settings.ckanBaseUrl + '/api/3/action/package_list', // See http://docs.ckan.org/en/ckan-2.7.3/api/
             json: true,
             headers: RequestDelegate.defaultRequestHeaders(),
-            proxy: settings.proxy
+            proxy: settings.proxy,
+            agentOptions: {
+                rejectUnauthorized: settings.rejectUnauthorizedSSL
+            },
+            rejectUnauthorized: settings.rejectUnauthorizedSSL
         };
     }
 

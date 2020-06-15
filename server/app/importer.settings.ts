@@ -21,5 +21,6 @@ export type ImporterSettings = {
     showCompleteSummaryInfo?: boolean;
     startPosition?: number,
     type: string,
-    whitelistedIds?: string[]
+    whitelistedIds?: string[],
+    rejectUnauthorizedSSL?: boolean
 }
