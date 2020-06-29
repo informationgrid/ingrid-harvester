@@ -161,6 +161,7 @@ export class CswMapper extends GenericMapper {
             true);
         let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
         let serviceFormat = CswMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true).textContent;
+        let serviceTypeVersion = CswMapper.select('.//srv:serviceTypeVersion/gco:CharacterString', srvIdent, true);
         let serviceLinks: Distribution[] = [];
 
         if (getCapablitiesUrl) {
@@ -171,21 +172,30 @@ export class CswMapper extends GenericMapper {
             if (lowercase.match(/\bwmts\b/)) serviceFormat = 'WMTS';
         }
 
+        if (serviceTypeVersion) {
+            let lowercase = serviceTypeVersion.textContent.toLowerCase();
+            if (lowercase.match(/\bwms\b/)) serviceFormat = 'WMS';
+            if (lowercase.match(/\bwfs\b/)) serviceFormat = 'WFS';
+            if (lowercase.match(/\bwcs\b/)) serviceFormat = 'WCS';
+            if (lowercase.match(/\bwmts\b/)) serviceFormat = 'WMTS';
+        }
+
+
         let onlineResources = CswMapper
-            .select('./srv:containsOperations/*/srv:connectPoint/*/gmd:CI_OnlineResource', srvIdent);
+            .select('./srv:containsOperations/*/srv:connectPoint/gmd:CI_OnlineResource', srvIdent);
 
         for (let i = 0; i < onlineResources.length; i++) {
             let onlineResource = onlineResources[i];
 
-            let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource);
-            let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource);
+            let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource, true);
+            let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true);
 
             let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
             let url = await UrlUtils.urlWithProtocolFor(requestConfig);
             if (url && !urlsFound.includes(url)) {
                 serviceLinks.push({
                     accessURL: url,
-                    format: protocolNode.textContent ? protocolNode.textContent : serviceFormat
+                    format: [protocolNode ? protocolNode.textContent : serviceFormat]
                 });
                 urlsFound.push(url);
             }
