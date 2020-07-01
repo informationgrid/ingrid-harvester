@@ -160,9 +160,13 @@ export class CswMapper extends GenericMapper {
             srvIdent,
             true);
         let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
-        let serviceFormat = CswMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true).textContent;
-        let serviceTypeVersion = CswMapper.select('.//srv:serviceTypeVersion/gco:CharacterString', srvIdent, true);
+        let serviceFormat = CswMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true);
+        let serviceTypeVersion = CswMapper.select('.//srv:serviceTypeVersion/gco:CharacterString', srvIdent);
         let serviceLinks: Distribution[] = [];
+
+        if(serviceFormat){
+            serviceFormat = serviceFormat.textContent;
+        }
 
         if (getCapablitiesUrl) {
             let lowercase = getCapablitiesUrl.toLowerCase();
@@ -173,31 +177,43 @@ export class CswMapper extends GenericMapper {
         }
 
         if (serviceTypeVersion) {
-            let lowercase = serviceTypeVersion.textContent.toLowerCase();
-            if (lowercase.match(/\bwms\b/)) serviceFormat = 'WMS';
-            if (lowercase.match(/\bwfs\b/)) serviceFormat = 'WFS';
-            if (lowercase.match(/\bwcs\b/)) serviceFormat = 'WCS';
-            if (lowercase.match(/\bwmts\b/)) serviceFormat = 'WMTS';
+            for(let i = 0; i < serviceTypeVersion.length; i++) {
+                let lowercase = serviceTypeVersion[i].textContent.toLowerCase();
+                if (lowercase.match(/\bwms\b/)) serviceFormat = 'WMS';
+                if (lowercase.match(/\bwfs\b/)) serviceFormat = 'WFS';
+                if (lowercase.match(/\bwcs\b/)) serviceFormat = 'WCS';
+                if (lowercase.match(/\bwmts\b/)) serviceFormat = 'WMTS';
+            }
         }
 
 
-        let onlineResources = CswMapper
-            .select('./srv:containsOperations/*/srv:connectPoint/gmd:CI_OnlineResource', srvIdent);
+        let operations = CswMapper
+            .select('./srv:containsOperations/srv:SV_OperationMetadata', srvIdent);
 
-        for (let i = 0; i < onlineResources.length; i++) {
-            let onlineResource = onlineResources[i];
+        for (let i = 0; i < operations.length; i++) {
+            let onlineResource = CswMapper.select('./srv:connectPoint/gmd:CI_OnlineResource', operations[i], true);
 
-            let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource, true);
-            let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true);
+            if(onlineResource) {
+                let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource, true);
+                let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true);
 
-            let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-            let url = await UrlUtils.urlWithProtocolFor(requestConfig);
-            if (url && !urlsFound.includes(url)) {
-                serviceLinks.push({
-                    accessURL: url,
-                    format: [protocolNode ? protocolNode.textContent : serviceFormat]
-                });
-                urlsFound.push(url);
+                let title = this.getTitle();
+
+                let operationNameNode = CswMapper.select('srv:operationName/gco:CharacterString', operations[i], true);
+                if(operationNameNode){
+                    title = title + " - " + operationNameNode.textContent;
+                }
+
+                let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
+                let url = await UrlUtils.urlWithProtocolFor(requestConfig);
+                if (url && !urlsFound.includes(url)) {
+                    serviceLinks.push({
+                        accessURL: url,
+                        format: [protocolNode ? protocolNode.textContent : serviceFormat],
+                        title: (title && title.length > 0) ? title : undefined
+                    });
+                    urlsFound.push(url);
+                }
             }
         }
 

@@ -140,7 +140,46 @@ export class CswImporter implements Importer {
               */
             if (this.totalRecords < this.requestDelegate.getStartRecordIndex()) break;
         }
+        this.createDataServiceCoupling();
+    }
 
+    createDataServiceCoupling(){
+        let bulkData = this.elastic._bulkData;
+        let servicesByDataIdentifier = []
+        for(let i = 0; i < bulkData.length; i++){
+            let doc = bulkData[i];
+            if(doc.extras){
+                let harvestedData = doc.extras.harvested_data;
+                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
+                let identifierList = CswMapper.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
+                if(identifierList){
+                    for(let j = 0; j < identifierList.length; j++){
+                        let identifer = identifierList[j].textContent;
+                        if(!servicesByDataIdentifier[identifer]){
+                            servicesByDataIdentifier[identifer] = [];
+                        }
+                        servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distribution);
+                    }
+                }
+            }
+        }
+
+        for(let i = 0; i < bulkData.length; i++){
+            let doc = bulkData[i];
+            if(doc.extras){
+                let harvestedData = doc.extras.harvested_data;
+                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
+                let identifierList = CswMapper.select('.//gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
+                if(identifierList){
+                    for(let j = 0; j < identifierList.length; j++){
+                        let identifer = identifierList[j].textContent;
+                        if(servicesByDataIdentifier[identifer]){
+                            doc.distribution = doc.distribution.concat(servicesByDataIdentifier[identifer]);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     async extractRecords(getRecordsResponse, harvestTime) {
