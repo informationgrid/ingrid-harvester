@@ -424,6 +424,59 @@ export class CkanMapper extends GenericMapper {
         return config;
     }
 
+    getSpatial(): any {
+        let extras = this.source.extras;
+        if (extras) {
+            for (let i = 0; i < extras.length; i++) {
+                let extra = extras[i];
+                if(extra.key === 'spatial') {
+                    return this.checkAndFixSpatialData(JSON.parse(extra.value));
+                }
+            }
+        }
+        else if (this.source.spatial) {
+            return this.checkAndFixSpatialData(JSON.parse(this.source.spatial));
+        }
+        return undefined;
+    }
+
+    checkAndFixSpatialData(spatial : any): any {
+        if(spatial.coordinates) {
+            spatial.coordinates = this.checkAndFixSpatialCoordinates(spatial.coordinates);
+        }
+        return spatial;
+    }
+
+    checkAndFixSpatialCoordinates(coordinates : any): any {
+        if(coordinates instanceof Array && coordinates[0] instanceof Array && coordinates[0][0] instanceof Array) {
+            for (let i = 0; i < coordinates.length; i++) {
+                coordinates[i] = this.checkAndFixSpatialCoordinates(coordinates[i]);
+            }
+        }
+        else if (coordinates instanceof Array) {
+            for (let i = 1; i < coordinates.length; i++) {
+                if((coordinates[i-1][0] === coordinates[i][0]) && (coordinates[i-1][1] === coordinates[i][1])){
+                    coordinates.splice(i--, 1);
+                }
+            }
+        }
+        return coordinates;
+    }
+
+
+    getSpatialText(): string {
+        let extras = this.source.extras;
+        if (extras) {
+            for (let i = 0; i < extras.length; i++) {
+                let extra = extras[i];
+                if(extra.key === 'opennrw_spatial' || extra.key === 'spatial_text' || extra.key === 'spatial-text') {
+                    return extra.value;
+                }
+            }
+        }
+        return undefined;
+    }
+
     isValid(doc?: any): boolean {
         if (doc.distribution.length === 0) {
             this.valid = false;
