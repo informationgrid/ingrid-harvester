@@ -90,11 +90,19 @@ export class CswImporter implements Importer {
             try {
                 await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
                 await this.harvest();
-                await this.elastic.sendBulkData(false);
-                await this.elastic.finishIndex();
-                observer.next(ImportResult.complete(this.summary));
-                observer.complete();
+                if(this.numIndexDocs > 0) {
+                    await this.elastic.sendBulkData(false);
+                    await this.elastic.finishIndex();
+                    observer.next(ImportResult.complete(this.summary));
+                    observer.complete();
+                } else {
+                    log.error('No results during CSW import - Keep old index');
+                    observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
+                    observer.complete();
 
+                    // clean up index
+                    this.elastic.deleteIndex(this.elastic.indexName);
+                }
             } catch (err) {
                 this.summary.appErrors.push(err.message ? err.message : err);
                 log.error('Error during CSW import', err);
