@@ -159,6 +159,18 @@
       "issued": "2020-05-12T06:44:29.228Z",
       "modified": null,
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - Sm B1"
+    },
+    {
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2020_ZpAR_Sm_B2.pdf",
+      "byteSize": null,
+      "description": "Sommerfahrplan 2020 - Gültigkeit: 01.10.2020 – 12.12.2020 (Stand: 03.07.2020)",
+      "format": [
+        "PDF"
+      ],
+      "id": "7c1f36a8-a5b0-45b2-8182-09d263a67539",
+      "issued": "2020-07-06T08:41:10.172Z",
+      "modified": null,
+      "title": "Zugbildungsplan A-Reihung- (ZpAR) - Sm B2"
     }
   ],
   "extras": {
