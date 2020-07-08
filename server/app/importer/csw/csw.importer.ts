@@ -96,6 +96,9 @@ export class CswImporter implements Importer {
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
                 } else {
+                    if(this.summary.appErrors.length === 0) {
+                        this.summary.appErrors.push('No Results');
+                    }
                     log.error('No results during CSW import - Keep old index');
                     observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
                     observer.complete();
