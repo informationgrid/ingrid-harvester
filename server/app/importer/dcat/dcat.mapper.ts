@@ -328,6 +328,14 @@ export class DcatMapper extends GenericMapper {
         return modified?new Date(modified.textContent):undefined;
     }
 
+    getSpatial(): any {
+        return undefined;
+    }
+
+    getSpatialText(): string {
+        return undefined;
+    }
+
     getTemporal(): DateRange {
         return undefined;
     }

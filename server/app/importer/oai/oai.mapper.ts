@@ -453,6 +453,64 @@ export class OaiMapper extends GenericMapper {
         return new Date(OaiMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent);
     }
 
+    getSpatial(): any {
+        let geographicBoundingBoxes = OaiMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
+        let geometries = [];
+        for(let i=0; i < geographicBoundingBoxes.length; i++){
+            let geographicBoundingBox = geographicBoundingBoxes[i];
+            let west = parseFloat(OaiMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let east = parseFloat(OaiMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let south = parseFloat(OaiMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let north = parseFloat(OaiMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+
+            if (west === east && north === south) {
+                geometries.push({
+                    'type': 'point',
+                    'coordinates': [west, north]
+                });
+            } else if (west === east || north === south) {
+                geometries.push({
+                    'type': 'linestring',
+                    'coordinates': [[west, north], [east, south]]
+                });
+            } else {
+                geometries.push({
+                    'type': 'envelope',
+                    'coordinates': [[west, north], [east, south]]
+                });
+            }
+        }
+        if(geometries.length == 1){
+            return geometries[0];
+        }
+        else if(geometries.length > 1){
+            return {
+                'type': 'geometrycollection',
+                'geometries' : geometries
+            }
+        }
+
+        return undefined;
+    }
+
+    getSpatialText(): string {
+        let geoGraphicDescriptions = OaiMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription', this.idInfo);
+        let result = [];
+        for(let i=0; i < geoGraphicDescriptions.length; i++)
+        {
+            let geoGraphicDescription = geoGraphicDescriptions[i];
+            let geoGraphicCode = OaiMapper.select('./gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', geoGraphicDescription, true);
+            if(geoGraphicCode)
+                result.push(geoGraphicCode.textContent);
+        }
+
+        if(result){
+            return result.join(", ");
+        }
+
+        return undefined;
+    }
+
     getTemporal(): DateRange {
         let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
 
