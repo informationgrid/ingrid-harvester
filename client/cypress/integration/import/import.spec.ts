@@ -34,16 +34,16 @@ describe('Import operations', () => {
   });
 
   it('should show an icon if a harvester has an import schedule', () => {
-    harvester.toggleHarvesterById(constants.CKAN_GEONET_ID);
-    harvester.openScheduleDialog(constants.CKAN_GEONET_ID);
+    harvester.toggleHarvesterById(constants.CKAN_TEST_ID);
+    harvester.openScheduleDialog(constants.CKAN_TEST_ID);
     harvester.setCronPatternTo('30 4 1 * 0,6');
     harvester.activateScheduler();
     harvester.applyScheduleDialog();
 
-    harvester.activateForSearch(constants.CKAN_GEONET_ID);
-    harvester.alarmOnIconIsShown(constants.CKAN_GEONET_ID);
+    harvester.activateForSearch(constants.CKAN_TEST_ID);
+    harvester.alarmOnIconIsShown(constants.CKAN_TEST_ID);
 
-    harvester.deactivateForSearch(constants.CKAN_GEONET_ID);
-    harvester.alarmOffIconIsShown(constants.CKAN_GEONET_ID);
+    harvester.deactivateForSearch(constants.CKAN_TEST_ID);
+    harvester.alarmOffIconIsShown(constants.CKAN_TEST_ID);
   });
 });

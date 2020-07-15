@@ -70,11 +70,11 @@ describe('Import cron pattern operations', () => {
   });
 
   it('should disable scheduling for a harvester', () => {
-    harvester.toggleHarvesterById(constants.CKAN_GEONET_ID);
-    harvester.openScheduleDialog(constants.CKAN_GEONET_ID);
+    harvester.toggleHarvesterById(constants.CKAN_TEST_ID);
+    harvester.openScheduleDialog(constants.CKAN_TEST_ID);
     harvester.deactivateScheduler();
     harvester.applyScheduleDialog();
 
-    harvester.checkFieldValueIs(constants.CKAN_GEONET_ID, harvester.nextExecution, 'deaktiviert');
+    harvester.checkFieldValueIs(constants.CKAN_TEST_ID, harvester.nextExecution, 'deaktiviert');
   });
 });

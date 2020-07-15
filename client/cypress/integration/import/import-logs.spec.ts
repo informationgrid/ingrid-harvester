@@ -1,13 +1,11 @@
 import Authentication from "../../support/pageObjects/auth";
 import Constants from "../../support/constants";
 import HarvesterPage from "../../support/pageObjects/harvester/harvester";
-import HarvesterForm from "../../support/pageObjects/harvester/harvesterForm";
 
 describe('Import log operations', () => {
   const constants = new Constants();
   const auth = new Authentication();
   const harvester = new HarvesterPage();
-  const form = new HarvesterForm();
 
   beforeEach(() => {
     auth.apiLogIn();
@@ -27,36 +25,15 @@ describe('Import log operations', () => {
   });
 
   it('should show an error in the harvester logs if the CKAN index name is invalid', () => {
-    harvester.openFormById(constants.CKAN_GEONET_ID);
-    form.setFields({indexName: '-ckan_geonet_mrn'});
-    form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.CKAN_GEONET_ID);
-
-    harvester.openHarvesterLog(constants.CKAN_GEONET_ID);
-    harvester.openElasticSearchLog();
-    harvester.errorLogHasMsg('[invalid_index_name_exception]');
-    harvester.closeErrorLog();
-
-    harvester.openFormById(constants.CKAN_GEONET_ID);
-    form.setFields({indexName: 'ckan_geonet_mrn'});
-    form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.CKAN_GEONET_ID);
+    harvester.importHarvesterById(constants.CKAN_TEST_ID);
+    harvester.openHarvesterLog(constants.CKAN_TEST_ID);
+    harvester.errorLogHasMsg('Error:');
   });
 
   it('should show an error in the harvester logs if the CKAN url is invalid', () => {
-    harvester.openFormById(constants.CKAN_GEONET_ID);
-    form.setFields({ckanBasisUrl: '-http://ckan.geonet-mrn.de'});
-    form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.CKAN_GEONET_ID);
-
-    harvester.openHarvesterLog(constants.CKAN_GEONET_ID);
-    harvester.errorLogHasMsg('Error: Invalid');
-    harvester.closeErrorLog();
-
-    harvester.openFormById(constants.CKAN_GEONET_ID);
-    form.setFields({ckanBasisUrl: 'http://ckan.geonet-mrn.de'});
-    form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.CKAN_GEONET_ID);
+    harvester.importHarvesterById(constants.CKAN_TEST_ID);
+    harvester.openHarvesterLog(constants.CKAN_TEST_ID);
+    harvester.errorLogHasMsg('Error: Invalid URI');
   });
 
   it('should show an error in the harvester logs if the CSW URL is not valid ', () => {

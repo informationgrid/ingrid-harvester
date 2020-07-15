@@ -14,13 +14,13 @@ describe('Harvester operations', () => {
   });
 
   it('should check that the type of a harvester cannot be changed during an update', () => {
-    harvester.openFormById(constants.CKAN_DBD_ID);
+    harvester.openFormById(constants.CKAN_TEST_ID);
 
     form.fieldIsDisabled(form.type);
   });
 
   it('should check that startPosition cannot be negative or a character', () => {
-    harvester.openFormById(constants.CKAN_DBD_ID);
+    harvester.openFormById(constants.CKAN_TEST_ID);
     cy.wait(500);
 
     form.setFields({startPosition: 'ffm'});
@@ -34,7 +34,7 @@ describe('Harvester operations', () => {
   });
 
   it('should check that maxRecords cannot be negative or a character', () => {
-    harvester.openFormById(constants.CKAN_DBD_ID);
+    harvester.openFormById(constants.CKAN_TEST_ID);
       cy.wait(500);
 
     form.setFields({maxRecords: 'ffm'});
