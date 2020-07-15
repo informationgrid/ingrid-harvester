@@ -194,7 +194,7 @@ class HarvesterPage {
   }
 
   openElasticSearchLog() {
-    cy.get(this.labelContent).contains('Elasticsearch-Errors').click();
+    cy.get(this.labelContent).contains('Elasticsearch-Fehler').click();
   }
 
   waitForImportToFinish(id) {
