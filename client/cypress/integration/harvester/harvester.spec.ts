@@ -48,12 +48,12 @@ describe('Harvester operations', () => {
   });
 
   it('should show the old values if an update operation is aborted and the page is not refreshed', () => {
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.openFormById(constants.CKAN_DBD_ID);
     form.setFields({description: 'hold', indexName: 'the', defaultAttribution: 'door'});
 
     form.closeFormWithoutSaving();
 
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.openFormById(constants.CKAN_DBD_ID);
     form.checkFields({
       description: 'Deutsche Bahn Datenportal',
       indexName: 'ckan_db',
@@ -71,11 +71,9 @@ describe('Harvester operations', () => {
     form.btnIsDisabled(form.saveHarvesterBtn);
   });
 
-  it('should delete an harvester', () => {
+  it('should delete a harvester', () => {
     harvester.seedExcelHarvester(constants.SEED_EXCEL_ID);
-    cy.get('.no-wrap').should('contain', 'excel_test_api');
 
     harvester.deleteHarvesterById(constants.SEED_EXCEL_ID);
-    cy.get('.no-wrap').should('not.contain', 'excel_test_api');
   });
 });

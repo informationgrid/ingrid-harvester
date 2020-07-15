@@ -14,16 +14,25 @@ describe('Import log operations', () => {
   });
 
   it('should show errors in the error-log if error/warning occurred during an import', () => {
+    harvester.openFormById(constants.EXCEL_TEST_ID);
+    form.setFields({excelFilePath: '-./data.xlsx'});
+    form.saveHarvesterConfig();
     harvester.importHarvesterById(constants.EXCEL_TEST_ID);
     harvester.openHarvesterLog(constants.EXCEL_TEST_ID);
 
     harvester.errorLogHasMsg('Error reading excel workbook: ');
+    harvester.closeErrorLog();
+
+    harvester.openFormById(constants.EXCEL_TEST_ID);
+    form.setFields({excelFilePath: './data.xlsx'});
+    form.saveHarvesterConfig();
+    harvester.importHarvesterById(constants.EXCEL_TEST_ID);
   });
 
   it('should show no error in the logs after a successful import', () => {
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
-    harvester.checkNoErrors(constants.CKAN_DB_ID);
+    harvester.importHarvesterById(constants.CKAN_DBD_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DBD_ID);
+    harvester.checkNoErrors(constants.CKAN_DBD_ID);
   });
 
   it('should show an error in the harvester logs if the CKAN index name is invalid', () => {
@@ -69,8 +78,18 @@ describe('Import log operations', () => {
   });
 
   it('should show an error in the harvester logs if the Excel path is not valid', () => {
+    harvester.openFormById(constants.EXCEL_TEST_ID);
+    form.setFields({excelFilePath: './da-ta.xlsx'});
+    form.saveHarvesterConfig();
     harvester.importHarvesterById(constants.EXCEL_TEST_ID);
     harvester.openHarvesterLog(constants.EXCEL_TEST_ID);
-    harvester.errorLogHasMsg('Error reading excel workbook: Error');
+
+    harvester.errorLogHasMsg('Error reading excel workbook: Error: File not found:');
+    harvester.closeErrorLog();
+
+    harvester.openFormById(constants.EXCEL_TEST_ID);
+    form.setFields({excelFilePath: './data.xlsx'});
+    form.saveHarvesterConfig();
+    harvester.importHarvesterById(constants.EXCEL_TEST_ID);
   });
 });

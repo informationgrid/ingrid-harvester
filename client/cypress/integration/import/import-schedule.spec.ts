@@ -12,38 +12,39 @@ describe('Import cron pattern operations', () => {
   });
 
   it('should plan an import, activate the auto-planning, check its execution and turn off the auto-planning', () => {
-    harvester.activateForSearch(constants.CKAN_DB_ID);
-    harvester.toggleHarvesterById(constants.CKAN_DB_ID);
-    harvester.openScheduleDialog(constants.CKAN_DB_ID);
+    harvester.activateForSearch(constants.CKAN_DBD_ID);
+    harvester.toggleHarvesterById(constants.CKAN_DBD_ID);
+    harvester.openScheduleDialog(constants.CKAN_DBD_ID);
     cy.wait(500);
     harvester.setCronPatternTo('* * * * *');
     harvester.activateScheduler();
     harvester.applyScheduleDialog();
 
-    cy.get("#harvester-" + constants.CKAN_DB_ID + " " + harvester.nextExecution, {timeout: 15000}).scrollIntoView();
+    cy.get("#harvester-" + constants.CKAN_DBD_ID + " " + harvester.nextExecution, {timeout: 15000}).scrollIntoView();
     const nextImport = Cypress.moment(new Date(), 'DD.MM.YY, HH:mm').add(1, 'minute').format('DD.MM.YY, HH:mm');
-    harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.nextExecution, nextImport);
+    harvester.checkFieldValueIs(constants.CKAN_DBD_ID, harvester.nextExecution, nextImport);
 
     //turn off auto planning
-    harvester.openScheduleDialog(constants.CKAN_DB_ID);
+    harvester.openScheduleDialog(constants.CKAN_DBD_ID);
     harvester.deactivateScheduler();
     harvester.applyScheduleDialog();
   });
 
   it('should reset cron expression if the input clear button is pressed', () => {
     //TODO: to check again, button is as now not deactivated if an empty schedule is given
-    harvester.toggleHarvesterById(constants.CKAN_DB_ID);
-    harvester.openScheduleDialog(constants.CKAN_DB_ID);
+
+    harvester.toggleHarvesterById(constants.CKAN_DBD_ID);
+    harvester.openScheduleDialog(constants.CKAN_DBD_ID);
     harvester.setCronPatternTo('* * * * *');
     harvester.deactivateScheduler();
     harvester.clickCronResetBtn();
-
+    harvester.activateScheduler();
     cy.get(harvester.setScheduleBtn).should('be.disabled');
   });
 
   it('should show cron pattern´s syntax examples when the info button in the planning page is pressed', () => {
-    harvester.toggleHarvesterById(constants.CKAN_DB_ID);
-    harvester.openScheduleDialog(constants.CKAN_DB_ID);
+    harvester.toggleHarvesterById(constants.CKAN_DBD_ID);
+    harvester.openScheduleDialog(constants.CKAN_DBD_ID);
 
     cy.get('.info').should('not.exist');
 
@@ -53,20 +54,20 @@ describe('Import cron pattern operations', () => {
   });
 
   it('should not import if the schedule is planned but off', () => {
-    harvester.toggleHarvesterById(constants.CKAN_DB_ID);
-    harvester.openScheduleDialog(constants.CKAN_DB_ID);
+    harvester.toggleHarvesterById(constants.CKAN_DBD_ID);
+    harvester.openScheduleDialog(constants.CKAN_DBD_ID);
     harvester.setCronPatternTo('* * * * *');
     harvester.deactivateScheduler();
     harvester.applyScheduleDialog();
 
-    harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.nextExecution, 'deaktiviert');
+    harvester.checkFieldValueIs(constants.CKAN_DBD_ID, harvester.nextExecution, 'deaktiviert');
 
     const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
     const nextImport = Cypress.moment(importsDate, 'DD.MM.YY, HH:mm').add(1, 'minute').format('DD.MM.YY, HH:mm');
 
     cy.wait(65000);
-    cy.get('#harvester-' + constants.CKAN_DB_ID + ' ' + harvester.lastExecution).scrollIntoView();
-    harvester.checkFieldValueIsNot(constants.CKAN_DB_ID, harvester.lastExecution, nextImport);
+    cy.get('#harvester-' + constants.CKAN_DBD_ID + ' ' + harvester.lastExecution).scrollIntoView();
+    harvester.checkFieldValueIsNot(constants.CKAN_DBD_ID, harvester.lastExecution, nextImport);
   });
 
   it('should disable scheduling for a harvester', () => {

@@ -13,24 +13,24 @@ describe('Indices operations', () => {
     auth.apiLogIn();
   });
 
-  it('should not find an harvester whose search is not activated', () => {
+  it('should not find a harvester whose search is not activated', () => {
     harvester.activateForSearch(constants.EXCEL_TEST_ID);
 
     indicesPage.visit();
     indicesPage.indexIsContained('excel_index', false);
   });
 
-  it('should find an harvester whose search is activated', () => {
-    harvester.activateForSearch(constants.CKAN_DB_ID);
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
+  it('should find a harvester whose search is activated', () => {
+    harvester.activateForSearch(constants.CKAN_DBD_ID);
+    harvester.importHarvesterById(constants.CKAN_DBD_ID);
 
     indicesPage.visit();
     indicesPage.indexIsContained('ckan_db', true);
   });
 
   it('should show only one index per harvester', () => {
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterById(constants.CKAN_DBD_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DBD_ID);
 
     cy.wait(1000);
     indicesPage.visit();
@@ -57,8 +57,8 @@ describe('Indices operations', () => {
       "    \"_index\": \"ckan_db_";
     let indexType = "\"_type\": \"base\"";
 
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterById(constants.CKAN_DBD_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DBD_ID);
 
     indicesPage.visit();
 

@@ -15,11 +15,11 @@ class Constants {
   CSW_WSV_ID = '12';
 
   EXCEL_MCLOUD_ID = '7';
-  EXCEL_TEST_ID = '8';
+  EXCEL_TEST_ID = '99';
 
   SEED_CKAN_ID = '97';
   SEED_CSW_ID = '98';
-  SEED_EXCEL_ID = '99';
+  SEED_EXCEL_ID = '1';
 }
 
 export default Constants;

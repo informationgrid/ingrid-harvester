@@ -12,10 +12,10 @@ describe('Import operations', () => {
   });
 
   it('should open a harvester, start an import and check it is successful', () => {
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.importHarvesterById(constants.CKAN_DBD_ID);
     harvester.checkImportHasStarted();
 
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DBD_ID);
   });
 
   it('should import all harvesters at once and check a message is shown', () => {
@@ -24,13 +24,13 @@ describe('Import operations', () => {
   });
 
   it('should show last import info of an harvester after page refresh', () => {
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.importHarvesterById(constants.CKAN_DBD_ID);
     harvester.checkImportHasStarted();
 
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DBD_ID);
     cy.reload();
 
-    harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.lastExecution, Cypress.moment().format('DD.MM.YY, HH:mm'));
+    harvester.checkFieldValueIs(constants.CKAN_DBD_ID, harvester.lastExecution, Cypress.moment().format('DD.MM.YY, HH:mm'));
   });
 
   it('should show an icon if a harvester has an import schedule', () => {
