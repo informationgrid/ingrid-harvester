@@ -14,19 +14,21 @@ describe('Import log operations', () => {
   });
 
   it('should show errors in the error-log if error/warning occurred during an import', () => {
-    harvester.openFormById(constants.EXCEL_TEST_ID);
+    harvester.seedExcelHarvester(constants.SEED_EXCEL_ID);
+    harvester.openFormById(constants.SEED_EXCEL_ID);
     form.setFields({excelFilePath: '-./data.xlsx'});
     form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.EXCEL_TEST_ID);
-    harvester.openHarvesterLog(constants.EXCEL_TEST_ID);
+    harvester.importHarvesterById(constants.SEED_EXCEL_ID);
+    harvester.openHarvesterLog(constants.SEED_EXCEL_ID);
 
     harvester.errorLogHasMsg('Error reading excel workbook: ');
     harvester.closeErrorLog();
 
-    harvester.openFormById(constants.EXCEL_TEST_ID);
+    harvester.openFormById(constants.SEED_EXCEL_ID);
     form.setFields({excelFilePath: './data.xlsx'});
     form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.EXCEL_TEST_ID);
+    harvester.importHarvesterById(constants.SEED_EXCEL_ID);
+    harvester.deleteHarvesterById(constants.SEED_EXCEL_ID);
   });
 
   it('should show no error in the logs after a successful import', () => {
@@ -78,18 +80,16 @@ describe('Import log operations', () => {
   });
 
   it('should show an error in the harvester logs if the Excel path is not valid', () => {
-    harvester.openFormById(constants.EXCEL_TEST_ID);
+    harvester.seedExcelHarvester(constants.SEED_EXCEL_ID);
+    harvester.openFormById(constants.SEED_EXCEL_ID);
     form.setFields({excelFilePath: './da-ta.xlsx'});
     form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.EXCEL_TEST_ID);
-    harvester.openHarvesterLog(constants.EXCEL_TEST_ID);
+    harvester.importHarvesterById(constants.SEED_EXCEL_ID);
+    harvester.openHarvesterLog(constants.SEED_EXCEL_ID);
 
-    harvester.errorLogHasMsg('Error reading excel workbook: Error: File not found:');
+    harvester.errorLogHasMsg('Error reading excel workbook: Error: File not found');
     harvester.closeErrorLog();
 
-    harvester.openFormById(constants.EXCEL_TEST_ID);
-    form.setFields({excelFilePath: './data.xlsx'});
-    form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.EXCEL_TEST_ID);
+    harvester.deleteHarvesterById(constants.SEED_EXCEL_ID);
   });
 });

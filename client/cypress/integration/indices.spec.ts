@@ -14,10 +14,10 @@ describe('Indices operations', () => {
   });
 
   it('should not find a harvester whose search is not activated', () => {
-    harvester.activateForSearch(constants.EXCEL_TEST_ID);
+    harvester.activateForSearch(constants.CSW_CODEDE_ID);
 
     indicesPage.visit();
-    indicesPage.indexIsContained('excel_index', false);
+    indicesPage.indexIsContained(constants.CSW_CODEDE_INDEX, false);
   });
 
   it('should find a harvester whose search is activated', () => {
