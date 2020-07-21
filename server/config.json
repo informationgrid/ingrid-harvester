@@ -13,6 +13,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "filePath": "./data.xlsx",
     "description": "mCLOUD Excel Datei",
     "disable": false,
@@ -38,6 +39,7 @@
     "whitelistedIds": [
       "7e526b8c-16bd-4f2c-a02b-8d4d0a29d310"
     ],
+    "rejectUnauthorizedSSL": true,
     "ckanBaseUrl": "https://data.deutschebahn.com",
     "filterTags": [],
     "filterGroups": [],
@@ -77,6 +79,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "ckanBaseUrl": "https://www.opendata-hro.de",
     "filterTags": [],
     "filterGroups": [
@@ -117,6 +120,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "ckanBaseUrl": "https://www.offenesdatenportal.de",
     "filterTags": [],
     "filterGroups": [
@@ -177,6 +181,7 @@
       "b661cd3b-0eeb-4054-9242-94af19001247",
       "ded4d0b6-1482-4d47-9450-dcfcf6ef9da8"
     ],
+    "rejectUnauthorizedSSL": true,
     "ckanBaseUrl": "http://suche.transparenz.hamburg.de",
     "filterTags": [],
     "filterGroups": [
@@ -221,6 +226,7 @@
     "whitelistedIds": [
       "56e641a7-2219-4281-bb9b-adb1001f2869"
     ],
+    "rejectUnauthorizedSSL": false,
     "ckanBaseUrl": "https://opendata.rnv-online.de",
     "filterTags": [],
     "filterGroups": [],
@@ -246,8 +252,7 @@
       "containsDocumentsWithData": true,
       "containsDocumentsWithDataBlacklist": "zip"
     },
-    "additionalSearchFilter": "",
-    "rejectUnauthorizedSSL": false
+    "additionalSearchFilter": ""
   },
   {
     "index": "ckan_opendata_nrw",
@@ -277,6 +282,7 @@
       "c4cc9004-179e-4862-9fb7-64805484d28a",
       "4b0aedab-8c31-43bd-8459-1bccba1898a2"
     ],
+    "rejectUnauthorizedSSL": true,
     "ckanBaseUrl": "https://open.nrw",
     "filterTags": [],
     "filterGroups": [
@@ -322,6 +328,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "getRecordsUrl": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup",
     "eitherKeywords": [
       "opendata"
@@ -354,6 +361,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "getRecordsUrl": "http://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecords$Post$XML",
     "eitherKeywords": [
       "opendata"
@@ -386,6 +394,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "getRecordsUrl": "https://geoportal.bafg.de/soapServices/CSWStartup",
     "eitherKeywords": [
       "opendata"
@@ -418,6 +427,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "getRecordsUrl": "https://cdc.dwd.de/catalogue/srv/en/csw",
     "eitherKeywords": [
       "opendata",
@@ -451,6 +461,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "getRecordsUrl": "https://catalog.code-de.org/discovery/srv/en/csw",
     "eitherKeywords": [
       "opendata"
@@ -483,6 +494,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "getRecordsUrl": "https://www.geoseaportal.de/geonetwork/srv/ger/csw",
     "eitherKeywords": [
       "opendata"
@@ -515,6 +527,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "getRecordsUrl": "https://www.geoseaportal.de/soapServices/CSWStartup",
     "eitherKeywords": [
       "inspireidentifiziert"
@@ -543,6 +556,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "getRecordsUrl": "https://geoservice.dlr.de/catalogue/srv/eng/csw",
     "eitherKeywords": [
       "opendata"
@@ -577,6 +591,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "getRecordsUrl": "https://ils-geomonitoring.de/catalogue/csw",
     "eitherKeywords": [
       "incora"
@@ -608,6 +623,7 @@
     ],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "ckanBaseUrl": "https://datenregister.berlin.de",
     "filterTags": [],
     "filterGroups": [],
@@ -651,6 +667,7 @@
       "60b0e7aa-1d98-4f07-924d-feac7a8f7eae",
       "882d452a-8f2d-4344-a46b-4cf37f960cec"
     ],
+    "rejectUnauthorizedSSL": true,
     "ckanBaseUrl": "https://daten.rlp.de/",
     "filterTags": [
       "Verkehr"
@@ -694,6 +711,7 @@
     "whitelistedIds": [
       "8cd4543a-8a38-45dd-8f79-5e0e8253ff08"
     ],
+    "rejectUnauthorizedSSL": true,
     "ckanBaseUrl": "https://opendata.schleswig-holstein.de",
     "filterTags": [],
     "filterGroups": [
@@ -734,6 +752,7 @@
     ],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "ckanBaseUrl": "https://ckan.govdata.de",
     "filterTags": [],
     "filterGroups": [
@@ -769,6 +788,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "getRecordsUrl": "https://geomis.sachsen.de/soapServices/CSWStartup",
     "eitherKeywords": [],
     "httpMethod": "POST",
@@ -798,6 +818,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "ckanBaseUrl": "http://ckan.geonet-mrn.de",
     "filterTags": [
       "Verkehr",
@@ -840,6 +861,7 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "getRecordsUrl": "https://mis.bkg.bund.de/csw",
     "eitherKeywords": [],
     "httpMethod": "POST",
@@ -852,5 +874,195 @@
       "pattern": "45 2 * * *",
       "active": true
     }
+  },
+  {
+    "index": "csw_geoportal_brandenburg",
+    "includeTimestamp": true,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": "let downloads = CswMapper.select('.//gmd:CI_OnlineResource/gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue=\"download\"', this.record);\nif (!downloads) {\n\tthis.skipped = true;\n}",
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "REGI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "getRecordsUrl": "https://geoportal.brandenburg.de/csw-gdi-bb/service?SERVICE=CSW",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 35,
+    "description": "Geoportal Brandenburg",
+    "defaultAttribution": "Geoportal Brandenburg",
+    "defaultAttributionLink": null,
+    "recordFilter": "            \n<ogc:Filter>\n    <ogc:And>\n        <ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n            <ogc:Literal>*Datenlizenz Deutschland*</ogc:Literal>\n        </ogc:PropertyIsLike>\n        <ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>Keyword</ogc:PropertyName>\n            <ogc:Literal>Gewässer</ogc:Literal>\n        </ogc:PropertyIsLike>\n    </ogc:And>\n</ogc:Filter>\n",
+    "disable": true
+  },
+  {
+    "index": "csw_geodaten_mv",
+    "includeTimestamp": true,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "REGI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "getRecordsUrl": "http://www.geodaten-mv.de/soapServices/CSWStartup",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 36,
+    "description": "Geodaten MV",
+    "defaultAttribution": "Geodaten MV",
+    "defaultAttributionLink": null,
+    "recordFilter": "<ogc:Filter>\n\t<ogc:And>\n\t\t<ogc:Or>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>*Datenlizenz Deutschland*</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>*Creative Commons*</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t</ogc:Or>\n\t\t<ogc:Or>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>subject</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>Verkehrsnetze</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>Subject</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>Gew?ssernetz</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>transportation</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>inlandWaters</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t</ogc:Or>\n\t</ogc:And>\n</ogc:Filter>",
+    "disable": true
+  },
+  {
+    "index": "csw_eba_laermkartierung",
+    "includeTimestamp": true,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "railway"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "getRecordsUrl": "http://laermkartierung1.eisenbahn-bundesamt.de/geonetwork/srv/eng/csw",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 37,
+    "description": "EBA Laermkartierung",
+    "defaultAttribution": "EBA Laermkartierung",
+    "defaultAttributionLink": null,
+    "recordFilter": "            <ogc:Filter>\n               <ogc:PropertyIsEqualTo>\n                    <ogc:PropertyName>subject</ogc:PropertyName>\n                    <ogc:Literal>opendata</ogc:Literal>\n               </ogc:PropertyIsEqualTo>\n            </ogc:Filter>",
+    "disable": false
+  },
+  {
+    "index": "csw_geoportal_bw",
+    "includeTimestamp": true,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "REGI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "getRecordsUrl": "https://www.geoportal-bw.de/geonetwork/srv/ger/csw",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 38,
+    "description": "Geoportal BW",
+    "defaultAttribution": "Geoportal BW",
+    "defaultAttributionLink": null,
+    "recordFilter": "<ogc:Filter>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t<ogc:Literal>transportation</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n</ogc:Filter>",
+    "disable": true
+  },
+  {
+    "index": "csw_metaver_hb",
+    "includeTimestamp": true,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "REGI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "getRecordsUrl": "https://metaver.de/csw/partner/hb",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 39,
+    "description": "MetaVer Bremen",
+    "defaultAttribution": "MetaVer Bremen",
+    "defaultAttributionLink": null,
+    "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Verkehr</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
+    "disable": true
+  },
+  {
+    "index": "csw_metaver_st",
+    "includeTimestamp": true,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "REGI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "getRecordsUrl": "https://metaver.de/csw/partner/st",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 40,
+    "description": "MetaVer Sachsen-Anhalt",
+    "defaultAttribution": "MetaVer Sachsen-Anhalt",
+    "defaultAttributionLink": null,
+    "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Verkehr</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
+    "disable": true
+  },
+  {
+    "index": "csw_metaver_bb",
+    "includeTimestamp": true,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "REGI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "getRecordsUrl": "https://metaver.de/csw/partner/bb",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 41,
+    "description": "MetaVer Brandenburg",
+    "defaultAttribution": "MetaVer Brandenburg",
+    "defaultAttributionLink": null,
+    "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Lärm</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
+    "disable": true
+  }
   }
 ]
