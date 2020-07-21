@@ -1089,5 +1089,31 @@
     "defaultAttribution": "DWD",
     "defaultAttributionLink": null,
     "disable": true
+  },
+  {
+    "index": "dcat_govdata",
+    "includeTimestamp": true,
+    "type": "DCAT",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "customCode": "let contributor = DcatMapper.select('./dcatde:contributorID/@rdf:resource', this.record, true);\nif(contributor && contributor.textContent.endsWith(\"mCloud\")){\n\tthis.skipped = true\n}",
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "catalogUrl": "https://www.govdata.de/ckan/catalog/catalog.rdf?fq=theme:*TRAN*",
+    "filterTags": [],
+    "filterThemes": [],
+    "id": 46,
+    "description": "GovData DCAT-AP",
+    "defaultAttribution": "GovData",
+    "defaultAttributionLink": "https://www.govdata.de/",
+    "disable": false
   }
 ]
