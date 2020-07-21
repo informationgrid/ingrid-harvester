@@ -1063,6 +1063,31 @@
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Lärm</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
     "disable": true
-  }
+  },
+  {
+    "index": "oai_dwd",
+    "includeTimestamp": true,
+    "type": "OAI",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "climate"
+    ],
+    "defaultDCATCategory": [
+      "REGI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "providerUrl": "https://oai-test.dwd.de/oai/provider",
+    "eitherKeywords": [],
+    "set": "dwdcatalogue",
+    "id": 45,
+    "description": "OAI DWD",
+    "defaultAttribution": "DWD",
+    "defaultAttributionLink": null,
+    "disable": true
   }
 ]

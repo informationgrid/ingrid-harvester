@@ -21,6 +21,7 @@ export class OaiHarvesterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.form.addControl('providerUrl', new FormControl(this.model.providerUrl));
+    this.form.addControl('set', new FormControl(this.model.set));
 
     if (!this.model.eitherKeywords) {
       this.model.eitherKeywords = [];
