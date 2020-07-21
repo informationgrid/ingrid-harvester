@@ -39,7 +39,7 @@ describe('Configuration of Mapping-Formats', () => {
   });
 
   it('should delete a mapped value', () => {
-    let toDelete = "download";
+    let toDelete = "http://publications.europa.eu/resource/authority/file-type/pdf";
     configPage.deleteMapping(toDelete);
     cy.wait(500);
     configPage.checkMappingExists(toDelete, false);
