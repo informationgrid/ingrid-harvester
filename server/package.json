@@ -76,7 +76,8 @@
     "assets": [
       "./log4j.json",
       "./config.json",
-      "./config-general.json"
+      "./config-general.json",
+      "./def_licenses.rdf"
     ]
   }
 }
