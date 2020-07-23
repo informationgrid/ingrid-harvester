@@ -22,7 +22,7 @@ export class DcatMapper extends GenericMapper {
     static RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
     static DCAT = 'http://www.w3.org/ns/dcat#';
     static DCT = 'http://purl.org/dc/terms/';
-    static SKOS = 'ttp://www.w3.org/2004/02/skos/core#';
+    static SKOS = 'http://www.w3.org/2004/02/skos/core#';
     static VCARD = 'http://www.w3.org/2006/vcard/ns#';
     static DCATDE = 'http://dcat-ap.de/def/dcatde/';
 
@@ -329,10 +329,18 @@ export class DcatMapper extends GenericMapper {
     }
 
     getSpatial(): any {
+        let geometry = DcatMapper.select('./dct:spatial/dct:Location/locn:geometry[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
+        if(geometry){
+            return JSON.parse(geometry.textContent);
+        }
         return undefined;
     }
 
     getSpatialText(): string {
+        let prefLabel = DcatMapper.select('./dct:spatial/dct:Location/skos:prefLabel', this.record, true);
+        if(prefLabel){
+            return prefLabel.textContent;
+        }
         return undefined;
     }
 

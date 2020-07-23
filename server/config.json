@@ -1107,13 +1107,13 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
-    "catalogUrl": "https://www.govdata.de/ckan/catalog/catalog.rdf?fq=theme:*TRAN*",
+    "catalogUrl": "https://www.govdata.de/ckan/catalog/catalog.rdf?fq=groups:tran",
     "filterTags": [],
     "filterThemes": [],
     "id": 46,
     "description": "GovData DCAT-AP",
     "defaultAttribution": "GovData",
     "defaultAttributionLink": "https://www.govdata.de/",
-    "disable": false
+    "disable": true
   }
 ]
