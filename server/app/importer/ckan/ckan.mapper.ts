@@ -56,7 +56,21 @@ export class CkanMapper extends GenericMapper {
     }
 
     getCategories() {
-        return this.settings.defaultMcloudSubgroup;
+        let subgroups = [];
+        let keywords = this.getKeywords();
+        if (keywords) {
+            keywords.forEach(k => {
+                k = k.trim();
+                if (k === 'mcloud_category_roads' || k === 'mcloud-kategorie-straßen') subgroups.push('roads');
+                if (k === 'mcloud_category_climate' || k === 'mcloud-kategorie-klima-und-wetter') subgroups.push('climate');
+                if (k === 'mcloud_category_waters' || k === 'mcloud-kategorie-wasserstraßen-und-gewässer') subgroups.push('waters');
+                if (k === 'mcloud_category_railway' || k === 'mcloud-kategorie-bahn') subgroups.push('railway');
+                if (k === 'mcloud_category_infrastructure' || k === 'mcloud-kategorie-infrastuktur') subgroups.push('infrastructure');
+                if (k === 'mcloud_category_aviation' || k === 'mcloud-kategorie-luft--und-raumfahrt') subgroups.push('aviation');
+            });
+        }
+        if (subgroups.length === 0) subgroups.push(...this.settings.defaultMcloudSubgroup);
+        return subgroups;
     }
 
     getCitation() {
@@ -422,6 +436,59 @@ export class CkanMapper extends GenericMapper {
         }
 
         return config;
+    }
+
+    getSpatial(): any {
+        let extras = this.source.extras;
+        if (extras) {
+            for (let i = 0; i < extras.length; i++) {
+                let extra = extras[i];
+                if(extra.key === 'spatial') {
+                    return this.checkAndFixSpatialData(JSON.parse(extra.value));
+                }
+            }
+        }
+        else if (this.source.spatial) {
+            return this.checkAndFixSpatialData(JSON.parse(this.source.spatial));
+        }
+        return undefined;
+    }
+
+    checkAndFixSpatialData(spatial : any): any {
+        if(spatial.coordinates) {
+            spatial.coordinates = this.checkAndFixSpatialCoordinates(spatial.coordinates);
+        }
+        return spatial;
+    }
+
+    checkAndFixSpatialCoordinates(coordinates : any): any {
+        if(coordinates instanceof Array && coordinates[0] instanceof Array && coordinates[0][0] instanceof Array) {
+            for (let i = 0; i < coordinates.length; i++) {
+                coordinates[i] = this.checkAndFixSpatialCoordinates(coordinates[i]);
+            }
+        }
+        else if (coordinates instanceof Array) {
+            for (let i = 1; i < coordinates.length; i++) {
+                if((coordinates[i-1][0] === coordinates[i][0]) && (coordinates[i-1][1] === coordinates[i][1])){
+                    coordinates.splice(i--, 1);
+                }
+            }
+        }
+        return coordinates;
+    }
+
+
+    getSpatialText(): string {
+        let extras = this.source.extras;
+        if (extras) {
+            for (let i = 0; i < extras.length; i++) {
+                let extra = extras[i];
+                if(extra.key === 'opennrw_spatial' || extra.key === 'spatial_text' || extra.key === 'spatial-text') {
+                    return extra.value;
+                }
+            }
+        }
+        return undefined;
     }
 
     isValid(doc?: any): boolean {

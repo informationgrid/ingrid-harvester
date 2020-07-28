@@ -109,14 +109,14 @@ describe('Csw-Harvester operations', () => {
   });
 
   it('should successfully harvest after deleting an existing filter-label', () => {
-    harvester.openFormById(constants.CSW_CODEDE_ID);
+    harvester.openFormById(constants.CSW_WSV_ID);
 
     form.clearFilterField();
     form.saveHarvesterConfig();
 
-    harvester.importHarvesterById(constants.CSW_CODEDE_ID);
+    harvester.importHarvesterById(constants.CSW_WSV_ID);
     harvester.checkImportHasStarted();
 
-    harvester.checkFieldValueIs(constants.CSW_CODEDE_ID, harvester.lastExecution, Cypress.moment().format('DD.MM.YY, HH:mm'));
+    harvester.checkFieldValueIs(constants.CSW_WSV_ID, harvester.lastExecution, Cypress.moment().format('DD.MM.YY, HH:mm'));
   });
 });

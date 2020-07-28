@@ -7,7 +7,7 @@ async function runTests() {
   let opts = {
     reportDir: 'cypress/mochawesome-reports',
     reportFilename: 'index',
-    reportTitle: 'mcloud-ckan-importer tests'
+    reportTitle: 'mcloud-importer tests'
   };
 
   await fse.remove(opts.reportDir); // remove the report folder

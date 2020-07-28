@@ -1,0 +1,51 @@
+<form [formGroup]="form">
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Allgemeine DCAT Einstellungen</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Catalog URL" formControlName="catalogUrl" required>
+        </mat-form-field>
+        </div>
+
+      <h4>Bereitgestellt durch</h4>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Präfix" formControlName="providerPrefix" autocomplete="off">
+        </mat-form-field>
+        <mat-form-field fxFlex>
+          <mat-label>CKAN-Feld</mat-label>
+          <mat-select formControlName="providerField">
+            <mat-option value="maintainer">maintainer</mat-option>
+            <mat-option value="organization">organization</mat-option>
+            <mat-option value="author">author</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Filter und Regeln</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ng-container [ngTemplateOutlet]="rulesTemplate"></ng-container>
+
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <app-chip-list [list]="model.filterTags"
+                       placeholder="Filter Tags"
+                       (update)="model.filterTags = $event"></app-chip-list>
+
+
+        <app-chip-list [list]="model.filterThemes"
+                       placeholder="Filter Themes"
+                       (update)="model.filterThemes = $event"></app-chip-list>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>

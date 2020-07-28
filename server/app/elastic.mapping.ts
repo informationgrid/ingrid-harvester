@@ -248,6 +248,12 @@ export const elasticsearchMapping = {
                         }
                     }
                 },
+                'spatial': {
+                    'type': 'geo_shape'
+                },
+                'spatialText': {
+                    'type': 'text'
+                },
                 'temporal': {
                     'properties': {
                         'start': {

@@ -6,15 +6,15 @@ import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
-import {CswSummary} from "./csw.importer";
+import {OaiSummary} from "./oai.importer";
 import {OptionsWithUri} from "request-promise";
-import {CswSettings} from './csw.settings';
+import {OaiSettings} from './oai.settings';
 import {throwError} from "rxjs";
 import doc = Mocha.reporters.doc;
 
 let xpath = require('xpath');
 
-export class CswMapper extends GenericMapper {
+export class OaiMapper extends GenericMapper {
 
     static GMD = 'http://www.isotc211.org/2005/gmd';
     static GCO = 'http://www.isotc211.org/2005/gco';
@@ -23,10 +23,10 @@ export class CswMapper extends GenericMapper {
     static SRV = 'http://www.isotc211.org/2005/srv';
 
     static select = xpath.useNamespaces({
-        'gmd': CswMapper.GMD,
-        'gco': CswMapper.GCO,
-        'gml': CswMapper.GML,
-        'srv': CswMapper.SRV
+        'gmd': OaiMapper.GMD,
+        'gco': OaiMapper.GCO,
+        'gml': OaiMapper.GML,
+        'srv': OaiMapper.SRV
     });
 
     private log = getLogger();
@@ -36,9 +36,9 @@ export class CswMapper extends GenericMapper {
     private readonly issued: string;
 
     protected readonly idInfo; // : SelectedValue;
-    private settings: CswSettings;
+    private settings: OaiSettings;
     private readonly uuid: string;
-    private summary: CswSummary;
+    private summary: OaiSummary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {
@@ -56,16 +56,16 @@ export class CswMapper extends GenericMapper {
         this.issued = issued;
         this.summary = summary;
 
-        this.uuid = CswMapper.getCharacterStringContent(record, 'fileIdentifier');
+        this.uuid = OaiMapper.getCharacterStringContent(record, 'fileIdentifier');
 
-        this.idInfo = CswMapper.select('./gmd:identificationInfo', record, true);
+        this.idInfo = OaiMapper.select('./gmd:identificationInfo', record, true);
 
     }
 
     getDescription() {
-        let abstract = CswMapper.getCharacterStringContent(this.idInfo, 'abstract');
+        let abstract = OaiMapper.getCharacterStringContent(this.idInfo, 'abstract');
         if (!abstract) {
-            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.getRecordsUrl}\'`;
+            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.providerUrl}\'`;
             this.log.warn(msg);
             this.summary.warnings.push(['No description', msg]);
             this.valid = false;
@@ -79,13 +79,13 @@ export class CswMapper extends GenericMapper {
         let dists = [];
         let urlsFound = [];
 
-        let srvIdent = CswMapper.select('./srv:SV_ServiceIdentification', this.idInfo, true);
+        let srvIdent = OaiMapper.select('./srv:SV_ServiceIdentification', this.idInfo, true);
         if (srvIdent) {
             dists = await this.handleDistributionforService(srvIdent, urlsFound);
         }
 
-        let distNodes = CswMapper.select('./gmd:distributionInfo/gmd:MD_Distribution', this.record);
-        for (let i = 0; i < distNodes.length; i++) {
+        let distNodes = OaiMapper.select('./gmd:distributionInfo/gmd:MD_Distribution', this.record);
+        for (let i=0; i<distNodes.length; i++) {
             let distNode = distNodes[i];
             let id = distNode.getAttribute('id');
             if (!id) id = distNode.getAttribute('uuid');
@@ -93,7 +93,7 @@ export class CswMapper extends GenericMapper {
             let formats = [];
             let urls: Distribution[] = [];
 
-            CswMapper.select('.//gmd:MD_Format/gmd:name/gco:CharacterString', distNode).forEach(format => {
+            OaiMapper.select('.//gmd:MD_Format/gmd:name/gco:CharacterString', distNode).forEach(format => {
                 format.textContent.split(',').forEach(formatItem => {
                     if (!formats.includes(formatItem)) {
                         formats.push(formatItem.trim());
@@ -104,13 +104,13 @@ export class CswMapper extends GenericMapper {
             // Combine formats in a single slash-separated string
             if (formats.length === 0) formats.push('Unbekannt');
 
-            let onlineResources = CswMapper.select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource', distNode);
-            for (let j = 0; j < onlineResources.length; j++) {
+            let onlineResources = OaiMapper.select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource', distNode);
+            for(let j=0; j<onlineResources.length; j++) {
                 let onlineResource = onlineResources[j];
 
-                let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource);
-                let title = CswMapper.select('gmd:name/gco:CharacterString', onlineResource);
-                let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource);
+                let urlNode = OaiMapper.select('gmd:linkage/gmd:URL', onlineResource);
+                let title = OaiMapper.select('gmd:name/gco:CharacterString', onlineResource);
+                let protocolNode = OaiMapper.select('gmd:protocol/gco:CharacterString', onlineResource);
 
                 let url = null;
                 if (urlNode.length > 0) {
@@ -125,7 +125,7 @@ export class CswMapper extends GenericMapper {
                     urls.push({
                         accessURL: url,
                         title: title.length > 0 ? title[0].textContent : undefined,
-                        format: UrlUtils.mapFormat(formatArray, this.summary.warnings)
+                        format: UrlUtils.mapFormat(formats, this.summary.warnings)
                     });
                 }
             }
@@ -141,7 +141,7 @@ export class CswMapper extends GenericMapper {
         }
 
         if (dists.length === 0) {
-            let msg = `Dataset has no links for download/access. It will not be displayed in the portal. Id: \'${this.uuid}\', source: \'${this.settings.getRecordsUrl}\'`;
+            let msg = `Dataset has no links for download/access. It will not be displayed in the portal. Id: \'${this.uuid}\', source: \'${this.settings.providerUrl}\'`;
             this.summary.missingLinks++;
             this.log.warn(msg);
 
@@ -154,19 +154,14 @@ export class CswMapper extends GenericMapper {
 
     async handleDistributionforService(srvIdent, urlsFound): Promise<Distribution[]> {
 
-        let getCapabilitiesElement = CswMapper.select(
+        let getCapabilitiesElement = OaiMapper.select(
             // convert containing text to lower case
             './srv:containsOperations/srv:SV_OperationMetadata[./srv:operationName/gco:CharacterString/text()[contains(translate(\'GetCapabilities\', \'ABCEGILPST\', \'abcegilpst\'), "getcapabilities")]]/srv:connectPoint/*/gmd:linkage/gmd:URL',
             srvIdent,
             true);
         let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
-        let serviceFormat = CswMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true);
-        let serviceTypeVersion = CswMapper.select('.//srv:serviceTypeVersion/gco:CharacterString', srvIdent);
+        let serviceFormat = OaiMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true).textContent;
         let serviceLinks: Distribution[] = [];
-
-        if(serviceFormat){
-            serviceFormat = serviceFormat.textContent;
-        }
 
         if (getCapablitiesUrl) {
             let lowercase = getCapablitiesUrl.toLowerCase();
@@ -176,50 +171,29 @@ export class CswMapper extends GenericMapper {
             if (lowercase.match(/\bwmts\b/)) serviceFormat = 'WMTS';
         }
 
-        if (serviceTypeVersion) {
-            for(let i = 0; i < serviceTypeVersion.length; i++) {
-                let lowercase = serviceTypeVersion[i].textContent.toLowerCase();
-                if (lowercase.match(/\bwms\b/)) serviceFormat = 'WMS';
-                if (lowercase.match(/\bwfs\b/)) serviceFormat = 'WFS';
-                if (lowercase.match(/\bwcs\b/)) serviceFormat = 'WCS';
-                if (lowercase.match(/\bwmts\b/)) serviceFormat = 'WMTS';
-            }
-        }
+        let onlineResources = OaiMapper
+            .select('./srv:containsOperations/*/srv:connectPoint/*/gmd:CI_OnlineResource', srvIdent);
 
+        for (let i=0; i<onlineResources.length; i++) {
+            let onlineResource = onlineResources[i];
 
-        let operations = CswMapper
-            .select('./srv:containsOperations/srv:SV_OperationMetadata', srvIdent);
+            let urlNode = OaiMapper.select('gmd:linkage/gmd:URL', onlineResource);
+            let protocolNode = OaiMapper.select('gmd:protocol/gco:CharacterString', onlineResource);
 
-        for (let i = 0; i < operations.length; i++) {
-            let onlineResource = CswMapper.select('./srv:connectPoint/gmd:CI_OnlineResource', operations[i], true);
-
-            if(onlineResource) {
-                let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource, true);
-                let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true);
-
-                let title = this.getTitle();
-
-                let operationNameNode = CswMapper.select('srv:operationName/gco:CharacterString', operations[i], true);
-                if(operationNameNode){
-                    title = title + " - " + operationNameNode.textContent;
-                }
-
-                let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                let url = await UrlUtils.urlWithProtocolFor(requestConfig);
-                if (url && !urlsFound.includes(url)) {
-                    serviceLinks.push({
-                        accessURL: url,
-                        format: [protocolNode ? protocolNode.textContent : serviceFormat],
-                        title: (title && title.length > 0) ? title : undefined
-                    });
-                    urlsFound.push(url);
-                }
+            let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
+            let url = await UrlUtils.urlWithProtocolFor(requestConfig);
+            if (url && !urlsFound.includes(url)) {
+                serviceLinks.push({
+                    accessURL: url,
+                    format: protocolNode.textContent ? protocolNode.textContent : serviceFormat
+                });
+                urlsFound.push(url);
             }
         }
 
         return serviceLinks;
 
-    }
+   }
 
     async getPublisher(): Promise<any[]> {
         let publishers = [];
@@ -229,14 +203,14 @@ export class CswMapper extends GenericMapper {
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i = 0; i < queries.length; i++) {
-            let contacts = CswMapper.select(queries[i], this.record);
+            let contacts = OaiMapper.select(queries[i], this.record);
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
-                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+                let role = OaiMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
 
-                let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
-                let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let name = OaiMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                let org = OaiMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                let urlNode = OaiMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
 
                 let url = null;
                 if (urlNode) {
@@ -265,7 +239,7 @@ export class CswMapper extends GenericMapper {
     }
 
     getTitle() {
-        let title = CswMapper.getCharacterStringContent(this.idInfo, 'title');
+        let title = OaiMapper.getCharacterStringContent(this.idInfo, 'title');
         return title && title.trim() !== '' ? title : undefined;
     }
 
@@ -290,14 +264,14 @@ export class CswMapper extends GenericMapper {
      */
     getAccessRights(): string[] {
         // Extract all useLimitation texts
-        let limitations = CswMapper.select('./*/gmd:resourceConstraints/*/gmd:useLimitation', this.idInfo)
-            .map(node => CswMapper.getCharacterStringContent(node)) // Extract the text
+        let limitations = OaiMapper.select('./*/gmd:resourceConstraints/*/gmd:useLimitation', this.idInfo)
+            .map(node => OaiMapper.getCharacterStringContent(node)) // Extract the text
             .filter(text => text) // Filter out falsy items
             .map(text => text.trim());
 
         // Select 'otherConstraints' elements that have a 'useConstraints' sibling
-        let constraints = CswMapper.select('./*/gmd:resourceConstraints/*[./gmd:useConstraints and ./gmd:otherConstraints]/gmd:otherConstraints', this.idInfo)
-            .map(node => CswMapper.getCharacterStringContent(node)) // Extract the text
+        let constraints = OaiMapper.select('./*/gmd:resourceConstraints/*[./gmd:useConstraints and ./gmd:otherConstraints]/gmd:otherConstraints', this.idInfo)
+            .map(node => OaiMapper.getCharacterStringContent(node)) // Extract the text
             .filter(text => text) // Filter out null and undefined values
             .map(text => text.trim())
             .filter(text => text && !limitations.includes(text.trim()) && !text.match(/"url"\s*:\s*"([^"]+)"/)); // Keep non-empty (truthy) items that are not defined in useLimitations and are not a JSON-snippet
@@ -363,14 +337,14 @@ export class CswMapper extends GenericMapper {
                 }
 
                 displayContact = {
-                    name: displayName.trim(),
+                    name: displayName,
                     homepage: publisher[0].homepage
                 };
             } else {
                 let creator = this.getCreator();
 
                 displayContact = {
-                    name: creator[0].name.trim(),
+                    name: creator[0].name,
                     homepage: creator[0].homepage
                 };
             }
@@ -398,7 +372,7 @@ export class CswMapper extends GenericMapper {
         }
 
         keywords = [];
-        CswMapper.select('.//gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', this.record).forEach(node => {
+        OaiMapper.select('.//gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', this.record).forEach(node => {
             keywords.push(node.textContent);
         });
 
@@ -413,7 +387,7 @@ export class CswMapper extends GenericMapper {
         }, false);
         if (!valid) {
             // Don't index metadata-sets without any of the mandatory keywords
-            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.getRecordsUrl}'.`);
+            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.providerUrl}'.`);
             this.skipped = true;
         }
 
@@ -427,6 +401,7 @@ export class CswMapper extends GenericMapper {
         this.fetched.keywords[mandatoryKws.join()] = keywords;
         return keywords;
     }
+
 
 
     getMFundFKZ(): string {
@@ -466,28 +441,27 @@ export class CswMapper extends GenericMapper {
     }
 
     getMetadataSource(): any {
-        let gmdEncoded = encodeURIComponent(CswMapper.GMD);
-        let cswLink = `${this.settings.getRecordsUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
+        let oaiLink = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=iso19139&identifier=${this.uuid}`;
         return {
-            raw_data_source: cswLink,
+            raw_data_source: oaiLink,
             portal_link: this.settings.defaultAttributionLink,
             attribution: this.settings.defaultAttribution
         };
     }
 
     getModifiedDate() {
-        return new Date(CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent);
+        return new Date(OaiMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent);
     }
 
     getSpatial(): any {
-        let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
+        let geographicBoundingBoxes = OaiMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];
         for(let i=0; i < geographicBoundingBoxes.length; i++){
             let geographicBoundingBox = geographicBoundingBoxes[i];
-            let west = parseFloat(CswMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let east = parseFloat(CswMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let south = parseFloat(CswMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let west = parseFloat(OaiMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let east = parseFloat(OaiMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let south = parseFloat(OaiMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let north = parseFloat(OaiMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
 
             if (west === east && north === south) {
                 geometries.push({
@@ -520,12 +494,12 @@ export class CswMapper extends GenericMapper {
     }
 
     getSpatialText(): string {
-        let geoGraphicDescriptions = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription', this.idInfo);
+        let geoGraphicDescriptions = OaiMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription', this.idInfo);
         let result = [];
         for(let i=0; i < geoGraphicDescriptions.length; i++)
         {
             let geoGraphicDescription = geoGraphicDescriptions[i];
-            let geoGraphicCode = CswMapper.select('./gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', geoGraphicDescription, true);
+            let geoGraphicCode = OaiMapper.select('./gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', geoGraphicDescription, true);
             if(geoGraphicCode)
                 result.push(geoGraphicCode.textContent);
         }
@@ -540,7 +514,7 @@ export class CswMapper extends GenericMapper {
     getTemporal(): DateRange {
         let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
 
-        let nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', this.idInfo);
+        let nodes = OaiMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', this.idInfo);
         if (nodes.length > 1) {
             this.log.warn(`Multiple time extents defined. Using only the first one. ${suffix}`);
         }
@@ -558,7 +532,7 @@ export class CswMapper extends GenericMapper {
 
         // otherwise
 
-        nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimeInstant/gml:timePosition', this.idInfo);
+        nodes = OaiMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimeInstant/gml:timePosition', this.idInfo);
         let times = nodes.map(node => node.textContent);
         if (times.length === 1) {
             return {
@@ -575,9 +549,9 @@ export class CswMapper extends GenericMapper {
     }
 
     getTimeValue(nodes, beginOrEnd: 'begin' | 'end'): Date {
-        let dateNode = CswMapper.select('./gml:' + beginOrEnd + 'Position', nodes[0], true);
+        let dateNode = OaiMapper.select('./gml:' + beginOrEnd + 'Position', nodes[0], true);
         if (!dateNode) {
-            dateNode = CswMapper.select('./gml:' + beginOrEnd + '/*/gml:timePosition', nodes[0], true);
+            dateNode = OaiMapper.select('./gml:' + beginOrEnd + '/*/gml:timePosition', nodes[0], true);
         }
         try {
             if (!dateNode.hasAttribute('indeterminatePosition')) {
@@ -600,14 +574,14 @@ export class CswMapper extends GenericMapper {
 
         // Evaluate the themes
         let xpath = './/gmd:descriptiveKeywords/gmd:MD_Keywords[./gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()="Data theme (EU MDR)"]/gmd:keyword/gco:CharacterString';
-        let themes = CswMapper.select(xpath, this.record)
-            .map(node => CswMapper.dcatThemeUriFromKeyword(node.textContent))
+        let themes = OaiMapper.select(xpath, this.record)
+            .map(node => OaiMapper.dcatThemeUriFromKeyword(node.textContent))
             .filter(theme => theme); // Filter out falsy values
 
         if (!themes || themes.length === 0) {
             // Fall back to default value
             themes = this.settings.defaultDCATCategory
-                .map(category => GenericMapper.DCAT_CATEGORY_URL + category);
+                .map( category => GenericMapper.DCAT_CATEGORY_URL + category);
         }
 
         this.fetched.themes = themes;
@@ -620,19 +594,19 @@ export class CswMapper extends GenericMapper {
 
     static getCharacterStringContent(element, cname?): string {
         if (cname) {
-            let node = CswMapper.select(`.//gmd:${cname}/gco:CharacterString`, element, true);
+            let node = OaiMapper.select(`.//gmd:${cname}/gco:CharacterString`, element, true);
             if (node) {
                 return node.textContent;
             }
         } else {
-            let node = CswMapper.select('./gco:CharacterString', element, true);
+            let node = OaiMapper.select('./gco:CharacterString', element, true);
             return node ? node.textContent : null;
         }
     }
 
     getAccrualPeriodicity(): string {
         // Multiple resourceMaintenance elements are allowed. If present, use the first one
-        let freq = CswMapper.select('./*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode', this.idInfo);
+        let freq = OaiMapper.select('./*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode', this.idInfo);
         if (freq.length > 0) {
             return freq[0].getAttribute('codeListValue');
         }
@@ -641,14 +615,14 @@ export class CswMapper extends GenericMapper {
 
     async getLicense() {
         let license: License;
-        let constraints = CswMapper.select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license" or ./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="otherRestrictions"]', this.idInfo);
+        let constraints = OaiMapper.select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license"]', this.idInfo);
 
         if (constraints && constraints.length > 0) {
-            for (let j = 0; j < constraints.length; j++) {
+            for(let j=0; j<constraints.length; j++) {
                 let c = constraints[j];
-                let nodes = CswMapper.select('./gmd:otherConstraints', c);
+                let nodes = OaiMapper.select('./gmd:otherConstraints', c);
                 for (let i = 0; i < nodes.length; i++) {
-                    let text = CswMapper.getCharacterStringContent(nodes[i]);
+                    let text = OaiMapper.getCharacterStringContent(nodes[i]);
                     try {
                         let json = JSON.parse(text);
 
@@ -661,8 +635,7 @@ export class CswMapper extends GenericMapper {
                             url: await UrlUtils.urlWithProtocolFor(requestConfig)
                         };
 
-                    } catch (ignored) {
-                    }
+                    } catch(ignored) {}
                 }
             }
         }
@@ -684,7 +657,7 @@ export class CswMapper extends GenericMapper {
     }
 
     getErrorSuffix(uuid, title) {
-        return `Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'.`;
+        return `Id: '${uuid}', title: '${title}', source: '${this.settings.providerUrl}'.`;
     }
 
     getHarvestedData(): string {
@@ -698,25 +671,25 @@ export class CswMapper extends GenericMapper {
             './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
-        for (let i = 0; i < queries.length; i++) {
-            let contacts = CswMapper.select(queries[i], this.record);
+        for (let i=0; i<queries.length; i++) {
+            let contacts = OaiMapper.select(queries[i], this.record);
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
-                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+                let role = OaiMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
 
-                let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
-                let organisation = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                let name = OaiMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                let organisation = OaiMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                let email = OaiMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
 
                 if (role === 'originator' || role === 'author') {
-                    let creator: creatorType = {};
+                    let creator : creatorType = {};
                     /*
                      * Creator has only one field for name. Use either the name
                      * of the organisation or the person for this field. The
                      * organisation name has a higher priority.
                      */
                     if (organisation) {
-                        creator.name = organisation.textContent;
+                        creator.name =  organisation.textContent;
                     } else if (name) {
                         creator.name = name.textContent;
                     }
@@ -757,17 +730,17 @@ export class CswMapper extends GenericMapper {
             './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
-        for (let i = 0; i < queries.length; i++) {
-            let contacts = CswMapper.select(queries[i], this.record);
+        for (let i=0; i<queries.length; i++) {
+            let contacts = OaiMapper.select(queries[i], this.record);
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
-                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+                let role = OaiMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
 
                 if (role === 'originator') {
-                    let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
-                    let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                    let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
-                    let url = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                    let name = OaiMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                    let org = OaiMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                    let email = OaiMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                    let url = OaiMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
 
                     if (!name && !org) continue;
 
@@ -810,22 +783,22 @@ export class CswMapper extends GenericMapper {
             './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
-        for (let i = 0; i < queries.length; i++) {
-            let contacts = CswMapper.select(queries[i], this.record);
+        for (let i=0; i<queries.length; i++) {
+            let contacts = OaiMapper.select(queries[i], this.record);
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
-                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+                let role = OaiMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
 
                 if (role !== 'originator' && role !== 'author' && role !== 'publisher') {
-                    let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
-                    let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                    let delPt = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
-                    let region = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
-                    let country = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
-                    let postCode = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
-                    let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
-                    let phone = CswMapper.select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
-                    let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                    let name = OaiMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                    let org = OaiMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                    let delPt = OaiMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
+                    let region = OaiMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
+                    let country = OaiMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
+                    let postCode = OaiMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
+                    let email = OaiMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                    let phone = OaiMapper.select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
+                    let urlNode = OaiMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
                     let url = null;
                     if (urlNode) {
                         let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
@@ -841,7 +814,7 @@ export class CswMapper extends GenericMapper {
                     if (name) infos.fn = name.textContent;
                     if (org) infos['organization-name'] = org.textContent;
 
-                    let line1 = delPt.map(n => CswMapper.getCharacterStringContent(n));
+                    let line1 = delPt.map(n => OaiMapper.getCharacterStringContent(n));
                     line1 = line1.join(', ');
                     if (line1) infos['street-address'] = line1;
 
@@ -895,6 +868,6 @@ export class CswMapper extends GenericMapper {
 
 // Private interface. Do not export
 interface creatorType {
-    name?: string;
-    mbox?: string;
+    name? : string;
+    mbox? : string;
 }

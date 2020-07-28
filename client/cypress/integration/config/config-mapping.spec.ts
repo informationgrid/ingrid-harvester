@@ -39,9 +39,10 @@ describe('Configuration of Mapping-Formats', () => {
   });
 
   it('should delete a mapped value', () => {
-    configPage.deleteMapping('http://publications.europa.eu/resource/authority/file-type/doc');
+    let toDelete = "http://publications.europa.eu/resource/authority/file-type/pdf";
+    configPage.deleteMapping(toDelete);
     cy.wait(500);
-    configPage.checkMappingExists('http://publications.europa.eu/resource/authority/file-type/doc', false);
+    configPage.checkMappingExists(toDelete, false);
   });
 
 });

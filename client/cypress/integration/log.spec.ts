@@ -14,12 +14,11 @@ describe('Log tab operations', () => {
   });
 
   it('should show the right information in the logs after a single harvester is imported', () => {
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterById(constants.CKAN_DBD_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DBD_ID);
 
     logPage.visit();
-    logPage.infoIsContained('[INFO] default - Deutsche Bahn Datenportal (CKAN)');
-    logPage.infoIsContained('[INFO] default - Number of records:');
+    logPage.infoIsContained('[INFO] default - Deutsche Bahn Datenportal');
   });
 
   xit('should show information in the logs when all the harvester are imported', () => {

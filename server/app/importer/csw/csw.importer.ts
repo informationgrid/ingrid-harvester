@@ -90,11 +90,22 @@ export class CswImporter implements Importer {
             try {
                 await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
                 await this.harvest();
-                await this.elastic.sendBulkData(false);
-                await this.elastic.finishIndex();
-                observer.next(ImportResult.complete(this.summary));
-                observer.complete();
+                if(this.numIndexDocs > 0) {
+                    await this.elastic.sendBulkData(false);
+                    await this.elastic.finishIndex();
+                    observer.next(ImportResult.complete(this.summary));
+                    observer.complete();
+                } else {
+                    if(this.summary.appErrors.length === 0) {
+                        this.summary.appErrors.push('No Results');
+                    }
+                    log.error('No results during CSW import - Keep old index');
+                    observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
+                    observer.complete();
 
+                    // clean up index
+                    this.elastic.deleteIndex(this.elastic.indexName);
+                }
             } catch (err) {
                 this.summary.appErrors.push(err.message ? err.message : err);
                 log.error('Error during CSW import', err);
@@ -140,7 +151,46 @@ export class CswImporter implements Importer {
               */
             if (this.totalRecords < this.requestDelegate.getStartRecordIndex()) break;
         }
+        this.createDataServiceCoupling();
+    }
 
+    createDataServiceCoupling(){
+        let bulkData = this.elastic._bulkData;
+        let servicesByDataIdentifier = []
+        for(let i = 0; i < bulkData.length; i++){
+            let doc = bulkData[i];
+            if(doc.extras){
+                let harvestedData = doc.extras.harvested_data;
+                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
+                let identifierList = CswMapper.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
+                if(identifierList){
+                    for(let j = 0; j < identifierList.length; j++){
+                        let identifer = identifierList[j].textContent;
+                        if(!servicesByDataIdentifier[identifer]){
+                            servicesByDataIdentifier[identifer] = [];
+                        }
+                        servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distribution);
+                    }
+                }
+            }
+        }
+
+        for(let i = 0; i < bulkData.length; i++){
+            let doc = bulkData[i];
+            if(doc.extras){
+                let harvestedData = doc.extras.harvested_data;
+                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
+                let identifierList = CswMapper.select('.//gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
+                if(identifierList){
+                    for(let j = 0; j < identifierList.length; j++){
+                        let identifer = identifierList[j].textContent;
+                        if(servicesByDataIdentifier[identifer]){
+                            doc.distribution = doc.distribution.concat(servicesByDataIdentifier[identifer]);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     async extractRecords(getRecordsResponse, harvestTime) {
