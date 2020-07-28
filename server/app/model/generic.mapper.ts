@@ -26,9 +26,8 @@ export interface Organization extends Agent {
     organization: string;
 }
 export interface DateRange {
-    start?: Date,
-    end?: Date,
-    custom?: string
+    gte?: Date,
+    lte?: Date
 }
 
 
@@ -88,7 +87,7 @@ export abstract class GenericMapper {
 
     abstract getSpatialText(): string;
 
-    abstract getTemporal(): DateRange;
+    abstract getTemporal(): DateRange[];
 
     abstract getCitation(): string;
 

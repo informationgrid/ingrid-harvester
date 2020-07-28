@@ -23,6 +23,7 @@ export class DcatMapper extends GenericMapper {
     static DCAT = 'http://www.w3.org/ns/dcat#';
     static DCT = 'http://purl.org/dc/terms/';
     static SKOS = 'http://www.w3.org/2004/02/skos/core#';
+    static SCHEMA = 'http://schema.org/';
     static VCARD = 'http://www.w3.org/2006/vcard/ns#';
     static DCATDE = 'http://dcat-ap.de/def/dcatde/';
 
@@ -34,6 +35,7 @@ export class DcatMapper extends GenericMapper {
         'dcat': DcatMapper.DCAT,
         'dct': DcatMapper.DCT,
         'skos': DcatMapper.SKOS,
+        'schema': DcatMapper.SCHEMA,
         'vcard': DcatMapper.VCARD,
         'dcatde': DcatMapper.DCATDE
     });
@@ -344,8 +346,39 @@ export class DcatMapper extends GenericMapper {
         return undefined;
     }
 
-    getTemporal(): DateRange {
+    getTemporal(): DateRange[] {
+        let result: DateRange[] = [];
+
+        let nodes : string[] = DcatMapper.select('./dct:temporal/dct:PeriodOfTime', this.record)
+        for (let i = 0; i < nodes.length; i++) {
+            let begin = this.getTimeValue(nodes[i], 'startDate');
+            let end = this.getTimeValue(nodes[i], 'endDate');
+
+            if (begin || end) {
+                result.push({
+                    gte: begin ? begin : undefined,
+                    lte: end ? end : undefined
+                });
+            }
+        }
+
+        if(result.length)
+            return result;
+
         return undefined;
+    }
+
+    getTimeValue(node, beginOrEnd: 'startDate' | 'endDate'): Date {
+        let dateNode = DcatMapper.select('./schema:' + beginOrEnd, node, true);
+        if (dateNode) {
+            let text = dateNode.textContent;
+            let date = new Date(Date.parse(text));
+            if (date) {
+                return date;
+            } else {
+                this.log.warn(`Error parsing date, which was '${text}'. It will be ignored.`);
+            }
+        }
     }
 
 
