@@ -1117,5 +1117,36 @@
     "defaultAttribution": "GovData",
     "defaultAttributionLink": "https://www.govdata.de/",
     "disable": true
+  },
+  {
+    "index": "dcat_hro",
+    "includeTimestamp": true,
+    "type": "DCAT",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "REGI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "catalogUrl": "https://www.opendata-hro.de/catalog.rdf",
+    "filterTags": [],
+    "filterThemes": [
+      "TRAN"
+    ],
+    "id": 47,
+    "description": "OpenData Rostock",
+    "defaultAttribution": "OpenData Rostock",
+    "defaultAttributionLink": null,
+    "providerPrefix": "",
+    "dcatProviderField": "maintainer",
+    "priority": null,
+    "disable": true
   }
 ]
