@@ -105,10 +105,14 @@ export class DcatMapper extends GenericMapper {
                     } else {
                         format = formatNode.getAttribute('rdf:resource');
                     }
+                    if(format.startsWith("http://publications.europa.eu/resource/authority/file-type/")){
+                        format = format.substring("http://publications.europa.eu/resource/authority/file-type/".length)
+                    }
                 }
 
                 let url = DcatMapper.select('./dcat:accessURL', this.linkedDistributions[i], true);
                 let title = DcatMapper.select('./dct:title', this.linkedDistributions[i], true);
+                let description = DcatMapper.select('./dct:description', this.linkedDistributions[i], true);
                 let issued = DcatMapper.select('./dct:issued', this.linkedDistributions[i], true);
                 let modified = DcatMapper.select('./dct:modified', this.linkedDistributions[i], true);
                 let size = DcatMapper.select('./dcat:byteSize', this.linkedDistributions[i], true);
@@ -118,6 +122,7 @@ export class DcatMapper extends GenericMapper {
                         format: UrlUtils.mapFormat([format], this.summary.warnings),
                         accessURL: url.getAttribute('rdf:resource'),
                         title: title ? title.textContent : undefined,
+                        description: description ? description.textContent : undefined,
                         issued: issued ? new Date(issued.textContent) : undefined,
                         modified: modified ? new Date(modified.textContent) : undefined,
                         byteSize: size ? Number(size.textContent) : undefined
@@ -304,12 +309,6 @@ export class DcatMapper extends GenericMapper {
             homepage: displayHomepage
         };
 
-                displayContact = {
-                    name: creator[0].name,
-                    homepage: creator[0].homepage
-                };
-            }
-        }
         return [displayContact];
     }
 
