@@ -17,11 +17,12 @@
           <input matInput placeholder="Präfix" formControlName="providerPrefix" autocomplete="off">
         </mat-form-field>
         <mat-form-field fxFlex>
-          <mat-label>CKAN-Feld</mat-label>
-          <mat-select formControlName="providerField">
+          <mat-label>DCAT-Feld</mat-label>
+          <mat-select formControlName="dcatProviderField">
+            <mat-option value="contactPoint">contactPoint</mat-option>
+            <mat-option value="creator">creator</mat-option>
+            <mat-option value="originator">originator</mat-option>
             <mat-option value="maintainer">maintainer</mat-option>
-            <mat-option value="organization">organization</mat-option>
-            <mat-option value="author">author</mat-option>
           </mat-select>
         </mat-form-field>
       </div>

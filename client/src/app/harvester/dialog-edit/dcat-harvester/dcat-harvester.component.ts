@@ -20,7 +20,23 @@ export class DcatHarvesterComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    this.form.addControl('catalogUrl', new FormControl(this.model.catalogUrl));
+    this.form.addControl('catalogUrl', new FormControl(this.getModelField('catalogUrl', '')));
+
+    this.form.addControl('providerPrefix', new FormControl(this.getModelField('providerPrefix', '')));
+    this.form.addControl('dcatProviderField', new FormControl(this.getModelField('dcatProviderField', 'creator')));
+
+  }
+
+  private getModelField(field: string, defaultValue: any) {
+    let current = this.model;
+    const items = field.split('.');
+
+    const exists = items.every(item => {
+      current = current[item];
+      return current;
+    });
+
+    return exists ? current : defaultValue;
   }
 
   ngOnDestroy(): void {

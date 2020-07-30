@@ -210,40 +210,99 @@ export class DcatMapper extends GenericMapper {
 
     async getDisplayContacts() {
 
-        let contactPoint = await this.getContactPoint();
-        let displayContact: Person;
 
-        if (contactPoint) {
-            let displayName;
+        let displayName;
+        let displayHomepage;
 
-            if (contactPoint['organization-name']) {
-                displayName = contactPoint['organization-name'];
-            } else if (contactPoint.fn) {
-                displayName = contactPoint.fn;
+        if(this.settings.dcatProviderField) {
+            switch (this.settings.dcatProviderField) {
+                case "contactPoint":
+                    let contactPoint = await this.getContactPoint();
+                    if (contactPoint) {
+
+                        if (contactPoint['organization-name']) {
+                            displayName = contactPoint['organization-name'];
+                        } else if (contactPoint.fn) {
+                            displayName = contactPoint.fn;
+                        }
+
+                        displayHomepage = contactPoint.hasURL
+                    }
+                    break;
+                case "creator":
+                    let creator = this.getCreator();
+                    if (creator) {
+                        displayName = creator[0].name;
+                        displayHomepage = creator[0].homepage
+                    }
+                    break;
+                case "maintainer":
+                    let maintainer = this.getMaintainer();
+                    if (maintainer) {
+                        displayName = maintainer[0].name;
+                        displayHomepage = maintainer[0].homepage
+                    }
+                    break;
+                case "originator":
+                    let originator = this.getOriginator();
+                    if (originator) {
+                        displayName = originator[0].name;
+                        displayHomepage = originator[0].homepage
+                    }
+                    break;
             }
+        }
 
-            displayContact = {
-                name: displayName,
-                homepage: contactPoint.hasURL
-            };
-        } else {
-            let publisher = await this.getPublisher();
+        if(!displayName){
+            let contactPoint = await this.getContactPoint();
+            if (contactPoint) {
 
-            if (publisher) {
-                let displayName;
-
-                if (publisher[0].organization) {
-                    displayName = publisher[0].organization;
-                } else if (publisher[0].name) {
-                    displayName = publisher[0].name;
+                if (contactPoint['organization-name']) {
+                    displayName = contactPoint['organization-name'];
+                } else if (contactPoint.fn) {
+                    displayName = contactPoint.fn;
                 }
 
-                displayContact = {
-                    name: displayName,
-                    homepage: publisher[0].homepage
-                };
-            } else {
-                let creator = this.getCreator();
+                displayHomepage = contactPoint.hasURL
+            }
+        }
+
+        if(!displayName){
+            let creator = this.getCreator();
+            if (creator) {
+                displayName = creator[0].name;
+                displayHomepage = creator[0].homepage
+            }
+        }
+
+        if(!displayName) {
+            let maintainer = this.getMaintainer();
+            if (maintainer) {
+                displayName = maintainer[0].name;
+                displayHomepage = maintainer[0].homepage
+            }
+        }
+
+        if(!displayName) {
+            let originator = this.getOriginator();
+            if (originator) {
+                displayName = originator[0].name;
+                displayHomepage = originator[0].homepage
+            }
+        }
+
+        if(!displayName) {
+            displayName = this.settings.description.trim()
+        }
+
+        if(this.settings.providerPrefix){
+            displayName = this.settings.providerPrefix+displayName;
+        }
+
+        let displayContact: Person = {
+            name: displayName,
+            homepage: displayHomepage
+        };
 
                 displayContact = {
                     name: creator[0].name,
@@ -451,7 +510,7 @@ export class DcatMapper extends GenericMapper {
                 let mbox = DcatMapper.select('.//foaf:mbox', organization, true);
                 if(name) {
                     let infos: any = {
-                        organization: name.textContent
+                        name: name.textContent
                     };
                     if (mbox) infos.mbox = mbox.textContent;
 
@@ -463,6 +522,28 @@ export class DcatMapper extends GenericMapper {
         return creators.length === 0 ? undefined : creators;
     }
 
+    getMaintainer(): Person[] {
+        let maintainers = [];
+
+        let maintainerNodes = DcatMapper.select('.//dct:maintainer', this.record);
+        for (let i = 0; i < maintainerNodes.length; i++) {
+            let organization = DcatMapper.select('.//foaf:Organization', maintainerNodes[i], true);
+            if (organization) {
+                let name = DcatMapper.select('.//foaf:name', organization, true);
+                let mbox = DcatMapper.select('.//foaf:mbox', organization, true);
+                if(name) {
+                    let infos: any = {
+                        name: name.textContent
+                    };
+                    if (mbox) infos.mbox = mbox.textContent;
+
+                    maintainers.push(infos);
+                }
+            }
+        }
+
+        return maintainers.length === 0 ? undefined : maintainers;
+    }
 
     getGroups(): string[] {
         return undefined;
@@ -492,7 +573,7 @@ export class DcatMapper extends GenericMapper {
                 let name = DcatMapper.select('.//foaf:name', organization, true);
                 let mbox = DcatMapper.select('.//foaf:mbox', organization, true);
                 let infos: any = {
-                    organization: name.textContent
+                    name: name.textContent
                 };
                 if(mbox) infos.mbox = mbox.textContent;
 
