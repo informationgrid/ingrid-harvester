@@ -31,6 +31,7 @@ export class DialogEditComponent implements OnInit {
     this.harvesterForm = this.formBuilder.group({
       type: [{value: harvester.type, disabled: harvester.id !== -1}, Validators.required],
       description: [harvester.description, Validators.required],
+      priority: [harvester.priority],
       index: [harvester.index],
       defaultDCATCategory: [harvester.defaultDCATCategory],
       defaultMcloudSubgroup: [harvester.defaultMcloudSubgroup],

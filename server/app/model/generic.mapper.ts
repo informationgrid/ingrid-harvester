@@ -2,6 +2,7 @@ import {OptionsWithUri} from 'request-promise';
 import {License} from '@shared/license.model';
 import * as moment from 'moment';
 import {IndexDocument} from './index.document';
+import {ImporterSettings} from "../importer.settings";
 
 moment.locale('de');
 
@@ -57,6 +58,8 @@ export abstract class GenericMapper {
     protected valid = true;
 
     public skipped = false;
+
+    protected abstract getSettings(): ImporterSettings;
 
     abstract getTitle(): string;
 
@@ -236,6 +239,13 @@ export abstract class GenericMapper {
 
     executeCustomCode(doc: any) {
 
+    }
+
+    getPriority(){
+        if(this.getSettings().priority){
+            return this.getSettings().priority;
+        }
+        return undefined;
     }
 }
 

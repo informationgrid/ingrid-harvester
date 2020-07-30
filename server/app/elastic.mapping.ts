@@ -1,5 +1,8 @@
 export const elasticsearchMapping = {
     properties: {
+        'priority': {
+            'type': 'short'
+        },
         'title': {
             'type': 'text',
             'store': true,

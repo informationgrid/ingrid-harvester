@@ -22,7 +22,7 @@ export class ElasticQueries {
                     aggregations: {
                         duplicates: {
                             top_hits: {
-                                sort: [{'modified': {order: 'desc'}}],
+                                sort: [{'priority': {unmapped_type: 'short', missing: 0, order: 'desc'}},{'modified': {order: 'desc'}}],
                                 _source: {include: ['title', 'distribution', 'modified']}
                             }
                         }

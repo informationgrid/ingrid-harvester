@@ -10,6 +10,7 @@ import {UrlUtils} from '../../utils/url.utils';
 import {Summary} from '../../model/summary';
 import {CkanRules} from './ckan.rules';
 import {throwError} from 'rxjs';
+import {ImporterSettings} from "../../importer.settings";
 
 let mapping = require('../../../mappings.json');
 let markdown = require('markdown').markdown;
@@ -49,6 +50,10 @@ export class CkanMapper extends GenericMapper {
                 .split(',')
                 .map(item => item.trim());
         }
+    }
+
+    protected getSettings(): ImporterSettings {
+        return this.settings;
     }
 
     getAccessRights() {

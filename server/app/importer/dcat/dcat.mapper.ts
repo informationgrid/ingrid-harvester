@@ -11,6 +11,7 @@ import {OptionsWithUri} from "request-promise";
 import {DcatSettings} from './dcat.settings';
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {throwError} from "rxjs";
+import {ImporterSettings} from "../../importer.settings";
 
 let xpath = require('xpath');
 
@@ -68,6 +69,10 @@ export class DcatMapper extends GenericMapper {
         this.linkedDistributions = linkedDistributions
 
         this.uuid = DcatMapper.select('.//dct:identifier', record, true).textContent;
+    }
+
+    protected getSettings(): ImporterSettings {
+        return this.settings;
     }
 
     getDescription() {
