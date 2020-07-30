@@ -1,3 +1,12 @@
+* Tue Jul 28 2020 Jan Bücher <jan.buecher@wemove.com> - 2.1.0
+- Import Spatial Information (#2708)
+- Data/Service coupling in CSW (#2734)
+- Use mCLOUD-Category Keywords in CKAN (#2321)
+- Keep old index for Harvesting with 0 results (#2792)
+- new OAI-Importer - Beta (#2096)
+- new DCAT-Importer - Beta (#1970)
+- New Datasources (#2575)
+
 * Tue Jun 09 2020 Jan Bücher <jan.buecher@wemove.com> - 2.0.1
 - Fix License parsing for CSW (#2705)
 - Trim DisplayContact-Name to prevent trailing space (#2708)
