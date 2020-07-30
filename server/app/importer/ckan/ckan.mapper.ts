@@ -398,10 +398,7 @@ export class CkanMapper extends GenericMapper {
     }
 
     getOriginator(): Person[] {
-        return [{
-            name: this.source.author,
-            mbox: this.source.author_email
-        }];
+        return undefined;
     }
 
     async getLicense() {
