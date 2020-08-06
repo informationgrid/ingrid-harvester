@@ -936,7 +936,7 @@
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
-    "customCode": null,
+    "customCode": "for(let i = 0; i< doc.distribution.length; i++){\n    let distribution = doc.distribution[i];\n    if(distribution.format && distribution.format[0] === 'unknown'){\n        distribution.format[0] = 'HTML';\n    }\n}",
     "defaultMcloudSubgroup": [
       "railway"
     ],
@@ -955,7 +955,12 @@
     "defaultAttribution": "EBA Laermkartierung",
     "defaultAttributionLink": null,
     "recordFilter": "            <ogc:Filter>\n               <ogc:PropertyIsEqualTo>\n                    <ogc:PropertyName>subject</ogc:PropertyName>\n                    <ogc:Literal>opendata</ogc:Literal>\n               </ogc:PropertyIsEqualTo>\n            </ogc:Filter>",
-    "disable": false
+    "disable": false,
+    "priority": null,
+    "cron": {
+      "pattern": "37 02 * * *",
+      "active": true
+    }
   },
   {
     "index": "csw_geoportal_bw",
