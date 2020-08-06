@@ -909,7 +909,7 @@
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
-    "customCode": null,
+    "customCode": "let topicCategories = CswMapper.select('./*/gmd:topicCategory/gmd:MD_TopicCategoryCode', this.idInfo)\nlet isRoads = false;\nlet isWaters = false;\nfor(let i = 0; i < topicCategories.length; i++){\n    let topicCategory = topicCategories[i].textContent;\n    if(topicCategory === 'transportation') isRoads = true;\n    if(topicCategory === 'inlandWaters') isWaters = true;\n}\nfor(let i = 0; i < doc.keywords.length; i++){\n    let keyword= doc.keywords[i];\n    if(keyword=== 'Verkehrsnetze') isRoads = true;\n    if(keyword=== 'Gewässernetz') isWaters = true;\n}\nif(isRoads || isWaters){\n    let subgroups = [];\n    if(isRoads) subgroups.push('roads')\n    if(isWaters) subgroups.push('waters')\n    doc.extras.subgroups = subgroups;\n}",
     "defaultMcloudSubgroup": [
       "roads"
     ],
@@ -928,7 +928,12 @@
     "defaultAttribution": "Geodaten MV",
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n\t<ogc:And>\n\t\t<ogc:Or>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>*Datenlizenz Deutschland*</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>*Creative Commons*</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t</ogc:Or>\n\t\t<ogc:Or>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>subject</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>Verkehrsnetze</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>Subject</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>Gew?ssernetz</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>transportation</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>inlandWaters</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t</ogc:Or>\n\t</ogc:And>\n</ogc:Filter>",
-    "disable": true
+    "disable": true,
+    "priority": null,
+    "cron": {
+      "pattern": "50 02 * * *",
+      "active": true
+    }
   },
   {
     "index": "csw_eba_laermkartierung",
