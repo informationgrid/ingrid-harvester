@@ -1019,7 +1019,11 @@
     "defaultAttribution": "MetaVer Bremen",
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Verkehr</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
-    "disable": true
+    "disable": false,
+    "cron": {
+      "pattern": "46 02 * * *",
+      "active": true
+    }
   },
   {
     "index": "csw_metaver_st",
@@ -1027,7 +1031,7 @@
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
-    "customCode": null,
+    "customCode": "if(doc.title.indexOf('Wetterinformationen') !== -1){\n    doc.extras.subgroups = ['roads', 'climate'];\n}",
     "defaultMcloudSubgroup": [
       "roads"
     ],
@@ -1035,7 +1039,11 @@
       "REGI"
     ],
     "dateSourceFormats": [],
-    "blacklistedIds": [],
+    "blacklistedIds": [
+      "4C4D9986-8BF1-4703-815E-5F0D4C08A9D6",
+      "3B75D56A-B995-4050-86C9-1ECD4AE10843",
+      "672A102D-ACBF-46C9-B7EA-4F437D3395DD"
+    ],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "getRecordsUrl": "https://metaver.de/csw/partner/st",
@@ -1046,7 +1054,12 @@
     "defaultAttribution": "MetaVer Sachsen-Anhalt",
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Verkehr</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
-    "disable": true
+    "disable": false,
+    "priority": null,
+    "cron": {
+      "pattern": "47 02 * * *",
+      "active": true
+    }
   },
   {
     "index": "csw_metaver_bb",
@@ -1054,7 +1067,7 @@
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
-    "customCode": null,
+    "customCode": "if(doc.title.indexOf('Ballungsräume') !== -1){\n    doc.extras.subgroups=['roads', 'railway'];\n}\nif(doc.title.indexOf('Flughafen')  !== -1){\n    doc.extras.subgroups=['aviation'];\n}\nif(doc.title.indexOf('INSPIRE')  !== -1){\n    doc.extras.subgroups=['roads', 'railway', 'aviation'];\n}",
     "defaultMcloudSubgroup": [
       "roads"
     ],
@@ -1073,7 +1086,12 @@
     "defaultAttribution": "MetaVer Brandenburg",
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Lärm</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
-    "disable": true
+    "disable": false,
+    "priority": null,
+    "cron": {
+      "active": true,
+      "pattern": "45 02 * * *"
+    }
   },
   {
     "index": "oai_dwd",
