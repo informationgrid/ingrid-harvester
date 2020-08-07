@@ -11,6 +11,7 @@ import {OptionsWithUri} from "request-promise";
 import {OaiSettings} from './oai.settings';
 import {throwError} from "rxjs";
 import doc = Mocha.reporters.doc;
+import {ImporterSettings} from "../../importer.settings";
 
 let xpath = require('xpath');
 
@@ -60,6 +61,10 @@ export class OaiMapper extends GenericMapper {
 
         this.idInfo = OaiMapper.select('./gmd:identificationInfo', record, true);
 
+    }
+
+    protected getSettings(): ImporterSettings {
+        return this.settings;
     }
 
     getDescription() {

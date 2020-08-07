@@ -4,6 +4,7 @@ export class IndexDocument {
 
     static async create(mapper: GenericMapper) {
         let result = await {
+            priority: mapper.getPriority(),
             accessRights: mapper.getAccessRights(),
             accrualPeriodicity: mapper.getAccrualPeriodicity(),
             contactPoint: await mapper.getContactPoint(),

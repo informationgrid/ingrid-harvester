@@ -11,6 +11,7 @@ import {OptionsWithUri} from "request-promise";
 import {DcatSettings} from './dcat.settings';
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {throwError} from "rxjs";
+import {ImporterSettings} from "../../importer.settings";
 
 let xpath = require('xpath');
 
@@ -70,6 +71,10 @@ export class DcatMapper extends GenericMapper {
         this.uuid = DcatMapper.select('.//dct:identifier', record, true).textContent;
     }
 
+    protected getSettings(): ImporterSettings {
+        return this.settings;
+    }
+
     getDescription() {
         let description = DcatMapper.select('.//dct:description', this.record, true);
         if (!description) {
@@ -100,10 +105,14 @@ export class DcatMapper extends GenericMapper {
                     } else {
                         format = formatNode.getAttribute('rdf:resource');
                     }
+                    if(format.startsWith("http://publications.europa.eu/resource/authority/file-type/")){
+                        format = format.substring("http://publications.europa.eu/resource/authority/file-type/".length)
+                    }
                 }
 
                 let url = DcatMapper.select('./dcat:accessURL', this.linkedDistributions[i], true);
                 let title = DcatMapper.select('./dct:title', this.linkedDistributions[i], true);
+                let description = DcatMapper.select('./dct:description', this.linkedDistributions[i], true);
                 let issued = DcatMapper.select('./dct:issued', this.linkedDistributions[i], true);
                 let modified = DcatMapper.select('./dct:modified', this.linkedDistributions[i], true);
                 let size = DcatMapper.select('./dcat:byteSize', this.linkedDistributions[i], true);
@@ -113,6 +122,7 @@ export class DcatMapper extends GenericMapper {
                         format: UrlUtils.mapFormat([format], this.summary.warnings),
                         accessURL: url.getAttribute('rdf:resource'),
                         title: title ? title.textContent : undefined,
+                        description: description ? description.textContent : undefined,
                         issued: issued ? new Date(issued.textContent) : undefined,
                         modified: modified ? new Date(modified.textContent) : undefined,
                         byteSize: size ? Number(size.textContent) : undefined
@@ -205,47 +215,100 @@ export class DcatMapper extends GenericMapper {
 
     async getDisplayContacts() {
 
-        let contactPoint = await this.getContactPoint();
-        let displayContact: Person;
 
-        if (contactPoint) {
-            let displayName;
+        let displayName;
+        let displayHomepage;
 
-            if (contactPoint['organization-name']) {
-                displayName = contactPoint['organization-name'];
-            } else if (contactPoint.fn) {
-                displayName = contactPoint.fn;
-            }
+        if(this.settings.dcatProviderField) {
+            switch (this.settings.dcatProviderField) {
+                case "contactPoint":
+                    let contactPoint = await this.getContactPoint();
+                    if (contactPoint) {
 
-            displayContact = {
-                name: displayName,
-                homepage: contactPoint.hasURL
-            };
-        } else {
-            let publisher = await this.getPublisher();
+                        if (contactPoint['organization-name']) {
+                            displayName = contactPoint['organization-name'];
+                        } else if (contactPoint.fn) {
+                            displayName = contactPoint.fn;
+                        }
 
-            if (publisher) {
-                let displayName;
-
-                if (publisher[0].organization) {
-                    displayName = publisher[0].organization;
-                } else if (publisher[0].name) {
-                    displayName = publisher[0].name;
-                }
-
-                displayContact = {
-                    name: displayName,
-                    homepage: publisher[0].homepage
-                };
-            } else {
-                let creator = this.getCreator();
-
-                displayContact = {
-                    name: creator[0].name,
-                    homepage: creator[0].homepage
-                };
+                        displayHomepage = contactPoint.hasURL
+                    }
+                    break;
+                case "creator":
+                    let creator = this.getCreator();
+                    if (creator) {
+                        displayName = creator[0].name;
+                        displayHomepage = creator[0].homepage
+                    }
+                    break;
+                case "maintainer":
+                    let maintainer = this.getMaintainer();
+                    if (maintainer) {
+                        displayName = maintainer[0].name;
+                        displayHomepage = maintainer[0].homepage
+                    }
+                    break;
+                case "originator":
+                    let originator = this.getOriginator();
+                    if (originator) {
+                        displayName = originator[0].name;
+                        displayHomepage = originator[0].homepage
+                    }
+                    break;
             }
         }
+
+        if(!displayName){
+            let contactPoint = await this.getContactPoint();
+            if (contactPoint) {
+
+                if (contactPoint['organization-name']) {
+                    displayName = contactPoint['organization-name'];
+                } else if (contactPoint.fn) {
+                    displayName = contactPoint.fn;
+                }
+
+                displayHomepage = contactPoint.hasURL
+            }
+        }
+
+        if(!displayName){
+            let creator = this.getCreator();
+            if (creator) {
+                displayName = creator[0].name;
+                displayHomepage = creator[0].homepage
+            }
+        }
+
+        if(!displayName) {
+            let maintainer = this.getMaintainer();
+            if (maintainer) {
+                displayName = maintainer[0].name;
+                displayHomepage = maintainer[0].homepage
+            }
+        }
+
+        if(!displayName) {
+            let originator = this.getOriginator();
+            if (originator) {
+                displayName = originator[0].name;
+                displayHomepage = originator[0].homepage
+            }
+        }
+
+        if(!displayName) {
+            displayName = this.settings.description.trim()
+        }
+
+        if(this.settings.providerPrefix){
+            displayName = this.settings.providerPrefix+displayName;
+        }
+
+        let displayContact: Person = {
+            name: displayName,
+            homepage: displayHomepage
+        };
+
         return [displayContact];
     }
 
@@ -446,7 +509,7 @@ export class DcatMapper extends GenericMapper {
                 let mbox = DcatMapper.select('.//foaf:mbox', organization, true);
                 if(name) {
                     let infos: any = {
-                        organization: name.textContent
+                        name: name.textContent
                     };
                     if (mbox) infos.mbox = mbox.textContent;
 
@@ -458,6 +521,28 @@ export class DcatMapper extends GenericMapper {
         return creators.length === 0 ? undefined : creators;
     }
 
+    getMaintainer(): Person[] {
+        let maintainers = [];
+
+        let maintainerNodes = DcatMapper.select('.//dct:maintainer', this.record);
+        for (let i = 0; i < maintainerNodes.length; i++) {
+            let organization = DcatMapper.select('.//foaf:Organization', maintainerNodes[i], true);
+            if (organization) {
+                let name = DcatMapper.select('.//foaf:name', organization, true);
+                let mbox = DcatMapper.select('.//foaf:mbox', organization, true);
+                if(name) {
+                    let infos: any = {
+                        name: name.textContent
+                    };
+                    if (mbox) infos.mbox = mbox.textContent;
+
+                    maintainers.push(infos);
+                }
+            }
+        }
+
+        return maintainers.length === 0 ? undefined : maintainers;
+    }
 
     getGroups(): string[] {
         return undefined;
@@ -487,7 +572,7 @@ export class DcatMapper extends GenericMapper {
                 let name = DcatMapper.select('.//foaf:name', organization, true);
                 let mbox = DcatMapper.select('.//foaf:mbox', organization, true);
                 let infos: any = {
-                    organization: name.textContent
+                    name: name.textContent
                 };
                 if(mbox) infos.mbox = mbox.textContent;
 

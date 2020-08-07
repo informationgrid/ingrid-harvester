@@ -5,6 +5,7 @@ import {Summary} from '../../model/summary';
 import {ExcelSettings} from './excel.settings';
 import {RequestDelegate} from '../../utils/http-request.utils';
 import {OptionsWithUri} from 'request-promise';
+import {ImporterSettings} from "../../importer.settings";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -31,6 +32,10 @@ export class ExcelMapper extends GenericMapper {
         this.workbook = data.workbook;
         this.summary = data.summary;
         this.currentIndexName = data.currentIndexName;
+    }
+
+    protected getSettings(): ImporterSettings {
+        return this.settings;
     }
 
     getTitle() {
