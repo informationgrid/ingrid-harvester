@@ -955,8 +955,13 @@
     "description": "Geoportal BW",
     "defaultAttribution": "Geoportal BW",
     "defaultAttributionLink": null,
-    "recordFilter": "<ogc:Filter>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t<ogc:Literal>transportation</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n</ogc:Filter>",
-    "disable": true
+    "recordFilter": "<ogc:Filter>\n    <ogc:And>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>subject</ogc:PropertyName>\n\t\t<ogc:Literal>opendata</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t<ogc:Literal>transportation</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n    </ogc:And>\n</ogc:Filter> ",
+    "disable": false,
+    "cron": {
+      "active": true,
+      "pattern": "55 02 * * *"
+    },
+    "priority": null
   },
   {
     "index": "csw_metaver_hb",
