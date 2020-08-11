@@ -843,7 +843,7 @@
     "startPosition": 1,
     "customCode": "let downloads = CswMapper.select('.//gmd:CI_OnlineResource/gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue=\"download\"', this.record);\nif (!downloads) {\n\tthis.skipped = true;\n}",
     "defaultMcloudSubgroup": [
-      "roads"
+      "waters"
     ],
     "defaultDCATCategory": [
       "REGI"
@@ -860,7 +860,12 @@
     "defaultAttribution": "Geoportal Brandenburg",
     "defaultAttributionLink": null,
     "recordFilter": "            \n<ogc:Filter>\n    <ogc:And>\n        <ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n            <ogc:Literal>*Datenlizenz Deutschland*</ogc:Literal>\n        </ogc:PropertyIsLike>\n        <ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>Keyword</ogc:PropertyName>\n            <ogc:Literal>Gewässer</ogc:Literal>\n        </ogc:PropertyIsLike>\n    </ogc:And>\n</ogc:Filter>\n",
-    "disable": true
+    "disable": false,
+    "priority": null,
+    "cron": {
+      "pattern": "55 02 * * *",
+      "active": true
+    }
   },
   {
     "index": "csw_geodaten_mv",
