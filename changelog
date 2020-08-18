@@ -1,3 +1,9 @@
+* Fri Aug 07 2020 Jan Bücher <jan.buecher@wemove.com> - 2.1.1
+- Define Harvester-Priority for deduplication (#2902)
+- Minor Fixes in DCAT-Mapping (#2904)
+- Update Harvester Configurations (#2686)(#2904)(#2690)(#2680)(#2904)
+- CKAN: Remove mapping author -> originator (#2904)
+
 * Tue Jul 28 2020 Jan Bücher <jan.buecher@wemove.com> - 2.1.0
 - Import Spatial Information (#2708)
 - Data/Service coupling in CSW (#2734)
