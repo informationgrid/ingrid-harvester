@@ -208,6 +208,9 @@ export class DeduplicateUtils {
                                 urlsFromHit.length === urlsFromOtherHit.length
                                 && urlsFromHit.every(url => urlsFromOtherHit.includes(url));
 
+                            // Also Remove if both results habe the same ID
+                            remove = remove || (hit0._id === hit1._id);
+
                             if (remove) {
                                 let deleted = `Item to delete -> ID: '${hit1._id}', Title: '${hit1._source.title}', Index: '${hit1._index}'`;
                                 let retained = `Item to retain -> ID: '${hit0._id}', Title: '${hit0._source.title}', Index: '${hit0._index}'`;

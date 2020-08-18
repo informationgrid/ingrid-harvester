@@ -397,7 +397,7 @@
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
     "defaultAttribution": "Climate Data Centre (CDC) Katalog des DWD",
     "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/de/main.home",
-    "disable": false,
+    "disable": true,
     "id": 15,
     "cron": {
       "pattern": "35 2 * * *",
@@ -843,7 +843,7 @@
     "startPosition": 1,
     "customCode": "let downloads = CswMapper.select('.//gmd:CI_OnlineResource/gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue=\"download\"', this.record);\nif (!downloads) {\n\tthis.skipped = true;\n}",
     "defaultMcloudSubgroup": [
-      "roads"
+      "waters"
     ],
     "defaultDCATCategory": [
       "REGI"
@@ -860,7 +860,12 @@
     "defaultAttribution": "Geoportal Brandenburg",
     "defaultAttributionLink": null,
     "recordFilter": "            \n<ogc:Filter>\n    <ogc:And>\n        <ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n            <ogc:Literal>*Datenlizenz Deutschland*</ogc:Literal>\n        </ogc:PropertyIsLike>\n        <ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>Keyword</ogc:PropertyName>\n            <ogc:Literal>Gewässer</ogc:Literal>\n        </ogc:PropertyIsLike>\n    </ogc:And>\n</ogc:Filter>\n",
-    "disable": true
+    "disable": false,
+    "priority": null,
+    "cron": {
+      "pattern": "55 02 * * *",
+      "active": true
+    }
   },
   {
     "index": "csw_geodaten_mv",
@@ -950,8 +955,13 @@
     "description": "Geoportal BW",
     "defaultAttribution": "Geoportal BW",
     "defaultAttributionLink": null,
-    "recordFilter": "<ogc:Filter>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t<ogc:Literal>transportation</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n</ogc:Filter>",
-    "disable": true
+    "recordFilter": "<ogc:Filter>\n    <ogc:And>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>subject</ogc:PropertyName>\n\t\t<ogc:Literal>opendata</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t<ogc:Literal>transportation</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n    </ogc:And>\n</ogc:Filter> ",
+    "disable": false,
+    "cron": {
+      "active": true,
+      "pattern": "55 02 * * *"
+    },
+    "priority": null
   },
   {
     "index": "csw_metaver_hb",
@@ -1069,14 +1079,15 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
-    "providerUrl": "https://oai-test.dwd.de/oai/provider",
+    "providerUrl": "https://oai.dwd.de/oai/provider",
     "eitherKeywords": [],
-    "set": "dwdcatalogue",
+    "set": "mCLOUD",
     "id": 45,
     "description": "OAI DWD",
     "defaultAttribution": "DWD",
-    "defaultAttributionLink": null,
-    "disable": true
+    "defaultAttributionLink": "https://oai.dwd.de/oai/provider?verb=ListRecords&metadataPrefix=iso19139&set=mCLOUD",
+    "disable": false,
+    "priority": null
   },
   {
     "index": "dcat_govdata",

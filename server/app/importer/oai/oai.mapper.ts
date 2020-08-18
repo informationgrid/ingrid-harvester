@@ -165,8 +165,13 @@ export class OaiMapper extends GenericMapper {
             srvIdent,
             true);
         let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
-        let serviceFormat = OaiMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true).textContent;
+        let serviceFormat = OaiMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true);
+        let serviceTypeVersion = OaiMapper.select('.//srv:serviceTypeVersion/gco:CharacterString', srvIdent);
         let serviceLinks: Distribution[] = [];
+
+        if(serviceFormat){
+            serviceFormat = serviceFormat.textContent;
+        }
 
         if (getCapablitiesUrl) {
             let lowercase = getCapablitiesUrl.toLowerCase();
@@ -176,29 +181,50 @@ export class OaiMapper extends GenericMapper {
             if (lowercase.match(/\bwmts\b/)) serviceFormat = 'WMTS';
         }
 
-        let onlineResources = OaiMapper
-            .select('./srv:containsOperations/*/srv:connectPoint/*/gmd:CI_OnlineResource', srvIdent);
+        if (serviceTypeVersion) {
+            for(let i = 0; i < serviceTypeVersion.length; i++) {
+                let lowercase = serviceTypeVersion[i].textContent.toLowerCase();
+                if (lowercase.match(/\bwms\b/)) serviceFormat = 'WMS';
+                if (lowercase.match(/\bwfs\b/)) serviceFormat = 'WFS';
+                if (lowercase.match(/\bwcs\b/)) serviceFormat = 'WCS';
+                if (lowercase.match(/\bwmts\b/)) serviceFormat = 'WMTS';
+            }
+        }
 
-        for (let i=0; i<onlineResources.length; i++) {
-            let onlineResource = onlineResources[i];
 
-            let urlNode = OaiMapper.select('gmd:linkage/gmd:URL', onlineResource);
-            let protocolNode = OaiMapper.select('gmd:protocol/gco:CharacterString', onlineResource);
+        let operations = OaiMapper
+            .select('./srv:containsOperations/srv:SV_OperationMetadata', srvIdent);
 
-            let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-            let url = await UrlUtils.urlWithProtocolFor(requestConfig);
-            if (url && !urlsFound.includes(url)) {
-                serviceLinks.push({
-                    accessURL: url,
-                    format: protocolNode.textContent ? protocolNode.textContent : serviceFormat
-                });
-                urlsFound.push(url);
+        for (let i = 0; i < operations.length; i++) {
+            let onlineResource = OaiMapper.select('./srv:connectPoint/gmd:CI_OnlineResource', operations[i], true);
+
+            if(onlineResource) {
+                let urlNode = OaiMapper.select('gmd:linkage/gmd:URL', onlineResource, true);
+                let protocolNode = OaiMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true);
+
+                let title = this.getTitle();
+
+                let operationNameNode = OaiMapper.select('srv:operationName/gco:CharacterString', operations[i], true);
+                if(operationNameNode){
+                    title = title + " - " + operationNameNode.textContent;
+                }
+
+                let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
+                let url = await UrlUtils.urlWithProtocolFor(requestConfig);
+                if (url && !urlsFound.includes(url)) {
+                    serviceLinks.push({
+                        accessURL: url,
+                        format: [protocolNode ? protocolNode.textContent : serviceFormat],
+                        title: (title && title.length > 0) ? title : undefined
+                    });
+                    urlsFound.push(url);
+                }
             }
         }
 
         return serviceLinks;
 
-   }
+    }
 
     async getPublisher(): Promise<any[]> {
         let publishers = [];

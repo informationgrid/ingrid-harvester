@@ -65,5 +65,5 @@ describe('Indices operations', () => {
     indicesPage.selectIndex('ckan_db');
     indicesPage.checkContentIs(dbIndexContent);
     indicesPage.checkContentIs(indexType);
-  })
+  });
 });

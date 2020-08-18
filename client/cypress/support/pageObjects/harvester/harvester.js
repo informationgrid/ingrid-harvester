@@ -16,6 +16,7 @@ class HarvesterPage {
   numErrors = '[data-test="num-errors"]';
   nextExecution = '[data-test="next-execution"]';
   lastExecution = '[data-test="last-execution"]';
+  duration = '[data-test="duration"]';
   cronInfo = '[data-test="cron-info"]';
   cronToggleBar = '[title="Planung an- / ausschalten"]';
 
@@ -199,7 +200,7 @@ class HarvesterPage {
 
   waitForImportToFinish(id) {
     // const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    cy.get('#harvester-' + id + ' ' + this.lastExecution, {timeout: 30000}).scrollIntoView();
+    cy.get('#harvester-' + id + ' ' + this.lastExecution, {timeout: 45000}).scrollIntoView();
     this.checkFieldValueIs(id, this.lastExecution, Cypress.moment().format('DD.MM.YY, HH:mm'));
   }
 
