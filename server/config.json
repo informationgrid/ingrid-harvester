@@ -397,7 +397,7 @@
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
     "defaultAttribution": "Climate Data Centre (CDC) Katalog des DWD",
     "defaultAttributionLink": "https://cdc.dwd.de/catalogue/srv/de/main.home",
-    "disable": false,
+    "disable": true,
     "id": 15,
     "cron": {
       "pattern": "35 2 * * *",
@@ -1079,14 +1079,15 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
-    "providerUrl": "https://oai-test.dwd.de/oai/provider",
+    "providerUrl": "https://oai.dwd.de/oai/provider",
     "eitherKeywords": [],
-    "set": "dwdcatalogue",
+    "set": "mCLOUD",
     "id": 45,
     "description": "OAI DWD",
     "defaultAttribution": "DWD",
-    "defaultAttributionLink": null,
-    "disable": true
+    "defaultAttributionLink": "https://oai.dwd.de/oai/provider?verb=ListRecords&metadataPrefix=iso19139&set=mCLOUD",
+    "disable": false,
+    "priority": null
   },
   {
     "index": "dcat_govdata",
