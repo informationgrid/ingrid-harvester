@@ -10,5 +10,10 @@
   },
   "screenshotsFolder": "cypress/mochawesome-reports/assets",
   "videosFolder": "cypress/mochawesome-reports/assets",
-  "videoUploadOnPasses": false
+  "videoUploadOnPasses": false,
+
+  "retries": {
+    "runMode": 2,
+    "openMode": 0
+  }
 }

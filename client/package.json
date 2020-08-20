@@ -61,7 +61,7 @@
     "typescript": "~3.5.3"
   },
   "optionalDependencies": {
-    "cypress": "^4.11.0",
+    "cypress": "^5.0.0",
     "mocha": "5.2.0",
     "mochawesome": "^4.1.0",
     "mochawesome-merge": "^2.0.1",
