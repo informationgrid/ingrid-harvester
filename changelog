@@ -1,3 +1,9 @@
+* Tue Aug 18 2020 Jan Bücher <jan.buecher@wemove.com> - 2.1.2
+- Harvester Geoportal Brandenburg (#2685)
+- Harvester Geoportal BW (#2687)
+- Harver DWD by OAI (#2096)
+- Deduplicate by same ID (#2919)
+
 * Fri Aug 07 2020 Jan Bücher <jan.buecher@wemove.com> - 2.1.1
 - Define Harvester-Priority for deduplication (#2902)
 - Minor Fixes in DCAT-Mapping (#2904)
