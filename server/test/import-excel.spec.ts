@@ -64,8 +64,8 @@ describe('Import Excel', function () {
         mapper.columnValues[22] = "12.08.2018";
         chai.expect(mapper.getTemporal()).to.deep.equal({start: new Date("08/12/2018"), end: new Date("08/12/2018")});
 
-        mapper.columnValues[22] = "heute";
-        chai.expect(mapper.getTemporal().custom).to.equal("heute");
+        //mapper.columnValues[22] = "heute";
+        //chai.expect(mapper.getTemporal().custom).to.equal("heute");
 
         mapper.columnValues[22] = "12.08.2018 - 25.09.2018";
         chai.expect(mapper.getTemporal()).to.deep.equal({start: new Date("08/12/2018"), end: new Date("09/25/2018")});
