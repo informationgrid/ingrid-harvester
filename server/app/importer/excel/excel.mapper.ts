@@ -122,7 +122,7 @@ export class ExcelMapper extends GenericMapper {
         return undefined;
     }
 
-    getTemporal(): DateRange {
+    getTemporal(): DateRange[] {
         let range: string = this.columnValues[this.columnMap.Zeitraum];
         if (range) {
             try {
@@ -131,25 +131,23 @@ export class ExcelMapper extends GenericMapper {
                     if (splitted.length === 2) {
                         let dateFrom = this.parseDate(splitted[0]);
                         let dateTo = this.parseDate(splitted[1]);
-                        return dateFrom && dateTo && !isNaN(dateFrom.getTime()) && !isNaN(dateTo.getTime()) ? {
-                            start: dateFrom,
-                            end: dateTo
-                        } : { custom: range };
+                        return dateFrom && dateTo && !isNaN(dateFrom.getTime()) && !isNaN(dateTo.getTime()) ? [{
+                            gte: dateFrom,
+                            lte: dateTo
+                        }] : [];
                     }
                 }
 
                 let date = this.parseDate(range);
 
                 if (date === null || isNaN(date.getTime())) {
-                    return {custom: range};
                 } else {
-                    return {
-                        start: date,
-                        end: date
-                    };
+                    return [{
+                        gte: date,
+                        lte: date
+                    }];
                 }
             } catch {
-                return {custom: range};
             }
         }
     }

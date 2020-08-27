@@ -258,17 +258,7 @@ export const elasticsearchMapping = {
                     'type': 'text'
                 },
                 'temporal': {
-                    'properties': {
-                        'start': {
-                            'type': 'date'
-                        },
-                        'end': {
-                            'type': 'date'
-                        },
-                        'custom': {
-                            'type': 'keyword'
-                        }
-                    }
+                    "type": "date_range"
                 },
                 'groups': {
                     'type': 'keyword'
