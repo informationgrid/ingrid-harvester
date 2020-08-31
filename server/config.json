@@ -1073,7 +1073,7 @@
       "climate"
     ],
     "defaultDCATCategory": [
-      "REGI"
+      "ENVI"
     ],
     "dateSourceFormats": [],
     "blacklistedIds": [],
@@ -1087,7 +1087,11 @@
     "defaultAttribution": "DWD",
     "defaultAttributionLink": "https://oai.dwd.de/oai/provider?verb=ListRecords&metadataPrefix=iso19139&set=mCLOUD",
     "disable": false,
-    "priority": null
+    "priority": null,
+    "cron": {
+      "pattern": "50 02 * * *",
+      "active": true
+    }
   },
   {
     "index": "dcat_govdata",
