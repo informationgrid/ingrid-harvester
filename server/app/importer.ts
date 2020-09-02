@@ -4,7 +4,7 @@ import {Summary} from './model/summary';
 import {ImporterSettings} from './importer.settings';
 
 export const DefaultImporterSettings: ImporterSettings = {
-    priority: 0,
+    priority: null,
     type: '',
     maxRecords: 100,
     startPosition: 0,
