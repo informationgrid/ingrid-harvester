@@ -131,7 +131,7 @@ export class ExcelMapper extends GenericMapper {
                     if (splitted.length === 2) {
                         let dateFrom = this.parseDate(splitted[0].trim());
                         let dateTo = this.parseDate(splitted[1].trim());
-                        return dateFrom && dateTo && !isNaN(dateFrom.getTime()) && !isNaN(dateTo.getTime()) ? [{
+                        return (dateFrom && !isNaN(dateFrom.getTime())) || (dateTo && !isNaN(dateTo.getTime())) ? [{
                             gte: dateFrom,
                             lte: dateTo
                         }] : [];
