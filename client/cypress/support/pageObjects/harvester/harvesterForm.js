@@ -30,6 +30,8 @@ class HarvesterForm {
   dataDownload = '[formcontrolname="containsDocumentsWithData"]';
   blacklistedDataFormat = '[formcontrolname="containsDocumentsWithDataBlacklist"]';
 
+  apiFunction = '.mat-select-value-text:nth-of-type(4)';
+
   saveHarvesterConfig() {
     cy.get(this.saveHarvesterBtn).click();
     cy.wait(500);
@@ -114,6 +116,7 @@ class HarvesterForm {
     switch (key) {
       case 'type':
       case 'httpMethod':
+      case 'apiFunction':
         return 'select';
       case 'defaultDCATCategory':
       case 'defaultmCLOUDCategory':

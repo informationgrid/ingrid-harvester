@@ -117,9 +117,18 @@ class HarvesterPage {
     cy.get('#harvester-' + id + ' ' + this.importBtn).click();
   }
 
+  importHarvesterByName(name) {
+    this.toggleHarvesterByName(name);
+    cy.get(this.importBtn+':visible').click();
+  }
+
   checkImportHasStarted() {
     cy.get('.mat-simple-snackbar', {timeout: 60000}).should('contain', 'Import gestartet');
     cy.get('app-importer-detail').should('contain', ' Import läuft ');
+  }
+
+  checkVisibleFieldValue(field, value) {
+    cy.get(field+':visible', {timeout: 45000}).should('contain', value);
   }
 
   checkFieldValueIs(id, field, value) {
@@ -202,6 +211,11 @@ class HarvesterPage {
     // const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
     cy.get('#harvester-' + id + ' ' + this.lastExecution, {timeout: 45000}).scrollIntoView();
     this.checkFieldValueIs(id, this.lastExecution, Cypress.moment().format('DD.MM.YY, HH:mm'));
+  }
+
+  waitForImportToFinish() {
+    cy.get(this.lastExecution+':visible', {timeout: 45000}).scrollIntoView();
+    this.checkVisibleFieldValue( this.lastExecution, Cypress.moment().format('DD.MM.YY, HH:mm'));
   }
 
   getDocNumber(id) {

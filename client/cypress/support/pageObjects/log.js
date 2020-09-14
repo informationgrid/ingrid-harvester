@@ -1,5 +1,6 @@
 class LogPage {
   info = '.info'
+  warn = '.warn'
 
 
   visit() {
@@ -8,6 +9,10 @@ class LogPage {
 
   infoIsContained(info){
     cy.get(this.info).should('contain', info);
+  }
+
+  warnIsContained(warning){
+    cy.get(this.warn).should('contain', warning);
   }
 }
 
