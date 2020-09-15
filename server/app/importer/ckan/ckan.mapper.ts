@@ -249,7 +249,7 @@ export class CkanMapper extends GenericMapper {
         if (extras) {
             for (let i = 0; i < extras.length; i++) {
                 let extra = extras[i];
-                if(extra.key === 'temporal_coverage_from' || extra.key === 'temporal_start') {
+                if((extra.key === 'temporal_coverage_from' || extra.key === 'temporal_start') && extra.value) {
                     return this.handleDate(extra.value);
                 }
             }
@@ -266,7 +266,7 @@ export class CkanMapper extends GenericMapper {
         if (extras) {
             for (let i = 0; i < extras.length; i++) {
                 let extra = extras[i];
-                if(extra.key === 'temporal_coverage_to' || extra.key === 'temporal_end') {
+                if((extra.key === 'temporal_coverage_to' || extra.key === 'temporal_end') && extra.value) {
                     return this.handleDate(extra.value);
                 }
             }

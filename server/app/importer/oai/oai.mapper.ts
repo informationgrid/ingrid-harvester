@@ -576,10 +576,10 @@ export class OaiMapper extends GenericMapper {
         return undefined;
     }
 
-    getTimeValue(nodes, beginOrEnd: 'begin' | 'end'): Date {
-        let dateNode = OaiMapper.select('./gml:' + beginOrEnd + 'Position', nodes[0], true);
+    getTimeValue(node, beginOrEnd: 'begin' | 'end'): Date {
+        let dateNode = OaiMapper.select('./gml:' + beginOrEnd + 'Position', node, true);
         if (!dateNode) {
-            dateNode = OaiMapper.select('./gml:' + beginOrEnd + '/*/gml:timePosition', nodes[0], true);
+            dateNode = OaiMapper.select('./gml:' + beginOrEnd + '/*/gml:timePosition', node, true);
         }
         try {
             if (!dateNode.hasAttribute('indeterminatePosition')) {
