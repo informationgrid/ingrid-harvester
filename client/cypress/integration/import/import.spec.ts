@@ -25,7 +25,7 @@ describe('Import operations', () => {
 
   it('should show last import info of an harvester after page refresh', () => {
     // get last duration
-    //duration =  harvester.getFieldValue(constants.CKAN_DBD_ID, harvester.duration);
+    // duration =  harvester.getFieldValue(constants.CKAN_DBD_ID, harvester.duration);
 
     harvester.importHarvesterById(constants.CKAN_DBD_ID);
     harvester.checkImportHasStarted();
