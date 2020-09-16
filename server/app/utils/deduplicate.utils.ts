@@ -208,8 +208,8 @@ export class DeduplicateUtils {
                                 urlsFromHit.length === urlsFromOtherHit.length
                                 && urlsFromHit.every(url => urlsFromOtherHit.includes(url));
 
-                            // Also Remove if both results habe the same ID
-                            remove = remove || (hit0._id === hit1._id);
+                            // Also Remove if both results have the same UUID
+                            remove = remove || (hit0.uuid === hit1.uuid);
 
                             if (remove) {
                                 let deleted = `Item to delete -> ID: '${hit1._id}', Title: '${hit1._source.title}', Index: '${hit1._index}'`;
@@ -241,7 +241,9 @@ export class DeduplicateUtils {
         // TODO: send flush request to immediately remove documents from index
         try {
             await this.client.indices.flush();
-        } catch (e) { log.error('Error occurred during flush', e) }
+        } catch (e) {
+            log.error('Error occurred during flush', e);
+        }
 
         log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.elastic.indexName}`);
     }

@@ -1,6 +1,6 @@
 # Installation
 
-If nodejs is not yet installed on the system than run:
+If nodejs is not yet installed on the system then run:
 
 > sudo yum install nodejs
 

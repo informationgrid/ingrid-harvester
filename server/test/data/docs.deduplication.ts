@@ -27,3 +27,35 @@ export const doc4 = {
     modified: new Date('2019-03-12'),
     distribution: []
 };
+
+export const doc5 = {
+    title: 'My doc',
+    uuid: 'uuid_is_same',
+    modified: new Date('2020-01-01'),
+    distribution: [{
+        accessURL: 'not_same'
+    }, {
+        accessURL: 'also_not_same'
+    }],
+    extras: {
+        metadata: {
+            isValid: true
+        }
+    }
+};
+
+export const doc6 = {
+    title: 'My doc',
+    uuid: 'uuid_is_same',
+    modified: new Date('2020-01-03'),
+    distribution: [{
+        accessURL: 'pikapika'
+    }, {
+        accessURL: 'ash'
+    }],
+    extras: {
+        metadata: {
+            isValid: true
+        }
+    }
+};
