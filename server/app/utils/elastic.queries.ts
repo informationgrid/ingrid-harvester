@@ -23,6 +23,7 @@ export class ElasticQueries {
                         duplicates: {
                             top_hits: {
                                 sort: [{'priority': {unmapped_type: 'short', missing: 0, order: 'desc'}},{'modified': {order: 'desc'}}],
+                                size: 100,
                                 _source: {include: ['title', 'distribution', 'modified']}
                             }
                         }
