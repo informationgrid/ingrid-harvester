@@ -1,8 +1,9 @@
 import {Service} from '@tsed/di';
 import {ConfigService} from './config/ConfigService';
 import {ImportSocketService} from '../sockets/import.socket.service';
-import {CronJob} from 'cron';
+import {CronJob, CronTime} from 'cron';
 import {CronData} from '../importer.settings';
+import {Moment} from "moment";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -64,8 +65,18 @@ export class ScheduleService {
 
         try {
             this.jobs[id] = new CronJob(cronExpression, () => {
-                this.socketService.runImport(id);
+                let generalSettings = ConfigService.getGeneralSettings();
+                if (generalSettings.cronOffset) {
+                    setTimeout(function(socketService, id){
+                        socketService.runImport(id);
+                    }, generalSettings.cronOffset*60*1000, this.socketService, id);
+                }
+                else {
+                    this.socketService.runImport(id);
+                }
             }, null, startImmediately, 'Europe/Berlin');
+
+
         } catch (e) {
             log.error('Could not schedule job with ID: ' + id, e);
         }

@@ -3,12 +3,15 @@ import {ConfigService} from "../services/config/ConfigService";
 import {GeneralSettings} from '@shared/general-config.settings';
 import {MappingDistribution, MappingItem} from '@shared/mapping.model';
 import * as fs from "fs";
+import {IndexService} from "../services/IndexService";
+import {ScheduleService} from "../services/ScheduleService";
 
 @Controller("/api/config")
 @Authenticated()
 export class ConfigCtrl {
 
-    constructor() {
+    constructor(
+        private scheduleService: ScheduleService) {
     }
 
     @Get('/general')
@@ -20,8 +23,10 @@ export class ConfigCtrl {
 
     @Post('/general')
     setGeneralConfig(@BodyParams() body: GeneralSettings): void {
-        if(body.elasticSearchUrl && body.alias)
+        if(body.elasticSearchUrl && body.alias) {
             ConfigService.setGeneralConfig(body);
+            this.scheduleService.initialize();
+        }
 
     }
 
