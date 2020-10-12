@@ -147,7 +147,7 @@ describe('Ckan-Harvester operations', () => {
     harvester.waitForImportToFinish(constants.SEED_CKAN_ID);
 
     const importedDocNumber = harvester.getDocNumber(constants.SEED_CKAN_ID);
-    importedDocNumber.should('equal', '37');
+    importedDocNumber.should('equal', '38');
 
     harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
   });
@@ -168,7 +168,7 @@ describe('Ckan-Harvester operations', () => {
     harvester.waitForImportToFinish(constants.SEED_CKAN_ID);
 
     const importedDocNumber = harvester.getDocNumber(constants.SEED_CKAN_ID);
-    importedDocNumber.should('equal', '38');
+    importedDocNumber.should('equal', '39');
 
     harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
   });
