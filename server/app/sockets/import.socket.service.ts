@@ -7,6 +7,7 @@ import {CronJob} from 'cron';
 import {getLogger} from 'log4js';
 import {Mail, MailServer} from "../utils/nodemailer.utils";
 import {ImportLogMessage} from "../model/import.result";
+import {StatisticUtils} from "../statistic/statistic.utils";
 
 @SocketService('/import')
 export class ImportSocketService {
@@ -64,6 +65,8 @@ export class ImportSocketService {
 
                         importer.getSummary().print(this.log);
                         this.summaryService.update(response);
+                        let statisticUtils = new StatisticUtils(configGeneral);
+                        statisticUtils.saveSummary(response, configHarvester.index);
 
                         // when less results send mail
                         let importedLastRun = (summaryLastRun) ? summaryLastRun.summary.numDocs - summaryLastRun.summary.skippedDocs.length : 0;
