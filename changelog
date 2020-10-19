@@ -1,3 +1,11 @@
+* Mon Oct 19 2020 Jan Bücher <jan.buecher@wemove.com> - 2.2.0
+- Index temporal information as date-range (#2898)
+- Parse description for temporal information in excel import (#2958)
+- Allow offset for all CronJobs by configuration (#2793)
+- Fix missed deduplication with same uuid (#2929)
+- Fix missed deduplication for bigger buckets (#2919)
+- Fix changed priority is not displayed (#2917)
+
 * Tue Aug 18 2020 Jan Bücher <jan.buecher@wemove.com> - 2.1.2
 - Harvester Geoportal Brandenburg (#2685)
 - Harvester Geoportal BW (#2687)
