@@ -3,6 +3,7 @@
   "alias": "mcloud",
   "numberOfShards": 1,
   "numberOfReplicas": 0,
+  "cronOffset": 0,
   "proxy": "",
   "mail": {
     "enabled": false,

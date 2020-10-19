@@ -471,34 +471,6 @@
     }
   },
   {
-    "index": "csw_bsh_inspire",
-    "includeTimestamp": true,
-    "type": "CSW",
-    "maxRecords": 100,
-    "startPosition": 1,
-    "customCode": "",
-    "defaultMcloudSubgroup": [
-      "waters"
-    ],
-    "defaultDCATCategory": [
-      "ENVI"
-    ],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "getRecordsUrl": "https://www.geoseaportal.de/soapServices/CSWStartup",
-    "eitherKeywords": [
-      "inspireidentifiziert"
-    ],
-    "httpMethod": "POST",
-    "description": "BSH inspireidentifiziert",
-    "defaultAttribution": "GeoSeaPortal (BSH) INSPIRE",
-    "defaultAttributionLink": "https://www.geoseaportal.de/",
-    "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>inspireidentifiziert</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
-    "id": 19
-  },
-  {
     "index": "csw_geoservice_dlr",
     "includeTimestamp": true,
     "type": "CSW",
@@ -1073,7 +1045,7 @@
       "climate"
     ],
     "defaultDCATCategory": [
-      "REGI"
+      "ENVI"
     ],
     "dateSourceFormats": [],
     "blacklistedIds": [],
@@ -1087,7 +1059,11 @@
     "defaultAttribution": "DWD",
     "defaultAttributionLink": "https://oai.dwd.de/oai/provider?verb=ListRecords&metadataPrefix=iso19139&set=mCLOUD",
     "disable": false,
-    "priority": null
+    "priority": null,
+    "cron": {
+      "pattern": "50 02 * * *",
+      "active": true
+    }
   },
   {
     "index": "dcat_govdata",

@@ -81,6 +81,7 @@ export class ConfigGeneralComponent implements OnInit {
       alias: [settings.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
       numberOfShards: [settings.numberOfShards],
       numberOfReplicas: [settings.numberOfReplicas],
+      cronOffset: [settings.cronOffset],
       proxy: [settings.proxy],
       mail: this.formBuilder.group({
         enabled: [settings.mail.enabled],

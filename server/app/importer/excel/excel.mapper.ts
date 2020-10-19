@@ -122,34 +122,32 @@ export class ExcelMapper extends GenericMapper {
         return undefined;
     }
 
-    getTemporal(): DateRange {
+    getTemporal(): DateRange[] {
         let range: string = this.columnValues[this.columnMap.Zeitraum];
         if (range) {
             try {
                 if (range.includes('-')) {
                     let splitted = range.split('-');
                     if (splitted.length === 2) {
-                        let dateFrom = this.parseDate(splitted[0]);
-                        let dateTo = this.parseDate(splitted[1]);
-                        return dateFrom && dateTo && !isNaN(dateFrom.getTime()) && !isNaN(dateTo.getTime()) ? {
-                            start: dateFrom,
-                            end: dateTo
-                        } : { custom: range };
+                        let dateFrom = this.parseDate(splitted[0].trim());
+                        let dateTo = this.parseDate(splitted[1].trim());
+                        return (dateFrom && !isNaN(dateFrom.getTime())) || (dateTo && !isNaN(dateTo.getTime())) ? [{
+                            gte: dateFrom,
+                            lte: dateTo
+                        }] : [];
                     }
                 }
 
-                let date = this.parseDate(range);
+                let date = this.parseDate(range.trim());
 
                 if (date === null || isNaN(date.getTime())) {
-                    return {custom: range};
                 } else {
-                    return {
-                        start: date,
-                        end: date
-                    };
+                    return [{
+                        gte: date,
+                        lte: date
+                    }];
                 }
             } catch {
-                return {custom: range};
             }
         }
     }
@@ -383,13 +381,41 @@ export class ExcelMapper extends GenericMapper {
      * @param input
      */
     private parseDate(input): Date {
-        const parts = input.match(/(\d+)/g);
-        // note parts[1]-1
-        try {
-            return new Date(parts[2], parts[1] - 1, parts[0]);
-        } catch (e) {
-            return null;
+        let date: Date = new Date(Date.now());
+        date.setHours(0,0,0,0);
+        switch (input.toLowerCase()) {
+            case "heute":
+                return date;
+            case "gestern":
+                date.setDate(date.getDate()-1);
+                return date;
+            case "letzter monat":
+                date.setDate(0);
+                return date;
+            case "vorletzter monat":
+                date.setMonth(date.getMonth()-1, 0);
+                return date;
+            case "aktuelles jahr":
+                return new Date(date.getFullYear(), 0, 1)
+            case "letztes jahr":
+                return new Date(date.getFullYear()-1, 12-1, 31)
         }
+
+        if(input.match(/^[0-9]+$/g)){
+            date.setDate(date.getDate() - input);
+            return date;
+        }
+
+        if(input.match(/^([0-9]+)\.([0-9]+)\.([0-9]+)$/g)) {
+            const parts = input.match(/([0-9]+)/g);
+            // note parts[1]-1
+            try {
+                return new Date(parts[2], parts[1] - 1, parts[0]);
+            } catch (e) {
+                return null;
+            }
+        }
+        return null
     }
 
 }

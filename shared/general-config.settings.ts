@@ -1,5 +1,6 @@
 export type GeneralSettings = {
     elasticSearchUrl: string,
+    cronOffset?: number,
     alias: string,
     numberOfShards?: number,
     numberOfReplicas?: number,

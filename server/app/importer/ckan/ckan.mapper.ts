@@ -227,27 +227,51 @@ export class CkanMapper extends GenericMapper {
         return author ? [author] : [];
     }
 
-    getTemporal(): DateRange {
-        let dates = this.getResourcesData();
-        let minDate = new Date(Math.min(...dates)); // Math.min and Math.max convert items to numbers
-        let maxDate = new Date(Math.max(...dates));
+    getTemporal(): DateRange[] {
+        let from = this.getTemporalFrom();
+        let to = this.getTemporalTo()
 
-        if (minDate && maxDate) {
-            return {
-                start: minDate,
-                end: maxDate
-            };
-        } else if (maxDate) {
-            return {
-                start: maxDate,
-                end: maxDate
-            };
-        } else if (minDate) {
-            return {
-                start: minDate,
-                end: minDate
-            };
+        if (from || to) {
+            return [{
+                gte: from,
+                lte: to
+            }];
         }
+
+        return undefined;
+    }
+
+    getTemporalFrom(): Date {
+        if(this.source.temporal_coverage_from){
+            return this.handleDate(this.source.temporal_coverage_from);
+        }
+        let extras = this.source.extras;
+        if (extras) {
+            for (let i = 0; i < extras.length; i++) {
+                let extra = extras[i];
+                if((extra.key === 'temporal_coverage_from' || extra.key === 'temporal_start') && extra.value) {
+                    return this.handleDate(extra.value);
+                }
+            }
+        }
+
+        return undefined;
+    }
+
+    getTemporalTo(): Date {
+        if(this.source.temporal_coverage_to){
+            return this.handleDate(this.source.temporal_coverage_to);
+        }
+        let extras = this.source.extras;
+        if (extras) {
+            for (let i = 0; i < extras.length; i++) {
+                let extra = extras[i];
+                if((extra.key === 'temporal_coverage_to' || extra.key === 'temporal_end') && extra.value) {
+                    return this.handleDate(extra.value);
+                }
+            }
+        }
+
         return undefined;
     }
 

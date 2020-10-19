@@ -542,47 +542,44 @@ export class OaiMapper extends GenericMapper {
         return undefined;
     }
 
-    getTemporal(): DateRange {
+    getTemporal(): DateRange[] {
         let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
 
+        let result: DateRange[] = [];
+
         let nodes = OaiMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', this.idInfo);
-        if (nodes.length > 1) {
-            this.log.warn(`Multiple time extents defined. Using only the first one. ${suffix}`);
-        }
-        if (nodes.length > 0) {
-            let begin = this.getTimeValue(nodes, 'begin');
-            let end = this.getTimeValue(nodes, 'end');
+
+        for (let i = 0; i < nodes.length; i++) {
+            let begin = this.getTimeValue(nodes[i], 'begin');
+            let end = this.getTimeValue(nodes[i], 'end');
 
             if (begin || end) {
-                return {
-                    start: begin ? begin : undefined,
-                    end: end ? end : undefined
-                }
+                result.push({
+                    gte: begin ? begin : undefined,
+                    lte: end ? end : undefined
+                });
             }
         }
-
-        // otherwise
-
         nodes = OaiMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimeInstant/gml:timePosition', this.idInfo);
+
         let times = nodes.map(node => node.textContent);
-        if (times.length === 1) {
-            return {
-                start: new Date(times[0]),
-                end: new Date(times[0])
-            };
-        } else if (times.length > 1) {
-            this.log.warn(`Multiple time instants defined: [${times.join(', ')}]. ${suffix}`);
-            return {
-                custom: times
-            };
+        for (let i = 0; i < times.length; i++) {
+            result.push({
+                gte: new Date(times[i]),
+                lte: new Date(times[i])
+            });
         }
+
+        if(result.length)
+            return result;
+
         return undefined;
     }
 
-    getTimeValue(nodes, beginOrEnd: 'begin' | 'end'): Date {
-        let dateNode = OaiMapper.select('./gml:' + beginOrEnd + 'Position', nodes[0], true);
+    getTimeValue(node, beginOrEnd: 'begin' | 'end'): Date {
+        let dateNode = OaiMapper.select('./gml:' + beginOrEnd + 'Position', node, true);
         if (!dateNode) {
-            dateNode = OaiMapper.select('./gml:' + beginOrEnd + '/*/gml:timePosition', nodes[0], true);
+            dateNode = OaiMapper.select('./gml:' + beginOrEnd + '/*/gml:timePosition', node, true);
         }
         try {
             if (!dateNode.hasAttribute('indeterminatePosition')) {

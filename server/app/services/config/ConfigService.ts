@@ -9,6 +9,7 @@ import {MappingDistribution, MappingItem} from '@shared/mapping.model';
 import {UrlUtils} from "../../utils/url.utils";
 import {OaiImporter} from "../../importer/oai/oai.importer";
 import {DcatImporter} from "../../importer/dcat/dcat.importer";
+import {ScheduleService} from "../ScheduleService";
 
 const log = getLogger();
 
@@ -178,7 +179,6 @@ export class ConfigService {
     static setGeneralConfig(config: GeneralSettings) {
 
         fs.writeFileSync(this.GENERAL_CONFIG_FILE, JSON.stringify(config, null, 2));
-
     }
 
     static getMappingDistribution(): MappingDistribution[] {
