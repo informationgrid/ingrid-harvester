@@ -23,6 +23,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {AuthenticationService} from './security/authentication.service';
+import { GoogleChartsModule } from 'angular-google-charts';
 
 registerLocaleData(localeDe);
 
@@ -61,7 +62,8 @@ const appRoutes: Routes = [
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    GoogleChartsModule
   ],
   providers: [
     {

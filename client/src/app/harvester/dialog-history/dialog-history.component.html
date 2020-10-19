@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>{{dialogTitle}}</h2>
+
+<mat-dialog-content>
+  <google-chart #chart
+                [type]="type"
+                [data]="data"
+                [columns]="columnNames"
+                [options]="options"
+                [width]="width"
+                [height]="height">
+  </google-chart>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Schließen</button>
+</mat-dialog-actions>

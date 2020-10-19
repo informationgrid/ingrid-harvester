@@ -7,6 +7,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.component';
 import {DialogLogComponent} from './dialog-log/dialog-log.component';
 import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
+import {DialogHistoryComponent} from './dialog-history/dialog-history.component';
 import {ImportLogMessage} from '../../../../server/app/model/import.result';
 import {flatMap, groupBy, mergeMap, tap, toArray} from 'rxjs/operators';
 import {MatSlideToggleChange} from '@angular/material';
@@ -150,6 +151,23 @@ export class HarvesterComponent implements OnInit, OnDestroy {
         this.harvesterService.updateHarvester(result).subscribe(
           () => this.fetchHarvester(),
           err => alert(err.message));
+      }
+    });
+  }
+
+  showHistory(harvester: Harvester) {
+    const dialogRef = this.dialog.open(DialogHistoryComponent, {
+      data: JSON.parse(JSON.stringify(harvester)),
+      width: '950px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe((result: Harvester) => {
+      if (result) {
+        this.harvesterService.updateHarvester(result).subscribe(() => {
+          // update view by modifying original object
+          Object.keys(harvester).forEach(key => harvester[key] = result[key]);
+        }, err => alert(err.message));
       }
     });
   }

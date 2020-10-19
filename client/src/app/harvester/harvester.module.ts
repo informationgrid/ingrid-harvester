@@ -15,6 +15,7 @@ import {ExcelHarvesterComponent} from './dialog-edit/excel-harvester/excel-harve
 import {CkanHarvesterComponent} from './dialog-edit/ckan-harvester/ckan-harvester.component';
 import {CswHarvesterComponent} from './dialog-edit/csw-harvester/csw-harvester.component';
 import {OaiHarvesterComponent} from './dialog-edit/oai-harvester/oai-harvester.component';
+import {DialogHistoryComponent} from './dialog-history/dialog-history.component';
 import {ImporterDetailComponent} from './importer-detail/importer-detail.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatCardModule, MatCheckboxModule, MatChipsModule, MatListModule, MatTabsModule} from '@angular/material';
@@ -25,6 +26,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {ChipListComponent} from './dialog-edit/chip-list/chip-list.component';
 import {MatBadgeModule} from "@angular/material/badge";
 import {DcatHarvesterComponent} from "./dialog-edit/dcat-harvester/dcat-harvester.component";
+import { GoogleChartsModule } from 'angular-google-charts';
 
 const harvesterRoutes: Routes = [
   {
@@ -39,6 +41,7 @@ const harvesterRoutes: Routes = [
     DialogSchedulerComponent,
     DialogLogComponent,
     DialogEditComponent,
+    DialogHistoryComponent,
     ExcelHarvesterComponent,
     CkanHarvesterComponent,
     CswHarvesterComponent,
@@ -66,12 +69,14 @@ const harvesterRoutes: Routes = [
         MatTabsModule,
         ReactiveFormsModule,
         MatCheckboxModule,
-        MatBadgeModule
+        MatBadgeModule,
+        GoogleChartsModule
     ],
   entryComponents: [
     DialogSchedulerComponent,
     DialogLogComponent,
-    DialogEditComponent
+    DialogEditComponent,
+    DialogHistoryComponent
   ],
   exports: [
     HarvesterComponent
