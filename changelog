@@ -1,3 +1,6 @@
+* Mon Oct 19 2020 Jan Bücher <jan.buecher@wemove.com> - 2.2.1
+- Fix error in deduplication by same id. (#2929)
+
 * Mon Oct 19 2020 Jan Bücher <jan.buecher@wemove.com> - 2.2.0
 - Index temporal information as date-range (#2898)
 - Parse description for temporal information in excel import (#2958)
