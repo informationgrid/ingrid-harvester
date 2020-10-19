@@ -208,8 +208,8 @@ export class DeduplicateUtils {
                                 urlsFromHit.length === urlsFromOtherHit.length
                                 && urlsFromHit.every(url => urlsFromOtherHit.includes(url));
 
-                            // Also Remove if both results have the same UUID
-                            remove = remove || (hit0.uuid === hit1.uuid);
+                            // Also Remove if both results have the same ID
+                            remove = remove || (hit0._id && hit1._id && (hit0._id === hit1._id));
 
                             if (remove) {
                                 let deleted = `Item to delete -> ID: '${hit1._id}', Title: '${hit1._source.title}', Index: '${hit1._index}'`;
