@@ -61,4 +61,8 @@ export class HarvesterService {
   uploadHarvesterConfig(file: File): Observable<void> {
     return this.http.post<void>('rest/api/harvester/filecontent', file);
   }
+
+  getHarvesterHistory(id:number): Observable<any> {
+    return this.http.get<any>('rest/api/harvester/history/'+id);
+  }
 }

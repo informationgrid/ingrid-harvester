@@ -1,14 +1,7 @@
 <h2 mat-dialog-title>{{dialogTitle}}</h2>
 
 <mat-dialog-content>
-  <google-chart #chart
-                [type]="type"
-                [data]="data"
-                [columns]="columnNames"
-                [options]="options"
-                [width]="width"
-                [height]="height">
-  </google-chart>
+  <canvas id="chart"></canvas>
 </mat-dialog-content>
 
 <mat-dialog-actions>

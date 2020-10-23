@@ -3,6 +3,7 @@ import {ImporterSettings} from '../importer.settings';
 import {DeduplicateUtils} from './deduplicate.utils';
 import {ElasticSettings} from './elastic.setting';
 import {Index} from '@shared/index.model';
+import {ElasticQueries} from "./elastic.queries";
 
 let elasticsearch = require('elasticsearch'),
     log = require('log4js').getLogger(__filename);
@@ -421,5 +422,14 @@ export class ElasticSearchUtils {
 
     search(indexName: string): Promise<any> {
         return this.client.search({ index: indexName });
+    }
+
+    async getHistory(baseIndex: string): Promise<any> {
+        let result = await this.client.search({
+            index: ['mcloud_harvester_statistic'],
+            body: ElasticQueries.findHistory(baseIndex),
+            size: 30
+        });
+        return result.hits.hits.map(entry => entry._source);
     }
 }

@@ -84,4 +84,13 @@ export class IndexService {
         const response = await this.elasticUtils.search(indexName);
         return response.hits.hits;
     }
+
+    async getHistory(id: number): Promise<any>{
+        const harvester = ConfigService.get().find(h => h.id === id);
+        let history = await this.elasticUtils.getHistory(harvester.index);
+        return {
+            harvester: harvester.description,
+            history: history
+        }
+    }
 }

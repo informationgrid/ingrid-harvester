@@ -26,7 +26,6 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {ChipListComponent} from './dialog-edit/chip-list/chip-list.component';
 import {MatBadgeModule} from "@angular/material/badge";
 import {DcatHarvesterComponent} from "./dialog-edit/dcat-harvester/dcat-harvester.component";
-import { GoogleChartsModule } from 'angular-google-charts';
 
 const harvesterRoutes: Routes = [
   {
@@ -69,8 +68,7 @@ const harvesterRoutes: Routes = [
         MatTabsModule,
         ReactiveFormsModule,
         MatCheckboxModule,
-        MatBadgeModule,
-        GoogleChartsModule
+        MatBadgeModule
     ],
   entryComponents: [
     DialogSchedulerComponent,

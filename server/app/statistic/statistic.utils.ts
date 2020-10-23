@@ -40,8 +40,17 @@ export class StatisticUtils {
     }
 
     async saveSummary(logMessage: ImportLogMessage, baseIndex: string){
+        let timestamp = new Date();
+
+        let errors = new Map();
+        this.collectErrorsOrWarnings(errors, logMessage.summary.appErrors);
+        this.collectErrorsOrWarnings(errors, logMessage.summary.elasticErrors);
+
+        let warnings = new Map();
+        this.collectErrorsOrWarnings(warnings, logMessage.summary.warnings.map(entry => entry[1]?entry[0]+": "+entry[1]:entry[0]));
+
         this.addDocToBulk({
-                timestamp: new Date(),
+                timestamp: timestamp,
                 base_index: baseIndex,
                 numRecords: logMessage.summary.numDocs,
                 numSkipped: logMessage.summary.skippedDocs.length,
@@ -49,8 +58,10 @@ export class StatisticUtils {
                 numRecordErrors: logMessage.summary.numErrors,
                 numAppErrors: logMessage.summary.appErrors.length,
                 numESErrors: logMessage.summary.elasticErrors.length,
-                duration: logMessage.duration
-        }, baseIndex+"_"+new Date().toISOString());
+                duration: logMessage.duration,
+                warnings: Array.from(warnings.entries()).map(entry => {return {message: entry[0], count: entry[1]}}),
+                errors: Array.from(errors.entries()).map(entry => {return {message: entry[0], count: entry[1]}})
+        }, baseIndex+"_"+timestamp.toISOString());
 
         await this.prepareIndex(elasticsearchMapping, elasticsearchSettings)
             .then(() => this.finishIndex())
@@ -58,6 +69,15 @@ export class StatisticUtils {
                 let message = 'Error occurred creating statistic index';
                 log.error(message, err);
             });
+    }
+
+    collectErrorsOrWarnings(result: Map<string, number>, messages: string[]){
+        messages.forEach(message => {
+            if(result.has(message))
+                result.set(message, result.get(message)+1);
+            else
+                result.set(message, 1);
+        })
     }
 
     /**

@@ -26,6 +26,26 @@ export const elasticsearchMapping = {
         },
         'duration': {
             'type': 'long'
+        },
+        'warnings': {
+            'properties': {
+                'message': {
+                    'type': 'keyword'
+                },
+                'count': {
+                    'type': 'number'
+                }
+            }
+        },
+        'errors': {
+            'properties': {
+                'message': {
+                    'type': 'keyword'
+                },
+                'count': {
+                    'type': 'number'
+                }
+            }
         }
     }
 };

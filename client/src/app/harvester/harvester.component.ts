@@ -155,9 +155,11 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     });
   }
 
-  showHistory(harvester: Harvester) {
+  async showHistory(harvester: Harvester) {
+    let data = await this.harvesterService.getHarvesterHistory(harvester.id).toPromise();
+    if(data && data.history.length > 0){
     const dialogRef = this.dialog.open(DialogHistoryComponent, {
-      data: JSON.parse(JSON.stringify(harvester)),
+      data: data,
       width: '950px',
       disableClose: true
     });
@@ -170,6 +172,10 @@ export class HarvesterComponent implements OnInit, OnDestroy {
         }, err => alert(err.message));
       }
     });
+    }
+    else {
+      alert('Keine Historie für diesen Importer vorhanden!');
+    }
   }
 
   handleActivation($event: MatSlideToggleChange, harvester: Harvester) {

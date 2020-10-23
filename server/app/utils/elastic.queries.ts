@@ -87,4 +87,16 @@ export class ElasticQueries {
             }
         };
     }
+
+    static findHistory(baseIndex: string): any {
+        return {
+            size: 30,
+            query: {
+                term: {'base_index': baseIndex}
+            },
+            sort: {
+                'timestamp': {"order" : "asc"}
+            }
+        };
+    }
 }

@@ -1,7 +1,9 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Inject, OnInit} from '@angular/core';
 import {Harvester} from '@shared/harvester';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Chart } from 'chart.js';
+
 
 
 @Component({
@@ -9,64 +11,161 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
   templateUrl: './dialog-history.component.html',
   styleUrls: ['./dialog-history.component.scss']
 })
-export class DialogHistoryComponent implements OnInit {
+export class DialogHistoryComponent implements OnInit, AfterViewInit {
 
   dialogTitle = 'Harvester Historie';
 
-  harvesterForm: FormGroup;
+  data ;
 
-  title = 'Browser market shares at a specific website, 2014';
-  type = 'LineChart';
-  data = [
-    ["Jan",  7.0, -0.2, -0.9, 3.9],
-    ["Feb",  6.9, 0.8, 0.6, 4.2],
-    ["Mar",  9.5,  5.7, 3.5, 5.7],
-    ["Apr",  14.5, 11.3, 8.4, 8.5],
-    ["May",  18.2, 17.0, 13.5, 11.9],
-    ["Jun",  21.5, 22.0, 17.0, 15.2],
-    ["Jul",  25.2, 24.8, 18.6, 17.0],
-    ["Aug",  26.5, 24.1, 17.9, 16.6],
-    ["Sep",  23.3, 20.1, 14.3, 14.2],
-    ["Oct",  18.3, 14.1, 9.0, 10.3],
-    ["Nov",  13.9,  8.6, 3.9, 6.6],
-    ["Dec",  9.6,  2.5,  1.0, 4.8]
-  ];
-  columnNames = ["Month", "Tokyo", "New York","Berlin", "Paris"];
-  options = {
-    hAxis: {
-      title: 'Month',
-      textStyle: {
-        color: '#FFFFFF'
-      }
-    },
-    vAxis:{
-      title: 'Temperature',
-      textStyle: {
-        color: '#FFFFFF'
-      }
-    },
-    pointSize:5,
-    backgroundColor: '#424242',
-    legend: {
-      textStyle: {
-        color: '#FFFFFF'
-      }
-    }
-  };
-  width = 800;
-  height = 400;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public harvester: Harvester,
+  chart;
+
+  constructor(@Inject(MAT_DIALOG_DATA) public history: any,
               public dialogRef: MatDialogRef<DialogHistoryComponent>,
               private formBuilder: FormBuilder) {
 
-      //this.buildForm(harvester);
-
-
-
+      this.data = history;
   }
 
   ngOnInit() {
 
   }
+
+  ngAfterViewInit() {
+    this.chart = new Chart('chart', {
+      type: 'line',
+      data: {
+        labels: this.data.history.map(entry => new Date(entry.timestamp)),
+        datasets: [
+          {
+            label : "Datensätze",
+            data: this.data.history.map(entry => entry.numRecords - entry.numSkipped),
+            borderColor: "blue",
+            backgroundColor: "blue",
+            fill: false,
+            cubicInterpolationMode: 'monotone',
+            yAxisID: 'left-y-axis'
+          },
+          {
+            label : "Fehler",
+            data: this.data.history.map(entry => entry.numRecordErrors+entry.numAppErrors+entry.numESErrors),
+            borderColor: "red",
+            backgroundColor: "red",
+            fill: false,
+            cubicInterpolationMode: 'monotone',
+            yAxisID: 'left-y-axis'
+          },
+          {
+            label : "Warnungen",
+            data: this.data.history.map(entry => entry.numWarnings),
+            borderColor: "orange",
+            backgroundColor: "orange",
+            fill: false,
+            cubicInterpolationMode: 'monotone',
+            yAxisID: 'left-y-axis'
+          },
+          {
+            label : "Dauer",
+            data: this.data.history.map(entry => entry.duration),
+            borderColor: "yellow",
+            backgroundColor: "yellow",
+            fill: false,
+            cubicInterpolationMode: 'monotone',
+            yAxisID: 'right-y-axis'
+          },
+        ],
+        raw: this.data.history
+      },
+      options: {
+        responsive: true,
+        title: {
+          text: this.data.harvester,
+          display: true
+        },
+        legend: {
+          position: 'bottom',
+        },
+        tooltips: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            // Use the footer callback to display the sum of the items showing in the tooltip
+            footer: function(tooltipItems, data) {
+              let entry = data.raw[tooltipItems[0].index];
+              let result = "\nAbgerufen: "+entry.numRecords+"\n";
+              result += "Übersprungen: "+entry.numSkipped+"\n";
+              if(entry.errors && entry.errors.length>0){
+                result += "\nFehler:\n";
+                entry.errors.sort((a, b) => b.count - a.count).slice(0, 5).forEach(error => result += "* "+error.message+(error.count>1?" ("+error.count+")":"")+"\n");
+              }
+              if(entry.warnings && entry.warnings.length>0){
+                result += "\nWarnungen:\n";
+                entry.warnings.sort((a, b) => b.count - a.count).slice(0, 5).forEach(warning => result += "* "+warning.message+(warning.count>1?" ("+warning.count+")":"")+"\n");
+              }
+              return result;
+            },
+          },
+          footerFontStyle: 'normal'
+        },
+        hover: {
+          mode: 'nearest',
+          intersect: true
+        },
+        scales: {
+          xAxes: [{
+            type: 'time',
+            distribution: 'series',
+            time: {
+              tooltipFormat: 'DD.MM.YYYY HH:mm:ss',
+              unit: 'day',
+              unitStepSize: 1,
+              displayFormats: {
+                'day': 'DD.MM.'
+              }
+            },
+            display: true,
+            scaleLabel: {
+              display: true,
+            },
+            gridLines: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            }
+          }],
+          yAxes: [{
+            id: 'left-y-axis',
+            position: 'left',
+            display: true,
+            scaleLabel: {
+              labelString: 'Anzahl',
+              display: true,
+            },
+            gridLines: {
+              color: 'rgba(255, 255, 255, 0.2)'
+            },
+            ticks: {
+              beginAtZero: true,
+              padding: 10
+            }
+          },
+            {
+              id: 'right-y-axis',
+              position: 'right',
+              display: true,
+              scaleLabel: {
+                labelString: 'Dauer (s)',
+                display: true,
+              },
+              ticks: {
+                beginAtZero: true,
+                padding: 10
+              },
+              gridLines: {
+                drawOnChartArea: false, // only want the grid lines for one axis to show up
+              }
+            }]
+        }
+      }
+    });
+  }
+
 }
