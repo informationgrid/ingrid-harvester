@@ -138,7 +138,7 @@ export const elasticsearchMapping = {
             'type': 'date'
         },
         'accrualPeriodicity': {
-            'type': 'text'
+            'type': 'keyword'
         },
         'accessRights': {
             'type': 'text'
