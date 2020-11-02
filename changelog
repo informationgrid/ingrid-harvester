@@ -1,3 +1,6 @@
+* Mon Nov 02 2020 Jan Bücher <jan.buecher@wemove.com> - 2.2.2
+- Change Mapping for accrualPeriodicity to keyword (#3042)
+
 * Mon Oct 19 2020 Jan Bücher <jan.buecher@wemove.com> - 2.2.1
 - Fix error in deduplication by same id. (#2929)
 
