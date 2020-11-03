@@ -2,12 +2,14 @@ import Authentication from '../../support/pageObjects/auth';
 import Constants from '../../support/constants';
 import HarvesterPage from '../../support/pageObjects/harvester/harvester';
 import HarvesterForm from '../../support/pageObjects/harvester/harvesterForm';
+import McloudHome from '../../support/pageObjects/mcloudHome';
 
 describe('Ckan-Harvester operations', () => {
   const constants = new Constants();
   const auth = new Authentication();
   const harvester = new HarvesterPage();
   const form = new HarvesterForm();
+  const mcloudPage = new McloudHome();
 
   beforeEach(() => {
     auth.apiLogIn();
@@ -116,21 +118,35 @@ describe('Ckan-Harvester operations', () => {
 
   it('should filter blacklisted IDs', () => {
     const toBlacklist = '7e526b8c-16bd-4f2c-a02b-8d4d0a29d310';
+    const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
 
-    harvester.seedCkanHarvester(constants.SEED_CKAN_ID);
-    harvester.openFormById(constants.SEED_CKAN_ID);
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    mcloudPage.visitMcloudHome();
+    mcloudPage.urlIsMcloudHome();
+    mcloudPage.searchForId(toBlacklist);
+    mcloudPage.checkSearchResultsIncludeName(resultName, true);
+
+    harvester.visit();
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.deleteListedIds(form.blacklistedId);
+    form.deleteListedIds(form.whitelistedId);
     form.setFields({
       blacklistedId: toBlacklist
     });
     form.saveHarvesterConfig();
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
-    harvester.importHarvesterById(constants.SEED_CKAN_ID);
-    harvester.waitForImportToFinish(constants.SEED_CKAN_ID);
+    mcloudPage.visitMcloudHome();
+    mcloudPage.urlIsMcloudHome();
+    mcloudPage.searchForId(toBlacklist);
+    mcloudPage.checkNoResults();
 
-    const importedDocNumber = harvester.getDocNumber(constants.SEED_CKAN_ID);
-    importedDocNumber.should('equal', '41');
-
-    harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
+    harvester.visit();
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.deleteListedIds(form.blacklistedId);
+    form.saveHarvesterConfig();
   });
 
   it('should exclude documents which have no data downloads (e.g. "rest")', () => {
@@ -154,62 +170,116 @@ describe('Ckan-Harvester operations', () => {
 
   it('should import whitelisted IDs if excluded by no data downloads', () => {
     const toWhitelist = '7e526b8c-16bd-4f2c-a02b-8d4d0a29d310';
+    const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
 
-    harvester.seedCkanHarvester(constants.SEED_CKAN_ID);
-    harvester.openFormById(constants.SEED_CKAN_ID);
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.deleteListedIds(form.blacklistedId);
+    form.deleteListedIds(form.whitelistedId);
     form.activateContainsDataDownload();
     form.setFields({
-      whitelistedId: toWhitelist,
       blacklistedDataFormat: 'rest'
     });
     form.saveHarvesterConfig();
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
-    harvester.importHarvesterById(constants.SEED_CKAN_ID);
-    harvester.waitForImportToFinish(constants.SEED_CKAN_ID);
+    mcloudPage.visitMcloudHome();
+    mcloudPage.urlIsMcloudHome();
+    mcloudPage.searchForId(toWhitelist);
+    mcloudPage.checkNoResults();
 
-    const importedDocNumber = harvester.getDocNumber(constants.SEED_CKAN_ID);
-    importedDocNumber.should('equal', '39');
+    harvester.visit();
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.setFields({
+      whitelistedId: toWhitelist
+    });
+    form.saveHarvesterConfig();
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    mcloudPage.visitMcloudHome();
+    mcloudPage.urlIsMcloudHome();
+    mcloudPage.searchForId(toWhitelist);
+    mcloudPage.checkSearchResultsIncludeName(resultName, true);
 
-    harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
+    harvester.visit();
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.deleteListedIds(form.whitelistedId);
+    form.clearField(form.blacklistedDataFormat);
+    form.deactivateContainsDataDownload();
+    form.saveHarvesterConfig();
   });
 
   it('should import whitelisted IDs even if excluded by group', () => {
     const toWhitelist = 'a98ef34f-8f8e-487b-b2ea-b2ddb54a41de';
+    const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
 
-    harvester.seedCkanHarvester(constants.SEED_CKAN_ID);
-    harvester.openFormById(constants.SEED_CKAN_ID);
+    harvester.openFormById(constants.CKAN_DB_ID);
     form.setFields({
-      whitelistedId: toWhitelist,
-      filterGroups: 'Datensätze'
+      filterGroups: 'apis'
     });
     form.saveHarvesterConfig();
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
 
-    harvester.importHarvesterById(constants.SEED_CKAN_ID);
-    harvester.waitForImportToFinish(constants.SEED_CKAN_ID);
+    mcloudPage.visitMcloudHome();
+    mcloudPage.urlIsMcloudHome();
+    mcloudPage.searchForId(toWhitelist);
+    mcloudPage.checkNoResults();
 
-    const importedDocNumber = harvester.getDocNumber(constants.SEED_CKAN_ID);
-    importedDocNumber.should('equal', '1');
+    harvester.visit();
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.setFields({
+      whitelistedId: toWhitelist
+    });
+    form.saveHarvesterConfig();
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    mcloudPage.visitMcloudHome();
+    mcloudPage.urlIsMcloudHome();
+    mcloudPage.searchForId(toWhitelist);
+    mcloudPage.checkSearchResultsIncludeName(resultName, true);
 
-    harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
+    harvester.visit();
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.deleteListedIds(form.whitelistedId);
+    form.deleteListedIds(form.filterGroups);
+    form.saveHarvesterConfig();
   });
 
   it('should import whitelisted IDs even if excluded by tag', () => {
     const toWhitelist = 'a98ef34f-8f8e-487b-b2ea-b2ddb54a41de';
+    const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
 
-    harvester.seedCkanHarvester(constants.SEED_CKAN_ID);
-    harvester.openFormById(constants.SEED_CKAN_ID);
+    harvester.openFormById(constants.CKAN_DB_ID);
     form.setFields({
-      filterTag: 'Sensor',
+      filterTag: 'Bahnhof'
+    });
+    form.saveHarvesterConfig();
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+
+    mcloudPage.visitMcloudHome();
+    mcloudPage.urlIsMcloudHome();
+    mcloudPage.searchForId(toWhitelist);
+    mcloudPage.checkNoResults();
+
+    harvester.visit();
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.setFields({
       whitelistedId: toWhitelist
     });
     form.saveHarvesterConfig();
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    mcloudPage.visitMcloudHome();
+    mcloudPage.urlIsMcloudHome();
+    mcloudPage.searchForId(toWhitelist);
+    mcloudPage.checkSearchResultsIncludeName(resultName, true);
 
-    harvester.importHarvesterById(constants.SEED_CKAN_ID);
-    harvester.waitForImportToFinish(constants.SEED_CKAN_ID);
-
-    const importedDocNumberSnd = harvester.getDocNumber(constants.SEED_CKAN_ID);
-    importedDocNumberSnd.should('equal', '2');
-
-    harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
+    harvester.visit();
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.deleteListedIds(form.whitelistedId);
+    form.deleteListedIds(form.filterTag);
+    form.saveHarvesterConfig();
   });
 });
