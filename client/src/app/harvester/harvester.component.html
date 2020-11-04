@@ -46,6 +46,10 @@
                     <mat-icon class="inline-valigned">import_export</mat-icon>
                     Import starten
                 </button>
+              <button mat-button (click)="showHistory(harvester)" data-test="history">
+                <mat-icon class="inline-valigned">history</mat-icon>
+                Historie
+              </button>
                 <button mat-button (click)="schedule(harvester)" data-test="schedule">
                     <mat-icon class="inline-valigned">schedule</mat-icon>
                     Planen

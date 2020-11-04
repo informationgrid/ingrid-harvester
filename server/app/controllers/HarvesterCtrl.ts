@@ -62,4 +62,9 @@ export class HarvesterCtrl {
 
     }
 
+    @Get('/history/:id')
+    async getHarvesterHistory(@PathParams('id') id: number): Promise<any[]> {
+        return await this.indexService.getHistory(id);
+    }
+
 }
