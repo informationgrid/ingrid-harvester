@@ -32,9 +32,9 @@ describe('Import log operations', () => {
   });
 
   it('should show no error in the logs after a successful import', () => {
-    harvester.importHarvesterById(constants.CKAN_DBD_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DBD_ID);
-    harvester.checkNoErrors(constants.CKAN_DBD_ID);
+    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.checkNoErrors(constants.CKAN_DB_ID);
   });
 
   it('should show an error in the harvester logs if the CKAN index name is invalid', () => {

@@ -14,13 +14,13 @@ describe('Harvester operations', () => {
   });
 
   it('should check that the type of a harvester cannot be changed during an update', () => {
-    harvester.openFormById(constants.CKAN_DBD_ID);
+    harvester.openFormById(constants.CKAN_DB_ID);
 
     form.fieldIsDisabled(form.type);
   });
 
   it('should check that startPosition cannot be negative or a character', () => {
-    harvester.openFormById(constants.CKAN_DBD_ID);
+    harvester.openFormById(constants.CKAN_DB_ID);
     cy.wait(500);
 
     form.setFields({startPosition: 'ffm'});
@@ -34,7 +34,7 @@ describe('Harvester operations', () => {
   });
 
   it('should check that maxRecords cannot be negative or a character', () => {
-    harvester.openFormById(constants.CKAN_DBD_ID);
+    harvester.openFormById(constants.CKAN_DB_ID);
     cy.wait(500);
 
     form.setFields({maxRecords: 'ffm'});
@@ -48,12 +48,12 @@ describe('Harvester operations', () => {
   });
 
   it('should show the old values if an update operation is aborted and the page is not refreshed', () => {
-    harvester.openFormById(constants.CKAN_DBD_ID);
+    harvester.openFormById(constants.CKAN_DB_ID);
     form.setFields({description: 'hold', indexName: 'the', defaultAttribution: 'door'});
 
     form.closeFormWithoutSaving();
 
-    harvester.openFormById(constants.CKAN_DBD_ID);
+    harvester.openFormById(constants.CKAN_DB_ID);
     form.checkFields({
       description: 'Deutsche Bahn Datenportal',
       indexName: 'ckan_db',

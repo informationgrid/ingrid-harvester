@@ -6,7 +6,6 @@ class Constants {
   CKAN_DB_ID = '6';
   CKAN_RNV_ID = '10';
   CKAN_TEST_ID = '3';
-  CKAN_DBD_ID = '';
   CKAN_GEONET_ID = '32';
 
   CSW_CODEDE_ID = '16';
