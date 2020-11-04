@@ -162,7 +162,6 @@ export class DcatImporter implements Importer {
         let rootNode = xml.getElementsByTagNameNS(DcatMapper.RDF, 'RDF')[0];
         let records =  DcatMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
 
-        let distributions = DcatMapper.select('./dcat:Distribution', rootNode);
 
         let ids = [];
         for (let i = 0; i < records.length; i++) {
@@ -187,12 +186,6 @@ export class DcatImporter implements Importer {
                 continue;
             }
 
-            let distributionIDs = DcatMapper.select('./dcat:distribution', records[i])
-                .map(node => node.getAttribute('rdf:resource'))
-                .filter(distibution => distibution);
-
-            let linkedDistributions = distributions.filter(distribution => distributionIDs.includes(distribution.getAttribute('rdf:about')))
-
             if (log.isDebugEnabled()) {
                 log.debug(`Import document ${i + 1} from ${records.length}`);
             }
@@ -200,7 +193,7 @@ export class DcatImporter implements Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], linkedDistributions, harvestTime, issued[i], this.summary);
+            let mapper = this.getMapper(this.settings, records[i], rootNode, harvestTime, issued[i], this.summary);
 
             let doc: any = await IndexDocument.create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -235,8 +228,8 @@ export class DcatImporter implements Importer {
             .catch(err => log.error('Error indexing DCAT record', err));
     }
 
-    getMapper(settings, record, linkedDistributions, harvestTime, issuedTime, summary): DcatMapper {
-        return new DcatMapper(settings, record, linkedDistributions, harvestTime, issuedTime, summary);
+    getMapper(settings, record, catalogPage, harvestTime, issuedTime, summary): DcatMapper {
+        return new DcatMapper(settings, record, catalogPage, harvestTime, issuedTime, summary);
     }
 
     static createRequestConfig(settings: DcatSettings): OptionsWithUri {
