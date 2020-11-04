@@ -127,11 +127,11 @@ class HarvesterForm {
   }
 
   deleteListedIds(field) {
-    cy.get(field).click().type('{backspace}{backspace}');
+    cy.get(field).click({force: true}).type('{backspace}{backspace}');
   }
 
-  clearFilterField(){
-    cy.get(this.recordFilter).clear();
+  clearField(field) {
+    cy.get(field).clear();
   }
 
   activateContainsDataDownload() {

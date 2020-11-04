@@ -110,8 +110,7 @@ describe('Csw-Harvester operations', () => {
 
   it('should successfully harvest after deleting an existing filter-label', () => {
     harvester.openFormById(constants.CSW_WSV_ID);
-
-    form.clearFilterField();
+    form.clearField(form.recordFilter);
     form.saveHarvesterConfig();
 
     harvester.importHarvesterById(constants.CSW_WSV_ID);
