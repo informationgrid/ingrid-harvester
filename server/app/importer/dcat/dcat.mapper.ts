@@ -113,6 +113,7 @@ export class DcatMapper extends GenericMapper {
 
                 let format: string = "Unbekannt";
                 let formatNode = DcatMapper.select('./dct:format', this.linkedDistributions[i], true);
+                let mediaTypeNode = DcatMapper.select('./dcat:mediaType', this.linkedDistributions[i], true);
                 if (formatNode) {
                     if (formatNode.textContent) {
                         format = formatNode.textContent;
@@ -121,6 +122,15 @@ export class DcatMapper extends GenericMapper {
                     }
                     if(format.startsWith("http://publications.europa.eu/resource/authority/file-type/")){
                         format = format.substring("http://publications.europa.eu/resource/authority/file-type/".length)
+                    }
+                } else if (mediaTypeNode) {
+                    if (mediaTypeNode.textContent) {
+                        format = mediaTypeNode.textContent;
+                    } else {
+                        format = mediaTypeNode.getAttribute('rdf:resource');
+                    }
+                    if(format.startsWith("https://www.iana.org/assignments/media-types/text/csv")){
+                        format = format.substring("https://www.iana.org/assignments/media-types/text/csv".length)
                     }
                 }
 
