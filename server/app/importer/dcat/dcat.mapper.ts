@@ -129,8 +129,8 @@ export class DcatMapper extends GenericMapper {
                     } else {
                         format = mediaTypeNode.getAttribute('rdf:resource');
                     }
-                    if(format.startsWith("https://www.iana.org/assignments/media-types/text/csv")){
-                        format = format.substring("https://www.iana.org/assignments/media-types/text/csv".length)
+                    if(format.startsWith("https://www.iana.org/assignments/media-types/")){
+                        format = format.substring("https://www.iana.org/assignments/media-types/".length)
                     }
                 }
 
