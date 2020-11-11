@@ -19,7 +19,7 @@ export class DcatPeriodicityUtils {
                 case "halbjährlich" :
                     result = "ANNUAL_2";
                     break;
-                case "anual_3" :
+                case "annual_3" :
                 case "4 monat" :
                     result = "ANNUAL_3";
                     break;

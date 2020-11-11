@@ -12,6 +12,7 @@ import {DcatSettings} from './dcat.settings';
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
+import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 
 let xpath = require('xpath');
 
@@ -481,11 +482,20 @@ export class DcatMapper extends GenericMapper {
         let accrualPeriodicity = DcatMapper.select('./dct:accrualPeriodicity', this.record, true);
         if (accrualPeriodicity) {
             let res = accrualPeriodicity.getAttribute('rdf:resource');
-            if(res.length)
-                return res.substr(res.lastIndexOf('/') + 1);
-            else if(accrualPeriodicity.textContent.trim.length > 0)
-                return accrualPeriodicity.textContent;
+            let periodicity;
+            if(res.length > 0)
+                periodicity =  res.substr(res.lastIndexOf('/') + 1);
+            else if(accrualPeriodicity.textContent.trim().length > 0)
+                periodicity =  accrualPeriodicity.textContent;
 
+
+            if(periodicity){
+                let period = DcatPeriodicityUtils.getPeriodicity(periodicity)
+                if(!period){
+                    this.summary.warnings.push(["Unbekannte Periodizität", periodicity]);
+                }
+                return period;
+            }
         }
         return undefined;
     }
