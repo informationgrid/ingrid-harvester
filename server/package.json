@@ -44,7 +44,8 @@
     "socket.io": "^2.3.0",
     "ts-httpexceptions": "^4.1.0",
     "xmldom": "^0.2.1",
-    "xpath": "0.0.27"
+    "xpath": "0.0.27",
+    "sparql-http-client": "^2.2.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.7",

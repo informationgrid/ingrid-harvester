@@ -1128,5 +1128,43 @@
       "pattern": "5 2 * * *"
     },
     "disable": false
+  },
+  {
+    "index": "sparql_limbo",
+    "includeTimestamp": true,
+    "priority": 0,
+    "type": "SPARQL",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "customCode": "doc.distribution.forEach(dist => {\n\tif(dist.accessURL.endsWith('.ttl'))\n\t\tdist.format = ['Turtle-File']\n});\ndoc.extras.displayContact = [{\n            \"name\": \"LimboConsortium\",\n            \"mbox\": null,\n\t\t\t\"homepage\": \"https://data.limbo-project.org/LimboConsortium\"\n          }];",
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "endpointUrl": "https://metadata.limbo-project.org/sparql",
+    "query": "PREFIX dcat: <http://www.w3.org/ns/dcat#>\nPREFIX dataid: <http://dataid.dbpedia.org/ns/core#>\nPREFIX prov: <http://www.w3.org/ns/prov#> \nPREFIX dct: <http://purl.org/dc/terms/>\nPREFIX dcatx: <http://www.example.org/>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\n\nSELECT DISTINCT ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?license (GROUP_CONCAT(DISTINCT ?keyword; SEPARATOR=\", \") AS ?keywords) (GROUP_CONCAT(DISTINCT ?dcat_theme; SEPARATOR=\", \") AS ?dcat_theme)\nWHERE {\n?limbo_ds dataid:group ?group;\n            dct:identifier ?id;\n            dcat:distribution ?limbo_dist;\n            dct:issued ?issued;\n            dct:license ?license;\n            prov:wasDerivedFrom ?mcloud_dist.\nOPTIONAL {?limbo_ds dct:publisher ?publisher.}\n?limbo_dist dcat:downloadURL ?distribution_url ;\n            dcatx:localId ?distribution_title.\n?mcloud_ds dcat:distribution ?mcloud_dist ;\n            dct:title ?mcloud_title;\n            dct:description ?mcloud_description;\n            dcat:keyword ?keyword;\n            dcat:theme ?dcat_theme;\n            dcat:landingPage ?mcloud_landingPage .\n\nBIND (CONCAT(\"LIMBO - \",?mcloud_title) as ?title).\nBIND (CONCAT(\"Limbo-Daten f&uuml;r <a href=\\\"\",?mcloud_landingPage ,\"\\\">\",?mcloud_title,\"</a> \\r\\n\\r\\nOriginal:\\r\\n\",?mcloud_description) as ?description).\nBIND (?limbo_ds as ?source_link)\n\nFILTER (?group = 'org.limbo')\nFILTER(!EXISTS { ?x owl:priorVersion ?limbo_ds })\n}\nGROUP BY ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?license",
+    "filterTags": [],
+    "filterThemes": [],
+    "id": 48,
+    "description": "LIMBO",
+    "defaultAttribution": "LIMBO",
+    "defaultAttributionLink": "https://www.limbo-project.org/",
+    "ckanBaseUrl": "http://ckan.qrowd.aksw.org",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "requestType": "Search",
+    "additionalSearchFilter": "",
+    "providerPrefix": "",
+    "providerField": "organization",
+    "rules": {
+      "containsDocumentsWithData": false
+    },
+    "eitherKeywords": []
   }
 ]

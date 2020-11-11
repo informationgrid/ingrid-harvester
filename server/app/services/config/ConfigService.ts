@@ -10,6 +10,7 @@ import {UrlUtils} from "../../utils/url.utils";
 import {OaiImporter} from "../../importer/oai/oai.importer";
 import {DcatImporter} from "../../importer/dcat/dcat.importer";
 import {ScheduleService} from "../ScheduleService";
+import {SparqlImporter} from "../../importer/sparql/sparql.importer";
 
 const log = getLogger();
 
@@ -112,6 +113,7 @@ export class ConfigService {
                     else if (config.type && config.type.endsWith('CSW')) return {...CswImporter.defaultSettings, ...config};
                     else if (config.type === 'OAI') return {...OaiImporter.defaultSettings, ...config};
                     else if (config.type === 'DCAT') return {...DcatImporter.defaultSettings, ...config};
+                    else if (config.type === 'SPARQL') return {...SparqlImporter.defaultSettings, ...config};
                 })
                 .filter(config => config); // remove all invalid configurations
         } else {

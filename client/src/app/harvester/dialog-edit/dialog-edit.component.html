@@ -16,6 +16,7 @@
             </ng-container>
             <mat-option value="OAI">OAI</mat-option>
             <mat-option value="DCAT">DCAT</mat-option>
+            <mat-option value="SPARQL">SPARQL</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -120,10 +121,16 @@
                          class="flex-column"></app-oai-harvester>
 
       <app-dcat-harvester *ngIf="harvesterForm.get('type').value === 'DCAT'" [form]="harvesterForm"
-                         [model]="harvester"
-                         [rulesTemplate]="rules"
-                         class="flex-column">
+                          [model]="harvester"
+                          [rulesTemplate]="rules"
+                          class="flex-column">
       </app-dcat-harvester>
+
+      <app-sparql-harvester *ngIf="harvesterForm.get('type').value === 'SPARQL'" [form]="harvesterForm"
+                          [model]="harvester"
+                          [rulesTemplate]="rules"
+                          class="flex-column">
+      </app-sparql-harvester>
 
       <ng-template #rules>
         <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
