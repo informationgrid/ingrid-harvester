@@ -11,6 +11,7 @@ import {Summary} from '../../model/summary';
 import {CkanRules} from './ckan.rules';
 import {throwError} from 'rxjs';
 import {ImporterSettings} from "../../importer.settings";
+import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 
 let mapping = require('../../../mappings.json');
 let markdown = require('markdown').markdown;
@@ -302,7 +303,43 @@ export class CkanMapper extends GenericMapper {
     }
 
     getAccrualPeriodicity(): string {
-        return this.source.update_cycle;
+        let raw = undefined;
+
+        if(this.source.update_cycle){
+            raw = this.source.update_cycle;
+        }
+
+        if(!raw && this.source.temporal_granularity){
+            raw = this.source.temporal_granularity;
+        }
+
+        if(!raw && this.source.frequency){
+            raw = this.source.frequency;
+        }
+
+        if(!raw && this.source.extras){
+            let extras = this.source.extras;
+            let temporal_granularity = extras.find(extra => extra.key === 'temporal_granularity');
+            if(temporal_granularity){
+                raw = temporal_granularity.value;
+
+                let temporal_granularity_factor = extras.find(extra => extra.key === 'temporal_granularity_factor');
+                if(temporal_granularity_factor && temporal_granularity_factor.value !== "1"){
+                    raw = temporal_granularity_factor.value + ' ' + temporal_granularity.value;
+                }
+            }
+        }
+
+
+        let result = undefined;
+        if(raw){
+            result = DcatPeriodicityUtils.getPeriodicity(raw);
+            if(!result){
+                    this.summary.warnings.push(["Unbekannte Periodizität", raw]);
+            }
+        }
+
+        return result;
     }
 
     getKeywords(): string[] {

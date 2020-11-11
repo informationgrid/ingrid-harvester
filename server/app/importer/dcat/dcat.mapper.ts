@@ -481,7 +481,11 @@ export class DcatMapper extends GenericMapper {
         let accrualPeriodicity = DcatMapper.select('./dct:accrualPeriodicity', this.record, true);
         if (accrualPeriodicity) {
             let res = accrualPeriodicity.getAttribute('rdf:resource');
-            return res.substr(res.lastIndexOf('/')+1);
+            if(res.length)
+                return res.substr(res.lastIndexOf('/') + 1);
+            else if(accrualPeriodicity.textContent.trim.length > 0)
+                return accrualPeriodicity.textContent;
+
         }
         return undefined;
     }

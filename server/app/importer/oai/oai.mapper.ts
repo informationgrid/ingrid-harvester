@@ -12,6 +12,7 @@ import {OaiSettings} from './oai.settings';
 import {throwError} from "rxjs";
 import doc = Mocha.reporters.doc;
 import {ImporterSettings} from "../../importer.settings";
+import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 
 let xpath = require('xpath');
 
@@ -636,7 +637,11 @@ export class OaiMapper extends GenericMapper {
         // Multiple resourceMaintenance elements are allowed. If present, use the first one
         let freq = OaiMapper.select('./*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode', this.idInfo);
         if (freq.length > 0) {
-            return freq[0].getAttribute('codeListValue');
+            let periodicity = DcatPeriodicityUtils.getPeriodicity(freq[0].getAttribute('codeListValue'))
+            if(!periodicity){
+                this.summary.warnings.push(["Unbekannte Periodizität", freq[0].getAttribute('codeListValue')]);
+            }
+            return periodicity;
         }
         return undefined;
     }

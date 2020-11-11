@@ -76,7 +76,7 @@ export class ExcelImporter implements Importer {
             'Datenformat': 21,
             'Zeitraum': 22,
             'Aktualisierungsdatum': 23,
-            'Echtzeitdaten': 24,
+            'Periodizitaet': 24,
             'Lizenzbeschreibung': 25,
             'Lizenzlink': 26,
             'DatenhaltendeStelleLang': 27,

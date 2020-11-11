@@ -6,6 +6,7 @@ import {ExcelSettings} from './excel.settings';
 import {RequestDelegate} from '../../utils/http-request.utils';
 import {OptionsWithUri} from 'request-promise';
 import {ImporterSettings} from "../../importer.settings";
+import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -312,6 +313,14 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getAccrualPeriodicity(): string {
+        let value = this.columnValues[this.columnMap.Periodizitaet];
+        if(value){
+            let periodicity = DcatPeriodicityUtils.getPeriodicity(value);
+            if(!periodicity){
+                this.summary.warnings.push(["Unbekannte Periodizität", value]);
+            }
+            return periodicity;
+        }
         return undefined;
     }
 
