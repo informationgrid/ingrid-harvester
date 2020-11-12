@@ -28,7 +28,8 @@
     ],
     "CSV": [
       "http://publications.europa.eu/resource/authority/file-type/csv",
-      "csv"
+      "csv",
+      "text/csv"
     ],
     "Dateidownload": [
       "www:download-1.0-http--download",
@@ -127,7 +128,8 @@
     ],
     "XML": [
       "http://publications.europa.eu/resource/authority/file-type/xml",
-      "xml"
+      "xml",
+      "text/xml"
     ],
     "ZIP": [
       "http://publications.europa.eu/resource/authority/file-type/zip",
