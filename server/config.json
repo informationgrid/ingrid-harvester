@@ -2,6 +2,7 @@
   {
     "index": "excel",
     "includeTimestamp": true,
+    "priority": null,
     "type": "EXCEL",
     "maxRecords": 100,
     "startPosition": 0,
@@ -22,6 +23,7 @@
   {
     "index": "ckan_db",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -66,6 +68,7 @@
   {
     "index": "ckan_offenesdatenportal",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -107,6 +110,7 @@
   {
     "index": "ckan_portal_hamburg",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -168,6 +172,7 @@
   {
     "index": "ckan_opendata_rnv",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -216,6 +221,7 @@
   {
     "index": "ckan_opendata_nrw",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -276,6 +282,7 @@
   {
     "index": "csw_wsv",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -309,6 +316,7 @@
   {
     "index": "csw_mdi",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -342,6 +350,7 @@
   {
     "index": "csw_bfg",
     "includeTimestamp": true,
+    "priority": null,
     "type": "BFG-CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -375,6 +384,7 @@
   {
     "index": "csw_dwd",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -409,6 +419,7 @@
   {
     "index": "csw_codede",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CODEDE-CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -442,6 +453,7 @@
   {
     "index": "csw_bsh",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -475,6 +487,7 @@
   {
     "index": "csw_geoservice_dlr",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -510,6 +523,7 @@
   {
     "index": "csw_ils_geonode",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -541,6 +555,7 @@
   {
     "index": "ckan_berlin",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -581,6 +596,7 @@
   {
     "index": "ckan_rlp",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -627,6 +643,7 @@
   {
     "index": "ckan_schleswig_holstein",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 1,
@@ -670,6 +687,7 @@
   {
     "index": "ckan_govdata",
     "includeTimestamp": true,
+    "priority": -10,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -696,7 +714,6 @@
     "requestType": "ListWithResources",
     "markdownAsDescription": false,
     "defaultLicense": null,
-    "priority": -10,
     "id": 29,
     "description": "GovData",
     "defaultAttribution": "GovData",
@@ -709,6 +726,7 @@
   {
     "index": "csw_geomis_sachsen",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -739,6 +757,7 @@
   {
     "index": "ckan_geonet_mrn",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -782,6 +801,7 @@
   {
     "index": "csw_bkg",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -812,6 +832,7 @@
   {
     "index": "csw_geoportal_brandenburg",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -835,7 +856,6 @@
     "defaultAttributionLink": null,
     "recordFilter": "            \n<ogc:Filter>\n    <ogc:And>\n        <ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n            <ogc:Literal>*Datenlizenz Deutschland*</ogc:Literal>\n        </ogc:PropertyIsLike>\n        <ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>Keyword</ogc:PropertyName>\n            <ogc:Literal>Gewässer</ogc:Literal>\n        </ogc:PropertyIsLike>\n    </ogc:And>\n</ogc:Filter>\n",
     "disable": false,
-    "priority": null,
     "cron": {
       "pattern": "55 02 * * *",
       "active": true
@@ -844,6 +864,7 @@
   {
     "index": "csw_geodaten_mv",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -867,7 +888,6 @@
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n\t<ogc:And>\n\t\t<ogc:Or>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>*Datenlizenz Deutschland*</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>*Creative Commons*</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t</ogc:Or>\n\t\t<ogc:Or>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>subject</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>Verkehrsnetze</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>Subject</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>Gew?ssernetz</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>transportation</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>inlandWaters</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t</ogc:Or>\n\t</ogc:And>\n</ogc:Filter>",
     "disable": false,
-    "priority": null,
     "cron": {
       "pattern": "50 02 * * *",
       "active": true
@@ -876,6 +896,7 @@
   {
     "index": "csw_eba_laermkartierung",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -899,7 +920,6 @@
     "defaultAttributionLink": null,
     "recordFilter": "            <ogc:Filter>\n               <ogc:PropertyIsEqualTo>\n                    <ogc:PropertyName>subject</ogc:PropertyName>\n                    <ogc:Literal>opendata</ogc:Literal>\n               </ogc:PropertyIsEqualTo>\n            </ogc:Filter>",
     "disable": false,
-    "priority": null,
     "cron": {
       "pattern": "37 02 * * *",
       "active": true
@@ -908,6 +928,7 @@
   {
     "index": "csw_geoportal_bw",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -934,12 +955,12 @@
     "cron": {
       "active": true,
       "pattern": "55 02 * * *"
-    },
-    "priority": null
+    }
   },
   {
     "index": "csw_metaver_hb",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -971,6 +992,7 @@
   {
     "index": "csw_metaver_st",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -998,7 +1020,6 @@
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Verkehr</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
     "disable": false,
-    "priority": null,
     "cron": {
       "pattern": "47 02 * * *",
       "active": true
@@ -1007,6 +1028,7 @@
   {
     "index": "csw_metaver_bb",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -1030,7 +1052,6 @@
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Lärm</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
     "disable": false,
-    "priority": null,
     "cron": {
       "active": true,
       "pattern": "45 02 * * *"
@@ -1039,6 +1060,7 @@
   {
     "index": "oai_dwd",
     "includeTimestamp": true,
+    "priority": null,
     "type": "OAI",
     "maxRecords": 100,
     "startPosition": 1,
@@ -1061,7 +1083,6 @@
     "defaultAttribution": "DWD",
     "defaultAttributionLink": "https://oai.dwd.de/oai/provider?verb=ListRecords&metadataPrefix=iso19139&set=mCLOUD",
     "disable": false,
-    "priority": null,
     "cron": {
       "pattern": "50 02 * * *",
       "active": true
@@ -1070,6 +1091,7 @@
   {
     "index": "dcat_govdata",
     "includeTimestamp": true,
+    "priority": -10,
     "type": "DCAT",
     "maxRecords": 100,
     "startPosition": 0,
@@ -1084,19 +1106,21 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
-    "catalogUrl": "https://www.govdata.de/ckan/catalog/catalog.rdf?fq=groups:tran",
+    "catalogUrl": "https://www.govdata.de/ckan/catalog/catalog.rdf?fq=groups:tran+NOT+tags:bauleitplan",
     "filterTags": [],
     "filterThemes": [],
-    "priority": -10,
     "id": 46,
     "description": "GovData DCAT-AP",
     "defaultAttribution": "GovData",
     "defaultAttributionLink": "https://www.govdata.de/",
-    "disable": true
+    "disable": false,
+    "providerPrefix": "GovData: ",
+    "dcatProviderField": "creator"
   },
   {
     "index": "dcat_hro",
     "includeTimestamp": true,
+    "priority": null,
     "type": "DCAT",
     "maxRecords": 100,
     "startPosition": 0,
@@ -1122,7 +1146,6 @@
     "defaultAttributionLink": null,
     "providerPrefix": "",
     "dcatProviderField": "maintainer",
-    "priority": null,
     "cron": {
       "active": true,
       "pattern": "5 2 * * *"
