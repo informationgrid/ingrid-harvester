@@ -115,9 +115,9 @@ export class StatisticUtils {
 
     finishIndex() {
         return this.client.cluster.health({waitForStatus: 'yellow'})
-            .then(() => this.sendBulkData(false))
+            .then(() =>
+                this.sendBulkData(false))
             .then(() => {
-                this.client.close();
                 log.info('Successfully added statistic data into index: ' + this.indexName);
             })
             .catch(err => log.error('Error finishing index', err));
