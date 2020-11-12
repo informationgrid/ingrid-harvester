@@ -33,7 +33,7 @@ export const elasticsearchMapping = {
                     'type': 'keyword'
                 },
                 'count': {
-                    'type': 'number'
+                    'type': 'long'
                 }
             }
         },
@@ -43,7 +43,7 @@ export const elasticsearchMapping = {
                     'type': 'keyword'
                 },
                 'count': {
-                    'type': 'number'
+                    'type': 'long'
                 }
             }
         }
