@@ -1193,5 +1193,32 @@
       "containsDocumentsWithData": false
     },
     "eitherKeywords": []
+  },
+  {
+    "index": "csw_dfs",
+    "includeTimestamp": true,
+    "priority": 0,
+    "type": "CSW",
+    "maxRecords": 10,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "aviation"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "getRecordsUrl": "https://haleconnect.com/csw",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 49,
+    "description": "Deutsche Flugsicherung",
+    "defaultAttribution": "Deutsche Flugsicherung",
+    "defaultAttributionLink": "https://www.dfs.de",
+    "recordFilter": "            <ogc:Filter>\n               <ogc:PropertyIsEqualTo>\n                    <ogc:PropertyName>apiso:OrganisationName</ogc:PropertyName>\n                    <ogc:Literal>DFS</ogc:Literal>\n               </ogc:PropertyIsEqualTo>\n            </ogc:Filter>"
   }
 ]
