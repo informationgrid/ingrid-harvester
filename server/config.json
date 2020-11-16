@@ -1201,7 +1201,7 @@
     "type": "CSW",
     "maxRecords": 10,
     "startPosition": 1,
-    "customCode": null,
+    "customCode": "if(doc.distribution[0].format[0] === 'onLine'){\n    doc.distribution = [];\n} else {\n    doc.extras.metadata.isValid = false;\n}",
     "defaultMcloudSubgroup": [
       "aviation"
     ],
