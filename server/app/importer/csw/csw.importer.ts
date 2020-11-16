@@ -156,20 +156,32 @@ export class CswImporter implements Importer {
 
     createDataServiceCoupling(){
         let bulkData = this.elastic._bulkData;
-        let servicesByDataIdentifier = []
+        let servicesByDataIdentifier = [];
+        let servicesByFileIdentifier = [];
         for(let i = 0; i < bulkData.length; i++){
             let doc = bulkData[i];
             if(doc.extras){
                 let harvestedData = doc.extras.harvested_data;
                 let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
                 let identifierList = CswMapper.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
-                if(identifierList){
+                if(identifierList && identifierList.length > 0){
                     for(let j = 0; j < identifierList.length; j++){
                         let identifer = identifierList[j].textContent;
                         if(!servicesByDataIdentifier[identifer]){
                             servicesByDataIdentifier[identifer] = [];
                         }
                         servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distribution);
+                    }
+                } else {
+                    identifierList = CswMapper.select('.//srv:operatesOn', xml)
+                    if (identifierList && identifierList.length > 0) {
+                        for (let j = 0; j < identifierList.length; j++) {
+                            let identifer = identifierList[j].getAttribute("uuidref")
+                            if (!servicesByFileIdentifier[identifer]) {
+                                servicesByFileIdentifier[identifer] = [];
+                            }
+                            servicesByFileIdentifier[identifer] = servicesByFileIdentifier[identifer].concat(doc.distribution);
+                        }
                     }
                 }
             }
@@ -186,6 +198,15 @@ export class CswImporter implements Importer {
                         let identifer = identifierList[j].textContent;
                         if(servicesByDataIdentifier[identifer]){
                             doc.distribution = doc.distribution.concat(servicesByDataIdentifier[identifer]);
+                        }
+                    }
+                }
+                identifierList = CswMapper.select('.//gmd:fileIdentifier/gco:CharacterString', xml)
+                if(identifierList){
+                    for(let j = 0; j < identifierList.length; j++){
+                        let identifer = identifierList[j].textContent;
+                        if(servicesByFileIdentifier[identifer]){
+                            doc.distribution = doc.distribution.concat(servicesByFileIdentifier[identifer]);
                         }
                     }
                 }
