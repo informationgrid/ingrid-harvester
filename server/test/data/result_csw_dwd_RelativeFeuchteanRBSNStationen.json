@@ -73,8 +73,8 @@
       "meteorology",
       "Deutschland"
     ],
-    "temporal": {
-      "start": "1969-12-31T23:00:00.000Z"
-    }
+    "temporal": [{
+      "gte": "1969-12-31T23:00:00.000Z"
+    }]
   }
 }

@@ -43,10 +43,10 @@
       "title" : "Haftungsausschluss",
       "description" : "Dieser Datenbestand kann Fehler enthalten und/oder unvollständig sein. DB Cargo AG übernimmt keine Haftung und leistet keinerlei Gewähr."
     } ],
-    "temporal": {
-      "start": "2017-05-12T11:48:15.200Z",
-      "end": "2017-05-12T11:48:15.200Z"
-    },
+    "temporal": [{
+      "gte": "2017-05-12T11:48:15.200Z",
+      "lte": "2017-05-12T11:48:15.200Z"
+    }],
     "groups" : [ "APIs" ],
     "metadata" : {
       "source" : {
