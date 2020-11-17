@@ -1192,7 +1192,8 @@
     "rules": {
       "containsDocumentsWithData": false
     },
-    "eitherKeywords": []
+    "eitherKeywords": [],
+    "disable": true
   },
   {
     "index": "csw_dfs",
