@@ -13,6 +13,7 @@ import {throwError} from "rxjs";
 import doc = Mocha.reporters.doc;
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
+import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 
 let xpath = require('xpath');
 
@@ -661,13 +662,15 @@ export class CswMapper extends GenericMapper {
 
                         if (!json.id || !json.url) continue;
 
-                        let requestConfig = this.getUrlCheckRequestConfig(json.url);
-                        license = {
-                            id: json.id,
-                            title: json.name,
-                            url: await UrlUtils.urlWithProtocolFor(requestConfig)
-                        };
-
+                        license = await DcatLicensesUtils.get(json.url);
+                        if (!license) {
+                            let requestConfig = this.getUrlCheckRequestConfig(json.url);
+                            license = {
+                                id: json.id,
+                                title: json.name,
+                                url: await UrlUtils.urlWithProtocolFor(requestConfig)
+                            };
+                        }
                     } catch (ignored) {
                     }
                 }

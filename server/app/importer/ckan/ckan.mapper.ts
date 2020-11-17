@@ -12,6 +12,7 @@ import {CkanRules} from './ckan.rules';
 import {throwError} from 'rxjs';
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
+import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 
 let mapping = require('../../../mappings.json');
 let markdown = require('markdown').markdown;
@@ -477,6 +478,10 @@ export class CkanMapper extends GenericMapper {
             this.log.warn(msg);
             this.summary.warnings.push(['Missing license', msg]);
         } else {
+            let license = await DcatLicensesUtils.get(this.source.license_url);
+            if(license) return license;
+            license = await DcatLicensesUtils.get(this.source.license_title);
+            if(license) return license;
             return {
                 id: this.source.license_id ? this.source.license_id : 'unknown',
                 title: this.source.license_title,
