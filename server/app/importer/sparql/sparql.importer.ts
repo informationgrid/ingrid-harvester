@@ -158,12 +158,12 @@ export class SparqlImporter implements Importer {
         }
 
         let now = new Date(Date.now());
-        let issued;
+        let storedData;
 
         if (this.settings.dryRun) {
-            issued = ids.map(() => now);
+            storedData = ids.map(() => now);
         } else {
-            issued = await this.elastic.getIssuedDates(ids);
+            storedData = await this.elastic.getStoredData(ids);
         }
 
         for (let i = 0; i < records.length; i++) {
@@ -182,7 +182,7 @@ export class SparqlImporter implements Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], harvestTime, issued[i], this.summary);
+            let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary);
 
             let doc: any = await IndexDocument.create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -217,8 +217,8 @@ export class SparqlImporter implements Importer {
             .catch(err => log.error('Error indexing DCAT record', err));
     }
 
-    getMapper(settings, record, harvestTime, issuedTime, summary): SparqlMapper {
-        return new SparqlMapper(settings, record, harvestTime, issuedTime, summary);
+    getMapper(settings, record, harvestTime, storedData, summary): SparqlMapper {
+        return new SparqlMapper(settings, record, harvestTime, storedData, summary);
     }
 
 

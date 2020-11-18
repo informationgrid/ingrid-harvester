@@ -76,9 +76,7 @@ export abstract class GenericMapper {
 
     abstract getGeneratedId(): string;
 
-    getMetadataModified(): Date {
-        return new Date(Date.now());
-    }
+    abstract getMetadataModified(): Date;
 
     abstract getMetadataSource(): any;
 

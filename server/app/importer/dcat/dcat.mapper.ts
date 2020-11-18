@@ -48,7 +48,7 @@ export class DcatMapper extends GenericMapper {
     private readonly catalogPage: any;
     private readonly linkedDistributions: any;
     private harvestTime: any;
-    private readonly issued: string;
+    private readonly storedData: any;
 
 //    protected readonly idInfo; // : SelectedValue;
     private settings: DcatSettings;
@@ -63,12 +63,12 @@ export class DcatMapper extends GenericMapper {
     };
 
 
-    constructor(settings, record, catalogPage, harvestTime, issued, summary) {
+    constructor(settings, record, catalogPage, harvestTime, storedData, summary) {
         super();
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.issued = issued;
+        this.storedData = storedData;
         this.summary = summary;
         this.catalogPage = catalogPage;
 
@@ -397,7 +397,16 @@ export class DcatMapper extends GenericMapper {
     }
 
     getMetadataIssued(): Date {
-        return this.issued ? new Date(this.issued) : new Date(Date.now());
+        return this.storedData.issued ? new Date(this.storedData.issued) : new Date(Date.now());
+    }
+
+    getMetadataModified(): Date {
+        if(this.storedData.modified && this.storedData.dataset_modified){
+            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
+            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
+                return new Date(this.storedData.modified);
+        }
+        return new Date(Date.now());
     }
 
     getMetadataSource(): any {

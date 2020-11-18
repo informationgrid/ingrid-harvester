@@ -169,12 +169,12 @@ export class DcatImporter implements Importer {
         }
 
         let now = new Date(Date.now());
-        let issued;
+        let storedData;
 
         if (this.settings.dryRun) {
-            issued = ids.map(() => now);
+            storedData = ids.map(() => now);
         } else {
-            issued = await this.elastic.getIssuedDates(ids);
+            storedData = await this.elastic.getStoredData(ids);
         }
 
         for (let i = 0; i < records.length; i++) {
@@ -193,7 +193,7 @@ export class DcatImporter implements Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], rootNode, harvestTime, issued[i], this.summary);
+            let mapper = this.getMapper(this.settings, records[i], rootNode, harvestTime, storedData[i], this.summary);
 
             let doc: any = await IndexDocument.create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -228,8 +228,8 @@ export class DcatImporter implements Importer {
             .catch(err => log.error('Error indexing DCAT record', err));
     }
 
-    getMapper(settings, record, catalogPage, harvestTime, issuedTime, summary): DcatMapper {
-        return new DcatMapper(settings, record, catalogPage, harvestTime, issuedTime, summary);
+    getMapper(settings, record, catalogPage, harvestTime, storedData, summary): DcatMapper {
+        return new DcatMapper(settings, record, catalogPage, harvestTime, storedData, summary);
     }
 
     static createRequestConfig(settings: DcatSettings): OptionsWithUri {

@@ -14,7 +14,7 @@ export class ExcelMapper extends GenericMapper {
 
     data;
     id;
-    issuedExisting;
+    storedData;
     columnValues: string[] | Date;
     columnMap;
     workbook;
@@ -27,7 +27,7 @@ export class ExcelMapper extends GenericMapper {
         this.settings = settings;
         this.data = data;
         this.id = data.id;
-        this.issuedExisting = data.issued;
+        this.storedData = data.storedData;
         this.columnValues = data.columnValues;
         this.columnMap = data.columnMap;
         this.workbook = data.workbook;
@@ -104,7 +104,16 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getMetadataIssued() {
-        return this.issuedExisting ? this.issuedExisting : new Date(Date.now());
+        return this.storedData.issued ? this.storedData.issued : new Date(Date.now());
+    }
+
+    getMetadataModified(): Date {
+        if(this.storedData.modified && this.storedData.dataset_modified){
+            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
+            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
+                return new Date(this.storedData.modified);
+        }
+        return new Date(Date.now());
     }
 
     getMetadataSource() {
@@ -333,7 +342,7 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getHarvestedData(): string {
-        return undefined;
+        return JSON.stringify(this.columnValues);
     }
 
     getGroups(): string[] {

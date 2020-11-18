@@ -36,7 +36,7 @@ export class CswMapper extends GenericMapper {
 
     private readonly record: any;
     private harvestTime: any;
-    private readonly issued: string;
+    private readonly storedData: any;
 
     protected readonly idInfo; // : SelectedValue;
     private settings: CswSettings;
@@ -51,12 +51,12 @@ export class CswMapper extends GenericMapper {
     };
 
 
-    constructor(settings, record, harvestTime, issued, summary) {
+    constructor(settings, record, harvestTime, storedData, summary) {
         super();
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.issued = issued;
+        this.storedData = storedData;
         this.summary = summary;
 
         this.uuid = CswMapper.getCharacterStringContent(record, 'fileIdentifier');
@@ -469,7 +469,16 @@ export class CswMapper extends GenericMapper {
     }
 
     getMetadataIssued(): Date {
-        return this.issued ? new Date(this.issued) : new Date(Date.now());
+        return this.storedData.issued ? new Date(this.storedData.issued) : new Date(Date.now());
+    }
+
+    getMetadataModified(): Date {
+        if(this.storedData.modified && this.storedData.dataset_modified){
+            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
+            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
+                return new Date(this.storedData.modified);
+        }
+        return new Date(Date.now());
     }
 
     getMetadataSource(): any {

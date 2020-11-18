@@ -184,13 +184,13 @@ export class CkanImporter implements Importer {
             // add skipped documents to count
             this.summary.numDocs += results.length - filteredResults.length;
 
-            let timestamps = await this.getIssuedDates(filteredResults);
+            let storedData = await this.getStoredData(filteredResults);
 
             for (let i=0; i<filteredResults.length; i++) {
                 promises.push(
                     this.importDataset({
                         source: filteredResults[i],
-                        issuedDate: timestamps[i],
+                        storedData: storedData[i],
                         harvestTime: now,
                         currentIndexName: this.elastic.indexName,
                         summary: this.summary
@@ -210,11 +210,11 @@ export class CkanImporter implements Importer {
         return total;
     }
 
-    private async getIssuedDates(filteredResults: any[]) {
+    private async getStoredData(filteredResults: any[]) {
         let ids = filteredResults.map(result => result.id);
 
         // issued dates are those showing the date of the first harvesting
-        return await this.elastic.getIssuedDates(ids);
+        return await this.elastic.getStoredData(ids);
     }
 
     private async requestDocuments() {

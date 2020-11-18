@@ -24,7 +24,7 @@ export class SparqlMapper extends GenericMapper {
     private readonly catalogPage: any;
     private readonly linkedDistributions: any;
     private harvestTime: any;
-    private readonly issued: string;
+    private readonly storedData: any;
 
 //    protected readonly idInfo; // : SelectedValue;
     private settings: SparqlSettings;
@@ -39,12 +39,12 @@ export class SparqlMapper extends GenericMapper {
     };
 
 
-    constructor(settings, record, harvestTime, issued, summary) {
+    constructor(settings, record, harvestTime, storedData, summary) {
         super();
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.issued = issued;
+        this.storedData = storedData;
         this.summary = summary;
 
         this.uuid = record.id.value;
@@ -186,7 +186,16 @@ export class SparqlMapper extends GenericMapper {
     }
 
     getMetadataIssued(): Date {
-        return this.record.issued ? new Date(this.record.issued.value) : undefined;
+        return this.storedData.issued ? new Date(this.storedData.issued.value) : undefined;
+    }
+
+    getMetadataModified(): Date {
+        if(this.storedData.modified && this.storedData.dataset_modified){
+            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
+            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
+                return new Date(this.storedData.modified);
+        }
+        return new Date(Date.now());
     }
 
     getMetadataSource(): any {
