@@ -61,9 +61,9 @@ export class TestUtils {
         chai.assert.deepInclude(actual, expected);
     }
 
-    static prepareIssuedDates(repeat: number, date: string): string[] {
-        let issuedDates = [];
-        for (let i = 0; i < repeat; i++) issuedDates.push(date);
-        return issuedDates;
+    static prepareStoredData(repeat: number, data: any): any[] {
+        let storedData = [];
+        for (let i = 0; i < repeat; i++) storedData.push(data);
+        return storedData;
     }
 }
