@@ -37,7 +37,7 @@ describe('Import Excel', function () {
         };
         let importer = new ExcelImporter(settings);
 
-        sinon.stub(importer.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(3, "2019-01-08T16:33:11.168Z"));
+        sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(3, {issued: "2019-01-08T16:33:11.168Z"}));
 
         indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
 
