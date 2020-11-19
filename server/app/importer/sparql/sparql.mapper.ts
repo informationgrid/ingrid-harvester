@@ -186,7 +186,7 @@ export class SparqlMapper extends GenericMapper {
     }
 
     getMetadataIssued(): Date {
-        return this.storedData.issued ? new Date(this.storedData.issued.value) : undefined;
+        return this.storedData.issued ? new Date(this.storedData.issued) : undefined;
     }
 
     getMetadataModified(): Date {

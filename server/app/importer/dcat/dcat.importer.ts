@@ -165,7 +165,7 @@ export class DcatImporter implements Importer {
 
         let ids = [];
         for (let i = 0; i < records.length; i++) {
-            ids.push(records[i].getAttribute('rdf:about'));
+            ids.push(DcatMapper.select('.//dct:identifier', records[i], true).textContent);
         }
 
         let now = new Date(Date.now());
