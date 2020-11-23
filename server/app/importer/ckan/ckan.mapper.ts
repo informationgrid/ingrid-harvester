@@ -171,11 +171,11 @@ export class CkanMapper extends GenericMapper {
     }
 
     getMetadataIssued() {
-        return this.data.storedData.issued ? new Date(this.data.storedData.issued) : new Date(Date.now());
+        return (this.data.storedData && this.data.storedData.issued) ? new Date(this.data.storedData.issued) : new Date(Date.now());
     }
 
     getMetadataModified(): Date {
-        if(this.data.storedData.modified && this.data.storedData.dataset_modified){
+        if(this.data.storedData && this.data.storedData.modified && this.data.storedData.dataset_modified){
             let storedDataset_modified: Date = new Date(this.data.storedData.dataset_modified);
             if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
                 return new Date(this.data.storedData.modified);

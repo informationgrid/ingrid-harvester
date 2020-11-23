@@ -469,11 +469,11 @@ export class CswMapper extends GenericMapper {
     }
 
     getMetadataIssued(): Date {
-        return this.storedData.issued ? new Date(this.storedData.issued) : new Date(Date.now());
+        return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : new Date(Date.now());
     }
 
     getMetadataModified(): Date {
-        if(this.storedData.modified && this.storedData.dataset_modified){
+        if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
             let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
             if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
                 return new Date(this.storedData.modified);
