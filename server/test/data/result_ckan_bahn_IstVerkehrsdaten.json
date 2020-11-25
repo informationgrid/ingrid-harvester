@@ -4,7 +4,7 @@
   "theme" : [ "http://publications.europa.eu/resource/authority/data-theme/TRAN" ],
   "issued" : "2017-05-12T13:47:33.056410",
   "modified" : "2017-12-13T13:03:48.489043",
-  "accrualPeriodicity" : "once_per_year",
+  "accrual_periodicity" : "once_per_year",
   "keywords" : [ "Betriebsstelle", "Logistik" ],
   "creator" : {
     "name" : "Hannah Richta",
@@ -58,7 +58,7 @@
       "modified" : "2019-01-09T02:17:16.269Z",
       "harvested" : "2019-01-09T02:17:15.762Z"
     },
-    "displayContact" : {
+    "display_contact" : {
       "name" : "DB Cargo AG",
       "url" : "https://www.dbcargo.com/"
     },

@@ -19,7 +19,7 @@
     }],
     "citation" : "Bundesanstalt für Straßenwesen",
     "subgroups" : [ "roads" ],
-    "displayContact" : [
+    "display_contact" : [
       {
         "name" : "Bundesanstalt für Straßenwesen (BASt)",
         "homepage" : "http://www.bast.de/"
