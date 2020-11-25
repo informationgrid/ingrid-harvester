@@ -83,7 +83,7 @@ export const elasticsearchMapping = {
                 }
             }
         },
-        'contactPoint': {
+        'contact_point': {
             'properties': {
                 'hasUID': {
                     'type': 'keyword'
@@ -137,10 +137,10 @@ export const elasticsearchMapping = {
         'modified': {
             'type': 'date'
         },
-        'accrualPeriodicity': {
+        'accrual_periodicity': {
             'type': 'keyword'
         },
-        'accessRights': {
+        'access_rights': {
             'type': 'text'
         },
         'distribution': {
@@ -201,7 +201,7 @@ export const elasticsearchMapping = {
                                 }
                             }
                         },
-                        'isValid': {
+                        'is_valid': {
                             'type': 'boolean',
                             'null_value': true
                         },
@@ -213,7 +213,7 @@ export const elasticsearchMapping = {
                 'generated_id': {
                     'type': 'keyword'
                 },
-                'displayContact': {
+                'display_contact': {
                     'properties': {
                         'name': {
                             'type': 'text',
@@ -254,7 +254,7 @@ export const elasticsearchMapping = {
                 'spatial': {
                     'type': 'geo_shape'
                 },
-                'spatialText': {
+                'spatial_text': {
                     'type': 'text'
                 },
                 'temporal': {
