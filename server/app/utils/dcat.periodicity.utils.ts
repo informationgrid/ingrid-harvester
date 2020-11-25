@@ -3,7 +3,8 @@ import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 
 export class DcatPeriodicityUtils {
-    static getPeriodicity(raw: string) :string {let result = undefined;
+    static getPeriodicity(raw: string) :string {
+        let result = undefined;
         if(raw){
             switch (raw.trim().toLowerCase()) {
                 case "annual" :

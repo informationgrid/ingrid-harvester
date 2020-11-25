@@ -322,7 +322,7 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getAccrualPeriodicity(): string {
-        let value = this.columnValues[this.columnMap.Periodizitaet];
+        let value: string = this.columnValues[this.columnMap.Periodizitaet].toString();
         if(value){
             let periodicity = DcatPeriodicityUtils.getPeriodicity(value);
             if(!periodicity){
