@@ -1193,7 +1193,7 @@
       "containsDocumentsWithData": false
     },
     "eitherKeywords": [],
-    "disable": false
+    "disable": true
   },
   {
     "index": "csw_dfs",
