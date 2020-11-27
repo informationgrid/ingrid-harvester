@@ -120,8 +120,7 @@ describe('Ckan-Harvester operations', () => {
     const toBlacklist = '7e526b8c-16bd-4f2c-a02b-8d4d0a29d310';
     const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
 
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(toBlacklist);
@@ -135,8 +134,7 @@ describe('Ckan-Harvester operations', () => {
       blacklistedId: toBlacklist
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
 
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
@@ -159,8 +157,7 @@ describe('Ckan-Harvester operations', () => {
     });
     form.saveHarvesterConfig();
 
-    harvester.importHarvesterById(constants.SEED_CKAN_ID);
-    harvester.waitForImportToFinish(constants.SEED_CKAN_ID);
+    harvester.importHarvesterByIdAndWait(constants.SEED_CKAN_ID);
 
     const importedDocNumber = harvester.getDocNumber(constants.SEED_CKAN_ID);
     importedDocNumber.should('equal', '38');
@@ -180,8 +177,7 @@ describe('Ckan-Harvester operations', () => {
       blacklistedDataFormat: 'rest'
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
 
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
@@ -194,8 +190,7 @@ describe('Ckan-Harvester operations', () => {
       whitelistedId: toWhitelist
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(toWhitelist);
@@ -218,8 +213,7 @@ describe('Ckan-Harvester operations', () => {
       filterGroups: 'apis'
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
 
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
@@ -232,8 +226,7 @@ describe('Ckan-Harvester operations', () => {
       whitelistedId: toWhitelist
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(toWhitelist);
@@ -255,8 +248,7 @@ describe('Ckan-Harvester operations', () => {
       filterTag: 'Bahnhof'
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
 
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
@@ -269,8 +261,7 @@ describe('Ckan-Harvester operations', () => {
       whitelistedId: toWhitelist
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(toWhitelist);

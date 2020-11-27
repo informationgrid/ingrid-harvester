@@ -29,8 +29,7 @@ describe('Indices operations', () => {
   });
 
   it('should show only one index per harvester', () => {
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
 
     cy.wait(2000);
     indicesPage.visit();
@@ -39,8 +38,7 @@ describe('Indices operations', () => {
 
   it('should delete an index if its harvester is deleted', () => {
     harvester.seedExcelHarvester(constants.SEED_EXCEL_ID);
-    harvester.importHarvesterById(constants.SEED_EXCEL_ID);
-    harvester.waitForImportToFinish(constants.SEED_EXCEL_ID);
+    harvester.importHarvesterByIdAndWait(constants.SEED_EXCEL_ID);
 
     indicesPage.visit();
     indicesPage.indexIsContained('excel_index_api', true);
@@ -57,8 +55,7 @@ describe('Indices operations', () => {
       "    \"_index\": \"ckan_db_";
     let indexType = "\"_type\": \"base\"";
 
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
 
     indicesPage.visit();
 

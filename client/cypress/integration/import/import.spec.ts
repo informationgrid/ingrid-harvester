@@ -1,6 +1,6 @@
-import Authentication from "../../support/pageObjects/auth";
-import Constants from "../../support/constants";
-import HarvesterPage from "../../support/pageObjects/harvester/harvester";
+import Authentication from '../../support/pageObjects/auth';
+import Constants from '../../support/constants';
+import HarvesterPage from '../../support/pageObjects/harvester/harvester';
 
 describe('Import operations', () => {
   const constants = new Constants();
@@ -34,10 +34,10 @@ describe('Import operations', () => {
     cy.reload();
 
     // check different than last duration
-    //harvester.checkFieldValueIsNot(constants.CKAN_DB_ID, harvester.duration, duration);
+    // harvester.checkFieldValueIsNot(constants.CKAN_DB_ID, harvester.duration, duration);
 
-    let timeString = Cypress.moment().format('DD.MM.YY, HH:mm')
-    timeString = timeString.slice(0, timeString.length-1)
+    let timeString = Cypress.moment().format('DD.MM.YY, HH:mm');
+    timeString = timeString.slice(0, timeString.length - 1);
     harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.lastExecution, timeString);
   });
 

@@ -32,8 +32,7 @@ describe('Import log operations', () => {
   });
 
   it('should show no error in the logs after a successful import', () => {
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
     harvester.checkNoErrors(constants.CKAN_DB_ID);
   });
 

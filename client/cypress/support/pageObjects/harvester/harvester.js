@@ -114,12 +114,15 @@ class HarvesterPage {
   //IMPORT OPS
   importHarvesterById(id) {
     cy.get('#harvester-' + id).click();
-    cy.get('#harvester-' + id + ' ' + this.importBtn).click();
+    return cy.get('#harvester-' + id + ' ' + this.importBtn).click();
+  }
+  importHarvesterByIdAndWait(id) {
+    this.importHarvesterById(id).then(() => this.waitForImportToFinish(id));
   }
 
   importHarvesterByName(name) {
     this.toggleHarvesterByName(name);
-    cy.get(this.importBtn+':visible').click();
+    cy.get(this.importBtn + ':visible').click();
   }
 
   checkImportHasStarted() {
@@ -128,7 +131,7 @@ class HarvesterPage {
   }
 
   checkVisibleFieldValue(field, value) {
-    cy.get(field+':visible', {timeout: 45000}).should('contain', value);
+    cy.get(field + ':visible', {timeout: 45000}).should('contain', value);
   }
 
   checkFieldValueIs(id, field, value) {
@@ -208,8 +211,9 @@ class HarvesterPage {
   }
 
   waitForImportToFinish(id) {
-    cy.get('#harvester-' + id + ' ' + this.lastExecution, {timeout: 45000}).scrollIntoView();
-    this.checkFieldValueIs(id, this.lastExecution, Cypress.moment().format('DD.MM.YY, HH:mm'));
+    cy.get('#harvester-' + id + ' ' + this.lastExecution, {timeout: 45000})
+      .scrollIntoView()
+      .should('contain', Cypress.moment().format('DD.MM.YY, HH:mm'));
   }
 
   getDocNumber(id) {
