@@ -95,7 +95,7 @@ export class ElasticQueries {
                 term: {'base_index': baseIndex}
             },
             sort: {
-                'timestamp': {"order" : "asc"}
+                'timestamp': {"order" : "desc"}
             }
         };
     }
