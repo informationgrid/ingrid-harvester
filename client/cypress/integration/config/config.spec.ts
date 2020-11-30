@@ -44,27 +44,27 @@ describe('Configuration of general settings', () => {
 
   it('should check that the save button is disabled if only spaces are inserted [INPUT CONTROL]', () => {
     cy.wait(500);
-    //no value in the url field
+    // no value in the url field
     configPage.setElasticSearchUrl('http://localhost:92000000');
     configPage.saveButtonIsDisabled();
 
     configPage.resetConfig();
 
-    //no value in the alias field
+    // no value in the alias field
     configPage.setAlias(' ');
     configPage.saveButtonIsDisabled();
   });
 
   it('should check that the save button is disabled if wrong port values are inserted [INPUT CONTROL]', () => {
-    //value is too big
+    // value is too big
     configPage.setElasticSearchUrl('http://localhost:92000000');
     configPage.saveButtonIsDisabled();
 
-    //value is NaN
+    // value is NaN
     configPage.setElasticSearchUrl('http://localhost:porttout');
     configPage.saveButtonIsDisabled();
 
-    //value is negative
+    // value is negative
     configPage.setElasticSearchUrl('http://localhost:-42');
     configPage.saveButtonIsDisabled();
   });
@@ -80,13 +80,22 @@ describe('Configuration of general settings', () => {
   it('should export the harvester configuration if the button is pressed', () => {
     cy.server();
     cy.route('GET', 'http://192.168.0.228/importer/rest/api/config/general').as('download');
+    // server and route deprecated!, use intercept but atm not buggy
+    // cy.intercept('GET', 'http://192.168.0.228/importer/rest/api/config/general').as('download');
     configPage.visit();
     configPage.selectTab(configPage.EXPORT);
     configPage.pressDownloadConfigButton();
 
     cy.wait('@download').then((xhr) => {
       expect(xhr.responseHeaders).to.have.property('content-type', 'application/json; charset=utf-8');
-      expect(xhr.responseHeaders).to.have.property('etag'); //etag value to check
+      expect(xhr.responseHeaders).to.have.property('etag');
     });
+
+    // cy.wait('@download')
+    //   .its('response.header')
+    //   .then((header) => {
+    //     expect(header).to.have.property('content-type', 'application/json; charset=utf-8');
+    //     expect(header).to.have.property('etag');
+    //   });
   });
 });

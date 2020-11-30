@@ -72,8 +72,7 @@ class HarvesterPage {
   }
 
   deleteHarvesterById(id) {
-    cy.server();
-    cy.route({
+    cy.intercept({
       url: 'http://192.168.0.228/importer/rest/api/harvester/*',
       method: 'DELETE'
     }).as('deleteHarvester');
@@ -86,8 +85,7 @@ class HarvesterPage {
   }
 
   deleteHarvesterByName(name) {
-    cy.server();
-    cy.route({
+    cy.intercept({
       url: 'http://192.168.0.228/importer/rest/api/harvester/*',
       method: 'DELETE'
     }).as('deleteHarvester');
