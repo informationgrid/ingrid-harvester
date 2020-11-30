@@ -120,6 +120,9 @@ describe('Ckan-Harvester operations', () => {
     const toBlacklist = '7e526b8c-16bd-4f2c-a02b-8d4d0a29d310';
     const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
 
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.cleanFilterAndRules();
+    form.saveHarvesterConfig();
     harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
@@ -128,8 +131,6 @@ describe('Ckan-Harvester operations', () => {
 
     harvester.visit();
     harvester.openFormById(constants.CKAN_DB_ID);
-    form.deleteListedIds(form.blacklistedId);
-    form.deleteListedIds(form.whitelistedId);
     form.setFields({
       blacklistedId: toBlacklist
     });
@@ -140,29 +141,34 @@ describe('Ckan-Harvester operations', () => {
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(toBlacklist);
     mcloudPage.checkNoResults();
-
-    harvester.visit();
-    harvester.openFormById(constants.CKAN_DB_ID);
-    form.deleteListedIds(form.blacklistedId);
-    form.saveHarvesterConfig();
   });
 
   it('should exclude documents which have no data downloads (e.g. "rest")', () => {
-    // example: CKAN-DB, "Muss Daten-Download enthalten": X, "Datenformat ausschließen": "rest"
-    harvester.seedCkanHarvester(constants.SEED_CKAN_ID);
-    harvester.openFormById(constants.SEED_CKAN_ID);
+    const docWithDownload = '7e526b8c-16bd-4f2c-a02b-8d4d0a29d310';
+    const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
+
+    harvester.openFormById(constants.CKAN_DB_ID);
+    form.cleanFilterAndRules();
+    form.saveHarvesterConfig();
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
+    mcloudPage.visitMcloudHome();
+    mcloudPage.urlIsMcloudHome();
+    mcloudPage.searchForId(docWithDownload);
+    mcloudPage.checkSearchResultsIncludeName(resultName, true);
+
+    harvester.visit();
+    harvester.openFormById(constants.CKAN_DB_ID);
     form.activateContainsDataDownload();
     form.setFields({
       blacklistedDataFormat: 'rest'
     });
     form.saveHarvesterConfig();
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
 
-    harvester.importHarvesterByIdAndWait(constants.SEED_CKAN_ID);
-
-    const importedDocNumber = harvester.getDocNumber(constants.SEED_CKAN_ID);
-    importedDocNumber.should('equal', '38');
-
-    harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
+    mcloudPage.visitMcloudHome();
+    mcloudPage.urlIsMcloudHome();
+    mcloudPage.searchForId(docWithDownload);
+    mcloudPage.checkNoResults();
   });
 
   it('should import whitelisted IDs if excluded by no data downloads', () => {
@@ -170,8 +176,7 @@ describe('Ckan-Harvester operations', () => {
     const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
 
     harvester.openFormById(constants.CKAN_DB_ID);
-    form.deleteListedIds(form.blacklistedId);
-    form.deleteListedIds(form.whitelistedId);
+    form.cleanFilterAndRules();
     form.activateContainsDataDownload();
     form.setFields({
       blacklistedDataFormat: 'rest'
@@ -195,13 +200,6 @@ describe('Ckan-Harvester operations', () => {
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(toWhitelist);
     mcloudPage.checkSearchResultsIncludeName(resultName, true);
-
-    harvester.visit();
-    harvester.openFormById(constants.CKAN_DB_ID);
-    form.deleteListedIds(form.whitelistedId);
-    form.clearField(form.blacklistedDataFormat);
-    form.deactivateContainsDataDownload();
-    form.saveHarvesterConfig();
   });
 
   it('should import whitelisted IDs even if excluded by group', () => {
@@ -209,6 +207,7 @@ describe('Ckan-Harvester operations', () => {
     const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
 
     harvester.openFormById(constants.CKAN_DB_ID);
+    form.cleanFilterAndRules();
     form.setFields({
       filterGroups: 'apis'
     });
@@ -231,12 +230,6 @@ describe('Ckan-Harvester operations', () => {
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(toWhitelist);
     mcloudPage.checkSearchResultsIncludeName(resultName, true);
-
-    harvester.visit();
-    harvester.openFormById(constants.CKAN_DB_ID);
-    form.deleteListedIds(form.whitelistedId);
-    form.deleteListedIds(form.filterGroups);
-    form.saveHarvesterConfig();
   });
 
   it('should import whitelisted IDs even if excluded by tag', () => {
@@ -244,6 +237,7 @@ describe('Ckan-Harvester operations', () => {
     const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
 
     harvester.openFormById(constants.CKAN_DB_ID);
+    form.cleanFilterAndRules();
     form.setFields({
       filterTag: 'Bahnhof'
     });
@@ -266,11 +260,5 @@ describe('Ckan-Harvester operations', () => {
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(toWhitelist);
     mcloudPage.checkSearchResultsIncludeName(resultName, true);
-
-    harvester.visit();
-    harvester.openFormById(constants.CKAN_DB_ID);
-    form.deleteListedIds(form.whitelistedId);
-    form.deleteListedIds(form.filterTag);
-    form.saveHarvesterConfig();
   });
 });

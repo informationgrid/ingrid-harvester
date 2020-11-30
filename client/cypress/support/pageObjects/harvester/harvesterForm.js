@@ -127,11 +127,24 @@ class HarvesterForm {
   }
 
   deleteListedIds(field) {
-    cy.get(field).click({force: true}).type('{backspace}{backspace}');
+    cy.get(field).click({force: true}).type('{backspace}{backspace}{backspace}{backspace}');
   }
 
   clearField(field) {
-    cy.get(field).clear();
+    cy.get(field).then((isFieldActive) => {
+      if (isFieldActive.hasClass('ng-invalid')) {
+        cy.get(field).clear();
+      }
+    });
+  }
+
+  cleanFilterAndRules() {
+    this.deleteListedIds(this.blacklistedId);
+    this.deleteListedIds(this.whitelistedId);
+    this.deleteListedIds(this.filterGroups);
+    this.deleteListedIds(this.filterTag);
+    this.clearField(this.blacklistedDataFormat);
+    this.deactivateContainsDataDownload();
   }
 
   activateContainsDataDownload() {
