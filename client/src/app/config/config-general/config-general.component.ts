@@ -57,6 +57,11 @@ export class ConfigGeneralComponent implements OnInit {
     this.configService.fetch().subscribe(data => this.buildForm(data));
   }
 
+
+  urlCheck() {
+    this.configService.startUrlCheck().subscribe();
+  }
+
   private buildForm(settings: GeneralSettings) {
     if(!settings.mail)
     {

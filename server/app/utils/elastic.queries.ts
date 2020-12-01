@@ -22,7 +22,13 @@ export class ElasticQueries {
                     aggregations: {
                         duplicates: {
                             top_hits: {
-                                sort: [{'priority': {unmapped_type: 'short', missing: 0, order: 'desc'}},{'modified': {order: 'desc'}}],
+                                sort: [{
+                                    'priority': {
+                                        unmapped_type: 'short',
+                                        missing: 0,
+                                        order: 'desc'
+                                    }
+                                }, {'modified': {order: 'desc'}}],
                                 size: 100,
                                 _source: {include: ['title', 'distribution', 'modified']}
                             }
@@ -95,8 +101,74 @@ export class ElasticQueries {
                 term: {'base_index': baseIndex}
             },
             sort: {
-                'timestamp': {"order" : "desc"}
+                'timestamp': {"order": "desc"}
             }
         };
+    }
+
+    static getAccessUrls(after_key): any {
+        let query = {
+            "aggs": {
+                "accessURL": {
+                    "composite": {
+                        "size": 100,
+                        "sources": [
+                            {
+                                "accessURL": {
+                                    "terms": {
+                                        "script": {
+                                            "source": "doc['distribution.accessURL']"
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "aggs": {
+                        "attribution": {
+                            "terms": {
+                                "field": "extras.metadata.source.attribution",
+                                "size": 10000,
+                                "order": {
+                                    "_count": "desc"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "size": 0,
+            "_source": {
+                "excludes": []
+            },
+            "stored_fields": [
+                "*"
+            ],
+            "script_fields": {},
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match_all": {}
+                        },
+                        {
+                            "match_all": {}
+                        },
+                        {
+                            "exists": {
+                                "field": "distribution.accessURL"
+                            }
+                        }
+                    ],
+                    "filter": [],
+                    "should": [],
+                    "must_not": []
+                }
+            }
+        };
+        if(after_key){
+            query.aggs.accessURL.composite["after"] = after_key;
+        }
+        return query;
     }
 }

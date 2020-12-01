@@ -54,6 +54,9 @@ export class ConfigService {
     return this.http.post<void>('rest/api/config/general', file);
   }
 
+  startUrlCheck(): Observable<void> {
+    return this.http.post<void>('rest/api/url_check', null);
+  }
 
   /**
    * Download a file.

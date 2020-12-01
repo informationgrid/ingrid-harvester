@@ -62,7 +62,7 @@ export class ElasticSearchUtils {
         }
         return new Promise((resolve, reject) => {
             if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
-            this.client.indices.create({index: this.indexName, waitForActiveShards: '1', body:body})
+            this.client.indices.create({index: this.indexName, waitForActiveShards: '1', body: body})
                 .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
                 .catch(err => {
                     let message = 'Error occurred creating index';
@@ -138,15 +138,15 @@ export class ElasticSearchUtils {
         return this.getIndicesFromBasename(indexBaseName)
             .then(indices => {
 
-            let indicesToDelete = indices
-                .filter(index => index.name !== ignoreIndexName);
+                let indicesToDelete = indices
+                    .filter(index => index.name !== ignoreIndexName);
 
-            if (indicesToDelete.length > 0) {
-                return this.deleteIndex(indicesToDelete.map(i => i.name));
-            }
-        }).catch(err => {
-            this.handleError('Error occurred getting index names', err);
-        });
+                if (indicesToDelete.length > 0) {
+                    return this.deleteIndex(indicesToDelete.map(i => i.name));
+                }
+            }).catch(err => {
+                this.handleError('Error occurred getting index names', err);
+            });
     }
 
     getIndicesFromBasename(baseName: string): Promise<Index[]> {
@@ -424,7 +424,7 @@ export class ElasticSearchUtils {
         log.error(message, error);
     }
 
-    deleteIndex(indicesToDelete: string|string[]): Promise<any> {
+    deleteIndex(indicesToDelete: string | string[]): Promise<any> {
         log.debug('Deleting indices: ' + indicesToDelete);
         return this.client.indices.delete({
             index: indicesToDelete
@@ -432,7 +432,7 @@ export class ElasticSearchUtils {
     }
 
     search(indexName: string): Promise<any> {
-        return this.client.search({ index: indexName });
+        return this.client.search({index: indexName});
     }
 
     async getHistory(baseIndex: string): Promise<any> {
@@ -442,5 +442,24 @@ export class ElasticSearchUtils {
             size: 30
         });
         return result.hits.hits.map(entry => entry._source);
+    }
+
+    async getAccessUrls(after_key): Promise<any> {
+        let result = await this.client.search({
+            index: this.indexName,
+            body: ElasticQueries.getAccessUrls(after_key),
+            size: 0
+        });
+        return {
+            after_key: result.aggregations.accessURL.after_key,
+            buckets: result.aggregations.accessURL.buckets.map(entry => {
+                return {
+                    url: entry.key.accessURL,
+                    attribution: entry.attribution.buckets.map(entry => {
+                        return {name: entry.key, count: entry.doc_count}
+                    })
+                }
+            })
+        };
     }
 }
