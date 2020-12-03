@@ -12,6 +12,8 @@ import {CswSettings} from './csw.settings';
 import {throwError} from "rxjs";
 import doc = Mocha.reporters.doc;
 import {ImporterSettings} from "../../importer.settings";
+import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
+import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 
 let xpath = require('xpath');
 
@@ -34,7 +36,7 @@ export class CswMapper extends GenericMapper {
 
     private readonly record: any;
     private harvestTime: any;
-    private readonly issued: string;
+    private readonly storedData: any;
 
     protected readonly idInfo; // : SelectedValue;
     private settings: CswSettings;
@@ -49,12 +51,12 @@ export class CswMapper extends GenericMapper {
     };
 
 
-    constructor(settings, record, harvestTime, issued, summary) {
+    constructor(settings, record, harvestTime, storedData, summary) {
         super();
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.issued = issued;
+        this.storedData = storedData;
         this.summary = summary;
 
         this.uuid = CswMapper.getCharacterStringContent(record, 'fileIdentifier');
@@ -467,7 +469,16 @@ export class CswMapper extends GenericMapper {
     }
 
     getMetadataIssued(): Date {
-        return this.issued ? new Date(this.issued) : new Date(Date.now());
+        return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : new Date(Date.now());
+    }
+
+    getMetadataModified(): Date {
+        if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
+            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
+            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
+                return new Date(this.storedData.modified);
+        }
+        return new Date(Date.now());
     }
 
     getMetadataSource(): any {
@@ -636,7 +647,11 @@ export class CswMapper extends GenericMapper {
         // Multiple resourceMaintenance elements are allowed. If present, use the first one
         let freq = CswMapper.select('./*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode', this.idInfo);
         if (freq.length > 0) {
-            return freq[0].getAttribute('codeListValue');
+            let periodicity = DcatPeriodicityUtils.getPeriodicity(freq[0].getAttribute('codeListValue'))
+            if(!periodicity){
+                this.summary.warnings.push(["Unbekannte Periodizität", freq[0].getAttribute('codeListValue')]);
+            }
+            return periodicity;
         }
         return undefined;
     }
@@ -656,13 +671,15 @@ export class CswMapper extends GenericMapper {
 
                         if (!json.id || !json.url) continue;
 
-                        let requestConfig = this.getUrlCheckRequestConfig(json.url);
-                        license = {
-                            id: json.id,
-                            title: json.name,
-                            url: await UrlUtils.urlWithProtocolFor(requestConfig)
-                        };
-
+                        license = await DcatLicensesUtils.get(json.url);
+                        if (!license) {
+                            let requestConfig = this.getUrlCheckRequestConfig(json.url);
+                            license = {
+                                id: json.id,
+                                title: json.name,
+                                url: await UrlUtils.urlWithProtocolFor(requestConfig)
+                            };
+                        }
                     } catch (ignored) {
                     }
                 }

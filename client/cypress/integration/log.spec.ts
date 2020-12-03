@@ -13,9 +13,13 @@ describe('Log tab operations', () => {
     auth.apiLogIn();
   });
 
+  it('should show some information in the logs', () => {
+    logPage.visit();
+    logPage.infoIsContained('[INFO]');
+  });
+
   it('should show the right information in the logs after a single harvester is imported', () => {
-    harvester.importHarvesterById(constants.CKAN_DBD_ID);
-    harvester.waitForImportToFinish(constants.CKAN_DBD_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
 
     logPage.visit();
     logPage.infoIsContained('[INFO] default - Deutsche Bahn Datenportal');

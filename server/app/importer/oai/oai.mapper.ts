@@ -12,6 +12,7 @@ import {OaiSettings} from './oai.settings';
 import {throwError} from "rxjs";
 import doc = Mocha.reporters.doc;
 import {ImporterSettings} from "../../importer.settings";
+import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 
 let xpath = require('xpath');
 
@@ -34,7 +35,7 @@ export class OaiMapper extends GenericMapper {
 
     private readonly record: any;
     private harvestTime: any;
-    private readonly issued: string;
+    private readonly storedData: any;
 
     protected readonly idInfo; // : SelectedValue;
     private settings: OaiSettings;
@@ -49,12 +50,12 @@ export class OaiMapper extends GenericMapper {
     };
 
 
-    constructor(settings, record, harvestTime, issued, summary) {
+    constructor(settings, record, harvestTime, storedData, summary) {
         super();
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.issued = issued;
+        this.storedData = storedData;
         this.summary = summary;
 
         this.uuid = OaiMapper.getCharacterStringContent(record, 'fileIdentifier');
@@ -468,7 +469,16 @@ export class OaiMapper extends GenericMapper {
     }
 
     getMetadataIssued(): Date {
-        return this.issued ? new Date(this.issued) : new Date(Date.now());
+        return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : new Date(Date.now());
+    }
+
+    getMetadataModified(): Date {
+        if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
+            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
+            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
+                return new Date(this.storedData.modified);
+        }
+        return new Date(Date.now());
     }
 
     getMetadataSource(): any {
@@ -636,7 +646,11 @@ export class OaiMapper extends GenericMapper {
         // Multiple resourceMaintenance elements are allowed. If present, use the first one
         let freq = OaiMapper.select('./*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode', this.idInfo);
         if (freq.length > 0) {
-            return freq[0].getAttribute('codeListValue');
+            let periodicity = DcatPeriodicityUtils.getPeriodicity(freq[0].getAttribute('codeListValue'))
+            if(!periodicity){
+                this.summary.warnings.push(["Unbekannte Periodizität", freq[0].getAttribute('codeListValue')]);
+            }
+            return periodicity;
         }
         return undefined;
     }

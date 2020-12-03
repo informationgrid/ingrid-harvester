@@ -76,7 +76,7 @@ export class ExcelImporter implements Importer {
             'Datenformat': 21,
             'Zeitraum': 22,
             'Aktualisierungsdatum': 23,
-            'Echtzeitdaten': 24,
+            'Periodizitaet': 24,
             'Lizenzbeschreibung': 25,
             'Lizenzlink': 26,
             'DatenhaltendeStelleLang': 27,
@@ -110,7 +110,7 @@ export class ExcelImporter implements Importer {
 
             // get all issued dates from IDs
             observer.next(ImportResult.message('Getting previous issued dates'));
-            let timestamps = await this.elastic.getIssuedDates(ids);
+            let storedData = await this.elastic.getStoredData(ids);
 
             let numIndexDocs = 0;
 
@@ -129,7 +129,7 @@ export class ExcelImporter implements Importer {
                 let mapper = new ExcelMapper(this.settings, {
                     id: unit.id,
                     columnValues: unit.columnValues,
-                    issued: timestamps[idx],
+                    storedData: storedData[idx],
                     workbook: workbook,
                     columnMap: columnMap,
                     currentIndexName: this.elastic.indexName,

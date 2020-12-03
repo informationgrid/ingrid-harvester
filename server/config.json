@@ -2,6 +2,7 @@
   {
     "index": "excel",
     "includeTimestamp": true,
+    "priority": null,
     "type": "EXCEL",
     "maxRecords": 100,
     "startPosition": 0,
@@ -22,6 +23,7 @@
   {
     "index": "ckan_db",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -66,6 +68,7 @@
   {
     "index": "ckan_offenesdatenportal",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -107,6 +110,7 @@
   {
     "index": "ckan_portal_hamburg",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -168,6 +172,7 @@
   {
     "index": "ckan_opendata_rnv",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -216,6 +221,7 @@
   {
     "index": "ckan_opendata_nrw",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -276,6 +282,7 @@
   {
     "index": "csw_wsv",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -309,6 +316,7 @@
   {
     "index": "csw_mdi",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -342,6 +350,7 @@
   {
     "index": "csw_bfg",
     "includeTimestamp": true,
+    "priority": null,
     "type": "BFG-CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -375,6 +384,7 @@
   {
     "index": "csw_dwd",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -409,6 +419,7 @@
   {
     "index": "csw_codede",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CODEDE-CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -442,6 +453,7 @@
   {
     "index": "csw_bsh",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -475,6 +487,7 @@
   {
     "index": "csw_geoservice_dlr",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -510,6 +523,7 @@
   {
     "index": "csw_ils_geonode",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -541,10 +555,11 @@
   {
     "index": "ckan_berlin",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
-    "customCode": "doc.extras.metadata.source.portal_link = 'https://daten.berlin.de/datensaetze/' + this.source.name;\n\nthis.skipped = true;\n\nif(doc.keywords.indexOf('verkehr') !== -1|| doc.keywords.indexOf('Verkehr')!== -1)\n{\n\tthis.skipped = false;\n\tdoc.extras.subgroups = ['infrastructure'];\n\n\tlet publisher = doc.extras.displayContact[0].name.substr(this.settings.providerPrefix.length);\n\n\tswitch(publisher){\n\t\tcase 'Senatsverwaltung für Umwelt, Verkehr und Klimaschutz Berlin':\n\t\t\tdoc.extras.subgroups = ['roads'];\n\t\t\tbreak;\n\t\tcase 'Senatsverwaltung für Stadtentwicklung und Wohnen Berlin':\n\t\t\tdoc.extras.subgroups = ['infrastructure'];\n\t\t\tbreak;\n\t\tcase 'VBB - Verkehrsverbund Berlin-Brandenburg GmbH':\n\t\t\tdoc.extras.subgroups = ['roads', 'railway'];\n\t\t\tbreak;\n\t\tcase 'Gemeinsame Landesplanungsabteilung Berlin-Brandenburg':\n\t\t\tdoc.extras.subgroups = ['roads', 'railway'];\n\t\t\tbreak;\n\t\tcase 'DAI-Labor/TU-Berlin':\n\t\t\tdoc.extras.subgroups = ['roads'];\n\t\t\tbreak;\n\t}\n\n\tconst railwayAdditionalIDs = ['e4504444-2011-436d-8f5b-4c90c0b0b540',\n\t\t'ce54c74c-0e65-4f27-8178-9901411cb06f',\n\t\t'97e83926-3a86-4015-b93a-a6dfe5314855',\n\t\t'41a15066-5bfd-479d-9943-d277487c5b37',\n\t\t'a35bedfb-6c45-4e0a-a9f6-9c43adf798da',\n\t\t'ef2defcc-20ff-417d-a05e-299f099f7033',\n\t\t'676231d3-5b9b-4172-8ef7-6e3747bd19d7',\n\t\t'3a9f5e10-5ecc-4910-a3e3-012f14f8d3f4',\n\t\t'33e3d20d-0e5b-4728-b5c1-eaab5c11c25b',\n\t\t'181add76-a8c5-4c69-b715-be83e07c7574',\n\t\t'918d493f-04ce-45d2-a85b-7e482bea61a0',\n\t\t'6d06b54c-3429-4855-a2ff-27651489dfbc',\n\t\t'e3cae5ff-725e-4704-b357-26a4ee3df413',\n\t\t'4f0894f6-f42b-4a81-9034-c38016f76721',\n\t\t'116f91fa-52b5-4007-a050-a204a0ebf5fb',\n\t\t'a83e70bc-2922-4a92-8c94-a9debe326f9f',\n\t\t'a5023f76-759b-4b45-bc4e-5a8060119803',\n\t\t'370253a5-8004-4675-9fbe-038678022350'];\n\n\tconst aviationAdditionalIDs = ['181add76-a8c5-4c69-b715-be83e07c7574',\n\t\t'918d493f-04ce-45d2-a85b-7e482bea61a0',\n\t\t'2f41315a-9aba-41cc-8c98-ecb6467772f8',\n\t\t'4d163868-c451-4355-881d-a227be5ec856',\n\t\t'72f0078b-0475-42bb-bd64-272d18d4faca',\n\t\t'a83e70bc-2922-4a92-8c94-a9debe326f9f',\n\t\t'a5023f76-759b-4b45-bc4e-5a8060119803',\n\t\t'370253a5-8004-4675-9fbe-038678022350'];\n\n\tconst climateAdditionalIDs =['8b289abb-decd-4887-98c5-ee80381c21b4',\n\t\t'2ab0227e-6c6e-4441-b1a9-f0d1c8560a25',\n\t\t'1830dd65-76f2-47f1-8916-1d21fd80127e',\n\t\t'08e002be-37d4-4ad9-803c-c0a5b452bbfd',\n\t\t'82113feb-84a1-4e36-9c56-6235b9e31543',\n\t\t'60115464-39a7-43eb-b675-76030ef8570d',\n\t\t'da8f803c-e745-43c0-8c94-9ee295145a86',\n\t\t'd8516433-37b6-463a-afc2-3ecbaa1fab41',\n\t\t'dc126af9-9e22-4e00-9fca-804e30ea49ab',\n\t\t'e4b06b31-cc9e-4b3e-978e-8c276dd5e991',\n\t\t'0efd73aa-9d7d-4cba-96c0-608c194fba40',\n\t\t'084a03e9-9c54-40ea-bd0f-ae1e0d340a8a',\n\t\t'063d0b96-0796-4c20-926b-af7330eaec7b',\n\t\t'71a5da70-5567-48da-90c0-8f9d44c7fa48'];\n\n\tconst watersAdditionalIDs = ['c70763b1-4f86-4128-8da4-6caf783ebda1',\n\t\t'4255c7e5-a318-4ab8-b08e-d05cc2e4643b',\n\t\t'e27d7350-dde1-4a45-8020-2bbdc779d1d1',\n\t\t'a4bfd86a-75d4-46b0-b416-d783c9c0472a',\n\t\t'ff5c67e9-95c3-43f2-9895-17b1339add57',\n\t\t'a83e70bc-2922-4a92-8c94-a9debe326f9f',\n\t\t'a5023f76-759b-4b45-bc4e-5a8060119803',\n\t\t'370253a5-8004-4675-9fbe-038678022350'];\n\t\t\n\tconst roadsAdditionalIDs = ['f5efd167-ea1b-4b87-baa3-ae06bb4d7499',\n\t\t'84a678a7-a197-457e-8ca1-f04cbb157f42',\n\t\t'7aac7ced-8df7-44d1-8897-8d1a9764adaa',\n\t\t'059f7694-4940-4ee9-9f03-ac67eb65dd34',\n\t\t'8cbfbfc5-fa55-4e08-ace5-5aff735557f7',\n\t\t'8ea61d91-8759-4383-b92c-1cda5aa1d657',\n\t\t'9573fe92-0482-4bd8-b0dd-8dcf031d7d42',\n\t\t'c3f99292-25c8-4d64-9514-e493b0fb5ff9',\n\t\t'883bc929-94f3-4585-9d3d-374d2ae1c720',\n\t\t'ec4a828f-aecd-47bf-8eeb-697c9efc9378',\n\t\t'a83e70bc-2922-4a92-8c94-a9debe326f9f',\n\t\t'a5023f76-759b-4b45-bc4e-5a8060119803',\n\t\t'370253a5-8004-4675-9fbe-038678022350'];\n\n\tconst aviationOnlyIDs = ['b99003fa-3f3c-40e5-b2df-b316f257a2fc',\n\t\t'3afbc3aa-befa-4ae1-8821-b6094c0747cc',\n\t\t'4f9ef71d-d0e0-45cb-b716-21a714744252',\n\t\t'962c7b9a-cc85-48bb-99b2-a1c06c4b792b',\n\t\t'638c6b17-b0af-4208-a7c8-cb28614e000e',\n\t\t'ac89e40a-d6f7-439d-8c52-50202686efdd'];\n\n\tconst climateOnlyIDs =['3f9ef3d1-9618-4045-a385-dcc79c40a378'];\n\t\t\t\n\tconst climateAndWaterOnly = ['b9ca3d00-a512-47c3-8bbb-179c629bed51',\n\t\t'36d9cf15-43da-4b40-8470-2227ec9c3456',\n\t\t'c3b0cd66-3558-4af4-8ece-49ead068df1d',\n\t\t'b06da9f0-67e0-439c-a5e8-d79c6d3252e7'];\n\n\tif (railwayAdditionalIDs.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups.push('railway');\n\t}\n\tif (aviationAdditionalIDs.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups.push('aviation');\n\t}\n\tif (climateAdditionalIDs.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups.push('climate');\n\t}\n\tif (watersAdditionalIDs.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups.push('waters');\n\t}\n\tif (roadsAdditionalIDs.indexOf(this.source.id) !== -1) {\n\t  doc.extras.subgroups.push('roads');\n\t}\n\tif (aviationOnlyIDs.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups = ['aviation'];\n\t}\n\tif (climateOnlyIDs.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups = ['climate'];\n\t}\n\tif (climateAndWaterOnly.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups = ['climate', 'waters'];\n\t}\n}\nelse if(doc.extras.groups.indexOf('Wirtschaft') !== -1){\n\tif(doc.title === 'E-Mobility Ladesäulen in Berlin' || doc.title === 'Ladesäulen im öffentlichen und halböffentlichen Raum'){\n\t\tdoc.extras.subgroups = ['roads', 'infrastructure'];\n\t\tthis.skipped = false;\n\t}\n\tif(doc.title.indexOf('Breitbandversorgung') !== -1 || doc.title.indexOf('Breitbandverfügbarkeit') !== -1){\n\t\tdoc.extras.subgroups = ['infrastructure'];\n\t\tthis.skipped = false;\n\t}\n}\nelse if(doc.extras.groups.indexOf('Geographie und Stadtplanung') !== -1){\n\tif(doc.title.indexOf('Baumbestand') !== -1 || doc.title.indexOf('Umweltzone') !== -1){\n\t\tdoc.extras.subgroups = ['roads', 'climate'];\n\t\tthis.skipped = false;\n\t}\n}",
+    "customCode": "doc.extras.metadata.source.portal_link = 'https://daten.berlin.de/datensaetze/' + this.source.name;\n\nthis.skipped = true;\n\nif(doc.keywords.indexOf('verkehr') !== -1|| doc.keywords.indexOf('Verkehr')!== -1)\n{\n\tthis.skipped = false;\n\tdoc.extras.subgroups = ['infrastructure'];\n\n\tlet publisher = doc.extras.display_contact[0].name.substr(this.settings.providerPrefix.length);\n\n\tswitch(publisher){\n\t\tcase 'Senatsverwaltung für Umwelt, Verkehr und Klimaschutz Berlin':\n\t\t\tdoc.extras.subgroups = ['roads'];\n\t\t\tbreak;\n\t\tcase 'Senatsverwaltung für Stadtentwicklung und Wohnen Berlin':\n\t\t\tdoc.extras.subgroups = ['infrastructure'];\n\t\t\tbreak;\n\t\tcase 'VBB - Verkehrsverbund Berlin-Brandenburg GmbH':\n\t\t\tdoc.extras.subgroups = ['roads', 'railway'];\n\t\t\tbreak;\n\t\tcase 'Gemeinsame Landesplanungsabteilung Berlin-Brandenburg':\n\t\t\tdoc.extras.subgroups = ['roads', 'railway'];\n\t\t\tbreak;\n\t\tcase 'DAI-Labor/TU-Berlin':\n\t\t\tdoc.extras.subgroups = ['roads'];\n\t\t\tbreak;\n\t}\n\n\tconst railwayAdditionalIDs = ['e4504444-2011-436d-8f5b-4c90c0b0b540',\n\t\t'ce54c74c-0e65-4f27-8178-9901411cb06f',\n\t\t'97e83926-3a86-4015-b93a-a6dfe5314855',\n\t\t'41a15066-5bfd-479d-9943-d277487c5b37',\n\t\t'a35bedfb-6c45-4e0a-a9f6-9c43adf798da',\n\t\t'ef2defcc-20ff-417d-a05e-299f099f7033',\n\t\t'676231d3-5b9b-4172-8ef7-6e3747bd19d7',\n\t\t'3a9f5e10-5ecc-4910-a3e3-012f14f8d3f4',\n\t\t'33e3d20d-0e5b-4728-b5c1-eaab5c11c25b',\n\t\t'181add76-a8c5-4c69-b715-be83e07c7574',\n\t\t'918d493f-04ce-45d2-a85b-7e482bea61a0',\n\t\t'6d06b54c-3429-4855-a2ff-27651489dfbc',\n\t\t'e3cae5ff-725e-4704-b357-26a4ee3df413',\n\t\t'4f0894f6-f42b-4a81-9034-c38016f76721',\n\t\t'116f91fa-52b5-4007-a050-a204a0ebf5fb',\n\t\t'a83e70bc-2922-4a92-8c94-a9debe326f9f',\n\t\t'a5023f76-759b-4b45-bc4e-5a8060119803',\n\t\t'370253a5-8004-4675-9fbe-038678022350'];\n\n\tconst aviationAdditionalIDs = ['181add76-a8c5-4c69-b715-be83e07c7574',\n\t\t'918d493f-04ce-45d2-a85b-7e482bea61a0',\n\t\t'2f41315a-9aba-41cc-8c98-ecb6467772f8',\n\t\t'4d163868-c451-4355-881d-a227be5ec856',\n\t\t'72f0078b-0475-42bb-bd64-272d18d4faca',\n\t\t'a83e70bc-2922-4a92-8c94-a9debe326f9f',\n\t\t'a5023f76-759b-4b45-bc4e-5a8060119803',\n\t\t'370253a5-8004-4675-9fbe-038678022350'];\n\n\tconst climateAdditionalIDs =['8b289abb-decd-4887-98c5-ee80381c21b4',\n\t\t'2ab0227e-6c6e-4441-b1a9-f0d1c8560a25',\n\t\t'1830dd65-76f2-47f1-8916-1d21fd80127e',\n\t\t'08e002be-37d4-4ad9-803c-c0a5b452bbfd',\n\t\t'82113feb-84a1-4e36-9c56-6235b9e31543',\n\t\t'60115464-39a7-43eb-b675-76030ef8570d',\n\t\t'da8f803c-e745-43c0-8c94-9ee295145a86',\n\t\t'd8516433-37b6-463a-afc2-3ecbaa1fab41',\n\t\t'dc126af9-9e22-4e00-9fca-804e30ea49ab',\n\t\t'e4b06b31-cc9e-4b3e-978e-8c276dd5e991',\n\t\t'0efd73aa-9d7d-4cba-96c0-608c194fba40',\n\t\t'084a03e9-9c54-40ea-bd0f-ae1e0d340a8a',\n\t\t'063d0b96-0796-4c20-926b-af7330eaec7b',\n\t\t'71a5da70-5567-48da-90c0-8f9d44c7fa48'];\n\n\tconst watersAdditionalIDs = ['c70763b1-4f86-4128-8da4-6caf783ebda1',\n\t\t'4255c7e5-a318-4ab8-b08e-d05cc2e4643b',\n\t\t'e27d7350-dde1-4a45-8020-2bbdc779d1d1',\n\t\t'a4bfd86a-75d4-46b0-b416-d783c9c0472a',\n\t\t'ff5c67e9-95c3-43f2-9895-17b1339add57',\n\t\t'a83e70bc-2922-4a92-8c94-a9debe326f9f',\n\t\t'a5023f76-759b-4b45-bc4e-5a8060119803',\n\t\t'370253a5-8004-4675-9fbe-038678022350'];\n\t\t\n\tconst roadsAdditionalIDs = ['f5efd167-ea1b-4b87-baa3-ae06bb4d7499',\n\t\t'84a678a7-a197-457e-8ca1-f04cbb157f42',\n\t\t'7aac7ced-8df7-44d1-8897-8d1a9764adaa',\n\t\t'059f7694-4940-4ee9-9f03-ac67eb65dd34',\n\t\t'8cbfbfc5-fa55-4e08-ace5-5aff735557f7',\n\t\t'8ea61d91-8759-4383-b92c-1cda5aa1d657',\n\t\t'9573fe92-0482-4bd8-b0dd-8dcf031d7d42',\n\t\t'c3f99292-25c8-4d64-9514-e493b0fb5ff9',\n\t\t'883bc929-94f3-4585-9d3d-374d2ae1c720',\n\t\t'ec4a828f-aecd-47bf-8eeb-697c9efc9378',\n\t\t'a83e70bc-2922-4a92-8c94-a9debe326f9f',\n\t\t'a5023f76-759b-4b45-bc4e-5a8060119803',\n\t\t'370253a5-8004-4675-9fbe-038678022350'];\n\n\tconst aviationOnlyIDs = ['b99003fa-3f3c-40e5-b2df-b316f257a2fc',\n\t\t'3afbc3aa-befa-4ae1-8821-b6094c0747cc',\n\t\t'4f9ef71d-d0e0-45cb-b716-21a714744252',\n\t\t'962c7b9a-cc85-48bb-99b2-a1c06c4b792b',\n\t\t'638c6b17-b0af-4208-a7c8-cb28614e000e',\n\t\t'ac89e40a-d6f7-439d-8c52-50202686efdd'];\n\n\tconst climateOnlyIDs =['3f9ef3d1-9618-4045-a385-dcc79c40a378'];\n\t\t\t\n\tconst climateAndWaterOnly = ['b9ca3d00-a512-47c3-8bbb-179c629bed51',\n\t\t'36d9cf15-43da-4b40-8470-2227ec9c3456',\n\t\t'c3b0cd66-3558-4af4-8ece-49ead068df1d',\n\t\t'b06da9f0-67e0-439c-a5e8-d79c6d3252e7'];\n\n\tif (railwayAdditionalIDs.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups.push('railway');\n\t}\n\tif (aviationAdditionalIDs.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups.push('aviation');\n\t}\n\tif (climateAdditionalIDs.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups.push('climate');\n\t}\n\tif (watersAdditionalIDs.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups.push('waters');\n\t}\n\tif (roadsAdditionalIDs.indexOf(this.source.id) !== -1) {\n\t  doc.extras.subgroups.push('roads');\n\t}\n\tif (aviationOnlyIDs.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups = ['aviation'];\n\t}\n\tif (climateOnlyIDs.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups = ['climate'];\n\t}\n\tif (climateAndWaterOnly.indexOf(this.source.id) !== -1) {\n\t\tdoc.extras.subgroups = ['climate', 'waters'];\n\t}\n}\nelse if(doc.extras.groups.indexOf('Wirtschaft') !== -1){\n\tif(doc.title === 'E-Mobility Ladesäulen in Berlin' || doc.title === 'Ladesäulen im öffentlichen und halböffentlichen Raum'){\n\t\tdoc.extras.subgroups = ['roads', 'infrastructure'];\n\t\tthis.skipped = false;\n\t}\n\tif(doc.title.indexOf('Breitbandversorgung') !== -1 || doc.title.indexOf('Breitbandverfügbarkeit') !== -1){\n\t\tdoc.extras.subgroups = ['infrastructure'];\n\t\tthis.skipped = false;\n\t}\n}\nelse if(doc.extras.groups.indexOf('Geographie und Stadtplanung') !== -1){\n\tif(doc.title.indexOf('Baumbestand') !== -1 || doc.title.indexOf('Umweltzone') !== -1){\n\t\tdoc.extras.subgroups = ['roads', 'climate'];\n\t\tthis.skipped = false;\n\t}\n}",
     "defaultMcloudSubgroup": [
       "roads"
     ],
@@ -581,6 +596,7 @@
   {
     "index": "ckan_rlp",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -627,6 +643,7 @@
   {
     "index": "ckan_schleswig_holstein",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 1,
@@ -670,6 +687,7 @@
   {
     "index": "ckan_govdata",
     "includeTimestamp": true,
+    "priority": -10,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -696,7 +714,6 @@
     "requestType": "ListWithResources",
     "markdownAsDescription": false,
     "defaultLicense": null,
-    "priority": -10,
     "id": 29,
     "description": "GovData",
     "defaultAttribution": "GovData",
@@ -709,10 +726,11 @@
   {
     "index": "csw_geomis_sachsen",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
-    "customCode": "doc.extras.subgroups = ['roads'];\n\nif(doc.title.indexOf('Verkehrsnetze') !== -1){\n\tdoc.extras.subgroups.push('railway');\n\tdoc.extras.subgroups.push('waters');\n\tdoc.extras.subgroups.push('aviation');\n\tdoc.extras.subgroups.push('infrastructure');\n}\nif((doc.title.indexOf('Topographische Karte') !== -1) || (doc.title.indexOf('Landschaftsmodell') !== -1)){\n\tdoc.extras.subgroups.push('railway');\n\tdoc.extras.subgroups.push('waters');\n\tdoc.extras.subgroups.push('aviation');\n}\nif(doc.title.indexOf('Straßenknotennetz') !== -1){\n\tdoc.extras.subgroups.push('infrastructure');\n}\nif(doc.title.indexOf('Wetter') !== -1){\n\tdoc.extras.subgroups.push('climate');\n}\nif(doc.title.indexOf('Wirtschaft') !== -1){\n\tdoc.extras.subgroups.push('aviation');\n}\nif(doc.title.indexOf('Landeplätze') !== -1){\n\tdoc.extras.subgroups = ['aviation'];\n}",
+    "customCode": "doc.extras.subgroups = ['roads'];\n\nif(doc.title.indexOf('Verkehrsnetze') !== -1){\n\tdoc.extras.subgroups.push('railway');\n\tdoc.extras.subgroups.push('waters');\n\tdoc.extras.subgroups.push('aviation');\n\tdoc.extras.subgroups.push('infrastructure');\n}\nelse if(doc.title.indexOf('Verkehrsfläche') !== -1 || doc.title.indexOf('Verkehrsraum') !== -1){\n\tdoc.extras.subgroups.push('railway');\n\tdoc.extras.subgroups.push('aviation');\n\tdoc.extras.subgroups.push('infrastructure');\n}\nelse if((doc.title.indexOf('Topographische Karte') !== -1) || (doc.title.indexOf('Landschaftsmodell') !== -1)){\n\tdoc.extras.subgroups.push('railway');\n\tdoc.extras.subgroups.push('waters');\n\tdoc.extras.subgroups.push('aviation');\n}\nelse if(doc.title.indexOf('Straßenknotennetz') !== -1){\n\tdoc.extras.subgroups.push('infrastructure');\n}\nelse if(doc.title.indexOf('Wetter') !== -1){\n\tdoc.extras.subgroups.push('climate');\n}\nelse if(doc.title.indexOf('Wirtschaft') !== -1){\n\tdoc.extras.subgroups.push('aviation');\n}\nelse if(doc.title.indexOf('Landeplätze') !== -1){\n\tdoc.extras.subgroups = ['aviation'];\n}\nelse if(doc.title.indexOf('Schienennetzdichte') !== -1){\n\tdoc.extras.subgroups = ['railway'];\n}\nelse if(doc.title.indexOf('Wasserfläche') !== -1 || doc.title.indexOf('Gewässerranddichte') !== -1){\n\tdoc.extras.subgroups = ['waters'];\n}\nelse if(doc.title.indexOf('Gewässer') !== -1 || doc.keywords.indexOf('Gewässer') !== -1){\n\tthis.skipped = true;\n}",
     "defaultMcloudSubgroup": [
       "roads"
     ],
@@ -730,7 +748,7 @@
     "description": "GeoMIS.Sachsen",
     "defaultAttribution": "GeoMIS Sachsen",
     "defaultAttributionLink": "https://geomis.sachsen.de",
-    "recordFilter": "        <ogc:Filter>\n            <ogc:And>\n                <ogc:PropertyIsEqualTo>\n                    <ogc:PropertyName>subject</ogc:PropertyName>\n                    <ogc:Literal>opendata</ogc:Literal>\n                </ogc:PropertyIsEqualTo>\n                <ogc:Or>\n                    <ogc:PropertyIsEqualTo>\n                        <ogc:PropertyName>HierarchyLevelName</ogc:PropertyName>\n                        <ogc:Literal>transportation</ogc:Literal>\n                    </ogc:PropertyIsEqualTo>\n                    <ogc:PropertyIsEqualTo>\n                        <ogc:PropertyName>TopicCategory</ogc:PropertyName>\n                        <ogc:Literal>transportation</ogc:Literal>\n                    </ogc:PropertyIsEqualTo>\n                </ogc:Or>\n            </ogc:And>\n        </ogc:Filter>",
+    "recordFilter": "            <ogc:Filter>\n                <ogc:Or>\n                    <ogc:And>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>subject</ogc:PropertyName>\n                            <ogc:Literal>opendata</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:Or>\n                            <ogc:PropertyIsEqualTo>\n                                <ogc:PropertyName>HierarchyLevelName</ogc:PropertyName>\n                                <ogc:Literal>transportation</ogc:Literal>\n                            </ogc:PropertyIsEqualTo>\n                            <ogc:PropertyIsEqualTo>\n                                <ogc:PropertyName>TopicCategory</ogc:PropertyName>\n                                <ogc:Literal>transportation</ogc:Literal>\n                            </ogc:PropertyIsEqualTo>\n                        </ogc:Or>\n                    </ogc:And>\n                    <ogc:And>\n                        <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                            <ogc:PropertyName>OrganisationName</ogc:PropertyName>\n                            <ogc:Literal>Leibniz-Institut f.r .kologische Raumentwicklung</ogc:Literal>\n                        </ogc:PropertyIsLike>\n                        <ogc:Or>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*verkehr*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*stra.e*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*schiene*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*wasser*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*gew.sser*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                        </ogc:Or>\n                    </ogc:And>\n                </ogc:Or>\n            </ogc:Filter>",
     "cron": {
       "active": true,
       "pattern": "40 2 * * *"
@@ -739,6 +757,7 @@
   {
     "index": "ckan_geonet_mrn",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -782,6 +801,7 @@
   {
     "index": "csw_bkg",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -812,6 +832,7 @@
   {
     "index": "csw_geoportal_brandenburg",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -835,7 +856,6 @@
     "defaultAttributionLink": null,
     "recordFilter": "            \n<ogc:Filter>\n    <ogc:And>\n        <ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n            <ogc:Literal>*Datenlizenz Deutschland*</ogc:Literal>\n        </ogc:PropertyIsLike>\n        <ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>Keyword</ogc:PropertyName>\n            <ogc:Literal>Gewässer</ogc:Literal>\n        </ogc:PropertyIsLike>\n    </ogc:And>\n</ogc:Filter>\n",
     "disable": false,
-    "priority": null,
     "cron": {
       "pattern": "55 02 * * *",
       "active": true
@@ -844,6 +864,7 @@
   {
     "index": "csw_geodaten_mv",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -867,7 +888,6 @@
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n\t<ogc:And>\n\t\t<ogc:Or>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>*Datenlizenz Deutschland*</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>*Creative Commons*</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t</ogc:Or>\n\t\t<ogc:Or>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>subject</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>Verkehrsnetze</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>Subject</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>Gew?ssernetz</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>transportation</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>inlandWaters</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t</ogc:Or>\n\t</ogc:And>\n</ogc:Filter>",
     "disable": false,
-    "priority": null,
     "cron": {
       "pattern": "50 02 * * *",
       "active": true
@@ -876,6 +896,7 @@
   {
     "index": "csw_eba_laermkartierung",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -899,7 +920,6 @@
     "defaultAttributionLink": null,
     "recordFilter": "            <ogc:Filter>\n               <ogc:PropertyIsEqualTo>\n                    <ogc:PropertyName>subject</ogc:PropertyName>\n                    <ogc:Literal>opendata</ogc:Literal>\n               </ogc:PropertyIsEqualTo>\n            </ogc:Filter>",
     "disable": false,
-    "priority": null,
     "cron": {
       "pattern": "37 02 * * *",
       "active": true
@@ -908,6 +928,7 @@
   {
     "index": "csw_geoportal_bw",
     "includeTimestamp": true,
+    "priority": -5,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -934,12 +955,12 @@
     "cron": {
       "active": true,
       "pattern": "55 02 * * *"
-    },
-    "priority": null
+    }
   },
   {
     "index": "csw_metaver_hb",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -971,6 +992,7 @@
   {
     "index": "csw_metaver_st",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -998,7 +1020,6 @@
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Verkehr</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
     "disable": false,
-    "priority": null,
     "cron": {
       "pattern": "47 02 * * *",
       "active": true
@@ -1007,6 +1028,7 @@
   {
     "index": "csw_metaver_bb",
     "includeTimestamp": true,
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
@@ -1030,7 +1052,6 @@
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Lärm</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
     "disable": false,
-    "priority": null,
     "cron": {
       "active": true,
       "pattern": "45 02 * * *"
@@ -1039,6 +1060,7 @@
   {
     "index": "oai_dwd",
     "includeTimestamp": true,
+    "priority": null,
     "type": "OAI",
     "maxRecords": 100,
     "startPosition": 1,
@@ -1061,7 +1083,6 @@
     "defaultAttribution": "DWD",
     "defaultAttributionLink": "https://oai.dwd.de/oai/provider?verb=ListRecords&metadataPrefix=iso19139&set=mCLOUD",
     "disable": false,
-    "priority": null,
     "cron": {
       "pattern": "50 02 * * *",
       "active": true
@@ -1070,10 +1091,11 @@
   {
     "index": "dcat_govdata",
     "includeTimestamp": true,
+    "priority": -10,
     "type": "DCAT",
     "maxRecords": 100,
     "startPosition": 0,
-    "customCode": "let contributor = DcatMapper.select('./dcatde:contributorID/@rdf:resource', this.record, true);\nif(contributor && contributor.textContent.endsWith(\"mCloud\")){\n\tthis.skipped = true\n}",
+    "customCode": "doc.extras.metadata.source.portal_link='https://www.govdata.de/';\nlet contributor = DcatMapper.select('./dcatde:contributorID/@rdf:resource', this.record, true);\nif(contributor && contributor.textContent.endsWith(\"mCloud\")){\n\tthis.skipped = true;\n}\nif(!doc.distribution || doc.distribution.length === 0){\n\tthis.skipped = true;\n}\nswitch(doc.extras.display_contact[0].name){\n    case 'GovData DCAT-AP':\n        if(doc.title.indexOf('Binnenschiffahrt') !== -1 || doc.title.indexOf('WRRL') !== -1) doc.extras.subgroups = ['waters'];\n        else if(doc.title.indexOf('Fahrplandaten') !== -1) doc.extras.subgroups = ['roads', 'railway'];\n        else if(doc.title.indexOf('Luftverkehr') !== -1) doc.extras.subgroups = ['aviation'];\n        else  this.skipped = true;\n        //Schlagwort 'gewässernetz' oder 'hydrographie' vorhanden --> 'Wasserstraßen'\n        //Schlagwort 'umweltüberwachung': Standard-Kategorie 'Wasserstraßen',\n\n        //außer bei 'Niederschlagsmessnetz', 'Agrarmeteorologisches Messnetz', 'Luft- und Depositionsmessnetz Sachsen (AG Mz)' --> 'Wetter & Klima'\n        //außer bei 'Straßenzustands- und Wetter-Informationssystem (SWIS)', 'Immissionskataster' --> 'Wetter & Klima' & 'Straßen'\n        //außer bei 'Kartierungsgebiet', 'Belastete je Gemeinde' --> 'Straßen', 'Bahn', 'Luft- und Raumfahrt'\n\n        //UUIDs ausschließen: b11bc8e2-034b-40ea-b1d6-eb3c1ec441ff, f100f81b-22a8-56b4-8f5a-340d15fd8106, eb523000-c2f9-43b6-bac1-267dd015b775, ac2293e2-62a6-4889-b9c4-3534cbdc27bd, 4b4b6499-a473-44f3-baa8-864d426fce0d\n        break;\n    case 'GovData: Statistisches Bundesamt':\n        if(doc.title.indexOf('Berichtsflughafen') !== -1 || doc.title.indexOf('Luftverkehr') !== -1) doc.extras.subgroups = ['aviation'];\n        else if(doc.title.indexOf('Eisenbahngüterverkehr') !== -1 || doc.title.indexOf('Schienennetzes') !== -1) doc.extras.subgroups = ['railway'];\n        else if(['Seeverkehr', 'Seegüterumschlag', 'Binnensch.', 'Binnenschifffahrt', 'Fährverkehr', 'Seehäfen'].some(s => doc.title.indexOf(s) !== -1))  doc.extras.subgroups = ['waters'];\n        else if(doc.title.indexOf('Rohrfernleitungsstatistik') !== -1) doc.extras.subgroups = ['infrastructure'];\n        else if(doc.title.indexOf('Bussen und Bahnen') !== -1) doc.extras.subgroups = ['roads', 'railway'];\n        else doc.extras.subgroups = ['roads'];\n        break;\n    case 'GovData: Regionalverband Ruhr':\n        if(doc.title.indexOf('Verkehr') !== -1 || doc.title.indexOf('Radfahren') !== -1 || doc.title.indexOf('ÖPNV') !== -1)\n\t\t\tdoc.extras.subgroups = ['roads'];\n        else if (doc.title.indexOf('Gewässer') !== -1)\n\t\t\tdoc.extras.subgroups = ['waters'];\n        else this.skipped = true;\n        break;\n    case 'GovData: Nationalparkverwaltung Niedersächsisches Wattenmeer':\n        doc.extras.subgroups = ['waters'];\n        break;\n    case 'GovData: Nationalparkverwaltung Niedersächsisches Wattenmeer / Niedersächsischer Landesbetrieb für Wasserwirtschaft Küsten- und Naturschutz':\n        doc.extras.subgroups = ['waters'];\n        break;\n    case 'GovData: Stadt Trier':\n        if(doc.title.indexOf('Oberflächengewässer') !== -1) doc.extras.subgroups = ['waters'];\n        else if(['Fahrrad', 'Parken', 'Busparkplätze', 'Nahverkehr', 'Verkehr', 'Behindertenparkplätze', 'Elektromobilität'].some(s => doc.title.indexOf(s) !== -1))  doc.extras.subgroups = ['roads'];\n        else this.skipped = true;\n        break;\n    case 'GovData: SGD Nord - Referat 41 - Landesplanung, Raumordnung':\n        if(doc.title.indexOf('Hochgeschwindigkeitsstrecke') !== -1)  doc.extras.subgroups = ['railway'];\n        else if(doc.title.indexOf('Straßenverbindung') !== -1 || doc.title.indexOf('Verkehrs') !== -1)  doc.extras.subgroups = ['roads'];\n        else if(doc.title.indexOf('Hochwasserschutz') !== -1)  doc.extras.subgroups = ['waters'];\n        else this.skipped = true;\n        break;\n    case 'GovData: Umweltbundesamt':\n        if(doc.title.indexOf('Großflughäfen') !== -1 || doc.title.indexOf('Flughäfen') !== -1)  doc.extras.subgroups = ['aviation'];\n        else if(doc.title.indexOf('Luftqualitätsdaten') !== -1)  doc.extras.subgroups = ['climate'];\n        else if(doc.title.indexOf('Ballungsräume') !== -1)  doc.extras.subgroups = ['roads', 'railway', 'aviation'];\n        else if(doc.title.indexOf('Seentypologie') !== -1 || doc.title.indexOf('Einzugsgebiete') !== -1 || doc.title.indexOf('Seen') !== -1) doc.extras.subgroups = ['waters'];\n        else if(doc.title.indexOf('Hauptverkehrsstraßen') !== -1)  doc.extras.subgroups = ['roads'];\n        else if(doc.title.indexOf('Haupteisenbahnstrecken') !== -1)  doc.extras.subgroups = ['railway'];\n        else this.skipped = true;\n        break;\n    case 'GovData: Thüringer Landesamt für Bodenmanagement und Geoinformation':\n        if(doc.title.indexOf('Gewaesser') !== -1 || doc.title.indexOf('Hydro') !== -1) doc.extras.subgroups = ['waters'];\n        else if(doc.title.indexOf('Digitale Topographische Karte') !== -1 || doc.title.indexOf('Verkehrsnetze') !== -1 || doc.title.indexOf('Verkehr') !== -1)  doc.extras.subgroups = ['roads', 'railway', 'waters', 'aviation'];\n        else this.skipped = true;\n        break;\n    case 'GovData: Niedersächsisches Landesamt für Verbraucherschutz und Lebensmittelsicherheit':\n        doc.extras.subgroups = ['waters'];\n        break;\n    case 'GovData: Landesbetrieb Mobilität Rheinland-Pfalz':\n        doc.extras.subgroups = ['roads'];\n        break;\n    case 'GovData: Gewerbeaufsichtsamt Hildesheim, Zentrale Unterstützungsstelle Luftreinhaltung, Lärm, Gefahrstoffe und Störfallvorsorge (ZUS LLGS)':\n        if(doc.title.indexOf('Messstationen') !== -1 || doc.title.indexOf('PM10') !== -1 || doc.title.indexOf('NO2') !== -1)  doc.extras.subgroups = ['roads', 'climate'];\n        else if(doc.title.indexOf('Umweltzonen') !== -1)  doc.extras.subgroups = ['roads'];\n        else this.skipped = true;\n        break;\n    case 'GovData: Landkreis Diepholz':\n        if(doc.title.indexOf('Strassenmeistereibezirke') !== -1 || doc.title.indexOf('Fahrradleitsystem') !== -1 || doc.title.indexOf('Autobahn') !== -1)  doc.extras.subgroups = ['roads'];\n        else this.skipped = true;\n        break;\n    case 'GovData: Statistische Ämter des Bundes und der Länder':\n        doc.extras.subgroups = ['roads'];\n        break;\n    case 'GovData: Landeshauptstadt Dresden':\n        doc.extras.subgroups = ['waters'];\n        if(this.uuid === 'cf1b447c-2d3b-4e85-a61f-fd8ea49f121c') this.skipped = true;\n        break;\n    case 'GovData: Senatsverwaltung für Umwelt, Verkehr und Klimaschutz Berlin':\n        //--> bekommen wir eigentlich über eigene Schnittstelle rein. Hier bitte für mich ein Ticket anlegen, damit ich noch mal prüfe, ob wir Daten ausschließen, die jetzt über den Umweg GovData rein kommen.\n        doc.extras.subgroups = ['roads'];\n        break;\n    case 'GovData: Statistisches Landesamt des Freistaates Sachsen':\n        if(doc.title.indexOf('Binnenschifffahrt') !== -1)  doc.extras.subgroups = ['waters'];\n        else doc.extras.subgroups = ['roads'];\n        break;\n    case 'GovData: Bundesamt für Strahlenschutz':\n        if(doc.title.indexOf('Bundeswasserstrassen') !== -1 || doc.title.indexOf('Nord- und Ostsee') !== -1)  doc.extras.subgroups = ['waters'];\n        else doc.extras.subgroups = ['climate'];\n        break;\n    case 'GovData: Niedersächsisches Ministerium für Umwelt, Energie, Bauen und Klimaschutz, Referat 14 - Umweltinformation, Digitalisierung, eGovernment':\n        doc.extras.subgroups = ['waters'];\n        break;\n    case 'GovData: Stadt Gelsenkirchen':\n        if(doc.title.indexOf('Infrastrukturdaten') !== -1)  doc.extras.subgroups = ['infrastructure'];\n        else if(doc.title.indexOf('Stellplatzablösesatzung') !== -1)  doc.extras.subgroups = ['roads'];\n        else this.skipped = true;\n        break;\n    case 'GovData: Stadt Mittenwalde':\n        doc.extras.subgroups = ['roads'];\n        break;\n    case 'GovData: Statistisches Landesamt Bremen':\n        if(doc.title.indexOf('Häfen') !== -1)  doc.extras.subgroups = ['waters'];\n        else doc.extras.subgroups = ['roads'];\n        break;\n    case 'GovData: NLWKN':\n        doc.extras.subgroups = ['waters'];\n        break;\n    case 'GovData: Nds. Landesbehörde f. Straßenbau u. Verkehr':\n        doc.extras.subgroups = ['roads'];\n        break;\n    case 'GovData: Senatorin für Klimaschutz, Umwelt, Mobilität, Stadtentwicklung und Wohnungsbau':\n        doc.extras.subgroups = ['waters'];\n        break;\n    case 'GovData: ThüringenForst AöR, Forstliches Forschungs- und Kompetenzzentrum':\n        doc.extras.subgroups = ['roads', 'railway'];\n        break;\n    case 'GovData: NLWKN Betriebsstelle Brake-Oldenburg':\n        doc.extras.subgroups = ['waters'];\n        break;\n    case 'GovData: Verkehrslenkung Berlin':\n        doc.extras.subgroups = ['roads'];\n        break;\n    case 'GovData: Landesamt für Umwelt Brandenburg (LfU), Abteilung Wasserwirtschaft 1 (Genehmigungen / Grundlagen), Referat W16 - Hochwasserrisikomanagement, Wasserrahmenrichtlinie':\n        doc.extras.subgroups = ['waters'];\n        break;\n    case 'GovData: Kataster- und Vermessungsamt':\n        doc.extras.subgroups = ['roads'];\n        break;\n    case 'GovData: Stadt Braunschweig, Fachbereich 61 Stadtplanung und Umweltschutz, Abt. 61.2 Geoinformation':\n        doc.extras.subgroups = ['roads'];\n        break;\n    default:\n        this.skipped = true;\n        break;\n}\n",
     "defaultMcloudSubgroup": [
       "roads"
     ],
@@ -1084,19 +1106,25 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
-    "catalogUrl": "https://www.govdata.de/ckan/catalog/catalog.rdf?fq=groups:tran",
+    "catalogUrl": "https://www.govdata.de/ckan/catalog/catalog.rdf?fq=groups:tran+NOT+tags:bauleitplan",
     "filterTags": [],
     "filterThemes": [],
-    "priority": -10,
     "id": 46,
     "description": "GovData DCAT-AP",
     "defaultAttribution": "GovData",
     "defaultAttributionLink": "https://www.govdata.de/",
-    "disable": true
+    "disable": false,
+    "providerPrefix": "GovData: ",
+    "dcatProviderField": "creator",
+    "cron": {
+      "pattern": "05 03 * * * ",
+      "active": true
+    }
   },
   {
     "index": "dcat_hro",
     "includeTimestamp": true,
+    "priority": null,
     "type": "DCAT",
     "maxRecords": 100,
     "startPosition": 0,
@@ -1122,11 +1150,80 @@
     "defaultAttributionLink": null,
     "providerPrefix": "",
     "dcatProviderField": "maintainer",
-    "priority": null,
     "cron": {
       "active": true,
       "pattern": "5 2 * * *"
     },
     "disable": false
+  },
+  {
+    "index": "sparql_limbo",
+    "includeTimestamp": true,
+    "priority": 0,
+    "type": "SPARQL",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "customCode": "doc.distribution.forEach(dist => {\n\tif(dist.accessURL.endsWith('.ttl'))\n\t\tdist.format = ['Turtle-File']\n});\ndoc.extras.display_contact = [{\n            \"name\": \"LimboConsortium\",\n            \"mbox\": null,\n\t\t\t\"homepage\": \"https://data.limbo-project.org/LimboConsortium\"\n          }];",
+    "defaultMcloudSubgroup": [
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "endpointUrl": "https://metadata.limbo-project.org/sparql",
+    "query": "PREFIX dcat: <http://www.w3.org/ns/dcat#>\nPREFIX dataid: <http://dataid.dbpedia.org/ns/core#>\nPREFIX prov: <http://www.w3.org/ns/prov#> \nPREFIX dct: <http://purl.org/dc/terms/>\nPREFIX dcatx: <http://www.example.org/>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\n\nSELECT DISTINCT ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?license (GROUP_CONCAT(DISTINCT ?keyword; SEPARATOR=\", \") AS ?keywords) (GROUP_CONCAT(DISTINCT ?dcat_theme; SEPARATOR=\", \") AS ?dcat_theme)\nWHERE {\n?limbo_ds dataid:group ?group;\n            dct:identifier ?id;\n            dcat:distribution ?limbo_dist;\n            dct:issued ?issued;\n            dct:license ?license;\n            prov:wasDerivedFrom ?mcloud_dist.\nOPTIONAL {?limbo_ds dct:publisher ?publisher.}\n?limbo_dist dcat:downloadURL ?distribution_url ;\n            dcatx:localId ?distribution_title.\n?mcloud_ds dcat:distribution ?mcloud_dist ;\n            dct:title ?mcloud_title;\n            dct:description ?mcloud_description;\n            dcat:keyword ?keyword;\n            dcat:theme ?dcat_theme;\n            dcat:landingPage ?mcloud_landingPage .\n\nBIND (CONCAT(\"LIMBO - \",?mcloud_title) as ?title).\nBIND (CONCAT(\"Limbo-Daten f&uuml;r <a href=\\\"\",?mcloud_landingPage ,\"\\\">\",?mcloud_title,\"</a> \\r\\n\\r\\nOriginal:\\r\\n\",?mcloud_description) as ?description).\nBIND (?limbo_ds as ?source_link)\n\nFILTER (?group = 'org.limbo')\nFILTER(!EXISTS { ?x owl:priorVersion ?limbo_ds })\n}\nGROUP BY ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?license",
+    "filterTags": [],
+    "filterThemes": [],
+    "id": 48,
+    "description": "LIMBO",
+    "defaultAttribution": "LIMBO",
+    "defaultAttributionLink": "https://www.limbo-project.org/",
+    "ckanBaseUrl": "http://ckan.qrowd.aksw.org",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "requestType": "Search",
+    "additionalSearchFilter": "",
+    "providerPrefix": "",
+    "providerField": "organization",
+    "rules": {
+      "containsDocumentsWithData": false
+    },
+    "eitherKeywords": [],
+    "disable": true
+  },
+  {
+    "index": "csw_dfs",
+    "includeTimestamp": true,
+    "priority": 0,
+    "type": "CSW",
+    "maxRecords": 10,
+    "startPosition": 1,
+    "customCode": "if(doc.distribution[0].format[0] === 'onLine'){\n    doc.distribution = [];\n} else {\n    doc.extras.metadata.is_valid = false;\n}",
+    "defaultMcloudSubgroup": [
+      "aviation"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "getRecordsUrl": "https://haleconnect.com/csw",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 49,
+    "description": "Deutsche Flugsicherung",
+    "defaultAttribution": "Deutsche Flugsicherung",
+    "defaultAttributionLink": "https://www.dfs.de",
+    "recordFilter": "            <ogc:Filter>\n               <ogc:PropertyIsEqualTo>\n                    <ogc:PropertyName>apiso:OrganisationName</ogc:PropertyName>\n                    <ogc:Literal>DFS</ogc:Literal>\n               </ogc:PropertyIsEqualTo>\n            </ogc:Filter>",
+    "cron": {
+      "pattern": "55 02 * * *",
+      "active": true
+    }
   }
 ]

@@ -7,6 +7,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.component';
 import {DialogLogComponent} from './dialog-log/dialog-log.component';
 import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
+import {DialogHistoryComponent} from './dialog-history/dialog-history.component';
 import {ImportLogMessage} from '../../../../server/app/model/import.result';
 import {flatMap, groupBy, mergeMap, tap, toArray} from 'rxjs/operators';
 import {MatSlideToggleChange} from '@angular/material';
@@ -152,6 +153,29 @@ export class HarvesterComponent implements OnInit, OnDestroy {
           err => alert(err.message));
       }
     });
+  }
+
+  async showHistory(harvester: Harvester) {
+    let data = await this.harvesterService.getHarvesterHistory(harvester.id).toPromise();
+    if(data && data.history.length > 0){
+    const dialogRef = this.dialog.open(DialogHistoryComponent, {
+      data: data,
+      width: '950px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe((result: Harvester) => {
+      if (result) {
+        this.harvesterService.updateHarvester(result).subscribe(() => {
+          // update view by modifying original object
+          Object.keys(harvester).forEach(key => harvester[key] = result[key]);
+        }, err => alert(err.message));
+      }
+    });
+    }
+    else {
+      alert('Keine Historie für diesen Importer vorhanden!');
+    }
   }
 
   handleActivation($event: MatSlideToggleChange, harvester: Harvester) {

@@ -24,10 +24,13 @@ const addContext = require('mochawesome/addContext');
 
 Cypress.on('test:after:run', (test, runnable) => {
   if (test.state === 'failed') {
+    const firstTestStart = runnable.parent.tests[0].wallClockStartedAt;
+    const startTimeOffset = Math.round((test.wallClockStartedAt - firstTestStart) / 1000);
+
     const screenshotFileName = `${runnable.parent.title} -- ${test.title} (failed).png`;
 
     addContext({test}, `assets/${Cypress.spec.name}/${screenshotFileName}`);
-    addContext({test}, `assets/${Cypress.spec.name}.mp4`);
+    addContext({test}, `assets/${Cypress.spec.name}.mp4#t=${startTimeOffset}`);
   }
 });
 

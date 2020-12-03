@@ -43,9 +43,14 @@ export class DcatLicensesUtils {
     constructor() {
     }
 
-    static async get(dcatUrl) {
+    static async get(licenseURL) {
+        if(!licenseURL) return undefined;
+
         if (!DcatLicensesUtils.licenses) DcatLicensesUtils.import();
-        return DcatLicensesUtils.licenses[dcatUrl];
+
+        if(licenseURL.startsWith("https://")) licenseURL = licenseURL.substring("https://".length);
+        if(licenseURL.startsWith("http://")) licenseURL = licenseURL.substring("http://".length);
+        return DcatLicensesUtils.licenses[licenseURL];
 
     }
 
@@ -68,11 +73,21 @@ export class DcatLicensesUtils {
                     let url = DcatLicensesUtils.select('./foaf:homepage', concepts[i], true);
 
                     if (id && dcatURL && title && url) {
-                        DcatLicensesUtils.licenses[dcatURL] = {
+                        let license = {
                             id: id.textContent,
                             title: title.textContent,
                             url: url.getAttribute('rdf:resource')
                         };
+
+
+                        if(dcatURL.startsWith("https://")) dcatURL = dcatURL.substring("https://".length);
+                        if(dcatURL.startsWith("http://")) dcatURL = dcatURL.substring("http://".length);
+                        let licenseURL = url.getAttribute('rdf:resource');
+                        if(licenseURL.startsWith("https://")) licenseURL = licenseURL.substring("https://".length);
+                        if(licenseURL.startsWith("http://")) licenseURL = licenseURL.substring("http://".length);
+
+                        DcatLicensesUtils.licenses[dcatURL] = license;
+                        DcatLicensesUtils.licenses[licenseURL] = license;
                     }
                 }
             }

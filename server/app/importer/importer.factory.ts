@@ -10,10 +10,12 @@ import {ExcelSettings} from './excel/excel.settings';
 import {CswSettings} from './csw/csw.settings';
 import {OaiSettings} from './oai/oai.settings';
 import {DcatImporter} from "./dcat/dcat.importer";
+import {SparqlImporter} from "./sparql/sparql.importer";
+import {SparqlSettings} from "./sparql/sparql.settings";
 
 export class ImporterFactory {
 
-    public static get(config: ExcelSettings | CkanSettings | CswSettings | OaiSettings): Importer {
+    public static get(config: ExcelSettings | CkanSettings | CswSettings | OaiSettings | SparqlSettings): Importer {
         switch (config.type) {
             case 'CKAN':
                 // remove trailing slash from CKAN URL
@@ -28,6 +30,7 @@ export class ImporterFactory {
             case 'CODEDE-CSW': return new CodedeImporter(config);
             case 'OAI': return new OaiImporter(config);
             case 'DCAT': return new DcatImporter(config);
+            case 'SPARQL': return new SparqlImporter(config);
             default: {
                 console.error('Importer not found: ' + config.type);
             }

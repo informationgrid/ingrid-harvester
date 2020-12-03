@@ -6,6 +6,7 @@ import {ExcelSettings} from './excel.settings';
 import {RequestDelegate} from '../../utils/http-request.utils';
 import {OptionsWithUri} from 'request-promise';
 import {ImporterSettings} from "../../importer.settings";
+import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -13,7 +14,7 @@ export class ExcelMapper extends GenericMapper {
 
     data;
     id;
-    issuedExisting;
+    storedData;
     columnValues: string[] | Date;
     columnMap;
     workbook;
@@ -26,7 +27,7 @@ export class ExcelMapper extends GenericMapper {
         this.settings = settings;
         this.data = data;
         this.id = data.id;
-        this.issuedExisting = data.issued;
+        this.storedData = data.storedData;
         this.columnValues = data.columnValues;
         this.columnMap = data.columnMap;
         this.workbook = data.workbook;
@@ -103,7 +104,16 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getMetadataIssued() {
-        return this.issuedExisting ? this.issuedExisting : new Date(Date.now());
+        return (this.storedData && this.storedData.issued) ? this.storedData.issued : new Date(Date.now());
+    }
+
+    getMetadataModified(): Date {
+        if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
+            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
+            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
+                return new Date(this.storedData.modified);
+        }
+        return new Date(Date.now());
     }
 
     getMetadataSource() {
@@ -312,6 +322,14 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getAccrualPeriodicity(): string {
+        let value: string = this.columnValues[this.columnMap.Periodizitaet].toString();
+        if(value){
+            let periodicity = DcatPeriodicityUtils.getPeriodicity(value);
+            if(!periodicity){
+                this.summary.warnings.push(["Unbekannte Periodizität", value]);
+            }
+            return periodicity;
+        }
         return undefined;
     }
 
@@ -324,7 +342,7 @@ export class ExcelMapper extends GenericMapper {
     }
 
     getHarvestedData(): string {
-        return undefined;
+        return JSON.stringify(this.columnValues);
     }
 
     getGroups(): string[] {

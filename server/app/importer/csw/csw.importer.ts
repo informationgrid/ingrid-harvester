@@ -156,20 +156,32 @@ export class CswImporter implements Importer {
 
     createDataServiceCoupling(){
         let bulkData = this.elastic._bulkData;
-        let servicesByDataIdentifier = []
+        let servicesByDataIdentifier = [];
+        let servicesByFileIdentifier = [];
         for(let i = 0; i < bulkData.length; i++){
             let doc = bulkData[i];
             if(doc.extras){
                 let harvestedData = doc.extras.harvested_data;
                 let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
                 let identifierList = CswMapper.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
-                if(identifierList){
+                if(identifierList && identifierList.length > 0){
                     for(let j = 0; j < identifierList.length; j++){
                         let identifer = identifierList[j].textContent;
                         if(!servicesByDataIdentifier[identifer]){
                             servicesByDataIdentifier[identifer] = [];
                         }
                         servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distribution);
+                    }
+                } else {
+                    identifierList = CswMapper.select('.//srv:operatesOn', xml)
+                    if (identifierList && identifierList.length > 0) {
+                        for (let j = 0; j < identifierList.length; j++) {
+                            let identifer = identifierList[j].getAttribute("uuidref")
+                            if (!servicesByFileIdentifier[identifer]) {
+                                servicesByFileIdentifier[identifer] = [];
+                            }
+                            servicesByFileIdentifier[identifer] = servicesByFileIdentifier[identifer].concat(doc.distribution);
+                        }
                     }
                 }
             }
@@ -189,6 +201,15 @@ export class CswImporter implements Importer {
                         }
                     }
                 }
+                identifierList = CswMapper.select('.//gmd:fileIdentifier/gco:CharacterString', xml)
+                if(identifierList){
+                    for(let j = 0; j < identifierList.length; j++){
+                        let identifer = identifierList[j].textContent;
+                        if(servicesByFileIdentifier[identifer]){
+                            doc.distribution = doc.distribution.concat(servicesByFileIdentifier[identifer]);
+                        }
+                    }
+                }
             }
         }
     }
@@ -203,12 +224,12 @@ export class CswImporter implements Importer {
         }
 
         let now = new Date(Date.now());
-        let issued;
+        let storedData;
 
         if (this.settings.dryRun) {
-            issued = ids.map(() => now);
+            storedData = ids.map(() => now);
         } else {
-            issued = await this.elastic.getIssuedDates(ids);
+            storedData = await this.elastic.getStoredData(ids);
         }
 
         for (let i = 0; i < records.length; i++) {
@@ -227,7 +248,7 @@ export class CswImporter implements Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], harvestTime, issued[i], this.summary);
+            let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary);
 
             let doc: any = await IndexDocument.create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -262,8 +283,8 @@ export class CswImporter implements Importer {
             .catch(err => log.error('Error indexing CSW record', err));
     }
 
-    getMapper(settings, record, harvestTime, issuedTime, summary): CswMapper {
-        return new CswMapper(settings, record, harvestTime, issuedTime, summary);
+    getMapper(settings, record, harvestTime, storedData, summary): CswMapper {
+        return new CswMapper(settings, record, harvestTime, storedData, summary);
     }
 
     static createRequestConfig(settings: CswSettings): OptionsWithUri {

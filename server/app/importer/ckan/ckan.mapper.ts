@@ -11,13 +11,15 @@ import {Summary} from '../../model/summary';
 import {CkanRules} from './ckan.rules';
 import {throwError} from 'rxjs';
 import {ImporterSettings} from "../../importer.settings";
+import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
+import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 
 let mapping = require('../../../mappings.json');
 let markdown = require('markdown').markdown;
 
 export interface CkanMapperData {
     harvestTime: Date;
-    issuedDate: Date;
+    storedData: any;
     source: any;
     currentIndexName: string;
     summary: Summary;
@@ -169,7 +171,16 @@ export class CkanMapper extends GenericMapper {
     }
 
     getMetadataIssued() {
-        return this.data.issuedDate ? new Date(this.data.issuedDate) : new Date(Date.now());
+        return (this.data.storedData && this.data.storedData.issued) ? new Date(this.data.storedData.issued) : new Date(Date.now());
+    }
+
+    getMetadataModified(): Date {
+        if(this.data.storedData && this.data.storedData.modified && this.data.storedData.dataset_modified){
+            let storedDataset_modified: Date = new Date(this.data.storedData.dataset_modified);
+            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
+                return new Date(this.data.storedData.modified);
+        }
+        return new Date(Date.now());
     }
 
     getMetadataSource() {
@@ -302,7 +313,43 @@ export class CkanMapper extends GenericMapper {
     }
 
     getAccrualPeriodicity(): string {
-        return this.source.update_cycle;
+        let raw = undefined;
+
+        if(this.source.update_cycle){
+            raw = this.source.update_cycle;
+        }
+
+        if(!raw && this.source.temporal_granularity){
+            raw = this.source.temporal_granularity;
+        }
+
+        if(!raw && this.source.frequency){
+            raw = this.source.frequency;
+        }
+
+        if(!raw && this.source.extras){
+            let extras = this.source.extras;
+            let temporal_granularity = extras.find(extra => extra.key === 'temporal_granularity');
+            if(temporal_granularity){
+                raw = temporal_granularity.value;
+
+                let temporal_granularity_factor = extras.find(extra => extra.key === 'temporal_granularity_factor');
+                if(temporal_granularity_factor && temporal_granularity_factor.value !== "1"){
+                    raw = temporal_granularity_factor.value + ' ' + temporal_granularity.value;
+                }
+            }
+        }
+
+
+        let result = undefined;
+        if(raw){
+            result = DcatPeriodicityUtils.getPeriodicity(raw);
+            if(!result){
+                    this.summary.warnings.push(["Unbekannte Periodizität", raw]);
+            }
+        }
+
+        return result;
     }
 
     getKeywords(): string[] {
@@ -440,6 +487,10 @@ export class CkanMapper extends GenericMapper {
             this.log.warn(msg);
             this.summary.warnings.push(['Missing license', msg]);
         } else {
+            let license = await DcatLicensesUtils.get(this.source.license_url);
+            if(license) return license;
+            license = await DcatLicensesUtils.get(this.source.license_title);
+            if(license) return license;
             return {
                 id: this.source.license_id ? this.source.license_id : 'unknown',
                 title: this.source.license_title,

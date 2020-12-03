@@ -43,7 +43,7 @@ describe('Import CKAN Bahn', function () {
         };
         let importer = new CkanImporter(settings);
 
-        sinon.stub(importer.elastic, 'getIssuedDates').resolves(TestUtils.prepareIssuedDates(40, '2019-01-09T17:51:38.934Z'));
+        sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 
         indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
 

@@ -12,6 +12,7 @@ import {DcatSettings} from './dcat.settings';
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
+import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 
 let xpath = require('xpath');
 
@@ -44,9 +45,10 @@ export class DcatMapper extends GenericMapper {
     private log = getLogger();
 
     private readonly record: any;
+    private readonly catalogPage: any;
     private readonly linkedDistributions: any;
     private harvestTime: any;
-    private readonly issued: string;
+    private readonly storedData: any;
 
 //    protected readonly idInfo; // : SelectedValue;
     private settings: DcatSettings;
@@ -61,14 +63,24 @@ export class DcatMapper extends GenericMapper {
     };
 
 
-    constructor(settings, record, linkedDistributions, harvestTime, issued, summary) {
+    constructor(settings, record, catalogPage, harvestTime, storedData, summary) {
         super();
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.issued = issued;
+        this.storedData = storedData;
         this.summary = summary;
-        this.linkedDistributions = linkedDistributions
+        this.catalogPage = catalogPage;
+
+
+
+
+        let distributions = DcatMapper.select('./dcat:Distribution', catalogPage);
+        let distributionIDs = DcatMapper.select('./dcat:distribution', record)
+            .map(node => node.getAttribute('rdf:resource'))
+            .filter(distibution => distibution);
+
+        this.linkedDistributions = distributions.filter(distribution => distributionIDs.includes(distribution.getAttribute('rdf:about')))
 
         this.uuid = DcatMapper.select('.//dct:identifier', record, true).textContent;
     }
@@ -101,6 +113,7 @@ export class DcatMapper extends GenericMapper {
 
                 let format: string = "Unbekannt";
                 let formatNode = DcatMapper.select('./dct:format', this.linkedDistributions[i], true);
+                let mediaTypeNode = DcatMapper.select('./dcat:mediaType', this.linkedDistributions[i], true);
                 if (formatNode) {
                     if (formatNode.textContent) {
                         format = formatNode.textContent;
@@ -109,6 +122,15 @@ export class DcatMapper extends GenericMapper {
                     }
                     if(format.startsWith("http://publications.europa.eu/resource/authority/file-type/")){
                         format = format.substring("http://publications.europa.eu/resource/authority/file-type/".length)
+                    }
+                } else if (mediaTypeNode) {
+                    if (mediaTypeNode.textContent) {
+                        format = mediaTypeNode.textContent;
+                    } else {
+                        format = mediaTypeNode.getAttribute('rdf:resource');
+                    }
+                    if(format.startsWith("https://www.iana.org/assignments/media-types/")){
+                        format = format.substring("https://www.iana.org/assignments/media-types/".length)
                     }
                 }
 
@@ -307,7 +329,7 @@ export class DcatMapper extends GenericMapper {
         }
 
         let displayContact: Person = {
-            name: displayName,
+            name: displayName.trim(),
             homepage: displayHomepage
         };
 
@@ -375,7 +397,16 @@ export class DcatMapper extends GenericMapper {
     }
 
     getMetadataIssued(): Date {
-        return this.issued ? new Date(this.issued) : new Date(Date.now());
+        return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : new Date(Date.now());
+    }
+
+    getMetadataModified(): Date {
+        if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
+            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
+            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
+                return new Date(this.storedData.modified);
+        }
+        return new Date(Date.now());
     }
 
     getMetadataSource(): any {
@@ -470,7 +501,20 @@ export class DcatMapper extends GenericMapper {
         let accrualPeriodicity = DcatMapper.select('./dct:accrualPeriodicity', this.record, true);
         if (accrualPeriodicity) {
             let res = accrualPeriodicity.getAttribute('rdf:resource');
-            return res.substr(res.lastIndexOf('/')+1);
+            let periodicity;
+            if(res.length > 0)
+                periodicity =  res.substr(res.lastIndexOf('/') + 1);
+            else if(accrualPeriodicity.textContent.trim().length > 0)
+                periodicity =  accrualPeriodicity.textContent;
+
+
+            if(periodicity){
+                let period = DcatPeriodicityUtils.getPeriodicity(periodicity)
+                if(!period){
+                    this.summary.warnings.push(["Unbekannte Periodizität", periodicity]);
+                }
+                return period;
+            }
         }
         return undefined;
     }
@@ -624,33 +668,39 @@ export class DcatMapper extends GenericMapper {
         let infos: any = {};
         let contact = DcatMapper.select('./dcat:contactPoint', this.record, true);
         if (contact) {
-            let name = DcatMapper.select('./vcard:Organization/vcard:fn', contact, true);
-            let org = DcatMapper.select('./vcard:Organization/organization-name', contact, true);
-            let region = DcatMapper.select('./vcard:Organization/vcard:region', contact, true);
-            let country = DcatMapper.select('./vcard:Organization/vcard:hasCountryName', contact, true);
-            let postCode = DcatMapper.select('./vcard:Organization/vcard:hasPostalCode', contact, true);
-            let email = DcatMapper.select('./vcard:Organization/vcard:hasEmail', contact, true);
-            let phone = DcatMapper.select('./vcard:Organization/vcard:hasTelephone', contact, true);
-            let urlNode = DcatMapper.select('./vcard:Organization/vcard:hasURL', contact, true);
-            let url = null;
-            if (urlNode) {
-                let requestConfig = this.getUrlCheckRequestConfig(urlNode.getAttribute('rdf:resource'));
-                url = await UrlUtils.urlWithProtocolFor(requestConfig);
+            let organization = DcatMapper.select('./vcard:Organization', contact, true);
+            if(contact.getAttribute('rdf:resource')){
+                organization = DcatMapper.select('(vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"]|./*/*/vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"])', this.catalogPage, true)
             }
+            if(organization) {
+                let name = DcatMapper.select('./vcard:fn', organization, true);
+                let org = DcatMapper.select('./organization-name', organization, true);
+                let region = DcatMapper.select('./vcard:region', organization, true);
+                let country = DcatMapper.select('./vcard:hasCountryName', organization, true);
+                let postCode = DcatMapper.select('./vcard:hasPostalCode', organization, true);
+                let email = DcatMapper.select('./vcard:hasEmail', organization, true);
+                let phone = DcatMapper.select('./vcard:hasTelephone', organization, true);
+                let urlNode = DcatMapper.select('./vcard:hasURL', organization, true);
+                let url = null;
+                if (urlNode) {
+                    let requestConfig = this.getUrlCheckRequestConfig(urlNode.getAttribute('rdf:resource'));
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig);
+                }
 
-            if (contact.getAttribute('uuid')) {
-                infos.hasUID = contact.getAttribute('uuid');
+                if (contact.getAttribute('uuid')) {
+                    infos.hasUID = contact.getAttribute('uuid');
+                }
+
+                if (name) infos.fn = name.textContent;
+                if (org) infos['organization-name'] = org.textContent;
+
+                if (region) infos.region = region.textContent;
+                if (country) infos['country-name'] = country.textContent.trim();
+                if (postCode) infos['postal-code'] = postCode.textContent;
+                if (email) infos.hasEmail = email.getAttribute('rdf:resource').replace('mailto:', '');
+                if (phone) infos.hasTelephone = phone.getAttribute('rdf:resource').replace('tel:', '');
+                if (url) infos.hasURL = url;
             }
-
-            if (name) infos.fn = name.textContent;
-            if (org) infos['organization-name'] = org.textContent;
-
-            if (region) infos.region = region.textContent;
-            if (country) infos['country-name'] = country.textContent.trim();
-            if (postCode) infos['postal-code'] = postCode.textContent;
-            if (email) infos.hasEmail = email.getAttribute('rdf:resource').replace('mailto:','');
-            if (phone) infos.hasTelephone = phone.getAttribute('rdf:resource').replace('tel:','');
-            if (url) infos.hasURL = url;
 
         }
 

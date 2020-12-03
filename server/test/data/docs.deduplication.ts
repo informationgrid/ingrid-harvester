@@ -5,7 +5,7 @@ export const doc1 = {
     distribution: [],
     extras: {
         metadata: {
-            isValid: true
+            is_valid: true
         }
     }
 };
@@ -39,7 +39,7 @@ export const doc5 = {
     }],
     extras: {
         metadata: {
-            isValid: true
+            is_valid: true
         }
     }
 };
@@ -55,7 +55,7 @@ export const doc6 = {
     }],
     extras: {
         metadata: {
-            isValid: true
+            is_valid: true
         }
     }
 };

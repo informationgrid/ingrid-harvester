@@ -3,6 +3,7 @@ import {ImporterSettings} from '../importer.settings';
 import {DeduplicateUtils} from './deduplicate.utils';
 import {ElasticSettings} from './elastic.setting';
 import {Index} from '@shared/index.model';
+import {ElasticQueries} from "./elastic.queries";
 
 let elasticsearch = require('elasticsearch'),
     log = require('log4js').getLogger(__filename);
@@ -335,8 +336,8 @@ export class ElasticSearchUtils {
     }
 
     /**
-     * Searches the index for documents with the given ids and copies the issued
-     * date from existing documents, if any exist. If multiple documents with
+     * Searches the index for documents with the given ids and copies a set of the issued
+     * date, issued date and harvested data from existing documents, if any exist. If multiple documents with
      * the same id are found, then the issued date is copied from the first hit
      * returned by elasticsearch. If no indexed document with the given id is
      * found, then null or undefined is returned.
@@ -345,7 +346,7 @@ export class ElasticSearchUtils {
      * @returns {Promise<Array>}  array of issued dates (for found documents) or
      * nulls (for new documents) in the same order as the given ids
      */
-    async getIssuedDates(ids) {
+    async getStoredData(ids) {
         if (ids.length < 1) return [];
 
         const aliasExists = await this.client.indices.existsAlias({
@@ -382,6 +383,9 @@ export class ElasticSearchUtils {
                 if (result.responses) {
                     for (let j = 0; j < result.responses.length; j++) {
                         let response = result.responses[j];
+                        let issued;
+                        let modified;
+                        let dataset_modified;
 
                         if (response.error) {
                             this.handleError("Error in one of the search responses:", response.error);
@@ -389,11 +393,19 @@ export class ElasticSearchUtils {
                         }
                         try {
                             let firstHit = response.hits.hits[0];
-                            dates.push(firstHit._source.extras.metadata.issued);
+                            issued = firstHit._source.extras.metadata.issued;
+                            modified = firstHit._source.extras.metadata.modified;
+                            dataset_modified = firstHit._source.modified;
                         } catch (e) {
                             log.debug(`Did not find an existing issued date for dataset with id ${ids[j]}`);
-                            dates.push(null);
                         }
+
+                        dates.push({
+                            issued: issued,
+                            modified: modified,
+                            dataset_modified: dataset_modified
+                        })
+
                     }
                 } else {
                     log.debug('No result. Reponse after msearch', result);
@@ -421,5 +433,14 @@ export class ElasticSearchUtils {
 
     search(indexName: string): Promise<any> {
         return this.client.search({ index: indexName });
+    }
+
+    async getHistory(baseIndex: string): Promise<any> {
+        let result = await this.client.search({
+            index: ['mcloud_harvester_statistic'],
+            body: ElasticQueries.findHistory(baseIndex),
+            size: 30
+        });
+        return result.hits.hits.map(entry => entry._source);
     }
 }
