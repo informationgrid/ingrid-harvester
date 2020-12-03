@@ -1,3 +1,5 @@
+import {now} from "moment";
+
 export class ElasticQueries {
 
     /**
@@ -99,6 +101,27 @@ export class ElasticQueries {
             size: 30,
             query: {
                 term: {'base_index': baseIndex}
+            },
+            sort: {
+                'timestamp': {"order": "desc"}
+            }
+        };
+    }
+
+
+    static findHistories(): any {
+        const DAYS = 24*60*60*1000;
+        let timestamp = now();
+        timestamp -= 30*DAYS;
+
+        return {
+            size: 1000,
+            query: {
+            "range": {
+            "timestamp": {
+                "gte": timestamp
+            }
+        }
             },
             sort: {
                 'timestamp': {"order": "desc"}

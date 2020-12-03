@@ -36,6 +36,7 @@ export function ConfigLoader(configService: ConfigService) {
 const appRoutes: Routes = [
   {path: 'config', loadChildren: () => import('./config/config.module').then(mod => mod.ConfigModule)},
   {path: 'harvester', loadChildren: () => import('./harvester/harvester.module').then(mod => mod.HarvesterModule)},
+  {path: 'monitoring', loadChildren: () => import('./monitoring/monitoring.module').then(mod => mod.MonitoringModule)},
   {path: 'indices', loadChildren: () => import('./indices/indices.module').then(mod => mod.IndicesModule)},
   {path: 'log', loadChildren: () => import('./log/log.module').then(mod => mod.LogModule)},
   {path: 'login', component: LoginComponent},

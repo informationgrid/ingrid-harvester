@@ -67,4 +67,9 @@ export class HarvesterCtrl {
         return await this.indexService.getHistory(id);
     }
 
+    @Get('/histories')
+    getAllHarvesterHistory(@BodyParams() request: any) {
+        return this.indexService.getHistoryAll();
+    }
+
 }

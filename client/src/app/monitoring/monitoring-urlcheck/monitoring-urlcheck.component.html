@@ -1,0 +1,95 @@
+<div class="form-wrapper">
+
+  <form [formGroup]="configForm">
+
+    <mat-form-field>
+      <input matInput type="url" placeholder="Elasticsearch-URL" formControlName="elasticSearchUrl" required>
+      <mat-error *ngIf="configForm.get('elasticSearchUrl').hasError('required')">
+        Dies ist ein Pflichtfeld
+      </mat-error>
+      <mat-error *ngIf="configForm.get('elasticSearchUrl').hasError('elasticUrl')">
+        Dies ist keine gültige Elasticsearch-URL (Bsp: http://localhost:9200)
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Alias-Name" formControlName="alias" required>
+      <mat-error *ngIf="configForm.get('alias').hasError('whitespace')">
+        Es dürfen nicht nur Leerzeichen eingegeben sein
+      </mat-error>
+      <mat-error *ngIf="configForm.get('alias').hasError('required')">
+        Dies ist ein Pflichtfeld
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput  type="number"  placeholder="Offset Cron-Jobs in Minuten" formControlName="cronOffset">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Proxy" formControlName="proxy">
+    </mat-form-field>
+
+    <mat-card>
+      <div [formGroup]="configForm.get('mail')">
+      Email-Benachrichtigungen &nbsp;
+      <mat-slide-toggle color="primary" [checked]="configForm.get('mail.enabled')"
+                        title="Email-Benachrichtigungen an- / ausschalten" formControlName="enabled"
+                        (click)="$event.stopImmediatePropagation()"
+      >
+      </mat-slide-toggle></div>
+      <br/><br/>
+
+      <mat-card-content>
+        <mat-form-field [formGroup]="configForm.get('mail.mailServer')">
+          <input matInput placeholder="Mail-Server" formControlName="host" required>
+        </mat-form-field>
+        &nbsp;:&nbsp;
+        <mat-form-field [formGroup]="configForm.get('mail.mailServer')">
+          <input matInput placeholder="Port" formControlName="port" required>
+        </mat-form-field>
+        <br/>
+        <div [formGroup]="configForm.get('mail.mailServer')">
+          <mat-checkbox color="primary"
+                        formControlName="secure">
+            Secured Connection
+          </mat-checkbox>
+        </div>
+        <br/>
+        <mat-form-field [formGroup]="configForm.get('mail.mailServer.auth')">
+          <input matInput placeholder="User" formControlName="user">
+        </mat-form-field>
+        &nbsp;&nbsp;
+        <mat-form-field [formGroup]="configForm.get('mail.mailServer.auth')">
+          <input type="password" matInput placeholder="Passwort" formControlName="pass">
+        </mat-form-field>
+        <br/>
+        <mat-form-field [formGroup]="configForm.get('mail')">
+          <input matInput placeholder="Absender" formControlName="from" required>
+        </mat-form-field>
+        &nbsp;&nbsp;
+        <mat-form-field [formGroup]="configForm.get('mail')">
+          <input matInput placeholder="Empfänger" formControlName="to" required>
+        </mat-form-field>
+        <br/><br/>
+        <mat-form-field style="width: 250px">
+          <mat-label matPrefix>Benachrichtigungs-Schwelle:</mat-label>
+          <input matInput type="number" min="1" max="100" style="text-align: right; width: 50px" formControlName="maxDiff">
+          <mat-icon [inline]="true" style="padding-left: 1px" matSuffix>%</mat-icon>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
+  </form>
+
+  <div class="form-buttons">
+    <button mat-button (click)="reset()" data-test="reset">Zurücksetzen</button>
+    <div class="flex-space"></div>
+    <button mat-button color="primary" (click)="save()" [disabled]="!configForm.valid" data-test="save">Speichern
+    </button>
+  </div>
+
+  <div class="form-buttons">
+    <button mat-button (click)="urlCheck()" data-test="urlCheck">URL Check</button>
+  </div>
+</div>

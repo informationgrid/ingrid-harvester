@@ -444,6 +444,15 @@ export class ElasticSearchUtils {
         return result.hits.hits.map(entry => entry._source);
     }
 
+    async getHistories(): Promise<any> {
+        let result = await this.client.search({
+            index: ['mcloud_harvester_statistic'],
+            body: ElasticQueries.findHistories(),
+            size: 1000
+        });
+        return result.hits.hits.map(entry => entry._source);
+    }
+
     async getAccessUrls(after_key): Promise<any> {
         let result = await this.client.search({
             index: this.indexName,
