@@ -24,7 +24,8 @@
       "atom",
       "predefined ATOM",
       "Atom Feed",
-      "AtomFeed"
+      "AtomFeed",
+      "application/atom+xml"
     ],
     "CSV": [
       "http://publications.europa.eu/resource/authority/file-type/csv",
@@ -41,6 +42,12 @@
     "DOC": [
       "http://publications.europa.eu/resource/authority/file-type/doc"
     ],
+    "DOCX": [
+      "application/docx"
+    ],
+    "Excel": [
+      "application/vnd.ms-excel"
+    ],
     "GEOJSON": [
       "http://publications.europa.eu/resource/authority/file-type/geojson",
       "geojson"
@@ -48,11 +55,23 @@
     "GML": [
       "http://publications.europa.eu/resource/authority/file-type/gml",
       "gml",
-      "Geographic Markup Language (GML)"
+      "Geographic Markup Language (GML)",
+      "application/gml+xml",
+      "Geography Markup Language (GML)"
+    ],
+    "GTFS": [
+      "gtfs"
     ],
     "HTML": [
       "http://publications.europa.eu/resource/authority/file-type/html",
-      "html"
+      "html",
+      "application/html",
+      "htm"
+    ],
+    "JPEG": [
+      "interner Code:JPEG",
+      "Bild .jpg",
+      "jpg"
     ],
     "JSON": [
       "http://publications.europa.eu/resource/authority/file-type/json",
@@ -70,11 +89,15 @@
     ],
     "PDF": [
       "http://publications.europa.eu/resource/authority/file-type/pdf",
-      "pdf"
+      "pdf",
+      "application/pdf"
     ],
     "PNG": [
       "http://publications.europa.eu/resource/authority/file-type/png",
       "png"
+    ],
+    "Radolan": [
+      "interner Code:Radolan"
     ],
     "RSS": [
       "http://publications.europa.eu/resource/authority/file-type/rss"
@@ -86,11 +109,23 @@
       "esri shape",
       "esri shapefile",
       "gezippte shape",
-      "shp"
+      "shp",
+      "application/x-shapefile",
+      "~.shp",
+      "ESRI SHP",
+      "ESRI Shapefiles",
+      "Shapefiles"
+    ],
+    "SOAP": [
+      "xml/soap"
+    ],
+    "SOS": [
+      "OGC:SOS-2.0.0-http-get-capabilities"
     ],
     "TIFF": [
       "http://publications.europa.eu/resource/authority/file-type/tiff",
-      "tiff"
+      "tiff",
+      "interner Code:TIFF (T4)"
     ],
     "TXT": [
       "http://publications.europa.eu/resource/authority/file-type/txt",
@@ -98,12 +133,16 @@
     ],
     "WCS": [
       "ogc:wcs",
-      "wcs"
+      "wcs",
+      "OGC:WCS-2.0.1-http-get-capabilities"
     ],
     "WFS": [
       "ogc:wfs",
       "ogc:wfs-2.0.0-http-get-feature",
-      "http://publications.europa.eu/resource/authority/file-type/WFS_SRVC"
+      "http://publications.europa.eu/resource/authority/file-type/WFS_SRVC",
+      "application/vnd.ogc.wfs_xml",
+      "OGC:WFS-2.0.0-http-get-capabilities",
+      "OGC-WFS Web Feature Service"
     ],
     "WMS": [
       "ogc:wms",
@@ -111,7 +150,11 @@
       "ogc:wms-1.3.0-http-get-capabilities",
       "wms",
       "view",
-      "http://publications.europa.eu/resource/authority/file-type/WMS_SRVC"
+      "http://publications.europa.eu/resource/authority/file-type/WMS_SRVC",
+      "OGC:WMS-http-get-capabilities",
+      "OGC WMS",
+      "OGC:WMS-1.1.1-http-get-capabilities",
+      "application/vnd.ogc.wms_xml"
     ],
     "WWW": [
       "http",
@@ -124,7 +167,8 @@
     ],
     "XLSX": [
       "http://publications.europa.eu/resource/authority/file-type/xlsx",
-      "xlsx"
+      "xlsx",
+      "application/xlsx"
     ],
     "XML": [
       "http://publications.europa.eu/resource/authority/file-type/xml",
