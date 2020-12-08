@@ -15,6 +15,8 @@ import {FlexModule} from "@angular/flex-layout";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatCardModule} from "@angular/material/card";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MonitoringUrlcheckDetailComponent} from "./monitoring-urlcheck/monitoring-urlcheck-detail/monitoring-urlcheck-detail.component";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 const configRoutes: Routes = [
   {
@@ -24,7 +26,7 @@ const configRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [MonitoringComponent, MonitoringHarvesterComponent, MonitoringUrlcheckComponent],
+  declarations: [MonitoringComponent, MonitoringHarvesterComponent, MonitoringUrlcheckComponent, MonitoringUrlcheckDetailComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(configRoutes),
@@ -38,7 +40,11 @@ const configRoutes: Routes = [
     FlexModule,
     MatSlideToggleModule,
     MatCardModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatExpansionModule
+  ],
+  entryComponents: [
+    MonitoringUrlcheckDetailComponent
   ],
   exports: [
     MonitoringComponent

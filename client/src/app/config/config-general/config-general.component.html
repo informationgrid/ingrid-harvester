@@ -30,6 +30,35 @@
       <input matInput placeholder="Proxy" formControlName="proxy">
     </mat-form-field>
 
+    <mat-form-field>
+      <input matInput placeholder="Portal URL" formControlName="portalUrl">
+    </mat-form-field>
+
+    <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center" class="margin-below"  [formGroup]="configForm.get('urlCheck')">
+      <mat-slide-toggle color="primary"
+                        [checked]="configForm.get('urlCheck.active').value"
+                        (change)="translate(configForm.get('urlCheck.pattern').value)"
+                        formControlName = "active"
+                        title="Planung an- / ausschalten"></mat-slide-toggle>
+      <mat-form-field fxFlex>
+        <mat-label>UrlCheck Cron</mat-label>
+        <input matInput placeholder="* * * * *"  formControlName="pattern" (keyup)="translate(configForm.get('urlCheck.pattern').value)" data-test="urlCheck-input">
+        <button mat-button *ngIf="configForm.get('urlCheck.pattern')" matSuffix mat-icon-button aria-label="Clear" (click)="clearInput()" data-test="urlCheck-reset">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon" data-test="urlCheck-info">info_outline</mat-icon>
+        <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
+      </mat-form-field>
+      <div fxFlex><b>{{cronTranslation}}</b></div>
+    </div>
+    <mat-card class="info" *ngIf="showInfo" class="margin-below">
+      <div><span>*/5 * * * *</span>Alle 5 Minuten</div>
+      <div><span>45 8 * * *</span>Täglich um 8:45 Uhr</div>
+      <div><span>0 6-18/2 * * *</span>Täglich zwischen 6 und 18 Uhr, alle 2h</div>
+      <div><span>30 4 1 * 0,6</span>Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So</div>
+    </mat-card>
+
+
     <mat-card>
       <div [formGroup]="configForm.get('mail')">
       Email-Benachrichtigungen &nbsp;
@@ -87,9 +116,5 @@
     <div class="flex-space"></div>
     <button mat-button color="primary" (click)="save()" [disabled]="!configForm.valid" data-test="save">Speichern
     </button>
-  </div>
-
-  <div class="form-buttons">
-    <button mat-button (click)="urlCheck()" data-test="urlCheck">URL Check</button>
   </div>
 </div>

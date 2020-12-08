@@ -2,8 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {ConfigService} from '../config.service';
 import {HarvesterService} from '../../harvester/harvester.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {forkJoin, of} from 'rxjs';
+import {of} from 'rxjs';
 import {GeneralSettings} from '@shared/general-config.settings';
+import cronstrue from 'cronstrue/i18n';
 
 @Component({
   selector: 'app-config-general',
@@ -57,15 +58,17 @@ export class ConfigGeneralComponent implements OnInit {
     this.configService.fetch().subscribe(data => this.buildForm(data));
   }
 
-
-  urlCheck() {
-    this.configService.startUrlCheck().subscribe();
-  }
-
   private buildForm(settings: GeneralSettings) {
-    if(!settings.mail)
-    {
-      settings.mail={
+
+    if (!settings.urlCheck) {
+      settings.urlCheck = {
+        active: false,
+        pattern: ""
+      }
+    }
+
+    if (!settings.mail) {
+      settings.mail = {
         enabled: false,
         mailServer: {
           host: "",
@@ -88,6 +91,11 @@ export class ConfigGeneralComponent implements OnInit {
       numberOfReplicas: [settings.numberOfReplicas],
       cronOffset: [settings.cronOffset],
       proxy: [settings.proxy],
+      portalUrl: [settings.portalUrl],
+      urlCheck: this.formBuilder.group({
+        active: [settings.urlCheck.active],
+        pattern: [settings.urlCheck.pattern]
+      }),
       mail: this.formBuilder.group({
         enabled: [settings.mail.enabled],
         mailServer: this.formBuilder.group({
@@ -104,5 +112,33 @@ export class ConfigGeneralComponent implements OnInit {
       }),
       maxDiff: [settings.maxDiff]
     })
+
+
+    this.translate(settings.urlCheck.pattern);
+  }
+
+
+  cronTranslation: string;
+  validExpression = true;
+  showInfo = false;
+
+  translate(cronExpression: string) {
+    try {
+      this.cronTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
+      this.validExpression = true;
+    } catch (e) {
+      this.cronTranslation = 'Kein gültiger Ausdruck';
+      this.validExpression = false;
+    }
+
+    if (!this.configForm.get('urlCheck.active').value) {
+      this.cronTranslation = 'Planung ausgeschaltet';
+      return;
+    }
+  }
+
+  clearInput() {
+    this.configForm.get('urlCheck.pattern').setValue('');
+    this.translate('');
   }
 }

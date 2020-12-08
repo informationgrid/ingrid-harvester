@@ -14,6 +14,7 @@ let elasticsearch = require('elasticsearch'), log = require('log4js').getLogger(
 const http = require('http');
 const https = require('https');
 const request = require('request');
+const axios = require('axios');
 
 //const ftp = require('basic-ftp');
 
@@ -48,6 +49,13 @@ export class UrlCheckService {
         this._bulkData = [];
 
         this.indexName = 'url_check_history';
+    }
+
+    async getHistory(){
+        let history = await this.elasticUtils.getUrlCheckHistory();
+        return {
+            history: history
+        }
     }
 
     async start() {
@@ -96,7 +104,7 @@ export class UrlCheckService {
                 let options: any = {timeout: 10000, proxy: this.generalSettings.proxy, rejectUnauthorized: false};
                 let request_call = new Promise((resolve) => {
                         try {
-                            request.head(url, options, function (error, response, body) {
+                            request.get(url, options, function (error, response) {
                                 if (!error) {
                                     resolve({url: urlAggregation, status: response.statusCode});
                                 } else {

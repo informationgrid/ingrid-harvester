@@ -194,4 +194,16 @@ export class ElasticQueries {
         }
         return query;
     }
+
+    static getUrlCheckHistory(): any {
+        return {
+            size: 30,
+            "query": {
+                "match_all": {}
+            },
+            sort: {
+                'timestamp': {"order": "desc"}
+            }
+        };
+    }
 }

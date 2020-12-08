@@ -1,0 +1,24 @@
+
+.margin-below {
+  margin-bottom: 20px;
+}
+
+
+.info-icon {
+  vertical-align: middle;
+}
+
+.info {
+  padding-bottom: 20px;
+  font-size: small;
+
+  & div span {
+    display: inline-block;
+    width: 100px;
+    white-space: pre;
+  }
+}
+
+mat-icon {
+  cursor: pointer;
+}

@@ -21,13 +21,9 @@ export class MonitoringComponent implements OnInit {
 
   onTabChange(event) {
 
-    if(event.tab.textLabel === 'Harvester History'){
+    if(event.tab.textLabel === 'Harvester Historie'){
       MonitoringComponent.monitoringHarvesterComponent.draw_chart();
     }
-
-    console.log(event);
-
-    console.log(event.tab.textLabel);
 
   }
 }

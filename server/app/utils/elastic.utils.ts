@@ -12,7 +12,7 @@ export const DefaultElasticsearchSettings: ElasticSettings = {
     // elasticSearchUrl: 'localhost:9200',
     index: '',
     // alias: '',
-    includeTimestamp: true
+    includeTimestamp: true,
 };
 
 export interface BulkResponse {
@@ -470,5 +470,14 @@ export class ElasticSearchUtils {
                 }
             })
         };
+    }
+
+    async getUrlCheckHistory(): Promise<any> {
+        let result = await this.client.search({
+            index: ['url_check_history'],
+            body: ElasticQueries.getUrlCheckHistory(),
+            size: 30
+        });
+        return result.hits.hits.map(entry => entry._source);
     }
 }

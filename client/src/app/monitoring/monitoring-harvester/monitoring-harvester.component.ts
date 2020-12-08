@@ -13,28 +13,22 @@ import {MonitoringComponent} from "../monitoring.component";
 })
 export class MonitoringHarvesterComponent implements OnInit {
 
-  dialogTitle = 'Harvester Historie';
-
-  data;
-
-
   private chart : Chart;
 
   constructor(private configService: MonitoringService, private dialog: MatDialog, private http: HttpClient) {
   }
 
   ngOnInit() {
-    this.data = this.getHarvesterHistory(6).toPromise();
     MonitoringComponent.setMonitoringHarvesterComponent(this);
   }
 
   getHarvesterHistory(id: number): Observable<any> {
-    return this.http.get<any>('rest/api/harvester/histories');
+    return this.http.get<any>('rest/api/monitoring/harvester');
   }
 
   public async draw_chart() {
     if (!this.chart) {
-      this.data.then((data) => {
+      this.getHarvesterHistory(6).toPromise().then((data) => {
         let chartOptions = {
           type: 'line',
           data: {
@@ -82,8 +76,8 @@ export class MonitoringHarvesterComponent implements OnInit {
           options: {
             responsive: true,
             title: {
-              text: data.harvester,
-              display: true
+              //text: data.harvester,
+              display: false
             },
             legend: {
               position: 'bottom',
@@ -165,7 +159,7 @@ export class MonitoringHarvesterComponent implements OnInit {
             }
           }
         };
-        this.chart = new Chart('chart', chartOptions);
+        this.chart = new Chart('chart_harvester', chartOptions);
       });
     } else {
     }
