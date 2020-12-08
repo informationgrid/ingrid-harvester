@@ -89,7 +89,7 @@ export class DcatMapper extends GenericMapper {
         return this.settings;
     }
 
-    getDescription() {
+    _getDescription() {
         let description = DcatMapper.select('.//dct:description', this.record, true);
         if (!description) {
             let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.catalogUrl}\'`;
@@ -104,7 +104,7 @@ export class DcatMapper extends GenericMapper {
     }
 
 
-    async getDistributions(): Promise<Distribution[]> {
+    async _getDistributions(): Promise<Distribution[]> {
         let dists = [];
 
         if (this.linkedDistributions) {
@@ -161,7 +161,7 @@ export class DcatMapper extends GenericMapper {
     }
 
 
-    async getPublisher(): Promise<any[]> {
+    async _getPublisher(): Promise<any[]> {
         let publishers = [];
 
         let creators = DcatMapper.select('.//dct:creator', this.record);
@@ -187,7 +187,7 @@ export class DcatMapper extends GenericMapper {
         }
     }
 
-    getTitle() {
+    _getTitle() {
         let title = DcatMapper.select('.//dct:title', this.record, true).textContent;
         return title && title.trim() !== '' ? title : undefined;
     }
@@ -211,11 +211,11 @@ export class DcatMapper extends GenericMapper {
      *    + all otherConstraints texts for useConstraints/otherConstraints
      *      combinations that are not JSON-snippets.
      */
-    getAccessRights(): string[] {
+    _getAccessRights(): string[] {
         return undefined;
     }
 
-    getCategories(): string[] {
+    _getCategories(): string[] {
         let subgroups = [];
         let keywords = this.getKeywords();
         if (keywords) {
@@ -233,11 +233,11 @@ export class DcatMapper extends GenericMapper {
         return subgroups;
     }
 
-    getCitation(): string {
+    _getCitation(): string {
         return undefined;
     }
 
-    async getDisplayContacts() {
+    async _getDisplayContacts() {
 
 
         let displayName;
@@ -273,7 +273,7 @@ export class DcatMapper extends GenericMapper {
                     }
                     break;
                 case "originator":
-                    let originator = this.getOriginator();
+                    let originator = this._getOriginator();
                     if (originator) {
                         displayName = originator[0].name;
                         displayHomepage = originator[0].homepage
@@ -313,7 +313,7 @@ export class DcatMapper extends GenericMapper {
         }
 
         if(!displayName) {
-            let originator = this.getOriginator();
+            let originator = this._getOriginator();
             if (originator) {
                 displayName = originator[0].name;
                 displayHomepage = originator[0].homepage
@@ -336,7 +336,7 @@ export class DcatMapper extends GenericMapper {
         return [displayContact];
     }
 
-    getGeneratedId(): string {
+    _getGeneratedId(): string {
         return this.uuid;
     }
 
@@ -348,7 +348,7 @@ export class DcatMapper extends GenericMapper {
      * contains just one entry 'opendata' i.e. if the ISO-XML document doesn't
      * have this keyword defined, then it will be skipped from the index.
      */
-    getKeywords(): string[] {
+    _getKeywords(): string[] {
         let keywords = [];
         let keywordNodes = DcatMapper.select('./dcat:keyword', this.record);
         if (keywordNodes) {
@@ -364,7 +364,7 @@ export class DcatMapper extends GenericMapper {
         return keywords;
     }
 
-    getMFundFKZ(): string {
+    _getMFundFKZ(): string {
         // Detect mFund properties
         let keywords = this.getKeywords();
         if (keywords) {
@@ -380,7 +380,7 @@ export class DcatMapper extends GenericMapper {
         return undefined;
     }
 
-    getMFundProjectTitle(): string {
+    _getMFundProjectTitle(): string {
         // Detect mFund properties
         let keywords = this.getKeywords();
         if (keywords) {
@@ -396,11 +396,11 @@ export class DcatMapper extends GenericMapper {
         return undefined;
     }
 
-    getMetadataIssued(): Date {
+    _getMetadataIssued(): Date {
         return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : new Date(Date.now());
     }
 
-    getMetadataModified(): Date {
+    _getMetadataModified(): Date {
         if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
             let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
             if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
@@ -409,7 +409,7 @@ export class DcatMapper extends GenericMapper {
         return new Date(Date.now());
     }
 
-    getMetadataSource(): any {
+    _getMetadataSource(): any {
         let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');
         return {
@@ -419,12 +419,12 @@ export class DcatMapper extends GenericMapper {
         };
     }
 
-    getModifiedDate() {
+    _getModifiedDate() {
         let modified = DcatMapper.select('./dct:modified', this.record, true);
         return modified?new Date(modified.textContent):undefined;
     }
 
-    getSpatial(): any {
+    _getSpatial(): any {
         let geometry = DcatMapper.select('./dct:spatial/dct:Location/locn:geometry[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
         if(geometry){
             return JSON.parse(geometry.textContent);
@@ -432,7 +432,7 @@ export class DcatMapper extends GenericMapper {
         return undefined;
     }
 
-    getSpatialText(): string {
+    _getSpatialText(): string {
         let prefLabel = DcatMapper.select('./dct:spatial/dct:Location/skos:prefLabel', this.record, true);
         if(prefLabel){
             return prefLabel.textContent;
@@ -440,7 +440,7 @@ export class DcatMapper extends GenericMapper {
         return undefined;
     }
 
-    getTemporal(): DateRange[] {
+    _getTemporal(): DateRange[] {
         let result: DateRange[] = [];
 
         let nodes : string[] = DcatMapper.select('./dct:temporal/dct:PeriodOfTime', this.record)
@@ -476,7 +476,7 @@ export class DcatMapper extends GenericMapper {
     }
 
 
-    getThemes() {
+    _getThemes() {
         // Return cached value, if present
         if (this.fetched.themes) return this.fetched.themes;
 
@@ -493,11 +493,11 @@ export class DcatMapper extends GenericMapper {
         return themes;
     }
 
-    isRealtime(): boolean {
+    _isRealtime(): boolean {
         return undefined;
     }
 
-    getAccrualPeriodicity(): string {
+    _getAccrualPeriodicity(): string {
         let accrualPeriodicity = DcatMapper.select('./dct:accrualPeriodicity', this.record, true);
         if (accrualPeriodicity) {
             let res = accrualPeriodicity.getAttribute('rdf:resource');
@@ -519,7 +519,7 @@ export class DcatMapper extends GenericMapper {
         return undefined;
     }
 
-    async getLicense() {
+    async _getLicense() {
         let license: License;
 
         let accessRights = DcatMapper.select('./dct:accessRights', this.record);
@@ -571,11 +571,11 @@ export class DcatMapper extends GenericMapper {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.catalogUrl}'.`;
     }
 
-    getHarvestedData(): string {
+    _getHarvestedData(): string {
         return this.record.toString();
     }
 
-    getCreator(): Person[] {
+    _getCreator(): Person[] {
         let creators = [];
 
         let creatorNodes = DcatMapper.select('.//dct:creator', this.record);
@@ -621,24 +621,24 @@ export class DcatMapper extends GenericMapper {
         return maintainers.length === 0 ? undefined : maintainers;
     }
 
-    getGroups(): string[] {
+    _getGroups(): string[] {
         return undefined;
     }
 
-    getIssued(): Date {
+    _getIssued(): Date {
         let modified = DcatMapper.select('./dct:modified', this.record, true);
         return modified?new Date(modified.textContent):undefined;
     }
 
-    getMetadataHarvested(): Date {
+    _getMetadataHarvested(): Date {
         return new Date(Date.now());
     }
 
-    getSubSections(): any[] {
+    _getSubSections(): any[] {
         return undefined;
     }
 
-    getOriginator(): Person[] {
+    _getOriginator(): Person[] {
 
         let originators = [];
 
@@ -660,7 +660,7 @@ export class DcatMapper extends GenericMapper {
         return originators.length === 0 ? undefined : originators;
     }
 
-    async getContactPoint(): Promise<any> {
+    async _getContactPoint(): Promise<any> {
         let contactPoint = this.fetched.contactPoint;
         if (contactPoint) {
             return contactPoint;
@@ -708,7 +708,7 @@ export class DcatMapper extends GenericMapper {
         return infos;
     }
 
-    getUrlCheckRequestConfig(uri: string): OptionsWithUri {
+    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
         let config: OptionsWithUri = {
             method: 'GET',
             json: false,

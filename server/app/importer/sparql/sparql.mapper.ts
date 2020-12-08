@@ -54,14 +54,14 @@ export class SparqlMapper extends GenericMapper {
         return this.settings;
     }
 
-    getDescription() {
+    _getDescription() {
         if(this.record.description)
             return this.record.description.value;
         return undefined;
     }
 
 
-    async getDistributions(): Promise<Distribution[]> {
+    async _getDistributions(): Promise<Distribution[]> {
         let dists = [];
 
         if(this.record.distribution_url){
@@ -79,7 +79,7 @@ export class SparqlMapper extends GenericMapper {
     }
 
 
-    async getPublisher(): Promise<any[]> {
+    async _getPublisher(): Promise<any[]> {
         let publishers = [];
 
         if (publishers.length === 0) {
@@ -90,16 +90,16 @@ export class SparqlMapper extends GenericMapper {
         }
     }
 
-    getTitle() {
+    _getTitle() {
         let title = this.record.title.value;
         return title && title.trim() !== '' ? title : undefined;
     }
 
-    getAccessRights(): string[] {
+    _getAccessRights(): string[] {
         return undefined;
     }
 
-    getCategories(): string[] {
+    _getCategories(): string[] {
         let subgroups = [];
         let keywords = this.getKeywords();
         if (keywords) {
@@ -119,15 +119,15 @@ export class SparqlMapper extends GenericMapper {
         return subgroups;
     }
 
-    getCitation(): string {
+    _getCitation(): string {
         return undefined;
     }
 
-    async getDisplayContacts() {
+    async _getDisplayContacts() {
         return [];
     }
 
-    getGeneratedId(): string {
+    _getGeneratedId(): string {
         return this.uuid;
     }
 
@@ -139,7 +139,7 @@ export class SparqlMapper extends GenericMapper {
      * contains just one entry 'opendata' i.e. if the ISO-XML document doesn't
      * have this keyword defined, then it will be skipped from the index.
      */
-    getKeywords(): string[] {
+    _getKeywords(): string[] {
         let keywords = [];
 
         if(this.record.keywords){
@@ -153,7 +153,7 @@ export class SparqlMapper extends GenericMapper {
         return keywords;
     }
 
-    getMFundFKZ(): string {
+    _getMFundFKZ(): string {
         // Detect mFund properties
         let keywords = this.getKeywords();
         if (keywords) {
@@ -169,7 +169,7 @@ export class SparqlMapper extends GenericMapper {
         return undefined;
     }
 
-    getMFundProjectTitle(): string {
+    _getMFundProjectTitle(): string {
         // Detect mFund properties
         let keywords = this.getKeywords();
         if (keywords) {
@@ -185,11 +185,11 @@ export class SparqlMapper extends GenericMapper {
         return undefined;
     }
 
-    getMetadataIssued(): Date {
+    _getMetadataIssued(): Date {
         return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : undefined;
     }
 
-    getMetadataModified(): Date {
+    _getMetadataModified(): Date {
         if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
             let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
             if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
@@ -198,7 +198,7 @@ export class SparqlMapper extends GenericMapper {
         return new Date(Date.now());
     }
 
-    getMetadataSource(): any {
+    _getMetadataSource(): any {
         let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.source_link.value;
         return {
@@ -208,23 +208,23 @@ export class SparqlMapper extends GenericMapper {
         };
     }
 
-    getModifiedDate() {
+    _getModifiedDate() {
         return undefined;
     }
 
-    getSpatial(): any {
+    _getSpatial(): any {
         return undefined;
     }
 
-    getSpatialText(): string {
+    _getSpatialText(): string {
         return undefined;
     }
 
-    getTemporal(): DateRange[] {
+    _getTemporal(): DateRange[] {
         return undefined;
     }
 
-    getThemes() {
+    _getThemes() {
         // Return cached value, if present
         if (this.fetched.themes) return this.fetched.themes;
 
@@ -238,15 +238,15 @@ export class SparqlMapper extends GenericMapper {
         return themes;
     }
 
-    isRealtime(): boolean {
+    _isRealtime(): boolean {
         return undefined;
     }
 
-    getAccrualPeriodicity(): string {
+    _getAccrualPeriodicity(): string {
         return undefined;
     }
 
-    async getLicense() {
+    async _getLicense() {
         let license: License;
 
         if(this.record.license) {
@@ -273,44 +273,44 @@ export class SparqlMapper extends GenericMapper {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.endpointUrl}'.`;
     }
 
-    getHarvestedData(): string {
+    _getHarvestedData(): string {
         return JSON.stringify(this.record);
     }
 
-    getCreator(): Person[] {
+    _getCreator(): Person[] {
         let creators = [];
         return creators.length === 0 ? undefined : creators;
     }
 
-    getMaintainer(): Person[] {
+    _getMaintainer(): Person[] {
         let maintainers = [];
         return maintainers.length === 0 ? undefined : maintainers;
     }
 
-    getGroups(): string[] {
+    _getGroups(): string[] {
         return undefined;
     }
 
-    getIssued(): Date {
+    _getIssued(): Date {
         return this.record.issued ? new Date(this.record.issued.value) : undefined;
     }
 
-    getMetadataHarvested(): Date {
+    _getMetadataHarvested(): Date {
         return new Date(Date.now());
     }
 
-    getSubSections(): any[] {
+    _getSubSections(): any[] {
         return undefined;
     }
 
-    getOriginator(): Person[] {
+    _getOriginator(): Person[] {
 
         let originators = [];
 
         return originators.length === 0 ? undefined : originators;
     }
 
-    async getContactPoint(): Promise<any> {
+    async _getContactPoint(): Promise<any> {
         let contactPoint = this.fetched.contactPoint;
         if (contactPoint) {
             return contactPoint;
@@ -320,7 +320,7 @@ export class SparqlMapper extends GenericMapper {
         return infos;
     }
 
-    getUrlCheckRequestConfig(uri: string): OptionsWithUri {
+    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
         let config: OptionsWithUri = {
             method: 'GET',
             json: false,

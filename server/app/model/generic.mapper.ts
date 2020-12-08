@@ -60,82 +60,183 @@ export abstract class GenericMapper {
 
     protected abstract getSettings(): ImporterSettings;
 
-    abstract getTitle(): string;
 
-    abstract getDescription(): string;
+    abstract _getTitle(): string;
 
-    abstract async getPublisher(): Promise<Person[]|Organization[]>;
-
-    abstract getThemes(): string[];
-
-    abstract getModifiedDate(): Date;
-
-    abstract getAccessRights(): string[];
-
-    abstract async getDistributions(): Promise<Distribution[]>;
-
-    abstract getGeneratedId(): string;
-
-    abstract getMetadataModified(): Date;
-
-    abstract getMetadataSource(): any;
-
-    abstract getMetadataIssued(): Date;
-
-    abstract isRealtime(): boolean;
-
-    abstract getSpatial(): any;
-
-    abstract getSpatialText(): string;
-
-    abstract getTemporal(): DateRange[];
-
-    abstract getCitation(): string;
-
-    abstract getCategories(): string[];
-
-    abstract getMFundFKZ(): string;
-
-    abstract getMFundProjectTitle(): string;
-
-    abstract async getDisplayContacts(): Promise<Organization[] | Person[]>;
-
-    abstract getKeywords(): string[];
-
-    // HELPER METHODS
-
-    static createPublisher(name, url) {
-        return {
-            organization: name,
-            homepage: url
-        };
+    getTitle(): string{
+        return this._getTitle();
     }
 
-    static createSourceAttribution(name) {
-        return {
-            attribution: name
-        };
+    abstract _getDescription(): string;
+
+    getDescription(): string{
+        return this._getDescription();
     }
 
-    abstract getAccrualPeriodicity(): string;
+    abstract async _getPublisher(): Promise<Person[]|Organization[]>;
 
-    abstract async getContactPoint(): Promise<any>;
+    async getPublisher(): Promise<Person[]|Organization[]>{
+        return await this._getPublisher();
+    }
 
-    abstract getCreator(): Person[] | Person;
+    abstract _getThemes(): string[];
 
-    abstract getHarvestedData(): string;
+    getThemes(): string[]{
+        return this._getThemes();
+    }
+
+    abstract _getModifiedDate(): Date;
+
+    getModifiedDate(): Date{
+        return this._getModifiedDate()
+    }
+
+    abstract _getAccessRights(): string[];
+
+    getAccessRights(): string[]{
+        return this._getAccessRights();
+    }
+
+    abstract async _getDistributions(): Promise<Distribution[]>;
+    async getDistributions(): Promise<Distribution[]>{
+        return await this._getDistributions();
+    }
+
+    abstract _getGeneratedId(): string;
+
+    getGeneratedId(): string{
+        return this._getGeneratedId()
+    }
+
+    abstract _getMetadataModified(): Date;
+
+    getMetadataModified(): Date{
+        return this._getMetadataModified();
+    }
+
+    abstract _getMetadataSource(): any;
+
+    getMetadataSource(): any{
+        return this._getMetadataSource();
+    }
+
+    abstract _getMetadataIssued(): Date;
+
+    getMetadataIssued(): Date{
+        return this._getMetadataIssued();
+    }
+
+    abstract _isRealtime(): boolean;
+
+    isRealtime(): boolean{
+        return this._isRealtime();
+    }
+
+    abstract _getSpatial(): any;
+
+    getSpatial(): any{
+        return this._getSpatial();
+    }
+
+    abstract _getSpatialText(): string;
+
+    getSpatialText(): string{
+        return this._getSpatialText();
+    }
+
+    abstract _getTemporal(): DateRange[];
+
+    getTemporal(): DateRange[]{
+        return this._getTemporal();
+    }
+
+    abstract _getCitation(): string;
+
+    getCitation(): string{
+        return this._getCitation();
+    }
+
+    abstract _getCategories(): string[];
+
+    getCategories(): string[]{
+        return this._getCategories();
+    }
+
+    abstract _getMFundFKZ(): string;
+
+    getMFundFKZ(): string{
+        return this._getMFundFKZ()
+    }
+
+    abstract _getMFundProjectTitle(): string;
+
+    getMFundProjectTitle(): string{
+        return this._getMFundProjectTitle();
+    }
+
+    abstract async _getDisplayContacts(): Promise<Organization[] | Person[]>;
+
+    async getDisplayContacts(): Promise<Organization[] | Person[]>{
+        return await this._getDisplayContacts();
+    }
+
+    abstract _getKeywords(): string[];
+
+    getKeywords(): string[]{
+        return this._getKeywords();
+    }
+
+    abstract _getAccrualPeriodicity(): string;
+
+    getAccrualPeriodicity(): string{
+        return this._getAccrualPeriodicity();
+    }
+
+    abstract async _getContactPoint(): Promise<any>;
+
+    async getContactPoint(): Promise<any>{
+        return await this._getContactPoint();
+    }
+
+    abstract _getCreator(): Person[] | Person;
+
+    getCreator(): Person[] | Person{
+        return this._getCreator();
+    }
+
+    abstract _getHarvestedData(): string;
+
+    getHarvestedData(): string{
+        return this._getHarvestedData();
+    }
 
     getHarvestErrors() {
         return this.errors.length === 0 ? undefined : this.errors;
     }
 
-    abstract getIssued(): Date;
+    abstract _getIssued(): Date;
 
-    abstract getMetadataHarvested(): Date;
+    getIssued(): Date{
+        return this._getIssued();
+    }
 
-    abstract getSubSections(): any[];
+    abstract _getMetadataHarvested(): Date;
 
-    abstract getGroups(): string[];
+    getMetadataHarvested(): Date{
+        return this._getMetadataHarvested();
+    }
+
+    abstract _getSubSections(): any[];
+
+    getSubSections(): any[]{
+        return this._getSubSections();
+    }
+
+    abstract _getGroups(): string[];
+
+    getGroups(): string[]{
+        return this._getGroups();
+    }
 
     getExtrasAllData(): any[] {
         let all = [];
@@ -161,11 +262,51 @@ export abstract class GenericMapper {
         return this.skipped;
     }
 
-    abstract getOriginator(): Person[]|Organization[];
+    abstract _getOriginator(): Person[]|Organization[];
 
-    abstract async getLicense(): Promise<License>;
+    getOriginator(): Person[]|Organization[]{
+        return this._getOriginator();
+    }
 
-    abstract getUrlCheckRequestConfig(uri: string): OptionsWithUri;
+    abstract async _getLicense(): Promise<License>;
+
+    async getLicense(): Promise<License>{
+        return await this._getLicense();
+    }
+
+    abstract _getUrlCheckRequestConfig(uri: string): OptionsWithUri;
+
+    getUrlCheckRequestConfig(uri: string): OptionsWithUri{
+        return this._getUrlCheckRequestConfig(uri);
+    }
+
+
+    getPriority(){
+        if(this.getSettings().priority){
+            return this.getSettings().priority;
+        }
+        return undefined;
+    }
+
+    executeCustomCode(doc: any) {
+
+    }
+
+
+    // HELPER METHODS
+
+    static createPublisher(name, url) {
+        return {
+            organization: name,
+            homepage: url
+        };
+    }
+
+    static createSourceAttribution(name) {
+        return {
+            attribution: name
+        };
+    }
 
     // TODO: refactor into a mapping file
     static dcatThemeUriFromKeyword(keyword: string): string {
@@ -232,17 +373,6 @@ export abstract class GenericMapper {
                 return null;
         }
         return code ? GenericMapper.DCAT_CATEGORY_URL + code : null;
-    }
-
-    executeCustomCode(doc: any) {
-
-    }
-
-    getPriority(){
-        if(this.getSettings().priority){
-            return this.getSettings().priority;
-        }
-        return undefined;
     }
 }
 
