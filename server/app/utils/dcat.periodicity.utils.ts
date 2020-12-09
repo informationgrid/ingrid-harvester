@@ -90,6 +90,7 @@ export class DcatPeriodicityUtils {
                     break;
                 case "quarterly" :
                 case "vierteljährlich" :
+                case "once_per_quarter" :
                 case "quartal" :
                 case "3 monat" :
                     result = "QUARTERLY";
