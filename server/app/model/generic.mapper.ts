@@ -123,6 +123,9 @@ export abstract class GenericMapper {
             if(dist.format){
                 dist.format = dist.format.filter(format => format && format.trim() !== 'null' && format.trim() !== '');
             }
+            if(!dist.format || dist.format.length === 0){
+                dist.format = ["Unbekannt"];
+            }
         });
 
         if (distributions.length === 0) {
