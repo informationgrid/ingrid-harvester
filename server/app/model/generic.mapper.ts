@@ -99,7 +99,13 @@ export abstract class GenericMapper {
 
     abstract async _getDistributions(): Promise<Distribution[]>;
     async getDistributions(): Promise<Distribution[]>{
-        return await this._getDistributions();
+        let distributions = await this._getDistributions();
+        distributions.forEach(dist => {
+            if(dist.format){
+                dist.format = dist.format.filter(format => format && format.trim() !== '');
+            }
+        });
+        return distributions;
     }
 
     abstract _getGeneratedId(): string;
