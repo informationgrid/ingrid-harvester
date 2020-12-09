@@ -13,6 +13,7 @@ import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
+import {Summary} from "../../model/summary";
 
 let xpath = require('xpath');
 
@@ -72,9 +73,6 @@ export class DcatMapper extends GenericMapper {
         this.summary = summary;
         this.catalogPage = catalogPage;
 
-
-
-
         let distributions = DcatMapper.select('./dcat:Distribution', catalogPage);
         let distributionIDs = DcatMapper.select('./dcat:distribution', record)
             .map(node => node.getAttribute('rdf:resource'))
@@ -83,10 +81,16 @@ export class DcatMapper extends GenericMapper {
         this.linkedDistributions = distributions.filter(distribution => distributionIDs.includes(distribution.getAttribute('rdf:about')))
 
         this.uuid = DcatMapper.select('.//dct:identifier', record, true).textContent;
+
+        super.init();
     }
 
     protected getSettings(): ImporterSettings {
         return this.settings;
+    }
+
+    protected getSummary(): Summary{
+        return this.summary;
     }
 
     _getDescription() {

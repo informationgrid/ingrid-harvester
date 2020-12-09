@@ -33,10 +33,16 @@ export class ExcelMapper extends GenericMapper {
         this.workbook = data.workbook;
         this.summary = data.summary;
         this.currentIndexName = data.currentIndexName;
+
+        super.init();
     }
 
     protected getSettings(): ImporterSettings {
         return this.settings;
+    }
+
+    protected getSummary(): Summary{
+        return this.summary;
     }
 
     _getTitle() {
@@ -82,13 +88,6 @@ export class ExcelMapper extends GenericMapper {
             const dist = await this.addDownloadUrls(type, this.columnValues[this.columnMap[type]]);
             distributions.push(...dist);
         }));
-
-        if (distributions.length === 0) {
-            this.valid = false;
-            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.id}', index: '${this.currentIndexName}'.`;
-            log.warn(msg);
-            this.summary.warnings.push(['Invalid URLs', msg]);
-        }
 
         return distributions;
     }

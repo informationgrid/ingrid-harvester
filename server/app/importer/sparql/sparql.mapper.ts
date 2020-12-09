@@ -13,6 +13,7 @@ import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {map} from "rxjs/operators";
+import {Summary} from "../../model/summary";
 
 let xpath = require('xpath');
 
@@ -48,10 +49,16 @@ export class SparqlMapper extends GenericMapper {
         this.summary = summary;
 
         this.uuid = record.id.value;
+
+        super.init();
     }
 
     protected getSettings(): ImporterSettings {
         return this.settings;
+    }
+
+    protected getSummary(): Summary{
+        return this.summary;
     }
 
     _getDescription() {

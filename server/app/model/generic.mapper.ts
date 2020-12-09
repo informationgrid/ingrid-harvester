@@ -3,6 +3,9 @@ import {License} from '@shared/license.model';
 import * as moment from 'moment';
 import {IndexDocument} from './index.document';
 import {ImporterSettings} from "../importer.settings";
+import {getLogger} from "log4js";
+import {Summary} from "./summary";
+import {Rules} from "./rules";
 
 moment.locale('de');
 
@@ -58,8 +61,24 @@ export abstract class GenericMapper {
 
     public skipped = false;
 
-    protected abstract getSettings(): ImporterSettings;
+    private _log = getLogger();
 
+    private blacklistedFormats: string[] = [];
+
+    init() {
+        let hasDataDownloadRule = this.getSettings().rules
+            && this.getSettings().rules.containsDocumentsWithData
+            && this.getSettings().rules.containsDocumentsWithDataBlacklist;
+
+        if (hasDataDownloadRule) {
+            this.blacklistedFormats = this.getSettings().rules.containsDocumentsWithDataBlacklist
+                .split(',')
+                .map(item => item.trim());
+        }
+    }
+
+    protected abstract getSettings(): ImporterSettings;
+    protected abstract getSummary(): Summary;
 
     abstract _getTitle(): string;
 
@@ -105,6 +124,37 @@ export abstract class GenericMapper {
                 dist.format = dist.format.filter(format => format && format.trim() !== 'null' && format.trim() !== '');
             }
         });
+
+        if (distributions.length === 0) {
+            this.valid = false;
+            let msg = `Dataset has no links for download/access. It will not be displayed in the portal. Title: '${this.getTitle()}', Id: '${this.getGeneratedId()}'.`;
+
+            this.getSummary().missingLinks++;
+
+            this.valid = false;
+            this.getSummary().warnings.push(['No links', msg]);
+
+            this._log.warn(msg);
+        }
+
+        const isWhitelisted = this.getSettings().whitelistedIds.indexOf(this.getGeneratedId()) !== -1;
+
+        if (this.blacklistedFormats.length > 0) {
+
+            if (isWhitelisted) {
+                this._log.info(`Document is whitelisted and not checked: ${this.getGeneratedId()}`);
+            }
+
+            const result = Rules.containsDocumentsWithData(distributions, this.blacklistedFormats);
+            if (result.skipped) {
+                this.getSummary().warnings.push(['No data document', `${this.getTitle()} (${this.getGeneratedId()})`]);
+                this.skipped = true;
+            }
+            if (!result.valid) {
+                this._log.warn(`Document does not contain data links: ${this.getGeneratedId()}`);
+                this.valid = false;
+            }
+        }
         return distributions;
     }
 

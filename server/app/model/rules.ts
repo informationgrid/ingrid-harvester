@@ -1,4 +1,4 @@
-import {Distribution} from '../../model/generic.mapper';
+import {Distribution} from './generic.mapper';
 
 export class RuleResult {
     constructor(
@@ -8,7 +8,7 @@ export class RuleResult {
     }
 }
 
-export class CkanRules {
+export class Rules {
 
     static containsDocumentsWithData(distributions: Distribution[], blacklistedFormats: string[]): RuleResult {
         const valid = distributions.some(dist => this.isDataDocument(dist, blacklistedFormats));

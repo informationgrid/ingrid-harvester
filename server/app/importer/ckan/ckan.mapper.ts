@@ -8,7 +8,6 @@ import {DateRange, Distribution, GenericMapper, Organization, Person} from '../.
 import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from '../../utils/http-request.utils';
 import {UrlUtils} from '../../utils/url.utils';
 import {Summary} from '../../model/summary';
-import {CkanRules} from './ckan.rules';
 import {throwError} from 'rxjs';
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
@@ -34,7 +33,6 @@ export class CkanMapper extends GenericMapper {
     private resourcesDate: Date[] = null;
     private settings: CkanSettings;
     private summary: Summary;
-    private blacklistedFormats: string[] = [];
 
     constructor(settings: CkanSettings, data: CkanMapperData) {
         super();
@@ -43,19 +41,15 @@ export class CkanMapper extends GenericMapper {
         this.data = data;
         this.summary = data.summary;
 
-        let hasDataDownloadRule = this.settings.rules
-            && this.settings.rules.containsDocumentsWithData
-            && this.settings.rules.containsDocumentsWithDataBlacklist;
-
-        if (hasDataDownloadRule) {
-            this.blacklistedFormats = this.settings.rules.containsDocumentsWithDataBlacklist
-                .split(',')
-                .map(item => item.trim());
-        }
+        super.init();
     }
 
     protected getSettings(): ImporterSettings {
         return this.settings;
+    }
+
+    protected getSummary(): Summary{
+        return this.summary;
     }
 
     _getAccessRights() {
@@ -568,34 +562,6 @@ export class CkanMapper extends GenericMapper {
         return undefined;
     }
 
-    isValid(doc?: any): boolean {
-        if (doc.distribution.length === 0) {
-            this.valid = false;
-            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.source.id}', index: '${this.data.currentIndexName}'.`;
-            this.log.warn(msg);
-        }
-
-        const isWhitelisted = this.settings.whitelistedIds.indexOf(doc.extras.generated_id) !== -1;
-
-        if (this.blacklistedFormats.length > 0) {
-
-            if (isWhitelisted) {
-                this.log.info(`Document is whitelisted and not checked: ${this.source.id}`);
-                return super.isValid();
-            }
-
-            const result = CkanRules.containsDocumentsWithData(doc.distribution, this.blacklistedFormats);
-            if (result.skipped) {
-                this.summary.warnings.push(['No data document', `${this.source.title} (${this.source.id})`]);
-                this.skipped = true;
-            }
-            if (!result.valid) {
-                this.log.warn(`Document does not contain data links: ${this.source.id}`);
-                this.valid = false;
-            }
-        }
-        return super.isValid();
-    }
 
     static createRequestConfig(settings: CkanSettings): OptionsWithUri {
 
@@ -760,10 +726,6 @@ export class CkanMapper extends GenericMapper {
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);
         }
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 }
 

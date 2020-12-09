@@ -14,7 +14,10 @@ export const DefaultImporterSettings: ImporterSettings = {
     dateSourceFormats: [],
     blacklistedIds: [],
     whitelistedIds: [],
-    rejectUnauthorizedSSL: true
+    rejectUnauthorizedSSL: true,
+    rules: {
+            containsDocumentsWithData: false
+    }
 };
 
 export interface Importer {

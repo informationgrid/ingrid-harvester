@@ -62,19 +62,4 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
   }
-
-  toggleDisableRule(isChecked) {
-    if (isChecked) {
-      this.form.get('rules.containsDocumentsWithDataBlacklist').enable();
-    } else {
-      this.form.get('rules.containsDocumentsWithDataBlacklist').disable();
-    }
-  }
-
-  toLowerCase(text: string) {
-    const field = this.form.get('rules.containsDocumentsWithDataBlacklist');
-    if (field.value !== text.toLowerCase()) {
-      field.setValue(text.toLowerCase());
-    }
-  }
 }

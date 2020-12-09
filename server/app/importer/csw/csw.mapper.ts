@@ -14,6 +14,7 @@ import doc = Mocha.reporters.doc;
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
+import {Summary} from "../../model/summary";
 
 let xpath = require('xpath');
 
@@ -63,10 +64,15 @@ export class CswMapper extends GenericMapper {
 
         this.idInfo = CswMapper.select('./gmd:identificationInfo', record, true);
 
+        super.init();
     }
 
     protected getSettings(): ImporterSettings {
         return this.settings;
+    }
+
+    protected getSummary(): Summary {
+        return this.summary;
     }
 
     _getDescription() {
@@ -145,15 +151,6 @@ export class CswMapper extends GenericMapper {
 
             // add distributions to all
             dists.push(...urls);
-        }
-
-        if (dists.length === 0) {
-            let msg = `Dataset has no links for download/access. It will not be displayed in the portal. Id: \'${this.uuid}\', source: \'${this.settings.getRecordsUrl}\'`;
-            this.summary.missingLinks++;
-            this.log.warn(msg);
-
-            this.valid = false;
-            this.summary.warnings.push(['No links', msg]);
         }
 
         return dists;
