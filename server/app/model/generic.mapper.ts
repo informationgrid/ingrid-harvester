@@ -102,7 +102,7 @@ export abstract class GenericMapper {
         let distributions = await this._getDistributions();
         distributions.forEach(dist => {
             if(dist.format){
-                dist.format = dist.format.filter(format => format && format.trim() !== '');
+                dist.format = dist.format.filter(format => format && format.trim() !== 'null' && format.trim() !== '');
             }
         });
         return distributions;
