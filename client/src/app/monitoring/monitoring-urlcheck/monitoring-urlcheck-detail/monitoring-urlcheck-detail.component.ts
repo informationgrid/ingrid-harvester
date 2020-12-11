@@ -57,7 +57,7 @@ export class MonitoringUrlcheckDetailComponent implements OnInit {
   getLabelForStatus(status){
     switch(status){
       case '200' : return ' - OK';
-      case '400' : return ' -  Bad Request';
+      case '400' : return ' - Bad Request';
       case '401' : return ' - Unauthorized';
       case '403' : return ' - Forbidden';
       case '404' : return ' - Not Found';
@@ -71,6 +71,6 @@ export class MonitoringUrlcheckDetailComponent implements OnInit {
   }
 
   goToPortal(accessURL){
-    window.open(this.portalUrl+'web/guest/suche/-/results/suche/relevance/0?_mcloudsearchportlet_query='+encodeURI('distribution.accessURL:"'+accessURL+'"'), '_blank');
+    window.open(this.portalUrl+'web/guest/suche/-/results/suche/relevance/0?_mcloudsearchportlet_query='+encodeURIComponent('distribution.accessURL:"'+accessURL+'"'), '_blank');
   }
 }

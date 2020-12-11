@@ -24,7 +24,6 @@ export class MonitoringUrlcheckComponent implements OnInit {
 
 
   constructor(private http: HttpClient, private _dialog: MatDialog) {
-    console.log(_dialog)
     this.dialog = _dialog;
   }
 
@@ -84,13 +83,14 @@ export class MonitoringUrlcheckComponent implements OnInit {
                 yAxisID: 'left-y-axis'
               },
               {
-                label: "Dauer",
+                label: "Dauer (s)",
                 data: data.history.map(entry => entry.duration/1000),
                 borderColor: "yellow",
                 backgroundColor: "yellow",
                 fill: false,
                 cubicInterpolationMode: 'monotone',
-                yAxisID: 'right-y-axis'
+                yAxisID: 'right-y-axis',
+                hidden: true
               },
             ],
             raw: data.history
@@ -111,11 +111,10 @@ export class MonitoringUrlcheckComponent implements OnInit {
                 // Use the footer callback to display the sum of the items showing in the tooltip
                 footer: function (tooltipItems, data) {
                   let entry = data.raw[tooltipItems[0].index];
-                  let result = "\nAbgerufen: " + entry.numRecords + "\n";
-                  result += "Übersprungen: " + entry.numSkipped + "\n";
-                  if (entry.harvester && entry.harvester.length > 0) {
-                    result += "\nHarvester:\n";
-                    entry.harvester.forEach(harvester => result += "* " + harvester + "\n");
+                  let result = "";
+                  if (entry.status && entry.status.filter(status => isNaN(status.code) && status.code !== 'ftp').length > 0) {
+                    result += "\nFehler:\n";
+                    entry.status.filter(status => isNaN(status.code) && status.code !== 'ftp').forEach(status => result += "* " + status.code + "\n");
                   }
                   return result;
                 },
@@ -123,17 +122,19 @@ export class MonitoringUrlcheckComponent implements OnInit {
               footerFontStyle: 'normal'
             },
             'onClick' : function (evt) {
+              if(evt.layerX >= (this.chart.chartArea.left + this.chart.canvas.offsetLeft)
+                && evt.layerX <= (this.chart.chartArea.right + this.chart.canvas.offsetLeft)
+                && evt.layerY >= (this.chart.chartArea.top + this.chart.canvas.offsetTop)
+                && evt.layerY <= (this.chart.chartArea.bottom + this.chart.canvas.offsetTop)) {
               var activePoints = this.chart.getElementsAtEventForMode(evt, 'index', { intersect: false }, true);
               if(activePoints && activePoints.length > 0){
                 let data = this.chart.data.raw[activePoints[0]._index];
-
-                console.log(data);
                 dialog.open(MonitoringUrlcheckDetailComponent, {
                   data: data,
                   width: '950px',
                   disableClose: true
                 });
-              }
+              }}
             },
             hover: {
               mode: 'nearest',
@@ -166,7 +167,7 @@ export class MonitoringUrlcheckComponent implements OnInit {
               yAxes: [{
                 id: 'left-y-axis',
                 position: 'left',
-                display: true,
+                display: 'auto',
                 scaleLabel: {
                   labelString: 'Anzahl',
                   display: true,
@@ -182,7 +183,7 @@ export class MonitoringUrlcheckComponent implements OnInit {
                 {
                   id: 'right-y-axis',
                   position: 'right',
-                  display: true,
+                  display: 'auto',
                   scaleLabel: {
                     labelString: 'Dauer (s)',
                     display: true,
@@ -199,20 +200,6 @@ export class MonitoringUrlcheckComponent implements OnInit {
           }
         };
         this.chart = new Chart('chart_urlcheck', chartOptions);
-        console.log(this.chart);
-        /*
-        let chart = this.chart;
-        let canvas = this.chart.canvas;
-        //console.log(canvas);
-        canvas.onclick = function(evt){
-            var activePoints = chart.getElementsAtEvent(evt);
-            if(activePoints && activePoints.length > 0){
-              let data = chart.data.raw[activePoints[0]._index];
-              console.log(data);
-            }
-            console.log(activePoints);
-          console.log(chart);
-          };*/
       });
     } else {
     }

@@ -12,6 +12,7 @@ export class ScheduleService {
 
     // remember the scheduled jobs
     jobs: { [x: number]: CronJob } = {};
+    urlCheckJob : CronJob;
 
     constructor(private socketService: ImportSocketService) {
 

@@ -5,6 +5,11 @@
   "numberOfReplicas": 0,
   "cronOffset": 0,
   "proxy": "",
+  "portalUrl": "http://localhost:8080/",
+  "urlCheck": {
+    "active": true,
+    "pattern": "30 04 * * *"
+  },
   "mail": {
     "enabled": false,
     "mailServer": {
