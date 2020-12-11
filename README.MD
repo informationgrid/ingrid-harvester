@@ -19,22 +19,22 @@ Run the following command to install all necessary dependencies:
 
 Use docker-compose.yml to start up configured docker container or install manually as described below.
 
-Download Elasticsearch 2.4.6 here:
+Download Elasticsearch 6.8.4 here:
 
-https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/zip/elasticsearch/2.4.6/elasticsearch-2.4.6.zip
+https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.8.4.zip
 
 unzip in folder.
 
 Go to Elasticsearch folder and execute
 
 ```
-bin/plugin install https://nexus.informationgrid.eu/repository/maven-releases/de/ingrid/elasticsearch/decompound-plugin/2.4.6.0/decompound-plugin-2.4.6.0.zip
+bin/plugin install https://nexus.informationgrid.eu/repository/maven-releases/org/xbib/elasticsearch/plugin/elasticsearch-analysis-decompound/6.8.4.0/elasticsearch-analysis-decompound-6.8.4.0.zip
 ```
 
 or if downloaded before
 
 ```
-bin/plugin install file:///decompound-plugin-2.4.6.0.zip
+bin/plugin install file:///elasticsearch-analysis-decompound-6.8.4.0.zip
 ```
 
 Start Elasticsearch
@@ -48,9 +48,9 @@ bin/elasticsearch
 ## Installation Elasticsearch as ubuntu 16.04 service
 
 ```
-wget https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.4.6/elasticsearch-2.4.6.deb
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.8.4.deb
 
-sudo dpkg -i elasticsearch-2.4.6.deb
+sudo dpkg -i elasticsearch-6.8.4.deb
 ```
 
 This results in Elasticsearch being installed in ```/usr/share/elasticsearch/``` with its configuration files placed in ```/etc/elasticsearch``` and its init script added in ```/etc/init.d/elasticsearch```.
@@ -60,7 +60,7 @@ Install decompound plugin
 
 ```
 cd /usr/share/elasticsearch
-sudo bin/plugin install https://nexus.informationgrid.eu/repository/maven-releases/de/ingrid/elasticsearch/decompound-plugin/2.4.6.0/decompound-plugin-2.4.6.0.zip
+sudo bin/plugin install https://nexus.informationgrid.eu/repository/maven-releases/org/xbib/elasticsearch/plugin/elasticsearch-analysis-decompound/6.8.4.0/elasticsearch-analysis-decompound-6.8.4.0.zip
 ```
 
 Enable automatically startup
@@ -78,9 +78,9 @@ sudo systemctl start|stop|restart elasticsearch.service
 ### kibana
 
 ```
-wget https://artifacts.elastic.co/downloads/kibana/kibana-4.6.6-amd64.deb
+wget https://artifacts.elastic.co/downloads/kibana/kibana-6.8.4-amd64.deb
 
-sudo dpkg -i elasticsearch-4.6.6.deb
+sudo dpkg -i elasticsearch-6.8.4.deb
 ```
 
 Configure kibana here ```/etc/kibana/kibana.yml```
