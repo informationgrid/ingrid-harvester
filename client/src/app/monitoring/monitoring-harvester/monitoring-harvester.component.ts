@@ -62,13 +62,14 @@ export class MonitoringHarvesterComponent implements OnInit {
                 yAxisID: 'left-y-axis'
               },
               {
-                label: "Dauer",
+                label: "Dauer (s)",
                 data: data.history.map(entry => entry.duration),
                 borderColor: "yellow",
                 backgroundColor: "yellow",
                 fill: false,
                 cubicInterpolationMode: 'monotone',
-                yAxisID: 'right-y-axis'
+                yAxisID: 'right-y-axis',
+                hidden: true
               },
             ],
             raw: data.history
@@ -127,7 +128,7 @@ export class MonitoringHarvesterComponent implements OnInit {
               yAxes: [{
                 id: 'left-y-axis',
                 position: 'left',
-                display: true,
+                display: 'auto',
                 scaleLabel: {
                   labelString: 'Anzahl',
                   display: true,
@@ -143,7 +144,7 @@ export class MonitoringHarvesterComponent implements OnInit {
                 {
                   id: 'right-y-axis',
                   position: 'right',
-                  display: true,
+                  display: 'auto',
                   scaleLabel: {
                     labelString: 'Dauer (s)',
                     display: true,
