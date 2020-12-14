@@ -104,7 +104,7 @@ export class UrlCheckService {
                 let options: any = {timeout: 10000, proxy: this.generalSettings.proxy, rejectUnauthorized: false};
                 let request_call = new Promise((resolve) => {
                         try {
-                            request.get(url, options, function (error, response) {
+                            request.head(url, options, function (error, response) {
                                 if (!error) {
                                     resolve({url: urlAggregation, status: response.statusCode});
                                 } else {
