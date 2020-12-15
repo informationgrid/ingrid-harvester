@@ -1,6 +1,13 @@
-::ng-deep .mat-tab-group .mat-tab-body-wrapper {
+:host ::ng-deep .mat-tab-group .mat-tab-body-wrapper {
   padding-top: 20px;
+  overflow: hidden !important;
+  height: 100%;
 }
+
+:host ::ng-deep .mat-tab-body-active{
+  overflow: hidden !important;
+}
+
 
 mat-tab-group {
   position: absolute;
@@ -8,4 +15,7 @@ mat-tab-group {
   bottom: 0;
   left: 0;
   right: 0;
+  height: 100%;
+  overflow: hidden !important;
 }
+
