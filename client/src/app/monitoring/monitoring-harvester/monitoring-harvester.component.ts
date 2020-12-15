@@ -212,7 +212,7 @@ export class MonitoringHarvesterComponent implements OnInit {
       tooltip.x > this._chart.chartArea.right ||
       tooltip.y < this._chart.chartArea.top ||
       tooltip.y > this._chart.chartArea.bottom ) {
-      tooltipEl.style.opacity = 0;
+      tooltipEl.style.opacity = '0';
       return;
     }
 
@@ -280,7 +280,7 @@ export class MonitoringHarvesterComponent implements OnInit {
     //console.log(tooltipEl)
 
     // Display, position, and set styles for font
-    tooltipEl.style.opacity = 1;
+    tooltipEl.style.opacity = '1';
     tooltipEl.style.left = positionX + caretX + 'px';
     tooltipEl.style.top = positionY + caretY + 'px';
     tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
