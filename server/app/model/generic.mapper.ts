@@ -148,16 +148,16 @@ export abstract class GenericMapper {
 
             if (isWhitelisted) {
                 this._log.info(`Document is whitelisted and not checked: ${this.getGeneratedId()}`);
-            }
-
-            const result = Rules.containsDocumentsWithData(distributions, this.blacklistedFormats);
-            if (result.skipped) {
-                this.getSummary().warnings.push(['No data document', `${this.getTitle()} (${this.getGeneratedId()})`]);
-                this.skipped = true;
-            }
-            if (!result.valid) {
-                this._log.warn(`Document does not contain data links: ${this.getGeneratedId()}`);
-                this.valid = false;
+            } else {
+                const result = Rules.containsDocumentsWithData(distributions, this.blacklistedFormats);
+                if (result.skipped) {
+                    this.getSummary().warnings.push(['No data document', `${this.getTitle()} (${this.getGeneratedId()})`]);
+                    this.skipped = true;
+                }
+                if (!result.valid) {
+                    this._log.warn(`Document does not contain data links: ${this.getGeneratedId()}`);
+                    this.valid = false;
+                }
             }
         }
         return distributions;
