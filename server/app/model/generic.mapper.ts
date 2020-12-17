@@ -126,6 +126,8 @@ export abstract class GenericMapper {
             if(!dist.format || dist.format.length === 0){
                 dist.format = ["Unbekannt"];
             }
+
+            dist.accessURL = dist.accessURL.replace(/ /g, '%20');
         });
 
         if (distributions.length === 0) {
