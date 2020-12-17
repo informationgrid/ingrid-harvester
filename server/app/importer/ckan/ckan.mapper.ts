@@ -212,7 +212,7 @@ export class CkanMapper extends GenericMapper {
         let maintainer: Person;
         if (this.source.maintainer) {
             maintainer = {
-                name: this.settings.providerPrefix + this.source.maintainer,
+                name: this.settings.providerPrefix + this.source.maintainer.trim(),
                 mbox: this.source.maintainer_email
             };
         }
@@ -224,7 +224,7 @@ export class CkanMapper extends GenericMapper {
         let author: Person;
         if (this.source.author) {
             author = {
-                name: this.settings.providerPrefix + this.source.author,
+                name: this.settings.providerPrefix + this.source.author.trim(),
                 mbox: this.source.author_email
             };
         }
