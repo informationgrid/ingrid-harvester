@@ -14,6 +14,10 @@ node {
     download = true
 }
 
+npm_install {
+    args = ['--production']
+}
+
 task copyConfigs(type: Copy) {
     from ('.') {
         include '*.json'
@@ -33,7 +37,7 @@ task build(type: NpmTask) {
     outputs.dir('build')
 
     dependsOn npm_install
-    args = ['run', 'build', 'install-production']
+    args = ['run', 'build']
 }
 
 task test(type: NpmTask) {
