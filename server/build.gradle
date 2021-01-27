@@ -32,6 +32,7 @@ task copyWebapp(type: Copy) {
 
 task build(type: NpmTask) {
     inputs.files(fileTree('app'))
+    inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
 
     outputs.dir('build')
