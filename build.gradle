@@ -49,6 +49,12 @@ task buildRpm(type: Rpm) {
         into '/opt/ingrid/mcloud-importer'
     }
 
+    from('server/node_modules') {
+        user='ingrid'
+        permissionGroup='ingrid'
+        into '/opt/ingrid/mcloud-importer/node_modules'
+    }
+
     from('rpm/mcloud-importer.service') {
         user='root'
         permissionGroup='root'

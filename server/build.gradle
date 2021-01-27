@@ -30,11 +30,6 @@ task copyWebapp(type: Copy) {
     into 'build/server/app/webapp'
 }
 
-task copyNodeModuls(type: Copy) {
-    from '/node_modules'
-    into 'build/server/node_modules'
-}
-
 task build(type: NpmTask) {
     inputs.files(fileTree('app'))
     inputs.file('package.json')
@@ -49,7 +44,7 @@ task test(type: NpmTask) {
     args = ['run', 'test-jenkins']
 }
 
-task bundle(dependsOn: [build, copyConfigs, copyWebapp, copyNodeModuls]) {
+task bundle(dependsOn: [build, copyConfigs, copyWebapp]) {
 }
 
 task clean {
