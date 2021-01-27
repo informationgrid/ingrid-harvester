@@ -33,7 +33,7 @@ task build(type: NpmTask) {
     outputs.dir('build')
 
     dependsOn npm_install
-    args = ['run', 'build']
+    args = ['run', 'build', 'install-production']
 }
 
 task test(type: NpmTask) {
