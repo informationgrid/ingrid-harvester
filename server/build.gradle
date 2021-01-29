@@ -14,10 +14,6 @@ node {
     download = true
 }
 
-npm_install {
-    args = ['--production']
-}
-
 task copyConfigs(type: Copy) {
     from ('.') {
         include '*.json'
