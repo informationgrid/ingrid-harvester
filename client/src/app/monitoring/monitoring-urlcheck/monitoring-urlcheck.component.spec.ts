@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MonitoringUrlcheckComponent } from './monitoring-urlcheck.component';
+import { MonitoringUrlCheckComponent } from './monitoring-urlcheck.component';
 
 describe('MonitoringUrlCheckComponent', () => {
-  let component: MonitoringUrlcheckComponent;
-  let fixture: ComponentFixture<MonitoringUrlcheckComponent>;
+  let component: MonitoringUrlCheckComponent;
+  let fixture: ComponentFixture<MonitoringUrlCheckComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MonitoringUrlcheckComponent ]
+      declarations: [ MonitoringUrlCheckComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MonitoringUrlcheckComponent);
+    fixture = TestBed.createComponent(MonitoringUrlCheckComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

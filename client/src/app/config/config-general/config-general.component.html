@@ -37,19 +37,37 @@
     <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center" class="margin-below"  [formGroup]="configForm.get('urlCheck')">
       <mat-slide-toggle color="primary"
                         [checked]="configForm.get('urlCheck.active').value"
-                        (change)="translate(configForm.get('urlCheck.pattern').value)"
+                        (change)="urlCheckTranslate(configForm.get('urlCheck.pattern').value)"
                         formControlName = "active"
                         title="Planung an- / ausschalten"></mat-slide-toggle>
       <mat-form-field fxFlex>
         <mat-label>UrlCheck Cron</mat-label>
-        <input matInput placeholder="* * * * *"  formControlName="pattern" (keyup)="translate(configForm.get('urlCheck.pattern').value)" data-test="urlCheck-input">
-        <button mat-button *ngIf="configForm.get('urlCheck.pattern')" matSuffix mat-icon-button aria-label="Clear" (click)="clearInput()" data-test="urlCheck-reset">
+        <input matInput placeholder="* * * * *"  formControlName="pattern" (keyup)="urlCheckTranslate(configForm.get('urlCheck.pattern').value)" data-test="urlCheck-input">
+        <button mat-button *ngIf="configForm.get('urlCheck.pattern')" matSuffix mat-icon-button aria-label="Clear" (click)="clearUrlCheckInput()" data-test="urlCheck-reset">
           <mat-icon>close</mat-icon>
         </button>
         <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon" data-test="urlCheck-info">info_outline</mat-icon>
         <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
       </mat-form-field>
-      <div fxFlex><b>{{cronTranslation}}</b></div>
+      <div fxFlex><b>{{urlCheckTranslation}}</b></div>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center" class="margin-below"  [formGroup]="configForm.get('indexCheck')">
+      <mat-slide-toggle color="primary"
+                        [checked]="configForm.get('indexCheck.active').value"
+                        (change)="indexCheckTranslate(configForm.get('indexCheck.pattern').value)"
+                        formControlName = "active"
+                        title="Planung an- / ausschalten"></mat-slide-toggle>
+      <mat-form-field fxFlex>
+        <mat-label>IndexCheck Cron</mat-label>
+        <input matInput placeholder="* * * * *"  formControlName="pattern" (keyup)="indexCheckTranslate(configForm.get('indexCheck.pattern').value)" data-test="indexCheck-input">
+        <button mat-button *ngIf="configForm.get('indexCheck.pattern')" matSuffix mat-icon-button aria-label="Clear" (click)="clearIndexCheckInput()" data-test="indexCheck-reset">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon" data-test="indexCheck-info">info_outline</mat-icon>
+        <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
+      </mat-form-field>
+      <div fxFlex><b>{{indexCheckTranslation}}</b></div>
     </div>
     <mat-card class="info" *ngIf="showInfo" class="margin-below">
       <div><span>*/5 * * * *</span>Alle 5 Minuten</div>

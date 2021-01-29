@@ -172,12 +172,6 @@ export class ElasticQueries {
                 "bool": {
                     "must": [
                         {
-                            "match_all": {}
-                        },
-                        {
-                            "match_all": {}
-                        },
-                        {
                             "exists": {
                                 "field": "distribution.accessURL"
                             }
@@ -205,5 +199,139 @@ export class ElasticQueries {
                 'timestamp': {"order": "desc"}
             }
         };
+    }
+
+    static getIndexCheckHistory(): any {
+        return {
+            size: 30,
+            "query": {
+                "match_all": {}
+            },
+            sort: {
+                'timestamp': {"order": "desc"}
+            }
+        };
+    }
+
+
+    static getFacetsByAttribution(): any {
+        let query = {
+            "aggs": {
+                "attribution": {
+                    "terms": {
+                        "size": 1000,
+                        "field": "extras.metadata.source.attribution",
+                        "order": {
+                            "_count": "desc"
+                        }
+                    },
+                    "aggs": {
+                        "is_valid": {
+                            "terms": {
+                                "field": "extras.metadata.is_valid",
+                                "size": 10,
+                                "order": {
+                                    "_count": "desc"
+                                }
+                            }
+                        },
+                        "distributions": {
+                            "terms": {
+                                "script": {
+                                    "source": "doc['distribution.accessURL'].length"
+                                },
+                                "size": 100,
+                                "order": {
+                                    "_key": "asc"
+                                }
+                            }
+                        },
+                        "spatial": {
+                            "filter": {
+                                "exists": {
+                                    "field": "extras.spatial"
+                                }
+                            }
+                        },
+                        "temporal": {
+                            "filter": {
+                                "exists": {
+                                    "field": "extras.temporal"
+                                }
+                            }
+                        },
+                        "accrual_periodicity": {
+                            "terms": {
+                                "field": "accrual_periodicity",
+                                "size": 1000,
+                                "order": {
+                                    "_key": "asc"
+                                }
+                            }
+                        },
+                        "categories": {
+                            "terms": {
+                                "field": "extras.subgroups",
+                                "size": 1000,
+                                "order": {
+                                    "_key": "asc"
+                                }
+                            }
+                        },
+                        "display_contact": {
+                            "terms": {
+                                "field": "extras.display_contact.name.raw",
+                                "size": 1000,
+                                "order": {
+                                    "_key": "asc"
+                                }
+                            }
+                        },
+                        "format": {
+                            "terms": {
+                                "field": "distribution.format",
+                                "size": 1000,
+                                "order": {
+                                    "_key": "asc"
+                                }
+                            }
+                        },
+                        "license": {
+                            "terms": {
+                                "field": "extras.license.title",
+                                "size": 1000,
+                                "order": {
+                                    "_key": "asc"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "size": 0,
+            "_source": {
+                "excludes": []
+            },
+            "stored_fields": [
+                "*"
+            ],
+            "script_fields": {},
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "exists": {
+                                "field": "extras.metadata.is_valid"
+                            }
+                        }
+                    ],
+                    "filter": [],
+                    "should": [],
+                    "must_not": []
+                }
+            }
+        };
+
+        return query;
     }
 }

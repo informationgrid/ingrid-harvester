@@ -480,4 +480,50 @@ export class ElasticSearchUtils {
         });
         return result.hits.hits.map(entry => entry._source);
     }
+
+    async getFacetsByAttribution(): Promise<any> {
+        let result = await this.client.search({
+            index: this.indexName,
+            body: ElasticQueries.getFacetsByAttribution(),
+            size: 0
+        });
+        return result.aggregations.attribution.buckets.map(entry => {
+                return {
+                    attribution: entry.key,
+                    count: entry.doc_count,
+                    is_valid:  entry.is_valid.buckets.map(entry => {
+                        return {value: entry.key_as_string, count: entry.doc_count}
+                    }),
+                    spatial: entry.spatial.doc_count,
+                    temporal: entry.temporal.doc_count,
+                    license: entry.license.buckets.map(entry => {
+                        return {name: entry.key, count: entry.doc_count}
+                    }),
+                    display_contact: entry.display_contact.buckets.map(entry => {
+                        return {name: entry.key, count: entry.doc_count}
+                    }),
+                    format: entry.format.buckets.map(entry => {
+                        return {name: entry.key, count: entry.doc_count}
+                    }),
+                    categories: entry.categories.buckets.map(entry => {
+                        return {name: entry.key, count: entry.doc_count}
+                    }),
+                    accrual_periodicity: entry.accrual_periodicity.buckets.map(entry => {
+                        return {name: entry.key, count: entry.doc_count}
+                    }),
+                    distributions: entry.distributions.buckets.map(entry => {
+                        return {number: entry.key, count: entry.doc_count}
+                    })
+                }
+            });
+    }
+
+    async getIndexCheckHistory(): Promise<any> {
+        let result = await this.client.search({
+            index: ['index_check_history'],
+            body: ElasticQueries.getIndexCheckHistory(),
+            size: 30
+        });
+        return result.hits.hits.map(entry => entry._source);
+    }
 }

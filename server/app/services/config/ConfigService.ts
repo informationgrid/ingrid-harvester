@@ -37,6 +37,10 @@ export class ConfigService {
             active: false,
             pattern: ''
         },
+        indexCheck:{
+            active: false,
+            pattern: ''
+        },
         sessionSecret: "mysecretkey",
         mail: {
             enabled: false,

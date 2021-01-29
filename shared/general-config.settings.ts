@@ -7,6 +7,7 @@ export type GeneralSettings = {
     proxy: string,
     portalUrl?: string,
     urlCheck?: CronData,
+    indexCheck?: CronData,
     sessionSecret: string,
     mail?: {
     	enabled?: boolean,

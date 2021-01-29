@@ -96,6 +96,10 @@ export class ConfigGeneralComponent implements OnInit {
         active: [settings.urlCheck.active],
         pattern: [settings.urlCheck.pattern]
       }),
+      indexCheck: this.formBuilder.group({
+        active: [settings.indexCheck.active],
+        pattern: [settings.indexCheck.pattern]
+      }),
       mail: this.formBuilder.group({
         enabled: [settings.mail.enabled],
         mailServer: this.formBuilder.group({
@@ -114,31 +118,53 @@ export class ConfigGeneralComponent implements OnInit {
     })
 
 
-    this.translate(settings.urlCheck.pattern);
+    this.urlCheckTranslate(settings.urlCheck.pattern);
+    this.indexCheckTranslate(settings.indexCheck.pattern);
   }
 
 
-  cronTranslation: string;
-  validExpression = true;
+  urlCheckTranslation: string;
+  indexCheckTranslation: string;
+  //validExpression = true;
   showInfo = false;
 
-  translate(cronExpression: string) {
+  urlCheckTranslate(cronExpression: string) {
     try {
-      this.cronTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
-      this.validExpression = true;
+      this.urlCheckTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
+      //this.validExpression = true;
     } catch (e) {
-      this.cronTranslation = 'Kein gültiger Ausdruck';
-      this.validExpression = false;
+      this.urlCheckTranslation = 'Kein gültiger Ausdruck';
+      //this.validExpression = false;
     }
 
     if (!this.configForm.get('urlCheck.active').value) {
-      this.cronTranslation = 'Planung ausgeschaltet';
+      this.urlCheckTranslation = 'Planung ausgeschaltet';
       return;
     }
   }
 
-  clearInput() {
+  clearUrlCheckInput() {
     this.configForm.get('urlCheck.pattern').setValue('');
-    this.translate('');
+    this.urlCheckTranslate('');
+  }
+
+  indexCheckTranslate(cronExpression: string) {
+    try {
+      this.indexCheckTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
+//      this.validExpression = true;
+    } catch (e) {
+      this.indexCheckTranslation = 'Kein gültiger Ausdruck';
+      //    this.validExpression = false;
+    }
+
+    if (!this.configForm.get('indexCheck.active').value) {
+      this.indexCheckTranslation = 'Planung ausgeschaltet';
+      return;
+    }
+  }
+
+  clearIndexCheckInput() {
+    this.configForm.get('indexCheck.pattern').setValue('');
+    this.indexCheckTranslate('');
   }
 }

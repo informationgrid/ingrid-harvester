@@ -7,7 +7,8 @@ import {SharedModule} from '../shared/shared.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatTabsModule} from "@angular/material/tabs";
 import { MonitoringHarvesterComponent } from './monitoring-harvester/monitoring-harvester.component';
-import { MonitoringUrlcheckComponent } from './monitoring-urlcheck/monitoring-urlcheck.component';
+import { MonitoringUrlCheckComponent } from './monitoring-urlcheck/monitoring-urlcheck.component';
+import { MonitoringIndexCheckComponent } from './monitoring-indexcheck/monitoring-indexcheck.component';
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
@@ -16,6 +17,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatCardModule} from "@angular/material/card";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MonitoringUrlcheckDetailComponent} from "./monitoring-urlcheck/monitoring-urlcheck-detail/monitoring-urlcheck-detail.component";
+import {MonitoringIndexCheckDetailComponent} from "./monitoring-indexcheck/monitoring-indexcheck-detail/monitoring-indexcheck-detail.component";
 import {MatExpansionModule} from "@angular/material/expansion";
 
 const configRoutes: Routes = [
@@ -26,7 +28,7 @@ const configRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [MonitoringComponent, MonitoringHarvesterComponent, MonitoringUrlcheckComponent, MonitoringUrlcheckDetailComponent],
+  declarations: [MonitoringComponent, MonitoringHarvesterComponent, MonitoringUrlCheckComponent, MonitoringUrlcheckDetailComponent, MonitoringIndexCheckComponent, MonitoringIndexCheckDetailComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(configRoutes),
@@ -44,7 +46,8 @@ const configRoutes: Routes = [
     MatExpansionModule
   ],
   entryComponents: [
-    MonitoringUrlcheckDetailComponent
+    MonitoringUrlcheckDetailComponent,
+    MonitoringIndexCheckDetailComponent
   ],
   exports: [
     MonitoringComponent

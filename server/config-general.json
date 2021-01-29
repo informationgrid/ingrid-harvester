@@ -10,6 +10,10 @@
     "active": true,
     "pattern": "30 04 * * *"
   },
+  "indexCheck": {
+    "active": true,
+    "pattern": "10 04 * * *"
+  },
   "mail": {
     "enabled": false,
     "mailServer": {

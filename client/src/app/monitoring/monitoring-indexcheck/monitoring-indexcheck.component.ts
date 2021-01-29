@@ -7,14 +7,15 @@ import {Chart} from 'chart.js';
 import {Observable} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {HttpClient} from "@angular/common/http";
-import {MonitoringUrlcheckDetailComponent} from "./monitoring-urlcheck-detail/monitoring-urlcheck-detail.component";
+import {MonitoringIndexCheckDetailComponent} from "./monitoring-indexcheck-detail/monitoring-indexcheck-detail.component";
+import {MonitoringComponent} from "../monitoring.component";
 
 @Component({
-  selector: 'app-monitoring-urlcheck',
-  templateUrl: './monitoring-urlcheck.component.html',
-  styleUrls: ['./monitoring-urlcheck.component.scss']
+  selector: 'app-monitoring-indexcheck',
+  templateUrl: './monitoring-indexcheck.component.html',
+  styleUrls: ['./monitoring-indexcheck.component.scss']
 })
-export class MonitoringUrlCheckComponent implements OnInit {
+export class MonitoringIndexCheckComponent implements OnInit {
 
   data;
 
@@ -28,13 +29,11 @@ export class MonitoringUrlCheckComponent implements OnInit {
   }
 
   ngOnInit() {
+    MonitoringComponent.setMonitoringIndexCheckComponent(this);
   }
 
-  ngAfterViewInit() {
-    this.draw_chart()
-  }
   getHarvesterHistory(id: number): Observable<any> {
-    return this.http.get<any>('rest/api/monitoring/urlcheck');
+    return this.http.get<any>('rest/api/monitoring/indexcheck');
   }
 
   public async draw_chart() {
@@ -47,8 +46,8 @@ export class MonitoringUrlCheckComponent implements OnInit {
             labels: data.history.map(entry => new Date(entry.timestamp)),
             datasets: [
               {
-                label: "2xx",
-                data: data.history.map(entry => entry.status.filter(status => status.code >= 200 && status.code < 300).map(status => status.url.length).reduce((a, b) => a+b)),
+                label: "Valid",
+                data: data.history.map(entry => entry.attributions.map(attribution => attribution.is_valid.filter(valid => valid.value === "true").map(valid =>  valid.count)).reduce((a, b) => Number(a)+Number(b))),
                 borderColor: "green",
                 backgroundColor: "green",
                 fill: false,
@@ -56,8 +55,17 @@ export class MonitoringUrlCheckComponent implements OnInit {
                 yAxisID: 'left-y-axis'
               },
               {
-                label: "4xx",
-                data: data.history.map(entry => entry.status.filter(status => status.code >= 400 && status.code < 500).map(status => status.url.length).reduce((a, b) => a+b)),
+                label: "Not Valid",
+                data: data.history.map(entry => entry.attributions.map(attribution => attribution.is_valid.filter(valid => valid.value === "false").map(valid =>  valid.count)).reduce((a, b) => Number(a)+Number(b))),
+                borderColor: "red",
+                backgroundColor: "red",
+                fill: false,
+                cubicInterpolationMode: 'monotone',
+                yAxisID: 'left-y-axis'
+              },
+              {
+                label: "Spatial",
+                data: data.history.map(entry => entry.attributions.map(attribution => attribution.spatial).reduce((a, b) => Number(a)+Number(b))),
                 borderColor: "purple",
                 backgroundColor: "purple",
                 fill: false,
@@ -65,19 +73,10 @@ export class MonitoringUrlCheckComponent implements OnInit {
                 yAxisID: 'left-y-axis'
               },
               {
-                label: "5xx",
-                data: data.history.map(entry => entry.status.filter(status => status.code >= 500 && status.code < 600).map(status => status.url.length).reduce((a, b) => a+b)),
-                borderColor: "orange",
-                backgroundColor: "orange",
-                fill: false,
-                cubicInterpolationMode: 'monotone',
-                yAxisID: 'left-y-axis'
-              },
-              {
-                label: "Fehler",
-                data: data.history.map(entry => entry.status.filter(status => isNaN(status.code)).map(status => status.url.length).reduce((a, b) => a+b)),
-                borderColor: "red",
-                backgroundColor: "red",
+                label: "Temporal",
+                data: data.history.map(entry => entry.attributions.map(attribution => attribution.temporal).reduce((a, b) => Number(a)+Number(b))),
+                borderColor: "blue",
+                backgroundColor: "blue",
                 fill: false,
                 cubicInterpolationMode: 'monotone',
                 yAxisID: 'left-y-axis'
@@ -106,7 +105,7 @@ export class MonitoringUrlCheckComponent implements OnInit {
             },
             tooltips: {
               mode: 'index',
-              intersect: false,
+              intersect: false,/*
               callbacks: {
                 // Use the footer callback to display the sum of the items showing in the tooltip
                 footer: function (tooltipItems, data) {
@@ -118,7 +117,7 @@ export class MonitoringUrlCheckComponent implements OnInit {
                   }
                   return result;
                 },
-              },
+              },*/
               footerFontStyle: 'normal'
             },
             'onClick' : function (evt) {
@@ -129,7 +128,7 @@ export class MonitoringUrlCheckComponent implements OnInit {
               var activePoints = this.chart.getElementsAtEventForMode(evt, 'index', { intersect: false }, true);
               if(activePoints && activePoints.length > 0){
                 let data = this.chart.data.raw[activePoints[0]._index];
-                dialog.open(MonitoringUrlcheckDetailComponent, {
+                dialog.open(MonitoringIndexCheckDetailComponent, {
                   data: data,
                   width: '950px',
                   disableClose: true
@@ -199,7 +198,7 @@ export class MonitoringUrlCheckComponent implements OnInit {
             }
           }
         };
-        this.chart = new Chart('chart_urlcheck', chartOptions);
+        this.chart = new Chart('chart_indexcheck', chartOptions);
       });
     } else {
     }
@@ -207,7 +206,7 @@ export class MonitoringUrlCheckComponent implements OnInit {
 
   async showDetails(data) {
     if(data){
-      const dialogRef = this.dialog.open(MonitoringUrlcheckDetailComponent, {
+      const dialogRef = this.dialog.open(MonitoringIndexCheckDetailComponent, {
         data: data,
         width: '950px',
         disableClose: true
@@ -216,11 +215,11 @@ export class MonitoringUrlCheckComponent implements OnInit {
   }
 
 
-  urlCheck() {
-    this.startUrlCheck().subscribe();
+  indexCheck() {
+    this.startIndexCheck().subscribe();
   }
 
-  startUrlCheck(): Observable<void> {
-    return this.http.post<void>('rest/api/url_check', null);
+  startIndexCheck(): Observable<void> {
+    return this.http.post<void>('rest/api/index_check', null);
   }
 }

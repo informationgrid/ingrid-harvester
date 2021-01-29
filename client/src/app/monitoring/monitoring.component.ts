@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MonitoringHarvesterComponent} from "./monitoring-harvester/monitoring-harvester.component";
+import {MonitoringIndexCheckComponent} from "./monitoring-indexcheck/monitoring-indexcheck.component";
 
 @Component({
   selector: 'app-monitoring',
@@ -19,10 +20,19 @@ export class MonitoringComponent implements OnInit {
     MonitoringComponent.monitoringHarvesterComponent = monitoringHarvesterComponent;
   }
 
+  private static monitoringIndexCheckComponent: MonitoringIndexCheckComponent;
+  static setMonitoringIndexCheckComponent(monitoringIndexCheckComponent: MonitoringIndexCheckComponent){
+    MonitoringComponent.monitoringIndexCheckComponent = monitoringIndexCheckComponent;
+  }
+
   onTabChange(event) {
 
     if(event.tab.textLabel === 'Harvester Historie'){
       MonitoringComponent.monitoringHarvesterComponent.draw_chart();
+    }
+
+    if(event.tab.textLabel === 'IndexCheck'){
+      MonitoringComponent.monitoringIndexCheckComponent.draw_chart();
     }
 
   }

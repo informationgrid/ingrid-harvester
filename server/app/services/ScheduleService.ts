@@ -5,6 +5,7 @@ import {CronJob, CronTime} from 'cron';
 import {CronData} from '../importer.settings';
 import {Moment} from "moment";
 import {UrlCheckService} from "./statistic/UrlCheckService";
+import {IndexCheckService} from "./statistic/IndexCheckService";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -14,8 +15,9 @@ export class ScheduleService {
     // remember the scheduled jobs
     jobs: { [x: number]: CronJob } = {};
     urlCheckJob : CronJob;
+    indexCheckJob : CronJob;
 
-    constructor(private socketService: ImportSocketService, private urlCheckService: UrlCheckService) {
+    constructor(private socketService: ImportSocketService, private urlCheckService: UrlCheckService, private indexCheckService: IndexCheckService) {
 
         this.initialize();
 
@@ -33,6 +35,7 @@ export class ScheduleService {
             .forEach(config => this.scheduleJob(config.id, config.cron.pattern, !config.disable));
 
         this.setUrlCheck(ConfigService.getGeneralSettings().urlCheck);
+        this.setIndexCheck(ConfigService.getGeneralSettings().indexCheck);
 
     }
 
@@ -172,13 +175,78 @@ export class ScheduleService {
     }
 
     startUrlCheckJob() {
-
         if (this.urlCheckJob) {
             this.urlCheckJob.start();
         } else {
             let config = ConfigService.getGeneralSettings();
             this.scheduleUrlCheckJob(config.urlCheck.pattern, false);
         }
+    }
 
+
+
+    /**
+     * Save a cronjob and activate scheduler.
+     * @param cron
+     */
+    setIndexCheck(cron: CronData): Date {
+        // set up cron job if harvester is enabled and cron active
+        const schedulingIsActive = cron.active;
+        if (schedulingIsActive) {
+            this.scheduleIndexCheckJob(cron.pattern, true);
+            let cronJob = new CronJob(cron.pattern, () => {}, null, false);
+            return cronJob.nextDate().toDate();
+        } else {
+            this.stopIndexCheckJob();
+            return null;
+        }
+
+    }
+
+    /**
+     * Run a cron job
+     */
+    private scheduleIndexCheckJob(cronExpression: string, startImmediately: boolean): void {
+        this.stopIndexCheckJob();
+
+        try {
+            this.indexCheckJob = new CronJob(cronExpression, () => {
+                let generalSettings = ConfigService.getGeneralSettings();
+                if (generalSettings.cronOffset) {
+                    setTimeout(function(indexCheckService){
+                        indexCheckService.start();
+                    }, generalSettings.cronOffset*60*1000, this.indexCheckService);
+                }
+                else {
+                    this.indexCheckService.start();
+                }
+            }, null, startImmediately, 'Europe/Berlin');
+
+
+        } catch (e) {
+            log.error('Could not schedule IndexCheck job!', e);
+        }
+
+    }
+
+    /**
+     * Stop a cron job
+     */
+    stopIndexCheckJob() {
+
+        if (this.indexCheckJob) {
+            this.indexCheckJob.stop();
+            delete this.indexCheckJob;
+        }
+
+    }
+
+    startIndexCheckJob() {
+        if (this.indexCheckJob) {
+            this.indexCheckJob.start();
+        } else {
+            let config = ConfigService.getGeneralSettings();
+            this.scheduleIndexCheckJob(config.indexCheck.pattern, false);
+        }
     }
 }
