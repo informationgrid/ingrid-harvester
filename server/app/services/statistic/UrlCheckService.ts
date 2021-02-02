@@ -95,12 +95,11 @@ export class UrlCheckService {
         try {
             let url = urlAggregation.url.trim();
             if (!url.startsWith('ftp://')) {
-                //let client = http;
-                //let options: any = {method: 'HEAD', timeout: 10000};
-                //if (url.startsWith('https://')) {
-                //    client = https;
-                //    options = {method: 'HEAD', timeout: 10000, rejectUnauthorized: false};
-                //}
+                if(url.startsWith('/')){
+                    if(this.generalSettings.portalUrl.endsWith('/'))
+                        url = url.substring(1);
+                    url = this.generalSettings.portalUrl + url;
+                }
                 let options: any = {timeout: 10000, proxy: this.generalSettings.proxy, rejectUnauthorized: false};
                 let request_call = new Promise((resolve) => {
                         try {
@@ -148,6 +147,8 @@ export class UrlCheckService {
         if (msg.indexOf('ECONNRESET') !== -1) result = 'ECONNRESET';
         if (msg.indexOf('ERR_INVALID_URL') !== -1 || msg.indexOf('Error: Invalid URI')  !== -1) result = 'ERR_INVALID_URL';
         if (msg.indexOf('ERR_UNESCAPED_CHARACTERS') !== -1) result = 'ERR_UNESCAPED_CHARACTERS';
+        if (msg.indexOf('ECONNREFUSED') !== -1) result = 'ECONNREFUSED';
+        if (msg.indexOf('Exceeded maxRedirects') !== -1) result = 'Exceeded maxRedirects';
         return result;
     }
 
