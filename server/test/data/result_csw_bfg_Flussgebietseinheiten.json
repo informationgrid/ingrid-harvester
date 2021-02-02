@@ -104,32 +104,32 @@
   ],
   "distribution": [
     {
+      "accessURL": "https://registry.gdi-de.org/id/de.bund.bfg.csw/46c44922-b067-4ef6-8f66-6640124d5392",
       "format": [
-        "Geography Markup Language (GML)",
-        "Shape"
-      ],
-      "accessURL": "https://registry.gdi-de.org/id/de.bund.bfg.csw/a3d7dc07-cee6-4481-8d56-19e4a1d215a4"
+        "GML",
+        "x-filegdb"
+      ]
     },
     {
+      "accessURL": "https://registry.gdi-de.org/id/de.bund.bfg.csw/5177683d-5c40-42e5-9a58-f20fa98f0d78",
       "format": [
-        "Geography Markup Language (GML)",
-        "Shape"
-      ],
-      "accessURL": "https://registry.gdi-de.org/id/de.bund.bfg.csw/5177683d-5c40-42e5-9a58-f20fa98f0d78"
+        "GML",
+        "x-filegdb"
+      ]
     },
     {
+      "accessURL": "https://geoportal.bafg.de/arcgis1/rest/services/INSPIRE/AM/MapServer/exts/InspireView/service?VERSION=1.3.0&SERVICE=WMS&REQUEST=Getcapabilities",
       "format": [
-        "Geography Markup Language (GML)",
-        "Shape"
-      ],
-      "accessURL": "https://geoportal.bafg.de/wmsproxy/INSPIRE/WFDReportingUnits"
+        "GML",
+        "x-filegdb"
+      ]
     },
     {
+      "accessURL": "https://geoportal.bafg.de/inspire/download/AM/servicefeed.xml",
       "format": [
-        "Geography Markup Language (GML)",
-        "Shape"
-      ],
-      "accessURL": "https://geoportal.bafg.de/inspire/download/reporting_units/servicefeed.xml"
+        "GML",
+        "x-filegdb"
+      ]
     }
   ]
 }
