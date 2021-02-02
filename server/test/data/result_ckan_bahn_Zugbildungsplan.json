@@ -28,7 +28,7 @@
       "id": "a306f97c-fc51-4e6b-976b-40c34f573dbf",
       "title": "Zugbildungsplan A -Reihung- (ZpAR)",
       "description": "Endstück Winterfahrplan 2018 Gültigkeit: 09.12.2018 – 10.06.2019",
-      "accessURL": "URL: http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR_Wi_Endstueck.pdf",
+      "accessURL": "URL:%20http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR_Wi_Endstueck.pdf",
       "format": ["PDF"],
       "issued": "2020-03-20T12:28:48.220Z",
       "modified": null,
@@ -38,7 +38,7 @@
       "id": "397c4bf1-10e0-4a1b-8950-e2bff1636ea6",
       "title": "Zugbildungsplan A -Reihung- (ZpAR) - B1",
       "description": "Endstück Winterfahrplan 2018 - B1 - Gültigkeit: 04.02.2019 – 10.06.2019",
-      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR Wi_B1.pdf",
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2019_ZpAR%20Wi_B1.pdf",
       "format": ["PDF"],
       "issued": "2020-03-20T12:27:56.878Z",
       "modified": null,
@@ -171,6 +171,18 @@
       "issued": "2020-07-06T08:41:10.172Z",
       "modified": null,
       "title": "Zugbildungsplan A-Reihung- (ZpAR) - Sm B2"
+    },
+    {
+      "accessURL": "http://download-data.deutschebahn.com/static/datasets/zugbildungsplan/2021_ZpAR_Wi_Endstück.pdf",
+      "byteSize": null,
+      "description": "Winterfahrplan 2021 - Gültigkeit: 13.12.2020 – 12.06.2021 (Stand: 02.11.2020)",
+      "format": [
+            "PDF"
+      ],
+      "id": "87b009da-eeaf-4fb6-a807-f6725b8f2e84",
+      "issued": "2020-11-03T13:35:17.718Z",
+      "modified": null,
+      "title": "Zugbildungsplan A-Reihung- (ZpAR)"
     }
   ],
   "extras": {
