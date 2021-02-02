@@ -65,13 +65,13 @@ describe('Import Excel', function () {
         chai.expect(mapper.getTemporal()).to.deep.equal([{gte: new Date("08/12/2018"), lte: new Date("08/12/2018")}]);
 
         //mapper.columnValues[22] = "heute";
-        chai.expect(mapper.getTemporal()).to.deep.equal([{gte: new Date(Date.now()).setHours(0, 0, 0, 0), lte: new Date(Date.now()).setHours(0, 0, 0, 0)}]);
+        chai.expect(mapper.getTemporal()).to.deep.equal([{gte: new Date(new Date(Date.now()).setHours(0, 0, 0, 0)), lte: new Date(new Date(Date.now()).setHours(0, 0, 0, 0))}]);
 
         mapper.columnValues[22] = "12.08.2018 - 25.09.2018";
         chai.expect(mapper.getTemporal()).to.deep.equal([{gte: new Date("08/12/2018"), lte: new Date("09/25/2018")}]);
 
         mapper.columnValues[22] = "12.08.2018 - heute";
-        chai.expect(mapper.getTemporal()).to.deep.equal([{gte: new Date("08/12/2018"), lte: new Date(Date.now()).setHours(0, 0, 0, 0)}]);
+        chai.expect(mapper.getTemporal()).to.deep.equal([{gte: new Date("08/12/2018"), lte: new Date(new Date(Date.now()).setHours(0, 0, 0, 0))}]);
 
         //mapper.columnValues[22] = "2017";
         //chai.expect(mapper.getTemporal()).to.deep.equal({custom: "2017"});
