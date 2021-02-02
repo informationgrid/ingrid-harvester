@@ -66,7 +66,7 @@ export abstract class GenericMapper {
     private blacklistedFormats: string[] = [];
 
     init() {
-        let hasDataDownloadRule = this.getSettings().rules
+        let hasDataDownloadRule = this.getSettings() && this.getSettings().rules
             && this.getSettings().rules.containsDocumentsWithData
             && this.getSettings().rules.containsDocumentsWithDataBlacklist;
 
