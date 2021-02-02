@@ -120,7 +120,7 @@ export class MonitoringIndexCheckComponent implements OnInit {
               },*/
               footerFontStyle: 'normal'
             },
-            'onClick' : function (evt) {
+            'onClick' : function (evt) {/*
               if(evt.layerX >= (this.chart.chartArea.left + this.chart.canvas.offsetLeft)
                 && evt.layerX <= (this.chart.chartArea.right + this.chart.canvas.offsetLeft)
                 && evt.layerY >= (this.chart.chartArea.top + this.chart.canvas.offsetTop)
@@ -133,7 +133,7 @@ export class MonitoringIndexCheckComponent implements OnInit {
                   width: '950px',
                   disableClose: true
                 });
-              }}
+              }}*/
             },
             hover: {
               mode: 'nearest',
