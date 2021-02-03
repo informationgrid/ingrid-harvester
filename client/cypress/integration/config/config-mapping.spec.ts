@@ -12,6 +12,8 @@ describe('Configuration of Mapping-Formats', () => {
     auth.apiLogIn();
     configPage.visit();
     configPage.selectTab(configPage.MAPPING);
+    // buttons need some time to be initialized, otherwise click event will not work
+    cy.wait(100);
   });
 
   it('should show a list of mapped values', () => {

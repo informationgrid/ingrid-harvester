@@ -2,7 +2,7 @@ class ConfigurationPage {
 
   saveButton = '[data-test=save]';
   resetButton = '[data-test=reset]';
-  addMappingBtn = '[id="btnAddMapping"]';
+  addMappingBtn = '#btnAddMapping';
   mappingSource = 'input[placeholder="Quelle"]';
   mappingDestination = 'input[placeholder="Ziel"]';
   elasticSearchUrlField = '[formcontrolname="elasticSearchUrl"]';
