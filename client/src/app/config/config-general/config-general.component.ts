@@ -20,10 +20,6 @@ export class ConfigGeneralComponent implements OnInit {
 
   ngOnInit() {
     this.reset();
-
-    // @ts-ignore
-    this.buildForm({});
-
   }
 
   private static noWhitespaceValidator(control: FormControl) {
