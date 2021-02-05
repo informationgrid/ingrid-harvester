@@ -81,16 +81,6 @@ export class MonitoringIndexCheckComponent implements OnInit {
                 cubicInterpolationMode: 'monotone',
                 yAxisID: 'left-y-axis'
               },
-              {
-                label: "Dauer (s)",
-                data: data.history.map(entry => entry.duration/1000),
-                borderColor: "yellow",
-                backgroundColor: "yellow",
-                fill: false,
-                cubicInterpolationMode: 'monotone',
-                yAxisID: 'right-y-axis',
-                hidden: true
-              },
             ],
             raw: data.history
           },
