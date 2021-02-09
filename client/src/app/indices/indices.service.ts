@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Index} from '@shared/index.model';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +21,15 @@ export class IndicesService {
     return this.http.delete('rest/api/indices/' + name);
   }
 
+  exportIndex(name: string) {
+    return this.http.get('rest/api/indices/' + name);
+  }
   search(indexName: string) {
     this.http.get('rest/api/search/' + indexName)
       .subscribe(response => this.searchResponse$.next(response));
+  }
+
+  importIndex(file: File):Observable<Blob> {
+    return this.http.post<Blob>('rest/api/indices', file);
   }
 }

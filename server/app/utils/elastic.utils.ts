@@ -75,6 +75,43 @@ export class ElasticSearchUtils {
         });
     }
 
+    /**
+     *
+     * @param mapping
+     * @param settings
+     */
+    prepareIndexWithName(indexName: string, mapping, settings) {
+        return new Promise((resolve, reject) => {
+            this.client.indices.create({index: indexName, waitForActiveShards: '1', body: settings})
+                .then(() => {
+                    let type =  Object.keys(mapping)[0];
+                    this.client.indices.putMapping({
+                        index: indexName,
+                        type: type,
+                        body: mapping[type]
+                    }, err => {
+                        if (err) {
+                            this.handleError('Error occurred adding mapping', err);
+                            reject('Mapping error');
+                        } else this.client.indices.open({index: indexName}, errOpen => {
+                            if (errOpen) {
+                                this.handleError('Error opening index', indexName);
+                            }
+                            resolve();
+                        });
+                    });
+                })
+                .catch(err => {
+                    let message = 'Error occurred creating index';
+                    if (err.message.indexOf('index_already_exists_exception') !== -1) {
+                        message = 'Index ' + indexName + ' not created, since it already exists.';
+                    }
+                    this.handleError(message, err);
+                    reject(message);
+                });
+        });
+    }
+
     finishIndex() {
         if (this.settings.dryRun) {
             log.debug('Skipping finalisation of index for dry run.');
@@ -96,7 +133,6 @@ export class ElasticSearchUtils {
             })
             .catch(err => log.error('Error finishing index', err));
     }
-
 
     /**
      * Add the specified alias to an index.
@@ -250,6 +286,48 @@ export class ElasticSearchUtils {
                                 let err = item.index.error;
                                 if (err) {
                                     this.handleError(`Error during indexing on index '${this.indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
+                                }
+                            });
+                        }
+                        if (closeAfterBulk) {
+                            log.debug('Closing client connection to Elasticsearch');
+                            this.client.close();
+                        }
+                        log.debug('Bulk finished of data #items: ' + data.length / 2);
+                        resolve({
+                            queued: false,
+                            response: response
+                        });
+                    })
+                    .catch(err => {
+                        this.handleError('Error occurred during bulk index of #items: ' + data.length / 2, err);
+                        if (closeAfterBulk) {
+                            this.client.close();
+                        }
+                        reject(err);
+                    });
+            } catch (e) {
+                this.handleError('Error during bulk indexing of #items: ' + data.length / 2, e);
+            }
+        });
+    }
+
+
+
+    bulkWithIndexName(indexName, type, data, closeAfterBulk): Promise<BulkResponse> {
+        return new Promise((resolve, reject) => {
+            try {
+                this.client.bulk({
+                    index: indexName,
+                    type: type,
+                    body: data
+                })
+                    .then((response) => {
+                        if (response.errors) {
+                            response.items.forEach(item => {
+                                let err = item.index.error;
+                                if (err) {
+                                    this.handleError(`Error during indexing on index '${indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
                                 }
                             });
                         }
@@ -526,4 +604,44 @@ export class ElasticSearchUtils {
         });
         return result.hits.hits.map(entry => entry._source);
     }
+
+    async getIndexSettings(indexName): Promise<any>{
+        return await this.client.indices.getSettings({index: indexName})
+    }
+
+    async getIndexMapping(indexName): Promise<any>{
+        return await this.client.indices.getMapping({index: indexName})
+    }
+
+    async getAllEntries(indexName): Promise<any>{
+        return new Promise((resolve) => {
+            let results = [];
+            let client = this.client;
+
+            this.client.search({
+                index: indexName,
+                scroll: '5s',
+                body: {
+                    query: {
+                        "match_all": {}
+                    }
+                }
+            }, function getMoreUntilDone(error, response) {
+                response.hits.hits.forEach(function (hit) {
+                    results.push(hit);
+                });
+
+                if (response.hits.total !== results.length) {
+                    client.scroll({
+                        scrollId: response._scroll_id,
+                        scroll: '5s'
+                    }, getMoreUntilDone);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+    }
+
+
 }
