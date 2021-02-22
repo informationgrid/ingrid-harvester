@@ -78,16 +78,6 @@
                        placeholder="Filter Groups"
                        (update)="model.filterGroups = $event"></app-chip-list>
       </div>
-
-      <div formGroupName="rules" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between baseline">
-        <mat-checkbox formControlName="containsDocumentsWithData" (change)="toggleDisableRule($event.checked)">Muss Daten-Download enthalten</mat-checkbox>
-        <mat-form-field fxFlex>
-          <mat-label>Datenformat ausschließen</mat-label>
-          <input matInput placeholder="rss,doc,..." formControlName="containsDocumentsWithDataBlacklist"
-                 autocomplete="off" (ngModelChange)="toLowerCase($event)" required>
-        </mat-form-field>
-      </div>
-
     </mat-card-content>
   </mat-card>
 

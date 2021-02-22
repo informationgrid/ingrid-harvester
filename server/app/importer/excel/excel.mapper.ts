@@ -33,28 +33,34 @@ export class ExcelMapper extends GenericMapper {
         this.workbook = data.workbook;
         this.summary = data.summary;
         this.currentIndexName = data.currentIndexName;
+
+        super.init();
     }
 
     protected getSettings(): ImporterSettings {
         return this.settings;
     }
 
-    getTitle() {
+    protected getSummary(): Summary{
+        return this.summary;
+    }
+
+    _getTitle() {
         return this.columnValues[this.columnMap.Daten];
     }
 
-    getDescription() {
+    _getDescription() {
         return this.columnValues[this.columnMap.Kurzbeschreibung];
     }
 
-    async getPublisher() {
+    async _getPublisher() {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
         const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
         return publishers.map(p => GenericMapper.createPublisher(p.name, p.url));
     }
 
-    getThemes(): string[] {
+    _getThemes(): string[] {
 
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
         const dcatCategoriesString: string = this.columnValues[this.columnMap.DCATKategorie];
@@ -67,12 +73,12 @@ export class ExcelMapper extends GenericMapper {
 
     }
 
-    getAccessRights() {
+    _getAccessRights() {
         let rights = this.columnValues[this.columnMap.Nutzungshinweise];
         return rights && rights.trim() !== '' ? [rights] : undefined;
     }
 
-    async getDistributions() {
+    async _getDistributions() {
         const types = ['Dateidownload', 'WMS', 'FTP', 'AtomFeed', 'Portal', 'SOS', 'WFS', 'WCS', 'WMTS', 'API'];
 
         const distributions: Distribution[] = [];
@@ -83,31 +89,24 @@ export class ExcelMapper extends GenericMapper {
             distributions.push(...dist);
         }));
 
-        if (distributions.length === 0) {
-            this.valid = false;
-            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.id}', index: '${this.currentIndexName}'.`;
-            log.warn(msg);
-            this.summary.warnings.push(['Invalid URLs', msg]);
-        }
-
         return distributions;
     }
 
-    getModifiedDate() {
+    _getModifiedDate() {
         const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
         const dateMetaUpdate = this.columnValues[this.columnMap.Aktualisierungsdatum];
         return dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
     }
 
-    getGeneratedId() {
+    _getGeneratedId() {
         return this.data.id;
     }
 
-    getMetadataIssued() {
+    _getMetadataIssued() {
         return (this.storedData && this.storedData.issued) ? this.storedData.issued : new Date(Date.now());
     }
 
-    getMetadataModified(): Date {
+    _getMetadataModified(): Date {
         if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
             let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
             if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
@@ -116,23 +115,23 @@ export class ExcelMapper extends GenericMapper {
         return new Date(Date.now());
     }
 
-    getMetadataSource() {
+    _getMetadataSource() {
         return GenericMapper.createSourceAttribution('mcloud-excel');
     }
 
-    isRealtime() {
+    _isRealtime() {
         return this.columnMap.Echtzeitdaten === 1;
     }
 
-    getSpatial(): any {
+    _getSpatial(): any {
         return undefined;
     }
 
-    getSpatialText(): string {
+    _getSpatialText(): string {
         return undefined;
     }
 
-    getTemporal(): DateRange[] {
+    _getTemporal(): DateRange[] {
         let range: string = this.columnValues[this.columnMap.Zeitraum];
         if (range) {
             try {
@@ -162,24 +161,24 @@ export class ExcelMapper extends GenericMapper {
         }
     }
 
-    getCategories() {
+    _getCategories() {
         let categories = this.mapCategories(this.columnValues[this.columnMap.Kategorie].split(','));
         if (!categories || categories.length === 0) categories = this.settings.defaultMcloudSubgroup;
         return categories;
     }
 
-    getCitation() {
+    _getCitation() {
         return this.columnValues[this.columnMap.Quellenvermerk];
     }
 
-    async getDisplayContacts() {
+    async _getDisplayContacts() {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
         const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
         return publishers.map(p => <Person>{name: p.name.trim(), homepage: p.url});
     }
 
-    getMFundFKZ() {
+    _getMFundFKZ() {
         let mfundFkz = this.columnValues[this.columnMap.mFundFoerderkennzeichen];
         if (mfundFkz && (mfundFkz.formula || mfundFkz.sharedFormula)) {
             mfundFkz = mfundFkz.result;
@@ -187,7 +186,7 @@ export class ExcelMapper extends GenericMapper {
         return mfundFkz && mfundFkz.length > 0 ? mfundFkz : undefined;
     }
 
-    getMFundProjectTitle() {
+    _getMFundProjectTitle() {
         let mfundProject = this.columnValues[this.columnMap.mFundProjekt];
         if (mfundProject && (mfundProject.formula || mfundProject.sharedFormula)) {
             mfundProject = mfundProject.result;
@@ -294,7 +293,7 @@ export class ExcelMapper extends GenericMapper {
         });
     }
 
-    async getLicense() {
+    async _getLicense() {
         const licenseSheet = this.workbook.getWorksheet(3);
         const licenseId = this.columnValues[this.columnMap.Lizenz].toLowerCase();
         const numLicenses = licenseSheet.rowCount;
@@ -321,7 +320,7 @@ export class ExcelMapper extends GenericMapper {
         return license;
     }
 
-    getAccrualPeriodicity(): string {
+    _getAccrualPeriodicity(): string {
         let value: string = this.columnValues[this.columnMap.Periodizitaet].toString();
         if(value){
             let periodicity = DcatPeriodicityUtils.getPeriodicity(value);
@@ -333,39 +332,39 @@ export class ExcelMapper extends GenericMapper {
         return undefined;
     }
 
-    getKeywords(): string[] {
+    _getKeywords(): string[] {
         return undefined;
     }
 
-    getCreator() {
+    _getCreator() {
         return undefined;
     }
 
-    getHarvestedData(): string {
+    _getHarvestedData(): string {
         return JSON.stringify(this.columnValues);
     }
 
-    getGroups(): string[] {
+    _getGroups(): string[] {
         return undefined;
     }
 
-    getIssued(): Date {
+    _getIssued(): Date {
         return undefined;
     }
 
-    getMetadataHarvested(): Date {
+    _getMetadataHarvested(): Date {
         return undefined;
     }
 
-    getSubSections(): any[] {
+    _getSubSections(): any[] {
         return undefined;
     }
 
-    getContactPoint(): Promise<any> {
+    _getContactPoint(): Promise<any> {
         return undefined; //of(null).pipe(delay(1000)).toPromise();
     }
 
-    getOriginator(): Organization[] {
+    _getOriginator(): Organization[] {
         let originator = {
             organization: this.columnValues[this.columnMap.Quellenvermerk]
         };
@@ -378,7 +377,7 @@ export class ExcelMapper extends GenericMapper {
 
     }
 
-    getUrlCheckRequestConfig(uri: string): OptionsWithUri {
+    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
         let config: OptionsWithUri = {
             method: 'GET',
             json: false,

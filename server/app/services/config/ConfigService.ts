@@ -32,6 +32,15 @@ export class ConfigService {
         numberOfShards: 1,
         numberOfReplicas: 0,
         proxy: "",
+        portalUrl: "https://mcloud.de/",
+        urlCheck:{
+            active: false,
+            pattern: ''
+        },
+        indexCheck:{
+            active: false,
+            pattern: ''
+        },
         sessionSecret: "mysecretkey",
         mail: {
             enabled: false,

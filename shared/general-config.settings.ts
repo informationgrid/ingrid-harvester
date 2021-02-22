@@ -5,6 +5,9 @@ export type GeneralSettings = {
     numberOfShards?: number,
     numberOfReplicas?: number,
     proxy: string,
+    portalUrl?: string,
+    urlCheck?: CronData,
+    indexCheck?: CronData,
     sessionSecret: string,
     mail?: {
     	enabled?: boolean,
@@ -23,4 +26,9 @@ export interface MailServerConfiguration {
         user: string,
         pass: string
     }
+}
+
+export interface CronData {
+    pattern: string;
+    active: boolean;
 }

@@ -2,6 +2,7 @@ import {Authenticated, BodyParams, Controller, Delete, Get, PathParams, Post} fr
 import {ConfigService} from '../services/config/ConfigService';
 import {IndexService} from '../services/IndexService';
 import {ScheduleService} from '../services/ScheduleService';
+import {HistoryService} from '../services/statistic/HistoryService';
 import {Harvester} from '@shared/harvester';
 
 let log = require('log4js').getLogger(__filename);
@@ -12,7 +13,8 @@ export class HarvesterCtrl {
 
     constructor(
         private indexService: IndexService,
-        private scheduleService: ScheduleService) {
+        private scheduleService: ScheduleService,
+        private historyService: HistoryService) {
     }
 
     @Get('/')
@@ -64,7 +66,6 @@ export class HarvesterCtrl {
 
     @Get('/history/:id')
     async getHarvesterHistory(@PathParams('id') id: number): Promise<any[]> {
-        return await this.indexService.getHistory(id);
+        return await this.historyService.getHistory(id);
     }
-
 }

@@ -33,7 +33,7 @@ export class IndexService {
             index: ''
         };
         // @ts-ignore
-        const summary: Summary = {};
+        const summary: Summary = {elasticErrors: []};
         this.elasticUtils = new ElasticSearchUtils(settings, summary);
 
     }
@@ -85,12 +85,50 @@ export class IndexService {
         return response.hits.hits;
     }
 
-    async getHistory(id: number): Promise<any>{
-        const harvester = ConfigService.get().find(h => h.id === id);
-        let history = await this.elasticUtils.getHistory(harvester.index);
-        return {
-            harvester: harvester.description,
-            history: history
+    async exportIndex(name: string) : Promise<any> {
+        let settings = await this.elasticUtils.getIndexSettings(name);
+        let mapping = await this.elasticUtils.getIndexMapping(name);
+        let data = await this.elasticUtils.getAllEntries(name);
+
+        return{
+            index: name,
+            settings: {
+                number_of_shards: settings[name].settings.index.number_of_shards,
+                number_of_replicas: settings[name].settings.index.number_of_replicas,
+                analysis: settings[name].settings.index.analysis
+            },
+            mappings: mapping[name].mappings,
+            data: data
         }
+    }
+
+    async importIndex(json: any) : Promise<any> {
+        //let settings = json.settings;
+        //let mapping = await this.elasticUtils.getIndexMapping(name);
+        //let data = await this.elasticUtils.getAllEntries(name);
+
+        await this.elasticUtils.prepareIndexWithName(json.index, json.mappings, json.settings);
+        let bulkData = [];
+        let type = Object.keys(json.mappings)[0];
+        let promise = new Promise(resolve => {resolve()});
+        json.data.forEach(entry => {
+            bulkData.push({
+                index: {
+                    _id: entry._id
+                }
+            });
+            bulkData.push(entry._source)
+
+            if (bulkData.length >= (ElasticSearchUtils.maxBulkSize * 2)) {
+                let data = [];
+                bulkData.forEach(entry => data.push(entry));
+                bulkData = [];
+                promise = promise.then(() => this.elasticUtils.bulkWithIndexName(json.index, type, data, false));
+
+            }
+        });
+        return await promise
+            .then(() => this.elasticUtils.bulkWithIndexName(json.index, type, bulkData, false))
+            .then(() => this.elasticUtils.client.cluster.health({waitForStatus: 'yellow'}));
     }
 }

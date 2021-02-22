@@ -23,5 +23,9 @@ export type ImporterSettings = {
     startPosition?: number,
     type: string,
     whitelistedIds?: string[],
-    rejectUnauthorizedSSL?: boolean
+    rejectUnauthorizedSSL?: boolean,
+    rules?: {
+        containsDocumentsWithData?: boolean,
+        containsDocumentsWithDataBlacklist?: string
+    }
 }

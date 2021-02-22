@@ -19,12 +19,6 @@ let log = require('log4js').getLogger(__filename),
     DomParser = require('xmldom').DOMParser;
 
 export class CswSummary extends Summary {
-    opendata = 0;
-    missingLinks = 0;
-    missingPublishers = 0;
-    missingLicense = 0;
-    ok = 0;
-
     additionalSummary() {
         logSummary.info(`Number of records with at least one mandatory keyword: ${this.opendata}`);
         logSummary.info(`Number of records with missing links: ${this.missingLinks}`);

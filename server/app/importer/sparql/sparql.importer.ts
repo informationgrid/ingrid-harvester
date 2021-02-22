@@ -5,7 +5,6 @@ import {IndexDocument} from '../../model/index.document';
 import {SparqlMapper} from './sparql.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
-import {OptionsWithUri} from 'request-promise';
 import {DefaultImporterSettings, Importer} from '../../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
@@ -16,8 +15,6 @@ import {RequestDelegate} from "../../utils/http-request.utils";
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
     logRequest = getLogger('requests'),
-    DomParser = require('xmldom').DOMParser,
-    SparqlClient = require('sparql-http-client'),
     SimpleClient = require('sparql-http-client/SimpleClient');
 
 export class SparqlSummary extends Summary {

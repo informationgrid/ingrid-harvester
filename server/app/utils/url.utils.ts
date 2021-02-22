@@ -4,7 +4,7 @@ import {RequestDelegate} from "./http-request.utils";
 import {OptionsWithUri} from "request-promise";
 import * as fs from "fs";
 
-let log = require('log4js').getLogger( __filename );
+let log = require('log4js').getLogger(__filename);
 
 export class UrlUtils {
 
@@ -75,7 +75,7 @@ export class UrlUtils {
             await delegate.doRequest(callback);
             UrlUtils.cache[<string>requestConfig.uri] = found;
             return found;
-        } catch(err) {
+        } catch (err) {
             let message = err.message;
             // Ignore errors caused by 404 status code and invalid certificates
             if (!message.includes('ERR_TLS_CERT_ALTNAME_INVALID')
@@ -97,9 +97,11 @@ export class UrlUtils {
             const value = UrlUtils.formatMapping[format.toLowerCase()];
 
             if (!value) {
-                log.warn('Distribution format unknown: ' + format);
-                if (warnings) {
-                    warnings.push(['Distribution format unknown', format]);
+                if (Object.values(UrlUtils.formatMapping).indexOf(format) === -1) {
+                    log.warn('Distribution format unknown: ' + format);
+                    if (warnings) {
+                        warnings.push(['Distribution format unknown', format]);
+                    }
                 }
                 return format;
             }

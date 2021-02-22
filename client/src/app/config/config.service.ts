@@ -54,7 +54,6 @@ export class ConfigService {
     return this.http.post<void>('rest/api/config/general', file);
   }
 
-
   /**
    * Download a file.
    * @param data - Array Buffer data

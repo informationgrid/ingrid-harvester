@@ -8,7 +8,6 @@ import {DateRange, Distribution, GenericMapper, Organization, Person} from '../.
 import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from '../../utils/http-request.utils';
 import {UrlUtils} from '../../utils/url.utils';
 import {Summary} from '../../model/summary';
-import {CkanRules} from './ckan.rules';
 import {throwError} from 'rxjs';
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
@@ -34,7 +33,6 @@ export class CkanMapper extends GenericMapper {
     private resourcesDate: Date[] = null;
     private settings: CkanSettings;
     private summary: Summary;
-    private blacklistedFormats: string[] = [];
 
     constructor(settings: CkanSettings, data: CkanMapperData) {
         super();
@@ -43,26 +41,22 @@ export class CkanMapper extends GenericMapper {
         this.data = data;
         this.summary = data.summary;
 
-        let hasDataDownloadRule = this.settings.rules
-            && this.settings.rules.containsDocumentsWithData
-            && this.settings.rules.containsDocumentsWithDataBlacklist;
-
-        if (hasDataDownloadRule) {
-            this.blacklistedFormats = this.settings.rules.containsDocumentsWithDataBlacklist
-                .split(',')
-                .map(item => item.trim());
-        }
+        super.init();
     }
 
     protected getSettings(): ImporterSettings {
         return this.settings;
     }
 
-    getAccessRights() {
+    protected getSummary(): Summary{
+        return this.summary;
+    }
+
+    _getAccessRights() {
         return undefined;
     }
 
-    getCategories() {
+    _getCategories() {
         let subgroups = [];
         let keywords = this.getKeywords();
         if (keywords) {
@@ -80,11 +74,11 @@ export class CkanMapper extends GenericMapper {
         return subgroups;
     }
 
-    getCitation() {
+    _getCitation() {
         return undefined;
     }
 
-    getDescription() {
+    _getDescription() {
         if (this.source.notes) {
             return this.settings.markdownAsDescription ? markdown.toHTML(this.source.notes) : this.source.notes;
         } else {
@@ -92,7 +86,7 @@ export class CkanMapper extends GenericMapper {
         }
     }
 
-    async getDisplayContacts() {
+    async _getDisplayContacts() {
         let person = await this.getDisplayContactByField(this.settings.providerField);
 
         if (person.length === 0) {
@@ -104,7 +98,7 @@ export class CkanMapper extends GenericMapper {
         return person;
     }
 
-    async getDistributions(): Promise<Distribution[]> {
+    async _getDistributions(): Promise<Distribution[]> {
         let urlErrors = [];
         let distributions: Distribution[] = [];
         let resources = this.source.resources;
@@ -158,23 +152,23 @@ export class CkanMapper extends GenericMapper {
         return url;
     }
 
-    getGeneratedId() {
+    _getGeneratedId() {
         return this.source.id;
     }
 
-    getMFundFKZ() {
+    _getMFundFKZ() {
         return undefined;
     }
 
-    getMFundProjectTitle() {
+    _getMFundProjectTitle() {
         return undefined;
     }
 
-    getMetadataIssued() {
+    _getMetadataIssued() {
         return (this.data.storedData && this.data.storedData.issued) ? new Date(this.data.storedData.issued) : new Date(Date.now());
     }
 
-    getMetadataModified(): Date {
+    _getMetadataModified(): Date {
         if(this.data.storedData && this.data.storedData.modified && this.data.storedData.dataset_modified){
             let storedDataset_modified: Date = new Date(this.data.storedData.dataset_modified);
             if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
@@ -183,7 +177,7 @@ export class CkanMapper extends GenericMapper {
         return new Date(Date.now());
     }
 
-    getMetadataSource() {
+    _getMetadataSource() {
         // Metadata
         // The harvest source
         let rawSource = this.settings.ckanBaseUrl + '/api/3/action/package_show?id=' + this.source.name;
@@ -196,11 +190,11 @@ export class CkanMapper extends GenericMapper {
         };
     }
 
-    getModifiedDate() {
+    _getModifiedDate() {
         return this.handleDate(this.source.metadata_modified);
     }
 
-    async getPublisher(): Promise<Organization[]> {
+    async _getPublisher(): Promise<Organization[]> {
         let publisher: Organization;
         if (this.source.organization && this.source.organization.title) {
             let homepage = this.source.organization.description;
@@ -218,7 +212,7 @@ export class CkanMapper extends GenericMapper {
         let maintainer: Person;
         if (this.source.maintainer) {
             maintainer = {
-                name: this.settings.providerPrefix + this.source.maintainer,
+                name: this.settings.providerPrefix + this.source.maintainer.trim(),
                 mbox: this.source.maintainer_email
             };
         }
@@ -230,7 +224,7 @@ export class CkanMapper extends GenericMapper {
         let author: Person;
         if (this.source.author) {
             author = {
-                name: this.settings.providerPrefix + this.source.author,
+                name: this.settings.providerPrefix + this.source.author.trim(),
                 mbox: this.source.author_email
             };
         }
@@ -238,7 +232,7 @@ export class CkanMapper extends GenericMapper {
         return author ? [author] : [];
     }
 
-    getTemporal(): DateRange[] {
+    _getTemporal(): DateRange[] {
         let from = this.getTemporalFrom();
         let to = this.getTemporalTo()
 
@@ -286,7 +280,7 @@ export class CkanMapper extends GenericMapper {
         return undefined;
     }
 
-    getThemes(): string[] {
+    _getThemes(): string[] {
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
         // map ckan category to DCAT
         let mappedThemes = [];
@@ -304,15 +298,15 @@ export class CkanMapper extends GenericMapper {
             .map(category => GenericMapper.DCAT_CATEGORY_URL + category);
     }
 
-    getTitle() {
+    _getTitle() {
         return this.source.title;
     }
 
-    isRealtime() {
+    _isRealtime() {
         return undefined;
     }
 
-    getAccrualPeriodicity(): string {
+    _getAccrualPeriodicity(): string {
         let raw = undefined;
 
         if(this.source.update_cycle){
@@ -352,7 +346,7 @@ export class CkanMapper extends GenericMapper {
         return result;
     }
 
-    getKeywords(): string[] {
+    _getKeywords(): string[] {
         let keywords = [];
         if (this.source.tags) {
             this.source.tags.forEach(tag => {
@@ -366,7 +360,7 @@ export class CkanMapper extends GenericMapper {
         return keywords;
     }
 
-    getHarvestedData(): string {
+    _getHarvestedData(): string {
         return JSON.stringify(this.source);
     }
 
@@ -408,14 +402,14 @@ export class CkanMapper extends GenericMapper {
         return dates;
     }
 
-    getCreator(): Person {
+    _getCreator(): Person {
         return {
             name: this.source.author,
             mbox: this.source.author_email
         };
     }
 
-    getGroups(): string[] {
+    _getGroups(): string[] {
         let groups = [];
 
         // Groups
@@ -429,15 +423,15 @@ export class CkanMapper extends GenericMapper {
         return groups;
     }
 
-    getIssued(): Date {
+    _getIssued(): Date {
         return this.handleDate(this.source.metadata_created);
     }
 
-    getMetadataHarvested(): Date {
+    _getMetadataHarvested(): Date {
         return this.data.harvestTime;
     }
 
-    getSubSections(): any[] {
+    _getSubSections(): any[] {
         let subsections = [];
 
         // Extra information
@@ -464,15 +458,15 @@ export class CkanMapper extends GenericMapper {
         return subsections;
     }
 
-    getContactPoint(): any {
+    _getContactPoint(): any {
         return undefined;
     }
 
-    getOriginator(): Person[] {
+    _getOriginator(): Person[] {
         return undefined;
     }
 
-    async getLicense() {
+    async _getLicense() {
         const hasNoLicense = !this.source.license_id && !this.source.license_title && !this.source.license_url;
 
         if (this.settings.defaultLicense && hasNoLicense) {
@@ -499,7 +493,7 @@ export class CkanMapper extends GenericMapper {
         }
     }
 
-    getUrlCheckRequestConfig(uri: string): OptionsWithUri {
+    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
         let config: OptionsWithUri = {
             method: 'GET',
             json: false,
@@ -515,7 +509,7 @@ export class CkanMapper extends GenericMapper {
         return config;
     }
 
-    getSpatial(): any {
+    _getSpatial(): any {
         let extras = this.source.extras;
         if (extras) {
             for (let i = 0; i < extras.length; i++) {
@@ -555,7 +549,7 @@ export class CkanMapper extends GenericMapper {
     }
 
 
-    getSpatialText(): string {
+    _getSpatialText(): string {
         let extras = this.source.extras;
         if (extras) {
             for (let i = 0; i < extras.length; i++) {
@@ -568,34 +562,6 @@ export class CkanMapper extends GenericMapper {
         return undefined;
     }
 
-    isValid(doc?: any): boolean {
-        if (doc.distribution.length === 0) {
-            this.valid = false;
-            let msg = `Item will not be displayed in portal because no valid URLs were detected. Id: '${this.source.id}', index: '${this.data.currentIndexName}'.`;
-            this.log.warn(msg);
-        }
-
-        const isWhitelisted = this.settings.whitelistedIds.indexOf(doc.extras.generated_id) !== -1;
-
-        if (this.blacklistedFormats.length > 0) {
-
-            if (isWhitelisted) {
-                this.log.info(`Document is whitelisted and not checked: ${this.source.id}`);
-                return super.isValid();
-            }
-
-            const result = CkanRules.containsDocumentsWithData(doc.distribution, this.blacklistedFormats);
-            if (result.skipped) {
-                this.summary.warnings.push(['No data document', `${this.source.title} (${this.source.id})`]);
-                this.skipped = true;
-            }
-            if (!result.valid) {
-                this.log.warn(`Document does not contain data links: ${this.source.id}`);
-                this.valid = false;
-            }
-        }
-        return super.isValid();
-    }
 
     static createRequestConfig(settings: CkanSettings): OptionsWithUri {
 
@@ -736,7 +702,7 @@ export class CkanMapper extends GenericMapper {
     private async getDisplayContactByField(providerField: ProviderField): Promise<Person[]> {
         switch (providerField) {
             case 'organization':
-                const publisher = await this.getPublisher();
+                const publisher = await this._getPublisher();
                 if (publisher.length > 0) {
                     return [{
                         name: this.settings.providerPrefix + (publisher[0].organization ? publisher[0].organization.trim() : this.settings.description.trim()),
@@ -760,10 +726,6 @@ export class CkanMapper extends GenericMapper {
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);
         }
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 }
 

@@ -15,6 +15,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "filePath": "./data.xlsx",
     "description": "mCLOUD Excel Datei",
     "disable": false,
@@ -42,6 +45,9 @@
       "7e526b8c-16bd-4f2c-a02b-8d4d0a29d310"
     ],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "ckanBaseUrl": "https://data.deutschebahn.com",
     "filterTags": [],
     "filterGroups": [],
@@ -56,9 +62,6 @@
     "id": 6,
     "cronPattern": null,
     "defaultAttributionLink": null,
-    "rules": {
-      "containsDocumentsWithData": false
-    },
     "cron": {
       "active": true,
       "pattern": "3 2 * * *"
@@ -83,6 +86,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "ckanBaseUrl": "https://www.offenesdatenportal.de",
     "filterTags": [],
     "filterGroups": [
@@ -102,10 +108,7 @@
       "active": true,
       "pattern": "10 2 * * *"
     },
-    "additionalSearchFilter": "",
-    "rules": {
-      "containsDocumentsWithData": false
-    }
+    "additionalSearchFilter": ""
   },
   {
     "index": "ckan_portal_hamburg",
@@ -145,6 +148,9 @@
       "ded4d0b6-1482-4d47-9450-dcfcf6ef9da8"
     ],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "ckanBaseUrl": "http://suche.transparenz.hamburg.de",
     "filterTags": [],
     "filterGroups": [
@@ -160,9 +166,6 @@
     "disable": false,
     "id": 9,
     "defaultAttributionLink": null,
-    "rules": {
-      "containsDocumentsWithData": false
-    },
     "additionalSearchFilter": "type:dataset",
     "cron": {
       "pattern": "10 2 * * *",
@@ -191,6 +194,10 @@
       "56e641a7-2219-4281-bb9b-adb1001f2869"
     ],
     "rejectUnauthorizedSSL": false,
+    "rules": {
+      "containsDocumentsWithData": true,
+      "containsDocumentsWithDataBlacklist": "zip"
+    },
     "ckanBaseUrl": "https://opendata.rnv-online.de",
     "filterTags": [],
     "filterGroups": [],
@@ -211,10 +218,6 @@
     "cron": {
       "pattern": "0 2 * * *",
       "active": true
-    },
-    "rules": {
-      "containsDocumentsWithData": true,
-      "containsDocumentsWithDataBlacklist": "zip"
     },
     "additionalSearchFilter": ""
   },
@@ -250,6 +253,10 @@
       "4b0aedab-8c31-43bd-8459-1bccba1898a2"
     ],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": true,
+      "containsDocumentsWithDataBlacklist": "rss,html,doc,pdf"
+    },
     "ckanBaseUrl": "https://open.nrw",
     "filterTags": [],
     "filterGroups": [
@@ -269,10 +276,6 @@
     "disable": false,
     "id": 11,
     "defaultAttributionLink": null,
-    "rules": {
-      "containsDocumentsWithData": true,
-      "containsDocumentsWithDataBlacklist": "rss,html,doc,pdf"
-    },
     "cron": {
       "pattern": "15 2 * * *",
       "active": true
@@ -297,6 +300,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup",
     "eitherKeywords": [
       "opendata"
@@ -331,6 +337,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "http://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecords$Post$XML",
     "eitherKeywords": [
       "opendata"
@@ -365,6 +374,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://geoportal.bafg.de/soapServices/CSWStartup",
     "eitherKeywords": [
       "opendata"
@@ -399,6 +411,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://cdc.dwd.de/catalogue/srv/en/csw",
     "eitherKeywords": [
       "opendata",
@@ -434,6 +449,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://catalog.code-de.org/discovery/srv/en/csw",
     "eitherKeywords": [
       "opendata"
@@ -468,6 +486,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://www.geoseaportal.de/geonetwork/srv/ger/csw",
     "eitherKeywords": [
       "opendata"
@@ -503,6 +524,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://geoservice.dlr.de/catalogue/srv/eng/csw",
     "eitherKeywords": [
       "opendata"
@@ -539,6 +563,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://ils-geomonitoring.de/catalogue/csw",
     "eitherKeywords": [
       "incora"
@@ -572,6 +599,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "ckanBaseUrl": "https://datenregister.berlin.de",
     "filterTags": [],
     "filterGroups": [],
@@ -584,9 +614,6 @@
     "description": "OpenData Berlin",
     "defaultAttribution": "OpenData Berlin",
     "defaultAttributionLink": null,
-    "rules": {
-      "containsDocumentsWithData": false
-    },
     "cron": {
       "pattern": "5 2 * * *",
       "active": true
@@ -617,6 +644,9 @@
       "882d452a-8f2d-4344-a46b-4cf37f960cec"
     ],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "ckanBaseUrl": "https://daten.rlp.de/",
     "filterTags": [
       "Verkehr"
@@ -631,9 +661,6 @@
     "description": "OpenData Rheinland-Pfalz",
     "defaultAttribution": "OpenData Rheinland-Pfalz",
     "defaultAttributionLink": null,
-    "rules": {
-      "containsDocumentsWithData": false
-    },
     "cron": {
       "active": true,
       "pattern": "5 2 * * *"
@@ -662,6 +689,9 @@
       "8cd4543a-8a38-45dd-8f79-5e0e8253ff08"
     ],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "ckanBaseUrl": "https://opendata.schleswig-holstein.de",
     "filterTags": [],
     "filterGroups": [
@@ -676,9 +706,6 @@
     "description": "OpenData Schleswig-Holstein",
     "defaultAttribution": "OpenData Schleswig-Holstein",
     "defaultAttributionLink": null,
-    "rules": {
-      "containsDocumentsWithData": false
-    },
     "cron": {
       "active": true,
       "pattern": "10 2 * * *"
@@ -704,6 +731,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "ckanBaseUrl": "https://ckan.govdata.de",
     "filterTags": [],
     "filterGroups": [
@@ -718,9 +748,6 @@
     "description": "GovData",
     "defaultAttribution": "GovData",
     "defaultAttributionLink": null,
-    "rules": {
-      "containsDocumentsWithData": false
-    },
     "disable": true
   },
   {
@@ -741,6 +768,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://geomis.sachsen.de/soapServices/CSWStartup",
     "eitherKeywords": [],
     "httpMethod": "POST",
@@ -772,6 +802,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "ckanBaseUrl": "http://ckan.geonet-mrn.de",
     "filterTags": [
       "Verkehr",
@@ -790,9 +823,6 @@
     "defaultAttribution": "GeoNet.MRN",
     "defaultAttributionLink": "http://ckan.geonet-mrn.de",
     "additionalSearchFilter": "",
-    "rules": {
-      "containsDocumentsWithData": false
-    },
     "cron": {
       "pattern": "15 2 * * *",
       "active": true
@@ -816,6 +846,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://mis.bkg.bund.de/csw",
     "eitherKeywords": [],
     "httpMethod": "POST",
@@ -847,6 +880,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://geoportal.brandenburg.de/csw-gdi-bb/service?SERVICE=CSW",
     "eitherKeywords": [],
     "httpMethod": "POST",
@@ -879,6 +915,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "http://www.geodaten-mv.de/soapServices/CSWStartup",
     "eitherKeywords": [],
     "httpMethod": "POST",
@@ -911,6 +950,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "http://laermkartierung1.eisenbahn-bundesamt.de/geonetwork/srv/eng/csw",
     "eitherKeywords": [],
     "httpMethod": "POST",
@@ -943,6 +985,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://www.geoportal-bw.de/geonetwork/srv/ger/csw",
     "eitherKeywords": [],
     "httpMethod": "POST",
@@ -975,6 +1020,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://metaver.de/csw/partner/hb",
     "eitherKeywords": [],
     "httpMethod": "POST",
@@ -1011,6 +1059,9 @@
     ],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://metaver.de/csw/partner/st",
     "eitherKeywords": [],
     "httpMethod": "POST",
@@ -1043,6 +1094,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://metaver.de/csw/partner/bb",
     "eitherKeywords": [],
     "httpMethod": "POST",
@@ -1075,6 +1129,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "providerUrl": "https://oai.dwd.de/oai/provider",
     "eitherKeywords": [],
     "set": "mCLOUD",
@@ -1106,6 +1163,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "catalogUrl": "https://www.govdata.de/ckan/catalog/catalog.rdf?fq=groups:tran+NOT+tags:bauleitplan",
     "filterTags": [],
     "filterThemes": [],
@@ -1139,6 +1199,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "catalogUrl": "https://www.opendata-hro.de/catalog.rdf",
     "filterTags": [],
     "filterThemes": [
@@ -1174,6 +1237,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "endpointUrl": "https://metadata.limbo-project.org/sparql",
     "query": "PREFIX dcat: <http://www.w3.org/ns/dcat#>\nPREFIX dataid: <http://dataid.dbpedia.org/ns/core#>\nPREFIX prov: <http://www.w3.org/ns/prov#> \nPREFIX dct: <http://purl.org/dc/terms/>\nPREFIX dcatx: <http://www.example.org/>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\n\nSELECT DISTINCT ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?license (GROUP_CONCAT(DISTINCT ?keyword; SEPARATOR=\", \") AS ?keywords) (GROUP_CONCAT(DISTINCT ?dcat_theme; SEPARATOR=\", \") AS ?dcat_theme)\nWHERE {\n?limbo_ds dataid:group ?group;\n            dct:identifier ?id;\n            dcat:distribution ?limbo_dist;\n            dct:issued ?issued;\n            dct:license ?license;\n            prov:wasDerivedFrom ?mcloud_dist.\nOPTIONAL {?limbo_ds dct:publisher ?publisher.}\n?limbo_dist dcat:downloadURL ?distribution_url ;\n            dcatx:localId ?distribution_title.\n?mcloud_ds dcat:distribution ?mcloud_dist ;\n            dct:title ?mcloud_title;\n            dct:description ?mcloud_description;\n            dcat:keyword ?keyword;\n            dcat:theme ?dcat_theme;\n            dcat:landingPage ?mcloud_landingPage .\n\nBIND (CONCAT(\"LIMBO - \",?mcloud_title) as ?title).\nBIND (CONCAT(\"Limbo-Daten f&uuml;r <a href=\\\"\",?mcloud_landingPage ,\"\\\">\",?mcloud_title,\"</a> \\r\\n\\r\\nOriginal:\\r\\n\",?mcloud_description) as ?description).\nBIND (?limbo_ds as ?source_link)\n\nFILTER (?group = 'org.limbo')\nFILTER(!EXISTS { ?x owl:priorVersion ?limbo_ds })\n}\nGROUP BY ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?license",
     "filterTags": [],
@@ -1189,9 +1255,6 @@
     "additionalSearchFilter": "",
     "providerPrefix": "",
     "providerField": "organization",
-    "rules": {
-      "containsDocumentsWithData": false
-    },
     "eitherKeywords": [],
     "disable": true
   },
@@ -1213,6 +1276,9 @@
     "blacklistedIds": [],
     "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
     "getRecordsUrl": "https://haleconnect.com/csw",
     "eitherKeywords": [],
     "httpMethod": "POST",

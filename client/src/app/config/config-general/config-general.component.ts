@@ -2,8 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {ConfigService} from '../config.service';
 import {HarvesterService} from '../../harvester/harvester.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {forkJoin, of} from 'rxjs';
+import {of} from 'rxjs';
 import {GeneralSettings} from '@shared/general-config.settings';
+import cronstrue from 'cronstrue/i18n';
 
 @Component({
   selector: 'app-config-general',
@@ -19,10 +20,6 @@ export class ConfigGeneralComponent implements OnInit {
 
   ngOnInit() {
     this.reset();
-
-    // @ts-ignore
-    this.buildForm({});
-
   }
 
   private static noWhitespaceValidator(control: FormControl) {
@@ -58,9 +55,16 @@ export class ConfigGeneralComponent implements OnInit {
   }
 
   private buildForm(settings: GeneralSettings) {
-    if(!settings.mail)
-    {
-      settings.mail={
+
+    if (!settings.urlCheck) {
+      settings.urlCheck = {
+        active: false,
+        pattern: ""
+      }
+    }
+
+    if (!settings.mail) {
+      settings.mail = {
         enabled: false,
         mailServer: {
           host: "",
@@ -83,6 +87,15 @@ export class ConfigGeneralComponent implements OnInit {
       numberOfReplicas: [settings.numberOfReplicas],
       cronOffset: [settings.cronOffset],
       proxy: [settings.proxy],
+      portalUrl: [settings.portalUrl],
+      urlCheck: this.formBuilder.group({
+        active: [settings.urlCheck.active],
+        pattern: [settings.urlCheck.pattern]
+      }),
+      indexCheck: this.formBuilder.group({
+        active: [settings.indexCheck.active],
+        pattern: [settings.indexCheck.pattern]
+      }),
       mail: this.formBuilder.group({
         enabled: [settings.mail.enabled],
         mailServer: this.formBuilder.group({
@@ -99,5 +112,55 @@ export class ConfigGeneralComponent implements OnInit {
       }),
       maxDiff: [settings.maxDiff]
     })
+
+
+    this.urlCheckTranslate(settings.urlCheck.pattern);
+    this.indexCheckTranslate(settings.indexCheck.pattern);
+  }
+
+
+  urlCheckTranslation: string;
+  indexCheckTranslation: string;
+  //validExpression = true;
+  showInfo = false;
+
+  urlCheckTranslate(cronExpression: string) {
+    try {
+      this.urlCheckTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
+      //this.validExpression = true;
+    } catch (e) {
+      this.urlCheckTranslation = 'Kein gültiger Ausdruck';
+      //this.validExpression = false;
+    }
+
+    if (!this.configForm.get('urlCheck.active').value) {
+      this.urlCheckTranslation = 'Planung ausgeschaltet';
+      return;
+    }
+  }
+
+  clearUrlCheckInput() {
+    this.configForm.get('urlCheck.pattern').setValue('');
+    this.urlCheckTranslate('');
+  }
+
+  indexCheckTranslate(cronExpression: string) {
+    try {
+      this.indexCheckTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
+//      this.validExpression = true;
+    } catch (e) {
+      this.indexCheckTranslation = 'Kein gültiger Ausdruck';
+      //    this.validExpression = false;
+    }
+
+    if (!this.configForm.get('indexCheck.active').value) {
+      this.indexCheckTranslation = 'Planung ausgeschaltet';
+      return;
+    }
+  }
+
+  clearIndexCheckInput() {
+    this.configForm.get('indexCheck.pattern').setValue('');
+    this.indexCheckTranslate('');
   }
 }

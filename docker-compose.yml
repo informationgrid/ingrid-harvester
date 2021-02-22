@@ -2,7 +2,15 @@ version: '3'
 services:
 
   elastic:
-    image: docker-registry.wemove.com/dev-mcloud-elasticsearch
+    image: docker-registry.wemove.com/ingrid-elasticsearch-with-decompound:6.8.4
+    environment:
+      - cluster.name=mcloud
+      #      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+      - network.host=0.0.0.0
+      - network.publish_host=127.0.0.1
+    restart: unless-stopped
     ports:
       - 9200:9200
       - 9300:9300

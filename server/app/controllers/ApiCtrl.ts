@@ -6,6 +6,8 @@ import {ImportLogMessage} from '../model/import.result';
 import {LogService} from '../services/storage/LogService';
 import {ScheduleService} from '../services/ScheduleService';
 import {CronData} from '../importer.settings';
+import {UrlCheckService} from "../services/statistic/UrlCheckService";
+import {IndexCheckService} from "../services/statistic/IndexCheckService";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -17,7 +19,9 @@ export class ApiCtrl {
     constructor(private importSocketService: ImportSocketService,
                 private summaryService: SummaryService,
                 private logService: LogService,
-                private scheduleService: ScheduleService) {
+                private scheduleService: ScheduleService,
+                private urlCheckService: UrlCheckService,
+                private indexCheckService: IndexCheckService) {
     }
 
     @Post('/import/:id')
@@ -55,6 +59,18 @@ export class ApiCtrl {
     schedule(@PathParams('id') id: number, @BodyParams('cron') cronExpression: CronData): Date {
         console.log('Body:', cronExpression);
         return this.scheduleService.set(+id, cronExpression);
+    }
+
+    @Post('/url_check')
+    async checkURLs() {
+        this.urlCheckService.start();
+    }
+
+
+
+    @Post('/index_check')
+    async checkIndices() {
+        this.indexCheckService.start();
     }
 
 }

@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {IndicesService} from '../indices.service';
-import {Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {Index} from '@shared/index.model';
 import {tap} from 'rxjs/operators';
 import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
 import {MatDialog} from '@angular/material';
+import {ConfigService} from "../../config/config.service";
 
 @Component({
   selector: 'app-indices-list',
@@ -30,6 +31,18 @@ export class IndicesListComponent implements OnInit {
         });
       }
     });
+  }
+
+  exportIndex(name: string) {
+    forkJoin([
+      this.indicesService.exportIndex(name)
+    ]).subscribe(result => {
+      ConfigService.downLoadFile(name+'.json', JSON.stringify(result[0], null, 2));
+    });
+  }
+
+  importIndex(files: FileList) {
+    this.indicesService.importIndex(files[0]).subscribe();
   }
 
   private updateIndices() {

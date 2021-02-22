@@ -12,7 +12,7 @@ export const DefaultElasticsearchSettings: ElasticSettings = {
     // elasticSearchUrl: 'localhost:9200',
     index: '',
     // alias: '',
-    includeTimestamp: true
+    includeTimestamp: true,
 };
 
 export interface BulkResponse {
@@ -62,12 +62,49 @@ export class ElasticSearchUtils {
         }
         return new Promise((resolve, reject) => {
             if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
-            this.client.indices.create({index: this.indexName, waitForActiveShards: '1', body:body})
+            this.client.indices.create({index: this.indexName, waitForActiveShards: '1', body: body})
                 .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
                 .catch(err => {
                     let message = 'Error occurred creating index';
                     if (err.message.indexOf('index_already_exists_exception') !== -1) {
                         message = 'Index ' + this.indexName + ' not created, since it already exists.';
+                    }
+                    this.handleError(message, err);
+                    reject(message);
+                });
+        });
+    }
+
+    /**
+     *
+     * @param mapping
+     * @param settings
+     */
+    prepareIndexWithName(indexName: string, mapping, settings) {
+        return new Promise((resolve, reject) => {
+            this.client.indices.create({index: indexName, waitForActiveShards: '1', body: settings})
+                .then(() => {
+                    let type =  Object.keys(mapping)[0];
+                    this.client.indices.putMapping({
+                        index: indexName,
+                        type: type,
+                        body: mapping[type]
+                    }, err => {
+                        if (err) {
+                            this.handleError('Error occurred adding mapping', err);
+                            reject('Mapping error');
+                        } else this.client.indices.open({index: indexName}, errOpen => {
+                            if (errOpen) {
+                                this.handleError('Error opening index', indexName);
+                            }
+                            resolve();
+                        });
+                    });
+                })
+                .catch(err => {
+                    let message = 'Error occurred creating index';
+                    if (err.message.indexOf('index_already_exists_exception') !== -1) {
+                        message = 'Index ' + indexName + ' not created, since it already exists.';
                     }
                     this.handleError(message, err);
                     reject(message);
@@ -96,7 +133,6 @@ export class ElasticSearchUtils {
             })
             .catch(err => log.error('Error finishing index', err));
     }
-
 
     /**
      * Add the specified alias to an index.
@@ -138,15 +174,15 @@ export class ElasticSearchUtils {
         return this.getIndicesFromBasename(indexBaseName)
             .then(indices => {
 
-            let indicesToDelete = indices
-                .filter(index => index.name !== ignoreIndexName);
+                let indicesToDelete = indices
+                    .filter(index => index.name !== ignoreIndexName);
 
-            if (indicesToDelete.length > 0) {
-                return this.deleteIndex(indicesToDelete.map(i => i.name));
-            }
-        }).catch(err => {
-            this.handleError('Error occurred getting index names', err);
-        });
+                if (indicesToDelete.length > 0) {
+                    return this.deleteIndex(indicesToDelete.map(i => i.name));
+                }
+            }).catch(err => {
+                this.handleError('Error occurred getting index names', err);
+            });
     }
 
     getIndicesFromBasename(baseName: string): Promise<Index[]> {
@@ -250,6 +286,48 @@ export class ElasticSearchUtils {
                                 let err = item.index.error;
                                 if (err) {
                                     this.handleError(`Error during indexing on index '${this.indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
+                                }
+                            });
+                        }
+                        if (closeAfterBulk) {
+                            log.debug('Closing client connection to Elasticsearch');
+                            this.client.close();
+                        }
+                        log.debug('Bulk finished of data #items: ' + data.length / 2);
+                        resolve({
+                            queued: false,
+                            response: response
+                        });
+                    })
+                    .catch(err => {
+                        this.handleError('Error occurred during bulk index of #items: ' + data.length / 2, err);
+                        if (closeAfterBulk) {
+                            this.client.close();
+                        }
+                        reject(err);
+                    });
+            } catch (e) {
+                this.handleError('Error during bulk indexing of #items: ' + data.length / 2, e);
+            }
+        });
+    }
+
+
+
+    bulkWithIndexName(indexName, type, data, closeAfterBulk): Promise<BulkResponse> {
+        return new Promise((resolve, reject) => {
+            try {
+                this.client.bulk({
+                    index: indexName,
+                    type: type,
+                    body: data
+                })
+                    .then((response) => {
+                        if (response.errors) {
+                            response.items.forEach(item => {
+                                let err = item.index.error;
+                                if (err) {
+                                    this.handleError(`Error during indexing on index '${indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
                                 }
                             });
                         }
@@ -424,7 +502,7 @@ export class ElasticSearchUtils {
         log.error(message, error);
     }
 
-    deleteIndex(indicesToDelete: string|string[]): Promise<any> {
+    deleteIndex(indicesToDelete: string | string[]): Promise<any> {
         log.debug('Deleting indices: ' + indicesToDelete);
         return this.client.indices.delete({
             index: indicesToDelete
@@ -432,7 +510,7 @@ export class ElasticSearchUtils {
     }
 
     search(indexName: string): Promise<any> {
-        return this.client.search({ index: indexName });
+        return this.client.search({index: indexName});
     }
 
     async getHistory(baseIndex: string): Promise<any> {
@@ -443,4 +521,127 @@ export class ElasticSearchUtils {
         });
         return result.hits.hits.map(entry => entry._source);
     }
+
+    async getHistories(): Promise<any> {
+        let result = await this.client.search({
+            index: ['mcloud_harvester_statistic'],
+            body: ElasticQueries.findHistories(),
+            size: 1000
+        });
+        return result.hits.hits.map(entry => entry._source);
+    }
+
+    async getAccessUrls(after_key): Promise<any> {
+        let result = await this.client.search({
+            index: this.indexName,
+            body: ElasticQueries.getAccessUrls(after_key),
+            size: 0
+        });
+        return {
+            after_key: result.aggregations.accessURL.after_key,
+            buckets: result.aggregations.accessURL.buckets.map(entry => {
+                return {
+                    url: entry.key.accessURL,
+                    attribution: entry.attribution.buckets.map(entry => {
+                        return {name: entry.key, count: entry.doc_count}
+                    })
+                }
+            })
+        };
+    }
+
+    async getUrlCheckHistory(): Promise<any> {
+        let result = await this.client.search({
+            index: ['url_check_history'],
+            body: ElasticQueries.getUrlCheckHistory(),
+            size: 30
+        });
+        return result.hits.hits.map(entry => entry._source);
+    }
+
+    async getFacetsByAttribution(): Promise<any> {
+        let result = await this.client.search({
+            index: this.indexName,
+            body: ElasticQueries.getFacetsByAttribution(),
+            size: 0
+        });
+        return result.aggregations.attribution.buckets.map(entry => {
+                return {
+                    attribution: entry.key,
+                    count: entry.doc_count,
+                    is_valid:  entry.is_valid.buckets.map(entry => {
+                        return {value: entry.key_as_string, count: entry.doc_count}
+                    }),
+                    spatial: entry.spatial.doc_count,
+                    temporal: entry.temporal.doc_count,
+                    license: entry.license.buckets.map(entry => {
+                        return {name: entry.key, count: entry.doc_count}
+                    }),
+                    display_contact: entry.display_contact.buckets.map(entry => {
+                        return {name: entry.key, count: entry.doc_count}
+                    }),
+                    format: entry.format.buckets.map(entry => {
+                        return {name: entry.key, count: entry.doc_count}
+                    }),
+                    categories: entry.categories.buckets.map(entry => {
+                        return {name: entry.key, count: entry.doc_count}
+                    }),
+                    accrual_periodicity: entry.accrual_periodicity.buckets.map(entry => {
+                        return {name: entry.key, count: entry.doc_count}
+                    }),
+                    distributions: entry.distributions.buckets.map(entry => {
+                        return {number: entry.key, count: entry.doc_count}
+                    })
+                }
+            });
+    }
+
+    async getIndexCheckHistory(): Promise<any> {
+        let result = await this.client.search({
+            index: ['index_check_history'],
+            body: ElasticQueries.getIndexCheckHistory(),
+            size: 30
+        });
+        return result.hits.hits.map(entry => entry._source);
+    }
+
+    async getIndexSettings(indexName): Promise<any>{
+        return await this.client.indices.getSettings({index: indexName})
+    }
+
+    async getIndexMapping(indexName): Promise<any>{
+        return await this.client.indices.getMapping({index: indexName})
+    }
+
+    async getAllEntries(indexName): Promise<any>{
+        return new Promise((resolve) => {
+            let results = [];
+            let client = this.client;
+
+            this.client.search({
+                index: indexName,
+                scroll: '5s',
+                body: {
+                    query: {
+                        "match_all": {}
+                    }
+                }
+            }, function getMoreUntilDone(error, response) {
+                response.hits.hits.forEach(function (hit) {
+                    results.push(hit);
+                });
+
+                if (response.hits.total !== results.length) {
+                    client.scroll({
+                        scrollId: response._scroll_id,
+                        scroll: '5s'
+                    }, getMoreUntilDone);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+    }
+
+
 }
