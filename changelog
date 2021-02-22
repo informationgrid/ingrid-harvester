@@ -1,3 +1,14 @@
+* Mon Feb 22 2021 Jan Bücher <jan.buecher@wemove.com> - 2.4.0
+- Monitoring Section in AdminGUI (#2194)
+- Integrate URL Check (#2194)
+- Integrate Index-Check (#3188)
+- Import/Export for indices (#3127)
+- CronJob for UrlCheck (#2194)
+- filter datasets without distributions in all importer (#3122)
+- Filter distribution format 'null' (#3131)
+- No Warning for target File-Formats (#3124)
+- Encode space in accessURL (#3144)
+
 * Fri Jan 29 2021 Jan Bücher <jan.buecher@wemove.com> - 2.3.1
 - integrate node_modules in rpm (#2994)
 
