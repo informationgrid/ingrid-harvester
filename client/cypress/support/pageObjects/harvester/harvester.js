@@ -210,7 +210,7 @@ class HarvesterPage {
 
   waitForImportToFinish(id) {
     cy.get('#harvester-' + id + ' ' + this.lastExecution, {timeout: 45000})
-      .scrollIntoView()
+      // .scrollIntoView()
       .should('contain', Cypress.moment().format('DD.MM.YY, HH:mm'));
   }
 
