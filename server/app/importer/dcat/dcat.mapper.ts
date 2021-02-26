@@ -23,6 +23,7 @@ export class DcatMapper extends GenericMapper {
     static LOCN = 'http://www.w3.org/ns/locn#';
     static HYDRA = 'http://www.w3.org/ns/hydra/core#';
     static RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+    static RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
     static DCAT = 'http://www.w3.org/ns/dcat#';
     static DCT = 'http://purl.org/dc/terms/';
     static SKOS = 'http://www.w3.org/2004/02/skos/core#';
@@ -35,6 +36,7 @@ export class DcatMapper extends GenericMapper {
         'locn': DcatMapper.LOCN,
         'hydra': DcatMapper.HYDRA,
         'rdf': DcatMapper.RDF,
+        'rdfs': DcatMapper.RDFS,
         'dcat': DcatMapper.DCAT,
         'dct': DcatMapper.DCT,
         'skos': DcatMapper.SKOS,
@@ -96,6 +98,9 @@ export class DcatMapper extends GenericMapper {
     _getDescription() {
         let description = DcatMapper.select('.//dct:description', this.record, true);
         if (!description) {
+            description = DcatMapper.select('.//dct:abstract', this.record, true);
+        }
+        if (!description) {
             let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.catalogUrl}\'`;
             this.log.warn(msg);
             this.summary.warnings.push(['No description', msg]);
@@ -119,8 +124,16 @@ export class DcatMapper extends GenericMapper {
                 let formatNode = DcatMapper.select('./dct:format', this.linkedDistributions[i], true);
                 let mediaTypeNode = DcatMapper.select('./dcat:mediaType', this.linkedDistributions[i], true);
                 if (formatNode) {
-                    if (formatNode.textContent) {
-                        format = formatNode.textContent;
+                    let formatLabel = DcatMapper.select('.//rdfs:label', formatNode, true);
+                    let formatValue = DcatMapper.select('.//rdf:value', formatNode, true);
+                    if(formatLabel){
+                        format = formatLabel.textContent;
+                    }
+                    else if(formatValue){
+                        format = formatValue.textContent;
+                    }
+                    else if (formatNode.textContent) {
+                        format = formatNode.textContent.trim();
                     } else {
                         format = formatNode.getAttribute('rdf:resource');
                     }
@@ -148,7 +161,7 @@ export class DcatMapper extends GenericMapper {
                 if(url) {
                     let distribution = {
                         format: UrlUtils.mapFormat([format], this.summary.warnings),
-                        accessURL: url.getAttribute('rdf:resource'),
+                        accessURL: url.getAttribute('rdf:resource')?url.getAttribute('rdf:resource'):url.textContent,
                         title: title ? title.textContent : undefined,
                         description: description ? description.textContent : undefined,
                         issued: issued ? new Date(issued.textContent) : undefined,
