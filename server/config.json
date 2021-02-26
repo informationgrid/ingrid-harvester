@@ -545,41 +545,6 @@
     }
   },
   {
-    "index": "csw_ils_geonode",
-    "includeTimestamp": true,
-    "priority": null,
-    "type": "CSW",
-    "maxRecords": 100,
-    "startPosition": 1,
-    "customCode": "",
-    "defaultMcloudSubgroup": [
-      "infrastructure"
-    ],
-    "defaultDCATCategory": [
-      "REGI",
-      "TRAN"
-    ],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": false
-    },
-    "getRecordsUrl": "https://ils-geomonitoring.de/catalogue/csw",
-    "eitherKeywords": [
-      "incora"
-    ],
-    "httpMethod": "GET",
-    "disable": true,
-    "defaultAttribution": "GeoNode Catalogue",
-    "defaultAttributionLink": "https://ils-geomonitoring.de",
-    "description": "ILS GeoNode Catalogue",
-    "id": 22,
-    "cronPattern": "*/30 7-18 * * *",
-    "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>apiso:AnyText</ogc:PropertyName><ogc:Literal>incora</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>"
-  },
-  {
     "index": "ckan_berlin",
     "includeTimestamp": true,
     "priority": null,
