@@ -30,6 +30,7 @@ export class DcatMapper extends GenericMapper {
     static SCHEMA = 'http://schema.org/';
     static VCARD = 'http://www.w3.org/2006/vcard/ns#';
     static DCATDE = 'http://dcat-ap.de/def/dcatde/';
+    static OGC = 'http://www.opengis.net/rdf#'
 
     static select = xpath.useNamespaces({
         'foaf': DcatMapper.FOAF,
@@ -42,7 +43,8 @@ export class DcatMapper extends GenericMapper {
         'skos': DcatMapper.SKOS,
         'schema': DcatMapper.SCHEMA,
         'vcard': DcatMapper.VCARD,
-        'dcatde': DcatMapper.DCATDE
+        'dcatde': DcatMapper.DCATDE,
+        'ogc': DcatMapper.OGC
     });
 
     private log = getLogger();
@@ -446,7 +448,33 @@ export class DcatMapper extends GenericMapper {
         if(geometry){
             return JSON.parse(geometry.textContent);
         }
+        geometry = DcatMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
+        if(geometry){
+            return this.wktToGeoJson(geometry.textContent);
+        }
         return undefined;
+    }
+
+    wktToGeoJson(wkt: string):any{
+        try {
+            var coordsPos = wkt.indexOf("(");
+            var type = wkt.substring(0, coordsPos).trim();
+            if(type.lastIndexOf(' ') > -1){
+                var type = type.substring(type.lastIndexOf(' ')).trim();
+            }
+            var type = type.toLowerCase();
+            var coords = wkt.substring(coordsPos).trim();
+            coords = coords.replace(/\(/g, "[").replace(/\)/g, "]");
+            coords = coords.replace(/\[(\s*[-0-9][^\]]*\,[^\]]*[0-9]\s*)\]/g, "[[$1]]");
+            coords = coords.replace(/([0-9])\s*\,\s*([-0-9])/g, "$1], [$2");
+            coords = coords.replace(/([0-9])\s+([-0-9])/g, "$1, $2");
+            return {
+                'type': type,
+                'coordinates': JSON.parse(coords)
+            };
+        } catch(e) {
+            this.summary.appErrors.push("Can't parse WKT: "+e.message);
+        }
     }
 
     _getSpatialText(): string {
