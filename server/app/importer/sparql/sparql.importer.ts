@@ -11,6 +11,11 @@ import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {SparqlSettings} from './sparql.settings';
 import {FilterUtils} from "../../utils/filter.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
+import {ConfigService} from "../../services/config/ConfigService";
+
+
+const plain_fetch = require('node-fetch');
+const HttpsProxyAgent = require('https-proxy-agent');
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -40,6 +45,8 @@ export class SparqlImporter implements Importer {
 
     private totalRecords = 0;
     private numIndexDocs = 0;
+
+    private generalSettings = ConfigService.getGeneralSettings();
 
     static defaultSettings: SparqlSettings = {
         ...DefaultElasticsearchSettings,
@@ -106,7 +113,18 @@ export class SparqlImporter implements Importer {
             let response = "";
 
             const endpointUrl = this.settings.endpointUrl;
-            const client = new SimpleClient({endpointUrl});
+
+            let fetch = plain_fetch;
+
+            if(this.generalSettings.proxy || true){
+                let proxyAgent = new HttpsProxyAgent(this.generalSettings.proxy);
+                fetch = function(url, options){
+                    return plain_fetch(url, {...options, agent: proxyAgent})
+                }
+                fetch.Headers = plain_fetch.Headers;
+            }
+
+            const client = new SimpleClient({endpointUrl, fetch});
             await client.query.select(this.settings.query).then(result => {
                 let hadError = result.status >= 400;
 
