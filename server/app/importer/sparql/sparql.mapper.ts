@@ -150,7 +150,7 @@ export class SparqlMapper extends GenericMapper {
         let keywords = [];
 
         if(this.record.keywords){
-            keywords = this.record.keywords.value.split(',').map(s => s.trim())
+            keywords = this.record.keywords.value.split(',').map(s => s.trim()).filter(s => s.length > 0)
         }
 
         if(this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))){
@@ -216,7 +216,7 @@ export class SparqlMapper extends GenericMapper {
     }
 
     _getModifiedDate() {
-        return undefined;
+        return this.record.modified ? new Date(this.record.modified.value) : undefined;
     }
 
     _getSpatial(): any {
