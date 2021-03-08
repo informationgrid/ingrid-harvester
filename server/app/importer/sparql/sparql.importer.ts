@@ -116,7 +116,7 @@ export class SparqlImporter implements Importer {
 
             let fetch = plain_fetch;
 
-            if(this.generalSettings.proxy || true){
+            if(this.generalSettings.proxy){
                 let proxyAgent = new HttpsProxyAgent(this.generalSettings.proxy);
                 fetch = function(url, options){
                     return plain_fetch(url, {...options, agent: proxyAgent})
