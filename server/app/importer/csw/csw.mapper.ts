@@ -432,39 +432,6 @@ export class CswMapper extends GenericMapper {
         return keywords;
     }
 
-
-    _getMFundFKZ(): string {
-        // Detect mFund properties
-        let keywords = this.getKeywords();
-        if (keywords) {
-            let fkzKeyword = keywords.find(kw => kw.toLowerCase().startsWith('mfund-fkz:'));
-
-            if (fkzKeyword) {
-                let idx = fkzKeyword.indexOf(':');
-                let fkz = fkzKeyword.substr(idx + 1);
-
-                if (fkz) return fkz.trim();
-            }
-        }
-        return undefined;
-    }
-
-    _getMFundProjectTitle(): string {
-        // Detect mFund properties
-        let keywords = this.getKeywords();
-        if (keywords) {
-            let mfKeyword: string = keywords.find(kw => kw.toLowerCase().startsWith('mfund-projekt:'));
-
-            if (mfKeyword) {
-                let idx = mfKeyword.indexOf(':');
-                let mfName = mfKeyword.substr(idx + 1);
-
-                if (mfName) return mfName.trim();
-            }
-        }
-        return undefined;
-    }
-
     _getMetadataIssued(): Date {
         return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : new Date(Date.now());
     }

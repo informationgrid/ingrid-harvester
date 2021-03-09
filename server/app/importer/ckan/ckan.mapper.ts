@@ -156,14 +156,6 @@ export class CkanMapper extends GenericMapper {
         return this.source.id;
     }
 
-    _getMFundFKZ() {
-        return undefined;
-    }
-
-    _getMFundProjectTitle() {
-        return undefined;
-    }
-
     _getMetadataIssued() {
         return (this.data.storedData && this.data.storedData.issued) ? new Date(this.data.storedData.issued) : new Date(Date.now());
     }
