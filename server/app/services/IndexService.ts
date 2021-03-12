@@ -4,8 +4,10 @@ import {ElasticSearchUtils} from '../utils/elastic.utils';
 import {ElasticSettings} from '../utils/elastic.setting';
 import {Summary} from '../model/summary';
 import {Index} from '@shared/index.model';
+import * as fs from "fs";
 
 let log = require('log4js').getLogger(__filename);
+var path = require('path');
 
 @Service()
 export class IndexService {
@@ -85,12 +87,12 @@ export class IndexService {
         return response.hits.hits;
     }
 
-    async exportIndex(name: string) : Promise<any> {
+    async exportIndex(name: string): Promise<any> {
         let settings = await this.elasticUtils.getIndexSettings(name);
         let mapping = await this.elasticUtils.getIndexMapping(name);
         let data = await this.elasticUtils.getAllEntries(name);
 
-        return{
+        return {
             index: name,
             settings: {
                 number_of_shards: settings[name].settings.index.number_of_shards,
@@ -102,7 +104,23 @@ export class IndexService {
         }
     }
 
-    async importIndex(json: any) : Promise<any> {
+    async saveIndices(pattern: string, dir: string) {
+        log.info("Create Backup of Indices! Pattern: /"+pattern+"/i")
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir)
+        }
+        let regExp = new RegExp(pattern, "i");
+        this.getIndices().then(indices => {
+            indices.filter(index => index.name.match(regExp))
+                .forEach(index =>
+                    this.exportIndex(index.name).then(json => {
+                        let file = path.join(dir, index.name + ".json")
+                        fs.writeFileSync(file, JSON.stringify(json, null, 2));
+                    }));
+        });
+    }
+
+    async importIndex(json: any): Promise<any> {
         //let settings = json.settings;
         //let mapping = await this.elasticUtils.getIndexMapping(name);
         //let data = await this.elasticUtils.getAllEntries(name);
@@ -110,7 +128,9 @@ export class IndexService {
         await this.elasticUtils.prepareIndexWithName(json.index, json.mappings, json.settings);
         let bulkData = [];
         let type = Object.keys(json.mappings)[0];
-        let promise = new Promise(resolve => {resolve()});
+        let promise = new Promise(resolve => {
+            resolve()
+        });
         json.data.forEach(entry => {
             bulkData.push({
                 index: {

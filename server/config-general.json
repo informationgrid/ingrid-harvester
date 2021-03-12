@@ -28,5 +28,11 @@
     "from": "test@example.com",
     "to": "test@example.com"
   },
+  "indexBackup": {
+    "active": false,
+    "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+    "cronPattern": "",
+    "dir": ""
+  },
   "maxDiff": 10
 }

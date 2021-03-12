@@ -56,6 +56,12 @@ export class ConfigService {
             from: "test@example.com",
             to: "test@example.com"
         },
+        indexBackup: {
+            active: false,
+            indexPattern: "",
+            cronPattern: "",
+            dir: ""
+        },
         maxDiff: 10
     };
     private static ignoreCaseSort = (a: string, b: string) => {

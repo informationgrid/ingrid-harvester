@@ -15,6 +15,12 @@ export type GeneralSettings = {
 		from?: string,
     	to?: string
     },
+    indexBackup?: {
+        active: boolean,
+        indexPattern?: string,
+        cronPattern?: string,
+        dir?: string
+    },
     maxDiff?: number
 };
 
