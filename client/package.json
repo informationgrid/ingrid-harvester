@@ -36,7 +36,9 @@
     "socket.io-client": "2.2.0",
     "tslib": "^1.9.3",
     "zone.js": "~0.9.1",
-    "chart.js": "~2.9.4"
+    "chart.js": "~2.9.4",
+    "zlib": "^1.0.5",
+    "stream": "^0.0.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.803.23",

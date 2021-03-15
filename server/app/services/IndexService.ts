@@ -8,6 +8,8 @@ import * as fs from "fs";
 
 let log = require('log4js').getLogger(__filename);
 var path = require('path');
+const zlib = require('zlib');
+const Readable = require('stream').Readable
 
 @Service()
 export class IndexService {
@@ -114,8 +116,17 @@ export class IndexService {
             indices.filter(index => index.name.match(regExp))
                 .forEach(index =>
                     this.exportIndex(index.name).then(json => {
-                        let file = path.join(dir, index.name + ".json")
-                        fs.writeFileSync(file, JSON.stringify(json, null, 2));
+                        let file = path.join(dir, index.name + ".json.gz");
+                        let writeStream = fs.createWriteStream(file);
+
+                        let s = new Readable({read(size) {
+                                this.push(JSON.stringify(json, null, 2))
+                                this.push(null)
+                            }});
+
+                        const zip = zlib.createGzip();
+                        s.pipe(zip).pipe(writeStream);
+
                     }));
         });
     }
