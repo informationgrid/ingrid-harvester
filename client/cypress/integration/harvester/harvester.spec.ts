@@ -1,7 +1,7 @@
-import Authentication from "../../support/pageObjects/auth";
-import Constants from "../../support/constants";
-import HarvesterPage from "../../support/pageObjects/harvester/harvester";
-import HarvesterForm from "../../support/pageObjects/harvester/harvesterForm";
+import Authentication from '../../support/pageObjects/auth';
+import Constants from '../../support/constants';
+import HarvesterPage from '../../support/pageObjects/harvester/harvester';
+import HarvesterForm from '../../support/pageObjects/harvester/harvesterForm';
 
 describe('Harvester operations', () => {
   const constants = new Constants();

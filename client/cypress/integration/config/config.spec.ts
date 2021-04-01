@@ -1,5 +1,5 @@
-import ConfigurationPage from "../../support/pageObjects/configuration";
-import Authentication from "../../support/pageObjects/auth";
+import ConfigurationPage from '../../support/pageObjects/configuration';
+import Authentication from '../../support/pageObjects/auth';
 
 describe('Configuration of general settings', () => {
   const configPage = new ConfigurationPage();

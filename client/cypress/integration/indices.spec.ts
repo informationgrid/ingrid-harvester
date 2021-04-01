@@ -1,7 +1,7 @@
-import Authentication from "../support/pageObjects/auth";
-import Constants from "../support/constants";
-import HarvesterPage from "../support/pageObjects/harvester/harvester";
-import IndicesPage from "../support/pageObjects/indices";
+import Authentication from '../support/pageObjects/auth';
+import Constants from '../support/constants';
+import HarvesterPage from '../support/pageObjects/harvester/harvester';
+import IndicesPage from '../support/pageObjects/indices';
 
 describe('Indices operations', () => {
   const constants = new Constants();
@@ -51,9 +51,9 @@ describe('Indices operations', () => {
   });
 
   it('should show the content of an index when it is clicked', () => {
-    let dbIndexContent = "{\n" +
-      "    \"_index\": \"ckan_db_";
-    let indexType = "\"_type\": \"base\"";
+    let dbIndexContent = '{\n' +
+      '    "_index": "ckan_db_';
+    let indexType = '"_type": "base"';
 
     harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
 

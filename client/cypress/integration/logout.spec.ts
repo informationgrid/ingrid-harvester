@@ -1,4 +1,4 @@
-import Authentication from "../support/pageObjects/auth";
+import Authentication from '../support/pageObjects/auth';
 
 describe('Logout', () => {
   const auth = new Authentication();
