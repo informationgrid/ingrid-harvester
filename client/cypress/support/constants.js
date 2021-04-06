@@ -5,7 +5,9 @@
 class Constants {
   CKAN_DB_ID = '6';
   CKAN_RNV_ID = '10';
-  CKAN_TEST_ID = '3';
+  CKAN_MOBIDATA_BW_ID = '51';
+  CKAN_OFFENESDATENPORTAL_ID = '8';
+  CKAN_RLP_ID = '28';
   CKAN_GEONET_ID = '32';
 
   CSW_CODEDE_ID = '16';

@@ -117,25 +117,25 @@ describe('Ckan-Harvester operations', () => {
   });
 
   it('should filter blacklisted IDs', () => {
-    const toBlacklist = '7e526b8c-16bd-4f2c-a02b-8d4d0a29d310';
-    const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
+    const toBlacklist = 'a5750db7-c714-4903-b4f0-67ce57597a43';
+    const resultName = 'Daten VVS';
 
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.openFormById(constants.CKAN_MOBIDATA_BW_ID);
     form.cleanFilterAndRules();
     form.saveHarvesterConfig();
-    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_MOBIDATA_BW_ID);
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(toBlacklist);
     mcloudPage.checkSearchResultsIncludeName(resultName, true);
 
     harvester.visit();
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.openFormById(constants.CKAN_MOBIDATA_BW_ID);
     form.setFields({
       blacklistedId: toBlacklist
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_MOBIDATA_BW_ID);
 
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
@@ -144,26 +144,26 @@ describe('Ckan-Harvester operations', () => {
   });
 
   it('should exclude documents which have no data downloads (e.g. "rest")', () => {
-    const docWithDownload = '7e526b8c-16bd-4f2c-a02b-8d4d0a29d310';
-    const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
+    const docWithDownload = 'a5750db7-c714-4903-b4f0-67ce57597a43';
+    const resultName = 'Daten VVS';
 
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.openFormById(constants.CKAN_MOBIDATA_BW_ID);
     form.cleanFilterAndRules();
     form.saveHarvesterConfig();
-    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_MOBIDATA_BW_ID);
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(docWithDownload);
     mcloudPage.checkSearchResultsIncludeName(resultName, true);
 
     harvester.visit();
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.openFormById(constants.CKAN_MOBIDATA_BW_ID);
     form.activateContainsDataDownload();
     form.setFields({
-      blacklistedDataFormat: 'rest'
+      blacklistedDataFormat: 'ZIP'
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_MOBIDATA_BW_ID);
 
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
@@ -172,17 +172,17 @@ describe('Ckan-Harvester operations', () => {
   });
 
   it('should import whitelisted IDs if excluded by no data downloads', () => {
-    const toWhitelist = '7e526b8c-16bd-4f2c-a02b-8d4d0a29d310';
-    const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
+    const toWhitelist = 'a5750db7-c714-4903-b4f0-67ce57597a43';
+    const resultName = 'Daten VVS';
 
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.openFormById(constants.CKAN_MOBIDATA_BW_ID);
     form.cleanFilterAndRules();
     form.activateContainsDataDownload();
     form.setFields({
-      blacklistedDataFormat: 'rest'
+      blacklistedDataFormat: 'ZIP'
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_MOBIDATA_BW_ID);
 
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
@@ -190,29 +190,29 @@ describe('Ckan-Harvester operations', () => {
     mcloudPage.checkNoResults();
 
     harvester.visit();
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.openFormById(constants.CKAN_MOBIDATA_BW_ID);
     form.setFields({
       whitelistedId: toWhitelist
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_MOBIDATA_BW_ID);
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(toWhitelist);
     mcloudPage.checkSearchResultsIncludeName(resultName, true);
   });
 
-  it('should import whitelisted IDs even if excluded by group', () => {
-    const toWhitelist = 'a98ef34f-8f8e-487b-b2ea-b2ddb54a41de';
-    const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
+  it.only('should import whitelisted IDs even if excluded by group', () => {
+    const toWhitelist = '01f01b05-0bcd-4ff7-9010-9897466bc92c';
+    const resultName = 'Unfälle auf anderen Straßen, Anzahl (Kreisebene)';
 
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.openFormById(constants.CKAN_RLP_ID);
     form.cleanFilterAndRules();
     form.setFields({
-      filterGroups: 'apis'
+      filterGroups: 'Opendata'
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_RLP_ID);
 
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
@@ -220,12 +220,12 @@ describe('Ckan-Harvester operations', () => {
     mcloudPage.checkNoResults();
 
     harvester.visit();
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.openFormById(constants.CKAN_RLP_ID);
     form.setFields({
       whitelistedId: toWhitelist
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_RLP_ID);
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(toWhitelist);
@@ -233,16 +233,16 @@ describe('Ckan-Harvester operations', () => {
   });
 
   it('should import whitelisted IDs even if excluded by tag', () => {
-    const toWhitelist = 'a98ef34f-8f8e-487b-b2ea-b2ddb54a41de';
-    const resultName = 'Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene';
+    const toWhitelist = 'a5750db7-c714-4903-b4f0-67ce57597a43';
+    const resultName = 'Daten VVS';
 
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.openFormById(constants.CKAN_MOBIDATA_BW_ID);
     form.cleanFilterAndRules();
     form.setFields({
       filterTag: 'Bahnhof'
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_MOBIDATA_BW_ID);
 
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
@@ -250,12 +250,12 @@ describe('Ckan-Harvester operations', () => {
     mcloudPage.checkNoResults();
 
     harvester.visit();
-    harvester.openFormById(constants.CKAN_DB_ID);
+    harvester.openFormById(constants.CKAN_MOBIDATA_BW_ID);
     form.setFields({
       whitelistedId: toWhitelist
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_MOBIDATA_BW_ID);
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(toWhitelist);
