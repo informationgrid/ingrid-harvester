@@ -203,16 +203,16 @@ describe('Ckan-Harvester operations', () => {
   });
 
   it.only('should import whitelisted IDs even if excluded by group', () => {
-    const toWhitelist = '01f01b05-0bcd-4ff7-9010-9897466bc92c';
-    const resultName = 'Unfälle auf anderen Straßen, Anzahl (Kreisebene)';
+    const toWhitelist = '2521be73-84f3-441c-9134-abbad67f9e93';
+    const resultName = 'Ladesäulen im öffentlichen und halböffentlichen Raum';
 
-    harvester.openFormById(constants.CKAN_RLP_ID);
+    harvester.openFormById(constants.CKAN_BERLIN_ID);
     form.cleanFilterAndRules();
     form.setFields({
-      filterGroups: 'Opendata'
+      filterGroups: 'geo'
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterByIdAndWait(constants.CKAN_RLP_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_BERLIN_ID);
 
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
@@ -220,12 +220,12 @@ describe('Ckan-Harvester operations', () => {
     mcloudPage.checkNoResults();
 
     harvester.visit();
-    harvester.openFormById(constants.CKAN_RLP_ID);
+    harvester.openFormById(constants.CKAN_BERLIN_ID);
     form.setFields({
       whitelistedId: toWhitelist
     });
     form.saveHarvesterConfig();
-    harvester.importHarvesterByIdAndWait(constants.CKAN_RLP_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_BERLIN_ID);
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchForId(toWhitelist);
