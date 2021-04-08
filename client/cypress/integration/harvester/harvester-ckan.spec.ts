@@ -202,7 +202,7 @@ describe('Ckan-Harvester operations', () => {
     mcloudPage.checkSearchResultsIncludeName(resultName, true);
   });
 
-  it.only('should import whitelisted IDs even if excluded by group', () => {
+  it('should import whitelisted IDs even if excluded by group', () => {
     const toWhitelist = '2521be73-84f3-441c-9134-abbad67f9e93';
     const resultName = 'Ladesäulen im öffentlichen und halböffentlichen Raum';
 
