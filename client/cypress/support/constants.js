@@ -9,6 +9,7 @@ class Constants {
   CKAN_OFFENESDATENPORTAL_ID = '8';
   CKAN_RLP_ID = '28';
   CKAN_GEONET_ID = '32';
+  CKAN_BERLIN_ID = '26';
 
   CSW_CODEDE_ID = '16';
   CSW_CODEDE_INDEX = 'csw_codede';

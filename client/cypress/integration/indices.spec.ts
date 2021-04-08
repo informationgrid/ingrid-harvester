@@ -51,15 +51,15 @@ describe('Indices operations', () => {
   });
 
   it('should show the content of an index when it is clicked', () => {
-    let dbIndexContent = '{\n' +
-      '    "_index": "ckan_db_';
-    let indexType = '"_type": "base"';
+    const dbIndexContent = '{\n' +
+      '    "_index": "ckan_geonet_mrn_';
+    const indexType = '"_type": "base"';
 
-    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_GEONET_ID);
 
     indicesPage.visit();
 
-    indicesPage.selectIndex('ckan_db');
+    indicesPage.selectIndex('ckan_geonet_mrn');
     indicesPage.checkContentIs(dbIndexContent);
     indicesPage.checkContentIs(indexType);
   });
