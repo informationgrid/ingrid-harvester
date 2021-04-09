@@ -1296,5 +1296,39 @@
       "pattern": "07 03 * * *",
       "active": true
     }
+  },
+  {
+    "index": "csw_mundialis",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "aviation"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "getRecordsUrl": "https://data.mundialis.de/geonetwork/srv/eng/csw",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 52,
+    "description": "Mundialis",
+    "defaultAttribution": "Mundialis",
+    "defaultAttributionLink": "https://www.mundialis.de",
+    "recordFilter": "            <ogc:Filter>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>anyText</ogc:PropertyName>\n                            <ogc:Literal>mfund</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n            </ogc:Filter>",
+    "cron": {
+      "active": true,
+      "pattern": "08 03 * * *"
+    }
   }
 ]
