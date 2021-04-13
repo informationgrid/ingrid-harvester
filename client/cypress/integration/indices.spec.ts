@@ -14,10 +14,9 @@ describe('Indices operations', () => {
   });
 
   it('should not find a harvester whose search is not activated', () => {
-    harvester.activateForSearch(constants.CSW_CODEDE_ID);
-
+    harvester.deactivateForSearch(constants.CSW_DFS_ID);
     indicesPage.visit();
-    indicesPage.indexIsContained(constants.CSW_CODEDE_INDEX, false);
+    indicesPage.indexIsContained(constants.CSW_DFS_INDEX, false);
   });
 
   it('should find a harvester whose search is activated', () => {

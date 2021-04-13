@@ -11,8 +11,8 @@ class Constants {
   CKAN_GEONET_ID = '32';
   CKAN_BERLIN_ID = '26';
 
-  CSW_CODEDE_ID = '16';
-  CSW_CODEDE_INDEX = 'csw_codede';
+  CSW_DFS_ID = '49';
+  CSW_DFS_INDEX = 'csw_dfs';
 
   CSW_GEOSERVICE_ID = '5';
   CSW_TEST_ID = '';

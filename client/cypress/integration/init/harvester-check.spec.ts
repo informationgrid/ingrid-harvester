@@ -47,11 +47,11 @@ describe('All harvesters used in tests can import successfully', () => {
     harvester.checkNoErrors(constants.CKAN_BERLIN_ID);
   });
 
-  it('should import successfully with the csw harvester of "CODEDE"', () => {
-  harvester.importHarvesterById(constants.CSW_CODEDE_ID);
+  it('should import successfully with the csw harvester of "Deutsche Flugsicherung"', () => {
+  harvester.importHarvesterById(constants.CSW_DFS_ID);
   harvester.checkImportHasStarted();
-  harvester.waitForImportToFinish(constants.CSW_CODEDE_ID);
-  harvester.checkNoErrors(constants.CSW_CODEDE_ID);
+  harvester.waitForImportToFinish(constants.CSW_DFS_ID);
+  harvester.checkNoErrors(constants.CSW_DFS_ID);
   });
 
   it('should import successfully with the csw harvester of "WSV: Wasserstraßen- und Schifffahrtsverwaltung des Bundes"', () => {
