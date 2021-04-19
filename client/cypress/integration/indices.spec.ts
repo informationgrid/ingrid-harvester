@@ -2,6 +2,7 @@ import Authentication from '../support/pageObjects/auth';
 import Constants from '../support/constants';
 import HarvesterPage from '../support/pageObjects/harvester/harvester';
 import IndicesPage from '../support/pageObjects/indices';
+import McloudHome from '../support/pageObjects/mcloudHome';
 
 describe('Indices operations', () => {
   const constants = new Constants();
@@ -11,20 +12,6 @@ describe('Indices operations', () => {
 
   beforeEach(() => {
     auth.apiLogIn();
-  });
-
-  it('should not find a harvester whose search is not activated', () => {
-    harvester.deactivateForSearch(constants.CSW_DFS_ID);
-    indicesPage.visit();
-    indicesPage.indexIsContained(constants.CSW_DFS_INDEX, false);
-  });
-
-  it('should find a harvester whose search is activated', () => {
-    harvester.activateForSearch(constants.CKAN_DB_ID);
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-
-    indicesPage.visit();
-    indicesPage.indexIsContained('ckan_db', true);
   });
 
   it('should show only one index per harvester', () => {
