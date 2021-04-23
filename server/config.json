@@ -1299,6 +1299,46 @@
     }
   },
   {
+    "index": "ckan_oepnv",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "CKAN",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "customCode": "if(this.source.organization.name === 'hvv')\n   this.skipped = true;\nif(this.source.organization.name === 'vbb')\n   this.skipped = true;",
+    "defaultMcloudSubgroup": [
+      "railway",
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "ckanBaseUrl": "https://www.opendata-oepnv.de",
+    "filterTags": [],
+    "filterGroups": [],
+    "providerPrefix": "OpenData ÖPNV: ",
+    "providerField": "organization",
+    "requestType": "Search",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "id": 55,
+    "description": "OpenData ÖPNV",
+    "defaultAttribution": "OpenData ÖPNV",
+    "defaultAttributionLink": "https://www.opendata-oepnv.de",
+    "additionalSearchFilter": "",
+    "cron": {
+      "active": true,
+      "pattern": "56 02 * * *"
+    }
+  },
+  {
     "index": "csw_mundialis",
     "includeTimestamp": true,
     "priority": null,
