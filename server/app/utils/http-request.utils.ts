@@ -99,7 +99,7 @@ export class RequestDelegate {
     static cswRequestHeaders(): Headers {
         return {
             'User-Agent': 'mCLOUD Harvester. Request-Promise',
-            'Content-Type': 'test/xml,application/xml'
+            'Content-Type': 'application/xml'
         };
     }
 
