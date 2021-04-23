@@ -1193,9 +1193,9 @@
     "includeTimestamp": true,
     "priority": 0,
     "type": "SPARQL",
-    "maxRecords": 100,
-    "startPosition": 0,
-    "customCode": "doc.distribution.forEach(dist => {\n\tif(dist.accessURL.endsWith('.ttl'))\n\t\tdist.format = ['Turtle-File']\n});\ndoc.extras.display_contact = [{\n            \"name\": \"LimboConsortium\",\n            \"mbox\": null,\n\t\t\t\"homepage\": \"https://data.limbo-project.org/LimboConsortium\"\n          }];",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": "doc.distribution.forEach(dist => {\n\tif(dist.accessURL.endsWith('.ttl'))\n\t\tdist.format = ['Turtle-File'];\n\telse if(dist.accessURL.endsWith('.sparql'))\n\t\tdist.format = ['SPARQL'];\n\telse if(dist.accessURL.endsWith('.nt'))\n\t\tdist.format = ['N-Triples'];\n});\n\n\nif(doc.title.indexOf('bahn') !== -1 || doc.title.indexOf('train') !== -1){\n\tdoc.extras.subgroups = ['railway'];\n\tif(doc.title.indexOf('ampeln') !== -1 || doc.title.indexOf('bike') !== -1 || doc.title.indexOf('carsharing') !== -1){\n\t\tdoc.extras.subgroups.push('roads');\n\t}\n}\n\ndoc.extras.display_contact = [{\n            \"name\": \"LimboConsortium\",\n            \"mbox\": null,\n\t\t\t\"homepage\": \"https://data.limbo-project.org/LimboConsortium\"\n          }];",
     "defaultMcloudSubgroup": [
       "roads"
     ],
@@ -1210,22 +1210,19 @@
       "containsDocumentsWithData": false
     },
     "endpointUrl": "https://metadata.limbo-project.org/sparql",
-    "query": "PREFIX dcat: <http://www.w3.org/ns/dcat#>\nPREFIX dataid: <http://dataid.dbpedia.org/ns/core#>\nPREFIX prov: <http://www.w3.org/ns/prov#> \nPREFIX dct: <http://purl.org/dc/terms/>\nPREFIX dcatx: <http://www.example.org/>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\n\nSELECT DISTINCT ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?license (GROUP_CONCAT(DISTINCT ?keyword; SEPARATOR=\", \") AS ?keywords) (GROUP_CONCAT(DISTINCT ?dcat_theme; SEPARATOR=\", \") AS ?dcat_theme)\nWHERE {\n?limbo_ds dataid:group ?group;\n            dct:identifier ?id;\n            dcat:distribution ?limbo_dist;\n            dct:issued ?issued;\n            dct:license ?license;\n            prov:wasDerivedFrom ?mcloud_dist.\nOPTIONAL {?limbo_ds dct:publisher ?publisher.}\n?limbo_dist dcat:downloadURL ?distribution_url ;\n            dcatx:localId ?distribution_title.\n?mcloud_ds dcat:distribution ?mcloud_dist ;\n            dct:title ?mcloud_title;\n            dct:description ?mcloud_description;\n            dcat:keyword ?keyword;\n            dcat:theme ?dcat_theme;\n            dcat:landingPage ?mcloud_landingPage .\n\nBIND (CONCAT(\"LIMBO - \",?mcloud_title) as ?title).\nBIND (CONCAT(\"Limbo-Daten f&uuml;r <a href=\\\"\",?mcloud_landingPage ,\"\\\">\",?mcloud_title,\"</a> \\r\\n\\r\\nOriginal:\\r\\n\",?mcloud_description) as ?description).\nBIND (?limbo_ds as ?source_link)\n\nFILTER (?group = 'org.limbo')\nFILTER(!EXISTS { ?x owl:priorVersion ?limbo_ds })\n}\nGROUP BY ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?license",
+    "query": "PREFIX dcat: <http://www.w3.org/ns/dcat#>\nPREFIX dataid: <http://dataid.dbpedia.org/ns/core#>\nPREFIX prov: <http://www.w3.org/ns/prov#> \nPREFIX dct: <http://purl.org/dc/terms/>\nPREFIX dcatx: <http://www.example.org/>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n\nSELECT DISTINCT ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?modified ?license (GROUP_CONCAT(DISTINCT ?keyword; SEPARATOR=\", \") AS ?keywords) (GROUP_CONCAT(DISTINCT ?dcat_theme; SEPARATOR=\", \") AS ?dcat_theme)\nWHERE {\n?limbo_ds dataid:group ?group;\n\t\t\tdataid:artifact ?artifact;\n            dct:identifier ?id;\n            dcat:distribution ?limbo_dist;\n            dct:issued ?issued;\n            dct:license ?license;\n\t\t\trdf:type ?type.\n\n?limbo_dist dcat:downloadURL ?distribution_url ;\n            dcatx:localId ?distribution_title.\nOPTIONAL {\n\t?limbo_ds dct:publisher ?publisher.\n}\n\nOPTIONAL {\n\t?limbo_ds void:objectsTarget ?objectsTarget;\n\t\t\tvoid:subjectsTarget ?subjectsTarget.\n\t?objectsTarget dataid:artifact ?objectsTarget_artifact.\n\t?subjectsTarget dataid:artifact ?subjectsTarget_artifact.\n}\n\nOPTIONAL {\n\t?limbo_ds prov:wasDerivedFrom ?mcloud_dist.\n\t?mcloud_ds dcat:distribution ?mcloud_dist ;\n            dct:title ?mcloud_title;\n            dct:description ?mcloud_description;\n            dcat:keyword ?keyword;\n            dcat:theme ?dcat_theme;\n            dcat:landingPage ?mcloud_landingPage .\n}\n\t\t\nBIND (\n\tIF(\n\t\tbound(?mcloud_title),\n\t\tCONCAT(\"Limbo-Daten f&uuml;r <a href=\\\"\",?mcloud_landingPage ,\"\\\">\",?mcloud_title,\"</a> \\r\\n\\r\\nOriginal:\\r\\n\",?mcloud_description),\n\t\tIF(\n\t\t\tbound(?objectsTarget),\n\t\t\tCONCAT(\"Sammlung von Links zwischen den Datensammlungen <a href=\\\"\",?subjectsTarget,\"\\\">\",?subjectsTarget_artifact,\"</a>\",\n\t\t\t\" und <a href=\\\"\",?objectsTarget,\"\\\">\",?objectsTarget_artifact,\"</a> im RDF-Format\"),\n\t\t\tCONCAT(\"Datensammlung mit Informationen zu \",?artifact,\" im RDF-Format\")\n\t\t)\n\t)\n as ?description).\n \n \nBIND (\n\tIF(\n\t\tbound(?mcloud_title),\n\t\tCONCAT(\"LIMBO - \",?mcloud_title),\n\t\tCONCAT(\"LIMBO - \",?artifact)\n\t)\nas ?title).\n\nBIND (?limbo_ds as ?source_link)\nBIND (?issued as ?modified)\n\nFILTER (?group = 'org.limbo')\n\n# get the most current version by filtering out any dataset duplicates with earlier release dates\nFILTER(!EXISTS {\n ?limbo_ds2 dataid:artifact ?art . \n ?limbo_ds dataid:artifact ?art . \n ?limbo_ds2 dct:issued ?issued2 .\n FILTER (?issued2 > ?issued) })\n\n}\nGROUP BY ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?modified ?license",
     "filterTags": [],
     "filterThemes": [],
     "id": 48,
+    "eitherKeywords": [],
     "description": "LIMBO",
     "defaultAttribution": "LIMBO",
     "defaultAttributionLink": "https://www.limbo-project.org/",
-    "ckanBaseUrl": "http://ckan.qrowd.aksw.org",
-    "markdownAsDescription": false,
-    "defaultLicense": null,
-    "requestType": "Search",
-    "additionalSearchFilter": "",
-    "providerPrefix": "",
-    "providerField": "organization",
-    "eitherKeywords": [],
-    "disable": true
+    "disable": false,
+    "cron": {
+      "pattern": "59 02 * * *",
+      "active": true
+    }
   },
   {
     "index": "csw_dfs",
