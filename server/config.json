@@ -1183,10 +1183,9 @@
     "providerPrefix": "",
     "dcatProviderField": "maintainer",
     "cron": {
-      "active": true,
-      "pattern": "5 2 * * *"
-    },
-    "disable": false
+      "pattern": "05 02 * * *",
+      "active": true
+    }
   },
   {
     "index": "sparql_limbo",
@@ -1227,7 +1226,7 @@
   {
     "index": "csw_dfs",
     "includeTimestamp": true,
-    "priority": 0,
+    "priority": 5,
     "type": "CSW",
     "maxRecords": 10,
     "startPosition": 1,
@@ -1288,7 +1287,7 @@
     "requestType": "Search",
     "markdownAsDescription": false,
     "defaultLicense": null,
-    "id": 51,
+    "id": 50,
     "description": "MobiData BW",
     "defaultAttribution": "MobiData BW",
     "defaultAttributionLink": "https://www.mobidata-bw.de",
@@ -1362,14 +1361,48 @@
     "getRecordsUrl": "https://data.mundialis.de/geonetwork/srv/eng/csw",
     "eitherKeywords": [],
     "httpMethod": "POST",
-    "id": 52,
+    "id": 58,
     "description": "Mundialis",
     "defaultAttribution": "Mundialis",
     "defaultAttributionLink": "https://www.mundialis.de",
     "recordFilter": "            <ogc:Filter>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>anyText</ogc:PropertyName>\n                            <ogc:Literal>mfund</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n            </ogc:Filter>",
     "cron": {
-      "active": true,
-      "pattern": "08 03 * * *"
+      "pattern": "58 02 * * *",
+      "active": true
+    }
+  },
+  {
+    "index": "csw_fair",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "aviation"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "getRecordsUrl": "https://fair-metadata.de/geonetwork/srv/eng/csw",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 60,
+    "description": "FAIR",
+    "defaultAttribution": "FAIR",
+    "defaultAttributionLink": "https://fair-metadata.de/geonetwork",
+    "recordFilter": null,
+    "cron": {
+      "pattern": "57 02 * * *",
+      "active": true
     }
   }
 ]
