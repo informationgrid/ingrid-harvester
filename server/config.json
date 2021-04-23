@@ -21,7 +21,11 @@
     "filePath": "./data.xlsx",
     "description": "mCLOUD Excel Datei",
     "disable": false,
-    "id": 1
+    "id": 1,
+    "cron": {
+      "pattern": "00 01 * * *",
+      "active": true
+    }
   },
   {
     "index": "ckan_db",
