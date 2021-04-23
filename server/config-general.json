@@ -29,9 +29,9 @@
     "to": "test@example.com"
   },
   "indexBackup": {
-    "active": false,
+    "active": true,
     "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
-    "cronPattern": "",
+    "cronPattern": "30 05 * * *",
     "dir": ""
   },
   "maxDiff": 10
