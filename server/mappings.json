@@ -25,7 +25,8 @@
       "predefined ATOM",
       "Atom Feed",
       "AtomFeed",
-      "application/atom+xml"
+      "application/atom+xml",
+      "Atom Implementation of Pre-defined Dataset Download Service"
     ],
     "CSV": [
       "http://publications.europa.eu/resource/authority/file-type/csv",
@@ -34,7 +35,9 @@
     ],
     "Dateidownload": [
       "www:download-1.0-http--download",
-      "download"
+      "download",
+      "WWW:LINK-1.0-http--download",
+      "WWW:DOWNLOAD"
     ],
     "DBF": [
       "http://publications.europa.eu/resource/authority/file-type/dbf"
@@ -52,12 +55,23 @@
       "http://publications.europa.eu/resource/authority/file-type/geojson",
       "geojson"
     ],
+    "GeoTIFF": [
+      "Geotiff (*.tif)",
+      "interner Code:GEOTIFF",
+      "GeoTIF"
+    ],
+    "GIF": [
+      "gif"
+    ],
     "GML": [
       "http://publications.europa.eu/resource/authority/file-type/gml",
       "gml",
       "Geographic Markup Language (GML)",
+      "Geography Markup Language (GML)",
       "application/gml+xml",
-      "Geography Markup Language (GML)"
+      "gml+xml",
+      "XML/GML",
+      "[gml]"
     ],
     "GTFS": [
       "gtfs"
@@ -66,7 +80,13 @@
       "http://publications.europa.eu/resource/authority/file-type/html",
       "html",
       "application/html",
-      "htm"
+      "htm",
+      "text/hmtl",
+      "text/html",
+      "Text/HTML"
+    ],
+    "Image": [
+      "Image (*.img)"
     ],
     "JPEG": [
       "interner Code:JPEG",
@@ -114,26 +134,44 @@
       "~.shp",
       "ESRI SHP",
       "ESRI Shapefiles",
-      "Shapefiles"
+      "Shapefiles",
+      "ArcView Shapefile (*.shp)",
+      "shapefile (gezippt)",
+      "Shape (.shp)",
+      "Shape-File",
+      "ESRI-Shapefile",
+      "ESRI Shapefile PolylineM",
+      "Esri-Shapefile",
+      "shape-Datei",
+      "Shape (ESRI)"
     ],
     "SOAP": [
       "xml/soap"
     ],
     "SOS": [
+      "OGC:SOS-2.0.0-http-get-capabilities",
       "OGC:SOS-2.0.0-http-get-capabilities"
     ],
     "TIFF": [
       "http://publications.europa.eu/resource/authority/file-type/tiff",
       "tiff",
-      "interner Code:TIFF (T4)"
+      "interner Code:TIFF (T4)",
+      "tif",
+      "tif unkomprimiert"
     ],
     "TXT": [
       "http://publications.europa.eu/resource/authority/file-type/txt",
       "txt"
     ],
+    "Unbekannt": [
+      "inapplicable",
+      "Sonstiges",
+      "-"
+    ],
     "WCS": [
       "ogc:wcs",
       "wcs",
+      "OGC:WCS-2.0.1-http-get-capabilities",
       "OGC:WCS-2.0.1-http-get-capabilities"
     ],
     "WFS": [
@@ -142,7 +180,11 @@
       "http://publications.europa.eu/resource/authority/file-type/WFS_SRVC",
       "application/vnd.ogc.wfs_xml",
       "OGC:WFS-2.0.0-http-get-capabilities",
-      "OGC-WFS Web Feature Service"
+      "OGC-WFS Web Feature Service",
+      "OGC:WFS-2.0.0-http-get-capabilities",
+      "OGC:WFS-1.0.0-http-get-capabilities",
+      "WFS verfügbar",
+      "wfs_srvc"
     ],
     "WMS": [
       "ogc:wms",
@@ -154,7 +196,14 @@
       "OGC:WMS-http-get-capabilities",
       "OGC WMS",
       "OGC:WMS-1.1.1-http-get-capabilities",
-      "application/vnd.ogc.wms_xml"
+      "application/vnd.ogc.wms_xml",
+      "OGC:WMS-1.3.0-http-get-capabilities",
+      "OGC:WMS-1.1.1-http-get-map",
+      "über WMS",
+      "OGC-WMS Web Map Service",
+      "OGC:WMS-http-get-capabilities",
+      "wms_srvc",
+      "Web Map Service"
     ],
     "WWW": [
       "http",
@@ -178,7 +227,8 @@
     "ZIP": [
       "http://publications.europa.eu/resource/authority/file-type/zip",
       "zip",
-      ".zip"
+      ".zip",
+      "gzip"
     ]
   }
 }
