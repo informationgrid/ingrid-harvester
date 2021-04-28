@@ -1,3 +1,16 @@
+* Wed Apr 28 2021 Jan Bücher <jan.buecher@wemove.com> - 2.5.0
+- New Harvester: Mundialis/Incora (deactivated) (#3141)
+- New Harvester: Mundialis/FAIR (deactivated) (#3287)
+- New Harvester: OpenData OEPNV (deactivated) (#3178)
+- New Harvester: LIMBO (deactivated) (#3001)
+- Schedule based Index Backup (#3219)
+- evaluate mFUND-Keywords for all harvester (#3238)
+- Add DistributedSearch-Element to CSW Requests (#3250)
+- Change Content-Type to application/xml for CSW Requests (#2966)
+- Alternative GML-Namespace for temporal information (#3141)
+- Fix: Add Proxy for SPARQL Importer (#3001)
+- Extend Filetype Mappings
+
 * Mon Feb 22 2021 Jan Bücher <jan.buecher@wemove.com> - 2.4.0
 - Monitoring Section in AdminGUI (#2194)
 - Integrate URL Check (#2194)
