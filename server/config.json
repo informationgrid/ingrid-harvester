@@ -1217,7 +1217,7 @@
     "description": "LIMBO",
     "defaultAttribution": "LIMBO",
     "defaultAttributionLink": "https://www.limbo-project.org/",
-    "disable": false,
+    "disable": true,
     "cron": {
       "pattern": "59 02 * * *",
       "active": true
@@ -1335,7 +1335,8 @@
     "cron": {
       "active": true,
       "pattern": "56 02 * * *"
-    }
+    },
+    "disable": true
   },
   {
     "index": "csw_mundialis",
@@ -1369,7 +1370,8 @@
     "cron": {
       "pattern": "58 02 * * *",
       "active": true
-    }
+    },
+    "disable": true
   },
   {
     "index": "csw_fair",
@@ -1403,6 +1405,7 @@
     "cron": {
       "pattern": "57 02 * * *",
       "active": true
-    }
+    },
+    "disable": true
   }
 ]
