@@ -209,9 +209,13 @@ class HarvesterPage {
   }
 
   waitForImportToFinish(id) {
+    const dayjs = require('dayjs');
+    const customParseFormat = require('dayjs/plugin/customParseFormat');
+    dayjs.extend(customParseFormat);
+
     cy.get('#harvester-' + id + ' ' + this.lastExecution, {timeout: 45000})
-      .scrollIntoView()
-      .should('contain', Cypress.moment().format('DD.MM.YY, HH:mm'));
+      // .scrollIntoView()
+      .should('contain', dayjs().format('DD.MM.YY, HH:mm'));
   }
 
   getDocNumber(id) {

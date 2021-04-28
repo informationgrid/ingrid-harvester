@@ -150,7 +150,7 @@ export class SparqlMapper extends GenericMapper {
         let keywords = [];
 
         if(this.record.keywords){
-            keywords = this.record.keywords.value.split(',').map(s => s.trim())
+            keywords = this.record.keywords.value.split(',').map(s => s.trim()).filter(s => s.length > 0)
         }
 
         if(this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))){
@@ -158,38 +158,6 @@ export class SparqlMapper extends GenericMapper {
         }
 
         return keywords;
-    }
-
-    _getMFundFKZ(): string {
-        // Detect mFund properties
-        let keywords = this.getKeywords();
-        if (keywords) {
-            let fkzKeyword = keywords.find(kw => kw.toLowerCase().startsWith('mfund-fkz:'));
-
-            if (fkzKeyword) {
-                let idx = fkzKeyword.indexOf(':');
-                let fkz = fkzKeyword.substr(idx + 1);
-
-                if (fkz) return fkz.trim();
-            }
-        }
-        return undefined;
-    }
-
-    _getMFundProjectTitle(): string {
-        // Detect mFund properties
-        let keywords = this.getKeywords();
-        if (keywords) {
-            let mfKeyword: string = keywords.find(kw => kw.toLowerCase().startsWith('mfund-projekt:'));
-
-            if (mfKeyword) {
-                let idx = mfKeyword.indexOf(':');
-                let mfName = mfKeyword.substr(idx + 1);
-
-                if (mfName) return mfName.trim();
-            }
-        }
-        return undefined;
     }
 
     _getMetadataIssued(): Date {
@@ -216,7 +184,7 @@ export class SparqlMapper extends GenericMapper {
     }
 
     _getModifiedDate() {
-        return undefined;
+        return this.record.modified ? new Date(this.record.modified.value) : undefined;
     }
 
     _getSpatial(): any {

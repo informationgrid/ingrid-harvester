@@ -23,6 +23,7 @@ export class CswMapper extends GenericMapper {
     static GMD = 'http://www.isotc211.org/2005/gmd';
     static GCO = 'http://www.isotc211.org/2005/gco';
     static GML = 'http://www.opengis.net/gml';
+    static GML_3_2 = 'http://www.opengis.net/gml/3.2';
     static CSW = 'http://www.opengis.net/cat/csw/2.0.2';
     static SRV = 'http://www.isotc211.org/2005/srv';
 
@@ -30,6 +31,7 @@ export class CswMapper extends GenericMapper {
         'gmd': CswMapper.GMD,
         'gco': CswMapper.GCO,
         'gml': CswMapper.GML,
+        'gml32': CswMapper.GML_3_2,
         'srv': CswMapper.SRV
     });
 
@@ -432,39 +434,6 @@ export class CswMapper extends GenericMapper {
         return keywords;
     }
 
-
-    _getMFundFKZ(): string {
-        // Detect mFund properties
-        let keywords = this.getKeywords();
-        if (keywords) {
-            let fkzKeyword = keywords.find(kw => kw.toLowerCase().startsWith('mfund-fkz:'));
-
-            if (fkzKeyword) {
-                let idx = fkzKeyword.indexOf(':');
-                let fkz = fkzKeyword.substr(idx + 1);
-
-                if (fkz) return fkz.trim();
-            }
-        }
-        return undefined;
-    }
-
-    _getMFundProjectTitle(): string {
-        // Detect mFund properties
-        let keywords = this.getKeywords();
-        if (keywords) {
-            let mfKeyword: string = keywords.find(kw => kw.toLowerCase().startsWith('mfund-projekt:'));
-
-            if (mfKeyword) {
-                let idx = mfKeyword.indexOf(':');
-                let mfName = mfKeyword.substr(idx + 1);
-
-                if (mfName) return mfName.trim();
-            }
-        }
-        return undefined;
-    }
-
     _getMetadataIssued(): Date {
         return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : new Date(Date.now());
     }
@@ -555,7 +524,7 @@ export class CswMapper extends GenericMapper {
 
         let result: DateRange[] = [];
 
-        let nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimePeriod', this.idInfo);
+        let nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod|./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml32:TimePeriod', this.idInfo);
 
         for (let i = 0; i < nodes.length; i++) {
             let begin = this.getTimeValue(nodes[i], 'begin');
@@ -568,7 +537,7 @@ export class CswMapper extends GenericMapper {
                 });
             }
         }
-        nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent//gml:TimeInstant/gml:timePosition', this.idInfo);
+        nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimeInstant/gml:timePosition|./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml32:TimeInstant/gml32:timePosition', this.idInfo);
 
         let times = nodes.map(node => node.textContent);
         for (let i = 0; i < times.length; i++) {
@@ -585,9 +554,9 @@ export class CswMapper extends GenericMapper {
     }
 
     getTimeValue(node, beginOrEnd: 'begin' | 'end'): Date {
-        let dateNode = CswMapper.select('./gml:' + beginOrEnd + 'Position', node, true);
+        let dateNode = CswMapper.select('./gml:' + beginOrEnd + 'Position|./gml32:' + beginOrEnd + 'Position', node, true);
         if (!dateNode) {
-            dateNode = CswMapper.select('./gml:' + beginOrEnd + '/*/gml:timePosition', node, true);
+            dateNode = CswMapper.select('./gml:' + beginOrEnd + '/*/gml:timePosition|./gml32:' + beginOrEnd + '/*/gml32:timePosition', node, true);
         }
         try {
             if (!dateNode.hasAttribute('indeterminatePosition')) {

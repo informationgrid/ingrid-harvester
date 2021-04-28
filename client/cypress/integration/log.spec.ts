@@ -1,7 +1,7 @@
-import Authentication from "../support/pageObjects/auth";
-import Constants from "../support/constants";
-import HarvesterPage from "../support/pageObjects/harvester/harvester";
-import LogPage from "../support/pageObjects/log";
+import Authentication from '../support/pageObjects/auth';
+import Constants from '../support/constants';
+import HarvesterPage from '../support/pageObjects/harvester/harvester';
+import LogPage from '../support/pageObjects/log';
 
 describe('Log tab operations', () => {
   const constants = new Constants();

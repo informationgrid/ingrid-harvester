@@ -1,11 +1,14 @@
-import Authentication from "../../support/pageObjects/auth";
-import Constants from "../../support/constants";
-import HarvesterPage from "../../support/pageObjects/harvester/harvester";
+import Authentication from '../../support/pageObjects/auth';
+import Constants from '../../support/constants';
+import HarvesterPage from '../../support/pageObjects/harvester/harvester';
 
 describe('Import cron pattern operations', () => {
   const constants = new Constants();
   const auth = new Authentication();
   const harvester = new HarvesterPage();
+  const dayjs = require('dayjs');
+  const customParseFormat = require('dayjs/plugin/customParseFormat');
+  dayjs.extend(customParseFormat);
 
   beforeEach(() => {
     auth.apiLogIn();
@@ -20,18 +23,18 @@ describe('Import cron pattern operations', () => {
     harvester.activateScheduler();
     harvester.applyScheduleDialog();
 
-    cy.get("#harvester-" + constants.CKAN_DB_ID + " " + harvester.nextExecution, {timeout: 15000}).scrollIntoView();
-    const nextImport = Cypress.moment(new Date(), 'DD.MM.YY, HH:mm').add(1, 'minute').format('DD.MM.YY, HH:mm');
+    cy.get('#harvester-' + constants.CKAN_DB_ID + ' ' + harvester.nextExecution, {timeout: 15000}).scrollIntoView();
+    const nextImport = dayjs().add(1, 'minute').format('DD.MM.YY, HH:mm');
     harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.nextExecution, nextImport);
 
-    //turn off auto planning
+    // turn off auto planning
     harvester.openScheduleDialog(constants.CKAN_DB_ID);
     harvester.deactivateScheduler();
     harvester.applyScheduleDialog();
   });
 
   it('should reset cron expression if the input clear button is pressed', () => {
-    //TODO: to check again, button is as now not deactivated if an empty schedule is given
+    // TODO: to check again, button is as now not deactivated if an empty schedule is given
 
     harvester.toggleHarvesterById(constants.CKAN_DB_ID);
     harvester.openScheduleDialog(constants.CKAN_DB_ID);
@@ -62,8 +65,7 @@ describe('Import cron pattern operations', () => {
 
     harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.nextExecution, 'deaktiviert');
 
-    const importsDate = Cypress.moment().format('DD.MM.YY, HH:mm');
-    const nextImport = Cypress.moment(importsDate, 'DD.MM.YY, HH:mm').add(1, 'minute').format('DD.MM.YY, HH:mm');
+    const nextImport = dayjs().add(1, 'minute').format('DD.MM.YY, HH:mm');
 
     cy.wait(65000);
     cy.get('#harvester-' + constants.CKAN_DB_ID + ' ' + harvester.lastExecution).scrollIntoView();

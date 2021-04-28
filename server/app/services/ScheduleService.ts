@@ -6,6 +6,7 @@ import {CronData} from '../importer.settings';
 import {Moment} from "moment";
 import {UrlCheckService} from "./statistic/UrlCheckService";
 import {IndexCheckService} from "./statistic/IndexCheckService";
+import {IndexService} from "./IndexService";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -17,7 +18,9 @@ export class ScheduleService {
     urlCheckJob : CronJob;
     indexCheckJob : CronJob;
 
-    constructor(private socketService: ImportSocketService, private urlCheckService: UrlCheckService, private indexCheckService: IndexCheckService) {
+    indexBackupJob : CronJob;
+
+    constructor(private socketService: ImportSocketService, private urlCheckService: UrlCheckService, private indexCheckService: IndexCheckService, private indexService: IndexService) {
 
         this.initialize();
 
@@ -36,6 +39,7 @@ export class ScheduleService {
 
         this.setUrlCheck(ConfigService.getGeneralSettings().urlCheck);
         this.setIndexCheck(ConfigService.getGeneralSettings().indexCheck);
+        this.setIndexBackup(ConfigService.getGeneralSettings().indexBackup);
 
     }
 
@@ -248,5 +252,54 @@ export class ScheduleService {
             let config = ConfigService.getGeneralSettings();
             this.scheduleIndexCheckJob(config.indexCheck.pattern, false);
         }
+    }
+
+
+
+
+    /**
+     * Save a cronjob and activate scheduler.
+     * @param cron
+     */
+    setIndexBackup(cron): Date {
+        // set up cron job if harvester is enabled and cron active
+        const schedulingIsActive = cron.active;
+        if (schedulingIsActive) {
+            this.scheduleIndexBackupJob(cron.cronPattern, true);
+            let cronJob = new CronJob(cron.cronPattern, () => {}, null, false);
+            return cronJob.nextDate().toDate();
+        } else {
+            this.stopIndexBackupJob();
+            return null;
+        }
+
+    }
+
+    /**
+     * Run a cron job
+     */
+    private scheduleIndexBackupJob(cronExpression: string, startImmediately: boolean): void {
+        this.stopIndexBackupJob();
+        try {
+            this.indexBackupJob = new CronJob(cronExpression, () => {
+                let generalSettings = ConfigService.getGeneralSettings();
+                this.indexService.saveIndices(generalSettings.indexBackup.indexPattern, generalSettings.indexBackup.dir);
+            }, null, startImmediately, 'Europe/Berlin');
+        } catch (e) {
+            log.error('Could not schedule Index Backup job!', e);
+        }
+
+    }
+
+    /**
+     * Stop a cron job
+     */
+    stopIndexBackupJob() {
+
+        if (this.indexBackupJob) {
+            this.indexBackupJob.stop();
+            delete this.indexBackupJob;
+        }
+
     }
 }

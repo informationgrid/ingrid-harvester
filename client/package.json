@@ -27,16 +27,19 @@
     "@angular/platform-browser": "~8.2.14",
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
+    "chart.js": "~2.9.4",
     "core-js": "^2.6.11",
     "cronstrue": "^1.86.0",
+    "dayjs": "^1.10.4",
     "material-icons": "^0.3.1",
     "ngx-take-until-destroy": "^5.4.0",
     "roboto-fontface": "^0.10.0",
     "rxjs": "^6.5.4",
     "socket.io-client": "2.2.0",
+    "stream": "^0.0.2",
     "tslib": "^1.9.3",
-    "zone.js": "~0.9.1",
-    "chart.js": "~2.9.4"
+    "zlib": "^1.0.5",
+    "zone.js": "~0.9.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.803.23",
@@ -62,7 +65,7 @@
     "typescript": "~3.5.3"
   },
   "optionalDependencies": {
-    "cypress": "^6.0.0",
+    "cypress": "^6.8.0",
     "mocha": "5.2.0",
     "mochawesome": "^4.1.0",
     "mochawesome-merge": "^2.0.1",

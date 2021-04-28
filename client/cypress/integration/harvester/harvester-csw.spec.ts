@@ -1,13 +1,16 @@
-import Authentication from "../../support/pageObjects/auth";
-import Constants from "../../support/constants";
-import HarvesterPage from "../../support/pageObjects/harvester/harvester";
-import HarvesterForm from "../../support/pageObjects/harvester/harvesterForm";
+import Authentication from '../../support/pageObjects/auth';
+import Constants from '../../support/constants';
+import HarvesterPage from '../../support/pageObjects/harvester/harvester';
+import HarvesterForm from '../../support/pageObjects/harvester/harvesterForm';
 
 describe('Csw-Harvester operations', () => {
   const constants = new Constants();
   const auth = new Authentication();
   const harvester = new HarvesterPage();
   const form = new HarvesterForm();
+  const dayjs = require('dayjs');
+  const customParseFormat = require('dayjs/plugin/customParseFormat');
+  dayjs.extend(customParseFormat);
 
   beforeEach(() => {
     auth.apiLogIn();
@@ -116,6 +119,6 @@ describe('Csw-Harvester operations', () => {
     harvester.importHarvesterById(constants.CSW_WSV_ID);
     harvester.checkImportHasStarted();
 
-    harvester.checkFieldValueIs(constants.CSW_WSV_ID, harvester.lastExecution, Cypress.moment().format('DD.MM.YY, HH:mm'));
+    harvester.checkFieldValueIs(constants.CSW_WSV_ID, harvester.lastExecution, dayjs().format('DD.MM.YY, HH:mm'));
   });
 });

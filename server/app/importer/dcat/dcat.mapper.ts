@@ -23,24 +23,28 @@ export class DcatMapper extends GenericMapper {
     static LOCN = 'http://www.w3.org/ns/locn#';
     static HYDRA = 'http://www.w3.org/ns/hydra/core#';
     static RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+    static RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
     static DCAT = 'http://www.w3.org/ns/dcat#';
     static DCT = 'http://purl.org/dc/terms/';
     static SKOS = 'http://www.w3.org/2004/02/skos/core#';
     static SCHEMA = 'http://schema.org/';
     static VCARD = 'http://www.w3.org/2006/vcard/ns#';
     static DCATDE = 'http://dcat-ap.de/def/dcatde/';
+    static OGC = 'http://www.opengis.net/rdf#'
 
     static select = xpath.useNamespaces({
         'foaf': DcatMapper.FOAF,
         'locn': DcatMapper.LOCN,
         'hydra': DcatMapper.HYDRA,
         'rdf': DcatMapper.RDF,
+        'rdfs': DcatMapper.RDFS,
         'dcat': DcatMapper.DCAT,
         'dct': DcatMapper.DCT,
         'skos': DcatMapper.SKOS,
         'schema': DcatMapper.SCHEMA,
         'vcard': DcatMapper.VCARD,
-        'dcatde': DcatMapper.DCATDE
+        'dcatde': DcatMapper.DCATDE,
+        'ogc': DcatMapper.OGC
     });
 
     private log = getLogger();
@@ -96,6 +100,9 @@ export class DcatMapper extends GenericMapper {
     _getDescription() {
         let description = DcatMapper.select('.//dct:description', this.record, true);
         if (!description) {
+            description = DcatMapper.select('.//dct:abstract', this.record, true);
+        }
+        if (!description) {
             let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.catalogUrl}\'`;
             this.log.warn(msg);
             this.summary.warnings.push(['No description', msg]);
@@ -119,8 +126,16 @@ export class DcatMapper extends GenericMapper {
                 let formatNode = DcatMapper.select('./dct:format', this.linkedDistributions[i], true);
                 let mediaTypeNode = DcatMapper.select('./dcat:mediaType', this.linkedDistributions[i], true);
                 if (formatNode) {
-                    if (formatNode.textContent) {
-                        format = formatNode.textContent;
+                    let formatLabel = DcatMapper.select('.//rdfs:label', formatNode, true);
+                    let formatValue = DcatMapper.select('.//rdf:value', formatNode, true);
+                    if(formatLabel){
+                        format = formatLabel.textContent;
+                    }
+                    else if(formatValue){
+                        format = formatValue.textContent;
+                    }
+                    else if (formatNode.textContent) {
+                        format = formatNode.textContent.trim();
                     } else {
                         format = formatNode.getAttribute('rdf:resource');
                     }
@@ -148,7 +163,7 @@ export class DcatMapper extends GenericMapper {
                 if(url) {
                     let distribution = {
                         format: UrlUtils.mapFormat([format], this.summary.warnings),
-                        accessURL: url.getAttribute('rdf:resource'),
+                        accessURL: url.getAttribute('rdf:resource')?url.getAttribute('rdf:resource'):url.textContent,
                         title: title ? title.textContent : undefined,
                         description: description ? description.textContent : undefined,
                         issued: issued ? new Date(issued.textContent) : undefined,
@@ -368,38 +383,6 @@ export class DcatMapper extends GenericMapper {
         return keywords;
     }
 
-    _getMFundFKZ(): string {
-        // Detect mFund properties
-        let keywords = this.getKeywords();
-        if (keywords) {
-            let fkzKeyword = keywords.find(kw => kw.toLowerCase().startsWith('mfund-fkz:'));
-
-            if (fkzKeyword) {
-                let idx = fkzKeyword.indexOf(':');
-                let fkz = fkzKeyword.substr(idx + 1);
-
-                if (fkz) return fkz.trim();
-            }
-        }
-        return undefined;
-    }
-
-    _getMFundProjectTitle(): string {
-        // Detect mFund properties
-        let keywords = this.getKeywords();
-        if (keywords) {
-            let mfKeyword: string = keywords.find(kw => kw.toLowerCase().startsWith('mfund-projekt:'));
-
-            if (mfKeyword) {
-                let idx = mfKeyword.indexOf(':');
-                let mfName = mfKeyword.substr(idx + 1);
-
-                if (mfName) return mfName.trim();
-            }
-        }
-        return undefined;
-    }
-
     _getMetadataIssued(): Date {
         return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : new Date(Date.now());
     }
@@ -433,7 +416,33 @@ export class DcatMapper extends GenericMapper {
         if(geometry){
             return JSON.parse(geometry.textContent);
         }
+        geometry = DcatMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
+        if(geometry){
+            return this.wktToGeoJson(geometry.textContent);
+        }
         return undefined;
+    }
+
+    wktToGeoJson(wkt: string):any{
+        try {
+            var coordsPos = wkt.indexOf("(");
+            var type = wkt.substring(0, coordsPos).trim();
+            if(type.lastIndexOf(' ') > -1){
+                var type = type.substring(type.lastIndexOf(' ')).trim();
+            }
+            var type = type.toLowerCase();
+            var coords = wkt.substring(coordsPos).trim();
+            coords = coords.replace(/\(/g, "[").replace(/\)/g, "]");
+            coords = coords.replace(/\[(\s*[-0-9][^\]]*\,[^\]]*[0-9]\s*)\]/g, "[[$1]]");
+            coords = coords.replace(/([0-9])\s*\,\s*([-0-9])/g, "$1], [$2");
+            coords = coords.replace(/([0-9])\s+([-0-9])/g, "$1, $2");
+            return {
+                'type': type,
+                'coordinates': JSON.parse(coords)
+            };
+        } catch(e) {
+            this.summary.appErrors.push("Can't parse WKT: "+e.message);
+        }
     }
 
     _getSpatialText(): string {

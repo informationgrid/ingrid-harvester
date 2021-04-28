@@ -17,5 +17,13 @@
     "openMode": 0
   },
 
+  "testFiles": [
+    "init/*.spec.ts",
+    "config/*.spec.ts",
+    "harvester/*.spec.ts",
+    "import/*.spec.ts",
+    "*.spec.ts"
+  ],
+
   "watchForFileChanges": false
 }

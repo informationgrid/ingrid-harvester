@@ -305,6 +305,7 @@ export class CswImporter implements Importer {
                         outputSchema="http://www.isotc211.org/2005/gmd"
                         startPosition="${settings.startPosition}"
                         maxRecords="${settings.maxRecords}">
+                <DistributedSearch/>
                 <Query typeNames="gmd:MD_Metadata">
                     <ElementSetName typeNames="">full</ElementSetName>
                     ${settings.recordFilter ? `

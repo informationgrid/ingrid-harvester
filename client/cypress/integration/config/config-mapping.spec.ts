@@ -1,5 +1,5 @@
-import ConfigurationPage from "../../support/pageObjects/configuration";
-import Authentication from "../../support/pageObjects/auth";
+import ConfigurationPage from '../../support/pageObjects/configuration';
+import Authentication from '../../support/pageObjects/auth';
 
 describe('Configuration of Mapping-Formats', () => {
   const configPage = new ConfigurationPage();
@@ -41,7 +41,7 @@ describe('Configuration of Mapping-Formats', () => {
   });
 
   it('should delete a mapped value', () => {
-    let toDelete = "http://publications.europa.eu/resource/authority/file-type/pdf";
+    let toDelete = 'http://publications.europa.eu/resource/authority/file-type/pdf';
     configPage.deleteMapping(toDelete);
     cy.wait(500);
     configPage.checkMappingExists(toDelete, false);

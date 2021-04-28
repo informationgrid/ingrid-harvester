@@ -108,6 +108,7 @@ export class DcatImporter implements Importer {
     }
 
     async harvest() {
+        let retries = 0;
 
         while (true) {
             log.debug('Requesting next records');
@@ -120,6 +121,8 @@ export class DcatImporter implements Importer {
 
             let pagedCollection = responseDom.getElementsByTagNameNS(DcatMapper.HYDRA, 'PagedCollection')[0];
             if (pagedCollection) {
+                retries = 0;
+
                 let numReturned = responseDom.getElementsByTagNameNS(DcatMapper.DCAT, 'Dataset').length;
                 let itemsPerPage = DcatMapper.select('./hydra:itemsPerPage', pagedCollection, true).textContent;
                 this.totalRecords = DcatMapper.select('./hydra:totalItems', pagedCollection, true).textContent;
@@ -146,9 +149,19 @@ export class DcatImporter implements Importer {
                 log.debug(`Received ${numReturned} records from ${this.settings.catalogUrl} - Page: ${thisPage}`);
                 await this.extractRecords(response, harvestTime)
             } else {
-                const message = `Error while fetching DCAT Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`;
-                log.error(message);
-                this.summary.appErrors.push(message);
+                let numReturned = responseDom.getElementsByTagNameNS(DcatMapper.DCAT, 'Dataset').length;
+                if(numReturned > 0){
+                    await this.extractRecords(response, harvestTime);
+                    isLastPage = true;
+                } else {
+                    const message = `Error while fetching DCAT Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`;
+                    log.error(message);
+                    this.summary.appErrors.push(message);
+                    if(retries++ > 3){
+                        isLastPage = true;
+                        log.error('Stopped after 3 Retries')
+                    }
+                }
             }
 
             if (isLastPage) break;
@@ -239,11 +252,11 @@ export class DcatImporter implements Importer {
             json: false,
             proxy: settings.proxy || null
         };
-
+/*
         requestConfig.qs = {
             page: 1
         };
-
+*/
         return requestConfig;
     }
 

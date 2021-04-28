@@ -110,27 +110,33 @@ export class ConfigGeneralComponent implements OnInit {
         from: [settings.mail.from],
         to: [settings.mail.to]
       }),
+      indexBackup: this.formBuilder.group({
+        active: [settings.indexBackup.active],
+        indexPattern: [settings.indexBackup.indexPattern],
+        cronPattern: [settings.indexBackup.cronPattern],
+        dir: [settings.indexBackup.dir]
+      }),
       maxDiff: [settings.maxDiff]
     })
 
 
     this.urlCheckTranslate(settings.urlCheck.pattern);
     this.indexCheckTranslate(settings.indexCheck.pattern);
+    this.indexBackupCronTranslate(settings.indexBackup.cronPattern);
   }
 
 
   urlCheckTranslation: string;
   indexCheckTranslation: string;
-  //validExpression = true;
+  indexBackupCronTranslation: string;
   showInfo = false;
+  showBackupCronInfo = false;
 
   urlCheckTranslate(cronExpression: string) {
     try {
       this.urlCheckTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
-      //this.validExpression = true;
     } catch (e) {
       this.urlCheckTranslation = 'Kein gültiger Ausdruck';
-      //this.validExpression = false;
     }
 
     if (!this.configForm.get('urlCheck.active').value) {
@@ -147,10 +153,8 @@ export class ConfigGeneralComponent implements OnInit {
   indexCheckTranslate(cronExpression: string) {
     try {
       this.indexCheckTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
-//      this.validExpression = true;
     } catch (e) {
       this.indexCheckTranslation = 'Kein gültiger Ausdruck';
-      //    this.validExpression = false;
     }
 
     if (!this.configForm.get('indexCheck.active').value) {
@@ -162,5 +166,24 @@ export class ConfigGeneralComponent implements OnInit {
   clearIndexCheckInput() {
     this.configForm.get('indexCheck.pattern').setValue('');
     this.indexCheckTranslate('');
+  }
+
+
+  indexBackupCronTranslate(cronExpression: string) {
+    try {
+      this.indexBackupCronTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
+    } catch (e) {
+      this.indexBackupCronTranslation = 'Kein gültiger Ausdruck';
+    }
+
+    if (!this.configForm.get('indexBackup.active').value) {
+      this.indexBackupCronTranslation = 'Planung ausgeschaltet';
+      return;
+    }
+  }
+
+  clearIndexBackupCronInput() {
+    this.configForm.get('indexBackup.cronPattern').setValue('');
+    this.indexBackupCronTranslate('');
   }
 }

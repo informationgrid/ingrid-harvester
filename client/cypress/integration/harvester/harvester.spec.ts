@@ -1,13 +1,15 @@
-import Authentication from "../../support/pageObjects/auth";
-import Constants from "../../support/constants";
-import HarvesterPage from "../../support/pageObjects/harvester/harvester";
-import HarvesterForm from "../../support/pageObjects/harvester/harvesterForm";
+import Authentication from '../../support/pageObjects/auth';
+import Constants from '../../support/constants';
+import HarvesterPage from '../../support/pageObjects/harvester/harvester';
+import HarvesterForm from '../../support/pageObjects/harvester/harvesterForm';
+import McloudHome from '../../support/pageObjects/mcloudHome';
 
 describe('Harvester operations', () => {
   const constants = new Constants();
   const auth = new Authentication();
   const harvester = new HarvesterPage();
   const form = new HarvesterForm();
+  const mcloudPage = new McloudHome();
 
   beforeEach(() => {
     auth.apiLogIn();
@@ -75,5 +77,25 @@ describe('Harvester operations', () => {
     harvester.seedExcelHarvester(constants.SEED_EXCEL_ID);
 
     harvester.deleteHarvesterById(constants.SEED_EXCEL_ID);
+  });
+
+  it('should find a harvester whose search is activated', () => {
+    const docToFind = 'Daten VVS';
+
+    harvester.activateForSearch(constants.CKAN_MOBIDATA_BW_ID);
+    mcloudPage.visitMcloudHome();
+    mcloudPage.urlIsMcloudHome();
+    mcloudPage.searchFor(docToFind);
+    mcloudPage.checkSearchResultsIncludeName(docToFind, true);
+  });
+
+  it('should not find a harvester whose search is not activated', () => {
+    const docToFind = 'Daten VVS';
+
+    harvester.deactivateForSearch(constants.CKAN_MOBIDATA_BW_ID);
+    mcloudPage.visitMcloudHome();
+    mcloudPage.urlIsMcloudHome();
+    mcloudPage.searchFor(docToFind);
+    mcloudPage.checkSearchResultsIncludeName(docToFind, false);
   });
 });

@@ -1,7 +1,8 @@
-import Authentication from "../support/pageObjects/auth";
-import Constants from "../support/constants";
-import HarvesterPage from "../support/pageObjects/harvester/harvester";
-import IndicesPage from "../support/pageObjects/indices";
+import Authentication from '../support/pageObjects/auth';
+import Constants from '../support/constants';
+import HarvesterPage from '../support/pageObjects/harvester/harvester';
+import IndicesPage from '../support/pageObjects/indices';
+import McloudHome from '../support/pageObjects/mcloudHome';
 
 describe('Indices operations', () => {
   const constants = new Constants();
@@ -11,21 +12,6 @@ describe('Indices operations', () => {
 
   beforeEach(() => {
     auth.apiLogIn();
-  });
-
-  it('should not find a harvester whose search is not activated', () => {
-    harvester.activateForSearch(constants.CSW_CODEDE_ID);
-
-    indicesPage.visit();
-    indicesPage.indexIsContained(constants.CSW_CODEDE_INDEX, false);
-  });
-
-  it('should find a harvester whose search is activated', () => {
-    harvester.activateForSearch(constants.CKAN_DB_ID);
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
-
-    indicesPage.visit();
-    indicesPage.indexIsContained('ckan_db', true);
   });
 
   it('should show only one index per harvester', () => {
@@ -51,15 +37,15 @@ describe('Indices operations', () => {
   });
 
   it('should show the content of an index when it is clicked', () => {
-    let dbIndexContent = "{\n" +
-      "    \"_index\": \"ckan_db_";
-    let indexType = "\"_type\": \"base\"";
+    const dbIndexContent = '{\n' +
+      '    "_index": "ckan_geonet_mrn_';
+    const indexType = '"_type": "base"';
 
-    harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
+    harvester.importHarvesterByIdAndWait(constants.CKAN_GEONET_ID);
 
     indicesPage.visit();
 
-    indicesPage.selectIndex('ckan_db');
+    indicesPage.selectIndex('ckan_geonet_mrn');
     indicesPage.checkContentIs(dbIndexContent);
     indicesPage.checkContentIs(indexType);
   });

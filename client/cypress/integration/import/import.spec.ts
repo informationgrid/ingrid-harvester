@@ -6,6 +6,9 @@ describe('Import operations', () => {
   const constants = new Constants();
   const auth = new Authentication();
   const harvester = new HarvesterPage();
+  const dayjs = require('dayjs');
+  const customParseFormat = require('dayjs/plugin/customParseFormat');
+  dayjs.extend(customParseFormat);
 
   beforeEach(() => {
     auth.apiLogIn();
@@ -27,18 +30,18 @@ describe('Import operations', () => {
     // get last duration
     // duration =  harvester.getFieldValue(constants.CKAN_DB_ID, harvester.duration);
 
-    harvester.importHarvesterById(constants.CKAN_DB_ID);
+    harvester.importHarvesterById(constants.CKAN_RNV_ID);
     harvester.checkImportHasStarted();
 
-    harvester.waitForImportToFinish(constants.CKAN_DB_ID);
+    harvester.waitForImportToFinish(constants.CKAN_RNV_ID);
     cy.reload();
 
     // check different than last duration
     // harvester.checkFieldValueIsNot(constants.CKAN_DB_ID, harvester.duration, duration);
 
-    let timeString = Cypress.moment().format('DD.MM.YY, HH:mm');
+    let timeString = dayjs().format('DD.MM.YY, HH:mm');
     timeString = timeString.slice(0, timeString.length - 1);
-    harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.lastExecution, timeString);
+    harvester.checkFieldValueIs(constants.CKAN_RNV_ID, harvester.lastExecution, timeString);
   });
 
   it('should show an icon if a harvester has an import schedule', () => {

@@ -21,7 +21,11 @@
     "filePath": "./data.xlsx",
     "description": "mCLOUD Excel Datei",
     "disable": false,
-    "id": 1
+    "id": 1,
+    "cron": {
+      "pattern": "00 01 * * *",
+      "active": true
+    }
   },
   {
     "index": "ckan_db",
@@ -545,41 +549,6 @@
     }
   },
   {
-    "index": "csw_ils_geonode",
-    "includeTimestamp": true,
-    "priority": null,
-    "type": "CSW",
-    "maxRecords": 100,
-    "startPosition": 1,
-    "customCode": "",
-    "defaultMcloudSubgroup": [
-      "infrastructure"
-    ],
-    "defaultDCATCategory": [
-      "REGI",
-      "TRAN"
-    ],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": false
-    },
-    "getRecordsUrl": "https://ils-geomonitoring.de/catalogue/csw",
-    "eitherKeywords": [
-      "incora"
-    ],
-    "httpMethod": "GET",
-    "disable": true,
-    "defaultAttribution": "GeoNode Catalogue",
-    "defaultAttributionLink": "https://ils-geomonitoring.de",
-    "description": "ILS GeoNode Catalogue",
-    "id": 22,
-    "cronPattern": "*/30 7-18 * * *",
-    "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>apiso:AnyText</ogc:PropertyName><ogc:Literal>incora</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>"
-  },
-  {
     "index": "ckan_berlin",
     "includeTimestamp": true,
     "priority": null,
@@ -771,14 +740,14 @@
     "rules": {
       "containsDocumentsWithData": false
     },
-    "getRecordsUrl": "https://geomis.sachsen.de/soapServices/CSWStartup",
+    "getRecordsUrl": "https://geomis.sachsen.de/geomis-csw/api",
     "eitherKeywords": [],
     "httpMethod": "POST",
     "id": 31,
     "description": "GeoMIS.Sachsen",
     "defaultAttribution": "GeoMIS Sachsen",
     "defaultAttributionLink": "https://geomis.sachsen.de",
-    "recordFilter": "            <ogc:Filter>\n                <ogc:Or>\n                    <ogc:And>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>subject</ogc:PropertyName>\n                            <ogc:Literal>opendata</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:Or>\n                            <ogc:PropertyIsEqualTo>\n                                <ogc:PropertyName>HierarchyLevelName</ogc:PropertyName>\n                                <ogc:Literal>transportation</ogc:Literal>\n                            </ogc:PropertyIsEqualTo>\n                            <ogc:PropertyIsEqualTo>\n                                <ogc:PropertyName>TopicCategory</ogc:PropertyName>\n                                <ogc:Literal>transportation</ogc:Literal>\n                            </ogc:PropertyIsEqualTo>\n                        </ogc:Or>\n                    </ogc:And>\n                    <ogc:And>\n                        <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                            <ogc:PropertyName>OrganisationName</ogc:PropertyName>\n                            <ogc:Literal>Leibniz-Institut f.r .kologische Raumentwicklung</ogc:Literal>\n                        </ogc:PropertyIsLike>\n                        <ogc:Or>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*verkehr*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*stra.e*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*schiene*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*wasser*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*gew.sser*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                        </ogc:Or>\n                    </ogc:And>\n                </ogc:Or>\n            </ogc:Filter>",
+    "recordFilter": "            <ogc:Filter>\n                <ogc:Or>\n                    <ogc:And>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>subject</ogc:PropertyName>\n                            <ogc:Literal>opendata</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:Or>\n                            <ogc:PropertyIsEqualTo>\n                                <ogc:PropertyName>HierarchyLevelName</ogc:PropertyName>\n                                <ogc:Literal>transportation</ogc:Literal>\n                            </ogc:PropertyIsEqualTo>\n                            <ogc:PropertyIsEqualTo>\n                                <ogc:PropertyName>TopicCategory</ogc:PropertyName>\n                                <ogc:Literal>transportation</ogc:Literal>\n                            </ogc:PropertyIsEqualTo>\n                        </ogc:Or>\n                    </ogc:And>\n                    <ogc:And>\n                        <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                            <ogc:PropertyName>OrganisationName</ogc:PropertyName>\n                            <ogc:Literal>Leibniz-Institut.f.r..kologische.Raumentwicklung</ogc:Literal>\n                        </ogc:PropertyIsLike>\n                        <ogc:Or>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*verkehr*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*stra.e*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*schiene*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*wasser*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*gew.sser*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                        </ogc:Or>\n                    </ogc:And>\n                </ogc:Or>\n            </ogc:Filter>",
     "cron": {
       "active": true,
       "pattern": "40 2 * * *"
@@ -1214,19 +1183,18 @@
     "providerPrefix": "",
     "dcatProviderField": "maintainer",
     "cron": {
-      "active": true,
-      "pattern": "5 2 * * *"
-    },
-    "disable": false
+      "pattern": "05 02 * * *",
+      "active": true
+    }
   },
   {
     "index": "sparql_limbo",
     "includeTimestamp": true,
     "priority": 0,
     "type": "SPARQL",
-    "maxRecords": 100,
-    "startPosition": 0,
-    "customCode": "doc.distribution.forEach(dist => {\n\tif(dist.accessURL.endsWith('.ttl'))\n\t\tdist.format = ['Turtle-File']\n});\ndoc.extras.display_contact = [{\n            \"name\": \"LimboConsortium\",\n            \"mbox\": null,\n\t\t\t\"homepage\": \"https://data.limbo-project.org/LimboConsortium\"\n          }];",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": "doc.distribution.forEach(dist => {\n\tif(dist.accessURL.endsWith('.ttl'))\n\t\tdist.format = ['Turtle-File'];\n\telse if(dist.accessURL.endsWith('.sparql'))\n\t\tdist.format = ['SPARQL'];\n\telse if(dist.accessURL.endsWith('.nt'))\n\t\tdist.format = ['N-Triples'];\n});\n\n\nif(doc.title.indexOf('bahn') !== -1 || doc.title.indexOf('train') !== -1){\n\tdoc.extras.subgroups = ['railway'];\n\tif(doc.title.indexOf('ampeln') !== -1 || doc.title.indexOf('bike') !== -1 || doc.title.indexOf('carsharing') !== -1){\n\t\tdoc.extras.subgroups.push('roads');\n\t}\n}\n\ndoc.extras.display_contact = [{\n            \"name\": \"LimboConsortium\",\n            \"mbox\": null,\n\t\t\t\"homepage\": \"https://data.limbo-project.org/LimboConsortium\"\n          }];",
     "defaultMcloudSubgroup": [
       "roads"
     ],
@@ -1241,27 +1209,24 @@
       "containsDocumentsWithData": false
     },
     "endpointUrl": "https://metadata.limbo-project.org/sparql",
-    "query": "PREFIX dcat: <http://www.w3.org/ns/dcat#>\nPREFIX dataid: <http://dataid.dbpedia.org/ns/core#>\nPREFIX prov: <http://www.w3.org/ns/prov#> \nPREFIX dct: <http://purl.org/dc/terms/>\nPREFIX dcatx: <http://www.example.org/>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\n\nSELECT DISTINCT ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?license (GROUP_CONCAT(DISTINCT ?keyword; SEPARATOR=\", \") AS ?keywords) (GROUP_CONCAT(DISTINCT ?dcat_theme; SEPARATOR=\", \") AS ?dcat_theme)\nWHERE {\n?limbo_ds dataid:group ?group;\n            dct:identifier ?id;\n            dcat:distribution ?limbo_dist;\n            dct:issued ?issued;\n            dct:license ?license;\n            prov:wasDerivedFrom ?mcloud_dist.\nOPTIONAL {?limbo_ds dct:publisher ?publisher.}\n?limbo_dist dcat:downloadURL ?distribution_url ;\n            dcatx:localId ?distribution_title.\n?mcloud_ds dcat:distribution ?mcloud_dist ;\n            dct:title ?mcloud_title;\n            dct:description ?mcloud_description;\n            dcat:keyword ?keyword;\n            dcat:theme ?dcat_theme;\n            dcat:landingPage ?mcloud_landingPage .\n\nBIND (CONCAT(\"LIMBO - \",?mcloud_title) as ?title).\nBIND (CONCAT(\"Limbo-Daten f&uuml;r <a href=\\\"\",?mcloud_landingPage ,\"\\\">\",?mcloud_title,\"</a> \\r\\n\\r\\nOriginal:\\r\\n\",?mcloud_description) as ?description).\nBIND (?limbo_ds as ?source_link)\n\nFILTER (?group = 'org.limbo')\nFILTER(!EXISTS { ?x owl:priorVersion ?limbo_ds })\n}\nGROUP BY ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?license",
+    "query": "PREFIX dcat: <http://www.w3.org/ns/dcat#>\nPREFIX dataid: <http://dataid.dbpedia.org/ns/core#>\nPREFIX prov: <http://www.w3.org/ns/prov#> \nPREFIX dct: <http://purl.org/dc/terms/>\nPREFIX dcatx: <http://www.example.org/>\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n\nSELECT DISTINCT ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?modified ?license (GROUP_CONCAT(DISTINCT ?keyword; SEPARATOR=\", \") AS ?keywords) (GROUP_CONCAT(DISTINCT ?dcat_theme; SEPARATOR=\", \") AS ?dcat_theme)\nWHERE {\n?limbo_ds dataid:group ?group;\n\t\t\tdataid:artifact ?artifact;\n            dct:identifier ?id;\n            dcat:distribution ?limbo_dist;\n            dct:issued ?issued;\n            dct:license ?license;\n\t\t\trdf:type ?type.\n\n?limbo_dist dcat:downloadURL ?distribution_url ;\n            dcatx:localId ?distribution_title.\nOPTIONAL {\n\t?limbo_ds dct:publisher ?publisher.\n}\n\nOPTIONAL {\n\t?limbo_ds void:objectsTarget ?objectsTarget;\n\t\t\tvoid:subjectsTarget ?subjectsTarget.\n\t?objectsTarget dataid:artifact ?objectsTarget_artifact.\n\t?subjectsTarget dataid:artifact ?subjectsTarget_artifact.\n}\n\nOPTIONAL {\n\t?limbo_ds prov:wasDerivedFrom ?mcloud_dist.\n\t?mcloud_ds dcat:distribution ?mcloud_dist ;\n            dct:title ?mcloud_title;\n            dct:description ?mcloud_description;\n            dcat:keyword ?keyword;\n            dcat:theme ?dcat_theme;\n            dcat:landingPage ?mcloud_landingPage .\n}\n\t\t\nBIND (\n\tIF(\n\t\tbound(?mcloud_title),\n\t\tCONCAT(\"Limbo-Daten f&uuml;r <a href=\\\"\",?mcloud_landingPage ,\"\\\">\",?mcloud_title,\"</a> \\r\\n\\r\\nOriginal:\\r\\n\",?mcloud_description),\n\t\tIF(\n\t\t\tbound(?objectsTarget),\n\t\t\tCONCAT(\"Sammlung von Links zwischen den Datensammlungen <a href=\\\"\",?subjectsTarget,\"\\\">\",?subjectsTarget_artifact,\"</a>\",\n\t\t\t\" und <a href=\\\"\",?objectsTarget,\"\\\">\",?objectsTarget_artifact,\"</a> im RDF-Format\"),\n\t\t\tCONCAT(\"Datensammlung mit Informationen zu \",?artifact,\" im RDF-Format\")\n\t\t)\n\t)\n as ?description).\n \n \nBIND (\n\tIF(\n\t\tbound(?mcloud_title),\n\t\tCONCAT(\"LIMBO - \",?mcloud_title),\n\t\tCONCAT(\"LIMBO - \",?artifact)\n\t)\nas ?title).\n\nBIND (?limbo_ds as ?source_link)\nBIND (?issued as ?modified)\n\nFILTER (?group = 'org.limbo')\n\n# get the most current version by filtering out any dataset duplicates with earlier release dates\nFILTER(!EXISTS {\n ?limbo_ds2 dataid:artifact ?art . \n ?limbo_ds dataid:artifact ?art . \n ?limbo_ds2 dct:issued ?issued2 .\n FILTER (?issued2 > ?issued) })\n\n}\nGROUP BY ?id ?publisher ?source_link ?title ?description ?distribution_title  ?distribution_url ?issued ?modified ?license",
     "filterTags": [],
     "filterThemes": [],
     "id": 48,
+    "eitherKeywords": [],
     "description": "LIMBO",
     "defaultAttribution": "LIMBO",
     "defaultAttributionLink": "https://www.limbo-project.org/",
-    "ckanBaseUrl": "http://ckan.qrowd.aksw.org",
-    "markdownAsDescription": false,
-    "defaultLicense": null,
-    "requestType": "Search",
-    "additionalSearchFilter": "",
-    "providerPrefix": "",
-    "providerField": "organization",
-    "eitherKeywords": [],
-    "disable": true
+    "disable": true,
+    "cron": {
+      "pattern": "59 02 * * *",
+      "active": true
+    }
   },
   {
     "index": "csw_dfs",
     "includeTimestamp": true,
-    "priority": 0,
+    "priority": 5,
     "type": "CSW",
     "maxRecords": 10,
     "startPosition": 1,
@@ -1291,5 +1256,156 @@
       "pattern": "55 02 * * *",
       "active": true
     }
+  },
+  {
+    "index": "ckan_mobidata_bw",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "CKAN",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "customCode": "",
+    "defaultMcloudSubgroup": [
+      "railway",
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "ckanBaseUrl": "https://www.mobidata-bw.de/",
+    "filterTags": [],
+    "filterGroups": [],
+    "providerPrefix": "MobiData-BW: ",
+    "providerField": "author",
+    "requestType": "Search",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "id": 50,
+    "description": "MobiData BW",
+    "defaultAttribution": "MobiData BW",
+    "defaultAttributionLink": "https://www.mobidata-bw.de",
+    "additionalSearchFilter": "",
+    "cron": {
+      "pattern": "07 03 * * *",
+      "active": true
+    }
+  },
+  {
+    "index": "ckan_oepnv",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "CKAN",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "customCode": "if(this.source.organization.name === 'hvv')\n   this.skipped = true;\nif(this.source.organization.name === 'vbb')\n   this.skipped = true;",
+    "defaultMcloudSubgroup": [
+      "railway",
+      "roads"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "ckanBaseUrl": "https://www.opendata-oepnv.de",
+    "filterTags": [],
+    "filterGroups": [],
+    "providerPrefix": "OpenData ÖPNV: ",
+    "providerField": "organization",
+    "requestType": "Search",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "id": 55,
+    "description": "OpenData ÖPNV",
+    "defaultAttribution": "OpenData ÖPNV",
+    "defaultAttributionLink": "https://www.opendata-oepnv.de",
+    "additionalSearchFilter": "",
+    "cron": {
+      "active": true,
+      "pattern": "56 02 * * *"
+    },
+    "disable": true
+  },
+  {
+    "index": "csw_mundialis",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "aviation"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "getRecordsUrl": "https://data.mundialis.de/geonetwork/srv/eng/csw",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 58,
+    "description": "Mundialis",
+    "defaultAttribution": "Mundialis",
+    "defaultAttributionLink": "https://www.mundialis.de",
+    "recordFilter": "            <ogc:Filter>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>anyText</ogc:PropertyName>\n                            <ogc:Literal>mfund</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n            </ogc:Filter>",
+    "cron": {
+      "pattern": "58 02 * * *",
+      "active": true
+    },
+    "disable": true
+  },
+  {
+    "index": "csw_fair",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "aviation"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "getRecordsUrl": "https://fair-metadata.de/geonetwork/srv/eng/csw",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "id": 60,
+    "description": "FAIR",
+    "defaultAttribution": "FAIR",
+    "defaultAttributionLink": "https://fair-metadata.de/geonetwork",
+    "recordFilter": null,
+    "cron": {
+      "pattern": "57 02 * * *",
+      "active": true
+    },
+    "disable": true
   }
 ]

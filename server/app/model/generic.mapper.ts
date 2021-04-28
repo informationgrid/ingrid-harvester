@@ -223,13 +223,48 @@ export abstract class GenericMapper {
         return this._getCategories();
     }
 
-    abstract _getMFundFKZ(): string;
 
-    getMFundFKZ(): string{
-        return this._getMFundFKZ()
+    _getMFundFKZ(): string {
+        // Detect mFund properties
+        let keywords = this.getKeywords();
+        if (keywords) {
+            let fkzKeyword = keywords.find(kw => kw.toLowerCase().startsWith('mfund-fkz:') || kw.toLowerCase().startsWith('mfund-fkz '));
+
+            if (fkzKeyword) {
+                let idx_colon = fkzKeyword.indexOf(':');
+                let idx_blank = fkzKeyword.indexOf(' ');
+                let idx = (idx_colon > -1 && idx_blank > -1)?Math.min(idx_colon, idx_blank):Math.max(idx_colon, idx_blank);
+
+                let fkz = fkzKeyword.substr(idx + 1);
+
+                if (fkz) return fkz.trim();
+            }
+        }
+        return undefined;
     }
 
-    abstract _getMFundProjectTitle(): string;
+    getMFundFKZ(): string {
+        return this._getMFundFKZ();
+    }
+
+    _getMFundProjectTitle(): string{
+        // Detect mFund properties
+        let keywords = this.getKeywords();
+        if (keywords) {
+            let mfKeyword: string = keywords.find(kw => kw.toLowerCase().startsWith('mfund-projekt:') || kw.toLowerCase().startsWith('mfund-projekt '));
+
+            if (mfKeyword) {
+                let idx_colon = mfKeyword.indexOf(':');
+                let idx_blank = mfKeyword.indexOf(' ');
+                let idx = (idx_colon > -1 && idx_blank > -1)?Math.min(idx_colon, idx_blank):Math.max(idx_colon, idx_blank);
+
+                let mfName = mfKeyword.substr(idx + 1);
+
+                if (mfName) return mfName.trim();
+            }
+        }
+        return undefined;
+    }
 
     getMFundProjectTitle(): string{
         return this._getMFundProjectTitle();
