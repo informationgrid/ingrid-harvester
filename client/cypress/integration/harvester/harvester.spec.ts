@@ -96,6 +96,6 @@ describe('Harvester operations', () => {
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchFor(docToFind);
-    mcloudPage.checkSearchResultsIncludeName(docToFind, false);
+    mcloudPage.checkNoResults();
   });
 });
