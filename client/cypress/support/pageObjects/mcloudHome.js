@@ -72,6 +72,30 @@ class McloudHome {
       .should('equal', this.noResultsMsg);
   }
 
+  clickOnSearchResult(title){
+    return cy.get("h4.link-teaser-data").contains(title).click();
+  };
+
+  checkTitle (title){
+    return cy.get("h3").contains(title);
+  };
+
+  checkAuthor (author){
+    return cy.get("div.detail-card").contains(author);
+  };
+
+  checkCopyrightNotice (copyrightNotice){
+    return cy.get("div.detail-card").contains(copyrightNotice);
+  };
+
+  checkDataHasDownloadType(downloadtype){
+    return cy.get("span.unknown-filetype").contains(downloadtype);
+  };
+
+  checkDownloadCount(number){
+    cy.get('.downloads-table .download-list-row').should('have.lengthOf.lessThan', number+1)
+  };
+
 }
 
 export default McloudHome;
