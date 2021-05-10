@@ -114,6 +114,7 @@ class HarvesterPage {
     cy.get('#harvester-' + id).click();
     return cy.get('#harvester-' + id + ' ' + this.importBtn).click();
   }
+
   importHarvesterByIdAndWait(id) {
     this.importHarvesterById(id).then(() => this.waitForImportToFinish(id));
   }
@@ -125,7 +126,7 @@ class HarvesterPage {
 
   checkImportHasStarted() {
     cy.get('.mat-simple-snackbar', {timeout: 60000}).should('contain', 'Import gestartet');
-    cy.get('app-importer-detail').should('contain', ' Import läuft ');
+    cy.get('app-importer-detail', {timeout: 8000}).should('contain', ' Import läuft ');
   }
 
   checkVisibleFieldValue(field, value) {
