@@ -15,7 +15,7 @@ describe('All harvesters used in tests can import successfully', () => {
     auth.apiLogIn();
   });
 
-  it('should import and find search results of the CKAN-DB harvester', () => {
+  xit('should import and find search results of the CKAN-DB harvester', () => {
     const docToFind = '_id:\"7e526b8c-16bd-4f2c-a02b-8d4d0a29d310\"';
 
     harvester.activateForSearch(constants.CKAN_DB_ID);
