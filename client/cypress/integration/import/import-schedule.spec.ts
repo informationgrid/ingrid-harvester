@@ -57,19 +57,19 @@ describe('Import cron pattern operations', () => {
   });
 
   it('should not import if the schedule is planned but off', () => {
-    harvester.toggleHarvesterById(constants.CKAN_DB_ID);
-    harvester.openScheduleDialog(constants.CKAN_DB_ID);
+    harvester.toggleHarvesterById(constants.CKAN_RNV_ID);
+    harvester.openScheduleDialog(constants.CKAN_RNV_ID);
     harvester.setCronPatternTo('* * * * *');
     harvester.deactivateScheduler();
     harvester.applyScheduleDialog();
 
-    harvester.checkFieldValueIs(constants.CKAN_DB_ID, harvester.nextExecution, 'deaktiviert');
+    harvester.checkFieldValueIs(constants.CKAN_RNV_ID, harvester.nextExecution, 'deaktiviert');
 
     const nextImport = dayjs().add(1, 'minute').format('DD.MM.YY, HH:mm');
 
     cy.wait(65000);
-    cy.get('#harvester-' + constants.CKAN_DB_ID + ' ' + harvester.lastExecution).scrollIntoView();
-    harvester.checkFieldValueIsNot(constants.CKAN_DB_ID, harvester.lastExecution, nextImport);
+    cy.get('#harvester-' + constants.CKAN_RNV_ID + ' ' + harvester.lastExecution).scrollIntoView();
+    harvester.checkFieldValueIsNot(constants.CKAN_RNV_ID, harvester.lastExecution, nextImport);
   });
 
   it('should disable scheduling for a harvester', () => {
