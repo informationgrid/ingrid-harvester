@@ -77,18 +77,16 @@ describe('Configuration of general settings', () => {
    * In Electron a save dialog is shown which prevents further test execution
    * TODO: Wait for issue: https://github.com/cypress-io/cypress/issues/949
    */
-  it('should export the harvester configuration if the button is pressed', () => {
-    cy.server();
-    cy.route('GET', 'http://192.168.0.228/importer/rest/api/config/general').as('download');
-    // server and route deprecated!, use intercept but atm not buggy
-    // cy.intercept('GET', 'http://192.168.0.228/importer/rest/api/config/general').as('download');
+  xit('should export the harvester configuration if the button is pressed', () => {
+    cy.intercept('GET', 'http://192.168.0.228/importer/rest/api/config/general').as('download');
+
     configPage.visit();
     configPage.selectTab(configPage.EXPORT);
     configPage.pressDownloadConfigButton();
 
-    cy.wait('@download').then((xhr) => {
-      expect(xhr.responseHeaders).to.have.property('content-type', 'application/json; charset=utf-8');
-      expect(xhr.responseHeaders).to.have.property('etag');
+    cy.wait('@download').then(({ request, response }) => {
+      expect(request.headers).to.have.property('content-type', 'application/json; charset=utf-8');
+      expect(request.headers).to.have.property('etag');
     });
 
     // cy.wait('@download')
