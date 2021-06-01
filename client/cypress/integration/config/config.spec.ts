@@ -73,27 +73,52 @@ describe('Configuration of general settings', () => {
     configPage.exportAndCheckConfigDownloadApi();
   });
 
-  /**
-   * In Electron a save dialog is shown which prevents further test execution
-   * TODO: Wait for issue: https://github.com/cypress-io/cypress/issues/949
-   */
-  xit('should export the harvester configuration if the button is pressed', () => {
-    cy.intercept('GET', 'http://192.168.0.228/importer/rest/api/config/general').as('download');
+  it('should export the general configuration when the export configuration button is pressed', () => {
+    cy.intercept('general').as('generalConfig');
 
     configPage.visit();
     configPage.selectTab(configPage.EXPORT);
-    configPage.pressDownloadConfigButton();
+    configPage.pressDownloadConfig();
 
-    cy.wait('@download').then(({ request, response }) => {
-      expect(request.headers).to.have.property('content-type', 'application/json; charset=utf-8');
-      expect(request.headers).to.have.property('etag');
+    cy.wait('@generalConfig').its('request').then((req) => {
+      cy.request(req)
+        .then(({body, headers, status}) => {
+          expect(headers).to.have.property('etag');
+          expect(status).to.eq(304);
+        });
     });
-
-    // cy.wait('@download')
-    //   .its('response.header')
-    //   .then((header) => {
-    //     expect(header).to.have.property('content-type', 'application/json; charset=utf-8');
-    //     expect(header).to.have.property('etag');
-    //   });
   });
+
+  it('should export the mapping configuration when the export mapping button is pressed', () => {
+    cy.intercept('filecontent').as('mappingConfig');
+
+    configPage.visit();
+    configPage.selectTab(configPage.EXPORT);
+    configPage.pressDownloadMapping();
+
+    cy.wait('@mappingConfig').its('request').then((req) => {
+      cy.request(req)
+        .then(({body, headers, status}) => {
+          expect(headers).to.have.property('etag');
+          expect(status).to.eq(304);
+        });
+    });
+  });
+
+  it('should export the harvester configuration when the export harvester button is pressed', () => {
+    cy.intercept('harvester').as('harvesterConfig');
+
+    configPage.visit();
+    configPage.selectTab(configPage.EXPORT);
+    configPage.pressDownloadHarvester();
+
+    cy.wait('@harvesterConfig').its('request').then((req) => {
+      cy.request(req)
+        .then(({body, headers, status}) => {
+          expect(headers).to.have.property('etag');
+          expect(status).to.eq(304);
+        });
+    });
+  });
+
 });

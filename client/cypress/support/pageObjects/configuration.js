@@ -15,7 +15,10 @@ class ConfigurationPage {
   MAPPING = 'Mapping (Datenformate)';
   CONFIG = 'Konfiguration';
   EXPORT = 'Import/Export';
-  configExportDownloadBtn = '.form-wrapper :nth-child(1) > :nth-child(4)';
+  configExportAllBtn = '[data-test="exportAll"]';
+  configExportBtn = '[data-test="exportConfigGeneral"]'
+  mappingExportBtn = '[data-test="exportMapping"]'
+  harvesterExportBtn = '[data-test="exportHarvester"]'
 
 
   //TODO: export all button data-tests att, Mapping-Tab Btn, input fields source and dest
@@ -132,10 +135,22 @@ class ConfigurationPage {
     });
   }
 
-  //TODO fix data-test attributes
-  pressDownloadConfigButton() {
-    cy.get(this.configExportDownloadBtn).click();
+  pressDownloadAllConfigButton() {
+    cy.get(this.configExportAllBtn).click();
   }
+
+  pressDownloadConfig() {
+    cy.get(this.configExportBtn).click();
+  }
+
+  pressDownloadMapping() {
+    cy.get(this.mappingExportBtn).click();
+  }
+
+  pressDownloadHarvester() {
+    cy.get(this.harvesterExportBtn).click();
+  }
+  
 }
 
 export default ConfigurationPage;
