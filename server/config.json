@@ -361,43 +361,6 @@
     }
   },
   {
-    "index": "csw_bfg",
-    "includeTimestamp": true,
-    "priority": null,
-    "type": "BFG-CSW",
-    "maxRecords": 100,
-    "startPosition": 1,
-    "customCode": "",
-    "defaultMcloudSubgroup": [
-      "waters"
-    ],
-    "defaultDCATCategory": [
-      "ENVI"
-    ],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": false
-    },
-    "getRecordsUrl": "https://geoportal.bafg.de/soapServices/CSWStartup",
-    "eitherKeywords": [
-      "opendata"
-    ],
-    "httpMethod": "GET",
-    "description": "BFG",
-    "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>opendata</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
-    "defaultAttribution": "Bundesanstalt für Gewässerkunde",
-    "defaultAttributionLink": "https://geoportal.bafg.de/",
-    "disable": false,
-    "id": 14,
-    "cron": {
-      "active": true,
-      "pattern": "30 2 * * *"
-    }
-  },
-  {
     "index": "csw_dwd",
     "includeTimestamp": true,
     "priority": null,
@@ -1407,5 +1370,41 @@
       "active": true
     },
     "disable": true
+  },
+  {
+    "index": "csw_bfg",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "waters"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "getRecordsUrl": "https://geoportal.bafg.de/csw/api",
+    "eitherKeywords": [
+      "opendata"
+    ],
+    "httpMethod": "POST",
+    "id": 62,
+    "description": "BfG",
+    "defaultAttribution": "Bundesanstalt für Gewässerkunde",
+    "defaultAttributionLink": "https://geoportal.bafg.de/",
+    "recordFilter": "<ogc:Filter>\n    <ogc:And>\n        <ogc:PropertyIsEqualTo>\n            <ogc:PropertyName>Subject</ogc:PropertyName>\n            <ogc:Literal>opendata</ogc:Literal>\n        </ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo>\n            <ogc:PropertyName>OrganisationName</ogc:PropertyName>\n            <ogc:Literal>Bundesanstalt für Gewässerkunde</ogc:Literal>\n        </ogc:PropertyIsEqualTo>\n    </ogc:And>\n</ogc:Filter>",
+    "cron": {
+      "pattern": "30 2 * * *",
+      "active": true
+    }
   }
 ]
