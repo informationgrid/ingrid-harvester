@@ -4,8 +4,8 @@ import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
 import {TestUtils} from "./utils/test-utils";
 import {IndexDocument} from '../app/model/index.document';
-import {BfgImporter} from '../app/importer/csw/bfg.importer';
 import {CswSettings} from '../app/importer/csw/csw.settings';
+import {CswImporter} from '../app/importer/csw/csw.importer';
 
 let log = getLogger();
 configure('./log4js.json');
@@ -26,7 +26,7 @@ describe('Import CSW BFG', function () {
         const settings: CswSettings = {
             dryRun: true,
             startPosition: 1,
-            getRecordsUrl: "https://geoportal.bafg.de/soapServices/CSWStartup",
+            getRecordsUrl: "https://geoportal.bafg.de/csw/api",
             proxy: null,
             defaultMcloudSubgroup: ["waters"],
             defaultDCATCategory: ["TRAN", "TECH"],
@@ -46,7 +46,7 @@ describe('Import CSW BFG', function () {
                 </ogc:Filter>`
         };
 
-        let importer = new BfgImporter(settings);
+        let importer = new CswImporter(settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 

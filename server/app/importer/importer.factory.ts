@@ -2,7 +2,6 @@ import {Importer} from "../importer";
 import {CkanImporter} from "./ckan/ckan.importer";
 import {ExcelImporter} from "./excel/excel.importer";
 import {CswImporter} from "./csw/csw.importer";
-import {BfgImporter} from "./csw/bfg.importer";
 import {CodedeImporter} from "./csw/codede.importer";
 import {OaiImporter} from "./oai/oai.importer";
 import {CkanSettings} from './ckan/ckan.settings';
@@ -26,7 +25,6 @@ export class ImporterFactory {
                 return new CkanImporter(ckanConfig);
             case 'EXCEL': return new ExcelImporter(config);
             case 'CSW': return new CswImporter(config);
-            case 'BFG-CSW': return new BfgImporter(config);
             case 'CODEDE-CSW': return new CodedeImporter(config);
             case 'OAI': return new OaiImporter(config);
             case 'DCAT': return new DcatImporter(config);
