@@ -153,15 +153,16 @@ describe('All harvesters used in tests can import successfully', () => {
     mcloudPage.checkDownloadCount(7);
   });
 
-  it('should import and find search results of the CSW-DWD harvester', () => {
+  it('should import and find search results of the OAI-DWD harvester', () => {
+    // OAI is now used for DWD (#2096)
     const docToFind = 'extras.metadata.source.attribution:"DWD"';
     const docTitle = 'WMS-Dienst des Deutschen Wetterdienstes für Klimadaten';
 
-    harvester.activateForSearch(constants.CSW_DWD_ID);
-    harvester.importHarvesterById(constants.CSW_DWD_ID);
+    harvester.activateForSearch(constants.OAI_DWD_ID);
+    harvester.importHarvesterById(constants.OAI_DWD_ID);
     harvester.checkImportHasStarted();
-    harvester.waitForImportToFinish(constants.CSW_DWD_ID);
-    harvester.checkNoErrors(constants.CSW_DWD_ID);
+    harvester.waitForImportToFinish(constants.OAI_DWD_ID);
+    harvester.checkNoErrors(constants.OAI_DWD_ID);
 
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();

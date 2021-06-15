@@ -20,6 +20,8 @@ class Constants {
   CSW_BFG_ID = '62';
   CSW_DWD_ID = '15';
 
+  OAI_DWD_ID = '45';
+
   EXCEL_MCLOUD_ID = '1';
   EXCEL_TEST_ID = '';
 
