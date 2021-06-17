@@ -58,21 +58,15 @@ class ConfigurationPage {
   }
 
   checkMappingExists(source, bool) {
-    let mapList = this.getAllMappings();
-
     if (bool) {
-      mapList.should('contain', source);
+      cy.get(this.line).should('contain', source);
     } else {
-      mapList.should('not.contain', source);
+      cy.get(this.line).should('not.contain', source);
     }
   }
 
   deleteMapping(source) {
     cy.get(this.sourceContent).contains(source).parents().children('.mat-icon-button').click();
-  }
-
-  getAllMappings() {
-    return cy.get(this.line).invoke('text');
   }
 
   resetConfigApi() {
@@ -150,7 +144,7 @@ class ConfigurationPage {
   pressDownloadHarvester() {
     cy.get(this.harvesterExportBtn).click();
   }
-  
+
 }
 
 export default ConfigurationPage;
