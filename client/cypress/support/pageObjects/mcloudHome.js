@@ -10,13 +10,15 @@ class McloudHome {
   resultCountHeader = 'h4.result-number';
   noResultsMsg = 'Ihre Suche ergab leider keine Treffer';
 
+  // get base url without 'importer/' string
+  mCloudSearchUrl = Cypress.config().baseUrl.replace('importer/','')
 
   reload() {
     cy.reload();
   }
 
   visitMcloudHome() {
-    cy.visit('http://192.168.0.228');
+    cy.visit(this.mCloudSearchUrl);
   }
 
   visitBaseUrl() {
@@ -36,7 +38,7 @@ class McloudHome {
   }
 
   urlIsMcloudHome() {
-    cy.url().should('equal', 'http://192.168.0.228/');
+    cy.url().should('equal', this.mCloudSearchUrl);
   }
 
   searchFor(elem) {
