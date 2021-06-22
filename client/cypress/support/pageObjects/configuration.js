@@ -58,10 +58,12 @@ class ConfigurationPage {
   }
 
   checkMappingExists(source, bool) {
+    const mapList = this.getAllMappings();
+
     if (bool) {
-      cy.get(this.line).should('contain', source);
+      mapList.should('contain', source);
     } else {
-      cy.get(this.line).should('not.contain', source);
+      mapList.should('not.contain', source);
     }
   }
 
@@ -127,6 +129,10 @@ class ConfigurationPage {
       expect(response.headers).to.have.property('content-type', 'application/json; charset=utf-8');
       expect(response.headers).to.have.property('etag');
     });
+  }
+
+  getAllMappings() {
+    return cy.get(this.line).invoke('text');
   }
 
   pressDownloadAllConfigButton() {
