@@ -82,9 +82,10 @@ describe('All harvesters used in tests can import successfully', () => {
     mcloudPage.clickOnSearchResult('rnv-Haltestellen mit Linienreferenz');
 
   });
-  it('should import and find search results of the CKAN-BERLIN harvester', () => {
 
+  it('should import and find search results of the CKAN-BERLIN harvester', () => {
     const docToFind = '_id:\"094a385e-50e9-471b-947e-0ab0d216d2c8\"';
+
     harvester.activateForSearch(constants.CKAN_BERLIN_ID);
     harvester.importHarvesterById(constants.CKAN_BERLIN_ID);
     harvester.checkImportHasStarted();
