@@ -344,13 +344,13 @@
     "rules": {
       "containsDocumentsWithData": false
     },
-    "getRecordsUrl": "http://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecords$Post$XML",
+    "getRecordsUrl": "https://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecords$Post$XML",
     "eitherKeywords": [
       "opendata"
     ],
     "httpMethod": "POST",
     "description": "MDI",
-    "getRecordByIdUrl": "http://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecordByIdServant$Get",
+    "getRecordByIdUrl": "https://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecordByIdServant$Get",
     "defaultAttribution": "MDI-DE",
     "defaultAttributionLink": "https://www.mdi-de.org/",
     "disable": false,
