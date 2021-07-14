@@ -604,7 +604,7 @@
     "includeTimestamp": true,
     "priority": null,
     "type": "CKAN",
-    "maxRecords": 100,
+    "maxRecords": 50,
     "startPosition": 1,
     "customCode": "const infrastructureIDs = ['8cd4543a-8a38-45dd-8f79-5e0e8253ff08'];\nconst aviationIDs = ['5b0bedba-f10a-30f6-9cb1-6d9796f8ef70'];\nconst watersAndRoadsIDs = ['618b3cdc-1393-4a34-b8cd-1407d3d3cf08',\n\t'49e939f6-08f8-38ad-a85c-9861d2ec99ac',\n\t'77105e46-e23b-3c1e-b84a-59b77b032d89',\n\t'370adec3-d38a-30e3-a89b-cf1d7350f926',\n\t'adcdfdeb-9520-3cf4-b3d5-a134f4f97881',\n\t'0f9bfd90-b532-35d0-8d6d-51527454b9ee',\n\t'9a7015e8-704f-3d06-a3ae-6b5c11a50162'];\nconst watersIDs = ['b06b3f9e-b220-3a9e-a956-7a46077b396b',\n\t'2658b8a7-5d2b-3c4a-91c1-9c405078c6ce',\n\t'a51a65b7-097f-3946-8825-35f193964320',\n\t'c209bc9a-7950-32fb-88b2-b9c29054f458',\n\t'7d520332-65a2-3c9a-a792-090987ff81b2',\n\t'4be7d97c-7ca6-37b1-a276-4aff60c97fc0',\n\t'7f907139-b383-3dae-84bb-7d483cbc83c5',\n\t'4c586654-4659-319c-aab7-ee87629b1f01',\n\t'c4cc34d5-6e1f-385e-8ebb-bd043250bd14',\n\t'b64b796f-243d-3131-91d5-fe0c21ac48e8'];\n\nif (infrastructureIDs.indexOf(this.source.id) !== -1) {\n\tdoc.extras.subgroups = ['infrastructure'];\n}\nif (aviationIDs.indexOf(this.source.id) !== -1) {\n\tdoc.extras.subgroups = ['aviation'];\n}\nif (watersAndRoadsIDs.indexOf(this.source.id) !== -1) {\n\tdoc.extras.subgroups = ['waters', 'roads'];\n}\t\nif (watersIDs.indexOf(this.source.id) !== -1 || doc.title.indexOf('schifffahrt') !== -1) {\n\tdoc.extras.subgroups = ['waters'];\n}",
     "defaultMcloudSubgroup": [
