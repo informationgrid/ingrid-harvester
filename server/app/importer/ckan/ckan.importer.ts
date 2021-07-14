@@ -112,7 +112,7 @@ export class CkanImporter implements Importer {
                     if (!response.queued) {
                         this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
                     }
-                })
+                }).then(() => this.elastic.client.cluster.health({waitForStatus: 'yellow'}))
         }
     }
 
