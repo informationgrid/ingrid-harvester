@@ -21,7 +21,7 @@ export interface BulkResponse {
 }
 
 export class ElasticSearchUtils {
-    public static maxBulkSize = 100;
+    public static maxBulkSize = 50;
 
     private static readonly LENGTH_OF_TIMESTAMP = 18;
 
