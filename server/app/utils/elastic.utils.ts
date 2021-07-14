@@ -342,7 +342,7 @@ export class ElasticSearchUtils {
                         });
                     })
                     .catch(err => {
-                        this.handleError('Error occurred during bulk index of #items: ' + data.length / 2, err);
+                        this.handleError('Error occurred during bulkWithIndexName index of #items: ' + data.length / 2, err);
                         if (closeAfterBulk) {
                             this.client.close();
                         }
