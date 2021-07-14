@@ -521,6 +521,9 @@ export class CkanMapper extends GenericMapper {
         if(spatial.coordinates) {
             spatial.coordinates = this.checkAndFixSpatialCoordinates(spatial.coordinates);
         }
+        if(spatial.coordinates.length == 0) {
+            spatial = null;
+        }
         return spatial;
     }
 
@@ -528,6 +531,9 @@ export class CkanMapper extends GenericMapper {
         if(coordinates instanceof Array && coordinates[0] instanceof Array && coordinates[0][0] instanceof Array) {
             for (let i = 0; i < coordinates.length; i++) {
                 coordinates[i] = this.checkAndFixSpatialCoordinates(coordinates[i]);
+                if(coordinates[i].length == 0){
+                    coordinates.splice(i, 1)
+                }
             }
         }
         else if (coordinates instanceof Array) {
@@ -535,6 +541,9 @@ export class CkanMapper extends GenericMapper {
                 if((coordinates[i-1][0] === coordinates[i][0]) && (coordinates[i-1][1] === coordinates[i][1])){
                     coordinates.splice(i--, 1);
                 }
+            }
+            if(coordinates.length < 4){
+                coordinates = [];
             }
         }
         return coordinates;
