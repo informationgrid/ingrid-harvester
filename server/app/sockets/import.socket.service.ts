@@ -75,9 +75,9 @@ export class ImportSocketService {
                         if ((importedLastRun - (importedLastRun*maxDiff/100) >= imported) || (imported === 0)) {
                             let subject: string;
                             if (imported === 0)
-                                subject = `[mCloud] Importer "${configData.description}" ohne Ergebnisse!`;
+                                subject = `Importer "${configData.description}" ohne Ergebnisse!`;
                             else
-                                subject = `[mCloud] Importer "${configData.description}" mit weniger Ergebnissen!`;
+                                subject = `Importer "${configData.description}" mit weniger Ergebnissen!`;
                             let text = `Current Run:\n`
                                 + importer.getSummary().toString();
                             if (summaryLastRun) {
@@ -93,7 +93,7 @@ export class ImportSocketService {
                 }, error => {
                     console.error('There was an error:', error);
 
-                    MailServer.getInstance().send(`[mCloud] Importer ${configData.description} failed`, error.toString());
+                    MailServer.getInstance().send(`Importer ${configData.description} failed`, error.toString());
                 });
             } catch (e) {
                 console.error('An error: ', e);

@@ -76,7 +76,8 @@ export class ConfigGeneralComponent implements OnInit {
           }
         },
         from: "",
-        to: ""
+        to: "",
+        subjectTag: ""
       }
     }
 
@@ -108,7 +109,8 @@ export class ConfigGeneralComponent implements OnInit {
           })
         }),
         from: [settings.mail.from],
-        to: [settings.mail.to]
+        to: [settings.mail.to],
+        subjectTag: [settings.mail.subjectTag]
       }),
       indexBackup: this.formBuilder.group({
         active: [settings.indexBackup.active],

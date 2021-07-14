@@ -187,6 +187,10 @@
         <mat-form-field [formGroup]="configForm.get('mail')">
           <input matInput placeholder="Empfänger" formControlName="to" required>
         </mat-form-field>
+        <br/>
+        <mat-form-field [formGroup]="configForm.get('mail')">
+          <input matInput placeholder="Betreff-Tag" formControlName="subjectTag">
+        </mat-form-field>
         <br/><br/>
         <mat-form-field style="width: 250px">
           <mat-label matPrefix>Benachrichtigungs-Schwelle:</mat-label>

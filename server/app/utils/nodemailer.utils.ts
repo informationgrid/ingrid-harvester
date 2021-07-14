@@ -31,10 +31,12 @@ export class MailServer {
     ) {
         let generalSettings = ConfigService.getGeneralSettings();
         if (generalSettings.mail && generalSettings.mail.enabled && generalSettings.mail.from && generalSettings.mail.to) {
+            let tag = '[mcloud] '
+            if(generalSettings.mail.subjectTag) tag = '['+generalSettings.mail.subjectTag+'] ';
             let mail: Mail = {
                 from: generalSettings.mail.from,
                 to: generalSettings.mail.to,
-                subject: subject,
+                subject: tag + subject,
                 text: text
             }
             this.sendMail(mail).catch(console.error);

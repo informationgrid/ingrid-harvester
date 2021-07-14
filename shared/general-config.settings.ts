@@ -13,7 +13,8 @@ export type GeneralSettings = {
     	enabled?: boolean,
         mailServer?: MailServerConfiguration,
 		from?: string,
-    	to?: string
+    	to?: string,
+        subjectTag?: string
     },
     indexBackup?: {
         active: boolean,

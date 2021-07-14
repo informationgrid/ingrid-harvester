@@ -26,7 +26,8 @@
       }
     },
     "from": "test@example.com",
-    "to": "test@example.com"
+    "to": "test@example.com",
+    "subjectTag": "mcloud"
   },
   "indexBackup": {
     "active": true,
