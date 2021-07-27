@@ -563,6 +563,33 @@ export class CkanMapper extends GenericMapper {
         return undefined;
     }
 
+    _getParent(): string {
+        let extras = this.source.extras;
+        if(this.source.relationships_as_subject && this.source.relationships_as_subject.length > 0 && this.source.relationships_as_subject[0].type == "child_of"){
+            if(this.source.relationships_as_subject[0].__extras.object_package_id)
+                return this.source.relationships_as_subject[0].__extras.object_package_id;
+        }
+        else {
+            let versionOf = this.getExtra('is_version_of');
+            if(versionOf){
+                return versionOf;
+            }
+        }
+        return super._getParent();
+    }
+
+    private getExtra(key){
+        let extras = this.source.extras;
+        if(extras){
+            for (let i = 0; i < extras.length; i++) {
+                let extra = extras[i];
+                if(extra.key === 'is_version_of') {
+                    return extra.value;
+                }
+            }
+        }
+        return null;
+    }
 
     static createRequestConfig(settings: CkanSettings): OptionsWithUri {
 

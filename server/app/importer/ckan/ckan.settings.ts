@@ -13,5 +13,6 @@ export type CkanSettings = {
     requestType?: 'ListWithResources' | 'Search',
     additionalSearchFilter?: string,
     markdownAsDescription?: boolean,
+    groupChilds?: boolean,
     defaultLicense?: License;
 } & ElasticSettings & ImporterSettings;

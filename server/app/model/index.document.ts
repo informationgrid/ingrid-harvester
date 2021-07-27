@@ -2,7 +2,7 @@ import {GenericMapper} from "./generic.mapper";
 
 export class IndexDocument {
 
-    static async create(mapper: GenericMapper) {
+    static async create(mapper: GenericMapper) : Promise<any> {
         let result = await {
             priority: mapper.getPriority(),
             access_rights: mapper.getAccessRights(),
@@ -34,7 +34,8 @@ export class IndexDocument {
                 subsection: mapper.getSubSections(),
                 spatial: mapper.getSpatial(),
                 spatial_text: mapper.getSpatialText(),
-                temporal: mapper.getTemporal()
+                temporal: mapper.getTemporal(),
+                parent: mapper.getParent()
             },
             issued: mapper.getIssued(),
             keywords: mapper.getKeywords(),

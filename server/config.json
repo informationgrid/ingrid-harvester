@@ -633,6 +633,7 @@
     "providerField": "organization",
     "requestType": "Search",
     "markdownAsDescription": false,
+    "groupChilds": true,
     "defaultLicense": null,
     "id": 30,
     "description": "OpenData Schleswig-Holstein",

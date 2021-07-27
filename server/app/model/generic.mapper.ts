@@ -211,6 +211,14 @@ export abstract class GenericMapper {
         return this._getTemporal();
     }
 
+    _getParent(): string{
+        return null;
+    }
+
+    getParent(): string{
+        return this._getParent();
+    }
+
     abstract _getCitation(): string;
 
     getCitation(): string{

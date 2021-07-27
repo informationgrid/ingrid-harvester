@@ -460,6 +460,7 @@ export class ElasticSearchUtils {
 
                 if (result.responses) {
                     for (let j = 0; j < result.responses.length; j++) {
+                        let response_id
                         let response = result.responses[j];
                         let issued;
                         let modified;
@@ -471,6 +472,7 @@ export class ElasticSearchUtils {
                         }
                         try {
                             let firstHit = response.hits.hits[0];
+                            response_id = firstHit._source.extras.generated_id
                             issued = firstHit._source.extras.metadata.issued;
                             modified = firstHit._source.extras.metadata.modified;
                             dataset_modified = firstHit._source.modified;
@@ -479,6 +481,7 @@ export class ElasticSearchUtils {
                         }
 
                         dates.push({
+                            id: response_id,
                             issued: issued,
                             modified: modified,
                             dataset_modified: dataset_modified

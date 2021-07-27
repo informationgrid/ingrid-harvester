@@ -25,7 +25,11 @@
         </mat-form-field>
       </div>
 
-      <mat-checkbox formControlName="markdownAsDescription"> Beschreibung als Markdown</mat-checkbox>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between baseline">
+        <mat-checkbox formControlName="markdownAsDescription"> Beschreibung als Markdown</mat-checkbox>
+
+        <mat-checkbox formControlName="groupChilds" fxFlex> Datensatzreihen zusammenfassen</mat-checkbox>
+      </div>
 
       <h4>Bereitgestellt durch</h4>
       <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">

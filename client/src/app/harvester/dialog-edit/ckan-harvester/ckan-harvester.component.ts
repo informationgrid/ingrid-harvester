@@ -26,6 +26,8 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
       })
     );
 
+    this.form.addControl('groupChilds', new FormControl(this.getModelField('groupChilds', false)));
+
     this.form.addControl('requestType',
       new FormControl(this.getModelField('requestType', 'ListWithResources')));
     this.form.addControl('additionalSearchFilter',
