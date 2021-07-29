@@ -24,6 +24,10 @@ class HarvesterPage {
     cy.visit('harvester');
   }
 
+  checkHarvesterPage()  {
+    cy.url().should('include', '/harvester');
+  }
+
   addNewHarvester() {
     cy.get(this.addHarvesterBtn).click();
   }
@@ -126,7 +130,7 @@ class HarvesterPage {
 
   checkImportHasStarted() {
     cy.get('.mat-simple-snackbar', {timeout: 60000}).should('contain', 'Import gestartet');
-    cy.get('app-importer-detail', {timeout: 8000}).should('contain', ' Import läuft ');
+    cy.get('app-importer-detail', {timeout: 15000}).should('contain', ' Import läuft ');
   }
 
   checkVisibleFieldValue(field, value) {
