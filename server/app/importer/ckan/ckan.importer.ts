@@ -273,7 +273,7 @@ export class CkanImporter implements Importer {
                     }
                     doc.extras.child_ids = child_ids;
                     doc.extras.generated_id = uuid;
-                    doc.extras.metadata.source.portal_link = this.settings.defaultAttributionLink;
+                    //doc.extras.metadata.source.portal_link = this.settings.defaultAttributionLink;
 
                     let stored = storedData.find(element => element.id === uuid);
                     if (stored && stored.issued) {
