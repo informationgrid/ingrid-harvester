@@ -89,7 +89,12 @@ export class SparqlImporter implements Importer {
         } else {
             try {
                 await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
-                await this.harvest();
+                await this.harvest().catch(err => {
+                    this.summary.appErrors.push(err.message ? err.message : err);
+                    log.error('Error during SPARQL import', err);
+                    observer.next(ImportResult.complete(this.summary, 'Error happened'));
+                    observer.complete();
+                });
 
                 if(this.numIndexDocs > 0) {
                     await this.elastic.sendBulkData(false);
@@ -138,28 +143,32 @@ export class SparqlImporter implements Importer {
             }
 
             const client = new SimpleClient({endpointUrl, fetch});
-            await client.query.select(this.settings.query).then(result => {
+            return new Promise((resolve, reject) => client.query.select(this.settings.query).then(result => {
                 let hadError = result.status >= 400;
 
                 result.body.on('data', data => {
+                    log.debug("Receive Data from "+endpointUrl)
                     response += data.toString();
                 });
 
                 result.body.on('error', err => {
                     hadError = true;
                     this.summary.appErrors.push(err.toString());
-                    log.error(err)
+                    log.error(err);
                 })
 
                 result.body.on('finish', () => {
+                    log.debug("Finished SPARQL Communication.")
                     if(!hadError) {
                         try {
                             let json = JSON.parse(response);
                             let harvestTime = new Date(Date.now());
-                            this.extractRecords(json, harvestTime)
+                            this.extractRecords(json, harvestTime).then(() =>
+                                resolve());
                         } catch (e) {
                             this.summary.appErrors.push(e.toString());
-                            log.error(e)
+                            log.error(e);
+                            reject(e);
                         }
                     }
                 });
@@ -168,9 +177,10 @@ export class SparqlImporter implements Importer {
                         let message = result.statusText + ' - '+response;
                         this.summary.appErrors.push(message);
                         log.error(message);
+                        reject();
                     }
                 });
-            });
+            }));
 
     }
 
@@ -219,7 +229,6 @@ export class SparqlImporter implements Importer {
             });
 
             if (!mapper.shouldBeSkipped()) {
-
                 if (doc.extras.metadata.isValid && doc.distribution.length > 0) {
                     this.summary.ok++;
                 }
