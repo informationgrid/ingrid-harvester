@@ -218,7 +218,7 @@ class HarvesterPage {
     const customParseFormat = require('dayjs/plugin/customParseFormat');
     dayjs.extend(customParseFormat);
 
-    cy.get('#harvester-' + id + ' ' + this.lastExecution, {timeout: 45000})
+    cy.get('#harvester-' + id + ' ' + this.lastExecution, {timeout: 60000})
       // .scrollIntoView()
       .should('contain', dayjs().format('DD.MM.YY, HH:mm'));
   }
