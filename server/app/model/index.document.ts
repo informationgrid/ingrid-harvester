@@ -5,6 +5,7 @@ export class IndexDocument {
     static async create(mapper: GenericMapper) : Promise<any> {
         let result = await {
             priority: mapper.getPriority(),
+            completion: mapper.getKeywords(),
             access_rights: mapper.getAccessRights(),
             accrual_periodicity: mapper.getAccrualPeriodicity(),
             contact_point: await mapper.getContactPoint(),

@@ -287,7 +287,7 @@ export abstract class GenericMapper {
     abstract _getKeywords(): string[];
 
     getKeywords(): string[]{
-        return this._getKeywords();
+        return this._getKeywords().map(keyword => keyword.trim());
     }
 
     abstract _getAccrualPeriodicity(): string;

@@ -3,6 +3,11 @@ export const elasticsearchMapping = {
         'priority': {
             'type': 'short'
         },
+        'completion': {
+            'type': 'completion',
+            'analyzer': 'german',
+            'search_analyzer': 'german'
+        },
         'title': {
             'type': 'text',
             'store': true,
