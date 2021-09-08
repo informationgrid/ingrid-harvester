@@ -88,7 +88,9 @@ export class UrlCheckService {
 
         let duration = now() - start;
         log.info('UrlCheck: ' + (duration / 1000) + 's');
-        this.saveResult(result, new Date(start), duration);
+        await this.saveResult(result, new Date(start), duration);
+
+        this.cleanIndex();
     }
 
     private async getStatus(urlAggregation: any) {
@@ -376,5 +378,10 @@ export class UrlCheckService {
                 log.error('Error during bulk indexing of #items: ' + data.length / 2, e);
             }
         });
+    }
+
+    private async cleanIndex() {
+        log.info('Cleanup UrlCheckHistory')
+        await this.elasticUtils.cleanUrlCheckHistory(40)
     }
 }

@@ -562,6 +562,21 @@ export class ElasticSearchUtils {
         return result.hits.hits.map(entry => entry._source);
     }
 
+    async cleanUrlCheckHistory(days: number): Promise<any> {
+        let result = await this.client.deleteByQuery({
+            index: ['url_check_history'],
+            body: {
+                "query": {
+                    "range": {
+                        "timestamp": {
+                            "lt":"now-"+days+"d/d"
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     async getFacetsByAttribution(): Promise<any> {
         let result = await this.client.search({
             index: this.indexName,
