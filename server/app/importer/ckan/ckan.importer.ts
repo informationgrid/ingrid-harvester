@@ -265,7 +265,12 @@ export class CkanImporter implements Importer {
                     if(doc.extras.temporal && doc.extras.temporal.length > 0) {
                         for (let j = 0; j < doc.distribution.length; j++) {
                             let distribution = doc.distribution[j];
-                            distribution.temporal = doc.extras.temporal;
+                            if (doc.extras.temporal && doc.extras.temporal.length > 0) {
+                                distribution.temporal = [{
+                                    "gte": doc.extras.temporal[0].gte,
+                                    "lte": doc.extras.temporal[0].lte
+                                }];
+                            }
                         }
                     }
                     for (let i = 1; i < docs.length; i++) {
@@ -274,7 +279,12 @@ export class CkanImporter implements Importer {
                         if(newDoc.extras.temporal && newDoc.extras.temporal.length > 0) {
                             for (let j = 0; j < newDoc.distribution.length; j++) {
                                 let distribution = newDoc.distribution[j];
-                                distribution.temporal = newDoc.extras.temporal;
+                                if (newDoc.extras.temporal && newDoc.extras.temporal.length > 0) {
+                                    distribution.temporal = [{
+                                        "gte": newDoc.extras.temporal[0].gte,
+                                        "lte": newDoc.extras.temporal[0].lte
+                                    }];
+                                }
                             }
                         }
                         if (newDoc.modified > doc.modified) {
