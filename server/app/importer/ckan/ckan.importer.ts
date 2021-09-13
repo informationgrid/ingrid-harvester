@@ -239,9 +239,21 @@ export class CkanImporter implements Importer {
                     let uuid = uuidv5(key, UUID_NAMESPACE);
                     log.info(`Group ${docs.length} records by parent: ${key} -> ${uuid}`);
                     let child_ids = [doc.extras.generated_id];
+                    if(doc.extras.temporal && doc.extras.temporal.length > 0) {
+                        for (let j = 0; j < doc.distribution.length; j++) {
+                            let distribution = doc.distribution[j];
+                            distribution.temporal = doc.extras.temporal;
+                        }
+                    }
                     for (let i = 1; i < docs.length; i++) {
                         let newDoc = docs[i];
                         child_ids.push(newDoc.extras.generated_id);
+                        if(newDoc.extras.temporal && newDoc.extras.temporal.length > 0) {
+                            for (let j = 0; j < newDoc.distribution.length; j++) {
+                                let distribution = newDoc.distribution[j];
+                                distribution.temporal = newDoc.extras.temporal;
+                            }
+                        }
                         if (newDoc.modified > doc.modified) {
                             if (doc.issued < newDoc.issued) {
                                 newDoc.issued = doc.issued;

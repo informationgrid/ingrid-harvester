@@ -175,6 +175,9 @@ export const elasticsearchMapping = {
                 },
                 'byteSize': {
                     'type': 'long'
+                },
+                'temporal': {
+                    "type": "date_range"
                 }
             }
         },
