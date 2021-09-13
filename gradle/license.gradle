@@ -10,13 +10,7 @@ license {
     }
     tasks {
         directory {
-            files = project.files('server/app/')
-        }
-        directory {
-            files = project.files('server/test/')
-        }
-        directory {
-            files = project.files('client/src/')
+            files = project.files('server/app/', 'server/test/', 'client/src/','shared/')
         }
     }
 }
