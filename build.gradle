@@ -5,7 +5,10 @@
 plugins {
     id "nebula.rpm" version "8.1.0"
     id "fr.brouillard.oss.gradle.jgitver" version "0.9.1"
+    id 'com.github.joschi.licenser' version '0.6.0'
 }
+
+apply from: "${rootDir}/gradle/license.gradle"
 
 repositories {
     jcenter()
@@ -17,6 +20,7 @@ description = 'InGrid mCLOUD Importer'
 jgitver {
     nonQualifierBranches = 'master,develop'
 }
+
 
 task buildRpm(type: Rpm) {
     packageName 'mcloud-importer'
