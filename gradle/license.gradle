@@ -3,16 +3,20 @@ license {
     ext {
         year = 2021
     }
-    include("**/*.ts", "**/*.html")
+    include("**/*.ts", "**/*.html", "**/*.scss")
     style {
         ts = 'BLOCK_COMMENT'
+        scss = 'BLOCK_COMMENT'
     }
     tasks {
         directory {
             files = project.files('server/app/')
         }
         directory {
-            files = project.files('client/src/app/')
+            files = project.files('server/test/')
+        }
+        directory {
+            files = project.files('client/src/')
         }
     }
 }
