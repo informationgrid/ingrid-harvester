@@ -11,7 +11,7 @@
  *  You may not use this work except in compliance with the Licence.
  *  You may obtain a copy of the Licence at:
  *
- *  http://ec.europa.eu/idabc/eupl5
+ *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the Licence is distributed on an "AS IS" basis,
