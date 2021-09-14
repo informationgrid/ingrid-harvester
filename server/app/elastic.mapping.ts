@@ -28,8 +28,8 @@ export const elasticsearchMapping = {
         },
         'completion': {
             'type': 'completion',
-            'analyzer': 'german',
-            'search_analyzer': 'german'
+            'analyzer': 'german_simple',
+            'search_analyzer': 'german_simple'
         },
         'title': {
             'type': 'text',
