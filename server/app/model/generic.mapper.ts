@@ -322,7 +322,7 @@ export abstract class GenericMapper {
 
         let keywords = this.getKeywords()
         if(keywords != undefined)
-            parts.concat(keywords.filter(s => s.length >= 3));
+            parts = parts.concat(keywords.filter(s => s.length >= 3));
 
         return parts;
     }
