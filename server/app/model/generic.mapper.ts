@@ -319,7 +319,11 @@ export abstract class GenericMapper {
     getAutoCompletion(): string[]{
         let title = this.getTitle();
         let parts = title.split(/[^a-zA-Z0-9\u00E4\u00F6\u00FC\u00C4\u00D6\u00DC\u00df]/).filter(s => s.length >= 3).filter(s => s.match(/[a-zA-Z]/));
-        parts.concat(this.getKeywords().filter(s => s.length >= 3));
+
+        let keywords = this.getKeywords()
+        if(keywords != undefined)
+            parts.concat(keywords.filter(s => s.length >= 3));
+
         return parts;
     }
 
