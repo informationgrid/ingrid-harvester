@@ -319,6 +319,8 @@ export class CkanImporter implements Importer {
                     doc.extras.child_ids = child_ids;
                     doc.extras.generated_id = uuid;
                     //doc.extras.metadata.source.portal_link = this.settings.defaultAttributionLink;
+                    doc.title += " (aggregiert)"
+                    doc.description  = "Dieser Metadatensatz wurde von der <a href=\"https://www.mcloud.de\">mCLOUD</a> generiert und fasst alle einzelnen Metadatensätze dieser Datenserie zusammen.\r\n\r\n" + doc.description
 
                     let stored = storedData.find(element => element.id === uuid);
                     if (stored && stored.issued) {
