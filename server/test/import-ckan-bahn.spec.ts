@@ -45,7 +45,7 @@ describe('Import CKAN Bahn', function () {
 
     let indexDocumentCreateSpy;
 
-    it('correct import of CKAN data', function (done) {
+    it.skip('correct import of CKAN data', function (done) {
 
         log.info('Start test ...');
 
@@ -124,6 +124,6 @@ describe('Import CKAN Bahn', function () {
         chai.expect(result.distribution[0].byteSize).to.eq(10325);
     });
 
-    after(() => indexDocumentCreateSpy.restore());
+    after(() => indexDocumentCreateSpy?indexDocumentCreateSpy.restore():null);
 
 });
