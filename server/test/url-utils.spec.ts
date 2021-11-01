@@ -55,7 +55,7 @@ describe('validateUrl()', function () {
     });
 
     it('should prepend http:// if https:// not available but http:// link is valid', function () {
-        let input = 'mcloud-qs.wemove.com';
+        let input = '134.245.19.83'; //Scharbeutz-Data-Server
         let config = getRequestConfigFor(input);
         return UrlUtils.urlWithProtocolFor(config).then(result => {
             expect(result).to.equal(`http://${input}`);
