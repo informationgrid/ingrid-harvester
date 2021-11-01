@@ -56,12 +56,9 @@ describe('Import CSW BFG', function () {
             defaultAttribution: "Bundesanstalt für Gewässerkunde",
             defaultAttributionLink: "https://www.bafg.de/",
             includeTimestamp: true,
+            httpMethod: "POST",
             recordFilter: `
                 <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-                    <ogc:PropertyIsEqualTo>
-                        <ogc:PropertyName>subject</ogc:PropertyName>
-                        <ogc:Literal>opendata</ogc:Literal>
-                    </ogc:PropertyIsEqualTo>
                     <ogc:PropertyIsEqualTo>
                         <ogc:PropertyName>identifier</ogc:PropertyName>
                         <ogc:Literal>82f97ad0-198b-477e-a440-82fa781624eb</ogc:Literal>
