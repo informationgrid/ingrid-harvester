@@ -1373,6 +1373,45 @@
     "disable": true
   },
   {
+    "index": "ckan_vag",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "CKAN",
+    "maxRecords": 100,
+    "startPosition": 0,
+    "customCode": "const roadsOnlyIDs = [' 926ee389-558c-488b-879e-7914d4c072d9', '6773a9ab-22c7-4970-b907-2c0bcd2635ba'];\nconst roadsAdditionalIDs = ['08eb49f9-0f6c-4b76-96fd-5f8e3a0ac593', 'a2347b5d-8214-4fa4-a68a-778ec1dc3a5d'];\n\nif (roadsOnlyIDs .indexOf(this.source.id) !== -1) {\n  doc.extras.subgroups = ['roads'];\n}\nelse if (roadsAdditionalIDs .indexOf(this.source.id) !== -1) {\n  doc.extras.subgroups = ['roads', 'railway'];\n}",
+    "defaultMcloudSubgroup": [
+      "railway"
+    ],
+    "defaultDCATCategory": [
+      "TRAN"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "ckanBaseUrl": "https://opendata.vag.de",
+    "filterTags": [],
+    "filterGroups": [],
+    "providerPrefix": "",
+    "providerField": "organization",
+    "requestType": "Search",
+    "markdownAsDescription": false,
+    "defaultLicense": null,
+    "id": 61,
+    "description": "VAG",
+    "defaultAttribution": "VAG",
+    "defaultAttributionLink": "https://opendata.vag.de",
+    "additionalSearchFilter": "",
+    "cron": {
+      "pattern": "08 03 * * *",
+      "active": true
+    }
+  },
+  {
     "index": "csw_bfg",
     "includeTimestamp": true,
     "priority": null,
