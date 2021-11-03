@@ -1300,7 +1300,7 @@
       "active": true,
       "pattern": "56 02 * * *"
     },
-    "disable": true
+    "disable": false
   },
   {
     "index": "csw_mundialis",
@@ -1335,7 +1335,7 @@
       "pattern": "58 02 * * *",
       "active": true
     },
-    "disable": true
+    "disable": false
   },
   {
     "index": "csw_fair",
