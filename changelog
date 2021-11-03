@@ -1,3 +1,14 @@
+* Wed Nov 03 2021 Jan Bücher <jan.buecher@wemove.com> - 2.6.0
+- Add: Aggregate Dataseries (#3195)
+- Add: Autocompletion Data in Index (#1259)
+- Add: Configure Subject-Tag for Status-Mail (#3372)
+- Add: EUPL-Header (#2188)
+- Add: Cleanup UrlCheckHistory (#3454)
+- Fix: New Endpoint for BfG-Harvester (#3230)
+- Fix: Change Filter for Daten Berlin (#3408)
+- Fix: Keep old SPARQL-Index if no results (#3435)
+- Fix: ES Timeouts (#3405)
+
 * Wed Apr 28 2021 Jan Bücher <jan.buecher@wemove.com> - 2.5.0
 - New Harvester: Mundialis/Incora (deactivated) (#3141)
 - New Harvester: Mundialis/FAIR (deactivated) (#3287)
