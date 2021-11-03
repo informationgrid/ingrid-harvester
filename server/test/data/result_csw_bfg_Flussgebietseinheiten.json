@@ -4,7 +4,7 @@
   "extras": {
     "metadata": {
       "source": {
-        "raw_data_source": "https://geoportal.bafg.de/soapServices/CSWStartup?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=82f97ad0-198b-477e-a440-82fa781624eb",
+        "raw_data_source": "https://geoportal.bafg.de/csw/api?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=82f97ad0-198b-477e-a440-82fa781624eb",
         "portal_link": "https://www.bafg.de/",
         "attribution": "Bundesanstalt für Gewässerkunde"
       }

@@ -1,3 +1,26 @@
+/*
+ *  ==================================================
+ *  mcloud-importer
+ *  ==================================================
+ *  Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+ *  ==================================================
+ *  Licensed under the EUPL, Version 1.2 or – as soon they will be
+ *  approved by the European Commission - subsequent versions of the
+ *  EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *  You may obtain a copy of the Licence at:
+ *
+ *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ * ==================================================
+ */
+
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
 import {elasticsearchMapping} from '../../elastic.mapping';
 import {elasticsearchSettings} from '../../elastic.settings';
@@ -89,11 +112,29 @@ export class SparqlImporter implements Importer {
         } else {
             try {
                 await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
-                await this.harvest();
-                await this.elastic.sendBulkData(false);
-                await this.elastic.finishIndex();
-                observer.next(ImportResult.complete(this.summary));
-                observer.complete();
+                await this.harvest().catch(err => {
+                    this.summary.appErrors.push(err.message ? err.message : err);
+                    log.error('Error during SPARQL import', err);
+                    observer.next(ImportResult.complete(this.summary, 'Error happened'));
+                    observer.complete();
+                });
+
+                if(this.numIndexDocs > 0) {
+                    await this.elastic.sendBulkData(false);
+                    await this.elastic.finishIndex();
+                    observer.next(ImportResult.complete(this.summary));
+                    observer.complete();
+                } else {
+                    if(this.summary.appErrors.length === 0) {
+                        this.summary.appErrors.push('No Results');
+                    }
+                    log.error('No results during SPARQL import - Keep old index');
+                    observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
+                    observer.complete();
+
+                    // clean up index
+                    this.elastic.deleteIndex(this.elastic.indexName);
+                }
 
             } catch (err) {
                 this.summary.appErrors.push(err.message ? err.message : err);
@@ -125,28 +166,32 @@ export class SparqlImporter implements Importer {
             }
 
             const client = new SimpleClient({endpointUrl, fetch});
-            await client.query.select(this.settings.query).then(result => {
+            return new Promise((resolve, reject) => client.query.select(this.settings.query).then(result => {
                 let hadError = result.status >= 400;
 
                 result.body.on('data', data => {
+                    log.debug("Receive Data from "+endpointUrl)
                     response += data.toString();
                 });
 
                 result.body.on('error', err => {
                     hadError = true;
                     this.summary.appErrors.push(err.toString());
-                    log.error(err)
+                    log.error(err);
                 })
 
                 result.body.on('finish', () => {
+                    log.debug("Finished SPARQL Communication.")
                     if(!hadError) {
                         try {
                             let json = JSON.parse(response);
                             let harvestTime = new Date(Date.now());
-                            this.extractRecords(json, harvestTime)
+                            this.extractRecords(json, harvestTime).then(() =>
+                                resolve());
                         } catch (e) {
                             this.summary.appErrors.push(e.toString());
-                            log.error(e)
+                            log.error(e);
+                            reject(e);
                         }
                     }
                 });
@@ -155,9 +200,10 @@ export class SparqlImporter implements Importer {
                         let message = result.statusText + ' - '+response;
                         this.summary.appErrors.push(message);
                         log.error(message);
+                        reject();
                     }
                 });
-            });
+            }));
 
     }
 
@@ -206,7 +252,6 @@ export class SparqlImporter implements Importer {
             });
 
             if (!mapper.shouldBeSkipped()) {
-
                 if (doc.extras.metadata.isValid && doc.distribution.length > 0) {
                     this.summary.ok++;
                 }

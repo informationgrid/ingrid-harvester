@@ -1,10 +1,34 @@
+/*
+ *  ==================================================
+ *  mcloud-importer
+ *  ==================================================
+ *  Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+ *  ==================================================
+ *  Licensed under the EUPL, Version 1.2 or – as soon they will be
+ *  approved by the European Commission - subsequent versions of the
+ *  EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *  You may obtain a copy of the Licence at:
+ *
+ *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ * ==================================================
+ */
+
 import {GenericMapper} from "./generic.mapper";
 
 export class IndexDocument {
 
-    static async create(mapper: GenericMapper) {
+    static async create(mapper: GenericMapper) : Promise<any> {
         let result = await {
             priority: mapper.getPriority(),
+            completion: mapper.getAutoCompletion(),
             access_rights: mapper.getAccessRights(),
             accrual_periodicity: mapper.getAccrualPeriodicity(),
             contact_point: await mapper.getContactPoint(),
@@ -34,7 +58,8 @@ export class IndexDocument {
                 subsection: mapper.getSubSections(),
                 spatial: mapper.getSpatial(),
                 spatial_text: mapper.getSpatialText(),
-                temporal: mapper.getTemporal()
+                temporal: mapper.getTemporal(),
+                parent: mapper.getParent()
             },
             issued: mapper.getIssued(),
             keywords: mapper.getKeywords(),

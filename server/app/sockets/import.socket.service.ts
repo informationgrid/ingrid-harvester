@@ -1,3 +1,26 @@
+/*
+ *  ==================================================
+ *  mcloud-importer
+ *  ==================================================
+ *  Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+ *  ==================================================
+ *  Licensed under the EUPL, Version 1.2 or – as soon they will be
+ *  approved by the European Commission - subsequent versions of the
+ *  EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *  You may obtain a copy of the Licence at:
+ *
+ *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ * ==================================================
+ */
+
 import {Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession} from '@tsed/socketio';
 import * as SocketIO from 'socket.io';
 import {ConfigService} from '../services/config/ConfigService';
@@ -75,9 +98,9 @@ export class ImportSocketService {
                         if ((importedLastRun - (importedLastRun*maxDiff/100) >= imported) || (imported === 0)) {
                             let subject: string;
                             if (imported === 0)
-                                subject = `[mCloud] Importer "${configData.description}" ohne Ergebnisse!`;
+                                subject = `Importer "${configData.description}" ohne Ergebnisse!`;
                             else
-                                subject = `[mCloud] Importer "${configData.description}" mit weniger Ergebnissen!`;
+                                subject = `Importer "${configData.description}" mit weniger Ergebnissen!`;
                             let text = `Current Run:\n`
                                 + importer.getSummary().toString();
                             if (summaryLastRun) {
@@ -93,7 +116,7 @@ export class ImportSocketService {
                 }, error => {
                     console.error('There was an error:', error);
 
-                    MailServer.getInstance().send(`[mCloud] Importer ${configData.description} failed`, error.toString());
+                    MailServer.getInstance().send(`Importer ${configData.description} failed`, error.toString());
                 });
             } catch (e) {
                 console.error('An error: ', e);

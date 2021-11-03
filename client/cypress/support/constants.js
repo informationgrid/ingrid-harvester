@@ -17,6 +17,10 @@ class Constants {
   CSW_GEOSERVICE_ID = '5';
   CSW_TEST_ID = '';
   CSW_WSV_ID = '12';
+  CSW_BFG_ID = '62';
+  CSW_DWD_ID = '15';
+
+  OAI_DWD_ID = '45';
 
   EXCEL_MCLOUD_ID = '1';
   EXCEL_TEST_ID = '';

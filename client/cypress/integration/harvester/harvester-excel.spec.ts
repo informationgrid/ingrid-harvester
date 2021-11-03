@@ -85,6 +85,7 @@ describe('Excel-Harvester operations', () => {
 
     form.saveHarvesterConfig();
     cy.reload();
+    harvester.checkHarvesterPage();
 
     harvester.openFormById(constants.SEED_EXCEL_ID);
     form.checkFields({

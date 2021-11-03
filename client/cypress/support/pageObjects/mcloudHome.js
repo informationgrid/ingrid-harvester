@@ -10,13 +10,15 @@ class McloudHome {
   resultCountHeader = 'h4.result-number';
   noResultsMsg = 'Ihre Suche ergab leider keine Treffer';
 
+  // get base url without 'importer/' string
+  mCloudSearchUrl = Cypress.config().baseUrl.replace('importer/','')
 
   reload() {
     cy.reload();
   }
 
   visitMcloudHome() {
-    cy.visit('http://192.168.0.228');
+    cy.visit(this.mCloudSearchUrl);
   }
 
   visitBaseUrl() {
@@ -36,7 +38,7 @@ class McloudHome {
   }
 
   urlIsMcloudHome() {
-    cy.url().should('equal', 'http://192.168.0.228/');
+    cy.url().should('equal', this.mCloudSearchUrl);
   }
 
   searchFor(elem) {
@@ -71,6 +73,34 @@ class McloudHome {
     cy.get(this.resultCountHeader).invoke('text')
       .should('equal', this.noResultsMsg);
   }
+
+  clickOnSearchResult(title) {
+    return cy.get("h4.link-teaser-data").contains(title).click();
+  };
+
+  checkTitle(title) {
+    return cy.get("h3").contains(title);
+  };
+
+  checkAuthor(author) {
+    return cy.get("div.detail-card").contains(author);
+  };
+
+  checkCopyrightNotice(copyrightNotice) {
+    return cy.get("div.detail-card").contains(copyrightNotice);
+  };
+
+  checkDataHasDownloadType(downloadtype) {
+    return cy.get("span.unknown-filetype").contains(downloadtype);
+  };
+
+  checkDataHasKnownDownloadType(downloadtype) {
+    return cy.get("span.filetype").contains(downloadtype);
+  };
+
+  checkDownloadCount(number) {
+    cy.get('.downloads-table .download-list-row').should('have.lengthOf.at.least', number)
+  };
 
 }
 

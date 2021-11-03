@@ -1,11 +1,34 @@
+/*
+ *  ==================================================
+ *  mcloud-importer
+ *  ==================================================
+ *  Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+ *  ==================================================
+ *  Licensed under the EUPL, Version 1.2 or – as soon they will be
+ *  approved by the European Commission - subsequent versions of the
+ *  EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *  You may obtain a copy of the Licence at:
+ *
+ *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ * ==================================================
+ */
+
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
 import {TestUtils} from "./utils/test-utils";
 import {IndexDocument} from '../app/model/index.document';
-import {BfgImporter} from '../app/importer/csw/bfg.importer';
 import {CswSettings} from '../app/importer/csw/csw.settings';
+import {CswImporter} from '../app/importer/csw/csw.importer';
 
 let log = getLogger();
 configure('./log4js.json');
@@ -26,19 +49,16 @@ describe('Import CSW BFG', function () {
         const settings: CswSettings = {
             dryRun: true,
             startPosition: 1,
-            getRecordsUrl: "https://geoportal.bafg.de/soapServices/CSWStartup",
+            getRecordsUrl: "https://geoportal.bafg.de/csw/api",
             proxy: null,
             defaultMcloudSubgroup: ["waters"],
             defaultDCATCategory: ["TRAN", "TECH"],
             defaultAttribution: "Bundesanstalt für Gewässerkunde",
             defaultAttributionLink: "https://www.bafg.de/",
             includeTimestamp: true,
+            httpMethod: "POST",
             recordFilter: `
                 <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-                    <ogc:PropertyIsEqualTo>
-                        <ogc:PropertyName>subject</ogc:PropertyName>
-                        <ogc:Literal>opendata</ogc:Literal>
-                    </ogc:PropertyIsEqualTo>
                     <ogc:PropertyIsEqualTo>
                         <ogc:PropertyName>identifier</ogc:PropertyName>
                         <ogc:Literal>82f97ad0-198b-477e-a440-82fa781624eb</ogc:Literal>
@@ -46,7 +66,7 @@ describe('Import CSW BFG', function () {
                 </ogc:Filter>`
         };
 
-        let importer = new BfgImporter(settings);
+        let importer = new CswImporter(settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 

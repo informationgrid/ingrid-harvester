@@ -1,3 +1,26 @@
+/*
+ *  ==================================================
+ *  mcloud-importer
+ *  ==================================================
+ *  Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+ *  ==================================================
+ *  Licensed under the EUPL, Version 1.2 or – as soon they will be
+ *  approved by the European Commission - subsequent versions of the
+ *  EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *  You may obtain a copy of the Licence at:
+ *
+ *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ * ==================================================
+ */
+
 /**
  * A mapper for CKAN documents.
  */
@@ -521,6 +544,9 @@ export class CkanMapper extends GenericMapper {
         if(spatial.coordinates) {
             spatial.coordinates = this.checkAndFixSpatialCoordinates(spatial.coordinates);
         }
+        if(spatial.coordinates.length == 0) {
+            spatial = null;
+        }
         return spatial;
     }
 
@@ -528,6 +554,9 @@ export class CkanMapper extends GenericMapper {
         if(coordinates instanceof Array && coordinates[0] instanceof Array && coordinates[0][0] instanceof Array) {
             for (let i = 0; i < coordinates.length; i++) {
                 coordinates[i] = this.checkAndFixSpatialCoordinates(coordinates[i]);
+                if(coordinates[i].length == 0){
+                    coordinates.splice(i, 1)
+                }
             }
         }
         else if (coordinates instanceof Array) {
@@ -535,6 +564,9 @@ export class CkanMapper extends GenericMapper {
                 if((coordinates[i-1][0] === coordinates[i][0]) && (coordinates[i-1][1] === coordinates[i][1])){
                     coordinates.splice(i--, 1);
                 }
+            }
+            if(coordinates.length < 4){
+                coordinates = [];
             }
         }
         return coordinates;
@@ -554,6 +586,33 @@ export class CkanMapper extends GenericMapper {
         return undefined;
     }
 
+    _getParent(): string {
+        let extras = this.source.extras;
+        if(this.source.relationships_as_subject && this.source.relationships_as_subject.length > 0 && this.source.relationships_as_subject[0].type == "child_of"){
+            if(this.source.relationships_as_subject[0].__extras.object_package_id)
+                return this.source.relationships_as_subject[0].__extras.object_package_id;
+        }
+        else {
+            let versionOf = this.getExtra('is_version_of');
+            if(versionOf){
+                return versionOf;
+            }
+        }
+        return super._getParent();
+    }
+
+    private getExtra(key){
+        let extras = this.source.extras;
+        if(extras){
+            for (let i = 0; i < extras.length; i++) {
+                let extra = extras[i];
+                if(extra.key === 'is_version_of') {
+                    return extra.value;
+                }
+            }
+        }
+        return null;
+    }
 
     static createRequestConfig(settings: CkanSettings): OptionsWithUri {
 

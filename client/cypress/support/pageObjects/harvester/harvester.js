@@ -24,6 +24,10 @@ class HarvesterPage {
     cy.visit('harvester');
   }
 
+  checkHarvesterPage()  {
+    cy.url().should('include', '/harvester');
+  }
+
   addNewHarvester() {
     cy.get(this.addHarvesterBtn).click();
   }
@@ -73,7 +77,7 @@ class HarvesterPage {
 
   deleteHarvesterById(id) {
     cy.intercept({
-      url: 'http://192.168.0.228/importer/rest/api/harvester/*',
+      url: Cypress.config().baseUrl.concat('rest/api/harvester/*'),
       method: 'DELETE'
     }).as('deleteHarvester');
 
@@ -86,7 +90,7 @@ class HarvesterPage {
 
   deleteHarvesterByName(name) {
     cy.intercept({
-      url: 'http://192.168.0.228/importer/rest/api/harvester/*',
+      url: Cypress.config().baseUrl.concat('rest/api/harvester/*'),
       method: 'DELETE'
     }).as('deleteHarvester');
 
@@ -114,6 +118,7 @@ class HarvesterPage {
     cy.get('#harvester-' + id).click();
     return cy.get('#harvester-' + id + ' ' + this.importBtn).click();
   }
+
   importHarvesterByIdAndWait(id) {
     this.importHarvesterById(id).then(() => this.waitForImportToFinish(id));
   }
@@ -125,7 +130,7 @@ class HarvesterPage {
 
   checkImportHasStarted() {
     cy.get('.mat-simple-snackbar', {timeout: 60000}).should('contain', 'Import gestartet');
-    cy.get('app-importer-detail').should('contain', ' Import läuft ');
+    cy.get('app-importer-detail', {timeout: 15000}).should('contain', ' Import läuft ');
   }
 
   checkVisibleFieldValue(field, value) {
@@ -213,7 +218,7 @@ class HarvesterPage {
     const customParseFormat = require('dayjs/plugin/customParseFormat');
     dayjs.extend(customParseFormat);
 
-    cy.get('#harvester-' + id + ' ' + this.lastExecution, {timeout: 45000})
+    cy.get('#harvester-' + id + ' ' + this.lastExecution, {timeout: 60000})
       // .scrollIntoView()
       .should('contain', dayjs().format('DD.MM.YY, HH:mm'));
   }

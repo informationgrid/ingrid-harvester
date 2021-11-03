@@ -1,3 +1,26 @@
+/*
+ *  ==================================================
+ *  mcloud-importer
+ *  ==================================================
+ *  Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+ *  ==================================================
+ *  Licensed under the EUPL, Version 1.2 or – as soon they will be
+ *  approved by the European Commission - subsequent versions of the
+ *  EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *  You may obtain a copy of the Licence at:
+ *
+ *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ * ==================================================
+ */
+
 import {Summary} from '../model/summary';
 import {ImporterSettings} from '../importer.settings';
 import {DeduplicateUtils} from './deduplicate.utils';
@@ -21,7 +44,7 @@ export interface BulkResponse {
 }
 
 export class ElasticSearchUtils {
-    public static maxBulkSize = 100;
+    public static maxBulkSize = 50;
 
     private static readonly LENGTH_OF_TIMESTAMP = 18;
 
@@ -342,7 +365,7 @@ export class ElasticSearchUtils {
                         });
                     })
                     .catch(err => {
-                        this.handleError('Error occurred during bulk index of #items: ' + data.length / 2, err);
+                        this.handleError('Error occurred during bulkWithIndexName index of #items: ' + data.length / 2, err);
                         if (closeAfterBulk) {
                             this.client.close();
                         }
@@ -460,6 +483,7 @@ export class ElasticSearchUtils {
 
                 if (result.responses) {
                     for (let j = 0; j < result.responses.length; j++) {
+                        let response_id
                         let response = result.responses[j];
                         let issued;
                         let modified;
@@ -471,6 +495,7 @@ export class ElasticSearchUtils {
                         }
                         try {
                             let firstHit = response.hits.hits[0];
+                            response_id = firstHit._source.extras.generated_id
                             issued = firstHit._source.extras.metadata.issued;
                             modified = firstHit._source.extras.metadata.modified;
                             dataset_modified = firstHit._source.modified;
@@ -479,6 +504,7 @@ export class ElasticSearchUtils {
                         }
 
                         dates.push({
+                            id: response_id,
                             issued: issued,
                             modified: modified,
                             dataset_modified: dataset_modified
@@ -557,6 +583,21 @@ export class ElasticSearchUtils {
             size: 30
         });
         return result.hits.hits.map(entry => entry._source);
+    }
+
+    async cleanUrlCheckHistory(days: number): Promise<any> {
+        let result = await this.client.deleteByQuery({
+            index: ['url_check_history'],
+            body: {
+                "query": {
+                    "range": {
+                        "timestamp": {
+                            "lt":"now-"+days+"d/d"
+                        }
+                    }
+                }
+            }
+        });
     }
 
     async getFacetsByAttribution(): Promise<any> {

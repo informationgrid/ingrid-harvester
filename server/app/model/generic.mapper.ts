@@ -1,3 +1,26 @@
+/*
+ *  ==================================================
+ *  mcloud-importer
+ *  ==================================================
+ *  Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+ *  ==================================================
+ *  Licensed under the EUPL, Version 1.2 or – as soon they will be
+ *  approved by the European Commission - subsequent versions of the
+ *  EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *  You may obtain a copy of the Licence at:
+ *
+ *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ * ==================================================
+ */
+
 import {OptionsWithUri} from 'request-promise';
 import {License} from '@shared/license.model';
 import * as moment from 'moment';
@@ -211,6 +234,14 @@ export abstract class GenericMapper {
         return this._getTemporal();
     }
 
+    _getParent(): string{
+        return null;
+    }
+
+    getParent(): string{
+        return this._getParent();
+    }
+
     abstract _getCitation(): string;
 
     getCitation(): string{
@@ -279,7 +310,21 @@ export abstract class GenericMapper {
     abstract _getKeywords(): string[];
 
     getKeywords(): string[]{
-        return this._getKeywords();
+        let keywords = this._getKeywords()
+        if(keywords != undefined)
+            return keywords.map(keyword => keyword.trim());
+        return undefined;
+    }
+
+    getAutoCompletion(): string[]{
+        let title = this.getTitle();
+        let parts = title.split(/[^a-zA-Z0-9\u00E4\u00F6\u00FC\u00C4\u00D6\u00DC\u00df]/).filter(s => s.length >= 3).filter(s => s.match(/[a-zA-Z]/));
+
+        let keywords = this.getKeywords()
+        if(keywords != undefined)
+            parts = parts.concat(keywords.filter(s => s.length >= 3));
+
+        return parts;
     }
 
     abstract _getAccrualPeriodicity(): string;

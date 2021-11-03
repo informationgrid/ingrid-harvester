@@ -5,8 +5,8 @@ describe('Configuration of Mapping-Formats', () => {
   const configPage = new ConfigurationPage();
   const auth = new Authentication();
 
-  let mapSource = 'mapping_source';
-  let mapDest = 'mapping_destination';
+  const mapSource = 'mapping_source';
+  const mapDest = 'mapping_destination';
 
   beforeEach(() => {
     auth.apiLogIn();
@@ -17,7 +17,7 @@ describe('Configuration of Mapping-Formats', () => {
   });
 
   it('should show a list of mapped values', () => {
-    let mapList = configPage.getAllMappings();
+    const mapList = configPage.getAllMappings();
 
     mapList.should('contain', 'html')
       .and('contain', 'json')
@@ -41,9 +41,9 @@ describe('Configuration of Mapping-Formats', () => {
   });
 
   it('should delete a mapped value', () => {
-    let toDelete = 'http://publications.europa.eu/resource/authority/file-type/pdf';
+    const toDelete = 'http://publications.europa.eu/resource/authority/file-type/pdf';
+
     configPage.deleteMapping(toDelete);
-    cy.wait(500);
     configPage.checkMappingExists(toDelete, false);
   });
 

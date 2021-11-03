@@ -1,3 +1,26 @@
+/*
+ *  ==================================================
+ *  mcloud-importer
+ *  ==================================================
+ *  Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+ *  ==================================================
+ *  Licensed under the EUPL, Version 1.2 or – as soon they will be
+ *  approved by the European Commission - subsequent versions of the
+ *  EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *  You may obtain a copy of the Licence at:
+ *
+ *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ * ==================================================
+ */
+
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
 import {elasticsearchSettings} from '../../elastic.settings';
 import {elasticsearchMapping} from '../../elastic.mapping';
@@ -9,14 +32,17 @@ import {CkanMapper, CkanMapperData} from './ckan.mapper';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {CkanSettings} from './ckan.settings';
-import {FilterUtils} from "../../utils/filter.utils";
+import {FilterUtils} from '../../utils/filter.utils';
 
 let log = require('log4js').getLogger(__filename);
+const uuidv5 = require('uuid/v5');
+const UUID_NAMESPACE = '6891a617-ab3b-4060-847f-61e31d6ccf6f';
 
 export class CkanImporter implements Importer {
     private readonly settings: CkanSettings;
     elastic: ElasticSearchUtils;
     private requestDelegate: RequestDelegate;
+    private docsByParent: any[][] = [];
 
     static defaultSettings: CkanSettings = {
         ...DefaultElasticsearchSettings,
@@ -29,6 +55,7 @@ export class CkanImporter implements Importer {
         dateSourceFormats: [],
         requestType: 'ListWithResources',
         markdownAsDescription: true,
+        groupChilds: false,
         defaultLicense: null
     };
 
@@ -81,12 +108,12 @@ export class CkanImporter implements Importer {
     async importDataset(data: CkanMapperData) {
 
         try {
-            log.debug("Processing CKAN dataset: " + data.source.name + " from data-source: " + this.settings.ckanBaseUrl);
+            log.debug('Processing CKAN dataset: ' + data.source.name + ' from data-source: ' + this.settings.ckanBaseUrl);
 
             // Execute the mappers
             let mapper = new CkanMapper(this.settings, data);
 
-            let doc = await IndexDocument.create(mapper)
+            let doc: any = await IndexDocument.create(mapper)
                 .catch(e => {
                     log.error('Error creating index document', e);
                     this.summary.appErrors.push(e.toString());
@@ -98,10 +125,19 @@ export class CkanImporter implements Importer {
                 return;
             }
 
+            let parent = doc.extras.parent;
+            if (this.settings.groupChilds && parent) {
+                if (!this.docsByParent[parent]) {
+                    this.docsByParent[parent] = [];
+                }
+                this.docsByParent[parent].push(doc);
+                return;
+            }
+
             return this.indexDocument(doc, data.source.id);
 
         } catch (e) {
-            log.error("Error: " + e);
+            log.error('Error: ' + e);
         }
     }
 
@@ -112,7 +148,7 @@ export class CkanImporter implements Importer {
                     if (!response.queued) {
                         this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
                     }
-                })
+                }).then(() => this.elastic.client.cluster.health({waitForStatus: 'yellow'}));
         }
     }
 
@@ -174,7 +210,9 @@ export class CkanImporter implements Importer {
             let results = await this.requestDocuments();
 
             // if offset is too high, then there should be an error and we are finished
-            if (!results) break;
+            if (!results) {
+                break;
+            }
 
             log.info(`Received ${results.length} records from ${this.settings.ckanBaseUrl}`);
             total += results.length;
@@ -186,9 +224,9 @@ export class CkanImporter implements Importer {
 
             let storedData = await this.getStoredData(filteredResults);
 
-            for (let i=0; i<filteredResults.length; i++) {
+            for (let i = 0; i < filteredResults.length; i++) {
                 promises.push(
-                    this.importDataset({
+                    await this.importDataset({
                         source: filteredResults[i],
                         storedData: storedData[i],
                         harvestTime: now,
@@ -207,7 +245,104 @@ export class CkanImporter implements Importer {
             this.updateRequestMethod(offset);
 
         }
+        if (Object.keys(this.docsByParent).length > 0) {
+            let storedData = await await this.elastic.getStoredData(Object.keys(this.docsByParent).map(key => uuidv5(key, UUID_NAMESPACE)));
+            await this.indexGroupedChilds(storedData).then(result => result.forEach(promise => promises.push(promise)));
+        }
         return total;
+    }
+
+    private async indexGroupedChilds(storedData){
+        if (!this.settings.dryRun) {
+            log.info(`Received ${Object.keys(this.docsByParent).length} groups of records by parent`);
+            return Object.keys(this.docsByParent).map(key => {
+                let docs = this.docsByParent[key];
+                let doc = docs[0];
+                if (docs.length > 1) {
+                    let uuid = uuidv5(key, UUID_NAMESPACE);
+                    log.info(`Group ${docs.length} records by parent: ${key} -> ${uuid}`);
+                    let child_ids = [doc.extras.generated_id];
+                    if(doc.extras.temporal && doc.extras.temporal.length > 0) {
+                        for (let j = 0; j < doc.distribution.length; j++) {
+                            let distribution = doc.distribution[j];
+                            if (doc.extras.temporal && doc.extras.temporal.length > 0) {
+                                distribution.temporal = [{
+                                    "gte": doc.extras.temporal[0].gte,
+                                    "lte": doc.extras.temporal[0].lte
+                                }];
+                            }
+                        }
+                    }
+                    for (let i = 1; i < docs.length; i++) {
+                        let newDoc = docs[i];
+                        child_ids.push(newDoc.extras.generated_id);
+                        if(newDoc.extras.temporal && newDoc.extras.temporal.length > 0) {
+                            for (let j = 0; j < newDoc.distribution.length; j++) {
+                                let distribution = newDoc.distribution[j];
+                                if (newDoc.extras.temporal && newDoc.extras.temporal.length > 0) {
+                                    distribution.temporal = [{
+                                        "gte": newDoc.extras.temporal[0].gte,
+                                        "lte": newDoc.extras.temporal[0].lte
+                                    }];
+                                }
+                            }
+                        }
+                        if (newDoc.modified > doc.modified) {
+                            if (doc.issued < newDoc.issued) {
+                                newDoc.issued = doc.issued;
+                            }
+                            newDoc.distribution = newDoc.distribution.concat(doc.distribution);
+                            if (newDoc.extras.temporal && newDoc.extras.temporal.length > 0 && doc.extras.temporal && doc.extras.temporal.length > 0) {
+                                if (doc.extras.temporal[0].gte && (!newDoc.extras.temporal[0].gte || doc.extras.temporal[0].gte < newDoc.extras.temporal[0].gte)) {
+                                    newDoc.extras.temporal[0].gte = doc.extras.temporal[0].gte;
+                                }
+                                if (doc.extras.temporal[0].lte && (!newDoc.extras.temporal[0].lte || doc.extras.temporal[0].lte > newDoc.extras.temporal[0].lte)) {
+                                    newDoc.extras.temporal[0].lte = doc.extras.temporal[0].lte;
+                                }
+                            }
+                            doc = newDoc;
+                        } else {
+                            if (newDoc.issued < doc.issued) {
+                                doc.issued = newDoc.issued;
+                            }
+                            doc.distribution = doc.distribution.concat(newDoc.distribution);
+                            if (doc.extras.temporal && doc.extras.temporal.length > 0 && newDoc.extras.temporal && newDoc.extras.temporal.length > 0) {
+                                if (newDoc.extras.temporal[0].gte && (!doc.extras.temporal[0].gte || newDoc.extras.temporal[0].gte < doc.extras.temporal[0].gte)) {
+                                    doc.extras.temporal[0].gte = newDoc.extras.temporal[0].gte;
+                                }
+                                if (newDoc.extras.temporal[0].lte && (!doc.extras.temporal[0].lte || newDoc.extras.temporal[0].lte > doc.extras.temporal[0].lte)) {
+                                    doc.extras.temporal[0].lte = newDoc.extras.temporal[0].lte;
+                                }
+                            }
+                        }
+                    }
+                    doc.extras.child_ids = child_ids;
+                    doc.extras.generated_id = uuid;
+                    //doc.extras.metadata.source.portal_link = this.settings.defaultAttributionLink;
+                    doc.title += " (aggregiert)";
+                    doc.description  = "Dieser Metadatensatz wurde von der <a href=\"https://www.mcloud.de\">mCLOUD</a> generiert und fasst alle einzelnen Metadatensätze dieser Datenserie zusammen.\r\n\r\n" + doc.description;
+
+                    let stored = storedData.find(element => element.id === uuid);
+                    if (stored && stored.issued) {
+                        doc.extras.metadata.issued = new Date(stored.issued);
+                    } else {
+                        doc.extras.metadata.issued = new Date(Date.now());
+                    }
+                    doc.extras.metadata.modified = new Date();
+                    if(stored && stored.modified && stored.dataset_modified){
+                        let storedDataset_modified: Date = new Date(stored.dataset_modified);
+                        if(storedDataset_modified.valueOf() === doc.modified.valueOf()  )
+                            doc.extras.metadata.modified = new Date(stored.modified);
+                    }
+                }
+                return this.elastic.addDocToBulk(doc, doc.extras.generated_id)
+                    .then(response => {
+                        if (!response.queued) {
+                            this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                        }
+                    }).then(() => this.elastic.client.cluster.health({waitForStatus: 'yellow'}));
+            });
+        }
     }
 
     private async getStoredData(filteredResults: any[]) {
@@ -221,7 +356,7 @@ export class CkanImporter implements Importer {
         let json = await this.requestDelegate.doRequest();
         let results = this.settings.requestType === 'ListWithResources' ? json.result : json.result.results;
 
-        if(json.result.count) {
+        if (json.result.count) {
             this.totalCount = json.result.count;
         }
         // Workaround if results are contained with another array (https://offenedaten-koeln.de)
@@ -274,20 +409,19 @@ export class CkanImporter implements Importer {
             });
         } else {
             let fq;
-            if(this.settings.filterGroups.length > 0 || this.settings.filterTags.length > 0 || this.settings.additionalSearchFilter)
-            {
+            if (this.settings.filterGroups.length > 0 || this.settings.filterTags.length > 0 || this.settings.additionalSearchFilter) {
                 fq = '';
-                if(this.settings.filterGroups.length > 0) {
+                if (this.settings.filterGroups.length > 0) {
                     fq += '+groups:(' + this.settings.filterGroups.join(' OR ') + ')';
                 }
-                if(this.settings.filterTags.length > 0) {
+                if (this.settings.filterTags.length > 0) {
                     fq += '+tags:(' + this.settings.filterTags.join(' OR ') + ')';
                 }
-                if(this.settings.additionalSearchFilter){
-                    fq += '+'+this.settings.additionalSearchFilter;
+                if (this.settings.additionalSearchFilter) {
+                    fq += '+' + this.settings.additionalSearchFilter;
                 }
-                if(this.settings.whitelistedIds.length > 0){
-                    fq = '(('+fq+ ') OR id:('+this.settings.whitelistedIds.join(' OR ')+'))'
+                if (this.settings.whitelistedIds.length > 0) {
+                    fq = '((' + fq + ') OR id:(' + this.settings.whitelistedIds.join(' OR ') + '))';
                 }
             }
             this.requestDelegate.updateConfig({
