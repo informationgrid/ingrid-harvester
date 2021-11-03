@@ -110,7 +110,7 @@
     "defaultAttributionLink": null,
     "cron": {
       "active": true,
-      "pattern": "10 2 * * *"
+      "pattern": "3 2 * * *"
     },
     "additionalSearchFilter": ""
   },
