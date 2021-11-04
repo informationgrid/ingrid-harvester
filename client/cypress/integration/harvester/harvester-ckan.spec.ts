@@ -113,6 +113,7 @@ describe('Ckan-Harvester operations', () => {
     });
 
     cy.reload();
+    cy.wait(500);
     harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
   });
 

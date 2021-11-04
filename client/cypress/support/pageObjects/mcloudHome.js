@@ -74,6 +74,11 @@ class McloudHome {
       .should('equal', this.noResultsMsg);
   }
 
+  checkForResults() {
+    cy.get(this.resultCountHeader).invoke('text')
+      .should('not.equal', this.noResultsMsg);
+  }
+
   clickOnSearchResult(title) {
     return cy.get("h4.link-teaser-data").contains(title).click();
   };
