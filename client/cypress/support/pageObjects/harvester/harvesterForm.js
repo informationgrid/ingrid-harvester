@@ -55,7 +55,7 @@ class HarvesterForm {
           cy.wait(500);
           cy.get(this[key]).click();
           cy.get('.mat-option-text').contains(options[key]).click();
-          cy.get(this[key]).type('{esc}');
+          cy.get(this[key]).type('{esc}', {force: true});
           break;
         default:
           throw new Error('Type unknown: ' + type);
@@ -92,11 +92,11 @@ class HarvesterForm {
     }
   }
 
-  fieldValueIs(field, value){
+  fieldValueIs(field, value) {
     cy.get(field).should('have.value', value);
   }
 
-  fieldValueIsNot(field, value){
+  fieldValueIsNot(field, value) {
     cy.get(field).should('not.have.value', value);
   }
 
@@ -104,8 +104,8 @@ class HarvesterForm {
     cy.get(btn).should('be.enabled');
   }
 
-  btnIsDisabled(btn){
-  cy.get(btn).should('be.disabled');
+  btnIsDisabled(btn) {
+    cy.get(btn).should('be.disabled');
   }
 
   closeFormWithoutSaving() {
