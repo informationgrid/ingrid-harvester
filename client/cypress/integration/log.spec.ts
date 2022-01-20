@@ -22,7 +22,7 @@ describe('Log tab operations', () => {
     harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
 
     logPage.visit();
-    logPage.infoIsContained('[INFO] default - Deutsche Bahn Datenportal');
+    logPage.infoIsContained('[INFO] default - >> Running importer: Deutsche Bahn Datenportal');
   });
 
   xit('should show information in the logs when all the harvester are imported', () => {

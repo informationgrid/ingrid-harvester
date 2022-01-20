@@ -41,7 +41,7 @@ describe('Configuration of Mapping-Formats', () => {
   });
 
   it('should delete a mapped value', () => {
-    const toDelete = 'http://publications.europa.eu/resource/authority/file-type/pdf';
+    const toDelete = mapSource;
 
     configPage.deleteMapping(toDelete);
     configPage.checkMappingExists(toDelete, false);
