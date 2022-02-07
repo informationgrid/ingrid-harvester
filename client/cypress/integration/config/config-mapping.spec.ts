@@ -13,7 +13,7 @@ describe('Configuration of Mapping-Formats', () => {
     configPage.visit();
     configPage.selectTab(configPage.MAPPING);
     // buttons need some time to be initialized, otherwise click event will not work
-    cy.wait(100);
+    cy.wait(200);
   });
 
   it('should show a list of mapped values', () => {
