@@ -329,43 +329,6 @@
     }
   },
   {
-    "index": "csw_mdi",
-    "includeTimestamp": true,
-    "priority": null,
-    "type": "CSW",
-    "maxRecords": 100,
-    "startPosition": 1,
-    "customCode": "",
-    "defaultMcloudSubgroup": [
-      "waters"
-    ],
-    "defaultDCATCategory": [
-      "ENVI"
-    ],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": false
-    },
-    "getRecordsUrl": "https://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecords$Post$XML",
-    "eitherKeywords": [
-      "opendata"
-    ],
-    "httpMethod": "POST",
-    "description": "MDI",
-    "getRecordByIdUrl": "https://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecordByIdServant$Get",
-    "defaultAttribution": "MDI-DE",
-    "defaultAttributionLink": "https://www.mdi-de.org/",
-    "disable": false,
-    "id": 13,
-    "cron": {
-      "active": true,
-      "pattern": "45 2 * * *"
-    }
-  },
-  {
     "index": "csw_dwd",
     "includeTimestamp": true,
     "priority": null,
@@ -1456,6 +1419,42 @@
     "recordFilter": "<ogc:Filter>\n    <ogc:And>\n        <ogc:PropertyIsEqualTo>\n            <ogc:PropertyName>Subject</ogc:PropertyName>\n            <ogc:Literal>opendata</ogc:Literal>\n        </ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo>\n            <ogc:PropertyName>OrganisationName</ogc:PropertyName>\n            <ogc:Literal>Bundesanstalt für Gewässerkunde</ogc:Literal>\n        </ogc:PropertyIsEqualTo>\n    </ogc:And>\n</ogc:Filter>",
     "cron": {
       "pattern": "30 2 * * *",
+      "active": true
+    }
+  },
+  {
+    "index": "csw_baw",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "waters"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "getRecordsUrl": "https://datenrepository.baw.de/csw",
+    "eitherKeywords": [
+      "opendata"
+    ],
+    "httpMethod": "POST",
+    "id": 63,
+    "description": "BAW-Datenrepository",
+    "defaultAttribution": "BAW-Datenrepository",
+    "defaultAttributionLink": "https://datenrepository.baw.de",
+    "recordFilter": null,
+    "cron": {
+      "pattern": "45 2 * * *",
       "active": true
     }
   }
