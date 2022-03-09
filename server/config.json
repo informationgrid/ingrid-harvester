@@ -858,7 +858,7 @@
     "rules": {
       "containsDocumentsWithData": false
     },
-    "getRecordsUrl": "http://laermkartierung1.eisenbahn-bundesamt.de/geonetwork/srv/eng/csw",
+    "getRecordsUrl": "https://laermkartierung.eisenbahn-bundesamt.de/geonetwork/srv/eng/csw",
     "eitherKeywords": [],
     "httpMethod": "POST",
     "id": 37,
