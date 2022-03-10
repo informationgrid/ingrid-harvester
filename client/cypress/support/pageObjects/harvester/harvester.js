@@ -34,7 +34,8 @@ class HarvesterPage {
 
   openFormById(id) {
     cy.get('#harvester-' + id).click();
-    cy.get('#harvester-' + id + ' ' + this.editHarvesterBtn).click();
+    // force click to prevent element detached error
+    cy.get('#harvester-' + id + ' ' + this.editHarvesterBtn).click({force: true});
     cy.wait(500);
   }
 
