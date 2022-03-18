@@ -68,7 +68,7 @@
     "cronPattern": null,
     "defaultAttributionLink": null,
     "cron": {
-      "active": true,
+      "active": false,
       "pattern": "3 2 * * *"
     },
     "additionalSearchFilter": ""
