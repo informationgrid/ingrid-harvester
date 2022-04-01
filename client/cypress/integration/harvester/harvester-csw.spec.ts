@@ -75,9 +75,9 @@ describe('Csw-Harvester operations', () => {
       startPosition: '0'
     });
 
+    form.closeFormWithoutSaving();
     cy.reload();
     cy.wait(500);
-
     harvester.deleteHarvesterByName('Testing CSW Harvester');
   });
 

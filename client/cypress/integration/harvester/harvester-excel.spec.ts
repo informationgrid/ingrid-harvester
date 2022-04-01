@@ -31,6 +31,8 @@ describe('Excel-Harvester operations', () => {
       indexName: 'part_excel',
       excelFilePath: './data.xlsx'
     });
+
+    form.closeFormWithoutSaving();
     cy.reload();
     harvester.deleteHarvesterByName('Excel partial opts Harvester');
   });
@@ -61,6 +63,8 @@ describe('Excel-Harvester operations', () => {
       defaultAttribution: '100',
       defaultAttributionLink: '23'
     });
+
+    form.closeFormWithoutSaving();
     cy.reload();
     harvester.deleteHarvesterByName('Excel full opts Harvester');
   });
