@@ -107,9 +107,13 @@ export class DcatMapper extends GenericMapper {
 
         this.linkedDistributions = distributions.filter(distribution => distributionIDs.includes(distribution.getAttribute('rdf:about')))
 
-        this.uuid = DcatMapper.select('.//dct:identifier', record, true).textContent;
+        let uuid = DcatMapper.select('.//dct:identifier', record, true).textContent;
+        if(!uuid) {
+            uuid = DcatMapper.select('./dct:identifier/@rdf:resource', record, true).textContent;
+        }
+        this.uuid = uuid;
 
-        super.init();
+            super.init();
     }
 
     protected getSettings(): ImporterSettings {

@@ -201,7 +201,12 @@ export class DcatImporter implements Importer {
 
         let ids = [];
         for (let i = 0; i < records.length; i++) {
-            ids.push(DcatMapper.select('.//dct:identifier', records[i], true).textContent);
+            let uuid = DcatMapper.select('./dct:identifier', records[i], true).textContent;
+            if(!uuid) {
+                uuid = DcatMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
+            }
+            ids.push(uuid);
+
         }
 
         let now = new Date(Date.now());
@@ -216,7 +221,10 @@ export class DcatImporter implements Importer {
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
 
-            const uuid = DcatMapper.select('./dct:identifier', records[i], true).textContent;
+            let uuid = DcatMapper.select('./dct:identifier', records[i], true).textContent;
+            if(!uuid) {
+                uuid = DcatMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
+            }
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;
@@ -299,6 +307,10 @@ export class DcatImporter implements Importer {
         let pos = url.indexOf('page=')
         if (pos !== -1) {
             url = url.substr(pos + 5);
+            let endPos = url.indexOf('&')
+            if(endPos > -1){
+                url = url.substr(0, endPos);
+            }
             return url;
         }
         return undefined;
