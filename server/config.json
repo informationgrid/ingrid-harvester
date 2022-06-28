@@ -312,7 +312,7 @@
     "rules": {
       "containsDocumentsWithData": false
     },
-    "getRecordsUrl": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup",
+    "getRecordsUrl": "https://via.bund.de/wsv/geokat/csw",
     "eitherKeywords": [
       "opendata"
     ],
@@ -320,7 +320,7 @@
     "description": "WSV: Wasserstraßen- und Schifffahrtsverwaltung des Bundes",
     "recordFilter": "<ogc:Filter> <ogc:PropertyIsEqualTo> <ogc:PropertyName>subject</ogc:PropertyName> <ogc:Literal>opendata</ogc:Literal> </ogc:PropertyIsEqualTo> </ogc:Filter>",
     "defaultAttribution": "WSV.Geokatalog CSW",
-    "defaultAttributionLink": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2",
+    "defaultAttributionLink": "https://via.bund.de/wsv/geokat/csw?SERVICE=CSW&REQUEST=GetCapabilities",
     "disable": false,
     "id": 12,
     "cron": {
