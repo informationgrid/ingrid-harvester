@@ -600,9 +600,20 @@ export class CswMapper extends GenericMapper {
         // Return cached value, if present
         if (this.fetched.themes) return this.fetched.themes;
 
+        let themes = []
+
+        let xpath = './gmd:identificationInfo[1]/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode';
+        let categories = CswMapper.select(xpath, this.record);
+        let keywords = this._getKeywords()
+
+        if(categories && categories.length > 0){
+            themes = this.mapCategoriesToThemes(categories, keywords);
+        }
+
+
         // Evaluate the themes
-        let xpath = './/gmd:descriptiveKeywords/gmd:MD_Keywords[./gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()="Data theme (EU MDR)"]/gmd:keyword/gco:CharacterString';
-        let themes = CswMapper.select(xpath, this.record)
+        xpath = './/gmd:descriptiveKeywords/gmd:MD_Keywords[./gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()="Data theme (EU MDR)"]/gmd:keyword/gco:CharacterString';
+        themes = CswMapper.select(xpath, this.record)
             .map(node => CswMapper.dcatThemeUriFromKeyword(node.textContent))
             .filter(theme => theme); // Filter out falsy values
 
@@ -613,6 +624,114 @@ export class CswMapper extends GenericMapper {
         }
 
         this.fetched.themes = themes;
+        return themes;
+    }
+
+    protected mapCategoriesToThemes(categories, keywords): string[]{
+        let themes: string[] = [];
+
+        categories.map(category => category.textContent).forEach(category => {
+            switch (category) {
+
+                case "farming":
+                    themes.push('AGRI');
+                    themes.push('ENVI');
+                    break;
+                case "biota":
+                    themes.push('ENVI');
+                    break;
+                case "boundaries":
+                    themes.push('REGI');
+                    themes.push('GOVE');
+                    break;
+                case "climatologyMeteorology Atmosphere":
+                    themes.push('ENVI');
+                    themes.push('TECH');
+                    break;
+                case "economy":
+                    themes.push('ECON');
+                    if (keywords.includes("Energiequellen")) {
+                        themes.push('ENER');
+                        themes.push('ENVI');
+                        themes.push('TECH');
+                    }
+                    if (keywords.includes("Mineralische Bodenschätze")) {
+                        themes.push('ENVI');
+                        themes.push('TECH');
+                    }
+                    break;
+                case "elevation":
+                    themes.push('ENVI');
+                    themes.push('GOVE');
+                    themes.push('TECH');
+                    break;
+                case "environment":
+                    themes.push('ENVI');
+                    break;
+                case "geoscientificInformation":
+                    themes.push('REGI');
+                    themes.push('ENVI');
+                    themes.push('TECH');
+                    break;
+                case "health":
+                    themes.push('HEAL');
+                    break;
+                case "imageryBaseMapsEarthCover ":
+                    themes.push('ENVI');
+                    themes.push('GOVE');
+                    themes.push('TECH');
+                    themes.push('REGI');
+                    themes.push('AGRI');
+                    break;
+                case "intelligenceMilitary":
+                    themes.push('JUST');
+                    break;
+                case "inlandWaters":
+                    themes.push('ENVI');
+                    themes.push('TRAN');
+                    themes.push('AGRI');
+                    break;
+                case "location":
+                    themes.push('REGI');
+                    themes.push('GOVE');
+                    break;
+                case "oceans":
+                    themes.push('ENVI');
+                    themes.push('TRAN');
+                    themes.push('AGRI');
+                    break;
+                case "planningCadastre":
+                    themes.push('REGI');
+                    themes.push('GOVE');
+                    if (keywords.includes("Flurstücke/Grundstücke")) {
+                        themes.push('JUST');
+                    }
+                    break;
+                case "society":
+                    themes.push('SOCI');
+                    themes.push('EDUC');
+                    break;
+                case "structure":
+                    themes.push('REGI');
+                    themes.push('TRAN');
+                    if (keywords.includes("Produktions- und Industrieanlagen")) {
+                        themes.push('ECON');
+                    }
+                    if (keywords.includes("Umweltüberwachung")) {
+                        themes.push('ENVI');
+                    }
+                    break;
+                case "transportation":
+                    themes.push('TRAN');
+                    break;
+                case "utilitiesCommunication":
+                    themes.push('ENER');
+                    themes.push('ENVI');
+                    themes.push('GOVE');
+                    break;
+            }
+        });
+
         return themes;
     }
 
