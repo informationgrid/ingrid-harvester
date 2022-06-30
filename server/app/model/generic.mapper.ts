@@ -449,6 +449,8 @@ export abstract class GenericMapper {
         };
     }
 
+    static DCAT_THEMES = ['AGRI', 'ECON', 'EDUC','ENER','ENVI','GOVE','HEAL','INTR','JUST','REGI','SOCI','TECH','TRAN'];
+
     // TODO: refactor into a mapping file
     static dcatThemeUriFromKeyword(keyword: string): string {
         // Check falsy values first

@@ -610,18 +610,25 @@ export class CswMapper extends GenericMapper {
             themes = this.mapCategoriesToThemes(categories, keywords);
         }
 
+        keywords.filter(keyword => GenericMapper.DCAT_THEMES.includes(keyword)).forEach(keyword => themes.push(keyword));
+
+        themes = themes.concat(CswMapper.select(xpath, this.record)
+            .map(node => CswMapper.dcatThemeUriFromKeyword(node.textContent))
+            .filter(theme => theme)); // Filter out falsy values
 
         // Evaluate the themes
         xpath = './/gmd:descriptiveKeywords/gmd:MD_Keywords[./gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()="Data theme (EU MDR)"]/gmd:keyword/gco:CharacterString';
-        themes = CswMapper.select(xpath, this.record)
+        themes = themes.concat(CswMapper.select(xpath, this.record)
             .map(node => CswMapper.dcatThemeUriFromKeyword(node.textContent))
-            .filter(theme => theme); // Filter out falsy values
+            .filter(theme => theme)); // Filter out falsy values
 
         if (!themes || themes.length === 0) {
             // Fall back to default value
             themes = this.settings.defaultDCATCategory
                 .map(category => GenericMapper.DCAT_CATEGORY_URL + category);
         }
+
+        themes = themes.filter((keyword, index, self) => self.indexOf(keyword) === index);
 
         this.fetched.themes = themes;
         return themes;
