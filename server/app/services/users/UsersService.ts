@@ -24,6 +24,7 @@
 import {Service} from "@tsed/common";
 import {MemoryStorage} from "../storage/MemoryStorage";
 import {IUser} from "../../model/User";
+import { sha512 } from 'js-sha512';
 import * as fs from "fs";
 
 @Service()
@@ -53,7 +54,7 @@ export class UsersService {
 
     async findByCredential(username: string, password: string) {
         const users: IUser[] = await this.query();
-        return users.find((value: IUser) => value.username === username && value.password === password);
+        return users.find((value: IUser) => value.username === username && value.password === sha512(password));
     }
 
     /**
