@@ -1,7 +1,7 @@
 declare namespace Cypress {
   interface Chainable {
-    restoreLocalStorageCache(): Chainable
-    saveLocalStorageCache(): Chainable
+    restoreLocalStorageCache(): Chainable;
+    saveLocalStorageCache(): Chainable;
   }
 }
 
