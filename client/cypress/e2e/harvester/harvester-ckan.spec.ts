@@ -32,7 +32,8 @@ describe('Ckan-Harvester operations', () => {
       indexName: 'ckan_index',
       ckanBasisUrl: 'testme'
     });
-
+    
+    form.closeFormWithoutSaving();
     cy.reload();
     harvester.deleteHarvesterByName('Testing CKAN Harvester');
   });
@@ -76,6 +77,7 @@ describe('Ckan-Harvester operations', () => {
       licenseUrl: 'wwwdedede'
     });
 
+    form.closeFormWithoutSaving();
     cy.reload();
     harvester.deleteHarvesterByName('Testing full CKAN Harvester');
   });
@@ -111,8 +113,10 @@ describe('Ckan-Harvester operations', () => {
       maxRecords: '100',
       startPosition: '0'
     });
+    form.closeFormWithoutSaving();
 
     cy.reload();
+    cy.wait(500);
     harvester.deleteHarvesterById(constants.SEED_CKAN_ID);
   });
 

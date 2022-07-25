@@ -80,17 +80,18 @@ describe('Harvester operations', () => {
   });
 
   it('should find a harvester whose search is activated', () => {
-    const docToFind = 'Daten VVS';
+    const docToFind = 'Fahrplandaten mit Linienverlauf';
 
     harvester.activateForSearch(constants.CKAN_MOBIDATA_BW_ID);
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchFor(docToFind);
-    mcloudPage.checkSearchResultsIncludeName(docToFind, true);
+
+    mcloudPage.checkForResults();
   });
 
   it('should not find a harvester whose search is not activated', () => {
-    const docToFind = 'Daten VVS';
+    const docToFind = 'Fahrplandaten mit Linienverlauf';
 
     harvester.deactivateForSearch(constants.CKAN_MOBIDATA_BW_ID);
     mcloudPage.visitMcloudHome();

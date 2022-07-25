@@ -95,8 +95,8 @@ describe('All harvesters used in tests can import successfully', () => {
     mcloudPage.visitMcloudHome();
     mcloudPage.urlIsMcloudHome();
     mcloudPage.searchFor(docToFind);
-    mcloudPage.clickOnSearchResult('Strat. Lärmkarte L_N (Nacht-Index) Straßen-/U-Bahnverkehr 2017 (UA) - [Atom]');
-    mcloudPage.checkTitle('Strat. Lärmkarte L_N (Nacht-Index) Straßen-/U-Bahnverkehr 2017 (UA) - [Atom]');
+    mcloudPage.clickOnSearchResult('Strat. Lärmkarte L_N (Nacht-Index) Straßen-/U-Bahnverkehr 2017 (Umweltatlas) - [Atom]');
+    mcloudPage.checkTitle('Strat. Lärmkarte L_N (Nacht-Index) Straßen-/U-Bahnverkehr 2017 (Umweltatlas) - [Atom]');
   });
 
   it('should import and find search results of the CSW Deutsche Flugsicherung harvester', () => {

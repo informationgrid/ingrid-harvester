@@ -19,10 +19,11 @@ describe('Log tab operations', () => {
   });
 
   it('should show the right information in the logs after a single harvester is imported', () => {
+    const logInfo = '[INFO] default - Deutsche Bahn Datenportal (CKAN)';
     harvester.importHarvesterByIdAndWait(constants.CKAN_DB_ID);
 
     logPage.visit();
-    logPage.infoIsContained('[INFO] default - Deutsche Bahn Datenportal');
+    logPage.infoIsContained(logInfo);
   });
 
   xit('should show information in the logs when all the harvester are imported', () => {

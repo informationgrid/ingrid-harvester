@@ -59,6 +59,7 @@
     "providerField": "organization",
     "requestType": "Search",
     "markdownAsDescription": true,
+    "groupChilds": false,
     "defaultLicense": null,
     "description": "Deutsche Bahn Datenportal",
     "defaultAttribution": "Deutsche Bahn Datenportal",
@@ -67,7 +68,7 @@
     "cronPattern": null,
     "defaultAttributionLink": null,
     "cron": {
-      "active": true,
+      "active": false,
       "pattern": "3 2 * * *"
     },
     "additionalSearchFilter": ""
@@ -102,6 +103,7 @@
     "providerField": "organization",
     "requestType": "Search",
     "markdownAsDescription": true,
+    "groupChilds": false,
     "defaultLicense": null,
     "description": "Offenesdatenportal",
     "defaultAttribution": "Offenesdatenportal",
@@ -164,6 +166,7 @@
     "providerField": "author",
     "requestType": "Search",
     "markdownAsDescription": true,
+    "groupChilds": false,
     "defaultLicense": null,
     "description": "Transparenzportal Hamburg",
     "defaultAttribution": "Transparenzportal Hamburg",
@@ -209,6 +212,7 @@
     "providerField": "organization",
     "requestType": "ListWithResources",
     "markdownAsDescription": false,
+    "groupChilds": false,
     "defaultLicense": {
       "id": "dl-de-by-2.0",
       "title": "Datenlizenz Deutschland Namensnennung 2.0",
@@ -270,6 +274,7 @@
     "providerField": "organization",
     "requestType": "Search",
     "markdownAsDescription": false,
+    "groupChilds": false,
     "defaultLicense": {
       "id": "dl-de-by-2.0",
       "title": "Datenlizenz Deutschland Namensnennung 2.0",
@@ -307,7 +312,7 @@
     "rules": {
       "containsDocumentsWithData": false
     },
-    "getRecordsUrl": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup",
+    "getRecordsUrl": "https://via.bund.de/wsv/geokat/csw",
     "eitherKeywords": [
       "opendata"
     ],
@@ -315,49 +320,12 @@
     "description": "WSV: Wasserstraßen- und Schifffahrtsverwaltung des Bundes",
     "recordFilter": "<ogc:Filter> <ogc:PropertyIsEqualTo> <ogc:PropertyName>subject</ogc:PropertyName> <ogc:Literal>opendata</ogc:Literal> </ogc:PropertyIsEqualTo> </ogc:Filter>",
     "defaultAttribution": "WSV.Geokatalog CSW",
-    "defaultAttributionLink": "https://atlas.wsv.bund.de/geokat/csw/CSWStartup?REQUEST=GetCapabilities&SERVICE=CSW&VERSION=2.0.2",
+    "defaultAttributionLink": "https://via.bund.de/wsv/geokat/csw?SERVICE=CSW&REQUEST=GetCapabilities",
     "disable": false,
     "id": 12,
     "cron": {
       "pattern": "40 2 * * *",
       "active": true
-    }
-  },
-  {
-    "index": "csw_mdi",
-    "includeTimestamp": true,
-    "priority": null,
-    "type": "CSW",
-    "maxRecords": 100,
-    "startPosition": 1,
-    "customCode": "",
-    "defaultMcloudSubgroup": [
-      "waters"
-    ],
-    "defaultDCATCategory": [
-      "ENVI"
-    ],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": false
-    },
-    "getRecordsUrl": "https://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecords$Post$XML",
-    "eitherKeywords": [
-      "opendata"
-    ],
-    "httpMethod": "POST",
-    "description": "MDI",
-    "getRecordByIdUrl": "https://mdi-dienste.baw.de/nokis/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecordByIdServant$Get",
-    "defaultAttribution": "MDI-DE",
-    "defaultAttributionLink": "https://www.mdi-de.org/",
-    "disable": false,
-    "id": 13,
-    "cron": {
-      "active": true,
-      "pattern": "45 2 * * *"
     }
   },
   {
@@ -541,6 +509,7 @@
     "providerField": "author",
     "requestType": "Search",
     "markdownAsDescription": true,
+    "groupChilds": false,
     "defaultLicense": null,
     "id": 26,
     "description": "OpenData Berlin",
@@ -588,6 +557,7 @@
     "providerField": "organization",
     "requestType": "Search",
     "markdownAsDescription": false,
+    "groupChilds": false,
     "defaultLicense": null,
     "id": 28,
     "description": "OpenData Rheinland-Pfalz",
@@ -676,6 +646,7 @@
     "providerField": "organization",
     "requestType": "ListWithResources",
     "markdownAsDescription": false,
+    "groupChilds": false,
     "defaultLicense": null,
     "id": 29,
     "description": "GovData",
@@ -750,6 +721,7 @@
     "providerField": "organization",
     "requestType": "Search",
     "markdownAsDescription": false,
+    "groupChilds": false,
     "defaultLicense": null,
     "id": 32,
     "description": "GeoNet.MRN",
@@ -886,7 +858,7 @@
     "rules": {
       "containsDocumentsWithData": false
     },
-    "getRecordsUrl": "http://laermkartierung1.eisenbahn-bundesamt.de/geonetwork/srv/eng/csw",
+    "getRecordsUrl": "https://laermkartierung.eisenbahn-bundesamt.de/geonetwork/srv/eng/csw",
     "eitherKeywords": [],
     "httpMethod": "POST",
     "id": 37,
@@ -1250,6 +1222,7 @@
     "providerField": "author",
     "requestType": "Search",
     "markdownAsDescription": false,
+    "groupChilds": false,
     "defaultLicense": null,
     "id": 50,
     "description": "MobiData BW",
@@ -1290,6 +1263,7 @@
     "providerField": "organization",
     "requestType": "Search",
     "markdownAsDescription": false,
+    "groupChilds": false,
     "defaultLicense": null,
     "id": 55,
     "description": "OpenData ÖPNV",
@@ -1400,6 +1374,7 @@
     "providerField": "organization",
     "requestType": "Search",
     "markdownAsDescription": false,
+    "groupChilds": false,
     "defaultLicense": null,
     "id": 61,
     "description": "VAG",
@@ -1444,6 +1419,42 @@
     "recordFilter": "<ogc:Filter>\n    <ogc:And>\n        <ogc:PropertyIsEqualTo>\n            <ogc:PropertyName>Subject</ogc:PropertyName>\n            <ogc:Literal>opendata</ogc:Literal>\n        </ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo>\n            <ogc:PropertyName>OrganisationName</ogc:PropertyName>\n            <ogc:Literal>Bundesanstalt für Gewässerkunde</ogc:Literal>\n        </ogc:PropertyIsEqualTo>\n    </ogc:And>\n</ogc:Filter>",
     "cron": {
       "pattern": "30 2 * * *",
+      "active": true
+    }
+  },
+  {
+    "index": "csw_baw",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": [
+      "waters"
+    ],
+    "defaultDCATCategory": [
+      "ENVI"
+    ],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "getRecordsUrl": "https://datenrepository.baw.de/csw",
+    "eitherKeywords": [
+      "opendata"
+    ],
+    "httpMethod": "POST",
+    "id": 63,
+    "description": "BAW-Datenrepository",
+    "defaultAttribution": "BAW-Datenrepository",
+    "defaultAttributionLink": "https://datenrepository.baw.de",
+    "recordFilter": null,
+    "cron": {
+      "pattern": "45 2 * * *",
       "active": true
     }
   }

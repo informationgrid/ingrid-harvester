@@ -47,7 +47,8 @@
     "xpath": "0.0.27",
     "sparql-http-client": "^2.2.2",
     "https-proxy-agent": "^5.0.0",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "js-sha512": "^0.8.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.7",

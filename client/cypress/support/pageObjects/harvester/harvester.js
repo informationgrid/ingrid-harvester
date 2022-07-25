@@ -33,8 +33,10 @@ class HarvesterPage {
   }
 
   openFormById(id) {
-    cy.get('#harvester-' + id).click();
-    cy.get('#harvester-' + id + ' ' + this.editHarvesterBtn).click();
+    cy.get('#harvester-' + id).click({force: true});
+    cy.wait(500);
+    // force click to prevent element detached error
+    cy.get('#harvester-' + id + ' ' + this.editHarvesterBtn).click({force: true});
     cy.wait(500);
   }
 
@@ -95,6 +97,8 @@ class HarvesterPage {
     }).as('deleteHarvester');
 
     this.toggleHarvesterByName(name);
+    cy.wait(500);
+
     cy.get(this.deleteHarvesterBtn + ':visible').click();
     cy.get('.mat-button-wrapper').contains('Löschen').click();
     cy.wait('@deleteHarvester');
