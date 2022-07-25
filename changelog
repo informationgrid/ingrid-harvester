@@ -1,3 +1,13 @@
+* Mon Jul 25 2022 Jan Bücher <jan.buecher@wemove.com> - 3.1.0
+- Improve Mapping DCAT-Themes from CSW Data (#3555)
+- Decode Passwords (#3549)
+- Fix DCAT-Importer Handling for Identifier (#3797)
+- New Harvester BAW-Datenrepository (#3642)
+- new URL EBA-Harvester (#3664)
+- new URL WSV-Geokatalog (#3799)
+- Deactivate Harvester CKAN-DB
+
+
 * Wed Nov 03 2021 Jan Bücher <jan.buecher@wemove.com> - 2.6.0
 - Add: Aggregate Dataseries (#3195)
 - Add: Autocompletion Data in Index (#1259)
