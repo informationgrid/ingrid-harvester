@@ -1,0 +1,69 @@
+<!--
+     ==================================================
+     mcloud-importer
+     ==================================================
+     Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+     ==================================================
+     Licensed under the EUPL, Version 1.2 or – as soon they will be
+     approved by the European Commission - subsequent versions of the
+     EUPL (the "Licence");
+
+     You may not use this work except in compliance with the Licence.
+     You may obtain a copy of the Licence at:
+
+     https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the Licence is distributed on an "AS IS" basis,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the Licence for the specific language governing permissions and
+     limitations under the Licence.
+    ==================================================
+-->
+
+<form [formGroup]="form">
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Allgemeine SPARQL Einstellungen</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Endpoint URL" formControlName="endpointUrl" required>
+        </mat-form-field>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Filter und Regeln</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ng-container [ngTemplateOutlet]="rulesTemplate"></ng-container>
+
+      <div fxLayout="column">
+        <mat-form-field fxFlex>
+          <textarea matInput rows="6" class="code" placeholder="Query" formControlName="query"></textarea>
+        </mat-form-field>
+
+        <mat-form-field fxFlex>
+          <mat-chip-list #chipList>
+            <mat-chip *ngFor="let keyword of model.eitherKeywords" [selectable]="false"
+                      [removable]="true" (removed)="remove(keyword)">
+              {{keyword}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="Either keywords"
+                   [matChipInputFor]="chipList"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   [matChipInputAddOnBlur]="true"
+                   (matChipInputTokenEnd)="add($event)">
+          </mat-chip-list>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>

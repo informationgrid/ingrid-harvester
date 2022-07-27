@@ -1,0 +1,121 @@
+/*
+ *  ==================================================
+ *  mcloud-importer
+ *  ==================================================
+ *  Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+ *  ==================================================
+ *  Licensed under the EUPL, Version 1.2 or – as soon they will be
+ *  approved by the European Commission - subsequent versions of the
+ *  EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *  You may obtain a copy of the Licence at:
+ *
+ *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ * ==================================================
+ */
+
+:host {
+  display: block;
+  padding: 20px;
+}
+
+.mat-fab-bottom-right {
+  position: fixed;
+  right: 35px;
+  bottom: 16px;
+  z-index: 100;
+}
+
+mat-expansion-panel {
+  margin-bottom: 20px;
+}
+
+mat-expansion-panel-header {
+  padding-left: 0;
+}
+
+.mat-slide-toggle {
+  height: 48px;
+  padding: 0 20px;
+}
+
+::ng-deep mat-slide-toggle .mat-slide-toggle-thumb-container {
+  cursor: pointer;
+}
+
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  align-items: center;
+  flex-grow: 0;
+  margin-right: 0;
+}
+
+.material-icons.inline-valigned {
+  font-size: inherit;
+  line-height: inherit;
+  vertical-align: middle;
+  height: auto;
+  width: auto;
+  margin-bottom: 0.15em;
+}
+
+.success {
+  color: #5dc57b;
+}
+
+.warning {
+  color: #ff9e00;
+}
+
+.flex-space {
+  flex: 1 1 auto;
+}
+
+mat-action-row {
+  padding-left: 8px;
+}
+
+.lastExecution, .nextExecution {
+  color: #d2d2d2;
+}
+
+.lastExecution {
+  float: left;
+}
+
+.nextExecution, #btnAddHarvester {
+  float: right;
+}
+
+mat-spinner {
+  margin: 13px 0 0 10px;
+}
+
+.no-harvester {
+  text-align: center;
+
+  mat-spinner {
+    display: inline-block;
+  }
+}
+
+.scheduled {
+  align-self: center;
+  padding-right: 10px;
+}
+
+::ng-deep h4 {
+  padding-top: 10px;
+  margin-bottom: 10px;
+}

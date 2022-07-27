@@ -1,0 +1,66 @@
+<!--
+     ==================================================
+     mcloud-importer
+     ==================================================
+     Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+     ==================================================
+     Licensed under the EUPL, Version 1.2 or – as soon they will be
+     approved by the European Commission - subsequent versions of the
+     EUPL (the "Licence");
+
+     You may not use this work except in compliance with the Licence.
+     You may obtain a copy of the Licence at:
+
+     https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the Licence is distributed on an "AS IS" basis,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the Licence for the specific language governing permissions and
+     limitations under the Licence.
+    ==================================================
+-->
+
+<h2 mat-dialog-title>Ausführung planen</h2>
+
+<mat-dialog-content>
+
+  <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center" class="padding-below">
+    <mat-slide-toggle color="primary"
+                      [(ngModel)]="cron.active"
+                      (change)="translate(cron.pattern)"
+                      title="Planung an- / ausschalten"></mat-slide-toggle>
+
+    <mat-form-field fxFlex>
+      <mat-label>Cron Expression</mat-label>
+      <input matInput placeholder="* * * * *" [(ngModel)]="cron.pattern" (keyup)="translate(cron.pattern)" data-test="cron-input">
+      <button mat-button *ngIf="cron.pattern" matSuffix mat-icon-button aria-label="Clear" (click)="clearInput()" data-test="cron-reset">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon" data-test="cron-info">info_outline</mat-icon>
+      <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
+    </mat-form-field>
+  </div>
+
+  <mat-card class="info" *ngIf="showInfo">
+    <div><span>*/5 * * * *</span>Alle 5 Minuten</div>
+    <div><span>45 8 * * *</span>Täglich um 8:45 Uhr</div>
+    <div><span>0 6-18/2 * * *</span>Täglich zwischen 6 und 18 Uhr, alle 2h</div>
+    <div><span>30 4 1 * 0,6</span>Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So</div>
+  </mat-card>
+
+  <mat-divider></mat-divider>
+
+  <h3>{{cronTranslation}}</h3>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Abbrechen</button>
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+  <div class="flex-space"></div>
+  <button mat-button color="primary"
+          [disabled]="cron.active && !validExpression"
+          [mat-dialog-close]="cron || null"
+          data-test="dlg-schedule">Aktualisieren</button>
+</mat-dialog-actions>

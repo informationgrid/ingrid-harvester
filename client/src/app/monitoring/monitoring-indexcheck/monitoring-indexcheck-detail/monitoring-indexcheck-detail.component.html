@@ -1,0 +1,48 @@
+<!--
+     ==================================================
+     mcloud-importer
+     ==================================================
+     Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+     ==================================================
+     Licensed under the EUPL, Version 1.2 or – as soon they will be
+     approved by the European Commission - subsequent versions of the
+     EUPL (the "Licence");
+
+     You may not use this work except in compliance with the Licence.
+     You may obtain a copy of the Licence at:
+
+     https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the Licence is distributed on an "AS IS" basis,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the Licence for the specific language governing permissions and
+     limitations under the Licence.
+    ==================================================
+-->
+
+<h2 mat-dialog-title>{{dialogTitle}}</h2>
+<mat-dialog-content>
+  <mat-expansion-panel *ngFor="let status of data.status" hideToggle [id]="'status-' + status.code">
+    <mat-expansion-panel-header>
+
+      <mat-panel-title>
+        {{status.code}}{{getLabelForStatus(status.code)}} ({{status.url.length}})
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <ng-container *ngFor="let url of status.url">
+      <div style="width: 100%"><div style="max-width: 90%; overflow: hidden; white-space: nowrap;  text-overflow: ellipsis;display: inline-block; margin-right: 10px"
+           title="{{url.attribution[0].name}}: {{url.url}}">
+        <span (click)="goToPortal(url.url)" style="cursor:pointer;">
+          {{url.url}}</span>
+      </div><div style="max-width: 90%; overflow: hidden; white-space: nowrap;  text-overflow: ellipsis;display: inline-block; margin-right: 10px"><span>({{url.attribution[0].count}})</span></div>
+      </div>
+    </ng-container>
+  </mat-expansion-panel>
+  <br>
+  </mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Schließen</button>
+</mat-dialog-actions>

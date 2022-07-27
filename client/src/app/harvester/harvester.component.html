@@ -1,0 +1,105 @@
+<!--
+     ==================================================
+     mcloud-importer
+     ==================================================
+     Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+     ==================================================
+     Licensed under the EUPL, Version 1.2 or – as soon they will be
+     approved by the European Commission - subsequent versions of the
+     EUPL (the "Licence");
+
+     You may not use this work except in compliance with the Licence.
+     You may obtain a copy of the Licence at:
+
+     https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the Licence is distributed on an "AS IS" basis,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the Licence for the specific language governing permissions and
+     limitations under the Licence.
+    ==================================================
+-->
+
+<div *ngIf="harvesterLoaded" class="example-headers-align">
+    <div fxLayout="row">
+      <div fxFlex></div>
+      <button mat-flat-button [disabled]="numberOfHarvesters === 0" (click)="importAll()" data-test="import-all">Alle importieren</button>
+    </div>
+
+    <ng-container *ngFor="let item of harvesters | keyvalue">
+
+        <h3>{{item.key}}</h3>
+
+        <mat-expansion-panel *ngFor="let harvester of item.value" hideToggle [id]="'harvester-' + harvester.id">
+            <mat-expansion-panel-header>
+
+                <mat-panel-title>
+                    <mat-slide-toggle color="primary" [checked]="!harvester.disable"
+                                      title="Für Suche und Planung an- / ausschalten"
+                                      (change)="handleActivation($event, harvester)"
+                                      (click)="$event.stopImmediatePropagation()"></mat-slide-toggle>
+                    <mat-icon *ngIf="harvester.cron?.pattern" inline class="scheduled">
+                      {{harvester.disable || !harvester.cron.active ? 'alarm_off' : 'alarm_on'}}
+                    </mat-icon>
+                    <p class="no-wrap">{{harvester.description || harvester.defaultAttribution}}</p>
+                    <mat-spinner *ngIf="importDetail[harvester.id]?.complete === false" diameter="20"></mat-spinner>
+                </mat-panel-title>
+
+                <mat-panel-description *ngIf="importDetail[harvester.id]?.summary">
+                    <mat-icon *ngIf="hasAnyErrors(harvester.id)" color="warn">error_outline</mat-icon>
+                    <mat-icon *ngIf="!hasAnyProblems(harvester.id)" class="success">check_circle_outline</mat-icon>
+                    <mat-icon *ngIf="hasOnlyWarnings(harvester.id)" class="warning">error_outline</mat-icon>
+                </mat-panel-description>
+
+            </mat-expansion-panel-header>
+
+            <app-importer-detail [data]="importDetail[harvester.id]"
+                                 (showLog)="showLog(harvester.id)"
+                                 [cronActive]="!harvester.disable && harvester.cron?.active"></app-importer-detail>
+
+            <mat-action-row>
+                <button mat-button (click)="showLog(harvester.id)" [disabled]="!hasAnyProblems(harvester.id)" data-test="log">
+                    <mat-icon class="inline-valigned">description</mat-icon>
+                    Error-Log
+                </button>
+                <button mat-button (click)="startImport(harvester.id)"
+                        data-test="import"
+                        [disabled]="importDetail[harvester.id]?.complete === false">
+                    <mat-icon class="inline-valigned">import_export</mat-icon>
+                    Import starten
+                </button>
+              <button mat-button (click)="showHistory(harvester)" data-test="history">
+                <mat-icon class="inline-valigned">history</mat-icon>
+                Historie
+              </button>
+                <button mat-button (click)="schedule(harvester)" data-test="schedule">
+                    <mat-icon class="inline-valigned">schedule</mat-icon>
+                    Planen
+                </button>
+                <button mat-button color="warn" (click)="deleteHarvester(harvester)" data-test="delete">
+                    <mat-icon class="inline-valigned">delete</mat-icon>
+                    Entfernen
+                </button>
+                <div class="flex-space"></div>
+                <button mat-button color="primary" (click)="edit(harvester)" data-test="edit">
+                    <mat-icon class="inline-valigned">edit</mat-icon>
+                    Bearbeiten
+                </button>
+            </mat-action-row>
+
+        </mat-expansion-panel>
+    </ng-container>
+
+    <button mat-fab
+            color="primary"
+            (click)="addHarvester()"
+            class="mat-fab-bottom-right"
+            id="btnAddHarvester">
+        <mat-icon aria-label="Add Harvester">add</mat-icon>
+    </button>
+</div>
+
+<div *ngIf="!harvesterLoaded" class="no-harvester">
+  <mat-spinner diameter="100"></mat-spinner>
+</div>

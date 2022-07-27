@@ -1,0 +1,235 @@
+<!--
+     ==================================================
+     mcloud-importer
+     ==================================================
+     Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+     ==================================================
+     Licensed under the EUPL, Version 1.2 or – as soon they will be
+     approved by the European Commission - subsequent versions of the
+     EUPL (the "Licence");
+
+     You may not use this work except in compliance with the Licence.
+     You may obtain a copy of the Licence at:
+
+     https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the Licence is distributed on an "AS IS" basis,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the Licence for the specific language governing permissions and
+     limitations under the Licence.
+    ==================================================
+-->
+
+<div *ngIf="configForm" class="form-wrapper">
+
+  <form [formGroup]="configForm">
+
+    <mat-form-field>
+      <input matInput type="url" placeholder="Elasticsearch-URL" formControlName="elasticSearchUrl" required>
+      <mat-error *ngIf="configForm.get('elasticSearchUrl').hasError('required')">
+        Dies ist ein Pflichtfeld
+      </mat-error>
+      <mat-error *ngIf="configForm.get('elasticSearchUrl').hasError('elasticUrl')">
+        Dies ist keine gültige Elasticsearch-URL (Bsp: http://localhost:9200)
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Alias-Name" formControlName="alias" required>
+      <mat-error *ngIf="configForm.get('alias').hasError('whitespace')">
+        Es dürfen nicht nur Leerzeichen eingegeben sein
+      </mat-error>
+      <mat-error *ngIf="configForm.get('alias').hasError('required')">
+        Dies ist ein Pflichtfeld
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="number" placeholder="Offset Cron-Jobs in Minuten" formControlName="cronOffset">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Proxy" formControlName="proxy">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Portal URL" formControlName="portalUrl">
+    </mat-form-field>
+
+
+    <mat-card class="margin-below">
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center" class="margin-below"
+           [formGroup]="configForm.get('urlCheck')">
+        <mat-slide-toggle color="primary"
+                          [checked]="configForm.get('urlCheck.active').value"
+                          (change)="urlCheckTranslate(configForm.get('urlCheck.pattern').value)"
+                          formControlName="active"
+                          title="Planung an- / ausschalten"></mat-slide-toggle>
+        <mat-form-field fxFlex>
+          <mat-label>UrlCheck Cron</mat-label>
+          <input matInput placeholder="* * * * *" formControlName="pattern"
+                 (keyup)="urlCheckTranslate(configForm.get('urlCheck.pattern').value)" data-test="urlCheck-input">
+          <button mat-button *ngIf="configForm.get('urlCheck.pattern')" matSuffix mat-icon-button aria-label="Clear"
+                  (click)="clearUrlCheckInput()" data-test="urlCheck-reset">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon" data-test="urlCheck-info">info_outline
+          </mat-icon>
+          <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
+        </mat-form-field>
+        <div fxFlex><b>{{urlCheckTranslation}}</b></div>
+      </div>
+
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center" class="margin-below"
+           [formGroup]="configForm.get('indexCheck')">
+        <mat-slide-toggle color="primary"
+                          [checked]="configForm.get('indexCheck.active').value"
+                          (change)="indexCheckTranslate(configForm.get('indexCheck.pattern').value)"
+                          formControlName="active"
+                          title="Planung an- / ausschalten"></mat-slide-toggle>
+        <mat-form-field fxFlex>
+          <mat-label>IndexCheck Cron</mat-label>
+          <input matInput placeholder="* * * * *" formControlName="pattern"
+                 (keyup)="indexCheckTranslate(configForm.get('indexCheck.pattern').value)" data-test="indexCheck-input">
+          <button mat-button *ngIf="configForm.get('indexCheck.pattern')" matSuffix mat-icon-button aria-label="Clear"
+                  (click)="clearIndexCheckInput()" data-test="indexCheck-reset">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon" data-test="indexCheck-info">
+            info_outline
+          </mat-icon>
+          <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
+        </mat-form-field>
+        <div fxFlex><b>{{indexCheckTranslation}}</b></div>
+      </div>
+      <mat-card class="info" *ngIf="showInfo" class="margin-below">
+        <div><span>*/5 * * * *</span> Alle 5 Minuten</div>
+        <div><span>45 8 * * *</span> Täglich um 8:45 Uhr</div>
+        <div><span>0 6-18/2 * * *</span> Täglich zwischen 6 und 18 Uhr, alle 2h</div>
+        <div><span>30 4 1 * 0,6</span> Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So</div>
+      </mat-card>
+    </mat-card>
+
+
+    <mat-card class="margin-below" [formGroup]="configForm.get('indexBackup')">
+      <div>
+        Index-Backup
+
+        <mat-slide-toggle color="primary"
+                          [checked]="configForm.get('indexBackup.active').value"
+                          (change)="indexBackupCronTranslate(configForm.get('indexBackup.cronPattern').value)"
+                          formControlName="active"
+                          title="Index-Backup an- / ausschalten">
+        </mat-slide-toggle>
+      </div>
+
+      <mat-card-content>
+
+        <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center" class="margin-below">
+          <mat-form-field fxFlex>
+            <mat-label>Cron</mat-label>
+            <input matInput placeholder="* * * * *" formControlName="cronPattern"
+                   (keyup)="indexBackupCronTranslate(configForm.get('indexBackup.cronPattern').value)"
+                   data-test="indexBackupCron-input">
+            <button mat-button *ngIf="configForm.get('indexBackup.cronPattern')" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="clearIndexBackupCronInput()" data-test="indexBackupCron-reset">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-icon matSuffix (click)="showBackupCronInfo = !showBackupCronInfo" class="info-icon" data-test="indexBackupCron-info">
+              info_outline
+            </mat-icon>
+            <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
+          </mat-form-field>
+          <div fxFlex><b>{{indexBackupCronTranslation}}</b></div>
+        </div>
+
+        <mat-card class="info" *ngIf="showBackupCronInfo" class="margin-below">
+          <div><span>*/5 * * * *</span> Alle 5 Minuten</div>
+          <div><span>45 8 * * *</span> Täglich um 8:45 Uhr</div>
+          <div><span>0 6-18/2 * * *</span> Täglich zwischen 6 und 18 Uhr, alle 2h</div>
+          <div><span>30 4 1 * 0,6</span> Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So</div>
+        </mat-card>
+
+        <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center" >
+          <mat-form-field fxFlex>
+            <input matInput placeholder="Index (RegExp)" formControlName="indexPattern">
+          </mat-form-field>
+          <div fxFlex></div>
+        </div>
+
+        <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center" class="margin-below">
+          <mat-form-field fxFlex>
+            <input matInput placeholder="Verzeichnis" formControlName="dir">
+          </mat-form-field>
+          <div fxFlex></div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <div [formGroup]="configForm.get('mail')">
+        Email-Benachrichtigungen &nbsp;
+        <mat-slide-toggle color="primary" [checked]="configForm.get('mail.enabled')"
+                          title="Email-Benachrichtigungen an- / ausschalten" formControlName="enabled"
+                          (click)="$event.stopImmediatePropagation()"
+        >
+        </mat-slide-toggle>
+      </div>
+      <br/><br/>
+
+      <mat-card-content>
+        <mat-form-field [formGroup]="configForm.get('mail.mailServer')">
+          <input matInput placeholder="Mail-Server" formControlName="host" required>
+        </mat-form-field>
+        &nbsp;:&nbsp;
+        <mat-form-field [formGroup]="configForm.get('mail.mailServer')">
+          <input matInput placeholder="Port" formControlName="port" required>
+        </mat-form-field>
+        <br/>
+        <div [formGroup]="configForm.get('mail.mailServer')">
+          <mat-checkbox color="primary"
+                        formControlName="secure">
+            Secured Connection
+          </mat-checkbox>
+        </div>
+        <br/>
+        <mat-form-field [formGroup]="configForm.get('mail.mailServer.auth')">
+          <input matInput placeholder="User" formControlName="user">
+        </mat-form-field>
+        &nbsp;&nbsp;
+        <mat-form-field [formGroup]="configForm.get('mail.mailServer.auth')">
+          <input type="password" matInput placeholder="Passwort" formControlName="pass">
+        </mat-form-field>
+        <br/>
+        <mat-form-field [formGroup]="configForm.get('mail')">
+          <input matInput placeholder="Absender" formControlName="from" required>
+        </mat-form-field>
+        &nbsp;&nbsp;
+        <mat-form-field [formGroup]="configForm.get('mail')">
+          <input matInput placeholder="Empfänger" formControlName="to" required>
+        </mat-form-field>
+        <br/>
+        <mat-form-field [formGroup]="configForm.get('mail')">
+          <input matInput placeholder="Betreff-Tag" formControlName="subjectTag">
+        </mat-form-field>
+        <br/><br/>
+        <mat-form-field style="width: 250px">
+          <mat-label matPrefix>Benachrichtigungs-Schwelle:</mat-label>
+          <input matInput type="number" min="1" max="100" style="text-align: right; width: 50px"
+                 formControlName="maxDiff">
+          <mat-icon [inline]="true" style="padding-left: 1px" matSuffix>%</mat-icon>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
+  </form>
+
+  <div class="form-buttons">
+    <button mat-button (click)="reset()" data-test="reset">Zurücksetzen</button>
+    <div class="flex-space"></div>
+    <button mat-button color="primary" (click)="save()" [disabled]="!configForm.valid" data-test="save">Speichern
+    </button>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+/*
+ *  ==================================================
+ *  mcloud-importer
+ *  ==================================================
+ *  Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+ *  ==================================================
+ *  Licensed under the EUPL, Version 1.2 or – as soon they will be
+ *  approved by the European Commission - subsequent versions of the
+ *  EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *  You may obtain a copy of the Licence at:
+ *
+ *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ * ==================================================
+ */
+
+// Import material theming functions
+@import '~@angular/material/theming';
+
+// Copy the palettes from your selected theme (usually theme.scss).
+$app-primary: mat-palette($mat-grey);
+$app-accent:  mat-palette($mat-light-blue);
+$app-warn:    mat-palette($mat-amber);
+$app-error:    mat-palette($mat-pink);
+
+// Create your Sass color vars (will be available in all the project)
+$primary: mat-color($app-primary);
+$accent: mat-color($app-accent);
+$warn: mat-color($app-warn, 'darker');
+$error: mat-color($app-error);

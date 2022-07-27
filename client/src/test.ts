@@ -1,0 +1,43 @@
+/*
+ *  ==================================================
+ *  mcloud-importer
+ *  ==================================================
+ *  Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+ *  ==================================================
+ *  Licensed under the EUPL, Version 1.2 or – as soon they will be
+ *  approved by the European Commission - subsequent versions of the
+ *  EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *  You may obtain a copy of the Licence at:
+ *
+ *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ * ==================================================
+ */
+
+// This file is required by karma.conf.js and loads recursively all the .spec and framework files
+
+import 'zone.js/dist/zone-testing';
+import { getTestBed } from '@angular/core/testing';
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting
+} from '@angular/platform-browser-dynamic/testing';
+
+declare const require: any;
+
+// First, initialize the Angular testing environment.
+getTestBed().initTestEnvironment(
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting()
+);
+// Then we find all the tests.
+const context = require.context('./', true, /\.spec\.ts$/);
+// And load the modules.
+context.keys().map(context);

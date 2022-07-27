@@ -1,0 +1,39 @@
+{
+  "elasticSearchUrl": "http://localhost:9200",
+  "alias": "mcloud",
+  "numberOfShards": 1,
+  "numberOfReplicas": 0,
+  "cronOffset": 0,
+  "proxy": "",
+  "portalUrl": "http://localhost:8080/",
+  "urlCheck": {
+    "active": true,
+    "pattern": "30 04 * * *"
+  },
+  "indexCheck": {
+    "active": true,
+    "pattern": "10 04 * * *"
+  },
+  "mail": {
+    "enabled": false,
+    "mailServer": {
+      "host": "localhost",
+      "port": 465,
+      "secure": false,
+      "auth": {
+        "user": "",
+        "pass": ""
+      }
+    },
+    "from": "test@example.com",
+    "to": "test@example.com",
+    "subjectTag": "mcloud"
+  },
+  "indexBackup": {
+    "active": true,
+    "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+    "cronPattern": "30 05 * * *",
+    "dir": ""
+  },
+  "maxDiff": 10
+}
