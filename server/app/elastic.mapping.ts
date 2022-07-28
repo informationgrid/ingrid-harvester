@@ -301,6 +301,10 @@ export const elasticsearchMapping = {
                     'type': 'text',
                     'index': false
                 },
+                'transformed_data_dcatapplu': {
+                    'type': 'text',
+                    'index': false
+                },
                 'mfund_fkz': {
                     'type': 'keyword'
                 },

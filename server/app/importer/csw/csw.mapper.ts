@@ -37,6 +37,7 @@ import doc = Mocha.reporters.doc;
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
+import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
 
 let xpath = require('xpath');
@@ -49,6 +50,11 @@ export class CswMapper extends GenericMapper {
     static GML_3_2 = 'http://www.opengis.net/gml/3.2';
     static CSW = 'http://www.opengis.net/cat/csw/2.0.2';
     static SRV = 'http://www.isotc211.org/2005/srv';
+    static RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+    static RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
+    static DCAT = 'http://www.w3.org/ns/dcat#';
+    static DCT = 'http://purl.org/dc/terms/';
+    static VCARD = 'http://www.w3.org/2006/vcard/ns#';
 
     static select = xpath.useNamespaces({
         'gmd': CswMapper.GMD,
@@ -823,6 +829,63 @@ export class CswMapper extends GenericMapper {
 
     _getHarvestedData(): string {
         return this.record.toString();
+    }
+
+    async _getTransformedData(format: string): Promise<string> {
+        switch(format) {
+            case ExportFormat.DCAT_AP_PLU:
+                return this.cswToDcatApPlu();
+            default:
+                return '';
+        }
+    }
+
+    async cswToDcatApPlu(): Promise<string> {
+        let contactPoint = await this._getContactPoint();
+        // TODO lots of fields left to infer
+        let vcardXml = `<vcard:Organization>
+                <vcard:fn>${contactPoint['organization-name'] || contactPoint.fn}</vcard:fn>
+                <vcard:hasPostalCode>${contactPoint['postal-code']}</vcard:hasPostalCode>
+                <vcard:hasStreetAddress>${'??'}</vcard:hasStreetAddress>
+                <vcard:hasLocality>${contactPoint['region'] + ' ??'}</vcard:hasLocality>
+                <vcard:hasCountryName>${contactPoint['country-name']}</vcard:hasCountryName>
+                <vcard:hasEmail rdf:resource="${contactPoint.hasEmail}"/>
+                <vcard:hasTelephoneNumber>${contactPoint.hasTelephone}</vcard:hasTelephoneNumber>
+            </vcard:Organization>`;
+
+        // TODO where to infer the language from?
+        let lang = 'de';
+        // TODO lots of fields left to infer
+        // TODO correct namespaces? (copied from dcat.mapper)
+        // TODO missing namespace for "plu"
+        let dcatApPluXml = `<?xml version="1.0"?>
+        <rdf:RDF
+            rdf:xmlns="${CswMapper.RDF}"
+            dcat:xmlns="${CswMapper.DCAT}"
+            dcterms:xmlns="${CswMapper.DCT}"
+            vcard:xmlns="${CswMapper.VCARD}"
+            plu:xmlns="${'??'}">
+            <dcat:Dataset rdf:about="${'??'}">
+                <dcat:contactPoint>
+                    ${vcardXml}
+                </dcat:contactPoint>
+                <dcterms:description xml:lang="${lang}">${this._getDescription()}</dcterms:description>
+                <dcterms:identifier>${this.uuid}</dcterms:identifier>
+                <dcterms:title xml:lang="${lang}">${this._getTitle()}</dcterms:title>
+                <dcat:distribution rdf:resource="${'??'}"></dcat:distribution>
+                <plu:PlanState>${'??'}</plu:PlanState>
+                <plu:pluProcedureState rdf:resource="${'??'}" />
+                <plu:procedureStartDate rdf:resource="${'??'}" />
+                <dcterms:issued>${this._getIssued()}</dcterms:issued>
+                <dcterms:modified>${this._getModifiedDate()}</dcterms:modified>
+                <dcterms:relation>${'??'}</dcterms:relation>
+                <plu:pluPlanType rdf:resource="${'??'}" />
+                <plu:pluPlanTypeFine rdf:resource="${'??'}" />
+                <plu:pluProcedureType rdf:resource="${'??'}" />
+            </dcat:Dataset>
+        </rdf:RDF>`;
+
+        return dcatApPluXml;
     }
 
     _getCreator(): Person[] {

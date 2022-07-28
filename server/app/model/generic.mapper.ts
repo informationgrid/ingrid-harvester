@@ -355,6 +355,15 @@ export abstract class GenericMapper {
         return this.errors.length === 0 ? undefined : this.errors;
     }
 
+    async _getTransformedData(format: string): Promise<string>{
+        // throw new NotImplemented(`Transformation to ${format} is not implemented yet.`);
+        return '';
+    }
+
+    async getTransformedData(format: string): Promise<string>{
+        return await this._getTransformedData(format);
+    }
+
     abstract _getIssued(): Date;
 
     getIssued(): Date{
