@@ -210,9 +210,9 @@ export class DcatMapper extends GenericMapper {
     async _getPublisher(): Promise<any[]> {
         let publishers = [];
 
-        let creators = DcatMapper.select('.//dct:creator', this.record);
-        for (let i = 0; i < creators.length; i++) {
-            let organization = DcatMapper.select('.//foaf:Organization', creators[i], true);
+        let dctPublishers = DcatMapper.select('.//dct:publisher', this.record);
+        for (let i = 0; i < dctPublishers.length; i++) {
+            let organization = DcatMapper.select('.//foaf:Organization', dctPublishers[i], true);
             if (organization) {
                 let name = DcatMapper.select('.//foaf:name', organization, true);
                 if(name) {
@@ -221,6 +221,24 @@ export class DcatMapper extends GenericMapper {
                     };
 
                     publishers.push(infos);
+                }
+            }
+        }
+
+
+        if (publishers.length === 0) {
+            let creators = DcatMapper.select('.//dct:creator', this.record);
+            for (let i = 0; i < creators.length; i++) {
+                let organization = DcatMapper.select('.//foaf:Organization', creators[i], true);
+                if (organization) {
+                    let name = DcatMapper.select('.//foaf:name', organization, true);
+                    if (name) {
+                        let infos: any = {
+                            organization: name.textContent
+                        };
+
+                        publishers.push(infos);
+                    }
                 }
             }
         }
