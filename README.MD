@@ -80,7 +80,7 @@ sudo systemctl start|stop|restart elasticsearch.service
 ```
 wget https://artifacts.elastic.co/downloads/kibana/kibana-6.8.4-amd64.deb
 
-sudo dpkg -i elasticsearch-6.8.4.deb
+sudo dpkg -i kibana-6.8.4-amd64.deb
 ```
 
 Configure kibana here ```/etc/kibana/kibana.yml```
@@ -119,6 +119,9 @@ Run Elasticsearch:
 
 For the server:
 > npm run start-dev
+
+For the server (node 16+):
+> npm run start-dev-16
 
 For the client:
 > npm run start
