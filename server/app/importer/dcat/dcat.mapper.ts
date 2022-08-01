@@ -213,6 +213,9 @@ export class DcatMapper extends GenericMapper {
         let dctPublishers = DcatMapper.select('.//dct:publisher', this.record);
         for (let i = 0; i < dctPublishers.length; i++) {
             let organization = DcatMapper.select('.//foaf:Organization', dctPublishers[i], true);
+            if(!organization){
+                organization = DcatMapper.select('.//foaf:Organization[@rdf:about="'+dctPublishers[i].getAttribute('rdf:resource')+'"]', this.catalogPage, true)
+            }
             if (organization) {
                 let name = DcatMapper.select('.//foaf:name', organization, true);
                 if(name) {
