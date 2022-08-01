@@ -1,10 +1,10 @@
 {
   "/rest/api": {
-    "target": "http://localhost:8090",
+    "target": "http://0.0.0.0:8090",
     "secure": false
   },
   "/rest/passport": {
-    "target": "http://localhost:8090",
+    "target": "http://0.0.0.0:8090",
     "secure": false
   }
 }

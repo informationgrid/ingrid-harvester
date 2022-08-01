@@ -76,7 +76,7 @@ class ConfigurationPage {
       method: 'POST',
       url: 'rest/api/config/general',
       body: {
-        "elasticSearchUrl": "http://localhost:9200",
+        "elasticSearchUrl": process.env.ELASTIC_URL || "http://localhost:9200",
         "alias": "mcloud",
         "proxy": "",
         "sessionSecret": "mysecretkey"
