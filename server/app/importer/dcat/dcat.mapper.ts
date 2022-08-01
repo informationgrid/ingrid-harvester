@@ -361,6 +361,13 @@ export class DcatMapper extends GenericMapper {
         }
 
         if(!displayName){
+            let publisher = await this.getPublisher();
+            if (publisher && publisher[0]['organization']) {
+                displayName = publisher[0]['organization'];
+            }
+        }
+
+        if(!displayName){
             let creator = this.getCreator();
             if (creator) {
                 displayName = creator[0].name;
