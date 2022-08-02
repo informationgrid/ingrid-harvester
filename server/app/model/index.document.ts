@@ -46,7 +46,9 @@ export class IndexDocument {
                 generated_id: mapper.getGeneratedId(),
                 groups: mapper.getGroups(),
                 harvested_data: mapper.getHarvestedData(),
-                transformed_data_dcatapplu: await mapper.getTransformedData(ExportFormat.DCAT_AP_PLU),
+                transformed_data: {
+                    [ExportFormat.DCAT_AP_PLU]: await mapper.getTransformedData(ExportFormat.DCAT_AP_PLU),
+                },
                 license: await mapper.getLicense(),
                 metadata: {
                     harvested: mapper.getMetadataHarvested(),
