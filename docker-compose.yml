@@ -13,9 +13,9 @@ services:
     volumes:
       - esdata:/usr/share/elasticsearch/data
     restart: unless-stopped
-    ports:
-      - 9200:9200
-      - 9300:9300
+    # ports:
+    #   - 9200:9200
+    #   - 9300:9300
     networks: 
       - testnetwork
 
