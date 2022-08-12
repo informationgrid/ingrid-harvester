@@ -40,6 +40,7 @@ import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
+import { DcatApPluFactory } from "./DcatApPluFactory";
 
 // const ogr2ogr = require('ogr2ogr').default
 // const gmlParser = require('parse-gml-polygon');
@@ -905,59 +906,48 @@ export class WfsMapper extends GenericMapper {
 
     // TODO
     async wfsToDcatApPlu(): Promise<string> {
-        let contactPoint = await this._getContactPoint();
-        // TODO lots of fields left to infer
-        let vcardXml = `<vcard:Organization>
-                <vcard:fn>${contactPoint['organization-name'] || contactPoint.fn}</vcard:fn>
-                <vcard:hasPostalCode>${contactPoint['postal-code']}</vcard:hasPostalCode>
-                <vcard:hasStreetAddress>${contactPoint['street-address']}</vcard:hasStreetAddress>
-                <vcard:hasLocality>${contactPoint['region'] + ' ??'}</vcard:hasLocality>
-                <vcard:hasCountryName>${contactPoint['country-name']}</vcard:hasCountryName>
-                <vcard:hasEmail rdf:resource="${contactPoint.hasEmail}"/>
-                <vcard:hasTelephoneNumber>${contactPoint.hasTelephone}</vcard:hasTelephoneNumber>
-            </vcard:Organization>`;
-
-        // TODO where to infer the language from?
-        let lang = 'de';
-        // TODO lots of fields left to infer
-        let dcatApPluXml = `<?xml version="1.0"?>
-        <rdf:RDF
-            rdf:xmlns="${WfsMapper.RDF}"
-            dcat:xmlns="${WfsMapper.DCAT}"
-            dcterms:xmlns="${WfsMapper.DCT}"
-            vcard:xmlns="${WfsMapper.VCARD}"
-            plu:xmlns="${WfsMapper.PLU}">
-            <dcat:Dataset rdf:about="https://some.tld/features/${this.uuid}">
-                <dcat:contactPoint>
-                    ${vcardXml}
-                </dcat:contactPoint>
-                <dcterms:description xml:lang="${lang}">${this._getDescription()}</dcterms:description>
-                <dcterms:identifier>${this.uuid}</dcterms:identifier>
-                <dcterms:title xml:lang="${lang}">${this._getTitle()}</dcterms:title>
-                <dcat:distribution rdf:resource="${'??'}"></dcat:distribution>
-                <dcterms:publisher>
-                    <dcterms:type></dcterms:type>
-                    <foaf:name>{??}</foaf:name>
-                </dcterms:publisher>
-                <plu:PlanState>${'?? TODO: Mapping'}</plu:PlanState>
-                <plu:pluProcedureState rdf:resource="${'?? TODO: Mapping'}" />
-                <plu:procedureStartDate rdf:resource="${'?? TODO: Mapping'}" />
-                <dcterms:issued>${this._getIssued()}</dcterms:issued>
-                <dcterms:modified>${this._getModifiedDate()}</dcterms:modified>
-                <dcterms:relation>${'?? TODO: leer?'}</dcterms:relation>
-                <plu:pluPlanType rdf:resource="${'?? TODO: Mapping'}" />
-                <plu:pluPlanTypeFine rdf:resource="${'?? TODO: Mapping'}" />
-                <plu:pluProcedureType rdf:resource="${'?? TODO: Mapping'}" />
-                <dcterms:spatial>
-                    <dcat:bbox>${'/.../gml:boundedBy/...'}</dcat:bbox>
-                    <locn:geometry>${this._getSpatialGml()}</locn:geometry>
-                    <dcat:centroid>{leer oder berechnen?}</dcat:centroid>
-                    <locn:geographicName>{leer}</locn:geographicName>
-                </dcterms:spatial>
-            </dcat:Dataset>
-        </rdf:RDF>`;
-
-        return dcatApPluXml;
+        return DcatApPluFactory.createXml({
+            catalog: {
+                description: '',
+                title: '',
+                publisher: {
+                    name: ''
+                }
+            }, 
+            contactPoint: {
+                address: '',
+                country: '',
+                email: '',
+                locality: '',
+                orgName: '',
+                phone: '',
+                postalCode: ''
+            }, 
+            // contributors: null,
+            descriptions: [this._getDescription()], 
+            // distributions: null,
+            // geographicName: null,
+            identifier: this.uuid,
+            issued: this._getIssued(),
+            // TODO where to infer the language from?
+            lang: 'de',
+            locationXml: this._getSpatialGml(),
+            // maintainers: null,
+            modified: this._getModifiedDate(),
+            namespaces: WfsMapper.nsMap,
+            planState: null,
+            // pluPlanType: null,
+            // pluPlanTypeFine: null,
+            pluProcedureState: null,
+            // pluProcedureType: null,
+            // pluProcessSteps: null,
+            procedureStartDate: null,
+            publisher: {
+                name: ''
+            },
+            relation: null,
+            title: this._getTitle()
+        });
     }
 
     // TODO
