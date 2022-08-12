@@ -74,7 +74,7 @@ interface DcatApPlu {
     lang,
     locationXml: string,
     maintainers?: Agent[],
-    modified: string,
+    modified: Date,
     namespaces: object,
     planState: string,
     pluPlanType?: string,

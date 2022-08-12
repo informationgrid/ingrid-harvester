@@ -39,6 +39,7 @@ import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
+import { DcatApPluFactory } from "../DcatApPluFactory";
 
 let xpath = require('xpath');
 
@@ -49,6 +50,7 @@ export class CswMapper extends GenericMapper {
     static GML = 'http://www.opengis.net/gml';
     static GML_3_2 = 'http://www.opengis.net/gml/3.2';
     static CSW = 'http://www.opengis.net/cat/csw/2.0.2';
+    static PLU = 'here goes the custom PLU URL';
     static SRV = 'http://www.isotc211.org/2005/srv';
     static RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
     static RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
@@ -56,13 +58,15 @@ export class CswMapper extends GenericMapper {
     static DCT = 'http://purl.org/dc/terms/';
     static VCARD = 'http://www.w3.org/2006/vcard/ns#';
 
-    static select = xpath.useNamespaces({
+    static nsMap = {
         'gmd': CswMapper.GMD,
         'gco': CswMapper.GCO,
         'gml': CswMapper.GML,
         'gml32': CswMapper.GML_3_2,
         'srv': CswMapper.SRV
-    });
+    };
+
+    static select = xpath.useNamespaces(CswMapper.nsMap);
 
     private log = getLogger();
 
@@ -490,6 +494,11 @@ export class CswMapper extends GenericMapper {
         return new Date(CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent);
     }
 
+    _getSpatialGml(): any {
+        let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
+        return geographicBoundingBoxes.toString();
+    }
+
     _getSpatial(): any {
         let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];
@@ -840,52 +849,51 @@ export class CswMapper extends GenericMapper {
         }
     }
 
+    // TODO lots of fields left to infer
     async cswToDcatApPlu(): Promise<string> {
         let contactPoint = await this._getContactPoint();
-        // TODO lots of fields left to infer
-        let vcardXml = `<vcard:Organization>
-                <vcard:fn>${contactPoint['organization-name'] || contactPoint.fn}</vcard:fn>
-                <vcard:hasPostalCode>${contactPoint['postal-code']}</vcard:hasPostalCode>
-                <vcard:hasStreetAddress>${'??'}</vcard:hasStreetAddress>
-                <vcard:hasLocality>${contactPoint['region'] + ' ??'}</vcard:hasLocality>
-                <vcard:hasCountryName>${contactPoint['country-name']}</vcard:hasCountryName>
-                <vcard:hasEmail rdf:resource="${contactPoint.hasEmail}"/>
-                <vcard:hasTelephoneNumber>${contactPoint.hasTelephone}</vcard:hasTelephoneNumber>
-            </vcard:Organization>`;
-
-        // TODO where to infer the language from?
-        let lang = 'de';
-        // TODO lots of fields left to infer
-        // TODO correct namespaces? (copied from dcat.mapper)
-        // TODO missing namespace for "plu"
-        let dcatApPluXml = `<?xml version="1.0"?>
-        <rdf:RDF
-            rdf:xmlns="${CswMapper.RDF}"
-            dcat:xmlns="${CswMapper.DCAT}"
-            dcterms:xmlns="${CswMapper.DCT}"
-            vcard:xmlns="${CswMapper.VCARD}"
-            plu:xmlns="${'??'}">
-            <dcat:Dataset rdf:about="${'??'}">
-                <dcat:contactPoint>
-                    ${vcardXml}
-                </dcat:contactPoint>
-                <dcterms:description xml:lang="${lang}">${this._getDescription()}</dcterms:description>
-                <dcterms:identifier>${this.uuid}</dcterms:identifier>
-                <dcterms:title xml:lang="${lang}">${this._getTitle()}</dcterms:title>
-                <dcat:distribution rdf:resource="${'??'}"></dcat:distribution>
-                <plu:PlanState>${'??'}</plu:PlanState>
-                <plu:pluProcedureState rdf:resource="${'??'}" />
-                <plu:procedureStartDate rdf:resource="${'??'}" />
-                <dcterms:issued>${this._getIssued()}</dcterms:issued>
-                <dcterms:modified>${this._getModifiedDate()}</dcterms:modified>
-                <dcterms:relation>${'??'}</dcterms:relation>
-                <plu:pluPlanType rdf:resource="${'??'}" />
-                <plu:pluPlanTypeFine rdf:resource="${'??'}" />
-                <plu:pluProcedureType rdf:resource="${'??'}" />
-            </dcat:Dataset>
-        </rdf:RDF>`;
-
-        return dcatApPluXml;
+        return DcatApPluFactory.createXml({
+            catalog: {
+                description: '',
+                title: '',
+                publisher: {
+                    name: ''
+                }
+            }, 
+            contactPoint: {
+                address: '??',
+                country: contactPoint['country-name'],
+                email: contactPoint.hasEmail,
+                locality: contactPoint['region'],
+                orgName: contactPoint['organization-name'],
+                phone: contactPoint.hasTelephone,
+                postalCode: contactPoint['postal-code']
+            }, 
+            // contributors: null,
+            descriptions: [this._getDescription()], 
+            // distributions: null,
+            // geographicName: null,
+            identifier: this.uuid,
+            issued: this._getIssued(),
+            // TODO where to infer the language from?
+            lang: 'de',
+            locationXml: this._getSpatialGml(),
+            // maintainers: null,
+            modified: this._getModifiedDate(),
+            namespaces: CswMapper.nsMap,
+            planState: null,
+            // pluPlanType: null,
+            // pluPlanTypeFine: null,
+            pluProcedureState: null,
+            // pluProcedureType: null,
+            // pluProcessSteps: null,
+            procedureStartDate: null,
+            publisher: {
+                name: ''
+            },
+            relation: null,
+            title: this._getTitle()
+        });
     }
 
     _getCreator(): Person[] {
