@@ -1,0 +1,484 @@
+/*
+ *  ==================================================
+ *  mcloud-importer
+ *  ==================================================
+ *  Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+ *  ==================================================
+ *  Licensed under the EUPL, Version 1.2 or – as soon they will be
+ *  approved by the European Commission - subsequent versions of the
+ *  EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *  You may obtain a copy of the Licence at:
+ *
+ *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ * ==================================================
+ */
+
+import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
+import {elasticsearchMapping} from '../../elastic.mapping';
+import {elasticsearchSettings} from '../../elastic.settings';
+import {IndexDocument} from '../../model/index.document';
+import {WfsMapper} from './wfs.mapper';
+import {Summary} from '../../model/summary';
+import {getLogger} from 'log4js';
+import {WfsParameters, RequestDelegate} from '../../utils/http-request.utils';
+import {OptionsWithUri} from 'request-promise';
+import {DefaultImporterSettings, Importer} from '../../importer';
+import {Observable, Observer} from 'rxjs';
+import {ImportLogMessage, ImportResult} from '../../model/import.result';
+import {WfsSettings} from './wfs.settings';
+import {FilterUtils} from "../../utils/filter.utils";
+
+let log = require('log4js').getLogger(__filename),
+    logSummary = getLogger('summary'),
+    logRequest = getLogger('requests'),
+    DomParser = require('xmldom').DOMParser;
+
+export class WfsSummary extends Summary {
+    additionalSummary() {
+        logSummary.info(`Number of records with at least one mandatory keyword: ${this.opendata}`);
+        logSummary.info(`Number of records with missing links: ${this.missingLinks}`);
+        logSummary.info(`Number of records with missing license: ${this.missingLicense}`);
+        logSummary.info(`Number of records with missing publishers: ${this.missingPublishers}`);
+        logSummary.info(`Number of records imported as valid: ${this.ok}`);
+    }
+}
+
+export const DefaultXplanSettings: any = {
+    xpaths: {
+        name: '/xplan:name',
+        description: '//xplan:beschreibung',
+        spatial: '//xplan:raeumlicherGeltungsbereich'
+    }
+};
+
+// export const DefaultFisSettings: any = {
+//     xpaths: {
+//         name: ,
+//         description: ,
+//         spatial:
+//     }
+// }
+
+export class WfsImporter implements Importer {
+    private readonly settings: WfsSettings;
+    elastic: ElasticSearchUtils;
+    private readonly requestDelegate: RequestDelegate;
+
+    private totalFeatures = 0;
+    private numIndexDocs = 0;
+
+    static defaultSettings: WfsSettings = {
+        ...DefaultElasticsearchSettings,
+        ...DefaultImporterSettings,
+        ...DefaultXplanSettings,
+        // ...DefaultFisSettings,
+        // getFeaturesUrl: '',
+        eitherKeywords: [],
+        httpMethod: 'GET',
+        resultType: 'results'
+    };
+
+    private readonly summary: WfsSummary;
+    private filterUtils: FilterUtils;
+    private contactPoint: any;
+    private supportsPaging: boolean;
+
+    /**
+     *  This is an adhoc replacement for node.firstElementChild because xmldom does not support it.
+     */
+    static firstElementChild(node: Node): any {
+        return Object.values(node.childNodes).find(child => child.nodeType === 1);//Node.ELEMENT_NODE);
+    }
+
+    run = new Observable<ImportLogMessage>(observer => {
+        this.observer = observer;
+        this.exec(observer);
+    });
+
+    private observer: Observer<ImportLogMessage>;
+
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        // merge default settings with configured ones
+        settings = {...WfsImporter.defaultSettings, ...settings};
+
+        if (requestDelegate) {
+            this.requestDelegate = requestDelegate;
+        } else {
+            let requestConfig = WfsImporter.createRequestConfig(settings);
+            this.requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(settings));
+        }
+
+        this.settings = settings;
+        this.filterUtils = new FilterUtils(settings);
+
+        this.summary = new WfsSummary(settings);
+
+        this.elastic = new ElasticSearchUtils(settings, this.summary);
+    }
+
+    async exec(observer: Observer<ImportLogMessage>): Promise<void> {
+        if (this.settings.dryRun) {
+            log.debug('Dry run option enabled. Skipping index creation.');
+            await this.harvest();
+            log.debug('Skipping finalisation of index for dry run.');
+            observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
+            observer.complete();
+        } else {
+            try {
+                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                await this.harvest();
+                if(this.numIndexDocs > 0) {
+                    await this.elastic.sendBulkData(false);
+                    await this.elastic.finishIndex();
+                    observer.next(ImportResult.complete(this.summary));
+                    observer.complete();
+                } else {
+                    if(this.summary.appErrors.length === 0) {
+                        this.summary.appErrors.push('No Results');
+                    }
+                    log.error('No results during WFS import - Keep old index');
+                    observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
+                    observer.complete();
+
+                    // clean up index
+                    this.elastic.deleteIndex(this.elastic.indexName);
+                }
+            } catch (err) {
+                this.summary.appErrors.push(err.message ? err.message : err);
+                log.error('Error during WFS import', err);
+                observer.next(ImportResult.complete(this.summary, 'Error happened'));
+                observer.complete();
+
+                // clean up index
+                this.elastic.deleteIndex(this.elastic.indexName);
+            }
+        }
+    }
+
+    async harvest() {
+
+        // get meta-Metadata through getCapabilities, if available;
+        // TODO send a request to getcapabilites
+        let getCapabilitiesResponse;
+        // let contact = WfsMapper.select('.//ows:ServiceProvider', getCapResponse, true);
+        // this.supportsPaging = WfsMapper.select('.//ows:Constraint[name="ImplementsResultPaging"]/ows:DefaultValue', getCapabilitiesResponse, true).textContent == 'TRUE';
+        this.contactPoint = {
+        //     'fn': WfsMapper.select('./ows:ServiceContact/ows:IndividualName', contact, true).textContenxt,
+        //     'organization-name': WfsMapper.select('./ows:ProviderName', contact, true).textContenxt,
+        //     'street-address': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', contact, true).textContenxt,
+        //     'region': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', contact, true).textContenxt,
+        //     'country': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', contact, true).textContenxt,
+        //     'postal-code': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', contact, true).textContenxt,
+        //     'hasEmail': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', contact, true).textContenxt,
+        //     'hasTelephone': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', contact, true).textContenxt,
+        //     'hasURL': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:OnlineResource/@xlink:href', contact, true).textContenxt,
+        };
+
+        while (true) {
+            log.debug('Requesting next features');
+            let response = await this.requestDelegate.doRequest();
+            let harvestTime = new Date(Date.now());
+
+            let responseDom = new DomParser().parseFromString(response);
+            let resultsNode = responseDom.getElementsByTagNameNS(WfsMapper.nsMap['wfs'], 'FeatureCollection')[0];
+
+            if (resultsNode) {
+                // TODO for v2.0.0, the request will only return accurate numbers if used with a "resultType=hits" query ("unknown" otherwise)
+                // TODO so, before a "real" GetFeature request we should send one to determine metadataset size
+                // this.totalFeatures = resultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures');
+                let hitsSettings: WfsSettings = { ...this.settings, resultType: 'hits' };
+                let hitsRequestConfig = WfsImporter.createRequestConfig(hitsSettings);
+                let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
+                let hitsResponse = await hitsRequestDelegate.doRequest();
+                let hitsResponseDom = new DomParser().parseFromString(hitsResponse);
+                let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(WfsMapper.nsMap['wfs'], 'FeatureCollection')[0];
+                this.totalFeatures = hitsResultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures');
+
+                // TODO for v2.0.0, the request will return 0 (regardless of resultType)
+                // TODO for v1.1.0, the request will not return a separate "number returned" attribute
+                let numReturned = this.settings.version === '2.0.0' ? resultsNode.getAttribute('numberReturned') : 'nullo';
+                numReturned = this.totalFeatures;
+
+                log.debug(`Received ${numReturned} records from ${this.settings.getFeaturesUrl}`);
+                await this.extractFeatures(response, harvestTime)
+            } else {
+                const message = `Error while fetching WFS Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`;
+                log.error(message);
+                this.summary.appErrors.push(message);
+            }
+            this.requestDelegate.incrementStartRecordIndex();
+            /*
+              * startRecord was already incremented in the last step, so we can
+              * directly use it to check if we need to continue.
+              *
+              * If there is a problem with the first request, then numMatched is
+              * still 0. This will result in no records being harvested. If this
+              * behaviour is not desired then the following check should be
+              * updated. The easiest solution would be to set numMatched to
+              * maxRecords * numRetries
+              */
+            if (this.totalFeatures < this.requestDelegate.getStartRecordIndex()) break;
+        }
+        // TODO: how to couple WFS?
+        // this.createDataServiceCoupling();
+    }
+
+    // ED: TODO
+    createDataServiceCoupling(){
+        let bulkData = this.elastic._bulkData;
+        let servicesByDataIdentifier = [];
+        let servicesByFileIdentifier = [];
+        for(let i = 0; i < bulkData.length; i++){
+            let doc = bulkData[i];
+            if(doc.extras){
+                let harvestedData = doc.extras.harvested_data;
+                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
+                let identifierList = WfsMapper.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
+                if(identifierList && identifierList.length > 0){
+                    for(let j = 0; j < identifierList.length; j++){
+                        let identifer = identifierList[j].textContent;
+                        if(!servicesByDataIdentifier[identifer]){
+                            servicesByDataIdentifier[identifer] = [];
+                        }
+                        servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distribution);
+                    }
+                } else {
+                    identifierList = WfsMapper.select('.//srv:operatesOn', xml)
+                    if (identifierList && identifierList.length > 0) {
+                        for (let j = 0; j < identifierList.length; j++) {
+                            let identifer = identifierList[j].getAttribute("uuidref")
+                            if (!servicesByFileIdentifier[identifer]) {
+                                servicesByFileIdentifier[identifer] = [];
+                            }
+                            servicesByFileIdentifier[identifer] = servicesByFileIdentifier[identifer].concat(doc.distribution);
+                        }
+                    }
+                }
+            }
+        }
+
+        for(let i = 0; i < bulkData.length; i++){
+            let doc = bulkData[i];
+            if(doc.extras){
+                let harvestedData = doc.extras.harvested_data;
+                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
+                let identifierList = WfsMapper.select('.//gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
+                if(identifierList){
+                    for(let j = 0; j < identifierList.length; j++){
+                        let identifer = identifierList[j].textContent;
+                        if(servicesByDataIdentifier[identifer]){
+                            doc.distribution = doc.distribution.concat(servicesByDataIdentifier[identifer]);
+                        }
+                    }
+                }
+                identifierList = WfsMapper.select('.//gmd:fileIdentifier/gco:CharacterString', xml)
+                if(identifierList){
+                    for(let j = 0; j < identifierList.length; j++){
+                        let identifer = identifierList[j].textContent;
+                        if(servicesByFileIdentifier[identifer]){
+                            doc.distribution = doc.distribution.concat(servicesByFileIdentifier[identifer]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // ED: TODO
+    async extractFeatures(getFeatureResponse, harvestTime) {
+        let promises = [];
+        let xml = new DomParser({ xmlns: WfsMapper.nsMap }).parseFromString(getFeatureResponse, 'application/xml');
+        // some documents may use wfs:member, some gml:featureMember
+        // TODO this is not consolidated, some may use another element alltogether...
+        // let features = xml.getElementsByTagNameNS(this.getWfsNs(), 'member');
+        // if (features.length === 0) {
+        //     features = xml.getElementsByTagNameNS(this.getGmlNs(), 'featureMember');
+        // }
+        // TODO probably get these node names from settings, or from user settings?
+        let features = WfsMapper.select('.//wfs:member|.//gml:featureMember', xml, false);
+        // let features = WfsMapper.select('.//wfs:member/*[@gml:id]|.//gml:featureMember/*[@gml:id]', xml, false);
+        let ids = [];
+        for (let i = 0; i < features.length; i++) {
+            // let child = WfsImporter.firstElementChild(features[i])
+            // console.log('importing feature ', child.getAttributeNS(this.getGmlNs(), 'id'));
+            ids.push(WfsImporter.firstElementChild(features[i]).getAttributeNS(WfsMapper.nsMap['gml'], 'id'));
+        }
+        console.log(ids);
+
+        let now = new Date(Date.now());
+        let storedData;
+
+        if (this.settings.dryRun) {
+            storedData = ids.map(() => now);
+        } else {
+            storedData = await this.elastic.getStoredData(ids);
+        }
+
+        for (let i = 0; i < features.length; i++) {
+            let child = WfsImporter.firstElementChild(features[i])
+            if (child == undefined) {
+                continue;
+            }
+
+            this.summary.numDocs++;
+
+            const uuid = child.getAttributeNS(WfsMapper.nsMap['gml'], 'id');
+            // const uuid = features[i].getAttributeNS(WfsMapper.nsMap['gml'], 'id');
+            if (!this.filterUtils.isIdAllowed(uuid)) {
+                this.summary.skippedDocs.push(uuid);
+                continue;
+            }
+
+            if (log.isDebugEnabled()) {
+                log.debug(`Import document ${i + 1} from ${features.length}`);
+            }
+            if (logRequest.isDebugEnabled()) {
+                logRequest.debug("Record content: ", features[i].toString());
+            }
+
+            // --- bounding box for FIS Berlin
+            let boundingBox = null;
+            // try {
+            //     let lowerCorner = WfsMapper.select('./gml:boundedBy/*/gml:lowerCorner/text()', xml).trim().split(' ');
+            //     let upperCorner = WfsMapper.select('./gml:boundedBy/*/gml:upperCorner/text()', xml).trim().split(' ');
+            //     let west = parseFloat(lowerCorner[1]);;
+            //     let east = parseFloat(upperCorner[1]);
+            //     let south = parseFloat(lowerCorner[0]);
+            //     let north = parseFloat(upperCorner[0]);;
+        
+            //     if (west === east && north === south) {
+            //         boundingBox = {
+            //             'type': 'point',
+            //             'coordinates': [west, north]
+            //         };
+            //     } else if (west === east || north === south) {
+            //         boundingBox = {
+            //             'type': 'linestring',
+            //             'coordinates': [[west, north], [east, south]]
+            //         };
+            //     } else {
+            //         boundingBox = {
+            //             'type': 'envelope',
+            //             'coordinates': [[west, north], [east, south]]
+            //         };
+            //     }
+            // }
+            // catch (e) {
+            //     // NOPE
+            // }
+            // ---
+
+            let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.contactPoint, boundingBox);
+
+            let doc: any = await IndexDocument.create(mapper).catch(e => {
+                log.error('Error creating index document', e);
+                this.summary.appErrors.push(e.toString());
+                mapper.skipped = true;
+            });
+
+            if (!mapper.shouldBeSkipped()) {
+
+                if (doc.extras.metadata.isValid && doc.distribution.length > 0) {
+                    this.summary.ok++;
+                }
+
+                if (!this.settings.dryRun) {
+                    promises.push(
+                        this.elastic.addDocToBulk(doc, uuid)
+                            .then(response => {
+                                if (!response.queued) {
+                                    // numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                                    // this.observer.next(ImportResult.running(numIndexDocs, records.length));
+                                }
+                            })
+                    );
+                }
+
+            } else {
+                this.summary.skippedDocs.push(uuid);
+            }
+            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalFeatures));
+        }
+        await Promise.all(promises)
+            .catch(err => log.error('Error indexing WFS record', err));
+    }
+
+    getMapper(settings, feature, harvestTime, storedData, summary, contactPoint, boundingBox): WfsMapper {
+        return new WfsMapper(settings, feature, harvestTime, storedData, summary, contactPoint, boundingBox);
+    }
+
+    static createRequestConfig(settings: WfsSettings): OptionsWithUri {
+        let requestConfig: OptionsWithUri = {
+            method: settings.httpMethod || "GET",
+            uri: settings.getFeaturesUrl,
+            json: false,
+            headers: RequestDelegate.wfsRequestHeaders(),
+            proxy: settings.proxy || null
+        };
+
+        // TODO
+        // * correct namespaces
+        // * check filter
+        // * support paging if server supports it
+        if (settings.httpMethod === "POST") {
+            requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
+            <GetFeatures xmlns="http://www.opengis.net/cat/csw/2.0.2"
+                        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xmlns:ogc="http://www.opengis.net/ogc"
+                        xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
+            
+                        service="WFS"
+                        version="${settings.version}"
+                        resultType="${settings.resultType}"
+                <DistributedSearch/>
+                <Query typename="${settings.typename}">
+                    ${settings.featureFilter ? `
+                    <Constraint version=\"1.1.0\">
+                        ${settings.featureFilter}
+                    </Constraint>` : ''}
+                </Query>
+            </GetRecords>`
+
+        } else {
+            requestConfig.qs = <WfsParameters>{
+                request: 'GetFeature',
+                SERVICE: 'WFS',
+                VERSION: settings.version,
+                resultType: settings.resultType,
+                typename: settings.typename,
+                CONSTRAINTLANGUAGE: 'FILTER',
+                CONSTRAINT_LANGUAGE_VERSION: '1.1.0'
+            };
+            if (settings.featureFilter) {
+                requestConfig.qs.constraint = settings.featureFilter;
+            }
+        }
+
+        return requestConfig;
+    }
+
+    // TODO implement paging
+    // low priority, as neither hamburg nor freiburg implement paging on the server side
+    static createPaging(settings: WfsSettings) {
+        return {
+            // TODO paging in WFS works not by selecting a start index, but by traversing "next" URLs given in the server response
+            startFieldName: 'startPosition',
+            startPosition: settings.startPosition,
+            numRecords: settings.maxRecords,
+            count: settings.maxRecords
+        }
+    }
+
+    getSummary(): Summary {
+        return this.summary;
+    }
+}

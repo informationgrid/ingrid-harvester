@@ -39,6 +39,7 @@ import {CkanHarvesterComponent} from './dialog-edit/ckan-harvester/ckan-harveste
 import {CswHarvesterComponent} from './dialog-edit/csw-harvester/csw-harvester.component';
 import {OaiHarvesterComponent} from './dialog-edit/oai-harvester/oai-harvester.component';
 import {SparqlHarvesterComponent} from './dialog-edit/sparql-harvester/sparql-harvester.component';
+import {WfsHarvesterComponent} from './dialog-edit/wfs-harvester/wfs-harvester.component';
 import {DialogHistoryComponent} from './dialog-history/dialog-history.component';
 import {ImporterDetailComponent} from './importer-detail/importer-detail.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
@@ -71,6 +72,7 @@ const harvesterRoutes: Routes = [
     OaiHarvesterComponent,
     DcatHarvesterComponent,
     SparqlHarvesterComponent,
+    WfsHarvesterComponent,
     ImporterDetailComponent,
     ChipListComponent
   ],

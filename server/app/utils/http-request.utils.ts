@@ -50,6 +50,23 @@ export interface CswParameters {
 }
 
 /**
+ * HTTP parameters configuration for WFS harvesters.
+ */
+export interface WfsParameters {
+    readonly request: 'GetFeature' | 'GetCapabilities',
+    readonly SERVICE: 'WFS',
+    readonly VERSION: '2.0.0' | '1.1.0',
+    readonly resultType?: 'hits' | 'results',
+    readonly typename?: string,
+    readonly CONSTRAINTLANGUAGE?: 'FILTER' | 'CQL_TEXT',
+    readonly CONSTRAINT_LANGUAGE_VERSION?: '1.1.0',
+    readonly constraint?: string,
+
+    startPosition?: number,
+    maxRecords?: number
+}
+
+/**
  * HTTP parameters configuration for CKAN harvesters. Since all keys of this
  * object are empty, it can also be used for requests that don't set any
  * parameters.
@@ -120,6 +137,19 @@ export class RequestDelegate {
      * - Content-Type: text/xml
      */
     static cswRequestHeaders(): Headers {
+        return {
+            'User-Agent': 'mCLOUD Harvester. Request-Promise',
+            'Content-Type': 'application/xml'
+        };
+    }
+
+    /**
+     * Returns the default HTTP request headers that can be used for WFS
+     * harvesting requests. The headers that are set are:
+     * - User-Agent: mCLOUD Harvester. Request-Promise
+     * - Content-Type: text/xml
+     */
+    static wfsRequestHeaders(): Headers {
         return {
             'User-Agent': 'mCLOUD Harvester. Request-Promise',
             'Content-Type': 'application/xml'

@@ -39,6 +39,7 @@
             <mat-option value="OAI">OAI</mat-option>
             <mat-option value="DCAT">DCAT</mat-option>
             <mat-option value="SPARQL">SPARQL</mat-option>
+            <mat-option value="WFS">WFS</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -153,6 +154,12 @@
                           [rulesTemplate]="rules"
                           class="flex-column">
       </app-sparql-harvester>
+
+      <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS'" [form]="harvesterForm"
+                         [model]="harvester"
+                         [rulesTemplate]="rules"
+                         class="flex-column">
+      </app-wfs-harvester>
 
       <ng-template #rules>
         <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">

@@ -34,10 +34,12 @@ import {OaiSettings} from './oai/oai.settings';
 import {DcatImporter} from "./dcat/dcat.importer";
 import {SparqlImporter} from "./sparql/sparql.importer";
 import {SparqlSettings} from "./sparql/sparql.settings";
+import {WfsImporter} from "./wfs/wfs.importer";
+import {WfsSettings} from "./wfs/wfs.settings";
 
 export class ImporterFactory {
 
-    public static get(config: ExcelSettings | CkanSettings | CswSettings | OaiSettings | SparqlSettings): Importer {
+    public static get(config: ExcelSettings | CkanSettings | CswSettings | OaiSettings | SparqlSettings | WfsSettings): Importer {
         switch (config.type) {
             case 'CKAN':
                 // remove trailing slash from CKAN URL
@@ -52,6 +54,7 @@ export class ImporterFactory {
             case 'OAI': return new OaiImporter(config);
             case 'DCAT': return new DcatImporter(config);
             case 'SPARQL': return new SparqlImporter(config);
+            case 'WFS': return new WfsImporter(config);
             default: {
                 console.error('Importer not found: ' + config.type);
             }
