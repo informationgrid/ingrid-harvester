@@ -41,6 +41,7 @@ import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { DcatApPluFactory } from "../DcatApPluFactory";
+import { XPathUtils } from "../../utils/xpath.utils";
 
 // const ogr2ogr = require('ogr2ogr').default
 // const gmlParser = require('parse-gml-polygon');
@@ -528,7 +529,7 @@ export class WfsMapper extends GenericMapper {
 
     _getSpatialGml(): any {
         let spatialContainer = WfsMapper.select(this.settings.xpaths.spatial, this.feature, true);
-        let child = WfsImporter.firstElementChild(spatialContainer);
+        let child = XPathUtils.firstElementChild(spatialContainer);
         return child.toString();
     }
 
@@ -562,7 +563,7 @@ export class WfsMapper extends GenericMapper {
         //     return polygonArr;
         // }
         let spatialContainer = WfsMapper.select(this.settings.xpaths.spatial, this.feature, true);
-        let child = WfsImporter.firstElementChild(spatialContainer);
+        let child = XPathUtils.firstElementChild(spatialContainer);
 
         // TODO how to get those definitions automatically from epsg.org or epsg.io?
         // probably best to save these (or only those that occur?) to a CRS.CONFIG file

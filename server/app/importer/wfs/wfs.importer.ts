@@ -35,6 +35,7 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {WfsSettings} from './wfs.settings';
 import {FilterUtils} from "../../utils/filter.utils";
+import { XPathUtils } from '../../utils/xpath.utils';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -90,13 +91,6 @@ export class WfsImporter implements Importer {
     private filterUtils: FilterUtils;
     private contactPoint: any;
     private supportsPaging: boolean;
-
-    /**
-     *  This is an adhoc replacement for node.firstElementChild because xmldom does not support it.
-     */
-    static firstElementChild(node: Node): any {
-        return Object.values(node.childNodes).find(child => child.nodeType === 1);//Node.ELEMENT_NODE);
-    }
 
     run = new Observable<ImportLogMessage>(observer => {
         this.observer = observer;
@@ -309,7 +303,7 @@ export class WfsImporter implements Importer {
         for (let i = 0; i < features.length; i++) {
             // let child = WfsImporter.firstElementChild(features[i])
             // console.log('importing feature ', child.getAttributeNS(this.getGmlNs(), 'id'));
-            ids.push(WfsImporter.firstElementChild(features[i]).getAttributeNS(WfsMapper.nsMap['gml'], 'id'));
+            ids.push(XPathUtils.firstElementChild(features[i]).getAttributeNS(WfsMapper.nsMap['gml'], 'id'));
         }
         console.log(ids);
 
@@ -323,7 +317,7 @@ export class WfsImporter implements Importer {
         }
 
         for (let i = 0; i < features.length; i++) {
-            let child = WfsImporter.firstElementChild(features[i])
+            let child = XPathUtils.firstElementChild(features[i])
             if (child == undefined) {
                 continue;
             }
