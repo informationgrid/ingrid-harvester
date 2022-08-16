@@ -37,6 +37,8 @@ import {WfsSettings} from './wfs.settings';
 import {FilterUtils} from "../../utils/filter.utils";
 import { XPathUtils } from '../../utils/xpath.utils';
 
+const fs = require('fs');
+
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
     logRequest = getLogger('requests'),
@@ -91,6 +93,7 @@ export class WfsImporter implements Importer {
     private filterUtils: FilterUtils;
     private contactPoint: any;
     private supportsPaging: boolean;
+    private epsgToProj4: object;
 
     run = new Observable<ImportLogMessage>(observer => {
         this.observer = observer;
@@ -159,11 +162,29 @@ export class WfsImporter implements Importer {
 
     async harvest() {
 
-        // get meta-Metadata through getCapabilities, if available;
-        // TODO send a request to getcapabilites
-        let getCapabilitiesResponse;
-        // let contact = WfsMapper.select('.//ows:ServiceProvider', getCapResponse, true);
-        // this.supportsPaging = WfsMapper.select('.//ows:Constraint[name="ImplementsResultPaging"]/ows:DefaultValue', getCapabilitiesResponse, true).textContent == 'TRUE';
+        // get used CRSs through getCapabilities
+        let capabilitiesRequestConfig = WfsImporter.createRequestConfig(this.settings, 'GetCapabilities');
+        let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
+        let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
+        let capabilitiesResponseDom = new DomParser().parseFromString(capabilitiesResponse);
+        let featureTypes = WfsMapper.select(`.//*[local-name()="FeatureType"]`, capabilitiesResponseDom, false);
+        // import proj4 strings for all EPSGs
+        const data = fs.readFileSync('app/importer/proj4.json', { encoding: 'utf8', flag: 'r' });
+        let proj4Json = JSON.parse(data);
+        // save only those that we need
+        this.epsgToProj4 = {};
+        for (let featureType of featureTypes) {
+            let typename = WfsMapper.select('.//*[local-name()="Name"]', featureType, true).textContent;
+            if (!this.settings.typename.split(',').includes(typename)) {
+                continue;
+            }
+            let crsNodes = WfsMapper.select('.//*[local-name()="DefaultCRS" or local-name()="OtherCRS"]', featureType, false);
+            for (let node of crsNodes) {
+                let epsg = node.textContent.split(':').pop();
+                this.epsgToProj4[epsg] = proj4Json[epsg];
+            }
+        }
+
         this.contactPoint = {
         //     'fn': WfsMapper.select('./ows:ServiceContact/ows:IndividualName', contact, true).textContenxt,
         //     'organization-name': WfsMapper.select('./ows:ProviderName', contact, true).textContenxt,
@@ -370,7 +391,7 @@ export class WfsImporter implements Importer {
             // }
             // ---
 
-            let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.contactPoint, boundingBox);
+            let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.contactPoint, boundingBox, this.epsgToProj4);
 
             let doc: any = await IndexDocument.create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -405,11 +426,11 @@ export class WfsImporter implements Importer {
             .catch(err => log.error('Error indexing WFS record', err));
     }
 
-    getMapper(settings, feature, harvestTime, storedData, summary, contactPoint, boundingBox): WfsMapper {
-        return new WfsMapper(settings, feature, harvestTime, storedData, summary, contactPoint, boundingBox);
+    getMapper(settings, feature, harvestTime, storedData, summary, contactPoint, boundingBox, epsgToProj4): WfsMapper {
+        return new WfsMapper(settings, feature, harvestTime, storedData, summary, contactPoint, boundingBox, epsgToProj4);
     }
 
-    static createRequestConfig(settings: WfsSettings): OptionsWithUri {
+    static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): OptionsWithUri {
         let requestConfig: OptionsWithUri = {
             method: settings.httpMethod || "GET",
             uri: settings.getFeaturesUrl,
@@ -423,6 +444,7 @@ export class WfsImporter implements Importer {
         // * check filter
         // * support paging if server supports it
         if (settings.httpMethod === "POST") {
+            if (request === 'GetFeature') {
             requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
             <GetFeatures xmlns="http://www.opengis.net/cat/csw/2.0.2"
                         xmlns:gmd="http://www.isotc211.org/2005/gmd"
@@ -440,11 +462,14 @@ export class WfsImporter implements Importer {
                         ${settings.featureFilter}
                     </Constraint>` : ''}
                 </Query>
-            </GetRecords>`
-
+                </GetFeatures>`;
+            }
+            else {
+                // TODO send GetCapabilities post request
+            }
         } else {
             requestConfig.qs = <WfsParameters>{
-                request: 'GetFeature',
+                request: request,
                 SERVICE: 'WFS',
                 VERSION: settings.version,
                 resultType: settings.resultType,

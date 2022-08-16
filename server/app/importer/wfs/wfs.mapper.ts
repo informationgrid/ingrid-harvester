@@ -100,9 +100,10 @@ export class WfsMapper extends GenericMapper {
         keywords: {},
         themes: null
     };
+    private epsgToProj4: object;
 
 
-    constructor(settings, feature, harvestTime, storedData, summary, contactPoint, boundingBox) {
+    constructor(settings, feature, harvestTime, storedData, summary, contactPoint, boundingBox, epsgToProj4) {
         super();
         this.settings = settings;
         this.feature = feature;
@@ -112,6 +113,7 @@ export class WfsMapper extends GenericMapper {
         this.fetched.boundingBox = boundingBox;
         this.fetched.contactPoint = contactPoint;
         this.uuid = WfsMapper.select(`./*/@gml:id`, feature, true).textContent;
+        this.epsgToProj4 = epsgToProj4;
 
         super.init();
     }
@@ -542,87 +544,22 @@ export class WfsMapper extends GenericMapper {
         let spatialContainer = WfsMapper.select(this.settings.xpaths.spatial, this.feature, true);
         let child = XPathUtils.firstElementChild(spatialContainer);
 
-        // TODO how to get those definitions automatically from epsg.org or epsg.io?
-        // probably best to save these (or only those that occur?) to a CRS.CONFIG file
-        // get the ones that are used from GetCapabilities at the start of the harvest
-        proj4.defs('EPSG:25832', "+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
-        // TODO how to determine automatically?
+        // TODO the CRS lookup is far from ideal, and atm very proprietary:
         // for XPLAN just use the srsName attribute; for fis, it's encoded in the element name
-        let crs = 'EPSG:25832';
+        let crs = child.getAttribute('srsName');
+        if (!crs) {
+            spatialContainer.localName.split('_')[1];
+        }
+        // TODO this is not robust and very much specialized for the XPLAN WFS documents
+        if (crs.startsWith('EPSG:')) {
+            crs = crs.split(':', 2)[1];
+        }
+        // define the retrieved CRS for proj4
+        proj4.defs(crs, this.epsgToProj4[crs]);
+        // function to project from specified CRS to WGS84
         let transformer = (x, y) => proj4(crs, 'WGS84').forward([x, y]);
         let geojson = WfsMapper.geojsonUtils.parse(child, { transformCoords: transformer });
-        // return geojson;
-        return {    
-            "type": "Point",
-            "coordinates": [
-                -105.01621,
-                39.57422
-        ]
-          };
-        // let coordinates = [];
-        // switch (child.localName) {
-        //     // TODO handle multisurface
-        //     case 'MultiSurface':
-        //         let polygonElements = WfsMapper.select('//gml:Polygon', child, false);
-        //         for (let polygonElement of polygonElements) {
-        //             coordinates.push(gmlParser(polygonElement));
-        //             console.log("CHILD:", gmlParser(child))
-        //         }
-        //         return {
-        //             'type': 'MultiPolygon',
-        //             'coordinates': coordinates
-        //         };
-        //     // TODO handle polygon
-        //     case 'Polygon':
-        //         coordinates.push(gmlParser(child));
-        //         console.log("CHILD:", gmlParser(child))
-        //         return {
-        //             'type': 'Polygon',
-        //             'coordinates': coordinates
-        //         };
-        //     default:
-        //         // TODO is there more?
-        //         throwError(`Currently not handling spatial info from ${child.localName}.`);
-        //         break;
-        // }
-
-        // let polygon = WfsMapper.select(`${this.settings.xpaths.spatial}/gml:Polygon/gml:exterior/gml:LinearRing/gml:posList`, this.feature, true)?.textContent?.split(' ') ?? [];
-        // let polygonArr = [];
-        // for (let i = 0; i < polygon.length/2; i += 2) {
-        //     polygonArr.push([parseFloat(polygon[i]), parseFloat(polygon[i+1])]);
-        // }
-
-        // // TODO: invalid LinearRing provided for type polygon. Linear ring must be an array of coordinates
-        // // this signals the requirement that the first and last coordinates must be the same
-        // // -> we copy the first coordinate to the end if they're not the same
-        // if (polygonArr[0] != polygonArr[polygonArr.length - 1]) {
-        //     polygonArr.push(polygonArr[0]);
-        // }
-
-        // // TODO we receive following error on import
-        // // illegal_argument_exception: Unable to Tessellate shape [...]. Possible malformed shape detected.
-
-        // return {
-        //     'type': 'Polygon',
-        //     'coordinates': [ polygonArr ]
-        // };
-
-        // let spatialContainer = WfsMapper.select(this.settings.xpaths.spatial, this.feature, true);
-        // let child = WfsImporter.getFirstElementChild(spatialContainer);
-
-        // let stream = new Readable();
-        // stream.push(child.content);
-        // stream.push(null);
-
-        // let options = {};
-        // if (child.getAttribute('srsName')) {
-        //     options['-t_srs'] = child.getAttribute('srsName');
-        // }
-        // let text = await ogr2ogr(stream, options);
-        // console.log("TEXT");
-        // console.log(text);
-        // return text;
-        // return undefined;
+        return geojson;
     }
 
     // TODO
