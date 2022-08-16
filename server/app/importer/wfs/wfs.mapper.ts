@@ -512,35 +512,7 @@ export class WfsMapper extends GenericMapper {
         return child.toString();
     }
 
-    // TODO:check
     _getSpatial(): any {
-        // console.log("spat");
-        // console.log(this.settings.xpaths.spatial);
-        // console.log(`${this.settings.xpaths.spatial}/gml:Polygon/gml:exterior/gml:LinearRing/gml:posList`);
-        // console.log(WfsMapper.select(`${this.settings.xpaths.spatial}/gml:Polygon/gml:exterior/gml:LinearRing/gml:posList`, this.feature));
-        // return {
-        //     'mäh': 'mäh'
-        // }
-
-        // ED: close, but no cigar - tbh, not even close
-        // function handlePolygon(polygonElement) {
-        //     let posListElem = WfsMapper.select("//gml:exterior/*/gml:posList", polygonElement, true);
-        //     let polygon = posListElem.textContent.split(' ');
-        //     let polygonArr = [];
-        //     for (let i = 0; i < polygon.length/2; i += 2) {
-        //         polygonArr.push([parseFloat(polygon[i]), parseFloat(polygon[i+1])]);
-        //     }
-        //     // TODO: invalid LinearRing provided for type polygon. Linear ring must be an array of coordinates
-        //     // this signals the requirement that the first and last coordinates must be the same
-        //     // -> we copy the first coordinate to the end if they're not the same
-        //     if (posListElem.parentNode.localName === 'LinearRing' && polygonArr[0] != polygonArr[polygonArr.length - 1]) {
-        //         polygonArr.push(polygonArr[0]);
-        //     }
-        //     else {
-        //         throwError(`Unrecognized polygon type: ${posListElem.parentNode.localName}`);
-        //     }
-        //     return polygonArr;
-        // }
         let spatialContainer = WfsMapper.select(this.settings.xpaths.spatial, this.feature, true);
         let child = XPathUtils.firstElementChild(spatialContainer);
 

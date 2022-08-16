@@ -313,20 +313,13 @@ export class WfsImporter implements Importer {
         let xml = new DomParser({ xmlns: WfsMapper.nsMap }).parseFromString(getFeatureResponse, 'application/xml');
         // some documents may use wfs:member, some gml:featureMember
         // TODO this is not consolidated, some may use another element alltogether...
-        // let features = xml.getElementsByTagNameNS(this.getWfsNs(), 'member');
-        // if (features.length === 0) {
-        //     features = xml.getElementsByTagNameNS(this.getGmlNs(), 'featureMember');
-        // }
         // TODO probably get these node names from settings, or from user settings?
         let features = WfsMapper.select('.//wfs:member|.//gml:featureMember', xml, false);
         // let features = WfsMapper.select('.//wfs:member/*[@gml:id]|.//gml:featureMember/*[@gml:id]', xml, false);
         let ids = [];
         for (let i = 0; i < features.length; i++) {
-            // let child = WfsImporter.firstElementChild(features[i])
-            // console.log('importing feature ', child.getAttributeNS(this.getGmlNs(), 'id'));
             ids.push(XPathUtils.firstElementChild(features[i]).getAttributeNS(WfsMapper.nsMap['gml'], 'id'));
         }
-        console.log(ids);
 
         let now = new Date(Date.now());
         let storedData;
@@ -346,7 +339,6 @@ export class WfsImporter implements Importer {
             this.summary.numDocs++;
 
             const uuid = child.getAttributeNS(WfsMapper.nsMap['gml'], 'id');
-            // const uuid = features[i].getAttributeNS(WfsMapper.nsMap['gml'], 'id');
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;
@@ -445,23 +437,23 @@ export class WfsImporter implements Importer {
         // * support paging if server supports it
         if (settings.httpMethod === "POST") {
             if (request === 'GetFeature') {
-            requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
-            <GetFeatures xmlns="http://www.opengis.net/cat/csw/2.0.2"
-                        xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                        xmlns:ogc="http://www.opengis.net/ogc"
-                        xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
-            
-                        service="WFS"
-                        version="${settings.version}"
-                        resultType="${settings.resultType}"
-                <DistributedSearch/>
-                <Query typename="${settings.typename}">
-                    ${settings.featureFilter ? `
-                    <Constraint version=\"1.1.0\">
-                        ${settings.featureFilter}
-                    </Constraint>` : ''}
-                </Query>
+                requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
+                <GetFeatures xmlns="http://www.opengis.net/cat/csw/2.0.2"
+                            xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                            xmlns:ogc="http://www.opengis.net/ogc"
+                            xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
+                
+                            service="WFS"
+                            version="${settings.version}"
+                            resultType="${settings.resultType}"
+                    <DistributedSearch/>
+                    <Query typename="${settings.typename}">
+                        ${settings.featureFilter ? `
+                        <Constraint version=\"1.1.0\">
+                            ${settings.featureFilter}
+                        </Constraint>` : ''}
+                    </Query>
                 </GetFeatures>`;
             }
             else {
