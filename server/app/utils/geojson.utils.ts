@@ -134,7 +134,7 @@ export class GeoJsonUtils {
     parseCurveSegments = (_, opts, ctx = {}) => {
         let points = []
 
-        Object.values(this.select('//gml:LineStringSegment', _, false)).forEach(c => {
+        Object.values(this.select('.//gml:LineStringSegment|.//gml:LineString|.//gml:Arc', _, false)).forEach(c => {
             const points2 = this.parseLinearRingOrLineString(c, opts, ctx)
 
             // remove overlapping
