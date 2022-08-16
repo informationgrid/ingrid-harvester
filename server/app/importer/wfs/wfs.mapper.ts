@@ -111,19 +111,7 @@ export class WfsMapper extends GenericMapper {
         this.summary = summary;
         this.fetched.boundingBox = boundingBox;
         this.fetched.contactPoint = contactPoint;
-
-        // this.uuid = WfsMapper.getCharacterStringContent(feature, 'fileIdentifier');
-        // this.uuid = feature.firstChildElement.getAttribute(this.settings.gmlVersion, 'id');
-        // this.uuid = WfsMapper.select(settings.xpaths.id, feature);
-        // TODO:check
-        let typenames = settings.typename.split(',');
-        for (let typename of typenames) {
-            let idElem = WfsMapper.select(`.//${typename}/@gml:id`, feature, true);
-            if (idElem != null) {
-                this.uuid = idElem.textContent;
-                break;
-            }
-        }
+        this.uuid = WfsMapper.select(`./*/@gml:id`, feature, true).textContent;
 
         super.init();
     }
@@ -139,7 +127,6 @@ export class WfsMapper extends GenericMapper {
     // TODO:check
     _getDescription() {
         let abstract = WfsMapper.select(this.settings.xpaths.description, this.feature, true)?.textContent || "just a default value";
-        // let abstract = WfsMapper.getCharacterStringContent(this.idInfo, 'abstract');
         if (!abstract) {
             let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.getFeaturesUrl}\'`;
             this.log.warn(msg);
@@ -334,17 +321,7 @@ export class WfsMapper extends GenericMapper {
 
     // TODO:check
     _getTitle() {
-        let title;
-        let typenames = this.settings.typename.split(',');
-        for (let typename of typenames) {
-            title = WfsMapper.select(`.//${typename}${this.settings.xpaths.name}`, this.feature, true);
-            if (title != null) {
-                title = title.textContent;
-                break;
-            }
-        }
-        // this.settings.xpaths.name
-        // let title = WfsMapper.select('/xplan:name', this.feature, true)?.textContent;
+        let title = WfsMapper.select(this.settings.xpaths.name, this.feature, true).textContent;
         return title && title.trim() !== '' ? title : undefined;
     }
 
@@ -501,8 +478,8 @@ export class WfsMapper extends GenericMapper {
         }
 
         let boundingBox = {};
-        let lowerCorner = WfsMapper.select('(./gml:boundedBy/*/gml:lowerCorner/text()', this.feature).trim().split(' ');
-        let upperCorner = WfsMapper.select('(./gml:boundedBy/*/gml:upperCorner/text()', this.feature).trim().split(' ');
+        let lowerCorner = WfsMapper.select(`./*/gml:boundedBy/gml:Envelope/gml:lowerCorner/text()`, this.feature).trim().split(' ');
+        let upperCorner = WfsMapper.select(`./*/gml:boundedBy/gml:Envelope/gml:upperCorner/text()`, this.feature).trim().split(' ');
         let west = parseFloat(lowerCorner[1]);;
         let east = parseFloat(upperCorner[1]);
         let south = parseFloat(lowerCorner[0]);

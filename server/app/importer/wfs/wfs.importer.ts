@@ -54,9 +54,9 @@ export class WfsSummary extends Summary {
 
 export const DefaultXplanSettings: any = {
     xpaths: {
-        name: '/xplan:name',
-        description: '//xplan:beschreibung',
-        spatial: '//xplan:raeumlicherGeltungsbereich'
+        name: './*/xplan:name',
+        description: './*/xplan:beschreibung',
+        spatial: './*/xplan:raeumlicherGeltungsbereich'
     }
 };
 

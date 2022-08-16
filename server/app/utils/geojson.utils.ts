@@ -28,6 +28,7 @@
 import { deepStrictEqual } from 'deep-strict-equal';
 import rewind from '@turf/rewind';
 import * as xpath from 'xpath';
+import { XPathUtils } from '../utils/xpath.utils';
 
 export class GeoJsonUtils {
 
@@ -59,7 +60,7 @@ export class GeoJsonUtils {
     }
 
     findIn = (root: Node, ...tags) => {
-        return this.select(tags.map(tag => `//${tag}`).join('|'), root, true);
+        return this.select(`.//${tags.join('/')}`, root, true);
     }
 
     createChildContext = (_, opts, ctx) => {
@@ -118,10 +119,10 @@ export class GeoJsonUtils {
         const posList = this.findIn(_, 'gml:posList')
         if (posList) points = this.parsePosList(posList, opts, childCtx)
         else {
-            Object.values(this.select('//gml:Point', _, false)).forEach(c => {
+            Object.values(this.select('.//gml:Point', _, false)).forEach(c => {
             points.push(this.parsePoint(c, opts, childCtx))
             });
-            Object.values(this.select('//gml:pos', _, false)).forEach(c => {
+            Object.values(this.select('.//gml:pos', _, false)).forEach(c => {
             points.push(this.parsePos(c, opts, childCtx))
             });
         }
@@ -155,14 +156,14 @@ export class GeoJsonUtils {
 
         const points = [];
 
-        Object.values(this.select('//gml:curveMember', _, false)).forEach((c: Node) => {
+        Object.values(this.select('.//gml:curveMember', _, false)).forEach((c: Node) => {
             let points2;
 
             const lineString = this.findIn(c, 'gml:LineString');
             if (lineString) {
                 points2 = this.parseLinearRingOrLineString(lineString, opts, childCtx)
             } else {
-                const segments = this.findIn(c, 'gml:Curve', 'gml:segments');
+                const segments = this.findIn(c, 'gml:Curve/gml:segments');
                 if (!segments) throw new Error('invalid ' + c.nodeName + ' element');
 
                 points2 = this.parseCurveSegments(segments, opts, childCtx);
@@ -202,7 +203,7 @@ export class GeoJsonUtils {
             this.parseExteriorOrInterior(exterior, opts, childCtx)
         ]
 
-        Object.values(this.select('//gml:interior', _, false)).forEach(c => {
+        Object.values(this.select('.//gml:interior', _, false)).forEach(c => {
             pointLists.push(this.parseExteriorOrInterior(c, opts, childCtx))
         });
 
@@ -216,7 +217,7 @@ export class GeoJsonUtils {
         if (!patches) throw new Error('invalid ' + _.nodeName + ' element')
 
         const polygons = []
-        Object.values(this.select('//gml:PolygonPatch|gml:Rectangle', _, false)).forEach(c => {
+        Object.values(this.select('.//gml:PolygonPatch|.//gml:Rectangle', _, false)).forEach(c => {
             polygons.push(this.parsePolygonOrRectangle(c, opts, childCtx))
         });
 
@@ -228,8 +229,8 @@ export class GeoJsonUtils {
         const childCtx = this.createChildContext(_, opts, ctx)
 
         const polygons = []
-        Object.values(this.select('//gml:surfaceMember', _, false)).forEach((c: Node) => {
-            const c2 = c.childNodes[0]
+        Object.values(this.select('.//gml:surfaceMember', _, false)).forEach((c: Element) => {
+            const c2 = XPathUtils.firstElementChild(c);
             if (c2.nodeName === 'gml:Surface') {
             polygons.push(...this.parseSurface(c2, opts, childCtx))
             } else if (c2.nodeName === 'gml:Polygon') {
@@ -248,12 +249,13 @@ export class GeoJsonUtils {
         if (surfaceMembers) el = surfaceMembers
 
         const polygons = []
-        Object.values(this.select('//gml:Surface|gml:surfaceMember', _, false)).forEach((c: Node) => {
+        Object.values(this.select('.//gml:Surface|.//gml:surfaceMember', _, false)).forEach((c: Element) => {
             if (c.nodeName === 'gml:Surface') {
             const polygons2 = this.parseSurface(c, opts, ctx)
             polygons.push(...polygons2)
-            } else if (c.nodeName === 'gml:surfaceMember') {
-            const c2 = c.childNodes[0]
+            }
+            else if (c.nodeName === 'gml:surfaceMember') {
+                const c2 = XPathUtils.firstElementChild(c);
             if (c2.nodeName === 'gml:CompositeSurface') {
                 polygons.push(...this.parseCompositeSurface(c2, opts, ctx))
             } else if (c2.nodeName === 'gml:Surface') {
