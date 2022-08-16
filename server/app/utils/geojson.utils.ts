@@ -25,10 +25,10 @@
 // TODO this is a fork of https://github.com/derhuerst/parse-gml-polygon
 // TODO it uses ISC license, which is compatible with EUPL
 
-import { deepStrictEqual } from 'deep-strict-equal';
 import rewind from '@turf/rewind';
 import * as xpath from 'xpath';
 import { XPathUtils } from '../utils/xpath.utils';
+const deepEqual = require('deep-equal');
 
 export class GeoJsonUtils {
 
@@ -140,7 +140,7 @@ export class GeoJsonUtils {
             // remove overlapping
             const end = points[points.length - 1]
             const start = points2[0]
-            if (end && start && deepStrictEqual(end, start)) points2.shift()
+            if (end && start && deepEqual(end, start)) points2.shift()
 
             points.push(...points2)
         });
@@ -172,7 +172,7 @@ export class GeoJsonUtils {
             // remove overlapping
             const end = points[points.length - 1];
             const start = points2[0];
-            if (end && start && deepStrictEqual(end, start)) points2.shift();
+            if (end && start && deepEqual(end, start)) points2.shift();
 
             points.push(...points2);
         });

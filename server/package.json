@@ -26,6 +26,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.4",
     "cron": "^1.7.2",
+    "deep-equal": "^2.0.5",
     "elasticsearch": "^15.2.0",
     "exceljs": "^1.6.3",
     "express": "^4.17.1",
