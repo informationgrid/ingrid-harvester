@@ -84,7 +84,7 @@ export class WfsMapper extends GenericMapper {
 
     private log = getLogger();
 
-    private readonly feature: any;
+    private readonly feature: Node & Element;
     private harvestTime: any;
     private readonly storedData: any;
 
