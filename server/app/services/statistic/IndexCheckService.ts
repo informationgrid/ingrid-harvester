@@ -34,6 +34,8 @@ import {BulkResponse} from "../../statistic/statistic.utils";
 
 let elasticsearch = require('elasticsearch'), log = require('log4js').getLogger(__filename);
 
+require('url').URL;
+
 
 @Service()
 export class IndexCheckService {
@@ -55,9 +57,15 @@ export class IndexCheckService {
         };
 
         // the elasticsearch client for access the cluster
+        const url = new URL(this.settings.elasticSearchUrl);
         this.client = new elasticsearch.Client({
-            host: this.settings.elasticSearchUrl
-            //log: 'trace'
+            // log: 'trace',
+            host: {
+                host: url.hostname,
+                port: url.port,
+                protocol: url.protocol,
+                auth: 'elastic:elastic',
+            }
         });
 
         // @ts-ignore

@@ -33,6 +33,8 @@ import {ElasticSearchUtils} from '../app/utils/elastic.utils';
 let elasticsearch = require('elasticsearch');
 configure('./test/log4js-test.json');
 
+require('url').URL;
+
 
 xdescribe('deduplication by exact title', function() {
     this.timeout(10000);
@@ -49,8 +51,15 @@ xdescribe('deduplication by exact title', function() {
     let summary: Summary = {
         elasticErrors: []
     };
+    const url = new URL(settings.elasticSearchUrl);
     let client = new elasticsearch.Client({
-        host: settings.elasticSearchUrl
+        // log: 'trace',
+        host: {
+            host: url.hostname,
+            port: url.port,
+            protocol: url.protocol,
+            auth: 'elastic:elastic',
+        }
     });
 
     let elasticSearchUtils = new ElasticSearchUtils(settings, summary);

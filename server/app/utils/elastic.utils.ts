@@ -31,6 +31,8 @@ import {ElasticQueries} from "./elastic.queries";
 let elasticsearch = require('elasticsearch'),
     log = require('log4js').getLogger(__filename);
 
+require('url').URL;
+
 export const DefaultElasticsearchSettings: ElasticSettings = {
     elasticSearchUrl: process.env.ELASTIC_URL || "http://localhost:9200",
     index: '',
@@ -62,9 +64,15 @@ export class ElasticSearchUtils {
         this.summary = summary;
 
         // the elasticsearch client for access the cluster
+        const url = new URL(this.settings.elasticSearchUrl);
         this.client = new elasticsearch.Client({
-            host: this.settings.elasticSearchUrl
-            //log: 'trace'
+            // log: 'trace',
+            host: {
+                host: url.hostname,
+                port: url.port,
+                protocol: url.protocol,
+                auth: 'elastic:elastic',
+            }
         });
         this._bulkData = [];
         this.indexName = this.settings.index;

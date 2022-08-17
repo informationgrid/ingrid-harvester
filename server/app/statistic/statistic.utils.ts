@@ -31,6 +31,8 @@ import {ImportLogMessage} from "../model/import.result";
 let elasticsearch = require('elasticsearch'),
     log = require('log4js').getLogger(__filename);
 
+require('url').URL;
+
 export interface BulkResponse {
     queued: boolean;
     response?: any;
@@ -53,9 +55,15 @@ export class StatisticUtils {
         this.settings = settings;
 
         // the elasticsearch client for access the cluster
+        const url = new URL(this.settings.elasticSearchUrl);
         this.client = new elasticsearch.Client({
-            host: this.settings.elasticSearchUrl
-            //log: 'trace'
+            // log: 'trace',
+            host: {
+                host: url.hostname,
+                port: url.port,
+                protocol: url.protocol,
+                auth: 'elastic:elastic',
+            }
         });
         this._bulkData = [];
         this.indexName = "mcloud_harvester_statistic"

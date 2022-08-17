@@ -40,6 +40,7 @@ const request = require('request');
 //const axios = require('axios');
 
 //const ftp = require('basic-ftp');
+require('url').URL;
 
 @Service()
 export class UrlCheckService {
@@ -61,9 +62,15 @@ export class UrlCheckService {
         };
 
         // the elasticsearch client for access the cluster
+        const url = new URL(this.settings.elasticSearchUrl);
         this.client = new elasticsearch.Client({
-            host: this.settings.elasticSearchUrl
-            //log: 'trace'
+            // log: 'trace',
+            host: {
+                host: url.hostname,
+                port: url.port,
+                protocol: url.protocol,
+                auth: 'elastic:elastic',
+            }
         });
 
         // @ts-ignore
