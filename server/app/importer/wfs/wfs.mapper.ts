@@ -52,7 +52,6 @@ export class WfsMapper extends GenericMapper {
     private harvestTime: any;
     private readonly storedData: any;
 
-    // protected readonly idInfo; // : SelectedValue;
     private settings: WfsSettings;
     private readonly uuid: string;
     private summary: WfsSummary;
@@ -106,12 +105,12 @@ export class WfsMapper extends GenericMapper {
     async _getDistributions(): Promise<Distribution[]> {
         let dists = [];
         let urlsFound = [];
-        // let srvIdent = WfsMapper.select('./srv:SV_ServiceIdentification', this.idInfo, true);
+        // let srvIdent = this.select('./srv:SV_ServiceIdentification', this.idInfo, true);
         // if (srvIdent) {
         //     dists = await this.handleDistributionforService(srvIdent, urlsFound);
         // }
 
-        // let distNodes = WfsMapper.select('./gmd:distributionInfo/gmd:MD_Distribution', this.feature);
+        // let distNodes = this.select('./gmd:distributionInfo/gmd:MD_Distribution', this.feature);
         // for (let i = 0; i < distNodes.length; i++) {
         //     let distNode = distNodes[i];
         //     let id = distNode.getAttribute('id');
@@ -120,7 +119,7 @@ export class WfsMapper extends GenericMapper {
         //     let formats = [];
         //     let urls: Distribution[] = [];
 
-        //     WfsMapper.select('.//gmd:MD_Format/gmd:name/gco:CharacterString', distNode).forEach(format => {
+        //     this.select('.//gmd:MD_Format/gmd:name/gco:CharacterString', distNode).forEach(format => {
         //         format.textContent.split(',').forEach(formatItem => {
         //             if (!formats.includes(formatItem)) {
         //                 formats.push(formatItem.trim());
@@ -131,13 +130,13 @@ export class WfsMapper extends GenericMapper {
         //     // Combine formats in a single slash-separated string
         //     if (formats.length === 0) formats.push('Unbekannt');
 
-        //     let onlineResources = WfsMapper.select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource', distNode);
+        //     let onlineResources = this.select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource', distNode);
         //     for (let j = 0; j < onlineResources.length; j++) {
         //         let onlineResource = onlineResources[j];
 
-        //         let urlNode = WfsMapper.select('gmd:linkage/gmd:URL', onlineResource);
-        //         let title = WfsMapper.select('gmd:name/gco:CharacterString', onlineResource);
-        //         let protocolNode = WfsMapper.select('gmd:protocol/gco:CharacterString', onlineResource);
+        //         let urlNode = this.select('gmd:linkage/gmd:URL', onlineResource);
+        //         let title = this.select('gmd:name/gco:CharacterString', onlineResource);
+        //         let protocolNode = this.select('gmd:protocol/gco:CharacterString', onlineResource);
 
         //         let url = null;
         //         if (urlNode.length > 0) {
@@ -396,7 +395,7 @@ export class WfsMapper extends GenericMapper {
     // TODO
     _getModifiedDate() {
         return undefined;
-        // return new Date(WfsMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.feature, true).textContent);
+        // return new Date(this.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.feature, true).textContent);
     }
 
     // TODO do we need this?
@@ -462,12 +461,12 @@ export class WfsMapper extends GenericMapper {
 
     // TODO
     _getSpatialText(): string {
-        // let geoGraphicDescriptions = WfsMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription', this.idInfo);
+        // let geoGraphicDescriptions = this.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription', this.idInfo);
         // let result = [];
         // for(let i=0; i < geoGraphicDescriptions.length; i++)
         // {
         //     let geoGraphicDescription = geoGraphicDescriptions[i];
-        //     let geoGraphicCode = WfsMapper.select('./gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', geoGraphicDescription, true);
+        //     let geoGraphicCode = this.select('./gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', geoGraphicDescription, true);
         //     if(geoGraphicCode)
         //         result.push(geoGraphicCode.textContent);
         // }
@@ -485,7 +484,7 @@ export class WfsMapper extends GenericMapper {
 
         // let result: DateRange[] = [];
 
-        // let nodes = WfsMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod|./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml32:TimePeriod', this.idInfo);
+        // let nodes = this.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod|./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml32:TimePeriod', this.idInfo);
 
         // for (let i = 0; i < nodes.length; i++) {
         //     let begin = this.getTimeValue(nodes[i], 'begin');
@@ -498,7 +497,7 @@ export class WfsMapper extends GenericMapper {
         //         });
         //     }
         // }
-        // nodes = WfsMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimeInstant/gml:timePosition|./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml32:TimeInstant/gml32:timePosition', this.idInfo);
+        // nodes = this.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimeInstant/gml:timePosition|./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml32:TimeInstant/gml32:timePosition', this.idInfo);
 
         // let times = nodes.map(node => node.textContent);
         // for (let i = 0; i < times.length; i++) {
@@ -652,22 +651,10 @@ export class WfsMapper extends GenericMapper {
         return undefined;
     }
 
-    // static getCharacterStringContent(ns, element, cname?): string {
-    //     if (cname) {
-    //         let node = WfsMapper.select(`.//gmd:${cname}/gco:CharacterString`, element, true);
-    //         if (node) {
-    //             return node.textContent;
-    //         }
-    //     } else {
-    //         let node = WfsMapper.select('./gco:CharacterString', element, true);
-    //         return node ? node.textContent : null;
-    //     }
-    // }
-
     // TODO
     _getAccrualPeriodicity(): string {
         // Multiple resourceMaintenance elements are allowed. If present, use the first one
-        // let freq = WfsMapper.select('./*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode', this.idInfo);
+        // let freq = this.select('./*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode', this.idInfo);
         // if (freq.length > 0) {
         //     let periodicity = DcatPeriodicityUtils.getPeriodicity(freq[0].getAttribute('codeListValue'))
         //     if(!periodicity){
@@ -759,14 +746,14 @@ export class WfsMapper extends GenericMapper {
         //     './gmd:contact/gmd:CI_ResponsibleParty'
         // ];
         // for (let i = 0; i < queries.length; i++) {
-        //     let contacts = WfsMapper.select(queries[i], this.feature);
+        //     let contacts = this.select(queries[i], this.feature);
         //     for (let j = 0; j < contacts.length; j++) {
         //         let contact = contacts[j];
-        //         let role = WfsMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+        //         let role = this.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
 
-        //         let name = WfsMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
-        //         let organisation = WfsMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-        //         let email = WfsMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+        //         let name = this.select('./gmd:individualName/gco:CharacterString', contact, true);
+        //         let organisation = this.select('./gmd:organisationName/gco:CharacterString', contact, true);
+        //         let email = this.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
 
         //         if (role === 'originator' || role === 'author') {
         //             let creator: creatorType = {};
@@ -818,16 +805,16 @@ export class WfsMapper extends GenericMapper {
         //     './gmd:contact/gmd:CI_ResponsibleParty'
         // ];
         // for (let i = 0; i < queries.length; i++) {
-        //     let contacts = WfsMapper.select(queries[i], this.feature);
+        //     let contacts = this.select(queries[i], this.feature);
         //     for (let j = 0; j < contacts.length; j++) {
         //         let contact = contacts[j];
-        //         let role = WfsMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+        //         let role = this.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
 
         //         if (role === 'originator') {
-        //             let name = WfsMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
-        //             let org = WfsMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-        //             let email = WfsMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
-        //             let url = WfsMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+        //             let name = this.select('./gmd:individualName/gco:CharacterString', contact, true);
+        //             let org = this.select('./gmd:organisationName/gco:CharacterString', contact, true);
+        //             let email = this.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+        //             let url = this.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
 
         //             if (!name && !org) continue;
 

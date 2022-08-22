@@ -426,6 +426,7 @@ export class WfsImporter implements Importer {
             // catch (e) {
             //     // NOPE
             // }
+            // store overall bounding box in general info
             this.generalInfo['boundingBox'] = boundingBox;
             // ---
 
