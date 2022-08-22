@@ -40,7 +40,7 @@ import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
-import { DcatApPluFactory } from "../DcatApPluFactory";
+import { Contact, DcatApPluFactory } from "../DcatApPluFactory";
 import { XPathUtils } from "../../utils/xpath.utils";
 
 // const ogr2ogr = require('ogr2ogr').default
