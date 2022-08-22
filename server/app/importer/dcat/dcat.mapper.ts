@@ -86,6 +86,7 @@ export class DcatMapper extends GenericMapper {
     private keywordsAlreadyFetched = false;
     private fetched: any = {
         contactPoint: null,
+        publishers: null,
         keywords: {},
         themes: null
     };
@@ -107,7 +108,7 @@ export class DcatMapper extends GenericMapper {
 
         this.linkedDistributions = distributions.filter(distribution => distributionIDs.includes(distribution.getAttribute('rdf:about')))
 
-        let uuid = DcatMapper.select('.//dct:identifier', record, true).textContent;
+        let uuid = DcatMapper.select('./dct:identifier', record, true).textContent;
         if(!uuid) {
             uuid = DcatMapper.select('./dct:identifier/@rdf:resource', record, true).textContent;
         }
@@ -125,9 +126,9 @@ export class DcatMapper extends GenericMapper {
     }
 
     _getDescription() {
-        let description = DcatMapper.select('.//dct:description', this.record, true);
+        let description = DcatMapper.select('./dct:description', this.record, true);
         if (!description) {
-            description = DcatMapper.select('.//dct:abstract', this.record, true);
+            description = DcatMapper.select('./dct:abstract', this.record, true);
         }
         if (!description) {
             let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.catalogUrl}\'`;
@@ -208,16 +209,20 @@ export class DcatMapper extends GenericMapper {
 
 
     async _getPublisher(): Promise<any[]> {
+        if(this.fetched.publishers != null){
+            return this.fetched.publishers
+        }
+
         let publishers = [];
 
-        let dctPublishers = DcatMapper.select('.//dct:publisher', this.record);
+        let dctPublishers = DcatMapper.select('./dct:publisher', this.record);
         for (let i = 0; i < dctPublishers.length; i++) {
-            let organization = DcatMapper.select('.//foaf:Organization', dctPublishers[i], true);
+            let organization = DcatMapper.select('./foaf:Organization', dctPublishers[i], true);
             if(!organization){
-                organization = DcatMapper.select('.//foaf:Organization[@rdf:about="'+dctPublishers[i].getAttribute('rdf:resource')+'"]', this.catalogPage, true)
+                organization = DcatMapper.select('./foaf:Organization[@rdf:about="'+dctPublishers[i].getAttribute('rdf:resource')+'"]', this.catalogPage, true)
             }
             if (organization) {
-                let name = DcatMapper.select('.//foaf:name', organization, true);
+                let name = DcatMapper.select('./foaf:name', organization, true);
                 if(name) {
                     let infos: any = {
                         organization: name.textContent
@@ -230,11 +235,11 @@ export class DcatMapper extends GenericMapper {
 
 
         if (publishers.length === 0) {
-            let creators = DcatMapper.select('.//dct:creator', this.record);
+            let creators = DcatMapper.select('./dct:creator', this.record);
             for (let i = 0; i < creators.length; i++) {
-                let organization = DcatMapper.select('.//foaf:Organization', creators[i], true);
+                let organization = DcatMapper.select('./foaf:Organization', creators[i], true);
                 if (organization) {
-                    let name = DcatMapper.select('.//foaf:name', organization, true);
+                    let name = DcatMapper.select('./foaf:name', organization, true);
                     if (name) {
                         let infos: any = {
                             organization: name.textContent
@@ -250,12 +255,13 @@ export class DcatMapper extends GenericMapper {
             this.summary.missingPublishers++;
             return undefined;
         } else {
+            this.fetched.publishers = publishers;
             return publishers;
         }
     }
 
     _getTitle() {
-        let title = DcatMapper.select('.//dct:title', this.record, true).textContent;
+        let title = DcatMapper.select('./dct:title', this.record, true).textContent;
         return title && title.trim() !== '' ? title : undefined;
     }
 
@@ -646,12 +652,12 @@ export class DcatMapper extends GenericMapper {
     _getCreator(): Person[] {
         let creators = [];
 
-        let creatorNodes = DcatMapper.select('.//dct:creator', this.record);
+        let creatorNodes = DcatMapper.select('./dct:creator', this.record);
         for (let i = 0; i < creatorNodes.length; i++) {
-            let organization = DcatMapper.select('.//foaf:Organization', creatorNodes[i], true);
+            let organization = DcatMapper.select('./foaf:Organization', creatorNodes[i], true);
             if (organization) {
-                let name = DcatMapper.select('.//foaf:name', organization, true);
-                let mbox = DcatMapper.select('.//foaf:mbox', organization, true);
+                let name = DcatMapper.select('./foaf:name', organization, true);
+                let mbox = DcatMapper.select('./foaf:mbox', organization, true);
                 if(name) {
                     let infos: any = {
                         name: name.textContent
@@ -669,12 +675,12 @@ export class DcatMapper extends GenericMapper {
     getMaintainer(): Person[] {
         let maintainers = [];
 
-        let maintainerNodes = DcatMapper.select('.//dct:maintainer', this.record);
+        let maintainerNodes = DcatMapper.select('./dct:maintainer', this.record);
         for (let i = 0; i < maintainerNodes.length; i++) {
-            let organization = DcatMapper.select('.//foaf:Organization', maintainerNodes[i], true);
+            let organization = DcatMapper.select('./foaf:Organization', maintainerNodes[i], true);
             if (organization) {
-                let name = DcatMapper.select('.//foaf:name', organization, true);
-                let mbox = DcatMapper.select('.//foaf:mbox', organization, true);
+                let name = DcatMapper.select('./foaf:name', organization, true);
+                let mbox = DcatMapper.select('./foaf:mbox', organization, true);
                 if(name) {
                     let infos: any = {
                         name: name.textContent
@@ -710,12 +716,12 @@ export class DcatMapper extends GenericMapper {
 
         let originators = [];
 
-        let originatorNode = DcatMapper.select('.//dcatde:originator', this.record);
+        let originatorNode = DcatMapper.select('./dcatde:originator', this.record);
         for (let i = 0; i < originatorNode.length; i++) {
-            let organization = DcatMapper.select('.//foaf:Organization', originatorNode[i], true);
+            let organization = DcatMapper.select('./foaf:Organization', originatorNode[i], true);
             if (organization) {
-                let name = DcatMapper.select('.//foaf:name', organization, true);
-                let mbox = DcatMapper.select('.//foaf:mbox', organization, true);
+                let name = DcatMapper.select('./foaf:name', organization, true);
+                let mbox = DcatMapper.select('./foaf:mbox', organization, true);
                 let infos: any = {
                     name: name.textContent
                 };
