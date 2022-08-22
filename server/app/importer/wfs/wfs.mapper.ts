@@ -39,48 +39,12 @@ import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
-import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { Contact, DcatApPluFactory } from "../DcatApPluFactory";
 import { XPathUtils } from "../../utils/xpath.utils";
 
-// const ogr2ogr = require('ogr2ogr').default
-// const gmlParser = require('parse-gml-polygon');
 const proj4 = require('proj4');
-const xpath = require('xpath');
 
 export class WfsMapper extends GenericMapper {
-
-    static FIS = 'http://www.berlin.de/broker';
-    // static GMD = 'http://www.isotc211.org/2005/gmd';
-    // static GCO = 'http://www.isotc211.org/2005/gco';
-    static GML = 'http://www.opengis.net/gml';
-    static GML_3_2 = 'http://www.opengis.net/gml/3.2';
-    // static CSW = 'http://www.opengis.net/cat/csw/2.0.2';
-    static PLU = 'here goes the custom PLU URL';
-    // static SRV = 'http://www.isotc211.org/2005/srv';
-    static RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-    static RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
-    static DCAT = 'http://www.w3.org/ns/dcat#';
-    static DCT = 'http://purl.org/dc/terms/';
-    static WFS_1_1 = 'http://www.opengis.net/wfs';
-    static WFS_2_0 = 'http://www.opengis.net/wfs/2.0';
-    static XPLAN_5_1 = 'http://www.xplanung.de/xplangml/5/1';
-    static XPLAN_5_2 = 'http://www.xplanung.de/xplangml/5/2';
-    static XPLAN_5_3 = 'http://www.xplanung.de/xplangml/5/3';
-    static XPLAN_5_4 = 'http://www.xplanung.de/xplangml/5/4';
-    static VCARD = 'http://www.w3.org/2006/vcard/ns#';
-
-    static nsMap = {
-        'fis': WfsMapper.FIS,
-        // 'gml': WfsMapper.GML,
-        'gml': WfsMapper.GML_3_2,
-        'wfs11': WfsMapper.WFS_1_1,
-        'wfs': WfsMapper.WFS_2_0,
-        'xplan': WfsMapper.XPLAN_5_1,
-    };
-
-    static select = xpath.useNamespaces(WfsMapper.nsMap);
-    static geojsonUtils = new GeoJsonUtils(WfsMapper.nsMap);
 
     private log = getLogger();
 
@@ -101,16 +65,18 @@ export class WfsMapper extends GenericMapper {
         themes: null
     };
 
+    private select: Function;
 
-    constructor(settings, feature, harvestTime, storedData, summary, generalInfo) {
+    constructor(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils) {
         super();
         this.settings = settings;
         this.feature = feature;
         this.harvestTime = harvestTime;
         this.storedData = storedData;
         this.summary = summary;
-        this.fetched = {...this.fetched, generalInfo};
-        this.uuid = WfsMapper.select(`./*/@gml:id`, feature, true).textContent;
+        this.fetched = {...this.fetched, ...generalInfo, geojsonUtils};
+        this.select = generalInfo['select'];
+        this.uuid = this.select(`./*/@gml:id`, feature, true).textContent;
 
         super.init();
     }
@@ -125,7 +91,7 @@ export class WfsMapper extends GenericMapper {
 
     // TODO:check
     _getDescription() {
-        let abstract = WfsMapper.select(this.settings.xpaths.description, this.feature, true)?.textContent || "just a default value";
+        let abstract = this.select(this.settings.xpaths.description, this.feature, true)?.textContent || "just a default value";
         if (!abstract) {
             let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.getFeaturesUrl}\'`;
             this.log.warn(msg);
@@ -207,14 +173,14 @@ export class WfsMapper extends GenericMapper {
     // TODO
     async handleDistributionforService(srvIdent, urlsFound): Promise<Distribution[]> {
 
-        let getCapabilitiesElement = WfsMapper.select(
+        let getCapabilitiesElement = this.select(
             // convert containing text to lower case
             './srv:containsOperations/srv:SV_OperationMetadata[./srv:operationName/gco:CharacterString/text()[contains(translate(\'GetCapabilities\', \'ABCEGILPST\', \'abcegilpst\'), "getcapabilities")]]/srv:connectPoint/*/gmd:linkage/gmd:URL',
             srvIdent,
             true);
         let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
-        let serviceFormat = WfsMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true);
-        let serviceTypeVersion = WfsMapper.select('.//srv:serviceTypeVersion/gco:CharacterString', srvIdent);
+        let serviceFormat = this.select('.//srv:serviceType/gco:LocalName', srvIdent, true);
+        let serviceTypeVersion = this.select('.//srv:serviceTypeVersion/gco:CharacterString', srvIdent);
         let serviceLinks: Distribution[] = [];
 
         if(serviceFormat){
@@ -240,19 +206,18 @@ export class WfsMapper extends GenericMapper {
         }
 
 
-        let operations = WfsMapper
-            .select('./srv:containsOperations/srv:SV_OperationMetadata', srvIdent);
+        let operations = this.select('./srv:containsOperations/srv:SV_OperationMetadata', srvIdent);
 
         for (let i = 0; i < operations.length; i++) {
-            let onlineResource = WfsMapper.select('./srv:connectPoint/gmd:CI_OnlineResource', operations[i], true);
+            let onlineResource = this.select('./srv:connectPoint/gmd:CI_OnlineResource', operations[i], true);
 
             if(onlineResource) {
-                let urlNode = WfsMapper.select('gmd:linkage/gmd:URL', onlineResource, true);
-                let protocolNode = WfsMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true);
+                let urlNode = this.select('gmd:linkage/gmd:URL', onlineResource, true);
+                let protocolNode = this.select('gmd:protocol/gco:CharacterString', onlineResource, true);
 
                 let title = this.getTitle();
 
-                let operationNameNode = WfsMapper.select('srv:operationName/gco:CharacterString', operations[i], true);
+                let operationNameNode = this.select('srv:operationName/gco:CharacterString', operations[i], true);
                 if(operationNameNode){
                     title = title + " - " + operationNameNode.textContent;
                 }
@@ -275,7 +240,7 @@ export class WfsMapper extends GenericMapper {
     }
 
     _getPublisher(): any {
-        return [{ name: WfsMapper.select('./ows:ProviderName', this.fetched.serviceProvider, true)?.textContent }];
+        return this.fetched.publisher;
     }
 
     _getCatalogLanguage(): string {
@@ -284,7 +249,7 @@ export class WfsMapper extends GenericMapper {
 
     // TODO:check
     _getTitle() {
-        let title = WfsMapper.select(this.settings.xpaths.name, this.feature, true).textContent;
+        let title = this.select(this.settings.xpaths.name, this.feature, true).textContent;
         return title && title.trim() !== '' ? title : undefined;
     }
 
@@ -441,8 +406,8 @@ export class WfsMapper extends GenericMapper {
         }
 
         let boundingBox = {};
-        let lowerCorner = WfsMapper.select(`./*/gml:boundedBy/gml:Envelope/gml:lowerCorner/text()`, this.feature).trim().split(' ');
-        let upperCorner = WfsMapper.select(`./*/gml:boundedBy/gml:Envelope/gml:upperCorner/text()`, this.feature).trim().split(' ');
+        let lowerCorner = this.select(`./*/gml:boundedBy/gml:Envelope/gml:lowerCorner/text()`, this.feature).trim().split(' ');
+        let upperCorner = this.select(`./*/gml:boundedBy/gml:Envelope/gml:upperCorner/text()`, this.feature).trim().split(' ');
         let west = parseFloat(lowerCorner[1]);;
         let east = parseFloat(upperCorner[1]);
         let south = parseFloat(lowerCorner[0]);
@@ -468,13 +433,13 @@ export class WfsMapper extends GenericMapper {
     }
 
     _getSpatialGml(): any {
-        let spatialContainer = WfsMapper.select(this.settings.xpaths.spatial, this.feature, true);
+        let spatialContainer = this.select(this.settings.xpaths.spatial, this.feature, true);
         let child = XPathUtils.firstElementChild(spatialContainer);
         return child.toString();
     }
 
     _getSpatial(): any {
-        let spatialContainer = WfsMapper.select(this.settings.xpaths.spatial, this.feature, true);
+        let spatialContainer = this.select(this.settings.xpaths.spatial, this.feature, true);
         let child = XPathUtils.firstElementChild(spatialContainer);
 
         // TODO the CRS lookup is far from ideal, and atm very proprietary:
@@ -491,7 +456,7 @@ export class WfsMapper extends GenericMapper {
         proj4.defs(crs, this.fetched.epsgToProj4[crs]);
         // function to project from specified CRS to WGS84
         let transformer = (x, y) => proj4(crs, 'WGS84').forward([x, y]);
-        let geojson = WfsMapper.geojsonUtils.parse(child, { transformCoords: transformer });
+        let geojson = this.fetched.geojsonUtils.parse(child, { transformCoords: transformer });
         return geojson;
     }
 
@@ -551,9 +516,9 @@ export class WfsMapper extends GenericMapper {
 
     // TODO
     getTimeValue(node, beginOrEnd: 'begin' | 'end'): Date {
-        let dateNode = WfsMapper.select('./gml:' + beginOrEnd + 'Position|./gml32:' + beginOrEnd + 'Position', node, true);
+        let dateNode = this.select('./gml:' + beginOrEnd + 'Position|./gml32:' + beginOrEnd + 'Position', node, true);
         if (!dateNode) {
-            dateNode = WfsMapper.select('./gml:' + beginOrEnd + '/*/gml:timePosition|./gml32:' + beginOrEnd + '/*/gml32:timePosition', node, true);
+            dateNode = this.select('./gml:' + beginOrEnd + '/*/gml:timePosition|./gml32:' + beginOrEnd + '/*/gml32:timePosition', node, true);
         }
         try {
             if (!dateNode.hasAttribute('indeterminatePosition')) {
@@ -756,8 +721,8 @@ export class WfsMapper extends GenericMapper {
     async wfsToDcatApPlu(): Promise<string> {
         return DcatApPluFactory.createXml({
             catalog: {
-                description: this.fetched.catalog.description,
-                title: this.fetched.catalog.title,
+                description: this.fetched.abstract,
+                title: this.fetched.title,
                 publisher: this._getPublisher()[0]
             }, 
             contactPoint: await this._getContactPoint(), 
@@ -771,7 +736,7 @@ export class WfsMapper extends GenericMapper {
             locationXml: this._getSpatialGml(),
             // maintainers: null,
             modified: this._getModifiedDate(),
-            namespaces: WfsMapper.nsMap,
+            namespaces: this.fetched.nsMap,
             planState: null,
             // pluPlanType: null,
             // pluPlanTypeFine: null,
@@ -896,25 +861,7 @@ export class WfsMapper extends GenericMapper {
     // ED: the features itself contain no contact information
     // we can scrape a little bit from GetCapabilities...
     async _getContactPoint(): Promise<Contact> {
-
-        let contactPoint = this.fetched.contactPoint;
-        if (contactPoint) {
-            return contactPoint;
-        }
-
-        contactPoint = {
-            address: WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', this.fetched.serviceProvider, true).textContent,
-            country: WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', this.fetched.serviceProvider, true).textContent,
-            email: WfsMapper.select('./ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', this.fetched.serviceProvider, true).textContent,
-            fn: WfsMapper.select('./ows:ServiceContact/ows:IndividualName', this.fetched.serviceProvider, true).textContent,
-            locality: WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', this.fetched.serviceProvider, true).textContent,
-            // orgName: WfsMapper.select('./', this.fetched.serviceProvider, true).textContent,
-            phone: WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', this.fetched.serviceProvider, true).textContent,
-            postalCode: WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', this.fetched.serviceProvider, true).textContent,
-            region: WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', this.fetched.serviceProvider, true).textContent
-        };
-        this.fetched.contactPoint = contactPoint;
-        return contactPoint; // TODO index all contacts
+        return this.fetched.contactPoint;
     }
 
     // TODO

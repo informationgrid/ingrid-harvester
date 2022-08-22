@@ -35,9 +35,11 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {WfsSettings} from './wfs.settings';
 import {FilterUtils} from "../../utils/filter.utils";
+import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from '../../utils/xpath.utils';
 
 const fs = require('fs');
+const xpath = require('xpath');
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -99,6 +101,8 @@ export class WfsImporter implements Importer {
     private filterUtils: FilterUtils;
     private generalInfo: object = {};
     private supportsPaging: boolean;
+    private select: Function;
+    private nsMap: {};
 
     run = new Observable<ImportLogMessage>(observer => {
         this.observer = observer;
@@ -167,23 +171,28 @@ export class WfsImporter implements Importer {
 
     async harvest() {
 
-        // get used CRSs through getCapabilities
         let capabilitiesRequestConfig = WfsImporter.createRequestConfig(this.settings, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
         let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
         let capabilitiesResponseDom = new DomParser().parseFromString(capabilitiesResponse);
-        let featureTypes = WfsMapper.select(`.//*[local-name()="FeatureType"]`, capabilitiesResponseDom, false);
+
+        // extract the namespace map for the capabilities
+        this.nsMap = {...XPathUtils.getNsMap(capabilitiesResponseDom), ...XPathUtils.getExtendedNsMap(capabilitiesResponseDom)};
+        this.select = xpath.useNamespaces(this.nsMap);
+
+        // get used CRSs through getCapabilities
+        let featureTypes = this.select(`.//*[local-name()="FeatureType"]`, capabilitiesResponseDom, false);
         // import proj4 strings for all EPSGs
         const data = fs.readFileSync('app/importer/proj4.json', { encoding: 'utf8', flag: 'r' });
         let proj4Json = JSON.parse(data);
         // save only those that we need
         let epsgToProj4 = {};
         for (let featureType of featureTypes) {
-            let typename = WfsMapper.select('.//*[local-name()="Name"]', featureType, true).textContent;
+            let typename = this.select('.//*[local-name()="Name"]', featureType, true).textContent;
             if (!this.settings.typename.split(',').includes(typename)) {
                 continue;
             }
-            let crsNodes = WfsMapper.select('.//*[local-name()="DefaultCRS" or local-name()="OtherCRS"]', featureType, false);
+            let crsNodes = this.select('.//*[local-name()="DefaultCRS" or local-name()="OtherCRS"]', featureType, false);
             for (let node of crsNodes) {
                 let epsg = node.textContent.split(':').pop();
                 epsgToProj4[epsg] = proj4Json[epsg];
@@ -192,14 +201,26 @@ export class WfsImporter implements Importer {
         this.generalInfo['epsgToProj4'] = epsgToProj4;
 
         // store the getCapabilities language in generalInfo
-        this.generalInfo['language'] = WfsMapper.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true).textContent;
+        this.generalInfo['language'] = this.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true)?.textContent;
 
         // store the getCapabilities ServiceProvider in generalInfo
-        this.generalInfo['serviceProvider'] = WfsMapper.select(this.settings.xpaths.capabilities.serviceProvider, capabilitiesResponseDom, true);;
+        let serviceProvider = this.select(this.settings.xpaths.capabilities.serviceProvider, capabilitiesResponseDom, true);
+        this.generalInfo['publisher'] = [{ name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent }];
+        this.generalInfo['contactPoint'] = {
+            address: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', serviceProvider, true)?.textContent,
+            country: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', serviceProvider, true)?.textContent,
+            email: this.select('./ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', serviceProvider, true)?.textContent,
+            fn: this.select('./ows:ServiceContact/ows:IndividualName', serviceProvider, true)?.textContent,
+            locality: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', serviceProvider, true)?.textContent,
+            // orgName: this.select('./', this.fetched.serviceProvider, true).textContent,
+            phone: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', serviceProvider, true)?.textContent,
+            postalCode: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', serviceProvider, true)?.textContent,
+            region: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', serviceProvider, true)?.textContent
+        };
 
         // store title and abstract from getCapabilities in generalInfo
-        this.generalInfo['capabilities.title'] = WfsMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true).textContent;
-        this.generalInfo['capabilities.abstract'] = WfsMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true).textContent;
+        this.generalInfo['title'] = this.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent;
+        this.generalInfo['abstract'] = this.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent;
 
         // this.contactPoint = {
         //     'fn': WfsMapper.select('./ows:ServiceContact/ows:IndividualName', contact, true).textContenxt,
@@ -219,7 +240,7 @@ export class WfsImporter implements Importer {
             let harvestTime = new Date(Date.now());
 
             let responseDom = new DomParser().parseFromString(response);
-            let resultsNode = responseDom.getElementsByTagNameNS(WfsMapper.nsMap['wfs'], 'FeatureCollection')[0];
+            let resultsNode = responseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
 
             if (resultsNode) {
                 // TODO for v2.0.0, the request will only return accurate numbers if used with a "resultType=hits" query ("unknown" otherwise)
@@ -230,7 +251,7 @@ export class WfsImporter implements Importer {
                 let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
                 let hitsResponse = await hitsRequestDelegate.doRequest();
                 let hitsResponseDom = new DomParser().parseFromString(hitsResponse);
-                let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(WfsMapper.nsMap['wfs'], 'FeatureCollection')[0];
+                let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
                 this.totalFeatures = hitsResultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures');
 
                 // TODO for v2.0.0, the request will return 0 (regardless of resultType)
@@ -272,7 +293,7 @@ export class WfsImporter implements Importer {
             if(doc.extras){
                 let harvestedData = doc.extras.harvested_data;
                 let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = WfsMapper.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
+                let identifierList = this.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
                 if(identifierList && identifierList.length > 0){
                     for(let j = 0; j < identifierList.length; j++){
                         let identifer = identifierList[j].textContent;
@@ -282,7 +303,7 @@ export class WfsImporter implements Importer {
                         servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distribution);
                     }
                 } else {
-                    identifierList = WfsMapper.select('.//srv:operatesOn', xml)
+                    identifierList = this.select('.//srv:operatesOn', xml)
                     if (identifierList && identifierList.length > 0) {
                         for (let j = 0; j < identifierList.length; j++) {
                             let identifer = identifierList[j].getAttribute("uuidref")
@@ -301,7 +322,7 @@ export class WfsImporter implements Importer {
             if(doc.extras){
                 let harvestedData = doc.extras.harvested_data;
                 let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = WfsMapper.select('.//gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
+                let identifierList = this.select('.//gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
                 if(identifierList){
                     for(let j = 0; j < identifierList.length; j++){
                         let identifer = identifierList[j].textContent;
@@ -310,7 +331,7 @@ export class WfsImporter implements Importer {
                         }
                     }
                 }
-                identifierList = WfsMapper.select('.//gmd:fileIdentifier/gco:CharacterString', xml)
+                identifierList = this.select('.//gmd:fileIdentifier/gco:CharacterString', xml)
                 if(identifierList){
                     for(let j = 0; j < identifierList.length; j++){
                         let identifer = identifierList[j].textContent;
@@ -326,15 +347,23 @@ export class WfsImporter implements Importer {
     // ED: TODO
     async extractFeatures(getFeatureResponse, harvestTime) {
         let promises = [];
-        let xml = new DomParser({ xmlns: WfsMapper.nsMap }).parseFromString(getFeatureResponse, 'application/xml');
+        let xml = new DomParser().parseFromString(getFeatureResponse, 'application/xml');
+
+        // extend nsmap with the namespaces from the FeatureCollection response
+        // this.nsMap = { ...XPathUtils.getNsMap(xml), ...XPathUtils.getExtendedNsMap(xml) };
+        // TODO: the above does not work, because it doesn't containt the NS for the FeatureType;
+        // the below however includes superfluous NS for the DCAT-AP-PLU document... :/
+        this.nsMap = {...this.nsMap, ...XPathUtils.getNsMap(xml)};
+        this.select = xpath.useNamespaces(this.nsMap);
+
         // some documents may use wfs:member, some gml:featureMember
         // TODO this is not consolidated, some may use another element alltogether...
         // TODO probably get these node names from settings, or from user settings?
-        let features = WfsMapper.select('.//wfs:member|.//gml:featureMember', xml, false);
+        let features = this.select('.//wfs:member|.//gml:featureMember', xml, false);
         // let features = WfsMapper.select('.//wfs:member/*[@gml:id]|.//gml:featureMember/*[@gml:id]', xml, false);
         let ids = [];
         for (let i = 0; i < features.length; i++) {
-            ids.push(XPathUtils.firstElementChild(features[i]).getAttributeNS(WfsMapper.nsMap['gml'], 'id'));
+            ids.push(XPathUtils.firstElementChild(features[i]).getAttributeNS(this.nsMap['gml'], 'id'));
         }
 
         let now = new Date(Date.now());
@@ -354,7 +383,7 @@ export class WfsImporter implements Importer {
 
             this.summary.numDocs++;
 
-            const uuid = child.getAttributeNS(WfsMapper.nsMap['gml'], 'id');
+            const uuid = child.getAttributeNS(this.nsMap['gml'], 'id');
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;
@@ -400,7 +429,11 @@ export class WfsImporter implements Importer {
             this.generalInfo['boundingBox'] = boundingBox;
             // ---
 
-            let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.generalInfo);
+            // store xpath handling stuff in general info
+            this.generalInfo['select'] = this.select;
+            this.generalInfo['nsMap'] = this.nsMap;
+
+            let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.generalInfo, new GeoJsonUtils(this.nsMap));
 
             let doc: any = await IndexDocument.create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -435,8 +468,8 @@ export class WfsImporter implements Importer {
             .catch(err => log.error('Error indexing WFS record', err));
     }
 
-    getMapper(settings, feature, harvestTime, storedData, summary, generalInfo): WfsMapper {
-        return new WfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo);
+    getMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils): WfsMapper {
+        return new WfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils);
     }
 
     static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): OptionsWithUri {
