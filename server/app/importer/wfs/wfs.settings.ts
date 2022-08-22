@@ -27,8 +27,14 @@ import {ImporterSettings} from '../../importer.settings';
 export type WfsSettings = {
     version: "2.0.0" | "1.1.0",
     xpaths: {
-        name: string,
+        capabilities: {
+            abstract: '',
+            language: '',
+            serviceProvider: '',
+            title: ''
+        },
         description: string,
+        name: string,
         spatial: string
     },
     count: number,

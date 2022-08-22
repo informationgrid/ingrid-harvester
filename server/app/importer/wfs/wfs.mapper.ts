@@ -100,20 +100,17 @@ export class WfsMapper extends GenericMapper {
         keywords: {},
         themes: null
     };
-    private epsgToProj4: object;
 
 
-    constructor(settings, feature, harvestTime, storedData, summary, contactPoint, boundingBox, epsgToProj4) {
+    constructor(settings, feature, harvestTime, storedData, summary, generalInfo) {
         super();
         this.settings = settings;
         this.feature = feature;
         this.harvestTime = harvestTime;
         this.storedData = storedData;
         this.summary = summary;
-        this.fetched.boundingBox = boundingBox;
-        this.fetched.contactPoint = contactPoint;
+        this.fetched = {...this.fetched, generalInfo};
         this.uuid = WfsMapper.select(`./*/@gml:id`, feature, true).textContent;
-        this.epsgToProj4 = epsgToProj4;
 
         super.init();
     }
@@ -277,48 +274,12 @@ export class WfsMapper extends GenericMapper {
 
     }
 
-    // TODO
-    async _getPublisher(): Promise<any[]> {
-        let publishers = [];
-        // Look up contacts for the dataset first and then the metadata contact
-        // let queries = [
-        //     './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
-        //     './gmd:contact/gmd:CI_ResponsibleParty'
-        // ];
-        // for (let i = 0; i < queries.length; i++) {
-        //     let contacts = WfsMapper.select(queries[i], this.feature);
-        //     for (let j = 0; j < contacts.length; j++) {
-        //         let contact = contacts[j];
-        //         let role = WfsMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+    _getPublisher(): any {
+        return WfsMapper.select('./ows:ProviderName', this.fetched.serviceProvider, true).textContent;
+    }
 
-        //         let name = WfsMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
-        //         let org = WfsMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-        //         let urlNode = WfsMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
-
-        //         let url = null;
-        //         if (urlNode) {
-        //             let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-        //             url = await UrlUtils.urlWithProtocolFor(requestConfig);
-        //         }
-
-        //         if (role === 'publisher') {
-        //             let infos: any = {};
-
-        //             if (name) infos.name = name.textContent;
-        //             if (url) infos.homepage = url;
-        //             if (org) infos.organization = org.textContent;
-
-        //             publishers.push(infos);
-        //         }
-        //     }
-        // }
-
-        if (publishers.length === 0) {
-            this.summary.missingPublishers++;
-            return undefined;
-        } else {
-            return publishers;
-        }
+    _getCatalogLanguage(): string {
+        return this.fetched.language;
     }
 
     // TODO:check
@@ -527,7 +488,7 @@ export class WfsMapper extends GenericMapper {
             crs = crs.split(':', 2)[1];
         }
         // define the retrieved CRS for proj4
-        proj4.defs(crs, this.epsgToProj4[crs]);
+        proj4.defs(crs, this.fetched.epsgToProj4[crs]);
         // function to project from specified CRS to WGS84
         let transformer = (x, y) => proj4(crs, 'WGS84').forward([x, y]);
         let geojson = WfsMapper.geojsonUtils.parse(child, { transformCoords: transformer });
@@ -795,29 +756,20 @@ export class WfsMapper extends GenericMapper {
     async wfsToDcatApPlu(): Promise<string> {
         return DcatApPluFactory.createXml({
             catalog: {
-                description: '',
-                title: '',
+                description: this.fetched.catalog.description,
+                title: this.fetched.catalog.title,
                 publisher: {
-                    name: ''
+                    name: this._getPublisher()
                 }
             }, 
-            contactPoint: {
-                address: '',
-                country: '',
-                email: '',
-                locality: '',
-                orgName: '',
-                phone: '',
-                postalCode: ''
-            }, 
+            contactPoint: await this._getContactPoint(), 
             // contributors: null,
             descriptions: [this._getDescription()], 
             // distributions: null,
             // geographicName: null,
             identifier: this.uuid,
             issued: this._getIssued(),
-            // TODO where to infer the language from?
-            lang: 'de',
+            lang: this._getCatalogLanguage(),
             locationXml: this._getSpatialGml(),
             // maintainers: null,
             modified: this._getModifiedDate(),
@@ -830,7 +782,7 @@ export class WfsMapper extends GenericMapper {
             // pluProcessSteps: null,
             procedureStartDate: null,
             publisher: {
-                name: ''
+                name: this._getPublisher()
             },
             relation: null,
             title: this._getTitle()
@@ -947,65 +899,24 @@ export class WfsMapper extends GenericMapper {
     // TODO
     // ED: the features itself contain no contact information
     // we can scrape a little bit from GetCapabilities...
-    async _getContactPoint(): Promise<any> {
+    async _getContactPoint(): Promise<Contact> {
 
         let contactPoint = this.fetched.contactPoint;
         if (contactPoint) {
             return contactPoint;
         }
 
-        contactPoint = [];
-        // // Look up contacts for the dataset first and then the metadata contact
-        // let queries = [
-        //     './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
-        //     './gmd:contact/gmd:CI_ResponsibleParty'
-        // ];
-        // for (let i = 0; i < queries.length; i++) {
-        //     let contacts = WfsMapper.select(queries[i], this.feature);
-        //     for (let j = 0; j < contacts.length; j++) {
-        //         let contact = contacts[j];
-        //         let role = WfsMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
-
-        //         if (role !== 'originator' && role !== 'author' && role !== 'publisher') {
-                    // let name = WfsMapper.select('./gmd:individualName/gco:CharacterString', feature, true);
-                    // let org = WfsMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                    // let delPt = WfsMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
-                    // let region = WfsMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
-                    // let country = WfsMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
-                    // let postCode = WfsMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
-                    // let email = WfsMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
-                    // let phone = WfsMapper.select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
-                    // let urlNode = WfsMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
-                    // let url = null;
-                    // if (urlNode) {
-                    //     let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                    //     url = await UrlUtils.urlWithProtocolFor(requestConfig);
-                    // }
-
-                    let infos: any = {};
-
-                    // if (contact.getAttribute('uuid')) {
-                    //     infos.hasUID = contact.getAttribute('uuid');
-                    // }
-
-                    // if (name) infos.fn = name.textContent;
-                    // if (org) infos['organization-name'] = org.textContent;
-
-                    // let line1 = delPt.map(n => WfsMapper.getCharacterStringContent(n));
-                    // line1 = line1.join(', ');
-                    // if (line1) infos['street-address'] = line1;
-
-                    // if (region) infos.region = region.textContent;
-                    // if (country) infos['country-name'] = country.textContent;
-                    // if (postCode) infos['postal-code'] = postCode.textContent;
-                    // if (email) infos.hasEmail = email.textContent;
-                    // if (phone) infos.hasTelephone = phone.textContent;
-                    // if (url) infos.hasURL = url;
-
-                    contactPoint.push(infos);
-        //         }
-        //     }
-        // }
+        contactPoint = {
+            address: WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', this.fetched.serviceProvider, true).textContent,
+            country: WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', this.fetched.serviceProvider, true).textContent,
+            email: WfsMapper.select('./ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', this.fetched.serviceProvider, true).textContent,
+            fn: WfsMapper.select('./ows:ServiceContact/ows:IndividualName', this.fetched.serviceProvider, true).textContent,
+            locality: WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', this.fetched.serviceProvider, true).textContent,
+            // orgName: WfsMapper.select('./', this.fetched.serviceProvider, true).textContent,
+            phone: WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', this.fetched.serviceProvider, true).textContent,
+            postalCode: WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', this.fetched.serviceProvider, true).textContent,
+            region: WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', this.fetched.serviceProvider, true).textContent
+        };
         this.fetched.contactPoint = contactPoint;
         return contactPoint; // TODO index all contacts
     }

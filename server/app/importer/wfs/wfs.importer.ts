@@ -58,7 +58,13 @@ export const DefaultXplanSettings: any = {
     xpaths: {
         name: './*/xplan:name',
         description: './*/xplan:beschreibung',
-        spatial: './*/xplan:raeumlicherGeltungsbereich'
+        spatial: './*/xplan:raeumlicherGeltungsbereich',
+        capabilities: {
+            abstract: './WFS_Capabilities/ows:ServiceIdentification/ows:Abstract',
+            language: './WFS_Capabilities/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language	WFS_Capabilities/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language	WFS_Capabilities/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language	WFS_Capabilities/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language	WFS_Capabilities/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language	WFS_Capabilities/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language	WFS_Capabilities/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language	WFS_Capabilities/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language	WFS_Capabilities/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language	WFS_Capabilities/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language	WFS_Capabilities/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language	WFS_Capabilities/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language',
+            serviceProvider: './WFS_Capabilities/ows:ServiceProvider',
+            title: './WFS_Capabilities/ows:ServiceIdentification/ows:Title'
+        }
     }
 };
 
@@ -91,9 +97,8 @@ export class WfsImporter implements Importer {
 
     private readonly summary: WfsSummary;
     private filterUtils: FilterUtils;
-    private contactPoint: any;
+    private generalInfo: object = {};
     private supportsPaging: boolean;
-    private epsgToProj4: object;
 
     run = new Observable<ImportLogMessage>(observer => {
         this.observer = observer;
@@ -172,7 +177,7 @@ export class WfsImporter implements Importer {
         const data = fs.readFileSync('app/importer/proj4.json', { encoding: 'utf8', flag: 'r' });
         let proj4Json = JSON.parse(data);
         // save only those that we need
-        this.epsgToProj4 = {};
+        let epsgToProj4 = {};
         for (let featureType of featureTypes) {
             let typename = WfsMapper.select('.//*[local-name()="Name"]', featureType, true).textContent;
             if (!this.settings.typename.split(',').includes(typename)) {
@@ -181,11 +186,22 @@ export class WfsImporter implements Importer {
             let crsNodes = WfsMapper.select('.//*[local-name()="DefaultCRS" or local-name()="OtherCRS"]', featureType, false);
             for (let node of crsNodes) {
                 let epsg = node.textContent.split(':').pop();
-                this.epsgToProj4[epsg] = proj4Json[epsg];
+                epsgToProj4[epsg] = proj4Json[epsg];
             }
         }
+        this.generalInfo['epsgToProj4'] = epsgToProj4;
 
-        this.contactPoint = {
+        // store the getCapabilities language in generalInfo
+        this.generalInfo['language'] = WfsMapper.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true).textContent;
+
+        // store the getCapabilities ServiceProvider in generalInfo
+        this.generalInfo['serviceProvider'] = WfsMapper.select(this.settings.xpaths.capabilities.serviceProvider, capabilitiesResponseDom, true);;
+
+        // store title and abstract from getCapabilities in generalInfo
+        this.generalInfo['capabilities.title'] = WfsMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true).textContent;
+        this.generalInfo['capabilities.abstract'] = WfsMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true).textContent;
+
+        // this.contactPoint = {
         //     'fn': WfsMapper.select('./ows:ServiceContact/ows:IndividualName', contact, true).textContenxt,
         //     'organization-name': WfsMapper.select('./ows:ProviderName', contact, true).textContenxt,
         //     'street-address': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', contact, true).textContenxt,
@@ -195,7 +211,7 @@ export class WfsImporter implements Importer {
         //     'hasEmail': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', contact, true).textContenxt,
         //     'hasTelephone': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', contact, true).textContenxt,
         //     'hasURL': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:OnlineResource/@xlink:href', contact, true).textContenxt,
-        };
+        // };
 
         while (true) {
             log.debug('Requesting next features');
@@ -381,9 +397,10 @@ export class WfsImporter implements Importer {
             // catch (e) {
             //     // NOPE
             // }
+            this.generalInfo['boundingBox'] = boundingBox;
             // ---
 
-            let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.contactPoint, boundingBox, this.epsgToProj4);
+            let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.generalInfo);
 
             let doc: any = await IndexDocument.create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -418,8 +435,8 @@ export class WfsImporter implements Importer {
             .catch(err => log.error('Error indexing WFS record', err));
     }
 
-    getMapper(settings, feature, harvestTime, storedData, summary, contactPoint, boundingBox, epsgToProj4): WfsMapper {
-        return new WfsMapper(settings, feature, harvestTime, storedData, summary, contactPoint, boundingBox, epsgToProj4);
+    getMapper(settings, feature, harvestTime, storedData, summary, generalInfo): WfsMapper {
+        return new WfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo);
     }
 
     static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): OptionsWithUri {
