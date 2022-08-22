@@ -275,7 +275,7 @@ export class WfsMapper extends GenericMapper {
     }
 
     _getPublisher(): any {
-        return WfsMapper.select('./ows:ProviderName', this.fetched.serviceProvider, true).textContent;
+        return [{ name: WfsMapper.select('./ows:ProviderName', this.fetched.serviceProvider, true)?.textContent }];
     }
 
     _getCatalogLanguage(): string {
@@ -758,9 +758,7 @@ export class WfsMapper extends GenericMapper {
             catalog: {
                 description: this.fetched.catalog.description,
                 title: this.fetched.catalog.title,
-                publisher: {
-                    name: this._getPublisher()
-                }
+                publisher: this._getPublisher()[0]
             }, 
             contactPoint: await this._getContactPoint(), 
             // contributors: null,
@@ -781,9 +779,7 @@ export class WfsMapper extends GenericMapper {
             // pluProcedureType: null,
             // pluProcessSteps: null,
             procedureStartDate: null,
-            publisher: {
-                name: this._getPublisher()
-            },
+            publisher: this._getPublisher()[0],
             relation: null,
             title: this._getTitle()
         });
