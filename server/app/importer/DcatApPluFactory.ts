@@ -30,7 +30,7 @@ function optional(nodeName: string, variable: any, mapper?: Function) {
             return variable.map(v => mapper(variable)).join(' ');
         }
         else {
-            return variable.map(v => `<${nodeName}>${v}</${nodeName}>`).join(' ');
+            return variable.map(v => `<${nodeName}>${v}</${nodeName}>`).join('\n');
         }
     }
     else {
@@ -55,14 +55,16 @@ interface Catalog {
     title: string
 }
 
-interface Contact {
-    address: string,
-    country: string,
-    email: string,
-    locality: string,
-    orgName: string,
-    phone: string,
-    postalCode: string
+export interface Contact {
+    address?: string,
+    country?: string,
+    email?: string,
+    fn: string,
+    locality?: string,
+    orgName?: string,
+    phone?: string,
+    postalCode?: string,
+    region?: string
 }
 
 interface Distribution {
@@ -83,7 +85,7 @@ interface Record {
     title: string
 }
     
-interface DcatApPlu {
+export interface DcatApPlu {
     catalog: Catalog, 
     contactPoint: Contact, 
     contributors?: Agent[],
@@ -112,8 +114,8 @@ interface DcatApPlu {
 export class DcatApPluFactory {
 
     static createXml({ catalog, contactPoint, contributors, descriptions, distributions, geographicName, identifier, issued, lang, locationXml, maintainers, modified, namespaces, planState, pluPlanType, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessSteps, procedureStartDate, publisher, relation, title }: DcatApPlu): string {
-        return `<?xml version="1.0"?>
-        <rdf:RDF ${Object.entries(namespaces).map(([ns, uri]) => `${ns}:xmlns="${uri}"`).join(' ')}>
+        let xmlString = `<?xml version="1.0"?>
+        <rdf:RDF ${Object.entries(namespaces).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
             <dcat:Catalog>
                 <dcterms:description>${catalog.description}</dcterms:description>
                 <dcterms:title>${catalog.title}</dcterms:title>
@@ -154,6 +156,8 @@ export class DcatApPluFactory {
                 ${pluProcessSteps ? pluProcessSteps.map(processStep => DcatApPluFactory.xmlProcessStep(processStep)).join(' ') : ''}
             </dcat:Dataset>
         </rdf:RDF>`;
+
+        return xmlString.replace(/^\s*\n/gm, '');
     }
 
     private static xmlDistribution ({ accessUrl: accessURL, description, downloadURL, format, issued, modified, period, pluDoctype, title } : Distribution): string {
@@ -206,16 +210,18 @@ export class DcatApPluFactory {
         </dcat:record>`;
     }
 
-    private static xmlContact({ address, country, email, locality, orgName, phone, postalCode }: Contact): string {
+    private static xmlContact({ address, country, email, fn, locality, orgName, phone, postalCode, region }: Contact): string {
         return `<dcat:contactPoint>
             <vcard:Organization>
-                <vcard:fn>${orgName}</vcard:fn>
-                <vcard:hasPostalCode>${postalCode}</vcard:hasPostalCode>
-                <vcard:hasStreetAddress>${address}</vcard:hasStreetAddress>
-                <vcard:hasLocality>${locality}</vcard:hasLocality>
-                <vcard:hasCountryName>${country}</vcard:hasCountryName>
-                <vcard:hasEmail rdf:resource="${email}"/>
-                <vcard:hasTelephoneNumber>${phone}</vcard:hasTelephoneNumber>
+                <vcard:fn>${fn}</vcard:fn>
+                ${optional('vcard:organization-name', orgName)}
+                ${optional('vcard:hasPostalCode', postalCode)}
+                ${optional('vcard:hasStreetAddress', address)}
+                ${optional('vcard:hasLocality', locality)}
+                ${optional('vcard:hasRegion', region)}
+                ${optional('vcard:hasCountryName', country)}
+                ${optional('vcard:hasEmail', email)}
+                ${optional('vcard:hasTelephoneNumber', phone)}
             </vcard:Organization>
         </dcat:contactPoint>`;
     }
