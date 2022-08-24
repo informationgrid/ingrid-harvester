@@ -34,6 +34,7 @@ export type WfsSettings = {
             title: ''
         },
         description: string,
+        featureParent: string,
         name: string,
         spatial: string
     },

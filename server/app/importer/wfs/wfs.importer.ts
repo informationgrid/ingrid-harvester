@@ -58,25 +58,33 @@ export class WfsSummary extends Summary {
 
 export const DefaultXplanSettings: any = {
     xpaths: {
+        featureParent: './wfs:FeatureCollection/wfs:member',
         name: './*/xplan:name',
         description: './*/xplan:beschreibung',
         spatial: './*/xplan:raeumlicherGeltungsbereich',
         capabilities: {
-            abstract: './/ows:ServiceIdentification/ows:Abstract',
-            language: './/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language',
-            serviceProvider: './/ows:ServiceProvider',
-            title: './/ows:ServiceIdentification/ows:Title'
+            abstract: './ows:ServiceIdentification/ows:Abstract',
+            language: './ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language',
+            serviceProvider: './*[local-name="WFS_Capabilities"]/ows:ServiceProvider',
+            title: './ows:ServiceIdentification/ows:Title'
         }
     }
 };
 
-// export const DefaultFisSettings: any = {
-//     xpaths: {
-//         name: ,
-//         description: ,
-//         spatial:
-//     }
-// }
+export const DefaultFisSettings: any = {
+    xpaths: {
+        featureParent: './wfs:FeatureCollection/gml:featureMember',
+        name: './*/fis:PLANNAME',
+        description: './*/fis:BEREICH',
+        spatial: './*/fis:SHAPE_25833',
+        capabilities: {
+            abstract: './ows:ServiceIdentification/ows:Abstract',
+            language: '',
+            serviceProvider: './*[local-name="WFS_Capabilities"]/ows:ServiceProvider',
+            title: './ows:ServiceIdentification/ows:Title'
+        }
+    }
+}
 
 export class WfsImporter implements Importer {
     private readonly settings: WfsSettings;
@@ -183,7 +191,7 @@ export class WfsImporter implements Importer {
         this.select = xpath.useNamespaces(this.nsMap);
 
         // get used CRSs through getCapabilities
-        let featureTypes = this.select(`.//*[local-name()="FeatureType"]`, capabilitiesResponseDom, false);
+        let featureTypes = this.select(`./*[local-name()="WFS_Capabilities"]/*[local-name()="FeatureTypeList"]/*[local-name()="FeatureType"]`, capabilitiesResponseDom, false);
         // import proj4 strings for all EPSGs
         const data = fs.readFileSync('app/importer/proj4.json', { encoding: 'utf8', flag: 'r' });
         let proj4Json = JSON.parse(data);
@@ -369,11 +377,8 @@ export class WfsImporter implements Importer {
             this.generalInfo['boundingBox'] = geojsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
         }
 
-        // some documents may use wfs:member, some gml:featureMember
-        // TODO this is not consolidated, some may use another element alltogether...
-        // TODO probably get these node names from settings, or from user settings?
-        let features = select('.//wfs:member|.//gml:featureMember', xml, false);
-        // let features = WfsMapper.select('.//wfs:member/*[@gml:id]|.//gml:featureMember/*[@gml:id]', xml, false);
+        // some documents may use wfs:member, some gml:featureMember, some maybe something else: use settings
+        let features = select(this.settings.xpaths.featureParent, xml, false);
         let ids = [];
         for (let i = 0; i < features.length; i++) {
             ids.push(XPathUtils.firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id'));
