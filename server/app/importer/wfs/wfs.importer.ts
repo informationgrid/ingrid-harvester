@@ -103,6 +103,8 @@ export class WfsImporter implements Importer {
     private supportsPaging: boolean;
     private select: Function;
     private nsMap: {};
+    private crsList: string[][];
+    private defaultCrs: string;
 
     run = new Observable<ImportLogMessage>(observer => {
         this.observer = observer;
@@ -186,19 +188,20 @@ export class WfsImporter implements Importer {
         const data = fs.readFileSync('app/importer/proj4.json', { encoding: 'utf8', flag: 'r' });
         let proj4Json = JSON.parse(data);
         // save only those that we need
-        let epsgToProj4 = {};
+        this.crsList = [];
         for (let featureType of featureTypes) {
-            let typename = this.select('.//*[local-name()="Name"]', featureType, true).textContent;
+            let typename = this.select('./*[local-name()="Name"]', featureType, true).textContent;
             if (!this.settings.typename.split(',').includes(typename)) {
                 continue;
             }
-            let crsNodes = this.select('.//*[local-name()="DefaultCRS" or local-name()="OtherCRS"]', featureType, false);
+            let crsNodes = this.select('./*[local-name()="DefaultCRS" or local-name()="OtherCRS" or local-name="DefaultSRS" or local-name="OtherSRS"]', featureType, false);
             for (let node of crsNodes) {
-                let epsg = node.textContent.split(':').pop();
-                epsgToProj4[epsg] = proj4Json[epsg];
+                this.crsList.push([node.textContent, proj4Json[node.textContent.replace('EPSG:', '')]]);
+                if (node.localName === 'DefaultCRS' || node.localName === 'DefaultSRS') {
+                    this.defaultCrs = node.textContent;
+                }
             }
         }
-        this.generalInfo['epsgToProj4'] = epsgToProj4;
 
         // store the getCapabilities language in generalInfo
         this.generalInfo['language'] = this.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true)?.textContent;
@@ -356,6 +359,16 @@ export class WfsImporter implements Importer {
         let nsMap = {...this.nsMap, ...XPathUtils.getNsMap(xml)};
         let select = xpath.useNamespaces(nsMap);
 
+        let geojsonUtils = new GeoJsonUtils(nsMap, this.crsList, this.defaultCrs);
+        // bounding box if given
+        let envelope = select('./gml:Envelope/gml:boundedBy', xml, true);
+        if (envelope != null) {
+            let lowerCorner = select('./gml:lowerCorner/text()', envelope, true);
+            let upperCorner = select('./gml:upperCorner/text()', envelope, true);
+            let crs = envelope.getAttribute('srsName');            
+            this.generalInfo['boundingBox'] = geojsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
+        }
+
         // some documents may use wfs:member, some gml:featureMember
         // TODO this is not consolidated, some may use another element alltogether...
         // TODO probably get these node names from settings, or from user settings?
@@ -391,45 +404,11 @@ export class WfsImporter implements Importer {
                 logRequest.debug("Record content: ", features[i].toString());
             }
 
-            // --- bounding box for FIS Berlin
-            let boundingBox = null;
-            // try {
-            //     let lowerCorner = WfsMapper.select('./gml:boundedBy/*/gml:lowerCorner/text()', xml).trim().split(' ');
-            //     let upperCorner = WfsMapper.select('./gml:boundedBy/*/gml:upperCorner/text()', xml).trim().split(' ');
-            //     let west = parseFloat(lowerCorner[1]);;
-            //     let east = parseFloat(upperCorner[1]);
-            //     let south = parseFloat(lowerCorner[0]);
-            //     let north = parseFloat(upperCorner[0]);;
-        
-            //     if (west === east && north === south) {
-            //         boundingBox = {
-            //             'type': 'point',
-            //             'coordinates': [west, north]
-            //         };
-            //     } else if (west === east || north === south) {
-            //         boundingBox = {
-            //             'type': 'linestring',
-            //             'coordinates': [[west, north], [east, south]]
-            //         };
-            //     } else {
-            //         boundingBox = {
-            //             'type': 'envelope',
-            //             'coordinates': [[west, north], [east, south]]
-            //         };
-            //     }
-            // }
-            // catch (e) {
-            //     // NOPE
-            // }
-            // store overall bounding box in general info
-            this.generalInfo['boundingBox'] = boundingBox;
-            // ---
-
             // store xpath handling stuff in general info
             this.generalInfo['select'] = select;
             this.generalInfo['nsMap'] = nsMap;
 
-            let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.generalInfo, new GeoJsonUtils(nsMap));
+            let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.generalInfo, geojsonUtils);
 
             let doc: any = await IndexDocument.create(mapper).catch(e => {
                 log.error('Error creating index document', e);

@@ -29,20 +29,51 @@ import rewind from '@turf/rewind';
 import * as xpath from 'xpath';
 import { XPathUtils } from '../utils/xpath.utils';
 const deepEqual = require('deep-equal');
+const proj4 = require('proj4');
 
 export class GeoJsonUtils {
 
     private select: Function;
+    private transformer: Function;
 
-    constructor(nsMap: { [name: string]: string; }) {
+    constructor(nsMap: { [name: string]: string; }, crsMap: object, defaultCrs: string) {
         this.select = xpath.useNamespaces(nsMap);
+        // define the retrieved CRSs for proj4
+        proj4.defs(crsMap);
+        // function to project from specified CRS to WGS84
+        this.transformer = (crs: string) => (x: number, y: number) => proj4(crs ?? defaultCrs, 'WGS84').forward([x, y]);
     }
 
-    static noTransform = (...coords) => coords;
+    // static noTransform = (...coords) => coords;
 
-    parseCoords = (s, opts = { transformCoords: GeoJsonUtils.noTransform, stride: 2 }, ctx = { srsDimension: null }) => {
+    getBoundingBox = (lowerCorner: string, upperCorner: string, crs?: string) => {
+        const transformCoords = this.transformer(crs);
+        let [west, south] = transformCoords(...lowerCorner.trim().split(' ').map(parseFloat));
+        let [east, north] = transformCoords(...upperCorner.trim().split(' ').map(parseFloat));
+
+        if (west === east && north === south) {
+            return {
+                'type': 'point',
+                'coordinates': [west, north]
+            };
+        }
+        else if (west === east || north === south) {
+            return {
+                'type': 'linestring',
+                'coordinates': [[west, north], [east, south]]
+            };
+        }
+        else {
+            return {
+                'type': 'envelope',
+                'coordinates': [[west, north], [east, south]]
+            };
+        }
+    }
+
+    parseCoords = (s, opts = { crs: null, stride: 2 }, ctx = { srsDimension: null }) => {
         const stride = ctx.srsDimension || opts.stride || 2
-        const transformCoords = opts.transformCoords || GeoJsonUtils.noTransform
+        const transformCoords = this.transformer(opts.crs)
 
         const coords = s.replace(/\s+/g, ' ').trim().split(' ');
         if (coords.length === 0 || (coords.length % stride) !== 0) {
@@ -295,8 +326,7 @@ export class GeoJsonUtils {
         return polygons;
     }
 
-    parse = (_: Node, opts: { transformCoords?: any, stride?: number } = { transformCoords: GeoJsonUtils.noTransform, stride: 2 }, ctx = {}) => {
-        // this.select = xpath.useNamespaces(opts.nsMap);
+    parse = (_: Node, opts: { crs?: any, stride?: number } = { crs: null, stride: 2 }, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
 
         if (_.nodeName === 'gml:Polygon' || _.nodeName === 'gml:Rectangle') {

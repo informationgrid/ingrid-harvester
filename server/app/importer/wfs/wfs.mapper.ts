@@ -29,7 +29,7 @@ import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
-import {WfsImporter, WfsSummary} from "./wfs.importer";
+import {WfsSummary} from "./wfs.importer";
 import {OptionsWithUri} from "request-promise";
 import {WfsSettings} from './wfs.settings';
 import {throwError} from "rxjs";
@@ -41,8 +41,6 @@ import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
 import { Contact, DcatApPluFactory } from "../DcatApPluFactory";
 import { XPathUtils } from "../../utils/xpath.utils";
-
-const proj4 = require('proj4');
 
 export class WfsMapper extends GenericMapper {
 
@@ -403,32 +401,14 @@ export class WfsMapper extends GenericMapper {
         if (this.fetched.boundingBox) {
             return this.fetched.boundingBox;
         }
-
-        let boundingBox = {};
-        let lowerCorner = this.select(`./*/gml:boundedBy/gml:Envelope/gml:lowerCorner/text()`, this.feature).trim().split(' ');
-        let upperCorner = this.select(`./*/gml:boundedBy/gml:Envelope/gml:upperCorner/text()`, this.feature).trim().split(' ');
-        let west = parseFloat(lowerCorner[1]);;
-        let east = parseFloat(upperCorner[1]);
-        let south = parseFloat(lowerCorner[0]);
-        let north = parseFloat(upperCorner[0]);;
-
-        if (west === east && north === south) {
-            boundingBox = {
-                'type': 'point',
-                'coordinates': [west, north]
-            };
-        } else if (west === east || north === south) {
-            boundingBox = {
-                'type': 'linestring',
-                'coordinates': [[west, north], [east, south]]
-            };
-        } else {
-            boundingBox = {
-                'type': 'envelope',
-                'coordinates': [[west, north], [east, south]]
-            };
+        let envelope = this.select('./*/gml:boundedBy/gml:Envelope', this.feature, true);
+        if (envelope != null) {
+            let lowerCorner = this.select('./gml:lowerCorner/text()', envelope, true);
+            let upperCorner = this.select('./gml:upperCorner/text()', envelope, true);
+            let crs = envelope.getAttribute('srsName');
+            return this.fetched.geojsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
         }
-        return boundingBox;
+        return undefined;
     }
 
     _getSpatialGml(): any {
@@ -448,14 +428,10 @@ export class WfsMapper extends GenericMapper {
             spatialContainer.localName.split('_')[1];
         }
         // TODO this is not robust and very much specialized for the XPLAN WFS documents
-        if (crs.startsWith('EPSG:')) {
-            crs = crs.split(':', 2)[1];
+        if (!crs.startsWith('EPSG:')) {
+            crs = 'EPSG:' + crs;
         }
-        // define the retrieved CRS for proj4
-        proj4.defs(crs, this.fetched.epsgToProj4[crs]);
-        // function to project from specified CRS to WGS84
-        let transformer = (x, y) => proj4(crs, 'WGS84').forward([x, y]);
-        let geojson = this.fetched.geojsonUtils.parse(child, { transformCoords: transformer });
+        let geojson = this.fetched.geojsonUtils.parse(child, { crs: crs });
         return geojson;
     }
 
