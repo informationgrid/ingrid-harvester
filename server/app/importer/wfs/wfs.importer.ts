@@ -233,18 +233,6 @@ export class WfsImporter implements Importer {
         this.generalInfo['title'] = this.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent;
         this.generalInfo['abstract'] = this.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent;
 
-        // this.contactPoint = {
-        //     'fn': WfsMapper.select('./ows:ServiceContact/ows:IndividualName', contact, true).textContenxt,
-        //     'organization-name': WfsMapper.select('./ows:ProviderName', contact, true).textContenxt,
-        //     'street-address': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', contact, true).textContenxt,
-        //     'region': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', contact, true).textContenxt,
-        //     'country': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', contact, true).textContenxt,
-        //     'postal-code': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', contact, true).textContenxt,
-        //     'hasEmail': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', contact, true).textContenxt,
-        //     'hasTelephone': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', contact, true).textContenxt,
-        //     'hasURL': WfsMapper.select('./ows:ServiceContact/ows:ContactInfo/ows:OnlineResource/@xlink:href', contact, true).textContenxt,
-        // };
-
         while (true) {
             log.debug('Requesting next features');
             let response = await this.requestDelegate.doRequest();
@@ -473,7 +461,6 @@ export class WfsImporter implements Importer {
                             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                             xmlns:ogc="http://www.opengis.net/ogc"
                             xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
-                
                             service="WFS"
                             version="${settings.version}"
                             resultType="${settings.resultType}"
