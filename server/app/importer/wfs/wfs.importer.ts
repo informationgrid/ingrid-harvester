@@ -353,17 +353,17 @@ export class WfsImporter implements Importer {
         // this.nsMap = { ...XPathUtils.getNsMap(xml), ...XPathUtils.getExtendedNsMap(xml) };
         // TODO: the above does not work, because it doesn't containt the NS for the FeatureType;
         // the below however includes superfluous NS for the DCAT-AP-PLU document... :/
-        this.nsMap = {...this.nsMap, ...XPathUtils.getNsMap(xml)};
-        this.select = xpath.useNamespaces(this.nsMap);
+        let nsMap = {...this.nsMap, ...XPathUtils.getNsMap(xml)};
+        let select = xpath.useNamespaces(nsMap);
 
         // some documents may use wfs:member, some gml:featureMember
         // TODO this is not consolidated, some may use another element alltogether...
         // TODO probably get these node names from settings, or from user settings?
-        let features = this.select('.//wfs:member|.//gml:featureMember', xml, false);
+        let features = select('.//wfs:member|.//gml:featureMember', xml, false);
         // let features = WfsMapper.select('.//wfs:member/*[@gml:id]|.//gml:featureMember/*[@gml:id]', xml, false);
         let ids = [];
         for (let i = 0; i < features.length; i++) {
-            ids.push(XPathUtils.firstElementChild(features[i]).getAttributeNS(this.nsMap['gml'], 'id'));
+            ids.push(XPathUtils.firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id'));
         }
 
         let now = new Date(Date.now());
@@ -376,14 +376,9 @@ export class WfsImporter implements Importer {
         }
 
         for (let i = 0; i < features.length; i++) {
-            let child = XPathUtils.firstElementChild(features[i])
-            if (child == undefined) {
-                continue;
-            }
-
             this.summary.numDocs++;
 
-            const uuid = child.getAttributeNS(this.nsMap['gml'], 'id');
+            const uuid = XPathUtils.firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id');
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;
@@ -431,10 +426,10 @@ export class WfsImporter implements Importer {
             // ---
 
             // store xpath handling stuff in general info
-            this.generalInfo['select'] = this.select;
-            this.generalInfo['nsMap'] = this.nsMap;
+            this.generalInfo['select'] = select;
+            this.generalInfo['nsMap'] = nsMap;
 
-            let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.generalInfo, new GeoJsonUtils(this.nsMap));
+            let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.generalInfo, new GeoJsonUtils(nsMap));
 
             let doc: any = await IndexDocument.create(mapper).catch(e => {
                 log.error('Error creating index document', e);
