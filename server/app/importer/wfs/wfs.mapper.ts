@@ -413,12 +413,20 @@ export class WfsMapper extends GenericMapper {
 
     _getSpatialGml(): any {
         let spatialContainer = this.select(this.settings.xpaths.spatial, this.feature, true);
+        // use bounding box as fallback
+        if (!spatialContainer) {
+            return this._getBoundingBox();
+        }
         let child = XPathUtils.firstElementChild(spatialContainer);
         return child.toString();
     }
 
     _getSpatial(): any {
         let spatialContainer = this.select(this.settings.xpaths.spatial, this.feature, true);
+        // use bounding box as fallback
+        if (!spatialContainer) {
+            return this._getBoundingBox();
+        }
         let child = XPathUtils.firstElementChild(spatialContainer);
 
         // TODO the CRS lookup is far from ideal, and atm very proprietary:
