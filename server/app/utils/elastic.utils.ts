@@ -446,7 +446,7 @@ export class ElasticSearchUtils {
 
     /**
      * Searches the index for documents with the given ids and copies a set of the issued
-     * date, issued date and harvested data from existing documents, if any exist. If multiple documents with
+     * date, modified date and harvested data from existing documents, if any exist. If multiple documents with
      * the same id are found, then the issued date is copied from the first hit
      * returned by elasticsearch. If no indexed document with the given id is
      * found, then null or undefined is returned.
@@ -508,7 +508,7 @@ export class ElasticSearchUtils {
                             modified = firstHit._source.extras.metadata.modified;
                             dataset_modified = firstHit._source.modified;
                         } catch (e) {
-                            log.debug(`Did not find an existing issued date for dataset with id ${ids[j]}`);
+                            log.debug(`Did not find an existing issued date for dataset with id ${ids[i/2+j]}`);
                         }
 
                         dates.push({
