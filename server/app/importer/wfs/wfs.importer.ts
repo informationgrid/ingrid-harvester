@@ -108,7 +108,7 @@ export class WfsImporter implements Importer {
     private readonly summary: WfsSummary;
     private filterUtils: FilterUtils;
     private generalInfo: object = {};
-    private supportsPaging: boolean;
+    private supportsPaging: boolean = false;
     private select: Function;
     private nsMap: {};
     private crsList: string[][];
@@ -280,7 +280,9 @@ export class WfsImporter implements Importer {
               * updated. The easiest solution would be to set numMatched to
               * maxRecords * numRetries
               */
-            if (this.totalFeatures < this.requestDelegate.getStartRecordIndex()) break;
+            if (!this.supportsPaging || this.totalFeatures < this.requestDelegate.getStartRecordIndex()) {
+                break;
+            }
         }
         // TODO: how to couple WFS?
         // this.createDataServiceCoupling();
