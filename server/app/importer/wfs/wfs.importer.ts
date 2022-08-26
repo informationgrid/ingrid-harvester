@@ -33,7 +33,7 @@ import {OptionsWithUri} from 'request-promise';
 import {DefaultImporterSettings, Importer} from '../../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {WfsSettings} from './wfs.settings';
+import {DefaultXpathSettings, WfsSettings} from './wfs.settings';
 import {FilterUtils} from "../../utils/filter.utils";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from '../../utils/xpath.utils';
@@ -56,35 +56,35 @@ export class WfsSummary extends Summary {
     }
 }
 
-export const DefaultXplanSettings: any = {
-    xpaths: {
-        featureParent: './wfs:FeatureCollection/wfs:member',
-        name: './*/xplan:name',
-        description: './*/xplan:beschreibung',
-        spatial: './*/xplan:raeumlicherGeltungsbereich',
-        capabilities: {
-            abstract: './ows:ServiceIdentification/ows:Abstract',
-            language: './ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language',
-            serviceProvider: './*[local-name="WFS_Capabilities"]/ows:ServiceProvider',
-            title: './ows:ServiceIdentification/ows:Title'
-        }
-    }
-};
+// export const DefaultXplanSettings: any = {
+//     xpaths: {
+//         featureParent: './wfs:FeatureCollection/wfs:member',
+//         name: './*/xplan:name',
+//         description: './*/xplan:beschreibung',
+//         spatial: './*/xplan:raeumlicherGeltungsbereich',
+//         capabilities: {
+//             abstract: './ows:ServiceIdentification/ows:Abstract',
+//             language: './ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language',
+//             serviceProvider: './*[local-name="WFS_Capabilities"]/ows:ServiceProvider',
+//             title: './ows:ServiceIdentification/ows:Title'
+//         }
+//     }
+// };
 
-export const DefaultFisSettings: any = {
-    xpaths: {
-        featureParent: './wfs:FeatureCollection/gml:featureMember',
-        name: './*/fis:PLANNAME',
-        description: './*/fis:BEREICH',
-        spatial: './*/fis:SHAPE_25833',
-        capabilities: {
-            abstract: './ows:ServiceIdentification/ows:Abstract',
-            language: '',
-            serviceProvider: './*[local-name="WFS_Capabilities"]/ows:ServiceProvider',
-            title: './ows:ServiceIdentification/ows:Title'
-        }
-    }
-}
+// export const DefaultFisSettings: any = {
+//     xpaths: {
+//         featureParent: './wfs:FeatureCollection/gml:featureMember',
+//         name: './*/fis:PLANNAME',
+//         description: './*/fis:BEREICH',
+//         spatial: './*/fis:SHAPE_25833',
+//         capabilities: {
+//             abstract: './ows:ServiceIdentification/ows:Abstract',
+//             language: '',
+//             serviceProvider: './*[local-name="WFS_Capabilities"]/ows:ServiceProvider',
+//             title: './ows:ServiceIdentification/ows:Title'
+//         }
+//     }
+// }
 
 export class WfsImporter implements Importer {
     private readonly settings: WfsSettings;
@@ -94,11 +94,10 @@ export class WfsImporter implements Importer {
     private totalFeatures = 0;
     private numIndexDocs = 0;
 
-    static defaultSettings: WfsSettings = {
+    static defaultSettings: Partial<WfsSettings> = {
         ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
-        ...DefaultXplanSettings,
-        // ...DefaultFisSettings,
+        ...DefaultXpathSettings,
         // getFeaturesUrl: '',
         eitherKeywords: [],
         httpMethod: 'GET',
@@ -191,18 +190,18 @@ export class WfsImporter implements Importer {
         this.select = xpath.useNamespaces(this.nsMap);
 
         // get used CRSs through getCapabilities
-        let featureTypes = this.select(`./*[local-name()="WFS_Capabilities"]/*[local-name()="FeatureTypeList"]/*[local-name()="FeatureType"]`, capabilitiesResponseDom, false);
+        let featureTypes = this.select('/wfs:WFS_Capabilities/wfs:FeatureTypeList/wfs:FeatureType', capabilitiesResponseDom, false);
         // import proj4 strings for all EPSGs
         const data = fs.readFileSync('app/importer/proj4.json', { encoding: 'utf8', flag: 'r' });
         let proj4Json = JSON.parse(data);
         // save only those that we need
         this.crsList = [];
         for (let featureType of featureTypes) {
-            let typename = this.select('./*[local-name()="Name"]', featureType, true).textContent;
+            let typename = this.select('./wfs:Name', featureType, true).textContent;
             if (!this.settings.typename.split(',').includes(typename)) {
                 continue;
             }
-            let crsNodes = this.select('./*[local-name()="DefaultCRS" or local-name()="OtherCRS" or local-name()="DefaultSRS" or local-name()="OtherSRS"]', featureType, false);
+            let crsNodes = this.select('./wfs:DefaultCRS|./wfs:OtherCRS|./wfs:DefaultSRS|./OtherSRS', featureType, false);
             for (let node of crsNodes) {
                 this.crsList.push([node.textContent, proj4Json[node.textContent.replace('EPSG:', '')]]);
                 if (node.localName === 'DefaultCRS' || node.localName === 'DefaultSRS') {

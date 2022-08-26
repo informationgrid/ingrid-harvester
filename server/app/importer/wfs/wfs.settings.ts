@@ -28,10 +28,10 @@ export type WfsSettings = {
     version: "2.0.0" | "1.1.0",
     xpaths: {
         capabilities: {
-            abstract: '',
-            language: '',
-            serviceProvider: '',
-            title: ''
+            abstract: string,
+            language: string,
+            serviceProvider: string,
+            title: string
         },
         description: string,
         featureParent: string,
@@ -46,3 +46,18 @@ export type WfsSettings = {
     httpMethod: "GET" | "POST",
     featureFilter?: string
 } & ElasticSettings & ImporterSettings;
+
+export const DefaultXpathSettings: Partial<WfsSettings> = {
+    xpaths: {
+        featureParent: '/wfs:FeatureCollection/wfs:member',
+        name: '',
+        description: '',
+        spatial: '',
+        capabilities: {
+            abstract: '/wfs:WFS_Capabilities/ows:ServiceIdentification/ows:Abstract',
+            language: '',
+            serviceProvider: '/wfs:WFS_Capabilities/ows:ServiceProvider',
+            title: '/wfs:WFS_Capabilities/ows:ServiceIdentification/ows:Title'
+        }
+    }
+}
