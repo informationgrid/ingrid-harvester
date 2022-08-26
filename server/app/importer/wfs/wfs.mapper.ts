@@ -425,7 +425,7 @@ export class WfsMapper extends GenericMapper {
         // for XPLAN just use the srsName attribute; for fis, it's encoded in the element name
         let crs = child.getAttribute('srsName');
         if (!crs) {
-            spatialContainer.localName.split('_')[1];
+            crs = spatialContainer.localName.split('_')[1];
         }
         // TODO this is not robust and very much specialized for the XPLAN WFS documents
         if (!crs.startsWith('EPSG:')) {
