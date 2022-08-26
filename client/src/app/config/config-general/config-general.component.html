@@ -160,7 +160,7 @@
 
         <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center" class="margin-below">
           <mat-form-field fxFlex>
-            <input matInput placeholder="Verzeichnis" formControlName="dir">
+            <input matInput placeholder="Verzeichnis" formControlName="dir" [required]="configForm.get('indexBackup.active').value">
           </mat-form-field>
           <div fxFlex></div>
         </div>
