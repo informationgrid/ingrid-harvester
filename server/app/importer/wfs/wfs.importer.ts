@@ -211,7 +211,8 @@ export class WfsImporter implements Importer {
         }
 
         // store the getCapabilities language in generalInfo
-        this.generalInfo['language'] = this.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true)?.textContent;
+        // try language as xpath; if not found, insert it as is (fallback option)
+        this.generalInfo['language'] = this.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true)?.textContent ?? this.settings.xpaths.capabilities.language;
 
         // store the getCapabilities ServiceProvider in generalInfo
         let serviceProvider = this.select(this.settings.xpaths.capabilities.serviceProvider, capabilitiesResponseDom, true);
