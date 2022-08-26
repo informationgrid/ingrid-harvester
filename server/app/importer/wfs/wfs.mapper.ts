@@ -24,7 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over WFS.
  */
-import {Agent, DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
+import {DateRange, Distribution, GenericMapper, Person} from "../../model/generic.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -33,10 +33,7 @@ import {WfsSummary} from "./wfs.importer";
 import {OptionsWithUri} from "request-promise";
 import {WfsSettings} from './wfs.settings';
 import {throwError} from "rxjs";
-import doc = Mocha.reporters.doc;
 import {ImporterSettings} from "../../importer.settings";
-import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
-import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
 import { Contact, DcatApPluFactory } from "../DcatApPluFactory";
@@ -86,7 +83,6 @@ export class WfsMapper extends GenericMapper {
         return this.summary;
     }
 
-    // TODO:check
     _getDescription() {
         let abstract = this.select(this.settings.xpaths.description, this.feature, true)?.textContent;
         if (!abstract) {
@@ -95,7 +91,6 @@ export class WfsMapper extends GenericMapper {
             this.summary.warnings.push(['No description', msg]);
             this.valid = false;
         }
-
         return abstract;
     }
 
@@ -244,7 +239,6 @@ export class WfsMapper extends GenericMapper {
         return this.fetched.language;
     }
 
-    // TODO:check
     _getTitle() {
         let title = this.select(this.settings.xpaths.name, this.feature, true)?.textContent;
         return title && title.trim() !== '' ? title : undefined;
@@ -345,7 +339,6 @@ export class WfsMapper extends GenericMapper {
         return [displayContact];
     }
 
-    // TODO:check
     _getGeneratedId(): string {
         return this.uuid;
     }
@@ -396,7 +389,6 @@ export class WfsMapper extends GenericMapper {
         // return new Date(this.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.feature, true).textContent);
     }
 
-    // TODO do we need this?
     _getBoundingBox(): any {
         if (this.fetched.boundingBox) {
             return this.fetched.boundingBox;
@@ -675,12 +667,10 @@ export class WfsMapper extends GenericMapper {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.getFeaturesUrl}'.`;
     }
 
-    // TODO
     _getHarvestedData(): string {
         return this.feature.toString();
     }
 
-    // TODO
     async _getTransformedData(format: string): Promise<string> {
         switch(format) {
             case ExportFormat.DCAT_AP_PLU:
@@ -830,8 +820,7 @@ export class WfsMapper extends GenericMapper {
         return originators.length > 0 ? originators : undefined;
     }
 
-    // TODO
-    // ED: the features itself contain no contact information
+    // ED: the features themselves contain no contact information
     // we can scrape a little bit from GetCapabilities...
     async _getContactPoint(): Promise<Contact> {
         return this.fetched.contactPoint;

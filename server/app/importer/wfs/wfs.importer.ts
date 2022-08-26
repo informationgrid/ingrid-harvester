@@ -124,6 +124,9 @@ export class WfsImporter implements Importer {
         // merge default settings with configured ones
         settings = {...WfsImporter.defaultSettings, ...settings};
 
+        // TODO check settings for "//" in xpaths and disallow them for performance reasons
+        // TODO also disallow setting them in the UI
+
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
         } else {

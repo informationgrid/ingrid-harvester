@@ -86,6 +86,9 @@ export class GeoJsonUtils {
             points.push(transformCoords(...point));
         }
 
+        // TODO ED: check if polygon has counter-clockwise orientation;
+        // if yes, turn around?
+
         return points;
     }
 
