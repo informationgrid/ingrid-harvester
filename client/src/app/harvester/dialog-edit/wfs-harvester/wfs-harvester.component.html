@@ -30,22 +30,25 @@
     <mat-card-content>
       <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
         <mat-form-field fxFlex="20">
-          <mat-select placeholder="HTTP Method" formControlName="httpMethod" required>
+          <mat-select placeholder="HTTP Methode" formControlName="httpMethod" required>
             <mat-option value="GET">GET</mat-option>
             <mat-option value="POST">POST</mat-option>
           </mat-select>
         </mat-form-field>
-
         <mat-form-field fxFlex>
-          <input matInput placeholder="getFeatures URL" formControlName="getFeaturesUrl" required>
+          <input matInput placeholder="Service URL" formControlName="getFeaturesUrl" required>
         </mat-form-field>
       </div>
       <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
         <mat-form-field fxFlex="20">
-          <input matInput placeholder="WFS version" formControlName="version" required>
+          <!-- <input matInput placeholder="WFS Version" formControlName="version" required> -->
+          <mat-select placeholder="WFS Version" formControlName="version" required>
+            <mat-option value="2.0.0">2.0.0</mat-option>
+            <mat-option value="1.1.0">1.1.0</mat-option>
+          </mat-select>
         </mat-form-field>
         <mat-form-field fxFlex>
-          <input matInput placeholder="typename" formControlName="typename" required>
+          <input matInput placeholder="Typnamen (Komma-getrennt, inklusive Namespace)" formControlName="typename" required>
         </mat-form-field>
       </div>
     </mat-card-content>
