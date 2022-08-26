@@ -202,7 +202,7 @@ export class WfsImporter implements Importer {
             if (!this.settings.typename.split(',').includes(typename)) {
                 continue;
             }
-            let crsNodes = this.select('./*[local-name()="DefaultCRS" or local-name()="OtherCRS" or local-name="DefaultSRS" or local-name="OtherSRS"]', featureType, false);
+            let crsNodes = this.select('./*[local-name()="DefaultCRS" or local-name()="OtherCRS" or local-name()="DefaultSRS" or local-name()="OtherSRS"]', featureType, false);
             for (let node of crsNodes) {
                 this.crsList.push([node.textContent, proj4Json[node.textContent.replace('EPSG:', '')]]);
                 if (node.localName === 'DefaultCRS' || node.localName === 'DefaultSRS') {
