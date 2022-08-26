@@ -88,7 +88,7 @@ export class WfsMapper extends GenericMapper {
 
     // TODO:check
     _getDescription() {
-        let abstract = this.select(this.settings.xpaths.description, this.feature, true)?.textContent || "just a default value";
+        let abstract = this.select(this.settings.xpaths.description, this.feature, true)?.textContent;
         if (!abstract) {
             let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.getFeaturesUrl}\'`;
             this.log.warn(msg);
@@ -246,7 +246,7 @@ export class WfsMapper extends GenericMapper {
 
     // TODO:check
     _getTitle() {
-        let title = this.select(this.settings.xpaths.name, this.feature, true).textContent;
+        let title = this.select(this.settings.xpaths.name, this.feature, true)?.textContent;
         return title && title.trim() !== '' ? title : undefined;
     }
 
@@ -403,10 +403,12 @@ export class WfsMapper extends GenericMapper {
         }
         let envelope = this.select('./*/gml:boundedBy/gml:Envelope', this.feature, true);
         if (envelope != null) {
-            let lowerCorner = this.select('./gml:lowerCorner/text()', envelope, true);
-            let upperCorner = this.select('./gml:upperCorner/text()', envelope, true);
-            let crs = envelope.getAttribute('srsName');
-            return this.fetched.geojsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
+            let lowerCorner = this.select('./gml:lowerCorner', envelope, true)?.textContent;
+            let upperCorner = this.select('./gml:upperCorner', envelope, true)?.textContent;
+            if (lowerCorner && upperCorner) {
+                let crs = envelope.getAttribute('srsName');
+                return this.fetched.geojsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
+            }
         }
         return undefined;
     }
