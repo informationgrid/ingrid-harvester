@@ -39,6 +39,7 @@ import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from '../../utils/xpath.utils';
 
 const fs = require('fs');
+const merge = require('lodash/merge');
 const xpath = require('xpath');
 
 let log = require('log4js').getLogger(__filename),
@@ -122,7 +123,7 @@ export class WfsImporter implements Importer {
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         // merge default settings with configured ones
-        settings = {...WfsImporter.defaultSettings, ...settings};
+        settings = merge(WfsImporter.defaultSettings, settings);
 
         // TODO check settings for "//" in xpaths and disallow them for performance reasons
         // TODO also disallow setting them in the UI
