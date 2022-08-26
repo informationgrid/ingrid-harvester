@@ -255,11 +255,11 @@ export class WfsImporter implements Importer {
                 let hitsResponse = await hitsRequestDelegate.doRequest();
                 let hitsResponseDom = new DomParser().parseFromString(hitsResponse);
                 let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
-                this.totalFeatures = hitsResultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures');
+                this.totalFeatures = parseInt(hitsResultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
 
                 // TODO for v2.0.0, the request will return 0 (regardless of resultType)
                 // TODO for v1.1.0, the request will not return a separate "number returned" attribute
-                let numReturned = this.settings.version === '2.0.0' ? resultsNode.getAttribute('numberReturned') : 'nullo';
+                let numReturned = parseInt(this.settings.version === '2.0.0' ? resultsNode.getAttribute('numberReturned') : '0');
                 numReturned = this.totalFeatures;
 
                 log.debug(`Received ${numReturned} records from ${this.settings.getFeaturesUrl}`);
