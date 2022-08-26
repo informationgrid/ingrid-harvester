@@ -22,7 +22,7 @@
  */
 
 import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
-import {WfsSettings} from '../../../../../../server/app/importer/wfs/wfs.settings';
+import {DefaultXpathSettings, WfsSettings} from '../../../../../../server/app/importer/wfs/wfs.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material';
 import {FormControl, FormGroup} from '@angular/forms';
@@ -48,6 +48,24 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
     this.form.addControl('featuresFilter', new FormControl(this.model.featureFilter));
     this.form.addControl('version', new FormControl(this.model.version));
     this.form.addControl('typename', new FormControl(this.model.typename));
+
+    if (!this.model.xpaths) {
+      this.model.xpaths = DefaultXpathSettings.xpaths;
+    }
+    this.form.addControl('xpaths',
+      new FormGroup({
+        capabilities: new FormGroup({
+          // abstract: new FormControl(this.model.xpaths.capabilities.abstract),
+          language: new FormControl(this.model.xpaths.capabilities.language),
+          // serviceProvider: new FormControl(this.model.xpaths.capabilities.serviceProvider),
+          // title: new FormControl(this.model.xpaths.capabilities.title)
+        }),
+        description: new FormControl(this.model.xpaths.description),
+        featureParent: new FormControl(this.model.xpaths.featureParent),
+        name: new FormControl(this.model.xpaths.name),
+        spatial: new FormControl(this.model.xpaths.spatial)
+      })
+    );
 
     if (!this.model.eitherKeywords) {
       this.model.eitherKeywords = [];

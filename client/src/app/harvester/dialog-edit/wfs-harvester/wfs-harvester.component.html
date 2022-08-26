@@ -48,7 +48,46 @@
           <input matInput placeholder="typename" formControlName="typename" required>
         </mat-form-field>
       </div>
+    </mat-card-content>
+  </mat-card>
 
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>WFS XPaths zu ...</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div formGroupName="xpaths">
+        <div fxLayout="column">
+          <div formGroupName="capabilities">
+            <div fxLayout="column">
+              <!-- <mat-form-field fxFlex>
+                <input matInput placeholder="Katalogtitel" formControlName="title" required>
+              </mat-form-field>
+              <mat-form-field fxFlex>
+                <input matInput placeholder="Katalogbeschreibung" formControlName="abstract" required>
+              </mat-form-field> -->
+              <mat-form-field fxFlex>
+                <input matInput placeholder="Sprache des Katalogs (statt XPath auch direkte Eingabe der Sprache möglich)" formControlName="language" required>
+              </mat-form-field>
+              <!-- <mat-form-field fxFlex>
+                <input matInput placeholder="ServiceProvider" formControlName="serviceProvider" required>
+              </mat-form-field> -->
+            </div>
+          </div>
+          <mat-form-field fxFlex>
+            <input matInput placeholder="Feature XML Element" formControlName="featureParent" required>
+          </mat-form-field>
+          <mat-form-field fxFlex>
+            <input matInput placeholder="Name des Metadatensatzes (Feature-relativ)" formControlName="name" required>
+          </mat-form-field>
+          <mat-form-field fxFlex>
+            <input matInput placeholder="Beschreibung des Metadatensatzes (Feature-relativ)" formControlName="description" required>
+          </mat-form-field>
+          <mat-form-field fxFlex>
+            <input matInput placeholder="Räumliche Ausdehnung (Feature-relativ)" formControlName="spatial" required>
+          </mat-form-field>
+        </div>
+      </div>
     </mat-card-content>
   </mat-card>
 
