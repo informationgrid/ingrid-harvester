@@ -33,8 +33,13 @@ import {OptionsWithUri} from 'request-promise';
 import {DefaultImporterSettings, Importer} from '../../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {CswSettings} from './csw.settings';
+import {DefaultXpathSettings, CswSettings} from './csw.settings';
 import {FilterUtils} from "../../utils/filter.utils";
+import { XPathUtils } from '../../utils/xpath.utils';
+
+const fs = require('fs');
+const merge = require('lodash/merge');
+const xpath = require('xpath');
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -59,9 +64,10 @@ export class CswImporter implements Importer {
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    static defaultSettings: CswSettings = {
+    static defaultSettings: Partial<CswSettings> = {
         ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
+        ...DefaultXpathSettings,
         getRecordsUrl: '',
         eitherKeywords: [],
         httpMethod: 'GET'
@@ -69,6 +75,7 @@ export class CswImporter implements Importer {
 
     private readonly summary: CswSummary;
     private filterUtils: FilterUtils;
+    private generalInfo: object = {};
 
     run = new Observable<ImportLogMessage>(observer => {
         this.observer = observer;
@@ -79,7 +86,10 @@ export class CswImporter implements Importer {
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         // merge default settings with configured ones
-        settings = {...CswImporter.defaultSettings, ...settings};
+        settings = merge(CswImporter.defaultSettings, settings);
+
+        // TODO check settings for "//" in xpaths and disallow them for performance reasons
+        // TODO also disallow setting them in the UI
 
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
@@ -136,6 +146,19 @@ export class CswImporter implements Importer {
     }
 
     async harvest() {
+
+        let capabilitiesRequestConfig = CswImporter.createRequestConfig({ ...this.settings, httpMethod: 'GET' }, 'GetCapabilities');
+        let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
+        let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
+        let capabilitiesResponseDom = new DomParser().parseFromString(capabilitiesResponse);
+
+        // store info from the getCapabilities ServiceProvider in generalInfo
+        let serviceProvider = CswMapper.select(this.settings.xpaths.capabilities.serviceProvider, capabilitiesResponseDom, true);
+        this.generalInfo['publisher'] = [{ name: CswMapper.select('./ows:ProviderName', serviceProvider, true)?.textContent }];
+
+        // store title and abstract from getCapabilities in generalInfo
+        this.generalInfo['title'] = CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent;
+        this.generalInfo['abstract'] = CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent;
 
         while (true) {
             log.debug('Requesting next records');
@@ -265,7 +288,7 @@ export class CswImporter implements Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary);
+            let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary, this.generalInfo);
 
             let doc: any = await IndexDocument.create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -300,11 +323,11 @@ export class CswImporter implements Importer {
             .catch(err => log.error('Error indexing CSW record', err));
     }
 
-    getMapper(settings, record, harvestTime, storedData, summary): CswMapper {
-        return new CswMapper(settings, record, harvestTime, storedData, summary);
+    getMapper(settings, record, harvestTime, storedData, summary, generalInfo): CswMapper {
+        return new CswMapper(settings, record, harvestTime, storedData, summary, generalInfo);
     }
 
-    static createRequestConfig(settings: CswSettings): OptionsWithUri {
+    static createRequestConfig(settings: CswSettings, request = 'GetRecords'): OptionsWithUri {
         let requestConfig: OptionsWithUri = {
             method: settings.httpMethod || "GET",
             uri: settings.getRecordsUrl,
@@ -314,33 +337,36 @@ export class CswImporter implements Importer {
         };
 
         if (settings.httpMethod === "POST") {
-            requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
-            <GetRecords xmlns="http://www.opengis.net/cat/csw/2.0.2"
-                        xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                        xmlns:ogc="http://www.opengis.net/ogc"
-                        xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
-            
-                        service="CSW"
-                        version="2.0.2"
-                        resultType="results"
-                        outputFormat="application/xml"
-                        outputSchema="http://www.isotc211.org/2005/gmd"
-                        startPosition="${settings.startPosition}"
-                        maxRecords="${settings.maxRecords}">
-                <DistributedSearch/>
-                <Query typeNames="gmd:MD_Metadata">
-                    <ElementSetName typeNames="">full</ElementSetName>
-                    ${settings.recordFilter ? `
-                    <Constraint version=\"1.1.0\">
-                        ${settings.recordFilter}
-                    </Constraint>` : ''}
-                </Query>
-            </GetRecords>`
-
+            if (request === 'GetRecords') {
+                requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
+                <GetRecords xmlns="http://www.opengis.net/cat/csw/2.0.2"
+                            xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                            xmlns:ogc="http://www.opengis.net/ogc"
+                            xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
+                            service="CSW"
+                            version="2.0.2"
+                            resultType="results"
+                            outputFormat="application/xml"
+                            outputSchema="http://www.isotc211.org/2005/gmd"
+                            startPosition="${settings.startPosition}"
+                            maxRecords="${settings.maxRecords}">
+                    <DistributedSearch/>
+                    <Query typeNames="gmd:MD_Metadata">
+                        <ElementSetName typeNames="">full</ElementSetName>
+                        ${settings.recordFilter ? `
+                        <Constraint version=\"1.1.0\">
+                            ${settings.recordFilter}
+                        </Constraint>` : ''}
+                    </Query>
+                </GetRecords>`;
+            }
+            else {
+                // TODO send GetCapabilities post request
+            }
         } else {
             requestConfig.qs = <CswParameters>{
-                request: 'GetRecords',
+                request: request,
                 SERVICE: 'CSW',
                 VERSION: '2.0.2',
                 resultType: 'results',

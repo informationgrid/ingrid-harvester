@@ -50,6 +50,7 @@ export class CswMapper extends GenericMapper {
     static GML = 'http://www.opengis.net/gml';
     static GML_3_2 = 'http://www.opengis.net/gml/3.2';
     static CSW = 'http://www.opengis.net/cat/csw/2.0.2';
+    static OWS = 'http://www.opengis.net/ows';
     static PLU = 'here goes the custom PLU URL';
     static SRV = 'http://www.isotc211.org/2005/srv';
     static RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
@@ -59,10 +60,13 @@ export class CswMapper extends GenericMapper {
     static VCARD = 'http://www.w3.org/2006/vcard/ns#';
 
     static nsMap = {
+        'csw': CswMapper.CSW,
         'gmd': CswMapper.GMD,
         'gco': CswMapper.GCO,
         'gml': CswMapper.GML,
         'gml32': CswMapper.GML_3_2,
+        'ows': CswMapper.OWS,
+        'plu': CswMapper.PLU,
         'srv': CswMapper.SRV
     };
 
@@ -86,14 +90,14 @@ export class CswMapper extends GenericMapper {
         themes: null
     };
 
-
-    constructor(settings, record, harvestTime, storedData, summary) {
+    constructor(settings, record, harvestTime, storedData, summary, generalInfo) {
         super();
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
         this.storedData = storedData;
         this.summary = summary;
+        this.fetched = {...this.fetched, ...generalInfo};
 
         this.uuid = CswMapper.getCharacterStringContent(record, 'fileIdentifier');
 
@@ -851,32 +855,20 @@ export class CswMapper extends GenericMapper {
 
     // TODO lots of fields left to infer
     async cswToDcatApPlu(): Promise<string> {
-        let contactPoint = await this._getContactPoint();
         return DcatApPluFactory.createXml({
             catalog: {
-                description: '',
-                title: '',
-                publisher: {
-                    name: ''
-                }
+                description: this.fetched.abstract,
+                title: this.fetched.title,
+                publisher: this._getPublisher()[0]
             }, 
-            contactPoint: {
-                address: '??',
-                country: contactPoint['country-name'],
-                email: contactPoint.hasEmail,
-                locality: contactPoint['region'],
-                orgName: contactPoint['organization-name'],
-                phone: contactPoint.hasTelephone,
-                postalCode: contactPoint['postal-code']
-            }, 
+            contactPoint: await this._getContactPoint(),
             // contributors: null,
             descriptions: [this._getDescription()], 
             // distributions: null,
             // geographicName: null,
             identifier: this.uuid,
             issued: this._getIssued(),
-            // TODO where to infer the language from?
-            lang: 'de',
+            lang: this._getLanguage(),
             locationXml: this._getSpatialGml(),
             // maintainers: null,
             modified: this._getModifiedDate(),
@@ -888,9 +880,7 @@ export class CswMapper extends GenericMapper {
             // pluProcedureType: null,
             // pluProcessSteps: null,
             procedureStartDate: null,
-            publisher: {
-                name: ''
-            },
+            publisher: this._getPublisher()[0],
             relation: null,
             title: this._getTitle()
         });
@@ -944,6 +934,11 @@ export class CswMapper extends GenericMapper {
 
     _getIssued(): Date {
         return undefined;
+    }
+
+    _getLanguage(): string {
+        let language = CswMapper.select('./gmd:language/gmd:LanguageCode/@codeListValue', this.record, true)?.textContent;
+        return language && language.trim() !== '' ? language : undefined;
     }
 
     _getMetadataHarvested(): Date {
@@ -1025,6 +1020,7 @@ export class CswMapper extends GenericMapper {
                     let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                     let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
                     let delPt = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
+                    let locality = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:city/gco:CharacterString', contact, true);
                     let region = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
                     let country = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
                     let postCode = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
@@ -1050,6 +1046,7 @@ export class CswMapper extends GenericMapper {
                     line1 = line1.join(', ');
                     if (line1) infos['street-address'] = line1;
 
+                    if (locality) infos.city = locality.textContent;
                     if (region) infos.region = region.textContent;
                     if (country) infos['country-name'] = country.textContent;
                     if (postCode) infos['postal-code'] = postCode.textContent;

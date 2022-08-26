@@ -25,8 +25,25 @@ import {ElasticSettings} from '../../utils/elastic.setting';
 import {ImporterSettings} from '../../importer.settings';
 
 export type CswSettings = {
+    xpaths: {
+        capabilities: {
+            abstract: string,
+            serviceProvider: string,
+            title: string
+        },
+    },
     getRecordsUrl: string,
     eitherKeywords: string[],
     httpMethod: "GET" | "POST",
     recordFilter?: string
 } & ElasticSettings & ImporterSettings;
+
+export const DefaultXpathSettings: Partial<CswSettings> = {
+    xpaths: {
+        capabilities: {
+            abstract: '/csw:Capabilities/ows:ServiceIdentification/ows:Abstract',
+            serviceProvider: '/csw:Capabilities/ows:ServiceProvider',
+            title: '/csw:Capabilities/ows:ServiceIdentification/ows:Title'
+        }
+    }
+}

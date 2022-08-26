@@ -28,8 +28,8 @@ export class CodeDeMapper extends CswMapper {
 
     private readonly mySettings: any;
 
-    constructor(settings, record, harvestTime, issued, summary) {
-        super(settings, record, harvestTime, issued, summary);
+    constructor(settings, record, harvestTime, issued, summary, generalInfo) {
+        super(settings, record, harvestTime, issued, summary, generalInfo);
         this.mySettings = settings;
     }
 
@@ -50,8 +50,8 @@ export class CodeDeMapper extends CswMapper {
 
 export class CodedeImporter extends CswImporter {
 
-    getMapper(settings, record, harvestTime, issuedTime, summary): CswMapper {
-        return new CodeDeMapper(settings, record, harvestTime, issuedTime, summary);
+    getMapper(settings, record, harvestTime, issuedTime, summary, generalInfo): CswMapper {
+        return new CodeDeMapper(settings, record, harvestTime, issuedTime, summary, generalInfo);
     }
 
 }
