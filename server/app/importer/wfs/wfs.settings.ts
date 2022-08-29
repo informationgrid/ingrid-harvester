@@ -44,7 +44,9 @@ export type WfsSettings = {
     getFeaturesUrl: string,
     eitherKeywords: string[],
     httpMethod: "GET" | "POST",
-    featureFilter?: string
+    featureFilter?: string,
+    resolveWithFullResponse?: boolean,
+    encoding?: string
 } & ElasticSettings & ImporterSettings;
 
 export const DefaultXpathSettings: Partial<WfsSettings> = {

@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { decode } from 'iconv-lite';
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
 import {elasticsearchMapping} from '../../elastic.mapping';
 import {elasticsearchSettings} from '../../elastic.settings';
@@ -184,10 +185,19 @@ export class WfsImporter implements Importer {
 
     async harvest() {
 
-        let capabilitiesRequestConfig = WfsImporter.createRequestConfig(this.settings, 'GetCapabilities');
+        let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resolveWithFullResponse: true, encoding: null }, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
         let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
-        let capabilitiesResponseDom = new DomParser().parseFromString(capabilitiesResponse);
+        let contentType = capabilitiesResponse.headers['content-type'].split(';');
+        let charset = contentType.find(ct => ct.toLowerCase().startsWith('charset'))?.split('=')?.[1];
+        let responseBody = capabilitiesResponse.body;
+        if (charset.toLowerCase() == "utf-8") {
+            responseBody = responseBody.toString();
+        }
+        else {
+            responseBody = decode(responseBody, charset);
+        }
+        let capabilitiesResponseDom = new DomParser().parseFromString(responseBody);
 
         // extract the namespace map for the capabilities
         this.nsMap = {...XPathUtils.getNsMap(capabilitiesResponseDom), ...XPathUtils.getExtendedNsMap(capabilitiesResponseDom)};
@@ -452,8 +462,12 @@ export class WfsImporter implements Importer {
             uri: settings.getFeaturesUrl,
             json: false,
             headers: RequestDelegate.wfsRequestHeaders(),
-            proxy: settings.proxy || null
+            proxy: settings.proxy || null,
+            resolveWithFullResponse: settings.resolveWithFullResponse ?? false
         };
+        if (settings.hasOwnProperty('encoding')) {
+            requestConfig.encoding = settings.encoding;
+        }
 
         // TODO
         // * correct namespaces
