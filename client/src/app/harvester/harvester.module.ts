@@ -35,6 +35,7 @@ import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.comp
 import {DialogLogComponent} from './dialog-log/dialog-log.component';
 import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
 import {ExcelHarvesterComponent} from './dialog-edit/excel-harvester/excel-harvester.component';
+import {ExcelSparseHarvesterComponent} from './dialog-edit/excel-sparse-harvester/excel-sparse-harvester.component';
 import {CkanHarvesterComponent} from './dialog-edit/ckan-harvester/ckan-harvester.component';
 import {CswHarvesterComponent} from './dialog-edit/csw-harvester/csw-harvester.component';
 import {OaiHarvesterComponent} from './dialog-edit/oai-harvester/oai-harvester.component';
@@ -67,6 +68,7 @@ const harvesterRoutes: Routes = [
     DialogEditComponent,
     DialogHistoryComponent,
     ExcelHarvesterComponent,
+    ExcelSparseHarvesterComponent,
     CkanHarvesterComponent,
     CswHarvesterComponent,
     OaiHarvesterComponent,

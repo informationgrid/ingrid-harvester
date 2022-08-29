@@ -24,11 +24,13 @@
 import {Importer} from "../importer";
 import {CkanImporter} from "./ckan/ckan.importer";
 import {ExcelImporter} from "./excel/excel.importer";
+import {ExcelSparseImporter} from "./excelsparse/excelsparse.importer";
 import {CswImporter} from "./csw/csw.importer";
 import {CodedeImporter} from "./csw/codede.importer";
 import {OaiImporter} from "./oai/oai.importer";
 import {CkanSettings} from './ckan/ckan.settings';
 import {ExcelSettings} from './excel/excel.settings';
+import {ExcelSparseSettings} from './excelsparse/excelsparse.settings';
 import {CswSettings} from './csw/csw.settings';
 import {OaiSettings} from './oai/oai.settings';
 import {DcatImporter} from "./dcat/dcat.importer";
@@ -39,7 +41,7 @@ import {WfsSettings} from "./wfs/wfs.settings";
 
 export class ImporterFactory {
 
-    public static get(config: ExcelSettings | CkanSettings | CswSettings | OaiSettings | SparqlSettings | WfsSettings): Importer {
+    public static get(config: ExcelSettings | ExcelSparseSettings | CkanSettings | CswSettings | OaiSettings | SparqlSettings | WfsSettings): Importer {
         switch (config.type) {
             case 'CKAN':
                 // remove trailing slash from CKAN URL
@@ -49,6 +51,7 @@ export class ImporterFactory {
                 }
                 return new CkanImporter(ckanConfig);
             case 'EXCEL': return new ExcelImporter(config);
+            case 'EXCEL_SPARSE': return new ExcelSparseImporter(config);
             case 'CSW': return new CswImporter(config);
             case 'CODEDE-CSW': return new CodedeImporter(config);
             case 'OAI': return new OaiImporter(config);

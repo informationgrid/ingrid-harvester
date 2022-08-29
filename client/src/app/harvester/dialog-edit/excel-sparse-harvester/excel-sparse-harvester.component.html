@@ -1,0 +1,61 @@
+<!--
+     ==================================================
+     mcloud-importer
+     ==================================================
+     Copyright (C) 2017 - 2021 wemove digital solutions GmbH
+     ==================================================
+     Licensed under the EUPL, Version 1.2 or – as soon they will be
+     approved by the European Commission - subsequent versions of the
+     EUPL (the "Licence");
+
+     You may not use this work except in compliance with the Licence.
+     You may obtain a copy of the Licence at:
+
+     https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the Licence is distributed on an "AS IS" basis,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the Licence for the specific language governing permissions and
+     limitations under the Licence.
+    ==================================================
+-->
+
+<ng-container [formGroup]="form">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Allgemeine Excel (Sparse) Einstellungen</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div formGroupName="catalog">
+        <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+          <mat-form-field fxFlex>
+            <input matInput placeholder="Katalog-Title" formControlName="title" required>
+          </mat-form-field>
+          <mat-form-field fxFlex="20">
+            <input matInput placeholder="Katalog-Sprache" formControlName="language" required>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+          <mat-form-field fxFlex>
+            <input matInput placeholder="Katalog-Beschreibung" formControlName="description" required>
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Dateipfad" formControlName="filePath" required>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Filter und Regeln</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ng-container [ngTemplateOutlet]="rulesTemplate"></ng-container>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

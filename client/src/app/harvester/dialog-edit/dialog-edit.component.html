@@ -31,6 +31,7 @@
           <mat-label>Typ</mat-label>
           <mat-select formControlName="type" required>
             <mat-option value="EXCEL">EXCEL</mat-option>
+            <mat-option value="EXCEL_SPARSE">EXCEL (SPARSE)</mat-option>
             <mat-option value="CKAN">CKAN</mat-option>
             <mat-option value="CSW">CSW</mat-option>
             <ng-container *ngIf="harvester.id != -1">
@@ -127,6 +128,11 @@
                            [model]="harvester"
                            [rulesTemplate]="rules"
                            class="flex-column"></app-excel-harvester>
+
+      <app-excel-sparse-harvester *ngIf="harvesterForm.get('type').value === 'EXCEL_SPARSE'" [form]="harvesterForm"
+                          [model]="harvester"
+                          [rulesTemplate]="rules"
+                          class="flex-column"></app-excel-sparse-harvester>
 
       <app-ckan-harvester *ngIf="harvesterForm.get('type').value === 'CKAN'" [form]="harvesterForm" [model]="harvester"
                           [rulesTemplate]="rules"
