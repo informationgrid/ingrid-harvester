@@ -68,7 +68,15 @@ export interface Contact {
 }
 
 interface Distribution {
-    accessUrl: string, description?: string, downloadURL?: string, format?: string, issued?: string, modified?: string, period?: { start?: string, end?: string }, pluDoctype?: string, title?: string
+    accessUrl: string, 
+    description?: string, 
+    downloadURL?: string, 
+    format?: string, 
+    issued?: string, 
+    modified?: string, 
+    period?: { start?: string, end?: string }, 
+    pluDoctype?: string, 
+    title?: string
 }
 
 interface ProcessStep {
@@ -95,7 +103,7 @@ export interface DcatApPlu {
     geographicName?: string,
     identifier: string,
     issued?: Date,
-    lang,
+    lang: string,
     locationXml: string,
     maintainers?: Agent[],
     modified: Date,

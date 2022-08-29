@@ -33,7 +33,6 @@ import {CswSummary} from "./csw.importer";
 import {OptionsWithUri} from "request-promise";
 import {CswSettings} from './csw.settings';
 import {throwError} from "rxjs";
-import doc = Mocha.reporters.doc;
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
