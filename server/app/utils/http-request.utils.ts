@@ -33,7 +33,7 @@ let logRequest = getLogger('requests');
  * HTTP parameters configuration for CSW harvesters.
  */
 export interface CswParameters {
-    readonly request: 'GetRecords', // Only value currently being used. Needs to be extended, if required
+    readonly request: 'GetRecords' | 'GetCapabilities',
     readonly SERVICE: 'CSW',
     readonly VERSION: '2.0.2',  // Current use cases don't use any other value
     readonly elementSetName?: 'brief' | 'summary' | 'full',
