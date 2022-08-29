@@ -856,6 +856,7 @@ export class CswMapper extends GenericMapper {
     // TODO lots of fields left to infer
     async cswToDcatApPlu(): Promise<string> {
         return DcatApPluFactory.createXml({
+            bbox: this._getSpatialGml(),
             catalog: {
                 description: this.fetched.abstract,
                 title: this.fetched.title,

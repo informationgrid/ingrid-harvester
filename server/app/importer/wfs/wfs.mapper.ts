@@ -389,12 +389,25 @@ export class WfsMapper extends GenericMapper {
         // return new Date(this.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.feature, true).textContent);
     }
 
+    _getBoundingBoxGml(): string {
+        let envelope = this.select('./*/gml:boundedBy/gml:Envelope', this.feature, true);
+        if (envelope) {
+            if (envelope.getAttribute('srsName')) {
+                return envelope.toString();
+            }
+            else {
+                // TODO convert to GML from this._getBoundingBox();
+            }
+        }
+        return undefined;
+    }
+
     _getBoundingBox(): any {
         if (this.fetched.boundingBox) {
             return this.fetched.boundingBox;
         }
         let envelope = this.select('./*/gml:boundedBy/gml:Envelope', this.feature, true);
-        if (envelope != null) {
+        if (envelope) {
             let lowerCorner = this.select('./gml:lowerCorner', envelope, true)?.textContent;
             let upperCorner = this.select('./gml:upperCorner', envelope, true)?.textContent;
             if (lowerCorner && upperCorner) {
@@ -409,9 +422,12 @@ export class WfsMapper extends GenericMapper {
         let spatialContainer = this.select(this.settings.xpaths.spatial, this.feature, true);
         // use bounding box as fallback
         if (!spatialContainer) {
-            return this._getBoundingBox();
+            return this._getBoundingBoxGml();
         }
         let child = XPathUtils.firstElementChild(spatialContainer);
+        if (!child.getAttribute('srsName')) {
+            // TODO convert to GML from this._getSpatial()
+        }
         return child.toString();
     }
 
@@ -683,6 +699,7 @@ export class WfsMapper extends GenericMapper {
     // TODO
     async wfsToDcatApPlu(): Promise<string> {
         return DcatApPluFactory.createXml({
+            bbox: this._getBoundingBoxGml(),
             catalog: {
                 description: this.fetched.abstract,
                 title: this.fetched.title,
