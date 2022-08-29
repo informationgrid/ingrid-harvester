@@ -699,7 +699,6 @@ export class WfsMapper extends GenericMapper {
             locationXml: this._getSpatialGml(),
             // maintainers: null,
             modified: this._getModifiedDate(),
-            namespaces: this.fetched.nsMap,
             planState: null,
             // pluPlanType: null,
             // pluPlanTypeFine: null,

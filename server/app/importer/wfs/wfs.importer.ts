@@ -367,7 +367,6 @@ export class WfsImporter implements Importer {
         // extend nsmap with the namespaces from the FeatureCollection response
         // this.nsMap = { ...XPathUtils.getNsMap(xml), ...XPathUtils.getExtendedNsMap(xml) };
         // TODO: the above does not work, because it doesn't containt the NS for the FeatureType;
-        // the below however includes superfluous NS for the DCAT-AP-PLU document... :/
         let nsMap = {...this.nsMap, ...XPathUtils.getNsMap(xml)};
         let select = xpath.useNamespaces(nsMap);
 

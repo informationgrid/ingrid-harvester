@@ -872,7 +872,6 @@ export class CswMapper extends GenericMapper {
             locationXml: this._getSpatialGml(),
             // maintainers: null,
             modified: this._getModifiedDate(),
-            namespaces: CswMapper.nsMap,
             planState: null,
             // pluPlanType: null,
             // pluPlanTypeFine: null,
