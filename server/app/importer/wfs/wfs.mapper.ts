@@ -24,7 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over WFS.
  */
-import {DateRange, Distribution, GenericMapper, Person} from "../../model/generic.mapper";
+import {DateRange, Distribution as GenericDistribution, GenericMapper, Person} from "../../model/generic.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -36,7 +36,7 @@ import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
-import { Contact, DcatApPluFactory } from "../DcatApPluFactory";
+import { Contact, DcatApPluFactory, Distribution, pluDocType } from "../DcatApPluFactory";
 import { XPathUtils } from "../../utils/xpath.utils";
 
 export class WfsMapper extends GenericMapper {
@@ -94,8 +94,33 @@ export class WfsMapper extends GenericMapper {
         return abstract;
     }
 
-    // TODO
-    async _getDistributions(): Promise<Distribution[]> {
+    /**
+     * This is currently XPlan WFS specific.
+     * 
+     * // TODO what about FIS WFS?
+     * 
+     * @returns 
+     */
+    _getDAPDistributions(): Distribution[] {
+        let distributions = [];
+        // let distributions = this.select(this.settings.xpaths.distributions, this.feature, false);
+        let distElems = this.select('./*/xplan:externeReferenz/xplan:XP_SpezExterneReferenz', this.feature, false);
+        for (let distElem of distElems) {
+            let distribution: Distribution = {
+                accessUrl: this.select('./xplan:referenzURL', distElem, true)?.textContent,
+                description: this.select('./xplan:art', distElem, true)?.textContent,
+                format: this.select('./xplan:referenzMimeType', distElem, true)?.textContent,
+                pluDoctype: this._getPluDocType(this.select('./xplan:typ', distElem, true)?.textContent)
+            };
+            distributions.push(distribution);
+        }
+        return distributions;
+    }
+
+    // TODO we want only one Distribution, Agent, etc.; 
+    // TODO replace the ones in generic.mapper and reference the interfaces from DcatApPluFactory instead
+    // TODO look into compatibility problems first
+    async _getDistributions(): Promise<GenericDistribution[]> {
         let dists = [];
         let urlsFound = [];
         // let srvIdent = this.select('./srv:SV_ServiceIdentification', this.idInfo, true);
@@ -163,7 +188,7 @@ export class WfsMapper extends GenericMapper {
     }
 
     // TODO
-    async handleDistributionforService(srvIdent, urlsFound): Promise<Distribution[]> {
+    async handleDistributionforService(srvIdent, urlsFound): Promise<GenericDistribution[]> {
 
         let getCapabilitiesElement = this.select(
             // convert containing text to lower case
@@ -173,7 +198,7 @@ export class WfsMapper extends GenericMapper {
         let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
         let serviceFormat = this.select('.//srv:serviceType/gco:LocalName', srvIdent, true);
         let serviceTypeVersion = this.select('.//srv:serviceTypeVersion/gco:CharacterString', srvIdent);
-        let serviceLinks: Distribution[] = [];
+        let serviceLinks: GenericDistribution[] = [];
 
         if(serviceFormat){
             serviceFormat = serviceFormat.textContent;
@@ -679,6 +704,45 @@ export class WfsMapper extends GenericMapper {
         return license;
     }
 
+    /**
+     * This is currently XPlan specific.
+     * 
+     * // TODO fill in the gaps
+     * // TODO what about other WFS sources?
+     * 
+     * @param code 
+     * @returns 
+     */
+    _getPluDocType(code: string): string {
+        switch (code) {
+            // case '1000': return pluDocType.;// Beschreibung
+            // case '1010': return pluDocType.;// Begründung
+            // case '1020': return pluDocType.;// Legende
+            // case '1030': return pluDocType.;// Rechtsplan
+            // case '1040': return pluDocType.;// Plangrundlage - Abbildung auf BackgroundMapValue (siehe Tabelle 17)
+            // case '1050': return pluDocType.;// Umweltbericht
+            // case '1060': return pluDocType.;// Satzung
+            // case '1065': return pluDocType.;// Verordnung
+            // case '1070': return pluDocType.;// Karte
+            case '1080': return pluDocType.ERLAEUT_BER; // Erläuterung
+            // case '1090': return pluDocType.;// Zusammenfassende Erklärung
+            // case '2000': return pluDocType.;// Koordinatenliste
+            // case '2100': return pluDocType.;// Grundstücksverzeichnis
+            // case '2200': return pluDocType.;// Pflanzliste
+            // case '2300': return pluDocType.;// Grünordnungsplan
+            // case '2400': return pluDocType.;// Erschließungsvertrag
+            // case '2500': return pluDocType.;// Durchführungsvertrag
+            // case '2600': return pluDocType.;// Städtebaulicher Vertrag
+            // case '2700': return pluDocType.;// Umweltbezogene Stellungnahmen
+            // case '2800': return pluDocType.;// Beschluss
+            // case '2900': return pluDocType.;// Vorhaben- und Erschliessungsplan
+            // case '3000': return pluDocType.;// Metadaten von Plan
+            // case '9998': return pluDocType.;// Rechtsverbindlich
+            // case '9999': return pluDocType.;// Informell
+            default: return undefined;
+        }
+    }
+
     getErrorSuffix(uuid, title) {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.getFeaturesUrl}'.`;
     }
@@ -708,7 +772,7 @@ export class WfsMapper extends GenericMapper {
             contactPoint: await this._getContactPoint(), 
             // contributors: null,
             descriptions: [this._getDescription()], 
-            // distributions: null,
+            distributions: this._getDAPDistributions(),
             // geographicName: null,
             identifier: this.uuid,
             issued: this._getIssued(),
