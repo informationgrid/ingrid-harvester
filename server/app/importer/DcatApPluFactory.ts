@@ -259,13 +259,13 @@ export class DcatApPluFactory {
                     <dcat:Location>
                         <dcat:bbox>${bbox}</dcat:bbox>
                         <locn:geometry>${locationXml}</locn:geometry>
-                        <dcat:centroid>{leer oder berechnen?}</dcat:centroid>
-                        <locn:geographicName>${geographicName}</locn:geographicName>
+                        ${optional('dcat:centroid', '')}
+                        ${optional('locn:geographicName', geographicName)}
                     </dcat:Location>
                 </dct:spatial>
                 ${DcatApPluFactory.xmlFoafAgent('dct:publisher', publisher)}
-                ${optional((m: Agent) => DcatApPluFactory.xmlFoafAgent('dcatde:maintainer', m), maintainers)};
-                ${optional((c: Agent) => DcatApPluFactory.xmlFoafAgent('dct:contributor', c), contributors)};
+                ${optional((m: Agent) => DcatApPluFactory.xmlFoafAgent('dcatde:maintainer', m), maintainers)}
+                ${optional((c: Agent) => DcatApPluFactory.xmlFoafAgent('dct:contributor', c), contributors)}
                 ${optional(DcatApPluFactory.xmlDistribution, distributions)}
                 ${optional('dct:issued', issued)}
                 ${optional('dct:modified', modified)}
