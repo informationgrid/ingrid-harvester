@@ -21,20 +21,20 @@
  * ==================================================
  */
 
-function optional(nodeName: string, variable: any, mapper?: Function) {
+function optional(wrapper: string | Function, variable: any | any[]) {
     if (!variable) {
         return '';
     }
     if (Array.isArray(variable)) {
-        if (mapper) {
-            return variable.map(v => mapper(variable)).join(' ');
+        if (typeof wrapper == 'string') {
+            return variable.map(v => `<${wrapper}>${v}</${wrapper}>`).join('\n');
         }
         else {
-            return variable.map(v => `<${nodeName}>${v}</${nodeName}>`).join('\n');
+            return variable.map(v => wrapper(v)).join(' ');
         }
     }
     else {
-        return `<${nodeName}>${variable}</${nodeName}>`;
+        return `<${wrapper}>${variable}</${wrapper}>`;
     }
 }
 
@@ -144,7 +144,7 @@ export class DcatApPluFactory {
                 ${optional('dcterms:language', catalog.language)}
                 ${optional('dcterms:modified', catalog.modified)}
                 ${optional('foaf:homepage', catalog.homepage)}
-                ${optional('', catalog.records, DcatApPluFactory.xmlRecord)}
+                ${optional(DcatApPluFactory.xmlRecord, catalog.records)}
             </dcat:Catalog>
             <dcat:Dataset rdf:about="https://some.tld/features/${identifier}">
                 ${DcatApPluFactory.xmlContact(contactPoint)}
@@ -163,16 +163,16 @@ export class DcatApPluFactory {
                     </dcat:Location>
                 </dcterms:spatial>
                 ${DcatApPluFactory.xmlFoafAgent('dcterms:publisher', publisher)}
-                ${maintainers ? maintainers.map(maintainer => DcatApPluFactory.xmlFoafAgent('dcatde:maintainer', maintainer)).join(' ') : ''}
-                ${contributors ? contributors.map(contributor => DcatApPluFactory.xmlFoafAgent('dctermscontributor', contributor)).join(' ') : ''}
-                ${distributions ? distributions.map(distribution => DcatApPluFactory.xmlDistribution(distribution)) : ''}
+                ${optional((m: Agent) => DcatApPluFactory.xmlFoafAgent('dcatde:maintainer', m), maintainers)};
+                ${optional((c: Agent) => DcatApPluFactory.xmlFoafAgent('dcterms:contributor', c), contributors)};
+                ${optional(DcatApPluFactory.xmlDistribution, distributions)}
                 ${optional('dcterms:issued', issued)}
                 ${optional('dcterms:modified', modified)}
                 ${optional('dcterms:relation', relation)}
                 ${pluPlanType ? `<plu:pluPlanType rdf:resource="${pluPlanType}" />` : ''}
                 ${pluPlanTypeFine ? `<plu:pluPlanTypeFine rdf:resource="${pluPlanTypeFine}" />` : ''}
                 ${pluProcedureType ? `<plu:pluProcedureType rdf:resource="${pluProcedureType}" />` : ''}
-                ${pluProcessSteps ? pluProcessSteps.map(processStep => DcatApPluFactory.xmlProcessStep(processStep)).join(' ') : ''}
+                ${optional(DcatApPluFactory.xmlProcessStep, pluProcessSteps)}
             </dcat:Dataset>
         </rdf:RDF>`;
 
@@ -187,7 +187,7 @@ export class DcatApPluFactory {
             ${optional('dcterms:format', format)}
             ${optional('dcterms:issued', issued)}
             ${optional('dcterms:modified', modified)}
-            ${optional('', period, DcatApPluFactory.xmlPeriodOfTime)}
+            ${optional(DcatApPluFactory.xmlPeriodOfTime, period)}
             ${optional('plu:pluDoctype', pluDoctype)}
             ${optional('dcterms:title', title)}
         </dcat:Distribution>`;
@@ -213,12 +213,12 @@ export class DcatApPluFactory {
         return `<plu:PluProcessStep>
             <plu:ProcessStepType>${type}</plu:ProcessStepType>
             ${optional('dcterms:identifier', identifier)}
-            ${distributions ? distributions.map(distribution => DcatApPluFactory.xmlDistribution(distribution)) : ''}
-            ${optional('', period, DcatApPluFactory.xmlPeriodOfTime)}
+            ${optional(DcatApPluFactory.xmlDistribution, distributions)}
+            ${optional(DcatApPluFactory.xmlPeriodOfTime, period)}
         </plu:PluProcessStep>`;
     }
 
-    private static xmlRecord({ issued, modified, primaryTopic, title}: Record) {
+    private static xmlRecord({ issued, modified, primaryTopic, title }: Record) {
         return `<dcat:record>
             <dcat:CatalogRecord>
                 <dcterms:title>${title}</dcterms:title>
