@@ -130,6 +130,102 @@ export const DCAT_AP_PLU_NSMAP = {
     VCARD: 'http://www.w3.org/2006/vcard/ns#'
 };
 
+/**
+ * Codelist for procedureType (5.1)
+ */
+export const procedureType = {
+    NORM_VERF: '1001',          // normales Verfahren
+    VEREINF_VERF: '1002', 	    // vereinfachtes Verfahren
+    BEBAU_PLAN_INNEN: '1003' 	// Bebauungsplan der Innenentwicklung
+};
+
+/**
+ * Codeliste Arten von Verfahren zur Aufstellung raumbezogener Planwerke (5.2)
+ */
+export const pluProcedureState = {
+    GEPLANT: '2001',        // geplant
+    LAUFEND: '2002',        // laufend
+    ABGESCHLOSSEN: '2003'   // abgeschlossen
+};
+
+/**
+ * Codeliste für Status eines Plans (5.3)
+ */
+export const pluPlanState = {
+    IN_AUFST: '3001',   // in Aufstellung
+    FESTGES: '3002'     // festgesetzt
+};
+
+/**
+ * Codeliste für Arten von raumbezogenen Planwerken (5.4)
+ */
+export const pluPlantype = {
+    BEBAU_PLAN: '1000',         // Bebauungsplan
+    FLAECHENN_PLAN: '2000',     // Flächennutzungsplan
+    STAEDT_BAUL_SATZ: '3000',   // städtebauliche Satzungen
+    PW_BES_STAEDT_BAUR: '4000', // Planwerke besonderes Städtebaurecht
+    PW_LANDSCH_PLAN: '5000',    // Planwerke der Landschaftsplanung
+    RAUM_ORDN_PLAN: '6000',     // Raumordnungsplan
+    RAUM_ORDN_VERF: '7000',     // Raumordnungsverfahren
+    PLAN_FESTST_VERF: '8000'    // Planfeststellungsverfahren
+};
+
+/**
+ * Codeliste für Arten von raumbezogenen Planwerken, detailliert (5.5)
+ */
+export const pluPlanTypeFine = {
+    EINF_BEBAU_PLAN: '1100',    // Einfacher Bebauungsplan
+    QUALI_BEBAU_PLAN: '1200',   // Qualifizierter Bebauungsplan
+    TEIL_BEBAU_PLAN: '1300',    // Teilbebauungsplan
+    VORH_BEBAU_PLA: '1400',     // Vorhabenbezogener Bebauungsplan
+    DURCHF_PLAN: '1500',        // Durchführungsplan
+    BAUSTF_PLAN: '1600',        // Baustufenplan
+    FLUCHTL_PLAN: '1700',       // Fluchtlinienplan
+    FLAECHENN_PLAN: '2000',     // Flächennutzungsplan
+    GEMEINS_FLAECHENN_PLAN: '2100',     // Gemeinsamer Flächennutzungsplan
+    REGION_FLAECHENN_PLAN: '2200',      // Regionaler Flächennutzungsplan
+    STAEDT_BAUL_ERHALT_STZG: '3100',    // Städtebauliche Erhaltungssatzung
+    STAEDT_BAUL_ENTWICKL_STZG: '3200',  // Städtebauliche Entwicklungssatzung
+    STAEDT_BAUL_ERGAENZ_STZG: '3300',   // Städtebauliche Ergänzungssatzung
+    STAEDT_BAUL_KLARST_STZG: '3400',    // Städtebauliche Klarstellungssatzung
+    STAEDT_BAUL_INNENBER_STZG: '3500',  // Städtebauliche Innenbereichssatzung
+    SICHER_FREMD_VERK_STZG:	'4100',     // Satzung zur Sicherung von Gebieten mit Fremdenverkehrsfunktion
+    LANDSCH_PROG: '5100',   // Landschaftsprogramm
+    LANDSCH_RAHMEN_PLAN: '5200',    // Landschaftsrahmenplan
+    LANDSCH_PLAN: '5300',   // Landschaftsplan
+    GRUEN_ORD_PLAN: '5400', // Grünordnungsplan
+    REGION_PLAN: '6100',    // Regionalplan
+    SACHL_TEIL_PLAN_REGIONAL: '6200',   // Sachlicher Teilplan Regionalebene
+    SACHL_TEIL_PLAN_LAND: '6300',       // Sachlicher Teilplan Landesebene
+    BRAUNK_PLAN: '6400',        // Braunkohleplan
+    LAND_RAUM_ORD_PLAN: '6500', // Landesweiter Raumordnungsplan
+    STANDORT_KONZ_BUND: '6600', // Standortkonzept Bund
+    AWZ_PLAN: '6700',           // AWZ Plan
+    RAEUML_TEIL_PLAN: '6800'    // Räumlicher Teilplan
+};
+
+/**
+ * Codeliste für Arten von Verfahrensschritten bei raumbezogenen Verfahren (5.6)
+ */
+export const pluProcessStepType = {
+    FRUEHZ_BEH_BETEIL: '3001',   	// Frühzeitige Behördenbeteiligung
+    FRUEHZ_OEFFTL_BETEIL: '3002', 	// Frühzeitige Öffentlichkeitsbeteiligung
+    BETEIL_OEFFTL_TRAEGER: '3003', 	// Beteiligung der Träger öffentlicher Belange
+    OEFFTL_AUSL: '3004', 	        // Öffentliche Auslegung
+    INTERN_BEARB: '3005', 	        // Interne Bearbeitung
+    ABGESCHLOSSEN: '3006'           // Abgeschlossen
+};
+
+/**
+ * Codeliste für Arten von Dokumenten (5.7)
+ */
+export const pluDocType = {
+    AUSLEG_INFO: '4001',    // Auslegungsinformationen
+    ERLAEUT_BER: '4002', 	// Erläuterungsbericht
+    PLAN_ZEICHN: '4003',	// Planzeichnung
+    // TODO not finalized yet
+};
+
 export class DcatApPluFactory {
 
     static createXml({ bbox, catalog, contactPoint, contributors, descriptions, distributions, geographicName, identifier, issued, lang, locationXml, maintainers, modified, planState, pluPlanType, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessSteps, procedureStartDate, publisher, relation, title }: DcatApPlu): string {
