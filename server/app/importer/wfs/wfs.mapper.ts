@@ -36,7 +36,7 @@ import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
-import { Contact, DcatApPluFactory, Distribution, pluDocType, pluPlanState } from "../DcatApPluFactory";
+import { Contact, DcatApPluFactory, Distribution, pluDocType, pluPlanState, pluPlantype, pluPlanTypeFine, pluProcedureState } from "../DcatApPluFactory";
 import { XPathUtils } from "../../utils/xpath.utils";
 
 export class WfsMapper extends GenericMapper {
@@ -763,6 +763,108 @@ export class WfsMapper extends GenericMapper {
         return pluPlanState.UNBEKANNT;
     }
 
+    /**
+     * This is currently XPlan specific.
+     * 
+     * // TODO fill in the gaps
+     * // TODO what about other WFS sources?
+     * 
+     * @returns 
+     */
+    _getPluPlanType(): string {
+        let typename = this.select('./*', this.feature, true)?.localName;
+        switch (typename) {
+            case 'BP_Plan':
+                return pluPlantype.BEBAU_PLAN;
+            case 'FP_Plan':
+                return pluPlantype.FLAECHENN_PLAN;
+            case 'RP_Plan':
+                return pluPlantype.RAUM_ORDN_PLAN;
+            case 'SO_Plan':
+                // TODO
+                return pluPlantype.UNBEKANNT;
+            default:
+                return pluPlantype.UNBEKANNT;
+        }
+    }
+
+    /**
+     * This is currently XPlan specific.
+     * This is based on:
+     * - https://xleitstelle.de/sites/default/files/objektartenkataloge/5_4/html/xplan_BP_Plan.html#xplan_BP_Plan_planArt
+     * - https://xleitstelle.de/sites/default/files/objektartenkataloge/5_4/html/xplan_FP_Plan.html#xplan_FP_Plan_planArt
+     * - https://xleitstelle.de/sites/default/files/objektartenkataloge/5_4/html/xplan_RP_Plan.html#xplan_RP_Plan_planArt
+     *
+     * Note especially that we use the XPlan 5.4 codelists for all XPlan documents!
+     * 
+     * // TODO fill in the gaps
+     * // TODO what about other WFS sources?
+     * // TODO check differently versioned codelists for discrepancies
+     * 
+     * @returns 
+     */
+    _getPluPlanTypeFine(): string {
+        let typename = this.select('./*', this.feature, true)?.localName;
+        let planart = this.select('./*/xplan:planArt', this.feature, true)?.textContent;
+        switch (typename) {
+            case 'BP_Plan':
+                switch(planart) {
+                    // case 1000: return pluPlanTypeFine.; // BPlan
+                    case 10000: return pluPlanTypeFine.EINF_BEBAU_PLAN; // EinfacherBPlan
+                    case 10001: return pluPlanTypeFine.QUALI_BEBAU_PLAN;    // QualifizierterBPlan
+                    // case 10002: return pluPlanTypeFine.;    // BebauungsplanZurWohnraumversorgung
+                    case 3000: return pluPlanTypeFine.VORH_BEBAU_PLA;   // VorhabenbezogenerBPlan
+                    // case 3100: return pluPlanTypeFine.; // VorhabenUndErschliessungsplan
+                    case 4000: return pluPlanTypeFine.STAEDT_BAUL_INNENBER_STZG;    // InnenbereichsSatzung
+                    case 40000: return pluPlanTypeFine.STAEDT_BAUL_KLARST_STZG; // KlarstellungsSatzung
+                    case 40001: return pluPlanTypeFine.STAEDT_BAUL_ENTWICKL_STZG;   // EntwicklungsSatzung
+                    case 40002: return pluPlanTypeFine.STAEDT_BAUL_ERGAENZ_STZG;    // ErgaenzungsSatzung
+                    // case 5000: return pluPlanTypeFine.; // AussenbereichsSatzung
+                    // case 7000: return pluPlanTypeFine.; // OertlicheBauvorschrift
+                    // case 9999: return pluPlanTypeFine.; // Sonstiges
+                    default: return pluPlanTypeFine.UNBEKANNT;
+                }
+            case 'FP_Plan':
+                switch(planart) {
+                    case 1000: return pluPlanTypeFine.FLAECHENN_PLAN; // FPlan
+                    case 2000: return pluPlanTypeFine.GEMEINS_FLAECHENN_PLAN; // GemeinsamerFPlan
+                    case 3000: return pluPlanTypeFine.REGION_FLAECHENN_PLAN; // RegFPlan
+                    // case 4000: return pluPlanTypeFine.; // FPlanRegPlan
+                    // case 5000: return pluPlanTypeFine.; // SachlicherTeilplan
+                    // case 9999: return pluPlanTypeFine.; // Sonstiges
+                    default: return pluPlanTypeFine.UNBEKANNT;
+                }
+            case 'RP_Plan':
+                switch(planart) {
+                    case 1000: return pluPlanTypeFine.REGION_PLAN; // Regionalplan
+                    case 2000: return pluPlanTypeFine.SACHL_TEIL_PLAN_REGIONAL; // SachlicherTeilplanRegionalebene
+                    case 2001: return pluPlanTypeFine.SACHL_TEIL_PLAN_LAND; // SachlicherTeilplanLandesebene
+                    case 3000: return pluPlanTypeFine.BRAUNK_PLAN; // Braunkohlenplan
+                    case 4000: return pluPlanTypeFine.LAND_RAUM_ORD_PLAN; // LandesweiterRaumordnungsplan
+                    case 5000: return pluPlanTypeFine.STANDORT_KONZ_BUND; // StandortkonzeptBund
+                    case 5001: return pluPlanTypeFine.AWZ_PLAN; // AWZPlan
+                    case 6000: return pluPlanTypeFine.RAEUML_TEIL_PLAN; // RaeumlicherTeilplan
+                    // case 9999: return pluPlanTypeFine.; // Sonstiges
+                    default: return pluPlanTypeFine.UNBEKANNT;
+                }
+            case 'SO_Plan':
+                // TODO no codelists found!
+                // codeSpace="www.mysynergis.com/XPlanungR/5.1/0"; but URL (or similar) does not exist
+                switch(planart) {
+                    // TODO possibly more values possible; these are the ones found in the data so far
+                    // case 2000: return pluPlanTypeFine.;
+                    // case 17200: return pluPlanTypeFine.;
+                    default: return pluPlanTypeFine.UNBEKANNT;
+                }
+            default:
+                return pluPlanTypeFine.UNBEKANNT;
+        }
+    }
+
+    _getPluProcedureState(): string {
+        return pluProcedureState.UNBEKANNT;
+    }
+
     getErrorSuffix(uuid, title) {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.getFeaturesUrl}'.`;
     }
@@ -786,6 +888,7 @@ export class WfsMapper extends GenericMapper {
             bbox: this._getBoundingBoxGml(),
             catalog: {
                 description: this.fetched.abstract,
+                homepage: this.settings.getFeaturesUrl,
                 title: this.fetched.title,
                 publisher: this._getPublisher()[0]
             }, 
@@ -801,9 +904,9 @@ export class WfsMapper extends GenericMapper {
             // maintainers: null,
             modified: this._getModifiedDate(),
             planState: this._getPluPlanState(),
-            // pluPlanType: null,
-            // pluPlanTypeFine: null,
-            pluProcedureState: null,
+            pluPlanType: this._getPluPlanType(),
+            pluPlanTypeFine: this._getPluPlanTypeFine(),
+            pluProcedureState: this._getPluProcedureState(),
             // pluProcedureType: null,
             // pluProcessSteps: null,
             procedureStartDate: null,
