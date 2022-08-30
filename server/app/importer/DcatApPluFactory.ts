@@ -67,7 +67,7 @@ export interface Contact {
     region?: string
 }
 
-interface Distribution {
+export interface Distribution {
     accessUrl: string, 
     description?: string, 
     downloadURL?: string, 
