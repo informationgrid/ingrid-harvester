@@ -232,39 +232,39 @@ export class DcatApPluFactory {
         let xmlString = `<?xml version="1.0"?>
         <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns.toLowerCase()}="${uri}"`).join(' ')}>
             <dcat:Catalog>
-                <dcterms:description>${catalog.description}</dcterms:description>
-                <dcterms:title>${catalog.title}</dcterms:title>
-                ${DcatApPluFactory.xmlFoafAgent('dcterms:publisher', catalog.publisher)}
+                <dct:description>${catalog.description}</dct:description>
+                <dct:title>${catalog.title}</dct:title>
+                ${DcatApPluFactory.xmlFoafAgent('dct:publisher', catalog.publisher)}
                 ${optional('dcat:themeTaxonomy', catalog.themeTaxonomy)}
-                ${optional('dcterms:issued', catalog.issued)}
-                ${optional('dcterms:language', catalog.language)}
-                ${optional('dcterms:modified', catalog.modified)}
+                ${optional('dct:issued', catalog.issued)}
+                ${optional('dct:language', catalog.language)}
+                ${optional('dct:modified', catalog.modified)}
                 ${optional('foaf:homepage', catalog.homepage)}
                 ${optional(DcatApPluFactory.xmlRecord, catalog.records)}
             </dcat:Catalog>
             <dcat:Dataset rdf:about="https://some.tld/features/${identifier}">
                 ${DcatApPluFactory.xmlContact(contactPoint)}
-                ${descriptions.map(description => `<dcterms:description xml:lang="${lang}">${description}</dcterms:description>`).join(' ')}
-                <dcterms:identifier>${identifier}</dcterms:identifier>
-                <dcterms:title xml:lang="${lang}">${title}</dcterms:title>
+                ${descriptions.map(description => `<dct:description xml:lang="${lang}">${description}</dct:description>`).join(' ')}
+                <dct:identifier>${identifier}</dct:identifier>
+                <dct:title xml:lang="${lang}">${title}</dct:title>
                 <plu:PlanState>${planState}</plu:PlanState>
                 <plu:pluProcedureState rdf:resource="${pluProcedureState}" />
                 <plu:procedureStartDate rdf:resource="${procedureStartDate}" />
-                <dcterms:spatial>
+                <dct:spatial>
                     <dcat:Location>
                         <dcat:bbox>${bbox}</dcat:bbox>
                         <locn:geometry>${locationXml}</locn:geometry>
                         <dcat:centroid>{leer oder berechnen?}</dcat:centroid>
                         <locn:geographicName>${geographicName}</locn:geographicName>
                     </dcat:Location>
-                </dcterms:spatial>
-                ${DcatApPluFactory.xmlFoafAgent('dcterms:publisher', publisher)}
+                </dct:spatial>
+                ${DcatApPluFactory.xmlFoafAgent('dct:publisher', publisher)}
                 ${optional((m: Agent) => DcatApPluFactory.xmlFoafAgent('dcatde:maintainer', m), maintainers)};
-                ${optional((c: Agent) => DcatApPluFactory.xmlFoafAgent('dcterms:contributor', c), contributors)};
+                ${optional((c: Agent) => DcatApPluFactory.xmlFoafAgent('dct:contributor', c), contributors)};
                 ${optional(DcatApPluFactory.xmlDistribution, distributions)}
-                ${optional('dcterms:issued', issued)}
-                ${optional('dcterms:modified', modified)}
-                ${optional('dcterms:relation', relation)}
+                ${optional('dct:issued', issued)}
+                ${optional('dct:modified', modified)}
+                ${optional('dct:relation', relation)}
                 ${pluPlanType ? `<plu:pluPlanType rdf:resource="${pluPlanType}" />` : ''}
                 ${pluPlanTypeFine ? `<plu:pluPlanTypeFine rdf:resource="${pluPlanTypeFine}" />` : ''}
                 ${pluProcedureType ? `<plu:pluProcedureType rdf:resource="${pluProcedureType}" />` : ''}
@@ -278,37 +278,37 @@ export class DcatApPluFactory {
     private static xmlDistribution ({ accessUrl: accessURL, description, downloadURL, format, issued, modified, period, pluDoctype, title } : Distribution): string {
         return `<dcat:Distribution>
             <dcat:accessURL>${accessURL}</dcat:accessURL>
-            ${optional('dcterms:description', description)}
+            ${optional('dct:description', description)}
             ${optional('dcat:downloadURL', downloadURL)}
-            ${optional('dcterms:format', format)}
-            ${optional('dcterms:issued', issued)}
-            ${optional('dcterms:modified', modified)}
+            ${optional('dct:format', format)}
+            ${optional('dct:issued', issued)}
+            ${optional('dct:modified', modified)}
             ${optional(DcatApPluFactory.xmlPeriodOfTime, period)}
             ${optional('plu:pluDoctype', pluDoctype)}
-            ${optional('dcterms:title', title)}
+            ${optional('dct:title', title)}
         </dcat:Distribution>`;
     }
 
     private static xmlFoafAgent(parent: string, { name, type }: Agent): string {
         return `<${parent}><foaf:agent>
             <foaf:name>${name}</foaf:name>
-            ${optional('dcterms:type', type)}
+            ${optional('dct:type', type)}
         </foaf:agent></${parent}>`;
     }
 
     private static xmlPeriodOfTime({ start, end }: {start?: string, end?: string }): string {
-        return `<dcterms:temporal>
-            <dcterms:PeriodOfTime>
+        return `<dct:temporal>
+            <dct:PeriodOfTime>
                 ${optional('dcat:startDate', start)}
                 ${optional('dcat:endDate', end)}
-            </dcterms:PeriodOfTime>
-        </dcterms:temporal>`;
+            </dct:PeriodOfTime>
+        </dct:temporal>`;
     }
 
     private static xmlProcessStep({ distributions, identifier, period, type }: ProcessStep): string {
         return `<plu:PluProcessStep>
             <plu:ProcessStepType>${type}</plu:ProcessStepType>
-            ${optional('dcterms:identifier', identifier)}
+            ${optional('dct:identifier', identifier)}
             ${optional(DcatApPluFactory.xmlDistribution, distributions)}
             ${optional(DcatApPluFactory.xmlPeriodOfTime, period)}
         </plu:PluProcessStep>`;
@@ -317,10 +317,10 @@ export class DcatApPluFactory {
     private static xmlRecord({ issued, modified, primaryTopic, title }: Record) {
         return `<dcat:record>
             <dcat:CatalogRecord>
-                <dcterms:title>${title}</dcterms:title>
+                <dct:title>${title}</dct:title>
                 <foaf:primaryTopic>${primaryTopic}</foaf:primaryTopic>
-                ${optional('dcterms:issued', issued)}
-                ${optional('dcterms:modified', modified)}
+                ${optional('dct:issued', issued)}
+                ${optional('dct:modified', modified)}
             </dcat:CatalogRecord>
         </dcat:record>`;
     }
