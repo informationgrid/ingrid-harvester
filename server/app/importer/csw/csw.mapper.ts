@@ -38,7 +38,7 @@ import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
-import { DcatApPluFactory } from "../DcatApPluFactory";
+import { DcatApPluFactory, pluPlanState } from "../DcatApPluFactory";
 
 let xpath = require('xpath');
 
@@ -835,6 +835,26 @@ export class CswMapper extends GenericMapper {
         return license;
     }
 
+    // TODO check
+    _getPluPlanState(): string {
+        let planState;
+        try {
+            planState = CswMapper.select(this.settings.pluPlanState, this.record, true)?.textContent;
+        }
+        finally {
+            if (!planState) {
+                planState = this.settings.pluPlanState;
+            }
+        }
+        if (['ja', 'festgesetzt'].includes(planState.toLowerCase())) {
+            return pluPlanState.FESTGES;
+        }
+        else if (['nein', 'in aufstellung'].includes(planState.toLowerCase())) {
+            return pluPlanState.IN_AUFST;
+        }
+        return pluPlanState.UNBEKANNT;
+    }
+
     getErrorSuffix(uuid, title) {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'.`;
     }
@@ -872,7 +892,7 @@ export class CswMapper extends GenericMapper {
             locationXml: this._getSpatialGml(),
             // maintainers: null,
             modified: this._getModifiedDate(),
-            planState: null,
+            planState: this._getPluPlanState(),
             // pluPlanType: null,
             // pluPlanTypeFine: null,
             pluProcedureState: null,

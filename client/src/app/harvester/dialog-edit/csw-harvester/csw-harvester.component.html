@@ -35,12 +35,15 @@
             <mat-option value="POST">POST</mat-option>
           </mat-select>
         </mat-form-field>
-
         <mat-form-field fxFlex>
           <input matInput placeholder="getRecords URL" formControlName="getRecordsUrl" required>
         </mat-form-field>
       </div>
-
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Plan Status (XPath oder default Wert)" formControlName="pluPlanState">
+        </mat-form-field>
+      </div>
     </mat-card-content>
   </mat-card>
 

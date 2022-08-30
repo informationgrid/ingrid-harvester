@@ -36,6 +36,7 @@ export type WfsSettings = {
         description: string,
         featureParent: string,
         name: string,
+        pluPlanState: string,
         spatial: string
     },
     count: number,
@@ -51,15 +52,16 @@ export type WfsSettings = {
 
 export const DefaultXpathSettings: Partial<WfsSettings> = {
     xpaths: {
-        featureParent: '/wfs:FeatureCollection/wfs:member',
-        name: '',
-        description: '',
-        spatial: '',
         capabilities: {
             abstract: '/wfs:WFS_Capabilities/ows:ServiceIdentification/ows:Abstract',
             language: '',
             serviceProvider: '/wfs:WFS_Capabilities/ows:ServiceProvider',
             title: '/wfs:WFS_Capabilities/ows:ServiceIdentification/ows:Title'
-        }
+        },
+        description: '',
+        featureParent: '/wfs:FeatureCollection/wfs:member',
+        name: '',
+        pluPlanState: '',
+        spatial: ''
     }
 }

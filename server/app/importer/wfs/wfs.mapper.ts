@@ -36,7 +36,7 @@ import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
-import { Contact, DcatApPluFactory, Distribution, pluDocType } from "../DcatApPluFactory";
+import { Contact, DcatApPluFactory, Distribution, pluDocType, pluPlanState } from "../DcatApPluFactory";
 import { XPathUtils } from "../../utils/xpath.utils";
 
 export class WfsMapper extends GenericMapper {
@@ -743,6 +743,26 @@ export class WfsMapper extends GenericMapper {
         }
     }
 
+    // TODO check
+    _getPluPlanState(): string {
+        let planState;
+        try {
+            planState = this.select(this.settings.xpaths.pluPlanState, this.feature, true)?.textContent;
+        }
+        finally {
+            if (!planState) {
+                planState = this.settings.xpaths.pluPlanState;
+            }
+        }
+        if (['ja', 'festgesetzt'].includes(planState.toLowerCase())) {
+            return pluPlanState.FESTGES;
+        }
+        else if (['nein', 'in aufstellung'].includes(planState.toLowerCase())) {
+            return pluPlanState.IN_AUFST;
+        }
+        return pluPlanState.UNBEKANNT;
+    }
+
     getErrorSuffix(uuid, title) {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.getFeaturesUrl}'.`;
     }
@@ -780,7 +800,7 @@ export class WfsMapper extends GenericMapper {
             locationXml: this._getSpatialGml(),
             // maintainers: null,
             modified: this._getModifiedDate(),
-            planState: null,
+            planState: this._getPluPlanState(),
             // pluPlanType: null,
             // pluPlanTypeFine: null,
             pluProcedureState: null,

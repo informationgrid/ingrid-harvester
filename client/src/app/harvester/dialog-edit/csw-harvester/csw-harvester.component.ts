@@ -47,6 +47,7 @@ export class CswHarvesterComponent implements OnInit, OnDestroy {
     this.form.addControl('httpMethod', new FormControl(this.model.httpMethod));
     this.form.addControl('getRecordsUrl', new FormControl(this.model.getRecordsUrl));
     this.form.addControl('recordFilter', new FormControl(this.model.recordFilter));
+    this.form.addControl('pluPlanState', new FormControl(this.model.pluPlanState));
 
     if (!this.model.eitherKeywords) {
       this.model.eitherKeywords = [];

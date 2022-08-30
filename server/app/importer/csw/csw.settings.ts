@@ -32,6 +32,7 @@ export type CswSettings = {
             title: string
         },
     },
+    pluPlanState?: string,
     getRecordsUrl: string,
     eitherKeywords: string[],
     httpMethod: "GET" | "POST",
