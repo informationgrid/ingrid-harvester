@@ -253,8 +253,8 @@ export class DcatApPluFactory {
                 <dct:identifier>${identifier}</dct:identifier>
                 <dct:title xml:lang="${lang}">${title}</dct:title>
                 <plu:PlanState>${planState}</plu:PlanState>
-                <plu:pluProcedureState rdf:resource="${pluProcedureState}" />
-                <plu:procedureStartDate rdf:resource="${procedureStartDate}" />
+                <plu:pluProcedureState>${pluProcedureState}</plu:pluProcedureState>
+                <plu:procedureStartDate>${procedureStartDate}</plu:procedureStartDate>
                 <dct:spatial>
                     <dcat:Location>
                         <dcat:bbox>${bbox}</dcat:bbox>
@@ -270,9 +270,9 @@ export class DcatApPluFactory {
                 ${optional('dct:issued', issued)}
                 ${optional('dct:modified', modified)}
                 ${optional('dct:relation', relation)}
-                ${pluPlanType ? `<plu:pluPlanType rdf:resource="${pluPlanType}" />` : ''}
-                ${pluPlanTypeFine ? `<plu:pluPlanTypeFine rdf:resource="${pluPlanTypeFine}" />` : ''}
-                ${pluProcedureType ? `<plu:pluProcedureType rdf:resource="${pluProcedureType}" />` : ''}
+                ${optional('plu:pluPlanType', pluPlanType)}
+                ${optional('plu:pluPlanTypeFine', pluPlanTypeFine)}
+                ${optional('plu:pluProcedureType', pluProcedureType)}
                 ${optional(DcatApPluFactory.xmlProcessStep, pluProcessSteps)}
             </dcat:Dataset>
         </rdf:RDF>`;
