@@ -136,7 +136,8 @@ export const DCAT_AP_PLU_NSMAP = {
 export const procedureType = {
     NORM_VERF: '1001',          // normales Verfahren
     VEREINF_VERF: '1002', 	    // vereinfachtes Verfahren
-    BEBAU_PLAN_INNEN: '1003' 	// Bebauungsplan der Innenentwicklung
+    BEBAU_PLAN_INNEN: '1003',	// Bebauungsplan der Innenentwicklung
+    UNBEKANNT: '1004'           // unbekannt
 };
 
 /**
@@ -145,7 +146,8 @@ export const procedureType = {
 export const pluProcedureState = {
     GEPLANT: '2001',        // geplant
     LAUFEND: '2002',        // laufend
-    ABGESCHLOSSEN: '2003'   // abgeschlossen
+    ABGESCHLOSSEN: '2003',  // abgeschlossen
+    UNBEKANNT: '2004'       // unbekannt
 };
 
 /**
@@ -153,7 +155,8 @@ export const pluProcedureState = {
  */
 export const pluPlanState = {
     IN_AUFST: '3001',   // in Aufstellung
-    FESTGES: '3002'     // festgesetzt
+    FESTGES: '3002',    // festgesetzt
+    UNBEKANNT: '3004'   // unbekannt
 };
 
 /**
@@ -167,7 +170,8 @@ export const pluPlantype = {
     PW_LANDSCH_PLAN: '5000',    // Planwerke der Landschaftsplanung
     RAUM_ORDN_PLAN: '6000',     // Raumordnungsplan
     RAUM_ORDN_VERF: '7000',     // Raumordnungsverfahren
-    PLAN_FESTST_VERF: '8000'    // Planfeststellungsverfahren
+    PLAN_FESTST_VERF: '8000',   // Planfeststellungsverfahren
+    UNBEKANNT: '9000'           // unbekannt
 };
 
 /**
@@ -197,11 +201,12 @@ export const pluPlanTypeFine = {
     REGION_PLAN: '6100',    // Regionalplan
     SACHL_TEIL_PLAN_REGIONAL: '6200',   // Sachlicher Teilplan Regionalebene
     SACHL_TEIL_PLAN_LAND: '6300',       // Sachlicher Teilplan Landesebene
-    BRAUNK_PLAN: '6400',        // Braunkohleplan
+    BRAUNK_PLAN: '6400',        // Braunkohlenplan
     LAND_RAUM_ORD_PLAN: '6500', // Landesweiter Raumordnungsplan
     STANDORT_KONZ_BUND: '6600', // Standortkonzept Bund
     AWZ_PLAN: '6700',           // AWZ Plan
-    RAEUML_TEIL_PLAN: '6800'    // Räumlicher Teilplan
+    RAEUML_TEIL_PLAN: '6800',   // Räumlicher Teilplan
+    UNBEKANNT: '7000'           // unbekannt
 };
 
 /**
