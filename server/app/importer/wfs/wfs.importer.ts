@@ -223,6 +223,7 @@ export class WfsImporter implements Importer {
                 }
             }
         }
+        this.generalInfo['defaultCrs'] = this.defaultCrs;
 
         // store the getCapabilities language in generalInfo
         // try language as xpath; if not found, insert it as is (fallback option)

@@ -421,15 +421,13 @@ export class WfsMapper extends GenericMapper {
 
     _getBoundingBoxGml(): string {
         let envelope = this.select('./*/gml:boundedBy/gml:Envelope', this.feature, true);
-        if (envelope) {
-            if (envelope.getAttribute('srsName')) {
-                return envelope.toString();
-            }
-            else {
-                // TODO convert to GML from this._getBoundingBox();
-            }
+        if (!envelope) {
+            return undefined;
         }
-        return undefined;
+        if (!envelope.hasAttribute('srsName')) {
+            envelope.setAttribute('srsName', this.fetched.defaultCrs);
+        }
+        return envelope.toString();
     }
 
     _getBoundingBox(): any {
@@ -450,21 +448,20 @@ export class WfsMapper extends GenericMapper {
 
     _getSpatialGml(): any {
         let spatialContainer = this.select(this.settings.xpaths.spatial, this.feature, true);
-        // use bounding box as fallback
         if (!spatialContainer) {
-            return this._getBoundingBoxGml();
+            return undefined;
         }
         let child = XPathUtils.firstElementChild(spatialContainer);
-        if (!child.getAttribute('srsName')) {
-            // TODO convert to GML from this._getSpatial()
+        if (!child.hasAttribute('srsName')) {
+            child.setAttribute('srsName', this.fetched.defaultCrs);
         }
         return child.toString();
     }
 
     _getSpatial(): any {
         let spatialContainer = this.select(this.settings.xpaths.spatial, this.feature, true);
-        // use bounding box as fallback
         if (!spatialContainer) {
+            // use bounding box as fallback
             return this._getBoundingBox();
         }
         let child = XPathUtils.firstElementChild(spatialContainer);
@@ -476,7 +473,10 @@ export class WfsMapper extends GenericMapper {
             crs = spatialContainer.localName.split('_')[1];
         }
         // TODO this is not robust and very much specialized for the XPLAN WFS documents
-        if (!crs.startsWith('EPSG:')) {
+        if (!crs) {
+            crs = this.fetched.defaultCrs;
+        }
+        else if (!crs.startsWith('EPSG:')) {
             crs = 'EPSG:' + crs;
         }
         let geojson = this.fetched.geojsonUtils.parse(child, { crs: crs });
