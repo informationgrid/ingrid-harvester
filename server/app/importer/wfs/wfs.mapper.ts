@@ -37,6 +37,7 @@ import {ImporterSettings} from "../../importer.settings";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
 import { Contact, DcatApPluFactory, Distribution, pluDocType, pluPlanState, pluPlantype, pluPlanTypeFine, pluProcedureState } from "../DcatApPluFactory";
+import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from "../../utils/xpath.utils";
 
 export class WfsMapper extends GenericMapper {
