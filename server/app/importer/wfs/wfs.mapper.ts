@@ -104,15 +104,20 @@ export class WfsMapper extends GenericMapper {
     _getDAPDistributions(): Distribution[] {
         let distributions = [];
         // let distributions = this.select(this.settings.xpaths.distributions, this.feature, false);
-        let distElems = this.select('./*/xplan:externeReferenz/xplan:XP_SpezExterneReferenz', this.feature, false);
-        for (let distElem of distElems) {
-            let distribution: Distribution = {
-                accessUrl: this.select('./xplan:referenzURL', distElem, true)?.textContent,
-                description: this.select('./xplan:art', distElem, true)?.textContent,
-                format: this.select('./xplan:referenzMimeType', distElem, true)?.textContent,
-                pluDoctype: this._getPluDocType(this.select('./xplan:typ', distElem, true)?.textContent)
-            };
-            distributions.push(distribution);
+        try {
+            let distElems = this.select('./*/xplan:externeReferenz/xplan:XP_SpezExterneReferenz', this.feature, false);
+            for (let distElem of distElems) {
+                let distribution: Distribution = {
+                    accessUrl: this.select('./xplan:referenzURL', distElem, true)?.textContent,
+                    description: this.select('./xplan:art', distElem, true)?.textContent,
+                    format: this.select('./xplan:referenzMimeType', distElem, true)?.textContent,
+                    pluDoctype: this._getPluDocType(this.select('./xplan:typ', distElem, true)?.textContent)
+                };
+                distributions.push(distribution);
+            }
+        }
+        catch (e) {
+            // quietly swallow exceptions
         }
         return distributions;
     }
@@ -749,6 +754,9 @@ export class WfsMapper extends GenericMapper {
         try {
             planState = this.select(this.settings.xpaths.pluPlanState, this.feature, true)?.textContent;
         }
+        catch {
+            // quietly swallow exceptions
+        }
         finally {
             if (!planState) {
                 planState = this.settings.xpaths.pluPlanState;
@@ -805,59 +813,70 @@ export class WfsMapper extends GenericMapper {
      */
     _getPluPlanTypeFine(): string {
         let typename = this.select('./*', this.feature, true)?.localName;
-        let planart = this.select('./*/xplan:planArt', this.feature, true)?.textContent;
-        switch (typename) {
-            case 'BP_Plan':
-                switch(planart) {
-                    // case 1000: return pluPlanTypeFine.; // BPlan
-                    case 10000: return pluPlanTypeFine.EINF_BEBAU_PLAN; // EinfacherBPlan
-                    case 10001: return pluPlanTypeFine.QUALI_BEBAU_PLAN;    // QualifizierterBPlan
-                    // case 10002: return pluPlanTypeFine.;    // BebauungsplanZurWohnraumversorgung
-                    case 3000: return pluPlanTypeFine.VORH_BEBAU_PLA;   // VorhabenbezogenerBPlan
-                    // case 3100: return pluPlanTypeFine.; // VorhabenUndErschliessungsplan
-                    case 4000: return pluPlanTypeFine.STAEDT_BAUL_INNENBER_STZG;    // InnenbereichsSatzung
-                    case 40000: return pluPlanTypeFine.STAEDT_BAUL_KLARST_STZG; // KlarstellungsSatzung
-                    case 40001: return pluPlanTypeFine.STAEDT_BAUL_ENTWICKL_STZG;   // EntwicklungsSatzung
-                    case 40002: return pluPlanTypeFine.STAEDT_BAUL_ERGAENZ_STZG;    // ErgaenzungsSatzung
-                    // case 5000: return pluPlanTypeFine.; // AussenbereichsSatzung
-                    // case 7000: return pluPlanTypeFine.; // OertlicheBauvorschrift
-                    // case 9999: return pluPlanTypeFine.; // Sonstiges
-                    default: return pluPlanTypeFine.UNBEKANNT;
-                }
-            case 'FP_Plan':
-                switch(planart) {
-                    case 1000: return pluPlanTypeFine.FLAECHENN_PLAN; // FPlan
-                    case 2000: return pluPlanTypeFine.GEMEINS_FLAECHENN_PLAN; // GemeinsamerFPlan
-                    case 3000: return pluPlanTypeFine.REGION_FLAECHENN_PLAN; // RegFPlan
-                    // case 4000: return pluPlanTypeFine.; // FPlanRegPlan
-                    // case 5000: return pluPlanTypeFine.; // SachlicherTeilplan
-                    // case 9999: return pluPlanTypeFine.; // Sonstiges
-                    default: return pluPlanTypeFine.UNBEKANNT;
-                }
-            case 'RP_Plan':
-                switch(planart) {
-                    case 1000: return pluPlanTypeFine.REGION_PLAN; // Regionalplan
-                    case 2000: return pluPlanTypeFine.SACHL_TEIL_PLAN_REGIONAL; // SachlicherTeilplanRegionalebene
-                    case 2001: return pluPlanTypeFine.SACHL_TEIL_PLAN_LAND; // SachlicherTeilplanLandesebene
-                    case 3000: return pluPlanTypeFine.BRAUNK_PLAN; // Braunkohlenplan
-                    case 4000: return pluPlanTypeFine.LAND_RAUM_ORD_PLAN; // LandesweiterRaumordnungsplan
-                    case 5000: return pluPlanTypeFine.STANDORT_KONZ_BUND; // StandortkonzeptBund
-                    case 5001: return pluPlanTypeFine.AWZ_PLAN; // AWZPlan
-                    case 6000: return pluPlanTypeFine.RAEUML_TEIL_PLAN; // RaeumlicherTeilplan
-                    // case 9999: return pluPlanTypeFine.; // Sonstiges
-                    default: return pluPlanTypeFine.UNBEKANNT;
-                }
-            case 'SO_Plan':
-                // TODO no codelists found!
-                // codeSpace="www.mysynergis.com/XPlanungR/5.1/0"; but URL (or similar) does not exist
-                switch(planart) {
-                    // TODO possibly more values possible; these are the ones found in the data so far
-                    // case 2000: return pluPlanTypeFine.;
-                    // case 17200: return pluPlanTypeFine.;
-                    default: return pluPlanTypeFine.UNBEKANNT;
-                }
-            default:
-                return pluPlanTypeFine.UNBEKANNT;
+        let planart;
+        try {
+            planart = this.select('./*/xplan:planArt', this.feature, true)?.textContent;
+            switch (typename) {
+                case 'BP_Plan':
+                    switch(planart) {
+                        // case 1000: return pluPlanTypeFine.; // BPlan
+                        case 10000: return pluPlanTypeFine.EINF_BEBAU_PLAN; // EinfacherBPlan
+                        case 10001: return pluPlanTypeFine.QUALI_BEBAU_PLAN;    // QualifizierterBPlan
+                        // case 10002: return pluPlanTypeFine.;    // BebauungsplanZurWohnraumversorgung
+                        case 3000: return pluPlanTypeFine.VORH_BEBAU_PLA;   // VorhabenbezogenerBPlan
+                        // case 3100: return pluPlanTypeFine.; // VorhabenUndErschliessungsplan
+                        case 4000: return pluPlanTypeFine.STAEDT_BAUL_INNENBER_STZG;    // InnenbereichsSatzung
+                        case 40000: return pluPlanTypeFine.STAEDT_BAUL_KLARST_STZG; // KlarstellungsSatzung
+                        case 40001: return pluPlanTypeFine.STAEDT_BAUL_ENTWICKL_STZG;   // EntwicklungsSatzung
+                        case 40002: return pluPlanTypeFine.STAEDT_BAUL_ERGAENZ_STZG;    // ErgaenzungsSatzung
+                        // case 5000: return pluPlanTypeFine.; // AussenbereichsSatzung
+                        // case 7000: return pluPlanTypeFine.; // OertlicheBauvorschrift
+                        // case 9999: return pluPlanTypeFine.; // Sonstiges
+                        default: return pluPlanTypeFine.UNBEKANNT;
+                    }
+                case 'FP_Plan':
+                    switch(planart) {
+                        case 1000: return pluPlanTypeFine.FLAECHENN_PLAN; // FPlan
+                        case 2000: return pluPlanTypeFine.GEMEINS_FLAECHENN_PLAN; // GemeinsamerFPlan
+                        case 3000: return pluPlanTypeFine.REGION_FLAECHENN_PLAN; // RegFPlan
+                        // case 4000: return pluPlanTypeFine.; // FPlanRegPlan
+                        // case 5000: return pluPlanTypeFine.; // SachlicherTeilplan
+                        // case 9999: return pluPlanTypeFine.; // Sonstiges
+                        default: return pluPlanTypeFine.UNBEKANNT;
+                    }
+                case 'RP_Plan':
+                    switch(planart) {
+                        case 1000: return pluPlanTypeFine.REGION_PLAN; // Regionalplan
+                        case 2000: return pluPlanTypeFine.SACHL_TEIL_PLAN_REGIONAL; // SachlicherTeilplanRegionalebene
+                        case 2001: return pluPlanTypeFine.SACHL_TEIL_PLAN_LAND; // SachlicherTeilplanLandesebene
+                        case 3000: return pluPlanTypeFine.BRAUNK_PLAN; // Braunkohlenplan
+                        case 4000: return pluPlanTypeFine.LAND_RAUM_ORD_PLAN; // LandesweiterRaumordnungsplan
+                        case 5000: return pluPlanTypeFine.STANDORT_KONZ_BUND; // StandortkonzeptBund
+                        case 5001: return pluPlanTypeFine.AWZ_PLAN; // AWZPlan
+                        case 6000: return pluPlanTypeFine.RAEUML_TEIL_PLAN; // RaeumlicherTeilplan
+                        // case 9999: return pluPlanTypeFine.; // Sonstiges
+                        default: return pluPlanTypeFine.UNBEKANNT;
+                    }
+                case 'SO_Plan':
+                    // TODO no codelists found!
+                    // codeSpace="www.mysynergis.com/XPlanungR/5.1/0"; but URL (or similar) does not exist
+                    switch(planart) {
+                        // TODO possibly more values possible; these are the ones found in the data so far
+                        // case 2000: return pluPlanTypeFine.;
+                        // case 17200: return pluPlanTypeFine.;
+                        default: return pluPlanTypeFine.UNBEKANNT;
+                    }
+                default:
+                    return pluPlanTypeFine.UNBEKANNT;
+            }
+        }
+        catch {
+            // quietly swallow exceptions
+        }
+        finally {
+            if (!planart) {
+                return pluPlanTypeFine.UNBEKANNT
+            }
         }
     }
 
