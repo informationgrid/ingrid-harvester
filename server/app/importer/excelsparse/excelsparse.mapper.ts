@@ -33,6 +33,7 @@ import {ImporterSettings} from "../../importer.settings";
 import {Columns} from './excelsparse.importer';
 import { DcatApPluFactory } from '../DcatApPluFactory';
 import { ExportFormat } from '../../model/index.document';
+import { GeoJsonUtils } from "../../utils/geojson.utils";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -443,6 +444,7 @@ export class ExcelSparseMapper extends GenericMapper {
                 title: this.fetched.title,
                 publisher: this._getPublisher()[0]
             },
+            centroid: GeoJsonUtils.computeCentroidToGml(this._getSpatial()),
             contactPoint: await this._getContactPoint(), 
             // contributors: null,
             descriptions: [this._getDescription()], 

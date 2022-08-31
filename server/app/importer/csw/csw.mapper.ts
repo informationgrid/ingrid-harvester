@@ -39,6 +39,7 @@ import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
 import { DcatApPluFactory, pluPlanState } from "../DcatApPluFactory";
+import { GeoJsonUtils } from "../../utils/geojson.utils";
 
 let xpath = require('xpath');
 
@@ -890,6 +891,7 @@ export class CswMapper extends GenericMapper {
                 title: this.fetched.title,
                 publisher: this._getPublisher()[0]
             },
+            centroid: GeoJsonUtils.computeCentroidToGml(this._getSpatial()),
             contactPoint: await this._getContactPoint(),
             // contributors: null,
             descriptions: [this._getDescription()], 

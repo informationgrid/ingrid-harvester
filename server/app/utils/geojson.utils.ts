@@ -25,8 +25,10 @@
 // TODO this is a fork of https://github.com/derhuerst/parse-gml-polygon
 // TODO it uses ISC license, which is compatible with EUPL
 
+import centroid from '@turf/centroid';
 import rewind from '@turf/rewind';
 import * as xpath from 'xpath';
+import { AllGeoJSON } from "@turf/helpers";
 import { XPathUtils } from '../utils/xpath.utils';
 const deepEqual = require('deep-equal');
 const proj4 = require('proj4');
@@ -45,6 +47,13 @@ export class GeoJsonUtils {
     }
 
     // static noTransform = (...coords) => coords;
+
+    static computeCentroidToGml(geojson: object) {        
+        let polyCentroid = centroid(<AllGeoJSON>geojson);
+        return `<gml:Point>
+            <gml:pos>${polyCentroid.geometry.coordinates.join(' ')}</gml:pos>
+        </gml:Point>`;
+    }
 
     getBoundingBox = (lowerCorner: string, upperCorner: string, crs?: string) => {
         const transformCoords = this.transformer(crs);

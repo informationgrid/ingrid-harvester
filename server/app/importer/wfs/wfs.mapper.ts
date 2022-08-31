@@ -920,6 +920,7 @@ export class WfsMapper extends GenericMapper {
                 title: this.fetched.title,
                 publisher: this._getPublisher()[0]
             }, 
+            centroid: GeoJsonUtils.computeCentroidToGml(this._getSpatial() ?? this._getBoundingBox()),
             contactPoint: await this._getContactPoint(), 
             // contributors: null,
             descriptions: [this._getDescription()], 
