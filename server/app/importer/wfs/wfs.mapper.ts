@@ -446,7 +446,7 @@ export class WfsMapper extends GenericMapper {
         return undefined;
     }
 
-    _getSpatialGml(): any {
+    _getSpatialGml(): string {
         let spatialContainer = this.select(this.settings.xpaths.spatial, this.feature, true);
         if (!spatialContainer) {
             return undefined;

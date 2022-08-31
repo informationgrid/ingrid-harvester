@@ -502,7 +502,7 @@ export class CswMapper extends GenericMapper {
         return new Date(CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent);
     }
 
-    _getSpatialGml(): any {
+    _getSpatialGml(): string {
         let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         return geographicBoundingBoxes.toString();
     }
@@ -879,13 +879,17 @@ export class CswMapper extends GenericMapper {
 
     // TODO lots of fields left to infer
     async cswToDcatApPlu(): Promise<string> {
+        let spatialGml = this._getSpatialGml();
+        if (!spatialGml) {
+            throw new Error(`No geo information specified for ${this.uuid}.`);
+        }
         return DcatApPluFactory.createXml({
-            bbox: this._getSpatialGml(),
+            bboxGml: spatialGml,
             catalog: {
                 description: this.fetched.abstract,
                 title: this.fetched.title,
                 publisher: this._getPublisher()[0]
-            }, 
+            },
             contactPoint: await this._getContactPoint(),
             // contributors: null,
             descriptions: [this._getDescription()], 
@@ -894,7 +898,7 @@ export class CswMapper extends GenericMapper {
             identifier: this.uuid,
             issued: this._getIssued(),
             lang: this._getLanguage(),
-            locationXml: this._getSpatialGml(),
+            geometryGml: spatialGml,
             // maintainers: null,
             modified: this._getModifiedDate(),
             planState: this._getPluPlanState(),

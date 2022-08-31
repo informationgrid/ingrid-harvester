@@ -176,8 +176,10 @@ export class ExcelSparseMapper extends GenericMapper {
         return undefined;
     }
     
-    _getSpatialGml(): any {
-
+    _getSpatialGml(): string {
+        return `<gml:Point>
+            <gml:pos>${this.columnMap.LON} ${this.columnMap.LAT}</gml:pos>
+        </gml:Point>`;
     }
 
     _getSpatial(): any {
@@ -430,9 +432,12 @@ export class ExcelSparseMapper extends GenericMapper {
 
     // TODO
     async excelToDcatApPlu(): Promise<string> {
-        let publisher = this._getPublisher()[0]
+        let spatialGml = this._getSpatialGml();
+        if (!spatialGml) {
+            throw new Error(`No geo information specified for ${this.id}.`);
+        }
         return DcatApPluFactory.createXml({
-            bbox: this._getSpatialGml(),
+            bboxGml: null,
             catalog: {
                 description: this.fetched.description,
                 title: this.fetched.title,
@@ -446,7 +451,7 @@ export class ExcelSparseMapper extends GenericMapper {
             identifier: this.id,
             issued: this._getIssued(),
             lang: this._getCatalogLanguage(),
-            locationXml: this._getSpatialGml(),
+            geometryGml: spatialGml,
             // maintainers: null,
             modified: this._getModifiedDate(),
             planState: null,
