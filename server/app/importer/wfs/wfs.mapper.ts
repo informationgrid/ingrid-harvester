@@ -903,8 +903,13 @@ export class WfsMapper extends GenericMapper {
 
     // TODO
     async wfsToDcatApPlu(): Promise<string> {
+        let bboxGml = this._getBoundingBoxGml();
+        let spatialGml = this._getSpatialGml();
+        if (!bboxGml && !spatialGml) {
+            throw new Error(`No geo information specified for ${this.uuid}.`);
+        }
         return DcatApPluFactory.createXml({
-            bbox: this._getBoundingBoxGml(),
+            bboxGml: bboxGml,
             catalog: {
                 description: this.fetched.abstract,
                 homepage: this.settings.getFeaturesUrl,
@@ -919,7 +924,7 @@ export class WfsMapper extends GenericMapper {
             identifier: this.uuid,
             issued: this._getIssued(),
             lang: this._getCatalogLanguage(),
-            locationXml: this._getSpatialGml(),
+            geometryGml: spatialGml,
             // maintainers: null,
             modified: this._getModifiedDate(),
             planState: this._getPluPlanState(),

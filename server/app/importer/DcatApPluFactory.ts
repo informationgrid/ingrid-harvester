@@ -94,7 +94,7 @@ interface Record {
 }
     
 export interface DcatApPlu {
-    bbox: string,
+    bboxGml: string,
     catalog: Catalog, 
     contactPoint: Contact, 
     contributors?: Agent[],
@@ -104,7 +104,7 @@ export interface DcatApPlu {
     identifier: string,
     issued?: Date,
     lang: string,
-    locationXml: string,
+    geometryGml: string,
     maintainers?: Agent[],
     modified: Date,
     planState: string,
@@ -233,7 +233,7 @@ export const pluDocType = {
 
 export class DcatApPluFactory {
 
-    static createXml({ bbox, catalog, contactPoint, contributors, descriptions, distributions, geographicName, identifier, issued, lang, locationXml, maintainers, modified, planState, pluPlanType, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessSteps, procedureStartDate, publisher, relation, title }: DcatApPlu): string {
+    static createXml({ bboxGml, catalog, contactPoint, contributors, descriptions, distributions, geographicName, identifier, issued, lang, geometryGml, maintainers, modified, planState, pluPlanType, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessSteps, procedureStartDate, publisher, relation, title }: DcatApPlu): string {
         let xmlString = `<?xml version="1.0"?>
         <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns.toLowerCase()}="${uri}"`).join(' ')}>
             <dcat:Catalog>
@@ -257,8 +257,8 @@ export class DcatApPluFactory {
                 <plu:procedureStartDate>${procedureStartDate}</plu:procedureStartDate>
                 <dct:spatial>
                     <dcat:Location>
-                        <dcat:bbox>${bbox}</dcat:bbox>
-                        <locn:geometry>${locationXml}</locn:geometry>
+                        ${optional('dcat:bbox', bboxGml)}
+                        ${optional('locn:geometry', geometryGml)}
                         ${optional('dcat:centroid', '')}
                         ${optional('locn:geographicName', geographicName)}
                     </dcat:Location>
