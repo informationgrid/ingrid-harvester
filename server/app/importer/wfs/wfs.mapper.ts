@@ -991,8 +991,22 @@ export class WfsMapper extends GenericMapper {
         return undefined;
     }
 
+    /**
+     * This is currently XPlan WFS specific.
+     * 
+     * // TODO what about FIS WFS?
+     * 
+     * @returns 
+     */
     _getIssued(): Date {
-        return undefined;
+        let issued;
+        try {
+            issued = this.select('./*/xplan:technHerstellDatum')?.textContent;
+        }
+        catch (e) {
+            // quietly swallow exceptions
+        }
+        return issued;
     }
 
     _getMetadataHarvested(): Date {
