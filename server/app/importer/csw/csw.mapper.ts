@@ -894,7 +894,7 @@ export class CswMapper extends GenericMapper {
             centroid: GeoJsonUtils.computeCentroidToGml(this._getSpatial()),
             contactPoint: await this._getContactPoint(),
             // contributors: null,
-            descriptions: [this._getDescription()], 
+            descriptions: [this._getDescription()],
             // distributions: null,
             // geographicName: null,
             identifier: this.uuid,

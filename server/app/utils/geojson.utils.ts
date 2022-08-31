@@ -48,7 +48,7 @@ export class GeoJsonUtils {
 
     // static noTransform = (...coords) => coords;
 
-    static computeCentroidToGml(geojson: object) {        
+    static computeCentroidToGml(geojson: object) {
         let polyCentroid = centroid(<AllGeoJSON>geojson);
         return `<gml:Point>
             <gml:pos>${polyCentroid.geometry.coordinates.join(' ')}</gml:pos>

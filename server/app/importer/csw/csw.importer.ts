@@ -35,7 +35,6 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DefaultXpathSettings, CswSettings} from './csw.settings';
 import {FilterUtils} from "../../utils/filter.utils";
-import { XPathUtils } from '../../utils/xpath.utils';
 
 const fs = require('fs');
 const merge = require('lodash/merge');

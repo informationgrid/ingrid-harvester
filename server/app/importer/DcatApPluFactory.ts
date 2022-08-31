@@ -68,14 +68,14 @@ export interface Contact {
 }
 
 export interface Distribution {
-    accessUrl: string, 
-    description?: string, 
-    downloadURL?: string, 
-    format?: string, 
-    issued?: string, 
-    modified?: string, 
-    period?: { start?: string, end?: string }, 
-    pluDoctype?: string, 
+    accessUrl: string,
+    description?: string,
+    downloadURL?: string,
+    format?: string,
+    issued?: string,
+    modified?: string,
+    period?: { start?: string, end?: string },
+    pluDoctype?: string,
     title?: string
 }
 
@@ -92,14 +92,14 @@ interface Record {
     primaryTopic: string,
     title: string
 }
-    
+
 export interface DcatApPlu {
     bboxGml: string,
     catalog: Catalog,
     centroid: string,
-    contactPoint: Contact, 
+    contactPoint: Contact,
     contributors?: Agent[],
-    descriptions: string[], 
+    descriptions: string[],
     distributions?: Distribution[],
     geographicName?: string,
     identifier: string,

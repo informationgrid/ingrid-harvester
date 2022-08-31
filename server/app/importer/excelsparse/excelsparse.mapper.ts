@@ -176,7 +176,7 @@ export class ExcelSparseMapper extends GenericMapper {
         // return this.columnMap.Echtzeitdaten === 1;
         return undefined;
     }
-    
+
     _getSpatialGml(): string {
         return `<gml:Point>
             <gml:pos>${this.columnMap.LON} ${this.columnMap.LAT}</gml:pos>
@@ -445,9 +445,9 @@ export class ExcelSparseMapper extends GenericMapper {
                 publisher: this._getPublisher()[0]
             },
             centroid: GeoJsonUtils.computeCentroidToGml(this._getSpatial()),
-            contactPoint: await this._getContactPoint(), 
+            contactPoint: await this._getContactPoint(),
             // contributors: null,
-            descriptions: [this._getDescription()], 
+            descriptions: [this._getDescription()],
             // distributions: null,
             // geographicName: null,
             identifier: this.id,
