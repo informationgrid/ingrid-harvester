@@ -32,8 +32,8 @@ export class XPathUtils {
     /**
      *  This is an adhoc replacement for node.firstElementChild because xmldom does not support it.
      */
-     static firstElementChild(node: Node): Node & HTMLElement {
-        return Object.values(node.childNodes).find(child => child.nodeType === 1) as HTMLElement;//Node.ELEMENT_NODE);
+     static firstElementChild(node: Node): Node & Element {
+        return Object.values(node.childNodes).find(child => child.nodeType === 1) as Element;//Node.ELEMENT_NODE);
     }
 
     /**
