@@ -881,7 +881,11 @@ export class WfsMapper extends GenericMapper {
     }
 
     _getPluProcedureState(): string {
-        return pluProcedureState.UNBEKANNT;
+        switch (this._getPluPlanState()) {
+            case pluPlanState.FESTGES: return pluProcedureState.ABGESCHLOSSEN;
+            case pluPlanState.IN_AUFST: return pluProcedureState.LAUFEND;
+            default: return pluProcedureState.UNBEKANNT;
+        }
     }
 
     getErrorSuffix(uuid, title) {
