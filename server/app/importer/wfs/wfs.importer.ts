@@ -370,6 +370,10 @@ export class WfsImporter implements Importer {
         let nsMap = {...this.nsMap, ...XPathUtils.getNsMap(xml)};
         let select = xpath.useNamespaces(nsMap);
 
+        // store xpath handling stuff in general info
+        this.generalInfo['nsMap'] = nsMap;
+        this.generalInfo['select'] = select;
+
         let geojsonUtils = new GeoJsonUtils(nsMap, this.crsList, this.defaultCrs);
         // bounding box if given
         let envelope = select('./gml:Envelope/gml:boundedBy', xml, true);
@@ -411,10 +415,6 @@ export class WfsImporter implements Importer {
             if (logRequest.isDebugEnabled()) {
                 logRequest.debug("Record content: ", features[i].toString());
             }
-
-            // store xpath handling stuff in general info
-            this.generalInfo['select'] = select;
-            this.generalInfo['nsMap'] = nsMap;
 
             let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.generalInfo, geojsonUtils);
 
