@@ -51,7 +51,7 @@ export class ConfigService {
     static highestID: number = 0;
 
     private static readonly defaultSettings = {
-        elasticSearchUrl: "http://elastic:9200",
+        elasticSearchUrl: process.env.ELASTIC_URL || "http://localhost:9200",
         alias: "mcloud",
         numberOfShards: 1,
         numberOfReplicas: 0,
