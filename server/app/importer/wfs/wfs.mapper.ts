@@ -485,23 +485,25 @@ export class WfsMapper extends GenericMapper {
         return geojson;
     }
 
-    // TODO
+    /**
+     * This is currently XPlan specific.
+     * 
+     * // TODO what about other WFS sources?
+     * 
+     * @param code 
+     * @returns 
+     */
     _getSpatialText(): string {
-        // let geoGraphicDescriptions = this.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription', this.idInfo);
-        // let result = [];
-        // for(let i=0; i < geoGraphicDescriptions.length; i++)
-        // {
-        //     let geoGraphicDescription = geoGraphicDescriptions[i];
-        //     let geoGraphicCode = this.select('./gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', geoGraphicDescription, true);
-        //     if(geoGraphicCode)
-        //         result.push(geoGraphicCode.textContent);
-        // }
-
-        // if(result){
-        //     return result.join(", ");
-        // }
-
-        return undefined;
+        let spatialText;
+        let gemeinde = this.select('./*/xplan:gemeinde/XP_Gemeinde', this.feature, true);
+        if (gemeinde) {
+            spatialText = [
+                this.select('./xplan:ags', gemeinde, true)?.textContent ?? '',
+                this.select('./xplan:gemeindeName', gemeinde, true)?.textContent ?? '',
+                this.select('./xplan:ortsteilName', gemeinde, true)?.textContent ?? ''
+            ].join(' / ');
+        }
+        return spatialText;
     }
 
     _getCentroid(): number[] {
@@ -983,7 +985,7 @@ export class WfsMapper extends GenericMapper {
             // contributors: null,
             descriptions: [this._getDescription()],
             distributions: this._getDAPDistributions(),
-            // geographicName: null,
+            geographicName: this._getSpatialText(),
             identifier: this.uuid,
             issued: this._getIssued(),
             lang: this._getCatalogLanguage(),

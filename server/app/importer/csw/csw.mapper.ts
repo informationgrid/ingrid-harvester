@@ -930,7 +930,7 @@ export class CswMapper extends GenericMapper {
             // contributors: null,
             descriptions: [this._getDescription()],
             distributions: await this._getDAPDistributions(),
-            // geographicName: null,
+            geographicName: this._getSpatialText(),
             identifier: this.uuid,
             issued: this._getIssued(),
             lang: this._getLanguage(),
