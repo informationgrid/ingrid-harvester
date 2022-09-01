@@ -25,16 +25,14 @@ function optional(wrapper: string | Function, variable: any | any[]) {
     if (!variable) {
         return '';
     }
-    if (Array.isArray(variable)) {
-        if (typeof wrapper == 'string') {
-            return variable.map(v => `<${wrapper}>${v}</${wrapper}>`).join('\n');
-        }
-        else {
-            return variable.map(v => wrapper(v)).join(' ');
-        }
+    if (!Array.isArray(variable)) {
+        variable = [variable];
+    }
+    if (typeof wrapper == 'string') {
+        return variable.map(v => `<${wrapper}>${v}</${wrapper}>`).join('\n');
     }
     else {
-        return `<${wrapper}>${variable}</${wrapper}>`;
+        return variable.map(v => wrapper(v)).join(' ');
     }
 }
 
