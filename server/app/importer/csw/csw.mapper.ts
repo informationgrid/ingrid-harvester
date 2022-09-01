@@ -934,7 +934,7 @@ export class CswMapper extends GenericMapper {
             identifier: this.uuid,
             issued: this._getIssued(),
             lang: this._getLanguage(),
-            geometryGml: spatialGml,
+            geometryGml: null,
             // maintainers: null,
             modified: this._getModifiedDate(),
             planState: this._getPluPlanState(),
