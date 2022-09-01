@@ -37,7 +37,7 @@ import {ImporterSettings} from "../../importer.settings";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
 import centroid from '@turf/centroid';
-import { Contact, DcatApPluFactory, Distribution, pluDocType, pluPlanState, pluPlantype, pluPlanTypeFine, pluProcedureState, pluProcedureType } from "../DcatApPluFactory";
+import { Contact, DcatApPluFactory, Distribution, pluDocType, pluPlanState, pluPlantype, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../DcatApPluFactory";
 import { XPathUtils } from "../../utils/xpath.utils";
 
 export class WfsMapper extends GenericMapper {
@@ -883,6 +883,69 @@ export class WfsMapper extends GenericMapper {
         }
     }
 
+    /**
+     * This is currently FIS specific.
+     * 
+     * // TODO more process steps?
+     * // TODO what about other WFS sources?
+     */
+    _getPluProcessSteps(): ProcessStep[] {
+
+        const getPeriod = (startXpath: string, endXpath: string) => {
+            let period;
+            let start = this.select(startXpath, this.feature, true)?.textContent;
+            if (start) {
+                period = { start };
+            }
+            let end = this.select(endXpath, this.feature, true)?.textContent;
+            if (end) {
+                if (!start) {
+                    period = {};
+                    this.log.warn(`An end date (${endXpath}) was specified where a start date (${startXpath}) is missing:`, this.uuid);
+                }
+                period.end = end;
+            }
+            return period;
+        };
+
+        let processSteps = [];
+        let period_aufstBeschl = getPeriod('./*/fis:AFS_BESCHL', './*/fis:AFS_L_AEND');
+        if (period_aufstBeschl) {
+            processSteps.push({
+                period: period_aufstBeschl,
+                type: null  // TODO
+            });
+        }
+        let period_frzBuergerBet = getPeriod('./*/fis:BBG_ANFANG', './*/fis:BBG_ENDE');
+        if (period_frzBuergerBet) {
+            processSteps.push({
+                period: period_frzBuergerBet,
+                type: pluProcessStepType.FRUEHZ_OEFFTL_BETEIL
+            });
+        }
+        let period_oefftlAusleg = getPeriod('./*/fis:AUL_ANFANG', './*/fis:AUL_ENDE');
+        if (period_oefftlAusleg) {
+            let link = this.select('./*/fis:AUSLEG_WWW', this.feature, true)?.textContent;
+            processSteps.push({
+                distributions: link ? [{ accessURL: link }] : null,
+                period: period_oefftlAusleg,
+                type: pluProcessStepType.OEFFTL_AUSL
+            });
+        }
+        return processSteps;
+    }
+
+    /**
+     * This is currently FIS specific.
+     * 
+     * // TODO is this the correct field?
+     * // TODO what about other WFS sources?
+     */
+    _getPluProcedureStartDate(): any {
+        let procedureStartDate = this.select('./*/fis:AFS_BESCHL', this.feature, true)?.textContent;
+        return procedureStartDate;
+    }
+
     getErrorSuffix(uuid, title) {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.getFeaturesUrl}'.`;
     }
@@ -932,8 +995,8 @@ export class WfsMapper extends GenericMapper {
             pluPlanTypeFine: this._getPluPlanTypeFine(),
             pluProcedureState: this._getPluProcedureState(),
             pluProcedureType: this._getPluProcedureType(),
-            // pluProcessSteps: null,
-            procedureStartDate: null,
+            pluProcessSteps: this._getPluProcessSteps(),
+            procedureStartDate: this._getPluProcedureStartDate(),
             publisher: this._getPublisher()[0],
             relation: null,
             title: this._getTitle()
