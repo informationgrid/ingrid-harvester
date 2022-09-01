@@ -26,13 +26,13 @@ import {GeneralSettings} from '@shared/general-config.settings';
 import * as fs from 'fs';
 import {CkanImporter} from '../../importer/ckan/ckan.importer';
 import {ExcelImporter} from '../../importer/excel/excel.importer';
+import {ExcelSparseImporter} from '../../importer/excelsparse/excelsparse.importer';
 import {CswImporter} from '../../importer/csw/csw.importer';
 import {getLogger} from "log4js";
 import {MappingDistribution, MappingItem} from '@shared/mapping.model';
 import {UrlUtils} from "../../utils/url.utils";
 import {OaiImporter} from "../../importer/oai/oai.importer";
 import {DcatImporter} from "../../importer/dcat/dcat.importer";
-import {ScheduleService} from "../ScheduleService";
 import {SparqlImporter} from "../../importer/sparql/sparql.importer";
 import {WfsImporter} from "../../importer/wfs/wfs.importer";
 
@@ -148,6 +148,7 @@ export class ConfigService {
             return configs
                 .map(config => {
                     if (config.type === 'EXCEL') return {...ExcelImporter.defaultSettings, ...config};
+                    else if (config.type === 'EXCEL_SPARSE') return {...ExcelSparseImporter.defaultSettings, ...config};
                     else if (config.type === 'CKAN') return {...CkanImporter.defaultSettings, ...config};
                     else if (config.type && config.type.endsWith('CSW')) return {...CswImporter.defaultSettings, ...config};
                     else if (config.type === 'OAI') return {...OaiImporter.defaultSettings, ...config};
