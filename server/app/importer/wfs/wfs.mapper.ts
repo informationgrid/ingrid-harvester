@@ -833,7 +833,7 @@ export class WfsMapper extends GenericMapper {
                         // case 5000: return pluPlanTypeFine.; // AussenbereichsSatzung
                         // case 7000: return pluPlanTypeFine.; // OertlicheBauvorschrift
                         // case 9999: return pluPlanTypeFine.; // Sonstiges
-                        default: return pluPlanTypeFine.UNBEKANNT;
+                        default: this.log.warn('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
                     }
                 case 'FP_Plan':
                     switch(planart) {
@@ -843,7 +843,7 @@ export class WfsMapper extends GenericMapper {
                         // case 4000: return pluPlanTypeFine.; // FPlanRegPlan
                         // case 5000: return pluPlanTypeFine.; // SachlicherTeilplan
                         // case 9999: return pluPlanTypeFine.; // Sonstiges
-                        default: return pluPlanTypeFine.UNBEKANNT;
+                        default: this.log.warn('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
                     }
                 case 'RP_Plan':
                     switch(planart) {
@@ -856,7 +856,7 @@ export class WfsMapper extends GenericMapper {
                         case 5001: return pluPlanTypeFine.AWZ_PLAN; // AWZPlan
                         case 6000: return pluPlanTypeFine.RAEUML_TEIL_PLAN; // RaeumlicherTeilplan
                         // case 9999: return pluPlanTypeFine.; // Sonstiges
-                        default: return pluPlanTypeFine.UNBEKANNT;
+                        default: this.log.warn('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
                     }
                 case 'SO_Plan':
                     // TODO no codelists found!
@@ -865,7 +865,7 @@ export class WfsMapper extends GenericMapper {
                         // TODO possibly more values possible; these are the ones found in the data so far
                         // case 2000: return pluPlanTypeFine.;
                         // case 17200: return pluPlanTypeFine.;
-                        default: return pluPlanTypeFine.UNBEKANNT;
+                        default: this.log.warn('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
                     }
                 default:
                     return pluPlanTypeFine.UNBEKANNT;
