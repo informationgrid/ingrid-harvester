@@ -870,6 +870,14 @@ export class CswMapper extends GenericMapper {
         return pluPlanState.UNBEKANNT;
     }
 
+    _getPluProcedureState(): string {
+        switch (this._getPluPlanState()) {
+            case pluPlanState.FESTGES: return pluProcedureState.ABGESCHLOSSEN;
+            case pluPlanState.IN_AUFST: return pluProcedureState.LAUFEND;
+            default: return pluProcedureState.UNBEKANNT;
+        }
+    }
+
     getErrorSuffix(uuid, title) {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'.`;
     }
@@ -915,7 +923,7 @@ export class CswMapper extends GenericMapper {
             planState: this._getPluPlanState(),
             // pluPlanType: null,
             // pluPlanTypeFine: null,
-            pluProcedureState: null,
+            pluProcedureState: this._getPluProcedureState(),
             // pluProcedureType: null,
             // pluProcessSteps: null,
             procedureStartDate: null,
