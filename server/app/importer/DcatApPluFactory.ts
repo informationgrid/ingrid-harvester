@@ -41,7 +41,7 @@ interface Agent {
     type?: string
 }
 
-interface Catalog {
+export interface Catalog {
     description: string,
     homepage?: string,
     issued?: string,
@@ -66,22 +66,27 @@ export interface Contact {
 }
 
 export interface Distribution {
-    accessUrl: string,
+    accessURL: string,
     description?: string,
     downloadURL?: string,
     format?: string,
     issued?: string,
     modified?: string,
-    period?: { start?: string, end?: string },
+    period?: Period,
     pluDoctype?: string,
     title?: string
 }
 
-interface ProcessStep {
-    distributions?: any,
+export interface Period {
+    start?: string, 
+    end?: string
+}
+
+export interface ProcessStep {
+    distributions?: Distribution[],
     identifier?: string,
-    period?: { start?: string, end?: string },
-    type: string
+    period?: Period,
+    type: typeof pluProcessStepType[keyof typeof pluProcessStepType];
 }
 
 interface Record {
@@ -287,7 +292,7 @@ export class DcatApPluFactory {
         </dcat:centroid>`;
     }
 
-    private static xmlDistribution ({ accessUrl: accessURL, description, downloadURL, format, issued, modified, period, pluDoctype, title } : Distribution): string {
+    private static xmlDistribution({ accessURL: accessURL, description, downloadURL, format, issued, modified, period, pluDoctype, title } : Distribution): string {
         return `<dcat:Distribution>
             <dcat:accessURL>${accessURL}</dcat:accessURL>
             ${optional('dct:description', description)}
@@ -308,7 +313,7 @@ export class DcatApPluFactory {
         </foaf:agent></${parent}>`;
     }
 
-    private static xmlPeriodOfTime({ start, end }: {start?: string, end?: string }): string {
+    private static xmlPeriodOfTime({ start, end }: Period): string {
         return `<dct:temporal>
             <dct:PeriodOfTime>
                 ${optional('dcat:startDate', start)}
