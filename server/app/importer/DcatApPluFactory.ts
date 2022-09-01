@@ -251,7 +251,7 @@ export class DcatApPluFactory {
                 ${optional('foaf:homepage', catalog.homepage)}
                 ${optional(DcatApPluFactory.xmlRecord, catalog.records)}
             </dcat:Catalog>
-            <dcat:Dataset rdf:about="https://some.tld/features/${identifier}">
+            <dcat:Dataset>
                 ${DcatApPluFactory.xmlContact(contactPoint)}
                 ${descriptions.map(description => `<dct:description xml:lang="${lang}">${description}</dct:description>`).join(' ')}
                 <dct:identifier>${identifier}</dct:identifier>

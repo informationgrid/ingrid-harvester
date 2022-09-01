@@ -700,20 +700,6 @@ export class WfsMapper extends GenericMapper {
     // TODO:check
     async _getLicense() {
         let license: License;
-
-        if (!license) {
-            let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
-            this.summary.missingLicense++;
-
-            this.log.warn(msg);
-            this.summary.warnings.push(['Missing license', msg]);
-            return {
-                id: 'unknown',
-                title: 'Unbekannt',
-                url: undefined
-            };
-        }
-
         return license;
     }
 
@@ -779,17 +765,12 @@ export class WfsMapper extends GenericMapper {
     _getPluPlanType(): string {
         let typename = this.select('./*', this.feature, true)?.localName;
         switch (typename) {
-            case 'BP_Plan':
-                return pluPlantype.BEBAU_PLAN;
-            case 'FP_Plan':
-                return pluPlantype.FLAECHENN_PLAN;
-            case 'RP_Plan':
-                return pluPlantype.RAUM_ORDN_PLAN;
-            case 'SO_Plan':
-                // TODO
-                return pluPlantype.UNBEKANNT;
-            default:
-                return pluPlantype.UNBEKANNT;
+            case 'BP_Plan': return pluPlantype.BEBAU_PLAN;
+            case 'FP_Plan': return pluPlantype.FLAECHENN_PLAN;
+            case 'RP_Plan': return pluPlantype.RAUM_ORDN_PLAN;
+            // case 'SO_Plan': return pluPlantype.UNBEKANNT;   // TODO
+            case 'sach_bplan': return pluPlantype.BEBAU_PLAN;   // TODO check
+            default: this.log.warn('No pluPlantype available for typename', typename); return pluPlantype.UNBEKANNT;
         }
     }
 
