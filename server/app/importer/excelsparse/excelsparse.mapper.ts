@@ -194,6 +194,10 @@ export class ExcelSparseMapper extends GenericMapper {
         return undefined;
     }
 
+    _getCentroid(): number[] {
+        return this._getSpatial().coordinates;
+    }
+
     // TODO
     _getTemporal(): DateRange[] {
         // let range: string = this.columnValues[this.columnMap.Zeitraum];
@@ -444,7 +448,7 @@ export class ExcelSparseMapper extends GenericMapper {
                 title: this.fetched.title,
                 publisher: this._getPublisher()[0]
             },
-            centroid: GeoJsonUtils.computeCentroidToGml(this._getSpatial()),
+            centroid: this._getCentroid(),
             contactPoint: await this._getContactPoint(),
             // contributors: null,
             descriptions: [this._getDescription()],

@@ -38,8 +38,8 @@ import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
+import centroid from '@turf/centroid';
 import { DcatApPluFactory, pluPlanState } from "../DcatApPluFactory";
-import { GeoJsonUtils } from "../../utils/geojson.utils";
 
 let xpath = require('xpath');
 
@@ -520,17 +520,17 @@ export class CswMapper extends GenericMapper {
 
             if (west === east && north === south) {
                 geometries.push({
-                    'type': 'point',
+                    'type': 'Point',
                     'coordinates': [west, north]
                 });
             } else if (west === east || north === south) {
                 geometries.push({
-                    'type': 'linestring',
+                    'type': 'LineString',
                     'coordinates': [[west, north], [east, south]]
                 });
             } else {
                 geometries.push({
-                    'type': 'envelope',
+                    'type': 'Envelope',
                     'coordinates': [[west, north], [east, south]]
                 });
             }
@@ -540,7 +540,7 @@ export class CswMapper extends GenericMapper {
         }
         else if(geometries.length > 1){
             return {
-                'type': 'geometrycollection',
+                'type': 'GeometryCollection',
                 'geometries' : geometries
             }
         }
@@ -564,6 +564,15 @@ export class CswMapper extends GenericMapper {
         }
 
         return undefined;
+    }
+
+    _getCentroid(): number[] {
+        let spatial = this._getSpatial();
+        // turf/centroid does not support envelope, so we turn it into a linestring which has the same centroid
+        if (spatial.type == 'Envelope') {
+            spatial.type = 'LineString';
+        }
+        return centroid(spatial).geometry.coordinates;
     }
 
     _getTemporal(): DateRange[] {
@@ -891,7 +900,7 @@ export class CswMapper extends GenericMapper {
                 title: this.fetched.title,
                 publisher: this._getPublisher()[0]
             },
-            centroid: GeoJsonUtils.computeCentroidToGml(this._getSpatial()),
+            centroid: this._getCentroid(),
             contactPoint: await this._getContactPoint(),
             // contributors: null,
             descriptions: [this._getDescription()],

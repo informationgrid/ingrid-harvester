@@ -36,8 +36,8 @@ import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
+import centroid from '@turf/centroid';
 import { Contact, DcatApPluFactory, Distribution, pluDocType, pluPlanState, pluPlantype, pluPlanTypeFine, pluProcedureState, pluProcedureType } from "../DcatApPluFactory";
-import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from "../../utils/xpath.utils";
 
 export class WfsMapper extends GenericMapper {
@@ -503,6 +503,10 @@ export class WfsMapper extends GenericMapper {
         return undefined;
     }
 
+    _getCentroid(): number[] {
+        return centroid(this._getSpatial() ?? this._getBoundingBox()).geometry.coordinates;
+    }
+
     // TODO
     _getTemporal(): DateRange[] {
         // let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
@@ -943,7 +947,7 @@ export class WfsMapper extends GenericMapper {
                 title: this.fetched.title,
                 publisher: this._getPublisher()[0]
             },
-            centroid: GeoJsonUtils.computeCentroidToGml(this._getSpatial() ?? this._getBoundingBox()),
+            centroid: this._getCentroid(),
             contactPoint: await this._getContactPoint(),
             // contributors: null,
             descriptions: [this._getDescription()],

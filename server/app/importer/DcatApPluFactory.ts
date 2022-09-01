@@ -96,7 +96,7 @@ interface Record {
 export interface DcatApPlu {
     bboxGml: string,
     catalog: Catalog,
-    centroid: string,
+    centroid: number[],
     contactPoint: Contact,
     contributors?: Agent[],
     descriptions: string[],
@@ -260,7 +260,7 @@ export class DcatApPluFactory {
                     <dcat:Location>
                         ${optional('dcat:bbox', bboxGml)}
                         ${optional('locn:geometry', geometryGml)}
-                        <dcat:centroid>${centroid}</dcat:centroid>
+                        ${DcatApPluFactory.xmlCentroid(centroid)}
                         ${optional('locn:geographicName', geographicName)}
                     </dcat:Location>
                 </dct:spatial>
@@ -279,6 +279,14 @@ export class DcatApPluFactory {
         </rdf:RDF>`;
 
         return xmlString.replace(/^\s*\n/gm, '');
+    }
+
+    private static xmlCentroid(centroid: number[]): string {
+        return `<dcat:centroid>
+            <gml:Point>
+                <gml:pos>${centroid.join(' ')}</gml:pos>
+            </gml:Point>
+        </dcat:centroid>`;
     }
 
     private static xmlDistribution ({ accessUrl: accessURL, description, downloadURL, format, issued, modified, period, pluDoctype, title } : Distribution): string {

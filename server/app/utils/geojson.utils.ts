@@ -48,13 +48,6 @@ export class GeoJsonUtils {
 
     // static noTransform = (...coords) => coords;
 
-    static computeCentroidToGml(geojson: object) {
-        let polyCentroid = centroid(<AllGeoJSON>geojson);
-        return `<gml:Point>
-            <gml:pos>${polyCentroid.geometry.coordinates.join(' ')}</gml:pos>
-        </gml:Point>`;
-    }
-
     getBoundingBox = (lowerCorner: string, upperCorner: string, crs?: string) => {
         const transformCoords = this.transformer(crs);
         let [west, south] = transformCoords(...lowerCorner.trim().split(' ').map(parseFloat));
