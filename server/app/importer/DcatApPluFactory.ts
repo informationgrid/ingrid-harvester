@@ -134,7 +134,7 @@ export const DCAT_AP_PLU_NSMAP = {
 /**
  * Codelist for procedureType (5.1)
  */
-export const procedureType = {
+export const pluProcedureType = {
     NORM_VERF: '1001',          // normales Verfahren
     VEREINF_VERF: '1002', 	    // vereinfachtes Verfahren
     BEBAU_PLAN_INNEN: '1003',	// Bebauungsplan der Innenentwicklung

@@ -36,7 +36,7 @@ import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
-import { Contact, DcatApPluFactory, Distribution, pluDocType, pluPlanState, pluPlantype, pluPlanTypeFine, pluProcedureState } from "../DcatApPluFactory";
+import { Contact, DcatApPluFactory, Distribution, pluDocType, pluPlanState, pluPlantype, pluPlanTypeFine, pluProcedureState, pluProcedureType } from "../DcatApPluFactory";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from "../../utils/xpath.utils";
 
@@ -889,6 +889,28 @@ export class WfsMapper extends GenericMapper {
         }
     }
 
+    _getPluProcedureType(): string {
+        let procedureType;
+        try {
+            procedureType = this.select('./*/xplan:verfahren', this.feature, true)?.textContent;
+            switch (procedureType) {
+                case '1000': return pluProcedureType.NORM_VERF;         // Normal
+                case '2000': return pluProcedureType.VEREINF_VERF;      // Parag13
+                case '3000': return pluProcedureType.BEBAU_PLAN_INNEN;  // Parag13a
+                case '4000': this.log.warn('No procedure type available for xplan:verfahren', procedureType); return pluProcedureType.UNBEKANNT;     // Parag13b
+                default: return pluProcedureType.UNBEKANNT;
+            }
+        }
+        catch (e) {
+            // quietly swallow exceptions
+        }
+        finally {
+            if (!procedureType) {
+                return pluProcedureType.UNBEKANNT
+            }
+        }
+    }
+
     getErrorSuffix(uuid, title) {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.getFeaturesUrl}'.`;
     }
@@ -937,7 +959,7 @@ export class WfsMapper extends GenericMapper {
             pluPlanType: this._getPluPlanType(),
             pluPlanTypeFine: this._getPluPlanTypeFine(),
             pluProcedureState: this._getPluProcedureState(),
-            // pluProcedureType: null,
+            pluProcedureType: this._getPluProcedureType(),
             // pluProcessSteps: null,
             procedureStartDate: null,
             publisher: this._getPublisher()[0],
