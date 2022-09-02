@@ -115,7 +115,7 @@ export class WfsMapper extends GenericMapper {
         // very simple heuristic
         // TODO expand/improve
         function isMaybeDownloadUrl(url: string) {
-            let ext = url.slice(url.lastIndexOf('.')).toLowerCase();
+            let ext = url.slice(url.lastIndexOf('.') + 1).toLowerCase();
             return ['jpeg', 'jpg', 'pdf', 'zip'].includes(ext) || url.toLowerCase().indexOf('service=wfs') > -1;
         }
 
