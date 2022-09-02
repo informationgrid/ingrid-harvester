@@ -104,13 +104,21 @@ export class WfsMapper extends GenericMapper {
     }
 
     /**
-     * This is currently XPlan WFS specific.
-     * 
-     * // TODO what about FIS WFS?
-     * 
-     * @returns 
+     * This is currently very proprietary...
+     *
+     * // TODO try to generalize it a bit more
+     *
+     *  @returns 
      */
     _getDAPDistributions(): Distribution[] {
+
+        // very simple heuristic
+        // TODO expand/improve
+        function isMaybeDownloadUrl(url: string) {
+            let ext = url.slice(url.lastIndexOf('.')).toLowerCase();
+            return ['jpeg', 'jpg', 'pdf', 'zip'].includes(ext) || url.toLowerCase().indexOf('service=wfs') > -1;
+        }
+
         let distributions = [];
         for (let distElem of this.select('./*/xplan:externeReferenz/xplan:XP_SpezExterneReferenz', this.feature, false) ?? []) {
             let distribution: Distribution = {
@@ -120,6 +128,16 @@ export class WfsMapper extends GenericMapper {
                 pluDoctype: this._getPluDocType(this.select('./xplan:typ', distElem, true)?.textContent)
             };
             distributions.push(distribution);
+        }
+        for (let xp of ['./*/fis:SCAN_WWW', './*/fis:GRUND_WWW']) {
+            let elem = this.select(xp, this.feature, true);
+            if (elem) {
+                let dist: Distribution = { accessURL: elem.textContent };
+                if (isMaybeDownloadUrl(dist.accessURL)) {
+                    dist.downloadURL = dist.accessURL;
+                }
+                distributions.push(dist);
+            }
         }
         return distributions;
     }
