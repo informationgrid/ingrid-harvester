@@ -128,6 +128,7 @@ export const DCAT_AP_PLU_NSMAP = {
     DCAT: 'http://www.w3.org/ns/dcat#',
     DCT: 'http://purl.org/dc/terms/',
     FOAF: 'http://xmlns.com/foaf/0.1/',
+    GML: 'http://www.opengis.net/gml/3.2',
     LOCN: 'http://www.w3.org/ns/locn#',
     PLU: '',
     RDF: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
