@@ -887,6 +887,47 @@ export class CswMapper extends GenericMapper {
         return pluPlanState.UNBEKANNT;
     }
 
+    /**
+     * Heuristic based on metadata harvested from gdi-de.
+     * 
+     * // TODO extend
+     */
+    _getPluPlanType(): string {
+        // consider title, description, and keywords
+        let searchFields = [];
+        searchFields.push(this._getTitle());
+        searchFields.push(this._getDescription());
+        searchFields.push(...this._getKeywords());
+        let haystack = searchFields.join('#').toLowerCase();
+
+        // TODO especially in keywords - if set - there can be ambiguities, e.g. keycwords contain multiple determination words
+        if (['bebauungsplan'].some(needle => haystack.includes(needle))) {
+            return pluPlantype.BEBAU_PLAN;
+        }
+        if (['flächennutzungsplan', 'fnp'].some(needle => haystack.includes(needle))) {
+            return pluPlantype.FLAECHENN_PLAN;
+        }
+        if ([].some(needle => haystack.includes(needle))) {
+            return pluPlantype.PLAN_FESTST_VERF;
+        }
+        if ([].some(needle => haystack.includes(needle))) {
+            return pluPlantype.PW_BES_STAEDT_BAUR;
+        }
+        if ([].some(needle => haystack.includes(needle))) {
+            return pluPlantype.PW_LANDSCH_PLAN;
+        }
+        if ([].some(needle => haystack.includes(needle))) {
+            return pluPlantype.RAUM_ORDN_PLAN;
+        }
+        if (['raumordnungsverfahren'].some(needle => haystack.includes(needle))) {
+            return pluPlantype.RAUM_ORDN_VERF;
+        }
+        if (['städtebauliche satzungen'].some(needle => haystack.includes(needle))) {
+            return pluPlantype.STAEDT_BAUL_SATZ;
+        }
+        return pluPlantype.UNBEKANNT;
+    }
+
     _getPluProcedureState(): string {
         switch (this._getPluPlanState()) {
             case pluPlanState.FESTGES: return pluProcedureState.ABGESCHLOSSEN;
@@ -938,7 +979,7 @@ export class CswMapper extends GenericMapper {
             // maintainers: null,
             modified: this._getModifiedDate(),
             planState: this._getPluPlanState(),
-            // pluPlanType: null,
+            pluPlanType: this._getPluPlanType(),
             // pluPlanTypeFine: null,
             pluProcedureState: this._getPluProcedureState(),
             // pluProcedureType: null,
