@@ -142,6 +142,28 @@ export class HarvesterComponent implements OnInit, OnDestroy {
 
   }
 
+  copy(harvester: Harvester) {
+    const dialogRef = this.dialog.open(DialogEditComponent, {
+      data: {
+        ...JSON.parse(JSON.stringify(harvester)),
+        id: -1,
+        index: '',
+        description: harvester.description + ' (Copy)'
+      },
+      width: '950px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe((result: Harvester) => {
+      if (result) {
+        console.log('The dialog was closed', result);
+        this.harvesterService.updateHarvester(result).subscribe(
+          () => this.fetchHarvester(),
+          err => alert(err.message));
+      }
+    });
+  }
+
   edit(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogEditComponent, {
       data: JSON.parse(JSON.stringify(harvester)),

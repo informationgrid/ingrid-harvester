@@ -82,6 +82,10 @@
                     Entfernen
                 </button>
                 <div class="flex-space"></div>
+                <button mat-button (click)="copy(harvester)" data-test="copy">
+                    <mat-icon class="inline-valigned">copy</mat-icon>
+                    Kopieren
+                </button>
                 <button mat-button color="primary" (click)="edit(harvester)" data-test="edit">
                     <mat-icon class="inline-valigned">edit</mat-icon>
                     Bearbeiten
