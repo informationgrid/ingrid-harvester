@@ -39,7 +39,7 @@ import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
 import centroid from '@turf/centroid';
-import { DcatApPluFactory, Distribution, pluPlanState, pluProcedureState } from "../DcatApPluFactory";
+import { DcatApPluFactory, Distribution, pluPlanState, pluPlantype, pluProcedureState } from "../DcatApPluFactory";
 
 let xpath = require('xpath');
 
