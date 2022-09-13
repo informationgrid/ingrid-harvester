@@ -212,7 +212,7 @@ export class CswImporter implements Importer {
                         servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distribution);
                     }
                 } else {
-                    identifierList = CswMapper.select('.//srv:operatesOn', xml)
+                    identifierList = CswMapper.select('./gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn', xml)
                     if (identifierList && identifierList.length > 0) {
                         for (let j = 0; j < identifierList.length; j++) {
                             let identifer = identifierList[j].getAttribute("uuidref")
@@ -231,7 +231,7 @@ export class CswImporter implements Importer {
             if(doc.extras){
                 let harvestedData = doc.extras.harvested_data;
                 let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = CswMapper.select('.//gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
+                let identifierList = CswMapper.select('./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
                 if(identifierList){
                     for(let j = 0; j < identifierList.length; j++){
                         let identifer = identifierList[j].textContent;
@@ -240,7 +240,7 @@ export class CswImporter implements Importer {
                         }
                     }
                 }
-                identifierList = CswMapper.select('.//gmd:fileIdentifier/gco:CharacterString', xml)
+                identifierList = CswMapper.select('./gmd:fileIdentifier/gco:CharacterString', xml)
                 if(identifierList){
                     for(let j = 0; j < identifierList.length; j++){
                         let identifer = identifierList[j].textContent;

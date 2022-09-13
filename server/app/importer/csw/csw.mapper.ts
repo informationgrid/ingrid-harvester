@@ -162,7 +162,7 @@ export class CswMapper extends GenericMapper {
             let formats = [];
             let urls: GenericDistribution[] = [];
 
-            CswMapper.select('.//gmd:MD_Format/gmd:name/gco:CharacterString', distNode).forEach(format => {
+            CswMapper.select('./gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString', distNode).forEach(format => {
                 format.textContent.split(',').forEach(formatItem => {
                     if (!formats.includes(formatItem)) {
                         formats.push(formatItem.trim());
@@ -173,7 +173,7 @@ export class CswMapper extends GenericMapper {
             // Combine formats in a single slash-separated string
             if (formats.length === 0) formats.push('Unbekannt');
 
-            let onlineResources = CswMapper.select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource', distNode);
+            let onlineResources = CswMapper.select('./gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource', distNode);
             for (let j = 0; j < onlineResources.length; j++) {
                 let onlineResource = onlineResources[j];
 
@@ -220,8 +220,8 @@ export class CswMapper extends GenericMapper {
             srvIdent,
             true);
         let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
-        let serviceFormat = CswMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true);
-        let serviceTypeVersion = CswMapper.select('.//srv:serviceTypeVersion/gco:CharacterString', srvIdent);
+        let serviceFormat = CswMapper.select('./srv:serviceType/gco:LocalName', srvIdent, true);
+        let serviceTypeVersion = CswMapper.select('./srv:serviceTypeVersion/gco:CharacterString', srvIdent);
         let serviceLinks: GenericDistribution[] = [];
 
         if(serviceFormat){
@@ -463,7 +463,7 @@ export class CswMapper extends GenericMapper {
         }
 
         keywords = [];
-        CswMapper.select('.//gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', this.record).forEach(node => {
+        CswMapper.select('./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', this.record).forEach(node => {
             keywords.push(node.textContent);
         });
 
@@ -667,7 +667,7 @@ export class CswMapper extends GenericMapper {
             .filter(theme => theme)); // Filter out falsy values
 
         // Evaluate the themes
-        xpath = './/gmd:descriptiveKeywords/gmd:MD_Keywords[./gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()="Data theme (EU MDR)"]/gmd:keyword/gco:CharacterString';
+        xpath = './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords[./gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()="Data theme (EU MDR)"]/gmd:keyword/gco:CharacterString';
         themes = themes.concat(CswMapper.select(xpath, this.record)
             .map(node => CswMapper.dcatThemeUriFromKeyword(node.textContent))
             .filter(theme => theme)); // Filter out falsy values
