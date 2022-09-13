@@ -136,7 +136,7 @@ export const DCAT_AP_PLU_NSMAP = {
 };
 
 /**
- * Codelist for procedureType (5.1)
+ * Codeliste Arten von Verfahren zur Aufstellung raumbezogener Planwerke (5.1)
  */
 export const pluProcedureType = {
     NORM_VERF: '1001',          // normales Verfahren
@@ -146,7 +146,7 @@ export const pluProcedureType = {
 };
 
 /**
- * Codeliste Arten von Verfahren zur Aufstellung raumbezogener Planwerke (5.2)
+ * Codeliste für übergeordneten Status eines Verfahrens (5.2)
  */
 export const pluProcedureState = {
     GEPLANT: '2001',        // geplant
