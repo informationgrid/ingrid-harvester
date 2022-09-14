@@ -235,7 +235,7 @@ export class WfsImporter implements Importer {
         this.generalInfo['contactPoint'] = {
             address: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', serviceProvider, true)?.textContent,
             country: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', serviceProvider, true)?.textContent,
-            email: this.select('./ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', serviceProvider, true)?.textContent,
+            email: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', serviceProvider, true)?.textContent,
             fn: this.select('./ows:ServiceContact/ows:IndividualName', serviceProvider, true)?.textContent,
             locality: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', serviceProvider, true)?.textContent,
             // orgName: this.select('./', this.fetched.serviceProvider, true).textContent,
