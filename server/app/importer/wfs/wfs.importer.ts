@@ -232,16 +232,22 @@ export class WfsImporter implements Importer {
         // store the getCapabilities ServiceProvider in generalInfo
         let serviceProvider = this.select(this.settings.xpaths.capabilities.serviceProvider, capabilitiesResponseDom, true);
         this.generalInfo['publisher'] = [{ name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent }];
+        // TODO for FIS, there is additional metadata info in a linked CSW
+        // TODO do we grab this as well? if yes:
+        // - select the CSW link
+        // - retrieve the XML from the CSW link
+        // - select the appropriate nodes (gmd:contact or gmd:pointOfContact)
         this.generalInfo['contactPoint'] = {
             address: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', serviceProvider, true)?.textContent,
             country: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', serviceProvider, true)?.textContent,
             email: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', serviceProvider, true)?.textContent,
             fn: this.select('./ows:ServiceContact/ows:IndividualName', serviceProvider, true)?.textContent,
             locality: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', serviceProvider, true)?.textContent,
-            // orgName: this.select('./', this.fetched.serviceProvider, true).textContent,
+            orgName: this.generalInfo['publisher']?.[0]?.name,
             phone: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', serviceProvider, true)?.textContent,
             postalCode: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', serviceProvider, true)?.textContent,
-            region: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', serviceProvider, true)?.textContent
+            region: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', serviceProvider, true)?.textContent,
+            // homepage: this.select('./ows:ServiceContact/ows:ContactInfo/ows:OnlineResource/@xlink:href', serviceProvider, true)?.textContent
         };
 
         // store title and abstract from getCapabilities in generalInfo

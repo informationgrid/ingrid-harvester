@@ -344,10 +344,12 @@ export class DcatApPluFactory {
     }
 
     private static xmlContact({ address, country, email, fn, locality, orgName, phone, postalCode, region }: Contact): string {
+        // if fn is not set, use orgName instead; in this case, don't repeat orgName in an extra element
+        let useFn = fn && !['-'].includes(fn);
         return `<dcat:contactPoint>
             <vcard:Organization>
-                <vcard:fn>${fn}</vcard:fn>
-                ${optional('vcard:organization-name', orgName)}
+                <vcard:fn>${useFn ? fn : orgName}</vcard:fn>
+                ${optional('vcard:organization-name', useFn ? orgName : '')}
                 ${optional('vcard:hasPostalCode', postalCode)}
                 ${optional('vcard:hasStreetAddress', address)}
                 ${optional('vcard:hasLocality', locality)}
