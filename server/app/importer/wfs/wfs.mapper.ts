@@ -823,18 +823,18 @@ export class WfsMapper extends GenericMapper {
     _getPluProcessSteps(): ProcessStep[] {
 
         const getPeriod = (startXpath: string, endXpath: string) => {
-            let period;
+            let period: DateRange;
             let start = this.select(startXpath, this.feature, true)?.textContent;
             if (start) {
-                period = { start };
+                period = { gte: start };
             }
             let end = this.select(endXpath, this.feature, true)?.textContent;
             if (end) {
                 if (!start) {
                     period = {};
-                    this.log.warn(`An end date (${endXpath}) was specified where a start date (${startXpath}) is missing:`, this.uuid);
+                    this.log.warn(`Skipping ProcessStep.period: An end date (${endXpath}) was specified where a start date (${startXpath}) is missing:`, this.uuid);
                 }
-                period.end = end;
+                period.lte = end;
             }
             return period;
         };
