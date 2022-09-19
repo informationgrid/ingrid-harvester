@@ -73,7 +73,7 @@ export class GeoJsonUtils {
         }
     }
 
-    parseCoords = (s, opts = { crs: null, stride: 2 }, ctx = { srsDimension: null }) => {
+    parseCoords = (s, opts: { crs?: string, stride?: number } = { crs: null, stride: 2 }, ctx = { srsDimension: null }) => {
         const stride = ctx.srsDimension || opts.stride || 2
         const transformCoords = this.transformer(opts.crs)
 

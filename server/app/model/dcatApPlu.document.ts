@@ -211,8 +211,6 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
 
     static async create(mapper: GenericMapper): Promise<string> {
         let catalog = await mapper.getCatalog();
-        let datasetPublisher = await mapper.getPublisher();
-        let datasetPublisherino = datasetPublisher[0];
         let centroid = mapper.getCentroid();
         let contributors = null;    // TODO
         let maintainers = null;     // TODO
