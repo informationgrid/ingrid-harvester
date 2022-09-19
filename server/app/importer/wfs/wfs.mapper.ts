@@ -24,7 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over WFS.
  */
-import {DateRange, Distribution as GenericDistribution, GenericMapper, Person} from "../../model/generic.mapper";
+import {DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -37,7 +37,7 @@ import {ImporterSettings} from "../../importer.settings";
 import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
 import centroid from '@turf/centroid';
-import { Contact, DcatApPluFactory, Distribution, pluDocType, pluPlanState, pluPlantype, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../DcatApPluFactory";
+import { Contact, DcatApPluFactory, pluDocType, pluPlanState, pluPlantype, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../DcatApPluFactory";
 import { XPathUtils } from "../../utils/xpath.utils";
 
 export class WfsMapper extends GenericMapper {
@@ -110,7 +110,7 @@ export class WfsMapper extends GenericMapper {
      *
      *  @returns 
      */
-    _getDAPDistributions(): Distribution[] {
+    async _getDistributions(): Promise<Distribution[]> {
 
         // very simple heuristic
         // TODO expand/improve
@@ -124,7 +124,7 @@ export class WfsMapper extends GenericMapper {
             let distribution: Distribution = {
                 accessURL: this.select('./xplan:referenzURL', distElem, true)?.textContent,
                 description: this.select('./xplan:art', distElem, true)?.textContent,
-                format: this.select('./xplan:referenzMimeType', distElem, true)?.textContent,
+                format: [this.select('./xplan:referenzMimeType', distElem, true)?.textContent],
                 pluDoctype: this._getPluDocType(this.select('./xplan:typ', distElem, true)?.textContent)
             };
             distributions.push(distribution);
@@ -142,78 +142,8 @@ export class WfsMapper extends GenericMapper {
         return distributions;
     }
 
-    // TODO we want only one Distribution, Agent, etc.; 
-    // TODO replace the ones in generic.mapper and reference the interfaces from DcatApPluFactory instead
-    // TODO look into compatibility problems first
-    async _getDistributions(): Promise<GenericDistribution[]> {
-        let dists = [];
-        let urlsFound = [];
-        // let srvIdent = this.select('./srv:SV_ServiceIdentification', this.idInfo, true);
-        // if (srvIdent) {
-        //     dists = await this.handleDistributionforService(srvIdent, urlsFound);
-        // }
-
-        // let distNodes = this.select('./gmd:distributionInfo/gmd:MD_Distribution', this.feature);
-        // for (let i = 0; i < distNodes.length; i++) {
-        //     let distNode = distNodes[i];
-        //     let id = distNode.getAttribute('id');
-        //     if (!id) id = distNode.getAttribute('uuid');
-
-        //     let formats = [];
-        //     let urls: Distribution[] = [];
-
-        //     this.select('.//gmd:MD_Format/gmd:name/gco:CharacterString', distNode).forEach(format => {
-        //         format.textContent.split(',').forEach(formatItem => {
-        //             if (!formats.includes(formatItem)) {
-        //                 formats.push(formatItem.trim());
-        //             }
-        //         });
-        //     });
-
-        //     // Combine formats in a single slash-separated string
-        //     if (formats.length === 0) formats.push('Unbekannt');
-
-        //     let onlineResources = this.select('.//gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource', distNode);
-        //     for (let j = 0; j < onlineResources.length; j++) {
-        //         let onlineResource = onlineResources[j];
-
-        //         let urlNode = this.select('gmd:linkage/gmd:URL', onlineResource);
-        //         let title = this.select('gmd:name/gco:CharacterString', onlineResource);
-        //         let protocolNode = this.select('gmd:protocol/gco:CharacterString', onlineResource);
-
-        //         let url = null;
-        //         if (urlNode.length > 0) {
-        //             let requestConfig = this.getUrlCheckRequestConfig(urlNode[0].textContent);
-        //             url = await UrlUtils.urlWithProtocolFor(requestConfig);
-        //         }
-        //         if (url && !urls.includes(url)) {
-        //             const formatArray = protocolNode.length > 0 && protocolNode[0].textContent
-        //                 ? [protocolNode[0].textContent]
-        //                 : formats;
-
-        //             urls.push({
-        //                 accessURL: url,
-        //                 title: title.length > 0 ? title[0].textContent : undefined,
-        //                 format: UrlUtils.mapFormat(formatArray, this.summary.warnings)
-        //             });
-        //         }
-        //     }
-
-        //     // Filter out URLs that have already been found
-        //     urls = urls.filter(item => !urlsFound.includes(item.accessURL));
-
-        //     // Set id only if there is a single resource
-        //     if (urls.length === 1 && id) urls[0].id = id;
-
-        //     // add distributions to all
-        //     dists.push(...urls);
-        // }
-
-        return dists;
-    }
-
     // TODO
-    async handleDistributionforService(srvIdent, urlsFound): Promise<GenericDistribution[]> {
+    async handleDistributionforService(srvIdent, urlsFound): Promise<Distribution[]> {
 
         let getCapabilitiesElement = this.select(
             // convert containing text to lower case
@@ -223,7 +153,7 @@ export class WfsMapper extends GenericMapper {
         let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
         let serviceFormat = this.select('.//srv:serviceType/gco:LocalName', srvIdent, true);
         let serviceTypeVersion = this.select('.//srv:serviceTypeVersion/gco:CharacterString', srvIdent);
-        let serviceLinks: GenericDistribution[] = [];
+        let serviceLinks: Distribution[] = [];
 
         if(serviceFormat){
             serviceFormat = serviceFormat.textContent;
@@ -281,8 +211,8 @@ export class WfsMapper extends GenericMapper {
 
     }
 
-    _getPublisher(): any {
-        return this.fetched.publisher;
+    async _getPublisher(): Promise<Person[] | Organization[]> {
+        return this.fetched.catalog.publisher;
     }
 
     _getCatalogLanguage(): string {
@@ -367,9 +297,9 @@ export class WfsMapper extends GenericMapper {
             if (publisher) {
                 let displayName;
 
-                if (publisher[0].organization) {
+                if ('organization' in publisher[0]) {
                     displayName = publisher[0].organization;
-                } else if (publisher[0].name) {
+                } else if ('name' in publisher[0]) {
                     displayName = publisher[0].name;
                 }
 

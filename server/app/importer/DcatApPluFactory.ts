@@ -20,6 +20,7 @@
  *  limitations under the Licence.
  * ==================================================
  */
+import { Agent } from '../model/generic.mapper';
 
 function optional(wrapper: string | Function, variable: any | any[]) {
     if (!variable) {
@@ -34,11 +35,6 @@ function optional(wrapper: string | Function, variable: any | any[]) {
     else {
         return variable.map(v => wrapper(v)).join(' ');
     }
-}
-
-interface Agent {
-    name: string,
-    type?: string
 }
 
 export interface Catalog {
@@ -307,10 +303,10 @@ export class DcatApPluFactory {
         </dcat:Distribution>`;
     }
 
-    private static xmlFoafAgent(parent: string, { name, type }: Agent): string {
+    private static xmlFoafAgent(parent: string, agent: Agent): string {
         return `<${parent}><foaf:agent>
-            <foaf:name>${name}</foaf:name>
-            ${optional('dct:type', type)}
+            <foaf:name>${agent?.['name']}</foaf:name>
+            ${optional('dct:type', agent.type)}
         </foaf:agent></${parent}>`;
     }
 

@@ -24,7 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Agent, DateRange, Distribution as GenericDistribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
+import {Agent, DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -126,25 +126,18 @@ export class CswMapper extends GenericMapper {
         return abstract;
     }
 
-    /**
-     * TODO Merge this with _getDistributions() ?
-     * 
-     * @returns 
-     */
-    async _getDAPDistributions(): Promise<Distribution[]> {
+    // TODO ED:2022-09-16: handle filtering of distributions by accessURL not here, but in dcatApPlu.document?
+    async _getDistributions(): Promise<Distribution[]> {
         let distributions = [];
-        for (let distribution of await this._getDistributions()) {
+        for (let distribution of await this._getDistributions_Original()) {
             if (distribution.accessURL) {
-                distributions.push({ ...distribution, format: distribution.format?.[0] });
+                distributions.push({ ...distribution, format: distribution.format });
             }
         }
         return distributions;
     }
 
-    // TODO if possible, we want only one Distribution, Agent, etc.; 
-    // TODO replace the ones in generic.mapper and reference the interfaces from DcatApPluFactory instead
-    // TODO look into compatibility problems first
-    async _getDistributions(): Promise<GenericDistribution[]> {
+    async _getDistributions_Original(): Promise<Distribution[]> {
         let dists = [];
         let urlsFound = [];
 
@@ -160,7 +153,7 @@ export class CswMapper extends GenericMapper {
             if (!id) id = distNode.getAttribute('uuid');
 
             let formats = [];
-            let urls: GenericDistribution[] = [];
+            let urls: Distribution[] = [];
 
             CswMapper.select('./gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString', distNode).forEach(format => {
                 format.textContent.split(',').forEach(formatItem => {
@@ -212,7 +205,7 @@ export class CswMapper extends GenericMapper {
         return dists;
     }
 
-    async handleDistributionforService(srvIdent, urlsFound): Promise<GenericDistribution[]> {
+    async handleDistributionforService(srvIdent, urlsFound): Promise<Distribution[]> {
 
         let getCapabilitiesElement = CswMapper.select(
             // convert containing text to lower case
@@ -222,7 +215,7 @@ export class CswMapper extends GenericMapper {
         let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
         let serviceFormat = CswMapper.select('./srv:serviceType/gco:LocalName', srvIdent, true);
         let serviceTypeVersion = CswMapper.select('./srv:serviceTypeVersion/gco:CharacterString', srvIdent);
-        let serviceLinks: GenericDistribution[] = [];
+        let serviceLinks: Distribution[] = [];
 
         if(serviceFormat){
             serviceFormat = serviceFormat.textContent;
@@ -281,7 +274,7 @@ export class CswMapper extends GenericMapper {
 
     }
 
-    _getPublisher(): any {
+    async _getPublisher(): Promise<Person[] | Organization[]> {
         let publishers = [];
 
         if (this.fetched.publisher) {

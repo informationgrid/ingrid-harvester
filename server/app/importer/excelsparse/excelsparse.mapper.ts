@@ -97,7 +97,7 @@ export class ExcelSparseMapper extends GenericMapper {
     }
 
     // TODO
-    _getPublisher() {
+    async _getPublisher(): Promise<Person[] | Organization[]> {
         // const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
         // const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
@@ -443,11 +443,7 @@ export class ExcelSparseMapper extends GenericMapper {
         }
         return DcatApPluFactory.createXml({
             bboxGml: null,
-            catalog: {
-                description: this.fetched.description,
-                title: this.fetched.title,
-                publisher: this._getPublisher()[0]
-            },
+            catalog: this._getCatalog(),
             centroid: this._getCentroid(),
             contactPoint: await this._getContactPoint(),
             // contributors: null,
@@ -521,6 +517,14 @@ export class ExcelSparseMapper extends GenericMapper {
         }
 
         return config;
+    }
+
+    async _getCatalog() {
+        return {
+            description: this.fetched.description,
+            title: this.fetched.title,
+            publisher: await this._getPublisher()[0]
+        }
     }
 
     /**

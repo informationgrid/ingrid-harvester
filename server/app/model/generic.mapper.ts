@@ -33,18 +33,22 @@ import {Rules} from "./rules";
 moment.locale('de');
 
 export interface Distribution {
-    format: string[];
+    format?: string[];
     accessURL: string;
+    downloadURL?: string;
     id?: string;
     title?: string;
     description?: string;
     issued?: Date;
     modified?: Date;
     byteSize?: number;
+    period?: DateRange;
+    pluDoctype?: string;
 }
 export interface Agent {
     homepage?: string;
     mbox?: string;
+    type?: string;
 }
 export interface Person extends Agent {
     name: string;
