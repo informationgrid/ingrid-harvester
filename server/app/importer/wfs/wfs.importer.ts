@@ -226,11 +226,6 @@ export class WfsImporter implements Importer {
         }
         this.generalInfo['defaultCrs'] = this.defaultCrs;
 
-        // store the getCapabilities language in generalInfo
-        // try language as xpath; if not found, insert it as is (fallback option)
-        this.generalInfo['language'] = this.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true)?.textContent ?? this.settings.xpaths.capabilities.language;
-
-        // store the getCapabilities ServiceProvider in generalInfo
         let serviceProvider = this.select(this.settings.xpaths.capabilities.serviceProvider, capabilitiesResponseDom, true);
         // TODO for FIS, there is additional metadata info in a linked CSW
         // TODO do we grab this as well? if yes:
@@ -259,10 +254,11 @@ export class WfsImporter implements Importer {
         Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
         this.generalInfo['contactPoint'] = contact;
 
-        // store title and abstract from getCapabilities in generalInfo
+        // store catalog info from getCapabilities in generalInfo
         this.generalInfo['catalog'] = {
             description: this.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
             homepage: this.settings.getFeaturesUrl,
+            language: this.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true)?.textContent ?? this.settings.xpaths.capabilities.language,
             publisher: [{ name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent }],
             title: this.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
         };
