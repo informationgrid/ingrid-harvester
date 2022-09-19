@@ -24,11 +24,11 @@
 import {OptionsWithUri} from 'request-promise';
 import {License} from '@shared/license.model';
 import * as moment from 'moment';
-import {IndexDocument} from './index.document';
 import {ImporterSettings} from "../importer.settings";
 import {getLogger} from "log4js";
 import {Summary} from "./summary";
 import {Rules} from "./rules";
+import { Catalog } from './dcatApPlu.document';
 
 moment.locale('de');
 
@@ -359,15 +359,6 @@ export abstract class GenericMapper {
         return this.errors.length === 0 ? undefined : this.errors;
     }
 
-    async _getTransformedData(format: string): Promise<string>{
-        // throw new NotImplemented(`Transformation to ${format} is not implemented yet.`);
-        return '';
-    }
-
-    async getTransformedData(format: string): Promise<string>{
-        return await this._getTransformedData(format);
-    }
-
     abstract _getIssued(): Date;
 
     getIssued(): Date{
@@ -440,6 +431,72 @@ export abstract class GenericMapper {
             return this.getSettings().priority;
         }
         return undefined;
+    }
+
+    abstract _getBoundingBoxGml();
+
+    getBoundingBoxGml() {
+        return this._getBoundingBoxGml();
+    }
+
+    abstract _getSpatialGml();
+
+    getSpatialGml() {
+        return this._getSpatialGml();
+    }
+
+    abstract _getCentroid();
+
+    getCentroid() {
+        return this._getCentroid();
+    }
+
+    abstract async _getCatalog(): Promise<Catalog>;
+
+    async getCatalog(): Promise<Catalog> {
+        return this._getCatalog();
+    }
+
+    abstract _getPluPlanState();
+
+    getPluPlanState() {
+        return this._getPluPlanState();
+    }
+
+    abstract _getPluPlanType();
+
+    getPluPlanType() {
+        return this._getPluPlanType();
+    }
+
+    abstract _getPluPlanTypeFine();
+
+    getPluPlanTypeFine() {
+        return this._getPluPlanTypeFine();
+    }
+
+    abstract _getPluProcedureStartDate();
+
+    getPluProcedureStartDate() {
+        return this._getPluProcedureStartDate();
+    }
+
+    abstract _getPluProcedureState();
+
+    getPluProcedureState() {
+        return this._getPluProcedureState();
+    }
+
+    abstract _getPluProcedureType();
+
+    getPluProcedureType() {
+        return this._getPluProcedureType();
+    }
+
+    abstract _getPluProcessSteps();
+
+    getPluProcessSteps() {
+        return this._getPluProcessSteps();
     }
 
     executeCustomCode(doc: any) {

@@ -231,7 +231,6 @@ export class WfsImporter implements Importer {
 
         // store the getCapabilities ServiceProvider in generalInfo
         let serviceProvider = this.select(this.settings.xpaths.capabilities.serviceProvider, capabilitiesResponseDom, true);
-        this.generalInfo['publisher'] = [{ name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent }];
         // TODO for FIS, there is additional metadata info in a linked CSW
         // TODO do we grab this as well? if yes:
         // - select the CSW link
@@ -251,8 +250,12 @@ export class WfsImporter implements Importer {
         };
 
         // store title and abstract from getCapabilities in generalInfo
-        this.generalInfo['title'] = this.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent;
-        this.generalInfo['abstract'] = this.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent;
+        this.generalInfo['catalog'] = {
+            description: this.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
+            homepage: this.settings.getFeaturesUrl,
+            publisher: [{ name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent }],
+            title: this.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
+        };
 
         while (true) {
             log.debug('Requesting next features');

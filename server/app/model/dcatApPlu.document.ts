@@ -20,7 +20,8 @@
  *  limitations under the Licence.
  * ==================================================
  */
-import { Agent } from '../model/generic.mapper';
+
+import { Agent, DateRange, Distribution, GenericMapper, Organization, Person } from "./generic.mapper";
 
 function optional(wrapper: string | Function, variable: any | any[]) {
     if (!variable) {
@@ -43,7 +44,7 @@ export interface Catalog {
     issued?: string,
     language?: string,
     modified?: string,
-    publisher: Agent,
+    publisher: Person | Organization,
     records?: Record[],
     themeTaxonomy?: string,
     title: string
@@ -61,27 +62,10 @@ export interface Contact {
     region?: string
 }
 
-export interface Distribution {
-    accessURL: string,
-    description?: string,
-    downloadURL?: string,
-    format?: string,
-    issued?: string,
-    modified?: string,
-    period?: Period,
-    pluDoctype?: string,
-    title?: string
-}
-
-export interface Period {
-    start?: string, 
-    end?: string
-}
-
 export interface ProcessStep {
     distributions?: Distribution[],
     identifier?: string,
-    period?: Period,
+    period?: DateRange,
     type: typeof pluProcessStepType[keyof typeof pluProcessStepType];
 }
 
@@ -114,19 +98,18 @@ export interface DcatApPlu {
     pluProcedureType?: string,
     pluProcessSteps?: ProcessStep[],
     procedureStartDate: string,
-    publisher: Agent,
+    publisher: Person | Organization,
     relation: string,
     title: string
 }
 
-// TODO
 export const DCAT_AP_PLU_NSMAP = {
     DCAT: 'http://www.w3.org/ns/dcat#',
     DCT: 'http://purl.org/dc/terms/',
     FOAF: 'http://xmlns.com/foaf/0.1/',
     GML: 'http://www.opengis.net/gml/3.2',
     LOCN: 'http://www.w3.org/ns/locn#',
-    PLU: 'http://a.placeholder.url.for.dcat-ap-plu',
+    PLU: 'http://a.placeholder.url.for.dcat-ap-plu',    // TODO
     RDF: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     VCARD: 'http://www.w3.org/2006/vcard/ns#'
 };
@@ -232,49 +215,57 @@ export const pluDocType = {
     // TODO not finalized yet
 };
 
-export class DcatApPluFactory {
+export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
 
-    static createXml({ bboxGml, catalog, centroid, contactPoint, contributors, descriptions, distributions, geographicName, identifier, issued, lang, geometryGml, maintainers, modified, planState, pluPlanType, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessSteps, procedureStartDate, publisher, relation, title }: DcatApPlu): string {
+    static getExportFormat() {
+        return 'dcat-ap-plu';
+    }
+
+    static async create(mapper: GenericMapper): Promise<string> {
+        let catalog = await mapper.getCatalog();
+        let datasetPublisher = await mapper.getPublisher();
+        let datasetPublisherino = datasetPublisher[0];
+        let contributors = null;    // TODO
+        let maintainers = null;     // TODO
+        let relation = null;        // TODO
         let xmlString = `<?xml version="1.0"?>
         <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns.toLowerCase()}="${uri}"`).join(' ')}>
             <dcat:Catalog>
                 <dct:description>${catalog.description}</dct:description>
                 <dct:title>${catalog.title}</dct:title>
-                ${DcatApPluFactory.xmlFoafAgent('dct:publisher', catalog.publisher)}
+                ${DcatApPluDocument.xmlFoafAgent('dct:publisher', catalog.publisher[0])}
                 ${optional('dcat:themeTaxonomy', catalog.themeTaxonomy)}
                 ${optional('dct:issued', catalog.issued)}
                 ${optional('dct:language', catalog.language)}
                 ${optional('dct:modified', catalog.modified)}
                 ${optional('foaf:homepage', catalog.homepage)}
-                ${optional(DcatApPluFactory.xmlRecord, catalog.records)}
+                ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
             </dcat:Catalog>
             <dcat:Dataset>
-                ${DcatApPluFactory.xmlContact(contactPoint)}
-                ${descriptions.map(description => `<dct:description xml:lang="${lang}">${description}</dct:description>`).join(' ')}
-                <dct:identifier>${identifier}</dct:identifier>
-                <dct:title xml:lang="${lang}">${title}</dct:title>
-                <plu:PlanState>${planState}</plu:PlanState>
-                <plu:pluProcedureState>${pluProcedureState}</plu:pluProcedureState>
-                <plu:procedureStartDate>${procedureStartDate}</plu:procedureStartDate>
+                ${DcatApPluDocument.xmlContact(await mapper._getContactPoint())}
+                <dct:description xml:lang="${catalog.language}">${mapper.getDescription()}</dct:description>
+                <dct:identifier>${mapper.getGeneratedId()}</dct:identifier>
+                <dct:title xml:lang="${catalog.language}">${mapper.getTitle()}</dct:title>
+                <plu:planState>${mapper.getPluPlanState()}</plu:planState>
+                <plu:procedureState>${mapper.getPluProcedureState()}</plu:procedureState>
+                <plu:procedureStartDate>${mapper.getPluProcedureStartDate()}</plu:procedureStartDate>
                 <dct:spatial>
                     <dcat:Location>
-                        ${optional('dcat:bbox', bboxGml)}
-                        ${optional('locn:geometry', geometryGml)}
-                        ${DcatApPluFactory.xmlCentroid(centroid)}
-                        ${optional('locn:geographicName', geographicName)}
+                        ${optional('dcat:bbox', mapper.getBoundingBoxGml())}
+                        ${optional('locn:geometry', mapper.getSpatialGml())}
+                        ${DcatApPluDocument.xmlCentroid(mapper.getCentroid())}
+                        ${optional('locn:geographicName', mapper.getSpatialText())}
                     </dcat:Location>
                 </dct:spatial>
-                ${DcatApPluFactory.xmlFoafAgent('dct:publisher', publisher)}
-                ${optional((m: Agent) => DcatApPluFactory.xmlFoafAgent('dcatde:maintainer', m), maintainers)}
-                ${optional((c: Agent) => DcatApPluFactory.xmlFoafAgent('dct:contributor', c), contributors)}
-                ${optional(DcatApPluFactory.xmlDistribution, distributions)}
-                ${optional('dct:issued', issued)}
-                ${optional('dct:modified', modified)}
+                ${DcatApPluDocument.xmlFoafAgent('dct:publisher', (await mapper.getPublisher())[0])}
+                ${optional(DcatApPluDocument.xmlDistribution, mapper.getDistributions())}
+                ${optional('dct:issued', mapper.getIssued())}
+                ${optional('dct:modified', mapper.getModifiedDate())}
                 ${optional('dct:relation', relation)}
-                ${optional('plu:pluPlanType', pluPlanType)}
-                ${optional('plu:pluPlanTypeFine', pluPlanTypeFine)}
-                ${optional('plu:pluProcedureType', pluProcedureType)}
-                ${optional(DcatApPluFactory.xmlProcessStep, pluProcessSteps)}
+                ${optional('plu:pluPlanType', mapper.getPluPlanType())}
+                ${optional('plu:pluPlanTypeFine', mapper.getPluPlanTypeFine())}
+                ${optional('plu:pluProcedureType', mapper.getPluProcedureType())}
+                ${optional(DcatApPluDocument.xmlProcessStep, mapper.getPluProcessSteps())}
             </dcat:Dataset>
         </rdf:RDF>`;
 
@@ -289,28 +280,30 @@ export class DcatApPluFactory {
         </dcat:centroid>`;
     }
 
-    private static xmlDistribution({ accessURL: accessURL, description, downloadURL, format, issued, modified, period, pluDoctype, title } : Distribution): string {
+    private static xmlDistribution(distribution: Distribution): string {
         return `<dcat:Distribution>
-            <dcat:accessURL>${accessURL}</dcat:accessURL>
-            ${optional('dct:description', description)}
-            ${optional('dcat:downloadURL', downloadURL)}
-            ${optional('dct:format', format)}
-            ${optional('dct:issued', issued)}
-            ${optional('dct:modified', modified)}
-            ${optional(DcatApPluFactory.xmlPeriodOfTime, period)}
-            ${optional('plu:pluDoctype', pluDoctype)}
-            ${optional('dct:title', title)}
+            <dcat:accessURL>${distribution.accessURL}</dcat:accessURL>
+            ${optional('dct:description', distribution.description)}
+            ${optional('dcat:downloadURL', distribution.downloadURL)}
+            ${optional('dct:format', distribution.format)}
+            ${optional('dct:issued', distribution.issued)}
+            ${optional('dct:modified', distribution.modified)}
+            ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period)}
+            ${optional('plu:pluDoctype', distribution.pluDoctype)}
+            ${optional('dct:title', distribution.title)}
         </dcat:Distribution>`;
     }
 
-    private static xmlFoafAgent(parent: string, agent: Agent): string {
+    private static xmlFoafAgent(parent: string, agent: Person | Organization): string {
+        console.log(agent);
+        let name = (<Organization>agent)?.organization ?? (<Person>agent)?.name;
         return `<${parent}><foaf:agent>
-            <foaf:name>${agent?.['name']}</foaf:name>
+            <foaf:name>${name}</foaf:name>
             ${optional('dct:type', agent.type)}
         </foaf:agent></${parent}>`;
     }
 
-    private static xmlPeriodOfTime({ start, end }: Period): string {
+    private static xmlPeriodOfTime({ lte: start, gte: end }: DateRange): string {
         return `<dct:temporal>
             <dct:PeriodOfTime>
                 ${optional('dcat:startDate', start)}
@@ -323,8 +316,8 @@ export class DcatApPluFactory {
         return `<plu:PluProcessStep>
             <plu:ProcessStepType>${type}</plu:ProcessStepType>
             ${optional('dct:identifier', identifier)}
-            ${optional(DcatApPluFactory.xmlDistribution, distributions)}
-            ${optional(DcatApPluFactory.xmlPeriodOfTime, period)}
+            ${optional(DcatApPluDocument.xmlDistribution, distributions)}
+            ${optional(DcatApPluDocument.xmlPeriodOfTime, period)}
         </plu:PluProcessStep>`;
     }
 

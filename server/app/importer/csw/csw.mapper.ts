@@ -36,10 +36,9 @@ import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
-import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
 import centroid from '@turf/centroid';
-import { DcatApPluFactory, Distribution, pluPlanState, pluPlantype, pluProcedureState } from "../DcatApPluFactory";
+import { pluPlanState, pluPlantype, pluProcedureState } from "../../model/dcatApPlu.document";
 
 let xpath = require('xpath');
 
@@ -276,47 +275,52 @@ export class CswMapper extends GenericMapper {
 
     async _getPublisher(): Promise<Person[] | Organization[]> {
         let publishers = [];
+        let otherContacts = [];
+        // Look up contacts for the dataset first and then the metadata contact
+        let queries = [
+            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:contact/gmd:CI_ResponsibleParty'
+        ];
+        for (let i = 0; i < queries.length; i++) {
+            let contacts = CswMapper.select(queries[i], this.record);
+            for (let j = 0; j < contacts.length; j++) {
+                let contact = contacts[j];
+                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
 
-        if (this.fetched.publisher) {
-            return this.fetched.publisher;
+                let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+
+                let url = null;
+                if (urlNode) {
+                    let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig);
+                }
+
+                let infos: any = {};
+                if (name) infos.name = name.textContent;
+                if (url) infos.homepage = url;
+                if (org) infos.organization = org.textContent;
+
+                if (role === 'publisher') {
+                    publishers.push(infos);
+                }
+                else {
+                    otherContacts.push(infos);
+                }
+            }
         }
 
-        // // Look up contacts for the dataset first and then the metadata contact
-        // let queries = [
-        //     './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
-        //     './gmd:contact/gmd:CI_ResponsibleParty'
-        // ];
-        // for (let i = 0; i < queries.length; i++) {
-        //     let contacts = CswMapper.select(queries[i], this.record);
-        //     for (let j = 0; j < contacts.length; j++) {
-        //         let contact = contacts[j];
-        //         let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
-
-        //         let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
-        //         let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-        //         let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
-
-        //         let url = null;
-        //         if (urlNode) {
-        //             let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-        //             url = await UrlUtils.urlWithProtocolFor(requestConfig);
-        //         }
-
-        //         if (role === 'publisher') {
-        //             let infos: any = {};
-
-        //             if (name) infos.name = name.textContent;
-        //             if (url) infos.homepage = url;
-        //             if (org) infos.organization = org.textContent;
-
-        //             publishers.push(infos);
-        //         }
-        //     }
-        // }
-
         if (publishers.length === 0) {
-            this.summary.missingPublishers++;
-            return undefined;
+            if (otherContacts.length === 0) {
+                this.summary.missingPublishers++;
+                return undefined;
+            }
+            else {
+                // ED: 2022-09-15: use other contacts as fallback instead
+                // TODO add a toggle in UI whether to use this fallback
+                return otherContacts;
+            }
         } else {
             return publishers;
         }
@@ -414,9 +418,9 @@ export class CswMapper extends GenericMapper {
             if (publisher) {
                 let displayName;
 
-                if (publisher[0].organization) {
+                if ('organization' in publisher[0]) {
                     displayName = publisher[0].organization;
-                } else if (publisher[0].name) {
+                } else {
                     displayName = publisher[0].name;
                 }
 
@@ -929,59 +933,36 @@ export class CswMapper extends GenericMapper {
         }
     }
 
+    _getBoundingBoxGml() {
+        return undefined;
+    }
+
+    async _getCatalog() {
+        return this.fetched.catalog;
+    }
+
+    _getPluPlanTypeFine() {
+        return undefined;
+    }
+
+    _getPluProcedureStartDate() {
+        return undefined;
+    }
+
+    _getPluProcedureType() {
+        return undefined;
+    }
+
+    _getPluProcessSteps() {
+        return undefined;
+    }
+
     getErrorSuffix(uuid, title) {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'.`;
     }
 
     _getHarvestedData(): string {
         return this.record.toString();
-    }
-
-    async _getTransformedData(format: string): Promise<string> {
-        switch(format) {
-            case ExportFormat.DCAT_AP_PLU:
-                return this.cswToDcatApPlu();
-            default:
-                return '';
-        }
-    }
-
-    // TODO lots of fields left to infer
-    async cswToDcatApPlu(): Promise<string> {
-        let spatialGml = this._getSpatialGml();
-        if (!spatialGml) {
-            throw new Error(`No geo information specified for ${this.uuid}.`);
-        }
-        return DcatApPluFactory.createXml({
-            bboxGml: spatialGml,
-            catalog: {
-                description: this.fetched.abstract,
-                title: this.fetched.title,
-                publisher: this._getPublisher()[0]
-            },
-            centroid: this._getCentroid(),
-            contactPoint: await this._getContactPoint(),
-            // contributors: null,
-            descriptions: [this._getDescription()],
-            distributions: await this._getDAPDistributions(),
-            geographicName: this._getSpatialText(),
-            identifier: this.uuid,
-            issued: this._getIssued(),
-            lang: this._getLanguage(),
-            geometryGml: null,
-            // maintainers: null,
-            modified: this._getModifiedDate(),
-            planState: this._getPluPlanState(),
-            pluPlanType: this._getPluPlanType(),
-            // pluPlanTypeFine: null,
-            pluProcedureState: this._getPluProcedureState(),
-            // pluProcedureType: null,
-            // pluProcessSteps: null,
-            procedureStartDate: null,
-            publisher: this._getPublisher()[0],
-            relation: null,
-            title: this._getTitle()
-        });
     }
 
     _getCreator(): Person[] {

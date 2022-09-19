@@ -34,10 +34,9 @@ import {OptionsWithUri} from "request-promise";
 import {WfsSettings} from './wfs.settings';
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
-import {ExportFormat} from "../../model/index.document";
 import {Summary} from "../../model/summary";
 import centroid from '@turf/centroid';
-import { Contact, DcatApPluFactory, pluDocType, pluPlanState, pluPlantype, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../DcatApPluFactory";
+import { Contact, pluDocType, pluPlanState, pluPlantype, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../../model/dcatApPlu.document";
 import { XPathUtils } from "../../utils/xpath.utils";
 
 export class WfsMapper extends GenericMapper {
@@ -213,10 +212,6 @@ export class WfsMapper extends GenericMapper {
 
     async _getPublisher(): Promise<Person[] | Organization[]> {
         return this.fetched.catalog.publisher;
-    }
-
-    _getCatalogLanguage(): string {
-        return this.fetched.language;
     }
 
     _getTitle() {
@@ -651,6 +646,10 @@ export class WfsMapper extends GenericMapper {
         return license;
     }
 
+    async _getCatalog() {
+        return this.fetched.catalog;
+    }
+
     /**
      * This is currently XPlan specific.
      * 
@@ -883,55 +882,6 @@ export class WfsMapper extends GenericMapper {
 
     _getHarvestedData(): string {
         return this.feature.toString();
-    }
-
-    async _getTransformedData(format: string): Promise<string> {
-        switch(format) {
-            case ExportFormat.DCAT_AP_PLU:
-                return this.wfsToDcatApPlu();
-            default:
-                return '';
-        }
-    }
-
-    // TODO
-    async wfsToDcatApPlu(): Promise<string> {
-        let bboxGml = this._getBoundingBoxGml();
-        let spatialGml = this._getSpatialGml();
-        if (!bboxGml && !spatialGml) {
-            throw new Error(`No geo information specified for ${this.uuid}.`);
-        }
-        return DcatApPluFactory.createXml({
-            bboxGml: bboxGml,
-            catalog: {
-                description: this.fetched.abstract,
-                homepage: this.settings.getFeaturesUrl,
-                title: this.fetched.title,
-                publisher: this._getPublisher()[0]
-            },
-            centroid: this._getCentroid(),
-            contactPoint: await this._getContactPoint(),
-            // contributors: null,
-            descriptions: [this._getDescription()],
-            distributions: this._getDAPDistributions(),
-            geographicName: this._getSpatialText(),
-            identifier: this.uuid,
-            issued: this._getIssued(),
-            lang: this._getCatalogLanguage(),
-            geometryGml: spatialGml,
-            // maintainers: null,
-            modified: this._getModifiedDate(),
-            planState: this._getPluPlanState(),
-            pluPlanType: this._getPluPlanType(),
-            pluPlanTypeFine: this._getPluPlanTypeFine(),
-            pluProcedureState: this._getPluProcedureState(),
-            pluProcedureType: this._getPluProcedureType(),
-            pluProcessSteps: this._getPluProcessSteps(),
-            procedureStartDate: this._getPluProcedureStartDate(),
-            publisher: this._getPublisher()[0],
-            relation: null,
-            title: this._getTitle()
-        });
     }
 
     // TODO

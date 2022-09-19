@@ -151,13 +151,13 @@ export class CswImporter implements Importer {
         let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
         let capabilitiesResponseDom = new DomParser().parseFromString(capabilitiesResponse);
 
-        // store info from the getCapabilities ServiceProvider in generalInfo
-        let serviceProvider = CswMapper.select(this.settings.xpaths.capabilities.serviceProvider, capabilitiesResponseDom, true);
-        this.generalInfo['publisher'] = [{ name: CswMapper.select('./ows:ProviderName', serviceProvider, true)?.textContent }];
-
-        // store title and abstract from getCapabilities in generalInfo
-        this.generalInfo['title'] = CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent;
-        this.generalInfo['abstract'] = CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent;
+        // // store catalog info from getCapabilities in generalInfo
+        this.generalInfo['catalog'] = {
+            description: CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
+            homepage: this.settings.getRecordsUrl,
+            publisher: [{ name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent }],
+            title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
+        };
 
         while (true) {
             log.debug('Requesting next records');

@@ -885,6 +885,50 @@ export class OaiMapper extends GenericMapper {
         return this.uuid;
     }
 
+    _getBoundingBoxGml() {
+        return undefined;
+    }
+
+    _getSpatialGml() {
+        return undefined;
+    }
+
+    _getCentroid() {
+        return undefined;
+    }
+
+    async _getCatalog() {
+        return undefined;
+    }
+
+    _getPluPlanState() {
+        return undefined;
+    }
+
+    _getPluPlanType() {
+        return undefined;
+    }
+
+    _getPluPlanTypeFine() {
+        return undefined;
+    }
+
+    _getPluProcedureStartDate() {
+        return undefined;
+    }
+
+    _getPluProcedureState() {
+        return undefined;
+    }
+
+    _getPluProcedureType() {
+        return undefined;
+    }
+
+    _getPluProcessSteps() {
+        return undefined;
+    }
+
     executeCustomCode(doc: any) {
         try {
             if (this.settings.customCode) {

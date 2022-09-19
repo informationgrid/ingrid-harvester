@@ -21,60 +21,48 @@
  * ==================================================
  */
 
-import {GenericMapper} from "./generic.mapper";
-
-export const ExportFormat = {
-    DCAT_AP_PLU: 'dcat-ap-plu'
-}
+import { DcatApPluDocument } from "./dcatApPlu.document";
+import { GenericMapper } from "./generic.mapper";
 
 export class IndexDocument {
 
     static async create(mapper: GenericMapper) : Promise<any> {
         let result = await {
-            priority: mapper.getPriority(),
-            completion: mapper.getAutoCompletion(),
-            access_rights: mapper.getAccessRights(),
-            accrual_periodicity: mapper.getAccrualPeriodicity(),
+            // basic information
             contact_point: await mapper.getContactPoint(),
-            creator: mapper.getCreator(),
             description: mapper.getDescription(),
+            identifier: mapper.getGeneratedId(),
+            title: mapper.getTitle(),
+            // plan and procedure information
+            planState: mapper.getPluPlanState(),
+            planType: mapper.getPluPlanType(),
+            procedureState: mapper.getPluProcedureState(),
+            procedureStartDate: mapper.getPluProcedureStartDate(),
+            processSteps: mapper.getPluProcessSteps(),
+            // spatial and temporal features
+            spatial: mapper.getSpatial(),
+            spatial_text: mapper.getSpatialText(),
+            temporal: mapper.getTemporal(),
+            // additional information and metadata
+            publisher: await mapper.getPublisher(),
             distribution: await mapper.getDistributions(),
             extras: {
-                all: mapper.getExtrasAllData(),
-                citation: mapper.getCitation(),
-                display_contact: await mapper.getDisplayContacts(),
-                generated_id: mapper.getGeneratedId(),
-                groups: mapper.getGroups(),
                 harvested_data: mapper.getHarvestedData(),
-                transformed_data: {
-                    [ExportFormat.DCAT_AP_PLU]: await mapper.getTransformedData(ExportFormat.DCAT_AP_PLU),
-                },
-                license: await mapper.getLicense(),
                 metadata: {
                     harvested: mapper.getMetadataHarvested(),
                     harvesting_errors: null, // get errors after all operations been done
                     issued: mapper.getMetadataIssued(),
                     is_valid: null, // checks validity after all operations been done
                     modified: mapper.getMetadataModified(),
-                    source: mapper.getMetadataSource(),
+                    source: mapper.getMetadataSource()
                 },
-                mfund_fkz: mapper.getMFundFKZ(),
-                mfund_project_title: mapper.getMFundProjectTitle(),
-                realtime: mapper.isRealtime(),
-                subgroups: mapper.getCategories(),
-                subsection: mapper.getSubSections(),
-                spatial: mapper.getSpatial(),
-                spatial_text: mapper.getSpatialText(),
-                temporal: mapper.getTemporal(),
-                parent: mapper.getParent()
+                transformed_data: {
+                    [DcatApPluDocument.getExportFormat()]: await DcatApPluDocument.create(mapper),
+                }
             },
             issued: mapper.getIssued(),
             keywords: mapper.getKeywords(),
             modified: mapper.getModifiedDate(),
-            publisher: await mapper.getPublisher(),
-            originator: mapper.getOriginator(),
-            theme: mapper.getThemes(),
-            title: mapper.getTitle()
         };
 
         result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();

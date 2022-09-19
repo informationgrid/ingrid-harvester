@@ -416,6 +416,50 @@ export class ExcelMapper extends GenericMapper {
         return config;
     }
 
+    _getBoundingBoxGml() {
+        return undefined;
+    }
+
+    _getSpatialGml() {
+        return undefined;
+    }
+
+    _getCentroid() {
+        return undefined;
+    }
+
+    async _getCatalog() {
+        return undefined;
+    }
+
+    _getPluPlanState() {
+        return undefined;
+    }
+
+    _getPluPlanType() {
+        return undefined;
+    }
+
+    _getPluPlanTypeFine() {
+        return undefined;
+    }
+
+    _getPluProcedureStartDate() {
+        return undefined;
+    }
+
+    _getPluProcedureState() {
+        return undefined;
+    }
+
+    _getPluProcedureType() {
+        return undefined;
+    }
+
+    _getPluProcessSteps() {
+        return undefined;
+    }
+
     /**
      * Parse a string of format "dd.mm.yyyy" and convert it to a date object.
      * @param input

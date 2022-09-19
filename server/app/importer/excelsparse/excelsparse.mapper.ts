@@ -31,9 +31,6 @@ import {OptionsWithUri} from 'request-promise';
 import {ImporterSettings} from "../../importer.settings";
 // import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Columns} from './excelsparse.importer';
-import { DcatApPluFactory } from '../DcatApPluFactory';
-import { ExportFormat } from '../../model/index.document';
-import { GeoJsonUtils } from "../../utils/geojson.utils";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -79,11 +76,6 @@ export class ExcelSparseMapper extends GenericMapper {
 
     protected getSummary(): Summary{
         return this.summary;
-    }
-
-    // TODO
-    _getCatalogLanguage(): string {
-        return this.fetched.language;
     }
 
     _getTitle() {
@@ -426,49 +418,6 @@ export class ExcelSparseMapper extends GenericMapper {
         return JSON.stringify(this.columnValues);
     }
 
-    async _getTransformedData(format: string): Promise<string> {
-        switch(format) {
-            case ExportFormat.DCAT_AP_PLU:
-                return this.excelToDcatApPlu();
-            default:
-                return '';
-        }
-    }
-
-    // TODO
-    async excelToDcatApPlu(): Promise<string> {
-        let spatialGml = this._getSpatialGml();
-        if (!spatialGml) {
-            throw new Error(`No geo information specified for ${this.id}.`);
-        }
-        return DcatApPluFactory.createXml({
-            bboxGml: null,
-            catalog: this._getCatalog(),
-            centroid: this._getCentroid(),
-            contactPoint: await this._getContactPoint(),
-            // contributors: null,
-            descriptions: [this._getDescription()],
-            // distributions: null,
-            // geographicName: null,
-            identifier: this.id,
-            issued: this._getIssued(),
-            lang: this._getCatalogLanguage(),
-            geometryGml: spatialGml,
-            // maintainers: null,
-            modified: this._getModifiedDate(),
-            planState: null,
-            // pluPlanType: null,
-            // pluPlanTypeFine: null,
-            pluProcedureState: null,
-            // pluProcedureType: null,
-            // pluProcessSteps: null,
-            procedureStartDate: null,
-            publisher: this._getPublisher()[0],
-            relation: null,
-            title: this._getTitle()
-        });
-    }
-
     _getGroups(): string[] {
         return undefined;
     }
@@ -519,12 +468,44 @@ export class ExcelSparseMapper extends GenericMapper {
         return config;
     }
 
+    _getBoundingBoxGml() {
+        return undefined;
+    }
+
     async _getCatalog() {
         return {
             description: this.fetched.description,
             title: this.fetched.title,
             publisher: await this._getPublisher()[0]
         }
+    }
+
+    _getPluPlanState() {
+        return undefined;
+    }
+
+    _getPluPlanType() {
+        return undefined;
+    }
+
+    _getPluPlanTypeFine() {
+        return undefined;
+    }
+
+    _getPluProcedureStartDate() {
+        return undefined;
+    }
+
+    _getPluProcedureState() {
+        return undefined;
+    }
+
+    _getPluProcedureType() {
+        return undefined;
+    }
+
+    _getPluProcessSteps() {
+        return undefined;
     }
 
     /**
