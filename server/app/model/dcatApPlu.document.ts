@@ -213,6 +213,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let catalog = await mapper.getCatalog();
         let datasetPublisher = await mapper.getPublisher();
         let datasetPublisherino = datasetPublisher[0];
+        let centroid = mapper.getCentroid();
         let contributors = null;    // TODO
         let maintainers = null;     // TODO
         let relation = null;        // TODO
@@ -241,7 +242,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                     <dcat:Location>
                         ${optional('dcat:bbox', mapper.getBoundingBoxGml())}
                         ${optional('locn:geometry', mapper.getSpatialGml())}
-                        ${DcatApPluDocument.xmlCentroid(mapper.getCentroid())}
+                        ${optional(DcatApPluDocument.xmlCentroid, centroid ? [centroid] : null)}
                         ${optional('locn:geographicName', mapper.getSpatialText())}
                     </dcat:Location>
                 </dct:spatial>

@@ -450,7 +450,8 @@ export class WfsMapper extends GenericMapper {
     }
 
     _getCentroid(): number[] {
-        return centroid(this._getSpatial() ?? this._getBoundingBox()).geometry.coordinates;
+        let spatial = this._getSpatial() ?? this._getBoundingBox();
+        return spatial ? centroid(spatial).geometry.coordinates : undefined;
     }
 
     // TODO
