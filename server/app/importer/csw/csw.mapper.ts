@@ -24,7 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Agent, DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
+import {Agent, Contact, DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -1076,7 +1076,7 @@ export class CswMapper extends GenericMapper {
         return originators.length > 0 ? originators : undefined;
     }
 
-    async _getContactPoint(): Promise<any> {
+    async _getContactPoint(): Promise<Contact> {
 
         let contactPoint = this.fetched.contactPoint;
         if (contactPoint) {
@@ -1112,23 +1112,29 @@ export class CswMapper extends GenericMapper {
                         url = await UrlUtils.urlWithProtocolFor(requestConfig);
                     }
 
-                    let infos: any = {};
+                    let infos: Contact = {
+                        fn: name?.textContent,
+                    };
 
                     if (contact.getAttribute('uuid')) {
                         infos.hasUID = contact.getAttribute('uuid');
                     }
 
-                    if (name) infos.fn = name.textContent;
-                    if (org) infos['organization-name'] = org.textContent;
+                    if (!infos.fn) infos.fn = org?.textContent;
+                    if (org) infos['organization-name'] = org.textContent;                    
 
+                    let address = {};
                     let line1 = delPt.map(n => CswMapper.getCharacterStringContent(n));
                     line1 = line1.join(', ');
-                    if (line1) infos['street-address'] = line1;
+                    if (line1?.textContent) address['street-address'] = line1;
+                    if (locality?.textContent) address['locality'] = locality.textContent;
+                    if (region?.textContent) address['region'] = region.textContent;
+                    if (country?.textContent) address['country-name'] = country.textContent;
+                    if (postCode?.textContent) address['postal-code'] = postCode.textContent;
+                    if (Object.keys(address).length > 0) {
+                        infos.hasAddress = address;
+                    }
 
-                    if (locality) infos.city = locality.textContent;
-                    if (region) infos.region = region.textContent;
-                    if (country) infos['country-name'] = country.textContent;
-                    if (postCode) infos['postal-code'] = postCode.textContent;
                     if (email) infos.hasEmail = email.textContent;
                     if (phone) infos.hasTelephone = phone.textContent;
                     if (url) infos.hasURL = url;

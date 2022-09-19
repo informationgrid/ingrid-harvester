@@ -24,7 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Agent, DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
+import {Agent, Contact, DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -800,7 +800,7 @@ export class OaiMapper extends GenericMapper {
         return originators.length > 0 ? originators : undefined;
     }
 
-    async _getContactPoint(): Promise<any> {
+    async _getContactPoint(): Promise<Contact> {
 
         let contactPoint = this.fetched.contactPoint;
         if (contactPoint) {
@@ -835,7 +835,11 @@ export class OaiMapper extends GenericMapper {
                         url = await UrlUtils.urlWithProtocolFor(requestConfig);
                     }
 
-                    let infos: any = {};
+                    let infos: Contact = {
+                        fn: name?.textContent,
+                    };
+
+                    if (org) infos['organization-name'] = org.textContent;
 
                     if (contact.getAttribute('uuid')) {
                         infos.hasUID = contact.getAttribute('uuid');
@@ -844,13 +848,17 @@ export class OaiMapper extends GenericMapper {
                     if (name) infos.fn = name.textContent;
                     if (org) infos['organization-name'] = org.textContent;
 
+                    let address = {};
                     let line1 = delPt.map(n => OaiMapper.getCharacterStringContent(n));
                     line1 = line1.join(', ');
-                    if (line1) infos['street-address'] = line1;
+                    if (line1) address['street-address'] = line1;
+                    if (region) address['region'] = region.textContent;
+                    if (country) address['country-name'] = country.textContent;
+                    if (postCode) address['postal-code'] = postCode.textContent;
+                    if (Object.keys(address).length > 0) {
+                        infos.hasAddress = address;
+                    }
 
-                    if (region) infos.region = region.textContent;
-                    if (country) infos['country-name'] = country.textContent;
-                    if (postCode) infos['postal-code'] = postCode.textContent;
                     if (email) infos.hasEmail = email.textContent;
                     if (phone) infos.hasTelephone = phone.textContent;
                     if (url) infos.hasURL = url;

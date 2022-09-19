@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Agent, DateRange, Distribution, GenericMapper, Organization, Person } from "./generic.mapper";
+import { Agent, Contact, DateRange, Distribution, GenericMapper, Organization, Person } from "./generic.mapper";
 
 function optional(wrapper: string | Function, variable: any | any[]) {
     if (!variable) {
@@ -48,18 +48,6 @@ export interface Catalog {
     records?: Record[],
     themeTaxonomy?: string,
     title: string
-}
-
-export interface Contact {
-    address?: string,
-    country?: string,
-    email?: string,
-    fn: string,
-    locality?: string,
-    orgName?: string,
-    phone?: string,
-    postalCode?: string,
-    region?: string
 }
 
 export interface ProcessStep {
@@ -242,7 +230,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
             </dcat:Catalog>
             <dcat:Dataset>
-                ${DcatApPluDocument.xmlContact(await mapper._getContactPoint())}
+                ${DcatApPluDocument.xmlContact(await mapper.getContactPoint())}
                 <dct:description xml:lang="${catalog.language}">${mapper.getDescription()}</dct:description>
                 <dct:identifier>${mapper.getGeneratedId()}</dct:identifier>
                 <dct:title xml:lang="${catalog.language}">${mapper.getTitle()}</dct:title>
@@ -258,7 +246,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                     </dcat:Location>
                 </dct:spatial>
                 ${DcatApPluDocument.xmlFoafAgent('dct:publisher', (await mapper.getPublisher())[0])}
-                ${optional(DcatApPluDocument.xmlDistribution, mapper.getDistributions())}
+                ${optional(DcatApPluDocument.xmlDistribution, await mapper.getDistributions())}
                 ${optional('dct:issued', mapper.getIssued())}
                 ${optional('dct:modified', mapper.getModifiedDate())}
                 ${optional('dct:relation', relation)}
@@ -295,7 +283,6 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     }
 
     private static xmlFoafAgent(parent: string, agent: Person | Organization): string {
-        console.log(agent);
         let name = (<Organization>agent)?.organization ?? (<Person>agent)?.name;
         return `<${parent}><foaf:agent>
             <foaf:name>${name}</foaf:name>
@@ -332,20 +319,22 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         </dcat:record>`;
     }
 
-    private static xmlContact({ address, country, email, fn, locality, orgName, phone, postalCode, region }: Contact): string {
+    private static xmlContact(contact: Contact): string {
         // if fn is not set, use orgName instead; in this case, don't repeat orgName in an extra element
-        let useFn = fn && !['-'].includes(fn);
+        let useFn = contact.fn && !['-'].includes(contact.fn);
         return `<dcat:contactPoint>
             <vcard:Organization>
-                <vcard:fn>${useFn ? fn : orgName}</vcard:fn>
-                ${optional('vcard:organization-name', useFn ? orgName : '')}
-                ${optional('vcard:hasPostalCode', postalCode)}
-                ${optional('vcard:hasStreetAddress', address)}
-                ${optional('vcard:hasLocality', locality)}
-                ${optional('vcard:hasRegion', region)}
-                ${optional('vcard:hasCountryName', country)}
-                ${optional('vcard:hasEmail', email)}
-                ${optional('vcard:hasTelephoneNumber', phone)}
+                <vcard:fn>${useFn ? contact.fn : contact["organization-name"]}</vcard:fn>
+                ${optional('vcard:organization-name', useFn ? contact["organization-name"] : null)}
+                ${optional('vcard:hasAddress',
+                    optional('vcard:postal-code', contact.hasAddress?.["postal-code"]) +
+                    optional('vcard:street-address', contact.hasAddress?.["street-address"]) +
+                    optional('vcard:locality', contact.hasAddress?.locality) +
+                    optional('vcard:region', contact.hasAddress?.region) +
+                    optional('vcard:country-name', contact.hasAddress?.["country-name"])
+                )}
+                ${optional('vcard:hasEmail', contact.hasEmail)}
+                ${optional('vcard:hasTelephone', contact.hasTelephone)}
             </vcard:Organization>
         </dcat:contactPoint>`;
     }

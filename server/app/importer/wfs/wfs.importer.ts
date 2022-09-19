@@ -36,6 +36,7 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DefaultXpathSettings, WfsSettings} from './wfs.settings';
 import {FilterUtils} from "../../utils/filter.utils";
+import { Contact } from "../../model/generic.mapper";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from '../../utils/xpath.utils';
 
@@ -236,18 +237,21 @@ export class WfsImporter implements Importer {
         // - select the CSW link
         // - retrieve the XML from the CSW link
         // - select the appropriate nodes (gmd:contact or gmd:pointOfContact)
-        this.generalInfo['contactPoint'] = {
-            address: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', serviceProvider, true)?.textContent,
-            country: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', serviceProvider, true)?.textContent,
-            email: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', serviceProvider, true)?.textContent,
+        let contact: Contact = {
             fn: this.select('./ows:ServiceContact/ows:IndividualName', serviceProvider, true)?.textContent,
-            locality: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', serviceProvider, true)?.textContent,
-            orgName: this.generalInfo['publisher']?.[0]?.name,
-            phone: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', serviceProvider, true)?.textContent,
-            postalCode: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', serviceProvider, true)?.textContent,
-            region: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', serviceProvider, true)?.textContent,
-            // homepage: this.select('./ows:ServiceContact/ows:ContactInfo/ows:OnlineResource/@xlink:href', serviceProvider, true)?.textContent
+            hasAddress: {
+                'country-name': this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', serviceProvider, true)?.textContent,
+                locality: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', serviceProvider, true)?.textContent,
+                'postal-code': this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', serviceProvider, true)?.textContent,
+                region: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', serviceProvider, true)?.textContent,
+                'street-address': this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', serviceProvider, true)?.textContent
+            },
+            hasEmail: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', serviceProvider, true)?.textContent,
+            'organization-name': this.generalInfo['publisher']?.[0]?.name,
+            hasTelephone: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', serviceProvider, true)?.textContent,
+            // hasURL: this.select('./ows:ServiceContact/ows:ContactInfo/ows:OnlineResource/@xlink:href', serviceProvider, true)?.textContent
         };
+        this.generalInfo['contactPoint'] = contact;
 
         // store title and abstract from getCapabilities in generalInfo
         this.generalInfo['catalog'] = {

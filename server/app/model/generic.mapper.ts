@@ -60,6 +60,21 @@ export interface DateRange {
     gte?: Date,
     lte?: Date
 }
+export interface Contact {
+    fn: string,
+    hasAddress?: {
+        'country-name'?: string,
+        locality?: string,
+        'postal-code'?: string,
+        region?: string,
+        'street-address'?: string,
+    },
+    hasEmail?: string,
+    hasTelephone?: string,
+    hasUID?: string,
+    hasURL?: string,
+    'organization-name'?: string
+}
 
 
 export abstract class GenericMapper {
@@ -337,9 +352,9 @@ export abstract class GenericMapper {
         return this._getAccrualPeriodicity();
     }
 
-    abstract async _getContactPoint(): Promise<any>;
+    abstract async _getContactPoint(): Promise<Contact>;
 
-    async getContactPoint(): Promise<any>{
+    async getContactPoint(): Promise<Contact>{
         return await this._getContactPoint();
     }
 

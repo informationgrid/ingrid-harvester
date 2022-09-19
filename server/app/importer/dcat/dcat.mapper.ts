@@ -24,7 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Agent, DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
+import {Contact, DateRange, Distribution, GenericMapper, Person} from "../../model/generic.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -727,16 +727,24 @@ export class DcatMapper extends GenericMapper {
                     url = await UrlUtils.urlWithProtocolFor(requestConfig);
                 }
 
+                let infos: Contact = {
+                    fn: name?.textContent,
+                };                 
+
                 if (contact.getAttribute('uuid')) {
                     infos.hasUID = contact.getAttribute('uuid');
                 }
 
-                if (name) infos.fn = name.textContent;
                 if (org) infos['organization-name'] = org.textContent;
 
-                if (region) infos.region = region.textContent;
-                if (country) infos['country-name'] = country.textContent.trim();
-                if (postCode) infos['postal-code'] = postCode.textContent;
+                let address = {};
+                if (region) address['region'] = region.textContent;
+                if (country) address['country-name'] = country.textContent.trim();
+                if (postCode) address['postal-code'] = postCode.textContent;
+                if (Object.keys(address).length > 0) {
+                    infos.hasAddress = address;
+                }
+
                 if (email) infos.hasEmail = email.getAttribute('rdf:resource').replace('mailto:', '');
                 if (phone) infos.hasTelephone = phone.getAttribute('rdf:resource').replace('tel:', '');
                 if (url) infos.hasURL = url;
