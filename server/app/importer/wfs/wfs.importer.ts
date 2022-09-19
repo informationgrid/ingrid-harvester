@@ -251,6 +251,12 @@ export class WfsImporter implements Importer {
             hasTelephone: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', serviceProvider, true)?.textContent,
             // hasURL: this.select('./ows:ServiceContact/ows:ContactInfo/ows:OnlineResource/@xlink:href', serviceProvider, true)?.textContent
         };
+        // remove empty properties
+        Object.keys(contact.hasAddress).filter(k => contact.hasAddress[k] == null).forEach(k => delete contact.hasAddress[k]);
+        if (Object.keys(contact.hasAddress).length == 0) {
+            delete contact.hasAddress;
+        }
+        Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
         this.generalInfo['contactPoint'] = contact;
 
         // store title and abstract from getCapabilities in generalInfo
