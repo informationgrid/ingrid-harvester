@@ -178,7 +178,7 @@ export class CswMapper extends GenericMapper {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode[0].textContent);
                     url = await UrlUtils.urlWithProtocolFor(requestConfig);
                 }
-                if (url && !urls.includes(url)) {
+                if (url && !urls.some(alreadyUrl => alreadyUrl.accessURL == url)) {
                     const formatArray = protocolNode.length > 0 && protocolNode[0].textContent
                         ? [protocolNode[0].textContent]
                         : formats;
