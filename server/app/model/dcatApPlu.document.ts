@@ -249,9 +249,9 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional('dct:issued', mapper.getIssued())}
                 ${optional('dct:modified', mapper.getModifiedDate())}
                 ${optional('dct:relation', relation)}
-                ${optional('plu:pluPlanType', mapper.getPluPlanType())}
-                ${optional('plu:pluPlanTypeFine', mapper.getPluPlanTypeFine())}
-                ${optional('plu:pluProcedureType', mapper.getPluProcedureType())}
+                ${optional('plu:planType', mapper.getPluPlanType())}
+                ${optional('plu:planTypeFine', mapper.getPluPlanTypeFine())}
+                ${optional('plu:procedureType', mapper.getPluProcedureType())}
                 ${optional(DcatApPluDocument.xmlProcessStep, mapper.getPluProcessSteps())}
             </dcat:Dataset>
         </rdf:RDF>`;
@@ -276,7 +276,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
             ${optional('dct:issued', distribution.issued)}
             ${optional('dct:modified', distribution.modified)}
             ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period)}
-            ${optional('plu:pluDoctype', distribution.pluDoctype)}
+            ${optional('plu:doctype', distribution.pluDoctype)}
             ${optional('dct:title', distribution.title)}
         </dcat:Distribution>`;
     }
@@ -299,12 +299,12 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     }
 
     private static xmlProcessStep({ distributions, identifier, period, type }: ProcessStep): string {
-        return `<plu:PluProcessStep>
-            <plu:ProcessStepType>${type}</plu:ProcessStepType>
+        return `<plu:processStep>
+            <plu:processStepType>${type}</plu:processStepType>
             ${optional('dct:identifier', identifier)}
             ${optional(DcatApPluDocument.xmlDistribution, distributions)}
             ${optional(DcatApPluDocument.xmlPeriodOfTime, period)}
-        </plu:PluProcessStep>`;
+        </plu:processStep>`;
     }
 
     private static xmlRecord({ issued, modified, primaryTopic, title }: Record) {
