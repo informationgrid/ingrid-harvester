@@ -73,6 +73,76 @@ export const elasticsearchMapping = {
                 }
             }
         },
+        'planState': {
+            'type': 'keyword'
+        },
+        'planType': {
+            'type': 'keyword'
+        },
+        'planTypeFine': {
+            'type': 'keyword'
+        },
+        'procedureState': {
+            'type': 'keyword'
+        },
+        'procedureType': {
+            'type': 'keyword'
+        },
+        'procedureStartDate': {
+            'type': 'date'
+        },
+        'processSteps': {
+            'properties': {
+                'distributions': {
+                    'properties': {
+                        'id': {
+                            'type': 'keyword'
+                        },
+                        'title': {
+                            'type': 'text',
+                            'analyzer': 'decomp'
+                        },
+                        'description': {
+                            'type': 'text',
+                            'analyzer': 'decomp'
+                        },
+                        'format': {
+                            'type': 'keyword'
+                        },
+                        'accessURL': {
+                            'type': 'keyword'
+                        },
+                        'downloadURL': {
+                            'type': 'keyword'
+                        },
+                        'issued': {
+                            'type': 'date'
+                        },
+                        'modified': {
+                            'type': 'date'
+                        },
+                        'byteSize': {
+                            'type': 'long'
+                        },
+                        'period': {
+                            'type': 'date_range'
+                        },
+                        'pluDoctype': {
+                            'type': 'keyword'
+                        }
+                    }
+                },
+                'identifier': {
+                    'type': 'keyword'
+                },
+                'period': {
+                    'type': 'date_range'
+                },
+                'type': {
+                    'type': 'keyword'
+                }
+            }
+        },
         'creator': {
             'properties': {
                 'name': {
@@ -120,24 +190,26 @@ export const elasticsearchMapping = {
                     'type': 'keyword'
                 },
                 'organization-name': {
-                    'type': 'text',
-                    'fields': {
-                        'raw': {
+                    'type': 'keyword'
+                },
+                'hasAddress': {
+                    'properties': {
+                        'street-address': {
+                            'type': 'keyword'
+                        },
+                        'region': {
+                            'type': 'keyword'
+                        },
+                        'country-name': {
+                            'type': 'keyword'
+                        },
+                        'postal-code': {
+                            'type': 'keyword'
+                        },
+                        'locality': {
                             'type': 'keyword'
                         }
                     }
-                },
-                'street-address': {
-                    'type': 'keyword'
-                },
-                'region': {
-                    'type': 'keyword'
-                },
-                'country-name': {
-                    'type': 'keyword'
-                },
-                'postal-code': {
-                    'type': 'keyword'
                 },
                 'hasEmail': {
                     'type': 'keyword'
@@ -165,12 +237,6 @@ export const elasticsearchMapping = {
         'modified': {
             'type': 'date'
         },
-        'accrual_periodicity': {
-            'type': 'keyword'
-        },
-        'access_rights': {
-            'type': 'text'
-        },
         'distribution': {
             'properties': {
                 'id': {
@@ -190,6 +256,9 @@ export const elasticsearchMapping = {
                 'accessURL': {
                     'type': 'keyword'
                 },
+                'downloadURL': {
+                    'type': 'keyword'
+                },
                 'issued': {
                     'type': 'date'
                 },
@@ -199,10 +268,25 @@ export const elasticsearchMapping = {
                 'byteSize': {
                     'type': 'long'
                 },
-                'temporal': {
-                    "type": "date_range"
+                'period': {
+                    'type': 'date_range'
+                },
+                'pluDoctype': {
+                    'type': 'keyword'
                 }
             }
+        },
+        'centroid': {
+            'type': 'geo_point'
+        },
+        'spatial': {
+            'type': 'geo_shape'
+        },
+        'spatial_text': {
+            'type': 'text'
+        },
+        'temporal': {
+            "type": "date_range"
         },
         'extras': {
             'properties': {
@@ -259,38 +343,6 @@ export const elasticsearchMapping = {
                         }
                     }
                 },
-                'license': {
-                    'properties': {
-                        'id': {
-                            'type': 'keyword',
-                            'fields': {
-                                'analyzed': {
-                                    'type': 'text'
-                                }
-                            }
-                        },
-                        'title': {
-                            'type': 'keyword',
-                            'fields': {
-                                'analyzed': {
-                                    'type': 'text'
-                                }
-                            }
-                        },
-                        'url': {
-                            'type': 'keyword'
-                        }
-                    }
-                },
-                'spatial': {
-                    'type': 'geo_shape'
-                },
-                'spatial_text': {
-                    'type': 'text'
-                },
-                'temporal': {
-                    "type": "date_range"
-                },
                 'groups': {
                     'type': 'keyword'
                 },
@@ -301,19 +353,11 @@ export const elasticsearchMapping = {
                     'type': 'text',
                     'index': false
                 },
-                'transformed_data_dcatapplu': {
-                    'type': 'text',
-                    'index': false
-                },
-                'mfund_fkz': {
-                    'type': 'keyword'
-                },
-                'mfund_project_title': {
-                    'type': 'text',
-                    'analyzer': 'decomp',
-                    'fields': {
-                        'raw': {
-                            'type': 'keyword'
+                'transformed_data': {
+                    'properties': {
+                        'dcat-ap-plu': {
+                            'type': 'text',
+                            'index': false
                         }
                     }
                 },

@@ -36,10 +36,13 @@ export class IndexDocument {
             // plan and procedure information
             planState: mapper.getPluPlanState(),
             planType: mapper.getPluPlanType(),
+            planTypeFine: mapper.getPluPlanTypeFine(),
             procedureState: mapper.getPluProcedureState(),
             procedureStartDate: mapper.getPluProcedureStartDate(),
+            procedureType: mapper.getPluProcedureType(),
             processSteps: mapper.getPluProcessSteps(),
             // spatial and temporal features
+            centroid: mapper.getCentroid(),
             spatial: mapper.getSpatial(),
             spatial_text: mapper.getSpatialText(),
             temporal: mapper.getTemporal(),
