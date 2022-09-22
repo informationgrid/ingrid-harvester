@@ -229,7 +229,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
             </dcat:Catalog>
             <dcat:Dataset>
-                ${DcatApPluDocument.xmlContact(await mapper.getContactPoint())}
+                ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher[0].name)}
                 <dct:description xml:lang="${catalog.language}">${mapper.getDescription()}</dct:description>
                 <dct:identifier>${mapper.getGeneratedId()}</dct:identifier>
                 <dct:title xml:lang="${catalog.language}">${mapper.getTitle()}</dct:title>
@@ -245,6 +245,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                     </dcat:Location>
                 </dct:spatial>
                 ${DcatApPluDocument.xmlFoafAgent('dct:publisher', (await mapper.getPublisher())[0])}
+                ${optional('dcatde:maintainer', maintainers?.[0])}
+                ${optional('dct:contributor', contributors?.[0])}
                 ${optional(DcatApPluDocument.xmlDistribution, await mapper.getDistributions())}
                 ${optional('dct:issued', mapper.getIssued())}
                 ${optional('dct:modified', mapper.getModifiedDate())}
@@ -318,12 +320,12 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         </dcat:record>`;
     }
 
-    private static xmlContact(contact: Contact): string {
+    private static xmlContact(contact: Contact, backupFn: string): string {
         // if fn is not set, use orgName instead; in this case, don't repeat orgName in an extra element
         let useFn = contact.fn && !['-'].includes(contact.fn);
         return `<dcat:contactPoint>
             <vcard:Organization>
-                <vcard:fn>${useFn ? contact.fn : contact["organization-name"]}</vcard:fn>
+                <vcard:fn>${useFn ? contact.fn : contact["organization-name"] ?? backupFn}</vcard:fn>
                 ${optional('vcard:organization-name', useFn ? contact["organization-name"] : null)}
                 ${optional('vcard:hasAddress',
                     optional('vcard:postal-code', contact.hasAddress?.["postal-code"]) +

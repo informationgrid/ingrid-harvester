@@ -360,7 +360,7 @@ export abstract class GenericMapper {
 
     abstract _getCreator(): Person[] | Person;
 
-    getCreator(): Person[] | Person{
+    getCreator(): Agent[] | Agent{
         return this._getCreator();
     }
 
@@ -422,9 +422,9 @@ export abstract class GenericMapper {
         return this.skipped;
     }
 
-    abstract _getOriginator(): Person[]|Organization[];
+    abstract _getOriginator(): Agent[];
 
-    getOriginator(): Person[]|Organization[]{
+    getOriginator(): Agent[]{
         return this._getOriginator();
     }
 
