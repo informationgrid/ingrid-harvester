@@ -37,8 +37,8 @@ import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {Summary} from "../../model/summary";
-import centroid from '@turf/centroid';
 import { pluPlanState, pluPlantype, pluProcedureState } from "../../model/dcatApPlu.document";
+import { GeoJsonUtils } from "../../utils/geojson.utils";
 
 let xpath = require('xpath');
 
@@ -582,11 +582,7 @@ export class CswMapper extends GenericMapper {
 
     _getCentroid(): number[] {
         let spatial = this._getSpatial();
-        // turf/centroid does not support envelope, so we turn it into a linestring which has the same centroid
-        if (spatial.type == 'Envelope') {
-            spatial.type = 'LineString';
-        }
-        return centroid(spatial).geometry.coordinates;
+        return GeoJsonUtils.getCentroid(spatial)?.geometry.coordinates;
     }
 
     _getTemporal(): DateRange[] {

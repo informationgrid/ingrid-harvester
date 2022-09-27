@@ -28,7 +28,7 @@
 import centroid from '@turf/centroid';
 import rewind from '@turf/rewind';
 import * as xpath from 'xpath';
-import { AllGeoJSON } from "@turf/helpers";
+import { AllGeoJSON, GeometryCollection } from "@turf/helpers";
 import { XPathUtils } from '../utils/xpath.utils';
 const deepEqual = require('deep-equal');
 const proj4 = require('proj4');
@@ -71,6 +71,20 @@ export class GeoJsonUtils {
                 'coordinates': [[west, north], [east, south]]
             };
         }
+    }
+
+    static getCentroid = (spatial: AllGeoJSON) => {
+        if (!spatial) {
+            return undefined;
+        }
+        // turf/centroid does not support envelope, so we turn it into a linestring which has the same centroid
+        if (spatial.type == 'Envelope') {
+            spatial.type = 'LineString';
+        }
+        if (spatial.type == 'GeometryCollection') {
+            (<GeometryCollection>spatial).geometries.filter((geometry: AllGeoJSON) => geometry.type == 'Envelope').forEach((geometry: AllGeoJSON) => geometry.type = 'LineString');
+        }
+        return centroid(spatial);
     }
 
     parseCoords = (s, opts: { crs?: string, stride?: number } = { crs: null, stride: 2 }, ctx = { srsDimension: null }) => {

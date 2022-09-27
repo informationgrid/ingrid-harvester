@@ -35,8 +35,8 @@ import {WfsSettings} from './wfs.settings';
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {Summary} from "../../model/summary";
-import centroid from '@turf/centroid';
 import { pluDocType, pluPlanState, pluPlantype, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../../model/dcatApPlu.document";
+import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from "../../utils/xpath.utils";
 
 export class WfsMapper extends GenericMapper {
@@ -451,7 +451,7 @@ export class WfsMapper extends GenericMapper {
 
     _getCentroid(): number[] {
         let spatial = this._getSpatial() ?? this._getBoundingBox();
-        return spatial ? centroid(spatial).geometry.coordinates : undefined;
+        return GeoJsonUtils.getCentroid(spatial)?.geometry.coordinates;
     }
 
     // TODO
