@@ -32,6 +32,7 @@ export type CswSettings = {
             title: string
         },
     },
+    resultType?: "hits" | "results",
     pluPlanState?: string,
     getRecordsUrl: string,
     eitherKeywords: string[],

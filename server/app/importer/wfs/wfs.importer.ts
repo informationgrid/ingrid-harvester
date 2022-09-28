@@ -275,8 +275,7 @@ export class WfsImporter implements Importer {
                 // TODO for v2.0.0, the request will only return accurate numbers if used with a "resultType=hits" query ("unknown" otherwise)
                 // TODO so, before a "real" GetFeature request we should send one to determine metadataset size
                 // this.totalFeatures = resultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures');
-                let hitsSettings: WfsSettings = { ...this.settings, resultType: 'hits' };
-                let hitsRequestConfig = WfsImporter.createRequestConfig(hitsSettings);
+                let hitsRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resultType: 'hits' });
                 let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
                 let hitsResponse = await hitsRequestDelegate.doRequest();
                 let hitsResponseDom = new DomParser().parseFromString(hitsResponse);

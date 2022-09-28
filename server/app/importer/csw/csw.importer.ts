@@ -70,7 +70,8 @@ export class CswImporter implements Importer {
         ...DefaultXpathSettings,
         getRecordsUrl: '',
         eitherKeywords: [],
-        httpMethod: 'GET'
+        httpMethod: 'GET',
+        resultType: 'results'
     };
 
     private readonly summary: CswSummary;
@@ -367,7 +368,7 @@ export class CswImporter implements Importer {
                             xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
                             service="CSW"
                             version="2.0.2"
-                            resultType="results"
+                            resultType="${settings.resultType}"
                             outputFormat="application/xml"
                             outputSchema="http://www.isotc211.org/2005/gmd"
                             startPosition="${settings.startPosition}"
@@ -390,7 +391,7 @@ export class CswImporter implements Importer {
                 request: request,
                 SERVICE: 'CSW',
                 VERSION: '2.0.2',
-                resultType: 'results',
+                resultType: settings.resultType,
                 outputFormat: 'application/xml',
                 outputSchema: 'http://www.isotc211.org/2005/gmd',
                 typeNames: 'gmd:MD_Metadata',
