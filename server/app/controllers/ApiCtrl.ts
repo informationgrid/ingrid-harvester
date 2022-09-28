@@ -48,8 +48,8 @@ export class ApiCtrl {
     }
 
     @Post('/import/:id')
-    importFromHarvester(@PathParams('id') id: number, @QueryParams('isIncremental') isIncremental: boolean) {
-        this.importSocketService.runImport(+id, isIncremental);
+    importFromHarvester(@PathParams('id') id: number, @QueryParams('isIncremental') isIncremental: boolean, @QueryParams('isConcurrent') isConcurrent: boolean) {
+        this.importSocketService.runImport(+id, isIncremental, isConcurrent);
     }
 
     @Post('/importAll')

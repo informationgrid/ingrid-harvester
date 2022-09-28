@@ -41,6 +41,7 @@ export type ImporterSettings = {
     dryRun?: boolean,
     id?: number,
     isIncremental: boolean,
+    isConcurrent: boolean,
     maxRecords?: number,
     proxy?: string,
     showCompleteSummaryInfo?: boolean;

@@ -130,9 +130,9 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     });
   }
 
-  startImport(id: number, isIncremental: boolean = false) {
+  startImport(id: number, isIncremental: boolean = false, isConcurrent: boolean = false) {
 
-    this.harvesterService.runImport(id, isIncremental).subscribe();
+    this.harvesterService.runImport(id, isIncremental, isConcurrent).subscribe();
 
     this.snackBar.open('Import gestartet', null, {
       duration: 3 * 1000

@@ -41,7 +41,8 @@ export const DefaultImporterSettings: ImporterSettings = {
     rules: {
             containsDocumentsWithData: false
     },
-    isIncremental: false
+    isIncremental: false,
+    isConcurrent: false
 };
 
 export interface Importer {

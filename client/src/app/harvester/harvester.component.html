@@ -75,6 +75,18 @@
                     <mat-icon class="inline-valigned">import_export</mat-icon>
                     Import starten (inkrementell)
                 </button>
+                <button mat-button (click)="startImport(harvester.id, false, true)"
+                        data-test="import"
+                        [disabled]="importDetail[harvester.id]?.complete === false">
+                    <mat-icon class="inline-valigned">import_export</mat-icon>
+                    Import starten [concurrent]
+                </button>
+                <button mat-button (click)="startImport(harvester.id, true, true)"
+                        data-test="import"
+                        [disabled]="importDetail[harvester.id]?.complete === false">
+                    <mat-icon class="inline-valigned">import_export</mat-icon>
+                    Import starten [concurrent] (inkrementell)
+                </button>
               <button mat-button (click)="showHistory(harvester)" data-test="history">
                 <mat-icon class="inline-valigned">history</mat-icon>
                 Historie
