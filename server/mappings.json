@@ -37,7 +37,9 @@
       "www:download-1.0-http--download",
       "download",
       "WWW:LINK-1.0-http--download",
-      "WWW:DOWNLOAD"
+      "WWW:DOWNLOAD",
+      "http-get",
+      "onLine"
     ],
     "DBF": [
       "http://publications.europa.eu/resource/authority/file-type/dbf"
@@ -71,7 +73,9 @@
       "application/gml+xml",
       "gml+xml",
       "XML/GML",
-      "[gml]"
+      "[gml]",
+      "Planned Land Use GML Application Schema",
+      "Land Use GML Application Schema"
     ],
     "GTFS": [
       "gtfs"
@@ -120,7 +124,8 @@
       "interner Code:Radolan"
     ],
     "RSS": [
-      "http://publications.europa.eu/resource/authority/file-type/rss"
+      "http://publications.europa.eu/resource/authority/file-type/rss",
+      "WWW:LINK-1.0-http--rss"
     ],
     "Shape": [
       "http://publications.europa.eu/resource/authority/file-type/shp",
@@ -143,7 +148,9 @@
       "ESRI Shapefile PolylineM",
       "Esri-Shapefile",
       "shape-Datei",
-      "Shape (ESRI)"
+      "Shape (ESRI)",
+      "Shape-Dateien",
+      "ESRI-Shape"
     ],
     "SOAP": [
       "xml/soap"
@@ -203,7 +210,8 @@
       "OGC-WMS Web Map Service",
       "OGC:WMS-http-get-capabilities",
       "wms_srvc",
-      "Web Map Service"
+      "Web Map Service",
+      "OGC:WMS-http-get-map"
     ],
     "WWW": [
       "http",
