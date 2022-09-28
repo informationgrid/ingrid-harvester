@@ -70,12 +70,12 @@
             <mat-list-item>
                 <mat-icon mat-list-icon>access_time</mat-icon>
                 <h4 mat-line>Letzte Ausführung</h4>
-                <p mat-line data-test="last-execution"> {{data.lastExecution | date:'short'}} </p>
+                <p mat-line data-test="last-execution"> {{data.lastExecution | date:'short'}} {{ data.summary?.isIncremental ? '(inkrementell)' : '' }}</p>
             </mat-list-item>
             <mat-list-item>
                 <mat-icon mat-list-icon>timer</mat-icon>
                 <h4 mat-line>Dauer der Ausführung</h4>
-                <p mat-line data-test="duration"> {{data.duration}}s </p>
+                <p mat-line data-test="duration"> {{data.duration * 1000 | date:'HH:mm:ss':'UTC'}}</p>
             </mat-list-item>
             <mat-list-item >
                 <mat-icon mat-list-icon>snooze</mat-icon>
