@@ -57,7 +57,7 @@ export class ImportSocketService {
 
     @Input('runImport')
     @Emit('/log')
-    runImport(id: number): Promise<null> {
+    runImport(id: number, isIncremental?: boolean): Promise<null> {
         return new Promise(resolve => {
 
             let lastExecution = new Date();
@@ -65,7 +65,7 @@ export class ImportSocketService {
             let configData = ConfigService.get().filter(config => config.id === id)[0];
             configData.deduplicationAlias = configData.index + 'dedup';
 
-            let configHarvester = {...configData, ...configGeneral};
+            let configHarvester = {...configData, ...configGeneral, isIncremental};
 
             let importer = ImporterFactory.get(configHarvester);
             this.log.info('>> Running importer: ' + configHarvester.description);
@@ -106,7 +106,7 @@ export class ImportSocketService {
                             if (summaryLastRun) {
                                 text += `\n\n`
                                     + `Last Run (`+summaryLastRun.lastExecution+`):\n`
-                                    + this.summaryToString(summaryLastRun.summary);
+                                    + summaryLastRun.summary.toString();
                             }
                             MailServer.getInstance().send(subject, text);
                         }
@@ -123,22 +123,5 @@ export class ImportSocketService {
             }
 
         });
-    }
-
-    summaryToString(summary) : string {
-        let result =`---------------------------------------------------------\n`;
-        result += summary.headerTitle+"\n";
-        result += `---------------------------------------------------------\n`;
-        result += `Number of records: ${summary.numDocs}\n`;
-        result += `Skipped records: ${summary.skippedDocs.length}\n`;
-
-        result += `Record-Errors: ${summary.numErrors}\n`;
-        result += `Warnings: ${summary.warnings.length}\n`;
-
-        result += `App-Errors: ${summary.appErrors.length}\n`;
-
-        result += `Elasticsearch-Errors: ${summary.elasticErrors.length}\n`;
-
-        return result;
     }
 }

@@ -39,6 +39,8 @@ export class Summary {
 
     appErrors: string[] = [];
 
+    isIncremental: boolean;
+
     [x: string]: any;
 
     private readonly headerTitle: string;
@@ -48,12 +50,14 @@ export class Summary {
         if (settings.showCompleteSummaryInfo) {
             this.MAX_ITEMS_TO_SHOW = 1000000;
         }
+        this.isIncremental = settings.isIncremental;
     }
 
     print(logger) {
         logger.info(`---------------------------------------------------------`);
         logger.info(this.headerTitle);
         logger.info(`---------------------------------------------------------`);
+        logger.info(`Harvest type: ${this.isIncremental ? 'incremental' : 'full'}`);
         logger.info(`Number of records: ${this.numDocs}`);
         logger.info(`Skipped records: ${this.skippedDocs.length}`);
         this.logArray(logger, this.skippedDocs);
@@ -75,6 +79,7 @@ export class Summary {
         let result =`---------------------------------------------------------\n`;
         result += this.headerTitle+"\n";
         result += `---------------------------------------------------------\n`;
+        result += `Harvest type: ${this.isIncremental ? 'incremental' : 'full'}`;
         result += `Number of records: ${this.numDocs}\n`;
         result += `Skipped records: ${this.skippedDocs.length}\n`;
 

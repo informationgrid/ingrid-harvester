@@ -40,7 +40,8 @@ export const DefaultImporterSettings: ImporterSettings = {
     rejectUnauthorizedSSL: true,
     rules: {
             containsDocumentsWithData: false
-    }
+    },
+    isIncremental: false
 };
 
 export interface Importer {

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {Authenticated, BodyParams, Controller, Get, PathParams, Post} from '@tsed/common';
+import {Authenticated, BodyParams, Controller, Get, PathParams, Post, QueryParams} from '@tsed/common';
 import {ConfigService} from '../services/config/ConfigService';
 import {ImportSocketService} from '../sockets/import.socket.service';
 import {SummaryService} from '../services/config/SummaryService';
@@ -48,8 +48,8 @@ export class ApiCtrl {
     }
 
     @Post('/import/:id')
-    importFromHarvester(@PathParams('id') id: number) {
-        this.importSocketService.runImport(+id);
+    importFromHarvester(@PathParams('id') id: number, @QueryParams('isIncremental') isIncremental: boolean) {
+        this.importSocketService.runImport(+id, isIncremental);
     }
 
     @Post('/importAll')

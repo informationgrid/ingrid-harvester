@@ -40,6 +40,7 @@ export type ImporterSettings = {
     disable?: boolean,
     dryRun?: boolean,
     id?: number,
+    isIncremental: boolean,
     maxRecords?: number,
     proxy?: string,
     showCompleteSummaryInfo?: boolean;

@@ -55,11 +55,10 @@ export class HarvesterService {
 
   }
 
-  runImport(id: number): Observable<void> {
+  runImport(id: number, isIncremental?: boolean): Observable<void> {
     return id === null
       ? this.http.post<void>('rest/api/importAll', null)
-      : this.http.post<void>('rest/api/import/' + id, null);
-
+      : this.http.post<void>(`rest/api/import/${id}?isIncremental=${isIncremental}`, null);
   }
 
   getLastLogs(): Observable<ImportLogMessage[]> {

@@ -35,6 +35,7 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DefaultXpathSettings, CswSettings} from './csw.settings';
 import {FilterUtils} from "../../utils/filter.utils";
+import { SummaryService } from '../../services/config/SummaryService';
 
 const fs = require('fs');
 const merge = require('lodash/merge');
@@ -87,6 +88,13 @@ export class CswImporter implements Importer {
         // merge default settings with configured ones
         settings = merge(CswImporter.defaultSettings, settings);
 
+        // if we are looking for incremental updates, add a date filter to the existing record filter
+        if (settings.isIncremental) {
+            let sumser: SummaryService = new SummaryService();
+            let summary: ImportLogMessage = sumser.get(settings.id);
+            settings.recordFilter = CswImporter.addModifiedFilter(settings.recordFilter, summary.lastExecution);
+        }
+
         // TODO check settings for "//" in xpaths and disallow them for performance reasons
         // TODO also disallow setting them in the UI
 
@@ -103,6 +111,20 @@ export class CswImporter implements Importer {
         this.summary = new CswSummary(settings);
 
         this.elastic = new ElasticSearchUtils(settings, this.summary);
+    }
+
+    static addModifiedFilter(recordFilter: string, lastRunDate: Date): string {
+        let incrementalFilter = new DomParser().parseFromString(`<ogc:PropertyIsGreaterThanOrEqualTo><ogc:PropertyName>Modified</ogc:PropertyName><ogc:Literal>${lastRunDate.toISOString()}</ogc:Literal></ogc:PropertyIsGreaterThanOrEqualTo>`);
+        if (recordFilter != '') {
+            recordFilter = recordFilter.replace('<ogc:Filter>', '<ogc:And>');
+            recordFilter = recordFilter.replace('</ogc:Filter>', '</ogc:And>');
+            let andElem = new DomParser().parseFromString(recordFilter);
+            andElem.documentElement.appendChild(incrementalFilter);
+            incrementalFilter = andElem;
+        }
+        let modifiedFilter = new DomParser().parseFromString('<ogc:Filter/>');
+        modifiedFilter.documentElement.appendChild(incrementalFilter);
+        return modifiedFilter.toString().replace(' xmlns:ogc=""', '');
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
