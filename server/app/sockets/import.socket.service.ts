@@ -57,7 +57,7 @@ export class ImportSocketService {
 
     @Input('runImport')
     @Emit('/log')
-    runImport(id: number, isIncremental?: boolean): Promise<null> {
+    runImport(id: number, isIncremental?: boolean): Promise<void> {
         return new Promise(resolve => {
 
             let lastExecution = new Date();

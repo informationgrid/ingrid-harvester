@@ -134,7 +134,7 @@ export abstract class GenericMapper {
         return this._getDescription();
     }
 
-    abstract async _getPublisher(): Promise<Person[]|Organization[]>;
+    abstract _getPublisher(): Promise<Person[]|Organization[]>;
 
     async getPublisher(): Promise<Person[]|Organization[]>{
         return await this._getPublisher();
@@ -158,7 +158,8 @@ export abstract class GenericMapper {
         return this._getAccessRights();
     }
 
-    abstract async _getDistributions(): Promise<Distribution[]>;
+    abstract _getDistributions(): Promise<Distribution[]>;
+
     async getDistributions(): Promise<Distribution[]>{
         let distributions = await this._getDistributions();
         distributions.forEach(dist => {
@@ -320,7 +321,7 @@ export abstract class GenericMapper {
         return this._getMFundProjectTitle();
     }
 
-    abstract async _getDisplayContacts(): Promise<Organization[] | Person[]>;
+    abstract _getDisplayContacts(): Promise<Organization[] | Person[]>;
 
     async getDisplayContacts(): Promise<Organization[] | Person[]>{
         return await this._getDisplayContacts();
@@ -352,7 +353,7 @@ export abstract class GenericMapper {
         return this._getAccrualPeriodicity();
     }
 
-    abstract async _getContactPoint(): Promise<Contact>;
+    abstract _getContactPoint(): Promise<Contact>;
 
     async getContactPoint(): Promise<Contact>{
         return await this._getContactPoint();
@@ -428,7 +429,7 @@ export abstract class GenericMapper {
         return this._getOriginator();
     }
 
-    abstract async _getLicense(): Promise<License>;
+    abstract _getLicense(): Promise<License>;
 
     async getLicense(): Promise<License>{
         return await this._getLicense();
@@ -466,7 +467,7 @@ export abstract class GenericMapper {
         return this._getCentroid();
     }
 
-    abstract async _getCatalog(): Promise<Catalog>;
+    abstract _getCatalog(): Promise<Catalog>;
 
     async getCatalog(): Promise<Catalog> {
         return this._getCatalog();
