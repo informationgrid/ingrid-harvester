@@ -43,6 +43,7 @@
     "method-override": "^3.0.0",
     "moment": "^2.24.0",
     "nodemailer": "^6.4.0",
+    "p-limit": "^4.0.0",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "proj4": "^2.8.0",

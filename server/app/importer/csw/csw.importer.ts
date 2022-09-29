@@ -225,8 +225,11 @@ export class CswImporter implements Importer {
             delegates.push(new RequestDelegate(requestConfig));
         }
         // 2) run in parallel
-        // TODO limit how many run at the same time
-        await Promise.allSettled(delegates.map(delegate => this.handleHarvest(delegate)));
+        // TODO ED:2022-09-28: externalize maxConcurrent
+        let maxConcurrent = 4;
+        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
+        const limit = pLimit(maxConcurrent);
+        await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
     }
 
     async harvestSequentially(): Promise<void> {
