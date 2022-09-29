@@ -219,17 +219,14 @@ export class CswImporter implements Importer {
         this.totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
 
         // 1) create paged request delegates
-        let handlers: Promise<void>[] = [];
+        let delegates = [];
         for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords; startPosition += this.settings.maxRecords) {
             let requestConfig = CswImporter.createRequestConfig({ ...this.settings, startPosition });
-            let delegate = new RequestDelegate(requestConfig);
-            handlers.push(this.handleHarvest(delegate));
+            delegates.push(new RequestDelegate(requestConfig));
         }
         // 2) run in parallel
         // TODO limit how many run at the same time
-        // let pro = await Promise.allSettled(delegates.map(delegate => this.handleHarvest(delegate)));
-        await Promise.allSettled(handlers).then(result => console.log('done: ' + result));
-
+        await Promise.allSettled(delegates.map(delegate => this.handleHarvest(delegate)));
     }
 
     async harvestSequentially(): Promise<void> {
