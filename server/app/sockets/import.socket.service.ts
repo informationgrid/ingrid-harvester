@@ -57,7 +57,7 @@ export class ImportSocketService {
 
     @Input('runImport')
     @Emit('/log')
-    runImport(id: number, isIncremental?: boolean, isConcurrent?: boolean): Promise<void> {
+    runImport(id: number, isIncremental?: boolean): Promise<void> {
         return new Promise(resolve => {
 
             let lastExecution = new Date();
@@ -65,7 +65,7 @@ export class ImportSocketService {
             let configData = ConfigService.get().filter(config => config.id === id)[0];
             configData.deduplicationAlias = configData.index + 'dedup';
 
-            let configHarvester = {...configData, ...configGeneral, isIncremental, isConcurrent};
+            let configHarvester = {...configData, ...configGeneral, isIncremental};
 
             let importer = ImporterFactory.get(configHarvester);
             this.log.info('>> Running importer: ' + configHarvester.description);
