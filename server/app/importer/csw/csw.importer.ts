@@ -376,7 +376,7 @@ export class CswImporter implements Importer {
                     <Query typeNames="gmd:MD_Metadata">
                         <ElementSetName typeNames="">full</ElementSetName>
                         ${settings.recordFilter ? `
-                        <Constraint version=\"1.1.0\">
+                        <Constraint version="1.1.0">
                             ${settings.recordFilter}
                         </Constraint>` : ''}
                     </Query>
