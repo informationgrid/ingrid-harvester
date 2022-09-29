@@ -6,17 +6,18 @@ services:
     environment:
       - cluster.name=mcloud
       #      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+      - xpack.security.enabled=true
+      - discovery.type=single-node
       - network.host=0.0.0.0
       - network.publish_host=127.0.0.1
     volumes:
       - esdata:/usr/share/elasticsearch/data
     restart: unless-stopped
-    # ports:
-    #   - 9200:9200
-    #   - 9300:9300
-    networks: 
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
       - testnetwork
 
   mcloud:
@@ -31,8 +32,6 @@ services:
       - 8090:8090
     working_dir: /opt/mcloud
     command: sh entrypoint.sh
-    links:
-        - elastic
     depends_on:
         - elastic
     networks:
