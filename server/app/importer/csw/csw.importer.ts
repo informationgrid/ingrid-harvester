@@ -181,10 +181,12 @@ export class CswImporter implements Importer {
             title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
         };
 
-        if (this.settings.isConcurrent) {
+        if (this.settings.maxConcurrent > 1) {
             await this.harvestConcurrently();
         }
         else {
+            // this is only here for sentimental reasons;
+            // harvestConcurrently() also supports this.settings.maxConcurrent=1
             await this.harvestSequentially();
         }
 
@@ -212,11 +214,14 @@ export class CswImporter implements Importer {
     async harvestConcurrently(): Promise<void> {
         // collect number of totalRecords up front, so we can harvest concurrently
         let hitsRequestConfig = CswImporter.createRequestConfig({ ...this.settings, resultType: 'hits' });
-        let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig, CswImporter.createPaging(this.settings));
+        let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
         let hitsResponse = await hitsRequestDelegate.doRequest();
         let hitsResponseDom = new DomParser().parseFromString(hitsResponse);
         let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(CswMapper.CSW, 'SearchResults')[0];
         this.totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
+        if (log.isInfoEnabled()) {
+            log.info(`Finished getting number of records: ${this.totalRecords}`);
+        }
 
         // 1) create paged request delegates
         let delegates = [];
@@ -226,9 +231,8 @@ export class CswImporter implements Importer {
         }
         // 2) run in parallel
         // TODO ED:2022-09-28: externalize maxConcurrent
-        let maxConcurrent = 4;
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
-        const limit = pLimit(maxConcurrent);
+        const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
     }
 
