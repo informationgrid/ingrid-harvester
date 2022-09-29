@@ -242,7 +242,7 @@ export class UrlCheckService {
             number_of_shards: this.generalSettings.numberOfShards,
             number_of_replicas: this.generalSettings.numberOfReplicas
         }
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.isIndexPresent(this.indexName).then((isPresent) => {
 
                 if (!isPresent) {

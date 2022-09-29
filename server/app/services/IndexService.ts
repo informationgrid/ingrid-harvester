@@ -23,7 +23,7 @@
 
 import {Service} from '@tsed/di';
 import {ConfigService} from './config/ConfigService';
-import {ElasticSearchUtils} from '../utils/elastic.utils';
+import {BulkResponse, ElasticSearchUtils} from '../utils/elastic.utils';
 import {ElasticSettings} from '../utils/elastic.setting';
 import {Summary} from '../model/summary';
 import {Index} from '@shared/index.model';
@@ -162,7 +162,7 @@ export class IndexService {
         await this.elasticUtils.prepareIndexWithName(json.index, json.mappings, json.settings);
         let bulkData = [];
         let type = Object.keys(json.mappings)[0];
-        let promise = new Promise(resolve => {
+        let promise = new Promise<void | BulkResponse>(resolve => {
             resolve()
         });
         json.data.forEach(entry => {

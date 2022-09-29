@@ -112,7 +112,7 @@ export class ElasticSearchUtils {
      * @param settings
      */
     prepareIndexWithName(indexName: string, mapping, settings) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.client.indices.create({index: indexName, waitForActiveShards: '1', body: settings})
                 .then(() => {
                     let type =  Object.keys(mapping)[0];

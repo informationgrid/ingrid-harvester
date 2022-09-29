@@ -166,7 +166,7 @@ export class SparqlImporter implements Importer {
             }
 
             const client = new SimpleClient({endpointUrl, fetch});
-            return new Promise((resolve, reject) => client.query.select(this.settings.query).then(result => {
+            return new Promise<void>((resolve, reject) => client.query.select(this.settings.query).then(result => {
                 let hadError = result.status >= 400;
 
                 result.body.on('data', data => {

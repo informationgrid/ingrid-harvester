@@ -121,7 +121,7 @@ export class StatisticUtils {
             number_of_shards: this.settings.numberOfShards,
             number_of_replicas: this.settings.numberOfReplicas
         }
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.isIndexPresent(this.indexName).then((isPresent) => {
 
                 if (!isPresent) {
