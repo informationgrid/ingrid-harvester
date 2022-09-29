@@ -168,36 +168,6 @@ export class CswImporter implements Importer {
     }
 
     async harvest(): Promise<void> {
-        if (this.settings.isConcurrent) {
-            return this.harvestConcurrently();
-        }
-        else {
-            return this.harvestSequentially();
-        }
-    }
-
-    async handleHarvest(delegate: RequestDelegate): Promise<void> {
-        log.debug('Requesting next records');
-        let response = await delegate.doRequest();
-        let harvestTime = new Date(Date.now());
-
-        let responseDom = new DomParser().parseFromString(response);
-        let resultsNode = responseDom.getElementsByTagNameNS(CswMapper.CSW, 'SearchResults')[0];
-        if (resultsNode) {
-            let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
-            // this.totalRecords = resultsNode.getAttribute('numberOfRecordsMatched');
-
-            log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
-            await this.extractRecords(response, harvestTime)
-        } else {
-            const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`;
-            log.error(message);
-            this.summary.appErrors.push(message);
-        }
-    }
-
-    async harvestConcurrently() {
-
         let capabilitiesRequestConfig = CswImporter.createRequestConfig({ ...this.settings, httpMethod: 'GET' }, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
         let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
@@ -211,6 +181,35 @@ export class CswImporter implements Importer {
             title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
         };
 
+        if (this.settings.isConcurrent) {
+            await this.harvestConcurrently();
+        }
+        else {
+            await this.harvestSequentially();
+        }
+
+        this.createDataServiceCoupling();
+    }
+
+    async handleHarvest(delegate: RequestDelegate): Promise<void> {
+        log.debug('Requesting next records');
+        let response = await delegate.doRequest();
+        let harvestTime = new Date(Date.now());
+
+        let responseDom = new DomParser().parseFromString(response);
+        let resultsNode = responseDom.getElementsByTagNameNS(CswMapper.CSW, 'SearchResults')[0];
+        if (resultsNode) {
+            let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
+            log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
+            await this.extractRecords(response, harvestTime)
+        } else {
+            const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`;
+            log.error(message);
+            this.summary.appErrors.push(message);
+        }
+    }
+
+    async harvestConcurrently(): Promise<void> {
         // collect number of totalRecords up front, so we can harvest concurrently
         let hitsRequestConfig = CswImporter.createRequestConfig({ ...this.settings, resultType: 'hits' });
         let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig, CswImporter.createPaging(this.settings));
@@ -219,8 +218,6 @@ export class CswImporter implements Importer {
         let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(CswMapper.CSW, 'SearchResults')[0];
         this.totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
 
-        // --------------
-        
         // 1) create paged request delegates
         let handlers: Promise<void>[] = [];
         for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords; startPosition += this.settings.maxRecords) {
@@ -233,25 +230,9 @@ export class CswImporter implements Importer {
         // let pro = await Promise.allSettled(delegates.map(delegate => this.handleHarvest(delegate)));
         await Promise.allSettled(handlers).then(result => console.log('done: ' + result));
 
-        // --------------
-        this.createDataServiceCoupling();
     }
 
-    async harvestSequentially() {
-
-        let capabilitiesRequestConfig = CswImporter.createRequestConfig({ ...this.settings, httpMethod: 'GET' }, 'GetCapabilities');
-        let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
-        let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
-        let capabilitiesResponseDom = new DomParser().parseFromString(capabilitiesResponse);
-
-        // // store catalog info from getCapabilities in generalInfo
-        this.generalInfo['catalog'] = {
-            description: CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
-            homepage: this.settings.getRecordsUrl,
-            publisher: [{ name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent }],
-            title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
-        };
-
+    async harvestSequentially(): Promise<void> {
         while (true) {
             log.debug('Requesting next records');
             let response = await this.requestDelegate.doRequest();
@@ -283,7 +264,6 @@ export class CswImporter implements Importer {
               */
             if (this.totalRecords < this.requestDelegate.getStartRecordIndex()) break;
         }
-        this.createDataServiceCoupling();
     }
 
     createDataServiceCoupling(){
