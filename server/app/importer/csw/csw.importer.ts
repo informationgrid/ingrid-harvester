@@ -37,9 +37,7 @@ import {DefaultXpathSettings, CswSettings} from './csw.settings';
 import {FilterUtils} from "../../utils/filter.utils";
 import { SummaryService } from '../../services/config/SummaryService';
 
-const fs = require('fs');
 const merge = require('lodash/merge');
-const xpath = require('xpath');
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -152,6 +150,7 @@ export class CswImporter implements Importer {
                     observer.complete();
 
                     // clean up index
+                    // TODO ED:2022-09-27: is this correct here?
                     this.elastic.deleteIndex(this.elastic.indexName);
                 }
             } catch (err) {
@@ -191,8 +190,9 @@ export class CswImporter implements Importer {
             if (resultsNode) {
                 let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
                 this.totalRecords = resultsNode.getAttribute('numberOfRecordsMatched');
-
-                log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
+                if (log.isDebugEnabled()) {
+                    log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
+                }
                 await this.extractRecords(response, harvestTime)
             } else {
                 const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`;
