@@ -212,7 +212,7 @@ export class CswImporter implements Importer {
 
     async harvestConcurrently(): Promise<void> {
         // collect number of totalRecords up front, so we can harvest concurrently
-        let hitsRequestConfig = CswImporter.createRequestConfig({ ...this.settings, resultType: 'hits' });
+        let hitsRequestConfig = CswImporter.createRequestConfig({ ...this.settings, resultType: 'hits', startPosition: 1, maxRecords: 1 });
         let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
         let hitsResponse = await hitsRequestDelegate.doRequest();
         let hitsResponseDom = new DomParser().parseFromString(hitsResponse);
