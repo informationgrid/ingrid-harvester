@@ -21,9 +21,10 @@
  * ==================================================
  */
 
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {ImportLogMessage} from "../../../../../server/app/model/import.result";
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-dialog-log',
@@ -32,7 +33,9 @@ import {ImportLogMessage} from "../../../../../server/app/model/import.result";
 })
 export class DialogLogComponent implements OnInit {
 
-  logText: string;
+  @ViewChild(CdkVirtualScrollViewport, {static: false})
+  viewPort: CdkVirtualScrollViewport;
+
   appErrors: string[] = [];
   elasticSearchErrors: string[] = [];
   appWarnings: string[][] = [];
@@ -42,7 +45,6 @@ export class DialogLogComponent implements OnInit {
     this.appErrors = message.summary.appErrors;
     this.elasticSearchErrors = message.summary.elasticErrors;
     this.appWarnings = message.summary.warnings;
-
   }
 
   ngOnInit() {
