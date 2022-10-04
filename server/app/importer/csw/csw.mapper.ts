@@ -37,7 +37,7 @@ import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {Summary} from "../../model/summary";
-import { pluPlanState, pluPlantype, pluProcedureState } from "../../model/dcatApPlu.document";
+import { pluPlanState, pluPlanType, pluProcedureState } from "../../model/dcatApPlu.document";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 
 let xpath = require('xpath');
@@ -895,30 +895,30 @@ export class CswMapper extends GenericMapper {
 
         // TODO especially in keywords - if set - there can be ambiguities, e.g. keycwords contain multiple determination words
         if (['bebauungsplan'].some(needle => haystack.includes(needle))) {
-            return pluPlantype.BEBAU_PLAN;
+            return pluPlanType.BEBAU_PLAN;
         }
         if (['flächennutzungsplan', 'fnp'].some(needle => haystack.includes(needle))) {
-            return pluPlantype.FLAECHENN_PLAN;
+            return pluPlanType.FLAECHENN_PLAN;
         }
         if ([].some(needle => haystack.includes(needle))) {
-            return pluPlantype.PLAN_FESTST_VERF;
+            return pluPlanType.PLAN_FESTST_VERF;
         }
         if ([].some(needle => haystack.includes(needle))) {
-            return pluPlantype.PW_BES_STAEDT_BAUR;
+            return pluPlanType.PW_BES_STAEDT_BAUR;
         }
         if ([].some(needle => haystack.includes(needle))) {
-            return pluPlantype.PW_LANDSCH_PLAN;
+            return pluPlanType.PW_LANDSCH_PLAN;
         }
         if ([].some(needle => haystack.includes(needle))) {
-            return pluPlantype.RAUM_ORDN_PLAN;
+            return pluPlanType.RAUM_ORDN_PLAN;
         }
         if (['raumordnungsverfahren'].some(needle => haystack.includes(needle))) {
-            return pluPlantype.RAUM_ORDN_VERF;
+            return pluPlanType.RAUM_ORDN_VERF;
         }
         if (['städtebauliche satzungen'].some(needle => haystack.includes(needle))) {
-            return pluPlantype.STAEDT_BAUL_SATZ;
+            return pluPlanType.STAEDT_BAUL_SATZ;
         }
-        return pluPlantype.UNBEKANNT;
+        return pluPlanType.UNBEKANNT;
     }
 
     _getPluProcedureState(): string {

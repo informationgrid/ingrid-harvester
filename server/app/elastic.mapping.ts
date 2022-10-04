@@ -127,7 +127,7 @@ export const elasticsearchMapping = {
                         'period': {
                             'type': 'date_range'
                         },
-                        'pluDoctype': {
+                        'pluDocType': {
                             'type': 'keyword'
                         }
                     }
@@ -271,7 +271,7 @@ export const elasticsearchMapping = {
                 'period': {
                     'type': 'date_range'
                 },
-                'pluDoctype': {
+                'pluDocType': {
                     'type': 'keyword'
                 }
             }

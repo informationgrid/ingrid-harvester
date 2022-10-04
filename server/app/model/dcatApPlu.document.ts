@@ -134,7 +134,7 @@ export const pluPlanState = {
 /**
  * Codeliste für Arten von raumbezogenen Planwerken (5.4)
  */
-export const pluPlantype = {
+export const pluPlanType = {
     BEBAU_PLAN: '1000',         // Bebauungsplan
     FLAECHENN_PLAN: '2000',     // Flächennutzungsplan
     STAEDT_BAUL_SATZ: '3000',   // städtebauliche Satzungen
@@ -278,7 +278,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
             ${optional('dct:issued', distribution.issued)}
             ${optional('dct:modified', distribution.modified)}
             ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period)}
-            ${optional('plu:doctype', distribution.pluDoctype)}
+            ${optional('plu:docType', distribution.pluDocType)}
             ${optional('dct:title', distribution.title)}
         </dcat:Distribution>`;
     }

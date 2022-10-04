@@ -35,7 +35,7 @@ import {WfsSettings} from './wfs.settings';
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {Summary} from "../../model/summary";
-import { pluDocType, pluPlanState, pluPlantype, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../../model/dcatApPlu.document";
+import { pluDocType, pluPlanState, pluPlanType, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../../model/dcatApPlu.document";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from "../../utils/xpath.utils";
 
@@ -124,7 +124,7 @@ export class WfsMapper extends GenericMapper {
                 accessURL: this.select('./xplan:referenzURL', distElem, true)?.textContent,
                 description: this.select('./xplan:art', distElem, true)?.textContent,
                 format: [this.select('./xplan:referenzMimeType', distElem, true)?.textContent],
-                pluDoctype: this._getPluDocType(this.select('./xplan:typ', distElem, true)?.textContent)
+                pluDocType: this._getPluDocType(this.select('./xplan:typ', distElem, true)?.textContent)
             };
             distributions.push(distribution);
         }
@@ -713,12 +713,12 @@ export class WfsMapper extends GenericMapper {
     _getPluPlanType(): string {
         let typename = this.select('./*', this.feature, true)?.localName;
         switch (typename) {
-            case 'BP_Plan': return pluPlantype.BEBAU_PLAN;
-            case 'FP_Plan': return pluPlantype.FLAECHENN_PLAN;
-            case 'RP_Plan': return pluPlantype.RAUM_ORDN_PLAN;
-            // case 'SO_Plan': return pluPlantype.UNBEKANNT;   // TODO
-            case 'sach_bplan': return pluPlantype.BEBAU_PLAN;   // TODO check
-            default: this.log.warn('No pluPlantype available for typename', typename); return pluPlantype.UNBEKANNT;
+            case 'BP_Plan': return pluPlanType.BEBAU_PLAN;
+            case 'FP_Plan': return pluPlanType.FLAECHENN_PLAN;
+            case 'RP_Plan': return pluPlanType.RAUM_ORDN_PLAN;
+            // case 'SO_Plan': return pluPlanType.UNBEKANNT;   // TODO
+            case 'sach_bplan': return pluPlanType.BEBAU_PLAN;   // TODO check
+            default: this.log.warn('No pluPlanType available for typename', typename); return pluPlanType.UNBEKANNT;
         }
     }
 

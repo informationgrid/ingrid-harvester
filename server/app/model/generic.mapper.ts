@@ -43,7 +43,7 @@ export interface Distribution {
     modified?: Date;
     byteSize?: number;
     period?: DateRange;
-    pluDoctype?: string;
+    pluDocType?: string;
 }
 export interface Agent {
     homepage?: string;
