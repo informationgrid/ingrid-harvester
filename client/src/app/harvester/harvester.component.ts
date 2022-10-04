@@ -109,11 +109,13 @@ export class HarvesterComponent implements OnInit, OnDestroy {
 
         // update schedule and set next execution time
         this.harvesterService.schedule(harvester.id, harvester.cron)
-          .subscribe(nextExecution => {
-            // update immediately next execution time which is only calculated to the server
-            const detailElement = this.importDetail[harvester.id];
-            if (detailElement) {
-              detailElement.nextExecution = nextExecution;
+          .subscribe(nextExecutions => {
+            for (let nextExecution of nextExecutions) {
+              // update immediately next execution time which is only calculated to the server
+              const detailElement = this.importDetail[harvester.id];
+              if (detailElement) {
+                detailElement.nextExecution = nextExecution;
+              }
             }
           }, (error: Error) => this.showError(error));
       }
