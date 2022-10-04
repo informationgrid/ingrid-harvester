@@ -91,7 +91,7 @@ export class CswImporter implements Importer {
         if (settings.isIncremental) {
             let sumser: SummaryService = new SummaryService();
             let summary: ImportLogMessage = sumser.get(settings.id);
-            settings.recordFilter = CswImporter.addModifiedFilter(settings.recordFilter, summary.lastExecution);
+            settings.recordFilter = CswImporter.addModifiedFilter(settings.recordFilter, new Date(summary.lastExecution));
         }
 
         // TODO check settings for "//" in xpaths and disallow them for performance reasons
