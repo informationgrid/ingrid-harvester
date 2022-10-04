@@ -137,7 +137,7 @@ export class CswImporter implements Importer {
             try {
                 await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
                 await this.harvest();
-                if(this.numIndexDocs > 0) {
+                if(this.numIndexDocs > 0 || this.summary.isIncremental) {
                     await this.elastic.sendBulkData(false);
                     await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
