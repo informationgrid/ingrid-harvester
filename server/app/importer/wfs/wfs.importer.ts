@@ -165,7 +165,7 @@ export class WfsImporter implements Importer {
                     if(this.summary.appErrors.length === 0) {
                         this.summary.appErrors.push('No Results');
                     }
-                    log.error('No results during WFS import - Keep old index');
+                    log.warn('No results during WFS import - Keep old index');
                     observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
                     observer.complete();
 
