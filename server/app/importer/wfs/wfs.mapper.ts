@@ -840,6 +840,10 @@ export class WfsMapper extends GenericMapper {
                     period = {};
                     this.log.warn(`Skipping ProcessStep.period: An end date (${endXpath}) was specified where a start date (${startXpath}) is missing:`, this.uuid);
                 }
+                else if (start > end) {
+                    this.log.warn(`Skipping ProcessStep.period: The start date (${start}) is later than the end date (${end}):`, this.uuid);
+                    return {};
+                }
                 period.lte = end;
             }
             return period;
