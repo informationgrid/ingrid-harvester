@@ -718,7 +718,7 @@ export class WfsMapper extends GenericMapper {
             case 'RP_Plan': return pluPlanType.RAUM_ORDN_PLAN;
             // case 'SO_Plan': return pluPlanType.UNBEKANNT;   // TODO
             case 'sach_bplan': return pluPlanType.BEBAU_PLAN;   // TODO check
-            default: this.log.warn('No pluPlanType available for typename', typename); return pluPlanType.UNBEKANNT;
+            default: this.log.debug('No pluPlanType available for typename', typename); return pluPlanType.UNBEKANNT;
         }
     }
 
@@ -756,7 +756,7 @@ export class WfsMapper extends GenericMapper {
                     // case 5000: return pluPlanTypeFine.; // AussenbereichsSatzung
                     // case 7000: return pluPlanTypeFine.; // OertlicheBauvorschrift
                     // case 9999: return pluPlanTypeFine.; // Sonstiges
-                    default: this.log.warn('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
+                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
                 }
             case 'FP_Plan':
                 switch(planart) {
@@ -766,7 +766,7 @@ export class WfsMapper extends GenericMapper {
                     // case 4000: return pluPlanTypeFine.; // FPlanRegPlan
                     // case 5000: return pluPlanTypeFine.; // SachlicherTeilplan
                     // case 9999: return pluPlanTypeFine.; // Sonstiges
-                    default: this.log.warn('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
+                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
                 }
             case 'RP_Plan':
                 switch(planart) {
@@ -779,7 +779,7 @@ export class WfsMapper extends GenericMapper {
                     case 5001: return pluPlanTypeFine.AWZ_PLAN; // AWZPlan
                     case 6000: return pluPlanTypeFine.RAEUML_TEIL_PLAN;     // RaeumlicherTeilplan
                     // case 9999: return pluPlanTypeFine.; // Sonstiges
-                    default: this.log.warn('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
+                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
                 }
             case 'SO_Plan':
                 // TODO no codelists found!
@@ -788,7 +788,7 @@ export class WfsMapper extends GenericMapper {
                     // TODO possibly more values possible; these are the ones found in the data so far
                     // case 2000: return pluPlanTypeFine.;
                     // case 17200: return pluPlanTypeFine.;
-                    default: this.log.warn('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
+                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
                 }
             default:
                 return pluPlanTypeFine.UNBEKANNT;
@@ -803,6 +803,12 @@ export class WfsMapper extends GenericMapper {
         }
     }
 
+    /**
+     * This is currently XPlan specific.
+     * 
+     * // TODO more process steps?
+     * // TODO what about other WFS sources?
+     */
     _getPluProcedureType(): string {
         let procedureType = this.select('./*/xplan:verfahren', this.feature, true)?.textContent;
         switch (procedureType) {
@@ -810,7 +816,7 @@ export class WfsMapper extends GenericMapper {
             case '2000': return pluProcedureType.VEREINF_VERF;      // Parag13
             case '3000': return pluProcedureType.BEBAU_PLAN_INNEN;  // Parag13a
             // case '4000': return pluProcedureType.;     // Parag13b
-            default: this.log.warn('No procedure type available for xplan:verfahren', procedureType); return pluProcedureType.UNBEKANNT;
+            default: this.log.debug('No procedure type available for xplan:verfahren', procedureType); return pluProcedureType.UNBEKANNT;
         }
     }
 
