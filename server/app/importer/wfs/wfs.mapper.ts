@@ -850,13 +850,13 @@ export class WfsMapper extends GenericMapper {
         };
 
         let processSteps = [];
-        let period_aufstBeschl = getPeriod('./*/fis:AFS_BESCHL', './*/fis:AFS_L_AEND');
-        if (period_aufstBeschl) {
-            processSteps.push({
-                period: period_aufstBeschl,
-                type: null  // TODO
-            });
-        }
+        // let period_aufstBeschl = getPeriod('./*/fis:AFS_BESCHL', './*/fis:AFS_L_AEND');
+        // if (period_aufstBeschl) {
+        //     processSteps.push({
+        //         period: period_aufstBeschl,
+        //         type: null  // TODO
+        //     });
+        // }
         let period_frzBuergerBet = getPeriod('./*/fis:BBG_ANFANG', './*/fis:BBG_ENDE');
         if (period_frzBuergerBet) {
             processSteps.push({
