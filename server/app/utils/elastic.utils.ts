@@ -532,7 +532,7 @@ export class ElasticSearchUtils {
 
 
     private handleError(message: string, error: any) {
-        this.summary.elasticErrors.push(error.toString());
+        this.summary.elasticErrors.push(message);
         log.error(message, error);
     }
 
