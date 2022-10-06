@@ -94,8 +94,7 @@ export class CswImporter implements Importer {
             settings.recordFilter = CswImporter.addModifiedFilter(settings.recordFilter, new Date(summary.lastExecution));
         }
 
-        // TODO check settings for "//" in xpaths and disallow them for performance reasons
-        // TODO also disallow setting them in the UI
+        // TODO disallow setting "//" in xpaths in the UI
 
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
@@ -229,7 +228,6 @@ export class CswImporter implements Importer {
             delegates.push(new RequestDelegate(requestConfig));
         }
         // 2) run in parallel
-        // TODO ED:2022-09-28: externalize maxConcurrent
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));

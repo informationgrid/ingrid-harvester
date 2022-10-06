@@ -893,7 +893,7 @@ export class CswMapper extends GenericMapper {
         searchFields.push(...this._getKeywords());
         let haystack = searchFields.join('#').toLowerCase();
 
-        // TODO especially in keywords - if set - there can be ambiguities, e.g. keycwords contain multiple determination words
+        // TODO especially in keywords - if set - there can be ambiguities, e.g. keywords contain multiple determination words
         if (['bebauungsplan'].some(needle => haystack.includes(needle))) {
             return pluPlanType.BEBAU_PLAN;
         }

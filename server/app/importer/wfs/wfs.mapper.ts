@@ -418,7 +418,7 @@ export class WfsMapper extends GenericMapper {
         }
 
         // TODO the CRS lookup is far from ideal, and atm very proprietary:
-        // for XPLAN just use the srsName attribute; for fis, it's encoded in the element name
+        // for XPLAN just use the srsName attribute; for FIS, it's encoded in the element name
         let crs = child.getAttribute('srsName');
         if (!crs) {
             crs = spatialContainer.localName.split('_')[1];

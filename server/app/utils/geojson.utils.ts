@@ -361,6 +361,6 @@ export class GeoJsonUtils {
                 coordinates: this.parseMultiSurface(_, opts, childCtx)
             });
         }
-        return null; // todo
+        return null;
     }
 }
