@@ -205,18 +205,18 @@ export class WfsImporter implements Importer {
         this.select = xpath.useNamespaces(this.nsMap);
 
         // get used CRSs through getCapabilities
-        let featureTypes = this.select('/wfs:WFS_Capabilities/wfs:FeatureTypeList/wfs:FeatureType', capabilitiesResponseDom, false);
+        let featureTypes = this.select('/*[local-name()="WFS_Capabilities"]/*[local-name()="FeatureTypeList"]/*[local-name()="FeatureType"]', capabilitiesResponseDom, false);
         // import proj4 strings for all EPSGs
         const data = fs.readFileSync('app/importer/proj4.json', { encoding: 'utf8', flag: 'r' });
         let proj4Json = JSON.parse(data);
         // save only those that we need
         this.crsList = [];
         for (let featureType of featureTypes) {
-            let typename = this.select('./wfs:Name', featureType, true).textContent;
+            let typename = this.select('./*[local-name()="Name"]', featureType, true).textContent;
             if (!this.settings.typename.split(',').includes(typename)) {
                 continue;
             }
-            let crsNodes = this.select('./wfs:DefaultCRS|./wfs:OtherCRS|./wfs:DefaultSRS|./wfs:OtherSRS', featureType, false);
+            let crsNodes = this.select('./*[local-name()="DefaultCRS" or local-name()="OtherCRS" or local-name()="DefaultSRS" or local-name()="OtherSRS"]', featureType, false);
             for (let node of crsNodes) {
                 this.crsList.push([node.textContent, proj4Json[node.textContent.replace('EPSG:', '')]]);
                 if (node.localName === 'DefaultCRS' || node.localName === 'DefaultSRS') {

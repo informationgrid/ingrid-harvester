@@ -53,13 +53,13 @@ export type WfsSettings = {
 export const DefaultXpathSettings: Partial<WfsSettings> = {
     xpaths: {
         capabilities: {
-            abstract: '/wfs:WFS_Capabilities/ows:ServiceIdentification/ows:Abstract',
+            abstract: '/*[local-name()="WFS_Capabilities"]/ows:ServiceIdentification/ows:Abstract',
             language: '',
-            serviceProvider: '/wfs:WFS_Capabilities/ows:ServiceProvider',
-            title: '/wfs:WFS_Capabilities/ows:ServiceIdentification/ows:Title'
+            serviceProvider: '/*[local-name()="WFS_Capabilities"]/ows:ServiceProvider',
+            title: '/*[local-name()="WFS_Capabilities"]/ows:ServiceIdentification/ows:Title'
         },
         description: '',
-        featureParent: '/wfs:FeatureCollection/wfs:member',
+        featureParent: '/*[local-name()="FeatureCollection"]/*[local-name()="member"]',
         name: '',
         pluPlanState: '',
         spatial: ''
