@@ -78,7 +78,7 @@ export class GeoJsonUtils {
             return undefined;
         }
         // turf/centroid does not support envelope, so we turn it into a linestring which has the same centroid
-        if (spatial.type == 'Envelope') {
+        if (spatial.type?.toLowerCase() == 'envelope') {
             spatial.type = 'LineString';
         }
         if (spatial.type == 'GeometryCollection') {

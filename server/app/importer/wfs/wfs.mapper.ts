@@ -397,6 +397,9 @@ export class WfsMapper extends GenericMapper {
             return undefined;
         }
         let child = XPathUtils.firstElementChild(spatialContainer);
+        if (child == null) {
+            return undefined;
+        }
         if (!child.hasAttribute('srsName')) {
             child.setAttribute('srsName', this.fetched.defaultCrs);
         }
@@ -410,6 +413,9 @@ export class WfsMapper extends GenericMapper {
             return this._getBoundingBox();
         }
         let child = XPathUtils.firstElementChild(spatialContainer);
+        if (child == null) {
+            return undefined;
+        }
 
         // TODO the CRS lookup is far from ideal, and atm very proprietary:
         // for XPLAN just use the srsName attribute; for fis, it's encoded in the element name
