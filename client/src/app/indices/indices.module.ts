@@ -28,6 +28,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {MatIconModule, MatListModule, MatCardModule} from '@angular/material';
 import {SharedModule} from '../shared/shared.module';
 import {FlexLayoutModule} from "@angular/flex-layout";
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 const routes: Routes = [
   {
@@ -45,7 +46,8 @@ const routes: Routes = [
     MatListModule,
     MatIconModule,
     MatCardModule,
-    SharedModule
+    SharedModule,
+    ScrollingModule
   ]
 })
 export class IndicesModule {

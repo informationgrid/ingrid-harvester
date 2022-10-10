@@ -21,8 +21,8 @@
     ==================================================
 -->
 
-<div fxLayout="row">
-  <mat-list fxFlex="50" class="list-hover">
+<div fxLayout="row" class="full">
+  <mat-list fxFlex="50" class="list-hover scroll">
     <div fxLayout="row">
       <div fxFlex></div>
     <input type="file" #indexUpload id="indexUpload" name="harvesterUpload" (change)="importIndex(this.indexUpload.files)" accept="json/*.json" style="display:none;" />
@@ -43,8 +43,11 @@
     <mat-card-header>
       <mat-card-title>Inhalt</mat-card-title>
     </mat-card-header>
-    <mat-card-content>
-      <pre>{{searchResult | async | json}}</pre>
+    <mat-card-content class="items">
+      <cdk-virtual-scroll-viewport [itemSize]="20" [minBufferPx]="500" [maxBufferPx]="500" class="viewport">
+        <!-- <pre>{{searchResult | async | json}}</pre> -->
+        <div *cdkVirtualFor="let line of searchResultLines">{{line}}</div>
+      </cdk-virtual-scroll-viewport>
     </mat-card-content>
   </mat-card>
 </div>

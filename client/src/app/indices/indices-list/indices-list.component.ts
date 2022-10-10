@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {IndicesService} from '../indices.service';
 import {forkJoin, Observable} from 'rxjs';
 import {Index} from '@shared/index.model';
@@ -29,6 +29,7 @@ import {tap} from 'rxjs/operators';
 import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
 import {MatDialog} from '@angular/material';
 import {ConfigService} from "../../config/config.service";
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-indices-list',
@@ -36,8 +37,13 @@ import {ConfigService} from "../../config/config.service";
   styleUrls: ['./indices-list.component.scss']
 })
 export class IndicesListComponent implements OnInit {
+
+  @ViewChild(CdkVirtualScrollViewport, {static: false})
+  viewPort: CdkVirtualScrollViewport;
+
   indices: Observable<Index[]>;
   searchResult = this.indicesService.searchResponse$;
+  searchResultLines: string[] = [];
 
   constructor(private dialog: MatDialog, private indicesService: IndicesService) {
   }
@@ -75,7 +81,11 @@ export class IndicesListComponent implements OnInit {
       );
   }
 
-  sendSearchRequest(indexName: string) {
+  async sendSearchRequest(indexName: string) {
     this.indicesService.search(indexName);
+    this.searchResult.subscribe(data => {
+      let formattedJsonString = JSON.stringify(data, null, 4);
+      this.searchResultLines = formattedJsonString.split('\n');
+    }, (error => console.error('Error getting index:', error)));
   }
 }

@@ -24,3 +24,20 @@
 #importIndex{
   margin: 10px 40px;
 }
+
+.items {
+  height: calc(100% - 40px);  // 40px = 2 * (16px + 4px) = 2 * (padding + border)
+}
+
+.viewport {
+  height: 100%;
+  white-space: pre;
+}
+
+.full {
+  height: 100%;
+}
+
+.scroll {
+  overflow: scroll;
+}
