@@ -70,7 +70,7 @@ export class MonitoringIndexCheckComponent implements OnInit {
             datasets: [
               {
                 label: "Valid",
-                data: data.history.map(entry => entry.attributions.map(attribution => attribution.is_valid.filter(valid => valid.value === "true").map(valid =>  valid.count)).reduce((a, b) => Number(a)+Number(b))),
+                data: data.history.map(entry => entry.attributions.map(attribution => attribution.is_valid.filter(valid => valid.value === "true").map(valid => valid.count)).reduce((a, b) => Number(a)+Number(b), 0)),
                 borderColor: "green",
                 backgroundColor: "green",
                 fill: false,
@@ -79,7 +79,7 @@ export class MonitoringIndexCheckComponent implements OnInit {
               },
               {
                 label: "Not Valid",
-                data: data.history.map(entry => entry.attributions.map(attribution => attribution.is_valid.filter(valid => valid.value === "false").map(valid =>  valid.count)).reduce((a, b) => Number(a)+Number(b))),
+                data: data.history.map(entry => entry.attributions.map(attribution => attribution.is_valid.filter(valid => valid.value === "false").map(valid => valid.count)).reduce((a, b) => Number(a)+Number(b), 0)),
                 borderColor: "red",
                 backgroundColor: "red",
                 fill: false,
@@ -88,7 +88,7 @@ export class MonitoringIndexCheckComponent implements OnInit {
               },
               {
                 label: "Spatial",
-                data: data.history.map(entry => entry.attributions.map(attribution => attribution.spatial).reduce((a, b) => Number(a)+Number(b))),
+                data: data.history.map(entry => entry.attributions.map(attribution => attribution.spatial).reduce((a, b) => Number(a)+Number(b), 0)),
                 borderColor: "purple",
                 backgroundColor: "purple",
                 fill: false,
@@ -97,7 +97,7 @@ export class MonitoringIndexCheckComponent implements OnInit {
               },
               {
                 label: "Temporal",
-                data: data.history.map(entry => entry.attributions.map(attribution => attribution.temporal).reduce((a, b) => Number(a)+Number(b))),
+                data: data.history.map(entry => entry.attributions.map(attribution => attribution.temporal).reduce((a, b) => Number(a)+Number(b), 0)),
                 borderColor: "blue",
                 backgroundColor: "blue",
                 fill: false,
