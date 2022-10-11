@@ -21,13 +21,14 @@
  * ==================================================
  */
 
-import {AfterViewInit, Component, Inject, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {Harvester} from '@shared/harvester';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Chart } from 'chart.js';
 import {STATUS_CODES} from 'http';
 import {ConfigService} from "../../../config/config.service";
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 
 @Component({
@@ -36,6 +37,9 @@ import {ConfigService} from "../../../config/config.service";
   styleUrls: ['./monitoring-urlcheck-detail.component.scss']
 })
 export class MonitoringUrlcheckDetailComponent implements OnInit {
+
+  @ViewChild(CdkVirtualScrollViewport, {static: false})
+  viewPort: CdkVirtualScrollViewport;
 
   dialogTitle = 'UrlCheck Details';
 

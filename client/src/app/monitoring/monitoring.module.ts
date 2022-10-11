@@ -42,6 +42,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MonitoringUrlcheckDetailComponent} from "./monitoring-urlcheck/monitoring-urlcheck-detail/monitoring-urlcheck-detail.component";
 import {MonitoringIndexCheckDetailComponent} from "./monitoring-indexcheck/monitoring-indexcheck-detail/monitoring-indexcheck-detail.component";
 import {MatExpansionModule} from "@angular/material/expansion";
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 const configRoutes: Routes = [
   {
@@ -66,7 +67,8 @@ const configRoutes: Routes = [
     MatSlideToggleModule,
     MatCardModule,
     MatCheckboxModule,
-    MatExpansionModule
+    MatExpansionModule,
+    ScrollingModule
   ],
   entryComponents: [
     MonitoringUrlcheckDetailComponent,
