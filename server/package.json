@@ -16,7 +16,7 @@
     "test-jenkins": "mocha -r ts-node/register test/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml"
   },
   "author": "andre.wallat@wemove.com",
-  "license": "ISC",
+  "license": "EUPL",
   "dependencies": {
     "@tsed/common": "^5.36.2",
     "@tsed/core": "^5.36.2",
