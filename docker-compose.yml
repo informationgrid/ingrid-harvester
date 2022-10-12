@@ -14,6 +14,7 @@ services:
       - network.publish_host=127.0.0.1
     volumes:
       - esdata:/usr/share/elasticsearch/data
+      - ./elasticsearch/set-pw-es:/usr/share/elasticsearch/bin/set-pw-es
     restart: unless-stopped
     ports:
       - 9200:9200

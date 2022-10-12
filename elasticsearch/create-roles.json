@@ -1,0 +1,19 @@
+{
+    "cluster": [
+        "monitor"
+    ],
+    "indices": [
+        {
+            "names": [
+                "csw*",
+                "excel*",
+                "wfs*"
+            ],
+            "privileges": [
+                "read",
+                "monitor"
+            ],
+            "allow_restricted_indices": false
+        }
+    ]
+}

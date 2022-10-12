@@ -34,7 +34,7 @@ let elasticsearch = require('elasticsearch'),
 require('url').URL;
 
 export const DefaultElasticsearchSettings: ElasticSettings = {
-    elasticSearchUrl: process.env.ELASTIC_URL || "http://localhost:9200",
+    elasticSearchUrl: process.env.ELASTIC_URL || "http://elastic:9200",
     index: '',
     // alias: '',
     includeTimestamp: true,
