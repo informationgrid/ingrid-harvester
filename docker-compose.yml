@@ -2,6 +2,7 @@ version: '3'
 services:
 
   elastic:
+    container_name: mcloud-elastic
     image: docker-registry.wemove.com/ingrid-elasticsearch-with-decompound:6.8.4
     environment:
       - cluster.name=mcloud
@@ -18,7 +19,7 @@ services:
       - 9200:9200
       - 9300:9300
     networks:
-      - testnetwork
+      - mcloudnetwork
 
   mcloud:
     build: .
@@ -35,10 +36,10 @@ services:
     depends_on:
         - elastic
     networks:
-      - testnetwork
+      - mcloudnetwork
 
 volumes:
   esdata:
 
 networks: 
-  testnetwork:
+  mcloudnetwork:
