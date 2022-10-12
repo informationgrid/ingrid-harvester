@@ -50,6 +50,7 @@ export class HistoryService {
         this.alias = generalSettings.alias;
         const settings: ElasticSettings = {
             elasticSearchUrl: generalSettings.elasticSearchUrl,
+            elasticSearchPassword: generalSettings.elasticSearchPassword,
             alias: generalSettings.alias,
             includeTimestamp: true,
             index: ''

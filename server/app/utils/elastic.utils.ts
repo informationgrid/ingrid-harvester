@@ -71,7 +71,7 @@ export class ElasticSearchUtils {
                 host: url.hostname,
                 port: url.port,
                 protocol: url.protocol,
-                auth: 'elastic:elastic',
+                auth: 'elastic:' + this.settings.elasticSearchPassword,
             }
         });
         this._bulkData = [];

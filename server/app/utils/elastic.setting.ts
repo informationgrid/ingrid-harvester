@@ -22,5 +22,13 @@
  */
 
 export type ElasticSettings = {
-    elasticSearchUrl?: string, index: string, indexType?: string, alias?: string, deduplicationAlias?: string, includeTimestamp: boolean, numberOfShards?: number, numberOfReplicas?: number
+    elasticSearchUrl?: string,
+    elasticSearchPassword?: string,
+    index: string,
+    indexType?: string,
+    alias?: string,
+    deduplicationAlias?: string,
+    includeTimestamp: boolean,
+    numberOfShards?: number,
+    numberOfReplicas?: number
 }

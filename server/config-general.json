@@ -1,5 +1,6 @@
 {
   "elasticSearchUrl": "http://elastic:9200",
+  "elasticSearchPassword": "elastic",
   "alias": "mcloud",
   "numberOfShards": 1,
   "numberOfReplicas": 0,

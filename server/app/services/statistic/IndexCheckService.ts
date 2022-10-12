@@ -51,6 +51,7 @@ export class IndexCheckService {
         this.generalSettings = ConfigService.getGeneralSettings();
         this.settings = {
             elasticSearchUrl: this.generalSettings.elasticSearchUrl,
+            elasticSearchPassword: this.generalSettings.elasticSearchPassword,
             alias: this.generalSettings.alias,
             includeTimestamp: true,
             index: ''
@@ -64,7 +65,7 @@ export class IndexCheckService {
                 host: url.hostname,
                 port: url.port,
                 protocol: url.protocol,
-                auth: 'elastic:elastic',
+                auth: 'elastic:' + this.settings.elasticSearchPassword,
             }
         });
 

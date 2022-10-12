@@ -23,6 +23,7 @@
 
 export type GeneralSettings = {
     elasticSearchUrl: string,
+    elasticSearchPassword: string,
     cronOffset?: number,
     alias: string,
     numberOfShards?: number,
