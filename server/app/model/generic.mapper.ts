@@ -173,17 +173,17 @@ export abstract class GenericMapper {
             dist.accessURL = dist.accessURL.replace(/ /g, '%20');
         });
 
-        if (distributions.length === 0) {
-            this.valid = false;
-            let msg = `Dataset has no links for download/access. It will not be displayed in the portal. Title: '${this.getTitle()}', Id: '${this.getGeneratedId()}'.`;
+        // if (distributions.length === 0) {
+        //     this.valid = false;
+        //     let msg = `Dataset has no links for download/access. It will not be displayed in the portal. Title: '${this.getTitle()}', Id: '${this.getGeneratedId()}'.`;
 
-            this.getSummary().missingLinks++;
+        //     this.getSummary().missingLinks++;
 
-            this.valid = false;
-            this.getSummary().warnings.push(['No links', msg]);
+        //     this.valid = false;
+        //     this.getSummary().warnings.push(['No links', msg]);
 
-            this._log.warn(msg);
-        }
+        //     this._log.warn(msg);
+        // }
 
         const isWhitelisted = this.getSettings().whitelistedIds.indexOf(this.getGeneratedId()) !== -1;
 

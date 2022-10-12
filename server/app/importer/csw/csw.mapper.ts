@@ -115,12 +115,12 @@ export class CswMapper extends GenericMapper {
 
     _getDescription() {
         let abstract = CswMapper.getCharacterStringContent(this.idInfo, 'abstract');
-        if (!abstract) {
-            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.getRecordsUrl}\'`;
-            this.log.warn(msg);
-            this.summary.warnings.push(['No description', msg]);
-            this.valid = false;
-        }
+        // if (!abstract) {
+        //     let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.getRecordsUrl}\'`;
+        //     this.log.warn(msg);
+        //     this.summary.warnings.push(['No description', msg]);
+        //     this.valid = false;
+        // }
 
         return abstract;
     }

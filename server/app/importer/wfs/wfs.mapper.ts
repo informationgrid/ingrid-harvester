@@ -93,12 +93,12 @@ export class WfsMapper extends GenericMapper {
 
     _getDescription() {
         let abstract = this.select(this.settings.xpaths.description, this.feature, true)?.textContent;
-        if (!abstract) {
-            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.getFeaturesUrl}\'`;
-            this.log.warn(msg);
-            this.summary.warnings.push(['No description', msg]);
-            this.valid = false;
-        }
+        // if (!abstract) {
+        //     let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.getFeaturesUrl}\'`;
+        //     this.log.warn(msg);
+        //     this.summary.warnings.push(['No description', msg]);
+        //     this.valid = false;
+        // }
         return abstract;
     }
 
