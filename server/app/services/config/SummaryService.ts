@@ -68,13 +68,16 @@ export class SummaryService {
         return this.summaries
             .map(summary => {
                 let harvester = harvesters.find(h => h.id === summary.id);
-                if (harvester && harvester.cron && harvester.cron.active) {
-                    let cronJob = new CronJob(harvester.cron.pattern, () => {}, null, false);
-                    summary.nextExecution = cronJob.nextDate().toDate();
-                } else {
-                    summary.nextExecution = null;
-                }
-                return summary;
+                // for (let mode of <('full' | 'incr')[]>['full', 'incr']) {
+                    let mode = summary.summary.isIncremental ? 'incr' : 'full';
+                    if (harvester?.cron?.[mode]?.active) {
+                        let cronJob = new CronJob(harvester.cron[mode].pattern, () => {}, null, false);
+                        summary.nextExecution = cronJob.nextDate().toDate();
+                    } else {
+                        summary.nextExecution = null;
+                    }
+                    return summary;
+                // }
             } );
     }
 

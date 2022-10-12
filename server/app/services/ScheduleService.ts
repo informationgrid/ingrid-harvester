@@ -37,7 +37,7 @@ let log = require('log4js').getLogger(__filename);
 export class ScheduleService {
 
     // remember the scheduled jobs
-    jobs: { [x: number]: CronJob } = {};
+    jobs: { [x: number]: { [mode: string]: CronJob }} = {};
     urlCheckJob : CronJob;
     indexCheckJob : CronJob;
 
@@ -57,8 +57,13 @@ export class ScheduleService {
         // activate scheduler for all harvester that have a cron pattern
         // but only run those immediately that actually are enabled
         ConfigService.get()
-            .filter(config => config.cron && config.cron.active)
-            .forEach(config => this.scheduleJob(config.id, config.cron.pattern, !config.disable));
+            .forEach(config => {
+                for (let mode of <('full' | 'incr')[]>['full', 'incr']) {
+                    if (config.cron?.[mode]?.active) {
+                        this.scheduleJob(config.id, mode, config.cron[mode].pattern, !config.disable);
+                    }
+                }
+            });
 
         this.setUrlCheck(ConfigService.getGeneralSettings().urlCheck);
         this.setIndexCheck(ConfigService.getGeneralSettings().indexCheck);
@@ -71,42 +76,48 @@ export class ScheduleService {
      * @param id
      * @param cron
      */
-    set(id: number, cron: CronData): Date {
+    set(id: number, cron: { full: CronData, incr: CronData }): Date[] {
 
         // update cron pattern in configuration
         let configData = ConfigService.get().filter(config => config.id === id)[0];
         configData.cron = cron;
         ConfigService.update(id, configData);
 
-        // set up cron job if harvester is enabled and cron active
-        const schedulingIsActive = !configData.disable && cron.active;
-        if (schedulingIsActive) {
-            this.scheduleJob(id, cron.pattern, !configData.disable);
-            let cronJob = new CronJob(cron.pattern, () => {}, null, false);
-            return cronJob.nextDate().toDate();
-        } else {
-            this.stopJob(id);
-            return null;
+        let dates = [];
+        for (let mode of <('full' | 'incr')[]>['full', 'incr']) {
+            // set up cron job if harvester is enabled and cron active
+            const schedulingIsActive = !configData.disable && cron[mode]?.active;
+            if (schedulingIsActive) {
+                this.scheduleJob(id, mode, cron[mode].pattern, !configData.disable);
+                let cronJob = new CronJob(cron[mode].pattern, () => {}, null, false);
+                dates.push(cronJob.nextDate().toDate());
+            } else {
+                this.stopJob(id, mode);
+                dates.push(null);
+            }
         }
-
+        return dates;
     }
 
     /**
      * Run a cron job
      */
-    private scheduleJob(id: number, cronExpression: string, startImmediately: boolean): void {
-        this.stopJob(id);
+    private scheduleJob(id: number, mode: 'full' | 'incr', cronExpression: string, startImmediately: boolean): void {
+        this.stopJob(id, mode);
 
         try {
-            this.jobs[id] = new CronJob(cronExpression, () => {
+            if (!this.jobs[id]) {
+              this.jobs[id] = {};  
+            }
+            this.jobs[id][mode] = new CronJob(cronExpression, () => {
                 let generalSettings = ConfigService.getGeneralSettings();
                 if (generalSettings.cronOffset) {
                     setTimeout(function(socketService, id){
-                        socketService.runImport(id);
+                        socketService.runImport(id, mode == 'incr');
                     }, generalSettings.cronOffset*60*1000, this.socketService, id);
                 }
                 else {
-                    this.socketService.runImport(id);
+                    this.socketService.runImport(id, mode == 'incr');
                 }
             }, null, startImmediately, 'Europe/Berlin');
 
@@ -120,25 +131,22 @@ export class ScheduleService {
     /**
      * Stop a cron job
      */
-    stopJob(id: number) {
+    stopJob(id: number, mode: 'full' | 'incr') {
 
-        if (this.jobs[id]) {
-            this.jobs[id].stop();
-            delete this.jobs[id];
+        if (this.jobs[id]?.[mode]) {
+            this.jobs[id][mode]?.stop();
+            delete this.jobs[id][mode];
         }
 
     }
 
-    startJob(id: number) {
+    startJob(id: number, mode: 'full' | 'incr') {
 
-        if (this.jobs[id]) {
-            this.jobs[id].start();
+        if (this.jobs[id][mode]) {
+            this.jobs[id][mode].start();
         } else {
-            let config = ConfigService.get()
-                .filter(config => config.id === id && config.cron && config.cron.active)[0];
-
-
-                this.scheduleJob(id, config.cron.pattern, false);
+            let config = ConfigService.get().filter(config => config.id === id && config.cron?.[mode] && config.cron[mode].active)[0];
+            this.scheduleJob(id, mode, config.cron[mode].pattern, false);
             // log.error(`Job "${id}" could not be started.`);
         }
     }

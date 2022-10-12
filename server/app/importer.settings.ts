@@ -29,7 +29,10 @@ export interface CronData {
 export type ImporterSettings = {
     priority?: number,
     blacklistedIds?: string[],
-    cron?: CronData,
+    cron?: {
+        full: CronData,
+        incr: CronData
+    },
     customCode?: string,
     dateSourceFormats?: string[],
     defaultAttribution?: string,
@@ -40,6 +43,7 @@ export type ImporterSettings = {
     disable?: boolean,
     dryRun?: boolean,
     id?: number,
+    // TODO ED:2022-10-04: the next entry needs to be transient, i.e. not saved into config file but (requested and) given with every run
     isIncremental: boolean,
     maxConcurrent: number,
     maxRecords?: number,

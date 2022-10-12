@@ -32,34 +32,48 @@ import {CronData} from '../../../../../server/app/importer.settings';
   styleUrls: ['./dialog-scheduler.component.scss']
 })
 export class DialogSchedulerComponent implements OnInit {
-  cronTranslation: string;
-  validExpression = true;
+  full = {
+    cronTranslation: '',
+    validExpression: true,
+  };
+  incr = {
+    cronTranslation: '',
+    validExpression: true,
+  }
   showInfo = false;
 
-  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public cron: CronData) {
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public cron: { full: CronData, incr: CronData }) {
+    if (!cron.full) {
+      cron.full = { pattern: '', active: false };
+    }
+    if (!cron.incr) {
+      cron.incr = { pattern: '', active: false };
+    }
   }
 
   ngOnInit(): void {
-    this.translate(this.cron.pattern);
+    this.translate(this.cron.full.pattern, 'full');
+    this.translate(this.cron.incr.pattern, 'incr');
   }
 
-  translate(cronExpression: string) {
+  translate(cronExpression: string, mode: string) {
+    console.log('MODE:', mode);
     try {
-      this.cronTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
-      this.validExpression = true;
+      this[mode].cronTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
+      this[mode].validExpression = true;
     } catch (e) {
-      this.cronTranslation = 'Kein gültiger Ausdruck';
-      this.validExpression = false;
+      this[mode].cronTranslation = 'Kein gültiger Ausdruck';
+      this[mode].validExpression = false;
     }
 
-    if (!this.cron.active) {
-      this.cronTranslation = 'Planung ausgeschaltet';
+    if (!this.cron[mode].active) {
+      this[mode].cronTranslation = 'Planung ausgeschaltet';
       return;
     }
   }
 
-  clearInput() {
-    this.cron.pattern = '';
-    this.translate('');
+  clearInput(mode: string) {
+    this.cron[mode].pattern = '';
+    this.translate('', mode);
   }
 }

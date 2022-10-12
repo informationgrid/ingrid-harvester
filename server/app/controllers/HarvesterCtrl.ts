@@ -55,13 +55,14 @@ export class HarvesterCtrl {
     updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Harvester) {
         const updatedID = ConfigService.update(+id, config);
 
+        let mode: 'full' | 'incr' = config.isIncremental ? 'incr' : 'full';
         if (config.disable) {
-            this.scheduleService.stopJob(updatedID);
+            this.scheduleService.stopJob(updatedID, mode);
             this.indexService.removeFromAlias(updatedID)
                 .catch(e => log.error('Error removing alias', e));
         } else {
-            if (config.cron && config.cron.active) {
-                this.scheduleService.startJob(updatedID);
+            if (config.cron?.[mode]?.active) {
+                this.scheduleService.startJob(updatedID, mode);
             }
 
             this.indexService.addToAlias(updatedID)
@@ -76,8 +77,9 @@ export class HarvesterCtrl {
         this.indexService.removeFromAlias(+id);
         this.indexService.deleteIndexFromHarvester(+id);
 
-        // remove from scheduler
-        this.scheduleService.stopJob(+id);
+        // remove jobs from scheduler
+        this.scheduleService.stopJob(+id, 'full');
+        this.scheduleService.stopJob(+id, 'incr');
 
         // update config without the selected harvester
         const filtered = ConfigService.get()

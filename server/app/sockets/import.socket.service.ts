@@ -68,14 +68,15 @@ export class ImportSocketService {
             let configHarvester = {...configData, ...configGeneral, isIncremental};
 
             let importer = ImporterFactory.get(configHarvester);
+            let mode = isIncremental ? 'incr' : 'full';
             this.log.info('>> Running importer: ' + configHarvester.description);
 
             try {
                 importer.run.subscribe(response => {
                     response.id = id;
                     response.lastExecution = lastExecution;
-                    if (configHarvester.cron && configHarvester.cron.active) {
-                        response.nextExecution = new CronJob(configHarvester.cron.pattern, () => {
+                    if (configHarvester.cron?.[mode]?.active) {
+                        response.nextExecution = new CronJob(configHarvester.cron[mode].pattern, () => {
                         }).nextDate().toDate();
                     }
                     response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;
