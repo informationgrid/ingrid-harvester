@@ -19,7 +19,7 @@
   "categories": {
     "default": {
       "appenders": [ "console", "appLog" ],
-      "level": "DEBUG"
+      "level": "INFO"
     },
     "summary": {
       "appenders": [ "console", "summaryFile", "appLog" ],
