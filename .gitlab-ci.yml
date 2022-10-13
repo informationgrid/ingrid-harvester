@@ -5,6 +5,7 @@ push-to-remote-job:
   stage: push-to-remote
   only:
     - main
+    - develop
   script:
     - echo -e "* On branch"
     - echo -e "---"
