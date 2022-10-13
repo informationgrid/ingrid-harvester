@@ -1,5 +1,86 @@
 # Installation
 
+The harvester runs two components in a single docker container, `client` and `server`. It depends on an Elasticsearch instance running in a separate container on the same network.
+
+## General steps
+
+* Checkout this repo
+* Add readonly wemove docker hub credentials to your docker setup
+    ```bash
+    sudo docker login docker-registry.wemove.com
+    Username: readonly
+    Password: readonly
+    ```
+
+## Local development setup
+
+### Running in a local docker container
+
+You can use the same setup as outlined in the section `Test server` below, but with `docker-compose-dev.yml`. This scales down memory requirements and uses `ts-node-dev` instead of `ts-node`.
+
+### Running in a terminal
+
+Prerequisites:
+* node.js v16
+* an Elasticsearch index (either on your machine or from the one from docker-compose.yml)
+
+You may wish to run the server and the client outside of the docker container, for debugging and faster deployment/development purposes. Currently you have to change some files to achieve this, outlined below:
+
+* `server/config-general.json`: change the value of `elasticSearchUrl` to `http://localhost:9200` 
+* `server/config-general.json`: change the value of `elasticSearchPassword`
+
+Now, first start an Elasticsearch instance (either from the docker container or directly on your machine), then run the client and server separately:
+```bash
+cd client
+npm run start
+```
+```bash
+cd server
+npm run start-dev-16
+```
+
+## Test setup
+
+* `server/config-general.json`: change the value of `elasticSearchPassword`
+* Build, run, and detach the containers:
+    ```bash
+    sudo docker-compose -f docker-compose.yml --build -d
+    ```
+* If you are setting the harvester up for the first time (i.e., after initializing the Elasticsearch volume), you need to create the appropriate user credentials for Elasticsearch:
+    * `elasticsearch/set-pw-es`: customize all passwords
+        * make sure to use the same password twice, for user and Reenter
+        * make sure to put the same password for the `elastic` user that you chose for `elasticSearchPassword`
+    * `elasticsearch/create-users.json`: set a password for the readonly `read_user`
+    * `elasticsearch/setup-access.sh`:
+        * replace `$TOKEN` with a base64 encoded string of the elastic user and its password
+          ```bash
+          echo -n elastic:$YOUR_ELASTIC_PASSWORD | base64
+          ```
+        * uncomment the file
+        * run it
+* Now you can access the harvester
+    * via GUI: http://localhost:4200
+    * via Elasticsearch API: http://localhost:9200
+        * user: `read_user`
+        * password: *the one you set in `elasticsearch/create-users.json`*
+
+## Test setup in a Kubernetes environment
+
+* TODO
+
+## Production setup in a Kubernetes environment
+
+* TODO
+
+<br />
+<br />
+
+---
+
+***Below you find the old version of the readme, which targeted an RPM release***
+
+# Legacy Information
+
 If nodejs is not yet installed on the system then run:
 
 > sudo yum install nodejs
