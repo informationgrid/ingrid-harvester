@@ -31,7 +31,7 @@
     "subjectTag": "mcloud"
   },
   "indexBackup": {
-    "active": true,
+    "active": false,
     "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
     "cronPattern": "30 05 * * *",
     "dir": ""
