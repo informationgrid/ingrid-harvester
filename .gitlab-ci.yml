@@ -1,0 +1,24 @@
+stages:
+  - ls-remote
+#  - checkout
+#  - push
+
+ls-remote-job:
+  stage: ls-remote
+  script:
+    - echo "Running ls-remote on ADO"
+#    - git -c http.extraheader="Authorization: Basic $REMOTE_PAT" ls-remote $REMOTE_URL
+
+#checkout-job:
+#  stage: checkout
+#  script:
+#    - echo "Running unit tests... This will take about 60 seconds."
+#    - sleep 60
+#    - echo "Code coverage is 90%"
+#
+#push-job:
+#  stage: push
+#  script:
+#    - echo "Linting code... This will take about 10 seconds."
+#    - sleep 10
+#    - echo "No lint issues found."
