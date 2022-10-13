@@ -1,5 +1,5 @@
 {
-  "url": "",
+  "url": "ws://localhost:8090",
   "contextPath": "/importer",
   "version": "@@VERSION@@"
 }
