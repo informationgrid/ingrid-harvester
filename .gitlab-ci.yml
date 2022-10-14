@@ -12,10 +12,9 @@ push-to-remote-job:
     - if: $CI_PIPELINE_SOURCE == "web"
   script:
     - git checkout main
-    - git status
     - echo -e "* On branch"
     - echo -e "---"
-    - git branch --show-ref
+    - git branch --show-current
     - echo -e "\n* List checked out contents of github repo"
     - echo -e "---"
     - ls -la
