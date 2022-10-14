@@ -1,18 +1,16 @@
 [
   {
-    "index": "csw_geoportalde_test",
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "csw_geoportal_de",
     "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
-    "maxRecords": 100,
+    "maxRecords": 200,
     "startPosition": 1,
+    "maxConcurrent": 10,
     "customCode": null,
-    "defaultMcloudSubgroup": [
-      "roads"
-    ],
-    "defaultDCATCategory": [
-      "OP_DATPRO"
-    ],
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
@@ -20,44 +18,1403 @@
     "rules": {
       "containsDocumentsWithData": null
     },
-    "getRecordsUrl": "https://gdk.gdi-de.org/gdi-de/srv/ger/csw",
-    "eitherKeywords": [],
-    "httpMethod": "POST",
-    "id": 34,
-    "description": "TESTFILTER geoportal.de CSW",
-    "defaultAttribution": null,
-    "defaultAttributionLink": null,
-    "recordFilter": "<ogc:Filter>\n                <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>§ 172 BauGB Städtebauliche Förderung</ogc:Literal></ogc:PropertyIsEqualTo>\n</ogc:Filter>"
-  },
-  {
-    "index": "csw_geoportalde",
-    "includeTimestamp": true,
-    "priority": null,
-    "type": "CSW",
-    "maxRecords": 100,
-    "startPosition": 1,
-    "customCode": null,
-    "defaultMcloudSubgroup": [
-      "roads"
-    ],
-    "defaultDCATCategory": [
-      "OP_DATPRO"
-    ],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": null
+    "xpaths": {
+      "capabilities": {
+        "abstract": "/csw:Capabilities/ows:ServiceIdentification/ows:Abstract",
+        "serviceProvider": "/csw:Capabilities/ows:ServiceProvider",
+        "title": "/csw:Capabilities/ows:ServiceIdentification/ows:Title"
+      }
     },
-    "getRecordsUrl": "https://gdk.gdi-de.org/gdi-de/srv/ger/csw",
     "eitherKeywords": [],
     "httpMethod": "POST",
-    "id": 35,
-    "description": "geoportal.de CSW",
+    "getRecordsUrl": "https://gdk.gdi-de.org/gdi-de/srv/ger/csw",
+    "id": 0,
+    "description": "CSW geoportal.de",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n    <ogc:Or>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Bauleitplanung</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Bauleitpläne</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Bebauungsplan</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>B-Plan</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Flächennutzungsplan</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>FNP</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumordnung</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumordnungsprogramm</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumordnungsverfahren</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumverträglichkeit</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Regionalplan</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Regionalplanung</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Landesplanung</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Landesentwicklung</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Landesraumordnungsprogramm</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Milieuschutzgebiete</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Milieugebiet</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungssatzungsgebiete</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungssatzung</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungsverordnung</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungsverordnungsgebiete</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>städtebauliche Satzungen</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>§ 172 BauGB Städtebauliche Förderung</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Beteiligung der Öffentlichkeit</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Öffentlichkeitsbeteiligung</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>XPlanung</ogc:Literal></ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>XPlanGML</ogc:Literal></ogc:PropertyIsEqualTo>\n    </ogc:Or>\n</ogc:Filter>",
-    "disable": true
+    "pluPlanState": "festgesetzt",
+    "disable": false,
+    "deduplicationAlias": "csw_geoportal_de_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_hh_xplanungsplattform_de_51",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs51",
+    "id": 1,
+    "description": "WFS hh.xplanungsplattform.de v51",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_51_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_hh_xplanungsplattform_de_52",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs52",
+    "id": 2,
+    "description": "WFS hh.xplanungsplattform.de v52",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_52_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_hh_xplanungsplattform_de_53",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs53",
+    "id": 3,
+    "description": "WFS hh.xplanungsplattform.de v53",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_53_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_hh_xplanungsplattform_de_54",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs54",
+    "id": 4,
+    "description": "WFS hh.xplanungsplattform.de v54",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_54_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_hh_xplanungsplattform_de_51pre",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs51pre",
+    "id": 5,
+    "description": "WFS hh.xplanungsplattform.de v51pre",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_51pre_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_hh_xplanungsplattform_de_52pre",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs52pre",
+    "id": 6,
+    "description": "WFS hh.xplanungsplattform.de v52pre",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_52pre_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_hh_xplanungsplattform_de_53pre",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs53pre",
+    "id": 7,
+    "description": "WFS hh.xplanungsplattform.de v53pre",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_53pre_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_hh_xplanungsplattform_de_54pre",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs54pre",
+    "id": 8,
+    "description": "WFS hh.xplanungsplattform.de v54pre",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_54pre_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_xplanung_freiburg_de_30",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs30",
+    "id": 9,
+    "description": "WFS xplanung.freiburg.de v30",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "1.1.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_xplanung_freiburg_de_30_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_xplanung_freiburg_de_40",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs40",
+    "id": 10,
+    "description": "WFS xplanung.freiburg.de v40",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_xplanung_freiburg_de_40_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_xplanung_freiburg_de_41",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs41",
+    "id": 11,
+    "description": "WFS xplanung.freiburg.de v41",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_xplanung_freiburg_de_41_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_xplanung_freiburg_de_50",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs50",
+    "id": 12,
+    "description": "WFS xplanung.freiburg.de v50",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_xplanung_freiburg_de_50_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_xplanung_freiburg_de_51",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs51",
+    "id": 13,
+    "description": "WFS xplanung.freiburg.de v51",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_xplanung_freiburg_de_51_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_xplanung_freiburg_de_52",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs52",
+    "id": 14,
+    "description": "WFS xplanung.freiburg.de v52",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_xplanung_freiburg_de_52_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_xplanung_freiburg_de_53",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs53",
+    "id": 15,
+    "description": "WFS xplanung.freiburg.de v53",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_xplanung_freiburg_de_53_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_xplanung_freiburg_de_54",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+      },
+      "description": "./*/xplan:beschreibung",
+      "featureParent": "/wfs:FeatureCollection/wfs:member",
+      "name": "./*/xplan:name",
+      "pluPlanState": "festgesetzt",
+      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs54",
+    "id": 16,
+    "description": "WFS xplanung.freiburg.de v54",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "deduplicationAlias": "wfs_xplanung_freiburg_de_54_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
+  },
+  {
+    "elasticSearchUrl": "http://elastic:9200",
+    "index": "wfs_berliner_umringe",
+    "includeTimestamp": true,
+    "priority": null,
+    "type": "WFS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "xpaths": {
+      "capabilities": {
+        "language": "ger"
+      },
+      "description": "./*/fis:BEREICH",
+      "featureParent": "/wfs:FeatureCollection/gml:featureMember",
+      "name": "./*/fis:PLANNAME",
+      "pluPlanState": "./*/fis:FESTSG",
+      "spatial": "./*/fis:SHAPE_25833"
+    },
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://fbinter.stadt-berlin.de/fb/wfs/data/senstadt/sach_bplan",
+    "id": 17,
+    "description": "WFS Berliner Umringe",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "1.1.0",
+    "typename": "fis:sach_bplan",
+    "disable": false,
+    "deduplicationAlias": "wfs_berliner_umringe_dedup",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0,
+    "proxy": "",
+    "portalUrl": "http://localhost:8080/",
+    "urlCheck": {
+      "active": false,
+      "pattern": "30 04 * * *"
+    },
+    "indexCheck": {
+      "active": false,
+      "pattern": "10 04 * * *"
+    },
+    "sessionSecret": "mysecretkey",
+    "mail": {
+      "enabled": false,
+      "mailServer": {
+        "host": "localhost",
+        "port": 465,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "from": "test@example.com",
+      "to": "test@example.com",
+      "subjectTag": "mcloud"
+    },
+    "indexBackup": {
+      "active": false,
+      "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+      "cronPattern": "30 05 * * *",
+      "dir": ""
+    },
+    "maxDiff": 10,
+    "cronOffset": 0
   }
 ]
