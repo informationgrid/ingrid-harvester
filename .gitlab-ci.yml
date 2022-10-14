@@ -4,12 +4,12 @@ image:
 
 stages:
   - push-to-remote
+  - integrate-ado-changes
 
 push-to-remote-job:
   stage: push-to-remote
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
-    - if: $CI_PIPELINE_SOURCE == "web"
   script:
     - git checkout main
     - git pull # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4587
@@ -17,4 +17,23 @@ push-to-remote-job:
     - echo -e "\n* List checked out contents of github repo"
     - ls -la
     - echo -e "\n* Push main branch to remote repo"
-    - "git -c http.extraheader=\"Authorization: Basic $REMOTE_PAT\" push --force-with-lease $REMOTE_URL main"
+    - "git -c http.extraheader=\"Authorization: Basic $REMOTE_PAT\" push --force $REMOTE_URL main"
+
+integrate-ado-changes-job:
+  stage: integrate-ado-changes
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+  script:
+    - git pull # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4587
+    # pull ado branch from azure, update it to main, push it to origin and back to azure again
+    - git checkout ado
+    - git config pull.rebase false
+    - "git -c http.extraheader=\"Authorization: Basic $REMOTE_PAT\" pull $REMOTE_URL ado"
+    - git merge main
+    - git push origin ado
+    - "git -c http.extraheader=\"Authorization: Basic $REMOTE_PAT\" push --force $REMOTE_URL ado"
+    # merge ado changes into main and push main to origin and to azure 
+    - git checkout main
+    - git merge ado
+    - git push origin main
+    - "git -c http.extraheader=\"Authorization: Basic $REMOTE_PAT\" push --force $REMOTE_URL main"
