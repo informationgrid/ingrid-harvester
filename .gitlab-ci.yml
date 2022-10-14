@@ -11,10 +11,10 @@ push-to-remote-job:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_PIPELINE_SOURCE == "web"
   script:
-#    - git fetch --unshallow origin
     - git checkout main
+    - git pull # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4587
     - echo -e "* On branch" `git branch --show-current`
     - echo -e "\n* List checked out contents of github repo"
     - ls -la
     - echo -e "\n* Push main branch to remote repo"
-    - "git -c http.extraheader=\"Authorization: Basic $REMOTE_PAT\" push --force $REMOTE_URL main"
+    - "git -c http.extraheader=\"Authorization: Basic $REMOTE_PAT\" push --force-with-lease $REMOTE_URL main"
