@@ -9,7 +9,6 @@ push-to-remote-job:
   stage: push-to-remote
   only:
     - main
-    - develop
   script:
     - echo -e "* On branch"
     - echo -e "---"
@@ -17,7 +16,6 @@ push-to-remote-job:
     - echo -e "\n* List checked out contents of github repo"
     - echo -e "---"
     - ls -l
-#    - echo -e "\n* Push main branch to remote repo"
-#    - echo -e "---"
-#    - git -c http.extraheader="Authorization: Basic $REMOTE_PAT" push --force $REMOTE_URL main
-#    - git -c http.extraheader="Authorization: Basic $REMOTE_PAT" ls-remote $REMOTE_URL
+    - echo -e "\n* Push main branch to remote repo"
+    - echo -e "---"
+    - "git -c http.extraheader='Authorization: Basic $REMOTE_PAT' push --force $REMOTE_URL main"
