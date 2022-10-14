@@ -1,0 +1,21 @@
+image:
+  name: alpine/git:latest
+  entrypoint: [""] # override the ["git"] entrypoint provided by alpine/git
+
+stages:
+  - push-to-remote
+
+push-to-remote-job:
+  stage: push-to-remote
+  only:
+    - main
+  script:
+    - echo -e "* On branch"
+    - echo -e "---"
+    - git branch --show-current
+    - echo -e "\n* List checked out contents of github repo"
+    - echo -e "---"
+    - ls -l
+    - echo -e "\n* Push main branch to remote repo"
+    - echo -e "---"
+    - "git -c http.extraheader='Authorization: Basic $REMOTE_PAT' push --force $REMOTE_URL main"
