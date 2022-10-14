@@ -170,7 +170,7 @@ export abstract class GenericMapper {
                 dist.format = ["Unbekannt"];
             }
 
-            dist.accessURL = dist.accessURL.replace(/ /g, '%20');
+            dist.accessURL = dist.accessURL?.replace(/ /g, '%20');
         });
 
         // if (distributions.length === 0) {
