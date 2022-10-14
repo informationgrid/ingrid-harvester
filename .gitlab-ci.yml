@@ -1,3 +1,7 @@
+image:
+  name: alpine/git:latest
+  entrypoint: [""] # override the ["git"] entrypoint provided by alpine/git
+
 stages:
   - push-to-remote
 
