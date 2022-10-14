@@ -7,8 +7,9 @@ stages:
 
 push-to-remote-job:
   stage: push-to-remote
-  only:
-    - main
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "web"
   script:
     - echo -e "* On branch"
     - echo -e "---"
