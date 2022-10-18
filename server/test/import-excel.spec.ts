@@ -56,7 +56,9 @@ describe('Import Excel', function () {
             elasticSearchUrl: undefined,
             type: undefined,
             includeTimestamp: undefined,
-            index: undefined
+            index: undefined,
+            isIncremental: false,
+            maxConcurrent: 1
         };
         let importer = new ExcelImporter(settings);
 
