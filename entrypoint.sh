@@ -1,6 +1,2 @@
-
-cd /opt/mcloud/client
-npm run start &
-
-cd /opt/mcloud/server
-npm run start
+cd server
+node app/index.js

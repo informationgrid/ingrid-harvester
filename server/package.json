@@ -11,7 +11,8 @@
     "start-dev-16-inspect": "ts-node-dev --inspect --poll --ignore-watch mappings.json app/index.ts",
     "start-cli-dev": "ts-node app/server-cli.ts",
     "build": "tsc --outDir build",
-    "install-production": "npm install --production",
+    "postbuild": "copyfiles '../entrypoint.sh' './*.json' 'app/**/*.json' build/server",
+    "install-production": "NODE_ENV=production npm install",
     "test": "mocha -r ts-node/register test/**/*.ts",
     "test-jenkins": "mocha -r ts-node/register test/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml"
   },
@@ -74,6 +75,7 @@
     "@types/socket.io": "^2.1.4",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "copyfiles": "^2.4.1",
     "del": "^5.1.0",
     "eslint": "^6.8.0",
     "mocha": "^6.2.2",

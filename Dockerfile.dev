@@ -1,0 +1,14 @@
+FROM node:16.18.0-bullseye-slim
+
+WORKDIR /opt/mcloud
+COPY . ./
+
+WORKDIR /opt/mcloud/server
+RUN npm install
+
+WORKDIR /opt/mcloud/client
+RUN npm install
+
+EXPOSE 4200 8090 9200
+
+CMD ["tail", "-f", "/dev/null"]

@@ -18,7 +18,8 @@
       "dom"
     ],
     "paths": {
-      "@shared/*": ["../shared/*"]
+      "@shared/*": ["../shared/*"],
+      "tslib": ["node_modules/tslib"]
     }
   }
 }
