@@ -64,6 +64,7 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
         featureParent: new FormControl(this.model.xpaths.featureParent),
         name: new FormControl(this.model.xpaths.name),
         pluPlanState: new FormControl(this.model.xpaths.pluPlanState),
+        pluProcedureStartDate: new FormControl(this.model.xpaths.pluProcedureStartDate),
         spatial: new FormControl(this.model.xpaths.spatial)
       })
     );

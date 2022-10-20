@@ -100,6 +100,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -179,6 +180,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -258,6 +260,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -337,6 +340,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -416,6 +420,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -495,6 +500,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -574,6 +580,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -653,6 +660,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -732,6 +740,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -811,6 +820,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -890,6 +900,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -969,6 +980,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -1048,6 +1060,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -1127,6 +1140,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -1206,6 +1220,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -1285,6 +1300,7 @@
       "featureParent": "/wfs:FeatureCollection/wfs:member",
       "name": "./*/xplan:name",
       "pluPlanState": "festgesetzt",
+      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
       "spatial": "./*/xplan:raeumlicherGeltungsbereich"
     },
     "eitherKeywords": [],
@@ -1364,6 +1380,7 @@
       "featureParent": "/wfs:FeatureCollection/gml:featureMember",
       "name": "./*/fis:PLANNAME",
       "pluPlanState": "./*/fis:FESTSG",
+      "pluProcedureStartDate": "./*/fis:AFS_BESCHL",
       "spatial": "./*/fis:SHAPE_25833"
     },
     "eitherKeywords": [],

@@ -37,6 +37,7 @@ export type WfsSettings = {
         featureParent: string,
         name: string,
         pluPlanState: string,
+        pluProcedureStartDate: string,
         spatial: string
     },
     count: number,
@@ -62,6 +63,7 @@ export const DefaultXpathSettings: Partial<WfsSettings> = {
         featureParent: '/*[local-name()="FeatureCollection"]/*[local-name()="member"]',
         name: '',
         pluPlanState: '',
+        pluProcedureStartDate: '',
         spatial: ''
     }
 }

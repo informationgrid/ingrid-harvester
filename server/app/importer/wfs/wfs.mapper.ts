@@ -883,13 +883,13 @@ export class WfsMapper extends GenericMapper {
     }
 
     /**
-     * This is currently FIS specific.
+     * TODO This is currently very proprietary.
      * 
-     * // TODO is this the correct field?
-     * // TODO what about other WFS sources?
+     * FIS: fis:AFS_BESCHL
+     * XPLAN: xplan:aufstellungsbeschlussDatum
      */
-    _getPluProcedureStartDate(): any {
-        let procedureStartDate = this.select('./*/fis:AFS_BESCHL', this.feature, true)?.textContent;
+    _getPluProcedureStartDate(): Date {
+        let procedureStartDate = this.select(this.settings.xpaths.pluProcedureStartDate, this.feature, true)?.textContent;
         return procedureStartDate;
     }
 

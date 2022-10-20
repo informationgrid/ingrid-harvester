@@ -56,7 +56,7 @@
 
   <mat-card>
     <mat-card-header>
-      <mat-card-title>WFS XPaths zu ...</mat-card-title>
+      <mat-card-title>WFS XPaths (oder default-Werte) zu ...</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div formGroupName="xpaths">
@@ -70,7 +70,7 @@
                 <input matInput placeholder="Katalogbeschreibung" formControlName="abstract" required>
               </mat-form-field> -->
               <mat-form-field fxFlex>
-                <input matInput placeholder="Sprache des Katalogs (XPath oder default Wert)" formControlName="language" required>
+                <input matInput placeholder="Sprache des Katalogs" formControlName="language" required>
               </mat-form-field>
               <!-- <mat-form-field fxFlex>
                 <input matInput placeholder="ServiceProvider" formControlName="serviceProvider" required>
@@ -90,7 +90,10 @@
             <input matInput placeholder="Räumliche Ausdehnung (Feature-relativ)" formControlName="spatial" required>
           </mat-form-field>
           <mat-form-field fxFlex>
-            <input matInput placeholder="Plan Status (XPath oder default Wert)" formControlName="pluPlanState" required>
+            <input matInput placeholder="Plan Status (Feature-relativ)" formControlName="pluPlanState" required>
+          </mat-form-field>
+          <mat-form-field fxFlex>
+            <input matInput placeholder="Aufstellungsbeschlussdatum (Feature-relativ)" formControlName="pluProcedureStartDate" required>
           </mat-form-field>
         </div>
       </div>
