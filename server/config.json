@@ -94,7 +94,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -174,7 +177,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -254,7 +260,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -334,7 +343,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -414,7 +426,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -494,7 +509,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -574,7 +592,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -654,7 +675,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -734,7 +758,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -814,7 +841,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -894,7 +924,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -974,7 +1007,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -1054,7 +1090,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -1134,7 +1173,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -1214,7 +1256,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -1294,7 +1339,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -1374,7 +1422,10 @@
     },
     "xpaths": {
       "capabilities": {
-        "language": "ger"
+        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
+        "language": "ger",
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
+        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
       },
       "description": "./*/fis:BEREICH",
       "featureParent": "/wfs:FeatureCollection/gml:featureMember",
