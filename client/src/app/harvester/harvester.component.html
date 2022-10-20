@@ -56,7 +56,7 @@
 
             <app-importer-detail [data]="importDetail[harvester.id]"
                                  (showLog)="showLog(harvester.id)"
-                                 [cronActive]="!harvester.disable && harvester.cron?.active"></app-importer-detail>
+                                 [cronActive]="!harvester.disable && (harvester.cron?.full?.active || harvester.cron?.incr?.active)"></app-importer-detail>
 
             <mat-action-row>
                 <button mat-button (click)="showLog(harvester.id)" [disabled]="!hasAnyProblems(harvester.id)" data-test="log">
