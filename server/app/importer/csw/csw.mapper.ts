@@ -39,6 +39,7 @@ import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {Summary} from "../../model/summary";
 import { pluPlanState, pluPlanType, pluProcedureState } from "../../model/dcatApPlu.document";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
+import { MiscUtils } from '../../utils/misc.utils';
 
 let xpath = require('xpath');
 
@@ -96,7 +97,7 @@ export class CswMapper extends GenericMapper {
         this.harvestTime = harvestTime;
         this.storedData = storedData;
         this.summary = summary;
-        this.fetched = {...this.fetched, ...generalInfo};
+        this.fetched = MiscUtils.merge(this.fetched, generalInfo);
 
         this.uuid = CswMapper.getCharacterStringContent(record, 'fileIdentifier');
 

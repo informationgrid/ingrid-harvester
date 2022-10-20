@@ -35,6 +35,7 @@ import {OaiImporter} from "../../importer/oai/oai.importer";
 import {DcatImporter} from "../../importer/dcat/dcat.importer";
 import {SparqlImporter} from "../../importer/sparql/sparql.importer";
 import {WfsImporter} from "../../importer/wfs/wfs.importer";
+import { MiscUtils } from '../../utils/misc.utils';
 
 const log = getLogger();
 
@@ -148,14 +149,19 @@ export class ConfigService {
             let configs: Harvester[] = JSON.parse(contents.toString());
             return configs
                 .map(config => {
-                    if (config.type === 'EXCEL') return {...ExcelImporter.defaultSettings, ...config};
-                    else if (config.type === 'EXCEL_SPARSE') return {...ExcelSparseImporter.defaultSettings, ...config};
-                    else if (config.type === 'CKAN') return {...CkanImporter.defaultSettings, ...config};
-                    else if (config.type && config.type.endsWith('CSW')) return {...CswImporter.defaultSettings, ...config};
-                    else if (config.type === 'OAI') return {...OaiImporter.defaultSettings, ...config};
-                    else if (config.type === 'DCAT') return {...DcatImporter.defaultSettings, ...config};
-                    else if (config.type === 'SPARQL') return {...SparqlImporter.defaultSettings, ...config};
-                    else if (config.type === 'WFS') return {...WfsImporter.defaultSettings, ...config};
+                    let defaultSettings = {};
+                    switch (config.type) {
+                        case 'CKAN': defaultSettings = CkanImporter.defaultSettings; break;
+                        case 'CSW': defaultSettings = CswImporter.defaultSettings; break;
+                        case 'CODEDE-CSW': defaultSettings = CswImporter.defaultSettings; break;
+                        case 'DCAT': defaultSettings = DcatImporter.defaultSettings; break;
+                        case 'EXCEL': defaultSettings = ExcelImporter.defaultSettings; break;
+                        case 'EXCEL_SPARSE': defaultSettings = ExcelSparseImporter.defaultSettings; break;
+                        case 'OAI': defaultSettings = OaiImporter.defaultSettings; break;
+                        case 'SPARQL': defaultSettings = SparqlImporter.defaultSettings; break;
+                        case 'WFS': defaultSettings = WfsImporter.defaultSettings; break;
+                    }
+                    return MiscUtils.merge(defaultSettings, config);
                 })
                 .filter(config => config); // remove all invalid configurations
         } else {

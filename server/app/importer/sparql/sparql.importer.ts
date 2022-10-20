@@ -35,7 +35,7 @@ import {SparqlSettings} from './sparql.settings';
 import {FilterUtils} from "../../utils/filter.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
 import {ConfigService} from "../../services/config/ConfigService";
-
+import { MiscUtils } from '../../utils/misc.utils';
 
 const plain_fetch = require('node-fetch');
 const HttpsProxyAgent = require('https-proxy-agent');
@@ -92,7 +92,7 @@ export class SparqlImporter implements Importer {
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         // merge default settings with configured ones
-        settings = {...SparqlImporter.defaultSettings, ...settings};
+        settings = MiscUtils.merge(SparqlImporter.defaultSettings, settings);
 
         this.settings = settings;
         this.filterUtils = new FilterUtils(settings);

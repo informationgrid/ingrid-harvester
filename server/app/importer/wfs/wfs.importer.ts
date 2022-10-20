@@ -38,10 +38,10 @@ import {DefaultXpathSettings, WfsSettings} from './wfs.settings';
 import {FilterUtils} from "../../utils/filter.utils";
 import { Contact } from "../../model/generic.mapper";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
+import { MiscUtils } from '../../utils/misc.utils';
 import { XPathUtils } from '../../utils/xpath.utils';
 
 const fs = require('fs');
-const merge = require('lodash/merge');
 const xpath = require('xpath');
 
 let log = require('log4js').getLogger(__filename),
@@ -125,7 +125,7 @@ export class WfsImporter implements Importer {
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         // merge default settings with configured ones
-        settings = merge(WfsImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(WfsImporter.defaultSettings, settings);
 
         // TODO disallow setting "//" in xpaths in the UI
 
@@ -200,7 +200,7 @@ export class WfsImporter implements Importer {
         let capabilitiesResponseDom = new DomParser().parseFromString(responseBody);
 
         // extract the namespace map for the capabilities
-        this.nsMap = {...XPathUtils.getNsMap(capabilitiesResponseDom), ...XPathUtils.getExtendedNsMap(capabilitiesResponseDom)};
+        this.nsMap = MiscUtils.merge(XPathUtils.getNsMap(capabilitiesResponseDom), XPathUtils.getExtendedNsMap(capabilitiesResponseDom));
         this.select = xpath.useNamespaces(this.nsMap);
 
         // get used CRSs through getCapabilities
@@ -381,7 +381,7 @@ export class WfsImporter implements Importer {
         // extend nsmap with the namespaces from the FeatureCollection response
         // this.nsMap = { ...XPathUtils.getNsMap(xml), ...XPathUtils.getExtendedNsMap(xml) };
         // TODO: the above does not work, because it doesn't contain the NS for the FeatureType;
-        let nsMap = {...this.nsMap, ...XPathUtils.getNsMap(xml)};
+        let nsMap = MiscUtils.merge(this.nsMap, XPathUtils.getNsMap(xml));
         let select = xpath.useNamespaces(nsMap);
 
         // store xpath handling stuff in general info

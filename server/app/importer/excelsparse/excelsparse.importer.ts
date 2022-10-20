@@ -33,6 +33,7 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DefaultCatalogSettings, ExcelSparseSettings} from './excelsparse.settings';
 import {FilterUtils} from "../../utils/filter.utils";
+import { MiscUtils } from '../../utils/misc.utils';
 
 let log = require('log4js').getLogger(__filename);
 
@@ -62,7 +63,7 @@ export class ExcelSparseImporter implements Importer {
      */
     constructor(settings) {
         // merge default settings with configured ones
-        settings = {...ExcelSparseImporter.defaultSettings, ...settings};
+        settings = MiscUtils.merge(ExcelSparseImporter.defaultSettings, settings);
 
         this.summary = new Summary(settings);
         this.filterUtils = new FilterUtils(settings);
@@ -101,7 +102,7 @@ export class ExcelSparseImporter implements Importer {
             log.debug('done loading file');
 
             let generalInfo = {};
-            generalInfo = { ...generalInfo, ...this.settings.catalog };
+            generalInfo = MiscUtils.merge(generalInfo, this.settings.catalog);
             generalInfo['publisher'] = [{ name: '' }];
             generalInfo['contactPoint'] = {};
 

@@ -35,6 +35,7 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {OaiSettings} from './oai.settings';
 import {FilterUtils} from "../../utils/filter.utils";
+import { MiscUtils } from '../../utils/misc.utils';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -85,7 +86,7 @@ export class OaiImporter implements Importer {
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         // merge default settings with configured ones
-        settings = {...OaiImporter.defaultSettings, ...settings};
+        settings = MiscUtils.merge(OaiImporter.defaultSettings, settings);
 
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;

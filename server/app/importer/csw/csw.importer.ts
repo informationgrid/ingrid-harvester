@@ -35,9 +35,8 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DefaultXpathSettings, CswSettings} from './csw.settings';
 import {FilterUtils} from "../../utils/filter.utils";
+import { MiscUtils } from '../../utils/misc.utils';
 import { SummaryService } from '../../services/config/SummaryService';
-
-const merge = require('lodash/merge');
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -85,7 +84,7 @@ export class CswImporter implements Importer {
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         // merge default settings with configured ones
-        settings = merge(CswImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(CswImporter.defaultSettings, settings);
 
         // if we are looking for incremental updates, add a date filter to the existing record filter
         if (settings.isIncremental) {

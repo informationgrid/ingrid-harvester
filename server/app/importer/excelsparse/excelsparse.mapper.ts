@@ -31,6 +31,7 @@ import {OptionsWithUri} from 'request-promise';
 import {ImporterSettings} from "../../importer.settings";
 // import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Columns} from './excelsparse.importer';
+import { MiscUtils } from '../../utils/misc.utils';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -65,7 +66,7 @@ export class ExcelSparseMapper extends GenericMapper {
         this.workbook = data.workbook;
         this.summary = data.summary;
         this.currentIndexName = data.currentIndexName;
-        this.fetched = { ...this.fetched, ...generalInfo };
+        this.fetched = MiscUtils.merge(this.fetched, generalInfo);
 
         super.init();
     }

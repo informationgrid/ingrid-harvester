@@ -23,6 +23,8 @@
 
 'use strict';
 
+import { MiscUtils } from './misc.utils';
+
 export class XPathUtils {
 
     private XPathUtils() {
@@ -63,7 +65,7 @@ export class XPathUtils {
         }
         let featureTypeNames = responseXml.getElementsByTagNameNS('*', 'Name');
         if (featureTypeNames && featureTypeNames.length > 0) {
-            nsMap = { ...nsMap, ..._extractNamespaces(featureTypeNames[0].attributes) };
+            nsMap = MiscUtils.merge(nsMap, _extractNamespaces(featureTypeNames[0].attributes));
         }
         return nsMap;
     }

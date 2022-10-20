@@ -29,19 +29,14 @@ import {CswImporter} from "./csw/csw.importer";
 import {CodedeImporter} from "./csw/codede.importer";
 import {OaiImporter} from "./oai/oai.importer";
 import {CkanSettings} from './ckan/ckan.settings';
-import {ExcelSettings} from './excel/excel.settings';
-import {ExcelSparseSettings} from './excelsparse/excelsparse.settings';
-import {CswSettings} from './csw/csw.settings';
-import {OaiSettings} from './oai/oai.settings';
 import {DcatImporter} from "./dcat/dcat.importer";
 import {SparqlImporter} from "./sparql/sparql.importer";
-import {SparqlSettings} from "./sparql/sparql.settings";
 import {WfsImporter} from "./wfs/wfs.importer";
-import {WfsSettings} from "./wfs/wfs.settings";
+import { Harvester } from "@shared/harvester";
 
 export class ImporterFactory {
 
-    public static get(config: ExcelSettings | ExcelSparseSettings | CkanSettings | CswSettings | OaiSettings | SparqlSettings | WfsSettings): Importer {
+    public static get(config: Harvester): Importer {
         switch (config.type) {
             case 'CKAN':
                 // remove trailing slash from CKAN URL

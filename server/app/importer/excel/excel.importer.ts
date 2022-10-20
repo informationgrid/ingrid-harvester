@@ -33,6 +33,7 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {ExcelSettings} from './excel.settings';
 import {FilterUtils} from "../../utils/filter.utils";
+import { MiscUtils } from '../../utils/misc.utils';
 
 let log = require('log4js').getLogger(__filename);
 
@@ -60,7 +61,7 @@ export class ExcelImporter implements Importer {
      */
     constructor(settings) {
         // merge default settings with configured ones
-        settings = {...ExcelImporter.defaultSettings, ...settings};
+        settings = MiscUtils.merge(ExcelImporter.defaultSettings, settings);
 
         this.summary = new Summary(settings);
         this.filterUtils = new FilterUtils(settings);

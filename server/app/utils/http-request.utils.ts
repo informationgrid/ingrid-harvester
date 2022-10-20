@@ -24,6 +24,7 @@
 import {getLogger} from "log4js";
 import {OptionsWithUri} from "request-promise";
 import {Headers} from "request";
+import { MiscUtils } from './misc.utils';
 
 let request = require('request-promise');
 let DomParser = require('xmldom').DOMParser;
@@ -186,7 +187,7 @@ export class RequestDelegate {
     }
 
     updateConfig(partialConfig: any): void {
-        this.config = {...this.config, ...partialConfig};
+        this.config = MiscUtils.merge(this.config, partialConfig);
     }
 
     /**

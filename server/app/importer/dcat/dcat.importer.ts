@@ -35,6 +35,7 @@ import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DcatSettings} from './dcat.settings';
 import {FilterUtils} from "../../utils/filter.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
+import { MiscUtils } from '../../utils/misc.utils';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -85,7 +86,7 @@ export class DcatImporter implements Importer {
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         // merge default settings with configured ones
-        settings = {...DcatImporter.defaultSettings, ...settings};
+        settings = MiscUtils.merge(DcatImporter.defaultSettings, settings);
 
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;

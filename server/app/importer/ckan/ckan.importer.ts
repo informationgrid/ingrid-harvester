@@ -33,6 +33,7 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {CkanSettings} from './ckan.settings';
 import {FilterUtils} from '../../utils/filter.utils';
+import { MiscUtils } from '../../utils/misc.utils';
 
 let log = require('log4js').getLogger(__filename);
 const uuidv5 = require('uuid/v5');
@@ -79,7 +80,7 @@ export class CkanImporter implements Importer {
      */
     constructor(settings: CkanSettings) {
         // merge default settings with configured ones
-        settings = {...CkanImporter.defaultSettings, ...settings};
+        settings = MiscUtils.merge(CkanImporter.defaultSettings, settings);
 
         this.summary = new Summary(settings);
 

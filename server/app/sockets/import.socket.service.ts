@@ -31,6 +31,7 @@ import {getLogger} from 'log4js';
 import {Mail, MailServer} from "../utils/nodemailer.utils";
 import {ImportLogMessage} from "../model/import.result";
 import {StatisticUtils} from "../statistic/statistic.utils";
+import { MiscUtils } from '../utils/misc.utils';
 
 @SocketService('/import')
 export class ImportSocketService {
@@ -65,7 +66,7 @@ export class ImportSocketService {
             let configData = ConfigService.get().filter(config => config.id === id)[0];
             configData.deduplicationAlias = configData.index + 'dedup';
 
-            let configHarvester = {...configData, ...configGeneral, isIncremental};
+            let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });
 
             let importer = ImporterFactory.get(configHarvester);
             let mode = isIncremental ? 'incr' : 'full';

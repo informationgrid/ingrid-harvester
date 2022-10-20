@@ -28,6 +28,7 @@ import {concat, Observable} from 'rxjs';
 import {ImportLogMessage} from './model/import.result';
 import {ImporterFactory} from "./importer/importer.factory";
 import {ConfigService} from './services/config/ConfigService';
+import { MiscUtils } from './utils/misc.utils';
 
 let config = ConfigService.get(),
     configGeneral = ConfigService.getGeneralSettings(),
@@ -75,7 +76,7 @@ async function startProcess() {
         // Set the same elasticsearch alias for deduplication for all importers
         importerConfig.deduplicationAlias = deduplicationAlias;
 
-        let configHarvester = {...importerConfig, ...configGeneral};
+        let configHarvester = MiscUtils.merge(importerConfig, configGeneral);
 
         let importer = ImporterFactory.get( configHarvester );
         if (!importer) {
