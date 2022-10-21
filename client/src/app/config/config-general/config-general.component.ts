@@ -161,6 +161,9 @@ export class ConfigGeneralComponent implements OnInit {
 
   urlCheckTranslate(cronExpression: string) {
     try {
+      if (!isValidCron(cronExpression)) {
+        throw new Error('Kein gültiger Ausdruck');
+      }
       this.urlCheckTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
     } catch (e) {
       this.urlCheckTranslation = 'Kein gültiger Ausdruck';
@@ -179,6 +182,9 @@ export class ConfigGeneralComponent implements OnInit {
 
   indexCheckTranslate(cronExpression: string) {
     try {
+      if (!isValidCron(cronExpression)) {
+        throw new Error('Kein gültiger Ausdruck');
+      }
       this.indexCheckTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
     } catch (e) {
       this.indexCheckTranslation = 'Kein gültiger Ausdruck';
@@ -198,6 +204,9 @@ export class ConfigGeneralComponent implements OnInit {
 
   indexBackupCronTranslate(cronExpression: string) {
     try {
+      if (!isValidCron(cronExpression)) {
+        throw new Error('Kein gültiger Ausdruck');
+      }
       this.indexBackupCronTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
     } catch (e) {
       this.indexBackupCronTranslation = 'Kein gültiger Ausdruck';
