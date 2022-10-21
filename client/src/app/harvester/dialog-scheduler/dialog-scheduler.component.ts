@@ -25,7 +25,7 @@ import {Component, Inject, OnInit, Optional} from '@angular/core';
 import cronstrue from 'cronstrue/i18n';
 import {MAT_DIALOG_DATA} from '@angular/material';
 import {CronData} from '../../../../../server/app/importer.settings';
-import { parseExpression } from 'cron-parser';
+import { isValidCron } from 'cron-validator';
 
 @Component({
   selector: 'app-dialog-scheduler',
@@ -60,7 +60,9 @@ export class DialogSchedulerComponent implements OnInit {
   translate(cronExpression: string, mode: string) {
     console.log('MODE:', mode);
     try {
-      parseExpression(cronExpression);
+      if (!isValidCron(cronExpression)) {
+        throw new Error('Kein gültiger Ausdruck');
+      }
       this[mode].cronTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
       this[mode].validExpression = true;
     } catch (e) {
