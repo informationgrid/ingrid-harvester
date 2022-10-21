@@ -71,7 +71,7 @@ export class MonitoringUrlCheckComponent implements OnInit {
             datasets: [
               {
                 label: "2xx",
-                data: data.history.map(entry => entry.status.filter(status => status.code >= 200 && status.code < 300).map(status => status.url.length).reduce((a, b) => a+b)),
+                data: data.history.map(entry => entry.status.filter(status => status.code >= 200 && status.code < 300).map(status => status.url.length).reduce((a, b) => a+b, 0)),
                 borderColor: "green",
                 backgroundColor: "green",
                 fill: false,
@@ -80,7 +80,7 @@ export class MonitoringUrlCheckComponent implements OnInit {
               },
               {
                 label: "4xx",
-                data: data.history.map(entry => entry.status.filter(status => status.code >= 400 && status.code < 500).map(status => status.url.length).reduce((a, b) => a+b)),
+                data: data.history.map(entry => entry.status.filter(status => status.code >= 400 && status.code < 500).map(status => status.url.length).reduce((a, b) => a+b, 0)),
                 borderColor: "purple",
                 backgroundColor: "purple",
                 fill: false,
@@ -89,7 +89,7 @@ export class MonitoringUrlCheckComponent implements OnInit {
               },
               {
                 label: "5xx",
-                data: data.history.map(entry => entry.status.filter(status => status.code >= 500 && status.code < 600).map(status => status.url.length).reduce((a, b) => a+b)),
+                data: data.history.map(entry => entry.status.filter(status => status.code >= 500 && status.code < 600).map(status => status.url.length).reduce((a, b) => a+b, 0)),
                 borderColor: "orange",
                 backgroundColor: "orange",
                 fill: false,
@@ -98,7 +98,7 @@ export class MonitoringUrlCheckComponent implements OnInit {
               },
               {
                 label: "Fehler",
-                data: data.history.map(entry => entry.status.filter(status => isNaN(status.code)).map(status => status.url.length).reduce((a, b) => a+b)),
+                data: data.history.map(entry => entry.status.filter(status => isNaN(status.code)).map(status => status.url.length).reduce((a, b) => a+b, 0)),
                 borderColor: "red",
                 backgroundColor: "red",
                 fill: false,
