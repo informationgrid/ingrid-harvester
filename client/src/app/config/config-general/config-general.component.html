@@ -36,6 +36,10 @@
     </mat-form-field>
 
     <mat-form-field>
+      <input matInput type="password" placeholder="Elasticsearch-Passwort" formControlName="elasticSearchPassword" required>
+    </mat-form-field>
+
+    <mat-form-field>
       <input matInput placeholder="Alias-Name" formControlName="alias" required>
       <mat-error *ngIf="configForm.get('alias').hasError('whitespace')">
         Es dürfen nicht nur Leerzeichen eingegeben sein

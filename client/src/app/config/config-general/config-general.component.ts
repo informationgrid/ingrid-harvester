@@ -28,6 +28,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {of} from 'rxjs';
 import {GeneralSettings} from '@shared/general-config.settings';
 import cronstrue from 'cronstrue/i18n';
+import { isValidCron } from 'cron-validator';
 
 @Component({
   selector: 'app-config-general',
@@ -106,6 +107,7 @@ export class ConfigGeneralComponent implements OnInit {
 
     this.configForm = this.formBuilder.group({
       elasticSearchUrl: [settings.elasticSearchUrl, Validators.required, ConfigGeneralComponent.elasticUrlValidator],
+      elasticSearchPassword: [settings.elasticSearchPassword],
       alias: [settings.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
       numberOfShards: [settings.numberOfShards],
       numberOfReplicas: [settings.numberOfReplicas],
