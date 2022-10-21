@@ -16,35 +16,39 @@ The harvester runs two components in a single docker container, `client` and `se
 
 ### Running in a local docker container
 
-You can use the same setup as outlined in the section `Test server` below, but with `docker-compose-dev.yml`. This scales down memory requirements and uses `ts-node-dev` instead of `ts-node`.
+You can use the same setup as outlined in the section `Test setup` below, but with `docker-compose-dev.yml`. This scales down memory requirements and uses `ts-node-dev` instead of `node`.
 
 ### Running in a terminal
 
 Prerequisites:
 * node.js v16
-* an Elasticsearch index (either on your machine or from the one from docker-compose.yml)
+* an Elasticsearch index (either on your machine or the one from docker-compose.yml)
 
 You may wish to run the server and the client outside of the docker container, for debugging and faster deployment/development purposes. Currently you have to change some files to achieve this, outlined below:
 
 * `server/config-general.json`: change the value of `elasticSearchUrl` to `http://localhost:9200` 
 * `server/config-general.json`: change the value of `elasticSearchPassword`
-
-Now, first start an Elasticsearch instance (either from the docker container or directly on your machine), then run the client and server separately:
-```bash
-cd client
-npm run start
-```
-```bash
-cd server
-npm run start-dev-16
-```
+* Now, first start an Elasticsearch instance (either from the docker container or directly on your machine), then run the client and server separately:
+  ```bash
+  cd client
+  npm run start
+  ```
+  ```bash
+  cd server
+  npm run start-dev-16
+  ```
+* Now you can access the harvester
+    * via GUI: http://localhost:4200
+    * via Elasticsearch API: http://localhost:9200
+        * user: `read_user`
+        * password: *the one you set in `elasticsearch/create-users.json`*
 
 ## Test setup
 
 * `server/config-general.json`: change the value of `elasticSearchPassword`
 * Build, run, and detach the containers:
     ```bash
-    sudo docker-compose -f docker-compose.yml --build -d
+    sudo docker-compose -f docker-compose.yml up --build -d
     ```
 * If you are setting the harvester up for the first time (i.e., after initializing the Elasticsearch volume), you need to create the appropriate user credentials for Elasticsearch:
     * `elasticsearch/set-pw-es`: customize all passwords
@@ -52,14 +56,14 @@ npm run start-dev-16
         * make sure to put the same password for the `elastic` user that you chose for `elasticSearchPassword`
     * `elasticsearch/create-users.json`: set a password for the readonly `read_user`
     * `elasticsearch/setup-access.sh`:
-        * replace `$TOKEN` with a base64 encoded string of the elastic user and its password
+        * replace `$TOKEN` with a base64 encoded string of the elastic user and its password:
           ```bash
           echo -n elastic:$YOUR_ELASTIC_PASSWORD | base64
           ```
         * uncomment the file
         * run it
 * Now you can access the harvester
-    * via GUI: http://localhost:4200
+    * via GUI: http://localhost:8090
     * via Elasticsearch API: http://localhost:9200
         * user: `read_user`
         * password: *the one you set in `elasticsearch/create-users.json`*
