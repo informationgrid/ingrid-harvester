@@ -758,7 +758,7 @@ export class DcatMapper extends GenericMapper {
 
     _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
         let config: OptionsWithUri = {
-            method: 'GET',
+            method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),
             qs: {},

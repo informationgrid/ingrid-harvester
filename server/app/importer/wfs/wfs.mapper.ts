@@ -1025,7 +1025,7 @@ export class WfsMapper extends GenericMapper {
     // TODO
     _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
         let config: OptionsWithUri = {
-            method: 'GET',
+            method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),
             qs: {},
