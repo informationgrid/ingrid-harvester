@@ -33,6 +33,8 @@ let elasticsearch = require('elasticsearch'),
 
 require('url').URL;
 
+const MAX_MESSAGE_LENGTH = 4096;
+
 export interface BulkResponse {
     queued: boolean;
     response?: any;
@@ -104,10 +106,14 @@ export class StatisticUtils {
 
     collectErrorsOrWarnings(result: Map<string, number>, messages: string[]){
         messages.forEach(message => {
-            if(result.has(message))
-                result.set(message, result.get(message)+1);
+            // truncate too long messages:
+            // a) because usually the content is not needed for debugging after a few lines
+            // b) because elasticsearch complains for too long messages in a document
+            let truncatedMessage = message?.length > MAX_MESSAGE_LENGTH ? message.substring(0, MAX_MESSAGE_LENGTH - 3) + '...' : message;
+            if(result.has(truncatedMessage))
+                result.set(truncatedMessage, result.get(truncatedMessage)+1);
             else
-                result.set(message, 1);
+                result.set(truncatedMessage, 1);
         })
     }
 
