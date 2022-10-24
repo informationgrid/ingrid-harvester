@@ -71,7 +71,8 @@
                 </button>
                 <button mat-button (click)="startImport(harvester.id, true)"
                         data-test="import"
-                        [disabled]="importDetail[harvester.id]?.complete === false">
+                        [disabled]="importDetail[harvester.id]?.complete === false"
+                        *ngIf="item.key === 'CSW'">
                     <mat-icon class="inline-valigned">import_export</mat-icon>
                     Import starten (inkrementell)
                 </button>
