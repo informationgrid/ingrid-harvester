@@ -26,7 +26,9 @@
       "Atom Feed",
       "AtomFeed",
       "application/atom+xml",
-      "Atom Implementation of Pre-defined Dataset Download Service"
+      "Atom Implementation of Pre-defined Dataset Download Service",
+      "INSPIRE-ATOM",
+      "WWW:LINK-1.0-http--ATOM"
     ],
     "CSV": [
       "http://publications.europa.eu/resource/authority/file-type/csv",
@@ -39,7 +41,7 @@
       "WWW:LINK-1.0-http--download",
       "WWW:DOWNLOAD",
       "http-get",
-      "onLine"
+      "WWW:DOWNLOAD-1.0-ftp--download"
     ],
     "DBF": [
       "http://publications.europa.eu/resource/authority/file-type/dbf"
@@ -87,7 +89,8 @@
       "htm",
       "text/hmtl",
       "text/html",
-      "Text/HTML"
+      "Text/HTML",
+      "HTML5"
     ],
     "Image": [
       "Image (*.img)"
@@ -95,7 +98,8 @@
     "JPEG": [
       "interner Code:JPEG",
       "Bild .jpg",
-      "jpg"
+      "jpg",
+      "jpeg"
     ],
     "JSON": [
       "http://publications.europa.eu/resource/authority/file-type/json",
@@ -150,7 +154,8 @@
       "shape-Datei",
       "Shape (ESRI)",
       "Shape-Dateien",
-      "ESRI-Shape"
+      "ESRI-Shape",
+      "Shape (SHP)"
     ],
     "SOAP": [
       "xml/soap"
@@ -164,7 +169,9 @@
       "tiff",
       "interner Code:TIFF (T4)",
       "tif",
-      "tif unkomprimiert"
+      "tif unkomprimiert",
+      "tiff/tfw",
+      "TIFF (300 DPI)"
     ],
     "TXT": [
       "http://publications.europa.eu/resource/authority/file-type/txt",
@@ -173,7 +180,9 @@
     "Unbekannt": [
       "inapplicable",
       "Sonstiges",
-      "-"
+      "-",
+      "unknown",
+      "no Format"
     ],
     "WCS": [
       "ogc:wcs",
@@ -186,6 +195,7 @@
       "ogc:wfs-2.0.0-http-get-feature",
       "http://publications.europa.eu/resource/authority/file-type/WFS_SRVC",
       "application/vnd.ogc.wfs_xml",
+      "OGC:WFS-2.0.0-http-get-map",
       "OGC:WFS-2.0.0-http-get-capabilities",
       "OGC-WFS Web Feature Service",
       "OGC:WFS-2.0.0-http-get-capabilities",
@@ -215,8 +225,11 @@
     ],
     "WWW": [
       "http",
+      "Internet",
+      "onLine",
       "www:link-1.0-http--link",
-      "www:link-1.0-http--related"
+      "www:link-1.0-http--related",
+      "Web-Dienst"
     ],
     "XLS": [
       "http://publications.europa.eu/resource/authority/file-type/xls",
@@ -231,6 +244,13 @@
       "http://publications.europa.eu/resource/authority/file-type/xml",
       "xml",
       "text/xml"
+    ],
+    "XPlanGML": [
+      "TIFF (300 DPI) / XPlanGML",
+      "TIFF (300 DPI); XPlanGML",
+      "XPlanGML",
+      "XPlan-GML",
+      "XplanGML3.0"
     ],
     "ZIP": [
       "http://publications.europa.eu/resource/authority/file-type/zip",
