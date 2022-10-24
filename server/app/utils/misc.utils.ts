@@ -25,6 +25,9 @@
 
 import { merge as lodashMerge } from 'lodash';
 
+const MAX_MSG_LENGTH = 4096;
+const TRUNC_STR = '... (truncated)';
+
 export class MiscUtils {
 
     /**
@@ -37,5 +40,15 @@ export class MiscUtils {
     public static merge(...objs) {
         // lodash mutates the first object on which it merges subsequent objects
         return lodashMerge({}, ...objs)
+    }
+
+    /**
+     * For log output overview and ES indexing reasons, messages might want/need to be truncated.
+     * We set an arbitrary limit for message length in `MAX_MESSAGE_LENGTH`.
+     * 
+     * @param msg the message to be truncated
+     */
+    public static truncateErrorMessage(msg: string) {
+        return msg?.length > MAX_MSG_LENGTH ? msg.substring(0, MAX_MSG_LENGTH - TRUNC_STR.length) + TRUNC_STR : msg;
     }
 }

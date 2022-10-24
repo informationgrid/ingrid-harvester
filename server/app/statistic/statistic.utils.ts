@@ -27,13 +27,12 @@ import {Index} from '@shared/index.model';
 import {elasticsearchMapping} from "./statistic.mapping";
 import {elasticsearchSettings} from "./statistic.settings";
 import {ImportLogMessage} from "../model/import.result";
+import { MiscUtils } from '../utils/misc.utils';
 
 let elasticsearch = require('elasticsearch'),
     log = require('log4js').getLogger(__filename);
 
 require('url').URL;
-
-const MAX_MESSAGE_LENGTH = 4096;
 
 export interface BulkResponse {
     queued: boolean;
@@ -110,7 +109,7 @@ export class StatisticUtils {
             // truncate too long messages:
             // a) because usually the content is not needed for debugging after a few lines
             // b) because elasticsearch complains for too long messages in a document
-            let truncatedMessage = message?.length > MAX_MESSAGE_LENGTH ? message.substring(0, MAX_MESSAGE_LENGTH - 3) + '...' : message;
+            let truncatedMessage = MiscUtils.truncateErrorMessage(message);
             if(result.has(truncatedMessage))
                 result.set(truncatedMessage, result.get(truncatedMessage)+1);
             else
