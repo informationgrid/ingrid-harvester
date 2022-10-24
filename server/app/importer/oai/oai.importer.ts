@@ -154,7 +154,7 @@ export class OaiImporter implements Importer {
                 log.debug(`Received ${numReturned} records from ${this.settings.providerUrl}`);
                 await this.extractRecords(response, harvestTime)
             } else {
-                const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`;
+                const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
                 log.error(message);
                 this.summary.appErrors.push(message);
             }

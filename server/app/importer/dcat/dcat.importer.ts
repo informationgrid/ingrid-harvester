@@ -178,7 +178,7 @@ export class DcatImporter implements Importer {
                     await this.extractRecords(response, harvestTime);
                     isLastPage = true;
                 } else {
-                    const message = `Error while fetching DCAT Records. Will continue to try and fetch next records, if any.\nServer response: ${responseDom.toString()}.`;
+                    const message = `Error while fetching DCAT Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
                     log.error(message);
                     this.summary.appErrors.push(message);
                     if(retries++ > 3){
