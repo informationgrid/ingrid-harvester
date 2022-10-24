@@ -452,7 +452,7 @@ export class CswImporter implements Importer {
                 CONSTRAINT_LANGUAGE_VERSION: '1.1.0',
                 elementSetName: 'full'
             };
-            if (settings.recordFilter) {
+            if (request === 'GetRecords' && settings.recordFilter) {
                 requestConfig.qs.constraint = settings.recordFilter;
             }
         }
