@@ -152,7 +152,7 @@ export class OaiMapper extends GenericMapper {
                 let url = null;
                 if (urlNode.length > 0) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode[0].textContent);
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 }
                 if (url && !urls.includes(url)) {
                     const formatArray = protocolNode.length > 0 && protocolNode[0].textContent
@@ -233,7 +233,7 @@ export class OaiMapper extends GenericMapper {
                 }
 
                 let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                let url = await UrlUtils.urlWithProtocolFor(requestConfig);
+                let url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 if (url && !urlsFound.includes(url)) {
                     serviceLinks.push({
                         accessURL: url,
@@ -269,7 +269,7 @@ export class OaiMapper extends GenericMapper {
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 }
 
                 if (role === 'publisher') {
@@ -662,7 +662,7 @@ export class OaiMapper extends GenericMapper {
                         license = {
                             id: json.id,
                             title: json.name,
-                            url: await UrlUtils.urlWithProtocolFor(requestConfig)
+                            url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
                         };
 
                     } catch(ignored) {}
@@ -832,7 +832,7 @@ export class OaiMapper extends GenericMapper {
                     let url = null;
                     if (urlNode) {
                         let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                        url = await UrlUtils.urlWithProtocolFor(requestConfig);
+                        url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                     }
 
                     let infos: Contact = {

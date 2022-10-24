@@ -574,7 +574,7 @@ export class DcatMapper extends GenericMapper {
                     license = {
                         id: json.id,
                         title: json.name,
-                        url: await UrlUtils.urlWithProtocolFor(requestConfig)
+                        url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
                     };
 
                 } catch(ignored) {}
@@ -724,7 +724,7 @@ export class DcatMapper extends GenericMapper {
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.getAttribute('rdf:resource'));
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 }
 
                 let infos: Contact = {

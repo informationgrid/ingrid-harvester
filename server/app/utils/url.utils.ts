@@ -52,12 +52,14 @@ export class UrlUtils {
      * or the uri prefixed with 'https://' or 'http://' if these are reachable,
      * or undefined otherwise
      */
-    static async urlWithProtocolFor(requestConfig: OptionsWithUri): Promise<string> {
+    static async urlWithProtocolFor(requestConfig: OptionsWithUri, skip = false): Promise<string> {
         let url = <string>requestConfig.uri;
 
         if (url && url.trim()) {
             // we assume that an URL which contains '://' also has a protocol and is valid
-            if (url.includes('://')) return url;
+            if (url.includes('://') || skip) {
+                return url;
+            }
 
             // if URL is just a domain name with no protocol then first check if 'https://' works
             let urlToCheck = `https://${url}`;

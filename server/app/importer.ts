@@ -42,7 +42,8 @@ export const DefaultImporterSettings: ImporterSettings = {
             containsDocumentsWithData: false
     },
     isIncremental: false,
-    maxConcurrent: 1
+    maxConcurrent: 1,
+    skipUrlCheckOnHarvest: false
 };
 
 export interface Importer {

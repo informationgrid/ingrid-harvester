@@ -130,7 +130,7 @@ export class CkanMapper extends GenericMapper {
                 let res = resources[i];
 
                 let requestConfig = this.getUrlCheckRequestConfig(res.url);
-                let accessURL = await UrlUtils.urlWithProtocolFor(requestConfig);
+                let accessURL = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
 
                 if (accessURL) {
                     let dist = {

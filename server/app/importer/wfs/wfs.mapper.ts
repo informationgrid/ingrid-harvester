@@ -194,7 +194,7 @@ export class WfsMapper extends GenericMapper {
                 }
 
                 let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                let url = await UrlUtils.urlWithProtocolFor(requestConfig);
+                let url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 if (url && !urlsFound.includes(url)) {
                     serviceLinks.push({
                         accessURL: url,

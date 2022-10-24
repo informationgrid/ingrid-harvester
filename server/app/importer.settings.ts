@@ -48,7 +48,8 @@ export type ImporterSettings = {
     maxConcurrent: number,
     maxRecords?: number,
     proxy?: string,
-    showCompleteSummaryInfo?: boolean;
+    showCompleteSummaryInfo?: boolean,
+    skipUrlCheckOnHarvest?: boolean,
     startPosition?: number,
     type: string,
     whitelistedIds?: string[],

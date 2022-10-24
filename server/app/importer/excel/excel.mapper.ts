@@ -271,7 +271,7 @@ export class ExcelMapper extends GenericMapper {
             if (downloadUrl.trim().length === 0) return;
 
             let requestConfig = this.getUrlCheckRequestConfig(downloadUrl);
-            let checkedUrl = await UrlUtils.urlWithProtocolFor(requestConfig);
+            let checkedUrl = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
 
             if (checkedUrl) {
                 distributions.push({
