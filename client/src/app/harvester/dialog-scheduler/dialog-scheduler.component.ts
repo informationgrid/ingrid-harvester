@@ -58,7 +58,6 @@ export class DialogSchedulerComponent implements OnInit {
   }
 
   translate(cronExpression: string, mode: string) {
-    console.log('MODE:', mode);
     try {
       if (!isValidCron(cronExpression)) {
         throw new Error('Kein gültiger Ausdruck');

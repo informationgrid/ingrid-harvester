@@ -102,8 +102,6 @@ export class HarvesterComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('The dialog was closed', result);
-
         // update immediately component cronpattern
         harvester.cron = result;
 
@@ -158,7 +156,6 @@ export class HarvesterComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result: Harvester) => {
       if (result) {
-        console.log('The dialog was closed', result);
         this.harvesterService.updateHarvester(result).subscribe(
           () => this.fetchHarvester(),
           err => alert(err.message));
@@ -195,7 +192,6 @@ export class HarvesterComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('The dialog was closed', result);
         this.harvesterService.updateHarvester(result).subscribe(
           () => this.fetchHarvester(),
           err => alert(err.message));

@@ -80,7 +80,6 @@ export class ApiCtrl {
 
     @Post('/schedule/:id')
     schedule(@PathParams('id') id: number, @BodyParams('cron') cron: { full: CronData, incr: CronData }): Date[] {
-        console.log('Body:', cron);
         return this.scheduleService.set(+id, cron);
     }
 
