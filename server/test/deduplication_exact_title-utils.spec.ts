@@ -59,7 +59,8 @@ xdescribe('deduplication by exact title', function() {
             port: url.port,
             protocol: url.protocol,
             auth: 'elastic:elastic',
-        }
+        },
+        requestTimeout: 60000
     });
 
     let elasticSearchUtils = new ElasticSearchUtils(settings, summary);

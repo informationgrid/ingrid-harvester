@@ -72,7 +72,8 @@ export class ElasticSearchUtils {
                 port: url.port,
                 protocol: url.protocol,
                 auth: 'elastic:' + this.settings.elasticSearchPassword,
-            }
+            },
+            requestTimeout: 60000
         });
         this._bulkData = [];
         this.indexName = this.settings.index;
