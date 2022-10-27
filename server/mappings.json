@@ -47,10 +47,15 @@
       "http://publications.europa.eu/resource/authority/file-type/dbf"
     ],
     "DOC": [
-      "http://publications.europa.eu/resource/authority/file-type/doc"
+      "http://publications.europa.eu/resource/authority/file-type/doc",
+      "WinWord"
     ],
     "DOCX": [
       "application/docx"
+    ],
+    "DXF": [
+      "DXF",
+      "dxf"
     ],
     "Excel": [
       "application/vnd.ms-excel"
@@ -62,7 +67,8 @@
     "GeoTIFF": [
       "Geotiff (*.tif)",
       "interner Code:GEOTIFF",
-      "GeoTIF"
+      "GeoTIF",
+      "geoTIFF"
     ],
     "GIF": [
       "gif"
@@ -95,11 +101,16 @@
     "Image": [
       "Image (*.img)"
     ],
+    "INSPIRE": [
+      "INSPIRE GML gemäß Umsetzungsrichtlinie von 2010",
+      "INSPIRE-XML"
+    ],
     "JPEG": [
       "interner Code:JPEG",
       "Bild .jpg",
       "jpg",
-      "jpeg"
+      "jpeg",
+      "jpeg/png"
     ],
     "JSON": [
       "http://publications.europa.eu/resource/authority/file-type/json",
@@ -119,6 +130,11 @@
       "http://publications.europa.eu/resource/authority/file-type/pdf",
       "pdf",
       "application/pdf"
+    ],
+    "PMF": [
+      "Caigos PMF",
+      "caigos pmf",
+      "PMF (Version: 9.9)"
     ],
     "PNG": [
       "http://publications.europa.eu/resource/authority/file-type/png",
@@ -225,6 +241,7 @@
     ],
     "WWW": [
       "http",
+      "https",
       "Internet",
       "onLine",
       "www:link-1.0-http--link",
