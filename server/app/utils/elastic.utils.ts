@@ -405,7 +405,7 @@ export class ElasticSearchUtils {
         // send data to elasticsearch if limit is reached
         // TODO: don't use document size but bytes instead
         if (this._bulkData.length >= (ElasticSearchUtils.maxBulkSize * 2)) {
-            return this.sendBulkData();
+            return this.client.cluster.health({waitForStatus: 'yellow'}).then(() => this.sendBulkData());
         } else {
             return new Promise(resolve => resolve({
                 queued: true
