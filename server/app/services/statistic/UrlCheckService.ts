@@ -72,7 +72,7 @@ export class UrlCheckService {
                 protocol: url.protocol,
                 auth: 'elastic:' + this.settings.elasticSearchPassword,
             },
-            requestTimeout: 60000
+            requestTimeout: 30000
         });
 
         // @ts-ignore

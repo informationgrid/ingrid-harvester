@@ -65,7 +65,7 @@ export class StatisticUtils {
                 protocol: url.protocol,
                 auth: 'elastic:' + this.settings.elasticSearchPassword,
             },
-            requestTimeout: 60000
+            requestTimeout: 30000
         });
         this._bulkData = [];
         this.indexName = "mcloud_harvester_statistic"

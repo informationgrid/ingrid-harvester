@@ -60,7 +60,7 @@ xdescribe('deduplication by exact title', function() {
             protocol: url.protocol,
             auth: 'elastic:elastic',
         },
-        requestTimeout: 60000
+        requestTimeout: 30000
     });
 
     let elasticSearchUtils = new ElasticSearchUtils(settings, summary);
