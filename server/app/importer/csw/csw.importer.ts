@@ -90,7 +90,15 @@ export class CswImporter implements Importer {
         if (settings.isIncremental) {
             let sumser: SummaryService = new SummaryService();
             let summary: ImportLogMessage = sumser.get(settings.id);
-            settings.recordFilter = CswImporter.addModifiedFilter(settings.recordFilter, new Date(summary.lastExecution));
+            // only change the record filter (i.e. do an incremental harvest)
+            // if there exists a previous run
+            if (summary) {
+                settings.recordFilter = CswImporter.addModifiedFilter(settings.recordFilter, new Date(summary.lastExecution));
+            }
+            else {
+                log.warn(`Changing type of harvest to "full" because no previous harvest was found for harvester with id ${settings.id}`);
+                settings.isIncremental = false;
+            }
         }
 
         // TODO disallow setting "//" in xpaths in the UI
