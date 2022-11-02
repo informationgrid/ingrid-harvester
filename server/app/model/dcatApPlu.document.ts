@@ -22,6 +22,7 @@
  */
 
 import { Agent, Contact, DateRange, Distribution, GenericMapper, Organization, Person } from "./generic.mapper";
+import { escape as esc } from 'xml-escape';
 
 function optional(wrapper: string | Function, variable: any | any[]) {
     if (!variable) {
@@ -218,39 +219,39 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let xmlString = `<?xml version="1.0"?>
         <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns.toLowerCase()}="${uri}"`).join(' ')}>
             <dcat:Catalog>
-                <dct:description>${catalog.description}</dct:description>
-                <dct:title>${catalog.title}</dct:title>
+                <dct:description>${esc(catalog.description)}</dct:description>
+                <dct:title>${esc(catalog.title)}</dct:title>
                 ${DcatApPluDocument.xmlFoafAgent('dct:publisher', catalog.publisher[0])}
-                ${optional('dcat:themeTaxonomy', catalog.themeTaxonomy)}
-                ${optional('dct:issued', catalog.issued)}
-                ${optional('dct:language', catalog.language)}
-                ${optional('dct:modified', catalog.modified)}
-                ${optional('foaf:homepage', catalog.homepage)}
+                ${optional('dcat:themeTaxonomy', esc(catalog.themeTaxonomy))}
+                ${optional('dct:issued', esc(catalog.issued))}
+                ${optional('dct:language', esc(catalog.language))}
+                ${optional('dct:modified', esc(catalog.modified))}
+                ${optional('foaf:homepage', esc(catalog.homepage))}
                 ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
             </dcat:Catalog>
             <dcat:Dataset>
                 ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher[0].name)}
-                <dct:description xml:lang="${catalog.language}">${mapper.getDescription()}</dct:description>
-                <dct:identifier>${mapper.getGeneratedId()}</dct:identifier>
-                <dct:title xml:lang="${catalog.language}">${mapper.getTitle()}</dct:title>
+                <dct:description xml:lang="${esc(catalog.language)}">${esc(mapper.getDescription())}</dct:description>
+                <dct:identifier>${esc(mapper.getGeneratedId())}</dct:identifier>
+                <dct:title xml:lang="${esc(catalog.language)}">${esc(mapper.getTitle())}</dct:title>
                 <plu:planState>${mapper.getPluPlanState()}</plu:planState>
                 <plu:procedureState>${mapper.getPluProcedureState()}</plu:procedureState>
-                <plu:procedureStartDate>${mapper.getPluProcedureStartDate()}</plu:procedureStartDate>
+                <plu:procedureStartDate>${esc(mapper.getPluProcedureStartDate())}</plu:procedureStartDate>
                 <dct:spatial>
                     <dcat:Location>
                         ${optional('dcat:bbox', mapper.getBoundingBoxGml())}
                         ${optional('locn:geometry', mapper.getSpatialGml())}
                         ${optional(DcatApPluDocument.xmlCentroid, centroid ? [centroid] : null)}
-                        ${optional('locn:geographicName', mapper.getSpatialText())}
+                        ${optional('locn:geographicName', esc(mapper.getSpatialText()))}
                     </dcat:Location>
                 </dct:spatial>
                 ${DcatApPluDocument.xmlFoafAgent('dct:publisher', (await mapper.getPublisher())[0])}
                 ${optional('dcatde:maintainer', maintainers?.[0])}
                 ${optional('dct:contributor', contributors?.[0])}
                 ${optional(DcatApPluDocument.xmlDistribution, await mapper.getDistributions())}
-                ${optional('dct:issued', mapper.getIssued())}
-                ${optional('dct:modified', mapper.getModifiedDate())}
-                ${optional('dct:relation', relation)}
+                ${optional('dct:issued', esc(mapper.getIssued()))}
+                ${optional('dct:modified', esc(mapper.getModifiedDate()))}
+                ${optional('dct:relation', esc(relation))}
                 ${optional('plu:planType', mapper.getPluPlanType())}
                 ${optional('plu:planTypeFine', mapper.getPluPlanTypeFine())}
                 ${optional('plu:procedureType', mapper.getPluProcedureType())}
@@ -271,31 +272,31 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
 
     private static xmlDistribution(distribution: Distribution): string {
         return `<dcat:Distribution>
-            <dcat:accessURL>${distribution.accessURL}</dcat:accessURL>
-            ${optional('dct:description', distribution.description)}
-            ${optional('dcat:downloadURL', distribution.downloadURL)}
-            ${optional('dct:format', distribution.format)}
-            ${optional('dct:issued', distribution.issued)}
-            ${optional('dct:modified', distribution.modified)}
+            <dcat:accessURL>${esc(distribution.accessURL)}</dcat:accessURL>
+            ${optional('dct:description', esc(distribution.description))}
+            ${optional('dcat:downloadURL', esc(distribution.downloadURL))}
+            ${optional('dct:format', esc(distribution.format))}
+            ${optional('dct:issued', esc(distribution.issued))}
+            ${optional('dct:modified', esc(distribution.modified))}
             ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period)}
-            ${optional('plu:docType', distribution.pluDocType)}
-            ${optional('dct:title', distribution.title)}
+            ${optional('plu:docType', esc(distribution.pluDocType))}
+            ${optional('dct:title', esc(distribution.title))}
         </dcat:Distribution>`;
     }
 
     private static xmlFoafAgent(parent: string, agent: Person | Organization): string {
         let name = (<Organization>agent)?.organization ?? (<Person>agent)?.name;
         return `<${parent}><foaf:agent>
-            <foaf:name>${name}</foaf:name>
-            ${optional('dct:type', agent.type)}
+            <foaf:name>${esc(name)}</foaf:name>
+            ${optional('dct:type', esc(agent.type))}
         </foaf:agent></${parent}>`;
     }
 
     private static xmlPeriodOfTime({ lte: start, gte: end }: DateRange): string {
         return `<dct:temporal>
             <dct:PeriodOfTime>
-                ${optional('dcat:startDate', start)}
-                ${optional('dcat:endDate', end)}
+                ${optional('dcat:startDate', esc(start))}
+                ${optional('dcat:endDate', esc(end))}
             </dct:PeriodOfTime>
         </dct:temporal>`;
     }
@@ -303,7 +304,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     private static xmlProcessStep({ distributions, identifier, period, type }: ProcessStep): string {
         return `<plu:processStep>
             <plu:processStepType>${type}</plu:processStepType>
-            ${optional('dct:identifier', identifier)}
+            ${optional('dct:identifier', esc(identifier))}
             ${optional(DcatApPluDocument.xmlDistribution, distributions)}
             ${optional(DcatApPluDocument.xmlPeriodOfTime, period)}
         </plu:processStep>`;
@@ -312,10 +313,10 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     private static xmlRecord({ issued, modified, primaryTopic, title }: Record) {
         return `<dcat:record>
             <dcat:CatalogRecord>
-                <dct:title>${title}</dct:title>
-                <foaf:primaryTopic>${primaryTopic}</foaf:primaryTopic>
-                ${optional('dct:issued', issued)}
-                ${optional('dct:modified', modified)}
+                <dct:title>${esc(title)}</dct:title>
+                <foaf:primaryTopic>${esc(primaryTopic)}</foaf:primaryTopic>
+                ${optional('dct:issued', esc(issued))}
+                ${optional('dct:modified', esc(modified))}
             </dcat:CatalogRecord>
         </dcat:record>`;
     }
@@ -325,17 +326,17 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let useFn = contact.fn && !['-'].includes(contact.fn);
         return `<dcat:contactPoint>
             <vcard:Organization>
-                <vcard:fn>${useFn ? contact.fn : contact["organization-name"] ?? backupFn}</vcard:fn>
+                <vcard:fn>${useFn ? esc(contact.fn) : esc(contact["organization-name"]) ?? esc(backupFn)}</vcard:fn>
                 ${optional('vcard:organization-name', useFn ? contact["organization-name"] : null)}
                 ${optional('vcard:hasAddress',
-                    optional('vcard:postal-code', contact.hasAddress?.["postal-code"]) +
-                    optional('vcard:street-address', contact.hasAddress?.["street-address"]) +
-                    optional('vcard:locality', contact.hasAddress?.locality) +
-                    optional('vcard:region', contact.hasAddress?.region) +
-                    optional('vcard:country-name', contact.hasAddress?.["country-name"])
+                    optional('vcard:postal-code', esc(contact.hasAddress?.["postal-code"])) +
+                    optional('vcard:street-address', esc(contact.hasAddress?.["street-address"])) +
+                    optional('vcard:locality', esc(contact.hasAddress?.locality)) +
+                    optional('vcard:region', esc(contact.hasAddress?.region)) +
+                    optional('vcard:country-name', esc(contact.hasAddress?.["country-name"]))
                 )}
-                ${optional('vcard:hasEmail', contact.hasEmail)}
-                ${optional('vcard:hasTelephone', contact.hasTelephone)}
+                ${optional('vcard:hasEmail', esc(contact.hasEmail))}
+                ${optional('vcard:hasTelephone', esc(contact.hasTelephone))}
             </vcard:Organization>
         </dcat:contactPoint>`;
     }

@@ -57,6 +57,7 @@
     "sparql-http-client": "^2.2.2",
     "ts-httpexceptions": "^4.1.0",
     "uuid": "^3.3.2",
+    "xml-escape": "^1.1.0",
     "xmldom": "^0.2.1",
     "xpath": "0.0.27"
   },
