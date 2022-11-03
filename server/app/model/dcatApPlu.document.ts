@@ -92,15 +92,15 @@ export interface DcatApPlu {
     title: string
 }
 
-export const DCAT_AP_PLU_NSMAP = {
-    DCAT: 'http://www.w3.org/ns/dcat#',
-    DCT: 'http://purl.org/dc/terms/',
-    FOAF: 'http://xmlns.com/foaf/0.1/',
-    GML: 'http://www.opengis.net/gml/3.2',
-    LOCN: 'http://www.w3.org/ns/locn#',
-    PLU: 'http://a.placeholder.url.for.dcat-ap-plu',    // TODO
-    RDF: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    VCARD: 'http://www.w3.org/2006/vcard/ns#'
+const DCAT_AP_PLU_NSMAP = {
+    dcat: 'http://www.w3.org/ns/dcat#',
+    dct: 'http://purl.org/dc/terms/',
+    foaf: 'http://xmlns.com/foaf/0.1/',
+    gml: 'http://www.opengis.net/gml/3.2',
+    locn: 'http://www.w3.org/ns/locn#',
+    plu: 'http://a.placeholder.url.for.dcat-ap-plu',    // TODO
+    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    vcard: 'http://www.w3.org/2006/vcard/ns#'
 };
 
 /**
@@ -217,7 +217,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let maintainers = null;     // TODO
         let relation = null;        // TODO
         let xmlString = `<?xml version="1.0"?>
-        <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns.toLowerCase()}="${uri}"`).join(' ')}>
+        <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
             <dcat:Catalog>
                 <dct:description>${esc(catalog.description)}</dct:description>
                 <dct:title>${esc(catalog.title)}</dct:title>
