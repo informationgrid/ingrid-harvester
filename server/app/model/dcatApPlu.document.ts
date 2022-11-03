@@ -238,12 +238,12 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 <plu:procedureState>${mapper.getPluProcedureState()}</plu:procedureState>
                 <plu:procedureStartDate>${esc(mapper.getPluProcedureStartDate())}</plu:procedureStartDate>
                 <dct:spatial>
-                    <dcat:Location>
+                    <dct:Location>
                         ${optional('dcat:bbox', mapper.getBoundingBoxGml())}
                         ${optional('locn:geometry', mapper.getSpatialGml())}
                         ${optional(DcatApPluDocument.xmlCentroid, centroid ? [centroid] : null)}
                         ${optional('locn:geographicName', esc(mapper.getSpatialText()))}
-                    </dcat:Location>
+                    </dct:Location>
                 </dct:spatial>
                 ${DcatApPluDocument.xmlFoafAgent('dct:publisher', (await mapper.getPublisher())[0])}
                 ${optional('dcatde:maintainer', maintainers?.[0])}
