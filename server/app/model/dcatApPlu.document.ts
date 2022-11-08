@@ -286,10 +286,10 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
 
     private static xmlFoafAgent(parent: string, agent: Person | Organization): string {
         let name = (<Organization>agent)?.organization ?? (<Person>agent)?.name;
-        return `<${parent}><foaf:agent>
+        return `<${parent}><foaf:Agent>
             <foaf:name>${esc(name)}</foaf:name>
             ${optional('dct:type', esc(agent.type))}
-        </foaf:agent></${parent}>`;
+        </foaf:Agent></${parent}>`;
     }
 
     private static xmlPeriodOfTime({ lte: start, gte: end }: DateRange): string {
