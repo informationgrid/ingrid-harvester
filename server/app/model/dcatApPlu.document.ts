@@ -236,7 +236,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 <dct:title xml:lang="${esc(catalog.language)}">${esc(mapper.getTitle())}</dct:title>
                 <plu:planState>${mapper.getPluPlanState()}</plu:planState>
                 <plu:procedureState>${mapper.getPluProcedureState()}</plu:procedureState>
-                <plu:procedureStartDate>${esc(mapper.getPluProcedureStartDate())}</plu:procedureStartDate>
+                ${optional('plu:procedureStartDate', esc(mapper.getPluProcedureStartDate()))}
                 <dct:spatial>
                     <dct:Location>
                         ${optional('dcat:bbox', mapper.getBoundingBoxGml())}
