@@ -247,8 +247,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                     </dct:Location>
                 </dct:spatial>
                 ${DcatApPluDocument.xmlFoafAgent('dct:publisher', (await mapper.getPublisher())[0])}
-                ${optional('dcatde:maintainer', maintainers?.[0])}
-                ${optional('dct:contributor', contributors?.[0])}
+                ${optional(m => DcatApPluDocument.xmlFoafAgent('dcatde:maintainer', m), maintainers)}
+                ${optional(c => DcatApPluDocument.xmlFoafAgent('dct:contributor', c), contributors)}
                 ${optional(DcatApPluDocument.xmlDistribution, await mapper.getDistributions())}
                 ${optional('dct:issued', mapper.getIssued())}
                 ${optional('dct:modified', mapper.getModifiedDate())}
