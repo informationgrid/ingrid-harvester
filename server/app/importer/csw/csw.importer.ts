@@ -141,7 +141,14 @@ export class CswImporter implements Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                // when running an incremental harvest,
+                // clone the old index instead of preparing a new one
+                if (this.summary.isIncremental) {
+                    await this.elastic.cloneIndex(elasticsearchMapping, elasticsearchSettings);
+                }
+                else {
+                    await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                }
                 await this.harvest();
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
                     await this.elastic.sendBulkData(false);
@@ -157,7 +164,6 @@ export class CswImporter implements Importer {
                     observer.complete();
 
                     // clean up index
-                    // TODO ED:2022-09-27: is this correct here?
                     this.elastic.deleteIndex(this.elastic.indexName);
                 }
             } catch (err) {

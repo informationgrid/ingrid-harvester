@@ -87,6 +87,35 @@ export class ElasticSearchUtils {
      * @param mapping
      * @param settings
      */
+    async cloneIndex(mapping, settings) {
+        // find newest existing index
+        let existingIndices = await this.getIndicesFromBasename(this.indexName);
+        let oldIndexName = existingIndices.map(index => index.name).sort().pop();
+        // first prepare index
+        return this.prepareIndex(mapping, settings)
+            .then(() => this.client.cluster.health({waitForStatus: 'yellow'}))
+            // then reindex, i.e. copy documents, from last existing to new
+            .then(() => {
+                this.client.reindex({
+                    waitForCompletion: true,
+                    refresh: true,
+                    body: {
+                        source: {
+                            index: oldIndexName
+                        },
+                        dest: {
+                            index: this.indexName
+                        }
+                    }
+                });
+            });
+    }
+
+    /**
+     *
+     * @param mapping
+     * @param settings
+     */
     prepareIndex(mapping, settings) {
         let body = {
             number_of_shards: this.settings.numberOfShards,
