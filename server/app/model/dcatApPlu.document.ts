@@ -94,6 +94,7 @@ export interface DcatApPlu {
 
 const DCAT_AP_PLU_NSMAP = {
     dcat: 'http://www.w3.org/ns/dcat#',
+    dcatde: 'http://dcat-ap.de/def/dcatde/',
     dct: 'http://purl.org/dc/terms/',
     foaf: 'http://xmlns.com/foaf/0.1/',
     gml: 'http://www.opengis.net/gml/3.2',
