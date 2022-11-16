@@ -22,7 +22,7 @@
  */
 
 import { Agent, Contact, DateRange, Distribution, GenericMapper, Organization, Person } from "./generic.mapper";
-import { escape as esc } from 'xml-escape';
+var esc = require('xml-escape');
 
 function optional(wrapper: string | Function, variable: any | any[]) {
     if (!variable) {
@@ -249,8 +249,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional('dcatde:maintainer', maintainers?.[0])}
                 ${optional('dct:contributor', contributors?.[0])}
                 ${optional(DcatApPluDocument.xmlDistribution, await mapper.getDistributions())}
-                ${optional('dct:issued', esc(mapper.getIssued()))}
-                ${optional('dct:modified', esc(mapper.getModifiedDate()))}
+                ${optional('dct:issued', mapper.getIssued())}
+                ${optional('dct:modified', mapper.getModifiedDate())}
                 ${optional('dct:relation', esc(relation))}
                 ${optional('plu:planType', mapper.getPluPlanType())}
                 ${optional('plu:planTypeFine', mapper.getPluPlanTypeFine())}
@@ -275,9 +275,9 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
             <dcat:accessURL>${esc(distribution.accessURL)}</dcat:accessURL>
             ${optional('dct:description', esc(distribution.description))}
             ${optional('dcat:downloadURL', esc(distribution.downloadURL))}
-            ${optional('dct:format', esc(distribution.format))}
-            ${optional('dct:issued', esc(distribution.issued))}
-            ${optional('dct:modified', esc(distribution.modified))}
+            ${optional('dct:format', esc(distribution.format?.[0]))}
+            ${optional('dct:issued', distribution.issued)}
+            ${optional('dct:modified', distribution.modified)}
             ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period)}
             ${optional('plu:docType', esc(distribution.pluDocType))}
             ${optional('dct:title', esc(distribution.title))}
@@ -295,8 +295,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     private static xmlPeriodOfTime({ lte: start, gte: end }: DateRange): string {
         return `<dct:temporal>
             <dct:PeriodOfTime>
-                ${optional('dcat:startDate', esc(start))}
-                ${optional('dcat:endDate', esc(end))}
+                ${optional('dcat:startDate', start)}
+                ${optional('dcat:endDate', end)}
             </dct:PeriodOfTime>
         </dct:temporal>`;
     }
