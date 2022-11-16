@@ -35,6 +35,7 @@ export class IndexDocument {
             title: mapper.getTitle(),
             // plan and procedure information
             planState: mapper.getPluPlanState(),
+            planOrProcedureDate: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),
             planType: mapper.getPluPlanType(),
             planTypeFine: mapper.getPluPlanTypeFine(),
             procedureState: mapper.getPluProcedureState(),

@@ -73,6 +73,9 @@ export const elasticsearchMapping = {
                 }
             }
         },
+        'planOrProcedureDate': {
+            'type': 'date'
+        },
         'planState': {
             'type': 'keyword'
         },
