@@ -421,7 +421,7 @@ export class ElasticSearchUtils {
      * @param doc
      * @param {string|number} id
      */
-    addDocToBulk(doc, id): Promise<BulkResponse> {
+    async addDocToBulk(doc, id): Promise<BulkResponse> {
         this._bulkData.push({
             index: {
                 _id: id
@@ -433,8 +433,9 @@ export class ElasticSearchUtils {
 
         // send data to elasticsearch if limit is reached
         // TODO: don't use document size but bytes instead
+        await this.client.cluster.health({waitForStatus: 'yellow'});
         if (this._bulkData.length >= (ElasticSearchUtils.maxBulkSize * 2)) {
-            return this.client.cluster.health({waitForStatus: 'yellow'}).then(() => this.sendBulkData());
+            return this.sendBulkData();
         } else {
             return new Promise(resolve => resolve({
                 queued: true
