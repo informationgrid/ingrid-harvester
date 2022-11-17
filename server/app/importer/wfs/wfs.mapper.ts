@@ -436,6 +436,7 @@ export class WfsMapper extends GenericMapper {
 
     /**
      * This is currently XPlan specific.
+     * And even for those, source-specific.
      * 
      * // TODO what about other WFS sources?
      * 
@@ -443,16 +444,36 @@ export class WfsMapper extends GenericMapper {
      * @returns 
      */
     _getSpatialText(): string {
-        let spatialText;
-        let gemeinde = this.select('./*/xplan:gemeinde/XP_Gemeinde', this.feature, true);
-        if (gemeinde) {
-            spatialText = [
-                this.select('./xplan:ags', gemeinde, true)?.textContent ?? '',
-                this.select('./xplan:gemeindeName', gemeinde, true)?.textContent ?? '',
-                this.select('./xplan:ortsteilName', gemeinde, true)?.textContent ?? ''
-            ].join(' / ');
+        // find existing Regionalschluessel corresponding to the retrieved/constructed entry
+        const findLegalRs = (rs) => {
+            let r = new RegExp(rs);
+            return this.fetched.regionalschluessel.filter(aRs => r.test(aRs));
         }
-        return spatialText;
+
+        let xpGemeinde = this.select('./*/xplan:gemeinde/xplan:XP_Gemeinde', this.feature, true);
+        if (xpGemeinde) {
+            let rs = this.select('./xplan:rs', xpGemeinde, true)?.textContent;
+            if (!rs) {
+                let ags = this.select('./xplan:ags', xpGemeinde, true)?.textContent;
+                let gemeinde = this.select('./xplan:ortsteilName', xpGemeinde, true)?.textContent;
+                if (ags) {
+                    if (gemeinde && gemeinde.match("^\\d{3}$")) {
+                        rs = ags.substring(0, 2) + "\\d{3}0" + gemeinde + gemeinde;
+                        if (findLegalRs(rs).length == 0) {
+                            rs = ags.substring(0, 2) + "\\d{7}" + gemeinde;
+                        }
+                    }
+                    else {
+                        rs = ags.substring(0, 2) + "\\d{7}" + ags.substring(5, 8);
+                    }
+                }
+            }
+            let existingRs = findLegalRs(rs);
+            if (existingRs.length == 1) {
+                return existingRs[0];
+            }
+        }
+        return undefined;
     }
 
     _getCentroid(): number[] {

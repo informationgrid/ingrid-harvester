@@ -225,6 +225,10 @@ export class WfsImporter implements Importer {
         }
         this.generalInfo['defaultCrs'] = this.defaultCrs;
 
+        // Regionalschlüssel
+        const rs_data = fs.readFileSync('app/importer/regionalschluessel.json', { encoding: 'utf8', flag: 'r' });
+        this.generalInfo['regionalschluessel'] = JSON.parse(rs_data);
+
         let serviceProvider = this.select(this.settings.xpaths.capabilities.serviceProvider, capabilitiesResponseDom, true);
         // TODO for FIS, there is additional metadata info in a linked CSW
         // TODO do we grab this as well? if yes:
