@@ -206,8 +206,8 @@ export class WfsImporter implements Importer {
         // get used CRSs through getCapabilities
         let featureTypes = this.select('/*[local-name()="WFS_Capabilities"]/*[local-name()="FeatureTypeList"]/*[local-name()="FeatureType"]', capabilitiesResponseDom, false);
         // import proj4 strings for all EPSGs
-        const data = fs.readFileSync('app/importer/proj4.json', { encoding: 'utf8', flag: 'r' });
-        let proj4Json = JSON.parse(data);
+        const crs_data = fs.readFileSync('app/importer/proj4.json', { encoding: 'utf8', flag: 'r' });
+        let proj4Json = JSON.parse(crs_data);
         // save only those that we need
         this.crsList = [];
         for (let featureType of featureTypes) {
