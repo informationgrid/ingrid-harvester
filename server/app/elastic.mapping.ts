@@ -73,28 +73,28 @@ export const elasticsearchMapping = {
                 }
             }
         },
-        'planOrProcedureDate': {
+        'plan_or_procedure_date': {
             'type': 'date'
         },
-        'planState': {
+        'plan_state': {
             'type': 'keyword'
         },
-        'planType': {
+        'plan_type': {
             'type': 'keyword'
         },
-        'planTypeFine': {
+        'plan_type_fine': {
             'type': 'keyword'
         },
-        'procedureState': {
+        'procedure_state': {
             'type': 'keyword'
         },
-        'procedureType': {
+        'procedure_type': {
             'type': 'keyword'
         },
-        'procedureStartDate': {
+        'procedure_start_date': {
             'type': 'date'
         },
-        'processSteps': {
+        'process_steps': {
             'properties': {
                 'distributions': {
                     'properties': {
@@ -112,10 +112,10 @@ export const elasticsearchMapping = {
                         'format': {
                             'type': 'keyword'
                         },
-                        'accessURL': {
+                        'access_url': {
                             'type': 'keyword'
                         },
-                        'downloadURL': {
+                        'download_url': {
                             'type': 'keyword'
                         },
                         'issued': {
@@ -124,13 +124,13 @@ export const elasticsearchMapping = {
                         'modified': {
                             'type': 'date'
                         },
-                        'byteSize': {
+                        'byte_size': {
                             'type': 'long'
                         },
                         'period': {
                             'type': 'date_range'
                         },
-                        'pluDocType': {
+                        'plu_doc_type': {
                             'type': 'keyword'
                         }
                     }
@@ -186,16 +186,16 @@ export const elasticsearchMapping = {
         },
         'contact_point': {
             'properties': {
-                'hasUID': {
+                'has_uid': {
                     'type': 'keyword'
                 },
                 'fn': {
                     'type': 'keyword'
                 },
-                'organization-name': {
+                'organization_name': {
                     'type': 'keyword'
                 },
-                'hasAddress': {
+                'has_address': {
                     'properties': {
                         'street-address': {
                             'type': 'keyword'
@@ -214,13 +214,13 @@ export const elasticsearchMapping = {
                         }
                     }
                 },
-                'hasEmail': {
+                'has_email': {
                     'type': 'keyword'
                 },
-                'hasTelephone': {
+                'has_telephone': {
                     'type': 'keyword'
                 },
-                'hasURL': {
+                'has_url': {
                     'type': 'keyword'
                 }
             }
@@ -256,10 +256,10 @@ export const elasticsearchMapping = {
                 'format': {
                     'type': 'keyword'
                 },
-                'accessURL': {
+                'access_url': {
                     'type': 'keyword'
                 },
-                'downloadURL': {
+                'download_url': {
                     'type': 'keyword'
                 },
                 'issued': {
@@ -268,13 +268,13 @@ export const elasticsearchMapping = {
                 'modified': {
                     'type': 'date'
                 },
-                'byteSize': {
+                'byte_size': {
                     'type': 'long'
                 },
                 'period': {
                     'type': 'date_range'
                 },
-                'pluDocType': {
+                'plu_doc_type': {
                     'type': 'keyword'
                 }
             }
