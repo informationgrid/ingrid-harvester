@@ -365,12 +365,16 @@ export class WfsMapper extends GenericMapper {
     }
 
     _getBoundingBoxGml(): string {
-        let envelope = this.select('./*/gml:boundedBy/gml:Envelope', this.feature, true);
+        let envelope: Element = this.select('./*/gml:boundedBy/gml:Envelope', this.feature, true);
         if (!envelope) {
             return undefined;
         }
-        if (!envelope.hasAttribute('srsName')) {
-            envelope.setAttribute('srsName', this.fetched.defaultCrs);
+        if (envelope.hasAttribute('srsName')) {
+            envelope.setAttribute('gml:srsName', envelope.getAttribute('srsName'));
+            envelope.removeAttribute('srsName');
+        }
+        else {
+            envelope.setAttribute('gml:srsName', this.fetched.defaultCrs);
         }
         return envelope.toString();
     }
