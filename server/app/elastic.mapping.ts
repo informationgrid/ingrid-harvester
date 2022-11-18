@@ -73,7 +73,7 @@ export const elasticsearchMapping = {
                 }
             }
         },
-        'planOrProcedureDate': {
+        'plan_or_procedure_start': {
             'type': 'date'
         },
         'planState': {
