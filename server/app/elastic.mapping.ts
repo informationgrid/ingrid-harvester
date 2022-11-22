@@ -73,7 +73,7 @@ export const elasticsearchMapping = {
                 }
             }
         },
-        'plan_or_procedure_date': {
+        'plan_or_procedure_start_date': {
             'type': 'date'
         },
         'plan_state': {
@@ -358,7 +358,7 @@ export const elasticsearchMapping = {
                 },
                 'transformed_data': {
                     'properties': {
-                        'dcat-ap-plu': {
+                        'dcat_ap_plu': {
                             'type': 'text',
                             'index': false
                         }
