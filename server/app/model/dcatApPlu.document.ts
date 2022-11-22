@@ -208,7 +208,7 @@ export const pluDocType = {
 export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
 
     static getExportFormat() {
-        return 'dcat-ap-plu';
+        return 'dcat_ap_plu';
     }
 
     static async create(mapper: GenericMapper): Promise<string> {
