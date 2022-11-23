@@ -35,7 +35,7 @@ import {WfsSettings} from './wfs.settings';
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {Summary} from "../../model/summary";
-import { pluDocType, pluPlanState, pluPlanType, pluPlanTypeFine, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../../model/dcatApPlu.document";
+import { pluDocType, pluPlanState, pluPlanType, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../../model/dcatApPlu.document";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from "../../utils/xpath.utils";
 
@@ -762,6 +762,9 @@ export class WfsMapper extends GenericMapper {
      *
      * Note especially that we use the XPlan 5.4 codelists for all XPlan documents!
      * 
+     * The mappings targets are taken from the INSPIRE codelist for plan type name:
+     * https://registry.gdi-de.org/codelist/de.xleitstelle.inspire_plu/PlanTypeNameValue
+     * 
      * // TODO fill in the gaps
      * // TODO what about other WFS sources?
      * // TODO check differently versioned codelists for discrepancies
@@ -774,43 +777,43 @@ export class WfsMapper extends GenericMapper {
         switch (typename) {
             case 'BP_Plan':
                 switch(planart) {
-                    // case 1000: return pluPlanTypeFine.; // BPlan
-                    case 10000: return pluPlanTypeFine.EINF_BEBAU_PLAN; // EinfacherBPlan
-                    case 10001: return pluPlanTypeFine.QUALI_BEBAU_PLAN;    // QualifizierterBPlan
+                    case 1000: return '6_Bebauungsplan';    // BPlan
+                    case 10000: return '6_3_EinfacherBPlan';    // EinfacherBPlan
+                    case 10001: return '6_1_QualifizierterBPlan';   // QualifizierterBPlan
                     // case 10002: return pluPlanTypeFine.;    // BebauungsplanZurWohnraumversorgung
-                    case 3000: return pluPlanTypeFine.VORH_BEBAU_PLA;   // VorhabenbezogenerBPlan
+                    case 3000: return '6_2_VorhabenbezogenerBPlan'; // VorhabenbezogenerBPlan
                     // case 3100: return pluPlanTypeFine.; // VorhabenUndErschliessungsplan
-                    case 4000: return pluPlanTypeFine.STAEDT_BAUL_INNENBER_STZG;    // InnenbereichsSatzung
-                    case 40000: return pluPlanTypeFine.STAEDT_BAUL_KLARST_STZG;     // KlarstellungsSatzung
-                    case 40001: return pluPlanTypeFine.STAEDT_BAUL_ENTWICKL_STZG;   // EntwicklungsSatzung
-                    case 40002: return pluPlanTypeFine.STAEDT_BAUL_ERGAENZ_STZG;    // ErgaenzungsSatzung
-                    // case 5000: return pluPlanTypeFine.; // AussenbereichsSatzung
+                    case 4000: return '7_InnenbereichsSatzung';     // InnenbereichsSatzung
+                    case 40000: return '7_1_KlarstellungsSatzung';  // KlarstellungsSatzung
+                    case 40001: return '7_2_EntwicklungsSatzung';   // EntwicklungsSatzung
+                    case 40002: return '7_3_ErgaenzungsSatzung';    // ErgaenzungsSatzung
+                    case 5000: return '8_AussenbereichsSatzung';    // AussenbereichsSatzung
                     // case 7000: return pluPlanTypeFine.; // OertlicheBauvorschrift
                     // case 9999: return pluPlanTypeFine.; // Sonstiges
-                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
+                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return undefined;
                 }
             case 'FP_Plan':
                 switch(planart) {
-                    case 1000: return pluPlanTypeFine.FLAECHENN_PLAN; // FPlan
-                    case 2000: return pluPlanTypeFine.GEMEINS_FLAECHENN_PLAN; // GemeinsamerFPlan
-                    case 3000: return pluPlanTypeFine.REGION_FLAECHENN_PLAN; // RegFPlan
-                    // case 4000: return pluPlanTypeFine.; // FPlanRegPlan
-                    // case 5000: return pluPlanTypeFine.; // SachlicherTeilplan
+                    case 1000: return '5_2_FPlan';  // FPlan
+                    case 2000: return '4_2_GemeinsamerFPlan';   // GemeinsamerFPlan
+                    case 3000: return '4_1_RegFPlan';   // RegFPlan
+                    // case 4000: return '';   // FPlanRegPlan
+                    case 5000: return '5_3_SachlicherTeilplan'; // SachlicherTeilplan
                     // case 9999: return pluPlanTypeFine.; // Sonstiges
-                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
+                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return undefined;
                 }
             case 'RP_Plan':
                 switch(planart) {
-                    case 1000: return pluPlanTypeFine.REGION_PLAN;  // Regionalplan
-                    case 2000: return pluPlanTypeFine.SACHL_TEIL_PLAN_REGIONAL; // SachlicherTeilplanRegionalebene
-                    case 2001: return pluPlanTypeFine.SACHL_TEIL_PLAN_LAND;     // SachlicherTeilplanLandesebene
-                    case 3000: return pluPlanTypeFine.BRAUNK_PLAN; // Braunkohlenplan
-                    case 4000: return pluPlanTypeFine.LAND_RAUM_ORD_PLAN;   // LandesweiterRaumordnungsplan
-                    case 5000: return pluPlanTypeFine.STANDORT_KONZ_BUND;   // StandortkonzeptBund
-                    case 5001: return pluPlanTypeFine.AWZ_PLAN; // AWZPlan
-                    case 6000: return pluPlanTypeFine.RAEUML_TEIL_PLAN;     // RaeumlicherTeilplan
+                    case 1000: return '3_1_Regionalplan';   // Regionalplan
+                    case 2000: return ' 3_3_SachlicherTeilplanRegionalebene';   // SachlicherTeilplanRegionalebene
+                    case 2001: return '2_2_SachlicherTeilplanLandesebene';  // SachlicherTeilplanLandesebene
+                    case 3000: return '2_3_Braunkohlenplan';    // Braunkohlenplan
+                    case 4000: return '2_1_LandesweiterRaumordnungsplan';   // LandesweiterRaumordnungsplan
+                    case 5000: return '1_1_StandortkonzeptBund';    // StandortkonzeptBund
+                    case 5001: return '1_2_AWZPlan';    // AWZPlan
+                    case 6000: return '3_2_RaeumlicherTeilplan';    // RaeumlicherTeilplan
                     // case 9999: return pluPlanTypeFine.; // Sonstiges
-                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
+                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return undefined;
                 }
             case 'SO_Plan':
                 // TODO no codelists found!
@@ -819,10 +822,10 @@ export class WfsMapper extends GenericMapper {
                     // TODO possibly more values possible; these are the ones found in the data so far
                     // case 2000: return pluPlanTypeFine.;
                     // case 17200: return pluPlanTypeFine.;
-                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return pluPlanTypeFine.UNBEKANNT;
+                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return undefined;
                 }
             default:
-                return pluPlanTypeFine.UNBEKANNT;
+                return undefined;
         }
     }
 

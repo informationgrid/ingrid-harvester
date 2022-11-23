@@ -149,42 +149,7 @@ export const pluPlanType = {
 };
 
 /**
- * Codeliste für Arten von raumbezogenen Planwerken, detailliert (5.5)
- */
-export const pluPlanTypeFine = {
-    EINF_BEBAU_PLAN: '1100',    // Einfacher Bebauungsplan
-    QUALI_BEBAU_PLAN: '1200',   // Qualifizierter Bebauungsplan
-    TEIL_BEBAU_PLAN: '1300',    // Teilbebauungsplan
-    VORH_BEBAU_PLA: '1400',     // Vorhabenbezogener Bebauungsplan
-    DURCHF_PLAN: '1500',        // Durchführungsplan
-    BAUSTF_PLAN: '1600',        // Baustufenplan
-    FLUCHTL_PLAN: '1700',       // Fluchtlinienplan
-    FLAECHENN_PLAN: '2000',     // Flächennutzungsplan
-    GEMEINS_FLAECHENN_PLAN: '2100',     // Gemeinsamer Flächennutzungsplan
-    REGION_FLAECHENN_PLAN: '2200',      // Regionaler Flächennutzungsplan
-    STAEDT_BAUL_ERHALT_STZG: '3100',    // Städtebauliche Erhaltungssatzung
-    STAEDT_BAUL_ENTWICKL_STZG: '3200',  // Städtebauliche Entwicklungssatzung
-    STAEDT_BAUL_ERGAENZ_STZG: '3300',   // Städtebauliche Ergänzungssatzung
-    STAEDT_BAUL_KLARST_STZG: '3400',    // Städtebauliche Klarstellungssatzung
-    STAEDT_BAUL_INNENBER_STZG: '3500',  // Städtebauliche Innenbereichssatzung
-    SICHER_FREMD_VERK_STZG:	'4100',     // Satzung zur Sicherung von Gebieten mit Fremdenverkehrsfunktion
-    LANDSCH_PROG: '5100',   // Landschaftsprogramm
-    LANDSCH_RAHMEN_PLAN: '5200',    // Landschaftsrahmenplan
-    LANDSCH_PLAN: '5300',   // Landschaftsplan
-    GRUEN_ORD_PLAN: '5400', // Grünordnungsplan
-    REGION_PLAN: '6100',    // Regionalplan
-    SACHL_TEIL_PLAN_REGIONAL: '6200',   // Sachlicher Teilplan Regionalebene
-    SACHL_TEIL_PLAN_LAND: '6300',       // Sachlicher Teilplan Landesebene
-    BRAUNK_PLAN: '6400',        // Braunkohlenplan
-    LAND_RAUM_ORD_PLAN: '6500', // Landesweiter Raumordnungsplan
-    STANDORT_KONZ_BUND: '6600', // Standortkonzept Bund
-    AWZ_PLAN: '6700',           // AWZ Plan
-    RAEUML_TEIL_PLAN: '6800',   // Räumlicher Teilplan
-    UNBEKANNT: '7000'           // unbekannt
-};
-
-/**
- * Codeliste für Arten von Verfahrensschritten bei raumbezogenen Verfahren (5.6)
+ * Codeliste für Arten von Verfahrensschritten bei raumbezogenen Verfahren (5.5)
  */
 export const pluProcessStepType = {
     FRUEHZ_BEH_BETEIL: '3001',   	// Frühzeitige Behördenbeteiligung
@@ -196,7 +161,7 @@ export const pluProcessStepType = {
 };
 
 /**
- * Codeliste für Arten von Dokumenten (5.7)
+ * Codeliste für Arten von Dokumenten (5.6)
  */
 export const pluDocType = {
     AUSLEG_INFO: '4001',    // Auslegungsinformationen
