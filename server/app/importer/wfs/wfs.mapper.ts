@@ -131,14 +131,14 @@ export class WfsMapper extends GenericMapper {
         for (let xp of ['./*/fis:SCAN_WWW', './*/fis:GRUND_WWW']) {
             let elem = this.select(xp, this.feature, true);
             if (elem) {
-                let dist: Distribution = { accessURL: elem.textContent };
-                if (isMaybeDownloadUrl(dist.accessURL)) {
-                    dist.downloadURL = dist.accessURL;
+                let distribution: Distribution = { accessURL: elem.textContent };
+                if (isMaybeDownloadUrl(distribution.accessURL)) {
+                    distribution.downloadURL = distribution.accessURL;
                 }
-                distributions.push(dist);
+                distributions.push(distribution);
             }
         }
-        return distributions;
+        return distributions ? distributions : undefined;
     }
 
     // TODO
