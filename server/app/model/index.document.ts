@@ -22,14 +22,27 @@
  */
 
 import { DcatApPluDocument } from "./dcatApPlu.document";
-import { GenericMapper } from "./generic.mapper";
+import { Contact, GenericMapper } from "./generic.mapper";
 
 export class IndexDocument {
 
     static async create(mapper: GenericMapper) : Promise<any> {
+        let contactPoint: Contact = await mapper.getContactPoint();
         let result = await {
             // basic information
-            contact_point: await mapper.getContactPoint(),
+            contact_point: {
+                fn: contactPoint.fn,
+                has_country_name: contactPoint.hasCountryName,
+                has_locality: contactPoint.hasLocality,
+                has_postal_code: contactPoint.hasPostalCode,
+                has_region: contactPoint.hasRegion,
+                has_street_address: contactPoint.hasStreetAddress,
+                has_email: contactPoint.hasEmail,
+                has_telephone: contactPoint.hasTelephone,
+                has_uid: contactPoint.hasUID,
+                has_url: contactPoint.hasURL,
+                has_orgnaization_name: contactPoint.hasOrganizationName
+            },
             description: mapper.getDescription(),
             identifier: mapper.getGeneratedId(),
             title: mapper.getTitle(),
