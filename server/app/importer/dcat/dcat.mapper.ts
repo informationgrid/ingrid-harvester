@@ -737,13 +737,9 @@ export class DcatMapper extends GenericMapper {
 
                 if (org) infos['organization-name'] = org.textContent;
 
-                let address = {};
-                if (region) address['region'] = region.textContent;
-                if (country) address['country-name'] = country.textContent.trim();
-                if (postCode) address['postal-code'] = postCode.textContent;
-                if (Object.keys(address).length > 0) {
-                    infos.hasAddress = address;
-                }
+                if (region) infos.hasRegion = region.textContent;
+                if (country) infos.hasCountryName = country.textContent.trim();
+                if (postCode) infos.hasPostalCode = postCode.textContent;
 
                 if (email) infos.hasEmail = email.getAttribute('rdf:resource').replace('mailto:', '');
                 if (phone) infos.hasTelephone = phone.getAttribute('rdf:resource').replace('tel:', '');

@@ -839,25 +839,21 @@ export class OaiMapper extends GenericMapper {
                         fn: name?.textContent,
                     };
 
-                    if (org) infos['organization-name'] = org.textContent;
+                    if (org) infos.hasOrganizationName = org.textContent;
 
                     if (contact.getAttribute('uuid')) {
                         infos.hasUID = contact.getAttribute('uuid');
                     }
 
                     if (name) infos.fn = name.textContent;
-                    if (org) infos['organization-name'] = org.textContent;
+                    if (org) infos.hasOrganizationName = org.textContent;
 
-                    let address = {};
                     let line1 = delPt.map(n => OaiMapper.getCharacterStringContent(n));
                     line1 = line1.join(', ');
-                    if (line1) address['street-address'] = line1;
-                    if (region) address['region'] = region.textContent;
-                    if (country) address['country-name'] = country.textContent;
-                    if (postCode) address['postal-code'] = postCode.textContent;
-                    if (Object.keys(address).length > 0) {
-                        infos.hasAddress = address;
-                    }
+                    if (line1) infos.hasStreetAddress = line1;
+                    if (region) infos.hasRegion = region.textContent;
+                    if (country) infos.hasCountryName = country.textContent;
+                    if (postCode) infos.hasPostalCode = postCode.textContent;
 
                     if (email) infos.hasEmail = email.textContent;
                     if (phone) infos.hasTelephone = phone.textContent;

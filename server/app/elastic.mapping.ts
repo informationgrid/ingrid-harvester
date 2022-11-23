@@ -192,27 +192,23 @@ export const elasticsearchMapping = {
                 'fn': {
                     'type': 'keyword'
                 },
-                'organization_name': {
+                'has_organization_name': {
                     'type': 'keyword'
                 },
-                'has_address': {
-                    'properties': {
-                        'street-address': {
-                            'type': 'keyword'
-                        },
-                        'region': {
-                            'type': 'keyword'
-                        },
-                        'country-name': {
-                            'type': 'keyword'
-                        },
-                        'postal-code': {
-                            'type': 'keyword'
-                        },
-                        'locality': {
-                            'type': 'keyword'
-                        }
-                    }
+                'has_street_address': {
+                    'type': 'keyword'
+                },
+                'has_region': {
+                    'type': 'keyword'
+                },
+                'has_country_name': {
+                    'type': 'keyword'
+                },
+                'has_postal_code': {
+                    'type': 'keyword'
+                },
+                'has_locality': {
+                    'type': 'keyword'
                 },
                 'has_email': {
                     'type': 'keyword'

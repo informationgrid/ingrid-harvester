@@ -62,18 +62,16 @@ export interface DateRange {
 }
 export interface Contact {
     fn: string,
-    hasAddress?: {
-        'country-name'?: string,
-        locality?: string,
-        'postal-code'?: string,
-        region?: string,
-        'street-address'?: string,
-    },
+    hasCountryName?: string,
+    hasLocality?: string,
+    hasPostalCode?: string,
+    hasRegion?: string,
+    hasStreetAddress?: string,
     hasEmail?: string,
     hasTelephone?: string,
     hasUID?: string,
     hasURL?: string,
-    'organization-name'?: string
+    hasOrganizationName?: string
 }
 
 

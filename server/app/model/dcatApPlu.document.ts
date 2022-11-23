@@ -327,13 +327,13 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let useFn = contact.fn && !['-'].includes(contact.fn);
         return `<dcat:contactPoint>
             <vcard:Organization>
-                <vcard:fn>${useFn ? esc(contact.fn) : esc(contact["organization-name"]) ?? esc(backupFn)}</vcard:fn>
-                ${optional('vcard:hasOrganizationName', useFn ? contact["organization-name"] : null)}
-                ${optional('vcard:hasPostalCode', esc(contact.hasAddress?.["postal-code"]))}
-                ${optional('vcard:hasStreetAddress', esc(contact.hasAddress?.["street-address"]))}
-                ${optional('vcard:hasLocality', esc(contact.hasAddress?.locality))}
-                ${optional('vcard:hasRegion', esc(contact.hasAddress?.region))}
-                ${optional('vcard:hasCountryName', esc(contact.hasAddress?.["country-name"]))}
+                <vcard:fn>${useFn ? esc(contact.fn) : esc(contact.hasOrganizationName) ?? esc(backupFn)}</vcard:fn>
+                ${optional('vcard:hasOrganizationName', useFn ? contact.hasOrganizationName : null)}
+                ${optional('vcard:hasPostalCode', esc(contact.hasPostalCode))}
+                ${optional('vcard:hasStreetAddress', esc(contact.hasStreetAddress))}
+                ${optional('vcard:hasLocality', esc(contact.hasLocality))}
+                ${optional('vcard:hasRegion', esc(contact.hasRegion))}
+                ${optional('vcard:hasCountryName', esc(contact.hasCountryName))}
                 ${optional('vcard:hasEmail', esc(contact.hasEmail))}
                 ${optional('vcard:hasTelephone', esc(contact.hasTelephone))}
             </vcard:Organization>

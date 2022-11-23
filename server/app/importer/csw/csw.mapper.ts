@@ -1120,17 +1120,13 @@ export class CswMapper extends GenericMapper {
                     if (!infos.fn) infos.fn = org?.textContent;
                     if (org) infos['organization-name'] = org.textContent;                    
 
-                    let address = {};
                     let line1 = delPt.map(n => CswMapper.getCharacterStringContent(n));
                     line1 = line1.join(', ');
-                    if (line1?.textContent) address['street-address'] = line1;
-                    if (locality?.textContent) address['locality'] = locality.textContent;
-                    if (region?.textContent) address['region'] = region.textContent;
-                    if (country?.textContent) address['country-name'] = country.textContent;
-                    if (postCode?.textContent) address['postal-code'] = postCode.textContent;
-                    if (Object.keys(address).length > 0) {
-                        infos.hasAddress = address;
-                    }
+                    if (line1?.textContent) infos.hasStreetAddress = line1;
+                    if (locality?.textContent) infos.hasLocality = locality.textContent;
+                    if (region?.textContent) infos.hasRegion = region.textContent;
+                    if (country?.textContent) infos.hasCountryName = country.textContent;
+                    if (postCode?.textContent) infos.hasPostalCode = postCode.textContent;
 
                     if (email) infos.hasEmail = email.textContent;
                     if (phone) infos.hasTelephone = phone.textContent;

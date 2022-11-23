@@ -237,23 +237,16 @@ export class WfsImporter implements Importer {
         // - select the appropriate nodes (gmd:contact or gmd:pointOfContact)
         let contact: Contact = {
             fn: this.select('./ows:ServiceContact/ows:IndividualName', serviceProvider, true)?.textContent,
-            hasAddress: {
-                'country-name': this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', serviceProvider, true)?.textContent,
-                locality: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', serviceProvider, true)?.textContent,
-                'postal-code': this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', serviceProvider, true)?.textContent,
-                region: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', serviceProvider, true)?.textContent,
-                'street-address': this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', serviceProvider, true)?.textContent
-            },
+            hasCountryName: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', serviceProvider, true)?.textContent,
+            hasLocality: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', serviceProvider, true)?.textContent,
+            hasPostalCode: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', serviceProvider, true)?.textContent,
+            hasRegion: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', serviceProvider, true)?.textContent,
+            hasStreetAddress: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', serviceProvider, true)?.textContent,
             hasEmail: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', serviceProvider, true)?.textContent,
-            'organization-name': this.generalInfo['publisher']?.[0]?.name,
+            hasOrganizationName: this.generalInfo['publisher']?.[0]?.name,
             hasTelephone: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', serviceProvider, true)?.textContent,
             // hasURL: this.select('./ows:ServiceContact/ows:ContactInfo/ows:OnlineResource/@xlink:href', serviceProvider, true)?.textContent
         };
-        // remove empty properties
-        Object.keys(contact.hasAddress).filter(k => contact.hasAddress[k] == null).forEach(k => delete contact.hasAddress[k]);
-        if (Object.keys(contact.hasAddress).length == 0) {
-            delete contact.hasAddress;
-        }
         Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
         this.generalInfo['contactPoint'] = contact;
 

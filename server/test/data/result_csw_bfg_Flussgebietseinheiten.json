@@ -55,11 +55,11 @@
   },
   "contact_point": {
     "fn": "Busskamp, Ralf",
-    "organization-name": "Bundesanstalt für Gewässerkunde",
-    "street-address": "Am Mainzer Tor 1",
-    "region": "Rheinland-Pfalz",
-    "country-name": "Deutschland",
-    "postal-code": "56068",
+    "hasOrganizationName": "Bundesanstalt für Gewässerkunde",
+    "hasStreetAddress": "Am Mainzer Tor 1",
+    "hasRegion": "Rheinland-Pfalz",
+    "hasCountryName": "Deutschland",
+    "hasPostalCode": "56068",
     "hasEmail": "geoportal@bafg.de",
     "hasTelephone": "+49 (0)261 1306 5255"
   },
