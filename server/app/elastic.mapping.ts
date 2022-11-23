@@ -236,7 +236,7 @@ export const elasticsearchMapping = {
         'modified': {
             'type': 'date'
         },
-        'distribution': {
+        'distributions': {
             'properties': {
                 'id': {
                     'type': 'keyword'

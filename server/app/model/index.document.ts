@@ -49,7 +49,7 @@ export class IndexDocument {
             temporal: mapper.getTemporal(),
             // additional information and metadata
             publisher: await mapper.getPublisher(),
-            distribution: await mapper.getDistributions(),
+            distributions: await mapper.getDistributions(),
             extras: {
                 harvested_data: mapper.getHarvestedData(),
                 metadata: {

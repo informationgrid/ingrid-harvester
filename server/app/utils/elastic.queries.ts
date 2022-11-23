@@ -55,7 +55,7 @@ export class ElasticQueries {
                                     }
                                 }, {'modified': {order: 'desc'}}],
                                 size: 100,
-                                _source: {include: ['title', 'distribution', 'modified']}
+                                _source: {include: ['title', 'distributions', 'modified']}
                             }
                         }
                     }
