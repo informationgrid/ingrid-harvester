@@ -747,7 +747,7 @@ export class WfsMapper extends GenericMapper {
             case 'BP_Plan': return pluPlanType.BEBAU_PLAN;
             case 'FP_Plan': return pluPlanType.FLAECHENN_PLAN;
             case 'RP_Plan': return pluPlanType.RAUM_ORDN_PLAN;
-            // case 'SO_Plan': return pluPlanType.UNBEKANNT;   // TODO
+            case 'SO_Plan': return pluPlanType.SONST_PLAN;
             case 'sach_bplan': return pluPlanType.BEBAU_PLAN;   // TODO check
             default: this.log.debug('No pluPlanType available for typename', typename); return pluPlanType.UNBEKANNT;
         }

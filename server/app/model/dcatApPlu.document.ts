@@ -145,6 +145,7 @@ export const pluPlanType = {
     RAUM_ORDN_PLAN: '6000',     // Raumordnungsplan
     RAUM_ORDN_VERF: '7000',     // Raumordnungsverfahren
     PLAN_FESTST_VERF: '8000',   // Planfeststellungsverfahren
+    SONST_PLAN: '8500',         // Sonstige raumbezogene Planwerke
     UNBEKANNT: '9000'           // unbekannt
 };
 
