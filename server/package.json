@@ -11,7 +11,7 @@
     "start-dev-16-inspect": "ts-node-dev --inspect --poll --ignore-watch mappings.json app/index.ts",
     "start-cli-dev": "ts-node app/server-cli.ts",
     "build": "tsc --outDir build",
-    "postbuild": "copyfiles '../entrypoint.sh' './*.json' 'app/**/*.json' build/server",
+    "postbuild": "copyfiles './*.json' 'app/**/*.json' build/server",
     "install-production": "NODE_ENV=production npm install",
     "test": "mocha -r ts-node/register test/**/*.ts",
     "test-jenkins": "mocha -r ts-node/register test/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml"

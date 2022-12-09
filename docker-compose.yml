@@ -1,9 +1,9 @@
 version: '3'
 services:
 
-  mcloud:
+  harvester:
     build: .
-    container_name: mcloud
+    container_name: diplanung-metadata-harvester
     environment:
      - NODE_ENV=production
      - ES_HOST=elastic
@@ -11,15 +11,10 @@ services:
      - ELASTIC_PASSWORD=elastic
     ports:
       - 8090:8090
-    working_dir: /opt/mcloud
-    command: cd server && node app/index.js
-    depends_on:
-        - elastic
+    working_dir: /opt/mcloud/server
+    command: node app/index.js
     networks:
-      - mcloudnetwork
-
-volumes:
-  esdata:
+      - metadata-network
 
 networks: 
-  mcloudnetwork:
+  metadata-network:

@@ -3,7 +3,7 @@ services:
 
   elastic:
     image: docker-registry.wemove.com/ingrid-elasticsearch-with-decompound:6.8.4
-    container_name: mcloud-elastic
+    container_name: diplanung-elasticsearch-node1
     environment:
       - cluster.name=mcloud
       - bootstrap.memory_lock=true
@@ -20,13 +20,13 @@ services:
       - 9200:9200
       - 9300:9300
     networks:
-      - mcloudnetwork
+      - metadata-network
 
-  mcloud:
+  harvester:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: mcloud
+    container_name: diplanung-metadata-harvester
     environment:
      - NODE_ENV=development
      - ES_HOST=elastic
@@ -39,10 +39,10 @@ services:
     depends_on:
         - elastic
     networks:
-      - mcloudnetwork
+      - metadata-network
 
 volumes:
   esdata:
 
 networks: 
-  mcloudnetwork:
+  metadata-network:
