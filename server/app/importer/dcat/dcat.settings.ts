@@ -24,7 +24,7 @@
 import {ElasticSettings} from '../../utils/elastic.setting';
 import {ImporterSettings} from '../../importer.settings';
 
-export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer';
+export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';
 
 export type DcatSettings = {
     catalogUrl: string,

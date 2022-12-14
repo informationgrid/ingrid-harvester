@@ -352,6 +352,13 @@ export class DcatMapper extends GenericMapper {
                         displayHomepage = originator[0].homepage
                     }
                     break;
+                case "publisher":
+                    let publisher = await this._getPublisher();
+                    if (publisher.length > 0) {
+                        displayName = publisher[0].organization;
+                        displayHomepage = null;
+                    }
+                    break;
             }
         }
 
