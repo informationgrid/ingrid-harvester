@@ -556,7 +556,7 @@ export class CswMapper extends GenericMapper {
         else if(geometries.length > 1){
             return {
                 'type': 'GeometryCollection',
-                'geometries' : geometries
+                'geometries': geometries
             }
         }
 
@@ -931,6 +931,34 @@ export class CswMapper extends GenericMapper {
     }
 
     _getBoundingBoxGml() {
+        return undefined;
+    }
+
+    _getBoundingBox() {
+        let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
+        let geometries = [];
+        for(let i=0; i < geographicBoundingBoxes.length; i++){
+            let geographicBoundingBox = geographicBoundingBoxes[i];
+            let west = parseFloat(CswMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let east = parseFloat(CswMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let south = parseFloat(CswMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+
+            geometries.push({
+                'type': 'Envelope',
+                'coordinates': [[west, north], [east, south]]
+            });
+        }
+        if(geometries.length == 1){
+            return geometries[0];
+        }
+        else if(geometries.length > 1){
+            return {
+                'type': 'GeometryCollection',
+                'geometries': geometries
+            }
+        }
+
         return undefined;
     }
 

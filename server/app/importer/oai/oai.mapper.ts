@@ -893,6 +893,10 @@ export class OaiMapper extends GenericMapper {
         return undefined;
     }
 
+    _getBoundingBox() {
+        return undefined;
+    }
+
     _getSpatialGml() {
         return undefined;
     }

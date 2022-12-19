@@ -473,6 +473,10 @@ export class ExcelSparseMapper extends GenericMapper {
         return undefined;
     }
 
+    _getBoundingBox() {
+        return undefined;
+    }
+
     async _getCatalog() {
         return {
             description: this.fetched.description,

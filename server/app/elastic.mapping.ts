@@ -278,6 +278,9 @@ export const elasticsearchMapping = {
         'centroid': {
             'type': 'geo_point'
         },
+        'bounding_box': {
+            'type': 'geo_shape'
+        },
         'spatial': {
             'type': 'geo_shape'
         },

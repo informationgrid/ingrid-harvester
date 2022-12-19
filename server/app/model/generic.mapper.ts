@@ -453,6 +453,12 @@ export abstract class GenericMapper {
         return this._getBoundingBoxGml();
     }
 
+    abstract _getBoundingBox();
+
+    getBoundingBox() {
+        return this._getBoundingBox();
+    }
+
     abstract _getSpatialGml();
 
     getSpatialGml() {
