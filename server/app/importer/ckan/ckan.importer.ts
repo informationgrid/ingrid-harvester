@@ -264,8 +264,8 @@ export class CkanImporter implements Importer {
                     log.info(`Group ${docs.length} records by parent: ${key} -> ${uuid}`);
                     let child_ids = [doc.extras.generated_id];
                     if(doc.extras.temporal && doc.extras.temporal.length > 0) {
-                        for (let j = 0; j < doc.distribution.length; j++) {
-                            let distribution = doc.distribution[j];
+                        for (let j = 0; j < doc.distributions.length; j++) {
+                            let distribution = doc.distributions[j];
                             if (doc.extras.temporal && doc.extras.temporal.length > 0) {
                                 distribution.temporal = [{
                                     "gte": doc.extras.temporal[0].gte,
@@ -278,8 +278,8 @@ export class CkanImporter implements Importer {
                         let newDoc = docs[i];
                         child_ids.push(newDoc.extras.generated_id);
                         if(newDoc.extras.temporal && newDoc.extras.temporal.length > 0) {
-                            for (let j = 0; j < newDoc.distribution.length; j++) {
-                                let distribution = newDoc.distribution[j];
+                            for (let j = 0; j < newDoc.distributions.length; j++) {
+                                let distribution = newDoc.distributions[j];
                                 if (newDoc.extras.temporal && newDoc.extras.temporal.length > 0) {
                                     distribution.temporal = [{
                                         "gte": newDoc.extras.temporal[0].gte,
@@ -292,7 +292,7 @@ export class CkanImporter implements Importer {
                             if (doc.issued < newDoc.issued) {
                                 newDoc.issued = doc.issued;
                             }
-                            newDoc.distribution = newDoc.distribution.concat(doc.distribution);
+                            newDoc.distributions = newDoc.distributions.concat(doc.distributions);
                             if (newDoc.extras.temporal && newDoc.extras.temporal.length > 0 && doc.extras.temporal && doc.extras.temporal.length > 0) {
                                 if (doc.extras.temporal[0].gte && (!newDoc.extras.temporal[0].gte || doc.extras.temporal[0].gte < newDoc.extras.temporal[0].gte)) {
                                     newDoc.extras.temporal[0].gte = doc.extras.temporal[0].gte;
@@ -306,7 +306,7 @@ export class CkanImporter implements Importer {
                             if (newDoc.issued < doc.issued) {
                                 doc.issued = newDoc.issued;
                             }
-                            doc.distribution = doc.distribution.concat(newDoc.distribution);
+                            doc.distributions = doc.distributions.concat(newDoc.distributions);
                             if (doc.extras.temporal && doc.extras.temporal.length > 0 && newDoc.extras.temporal && newDoc.extras.temporal.length > 0) {
                                 if (newDoc.extras.temporal[0].gte && (!doc.extras.temporal[0].gte || newDoc.extras.temporal[0].gte < doc.extras.temporal[0].gte)) {
                                     doc.extras.temporal[0].gte = newDoc.extras.temporal[0].gte;

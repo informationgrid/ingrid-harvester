@@ -165,7 +165,7 @@ export class DeduplicateUtils {
         if (!generatedId) generatedId = '';
 
         let urls = [];
-        doc.distribution.forEach(dist => {
+        doc.distributions.forEach(dist => {
             if (dist.accessURL) {
                 urls.push(dist.accessURL);
             }
@@ -223,8 +223,8 @@ export class DeduplicateUtils {
                             // collect URLs from hits we want to compare
                             let urlsFromHit = [];
                             let urlsFromOtherHit = [];
-                            hit0._source.distribution.forEach(dist => urlsFromHit.push(dist.accessURL));
-                            hit1._source.distribution.forEach(dist => urlsFromOtherHit.push(dist.accessURL));
+                            hit0._source.distributions.forEach(dist => urlsFromHit.push(dist.accessURL));
+                            hit1._source.distributions.forEach(dist => urlsFromOtherHit.push(dist.accessURL));
 
                             // only if all URLs are the same in both hits, we expect them to be equal AND have the same length
                             let remove =

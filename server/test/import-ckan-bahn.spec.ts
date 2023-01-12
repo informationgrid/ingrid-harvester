@@ -115,13 +115,13 @@ describe('Import CKAN Bahn', function () {
         chai.expect(result.keywords[0]).to.eq('Koordinaten');
         chai.expect(result.publisher.length).to.eq(1);
         chai.expect((<Organization>result.publisher[0]).organization).to.eq('DB Vertrieb GmbH');
-        chai.expect(result.distribution.length).to.eq(1);
-        chai.expect(result.distribution[0].title).to.eq('Reisezentrenliste (Stand: 09/2018)');
-        chai.expect(result.distribution[0].accessURL).to.eq('http://download-data.deutschebahn.com/static/datasets/reisezentren/VSRz201703.csv');
-        chai.expect(result.distribution[0].format[0]).to.eq('CSV');
-        chai.expect(result.distribution[0].description).to.eq('Reisezentrenliste der DB Vertrieb GmbH');
-        chai.expect(result.distribution[0].modified.toString()).to.eq(new Date('2018-09-24T09:12:55.1358119').toString());
-        chai.expect(result.distribution[0].byteSize).to.eq(10325);
+        chai.expect(result.distributions.length).to.eq(1);
+        chai.expect(result.distributions[0].title).to.eq('Reisezentrenliste (Stand: 09/2018)');
+        chai.expect(result.distributions[0].accessURL).to.eq('http://download-data.deutschebahn.com/static/datasets/reisezentren/VSRz201703.csv');
+        chai.expect(result.distributions[0].format[0]).to.eq('CSV');
+        chai.expect(result.distributions[0].description).to.eq('Reisezentrenliste der DB Vertrieb GmbH');
+        chai.expect(result.distributions[0].modified.toString()).to.eq(new Date('2018-09-24T09:12:55.1358119').toString());
+        chai.expect(result.distributions[0].byteSize).to.eq(10325);
     });
 
     after(() => indexDocumentCreateSpy?indexDocumentCreateSpy.restore():null);

@@ -213,7 +213,7 @@ export class OaiImporter implements Importer {
 
             if (!mapper.shouldBeSkipped()) {
 
-                if (doc.extras.metadata.isValid && doc.distribution.length > 0) {
+                if (doc.extras.metadata.isValid && doc.distributions.length > 0) {
                     this.summary.ok++;
                 }
 
