@@ -1,17 +1,12 @@
 #
-# IMAGE: build server and client
+# IMAGE: build server
 #
-FROM node:16.18.0-bullseye-slim AS build
+FROM node:16.18.0-bullseye-slim AS build-server
 LABEL stage=build
 
 # install build dependencies
-COPY ./server/package.json /opt/mcloud/server/package.json
 WORKDIR /opt/mcloud/server
-RUN npm install
-
-# install build dependencies
-COPY ./client/package.json /opt/mcloud/client/package.json
-WORKDIR /opt/mcloud/client
+COPY ./server/package.json package.json
 RUN npm install
 
 # copy src files
@@ -22,6 +17,22 @@ COPY . .
 WORKDIR /opt/mcloud/server
 RUN npm run build
 
+
+#
+# IMAGE: build client
+#
+FROM node:16.18.0-bullseye-slim AS build-client
+LABEL stage=build
+
+# install build dependencies
+WORKDIR /opt/mcloud/client
+COPY ./client/package.json package.json
+RUN npm install
+
+# copy src files
+WORKDIR /opt/mcloud
+COPY . .
+
 # build client
 WORKDIR /opt/mcloud/client
 RUN npm run prod
@@ -30,7 +41,7 @@ RUN npm run prod
 #
 # IMAGE: final
 #
-FROM node:16.18.0-bullseye-slim as final
+FROM node:16.18.0-bullseye-slim AS final
 
 # TODO: remove these dev tools for production
 RUN apt-get update && \
@@ -40,15 +51,15 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # install production dependencies
-COPY ./server/package.json /opt/mcloud/server/package.json
 WORKDIR /opt/mcloud/server
+COPY ./server/package.json package.json
 RUN npm run install-production
 
 # copy built files from server and client
 WORKDIR /opt/mcloud
-COPY --from=build /opt/mcloud/server/build .
-COPY --from=build /opt/mcloud/client/dist/webapp /opt/mcloud/server/app/webapp
+COPY --from=build-server /opt/mcloud/server/build .
+COPY --from=build-client /opt/mcloud/client/dist/webapp server/app/webapp
 
-EXPOSE 8090 9200
+EXPOSE 8090
 
 CMD ["dumb-init"]
