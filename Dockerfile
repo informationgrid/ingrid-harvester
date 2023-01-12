@@ -62,4 +62,9 @@ COPY --from=build-client /opt/mcloud/client/dist/webapp server/app/webapp
 
 EXPOSE 8090
 
+RUN adduser --uid 1001 --group --system metadata && \
+    chown -R metadata:metadata /opt/mcloud
+
+USER metadata
+
 CMD ["dumb-init"]
