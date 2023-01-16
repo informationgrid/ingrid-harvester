@@ -279,7 +279,7 @@ export class UrlCheckService {
         return this.client.cat.indices({
             h: ['index'],
             format: 'json'
-        }).then((body) => {
+        }).then(({ body }) => {
             return body
                 .some(json => {
                     return index === json.index;
@@ -377,7 +377,7 @@ export class UrlCheckService {
                     type: this.settings.indexType || 'base',
                     body: data
                 })
-                    .then((response) => {
+                    .then(({ body: response }) => {
                         if (response.errors) {
                             response.items.forEach(item => {
                                 let err = item.index.error;

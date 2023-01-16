@@ -50,8 +50,6 @@ export class StatisticUtils {
     indexName: string;
     deduplicationAlias: string;
 
-
-
     constructor(settings) {
         this.settings = settings;
 
@@ -176,7 +174,7 @@ export class StatisticUtils {
         return this.client.cat.indices({
             h: ['index'],
             format: 'json'
-        }).then((body) => {
+        }).then(({ body }) => {
             return body
                 .some(json => {
                     return index === json.index;
@@ -257,7 +255,7 @@ export class StatisticUtils {
                     type: this.settings.indexType || 'base',
                     body: data
                 })
-                    .then((response) => {
+                    .then(({ body: response }) => {
                         if (response.errors) {
                             response.items.forEach(item => {
                                 let err = item.index.error;

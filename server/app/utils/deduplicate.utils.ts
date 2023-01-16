@@ -199,7 +199,7 @@ export class DeduplicateUtils {
         // By default elasticsearch limits the count of aggregates to 10. Ask it
         // to return a lot more results!
         try {
-            let response = await this.client.search({
+            let { body: response } = await this.client.search({
                 index: [this.settings.alias],
                 body: ElasticQueries.findSameTitle(),
                 size: 50
