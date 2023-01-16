@@ -62,15 +62,12 @@ export class UrlCheckService {
             index: ''
         };
 
-        // the elasticsearch client for access the cluster
-        const url = new URL(this.settings.elasticSearchUrl);
+        // the elasticsearch client for accessing the cluster
         this.client = new elasticsearch.Client({
-            // log: 'trace',
-            host: {
-                host: url.hostname,
-                port: url.port,
-                protocol: url.protocol,
-                auth: 'elastic:' + this.settings.elasticSearchPassword,
+            node: this.settings.elasticSearchUrl,
+            auth: {
+                username: 'elastic',
+                password: this.settings.elasticSearchPassword
             },
             requestTimeout: 30000
         });
