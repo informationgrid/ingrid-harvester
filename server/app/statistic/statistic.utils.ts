@@ -162,11 +162,12 @@ export class StatisticUtils {
      * @param {string} index
      * @param {string} alias
      */
-    addAlias(index, alias) {
-        return this.client.indices.putAlias({
+    async addAlias(index, alias): Promise<any> {
+        let { body } = await this.client.indices.putAlias({
             index: index,
             name: alias
         });
+        return body;
     }
 
     isIndexPresent(index: string){
@@ -180,7 +181,6 @@ export class StatisticUtils {
                     return index === json.index;
                 })
         }).catch(e => log.error(e));
-
     }
 
     /**
@@ -325,7 +325,8 @@ export class StatisticUtils {
             }));
     }
 
-    search(indexName: string): Promise<any> {
-        return this.client.search({ index: indexName });
+    async search(indexName: string): Promise<any> {
+        let { body } = await this.client.search({ index: indexName });
+        return body;
     }
 }

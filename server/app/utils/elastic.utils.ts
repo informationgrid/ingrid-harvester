@@ -198,11 +198,12 @@ export class ElasticSearchUtils {
      * @param {string} index
      * @param {string} alias
      */
-    addAlias(index, alias) {
-        return this.client.indices.putAlias({
+    async addAlias(index, alias): Promise<any> {
+        const { body } = await this.client.indices.putAlias({
             index: index,
             name: alias
         });
+        return body;
     }
 
     /**
@@ -211,11 +212,12 @@ export class ElasticSearchUtils {
      * @param {string} index
      * @param {string} alias
      */
-    removeAlias(index, alias) {
-        return this.client.indices.deleteAlias({
+    async removeAlias(index, alias): Promise<any> {
+        const { body } = await this.client.indices.deleteAlias({
             index: index,
             name: alias
         });
+        return body;
     }
 
 
@@ -247,7 +249,7 @@ export class ElasticSearchUtils {
         return this.client.cat.indices({
             h: ['index', 'docs.count', 'health', 'status'],
             format: 'json'
-        }).then(body => {
+        }).then(({ body }) => {
             return body
                 .filter(json => {
                     // the index name must consist of the base name + the date string which is
@@ -564,15 +566,17 @@ export class ElasticSearchUtils {
         log.error(message, error);
     }
 
-    deleteIndex(indicesToDelete: string | string[]): Promise<any> {
+    async deleteIndex(indicesToDelete: string | string[]): Promise<any> {
         log.debug('Deleting indices: ' + indicesToDelete);
-        return this.client.indices.delete({
+        const { body } = await this.client.indices.delete({
             index: indicesToDelete
         });
+        return body;
     }
 
-    search(indexName: string): Promise<any> {
-        return this.client.search({index: indexName});
+    async search(indexName: string): Promise<any> {
+        const { body } = await this.client.search({index: indexName});
+        return body;
     }
 
     async getHistory(baseIndex: string): Promise<any> {
@@ -705,7 +709,7 @@ export class ElasticSearchUtils {
                         "match_all": {}
                     }
                 }
-            }, function getMoreUntilDone(error, response) {
+            }, function getMoreUntilDone(error, { body: response }) {
                 response.hits.hits.forEach(function (hit) {
                     results.push(hit);
                 });
