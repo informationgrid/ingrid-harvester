@@ -32,7 +32,7 @@ import {elasticsearchMapping} from "../../statistic/url_check.mapping";
 import {elasticsearchSettings} from "../../statistic/url_check.settings";
 import {BulkResponse} from "../../statistic/statistic.utils";
 
-let elasticsearch = require('elasticsearch'), log = require('log4js').getLogger(__filename);
+let elasticsearch = require('@elastic/elasticsearch'), log = require('log4js').getLogger(__filename);
 
 require('url').URL;
 

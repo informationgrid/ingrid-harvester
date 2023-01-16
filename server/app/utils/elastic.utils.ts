@@ -28,7 +28,7 @@ import {ElasticSettings} from './elastic.setting';
 import {Index} from '@shared/index.model';
 import {ElasticQueries} from "./elastic.queries";
 
-let elasticsearch = require('elasticsearch'),
+let elasticsearch = require('@elastic/elasticsearch'),
     log = require('log4js').getLogger(__filename);
 
 require('url').URL;

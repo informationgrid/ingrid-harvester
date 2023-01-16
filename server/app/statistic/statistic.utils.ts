@@ -29,7 +29,7 @@ import {elasticsearchSettings} from "./statistic.settings";
 import {ImportLogMessage} from "../model/import.result";
 import { MiscUtils } from '../utils/misc.utils';
 
-let elasticsearch = require('elasticsearch'),
+let elasticsearch = require('@elastic/elasticsearch'),
     log = require('log4js').getLogger(__filename);
 
 require('url').URL;
