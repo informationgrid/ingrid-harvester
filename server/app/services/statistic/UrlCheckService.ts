@@ -31,8 +31,9 @@ import {now} from "moment";
 import {elasticsearchMapping} from "../../statistic/url_check.mapping";
 import {elasticsearchSettings} from "../../statistic/url_check.settings";
 import {BulkResponse} from "../../statistic/statistic.utils";
+import { Client } from '@elastic/elasticsearch';
 
-let elasticsearch = require('@elastic/elasticsearch'), log = require('log4js').getLogger(__filename);
+let log = require('log4js').getLogger(__filename);
 
 const http = require('http');
 const https = require('https');
@@ -50,7 +51,7 @@ export class UrlCheckService {
     private settings: ElasticSettings;
     private indexName: string;
 
-    private client: any;
+    private client: Client;
 
     constructor(private socketService: ImportSocketService) {
         this.generalSettings = ConfigService.getGeneralSettings();
@@ -63,7 +64,7 @@ export class UrlCheckService {
         };
 
         // the elasticsearch client for accessing the cluster
-        this.client = new elasticsearch.Client({
+        this.client = new Client({
             node: this.settings.elasticSearchUrl,
             auth: {
                 username: 'elastic',

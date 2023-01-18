@@ -27,9 +27,9 @@ import {DeduplicateUtils} from './deduplicate.utils';
 import {ElasticSettings} from './elastic.setting';
 import {Index} from '@shared/index.model';
 import {ElasticQueries} from "./elastic.queries";
+import { Client } from '@elastic/elasticsearch';
 
-let elasticsearch = require('@elastic/elasticsearch'),
-    log = require('log4js').getLogger(__filename);
+let log = require('log4js').getLogger(__filename);
 
 require('url').URL;
 
@@ -51,7 +51,7 @@ export class ElasticSearchUtils {
     private static readonly LENGTH_OF_TIMESTAMP = 18;
 
     settings: ElasticSettings & ImporterSettings;
-    client: any;
+    client: Client;
     _bulkData: any[];
     indexName: string;
     deduplicationAlias: string;
@@ -64,7 +64,7 @@ export class ElasticSearchUtils {
         this.summary = summary;
 
         // the elasticsearch client for accessing the cluster
-        this.client = new elasticsearch.Client({
+        this.client = new Client({
             node: this.settings.elasticSearchUrl,
             auth: {
                 username: 'elastic',
