@@ -149,7 +149,7 @@ export class CkanImporter implements Importer {
                     if (!response.queued) {
                         this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
                     }
-                }).then(() => this.elastic.client.cluster.health({waitForStatus: 'yellow'}));
+                }).then(() => this.elastic.client.cluster.health({wait_for_status: 'yellow'}));
         }
     }
 
@@ -341,7 +341,7 @@ export class CkanImporter implements Importer {
                         if (!response.queued) {
                             this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
                         }
-                    }).then(() => this.elastic.client.cluster.health({waitForStatus: 'yellow'}));
+                    }).then(() => this.elastic.client.cluster.health({wait_for_status: 'yellow'}));
             });
         }
     }

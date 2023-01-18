@@ -126,7 +126,7 @@ export class StatisticUtils {
             this.isIndexPresent(this.indexName).then((isPresent) => {
 
                 if (!isPresent) {
-                    this.client.indices.create({index: this.indexName, waitForActiveShards: '1', body: body})
+                    this.client.indices.create({index: this.indexName, wait_for_active_shards: '1', body: body})
                         .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
                         .catch(err => {
                             let message = 'Error occurred creating statistic index';
@@ -134,7 +134,7 @@ export class StatisticUtils {
                             reject(message);
                         });
                 } else {
-                    this.client.indices.open({index: this.indexName, waitForActiveShards: '1'}).catch(err => {
+                    this.client.indices.open({index: this.indexName, wait_for_active_shards: '1'}).catch(err => {
                         let message = 'Error occurred creating statistic index';
                         log.error(message, err);
                         reject(message);
@@ -146,7 +146,7 @@ export class StatisticUtils {
     }
 
     finishIndex() {
-        return this.client.cluster.health({waitForStatus: 'yellow'})
+        return this.client.cluster.health({wait_for_status: 'yellow'})
             .then(() =>
                 this.sendBulkData(false))
             .then(() => {
@@ -229,7 +229,7 @@ export class StatisticUtils {
 
         // in order to update settings the index has to be closed
         const handleClose = () => {
-            this.client.cluster.health({waitForStatus: 'yellow'})
+            this.client.cluster.health({wait_for_status: 'yellow'})
                 .then(() => this.client.indices.close({index: index}, handleSettings))
                 .catch(() => {
                     log.error('Cluster state did not become yellow');

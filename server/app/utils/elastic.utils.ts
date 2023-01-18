@@ -90,11 +90,11 @@ export class ElasticSearchUtils {
         let oldIndexName = existingIndices.map(index => index.name).sort().pop();
         // first prepare index
         return this.prepareIndex(mapping, settings)
-            .then(() => this.client.cluster.health({waitForStatus: 'yellow'}))
+            .then(() => this.client.cluster.health({wait_for_status: 'yellow'}))
             // then reindex, i.e. copy documents, from last existing to new
             .then(() => {
                 this.client.reindex({
-                    waitForCompletion: true,
+                    wait_for_completion: true,
                     refresh: true,
                     body: {
                         source: {
@@ -120,7 +120,7 @@ export class ElasticSearchUtils {
         }
         return new Promise((resolve, reject) => {
             if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
-            this.client.indices.create({index: this.indexName, waitForActiveShards: '1', body: body})
+            this.client.indices.create({index: this.indexName, wait_for_active_shards: '1', body: body})
                 .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
                 .catch(err => {
                     let message = 'Error occurred creating index';
@@ -140,7 +140,7 @@ export class ElasticSearchUtils {
      */
     prepareIndexWithName(indexName: string, mapping, settings) {
         return new Promise<void>((resolve, reject) => {
-            this.client.indices.create({index: indexName, waitForActiveShards: '1', body: settings})
+            this.client.indices.create({index: indexName, wait_for_active_shards: '1', body: settings})
                 .then(() => {
                     let type =  Object.keys(mapping)[0];
                     this.client.indices.putMapping({
@@ -176,7 +176,7 @@ export class ElasticSearchUtils {
             return;
         }
 
-        return this.client.cluster.health({waitForStatus: 'yellow'})
+        return this.client.cluster.health({wait_for_status: 'yellow'})
             .then(() => this.sendBulkData(false))
             .then(() => this.deleteOldIndices(this.settings.index, this.indexName))
             .then(() => {
@@ -314,7 +314,7 @@ export class ElasticSearchUtils {
 
         // in order to update settings the index has to be closed
         const handleClose = () => {
-            this.client.cluster.health({waitForStatus: 'yellow'})
+            this.client.cluster.health({wait_for_status: 'yellow'})
                 .then(() => this.client.indices.close({index: index}, handleSettings))
                 .catch(() => {
                     log.error('Cluster state did not become yellow');
@@ -432,7 +432,7 @@ export class ElasticSearchUtils {
 
         // send data to elasticsearch if limit is reached
         // TODO: don't use document size but bytes instead
-        await this.client.cluster.health({waitForStatus: 'yellow'});
+        await this.client.cluster.health({wait_for_status: 'yellow'});
         if (this._bulkData.length >= (ElasticSearchUtils.maxBulkSize * 2)) {
             return this.sendBulkData();
         } else {
@@ -716,7 +716,7 @@ export class ElasticSearchUtils {
 
                 if (response.hits.total !== results.length) {
                     client.scroll({
-                        scrollId: response._scroll_id,
+                        scroll_id: response._scroll_id,
                         scroll: '5s'
                     }, getMoreUntilDone);
                 } else {
