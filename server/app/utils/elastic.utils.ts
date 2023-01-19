@@ -199,11 +199,10 @@ export class ElasticSearchUtils {
      * @param {string} alias
      */
     async addAlias(index, alias): Promise<any> {
-        const { body } = await this.client.indices.putAlias({
+        return await this.client.indices.putAlias({
             index: index,
             name: alias
         });
-        return body;
     }
 
     /**
@@ -213,13 +212,11 @@ export class ElasticSearchUtils {
      * @param {string} alias
      */
     async removeAlias(index, alias): Promise<any> {
-        const { body } = await this.client.indices.deleteAlias({
+        return await this.client.indices.deleteAlias({
             index: index,
             name: alias
         });
-        return body;
     }
-
 
     /**
      * Delete all indices starting with indexBaseName but not indexName .
@@ -249,7 +246,7 @@ export class ElasticSearchUtils {
         return this.client.cat.indices({
             h: ['index', 'docs.count', 'health', 'status'],
             format: 'json'
-        }).then(({ body }) => {
+        }).then(body => {
             return body
                 .filter(json => {
                     // the index name must consist of the base name + the date string which is
@@ -340,7 +337,7 @@ export class ElasticSearchUtils {
                     type: this.settings.indexType || 'base',
                     body: data
                 })
-                    .then(({ body: response }) => {
+                    .then(response => {
                         if (response.errors) {
                             response.items.forEach(item => {
                                 let err = item.index.error;
@@ -382,7 +379,7 @@ export class ElasticSearchUtils {
                     type: type,
                     body: data
                 })
-                    .then(({ body: response }) => {
+                    .then(response => {
                         if (response.errors) {
                             response.items.forEach(item => {
                                 let err = item.index.error;
@@ -514,7 +511,7 @@ export class ElasticSearchUtils {
             let slice = data.slice(i, end);
 
             try {
-                let { body: result } = await this.client.msearch({
+                let result = await this.client.msearch({
                     index: this.settings.alias,
                     body: slice
                 });
@@ -568,19 +565,17 @@ export class ElasticSearchUtils {
 
     async deleteIndex(indicesToDelete: string | string[]): Promise<any> {
         log.debug('Deleting indices: ' + indicesToDelete);
-        const { body } = await this.client.indices.delete({
+        return await this.client.indices.delete({
             index: indicesToDelete
         });
-        return body;
     }
 
     async search(indexName: string): Promise<any> {
-        const { body } = await this.client.search({index: indexName});
-        return body;
+        return await this.client.search({index: indexName});
     }
 
     async getHistory(baseIndex: string): Promise<any> {
-        let { body: result } = await this.client.search({
+        let result = await this.client.search({
             index: ['mcloud_harvester_statistic'],
             body: ElasticQueries.findHistory(baseIndex),
             size: 30
@@ -589,7 +584,7 @@ export class ElasticSearchUtils {
     }
 
     async getHistories(): Promise<any> {
-        let { body: result } = await this.client.search({
+        let result = await this.client.search({
             index: ['mcloud_harvester_statistic'],
             body: ElasticQueries.findHistories(),
             size: 1000
@@ -598,7 +593,7 @@ export class ElasticSearchUtils {
     }
 
     async getAccessUrls(after_key): Promise<any> {
-        let { body: result } = await this.client.search({
+        let result = await this.client.search({
             index: this.indexName,
             body: ElasticQueries.getAccessUrls(after_key),
             size: 0
@@ -617,7 +612,7 @@ export class ElasticSearchUtils {
     }
 
     async getUrlCheckHistory(): Promise<any> {
-        let { body: result } = await this.client.search({
+        let result = await this.client.search({
             index: ['url_check_history'],
             body: ElasticQueries.getUrlCheckHistory(),
             size: 30
@@ -626,7 +621,7 @@ export class ElasticSearchUtils {
     }
 
     async cleanUrlCheckHistory(days: number): Promise<any> {
-        let { body } = await this.client.deleteByQuery({
+        await this.client.deleteByQuery({
             index: ['url_check_history'],
             body: {
                 "query": {
@@ -641,7 +636,7 @@ export class ElasticSearchUtils {
     }
 
     async getFacetsByAttribution(): Promise<any> {
-        let { body: result } = await this.client.search({
+        let result = await this.client.search({
             index: this.indexName,
             body: ElasticQueries.getFacetsByAttribution(),
             size: 0
@@ -678,22 +673,20 @@ export class ElasticSearchUtils {
     }
 
     async getIndexCheckHistory(): Promise<any> {
-        let { body } = await this.client.search({
+        let result = await this.client.search({
             index: ['index_check_history'],
             body: ElasticQueries.getIndexCheckHistory(),
             size: 30
         });
-        return body.hits.hits.map(entry => entry._source);
+        return result.hits.hits.map(entry => entry._source);
     }
 
     async getIndexSettings(indexName): Promise<any>{
-        let { body } = await this.client.indices.getSettings({index: indexName});
-        return body;
+        return await this.client.indices.getSettings({index: indexName});
     }
 
     async getIndexMapping(indexName): Promise<any>{
-        let { body } = await this.client.indices.getMapping({index: indexName});
-        return body;
+        return await this.client.indices.getMapping({index: indexName});
     }
 
     async getAllEntries(indexName): Promise<any>{

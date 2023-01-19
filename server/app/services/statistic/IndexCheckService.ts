@@ -174,8 +174,8 @@ export class IndexCheckService {
         return this.client.cat.indices({
             h: ['index'],
             format: 'json'
-        }).then(({ body }) => {
-            return body
+        }).then(response => {
+            return response
                 .some(json => {
                     return index === json.index;
                 })
@@ -272,7 +272,7 @@ export class IndexCheckService {
                     type: this.settings.indexType || 'base',
                     body: data
                 })
-                    .then(({ body: response }) => {
+                    .then(response => {
                         if (response.errors) {
                             response.items.forEach(item => {
                                 let err = item.index.error;

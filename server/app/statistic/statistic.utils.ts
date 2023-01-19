@@ -163,11 +163,10 @@ export class StatisticUtils {
      * @param {string} alias
      */
     async addAlias(index, alias): Promise<any> {
-        let { body } = await this.client.indices.putAlias({
+        return await this.client.indices.putAlias({
             index: index,
             name: alias
         });
-        return body;
     }
 
     isIndexPresent(index: string){
@@ -175,8 +174,8 @@ export class StatisticUtils {
         return this.client.cat.indices({
             h: ['index'],
             format: 'json'
-        }).then(({ body }) => {
-            return body
+        }).then(response => {
+            return response
                 .some(json => {
                     return index === json.index;
                 })
@@ -255,7 +254,7 @@ export class StatisticUtils {
                     type: this.settings.indexType || 'base',
                     body: data
                 })
-                    .then(({ body: response }) => {
+                    .then(response => {
                         if (response.errors) {
                             response.items.forEach(item => {
                                 let err = item.index.error;
@@ -326,7 +325,6 @@ export class StatisticUtils {
     }
 
     async search(indexName: string): Promise<any> {
-        let { body } = await this.client.search({ index: indexName });
-        return body;
+        return await this.client.search({ index: indexName });
     }
 }
