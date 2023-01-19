@@ -147,11 +147,11 @@ export class ElasticSearchUtils {
                         index: indexName,
                         type: type,
                         body: mapping[type]
-                    }, err => {
+                    }).catch(err => {
                         if (err) {
                             this.handleError('Error occurred adding mapping', err);
                             reject('Mapping error');
-                        } else this.client.indices.open({index: indexName}, errOpen => {
+                        } else this.client.indices.open({index: indexName}).catch(errOpen => {
                             if (errOpen) {
                                 this.handleError('Error opening index', indexName);
                             }
@@ -285,7 +285,7 @@ export class ElasticSearchUtils {
             this.client.indices.putSettings({
                 index: index,
                 body: settings
-            }, err => {
+            }).catch(err => {
                 if (err) {
                     this.handleError('Error occurred adding settings', err);
                     errorCallback(err);
@@ -299,11 +299,11 @@ export class ElasticSearchUtils {
                 index: index,
                 type: type || 'base',
                 body: mapping
-            }, err => {
+            }).catch(err => {
                 if (err) {
                     this.handleError('Error occurred adding mapping', err);
                     errorCallback('Mapping error');
-                } else this.client.indices.open({index: index}, errOpen => {
+                } else this.client.indices.open({index: index}).catch(errOpen => {
                     if (errOpen) {
                         this.handleError('Error opening index', errOpen);
                     }
@@ -315,14 +315,14 @@ export class ElasticSearchUtils {
         // in order to update settings the index has to be closed
         const handleClose = () => {
             this.client.cluster.health({wait_for_status: 'yellow'})
-                .then(() => this.client.indices.close({index: index}, handleSettings))
+                .then(() => this.client.indices.close({index: index}).then(handleSettings))
                 .catch(() => {
                     log.error('Cluster state did not become yellow');
                     errorCallback('Elasticsearch cluster state did not become yellow');
                 });
         };
 
-        this.client.indices.create({index: index}, () => setTimeout(handleClose, 1000));
+        this.client.indices.create({index: index}).then(() => setTimeout(handleClose, 1000));
         // handleSettings();
 
     }
@@ -709,7 +709,7 @@ export class ElasticSearchUtils {
                         "match_all": {}
                     }
                 }
-            }, function getMoreUntilDone(error, { body: response }) {
+            }).then(function getMoreUntilDone(response) {
                 response.hits.hits.forEach(function (hit) {
                     results.push(hit);
                 });
@@ -718,7 +718,7 @@ export class ElasticSearchUtils {
                     client.scroll({
                         scroll_id: response._scroll_id,
                         scroll: '5s'
-                    }, getMoreUntilDone);
+                    }).then(getMoreUntilDone);
                 } else {
                     resolve(results);
                 }

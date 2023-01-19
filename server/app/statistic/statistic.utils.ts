@@ -200,7 +200,7 @@ export class StatisticUtils {
             this.client.indices.putSettings({
                 index: index,
                 body: settings
-            }, err => {
+            }).catch(err => {
                 if (err) {
                     log.error('Error occurred adding settings', err);
                     errorCallback(err);
@@ -214,11 +214,11 @@ export class StatisticUtils {
                 index: index,
                 type: type || 'base',
                 body: mapping
-            }, err => {
+            }).catch(err => {
                 if (err) {
                     log.error('Error occurred adding mapping', err);
                     errorCallback('Mapping error');
-                } else this.client.indices.open({index: index}, errOpen => {
+                } else this.client.indices.open({index: index}).catch(errOpen => {
                     if (errOpen) {
                         log.error('Error opening index', errOpen);
                     }
@@ -230,14 +230,14 @@ export class StatisticUtils {
         // in order to update settings the index has to be closed
         const handleClose = () => {
             this.client.cluster.health({wait_for_status: 'yellow'})
-                .then(() => this.client.indices.close({index: index}, handleSettings))
+                .then(() => this.client.indices.close({index: index}).then(handleSettings))
                 .catch(() => {
                     log.error('Cluster state did not become yellow');
                     errorCallback('Elasticsearch cluster state did not become yellow');
                 });
         };
 
-        this.client.indices.create({index: index}, () => setTimeout(handleClose, 1000));
+        this.client.indices.create({index: index}).then(() => setTimeout(handleClose, 1000));
         // handleSettings();
 
     }
