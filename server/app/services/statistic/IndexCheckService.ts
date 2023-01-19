@@ -212,7 +212,7 @@ export class IndexCheckService {
         const handleMapping = () => {
             this.client.indices.putMapping({
                 index: index,
-                type: type || 'base',
+                // type: type || 'base',
                 body: mapping
             }).catch(err => {
                 if (err) {
@@ -269,7 +269,7 @@ export class IndexCheckService {
             try {
                 this.client.bulk({
                     index: this.indexName,
-                    type: this.settings.indexType || 'base',
+                    // type: this.settings.indexType || 'base',
                     body: data
                 })
                     .then(response => {
