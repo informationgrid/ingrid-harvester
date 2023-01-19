@@ -35,12 +35,7 @@ import { Client } from '@elastic/elasticsearch';
 
 let log = require('log4js').getLogger(__filename);
 
-const http = require('http');
-const https = require('https');
 const request = require('request');
-//const axios = require('axios');
-
-//const ftp = require('basic-ftp');
 require('url').URL;
 
 @Service()
@@ -110,7 +105,7 @@ export class UrlCheckService {
                             return statusMap;
                         });
                 });
-            }, new Promise((resolve) => {
+            }, new Promise(resolve => {
                 resolve(result);
             }));
             log.info('UrlCheck: ' + count);
@@ -133,7 +128,7 @@ export class UrlCheckService {
                     url = this.generalSettings.portalUrl + url;
                 }
                 let options: any = {timeout: 10000, proxy: this.generalSettings.proxy, rejectUnauthorized: false};
-                let request_call = new Promise((resolve) => {
+                let request_call = new Promise(resolve => {
                         try {
                             request.head(url, options, function (error, response) {
                                 if (!error) {
@@ -158,14 +153,14 @@ export class UrlCheckService {
                 );
                 return request_call;
             } else {
-                return new Promise((resolve) => {
+                return new Promise(resolve => {
                     //console.error(url + ': ftp');
                     resolve({url: urlAggregation, status: 'ftp'});
                 });
             }
         } catch (ex) {
             //console.error(url + ': ' + ex);
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 resolve({url: urlAggregation, status: UrlCheckService.mapErrorMsg(ex.toString())});
             });
         }
@@ -231,7 +226,6 @@ export class UrlCheckService {
         }));
     }
 
-
     /**
      *
      * @param mapping
@@ -243,7 +237,7 @@ export class UrlCheckService {
             number_of_replicas: this.generalSettings.numberOfReplicas
         }
         return new Promise<void>((resolve, reject) => {
-            this.isIndexPresent(this.indexName).then((isPresent) => {
+            this.isIndexPresent(this.indexName).then(isPresent => {
 
                 if (!isPresent) {
                     this.client.indices.create({index: this.indexName, wait_for_active_shards: 1, settings: idxSettings})
@@ -280,7 +274,7 @@ export class UrlCheckService {
         return this.client.cat.indices({
             h: ['index'],
             format: 'json'
-        }).then((response) => {
+        }).then(response => {
             return response
                 .some(json => {
                     return index === json.index;

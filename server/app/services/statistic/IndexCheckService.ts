@@ -37,7 +37,6 @@ let log = require('log4js').getLogger(__filename);
 
 require('url').URL;
 
-
 @Service()
 export class IndexCheckService {
     private elasticUtils: ElasticSearchUtils;
@@ -83,14 +82,12 @@ export class IndexCheckService {
         }
     }
 
-
     async start() {
         log.info('IndexCheck started!')
         let start = now();
         let facetsByAttribution = await this.elasticUtils.getFacetsByAttribution();
         this.saveResult(facetsByAttribution, new Date(start));
     }
-
 
     async saveResult(result, timestamp) {
             this.addDocToBulk({
@@ -125,7 +122,6 @@ export class IndexCheckService {
         }));
     }
 
-
     /**
      *
      * @param mapping
@@ -137,7 +133,7 @@ export class IndexCheckService {
             number_of_replicas: this.generalSettings.numberOfReplicas
         }
         return new Promise<void>((resolve, reject) => {
-            this.isIndexPresent(this.indexName).then((isPresent) => {
+            this.isIndexPresent(this.indexName).then(isPresent => {
 
                 if (!isPresent) {
                     this.client.indices.create({index: this.indexName, wait_for_active_shards: 1, settings: idxSettings})
