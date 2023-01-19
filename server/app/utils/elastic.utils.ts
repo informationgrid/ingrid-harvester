@@ -511,7 +511,7 @@ export class ElasticSearchUtils {
             let slice = data.slice(i, end);
 
             try {
-                let result = await this.client.msearch({
+                let result: any = await this.client.msearch({
                     index: this.settings.alias,
                     body: slice
                 });
@@ -593,7 +593,7 @@ export class ElasticSearchUtils {
     }
 
     async getAccessUrls(after_key): Promise<any> {
-        let result = await this.client.search({
+        let result: any = await this.client.search({
             index: this.indexName,
             body: ElasticQueries.getAccessUrls(after_key),
             size: 0
@@ -636,7 +636,7 @@ export class ElasticSearchUtils {
     }
 
     async getFacetsByAttribution(): Promise<any> {
-        let result = await this.client.search({
+        let result: any = await this.client.search({
             index: this.indexName,
             body: ElasticQueries.getFacetsByAttribution(),
             size: 0
