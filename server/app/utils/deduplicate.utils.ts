@@ -26,6 +26,7 @@ import {ElasticSettings} from './elastic.setting';
 import {ImporterSettings} from '../importer.settings';
 import {ElasticSearchUtils} from './elastic.utils';
 import {ElasticQueries} from './elastic.queries';
+import { Client } from '@elastic/elasticsearch';
 
 let log = require('log4js').getLogger(__filename);
 
@@ -43,7 +44,7 @@ export class DeduplicateUtils {
     settings: ElasticSettings & ImporterSettings;
     summary: Summary;
 
-    client: any;
+    client: Client;
     private elastic: ElasticSearchUtils;
 
 
@@ -199,7 +200,7 @@ export class DeduplicateUtils {
         // By default elasticsearch limits the count of aggregates to 10. Ask it
         // to return a lot more results!
         try {
-            let { body: response } = await this.client.search({
+            let response = await this.client.search({
                 index: [this.settings.alias],
                 body: ElasticQueries.findSameTitle(),
                 size: 50
