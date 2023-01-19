@@ -132,7 +132,7 @@ export class IndexCheckService {
      * @param settings
      */
     prepareIndex(mapping, settings) {
-        let body = {
+        let idxSettings = {
             number_of_shards: this.generalSettings.numberOfShards,
             number_of_replicas: this.generalSettings.numberOfReplicas
         }
@@ -140,7 +140,7 @@ export class IndexCheckService {
             this.isIndexPresent(this.indexName).then((isPresent) => {
 
                 if (!isPresent) {
-                    this.client.indices.create({index: this.indexName, wait_for_active_shards: 1, body: body})
+                    this.client.indices.create({index: this.indexName, wait_for_active_shards: 1, settings: idxSettings})
                         .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
                         .catch(err => {
                             let message = 'Error occurred creating UrlCheck index';

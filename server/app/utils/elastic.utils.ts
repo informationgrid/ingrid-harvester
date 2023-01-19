@@ -114,13 +114,13 @@ export class ElasticSearchUtils {
      * @param settings
      */
     prepareIndex(mapping, settings) {
-        let body = {
+        let idxSettings = {
             number_of_shards: this.settings.numberOfShards,
             number_of_replicas: this.settings.numberOfReplicas
         }
         return new Promise((resolve, reject) => {
             if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
-            this.client.indices.create({index: this.indexName, wait_for_active_shards: 1, body: body})
+            this.client.indices.create({index: this.indexName, wait_for_active_shards: 1, settings: idxSettings})
                 .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
                 .catch(err => {
                     let message = 'Error occurred creating index';

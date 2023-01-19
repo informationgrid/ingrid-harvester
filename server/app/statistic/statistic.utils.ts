@@ -118,7 +118,7 @@ export class StatisticUtils {
      * @param settings
      */
     prepareIndex(mapping, settings) {
-        let body = {
+        let idxSettings = {
             number_of_shards: this.settings.numberOfShards,
             number_of_replicas: this.settings.numberOfReplicas
         }
@@ -126,7 +126,7 @@ export class StatisticUtils {
             this.isIndexPresent(this.indexName).then((isPresent) => {
 
                 if (!isPresent) {
-                    this.client.indices.create({index: this.indexName, wait_for_active_shards: 1, body: body})
+                    this.client.indices.create({index: this.indexName, wait_for_active_shards: 1, settings: idxSettings})
                         .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
                         .catch(err => {
                             let message = 'Error occurred creating statistic index';
