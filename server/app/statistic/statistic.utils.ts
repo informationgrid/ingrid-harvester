@@ -126,7 +126,7 @@ export class StatisticUtils {
             this.isIndexPresent(this.indexName).then((isPresent) => {
 
                 if (!isPresent) {
-                    this.client.indices.create({index: this.indexName, wait_for_active_shards: '1', body: body})
+                    this.client.indices.create({index: this.indexName, wait_for_active_shards: 1, body: body})
                         .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
                         .catch(err => {
                             let message = 'Error occurred creating statistic index';
@@ -134,7 +134,7 @@ export class StatisticUtils {
                             reject(message);
                         });
                 } else {
-                    this.client.indices.open({index: this.indexName, wait_for_active_shards: '1'}).catch(err => {
+                    this.client.indices.open({index: this.indexName, wait_for_active_shards: 1}).catch(err => {
                         let message = 'Error occurred creating statistic index';
                         log.error(message, err);
                         reject(message);

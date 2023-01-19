@@ -120,7 +120,7 @@ export class ElasticSearchUtils {
         }
         return new Promise((resolve, reject) => {
             if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
-            this.client.indices.create({index: this.indexName, wait_for_active_shards: '1', body: body})
+            this.client.indices.create({index: this.indexName, wait_for_active_shards: 1, body: body})
                 .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
                 .catch(err => {
                     let message = 'Error occurred creating index';
@@ -140,7 +140,7 @@ export class ElasticSearchUtils {
      */
     prepareIndexWithName(indexName: string, mapping, settings) {
         return new Promise<void>((resolve, reject) => {
-            this.client.indices.create({index: indexName, wait_for_active_shards: '1', body: settings})
+            this.client.indices.create({index: indexName, wait_for_active_shards: 1, body: settings})
                 .then(() => {
                     let type =  Object.keys(mapping)[0];
                     this.client.indices.putMapping({
