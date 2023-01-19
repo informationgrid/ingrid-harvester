@@ -257,7 +257,7 @@ export class ElasticSearchUtils {
                 .map(item => {
                     return {
                         name: item.index,
-                        numDocs: item['docs.count'],
+                        numDocs: parseInt(item['docs.count']),
                         health: item.health,
                         status: item.status
                     } as Index;
