@@ -3,7 +3,7 @@ services:
 
   harvester:
     build: .
-    container_name: diplanung-metadata-harvester
+    container_name: metadata-harvester
     environment:
      - NODE_ENV=production
      - ES_HOST=elastic
@@ -16,5 +16,5 @@ services:
     networks:
       - metadata-network
 
-networks: 
+networks:
   metadata-network:

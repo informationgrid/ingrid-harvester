@@ -95,7 +95,7 @@ export class ElasticQueries {
                                     {
                                         bool: {
                                             must: [
-                                                {terms: {'distribution.accessURL': urls}},
+                                                {terms: {'distributions.accessURL': urls}},
                                                 {
                                                     match: {
                                                         'title.raw': {
@@ -163,7 +163,7 @@ export class ElasticQueries {
                                 "accessURL": {
                                     "terms": {
                                         "script": {
-                                            "source": "doc['distribution.accessURL']"
+                                            "source": "doc['distributions.accessURL']"
                                         }
                                     }
                                 }
@@ -196,7 +196,7 @@ export class ElasticQueries {
                     "must": [
                         {
                             "exists": {
-                                "field": "distribution.accessURL"
+                                "field": "distributions.accessURL"
                             }
                         }
                     ],
@@ -261,7 +261,7 @@ export class ElasticQueries {
                         "distributions": {
                             "terms": {
                                 "script": {
-                                    "source": "doc['distribution.accessURL'].length"
+                                    "source": "doc['distributions.accessURL'].length"
                                 },
                                 "size": 100,
                                 "order": {
@@ -312,7 +312,7 @@ export class ElasticQueries {
                         },
                         "format": {
                             "terms": {
-                                "field": "distribution.format",
+                                "field": "distributions.format",
                                 "size": 1000,
                                 "order": {
                                     "_key": "asc"

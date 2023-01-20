@@ -112,10 +112,10 @@ export const elasticsearchMapping = {
                         'format': {
                             'type': 'keyword'
                         },
-                        'access_url': {
+                        'accessURL': {
                             'type': 'keyword'
                         },
-                        'download_url': {
+                        'downloadURL': {
                             'type': 'keyword'
                         },
                         'issued': {
@@ -124,13 +124,13 @@ export const elasticsearchMapping = {
                         'modified': {
                             'type': 'date'
                         },
-                        'byte_size': {
+                        'byteSize': {
                             'type': 'long'
                         },
                         'period': {
                             'type': 'date_range'
                         },
-                        'plu_doc_type': {
+                        'pluDocType': {
                             'type': 'keyword'
                         }
                     }
@@ -252,10 +252,10 @@ export const elasticsearchMapping = {
                 'format': {
                     'type': 'keyword'
                 },
-                'access_url': {
+                'accessURL': {
                     'type': 'keyword'
                 },
-                'download_url': {
+                'downloadURL': {
                     'type': 'keyword'
                 },
                 'issued': {
@@ -264,19 +264,22 @@ export const elasticsearchMapping = {
                 'modified': {
                     'type': 'date'
                 },
-                'byte_size': {
+                'byteSize': {
                     'type': 'long'
                 },
                 'period': {
                     'type': 'date_range'
                 },
-                'plu_doc_type': {
+                'pluDocType': {
                     'type': 'keyword'
                 }
             }
         },
         'centroid': {
             'type': 'geo_point'
+        },
+        'bounding_box': {
+            'type': 'geo_shape'
         },
         'spatial': {
             'type': 'geo_shape'

@@ -420,6 +420,10 @@ export class ExcelMapper extends GenericMapper {
         return undefined;
     }
 
+    _getBoundingBox() {
+        return undefined;
+    }
+
     _getSpatialGml() {
         return undefined;
     }

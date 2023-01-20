@@ -297,7 +297,7 @@ export class CswImporter implements Importer {
                         if(!servicesByDataIdentifier[identifer]){
                             servicesByDataIdentifier[identifer] = [];
                         }
-                        servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distribution);
+                        servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distributions);
                     }
                 } else {
                     identifierList = CswMapper.select('./gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn', xml)
@@ -307,7 +307,7 @@ export class CswImporter implements Importer {
                             if (!servicesByFileIdentifier[identifer]) {
                                 servicesByFileIdentifier[identifer] = [];
                             }
-                            servicesByFileIdentifier[identifer] = servicesByFileIdentifier[identifer].concat(doc.distribution);
+                            servicesByFileIdentifier[identifer] = servicesByFileIdentifier[identifer].concat(doc.distributions);
                         }
                     }
                 }
@@ -324,7 +324,7 @@ export class CswImporter implements Importer {
                     for(let j = 0; j < identifierList.length; j++){
                         let identifer = identifierList[j].textContent;
                         if(servicesByDataIdentifier[identifer]){
-                            doc.distribution = doc.distribution.concat(servicesByDataIdentifier[identifer]);
+                            doc.distributions = doc.distributions.concat(servicesByDataIdentifier[identifer]);
                         }
                     }
                 }
@@ -333,7 +333,7 @@ export class CswImporter implements Importer {
                     for(let j = 0; j < identifierList.length; j++){
                         let identifer = identifierList[j].textContent;
                         if(servicesByFileIdentifier[identifer]){
-                            doc.distribution = doc.distribution.concat(servicesByFileIdentifier[identifer]);
+                            doc.distributions = doc.distributions.concat(servicesByFileIdentifier[identifer]);
                         }
                     }
                 }
@@ -385,7 +385,7 @@ export class CswImporter implements Importer {
 
             if (!mapper.shouldBeSkipped()) {
 
-                if (doc.extras.metadata.isValid && doc.distribution.length > 0) {
+                if (doc.extras.metadata.isValid && doc.distributions.length > 0) {
                     this.summary.ok++;
                 }
 

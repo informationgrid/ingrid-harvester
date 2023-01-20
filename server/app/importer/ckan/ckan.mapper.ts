@@ -605,6 +605,10 @@ export class CkanMapper extends GenericMapper {
         return undefined;
     }
 
+    _getBoundingBox() {
+        return undefined;
+    }
+
     _getSpatialGml() {
         return undefined;
     }

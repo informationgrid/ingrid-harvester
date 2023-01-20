@@ -57,6 +57,7 @@ export class IndexDocument {
             process_steps: mapper.getPluProcessSteps(),
             // spatial and temporal features
             centroid: mapper.getCentroid(),
+            bounding_box: mapper.getBoundingBox(),
             spatial: mapper.getSpatial(),
             spatial_text: mapper.getSpatialText(),
             temporal: mapper.getTemporal(),

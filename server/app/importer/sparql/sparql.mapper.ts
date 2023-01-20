@@ -342,6 +342,10 @@ export class SparqlMapper extends GenericMapper {
         return undefined;
     }
 
+    _getBoundingBox() {
+        return undefined;
+    }
+
     _getSpatialGml() {
         return undefined;
     }
