@@ -116,7 +116,9 @@ export class ElasticSearchUtils {
     prepareIndex(mapping, settings) {
         let idxSettings = {
             number_of_shards: this.settings.numberOfShards,
-            number_of_replicas: this.settings.numberOfReplicas
+            number_of_replicas: this.settings.numberOfReplicas,
+            max_shingle_diff: 6,
+            max_ngram_diff: 5
         }
         return new Promise((resolve, reject) => {
             if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
