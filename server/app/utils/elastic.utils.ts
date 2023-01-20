@@ -120,8 +120,8 @@ export class ElasticSearchUtils {
         }
         return new Promise((resolve, reject) => {
             if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
-            this.client.indices.create({index: this.indexName, wait_for_active_shards: 1, settings: idxSettings})
-                .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
+            this.client.indices.create({index: this.indexName, wait_for_active_shards: 1, settings: {...settings, ...idxSettings}, mappings: mapping})
+                .then(resolve)
                 .catch(err => {
                     let message = 'Error occurred creating index';
                     if (err.message.indexOf('index_already_exists_exception') !== -1) {
