@@ -264,13 +264,13 @@ export const elasticsearchMapping = {
                 'modified': {
                     'type': 'date'
                 },
-                'byte_size': {
+                'byteSize': {
                     'type': 'long'
                 },
                 'period': {
                     'type': 'date_range'
                 },
-                'plu_doc_type': {
+                'pluDocType': {
                     'type': 'keyword'
                 }
             }
