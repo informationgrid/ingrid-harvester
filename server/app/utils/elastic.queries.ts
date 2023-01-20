@@ -163,7 +163,7 @@ export class ElasticQueries {
                                 "accessURL": {
                                     "terms": {
                                         "script": {
-                                            "source": "doc['distributions.accessURL.keyword']"
+                                            "source": "doc['distributions.accessURL']"
                                         }
                                     }
                                 }
@@ -196,7 +196,7 @@ export class ElasticQueries {
                     "must": [
                         {
                             "exists": {
-                                "field": "distributions.accessURL.keyword"
+                                "field": "distributions.accessURL"
                             }
                         }
                     ],
@@ -312,7 +312,7 @@ export class ElasticQueries {
                         },
                         "format": {
                             "terms": {
-                                "field": "distributions.format.keyword",
+                                "field": "distributions.format",
                                 "size": 1000,
                                 "order": {
                                     "_key": "asc"
