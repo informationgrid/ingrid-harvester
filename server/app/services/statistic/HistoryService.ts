@@ -27,27 +27,13 @@ import {ElasticSearchUtils} from "../../utils/elastic.utils";
 import {ConfigService} from "../config/ConfigService";
 import {ElasticSettings} from "../../utils/elastic.setting";
 import {Summary} from "../../model/summary";
-import {now} from "moment";
-import {elasticsearchMapping} from "../../statistic/url_check.mapping";
-import {elasticsearchSettings} from "../../statistic/url_check.settings";
-import {BulkResponse} from "../../statistic/statistic.utils";
-
-let log = require('log4js').getLogger(__filename);
-
-const http = require('http');
-const https = require('https');
-const request = require('request');
-
-//const ftp = require('basic-ftp');
 
 @Service()
 export class HistoryService {
     private elasticUtils: ElasticSearchUtils;
-    private alias: string;
 
-    constructor(private socketService: ImportSocketService) {
+    constructor() {
         let generalSettings = ConfigService.getGeneralSettings();
-        this.alias = generalSettings.alias;
         const settings: ElasticSettings = {
             elasticSearchUrl: generalSettings.elasticSearchUrl,
             elasticSearchPassword: generalSettings.elasticSearchPassword,

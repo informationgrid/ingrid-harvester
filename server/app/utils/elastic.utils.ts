@@ -50,14 +50,13 @@ export class ElasticSearchUtils {
 
     private static readonly LENGTH_OF_TIMESTAMP = 18;
 
-    settings: ElasticSettings & ImporterSettings;
+    private settings: ElasticSettings & ImporterSettings;
     client: Client;
     _bulkData: any[];
     indexName: string;
-    deduplicationAlias: string;
 
-    summary: Summary;
-    deduplicationUtils: DeduplicateUtils;
+    private summary: Summary;
+    private deduplicationUtils: DeduplicateUtils;
 
     constructor(settings, summary: Summary) {
         this.settings = settings;
@@ -74,7 +73,6 @@ export class ElasticSearchUtils {
         });
         this._bulkData = [];
         this.indexName = this.settings.index;
-        this.deduplicationAlias = this.settings.deduplicationAlias;
 
         this.deduplicationUtils = new DeduplicateUtils(this, this.settings, this.summary);
     }
@@ -110,88 +108,85 @@ export class ElasticSearchUtils {
 
     /**
      *
-     * @param mapping
+     * @param mappings
      * @param settings
      */
-    prepareIndex(mapping, settings) {
-        let idxSettings = {
-            number_of_shards: this.settings.numberOfShards,
-            number_of_replicas: this.settings.numberOfReplicas,
-            max_shingle_diff: 6,
-            max_ngram_diff: 5
+    async prepareIndex(mappings, settings, openIfPresent=false) {
+        if (this.settings.includeTimestamp) {
+            this.indexName += '_' + this.getTimeStamp(new Date());
         }
-        return new Promise((resolve, reject) => {
-            if (this.settings.includeTimestamp) this.indexName += '_' + this.getTimeStamp(new Date());
-            this.client.indices.create({index: this.indexName, wait_for_active_shards: 1, settings: {...settings, ...idxSettings}, mappings: mapping})
-                .then(resolve)
-                .catch(err => {
-                    let message = 'Error occurred creating index';
-                    if (err.message.indexOf('index_already_exists_exception') !== -1) {
-                        message = 'Index ' + this.indexName + ' not created, since it already exists.';
-                    }
-                    this.handleError(message, err);
-                    reject(message);
-                });
-        });
+        return await this.prepareIndexWithName(this.indexName, mappings, settings, openIfPresent);
     }
 
     /**
      *
-     * @param mapping
+     * @param mappings
      * @param settings
      */
-    prepareIndexWithName(indexName: string, mapping, settings) {
-        return new Promise<void>((resolve, reject) => {
-            this.client.indices.create({index: indexName, wait_for_active_shards: 1, body: settings})
-                .then(() => {
-                    let type =  Object.keys(mapping)[0];
-                    this.client.indices.putMapping({
-                        index: indexName,
-                        // type: type,
-                        body: mapping[type]
-                    }).catch(err => {
-                        if (err) {
-                            this.handleError('Error occurred adding mapping', err);
-                            reject('Mapping error');
-                        } else this.client.indices.open({index: indexName}).catch(errOpen => {
-                            if (errOpen) {
-                                this.handleError('Error opening index', indexName);
-                            }
-                            resolve();
-                        });
-                    });
-                })
-                .catch(err => {
-                    let message = 'Error occurred creating index';
-                    if (err.message.indexOf('index_already_exists_exception') !== -1) {
-                        message = 'Index ' + indexName + ' not created, since it already exists.';
-                    }
-                    this.handleError(message, err);
-                    reject(message);
+    async prepareIndexWithName(indexName: string, mappings, settings, openIfPresent=false) {
+        let isPresent = await this.isIndexPresent(this.indexName);
+        settings = {
+            ...settings,
+            number_of_shards: this.settings.numberOfShards,
+            number_of_replicas: this.settings.numberOfReplicas,
+            max_shingle_diff: 6,
+            max_ngram_diff: 7
+        }
+        if (!openIfPresent || !isPresent) {
+            try {
+                return await this.client.indices.create({
+                    index: indexName,
+                    wait_for_active_shards: 1,
+                    mappings,
+                    settings                
                 });
-        });
+            }
+            catch(err) {
+                let message = 'Error occurred creating index ' + indexName;
+                if (err.message.indexOf('index_already_exists_exception') !== -1) {
+                    message = 'Index ' + indexName + ' not created, since it already exists.';
+                }
+                this.handleError(message, err);
+                return message;
+            }
+        }
+        else {
+            try {
+                return await this.client.indices.open({
+                    index: indexName,
+                    wait_for_active_shards: 1
+                });
+            }
+            catch (err) {
+                let message = 'Error occurred opening existing index' + indexName;
+                this.handleError(message, err);
+                return message;
+            }
+        }
     }
 
-    finishIndex() {
+    async finishIndex(closeIndex: boolean = true) {
         if (this.settings.dryRun) {
             log.debug('Skipping finalisation of index for dry run.');
             return;
         }
 
-        return this.client.cluster.health({wait_for_status: 'yellow'})
-            .then(() => this.sendBulkData(false))
-            .then(() => this.deleteOldIndices(this.settings.index, this.indexName))
-            .then(() => {
+        try {
+            await this.client.cluster.health({wait_for_status: 'yellow'});
+            await this.sendBulkData(false);
+            if (closeIndex) {
+                await this.deleteOldIndices(this.settings.index, this.indexName);
                 if (!this.settings.disable) {
-                    return this.addAlias(this.indexName, this.settings.alias)
+                    await this.addAlias(this.indexName, this.settings.alias);
                 }
-            })
-            .then(() => this.deduplicationUtils.deduplicate())
-            .then(() => {
-                this.client.close();
-                log.info('Successfully added data into new index: ' + this.indexName);
-            })
-            .catch(err => log.error('Error finishing index', err));
+                await this.deduplicationUtils.deduplicate();
+                await this.client.close();
+            }
+            log.info('Successfully added data into index: ' + this.indexName);
+        }
+        catch(err) {
+            log.error('Error finishing index', err);
+        }
     }
 
     /**
@@ -268,65 +263,6 @@ export class ElasticSearchUtils {
     }
 
     /**
-     * Add the specified mapping to an index and type.
-     *
-     * @param {string} index
-     * @param {string} type
-     * @param {object} mapping
-     * @param {object} settings
-     * @param callback
-     * @param errorCallback
-     */
-    addMapping(index, type, mapping, settings, callback, errorCallback) {
-
-        // set settings
-        const handleSettings = () => {
-            this.client.indices.putSettings({
-                index: index,
-                body: settings
-            }).catch(err => {
-                if (err) {
-                    this.handleError('Error occurred adding settings', err);
-                    errorCallback(err);
-                } else handleMapping(); //this.client.indices.open({ index: index });
-            });
-        };
-
-        // set mapping
-        const handleMapping = () => {
-            this.client.indices.putMapping({
-                index: index,
-                // type: type || 'base',
-                body: mapping
-            }).catch(err => {
-                if (err) {
-                    this.handleError('Error occurred adding mapping', err);
-                    errorCallback('Mapping error');
-                } else this.client.indices.open({index: index}).catch(errOpen => {
-                    if (errOpen) {
-                        this.handleError('Error opening index', errOpen);
-                    }
-                    callback();
-                });
-            });
-        };
-
-        // in order to update settings the index has to be closed
-        const handleClose = () => {
-            this.client.cluster.health({wait_for_status: 'yellow'})
-                .then(() => this.client.indices.close({index: index}).then(handleSettings))
-                .catch(() => {
-                    log.error('Cluster state did not become yellow');
-                    errorCallback('Elasticsearch cluster state did not become yellow');
-                });
-        };
-
-        this.client.indices.create({index: index}).then(() => setTimeout(handleClose, 1000));
-        // handleSettings();
-
-    }
-
-    /**
      * Index data in batches
      * @param {object} data
      * @param {boolean} closeAfterBulk
@@ -370,8 +306,6 @@ export class ElasticSearchUtils {
             }
         });
     }
-
-
 
     bulkWithIndexName(indexName, type, data, closeAfterBulk): Promise<BulkResponse> {
         return new Promise((resolve, reject) => {
@@ -419,7 +353,7 @@ export class ElasticSearchUtils {
      * @param doc
      * @param {string|number} id
      */
-    async addDocToBulk(doc, id): Promise<BulkResponse> {
+    async addDocToBulk(doc, id, maxBulkSize=ElasticSearchUtils.maxBulkSize): Promise<BulkResponse> {
         this._bulkData.push({
             index: {
                 _id: id
@@ -432,7 +366,7 @@ export class ElasticSearchUtils {
         // send data to elasticsearch if limit is reached
         // TODO: don't use document size but bytes instead
         await this.client.cluster.health({wait_for_status: 'yellow'});
-        if (this._bulkData.length >= (ElasticSearchUtils.maxBulkSize * 2)) {
+        if (this._bulkData.length >= (maxBulkSize * 2)) {
             return this.sendBulkData();
         } else {
             return new Promise(resolve => resolve({
@@ -457,7 +391,6 @@ export class ElasticSearchUtils {
             queued: true
         }));
     }
-
 
     /**
      * Returns a new Timestamp string
@@ -559,7 +492,6 @@ export class ElasticSearchUtils {
         return dates;
     }
 
-
     private handleError(message: string, error: any) {
         this.summary.elasticErrors.push(message);
         log.error(message, error);
@@ -596,7 +528,7 @@ export class ElasticSearchUtils {
 
     async getAccessUrls(after_key): Promise<any> {
         let result: any = await this.client.search({
-            index: this.indexName,
+            index: '',
             body: ElasticQueries.getAccessUrls(after_key),
             size: 0
         });
@@ -611,30 +543,6 @@ export class ElasticSearchUtils {
                 }
             })
         };
-    }
-
-    async getUrlCheckHistory(): Promise<any> {
-        let result = await this.client.search({
-            index: ['url_check_history'],
-            body: ElasticQueries.getUrlCheckHistory(),
-            size: 30
-        });
-        return result.hits.hits.map(entry => entry._source);
-    }
-
-    async cleanUrlCheckHistory(days: number): Promise<any> {
-        await this.client.deleteByQuery({
-            index: ['url_check_history'],
-            body: {
-                "query": {
-                    "range": {
-                        "timestamp": {
-                            "lt":"now-"+days+"d/d"
-                        }
-                    }
-                }
-            }
-        });
     }
 
     async getFacetsByAttribution(): Promise<any> {
@@ -674,15 +582,6 @@ export class ElasticSearchUtils {
             });
     }
 
-    async getIndexCheckHistory(): Promise<any> {
-        let result = await this.client.search({
-            index: ['index_check_history'],
-            body: ElasticQueries.getIndexCheckHistory(),
-            size: 30
-        });
-        return result.hits.hits.map(entry => entry._source);
-    }
-
     async getIndexSettings(indexName): Promise<any>{
         return await this.client.indices.getSettings({index: indexName});
     }
@@ -719,5 +618,18 @@ export class ElasticSearchUtils {
                 }
             });
         });
+    }
+
+    async isIndexPresent(index: string) {
+        try {
+            let response = await this.client.cat.indices({
+                h: ['index'],
+                format: 'json'
+            })
+            return response.some(json => index === json.index);
+        }
+        catch(e) {
+            this.handleError('Error while checking existence of index: ' + index, e);
+        }
     }
 }
