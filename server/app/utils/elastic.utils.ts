@@ -87,23 +87,21 @@ export class ElasticSearchUtils {
         let existingIndices = await this.getIndicesFromBasename(this.indexName);
         let oldIndexName = existingIndices.map(index => index.name).sort().pop();
         // first prepare index
-        return this.prepareIndex(mapping, settings)
-            .then(() => this.client.cluster.health({wait_for_status: 'yellow'}))
-            // then reindex, i.e. copy documents, from last existing to new
-            .then(() => {
-                this.client.reindex({
-                    wait_for_completion: true,
-                    refresh: true,
-                    body: {
-                        source: {
-                            index: oldIndexName
-                        },
-                        dest: {
-                            index: this.indexName
-                        }
-                    }
-                });
-            });
+        await this.prepareIndex(mapping, settings);
+        await this.client.cluster.health({wait_for_status: 'yellow'});
+        // then reindex, i.e. copy documents, from last existing to new
+        await this.client.reindex({
+            wait_for_completion: true,
+            refresh: true,
+            body: {
+                source: {
+                    index: oldIndexName
+                },
+                dest: {
+                    index: this.indexName
+                }
+            }
+        });
     }
 
     /**
@@ -221,45 +219,41 @@ export class ElasticSearchUtils {
      * @param {string} indexBaseName
      * @param {string} ignoreIndexName
      */
-    deleteOldIndices(indexBaseName, ignoreIndexName) {
-
+    async deleteOldIndices(indexBaseName, ignoreIndexName) {
         //  match index to be deleted with indexBaseName_timestamp!
         //  otherwise other indices with same prefix will be removed
-        return this.getIndicesFromBasename(indexBaseName)
-            .then(indices => {
-
-                let indicesToDelete = indices
-                    .filter(index => index.name !== ignoreIndexName);
-
-                if (indicesToDelete.length > 0) {
-                    return this.deleteIndex(indicesToDelete.map(i => i.name));
-                }
-            }).catch(err => {
-                this.handleError('Error occurred getting index names', err);
-            });
+        try {
+            let indices = await this.getIndicesFromBasename(indexBaseName);
+            let indicesToDelete = indices.filter(index => index.name !== ignoreIndexName);
+            if (indicesToDelete.length > 0) {
+                return this.deleteIndex(indicesToDelete.map(i => i.name));
+            }
+        }
+        catch(err) {
+            this.handleError('Error occurred getting index names', err);
+        }
     }
 
-    getIndicesFromBasename(baseName: string): Promise<Index[]> {
-        return this.client.cat.indices({
+    async getIndicesFromBasename(baseName: string): Promise<Index[]> {
+        let response = await this.client.cat.indices({
             h: ['index', 'docs.count', 'health', 'status'],
             format: 'json'
-        }).then(body => {
-            return body
-                .filter(json => {
-                    // the index name must consist of the base name + the date string which is
-                    // 18 characters long
-                    // in case we want to get all indices just request with an empty baseName
-                    return baseName === '' || (json.index.startsWith(baseName) && json.index.length === baseName.length + ElasticSearchUtils.LENGTH_OF_TIMESTAMP);
-                })
-                .map(item => {
-                    return {
-                        name: item.index,
-                        numDocs: parseInt(item['docs.count']),
-                        health: item.health,
-                        status: item.status
-                    } as Index;
-                })
         });
+        return response
+            .filter(json => {
+                // the index name must consist of the base name + the date string which is
+                // 18 characters long
+                // in case we want to get all indices just request with an empty baseName
+                return baseName === '' || (json.index.startsWith(baseName) && json.index.length === baseName.length + ElasticSearchUtils.LENGTH_OF_TIMESTAMP);
+            })
+            .map(item => {
+                return {
+                    name: item.index,
+                    numDocs: parseInt(item['docs.count']),
+                    health: item.health,
+                    status: item.status
+                } as Index;
+            });
     }
 
     /**
@@ -267,44 +261,37 @@ export class ElasticSearchUtils {
      * @param {object} data
      * @param {boolean} closeAfterBulk
      */
-    bulk(data, closeAfterBulk): Promise<BulkResponse> {
-        return new Promise((resolve, reject) => {
-            try {
-                this.client.bulk({
-                    index: this.indexName,
-                    // type: this.settings.indexType || 'base',
-                    body: data
-                })
-                    .then(response => {
-                        if (response.errors) {
-                            response.items.forEach(item => {
-                                let err = item.index.error;
-                                if (err) {
-                                    this.handleError(`Error during indexing on index '${this.indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
-                                }
-                            });
-                        }
-                        if (closeAfterBulk) {
-                            log.debug('Closing client connection to Elasticsearch');
-                            this.client.close();
-                        }
-                        log.debug('Bulk finished of data #items: ' + data.length / 2);
-                        resolve({
-                            queued: false,
-                            response: response
-                        });
-                    })
-                    .catch(err => {
-                        this.handleError('Error occurred during bulk index of #items: ' + data.length / 2, err);
-                        if (closeAfterBulk) {
-                            this.client.close();
-                        }
-                        reject(err);
-                    });
-            } catch (e) {
-                this.handleError('Error during bulk indexing of #items: ' + data.length / 2, e);
+    async bulk(data, closeAfterBulk): Promise<BulkResponse> {
+        try {
+            let response = await this.client.bulk({
+                index: this.indexName,
+                // type: this.settings.indexType || 'base',
+                body: data
+            });
+            if (response.errors) {
+                response.items.forEach(item => {
+                    let err = item.index.error;
+                    if (err) {
+                        this.handleError(`Error during indexing on index '${this.indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
+                    }
+                });
             }
-        });
+            if (closeAfterBulk) {
+                log.debug('Closing client connection to Elasticsearch');
+                this.client.close();
+            }
+            log.debug('Bulk finished of data #items: ' + data.length / 2);
+            return {
+                queued: false,
+                response: response
+            };
+        }
+        catch (e) {
+            if (closeAfterBulk) {
+                this.client.close();
+            }
+            this.handleError('Error during bulk indexing of #items: ' + data.length / 2, e);
+        }
     }
 
     bulkWithIndexName(indexName, type, data, closeAfterBulk): Promise<BulkResponse> {
