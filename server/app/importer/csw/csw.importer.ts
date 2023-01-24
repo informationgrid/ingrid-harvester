@@ -35,6 +35,7 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DefaultXpathSettings, CswSettings} from './csw.settings';
 import {FilterUtils} from "../../utils/filter.utils";
+import { Catalog } from '../../model/dcatApPlu.document';
 import { MiscUtils } from '../../utils/misc.utils';
 import { SummaryService } from '../../services/config/SummaryService';
 
@@ -185,12 +186,15 @@ export class CswImporter implements Importer {
         let capabilitiesResponseDom = new DomParser().parseFromString(capabilitiesResponse);
 
         // store catalog info from getCapabilities in generalInfo
-        this.generalInfo['catalog'] = {
+        let catalog: Catalog = {
             description: CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
             homepage: this.settings.getRecordsUrl,
-            publisher: [{ name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent }],
+            // TODO we need a unique ID for each catalog - where to get one from?
+            id: this.settings.getRecordsUrl,
+            publisher: { name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent },
             title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
         };
+        this.generalInfo['catalog'] = catalog;
 
         if (this.settings.maxConcurrent > 1) {
             await this.harvestConcurrently();

@@ -36,6 +36,7 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DefaultXpathSettings, WfsSettings} from './wfs.settings';
 import {FilterUtils} from "../../utils/filter.utils";
+import { Catalog } from 'model/dcatApPlu.document';
 import { Contact } from "../../model/generic.mapper";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { MiscUtils } from '../../utils/misc.utils';
@@ -251,13 +252,16 @@ export class WfsImporter implements Importer {
         this.generalInfo['contactPoint'] = contact;
 
         // store catalog info from getCapabilities in generalInfo
-        this.generalInfo['catalog'] = {
+        let catalog: Catalog = {
             description: this.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
             homepage: this.settings.getFeaturesUrl,
+            // TODO we need a unique ID for each catalog - where to get one from?
+            id: this.settings.getFeaturesUrl,
             language: this.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true)?.textContent ?? this.settings.xpaths.capabilities.language,
-            publisher: [{ name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent }],
+            publisher: { name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent },
             title: this.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
         };
+        this.generalInfo['catalog'] = catalog;
 
         while (true) {
             log.debug('Requesting next features');

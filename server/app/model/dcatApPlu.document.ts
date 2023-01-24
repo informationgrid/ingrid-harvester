@@ -42,10 +42,11 @@ function optional(wrapper: string | Function, variable: any | any[]) {
 export interface Catalog {
     description: string,
     homepage?: string,
+    id?: string,
     issued?: string,
     language?: string,
     modified?: string,
-    publisher: Person | Organization,
+    publisher: Person,// | Organization,
     records?: Record[],
     themeTaxonomy?: string,
     title: string
@@ -186,9 +187,10 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let xmlString = `<?xml version="1.0"?>
         <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
             <dcat:Catalog>
+                <dct:identifier>${esc(catalog.id)}</dct:identifier>
                 <dct:description>${esc(catalog.description)}</dct:description>
                 <dct:title>${esc(catalog.title)}</dct:title>
-                ${DcatApPluDocument.xmlFoafAgent('dct:publisher', catalog.publisher[0])}
+                ${DcatApPluDocument.xmlFoafAgent('dct:publisher', catalog.publisher)}
                 ${optional('dcat:themeTaxonomy', esc(catalog.themeTaxonomy))}
                 ${optional('dct:issued', esc(catalog.issued))}
                 ${optional('dct:language', esc(catalog.language))}
@@ -197,7 +199,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
             </dcat:Catalog>
             <dcat:Dataset>
-                ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher[0].name)}
+                ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher.name)}
                 <dct:description xml:lang="${esc(catalog.language)}">${esc(mapper.getDescription())}</dct:description>
                 <dct:identifier>${esc(mapper.getGeneratedId())}</dct:identifier>
                 <dct:title xml:lang="${esc(catalog.language)}">${esc(mapper.getTitle())}</dct:title>
