@@ -42,6 +42,7 @@ function optional(wrapper: string | Function, variable: any | any[]) {
 export interface Catalog {
     description: string,
     homepage?: string,
+    id?: string,
     issued?: string,
     language?: string,
     modified?: string,
@@ -186,6 +187,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let xmlString = `<?xml version="1.0"?>
         <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
             <dcat:Catalog>
+                <dct:identifier>${esc(catalog.id)}</dct:identifier>
                 <dct:description>${esc(catalog.description)}</dct:description>
                 <dct:title>${esc(catalog.title)}</dct:title>
                 ${DcatApPluDocument.xmlFoafAgent('dct:publisher', catalog.publisher)}

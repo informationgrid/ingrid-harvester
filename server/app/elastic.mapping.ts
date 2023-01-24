@@ -54,6 +54,16 @@ export const elasticsearchMapping = {
                 }
             }
         },
+        'catalog': {
+            'properties': {
+                'identifier': {
+                    'type': 'keyword'
+                }
+            }
+        },
+        'identifier': {
+            'type': 'keyword'
+        },
         'description': {
             'type': 'text',
             'analyzer': 'decomp',

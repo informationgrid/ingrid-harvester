@@ -46,6 +46,9 @@ export class IndexDocument {
             description: mapper.getDescription(),
             identifier: mapper.getGeneratedId(),
             title: mapper.getTitle(),
+            catalog: {
+                identifier: (await mapper._getCatalog()).id
+            },
             // plan and procedure information
             plan_state: mapper.getPluPlanState(),
             plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),

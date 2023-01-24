@@ -255,6 +255,8 @@ export class WfsImporter implements Importer {
         let catalog: Catalog = {
             description: this.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
             homepage: this.settings.getFeaturesUrl,
+            // TODO we need a unique ID for each catalog - where to get one from?
+            id: this.settings.getFeaturesUrl,
             language: this.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true)?.textContent ?? this.settings.xpaths.capabilities.language,
             publisher: { name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent },
             title: this.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
