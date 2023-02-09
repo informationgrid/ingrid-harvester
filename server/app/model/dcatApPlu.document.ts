@@ -98,9 +98,9 @@ const DCAT_AP_PLU_NSMAP = {
     dcatde: 'http://dcat-ap.de/def/dcatde/',
     dct: 'http://purl.org/dc/terms/',
     foaf: 'http://xmlns.com/foaf/0.1/',
-    gml: 'http://www.opengis.net/gml/3.2',
+    gml: 'http://www.opengis.net/gml/3.2#',
     locn: 'http://www.w3.org/ns/locn#',
-    plu: 'http://a.placeholder.url.for.dcat-ap-plu',    // TODO
+    plu: 'http://a.placeholder.url.for.dcat-ap-plu/',    // TODO
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     vcard: 'http://www.w3.org/2006/vcard/ns#'
 };
