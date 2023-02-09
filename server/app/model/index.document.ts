@@ -65,7 +65,7 @@ export class IndexDocument {
             spatial_text: mapper.getSpatialText(),
             temporal: mapper.getTemporal(),
             // additional information and metadata
-            publisher: await mapper.getPublisher(),
+            publisher: (await mapper.getPublisher())?.[0],
             distributions: await mapper.getDistributions(),
             extras: {
                 harvested_data: mapper.getHarvestedData(),
