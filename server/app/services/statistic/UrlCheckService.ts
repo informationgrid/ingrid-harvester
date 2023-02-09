@@ -103,48 +103,26 @@ export class UrlCheckService extends ElasticSearchUtils {
     private async getStatus(urlAggregation: any) {
         try {
             let url = urlAggregation.url.trim();
-            if (!url.startsWith('ftp://')) {
+            if (url.startsWith('ftp://')) {
+                return {url: urlAggregation, status: 'ftp'};
+            }
+            else {
                 if(url.startsWith('/')){
                     if(this.generalSettings.portalUrl.endsWith('/'))
                         url = url.substring(1);
                     url = this.generalSettings.portalUrl + url;
                 }
                 let options: any = {timeout: 10000, proxy: this.generalSettings.proxy, rejectUnauthorized: false};
-                let request_call = new Promise(resolve => {
-                        try {
-                            request.head(url, options, function (error, response) {
-                                if (!error) {
-                                    resolve({url: urlAggregation, status: response.statusCode});
-                                } else {
-                                    resolve({url: urlAggregation, status: UrlCheckService.mapErrorMsg(error.toString())});
-                                }
-                            });
-                            /*
-                            client.request(url, options, (res) => {
-                                //console.log(url + ': ' + res.statusCode);
-                                resolve({url: urlAggregation, status: res.statusCode});
-                            }).on('error', (err) => {
-                                //console.error(url + ': ' + err);
-                                resolve({url: urlAggregation, status: this.mapErrorMsg(err.toString())});
-                            }).end();*/
-                        } catch (ex) {
-                            //console.error(url + ': ' + ex);
-                            resolve({url: urlAggregation, status: UrlCheckService.mapErrorMsg(ex.toString())});
-                        }
+                request.head(url, options, function (error, response) {
+                    if (error) {
+                        throw Error(error);
                     }
-                );
-                return request_call;
-            } else {
-                return new Promise(resolve => {
-                    //console.error(url + ': ftp');
-                    resolve({url: urlAggregation, status: 'ftp'});
+                    return {url: urlAggregation, status: response.statusCode};
                 });
             }
-        } catch (ex) {
-            //console.error(url + ': ' + ex);
-            return new Promise(resolve => {
-                resolve({url: urlAggregation, status: UrlCheckService.mapErrorMsg(ex.toString())});
-            });
+        }
+        catch (ex) {
+            return {url: urlAggregation, status: UrlCheckService.mapErrorMsg(ex.toString())};
         }
     }
 
