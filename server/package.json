@@ -25,6 +25,7 @@
     "@tsed/socketio": "^5.36.2",
     "@turf/centroid": "^6.5.0",
     "@turf/rewind": "^6.5.0",
+    "@xmldom/xmldom": "^0.8.6",
     "async": "^3.1.0",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
@@ -58,7 +59,6 @@
     "ts-httpexceptions": "^4.1.0",
     "uuid": "^3.3.2",
     "xml-escape": "^1.1.0",
-    "xmldom": "^0.2.1",
     "xpath": "0.0.27"
   },
   "devDependencies": {

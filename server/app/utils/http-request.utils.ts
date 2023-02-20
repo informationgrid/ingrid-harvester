@@ -27,7 +27,7 @@ import {Headers} from "request";
 import { MiscUtils } from './misc.utils';
 
 let request = require('request-promise');
-let DomParser = require('xmldom').DOMParser;
+let DomParser = require('@xmldom/xmldom').DOMParser;
 let logRequest = getLogger('requests');
 
 /**

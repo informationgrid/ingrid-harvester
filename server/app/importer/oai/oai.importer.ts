@@ -40,7 +40,7 @@ import { MiscUtils } from '../../utils/misc.utils';
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
     logRequest = getLogger('requests'),
-    DomParser = require('xmldom').DOMParser;
+    DomParser = require('@xmldom/xmldom').DOMParser;
 
 export class OaiSummary extends Summary {
     opendata = 0;

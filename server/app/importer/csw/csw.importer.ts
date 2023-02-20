@@ -41,7 +41,7 @@ import { SummaryService } from '../../services/config/SummaryService';
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
     logRequest = getLogger('requests'),
-    DomParser = require('xmldom').DOMParser;
+    DomParser = require('@xmldom/xmldom').DOMParser;
 
 export class CswSummary extends Summary {
     additionalSummary() {
