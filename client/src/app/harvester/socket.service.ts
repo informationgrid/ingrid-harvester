@@ -34,7 +34,7 @@ export class SocketService {
 
   connectionLost$ = new Subject<boolean>();
 
-  private socket: SocketIOClient.Socket;
+  private socket: io.Socket;
 
   log$ = new Subject<ImportLogMessage>();
 

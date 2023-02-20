@@ -38,7 +38,19 @@ configure('./log4js.json');
 @ServerSettings({
     rootDir,
     httpPort: serverConfig.httpPort,
-    socketIO: {},
+    socketIO: {
+        path: null,
+        serveClient: null,
+        adapter: null,
+        parser: null,
+        connectTimeout: null,
+        connectionStateRecovery: null,
+        cleanupEmptyChildNamespaces: null,
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"]
+        }
+    },
     acceptMimes: ['application/json'],
     passport: {},
     statics: {
