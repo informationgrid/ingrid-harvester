@@ -461,7 +461,7 @@ export class CswMapper extends GenericMapper {
         }
 
         keywords = [];
-        CswMapper.select('./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', this.record).forEach(node => {
+        CswMapper.select('./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString|./gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', this.record).forEach(node => {
             keywords.push(node.textContent);
         });
 

@@ -21,65 +21,53 @@
  * ==================================================
  */
 
-import { DcatApPluDocument } from "./dcatApPlu.document";
-import { Contact, GenericMapper } from "./generic.mapper";
+import {GenericMapper} from "./generic.mapper";
 
 export class IndexDocument {
 
     static async create(mapper: GenericMapper) : Promise<any> {
-        let contactPoint: Contact = await mapper.getContactPoint();
         let result = await {
-            // basic information
-            contact_point: {
-                fn: contactPoint.fn,
-                has_country_name: contactPoint.hasCountryName,
-                has_locality: contactPoint.hasLocality,
-                has_postal_code: contactPoint.hasPostalCode,
-                has_region: contactPoint.hasRegion,
-                has_street_address: contactPoint.hasStreetAddress,
-                has_email: contactPoint.hasEmail,
-                has_telephone: contactPoint.hasTelephone,
-                has_uid: contactPoint.hasUID,
-                has_url: contactPoint.hasURL,
-                has_orgnaization_name: contactPoint.hasOrganizationName
-            },
+            priority: mapper.getPriority(),
+            completion: mapper.getAutoCompletion(),
+            access_rights: mapper.getAccessRights(),
+            accrual_periodicity: mapper.getAccrualPeriodicity(),
+            contact_point: await mapper.getContactPoint(),
+            creator: mapper.getCreator(),
             description: mapper.getDescription(),
-            identifier: mapper.getGeneratedId(),
-            title: mapper.getTitle(),
-            // plan and procedure information
-            plan_state: mapper.getPluPlanState(),
-            plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),
-            plan_type: mapper.getPluPlanType(),
-            plan_type_fine: mapper.getPluPlanTypeFine(),
-            procedure_state: mapper.getPluProcedureState(),
-            procedure_start_date: mapper.getPluProcedureStartDate(),
-            procedure_type: mapper.getPluProcedureType(),
-            process_steps: mapper.getPluProcessSteps(),
-            // spatial and temporal features
-            centroid: mapper.getCentroid(),
-            spatial: mapper.getSpatial(),
-            spatial_text: mapper.getSpatialText(),
-            temporal: mapper.getTemporal(),
-            // additional information and metadata
-            publisher: await mapper.getPublisher(),
-            distributions: await mapper.getDistributions(),
+            distribution: await mapper.getDistributions(),
             extras: {
+                all: mapper.getExtrasAllData(),
+                citation: mapper.getCitation(),
+                display_contact: await mapper.getDisplayContacts(),
+                generated_id: mapper.getGeneratedId(),
+                groups: mapper.getGroups(),
                 harvested_data: mapper.getHarvestedData(),
+                license: await mapper.getLicense(),
                 metadata: {
                     harvested: mapper.getMetadataHarvested(),
                     harvesting_errors: null, // get errors after all operations been done
                     issued: mapper.getMetadataIssued(),
                     is_valid: null, // checks validity after all operations been done
                     modified: mapper.getMetadataModified(),
-                    source: mapper.getMetadataSource()
+                    source: mapper.getMetadataSource(),
                 },
-                transformed_data: {
-                    [DcatApPluDocument.getExportFormat()]: await DcatApPluDocument.create(mapper),
-                }
+                mfund_fkz: mapper.getMFundFKZ(),
+                mfund_project_title: mapper.getMFundProjectTitle(),
+                realtime: mapper.isRealtime(),
+                subgroups: mapper.getCategories(),
+                subsection: mapper.getSubSections(),
+                spatial: mapper.getSpatial(),
+                spatial_text: mapper.getSpatialText(),
+                temporal: mapper.getTemporal(),
+                parent: mapper.getParent()
             },
             issued: mapper.getIssued(),
             keywords: mapper.getKeywords(),
             modified: mapper.getModifiedDate(),
+            publisher: await mapper.getPublisher(),
+            originator: mapper.getOriginator(),
+            theme: mapper.getThemes(),
+            title: mapper.getTitle()
         };
 
         result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
