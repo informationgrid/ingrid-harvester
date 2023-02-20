@@ -25,7 +25,7 @@ import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {DcatSettings} from '../../../../../../server/app/importer/dcat/dcat.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-dcat-harvester',
@@ -34,7 +34,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 })
 export class DcatHarvesterComponent implements OnInit, OnDestroy {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() model: DcatSettings;
   @Input() rulesTemplate: TemplateRef<any>;
 
@@ -43,10 +43,10 @@ export class DcatHarvesterComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    this.form.addControl('catalogUrl', new FormControl(this.getModelField('catalogUrl', '')));
+    this.form.addControl('catalogUrl', new UntypedFormControl(this.getModelField('catalogUrl', '')));
 
-    this.form.addControl('providerPrefix', new FormControl(this.getModelField('providerPrefix', '')));
-    this.form.addControl('dcatProviderField', new FormControl(this.getModelField('dcatProviderField', 'creator')));
+    this.form.addControl('providerPrefix', new UntypedFormControl(this.getModelField('providerPrefix', '')));
+    this.form.addControl('dcatProviderField', new UntypedFormControl(this.getModelField('dcatProviderField', 'creator')));
 
   }
 

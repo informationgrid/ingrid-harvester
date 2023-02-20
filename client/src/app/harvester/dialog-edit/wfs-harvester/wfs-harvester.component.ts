@@ -25,7 +25,7 @@ import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {DefaultXpathSettings, WfsSettings} from '../../../../../../server/app/importer/wfs/wfs.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-wfs-harvester',
@@ -34,7 +34,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 })
 export class WfsHarvesterComponent implements OnInit, OnDestroy {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() model: WfsSettings;
   @Input() rulesTemplate: TemplateRef<any>;
 
@@ -43,29 +43,29 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    this.form.addControl('httpMethod', new FormControl(this.model.httpMethod));
-    this.form.addControl('getFeaturesUrl', new FormControl(this.model.getFeaturesUrl));
-    this.form.addControl('featuresFilter', new FormControl(this.model.featureFilter));
-    this.form.addControl('version', new FormControl(this.model.version));
-    this.form.addControl('typename', new FormControl(this.model.typename));
+    this.form.addControl('httpMethod', new UntypedFormControl(this.model.httpMethod));
+    this.form.addControl('getFeaturesUrl', new UntypedFormControl(this.model.getFeaturesUrl));
+    this.form.addControl('featuresFilter', new UntypedFormControl(this.model.featureFilter));
+    this.form.addControl('version', new UntypedFormControl(this.model.version));
+    this.form.addControl('typename', new UntypedFormControl(this.model.typename));
 
     if (!this.model.xpaths) {
       this.model.xpaths = DefaultXpathSettings.xpaths;
     }
     this.form.addControl('xpaths',
-      new FormGroup({
-        capabilities: new FormGroup({
+      new UntypedFormGroup({
+        capabilities: new UntypedFormGroup({
           // abstract: new FormControl(this.model.xpaths.capabilities.abstract),
-          language: new FormControl(this.model.xpaths.capabilities.language),
+          language: new UntypedFormControl(this.model.xpaths.capabilities.language),
           // serviceProvider: new FormControl(this.model.xpaths.capabilities.serviceProvider),
           // title: new FormControl(this.model.xpaths.capabilities.title)
         }),
-        description: new FormControl(this.model.xpaths.description),
-        featureParent: new FormControl(this.model.xpaths.featureParent),
-        name: new FormControl(this.model.xpaths.name),
-        pluPlanState: new FormControl(this.model.xpaths.pluPlanState),
-        pluProcedureStartDate: new FormControl(this.model.xpaths.pluProcedureStartDate),
-        spatial: new FormControl(this.model.xpaths.spatial)
+        description: new UntypedFormControl(this.model.xpaths.description),
+        featureParent: new UntypedFormControl(this.model.xpaths.featureParent),
+        name: new UntypedFormControl(this.model.xpaths.name),
+        pluPlanState: new UntypedFormControl(this.model.xpaths.pluPlanState),
+        pluProcedureStartDate: new UntypedFormControl(this.model.xpaths.pluProcedureStartDate),
+        spatial: new UntypedFormControl(this.model.xpaths.spatial)
       })
     );
 

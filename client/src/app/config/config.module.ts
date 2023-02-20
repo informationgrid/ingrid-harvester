@@ -49,25 +49,24 @@ const configRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ConfigComponent, ConfigMappingComponent, ConfigGeneralComponent, ConfigImportExportComponent, AddMappingItemComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(configRoutes),
-    SharedModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatTabsModule,
-    MatListModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    FlexModule,
-    MatSlideToggleModule,
-    MatCardModule,
-    MatCheckboxModule
-  ],
-  exports: [
-    ConfigComponent
-  ],
-  entryComponents: [AddMappingItemComponent]
+    declarations: [ConfigComponent, ConfigMappingComponent, ConfigGeneralComponent, ConfigImportExportComponent, AddMappingItemComponent],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(configRoutes),
+        SharedModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatTabsModule,
+        MatListModule,
+        MatIconModule,
+        MatAutocompleteModule,
+        FlexModule,
+        MatSlideToggleModule,
+        MatCardModule,
+        MatCheckboxModule
+    ],
+    exports: [
+        ConfigComponent
+    ]
 })
 export class ConfigModule { }

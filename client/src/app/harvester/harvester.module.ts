@@ -66,23 +66,23 @@ const harvesterRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    HarvesterComponent,
-    DialogSchedulerComponent,
-    DialogLogComponent,
-    DialogEditComponent,
-    DialogHistoryComponent,
-    ExcelHarvesterComponent,
-    ExcelSparseHarvesterComponent,
-    CkanHarvesterComponent,
-    CswHarvesterComponent,
-    OaiHarvesterComponent,
-    DcatHarvesterComponent,
-    SparqlHarvesterComponent,
-    WfsHarvesterComponent,
-    ImporterDetailComponent,
-    ChipListComponent
-  ],
+    declarations: [
+        HarvesterComponent,
+        DialogSchedulerComponent,
+        DialogLogComponent,
+        DialogEditComponent,
+        DialogHistoryComponent,
+        ExcelHarvesterComponent,
+        ExcelSparseHarvesterComponent,
+        CkanHarvesterComponent,
+        CswHarvesterComponent,
+        OaiHarvesterComponent,
+        DcatHarvesterComponent,
+        SparqlHarvesterComponent,
+        WfsHarvesterComponent,
+        ImporterDetailComponent,
+        ChipListComponent
+    ],
     imports: [
         CommonModule,
         RouterModule.forChild(harvesterRoutes),
@@ -105,15 +105,9 @@ const harvesterRoutes: Routes = [
         MatBadgeModule,
         ScrollingModule
     ],
-  entryComponents: [
-    DialogSchedulerComponent,
-    DialogLogComponent,
-    DialogEditComponent,
-    DialogHistoryComponent
-  ],
-  exports: [
-    HarvesterComponent
-  ]
+    exports: [
+        HarvesterComponent
+    ]
 })
 export class HarvesterModule {
 }

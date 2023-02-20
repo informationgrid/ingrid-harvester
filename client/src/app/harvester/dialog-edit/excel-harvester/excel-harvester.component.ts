@@ -22,7 +22,7 @@
  */
 
 import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-excel-harvester',
@@ -31,7 +31,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 })
 export class ExcelHarvesterComponent implements OnInit, OnDestroy {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() model: any;
   @Input() rulesTemplate: TemplateRef<any>;
 
@@ -39,7 +39,7 @@ export class ExcelHarvesterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.form.addControl('filePath', new FormControl(this.model ? this.model.filePath : ''));
+    this.form.addControl('filePath', new UntypedFormControl(this.model ? this.model.filePath : ''));
   }
 
   ngOnDestroy(): void {

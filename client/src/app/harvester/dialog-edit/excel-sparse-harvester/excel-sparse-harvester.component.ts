@@ -22,7 +22,7 @@
  */
 
 import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {DefaultCatalogSettings, ExcelSparseSettings} from '../../../../../../server/app/importer/excelsparse/excelsparse.settings';
 
 @Component({
@@ -32,7 +32,7 @@ import {DefaultCatalogSettings, ExcelSparseSettings} from '../../../../../../ser
 })
 export class ExcelSparseHarvesterComponent implements OnInit, OnDestroy {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() model: ExcelSparseSettings;
   @Input() rulesTemplate: TemplateRef<any>;
 
@@ -45,13 +45,13 @@ export class ExcelSparseHarvesterComponent implements OnInit, OnDestroy {
     }
 
     this.form.addControl('catalog',
-      new FormGroup({
-        description: new FormControl(this.model.catalog.description),
-        language: new FormControl(this.model.catalog.language),
-        title: new FormControl(this.model.catalog.title)
+      new UntypedFormGroup({
+        description: new UntypedFormControl(this.model.catalog.description),
+        language: new UntypedFormControl(this.model.catalog.language),
+        title: new UntypedFormControl(this.model.catalog.title)
       })
     );
-    this.form.addControl('filePath', new FormControl(this.model ? this.model.filePath : ''));
+    this.form.addControl('filePath', new UntypedFormControl(this.model ? this.model.filePath : ''));
   }
 
   ngOnDestroy(): void {

@@ -25,7 +25,7 @@ import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {CswSettings} from '../../../../../../server/app/importer/csw/csw.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 // import {CswSettings} from '@server/importer/csw/csw.importer';
 
 @Component({
@@ -35,7 +35,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 })
 export class CswHarvesterComponent implements OnInit, OnDestroy {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() model: CswSettings;
   @Input() rulesTemplate: TemplateRef<any>;
 
@@ -44,10 +44,10 @@ export class CswHarvesterComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    this.form.addControl('httpMethod', new FormControl(this.model.httpMethod));
-    this.form.addControl('getRecordsUrl', new FormControl(this.model.getRecordsUrl));
-    this.form.addControl('recordFilter', new FormControl(this.model.recordFilter));
-    this.form.addControl('pluPlanState', new FormControl(this.model.pluPlanState));
+    this.form.addControl('httpMethod', new UntypedFormControl(this.model.httpMethod));
+    this.form.addControl('getRecordsUrl', new UntypedFormControl(this.model.getRecordsUrl));
+    this.form.addControl('recordFilter', new UntypedFormControl(this.model.recordFilter));
+    this.form.addControl('pluPlanState', new UntypedFormControl(this.model.pluPlanState));
 
     if (!this.model.eitherKeywords) {
       this.model.eitherKeywords = [];

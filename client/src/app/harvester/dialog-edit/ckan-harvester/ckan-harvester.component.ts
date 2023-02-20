@@ -23,7 +23,7 @@
 
 import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {CkanSettings} from '../../../../../../server/app/importer/ckan/ckan.settings';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-ckan-harvester',
@@ -32,7 +32,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class CkanHarvesterComponent implements OnInit, OnDestroy {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() model: CkanSettings;
   @Input() rulesTemplate: TemplateRef<any>;
 
@@ -40,34 +40,34 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.form.addControl('ckanBaseUrl', new FormControl(this.getModelField('ckanBaseUrl', ''), Validators.required));
-    this.form.addControl('markdownAsDescription', new FormControl(this.getModelField('markdownAsDescription', false)));
-    this.form.addControl('defaultLicense', new FormGroup({
-        id: new FormControl(this.getModelField('defaultLicense.id', '')),
-        title: new FormControl(this.getModelField('defaultLicense.title', '')),
-        url: new FormControl(this.getModelField('defaultLicense.url', ''))
+    this.form.addControl('ckanBaseUrl', new UntypedFormControl(this.getModelField('ckanBaseUrl', ''), Validators.required));
+    this.form.addControl('markdownAsDescription', new UntypedFormControl(this.getModelField('markdownAsDescription', false)));
+    this.form.addControl('defaultLicense', new UntypedFormGroup({
+        id: new UntypedFormControl(this.getModelField('defaultLicense.id', '')),
+        title: new UntypedFormControl(this.getModelField('defaultLicense.title', '')),
+        url: new UntypedFormControl(this.getModelField('defaultLicense.url', ''))
       })
     );
 
-    this.form.addControl('groupChilds', new FormControl(this.getModelField('groupChilds', false)));
+    this.form.addControl('groupChilds', new UntypedFormControl(this.getModelField('groupChilds', false)));
 
     this.form.addControl('requestType',
-      new FormControl(this.getModelField('requestType', 'ListWithResources')));
+      new UntypedFormControl(this.getModelField('requestType', 'ListWithResources')));
     this.form.addControl('additionalSearchFilter',
-      new FormControl(this.getModelField('additionalSearchFilter', '')));
+      new UntypedFormControl(this.getModelField('additionalSearchFilter', '')));
 
     this.form.addControl('providerPrefix',
-      new FormControl(this.getModelField('providerPrefix', '')));
+      new UntypedFormControl(this.getModelField('providerPrefix', '')));
     this.form.addControl('providerField',
-      new FormControl(this.getModelField('providerField', 'organization')));
+      new UntypedFormControl(this.getModelField('providerField', 'organization')));
 
-    const rule = new FormControl(this.getModelField('rules.containsDocumentsWithData', false));
-    const ruleBlacklist = new FormControl({
+    const rule = new UntypedFormControl(this.getModelField('rules.containsDocumentsWithData', false));
+    const ruleBlacklist = new UntypedFormControl({
       value: this.getModelField('rules.containsDocumentsWithDataBlacklist', ''),
       disabled: !rule.value
     }, Validators.required);
 
-    this.form.addControl('rules', new FormGroup({
+    this.form.addControl('rules', new UntypedFormGroup({
       containsDocumentsWithData: rule,
       containsDocumentsWithDataBlacklist: ruleBlacklist
     }));

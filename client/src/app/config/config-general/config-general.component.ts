@@ -24,7 +24,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ConfigService} from '../config.service';
 import {HarvesterService} from '../../harvester/harvester.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {of} from 'rxjs';
 import {GeneralSettings} from '@shared/general-config.settings';
 import cronstrue from 'cronstrue/i18n';
@@ -37,22 +37,22 @@ import { isValidCron } from 'cron-validator';
 })
 export class ConfigGeneralComponent implements OnInit {
 
-  configForm: FormGroup;
+  configForm: UntypedFormGroup;
 
-  constructor(private formBuilder: FormBuilder, private configService: ConfigService, private harvesterService: HarvesterService) {
+  constructor(private formBuilder: UntypedFormBuilder, private configService: ConfigService, private harvesterService: HarvesterService) {
   }
 
   ngOnInit() {
     this.reset();
   }
 
-  private static noWhitespaceValidator(control: FormControl) {
+  private static noWhitespaceValidator(control: UntypedFormControl) {
     const isWhitespace = (control.value || '').trim().length === 0;
     const isValid = !isWhitespace;
     return of(isValid ? null : {'whitespace': true});
   }
 
-  private static elasticUrlValidator(control: FormControl) {
+  private static elasticUrlValidator(control: UntypedFormControl) {
     if (!control.value) {
       return of(null);
     }

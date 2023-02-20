@@ -52,30 +52,26 @@ const configRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [MonitoringComponent, MonitoringHarvesterComponent, MonitoringUrlCheckComponent, MonitoringUrlcheckDetailComponent, MonitoringIndexCheckComponent, MonitoringIndexCheckDetailComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(configRoutes),
-    SharedModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatTabsModule,
-    MatListModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    FlexModule,
-    MatSlideToggleModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatExpansionModule,
-    ScrollingModule
-  ],
-  entryComponents: [
-    MonitoringUrlcheckDetailComponent,
-    MonitoringIndexCheckDetailComponent
-  ],
-  exports: [
-    MonitoringComponent
-  ]
+    declarations: [MonitoringComponent, MonitoringHarvesterComponent, MonitoringUrlCheckComponent, MonitoringUrlcheckDetailComponent, MonitoringIndexCheckComponent, MonitoringIndexCheckDetailComponent],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(configRoutes),
+        SharedModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatTabsModule,
+        MatListModule,
+        MatIconModule,
+        MatAutocompleteModule,
+        FlexModule,
+        MatSlideToggleModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatExpansionModule,
+        ScrollingModule
+    ],
+    exports: [
+        MonitoringComponent
+    ]
 })
 export class MonitoringModule { }
