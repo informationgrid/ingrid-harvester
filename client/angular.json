@@ -31,7 +31,6 @@
               "src/theme.scss"
             ],
             "scripts": [],
-            "es5BrowserSupport": true,
             "aot": false
           },
           "configurations": {

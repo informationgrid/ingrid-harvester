@@ -105,6 +105,12 @@ const harvesterRoutes: Routes = [
         MatBadgeModule,
         ScrollingModule
     ],
+  entryComponents: [
+    DialogSchedulerComponent,
+    DialogLogComponent,
+    DialogEditComponent,
+    DialogHistoryComponent
+  ],
   exports: [
     HarvesterComponent
   ]
