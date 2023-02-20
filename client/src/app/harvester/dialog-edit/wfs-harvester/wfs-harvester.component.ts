@@ -24,7 +24,7 @@
 import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {DefaultXpathSettings, WfsSettings} from '../../../../../../server/app/importer/wfs/wfs.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatChipInputEvent} from '@angular/material/chips';
+import {MatLegacyChipInputEvent as MatChipInputEvent} from '@angular/material/legacy-chips';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({

@@ -23,7 +23,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import {ConfigService, MappingDistribution} from "../config.service";
-import {MatDialog} from "@angular/material/dialog";
+import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
 import {AddMappingItemComponent} from "./add-mapping-item/add-mapping-item.component";
 import {map, tap} from "rxjs/operators";
 

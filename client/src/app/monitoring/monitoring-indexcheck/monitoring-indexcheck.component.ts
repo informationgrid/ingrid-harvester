@@ -28,7 +28,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {Chart} from 'chart.js';
 import {Observable} from "rxjs";
-import {MatDialog} from "@angular/material/dialog";
+import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
 import {HttpClient} from "@angular/common/http";
 import {MonitoringIndexCheckDetailComponent} from "./monitoring-indexcheck-detail/monitoring-indexcheck-detail.component";
 import {MonitoringComponent} from "../monitoring.component";
