@@ -22,15 +22,18 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatSelectModule} from '@angular/material';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 import {FormsModule} from '@angular/forms';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   imports: [FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatDialogModule, MatButtonModule],
   exports: [FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatDialogModule, MatButtonModule],
-  declarations: [ConfirmDialogComponent],
-  entryComponents: [ConfirmDialogComponent]
+  declarations: [ConfirmDialogComponent]
 })
 export class SharedModule {
 }

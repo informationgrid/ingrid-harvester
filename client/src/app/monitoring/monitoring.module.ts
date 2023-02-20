@@ -70,10 +70,6 @@ const configRoutes: Routes = [
     MatExpansionModule,
     ScrollingModule
   ],
-  entryComponents: [
-    MonitoringUrlcheckDetailComponent,
-    MonitoringIndexCheckDetailComponent
-  ],
   exports: [
     MonitoringComponent
   ]

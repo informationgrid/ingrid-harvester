@@ -67,7 +67,6 @@ const configRoutes: Routes = [
   ],
   exports: [
     ConfigComponent
-  ],
-  entryComponents: [AddMappingItemComponent]
+  ]
 })
 export class ConfigModule { }

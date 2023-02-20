@@ -33,7 +33,7 @@ import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
 import {DialogHistoryComponent} from './dialog-history/dialog-history.component';
 import {ImportLogMessage} from '../../../../server/app/model/import.result';
 import {flatMap, groupBy, mergeMap, tap, toArray} from 'rxjs/operators';
-import {MatSlideToggleChange} from '@angular/material';
+import {MatSlideToggleChange} from '@angular/material/slide-toggle';
 import {SocketService} from './socket.service';
 import {ConfirmDialogComponent} from '../shared/confirm-dialog/confirm-dialog.component';
 import {untilDestroyed} from 'ngx-take-until-destroy';

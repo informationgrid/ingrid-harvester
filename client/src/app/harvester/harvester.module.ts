@@ -44,7 +44,11 @@ import {WfsHarvesterComponent} from './dialog-edit/wfs-harvester/wfs-harvester.c
 import {DialogHistoryComponent} from './dialog-history/dialog-history.component';
 import {ImporterDetailComponent} from './importer-detail/importer-detail.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
-import {MatCardModule, MatCheckboxModule, MatChipsModule, MatListModule, MatTabsModule} from '@angular/material';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatListModule} from '@angular/material/list';
+import {MatTabsModule} from '@angular/material/tabs';
 import {RouterModule, Routes} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -101,12 +105,6 @@ const harvesterRoutes: Routes = [
         MatBadgeModule,
         ScrollingModule
     ],
-  entryComponents: [
-    DialogSchedulerComponent,
-    DialogLogComponent,
-    DialogEditComponent,
-    DialogHistoryComponent
-  ],
   exports: [
     HarvesterComponent
   ]

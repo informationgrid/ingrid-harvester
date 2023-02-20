@@ -24,7 +24,7 @@
 import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {SparqlSettings} from '../../../../../../server/app/importer/sparql/sparql.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatChipInputEvent} from '@angular/material';
+import {MatChipInputEvent} from '@angular/material/chips';
 import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
