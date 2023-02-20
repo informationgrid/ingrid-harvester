@@ -53,3 +53,4 @@ client/cypress/screenshots
 # Reports' files, but keep the folder
 client/cypress/mochawesome-reports/*
 !client/cypress/mochawesome-reports/.gitkeep
+/client/.angular/
