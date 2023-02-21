@@ -24,10 +24,20 @@
 
 import {pluDocument} from "./model/index.document";
 import {ProfileFactory} from "../profile.factory";
+import {elasticsearchMapping} from "./elastic/elastic.mapping";
+import {elasticsearchSettings} from "./elastic/elastic.settings";
 
 export class pluFactory extends ProfileFactory{
 
     getIndexDocument() : pluDocument{
         return new pluDocument;
+    }
+
+    getElasticMapping(): any {
+        return elasticsearchMapping;
+    }
+
+    getElasticSettings(): any {
+        return elasticsearchSettings;
     }
 }

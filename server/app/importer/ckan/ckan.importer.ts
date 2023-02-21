@@ -22,8 +22,6 @@
  */
 
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
-import {elasticsearchSettings} from '../../elastic.settings';
-import {elasticsearchMapping} from '../../elastic.mapping';
 import {Summary} from '../../model/summary';
 import {DefaultImporterSettings, Importer} from '../../importer';
 import {RequestDelegate} from '../../utils/http-request.utils';
@@ -201,7 +199,7 @@ export class CkanImporter implements Importer {
         if (this.settings.dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
         } else {
-            await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+            await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
         }
     }
 

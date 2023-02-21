@@ -22,8 +22,6 @@
  */
 
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
-import {elasticsearchMapping} from '../../elastic.mapping';
-import {elasticsearchSettings} from '../../elastic.settings';
 import {CswMapper} from './csw.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -147,10 +145,10 @@ export class CswImporter implements Importer {
                 // when running an incremental harvest,
                 // clone the old index instead of preparing a new one
                 if (this.summary.isIncremental) {
-                    await this.elastic.cloneIndex(elasticsearchMapping, elasticsearchSettings);
+                    await this.elastic.cloneIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
                 }
                 else {
-                    await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                    await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
                 }
                 await this.harvest();
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {

@@ -22,8 +22,6 @@
  */
 
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
-import {elasticsearchMapping} from '../../elastic.mapping';
-import {elasticsearchSettings} from '../../elastic.settings';
 import {SparqlMapper} from './sparql.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -114,7 +112,7 @@ export class SparqlImporter implements Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
                 await this.harvest().catch(err => {
                     this.summary.appErrors.push(err.message ? err.message : err);
                     log.error('Error during SPARQL import', err);

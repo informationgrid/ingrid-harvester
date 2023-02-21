@@ -23,8 +23,6 @@
 
 import { decode } from 'iconv-lite';
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
-import {elasticsearchMapping} from '../../elastic.mapping';
-import {elasticsearchSettings} from '../../elastic.settings';
 import {WfsMapper} from './wfs.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -156,7 +154,7 @@ export class WfsImporter implements Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
                 await this.harvest();
                 if(this.numIndexDocs > 0) {
                     await this.elastic.sendBulkData(false);

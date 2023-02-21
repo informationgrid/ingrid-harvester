@@ -24,10 +24,20 @@
 
 import {mcloudDocument} from "./model/index.document";
 import {ProfileFactory} from "../profile.factory";
+import {elasticsearchMapping} from "./elastic/elastic.mapping";
+import {elasticsearchSettings} from "./elastic/elastic.settings";
 
 export class mcloudFactory extends ProfileFactory{
 
     getIndexDocument() : mcloudDocument{
         return new mcloudDocument;
+    }
+
+    getElasticMapping(): any {
+        return elasticsearchMapping;
+    }
+
+    getElasticSettings(): any {
+        return elasticsearchSettings;
     }
 }

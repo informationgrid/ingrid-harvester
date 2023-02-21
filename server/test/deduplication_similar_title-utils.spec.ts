@@ -25,8 +25,8 @@ import {Summary} from '../app/model/summary';
 import {expect} from "chai";
 import {configure} from 'log4js';
 import {doc1, doc3, doc4} from './data/docs.deduplication';
-import {elasticsearchMapping} from '../app/elastic.mapping';
-import {elasticsearchSettings} from '../app/elastic.settings';
+import {elasticsearchMapping} from '../app/profiles/mcloud/elastic/elastic.mapping';
+import {elasticsearchSettings} from '../app/profiles/mcloud/elastic/elastic.settings';
 import {ElasticSettings} from '../app/utils/elastic.setting';
 import {ElasticSearchUtils} from '../app/utils/elastic.utils';
 

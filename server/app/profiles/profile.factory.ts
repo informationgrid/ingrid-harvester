@@ -23,10 +23,13 @@
 
 
 import {IndexDocument} from "../model/index.document";
-import {mcloudFactory} from "./mcloud/profile.factory";
 
 export abstract class ProfileFactory {
     private static instance: ProfileFactory;
 
     abstract getIndexDocument() : IndexDocument;
+
+    abstract getElasticSettings(): any;
+    abstract getElasticMapping(): any;
+
 }

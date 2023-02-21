@@ -24,8 +24,6 @@
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
 import {ExcelSparseMapper} from './excelsparse.mapper';
 import {Workbook, Worksheet} from 'exceljs';
-import {elasticsearchMapping} from '../../elastic.mapping';
-import {elasticsearchSettings} from '../../elastic.settings';
 import {Summary} from '../../model/summary';
 import {DefaultImporterSettings, Importer} from '../../importer';
 import {Observable, Observer} from 'rxjs';
@@ -97,7 +95,7 @@ export class ExcelSparseImporter implements Importer {
             if (this.settings.dryRun) {
                 log.debug('Dry run option enabled. Skipping index creation.');
             } else {
-                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
             }
             await workbook.xlsx.readFile(this.excelFilepath);
 
