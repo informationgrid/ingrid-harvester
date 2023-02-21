@@ -1,1 +1,181 @@
-[]
+[
+  {
+    "complete": true,
+    "summary": {
+      "MAX_ITEMS_TO_SHOW": 10,
+      "numDocs": 122,
+      "numErrors": 0,
+      "warnings": [
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          "ESRI Hub"
+        ],
+        [
+          "Distribution format unknown",
+          "TRIAS-API"
+        ],
+        [
+          "Distribution format unknown",
+          "API"
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Missing license",
+          "No license detected for dataset: 515c7b36-e5e5-414f-9a3a-145eede1145e -> Statistik der Halte je Einwohner VRN"
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          "DORA-Service"
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          "GBFS"
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          "DORA-Service"
+        ],
+        [
+          "Distribution format unknown",
+          "GBFS"
+        ],
+        [
+          "Distribution format unknown",
+          "DORA-Service"
+        ],
+        [
+          "Distribution format unknown",
+          "DORA-Service"
+        ],
+        [
+          "Distribution format unknown",
+          "GBFS"
+        ],
+        [
+          "Distribution format unknown",
+          "ESRI Hub"
+        ],
+        [
+          "Distribution format unknown",
+          "APP"
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          "APP"
+        ],
+        [
+          "Distribution format unknown",
+          "APP"
+        ],
+        [
+          "Distribution format unknown",
+          "ESRI Hub"
+        ],
+        [
+          "Distribution format unknown",
+          "ESRI Hub"
+        ],
+        [
+          "Distribution format unknown",
+          "ESRI Hub"
+        ],
+        [
+          "Distribution format unknown",
+          "ESRI Hub"
+        ],
+        [
+          "Distribution format unknown",
+          "ESRI Hub"
+        ],
+        [
+          "Distribution format unknown",
+          "APP"
+        ],
+        [
+          "Distribution format unknown",
+          "DORA-Service"
+        ],
+        [
+          "Distribution format unknown",
+          "GBFS"
+        ],
+        [
+          "Distribution format unknown",
+          ""
+        ],
+        [
+          "Distribution format unknown",
+          "API"
+        ]
+      ],
+      "skippedDocs": [],
+      "elasticErrors": [],
+      "appErrors": [],
+      "headerTitle": "MobiData BW (CKAN)",
+      "isIncremental": false,
+      "missingLicense": null
+    },
+    "id": 50,
+    "lastExecution": "2023-02-21T17:00:34.738Z",
+    "duration": 12.072
+  }
+]

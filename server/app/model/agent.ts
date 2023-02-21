@@ -21,15 +21,6 @@
  * ==================================================
  */
 
-import {OptionsWithUri} from 'request-promise';
-import {License} from '@shared/license.model';
-import * as moment from 'moment';
-import {ImporterSettings} from "../importer.settings";
-import {getLogger} from "log4js";
-import {Summary} from "./summary";
-import {Rules} from "./rules";
-import { Catalog } from '../profiles/plu/model/dcatApPlu.document';
-
 export interface Agent {
     homepage?: string;
     mbox?: string;
