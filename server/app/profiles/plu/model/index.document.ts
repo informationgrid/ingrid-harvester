@@ -22,8 +22,9 @@
  */
 
 import { DcatApPluDocument } from "./dcatApPlu.document";
-import {Contact, GenericMapper} from "../../../model/generic.mapper";
+import {GenericMapper} from "../../../importer/generic.mapper";
 import {IndexDocument} from "../../../model/index.document";
+import {Contact} from "../../../model/agent";
 
 export class pluDocument extends IndexDocument {
 

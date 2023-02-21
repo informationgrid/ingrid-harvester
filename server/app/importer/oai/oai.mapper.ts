@@ -24,7 +24,10 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Agent, Contact, DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
+
+import {GenericMapper} from '../generic.mapper';
+import {Distribution} from "../../model/distribution";
+import {DateRange} from "../../model/dateRange";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -37,6 +40,7 @@ import doc = Mocha.reporters.doc;
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Summary} from "../../model/summary";
+import {Agent, Contact, Organization, Person} from "../../model/agent";
 
 let xpath = require('xpath');
 

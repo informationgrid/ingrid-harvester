@@ -24,7 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Agent, Contact, DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
+import {GenericMapper} from "../generic.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -37,9 +37,12 @@ import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {Summary} from "../../model/summary";
-import { pluPlanState, pluPlanType, pluProcedureState } from "../../profiles/plu/model/dcatApPlu.document";
+import { pluPlanState, pluPlanType, pluProcedureState } from "../../model/dcatApPlu.model";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { MiscUtils } from '../../utils/misc.utils';
+import {Agent, Contact, Organization, Person} from "../../model/agent";
+import {DateRange} from "../../model/dateRange";
+import {Distribution} from "../../model/distribution";
 
 let xpath = require('xpath');
 

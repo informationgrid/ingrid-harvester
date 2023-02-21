@@ -26,72 +26,18 @@ import {License} from '@shared/license.model';
 import * as moment from 'moment';
 import {ImporterSettings} from "../importer.settings";
 import {getLogger} from "log4js";
-import {Summary} from "./summary";
-import {Rules} from "./rules";
-import { Catalog } from '../profiles/plu/model/dcatApPlu.document';
+import {Summary} from "../model/summary";
+import {Rules} from "../model/rules";
+import {Contact, Organization, Person, Agent} from "../model/agent";
+import {Distribution} from "../model/distribution";
+import {DateRange} from "../model/dateRange";
+import {Catalog} from "../model/dcatApPlu.model";
 
 moment.locale('de');
-
-export interface Distribution {
-    format?: string[];
-    accessURL: string;
-    downloadURL?: string;
-    id?: string;
-    title?: string;
-    description?: string;
-    issued?: Date;
-    modified?: Date;
-    byteSize?: number;
-    period?: DateRange;
-    pluDocType?: string;
-}
-export interface Agent {
-    homepage?: string;
-    mbox?: string;
-    type?: string;
-}
-export interface Person extends Agent {
-    name: string;
-}
-export interface Organization extends Agent {
-    organization: string;
-}
-export interface DateRange {
-    gte?: Date,
-    lte?: Date
-}
-export interface Contact {
-    fn: string,
-    hasCountryName?: string,
-    hasLocality?: string,
-    hasPostalCode?: string,
-    hasRegion?: string,
-    hasStreetAddress?: string,
-    hasEmail?: string,
-    hasTelephone?: string,
-    hasUID?: string,
-    hasURL?: string,
-    hasOrganizationName?: string
-}
-
 
 export abstract class GenericMapper {
 
     protected moment = moment;
-
-    protected sizeMap = {
-        byte: 1,
-        bytes: 1,
-        kilobyte: 1000,
-        kilobytes: 1000,
-        kb: 1000,
-        megabyte: 10000000,
-        megabytes: 10000000,
-        mb: 10000000,
-        gigabyte: 10000000000,
-        gigabytes: 10000000000,
-        gb: 10000000000,
-    };
 
     protected static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
 

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {GenericMapper} from "./generic.mapper";
+import {GenericMapper} from "../importer/generic.mapper";
 
 export abstract class IndexDocument {
 

@@ -24,10 +24,11 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Agent, DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
+import {GenericMapper} from '../generic.mapper';
+import {Distribution} from "../../model/distribution";
+import {DateRange} from "../../model/dateRange";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
-import {UrlUtils} from "../../utils/url.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
 import {SparqlSummary} from "./sparql.importer";
 import {OptionsWithUri} from "request-promise";
@@ -35,8 +36,8 @@ import {SparqlSettings} from './sparql.settings';
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
-import {map} from "rxjs/operators";
 import {Summary} from "../../model/summary";
+import {Person} from "../../model/agent";
 
 let xpath = require('xpath');
 

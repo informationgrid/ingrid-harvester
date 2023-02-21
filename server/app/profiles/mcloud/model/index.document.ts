@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {GenericMapper} from "../../../model/generic.mapper";
+import {GenericMapper} from "../../../importer/generic.mapper";
 import {IndexDocument} from "../../../model/index.document";
 
 export class mcloudDocument extends IndexDocument{

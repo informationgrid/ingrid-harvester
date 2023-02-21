@@ -26,10 +26,10 @@ import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
 import {configure, getLogger} from "log4js";
 import {TestUtils} from "./utils/test-utils";
-import {IndexDocument} from '../app/profiles/mcloud/model/index.document';
 import {ExcelImporter} from '../app/importer/excel/excel.importer';
 import {ExcelSettings} from '../app/importer/excel/excel.settings';
 import {ExcelMapper} from '../app/importer/excel/excel.mapper';
+import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
 
 let log = getLogger();
 configure('./log4js.json');
@@ -60,11 +60,11 @@ describe('Import Excel', function () {
             isIncremental: false,
             maxConcurrent: 1
         };
-        let importer = new ExcelImporter(settings);
+        let importer = new ExcelImporter(ProfileFactoryLoader.get(), settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(3, {issued: "2019-01-08T16:33:11.168Z"}));
 
-        indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
+        indexDocumentCreateSpy = sinon.spy(ProfileFactoryLoader.get().getIndexDocument(), 'create');
 
         importer.run.subscribe({
             complete: async () => {

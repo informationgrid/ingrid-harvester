@@ -33,11 +33,11 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DefaultXpathSettings, WfsSettings} from './wfs.settings';
 import {FilterUtils} from "../../utils/filter.utils";
-import { Contact } from "../../model/generic.mapper";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import { XPathUtils } from '../../utils/xpath.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
+import {Contact} from "../../model/agent";
 
 const fs = require('fs');
 const xpath = require('xpath');

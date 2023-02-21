@@ -21,34 +21,38 @@
  * ==================================================
  */
 
+import {OptionsWithUri} from 'request-promise';
+import {License} from '@shared/license.model';
+import * as moment from 'moment';
+import {ImporterSettings} from "../importer.settings";
+import {getLogger} from "log4js";
+import {Summary} from "./summary";
+import {Rules} from "./rules";
+import { Catalog } from '../profiles/plu/model/dcatApPlu.document';
 
-import {Distribution} from "./distribution";
-
-export class RuleResult {
-    constructor(
-        public valid: boolean,
-        public skipped: boolean
-    ) {
-    }
+export interface Agent {
+    homepage?: string;
+    mbox?: string;
+    type?: string;
+}
+export interface Person extends Agent {
+    name: string;
+}
+export interface Organization extends Agent {
+    organization: string;
+}
+export interface Contact {
+    fn: string,
+    hasCountryName?: string,
+    hasLocality?: string,
+    hasPostalCode?: string,
+    hasRegion?: string,
+    hasStreetAddress?: string,
+    hasEmail?: string,
+    hasTelephone?: string,
+    hasUID?: string,
+    hasURL?: string,
+    hasOrganizationName?: string
 }
 
-export class Rules {
 
-    static containsDocumentsWithData(distributions: Distribution[], blacklistedFormats: string[]): RuleResult {
-        const valid = distributions.some(dist => this.isDataDocument(dist, blacklistedFormats));
-        if (!valid) {
-            return new RuleResult(false, true);
-        }
-        return new RuleResult(true, false);
-    }
-
-    /**
-     * A distribution containing at least one format which belongs to non-data is defined
-     * as not a data document.
-     * @param dist
-     * @param blacklistedFormats
-     */
-    private static isDataDocument(dist: Distribution, blacklistedFormats: string[]) {
-        return dist.format.every(format => blacklistedFormats.indexOf(format.toLowerCase()) === -1);
-    }
-}

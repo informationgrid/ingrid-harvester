@@ -24,7 +24,9 @@
 /**
  * A mapper for ISO-XML documents harvested over WFS.
  */
-import {Contact, DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
+import {GenericMapper} from '../generic.mapper';
+import {Distribution} from "../../model/distribution";
+import {DateRange} from "../../model/dateRange";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -35,9 +37,10 @@ import {WfsSettings} from './wfs.settings';
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {Summary} from "../../model/summary";
-import { pluDocType, pluPlanState, pluPlanType, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../../profiles/plu/model/dcatApPlu.document";
+import { pluDocType, pluPlanState, pluPlanType, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../../model/dcatApPlu.model";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from "../../utils/xpath.utils";
+import {Contact, Organization, Person} from "../../model/agent";
 
 export class WfsMapper extends GenericMapper {
 

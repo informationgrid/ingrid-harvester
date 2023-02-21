@@ -27,7 +27,7 @@
 import {getLogger} from 'log4js';
 import {OptionsWithUri} from 'request-promise';
 import {CkanSettings, ProviderField} from './ckan.settings';
-import {DateRange, Distribution, GenericMapper, Organization, Person} from '../../model/generic.mapper';
+import {GenericMapper} from '../generic.mapper';
 import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from '../../utils/http-request.utils';
 import {UrlUtils} from '../../utils/url.utils';
 import {Summary} from '../../model/summary';
@@ -35,6 +35,9 @@ import {throwError} from 'rxjs';
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
+import {Organization, Person} from "../../model/agent";
+import {Distribution} from "../../model/distribution";
+import {DateRange} from "../../model/dateRange";
 
 let mapping = require('../../../mappings.json');
 let markdown = require('markdown').markdown;
@@ -48,6 +51,20 @@ export interface CkanMapperData {
 }
 
 export class CkanMapper extends GenericMapper {
+
+    protected sizeMap = {
+        byte: 1,
+        bytes: 1,
+        kilobyte: 1000,
+        kilobytes: 1000,
+        kb: 1000,
+        megabyte: 10000000,
+        megabytes: 10000000,
+        mb: 10000000,
+        gigabyte: 10000000000,
+        gigabytes: 10000000000,
+        gb: 10000000000,
+    };
 
     private log = getLogger();
 

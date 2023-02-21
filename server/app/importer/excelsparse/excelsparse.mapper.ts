@@ -22,7 +22,9 @@
  */
 
 import {UrlUtils} from '../../utils/url.utils';
-import {DateRange, Distribution, GenericMapper, Organization, Person} from '../../model/generic.mapper';
+import {GenericMapper} from '../generic.mapper';
+import {Distribution} from "../../model/distribution";
+import {DateRange} from "../../model/dateRange";
 // import {License} from '@shared/license.model';
 import {Summary} from '../../model/summary';
 import {ExcelSparseSettings} from './excelsparse.settings';
@@ -32,6 +34,7 @@ import {ImporterSettings} from "../../importer.settings";
 // import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Columns} from './excelsparse.importer';
 import { MiscUtils } from '../../utils/misc.utils';
+import {Organization, Person} from "../../model/agent";
 
 const log = require('log4js').getLogger(__filename);
 

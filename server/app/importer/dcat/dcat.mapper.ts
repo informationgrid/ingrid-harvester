@@ -24,7 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Contact, DateRange, Distribution, GenericMapper, Person} from "../../model/generic.mapper";
+import {GenericMapper} from "../generic.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -37,6 +37,9 @@ import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Summary} from "../../model/summary";
+import {Contact, Person} from "../../model/agent";
+import {Distribution} from "../../model/distribution";
+import {DateRange} from "../../model/dateRange";
 
 let xpath = require('xpath');
 
