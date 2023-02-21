@@ -13,8 +13,8 @@
     "build": "tsc --outDir build",
     "postbuild": "copyfiles '../entrypoint.sh' './*.json' 'app/**/*.json' build/server",
     "install-production": "NODE_ENV=production npm install",
-    "test": "mocha -r ts-node/register test/**/*.ts",
-    "test-jenkins": "mocha -r ts-node/register test/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml"
+    "test": "mocha -r ts-node/register test/**/*.ts  --profile=mcloud",
+    "test-jenkins": "mocha -r ts-node/register test/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml  --profile=mcloud"
   },
   "author": "andre.wallat@wemove.com",
   "license": "EUPL",

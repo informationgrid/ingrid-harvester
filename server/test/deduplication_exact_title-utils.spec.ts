@@ -41,7 +41,7 @@ xdescribe('deduplication by exact title', function() {
 
     // @ts-ignore
     let settings: ElasticSettings = {
-        elasticSearchUrl: 'localhost:9200',
+        elasticSearchUrl: 'http://localhost:9200',
         deduplicationAlias: 'test-dedup'
     };
 
