@@ -28,7 +28,7 @@ import {ImporterSettings} from "../importer.settings";
 import {getLogger} from "log4js";
 import {Summary} from "./summary";
 import {Rules} from "./rules";
-import { Catalog } from './dcatApPlu.document';
+import { Catalog } from '../profiles/plu/model/dcatApPlu.document';
 
 moment.locale('de');
 

@@ -24,7 +24,6 @@
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
 import {elasticsearchMapping} from '../../elastic.mapping';
 import {elasticsearchSettings} from '../../elastic.settings';
-import {IndexDocument} from '../../model/index.document';
 import {CswMapper} from './csw.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -37,6 +36,7 @@ import {DefaultXpathSettings, CswSettings} from './csw.settings';
 import {FilterUtils} from "../../utils/filter.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import { SummaryService } from '../../services/config/SummaryService';
+import {ProfileFactory} from "../../profiles/profile.factory";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -54,6 +54,7 @@ export class CswSummary extends Summary {
 }
 
 export class CswImporter implements Importer {
+    private profile: ProfileFactory;
     private readonly settings: CswSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
@@ -82,7 +83,9 @@ export class CswImporter implements Importer {
 
     private observer: Observer<ImportLogMessage>;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(profile: ProfileFactory, settings, requestDelegate?: RequestDelegate) {
+        this.profile = profile;
+
         // merge default settings with configured ones
         settings = MiscUtils.merge(CswImporter.defaultSettings, settings);
 
@@ -377,7 +380,7 @@ export class CswImporter implements Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary, this.generalInfo);
 
-            let doc: any = await IndexDocument.create(mapper).catch(e => {
+            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;

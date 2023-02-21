@@ -21,9 +21,12 @@
  * ==================================================
  */
 
-import {GenericMapper} from "./generic.mapper";
 
-export abstract class IndexDocument {
+import {IndexDocument} from "../model/index.document";
+import {mcloudFactory} from "./mcloud/profile.factory";
 
-    abstract create(mapper: GenericMapper) : Promise<any>;
+export abstract class ProfileFactory {
+    private static instance: ProfileFactory;
+
+    abstract getIndexDocument() : IndexDocument;
 }

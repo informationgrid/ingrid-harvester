@@ -24,7 +24,6 @@
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
 import {elasticsearchMapping} from '../../elastic.mapping';
 import {elasticsearchSettings} from '../../elastic.settings';
-import {IndexDocument} from '../../model/index.document';
 import {OaiMapper} from './oai.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -36,6 +35,7 @@ import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {OaiSettings} from './oai.settings';
 import {FilterUtils} from "../../utils/filter.utils";
 import { MiscUtils } from '../../utils/misc.utils';
+import {ProfileFactory} from "../../profiles/profile.factory";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -59,6 +59,7 @@ export class OaiSummary extends Summary {
 }
 
 export class OaiImporter implements Importer {
+    private profile: ProfileFactory;
     private readonly settings: OaiSettings;
     elastic: ElasticSearchUtils;
     private requestDelegate: RequestDelegate;
@@ -84,7 +85,9 @@ export class OaiImporter implements Importer {
 
     private observer: Observer<ImportLogMessage>;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(profile: ProfileFactory, settings, requestDelegate?: RequestDelegate) {
+        this.profile = profile;
+
         // merge default settings with configured ones
         settings = MiscUtils.merge(OaiImporter.defaultSettings, settings);
 
@@ -205,7 +208,7 @@ export class OaiImporter implements Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary);
 
-            let doc: any = await IndexDocument.create(mapper).catch(e => {
+            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;

@@ -35,7 +35,7 @@ import {WfsSettings} from './wfs.settings';
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {Summary} from "../../model/summary";
-import { pluDocType, pluPlanState, pluPlanType, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../../model/dcatApPlu.document";
+import { pluDocType, pluPlanState, pluPlanType, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from "../../profiles/plu/model/dcatApPlu.document";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from "../../utils/xpath.utils";
 

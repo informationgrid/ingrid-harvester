@@ -21,9 +21,13 @@
  * ==================================================
  */
 
-import {GenericMapper} from "./generic.mapper";
 
-export abstract class IndexDocument {
+import {pluDocument} from "./model/index.document";
+import {ProfileFactory} from "../profile.factory";
 
-    abstract create(mapper: GenericMapper) : Promise<any>;
+export class pluFactory extends ProfileFactory{
+
+    getIndexDocument() : pluDocument{
+        return new pluDocument;
+    }
 }

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Agent, Contact, DateRange, Distribution, GenericMapper, Organization, Person } from "./generic.mapper";
+import { Agent, Contact, DateRange, Distribution, GenericMapper, Organization, Person } from "../../../model/generic.mapper";
 var esc = require('xml-escape');
 
 function optional(wrapper: string | Function, variable: any | any[]) {

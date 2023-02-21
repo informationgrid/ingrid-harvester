@@ -24,7 +24,6 @@
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
 import {elasticsearchMapping} from '../../elastic.mapping';
 import {elasticsearchSettings} from '../../elastic.settings';
-import {IndexDocument} from '../../model/index.document';
 import {SparqlMapper} from './sparql.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -36,6 +35,7 @@ import {FilterUtils} from "../../utils/filter.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
 import {ConfigService} from "../../services/config/ConfigService";
 import { MiscUtils } from '../../utils/misc.utils';
+import {ProfileFactory} from "../../profiles/profile.factory";
 
 const plain_fetch = require('node-fetch');
 const HttpsProxyAgent = require('https-proxy-agent');
@@ -62,6 +62,7 @@ export class SparqlSummary extends Summary {
 }
 
 export class SparqlImporter implements Importer {
+    private profile: ProfileFactory;
     private readonly settings: SparqlSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
@@ -90,7 +91,9 @@ export class SparqlImporter implements Importer {
 
     private observer: Observer<ImportLogMessage>;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(profile: ProfileFactory, settings, requestDelegate?: RequestDelegate) {
+        this.profile = profile;
+
         // merge default settings with configured ones
         settings = MiscUtils.merge(SparqlImporter.defaultSettings, settings);
 
@@ -245,7 +248,7 @@ export class SparqlImporter implements Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary);
 
-            let doc: any = await IndexDocument.create(mapper).catch(e => {
+            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;

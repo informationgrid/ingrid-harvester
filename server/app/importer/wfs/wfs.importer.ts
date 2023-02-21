@@ -25,7 +25,6 @@ import { decode } from 'iconv-lite';
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
 import {elasticsearchMapping} from '../../elastic.mapping';
 import {elasticsearchSettings} from '../../elastic.settings';
-import {IndexDocument} from '../../model/index.document';
 import {WfsMapper} from './wfs.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -40,6 +39,7 @@ import { Contact } from "../../model/generic.mapper";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import { XPathUtils } from '../../utils/xpath.utils';
+import {ProfileFactory} from "../../profiles/profile.factory";
 
 const fs = require('fs');
 const xpath = require('xpath');
@@ -90,6 +90,7 @@ export class WfsSummary extends Summary {
 // }
 
 export class WfsImporter implements Importer {
+    private profile: ProfileFactory;
     private readonly settings: WfsSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
@@ -123,7 +124,9 @@ export class WfsImporter implements Importer {
 
     private observer: Observer<ImportLogMessage>;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(profile: ProfileFactory, settings, requestDelegate?: RequestDelegate) {
+        this.profile = profile;
+
         // merge default settings with configured ones
         settings = MiscUtils.merge(WfsImporter.defaultSettings, settings);
 
@@ -429,7 +432,7 @@ export class WfsImporter implements Importer {
 
             let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.generalInfo, geojsonUtils);
 
-            let doc: any = await IndexDocument.create(mapper).catch(e => {
+            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;

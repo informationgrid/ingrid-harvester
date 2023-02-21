@@ -37,7 +37,7 @@ import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {Summary} from "../../model/summary";
-import { pluPlanState, pluPlanType, pluProcedureState } from "../../model/dcatApPlu.document";
+import { pluPlanState, pluPlanType, pluProcedureState } from "../../profiles/plu/model/dcatApPlu.document";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 

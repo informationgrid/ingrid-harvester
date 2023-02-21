@@ -24,7 +24,6 @@
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
 import {elasticsearchSettings} from '../../elastic.settings';
 import {elasticsearchMapping} from '../../elastic.mapping';
-import {IndexDocument} from '../../model/index.document';
 import {Summary} from '../../model/summary';
 import {DefaultImporterSettings, Importer} from '../../importer';
 import {RequestDelegate} from '../../utils/http-request.utils';
@@ -34,12 +33,14 @@ import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {CkanSettings} from './ckan.settings';
 import {FilterUtils} from '../../utils/filter.utils';
 import { MiscUtils } from '../../utils/misc.utils';
+import {ProfileFactory} from "../../profiles/profile.factory";
 
 let log = require('log4js').getLogger(__filename);
 const uuidv5 = require('uuid/v5');
 const UUID_NAMESPACE = '6891a617-ab3b-4060-847f-61e31d6ccf6f';
 
 export class CkanImporter implements Importer {
+    private profile: ProfileFactory;
     private readonly settings: CkanSettings;
     elastic: ElasticSearchUtils;
     private requestDelegate: RequestDelegate;
@@ -78,7 +79,9 @@ export class CkanImporter implements Importer {
      * Create the importer and initialize with settings.
      * @param { {ckanBaseUrl, defaultMcloudSubgroup, mapper} }settings
      */
-    constructor(settings: CkanSettings) {
+    constructor(profile: ProfileFactory, settings: CkanSettings) {
+        this.profile = profile;
+
         // merge default settings with configured ones
         settings = MiscUtils.merge(CkanImporter.defaultSettings, settings);
 
@@ -114,7 +117,7 @@ export class CkanImporter implements Importer {
             // Execute the mappers
             let mapper = new CkanMapper(this.settings, data);
 
-            let doc: any = await IndexDocument.create(mapper)
+            let doc: any = await this.profile.getIndexDocument().create(mapper)
                 .catch(e => {
                     log.error('Error creating index document', e);
                     this.summary.appErrors.push(e.toString());

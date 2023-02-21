@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import {IndexDocument} from '../../model/index.document';
 import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
 import {ExcelSparseMapper} from './excelsparse.mapper';
 import {Workbook, Worksheet} from 'exceljs';
@@ -34,11 +33,12 @@ import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DefaultCatalogSettings, ExcelSparseSettings} from './excelsparse.settings';
 import {FilterUtils} from "../../utils/filter.utils";
 import { MiscUtils } from '../../utils/misc.utils';
+import {ProfileFactory} from "../../profiles/profile.factory";
 
 let log = require('log4js').getLogger(__filename);
 
 export class ExcelSparseImporter implements Importer {
-
+    private profile: ProfileFactory;
     settings: ExcelSparseSettings;
     elastic: ElasticSearchUtils;
     excelFilepath: string;
@@ -61,7 +61,9 @@ export class ExcelSparseImporter implements Importer {
      * Create the importer and initialize with settings.
      * @param { {filePath, mapper} }settings
      */
-    constructor(settings) {
+    constructor(profile: ProfileFactory, settings) {
+        this.profile = profile;
+
         // merge default settings with configured ones
         settings = MiscUtils.merge(ExcelSparseImporter.defaultSettings, settings);
 
@@ -142,7 +144,7 @@ export class ExcelSparseImporter implements Importer {
                     currentIndexName: this.elastic.indexName,
                     summary: this.summary
                 }, generalInfo);
-                let doc = await IndexDocument.create(mapper)
+                let doc = await this.profile.getIndexDocument().create(mapper)
                     .catch(e => this.handleIndexDocError(e, mapper));
 
                 // add document to buffer and send to elasticsearch if full

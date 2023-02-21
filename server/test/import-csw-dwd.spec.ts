@@ -27,7 +27,7 @@ import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
 import {TestUtils} from "./utils/test-utils";
 import {CswImporter} from '../app/importer/csw/csw.importer';
-import {IndexDocument} from '../app/model/index.document';
+import {IndexDocument} from '../app/profiles/mcloud/model/index.document';
 
 let log = getLogger();
 configure('./log4js.json');

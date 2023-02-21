@@ -26,7 +26,7 @@ import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
 import {configure, getLogger} from "log4js";
 import {TestUtils} from "./utils/test-utils";
-import {IndexDocument} from '../app/model/index.document';
+import {IndexDocument} from '../app/profiles/mcloud/model/index.document';
 import {ExcelImporter} from '../app/importer/excel/excel.importer';
 import {ExcelSettings} from '../app/importer/excel/excel.settings';
 import {ExcelMapper} from '../app/importer/excel/excel.mapper';

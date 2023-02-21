@@ -26,7 +26,7 @@ import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
 import {TestUtils} from "./utils/test-utils";
-import {IndexDocument} from '../app/model/index.document';
+import {IndexDocument} from '../app/profiles/mcloud/model/index.document';
 import {CswSettings} from '../app/importer/csw/csw.settings';
 import {CswImporter} from '../app/importer/csw/csw.importer';
 
