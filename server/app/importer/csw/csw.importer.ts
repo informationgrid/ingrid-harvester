@@ -52,7 +52,7 @@ export class CswSummary extends Summary {
 }
 
 export class CswImporter implements Importer {
-    private profile: ProfileFactory;
+    private profile: ProfileFactory<CswMapper>;
     private readonly settings: CswSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
@@ -81,7 +81,7 @@ export class CswImporter implements Importer {
 
     private observer: Observer<ImportLogMessage>;
 
-    constructor(profile: ProfileFactory, settings, requestDelegate?: RequestDelegate) {
+    constructor(profile: ProfileFactory<CswMapper>, settings, requestDelegate?: RequestDelegate) {
         this.profile = profile;
 
         // merge default settings with configured ones

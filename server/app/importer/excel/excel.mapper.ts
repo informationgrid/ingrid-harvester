@@ -22,7 +22,7 @@
  */
 
 import {UrlUtils} from '../../utils/url.utils';
-import {GenericMapper} from '../generic.mapper';
+import {BaseMapper} from '../base.mapper';
 import {Distribution} from "../../model/distribution";
 import {DateRange} from "../../model/dateRange";
 import {License} from '@shared/license.model';
@@ -36,7 +36,7 @@ import {Organization, Person} from "../../model/agent";
 
 const log = require('log4js').getLogger(__filename);
 
-export class ExcelMapper extends GenericMapper {
+export class ExcelMapper extends BaseMapper {
 
     data;
     id;
@@ -63,11 +63,11 @@ export class ExcelMapper extends GenericMapper {
         super.init();
     }
 
-    protected getSettings(): ImporterSettings {
+    public getSettings(): ImporterSettings {
         return this.settings;
     }
 
-    protected getSummary(): Summary{
+    public getSummary(): Summary{
         return this.summary;
     }
 
@@ -83,7 +83,7 @@ export class ExcelMapper extends GenericMapper {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
         const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
-        return publishers.map(p => GenericMapper.createPublisher(p.name, p.url));
+        return publishers.map(p => BaseMapper.createPublisher(p.name, p.url));
     }
 
     _getThemes(): string[] {
@@ -91,10 +91,10 @@ export class ExcelMapper extends GenericMapper {
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
         const dcatCategoriesString: string = this.columnValues[this.columnMap.DCATKategorie];
         if (dcatCategoriesString) {
-            return dcatCategoriesString.split(',').map(cat => GenericMapper.DCAT_CATEGORY_URL + cat);
+            return dcatCategoriesString.split(',').map(cat => BaseMapper.DCAT_CATEGORY_URL + cat);
         } else {
             return this.settings.defaultDCATCategory
-                .map( category => GenericMapper.DCAT_CATEGORY_URL + category);
+                .map( category => BaseMapper.DCAT_CATEGORY_URL + category);
         }
 
     }
@@ -142,7 +142,7 @@ export class ExcelMapper extends GenericMapper {
     }
 
     _getMetadataSource() {
-        return GenericMapper.createSourceAttribution('mcloud-excel');
+        return BaseMapper.createSourceAttribution('mcloud-excel');
     }
 
     _isRealtime() {
@@ -417,50 +417,6 @@ export class ExcelMapper extends GenericMapper {
         }
 
         return config;
-    }
-
-    _getBoundingBoxGml() {
-        return undefined;
-    }
-
-    _getSpatialGml() {
-        return undefined;
-    }
-
-    _getCentroid() {
-        return undefined;
-    }
-
-    async _getCatalog() {
-        return undefined;
-    }
-
-    _getPluPlanState() {
-        return undefined;
-    }
-
-    _getPluPlanType() {
-        return undefined;
-    }
-
-    _getPluPlanTypeFine() {
-        return undefined;
-    }
-
-    _getPluProcedureStartDate() {
-        return undefined;
-    }
-
-    _getPluProcedureState() {
-        return undefined;
-    }
-
-    _getPluProcedureType() {
-        return undefined;
-    }
-
-    _getPluProcessSteps() {
-        return undefined;
     }
 
     /**

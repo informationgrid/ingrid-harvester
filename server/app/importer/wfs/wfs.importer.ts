@@ -88,7 +88,7 @@ export class WfsSummary extends Summary {
 // }
 
 export class WfsImporter implements Importer {
-    private profile: ProfileFactory;
+    private profile: ProfileFactory<WfsMapper>;
     private readonly settings: WfsSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
@@ -122,7 +122,7 @@ export class WfsImporter implements Importer {
 
     private observer: Observer<ImportLogMessage>;
 
-    constructor(profile: ProfileFactory, settings, requestDelegate?: RequestDelegate) {
+    constructor(profile: ProfileFactory<WfsMapper>, settings, requestDelegate?: RequestDelegate) {
         this.profile = profile;
 
         // merge default settings with configured ones

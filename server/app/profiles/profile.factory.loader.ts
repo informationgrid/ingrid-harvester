@@ -26,11 +26,12 @@ import {IndexDocument} from "../model/index.document";
 import {mcloudFactory} from "./mcloud/profile.factory";
 import {ProfileFactory} from "./profile.factory";
 import {pluFactory} from "./plu/profile.factory";
+import {BaseMapper} from "../importer/base.mapper";
 
 export class ProfileFactoryLoader {
-    private static instance: ProfileFactory;
+    private static instance: ProfileFactory<BaseMapper>;
 
-    static get(): ProfileFactory {
+    static get(): ProfileFactory<BaseMapper> {
        if(this.instance) return this.instance;
 
         console.log('Find Profile')

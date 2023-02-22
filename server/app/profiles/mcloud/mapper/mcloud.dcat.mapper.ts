@@ -21,14 +21,13 @@
  * ==================================================
  */
 
+import {mcloudMapper} from "./mcloud.mapper";
+import {DcatMapper} from "../../../importer/dcat/dcat.mapper";
 
-import {IndexDocument} from "../model/index.document";
-import {BaseMapper} from "../importer/base.mapper";
-
-export abstract class ProfileFactory<M extends BaseMapper> {
-    abstract getIndexDocument() : IndexDocument<M>;
-
-    abstract getElasticSettings(): any;
-    abstract getElasticMapping(): any;
-
+export class mcloudDcatMapper extends mcloudMapper<DcatMapper> {
+    getCategories(): string[] {
+        return [];
+    }
 }
+
+

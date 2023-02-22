@@ -21,11 +21,16 @@
  * ==================================================
  */
 
-import {GenericMapper } from "../../../importer/generic.mapper";
+import {BaseMapper } from "../../../importer/base.mapper";
 import {Contact, Organization, Person} from "../../../model/agent";
 import {Distribution} from "../../../model/distribution";
 import {DateRange} from "../../../model/dateRange";
 import {Record, ProcessStep} from "../../../model/dcatApPlu.model";
+import {CswMapper} from "../../../importer/csw/csw.mapper";
+import {ExcelSparseMapper} from "../../../importer/excelsparse/excelsparse.mapper";
+import {WfsMapper} from "../../../importer/wfs/wfs.mapper";
+import {PluMapper} from "../mapper/plu.mapper";
+import {pluMapperFactory} from "../mapper/plu.mapper.factory";
 var esc = require('xml-escape');
 
 function optional(wrapper: string | Function, variable: any | any[]) {
@@ -62,7 +67,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         return 'dcat_ap_plu';
     }
 
-    static async create(mapper: GenericMapper): Promise<string> {
+    static async create(_mapper: CswMapper | ExcelSparseMapper | WfsMapper): Promise<string> {
+        let mapper = pluMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
         let centroid = mapper.getCentroid();
         let contributors = null;    // TODO

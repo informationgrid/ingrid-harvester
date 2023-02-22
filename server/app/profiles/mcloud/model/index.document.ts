@@ -21,12 +21,21 @@
  * ==================================================
  */
 
-import {GenericMapper} from "../../../importer/generic.mapper";
+import {BaseMapper} from "../../../importer/base.mapper";
 import {IndexDocument} from "../../../model/index.document";
+import {mcloudMapper} from "../mapper/mcloud.mapper";
+import {CkanMapper} from "../../../importer/ckan/ckan.mapper";
+import {CswMapper} from "../../../importer/csw/csw.mapper";
+import {DcatMapper} from "../../../importer/dcat/dcat.mapper";
+import {ExcelMapper} from "../../../importer/excel/excel.mapper";
+import {OaiMapper} from "../../../importer/oai/oai.mapper";
+import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
+import {mcloudMapperFactory} from "../mapper/mcloud.mapper.factory";
 
-export class mcloudDocument extends IndexDocument{
+export class mcloudDocument extends IndexDocument<CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper>{
 
-    async create(mapper: GenericMapper) : Promise<any> {
+    async create(_mapper: CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper) : Promise<any> {
+        let mapper = mcloudMapperFactory.getMapper(_mapper);
         let result = await {
             priority: mapper.getPriority(),
             completion: mapper.getAutoCompletion(),

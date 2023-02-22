@@ -24,7 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over WFS.
  */
-import {GenericMapper} from '../generic.mapper';
+import {BaseMapper} from '../base.mapper';
 import {Distribution} from "../../model/distribution";
 import {DateRange} from "../../model/dateRange";
 import {License} from '@shared/license.model';
@@ -42,7 +42,7 @@ import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from "../../utils/xpath.utils";
 import {Contact, Organization, Person} from "../../model/agent";
 
-export class WfsMapper extends GenericMapper {
+export class WfsMapper extends BaseMapper {
 
     private log = getLogger();
 
@@ -86,11 +86,11 @@ export class WfsMapper extends GenericMapper {
         super.init();
     }
 
-    protected getSettings(): ImporterSettings {
+    public getSettings(): ImporterSettings {
         return this.settings;
     }
 
-    protected getSummary(): Summary {
+    public getSummary(): Summary {
         return this.summary;
     }
 
@@ -268,53 +268,6 @@ export class WfsMapper extends GenericMapper {
     // TODO:check
     _getCitation(): string {
         return undefined;
-    }
-
-    // TODO
-    async _getDisplayContacts() {
-
-        let contactPoint = await this.getContactPoint();
-        let displayContact: Person;
-
-        if (contactPoint) {
-            let displayName;
-
-            if (contactPoint['organization-name']) {
-                displayName = contactPoint['organization-name'];
-            } else if (contactPoint.fn) {
-                displayName = contactPoint.fn;
-            }
-
-            displayContact = {
-                name: displayName,
-                homepage: contactPoint.hasURL
-            };
-        } else {
-            let publisher = await this._getPublisher();
-
-            if (publisher) {
-                let displayName;
-
-                if ('organization' in publisher[0]) {
-                    displayName = publisher[0].organization;
-                } else if ('name' in publisher[0]) {
-                    displayName = publisher[0].name;
-                }
-
-                displayContact = {
-                    name: displayName.trim(),
-                    homepage: publisher[0].homepage
-                };
-            } else {
-                let creator = this.getCreator();
-
-                displayContact = {
-                    name: creator[0].name.trim(),
-                    homepage: creator[0].homepage
-                };
-            }
-        }
-        return [displayContact];
     }
 
     _getGeneratedId(): string {
@@ -556,100 +509,100 @@ export class WfsMapper extends GenericMapper {
             switch (category) {
 
                 case "farming":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'AGRI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'AGRI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENVI');
                     break;
                 case "biota":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENVI');
                     break;
                 case "boundaries":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'GOVE');
                     break;
                 case "climatologyMeteorology Atmosphere":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'TECH');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'TECH');
                     break;
                 case "economy":
                     themes.push('ECON');
                     if (keywords.includes("Energiequellen")) {
-                        themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENER');
-                        themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENVI');
-                        themes.push(GenericMapper.DCAT_CATEGORY_URL + 'TECH');
+                        themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENER');
+                        themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENVI');
+                        themes.push(BaseMapper.DCAT_CATEGORY_URL + 'TECH');
                     }
                     if (keywords.includes("Mineralische Bodenschätze")) {
-                        themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENVI');
-                        themes.push(GenericMapper.DCAT_CATEGORY_URL + 'TECH');
+                        themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENVI');
+                        themes.push(BaseMapper.DCAT_CATEGORY_URL + 'TECH');
                     }
                     break;
                 case "elevation":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'GOVE');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'TECH');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'TECH');
                     break;
                 case "environment":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENVI');
                     break;
                 case "geoscientificInformation":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'TECH');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'TECH');
                     break;
                 case "health":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'HEAL');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'HEAL');
                     break;
                 case "imageryBaseMapsEarthCover ":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'GOVE');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'TECH');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'AGRI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'TECH');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'AGRI');
                     break;
                 case "intelligenceMilitary":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'JUST');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'JUST');
                     break;
                 case "inlandWaters":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'TRAN');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'AGRI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'TRAN');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'AGRI');
                     break;
                 case "location":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'GOVE');
                     break;
                 case "oceans":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'TRAN');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'AGRI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'TRAN');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'AGRI');
                     break;
                 case "planningCadastre":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'GOVE');
                     if (keywords.includes("Flurstücke/Grundstücke")) {
-                        themes.push(GenericMapper.DCAT_CATEGORY_URL + 'JUST');
+                        themes.push(BaseMapper.DCAT_CATEGORY_URL + 'JUST');
                     }
                     break;
                 case "society":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'SOCI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'EDUC');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'SOCI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'EDUC');
                     break;
                 case "structure":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'TRAN');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'TRAN');
                     if (keywords.includes("Produktions- und Industrieanlagen")) {
-                        themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ECON');
+                        themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ECON');
                     }
                     if (keywords.includes("Umweltüberwachung")) {
-                        themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENVI');
+                        themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENVI');
                     }
                     break;
                 case "transportation":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'TRAN');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'TRAN');
                     break;
                 case "utilitiesCommunication":
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENER');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(GenericMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENER');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(BaseMapper.DCAT_CATEGORY_URL + 'GOVE');
                     break;
             }
         });

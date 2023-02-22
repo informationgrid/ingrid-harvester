@@ -26,8 +26,16 @@ import {pluDocument} from "./model/index.document";
 import {ProfileFactory} from "../profile.factory";
 import {elasticsearchMapping} from "./elastic/elastic.mapping";
 import {elasticsearchSettings} from "./elastic/elastic.settings";
+import {CkanMapper} from "../../importer/ckan/ckan.mapper";
+import {CswMapper} from "../../importer/csw/csw.mapper";
+import {DcatMapper} from "../../importer/dcat/dcat.mapper";
+import {ExcelMapper} from "../../importer/excel/excel.mapper";
+import {OaiMapper} from "../../importer/oai/oai.mapper";
+import {SparqlMapper} from "../../importer/sparql/sparql.mapper";
+import {ExcelSparseMapper} from "../../importer/excelsparse/excelsparse.mapper";
+import {WfsMapper} from "../../importer/wfs/wfs.mapper";
 
-export class pluFactory extends ProfileFactory{
+export class pluFactory extends ProfileFactory<CswMapper | ExcelSparseMapper | WfsMapper>{
 
     getIndexDocument() : pluDocument{
         return new pluDocument;

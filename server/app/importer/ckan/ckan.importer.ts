@@ -38,7 +38,7 @@ const uuidv5 = require('uuid/v5');
 const UUID_NAMESPACE = '6891a617-ab3b-4060-847f-61e31d6ccf6f';
 
 export class CkanImporter implements Importer {
-    private profile: ProfileFactory;
+    private profile: ProfileFactory<CkanMapper>;
     private readonly settings: CkanSettings;
     elastic: ElasticSearchUtils;
     private requestDelegate: RequestDelegate;
@@ -77,7 +77,7 @@ export class CkanImporter implements Importer {
      * Create the importer and initialize with settings.
      * @param { {ckanBaseUrl, defaultMcloudSubgroup, mapper} }settings
      */
-    constructor(profile: ProfileFactory, settings: CkanSettings) {
+    constructor(profile: ProfileFactory<CkanMapper>, settings: CkanSettings) {
         this.profile = profile;
 
         // merge default settings with configured ones

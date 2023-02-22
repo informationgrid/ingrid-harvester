@@ -57,7 +57,7 @@ export class DcatSummary extends Summary {
 }
 
 export class DcatImporter implements Importer {
-    private profile: ProfileFactory;
+    private profile: ProfileFactory<DcatMapper>;
     private readonly settings: DcatSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
@@ -83,7 +83,7 @@ export class DcatImporter implements Importer {
 
     private observer: Observer<ImportLogMessage>;
 
-    constructor(profile: ProfileFactory, settings, requestDelegate?: RequestDelegate) {
+    constructor(profile: ProfileFactory<DcatMapper>, settings, requestDelegate?: RequestDelegate) {
         this.profile = profile;
 
         // merge default settings with configured ones

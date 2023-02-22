@@ -21,9 +21,15 @@
  * ==================================================
  */
 
-import {GenericMapper} from "../importer/generic.mapper";
+import {BaseMapper} from "../importer/base.mapper";
+import {CkanMapper} from "../importer/ckan/ckan.mapper";
+import {CswMapper} from "../importer/csw/csw.mapper";
+import {DcatMapper} from "../importer/dcat/dcat.mapper";
+import {ExcelMapper} from "../importer/excel/excel.mapper";
+import {OaiMapper} from "../importer/oai/oai.mapper";
+import {SparqlMapper} from "../importer/sparql/sparql.mapper";
 
-export abstract class IndexDocument {
+export abstract class IndexDocument<M extends BaseMapper> {
 
-    abstract create(mapper: GenericMapper) : Promise<any>;
+    abstract create(mapper: M) : Promise<any>;
 }

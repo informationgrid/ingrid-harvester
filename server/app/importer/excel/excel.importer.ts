@@ -36,7 +36,7 @@ import {ProfileFactory} from "../../profiles/profile.factory";
 let log = require('log4js').getLogger(__filename);
 
 export class ExcelImporter implements Importer {
-    private profile: ProfileFactory;
+    private profile: ProfileFactory<ExcelMapper>;
     settings: ExcelSettings;
     elastic: ElasticSearchUtils;
     excelFilepath: string;
@@ -57,7 +57,7 @@ export class ExcelImporter implements Importer {
      * Create the importer and initialize with settings.
      * @param { {filePath, mapper} }settings
      */
-    constructor(profile: ProfileFactory, settings) {
+    constructor(profile: ProfileFactory<ExcelMapper>, settings) {
         this.profile = profile;
 
         // merge default settings with configured ones

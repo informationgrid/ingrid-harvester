@@ -24,7 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {GenericMapper} from "../generic.mapper";
+import {BaseMapper} from "../base.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -43,7 +43,7 @@ import {DateRange} from "../../model/dateRange";
 
 let xpath = require('xpath');
 
-export class DcatMapper extends GenericMapper {
+export class DcatMapper extends BaseMapper {
 
     static FOAF = 'http://xmlns.com/foaf/0.1/';
     static LOCN = 'http://www.w3.org/ns/locn#';
@@ -120,11 +120,11 @@ export class DcatMapper extends GenericMapper {
             super.init();
     }
 
-    protected getSettings(): ImporterSettings {
+    public getSettings(): ImporterSettings {
         return this.settings;
     }
 
-    protected getSummary(): Summary{
+    public getSummary(): Summary{
         return this.summary;
     }
 
@@ -814,50 +814,6 @@ export class DcatMapper extends GenericMapper {
 
     protected getUuid(): string {
         return this.uuid;
-    }
-
-    _getBoundingBoxGml() {
-        return undefined;
-    }
-
-    _getSpatialGml() {
-        return undefined;
-    }
-
-    _getCentroid() {
-        return undefined;
-    }
-
-    async _getCatalog() {
-        return undefined;
-    }
-
-    _getPluPlanState() {
-        return undefined;
-    }
-
-    _getPluPlanType() {
-        return undefined;
-    }
-
-    _getPluPlanTypeFine() {
-        return undefined;
-    }
-
-    _getPluProcedureStartDate() {
-        return undefined;
-    }
-
-    _getPluProcedureState() {
-        return undefined;
-    }
-
-    _getPluProcedureType() {
-        return undefined;
-    }
-
-    _getPluProcessSteps() {
-        return undefined;
     }
 
     executeCustomCode(doc: any) {

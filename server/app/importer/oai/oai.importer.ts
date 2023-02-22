@@ -57,7 +57,7 @@ export class OaiSummary extends Summary {
 }
 
 export class OaiImporter implements Importer {
-    private profile: ProfileFactory;
+    private profile: ProfileFactory<OaiMapper>;
     private readonly settings: OaiSettings;
     elastic: ElasticSearchUtils;
     private requestDelegate: RequestDelegate;
@@ -83,7 +83,7 @@ export class OaiImporter implements Importer {
 
     private observer: Observer<ImportLogMessage>;
 
-    constructor(profile: ProfileFactory, settings, requestDelegate?: RequestDelegate) {
+    constructor(profile: ProfileFactory<OaiMapper>, settings, requestDelegate?: RequestDelegate) {
         this.profile = profile;
 
         // merge default settings with configured ones

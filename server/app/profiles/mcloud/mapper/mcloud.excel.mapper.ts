@@ -21,14 +21,13 @@
  * ==================================================
  */
 
+import {mcloudMapper} from "./mcloud.mapper";
+import {ExcelMapper} from "../../../importer/excel/excel.mapper";
 
-import {IndexDocument} from "../model/index.document";
-import {BaseMapper} from "../importer/base.mapper";
-
-export abstract class ProfileFactory<M extends BaseMapper> {
-    abstract getIndexDocument() : IndexDocument<M>;
-
-    abstract getElasticSettings(): any;
-    abstract getElasticMapping(): any;
-
+export class mcloudExcelMapper extends mcloudMapper<ExcelMapper> {
+    getCategories(): any {
+        this.baseMapper._getCategories();
+    }
 }
+
+

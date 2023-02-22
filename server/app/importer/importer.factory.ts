@@ -33,10 +33,11 @@ import {SparqlImporter} from "./sparql/sparql.importer";
 import {WfsImporter} from "./wfs/wfs.importer";
 import { Harvester } from "@shared/harvester";
 import {ProfileFactory} from "../profiles/profile.factory";
+import {BaseMapper} from "./base.mapper";
 
 export class ImporterFactory {
 
-    public static get(profile: ProfileFactory, config: Harvester): Importer {
+    public static get(profile: ProfileFactory<BaseMapper>, config: Harvester): Importer {
         switch (config.type) {
             case 'CKAN':
                 // remove trailing slash from CKAN URL

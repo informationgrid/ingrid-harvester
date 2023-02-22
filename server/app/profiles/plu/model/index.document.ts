@@ -22,15 +22,19 @@
  */
 
 import { DcatApPluDocument } from "./dcatApPlu.document";
-import {GenericMapper} from "../../../importer/generic.mapper";
 import {IndexDocument} from "../../../model/index.document";
 import {Contact} from "../../../model/agent";
+import {CswMapper} from "../../../importer/csw/csw.mapper";
+import {ExcelSparseMapper} from "../../../importer/excelsparse/excelsparse.mapper";
+import {WfsMapper} from "../../../importer/wfs/wfs.mapper";
+import {pluMapperFactory} from "../mapper/plu.mapper.factory";
 
-export class pluDocument extends IndexDocument {
+export class pluDocument extends IndexDocument<CswMapper | ExcelSparseMapper | WfsMapper> {
 
-    async create(mapper: GenericMapper) : Promise<any> {
+    async create(_mapper: CswMapper | ExcelSparseMapper | WfsMapper) : Promise<any> {
+        let mapper = pluMapperFactory.getMapper(_mapper);
         let contactPoint: Contact = await mapper.getContactPoint();
-        let result = await {
+        let result = {
             // basic information
             contact_point: {
                 fn: contactPoint.fn,
@@ -76,7 +80,7 @@ export class pluDocument extends IndexDocument {
                     source: mapper.getMetadataSource()
                 },
                 transformed_data: {
-                    [DcatApPluDocument.getExportFormat()]: await DcatApPluDocument.create(mapper),
+                    [DcatApPluDocument.getExportFormat()]: await DcatApPluDocument.create(_mapper),
                 }
             },
             issued: mapper.getIssued(),

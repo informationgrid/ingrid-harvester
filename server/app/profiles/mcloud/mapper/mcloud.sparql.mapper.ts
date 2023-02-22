@@ -21,14 +21,14 @@
  * ==================================================
  */
 
+import {mcloudMapper} from "./mcloud.mapper";
+import {CswMapper} from "../../../importer/csw/csw.mapper";
+import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
 
-import {IndexDocument} from "../model/index.document";
-import {BaseMapper} from "../importer/base.mapper";
-
-export abstract class ProfileFactory<M extends BaseMapper> {
-    abstract getIndexDocument() : IndexDocument<M>;
-
-    abstract getElasticSettings(): any;
-    abstract getElasticMapping(): any;
-
+export class mcloudSparqlMapper extends mcloudMapper<SparqlMapper> {
+    getCategories(): string[] {
+        return [];
+    }
 }
+
+

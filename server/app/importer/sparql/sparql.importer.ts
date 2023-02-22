@@ -60,7 +60,7 @@ export class SparqlSummary extends Summary {
 }
 
 export class SparqlImporter implements Importer {
-    private profile: ProfileFactory;
+    private profile: ProfileFactory<SparqlMapper>;
     private readonly settings: SparqlSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
@@ -89,7 +89,7 @@ export class SparqlImporter implements Importer {
 
     private observer: Observer<ImportLogMessage>;
 
-    constructor(profile: ProfileFactory, settings, requestDelegate?: RequestDelegate) {
+    constructor(profile: ProfileFactory<SparqlMapper>, settings, requestDelegate?: RequestDelegate) {
         this.profile = profile;
 
         // merge default settings with configured ones
