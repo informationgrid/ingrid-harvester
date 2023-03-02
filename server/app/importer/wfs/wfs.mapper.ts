@@ -211,7 +211,7 @@ export class WfsMapper extends GenericMapper {
     }
 
     async _getPublisher(): Promise<Person[] | Organization[]> {
-        return this.fetched.catalog.publisher;
+        return [this.fetched.catalog.publisher];
     }
 
     _getTitle() {

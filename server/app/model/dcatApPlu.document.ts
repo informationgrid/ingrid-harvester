@@ -98,9 +98,9 @@ const DCAT_AP_PLU_NSMAP = {
     dcatde: 'http://dcat-ap.de/def/dcatde/',
     dct: 'http://purl.org/dc/terms/',
     foaf: 'http://xmlns.com/foaf/0.1/',
-    gml: 'http://www.opengis.net/gml/3.2',
+    gml: 'http://www.opengis.net/gml/3.2#',
     locn: 'http://www.w3.org/ns/locn#',
-    plu: 'http://a.placeholder.url.for.dcat-ap-plu',    // TODO
+    plu: 'http://a.placeholder.url.for.dcat-ap-plu/',    // TODO
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     vcard: 'http://www.w3.org/2006/vcard/ns#'
 };
@@ -240,17 +240,19 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     }
 
     private static xmlDistribution(distribution: Distribution): string {
-        return `<dcat:Distribution>
-            <dcat:accessURL>${esc(distribution.accessURL)}</dcat:accessURL>
-            ${optional('dct:description', esc(distribution.description))}
-            ${optional('dcat:downloadURL', esc(distribution.downloadURL))}
-            ${optional('dct:format', esc(distribution.format?.[0]))}
-            ${optional('dct:issued', distribution.issued)}
-            ${optional('dct:modified', distribution.modified)}
-            ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period)}
-            ${optional('plu:docType', esc(distribution.pluDocType))}
-            ${optional('dct:title', esc(distribution.title))}
-        </dcat:Distribution>`;
+        return `<dcat:distribution>
+            <dcat:Distribution>
+                <dcat:accessURL>${esc(distribution.accessURL)}</dcat:accessURL>
+                ${optional('dct:description', esc(distribution.description))}
+                ${optional('dcat:downloadURL', esc(distribution.downloadURL))}
+                ${optional('dct:format', esc(distribution.format?.[0]))}
+                ${optional('dct:issued', distribution.issued)}
+                ${optional('dct:modified', distribution.modified)}
+                ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period)}
+                ${optional('plu:docType', esc(distribution.pluDocType))}
+                ${optional('dct:title', esc(distribution.title))}
+            </dcat:Distribution>
+        </dcat:distribution>`;
     }
 
     private static xmlFoafAgent(parent: string, agent: Person | Organization): string {
@@ -272,10 +274,12 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
 
     private static xmlProcessStep({ distributions, identifier, period, type }: ProcessStep): string {
         return `<plu:processStep>
-            <plu:processStepType>${type}</plu:processStepType>
-            ${optional('dct:identifier', esc(identifier))}
-            ${optional(DcatApPluDocument.xmlDistribution, distributions)}
-            ${optional(DcatApPluDocument.xmlPeriodOfTime, period)}
+            <plu:ProcessStep>
+                <plu:processStepType>${type}</plu:processStepType>
+                ${optional('dct:identifier', esc(identifier))}
+                ${optional(DcatApPluDocument.xmlDistribution, distributions)}
+                ${optional(DcatApPluDocument.xmlPeriodOfTime, period)}
+            </plu:ProcessStep>
         </plu:processStep>`;
     }
 
