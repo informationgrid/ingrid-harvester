@@ -56,7 +56,7 @@ export class ElasticSearchUtils {
     indexName: string;
 
     private summary: Summary;
-    private deduplicationUtils: DeduplicateUtils;
+    public deduplicationUtils: DeduplicateUtils;
 
     constructor(settings, summary: Summary) {
         this.settings = settings;
