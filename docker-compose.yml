@@ -3,7 +3,7 @@ services:
 
   harvester:
     build: .
-    container_name: metadata-harvester
+    container_name: harvester
     environment:
      - NODE_ENV=production
      - ES_HOST=elastic
@@ -13,8 +13,3 @@ services:
       - 8090:8090
     working_dir: /opt/mcloud/server
     command: node app/index.js
-    networks:
-      - metadata-network
-
-networks:
-  metadata-network:
