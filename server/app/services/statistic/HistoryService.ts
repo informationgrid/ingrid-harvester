@@ -35,6 +35,8 @@ export class HistoryService {
         let generalSettings = ConfigService.getGeneralSettings();
         const settings: ElasticSettings = {
             elasticSearchUrl: generalSettings.elasticSearchUrl,
+            elasticSearchVersion: generalSettings.elasticSearchVersion,
+            elasticSearchUser: generalSettings.elasticSearchUser,
             elasticSearchPassword: generalSettings.elasticSearchPassword,
             alias: generalSettings.alias,
             includeTimestamp: true,

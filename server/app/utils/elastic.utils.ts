@@ -35,6 +35,8 @@ require('url').URL;
 
 export const DefaultElasticsearchSettings: ElasticSettings = {
     elasticSearchUrl: process.env.ELASTIC_URL || "http://elastic:9200",
+    elasticSearchVersion: '8',
+    elasticSearchUser: 'elastic',
     index: '',
     // alias: '',
     includeTimestamp: true,

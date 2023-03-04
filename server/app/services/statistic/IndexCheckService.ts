@@ -51,6 +51,8 @@ export class IndexCheckService {
         this.generalSettings = ConfigService.getGeneralSettings();
         this.settings = {
             elasticSearchUrl: this.generalSettings.elasticSearchUrl,
+            elasticSearchVersion: this.generalSettings.elasticSearchVersion,
+            elasticSearchUser: this.generalSettings.elasticSearchUser,
             elasticSearchPassword: this.generalSettings.elasticSearchPassword,
             alias: this.generalSettings.alias,
             includeTimestamp: true,

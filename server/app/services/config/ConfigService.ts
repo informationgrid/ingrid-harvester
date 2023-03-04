@@ -53,6 +53,8 @@ export class ConfigService {
 
     private static readonly defaultSettings = {
         elasticSearchUrl: process.env.ELASTIC_URL || "http://elastic:9200",
+        elasticSearchVersion: "8",
+        elasticSearchUser: "elastic",
         elasticSearchPassword: "elastic",
         alias: "mcloud",
         numberOfShards: 1,
