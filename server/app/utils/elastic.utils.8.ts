@@ -61,11 +61,6 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         this.deduplicationUtils = new DeduplicateUtils(this, settings, this.summary);
     }
 
-    /**
-     *
-     * @param mapping
-     * @param settings
-     */
     async cloneIndex(mapping, settings) {
         // find newest existing index
         let existingIndices = await this.getIndicesFromBasename(this.indexName);
@@ -86,11 +81,6 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         });
     }
 
-    /**
-     *
-     * @param mappings
-     * @param settings
-     */
     async prepareIndex(mappings, settings, openIfPresent=false) {
         if (this.settings.includeTimestamp) {
             this.indexName += '_' + this.getTimeStamp(new Date());
@@ -98,11 +88,6 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         return await this.prepareIndexWithName(this.indexName, mappings, settings, openIfPresent);
     }
 
-    /**
-     *
-     * @param mappings
-     * @param settings
-     */
     async prepareIndexWithName(indexName: string, mappings, settings, openIfPresent=false) {
         let isPresent = await this.isIndexPresent(this.indexName);
         settings = {
@@ -169,12 +154,6 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         }
     }
 
-    /**
-     * Add the specified alias to an index.
-     *
-     * @param {string} index
-     * @param {string} alias
-     */
     async addAlias(index, alias): Promise<any> {
         return await this.client.indices.putAlias({
             index: index,
@@ -182,12 +161,6 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         });
     }
 
-    /**
-     * Remove the specified alias from an index.
-     *
-     * @param {string} index
-     * @param {string} alias
-     */
     async removeAlias(index, alias): Promise<any> {
         return await this.client.indices.deleteAlias({
             index: index,
@@ -195,12 +168,6 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         });
     }
 
-    /**
-     * Delete all indices starting with indexBaseName but not indexName .
-     *
-     * @param {string} indexBaseName
-     * @param {string} ignoreIndexName
-     */
     async deleteOldIndices(indexBaseName, ignoreIndexName) {
         //  match index to be deleted with indexBaseName_timestamp!
         //  otherwise other indices with same prefix will be removed
@@ -238,11 +205,6 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
             });
     }
 
-    /**
-     * Index data in batches
-     * @param {object} data
-     * @param {boolean} closeAfterBulk
-     */
     async bulk(data, closeAfterBulk): Promise<BulkResponse> {
         try {
             let response = await this.client.bulk({
@@ -316,12 +278,6 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         });
     }
 
-    /**
-     * Add a document to the bulk array which will be sent to the elasticsearch node
-     * if a certain limit {{maxBulkSize}} is reached.
-     * @param doc
-     * @param {string|number} id
-     */
     async addDocToBulk(doc, id, maxBulkSize=ElasticSearchUtils8.maxBulkSize): Promise<BulkResponse> {
         this._bulkData.push({
             index: {
@@ -344,11 +300,6 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         }
     }
 
-    /**
-     * Send all collected bulk data if any.
-     *
-     * @param {boolean=} closeAfterBulk
-     */
     sendBulkData(closeAfterBulk?): Promise<BulkResponse> {
         if (this._bulkData.length > 0) {
             log.debug('Sending BULK message with ' + (this._bulkData.length / 2) + ' items to index ' + this.indexName);
@@ -361,31 +312,6 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         }));
     }
 
-    /**
-     * Returns a new Timestamp string
-     */
-    getTimeStamp(date) {
-        let stamp = String(date.getFullYear());
-        stamp += ('0' + (date.getMonth() + 1)).slice(-2);
-        stamp += ('0' + date.getDate()).slice(-2);
-        stamp += ('0' + date.getHours()).slice(-2);
-        stamp += ('0' + date.getMinutes()).slice(-2);
-        stamp += ('0' + date.getSeconds()).slice(-2);
-        stamp += ('00' + date.getMilliseconds()).slice(-3);
-        return stamp;
-    }
-
-    /**
-     * Searches the index for documents with the given ids and copies a set of the issued
-     * date, modified date and harvested data from existing documents, if any exist. If multiple documents with
-     * the same id are found, then the issued date is copied from the first hit
-     * returned by elasticsearch. If no indexed document with the given id is
-     * found, then null or undefined is returned.
-     *
-     * @param ids {Array} array of ids for which to look up the issued date
-     * @returns {Promise<Array>}  array of issued dates (for found documents) or
-     * nulls (for new documents) in the same order as the given ids
-     */
     async getStoredData(ids) {
         if (ids.length < 1) return [];
 

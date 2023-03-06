@@ -174,4 +174,19 @@ export abstract class ElasticSearchUtils {
     async flush(body?: object): Promise<any> {
         return (<{ flush: Function }>this.client.indices).flush(body);
     };
+
+    /**
+     * Returns a new Timestamp string
+     */
+    // TODO replace this with a proper date format function instead of homebrew stuff?
+    protected getTimeStamp(date) {
+        let stamp = String(date.getFullYear());
+        stamp += ('0' + (date.getMonth() + 1)).slice(-2);
+        stamp += ('0' + date.getDate()).slice(-2);
+        stamp += ('0' + date.getHours()).slice(-2);
+        stamp += ('0' + date.getMinutes()).slice(-2);
+        stamp += ('0' + date.getSeconds()).slice(-2);
+        stamp += ('00' + date.getMilliseconds()).slice(-3);
+        return stamp;
+    }
 }

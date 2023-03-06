@@ -60,11 +60,6 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         this.deduplicationUtils = new DeduplicateUtils(this, settings, this.summary);
     }
 
-    /**
-     *
-     * @param mapping
-     * @param settings
-     */
     async cloneIndex(mapping, settings) {
         // find newest existing index
         let existingIndices = await this.getIndicesFromBasename(this.indexName);
@@ -87,11 +82,6 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         });
     }
 
-    /**
-     *
-     * @param mappings
-     * @param settings
-     */
     async prepareIndex(mappings, settings, openIfPresent=false) {
         if (this.settings.includeTimestamp) {
             this.indexName += '_' + this.getTimeStamp(new Date());
@@ -99,11 +89,6 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         return await this.prepareIndexWithName(this.indexName, mappings, settings, openIfPresent);
     }
 
-    /**
-     *
-     * @param mappings
-     * @param settings
-     */
     async prepareIndexWithName(indexName: string, mappings, settings, openIfPresent=false) {
         let isPresent = await this.isIndexPresent(this.indexName);
         settings = {
@@ -170,12 +155,6 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         }
     }
 
-    /**
-     * Add the specified alias to an index.
-     *
-     * @param {string} index
-     * @param {string} alias
-     */
     async addAlias(index, alias): Promise<any> {
         return await this.client.indices.putAlias({
             index: index,
@@ -183,12 +162,6 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         });
     }
 
-    /**
-     * Remove the specified alias from an index.
-     *
-     * @param {string} index
-     * @param {string} alias
-     */
     async removeAlias(index, alias): Promise<any> {
         return await this.client.indices.deleteAlias({
             index: index,
@@ -196,12 +169,6 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         });
     }
 
-    /**
-     * Delete all indices starting with indexBaseName but not indexName .
-     *
-     * @param {string} indexBaseName
-     * @param {string} ignoreIndexName
-     */
     async deleteOldIndices(indexBaseName, ignoreIndexName) {
         //  match index to be deleted with indexBaseName_timestamp!
         //  otherwise other indices with same prefix will be removed
@@ -239,11 +206,6 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
             });
     }
 
-    /**
-     * Index data in batches
-     * @param {object} data
-     * @param {boolean} closeAfterBulk
-     */
     async bulk(data, closeAfterBulk): Promise<BulkResponse> {
         try {
             let { body: response } = await this.client.bulk({
@@ -285,44 +247,38 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
                     type: type,
                     body: data
                 })
-                    .then(({ body: response }) => {
-                        if (response.errors) {
-                            response.items.forEach(item => {
-                                let err = item.index.error;
-                                if (err) {
-                                    this.handleError(`Error during indexing on index '${indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
-                                }
-                            });
-                        }
-                        if (closeAfterBulk) {
-                            log.debug('Closing client connection to Elasticsearch');
-                            this.client.close();
-                        }
-                        log.debug('Bulk finished of data #items: ' + data.length / 2);
-                        resolve({
-                            queued: false,
-                            response: response
+                .then(({ body: response }) => {
+                    if (response.errors) {
+                        response.items.forEach(item => {
+                            let err = item.index.error;
+                            if (err) {
+                                this.handleError(`Error during indexing on index '${indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
+                            }
                         });
-                    })
-                    .catch(err => {
-                        this.handleError('Error occurred during bulkWithIndexName index of #items: ' + data.length / 2, err);
-                        if (closeAfterBulk) {
-                            this.client.close();
-                        }
-                        reject(err);
+                    }
+                    if (closeAfterBulk) {
+                        log.debug('Closing client connection to Elasticsearch');
+                        this.client.close();
+                    }
+                    log.debug('Bulk finished of data #items: ' + data.length / 2);
+                    resolve({
+                        queued: false,
+                        response: response
                     });
+                })
+                .catch(err => {
+                    this.handleError('Error occurred during bulkWithIndexName index of #items: ' + data.length / 2, err);
+                    if (closeAfterBulk) {
+                        this.client.close();
+                    }
+                    reject(err);
+                });
             } catch (e) {
                 this.handleError('Error during bulk indexing of #items: ' + data.length / 2, e);
             }
         });
     }
 
-    /**
-     * Add a document to the bulk array which will be sent to the elasticsearch node
-     * if a certain limit {{maxBulkSize}} is reached.
-     * @param doc
-     * @param {string|number} id
-     */
     async addDocToBulk(doc, id, maxBulkSize=ElasticSearchUtils6.maxBulkSize): Promise<BulkResponse> {
         this._bulkData.push({
             index: {
@@ -345,11 +301,6 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         }
     }
 
-    /**
-     * Send all collected bulk data if any.
-     *
-     * @param {boolean=} closeAfterBulk
-     */
     sendBulkData(closeAfterBulk?): Promise<BulkResponse> {
         if (this._bulkData.length > 0) {
             log.debug('Sending BULK message with ' + (this._bulkData.length / 2) + ' items to index ' + this.indexName);
@@ -362,31 +313,6 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         }));
     }
 
-    /**
-     * Returns a new Timestamp string
-     */
-    getTimeStamp(date) {
-        let stamp = String(date.getFullYear());
-        stamp += ('0' + (date.getMonth() + 1)).slice(-2);
-        stamp += ('0' + date.getDate()).slice(-2);
-        stamp += ('0' + date.getHours()).slice(-2);
-        stamp += ('0' + date.getMinutes()).slice(-2);
-        stamp += ('0' + date.getSeconds()).slice(-2);
-        stamp += ('00' + date.getMilliseconds()).slice(-3);
-        return stamp;
-    }
-
-    /**
-     * Searches the index for documents with the given ids and copies a set of the issued
-     * date, modified date and harvested data from existing documents, if any exist. If multiple documents with
-     * the same id are found, then the issued date is copied from the first hit
-     * returned by elasticsearch. If no indexed document with the given id is
-     * found, then null or undefined is returned.
-     *
-     * @param ids {Array} array of ids for which to look up the issued date
-     * @returns {Promise<Array>}  array of issued dates (for found documents) or
-     * nulls (for new documents) in the same order as the given ids
-     */
     async getStoredData(ids) {
         if (ids.length < 1) return [];
 
@@ -534,35 +460,35 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
             body: ElasticQueries.getFacetsByAttribution(),
             size: 0
         });
-        return response.aggregations.attribution.buckets.map(entry => {
-                return {
-                    attribution: entry.key,
-                    count: entry.doc_count,
-                    is_valid:  entry.is_valid.buckets.map(entry => {
-                        return {value: entry.key_as_string, count: entry.doc_count}
-                    }),
-                    spatial: entry.spatial.doc_count,
-                    temporal: entry.temporal.doc_count,
-                    license: entry.license.buckets.map(entry => {
-                        return {name: entry.key, count: entry.doc_count}
-                    }),
-                    display_contact: entry.display_contact.buckets.map(entry => {
-                        return {name: entry.key, count: entry.doc_count}
-                    }),
-                    format: entry.format.buckets.map(entry => {
-                        return {name: entry.key, count: entry.doc_count}
-                    }),
-                    categories: entry.categories.buckets.map(entry => {
-                        return {name: entry.key, count: entry.doc_count}
-                    }),
-                    accrual_periodicity: entry.accrual_periodicity.buckets.map(entry => {
-                        return {name: entry.key, count: entry.doc_count}
-                    }),
-                    distributions: entry.distributions.buckets.map(entry => {
-                        return {number: entry.key, count: entry.doc_count}
-                    })
-                }
-            });
+        return response.aggregations.attribution.buckets.map(entry =>
+            ({
+                attribution: entry.key,
+                count: entry.doc_count,
+                is_valid:  entry.is_valid.buckets.map(entry => {
+                    return {value: entry.key_as_string, count: entry.doc_count}
+                }),
+                spatial: entry.spatial.doc_count,
+                temporal: entry.temporal.doc_count,
+                license: entry.license.buckets.map(entry => {
+                    return {name: entry.key, count: entry.doc_count}
+                }),
+                display_contact: entry.display_contact.buckets.map(entry => {
+                    return {name: entry.key, count: entry.doc_count}
+                }),
+                format: entry.format.buckets.map(entry => {
+                    return {name: entry.key, count: entry.doc_count}
+                }),
+                categories: entry.categories.buckets.map(entry => {
+                    return {name: entry.key, count: entry.doc_count}
+                }),
+                accrual_periodicity: entry.accrual_periodicity.buckets.map(entry => {
+                    return {name: entry.key, count: entry.doc_count}
+                }),
+                distributions: entry.distributions.buckets.map(entry => {
+                    return {number: entry.key, count: entry.doc_count}
+                })
+            })
+        );
     }
 
     async getIndexSettings(indexName): Promise<any>{
