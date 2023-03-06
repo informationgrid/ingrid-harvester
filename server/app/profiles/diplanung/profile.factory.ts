@@ -35,7 +35,7 @@ import {SparqlMapper} from "../../importer/sparql/sparql.mapper";
 import {ExcelSparseMapper} from "../../importer/excelsparse/excelsparse.mapper";
 import {WfsMapper} from "../../importer/wfs/wfs.mapper";
 
-export class pluFactory extends ProfileFactory<CswMapper | ExcelSparseMapper | WfsMapper>{
+export class DiplanungFactory extends ProfileFactory<CswMapper | ExcelSparseMapper | WfsMapper>{
 
     getIndexDocument() : pluDocument{
         return new pluDocument;

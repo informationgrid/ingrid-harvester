@@ -21,11 +21,9 @@
  * ==================================================
  */
 
-
-import {IndexDocument} from "../model/index.document";
 import {mcloudFactory} from "./mcloud/profile.factory";
+import {DiplanungFactory} from "./diplanung/profile.factory";
 import {ProfileFactory} from "./profile.factory";
-import {pluFactory} from "./plu/profile.factory";
 import {BaseMapper} from "../importer/base.mapper";
 
 export class ProfileFactoryLoader {
@@ -45,8 +43,8 @@ export class ProfileFactoryLoader {
                     case 'mcloud':
                         this.instance = new mcloudFactory();
                         break;
-                    case 'plu':
-                        this.instance = new pluFactory();
+                    case 'diplanung':
+                        this.instance = new DiplanungFactory();
                         break;
                 }
             }

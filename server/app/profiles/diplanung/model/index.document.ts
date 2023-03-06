@@ -27,12 +27,12 @@ import {Contact} from "../../../model/agent";
 import {CswMapper} from "../../../importer/csw/csw.mapper";
 import {ExcelSparseMapper} from "../../../importer/excelsparse/excelsparse.mapper";
 import {WfsMapper} from "../../../importer/wfs/wfs.mapper";
-import {pluMapperFactory} from "../mapper/plu.mapper.factory";
+import {DiplanungMapperFactory} from "../mapper/diplanung.mapper.factory";
 
 export class pluDocument extends IndexDocument<CswMapper | ExcelSparseMapper | WfsMapper> {
 
     async create(_mapper: CswMapper | ExcelSparseMapper | WfsMapper) : Promise<any> {
-        let mapper = pluMapperFactory.getMapper(_mapper);
+        let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let contactPoint: Contact = await mapper.getContactPoint();
         let result = {
             // basic information

@@ -30,16 +30,16 @@ import {ExcelMapper} from "../../../importer/excel/excel.mapper";
 import {OaiMapper} from "../../../importer/oai/oai.mapper";
 import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
 import {BaseMapper} from "../../../importer/base.mapper";
-import {PluMapper} from "./plu.mapper";
+import {DiplanungMapper} from "./diplanung.mapper";
 import {ExcelSparseMapper} from "../../../importer/excelsparse/excelsparse.mapper";
 import {WfsMapper} from "../../../importer/wfs/wfs.mapper";
 
-export class pluMapperFactory {
-    static getMapper(mapper) : PluMapper<any> {
+export class DiplanungMapperFactory {
+    static getMapper(mapper) : DiplanungMapper<any> {
         switch (mapper.constructor.name) {
-            case 'CswMapper': return new PluMapper(mapper)
-            case 'ExcelSparseMapper': return new PluMapper(mapper)
-            case 'WfsMapper': return new PluMapper(mapper)
+            case 'CswMapper': return new DiplanungMapper(mapper)
+            case 'ExcelSparseMapper': return new DiplanungMapper(mapper)
+            case 'WfsMapper': return new DiplanungMapper(mapper)
         }
     }
 }

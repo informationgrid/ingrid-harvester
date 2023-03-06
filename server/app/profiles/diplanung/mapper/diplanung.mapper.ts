@@ -40,7 +40,7 @@ import {ExcelSparseMapper} from "../../../importer/excelsparse/excelsparse.mappe
 moment.locale('de');
 
 
-export class PluMapper<M extends CswMapper | ExcelSparseMapper | WfsMapper>{
+export class DiplanungMapper<M extends CswMapper | ExcelSparseMapper | WfsMapper>{
 
     protected baseMapper: M;
 
