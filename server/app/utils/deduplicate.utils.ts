@@ -43,14 +43,11 @@ export class DeduplicateUtils {
     settings: ElasticSettings & ImporterSettings;
     summary: Summary;
 
-    client: any;
     private elastic: ElasticSearchUtils;
-
 
     constructor(elasticUtils: ElasticSearchUtils, settings, summary) {
         this.summary = summary;
         this.elastic = elasticUtils;
-        this.client = elasticUtils.client;
         this.settings = settings;
         // this.duplicateStaging = [];
     }
@@ -199,11 +196,11 @@ export class DeduplicateUtils {
         // By default elasticsearch limits the count of aggregates to 10. Ask it
         // to return a lot more results!
         try {
-            let response = await this.client.search({
-                index: [this.settings.alias],
-                body: ElasticQueries.findSameTitle(),
-                size: 50
-            });
+            let response = await this.elastic.search(
+                this.settings.alias,
+                ElasticQueries.findSameTitle(),
+                50
+            );
 
             let count = 0;
             log.debug(`Count of buckets for deduplication aggregates query: ${response.aggregations.duplicates.buckets.length}`);
@@ -263,7 +260,7 @@ export class DeduplicateUtils {
 
         // TODO: send flush request to immediately remove documents from index
         try {
-            await this.client.indices.flush();
+            await this.elastic.flush();
         } catch (e) {
             log.error('Error occurred during flush', e);
         }

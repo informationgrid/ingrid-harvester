@@ -183,6 +183,6 @@ export class IndexService {
         });
         return await promise
             .then(() => this.elasticUtils.bulkWithIndexName(json.index, type, bulkData, false))
-            .then(() => this.elasticUtils.client.cluster.health({waitForStatus: 'yellow'}));
+            .then(() => this.elasticUtils.health('yellow'));
     }
 }
