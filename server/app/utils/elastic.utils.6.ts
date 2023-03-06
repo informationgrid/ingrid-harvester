@@ -248,7 +248,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         try {
             let { body: response } = await this.client.bulk({
                 index: this.indexName,
-                // type: this.settings.indexType || 'base',
+                type: this.settings.indexType || 'base',
                 body: data
             });
             if (response.errors) {
@@ -282,7 +282,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
             try {
                 this.client.bulk({
                     index: indexName,
-                    // type: type,
+                    type: type,
                     body: data
                 })
                     .then(({ body: response }) => {
@@ -494,7 +494,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     async getHistory(index: string, body: object): Promise<{ history: any; }> {
         let { body: response } = await this.client.search({
             index,
-            ...body,
+            body,
             size: 30
         });
         return { history: response.hits.hits.map(entry => entry._source) };
