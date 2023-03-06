@@ -55,23 +55,26 @@ export abstract class ElasticSearchUtils {
     /**
      *
      * @param mapping
-     * @param settings
+     * @param {object} settings
      */
-    abstract cloneIndex(mapping, settings);
+    abstract cloneIndex(mapping, settings: object): Promise<void>;
 
     /**
      *
      * @param mappings
-     * @param settings
+     * @param {object} settings
+     * @param {boolean} openIfPresent
      */
-    abstract prepareIndex(mappings, settings, openIfPresent?);
+    abstract prepareIndex(mappings, settings: object, openIfPresent?: boolean);
 
     /**
      *
+     * @param {string} index
      * @param mappings
-     * @param settings
+     * @param {object} settings
+     * @param {boolean} openIfPresent
      */
-    abstract prepareIndexWithName(indexName: string, mappings, settings, openIfPresent?: boolean);
+    abstract prepareIndexWithName(index: string, mappings, settings: object, openIfPresent?: boolean);
 
     abstract finishIndex(closeIndex?: boolean);
 
@@ -81,7 +84,7 @@ export abstract class ElasticSearchUtils {
      * @param {string} index
      * @param {string} alias
      */
-    abstract addAlias(index, alias): Promise<any>;
+    abstract addAlias(index: string, alias: string): Promise<any>;
 
     /**
      * Remove the specified alias from an index.
@@ -89,7 +92,7 @@ export abstract class ElasticSearchUtils {
      * @param {string} index
      * @param {string} alias
      */
-    abstract removeAlias(index, alias): Promise<any>;
+    abstract removeAlias(index: string, alias: string): Promise<any>;
 
     /**
      * Delete all indices starting with indexBaseName but not indexName .
@@ -106,24 +109,25 @@ export abstract class ElasticSearchUtils {
      * @param {object} data
      * @param {boolean} closeAfterBulk
      */
-    abstract bulk(data, closeAfterBulk): Promise<BulkResponse>;
+    abstract bulk(data: object, closeAfterBulk: boolean): Promise<BulkResponse>;
 
-    abstract bulkWithIndexName(indexName, type, data, closeAfterBulk): Promise<BulkResponse>;
+    abstract bulkWithIndexName(index: string, type, data, closeAfterBulk: boolean): Promise<BulkResponse>;
 
     /**
      * Add a document to the bulk array which will be sent to the elasticsearch node
      * if a certain limit {{maxBulkSize}} is reached.
      * @param doc
      * @param {string|number} id
+     * @param {number} maxBulkSize
      */
-    abstract addDocToBulk(doc, id, maxBulkSize?: number): Promise<BulkResponse>;
+    abstract addDocToBulk(doc, id: string | number, maxBulkSize?: number): Promise<BulkResponse>;
 
     /**
      * Send all collected bulk data if any.
      *
-     * @param {boolean=} closeAfterBulk
+     * @param {boolean} closeAfterBulk
      */
-    abstract sendBulkData(closeAfterBulk?): Promise<BulkResponse>;
+    abstract sendBulkData(closeAfterBulk?: boolean): Promise<BulkResponse>;
 
     /**
      * Searches the index for documents with the given ids and copies a set of the issued
