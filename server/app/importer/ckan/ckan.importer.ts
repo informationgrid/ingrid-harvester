@@ -32,6 +32,7 @@ import {CkanSettings} from './ckan.settings';
 import {FilterUtils} from '../../utils/filter.utils';
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
 
 let log = require('log4js').getLogger(__filename);
 const uuidv5 = require('uuid/v5');
@@ -92,7 +93,7 @@ export class CkanImporter implements Importer {
         }
         this.settings = settings;
         this.filterUtils = new FilterUtils(settings);
-        this.elastic = new ElasticSearchUtils(settings, this.summary);
+        this.elastic = ElasticSearchFactory.getElasticUtils(settings, this.summary);
 
         let requestConfig = CkanMapper.createRequestConfig(settings);
         let requestConfigCount = CkanMapper.createRequestConfigCount(settings);

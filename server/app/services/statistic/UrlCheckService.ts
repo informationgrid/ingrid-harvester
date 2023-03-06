@@ -31,6 +31,7 @@ import {now} from "moment";
 import {elasticsearchMapping} from "../../statistic/url_check.mapping";
 import {elasticsearchSettings} from "../../statistic/url_check.settings";
 import {BulkResponse} from "../../statistic/statistic.utils";
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
 
 let elasticsearch = require('elasticsearch'), log = require('log4js').getLogger(__filename);
 
@@ -44,6 +45,7 @@ require('url').URL;
 
 @Service()
 export class UrlCheckService {
+
     private elasticUtils: ElasticSearchUtils;
     private _bulkData: any[];
     private generalSettings;
@@ -79,7 +81,7 @@ export class UrlCheckService {
 
         // @ts-ignore
         const summary: Summary = {};
-        this.elasticUtils = new ElasticSearchUtils(this.settings, summary);
+        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
         this._bulkData = [];
 
         this.indexName = 'url_check_history';

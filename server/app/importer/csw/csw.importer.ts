@@ -35,6 +35,7 @@ import {FilterUtils} from "../../utils/filter.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import { SummaryService } from '../../services/config/SummaryService';
 import {ProfileFactory} from "../../profiles/profile.factory";
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -116,7 +117,7 @@ export class CswImporter implements Importer {
 
         this.summary = new CswSummary(settings);
 
-        this.elastic = new ElasticSearchUtils(settings, this.summary);
+        this.elastic = ElasticSearchFactory.getElasticUtils(settings, this.summary);
     }
 
     static addModifiedFilter(recordFilter: string, lastRunDate: Date): string {

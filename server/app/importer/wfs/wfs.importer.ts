@@ -38,6 +38,7 @@ import { MiscUtils } from '../../utils/misc.utils';
 import { XPathUtils } from '../../utils/xpath.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
 import {Contact} from "../../model/agent";
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
 
 const fs = require('fs');
 const xpath = require('xpath');
@@ -142,7 +143,7 @@ export class WfsImporter implements Importer {
 
         this.summary = new WfsSummary(settings);
 
-        this.elastic = new ElasticSearchUtils(settings, this.summary);
+        this.elastic = ElasticSearchFactory.getElasticUtils(settings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {

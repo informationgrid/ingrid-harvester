@@ -34,6 +34,7 @@ import {OaiSettings} from './oai.settings';
 import {FilterUtils} from "../../utils/filter.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -101,7 +102,7 @@ export class OaiImporter implements Importer {
 
         this.summary = new OaiSummary(settings);
 
-        this.elastic = new ElasticSearchUtils(settings, this.summary);
+        this.elastic = ElasticSearchFactory.getElasticUtils(settings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {

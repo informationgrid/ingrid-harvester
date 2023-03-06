@@ -27,8 +27,8 @@ import {configure} from 'log4js';
 import {doc1, doc3, doc4} from './data/docs.deduplication';
 import {elasticsearchMapping} from '../app/profiles/mcloud/elastic/elastic.mapping';
 import {elasticsearchSettings} from '../app/profiles/mcloud/elastic/elastic.settings';
-import {ElasticSettings} from '../app/utils/elastic.setting';
-import {ElasticSearchUtils} from '../app/utils/elastic.utils';
+import { ElasticSearchFactory } from '../app/utils/elastic.factory';
+import { ElasticSettings } from '../app/utils/elastic.setting';
 
 let elasticsearch = require('elasticsearch');
 configure('./test/log4js-test.json');
@@ -62,7 +62,7 @@ xdescribe('deduplication by similar title', function () {
         requestTimeout: 30000
     });
 
-    let elasticSearchUtils = new ElasticSearchUtils(settings, summary);
+    let elasticSearchUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
     let deduplicateUtils = elasticSearchUtils.deduplicationUtils;
     deduplicateUtils.deduplicationIndices = deduplicationIndices;
 

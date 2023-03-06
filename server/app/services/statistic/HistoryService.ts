@@ -21,14 +21,16 @@
  * ==================================================
  */
 
-import {Service} from '@tsed/di';
-import {ElasticSearchUtils} from "../../utils/elastic.utils";
-import {ConfigService} from "../config/ConfigService";
-import {ElasticSettings} from "../../utils/elastic.setting";
-import {Summary} from "../../model/summary";
+import { ConfigService } from '../config/ConfigService';
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import { ElasticSearchUtils } from '../../utils/elastic.utils';
+import { ElasticSettings } from '../../utils/elastic.setting';
+import { Service } from '@tsed/di';
+import { Summary } from '../../model/summary';
 
 @Service()
 export class HistoryService {
+
     private elasticUtils: ElasticSearchUtils;
 
     constructor() {
@@ -44,7 +46,7 @@ export class HistoryService {
         };
         // @ts-ignore
         const summary: Summary = {};
-        this.elasticUtils = new ElasticSearchUtils(settings, summary);
+        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
     }
 
     async getHistory(id: number): Promise<any> {
