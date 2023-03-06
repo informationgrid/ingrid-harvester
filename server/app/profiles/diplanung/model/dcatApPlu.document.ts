@@ -29,8 +29,8 @@ import {Record, ProcessStep} from "../../../model/dcatApPlu.model";
 import {CswMapper} from "../../../importer/csw/csw.mapper";
 import {ExcelSparseMapper} from "../../../importer/excelsparse/excelsparse.mapper";
 import {WfsMapper} from "../../../importer/wfs/wfs.mapper";
-import {PluMapper} from "../mapper/plu.mapper";
-import {pluMapperFactory} from "../mapper/plu.mapper.factory";
+import {DiplanungMapper} from "../mapper/diplanung.mapper";
+import {DiplanungMapperFactory} from "../mapper/diplanung.mapper.factory";
 var esc = require('xml-escape');
 
 function optional(wrapper: string | Function, variable: any | any[]) {
@@ -68,7 +68,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     }
 
     static async create(_mapper: CswMapper | ExcelSparseMapper | WfsMapper): Promise<string> {
-        let mapper = pluMapperFactory.getMapper(_mapper);
+        let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
         let centroid = mapper.getCentroid();
         let contributors = null;    // TODO
