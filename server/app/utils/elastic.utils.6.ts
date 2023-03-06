@@ -474,12 +474,13 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         });
     }
 
-    async search(index: string, body?: object, size?: number): Promise<any> {
-        return await this.client.search({
-            index: [index],
+    async search(index: string | string[], body?: object, size?: number): Promise<{ hits: any }> {
+        let { body: response } = await this.client.search({
+            index,
             body,
             size
         });
+        return response;
     }
 
     // async getHistory(baseIndex: string): Promise<any> {
@@ -492,7 +493,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     // }
     async getHistory(index: string, body: object): Promise<{ history: any; }> {
         let { body: response } = await this.client.search({
-            index: [index],
+            index,
             ...body,
             size: 30
         });
@@ -501,7 +502,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
 
     async getHistories(): Promise<any> {
         let { body: response } = await this.client.search({
-            index: ['mcloud_harvester_statistic'],
+            index: 'mcloud_harvester_statistic',
             body: ElasticQueries.findHistories(),
             size: 1000
         });
@@ -615,9 +616,13 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         }
     }
 
+    async index(index: string, body: object) {
+        await this.client.index({ index, type: 'base', body });
+    }
+
     async deleteByQuery(days: number) {
         await this.client.deleteByQuery({
-            index: [this.indexName],
+            index: this.indexName,
             body: {
                 query: {
                     range: {
@@ -627,6 +632,14 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
                     }
                 }
             }
+        });
+    }
+
+    async deleteDocument(index: string, id: string) {
+        await this.client.delete({
+            index,
+            type: 'base',
+            id
         });
     }
 

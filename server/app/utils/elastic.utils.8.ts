@@ -473,12 +473,13 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         });
     }
 
-    async search(index: string, body?: object, size?: number): Promise<any> {
-        return await this.client.search({
-            index: [index],
+    async search(index: string | string[], body?: object, size?: number): Promise<{ hits: any }> {
+        let response = await this.client.search({
+            index,
             ...body,
             size
         });
+        return response;
     }
 
     // async getHistory(baseIndex: string): Promise<{ history: any }> {
@@ -492,7 +493,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
 
     async getHistory(index: string, body: object): Promise<{ history: any }> {
         let response = await this.client.search({
-            index: [index],
+            index,
             ...body,
             size: 30
         });
@@ -501,7 +502,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
 
     async getHistories(): Promise<any> {
         let response = await this.client.search({
-            index: ['mcloud_harvester_statistic'],
+            index: 'mcloud_harvester_statistic',
             ...ElasticQueries.findHistories(),
             size: 1000
         });
@@ -613,9 +614,13 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         }
     }
 
+    async index(index: string, document: object) {
+        await this.client.index({ index, document });
+    }
+
     async deleteByQuery(days: number) {
         await this.client.deleteByQuery({
-            index: [this.indexName],
+            index: this.indexName,
             query: {
                 range: {
                     timestamp: {
@@ -623,6 +628,13 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
                     }
                 }
             }
+        });
+    }
+
+    async deleteDocument(index: string, id: string) {
+        await this.client.delete({
+            index,
+            id
         });
     }
 

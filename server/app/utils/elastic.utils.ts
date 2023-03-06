@@ -140,7 +140,7 @@ export abstract class ElasticSearchUtils {
 
     abstract deleteIndex(indicesToDelete: string | string[]): Promise<any>;
 
-    abstract search(index: string, body?: object, size?: number): Promise<any>;
+    abstract search(index: string | string[], body?: object, size?: number): Promise<{ hits: any, aggregations?: any }>;
 
     // abstract getHistory(baseIndex: string): Promise<any>;
     abstract getHistory(index: string, body: object): Promise<{ history: any }>;
@@ -151,15 +151,19 @@ export abstract class ElasticSearchUtils {
 
     abstract getFacetsByAttribution(): Promise<any>;
 
-    abstract getIndexSettings(indexName): Promise<any>;
+    abstract getIndexSettings(index: string): Promise<any>;
 
-    abstract getIndexMapping(indexName): Promise<any>;
+    abstract getIndexMapping(index: string): Promise<any>;
 
-    abstract getAllEntries(indexName): Promise<any>;
+    abstract getAllEntries(index: string): Promise<any>;
 
-    abstract isIndexPresent(index: string);
+    abstract isIndexPresent(index: string): Promise<boolean>;
+
+    abstract index(index: string, document: object): Promise<void>;
 
     abstract deleteByQuery(days: number): Promise<void>;
+
+    abstract deleteDocument(index: string, id: string): Promise<void>;
 
     // abstract health(status?: 'green' | 'GREEN' | 'yellow' | 'YELLOW' | 'red' | 'RED'): Promise<any>;
     async health(status: 'green' | 'yellow' | 'red' = 'yellow'): Promise<any> {
@@ -167,7 +171,7 @@ export abstract class ElasticSearchUtils {
     }
 
     // abstract flush(): Promise<any>;
-    async flush(): Promise<any> {
-        return (<{ flush: Function }>this.client.indices).flush();
+    async flush(body?: object): Promise<any> {
+        return (<{ flush: Function }>this.client.indices).flush(body);
     };
 }
