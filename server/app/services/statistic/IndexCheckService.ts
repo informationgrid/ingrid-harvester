@@ -21,16 +21,16 @@
  * ==================================================
  */
 
-import {Service} from '@tsed/di';
-import {ElasticSearchUtils} from "../../utils/elastic.utils";
-import {ConfigService} from "../config/ConfigService";
-import {Summary} from "../../model/summary";
-import {now} from "moment";
-import {elasticsearchMapping} from "../../statistic/url_check.mapping";
+import { elasticsearchMapping } from '../../statistic/url_check.mapping';
+import { now } from 'moment';
+import { ConfigService } from '../config/ConfigService';
 import { ElasticQueries } from '../../utils/elastic.queries';
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import { ElasticSearchUtils } from '../../utils/elastic.utils';
 import { ElasticSettings } from 'utils/elastic.setting';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { Service } from '@tsed/di';
+import { Summary } from '../../model/summary';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -62,7 +62,7 @@ export class IndexCheckService {
     }
 
     async start() {
-        log.info('IndexCheck started!')
+        log.info('IndexCheck started!');
         let start = now();
         let facetsByAttribution = await this.elasticUtils.getFacetsByAttribution();
         this.saveResult(facetsByAttribution, new Date(start));

@@ -21,16 +21,16 @@
  * ==================================================
  */
 
-import {Service} from '@tsed/di';
-import {ElasticSearchUtils} from "../../utils/elastic.utils";
-import {ConfigService} from "../config/ConfigService";
-import {Summary} from "../../model/summary";
-import {now} from "moment";
-import {elasticsearchMapping} from "../../statistic/url_check.mapping";
+import { elasticsearchMapping } from '../../statistic/url_check.mapping';
+import { now } from 'moment';
+import { ConfigService } from '../config/ConfigService';
 import { ElasticQueries } from '../../utils/elastic.queries';
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import { ElasticSearchUtils } from '../../utils/elastic.utils';
 import { ElasticSettings } from 'utils/elastic.setting';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { Service } from '@tsed/di';
+import { Summary } from '../../model/summary';
 
 const log = require('log4js').getLogger(__filename);
 const request = require('request');
@@ -64,7 +64,7 @@ export class UrlCheckService {
     }
 
     async start() {
-        log.info('UrlCheck started!')
+        log.info('UrlCheck started!');
         let start = now();
         let result = [];
         let after_key = undefined;
@@ -80,8 +80,9 @@ export class UrlCheckService {
                             let status = urlStatus.status;
                             (statusMap[status] = statusMap[status] || []).push(urlStatus.url);
                             statusMap['status_list'] = statusMap['status_list'] || [];
-                            if(statusMap['status_list'].indexOf(status) === -1)
+                            if (statusMap['status_list'].indexOf(status) === -1) {
                                 statusMap['status_list'].push(status);
+                            }
                             return statusMap;
                         });
                 });
@@ -103,25 +104,26 @@ export class UrlCheckService {
         try {
             let url = urlAggregation.url.trim();
             if (url.startsWith('ftp://')) {
-                return {url: urlAggregation, status: 'ftp'};
+                return { url: urlAggregation, status: 'ftp'};
             }
             else {
-                if(url.startsWith('/')){
-                    if(this.generalSettings.portalUrl.endsWith('/'))
+                if (url.startsWith('/')) {
+                    if (this.generalSettings.portalUrl.endsWith('/')) {
                         url = url.substring(1);
+                    }
                     url = this.generalSettings.portalUrl + url;
                 }
-                let options: any = {timeout: 10000, proxy: this.generalSettings.proxy, rejectUnauthorized: false};
+                let options: any = { timeout: 10000, proxy: this.generalSettings.proxy, rejectUnauthorized: false };
                 request.head(url, options, function (error, response) {
                     if (error) {
                         throw Error(error);
                     }
-                    return {url: urlAggregation, status: response.statusCode};
+                    return { url: urlAggregation, status: response.statusCode };
                 });
             }
         }
         catch (ex) {
-            return {url: urlAggregation, status: UrlCheckService.mapErrorMsg(ex.toString())};
+            return { url: urlAggregation, status: UrlCheckService.mapErrorMsg(ex.toString())};
         }
     }
 
@@ -148,7 +150,7 @@ export class UrlCheckService {
                 status_map.push({
                     code: status.toString(),
                     url: urls
-                })
+                });
             }
 
             this.elasticUtils.addDocToBulk({

@@ -21,14 +21,14 @@
  * ==================================================
  */
 
-import {Summary} from '../model/summary';
-import {elasticsearchMapping} from "./statistic.mapping";
-import {ImportLogMessage} from "../model/import.result";
-import { MiscUtils } from '../utils/misc.utils';
+import { elasticsearchMapping} from './statistic.mapping';
 import { ElasticSearchFactory } from '../utils/elastic.factory';
 import { ElasticSearchUtils } from '../utils/elastic.utils';
 import { ElasticSettings } from 'utils/elastic.setting';
+import { ImportLogMessage} from '../model/import.result';
+import { MiscUtils } from '../utils/misc.utils';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
+import { Summary} from '../model/summary';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -49,7 +49,7 @@ export class StatisticUtils {
         this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
     }
 
-    async saveSummary(logMessage: ImportLogMessage, baseIndex: string){
+    async saveSummary(logMessage: ImportLogMessage, baseIndex: string) {
         let timestamp = new Date();
 
         let errors = new Map();
@@ -69,12 +69,12 @@ export class StatisticUtils {
                 numAppErrors: logMessage.summary.appErrors.length,
                 numESErrors: logMessage.summary.elasticErrors.length,
                 duration: logMessage.duration,
-                warnings: Array.from(warnings.entries()).map(entry => {return {message: entry[0], count: entry[1]}}),
-                errors: Array.from(errors.entries()).map(entry => {return {message: entry[0], count: entry[1]}})
+                warnings: Array.from(warnings.entries()).map(entry => ({ message: entry[0], count: entry[1] })),
+                errors: Array.from(errors.entries()).map(entry => ({ message: entry[0], count: entry[1] }))
         }, baseIndex+"_"+timestamp.toISOString(), StatisticUtils.maxBulkSize);
 
         try {
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true)
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
             await this.elasticUtils.finishIndex(false);
         }
         catch(err) {
@@ -83,16 +83,18 @@ export class StatisticUtils {
         }
     }
 
-    collectErrorsOrWarnings(result: Map<string, number>, messages: string[]){
+    collectErrorsOrWarnings(result: Map<string, number>, messages: string[]) {
         messages.forEach(message => {
             // truncate too long messages:
             // a) because usually the content is not needed for debugging after a few lines
             // b) because elasticsearch complains for too long messages in a document
             let truncatedMessage = MiscUtils.truncateErrorMessage(message);
-            if(result.has(truncatedMessage))
+            if (result.has(truncatedMessage)) {
                 result.set(truncatedMessage, result.get(truncatedMessage)+1);
-            else
+            }
+            else {
                 result.set(truncatedMessage, 1);
-        })
+            }
+        });
     }
 }

@@ -76,7 +76,7 @@ export class HistoryService {
         Object.entries(dates).forEach(([date, harvester]) => {
             reduced_history.push({
                 timestamp: date,
-                harvester: Object.keys(harvester).map((index => {return {base_index: index, count: (harvester[index]["numRecords"] - harvester[index]["numSkipped"])}})),
+                harvester: Object.keys(harvester).map((index => ({ base_index: index, count: (harvester[index]["numRecords"] - harvester[index]["numSkipped"]) }))),
                 numRecords: Object.values(harvester).map(h => h["numRecords"]).reduce(this.SUM),
                 numSkipped: Object.values(harvester).map(h => h["numSkipped"]).reduce(this.SUM),
                 numWarnings: Object.values(harvester).map(h => h["numWarnings"]).reduce(this.SUM),
@@ -85,7 +85,7 @@ export class HistoryService {
                 numESErrors: Object.values(harvester).map(h => h["numESErrors"]).reduce(this.SUM),
                 duration: Object.values(harvester).map(h => h["duration"]).reduce(this.SUM)
             });
-        })
+        });
 
         return {
             history: reduced_history
