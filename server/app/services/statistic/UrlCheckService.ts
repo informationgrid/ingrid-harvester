@@ -24,20 +24,22 @@
 import {Service} from '@tsed/di';
 import {ElasticSearchUtils} from "../../utils/elastic.utils";
 import {ConfigService} from "../config/ConfigService";
-import {ElasticSettings} from "../../utils/elastic.setting";
 import {Summary} from "../../model/summary";
 import {now} from "moment";
 import {elasticsearchMapping} from "../../statistic/url_check.mapping";
-import {elasticsearchSettings} from "../../statistic/url_check.settings";
+import { ElasticQueries } from '../../utils/elastic.queries';
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import { ElasticSettings } from 'utils/elastic.setting';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 
-let elasticsearch = require('elasticsearch'), log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 const request = require('request');
 
 @Service()
 export class UrlCheckService {
 
     private elasticUtils: ElasticSearchUtils;
+    private elasticsearchSettings: ElasticSettings;
     private generalSettings;
 
     constructor() {
@@ -54,13 +56,11 @@ export class UrlCheckService {
         // @ts-ignore
         const summary: Summary = {};
         this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
+        this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
     }
 
-    async getHistory(){
-        let history = await this.elasticUtils.getUrlCheckHistory();
-        return {
-            history: history
-        }
+    async getHistory() {
+        return this.elasticUtils.getHistory(this.elasticUtils.indexName, ElasticQueries.getUrlCheckHistory());
     }
 
     async start() {

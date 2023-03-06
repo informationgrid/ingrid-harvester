@@ -22,6 +22,7 @@
  */
 
 import { ConfigService } from '../config/ConfigService';
+import { ElasticQueries } from '../../utils/elastic.queries';
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
 import { ElasticSearchUtils } from '../../utils/elastic.utils';
 import { ElasticSettings } from '../../utils/elastic.setting';
@@ -51,10 +52,10 @@ export class HistoryService {
 
     async getHistory(id: number): Promise<any> {
         const harvester = ConfigService.get().find(h => h.id === id);
-        let history = await this.elasticUtils.getHistory(harvester.index);
+        let history = await this.elasticUtils.getHistory('mcloud_harvester_statistic', ElasticQueries.findHistory(harvester.index));
         return {
             harvester: harvester.description,
-            history: history
+            ...history
         }
     }
 

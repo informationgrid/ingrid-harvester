@@ -22,14 +22,23 @@
  */
 
 import { ElasticSearchUtils } from './elastic.utils';
+import { ElasticSearchUtils6 } from './elastic.utils.6';
+import { ElasticSearchUtils8 } from './elastic.utils.8';
 import { ElasticSettings } from './elastic.setting';
 import { Summary } from '../model/summary';
-
-let elasticsearch = require('elasticsearch');
 
 export class ElasticSearchFactory {
 
     public static getElasticUtils(settings: ElasticSettings, summary: Summary): ElasticSearchUtils {
-        return new ElasticSearchUtils(settings, summary);
+        switch (settings.elasticSearchVersion) {
+            case '6':
+                return new ElasticSearchUtils6(settings, summary);
+            case '7':
+                break;
+            case '8':
+                return new ElasticSearchUtils8(settings, summary);
+            default: 
+                throw new Error('Only ES versions 6 and 8 are supported; [' + settings.elasticSearchVersion + '] was specified');
+        }
     }
 }

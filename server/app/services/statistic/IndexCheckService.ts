@@ -27,18 +27,18 @@ import {ConfigService} from "../config/ConfigService";
 import {Summary} from "../../model/summary";
 import {now} from "moment";
 import {elasticsearchMapping} from "../../statistic/url_check.mapping";
-import {elasticsearchSettings} from "../../statistic/url_check.settings";
+import { ElasticQueries } from '../../utils/elastic.queries';
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import { ElasticSettings } from 'utils/elastic.setting';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 
-let elasticsearch = require('elasticsearch'), log = require('log4js').getLogger(__filename);
-
-require('url').URL;
-
+const log = require('log4js').getLogger(__filename);
 
 @Service()
 export class IndexCheckService {
 
     private elasticUtils: ElasticSearchUtils;
+    private elasticsearchSettings: ElasticSettings;
 
     constructor() {
         let generalSettings = ConfigService.getGeneralSettings();
@@ -54,13 +54,11 @@ export class IndexCheckService {
         // @ts-ignore
         const summary: Summary = {};
         this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
+        this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
     }
 
-    async getHistory(){
-        let history = await this.elasticUtils.getIndexCheckHistory();
-        return {
-            history: history
-        }
+    async getHistory() {
+        return this.elasticUtils.getHistory(this.elasticUtils.indexName, ElasticQueries.getIndexCheckHistory());
     }
 
     async start() {
@@ -76,7 +74,7 @@ export class IndexCheckService {
                 timestamp: timestamp,
                 attributions: result
             }, timestamp.toISOString());
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, elasticsearchSettings, true);
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
             await this.elasticUtils.finishIndex(false);
         }
         catch(err) {

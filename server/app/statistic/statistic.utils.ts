@@ -23,16 +23,20 @@
 
 import {Summary} from '../model/summary';
 import {elasticsearchMapping} from "./statistic.mapping";
-import {elasticsearchSettings} from "./statistic.settings";
 import {ImportLogMessage} from "../model/import.result";
 import { MiscUtils } from '../utils/misc.utils';
 import { ElasticSearchFactory } from '../utils/elastic.factory';
+import { ElasticSearchUtils } from '../utils/elastic.utils';
+import { ElasticSettings } from 'utils/elastic.setting';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 
-let elasticsearch = require('elasticsearch'),
-    log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
 export class StatisticUtils {
-    public static maxBulkSize = 100;
+
+    private elasticUtils: ElasticSearchUtils;
+    private elasticsearchSettings: ElasticSettings;
+    private static maxBulkSize = 100;
 
     constructor(settings) {
         settings = {
@@ -42,6 +46,7 @@ export class StatisticUtils {
         // @ts-ignore
         const summary: Summary = {};
         this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
+        this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
     }
 
     async saveSummary(logMessage: ImportLogMessage, baseIndex: string){
@@ -69,7 +74,7 @@ export class StatisticUtils {
         }, baseIndex+"_"+timestamp.toISOString(), StatisticUtils.maxBulkSize);
 
         try {
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, elasticsearchSettings, true)
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true)
             await this.elasticUtils.finishIndex(false);
         }
         catch(err) {
