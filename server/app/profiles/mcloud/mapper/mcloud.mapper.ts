@@ -105,11 +105,16 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
 
     checkAndFixSpatialData(spatial : any): any {
         if(spatial) {
+            if(spatial.geometries) {
+                for(let i = 0; i < spatial.geometries.length; i++){
+                    spatial.geometries[i].coordinates = this.checkAndFixSpatialCoordinates(spatial.geometries[i].type, spatial.geometries[i].coordinates);
+                }
+            }
             if (spatial.coordinates) {
                 spatial.coordinates = this.checkAndFixSpatialCoordinates(spatial.type, spatial.coordinates);
-            }
-            if (spatial.coordinates.length == 0) {
-                spatial = null;
+                if (spatial.coordinates.length == 0) {
+                    spatial = null;
+                }
             }
         }
         return spatial;
