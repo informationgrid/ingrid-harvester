@@ -101,11 +101,16 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         }
         if (!openIfPresent || !isPresent) {
             try {
-                return await this.client.indices.create({
+                let index = await this.client.indices.create({
                     index: indexName,
                     wait_for_active_shards: '1',
                     // mappings,
                     body: settings
+                });
+                await this.client.indices.put_mapping({
+                    index: indexName,
+                    type: this.settings.indexType || 'base',
+                    body: mappings
                 });
             }
             catch(err) {
