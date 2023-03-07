@@ -106,7 +106,7 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
     checkAndFixSpatialData(spatial : any): any {
         if(spatial) {
             if (spatial.coordinates) {
-                spatial.coordinates = this.checkAndFixSpatialCoordinates(spatial.coordinates);
+                spatial.coordinates = this.checkAndFixSpatialCoordinates(spatial.type, spatial.coordinates);
             }
             if (spatial.coordinates.length == 0) {
                 spatial = null;
@@ -115,10 +115,10 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
         return spatial;
     }
 
-    checkAndFixSpatialCoordinates(coordinates : any): any {
+    checkAndFixSpatialCoordinates(type: string, coordinates : any): any {
         if(coordinates instanceof Array && coordinates[0] instanceof Array && coordinates[0][0] instanceof Array) {
             for (let i = 0; i < coordinates.length; i++) {
-                coordinates[i] = this.checkAndFixSpatialCoordinates(coordinates[i]);
+                coordinates[i] = this.checkAndFixSpatialCoordinates(type, coordinates[i]);
                 if(coordinates[i].length == 0){
                     coordinates.splice(i, 1)
                 }
@@ -130,7 +130,7 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
                     coordinates.splice(i--, 1);
                 }
             }
-            if(coordinates.length < 4){
+            if(type.toLowerCase() === 'polygon' && coordinates.length < 4){
                 coordinates = [];
             }
         }
