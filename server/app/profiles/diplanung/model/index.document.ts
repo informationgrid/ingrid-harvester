@@ -21,15 +21,15 @@
  * ==================================================
  */
 
-import { DcatApPluDocument } from "./dcatApPlu.document";
-import {IndexDocument} from "../../../model/index.document";
-import {Contact} from "../../../model/agent";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
-import {ExcelSparseMapper} from "../../../importer/excelsparse/excelsparse.mapper";
-import {WfsMapper} from "../../../importer/wfs/wfs.mapper";
-import {DiplanungMapperFactory} from "../mapper/diplanung.mapper.factory";
+import { Contact } from '../../../model/agent';
+import { CswMapper } from '../../../importer/csw/csw.mapper';
+import { DcatApPluDocument } from './dcatApPlu.document';
+import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
+import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
+import { IndexDocument } from '../../../model/index.document';
+import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
-export class pluDocument extends IndexDocument<CswMapper | ExcelSparseMapper | WfsMapper> {
+export class DiPlanungDocument extends IndexDocument<CswMapper | ExcelSparseMapper | WfsMapper> {
 
     async create(_mapper: CswMapper | ExcelSparseMapper | WfsMapper) : Promise<any> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);

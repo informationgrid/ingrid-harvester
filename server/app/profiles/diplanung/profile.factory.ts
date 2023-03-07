@@ -21,29 +21,23 @@
  * ==================================================
  */
 
+import { elasticsearchMapping } from './elastic/elastic.mapping';
+import { elasticsearchSettings } from './elastic/elastic.settings';
+import { AbstractDeduplicateUtils } from '../../utils/abstract.deduplicate.utils';
+import { CswMapper } from '../../importer/csw/csw.mapper';
+import { DeduplicateUtils } from './elastic/deduplicate.utils';
+import { DiPlanungDocument } from './model/index.document';
+import { ElasticSearchUtils } from '../../utils/elastic.utils';
+import { ElasticSettings } from '../../utils/elastic.setting';
+import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper';
+import { ProfileFactory } from '../profile.factory';
+import { Summary } from '../../model/summary';
+import { WfsMapper } from '../../importer/wfs/wfs.mapper';
 
-import {pluDocument} from "./model/index.document";
-import {ProfileFactory} from "../profile.factory";
-import {elasticsearchMapping} from "./elastic/elastic.mapping";
-import {elasticsearchSettings} from "./elastic/elastic.settings";
-import {CkanMapper} from "../../importer/ckan/ckan.mapper";
-import {CswMapper} from "../../importer/csw/csw.mapper";
-import {DcatMapper} from "../../importer/dcat/dcat.mapper";
-import {ExcelMapper} from "../../importer/excel/excel.mapper";
-import {OaiMapper} from "../../importer/oai/oai.mapper";
-import {SparqlMapper} from "../../importer/sparql/sparql.mapper";
-import {ExcelSparseMapper} from "../../importer/excelsparse/excelsparse.mapper";
-import {WfsMapper} from "../../importer/wfs/wfs.mapper";
-import { AbstractDeduplicateUtils } from "../../utils/abstract.deduplicate.utils";
-import { DeduplicateUtils } from "./elastic/deduplicate.utils";
-import { ElasticSearchUtils } from "../../utils/elastic.utils";
-import { ElasticSettings } from "../../utils/elastic.setting";
-import { Summary } from "../../model/summary";
+export class DiplanungFactory extends ProfileFactory<CswMapper | ExcelSparseMapper | WfsMapper> {
 
-export class DiplanungFactory extends ProfileFactory<CswMapper | ExcelSparseMapper | WfsMapper>{
-
-    getIndexDocument() : pluDocument{
-        return new pluDocument;
+    getIndexDocument(): DiPlanungDocument {
+        return new DiPlanungDocument();
     }
 
     getElasticMapping(): any {
