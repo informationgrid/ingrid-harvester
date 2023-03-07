@@ -22,8 +22,11 @@
  */
 
 
-import {IndexDocument} from "../model/index.document";
-import {BaseMapper} from "../importer/base.mapper";
+import { AbstractDeduplicateUtils } from '../utils/abstract.deduplicate.utils';
+import { BaseMapper } from '../importer/base.mapper';
+import { ElasticSearchUtils } from '../utils/elastic.utils';
+import { IndexDocument } from '../model/index.document';
+import { Summary } from '../model/summary';
 
 export abstract class ProfileFactory<M extends BaseMapper> {
     abstract getIndexDocument() : IndexDocument<M>;
@@ -31,4 +34,5 @@ export abstract class ProfileFactory<M extends BaseMapper> {
     abstract getElasticSettings(): any;
     abstract getElasticMapping(): any;
 
+    abstract getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: any, summary: Summary): AbstractDeduplicateUtils;
 }

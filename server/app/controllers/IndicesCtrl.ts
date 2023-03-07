@@ -36,8 +36,7 @@ export class IndicesCtrl {
 
     @Get('/')
     async getIndices(): Promise<Index[]> {
-
-        return this.indexService.getIndices();
+        return await this.indexService.getIndices();
 
     }
 

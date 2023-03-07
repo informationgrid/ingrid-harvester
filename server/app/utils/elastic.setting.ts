@@ -22,7 +22,9 @@
  */
 
 export type ElasticSettings = {
-    elasticSearchUrl?: string,
+    elasticSearchUrl: string,
+    elasticSearchVersion: string,
+    elasticSearchUser: string,
     elasticSearchPassword?: string,
     index: string,
     indexType?: string,

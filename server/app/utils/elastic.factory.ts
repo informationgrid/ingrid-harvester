@@ -21,47 +21,24 @@
  * ==================================================
  */
 
-export type GeneralSettings = {
-    elasticSearchUrl: string,
-    elasticSearchVersion: string,
-    elasticSearchUser: string,
-    elasticSearchPassword?: string,
-    cronOffset?: number,
-    alias: string,
-    numberOfShards?: number,
-    numberOfReplicas?: number,
-    proxy: string,
-    portalUrl?: string,
-    urlCheck?: CronData,
-    indexCheck?: CronData,
-    sessionSecret: string,
-    mail?: {
-    	enabled?: boolean,
-        mailServer?: MailServerConfiguration,
-		from?: string,
-    	to?: string,
-        subjectTag?: string
-    },
-    indexBackup?: {
-        active: boolean,
-        indexPattern?: string,
-        cronPattern?: string,
-        dir?: string
-    },
-    maxDiff?: number
-};
+import { ElasticSearchUtils } from './elastic.utils';
+import { ElasticSearchUtils6 } from './elastic.utils.6';
+import { ElasticSearchUtils8 } from './elastic.utils.8';
+import { ElasticSettings } from './elastic.setting';
+import { Summary } from '../model/summary';
 
-export interface MailServerConfiguration {
-    host: string,
-    port: number,
-    secure?: boolean,
-    auth: {
-        user: string,
-        pass: string
+export class ElasticSearchFactory {
+
+    public static getElasticUtils(settings: ElasticSettings, summary: Summary): ElasticSearchUtils {
+        switch (settings.elasticSearchVersion) {
+            case '6':
+                return new ElasticSearchUtils6(settings, summary);
+            case '7':
+                break;
+            case '8':
+                return new ElasticSearchUtils8(settings, summary);
+            default: 
+                throw new Error('Only ES versions 6 and 8 are supported; [' + settings.elasticSearchVersion + '] was specified');
+        }
     }
-}
-
-export interface CronData {
-    pattern: string;
-    active: boolean;
 }

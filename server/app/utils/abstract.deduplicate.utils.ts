@@ -21,47 +21,31 @@
  * ==================================================
  */
 
-export type GeneralSettings = {
-    elasticSearchUrl: string,
-    elasticSearchVersion: string,
-    elasticSearchUser: string,
-    elasticSearchPassword?: string,
-    cronOffset?: number,
-    alias: string,
-    numberOfShards?: number,
-    numberOfReplicas?: number,
-    proxy: string,
-    portalUrl?: string,
-    urlCheck?: CronData,
-    indexCheck?: CronData,
-    sessionSecret: string,
-    mail?: {
-    	enabled?: boolean,
-        mailServer?: MailServerConfiguration,
-		from?: string,
-    	to?: string,
-        subjectTag?: string
-    },
-    indexBackup?: {
-        active: boolean,
-        indexPattern?: string,
-        cronPattern?: string,
-        dir?: string
-    },
-    maxDiff?: number
-};
+import { ElasticSearchUtils } from './elastic.utils';
+import { ElasticSettings } from './elastic.setting';
+import { ImporterSettings } from '../importer.settings';
+import { Summary } from '../model/summary';
 
-export interface MailServerConfiguration {
-    host: string,
-    port: number,
-    secure?: boolean,
-    auth: {
-        user: string,
-        pass: string
+const log = require('log4js').getLogger(__filename);
+
+export abstract class AbstractDeduplicateUtils {
+
+    protected elastic: ElasticSearchUtils;
+    protected settings: ElasticSettings & ImporterSettings;
+    protected summary: Summary;
+
+    constructor(elasticUtils: ElasticSearchUtils, settings: any, summary: Summary) {
+        this.summary = summary;
+        this.elastic = elasticUtils;
+        this.settings = settings;
     }
-}
 
-export interface CronData {
-    pattern: string;
-    active: boolean;
+    abstract deduplicate(): Promise<void>;
+
+    abstract _deduplicateByTitle(): Promise<void>;
+
+    protected handleError(message: string, error: any): void {
+        this.summary.elasticErrors.push(message);
+        log.error(message, error);
+    }
 }

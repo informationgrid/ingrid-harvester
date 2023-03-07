@@ -32,10 +32,14 @@ import {DcatMapper} from "../../importer/dcat/dcat.mapper";
 import {ExcelMapper} from "../../importer/excel/excel.mapper";
 import {OaiMapper} from "../../importer/oai/oai.mapper";
 import {SparqlMapper} from "../../importer/sparql/sparql.mapper";
+import { DeduplicateUtils } from "./elastic/deduplicate.utils";
+import { ElasticSearchUtils } from "../../utils/elastic.utils";
+import { ElasticSettings } from "../../utils/elastic.setting";
+import { Summary } from "../../model/summary";
 
-export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper>{
+export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper> {
 
-    getIndexDocument() : mcloudDocument{
+    getIndexDocument(): mcloudDocument{
         return new mcloudDocument;
     }
 
@@ -45,5 +49,9 @@ export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatM
 
     getElasticSettings(): any {
         return elasticsearchSettings;
+    }
+
+    getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: ElasticSettings, summary: Summary): DeduplicateUtils {
+        return new DeduplicateUtils(elasticUtils, elasticSettings, summary);
     }
 }

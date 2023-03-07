@@ -34,6 +34,7 @@ import {RequestDelegate} from "../../utils/http-request.utils";
 import {ConfigService} from "../../services/config/ConfigService";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
 
 const plain_fetch = require('node-fetch');
 const HttpsProxyAgent = require('https-proxy-agent');
@@ -100,7 +101,7 @@ export class SparqlImporter implements Importer {
 
         this.summary = new SparqlSummary(settings);
 
-        this.elastic = new ElasticSearchUtils(settings, this.summary);
+        this.elastic = ElasticSearchFactory.getElasticUtils(settings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {

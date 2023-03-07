@@ -21,77 +21,50 @@
  * ==================================================
  */
 
-import {Service} from '@tsed/di';
-import {ImportSocketService} from '../../sockets/import.socket.service';
-import {ElasticSearchUtils} from "../../utils/elastic.utils";
-import {ConfigService} from "../config/ConfigService";
-import {ElasticSettings} from "../../utils/elastic.setting";
-import {Summary} from "../../model/summary";
-import {now} from "moment";
-import {elasticsearchMapping} from "../../statistic/url_check.mapping";
-import {elasticsearchSettings} from "../../statistic/url_check.settings";
-import {BulkResponse} from "../../statistic/statistic.utils";
+import { elasticsearchMapping } from '../../statistic/url_check.mapping';
+import { now } from 'moment';
+import { ConfigService } from '../config/ConfigService';
+import { ElasticQueries } from '../../utils/elastic.queries';
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import { ElasticSearchUtils } from '../../utils/elastic.utils';
+import { ElasticSettings } from 'utils/elastic.setting';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { Service } from '@tsed/di';
+import { Summary } from '../../model/summary';
 
-let elasticsearch = require('elasticsearch'), log = require('log4js').getLogger(__filename);
-
-const http = require('http');
-const https = require('https');
+const log = require('log4js').getLogger(__filename);
 const request = require('request');
-//const axios = require('axios');
-
-//const ftp = require('basic-ftp');
-require('url').URL;
 
 @Service()
 export class UrlCheckService {
+
     private elasticUtils: ElasticSearchUtils;
-    private _bulkData: any[];
+    private elasticsearchSettings: ElasticSettings;
     private generalSettings;
-    private settings: ElasticSettings;
-    private indexName: string;
 
-    private client: any;
-
-    constructor(private socketService: ImportSocketService) {
+    constructor() {
         this.generalSettings = ConfigService.getGeneralSettings();
-        this.settings = {
+        let settings = {
             elasticSearchUrl: this.generalSettings.elasticSearchUrl,
+            elasticSearchVersion: this.generalSettings.elasticSearchVersion,
+            elasticSearchUser: this.generalSettings.elasticSearchUser,
             elasticSearchPassword: this.generalSettings.elasticSearchPassword,
             alias: this.generalSettings.alias,
-            includeTimestamp: true,
-            index: ''
+            includeTimestamp: false,
+            index: 'url_check_history'
         };
-
-        // the elasticsearch client for access the cluster
-        const url = new URL(this.settings.elasticSearchUrl);
-        this.client = new elasticsearch.Client({
-            // log: 'trace',
-            host: {
-                host: url.hostname,
-                port: url.port,
-                protocol: url.protocol,
-                auth: 'elastic:' + this.settings.elasticSearchPassword,
-            },
-            requestTimeout: 30000
-        });
-
         // @ts-ignore
         const summary: Summary = {};
-        this.elasticUtils = new ElasticSearchUtils(this.settings, summary);
-        this._bulkData = [];
-
-        this.indexName = 'url_check_history';
+        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
+        this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
     }
 
-    async getHistory(){
-        let history = await this.elasticUtils.getUrlCheckHistory();
-        return {
-            history: history
-        }
+    async getHistory() {
+        return this.elasticUtils.getHistory(this.elasticUtils.indexName, ElasticQueries.getUrlCheckHistory());
     }
 
     async start() {
-        log.info('UrlCheck started!')
+        log.info('UrlCheck started!');
         let start = now();
         let result = [];
         let after_key = undefined;
@@ -107,12 +80,13 @@ export class UrlCheckService {
                             let status = urlStatus.status;
                             (statusMap[status] = statusMap[status] || []).push(urlStatus.url);
                             statusMap['status_list'] = statusMap['status_list'] || [];
-                            if(statusMap['status_list'].indexOf(status) === -1)
+                            if (statusMap['status_list'].indexOf(status) === -1) {
                                 statusMap['status_list'].push(status);
+                            }
                             return statusMap;
                         });
                 });
-            }, new Promise((resolve) => {
+            }, new Promise(resolve => {
                 resolve(result);
             }));
             log.info('UrlCheck: ' + count);
@@ -122,54 +96,34 @@ export class UrlCheckService {
         log.info('UrlCheck: ' + (duration / 1000) + 's');
         await this.saveResult(result, new Date(start), duration);
 
-        this.cleanIndex();
+        log.info('Cleanup UrlCheckHistory');
+        await this.elasticUtils.deleteByQuery(40);
     }
 
     private async getStatus(urlAggregation: any) {
         try {
             let url = urlAggregation.url.trim();
-            if (!url.startsWith('ftp://')) {
-                if(url.startsWith('/')){
-                    if(this.generalSettings.portalUrl.endsWith('/'))
+            if (url.startsWith('ftp://')) {
+                return { url: urlAggregation, status: 'ftp'};
+            }
+            else {
+                if (url.startsWith('/')) {
+                    if (this.generalSettings.portalUrl.endsWith('/')) {
                         url = url.substring(1);
+                    }
                     url = this.generalSettings.portalUrl + url;
                 }
-                let options: any = {timeout: 10000, proxy: this.generalSettings.proxy, rejectUnauthorized: false};
-                let request_call = new Promise((resolve) => {
-                        try {
-                            request.head(url, options, function (error, response) {
-                                if (!error) {
-                                    resolve({url: urlAggregation, status: response.statusCode});
-                                } else {
-                                    resolve({url: urlAggregation, status: UrlCheckService.mapErrorMsg(error.toString())});
-                                }
-                            });
-                            /*
-                            client.request(url, options, (res) => {
-                                //console.log(url + ': ' + res.statusCode);
-                                resolve({url: urlAggregation, status: res.statusCode});
-                            }).on('error', (err) => {
-                                //console.error(url + ': ' + err);
-                                resolve({url: urlAggregation, status: this.mapErrorMsg(err.toString())});
-                            }).end();*/
-                        } catch (ex) {
-                            //console.error(url + ': ' + ex);
-                            resolve({url: urlAggregation, status: UrlCheckService.mapErrorMsg(ex.toString())});
-                        }
+                let options: any = { timeout: 10000, proxy: this.generalSettings.proxy, rejectUnauthorized: false };
+                request.head(url, options, function (error, response) {
+                    if (error) {
+                        throw Error(error);
                     }
-                );
-                return request_call;
-            } else {
-                return new Promise((resolve) => {
-                    //console.error(url + ': ftp');
-                    resolve({url: urlAggregation, status: 'ftp'});
+                    return { url: urlAggregation, status: response.statusCode };
                 });
             }
-        } catch (ex) {
-            //console.error(url + ': ' + ex);
-            return new Promise((resolve) => {
-                resolve({url: urlAggregation, status: UrlCheckService.mapErrorMsg(ex.toString())});
-            });
+        }
+        catch (ex) {
+            return { url: urlAggregation, status: UrlCheckService.mapErrorMsg(ex.toString())};
         }
     }
 
@@ -196,224 +150,23 @@ export class UrlCheckService {
                 status_map.push({
                     code: status.toString(),
                     url: urls
-                })
+                });
             }
 
-            this.addDocToBulk({
+            this.elasticUtils.addDocToBulk({
                 timestamp: timestamp,
                 duration: duration,
                 status: status_map
             }, timestamp.toISOString());
 
-            await this.prepareIndex(elasticsearchMapping, elasticsearchSettings)
-                .then(() => this.finishIndex())
-                .catch(err => {
-                    let message = 'Error occurred creating UrlCheck index';
-                    log.error(message, err);
-                });
-        }
-    }
-
-    /**
-     * Add a document to the bulk array which will be sent to the elasticsearch node
-     * if a certain limit {{maxBulkSize}} is reached.
-     * @param doc
-     * @param {string|number} id
-     */
-    addDocToBulk(doc, id): Promise<BulkResponse> {
-        this._bulkData.push({
-            index: {
-                _id: id
-            }
-        });
-        this._bulkData.push(doc);
-
-        return new Promise(resolve => resolve({
-            queued: true
-        }));
-    }
-
-
-    /**
-     *
-     * @param mapping
-     * @param settings
-     */
-    prepareIndex(mapping, settings) {
-        let body = {
-            number_of_shards: this.generalSettings.numberOfShards,
-            number_of_replicas: this.generalSettings.numberOfReplicas
-        }
-        return new Promise<void>((resolve, reject) => {
-            this.isIndexPresent(this.indexName).then((isPresent) => {
-
-                if (!isPresent) {
-                    this.client.indices.create({index: this.indexName, waitForActiveShards: '1', body: body})
-                        .then(() => this.addMapping(this.indexName, this.settings.indexType, mapping, settings, resolve, reject))
-                        .catch(err => {
-                            let message = 'Error occurred creating UrlCheck index';
-                            log.error(message, err);
-                            reject(message);
-                        });
-                } else {
-                    this.client.indices.open({index: this.indexName, waitForActiveShards: '1'}).catch(err => {
-                        let message = 'Error occurred creating UrlCheck index';
-                        log.error(message, err);
-                        reject(message);
-                    });
-                    resolve();
-                }
-            });
-        });
-    }
-
-    finishIndex() {
-        return this.client.cluster.health({waitForStatus: 'yellow'})
-            .then(() =>
-                this.sendBulkData(false))
-            .then(() => {
-                log.info('Successfully added UrlCheck data into index: ' + this.indexName);
-            })
-            .catch(err => log.error('Error finishing index', err));
-    }
-
-    isIndexPresent(index: string) {
-        let result: boolean;
-        return this.client.cat.indices({
-            h: ['index'],
-            format: 'json'
-        }).then((body) => {
-            return body
-                .some(json => {
-                    return index === json.index;
-                })
-        }).catch(e => log.error(e));
-
-    }
-
-    /**
-     * Add the specified mapping to an index and type.
-     *
-     * @param {string} index
-     * @param {string} type
-     * @param {object} mapping
-     * @param {object} settings
-     * @param callback
-     * @param errorCallback
-     */
-    addMapping(index, type, mapping, settings, callback, errorCallback) {
-
-        // set settings
-        const handleSettings = () => {
-            this.client.indices.putSettings({
-                index: index,
-                body: settings
-            }, err => {
-                if (err) {
-                    log.error('Error occurred adding settings', err);
-                    errorCallback(err);
-                } else handleMapping(); //this.client.indices.open({ index: index });
-            });
-        };
-
-        // set mapping
-        const handleMapping = () => {
-            this.client.indices.putMapping({
-                index: index,
-                type: type || 'base',
-                body: mapping
-            }, err => {
-                if (err) {
-                    log.error('Error occurred adding mapping', err);
-                    errorCallback('Mapping error');
-                } else this.client.indices.open({index: index}, errOpen => {
-                    if (errOpen) {
-                        log.error('Error opening index', errOpen);
-                    }
-                    callback();
-                });
-            });
-        };
-
-        // in order to update settings the index has to be closed
-        const handleClose = () => {
-            this.client.cluster.health({waitForStatus: 'yellow'})
-                .then(() => this.client.indices.close({index: index}, handleSettings))
-                .catch(() => {
-                    log.error('Cluster state did not become yellow');
-                    errorCallback('Elasticsearch cluster state did not become yellow');
-                });
-        };
-
-        this.client.indices.create({index: index}, () => setTimeout(handleClose, 1000));
-        // handleSettings();
-
-    }
-
-    /**
-     * Send all collected bulk data if any.
-     *
-     * @param {boolean=} closeAfterBulk
-     */
-    sendBulkData(closeAfterBulk?): Promise<BulkResponse> {
-        if (this._bulkData) {
-            log.debug('Sending UrlCheck data to index ' + this.indexName);
-            let promise = this.bulk(this._bulkData, closeAfterBulk);
-            this._bulkData = [];
-            return promise;
-        }
-        return new Promise(resolve => resolve({
-            queued: true
-        }));
-    }
-
-    /**
-     * Index data in batches
-     * @param {object} data
-     * @param {boolean} closeAfterBulk
-     */
-    bulk(data, closeAfterBulk): Promise<BulkResponse> {
-        return new Promise((resolve, reject) => {
             try {
-                this.client.bulk({
-                    index: this.indexName,
-                    type: this.settings.indexType || 'base',
-                    body: data
-                })
-                    .then((response) => {
-                        if (response.errors) {
-                            response.items.forEach(item => {
-                                let err = item.index.error;
-                                if (err) {
-                                    log.error(`Error during indexing on index '${this.indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
-                                }
-                            });
-                        }
-                        if (closeAfterBulk) {
-                            log.debug('Closing client connection to Elasticsearch');
-                            this.client.close();
-                        }
-                        log.debug('Bulk finished of data #items: ' + data.length / 2);
-                        resolve({
-                            queued: false,
-                            response: response
-                        });
-                    })
-                    .catch(err => {
-                        log.error('Error occurred during bulk index of #items: ' + data.length / 2, err);
-                        if (closeAfterBulk) {
-                            this.client.close();
-                        }
-                        reject(err);
-                    });
-            } catch (e) {
-                log.error('Error during bulk indexing of #items: ' + data.length / 2, e);
+                await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
+                await this.elasticUtils.finishIndex(false);
             }
-        });
-    }
-
-    private async cleanIndex() {
-        log.info('Cleanup UrlCheckHistory')
-        await this.elasticUtils.cleanUrlCheckHistory(40)
+            catch(err) {
+                let message = 'Error occurred creating UrlCheck index';
+                log.error(message, err);
+            }
+        }
     }
 }

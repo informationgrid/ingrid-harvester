@@ -107,6 +107,8 @@ export class ConfigGeneralComponent implements OnInit {
 
     this.configForm = this.formBuilder.group({
       elasticSearchUrl: [settings.elasticSearchUrl, Validators.required, ConfigGeneralComponent.elasticUrlValidator],
+      elasticSearchVersion: [settings.elasticSearchVersion],
+      elasticSearchUser: [settings.elasticSearchUser],
       elasticSearchPassword: [settings.elasticSearchPassword],
       alias: [settings.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
       numberOfShards: [settings.numberOfShards],

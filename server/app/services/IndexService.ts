@@ -28,6 +28,7 @@ import {ElasticSettings} from '../utils/elastic.setting';
 import {Summary} from '../model/summary';
 import {Index} from '@shared/index.model';
 import * as fs from "fs";
+import { ElasticSearchFactory } from '../utils/elastic.factory';
 
 let log = require('log4js').getLogger(__filename);
 var path = require('path');
@@ -41,20 +42,19 @@ export class IndexService {
     private elasticUtils: ElasticSearchUtils;
 
     constructor() {
-
         this.initialize();
-
     }
 
     /**
      * Start all cron jobs configured in each harvester
      */
     initialize() {
-
         let generalSettings = ConfigService.getGeneralSettings();
         this.alias = generalSettings.alias;
         const settings: ElasticSettings = {
             elasticSearchUrl: generalSettings.elasticSearchUrl,
+            elasticSearchVersion: generalSettings.elasticSearchVersion,
+            elasticSearchUser: generalSettings.elasticSearchUser,
             elasticSearchPassword: generalSettings.elasticSearchPassword,
             alias: generalSettings.alias,
             includeTimestamp: true,
@@ -62,8 +62,7 @@ export class IndexService {
         };
         // @ts-ignore
         const summary: Summary = {elasticErrors: []};
-        this.elasticUtils = new ElasticSearchUtils(settings, summary);
-
+        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
     }
 
     async addToAlias(id: number) {
@@ -184,6 +183,6 @@ export class IndexService {
         });
         return await promise
             .then(() => this.elasticUtils.bulkWithIndexName(json.index, type, bulkData, false))
-            .then(() => this.elasticUtils.client.cluster.health({waitForStatus: 'yellow'}));
+            .then(() => this.elasticUtils.health('yellow'));
     }
 }

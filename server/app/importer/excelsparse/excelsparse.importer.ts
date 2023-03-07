@@ -32,6 +32,7 @@ import {DefaultCatalogSettings, ExcelSparseSettings} from './excelsparse.setting
 import {FilterUtils} from "../../utils/filter.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
 
 let log = require('log4js').getLogger(__filename);
 
@@ -69,7 +70,7 @@ export class ExcelSparseImporter implements Importer {
         this.filterUtils = new FilterUtils(settings);
 
         this.settings = settings;
-        this.elastic = new ElasticSearchUtils(settings, this.summary);
+        this.elastic = ElasticSearchFactory.getElasticUtils(settings, this.summary);
         this.excelFilepath = settings.filePath;
     }
 
