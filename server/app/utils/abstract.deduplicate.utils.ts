@@ -21,18 +21,31 @@
  * ==================================================
  */
 
-
-import { AbstractDeduplicateUtils } from '../utils/abstract.deduplicate.utils';
-import { BaseMapper } from '../importer/base.mapper';
-import { ElasticSearchUtils } from '../utils/elastic.utils';
-import { IndexDocument } from '../model/index.document';
+import { ElasticSearchUtils } from './elastic.utils';
+import { ElasticSettings } from './elastic.setting';
+import { ImporterSettings } from '../importer.settings';
 import { Summary } from '../model/summary';
 
-export abstract class ProfileFactory<M extends BaseMapper> {
-    abstract getIndexDocument() : IndexDocument<M>;
+const log = require('log4js').getLogger(__filename);
 
-    abstract getElasticSettings(): any;
-    abstract getElasticMapping(): any;
+export abstract class AbstractDeduplicateUtils {
 
-    abstract getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: any, summary: Summary): AbstractDeduplicateUtils;
+    protected elastic: ElasticSearchUtils;
+    protected settings: ElasticSettings & ImporterSettings;
+    protected summary: Summary;
+
+    constructor(elasticUtils: ElasticSearchUtils, settings: any, summary: Summary) {
+        this.summary = summary;
+        this.elastic = elasticUtils;
+        this.settings = settings;
+    }
+
+    abstract deduplicate(): Promise<void>;
+
+    abstract _deduplicateByTitle(): Promise<void>;
+
+    protected handleError(message: string, error: any): void {
+        this.summary.elasticErrors.push(message);
+        log.error(message, error);
+    }
 }

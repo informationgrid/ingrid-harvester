@@ -34,6 +34,11 @@ import {OaiMapper} from "../../importer/oai/oai.mapper";
 import {SparqlMapper} from "../../importer/sparql/sparql.mapper";
 import {ExcelSparseMapper} from "../../importer/excelsparse/excelsparse.mapper";
 import {WfsMapper} from "../../importer/wfs/wfs.mapper";
+import { AbstractDeduplicateUtils } from "../../utils/abstract.deduplicate.utils";
+import { DeduplicateUtils } from "./elastic/deduplicate.utils";
+import { ElasticSearchUtils } from "../../utils/elastic.utils";
+import { ElasticSettings } from "../../utils/elastic.setting";
+import { Summary } from "../../model/summary";
 
 export class DiplanungFactory extends ProfileFactory<CswMapper | ExcelSparseMapper | WfsMapper>{
 
@@ -47,5 +52,9 @@ export class DiplanungFactory extends ProfileFactory<CswMapper | ExcelSparseMapp
 
     getElasticSettings(): any {
         return elasticsearchSettings;
+    }
+
+    getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: ElasticSettings, summary: Summary): AbstractDeduplicateUtils {
+        return new DeduplicateUtils(elasticUtils, elasticSettings, summary);
     }
 }

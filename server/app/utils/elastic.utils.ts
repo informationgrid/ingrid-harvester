@@ -21,10 +21,10 @@
  * ==================================================
  */
 
+import { AbstractDeduplicateUtils } from './abstract.deduplicate.utils';
 import { Client as Client6 } from 'elasticsearch6';
 import { Client as Client7 } from 'elasticsearch7';
 import { Client as Client8 } from 'elasticsearch8';
-import { DeduplicateUtils } from './deduplicate.utils';
 import { ElasticSettings } from './elastic.setting';
 import { Index } from '@shared/index.model';
 
@@ -48,7 +48,7 @@ export abstract class ElasticSearchUtils {
     protected static readonly LENGTH_OF_TIMESTAMP = 18;
 
     public static maxBulkSize: number = 50;
-    public deduplicationUtils: DeduplicateUtils;
+    public deduplicationUtils: AbstractDeduplicateUtils;
     public indexName: string;
     public _bulkData: any[];
 

@@ -21,13 +21,14 @@
  * ==================================================
  */
 
+import { AbstractDeduplicateUtils } from './abstract.deduplicate.utils';
 import { BulkResponse, ElasticSearchUtils } from './elastic.utils';
 import { Client } from 'elasticsearch6';
-import { DeduplicateUtils } from './deduplicate.utils';
 import { ElasticQueries } from "./elastic.queries";
 import { ElasticSettings } from './elastic.setting';
 import { ImporterSettings } from '../importer.settings';
 import { Index } from '@shared/index.model';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 
 let log = require('log4js').getLogger(__filename);
@@ -38,7 +39,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     protected client: Client;
     private summary: Summary;
 
-    public deduplicationUtils: DeduplicateUtils;
+    public deduplicationUtils: AbstractDeduplicateUtils;
 
     constructor(settings, summary: Summary) {
         super();
@@ -57,7 +58,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         this._bulkData = [];
         this.indexName = settings.index;
 
-        this.deduplicationUtils = new DeduplicateUtils(this, settings, this.summary);
+        this.deduplicationUtils = ProfileFactoryLoader.get().getDeduplicationUtils(this, settings, this.summary);
     }
 
     async cloneIndex(mapping, settings) {

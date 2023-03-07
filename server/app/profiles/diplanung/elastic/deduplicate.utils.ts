@@ -21,35 +21,18 @@
  * ==================================================
  */
 
-import {Summary} from '../model/summary';
-import {ElasticSettings} from './elastic.setting';
-import {ImporterSettings} from '../importer.settings';
-import {ElasticSearchUtils} from './elastic.utils';
-import {ElasticQueries} from './elastic.queries';
+import { AbstractDeduplicateUtils } from '../../../utils/abstract.deduplicate.utils';
+import { ElasticSearchUtils } from '../../../utils/elastic.utils';
+import { ElasticQueries } from '../../../utils/elastic.queries';
+import { Summary } from '../../../model/summary';
 
-let log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
 
-export class DeduplicateUtils {
+export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
-    /*duplicateStaging: {
-        id: string,
-        modified: Date,
-        title: string,
-        query: any
-    }[];*/
-    deduplicationIndices: string[];
-
-    settings: ElasticSettings & ImporterSettings;
-    summary: Summary;
-
-    private elastic: ElasticSearchUtils;
-
-    constructor(elasticUtils: ElasticSearchUtils, settings, summary) {
-        this.summary = summary;
-        this.elastic = elasticUtils;
-        this.settings = settings;
-        // this.duplicateStaging = [];
+    constructor(elasticUtils: ElasticSearchUtils, settings: any, summary: Summary) {
+        super(elasticUtils, settings, summary);
     }
 
     // FIXME: deduplication must work differently when import is not started for all harvesters
@@ -266,10 +249,5 @@ export class DeduplicateUtils {
         }
 
         log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.elastic.indexName}`);
-    }
-
-    private handleError(message: string, error: any) {
-        this.summary.elasticErrors.push(message);
-        log.error(message, error);
     }
 }
