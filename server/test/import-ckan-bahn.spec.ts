@@ -52,16 +52,13 @@ describe('Import CKAN Bahn', function () {
 
         var settings: CkanSettings = {
             ...CkanImporter.defaultSettings,
-            alias: undefined,
             ckanBaseUrl: 'https://data.deutschebahn.com',
             defaultAttribution: 'Deutsche Bahn Datenportal',
             defaultDCATCategory: ['TRAN', 'TECH'],
             defaultMcloudSubgroup: ['railway'],
             providerField: 'organization',
             dryRun: true,
-            elasticSearchUrl: undefined,
             type: undefined,
-            includeTimestamp: true,
             index: undefined,
             filterTags: ['Fernverkehr', 'Wagenreihung']
         };
@@ -98,7 +95,6 @@ describe('Import CKAN Bahn', function () {
             ...CkanImporter.defaultSettings,
             ckanBaseUrl: 'https://data.deutschebahn.com',
             index: 'xxx',
-            includeTimestamp: true,
             markdownAsDescription: false
         }, {
             source: ckanDoc,

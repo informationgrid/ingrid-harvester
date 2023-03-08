@@ -52,12 +52,7 @@ describe('Import Excel', function () {
             dryRun: true,
             filePath: 'test/data/data-test.xlsx',
             defaultDCATCategory: ['DEFAULT_TRAN', "XXX"],
-            alias: undefined,
-            elasticSearchUrl: undefined,
-            elasticSearchVersion: '6',
-            elasticSearchUser: 'elastic',
             type: undefined,
-            includeTimestamp: undefined,
             index: undefined,
             isIncremental: false,
             maxConcurrent: 1

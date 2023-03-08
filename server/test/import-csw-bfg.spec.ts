@@ -55,7 +55,6 @@ describe('Import CSW BFG', function () {
             defaultDCATCategory: ["TRAN", "TECH"],
             defaultAttribution: "Bundesanstalt für Gewässerkunde",
             defaultAttributionLink: "https://www.bafg.de/",
-            includeTimestamp: true,
             httpMethod: "POST",
             recordFilter: `
                 <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
