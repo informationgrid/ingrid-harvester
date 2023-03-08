@@ -54,6 +54,8 @@ describe('Import Excel', function () {
             defaultDCATCategory: ['DEFAULT_TRAN', "XXX"],
             alias: undefined,
             elasticSearchUrl: undefined,
+            elasticSearchVersion: '6',
+            elasticSearchUser: 'elastic',
             type: undefined,
             includeTimestamp: undefined,
             index: undefined,

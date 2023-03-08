@@ -56,7 +56,7 @@ xdescribe('deduplication by exact title', function() {
 
     let elasticSearchUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
     let deduplicateUtils = elasticSearchUtils.deduplicationUtils;
-    deduplicateUtils.deduplicationIndices = deduplicationIndices;
+    //deduplicateUtils.deduplicationIndices = deduplicationIndices;
 
     /**
      * Initialize test indices with mapping and settings
