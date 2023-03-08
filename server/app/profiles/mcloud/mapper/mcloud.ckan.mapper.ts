@@ -45,6 +45,10 @@ export class mcloudCkanMapper extends mcloudMapper<CkanMapper> {
         return subgroups;
     }
 
+    getParent(): string{
+        return this.baseMapper._getParent();
+    }
+
     async getDisplayContacts() {
         let person = await this.getDisplayContactByField(this.baseMapper.getSettings().providerField);
 
