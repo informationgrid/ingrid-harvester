@@ -25,41 +25,50 @@
 
   <form [formGroup]="configForm">
 
-    <mat-form-field>
-      <input matInput type="url" placeholder="Elasticsearch-URL" formControlName="elasticSearchUrl" required>
-      <mat-error *ngIf="configForm.get('elasticSearchUrl').hasError('required')">
-        Dies ist ein Pflichtfeld
-      </mat-error>
-      <mat-error *ngIf="configForm.get('elasticSearchUrl').hasError('elasticUrl')">
-        Dies ist keine gültige Elasticsearch-URL (Bsp: http://localhost:9200)
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput type="text" placeholder="Elasticsearch-Benutzername" formControlName="elasticSearchUser" required>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput type="password" placeholder="Elasticsearch-Passwort" formControlName="elasticSearchPassword">
-    </mat-form-field>
-
-    <mat-form-field fxFlex="20">
-      <mat-select placeholder="Elasticsearch-Version" formControlName="elasticSearchVersion" required>
-        <mat-option value="6">6</mat-option>
-        <mat-option value="7">7</mat-option>
-        <mat-option value="8">8</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput placeholder="Alias-Name" formControlName="alias" required>
-      <mat-error *ngIf="configForm.get('alias').hasError('whitespace')">
-        Es dürfen nicht nur Leerzeichen eingegeben sein
-      </mat-error>
-      <mat-error *ngIf="configForm.get('alias').hasError('required')">
-        Dies ist ein Pflichtfeld
-      </mat-error>
-    </mat-form-field>
+    <mat-card class="margin-below">
+      <mat-card-header>
+        <mat-card-title>Elasticsearch</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
+          <mat-form-field fxFlex="4">
+            <mat-select placeholder="Version" formControlName="elasticSearchVersion" required>
+              <mat-option value="6">6</mat-option>
+              <mat-option value="7">7</mat-option>
+              <mat-option value="8">8</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field fxFlex="26">
+            <input matInput type="url" placeholder="Host-URL" formControlName="elasticSearchUrl" required>
+            <mat-error *ngIf="configForm.get('elasticSearchUrl').hasError('required')">
+              Dies ist ein Pflichtfeld
+            </mat-error>
+            <mat-error *ngIf="configForm.get('elasticSearchUrl').hasError('elasticUrl')">
+              Dies ist keine gültige Elasticsearch-URL (Bsp: http://localhost:9200)
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
+            <mat-form-field fxFlex="15">
+              <input matInput type="text" placeholder="Benutzername" formControlName="elasticSearchUser" required>
+            </mat-form-field>
+            <mat-form-field fxFlex="15">
+              <input matInput type="password" placeholder="Passwort" formControlName="elasticSearchPassword">
+            </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
+          <mat-form-field fxFlex="30">
+            <input matInput placeholder="Alias-Name" formControlName="alias" required>
+            <mat-error *ngIf="configForm.get('alias').hasError('whitespace')">
+              Es dürfen nicht nur Leerzeichen eingegeben sein
+            </mat-error>
+            <mat-error *ngIf="configForm.get('alias').hasError('required')">
+              Dies ist ein Pflichtfeld
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
 
     <mat-form-field>
       <input matInput type="number" placeholder="Offset Cron-Jobs in Minuten" formControlName="cronOffset">
