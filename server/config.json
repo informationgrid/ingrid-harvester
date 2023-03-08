@@ -27,8 +27,10 @@
     "disable": false,
     "id": 1,
     "cron": {
-      "pattern": "00 01 * * *",
-      "active": true
+      "full": {
+        "pattern": "00 01 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -73,13 +75,14 @@
     "defaultAttribution": "Deutsche Bahn Datenportal",
     "disable": false,
     "id": 6,
-    "cronPattern": null,
     "defaultAttributionLink": null,
     "cron": {
-      "active": false,
-      "pattern": "3 2 * * *"
+      "full": {
+        "active": false,
+        "pattern": "3 2 * * *"
+      }
     },
-    "additionalSearchFilter": ""
+    "add  itionalSearchFilter": ""
   },
   {
     "elasticSearchUrl": "http://elastic:9200",
@@ -123,8 +126,10 @@
     "id": 8,
     "defaultAttributionLink": null,
     "cron": {
-      "active": true,
-      "pattern": "3 2 * * *"
+      "full": {
+        "active": true,
+        "pattern": "3 2 * * *"
+      }
     },
     "additionalSearchFilter": ""
   },
@@ -191,8 +196,10 @@
     "defaultAttributionLink": null,
     "additionalSearchFilter": "type:dataset",
     "cron": {
-      "pattern": "10 2 * * *",
-      "active": true
+      "full": {
+        "pattern": "10 2 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -257,8 +264,10 @@
     "id": 11,
     "defaultAttributionLink": null,
     "cron": {
-      "pattern": "15 2 * * *",
-      "active": true
+      "full": {
+        "pattern": "15 2 * * *",
+        "active": true
+      }
     },
     "additionalSearchFilter": ""
   },
@@ -307,8 +316,10 @@
     "disable": false,
     "id": 12,
     "cron": {
-      "pattern": "40 2 * * *",
-      "active": true
+      "full": {
+        "pattern": "40 2 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -356,8 +367,10 @@
     "disable": false,
     "id": 17,
     "cron": {
-      "pattern": "30 2 * * *",
-      "active": true
+      "full": {
+        "pattern": "30 2 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -405,10 +418,11 @@
     "defaultAttributionLink": "https://geoservice.dlr.de",
     "id": 20,
     "recordFilter": "<ogc:Filter xmlns:ogc=\"http://www.opengis.net/ogc\"><ogc:PropertyIsEqualTo><ogc:PropertyName>subject</ogc:PropertyName><ogc:Literal>opendata</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Filter>",
-    "cronPattern": "0 2 * * *",
     "cron": {
-      "active": true,
-      "pattern": "35 2 * * *"
+      "full": {
+        "active": true,
+        "pattern": "35 2 * * *"
+      }
     }
   },
   {
@@ -458,8 +472,10 @@
     "defaultAttribution": "OpenData Rheinland-Pfalz",
     "defaultAttributionLink": null,
     "cron": {
-      "active": true,
-      "pattern": "5 2 * * *"
+      "full": {
+        "active": true,
+        "pattern": "5 2 * * *"
+      }
     },
     "additionalSearchFilter": ""
   },
@@ -508,8 +524,10 @@
     "defaultAttribution": "OpenData Schleswig-Holstein",
     "defaultAttributionLink": null,
     "cron": {
-      "active": true,
-      "pattern": "10 2 * * *"
+      "full": {
+        "active": true,
+        "pattern": "10 2 * * *"
+      }
     },
     "additionalSearchFilter": ""
   },
@@ -555,8 +573,10 @@
     "defaultAttributionLink": "https://geomis.sachsen.de",
     "recordFilter": "            <ogc:Filter>\n                <ogc:Or>\n                    <ogc:And>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>subject</ogc:PropertyName>\n                            <ogc:Literal>opendata</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:Or>\n                            <ogc:PropertyIsEqualTo>\n                                <ogc:PropertyName>HierarchyLevelName</ogc:PropertyName>\n                                <ogc:Literal>transportation</ogc:Literal>\n                            </ogc:PropertyIsEqualTo>\n                            <ogc:PropertyIsEqualTo>\n                                <ogc:PropertyName>TopicCategory</ogc:PropertyName>\n                                <ogc:Literal>transportation</ogc:Literal>\n                            </ogc:PropertyIsEqualTo>\n                        </ogc:Or>\n                    </ogc:And>\n                    <ogc:And>\n                        <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                            <ogc:PropertyName>OrganisationName</ogc:PropertyName>\n                            <ogc:Literal>Leibniz-Institut.f.r..kologische.Raumentwicklung</ogc:Literal>\n                        </ogc:PropertyIsLike>\n                        <ogc:Or>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*verkehr*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*stra.e*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*schiene*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*wasser*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                            <ogc:PropertyIsLike wildCard=\"*\" singleChar=\".\" escapeChar=\"@\">\n                                <ogc:PropertyName>subject</ogc:PropertyName>\n                                <ogc:Literal>*gew.sser*</ogc:Literal>\n                            </ogc:PropertyIsLike>\n                        </ogc:Or>\n                    </ogc:And>\n                </ogc:Or>\n            </ogc:Filter>",
     "cron": {
-      "active": true,
-      "pattern": "40 2 * * *"
+      "full": {
+        "active": true,
+        "pattern": "40 2 * * *"
+      }
     }
   },
   {
@@ -604,8 +624,10 @@
     "defaultAttributionLink": "http://ckan.geonet-mrn.de",
     "additionalSearchFilter": "",
     "cron": {
-      "pattern": "15 2 * * *",
-      "active": true
+      "full": {
+        "pattern": "15 2 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -650,8 +672,10 @@
     "defaultAttributionLink": "https://mis.bkg.bund.de/portal/",
     "recordFilter": "\n            <ogc:Filter>\n                <ogc:And>\n                    <ogc:PropertyIsEqualTo>\n                        <ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n                        <ogc:Literal>Datenlizenz Deutschland</ogc:Literal>\n                    </ogc:PropertyIsEqualTo>\n                    <ogc:Or>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>subject</ogc:PropertyName>\n                            <ogc:Literal>Verkehrswesen</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>subject</ogc:PropertyName>\n                            <ogc:Literal>Verkehr</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>subject</ogc:PropertyName>\n                            <ogc:Literal>Kfz</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                    </ogc:Or>\n                </ogc:And>\n            </ogc:Filter>",
     "cron": {
-      "pattern": "45 2 * * *",
-      "active": true
+      "full": {
+        "pattern": "45 2 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -697,8 +721,10 @@
     "recordFilter": "            \n<ogc:Filter>\n    <ogc:And>\n        <ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n            <ogc:Literal>*Datenlizenz Deutschland*</ogc:Literal>\n        </ogc:PropertyIsLike>\n        <ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>Keyword</ogc:PropertyName>\n            <ogc:Literal>Gewässer</ogc:Literal>\n        </ogc:PropertyIsLike>\n    </ogc:And>\n</ogc:Filter>\n",
     "disable": false,
     "cron": {
-      "pattern": "55 02 * * *",
-      "active": true
+      "full": {
+        "pattern": "55 02 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -744,8 +770,10 @@
     "recordFilter": "<ogc:Filter>\n\t<ogc:And>\n\t\t<ogc:Or>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>*Datenlizenz Deutschland*</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>OtherConstraints</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>*Creative Commons*</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t</ogc:Or>\n\t\t<ogc:Or>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>subject</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>Verkehrsnetze</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t\t<ogc:PropertyIsLike escapeChar=\"!\" singleChar=\"?\" wildCard=\"*\">\n\t\t\t\t<ogc:PropertyName>Subject</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>Gew?ssernetz</ogc:Literal>\n\t\t\t</ogc:PropertyIsLike>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>transportation</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t\t<ogc:PropertyIsEqualTo>\n\t\t\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t\t\t<ogc:Literal>inlandWaters</ogc:Literal>\n\t\t\t</ogc:PropertyIsEqualTo>\n\t\t</ogc:Or>\n\t</ogc:And>\n</ogc:Filter>",
     "disable": false,
     "cron": {
-      "pattern": "50 02 * * *",
-      "active": true
+      "full": {
+        "pattern": "50 02 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -791,8 +819,10 @@
     "recordFilter": "            <ogc:Filter>\n               <ogc:PropertyIsEqualTo>\n                    <ogc:PropertyName>subject</ogc:PropertyName>\n                    <ogc:Literal>opendata</ogc:Literal>\n               </ogc:PropertyIsEqualTo>\n            </ogc:Filter>",
     "disable": false,
     "cron": {
-      "pattern": "37 02 * * *",
-      "active": true
+      "full": {
+        "pattern": "37 02 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -838,8 +868,10 @@
     "recordFilter": "<ogc:Filter>\n    <ogc:And>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>subject</ogc:PropertyName>\n\t\t<ogc:Literal>opendata</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>TopicCategory</ogc:PropertyName>\n\t\t<ogc:Literal>transportation</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n    </ogc:And>\n</ogc:Filter> ",
     "disable": false,
     "cron": {
-      "active": true,
-      "pattern": "55 02 * * *"
+      "full": {
+        "active": true,
+        "pattern": "55 02 * * *"
+      }
     }
   },
   {
@@ -885,8 +917,10 @@
     "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Verkehr</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
     "disable": false,
     "cron": {
-      "pattern": "46 02 * * *",
-      "active": true
+      "full": {
+        "pattern": "46 02 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -936,8 +970,10 @@
     "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Verkehr</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
     "disable": false,
     "cron": {
-      "pattern": "47 02 * * *",
-      "active": true
+      "full": {
+        "pattern": "47 02 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -983,8 +1019,10 @@
     "recordFilter": "<ogc:Filter>\n    <ogc:PropertyIsEqualTo>\n        <ogc:PropertyName>subject</ogc:PropertyName>\n        <ogc:Literal>Lärm</ogc:Literal>\n    </ogc:PropertyIsEqualTo>\n</ogc:Filter>",
     "disable": false,
     "cron": {
-      "active": true,
-      "pattern": "45 02 * * *"
+      "full": {
+        "active": true,
+        "pattern": "45 02 * * *"
+      }
     }
   },
   {
@@ -1021,8 +1059,10 @@
     "defaultAttributionLink": "https://oai.dwd.de/oai/provider?verb=ListRecords&metadataPrefix=iso19139&set=mCLOUD",
     "disable": false,
     "cron": {
-      "pattern": "50 02 * * *",
-      "active": true
+      "full": {
+        "pattern": "50 02 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -1061,8 +1101,10 @@
     "providerPrefix": "GovData: ",
     "dcatProviderField": "creator",
     "cron": {
-      "pattern": "05 03 * * * ",
-      "active": true
+      "full": {
+        "pattern": "05 03 * * * ",
+        "active": true
+      }
     }
   },
   {
@@ -1102,8 +1144,10 @@
     "providerPrefix": "",
     "dcatProviderField": "maintainer",
     "cron": {
-      "pattern": "05 02 * * *",
-      "active": true
+      "full": {
+        "pattern": "05 02 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -1142,8 +1186,10 @@
     "defaultAttributionLink": "https://www.limbo-project.org/",
     "disable": false,
     "cron": {
-      "pattern": "59 02 * * *",
-      "active": true
+      "full": {
+        "pattern": "59 02 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -1188,8 +1234,10 @@
     "defaultAttributionLink": "https://www.dfs.de",
     "recordFilter": "            <ogc:Filter>\n               <ogc:PropertyIsEqualTo>\n                    <ogc:PropertyName>apiso:OrganisationName</ogc:PropertyName>\n                    <ogc:Literal>DFS</ogc:Literal>\n               </ogc:PropertyIsEqualTo>\n            </ogc:Filter>",
     "cron": {
-      "pattern": "55 02 * * *",
-      "active": true
+      "full": {
+        "pattern": "55 02 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -1233,8 +1281,10 @@
     "defaultAttributionLink": "https://www.mobidata-bw.de",
     "additionalSearchFilter": "",
     "cron": {
-      "pattern": "07 03 * * *",
-      "active": true
+      "full": {
+        "pattern": "07 03 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -1278,8 +1328,10 @@
     "defaultAttributionLink": "https://www.opendata-oepnv.de",
     "additionalSearchFilter": "",
     "cron": {
-      "active": true,
-      "pattern": "56 02 * * *"
+      "full": {
+        "active": true,
+        "pattern": "56 02 * * *"
+      }
     },
     "disable": false
   },
@@ -1325,8 +1377,10 @@
     "defaultAttributionLink": "https://www.mundialis.de",
     "recordFilter": "            <ogc:Filter>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>anyText</ogc:PropertyName>\n                            <ogc:Literal>mfund</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n            </ogc:Filter>",
     "cron": {
-      "pattern": "58 02 * * *",
-      "active": true
+      "full": {
+        "pattern": "58 02 * * *",
+        "active": true
+      }
     },
     "disable": false
   },
@@ -1372,8 +1426,10 @@
     "defaultAttributionLink": "https://fair-metadata.de/geonetwork",
     "recordFilter": null,
     "cron": {
-      "pattern": "57 02 * * *",
-      "active": true
+      "full": {
+        "pattern": "57 02 * * *",
+        "active": true
+      }
     },
     "disable": true
   },
@@ -1417,8 +1473,10 @@
     "defaultAttributionLink": "https://opendata.vag.de",
     "additionalSearchFilter": "",
     "cron": {
-      "pattern": "08 03 * * *",
-      "active": true
+      "full": {
+        "pattern": "08 03 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -1465,8 +1523,10 @@
     "defaultAttributionLink": "https://geoportal.bafg.de/",
     "recordFilter": "<ogc:Filter>\n    <ogc:And>\n        <ogc:PropertyIsEqualTo>\n            <ogc:PropertyName>Subject</ogc:PropertyName>\n            <ogc:Literal>opendata</ogc:Literal>\n        </ogc:PropertyIsEqualTo>\n        <ogc:PropertyIsEqualTo>\n            <ogc:PropertyName>OrganisationName</ogc:PropertyName>\n            <ogc:Literal>Bundesanstalt für Gewässerkunde</ogc:Literal>\n        </ogc:PropertyIsEqualTo>\n    </ogc:And>\n</ogc:Filter>",
     "cron": {
-      "pattern": "30 2 * * *",
-      "active": true
+      "full": {
+        "pattern": "30 2 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -1513,8 +1573,10 @@
     "defaultAttributionLink": "https://datenrepository.baw.de",
     "recordFilter": null,
     "cron": {
-      "pattern": "45 2 * * *",
-      "active": true
+      "full": {
+        "pattern": "45 2 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -1559,8 +1621,10 @@
     "defaultAttributionLink": "https://www.geoportal.de/portal/main/",
     "recordFilter": "            <ogc:Filter>\n                    <ogc:PropertyIsEqualTo>\n                        <ogc:PropertyName>Subject</ogc:PropertyName>\n                        <ogc:Literal>BAYSIS</ogc:Literal>\n                    </ogc:PropertyIsEqualTo>\n            </ogc:Filter>",
     "cron": {
-      "pattern": "10 03 * * *",
-      "active": true
+      "full": {
+        "pattern": "10 03 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -1603,8 +1667,10 @@
     "defaultAttributionLink": null,
     "additionalSearchFilter": "",
     "cron": {
-      "pattern": "09 03 * * *",
-      "active": true
+      "full": {
+        "pattern": "09 03 * * *",
+        "active": true
+      }
     }
   },
   {
@@ -1642,8 +1708,10 @@
     "providerPrefix": "OpenData Berlin: ",
     "dcatProviderField": "publisher",
     "cron": {
-      "pattern": "5 2 * * *",
-      "active": true
+      "full": {
+        "pattern": "5 2 * * *",
+        "active": true
+      }
     }
   }
 ]
