@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
+import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {CswMapper} from './csw.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -36,6 +36,8 @@ import { MiscUtils } from '../../utils/misc.utils';
 import { SummaryService } from '../../services/config/SummaryService';
 import {ProfileFactory} from "../../profiles/profile.factory";
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import {ElasticSettings} from "../../utils/elastic.setting";
+import {ConfigService} from "../../services/config/ConfigService";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -62,7 +64,6 @@ export class CswImporter implements Importer {
     private numIndexDocs = 0;
 
     static defaultSettings: Partial<CswSettings> = {
-        ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         ...DefaultXpathSettings,
         getRecordsUrl: '',
@@ -117,7 +118,8 @@ export class CswImporter implements Importer {
 
         this.summary = new CswSummary(settings);
 
-        this.elastic = ElasticSearchFactory.getElasticUtils(settings, this.summary);
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
+        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     static addModifiedFilter(recordFilter: string, lastRunDate: Date): string {

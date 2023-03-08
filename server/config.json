@@ -1,8 +1,6 @@
 [
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "excel",
-    "includeTimestamp": true,
     "priority": null,
     "type": "EXCEL",
     "maxRecords": 100,
@@ -34,9 +32,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "ckan_db",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
@@ -85,9 +81,7 @@
     "add  itionalSearchFilter": ""
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "ckan_offenesdatenportal",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
@@ -134,9 +128,7 @@
     "additionalSearchFilter": ""
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "ckan_portal_hamburg",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
@@ -203,9 +195,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "ckan_opendata_nrw",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
@@ -272,9 +262,7 @@
     "additionalSearchFilter": ""
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_wsv",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -323,9 +311,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_bsh",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -374,9 +360,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_geoservice_dlr",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -426,9 +410,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "ckan_rlp",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
@@ -480,9 +462,7 @@
     "additionalSearchFilter": ""
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "ckan_schleswig_holstein",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CKAN",
     "maxRecords": 50,
@@ -532,9 +512,7 @@
     "additionalSearchFilter": ""
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_geomis_sachsen",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -580,9 +558,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "ckan_geonet_mrn",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
@@ -631,9 +607,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_bkg",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -679,9 +653,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_geoportal_brandenburg",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -728,9 +700,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_geodaten_mv",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -777,9 +747,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_eba_laermkartierung",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -826,9 +794,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_geoportal_bw",
-    "includeTimestamp": true,
     "priority": -5,
     "type": "CSW",
     "maxRecords": 100,
@@ -875,9 +841,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_metaver_hb",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -924,9 +888,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_metaver_st",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -977,9 +939,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_metaver_bb",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -1026,9 +986,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "oai_dwd",
-    "includeTimestamp": true,
     "priority": null,
     "type": "OAI",
     "maxRecords": 100,
@@ -1066,9 +1024,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "dcat_govdata",
-    "includeTimestamp": true,
     "priority": -10,
     "type": "DCAT",
     "maxRecords": 100,
@@ -1108,9 +1064,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "dcat_hro",
-    "includeTimestamp": true,
     "priority": null,
     "type": "DCAT",
     "maxRecords": 100,
@@ -1151,9 +1105,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "sparql_limbo",
-    "includeTimestamp": true,
     "priority": 0,
     "type": "SPARQL",
     "maxRecords": null,
@@ -1193,9 +1145,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_dfs",
-    "includeTimestamp": true,
     "priority": 5,
     "type": "CSW",
     "maxRecords": 10,
@@ -1241,9 +1191,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "ckan_mobidata_bw",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
@@ -1288,9 +1236,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "ckan_oepnv",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
@@ -1336,9 +1282,7 @@
     "disable": false
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_mundialis",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -1385,9 +1329,7 @@
     "disable": false
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_fair",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -1434,9 +1376,7 @@
     "disable": true
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "ckan_vag",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CKAN",
     "maxRecords": 100,
@@ -1480,9 +1420,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_bfg",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -1530,9 +1468,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_baw",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -1580,9 +1516,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "csw_gdi_de_baysis",
-    "includeTimestamp": true,
     "priority": null,
     "type": "CSW",
     "maxRecords": 100,
@@ -1628,10 +1562,8 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "ckan_fid",
-    "includeTimestamp": true,
-    "priority": -1,
+    "priority": -2,
     "type": "CKAN",
     "maxRecords": 100,
     "startPosition": 0,
@@ -1674,9 +1606,7 @@
     }
   },
   {
-    "elasticSearchUrl": "http://elastic:9200",
     "index": "dcat_berlin",
-    "includeTimestamp": true,
     "priority": null,
     "type": "DCAT",
     "maxRecords": 100,

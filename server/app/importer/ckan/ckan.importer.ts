@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
+import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {Summary} from '../../model/summary';
 import {DefaultImporterSettings, Importer} from '../../importer';
 import {RequestDelegate} from '../../utils/http-request.utils';
@@ -33,6 +33,8 @@ import {FilterUtils} from '../../utils/filter.utils';
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import {ElasticSettings} from '../../utils/elastic.setting';
+import {ConfigService} from "../../services/config/ConfigService";
 
 let log = require('log4js').getLogger(__filename);
 const uuidv5 = require('uuid/v5');
@@ -46,7 +48,6 @@ export class CkanImporter implements Importer {
     private docsByParent: any[][] = [];
 
     static defaultSettings: CkanSettings = {
-        ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         ckanBaseUrl: '',
         filterTags: [],
@@ -84,6 +85,8 @@ export class CkanImporter implements Importer {
         // merge default settings with configured ones
         settings = MiscUtils.merge(CkanImporter.defaultSettings, settings);
 
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
+
         this.summary = new Summary(settings);
 
         // Trim trailing slash
@@ -93,7 +96,7 @@ export class CkanImporter implements Importer {
         }
         this.settings = settings;
         this.filterUtils = new FilterUtils(settings);
-        this.elastic = ElasticSearchFactory.getElasticUtils(settings, this.summary);
+        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
 
         let requestConfig = CkanMapper.createRequestConfig(settings);
         let requestConfigCount = CkanMapper.createRequestConfigCount(settings);

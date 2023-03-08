@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
+import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {SparqlMapper} from './sparql.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -35,6 +35,7 @@ import {ConfigService} from "../../services/config/ConfigService";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import {ElasticSettings} from "../../utils/elastic.setting";
 
 const plain_fetch = require('node-fetch');
 const HttpsProxyAgent = require('https-proxy-agent');
@@ -72,7 +73,6 @@ export class SparqlImporter implements Importer {
     private generalSettings = ConfigService.getGeneralSettings();
 
     static defaultSettings: SparqlSettings = {
-        ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         endpointUrl: '',
         query: '',
@@ -101,7 +101,8 @@ export class SparqlImporter implements Importer {
 
         this.summary = new SparqlSummary(settings);
 
-        this.elastic = ElasticSearchFactory.getElasticUtils(settings, this.summary);
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
+        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {

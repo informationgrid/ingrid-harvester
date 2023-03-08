@@ -28,15 +28,6 @@ import { Client as Client8 } from 'elasticsearch8';
 import { ElasticSettings } from './elastic.setting';
 import { Index } from '@shared/index.model';
 
-export const DefaultElasticsearchSettings: ElasticSettings = {
-    elasticSearchUrl: process.env.ELASTIC_URL || "http://elastic:9200",
-    elasticSearchVersion: '8',
-    elasticSearchUser: 'elastic',
-    index: '',
-    // alias: '',
-    includeTimestamp: true,
-};
-
 export interface BulkResponse {
     queued: boolean;
     response?: any;

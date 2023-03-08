@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import {ElasticSettings} from '../../utils/elastic.setting';
 import {ImporterSettings} from '../../importer.settings';
 
 export type CswSettings = {
@@ -38,7 +37,7 @@ export type CswSettings = {
     eitherKeywords: string[],
     httpMethod: "GET" | "POST",
     recordFilter?: string
-} & ElasticSettings & ImporterSettings;
+} & ImporterSettings;
 
 export const DefaultXpathSettings: Partial<CswSettings> = {
     xpaths: {

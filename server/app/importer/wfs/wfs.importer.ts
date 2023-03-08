@@ -22,7 +22,7 @@
  */
 
 import { decode } from 'iconv-lite';
-import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
+import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {WfsMapper} from './wfs.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -39,6 +39,8 @@ import { XPathUtils } from '../../utils/xpath.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
 import {Contact} from "../../model/agent";
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import {ElasticSettings} from "../../utils/elastic.setting";
+import {ConfigService} from "../../services/config/ConfigService";
 
 const fs = require('fs');
 const xpath = require('xpath');
@@ -98,7 +100,6 @@ export class WfsImporter implements Importer {
     private numIndexDocs = 0;
 
     static defaultSettings: Partial<WfsSettings> = {
-        ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         ...DefaultXpathSettings,
         // getFeaturesUrl: '',
@@ -143,7 +144,8 @@ export class WfsImporter implements Importer {
 
         this.summary = new WfsSummary(settings);
 
-        this.elastic = ElasticSearchFactory.getElasticUtils(settings, this.summary);
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
+        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {

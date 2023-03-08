@@ -28,4 +28,4 @@ export type OaiSettings = {
     providerUrl: string,
     set: string,
     eitherKeywords: string[]
-} & ElasticSettings & ImporterSettings;
+} & ImporterSettings;

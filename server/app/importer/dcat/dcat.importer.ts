@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
+import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {DcatMapper} from './dcat.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -35,6 +35,8 @@ import {RequestDelegate} from "../../utils/http-request.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import {ElasticSettings} from "../../utils/elastic.setting";
+import {ConfigService} from "../../services/config/ConfigService";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -67,7 +69,6 @@ export class DcatImporter implements Importer {
     private numIndexDocs = 0;
 
     static defaultSettings: DcatSettings = {
-        ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         catalogUrl: '',
         filterTags: [],
@@ -102,7 +103,8 @@ export class DcatImporter implements Importer {
 
         this.summary = new DcatSummary(settings);
 
-        this.elastic = ElasticSearchFactory.getElasticUtils(settings, this.summary);
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
+        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
+import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {ExcelSparseMapper} from './excelsparse.mapper';
 import {Workbook, Worksheet} from 'exceljs';
 import {Summary} from '../../model/summary';
@@ -33,6 +33,8 @@ import {FilterUtils} from "../../utils/filter.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import {ElasticSettings} from "../../utils/elastic.setting";
+import {ConfigService} from "../../services/config/ConfigService";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -45,7 +47,6 @@ export class ExcelSparseImporter implements Importer {
     columnMap: Columns;
 
     static defaultSettings: Partial<ExcelSparseSettings> = {
-        ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         ...DefaultCatalogSettings,
         filePath: './data.xlsx'
@@ -70,7 +71,8 @@ export class ExcelSparseImporter implements Importer {
         this.filterUtils = new FilterUtils(settings);
 
         this.settings = settings;
-        this.elastic = ElasticSearchFactory.getElasticUtils(settings, this.summary);
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
+        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
         this.excelFilepath = settings.filePath;
     }
 
