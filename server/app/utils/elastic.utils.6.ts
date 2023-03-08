@@ -400,10 +400,12 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     }
 
     async deleteIndex(indicesToDelete: string | string[]): Promise<any> {
-        log.debug('Deleting indices: ' + indicesToDelete);
-        return await this.client.indices.delete({
-            index: indicesToDelete
-        });
+        if (indicesToDelete) {
+            log.debug('Deleting indices: ' + indicesToDelete);
+            return await this.client.indices.delete({
+                index: indicesToDelete
+            });
+        }
     }
 
     async search(index: string | string[], body?: object, size?: number): Promise<{ hits: any }> {
