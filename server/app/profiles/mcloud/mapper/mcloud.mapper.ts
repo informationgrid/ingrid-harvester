@@ -129,7 +129,7 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
                 }
             }
         }
-        else if (coordinates instanceof Array) {
+        else if (coordinates instanceof Array && coordinates[0] instanceof Array) {
             for (let i = 1; i < coordinates.length; i++) {
                 if((coordinates[i-1][0] === coordinates[i][0]) && (coordinates[i-1][1] === coordinates[i][1])){
                     coordinates.splice(i--, 1);
