@@ -55,7 +55,7 @@
               <mat-label>Indexname</mat-label>
               <input matInput formControlName="index" required>
             </mat-form-field>
-      
+
             <mat-form-field class="col-span-4 col-span-9-mobile">
               <mat-label>Beschreibung</mat-label>
               <input matInput formControlName="description" required>
@@ -69,6 +69,37 @@
         </mat-card-content>
       </mat-card>
 
+      @if (profile == 'ingrid') {
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>InGrid Einstellungen</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="flex-row gap-20 space-between">
+            <mat-form-field class="flex-1">
+              <mat-label>iPlugId</mat-label>
+              <input matInput formControlName="iPlugId">
+            </mat-form-field>
+
+            <mat-form-field class="flex-1">
+              <mat-label>Partner</mat-label>
+              <input matInput formControlName="partner">
+            </mat-form-field>
+          </div>
+          <div class="flex-row gap-20 space-between">
+            <mat-form-field class="flex-1">
+              <mat-label>Datasource Name</mat-label>
+              <input matInput formControlName="dataSourceName">
+            </mat-form-field>
+
+            <mat-form-field class="flex-1">
+              <mat-label>Datatype</mat-label>
+              <input matInput formControlName="datatype">
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      }
       @if (profile == 'mcloud') {
         <mat-card>
           <mat-card-header>
@@ -145,8 +176,8 @@
       </mat-card>
 
       @if (harvesterForm.get('type').value === 'CKAN') {
-        <app-ckan-harvester 
-          [form]="harvesterForm" 
+        <app-ckan-harvester
+          [form]="harvesterForm"
           [model]="harvester"
           [rulesTemplate]="rules"
           class="flex-column">
@@ -154,7 +185,7 @@
       }
 
       @if (harvesterForm.get('type').value?.endsWith('CSW')) {
-        <app-csw-harvester 
+        <app-csw-harvester
           [form]="harvesterForm"
           [model]="harvester"
           [rulesTemplate]="rules"
@@ -163,7 +194,7 @@
       }
 
       @if (harvesterForm.get('type').value === 'DCAT') {
-        <app-dcat-harvester 
+        <app-dcat-harvester
           [form]="harvesterForm"
           [model]="harvester"
           [rulesTemplate]="rules"
@@ -172,7 +203,7 @@
       }
 
       @if (harvesterForm.get('type').value === 'DCATAPPLU') {
-        <app-dcatapplu-harvester 
+        <app-dcatapplu-harvester
           [form]="harvesterForm"
           [model]="harvester"
           [rulesTemplate]="rules"
@@ -181,7 +212,7 @@
       }
 
       @if (harvesterForm.get('type').value === 'EXCEL') {
-        <app-excel-harvester 
+        <app-excel-harvester
           [form]="harvesterForm"
           [model]="harvester"
           [rulesTemplate]="rules"
@@ -190,7 +221,7 @@
       }
 
       @if (harvesterForm.get('type').value === 'EXCEL_SPARSE') {
-        <app-excel-sparse-harvester 
+        <app-excel-sparse-harvester
           [form]="harvesterForm"
           [model]="harvester"
           [rulesTemplate]="rules"
@@ -199,7 +230,7 @@
       }
 
       @if (harvesterForm.get('type').value?.endsWith('KLD')) {
-        <app-kld-harvester 
+        <app-kld-harvester
           [form]="harvesterForm"
           [model]="harvester"
           [rulesTemplate]="rules"
@@ -208,7 +239,7 @@
       }
 
       @if (harvesterForm.get('type').value?.endsWith('OAI')) {
-        <app-oai-harvester 
+        <app-oai-harvester
           [form]="harvesterForm"
           [model]="harvester"
           [rulesTemplate]="rules"
@@ -217,7 +248,7 @@
       }
 
       @if (harvesterForm.get('type').value === 'SPARQL') {
-        <app-sparql-harvester 
+        <app-sparql-harvester
           [form]="harvesterForm"
           [model]="harvester"
           [rulesTemplate]="rules"
@@ -226,7 +257,7 @@
       }
 
       @if (harvesterForm.get('type').value === 'WFS.FIS') {
-        <app-wfs-harvester 
+        <app-wfs-harvester
           [form]="harvesterForm"
           [model]="harvester"
           [rulesTemplate]="rules"
@@ -235,7 +266,7 @@
       }
 
       @if (harvesterForm.get('type').value === 'WFS.MS') {
-        <app-wfs-harvester 
+        <app-wfs-harvester
           [form]="harvesterForm"
           [model]="harvester"
           [rulesTemplate]="rules"
@@ -244,7 +275,7 @@
       }
 
       @if (harvesterForm.get('type').value === 'WFS.XPLAN') {
-        <app-wfs-harvester 
+        <app-wfs-harvester
           [form]="harvesterForm"
           [model]="harvester"
           [rulesTemplate]="rules"
@@ -253,7 +284,7 @@
       }
 
       @if (harvesterForm.get('type').value === 'WFS.XPLAN.SYN') {
-        <app-wfs-harvester 
+        <app-wfs-harvester
           [form]="harvesterForm"
           [model]="harvester"
           [rulesTemplate]="rules"
@@ -264,7 +295,7 @@
       <ng-template #rules>
           <app-chip-list [list]="harvester.blacklistedIds"
                          placeholder="Ausgeschlossene IDs"
-                         (update)="harvester.blacklistedIds = $event"></app-chip-list>              
+                         (update)="harvester.blacklistedIds = $event"></app-chip-list>
           <app-chip-list [list]="harvester.whitelistedIds"
                          placeholder="Nicht auszuschließende IDs"
                          (update)="harvester.whitelistedIds = $event"></app-chip-list>

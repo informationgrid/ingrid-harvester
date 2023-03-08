@@ -64,6 +64,13 @@ export type ImporterSettings = {
     defaultAttributionLink?: string,
     defaultDCATCategory?: string[],
     defaultMcloudSubgroup?: string[],
+    // Ingrid-PlugDescription
+    iPlugId?: string,
+    partner?: string,
+    provider?: string,
+    datatype?: string,
+    dataSourceName?: string,
+    boost?: number,
     description?: string,
     disable?: boolean,
     dryRun?: boolean,

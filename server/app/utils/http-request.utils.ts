@@ -265,6 +265,7 @@ export class RequestDelegate {
         // and create the signal here directly, then remove the timeout
         config.signal = AbortSignal.timeout(config.timeout ?? DEFAULT_TIMEOUT_MS);
         config.timeout = null;
+        config.compress = false;
         let response = fetch(fullURL, config);
 
         if (config.resolveWithFullResponse) {

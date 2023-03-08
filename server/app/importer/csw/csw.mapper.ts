@@ -55,6 +55,7 @@ export class CswMapper extends BaseMapper {
         'gco': namespaces.GCO,
         'gml': namespaces.GML,
         'gml32': namespaces.GML_3_2,
+        'gmx': namespaces.GMX,
         'ows': namespaces.OWS,
         'plu': namespaces.PLU,
         'srv': namespaces.SRV
@@ -62,7 +63,7 @@ export class CswMapper extends BaseMapper {
 
     log = getLogger();
 
-    protected readonly record: any;
+    readonly record: any;
     private harvestTime: any;
 
     readonly idInfo; // : SelectedValue;
@@ -349,6 +350,17 @@ export class CswMapper extends BaseMapper {
     getTitle() {
         let title = CswMapper.select('./*/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString', this.idInfo, true)?.textContent;
         return title && title.trim() !== '' ? title : undefined;
+    }
+
+    _getAlternateTitle() {
+        let result = []
+        let alternateTitles = CswMapper.select('./*/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', this.idInfo);
+        for(let alternateTitle of alternateTitles){
+            if(alternateTitle.textContent && alternateTitle.textContent.trim() !== ''){
+                result.push(alternateTitle.textContent)
+            }
+        }
+        return result.length? result : undefined;
     }
 
     /**
@@ -1052,7 +1064,7 @@ export class CswMapper extends BaseMapper {
                 }
 
                 if (!infos.fn) infos.fn = org?.textContent;
-                if (org) infos['organization-name'] = org.textContent;                    
+                if (org) infos['organization-name'] = org.textContent;
 
                 let line1 = delPt.map(n => CswMapper.getCharacterStringContent(n))?.join(', ');
                 if (line1) infos.hasStreetAddress = line1;
@@ -1073,6 +1085,44 @@ export class CswMapper extends BaseMapper {
         return others;
     }
 
+
+    getAddress(): any[] {
+        let results = [];
+
+        let contacts = CswMapper.select(".//*/gmd:CI_ResponsibleParty", this.record);
+        for (let j = 0; j < contacts.length; j++) {
+            let contact = contacts[j];
+            let contactInfoNode = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact', contact, true);
+            let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true)?.textContent;
+            let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true)?.textContent;
+            let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true)?.textContent;
+            let delPt = contactInfoNode ? CswMapper.select('./gmd:address/gmd:CI_Address/gmd:deliveryPoint/gco:CharacterString', contactInfoNode, true)?.textContent : undefined;
+            let locality = contactInfoNode ? CswMapper.select('./gmd:address/gmd:CI_Address/gmd:city/gco:CharacterString', contactInfoNode, true)?.textContent : undefined;
+            let region = contactInfoNode ? CswMapper.select('./gmd:address/gmd:CI_Address/gmd:administrativeArea/gco:CharacterString', contactInfoNode, true)?.textContent : undefined;
+            let country = contactInfoNode ? CswMapper.select('./gmd:address/gmd:CI_Address/gmd:country/gco:CharacterString', contactInfoNode, true)?.textContent : undefined;
+            let postCode = contactInfoNode ? CswMapper.select('./gmd:address/gmd:CI_Address/gmd:postalCode/gco:CharacterString', contactInfoNode, true)?.textContent : undefined;
+            let contactInstructions = contactInfoNode ? CswMapper.select('./gmd:address/gmd:CI_Address/gmd:contactInstructions/gco:CharacterString', contactInfoNode, true)?.textContent : undefined;
+            let position = CswMapper.select('./gmd:positionName/gco:CharacterString', contact, true)?.textContent;
+            if(role) {
+                let infos = {
+                    identificationinfo_administrative_area_value: region,
+                    institution: org,
+                    lastname: name,
+                    street: delPt,
+                    postcode: postCode,
+                    city: locality,
+                    administrative_area_value: region,
+                    country_code: country,
+                    job: position,
+                    descr: contactInstructions
+                };
+
+                results.push(infos);
+            }
+        }
+        return results;
+    }
+
     private getUrlCheckRequestConfig(uri: string): RequestOptions {
         let config: RequestOptions = {
             method: 'HEAD',
@@ -1091,6 +1141,10 @@ export class CswMapper extends BaseMapper {
 
     getHierarchyLevel(): string {
         return CswMapper.select('./gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue', this.record, true)?.textContent;
+    }
+
+    getHierarchyLevelName(): string {
+        return CswMapper.select('./gmd:hierarchyLevelName/gco:CharacterString', this.record, true)?.textContent;
     }
 
     getOperatesOn(): string[] {
@@ -1126,7 +1180,7 @@ export class CswMapper extends BaseMapper {
             }
         }
         operatesOnIds.delete(this.getUuid());
-        
+
         return operatesOnIds.size > 0 ? [...operatesOnIds] : undefined;
     }
 

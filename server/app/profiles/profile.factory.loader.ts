@@ -26,6 +26,7 @@ import { BaseMapper } from '../importer/base.mapper';
 import { DiplanungFactory } from './diplanung/profile.factory';
 import { LvrFactory } from './lvr/profile.factory';
 import { ProfileFactory } from './profile.factory';
+import {ingridFactory} from "./ingrid/profile.factory";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -49,6 +50,9 @@ export class ProfileFactoryLoader {
 
     private static createInstance(profile: string) {
         switch (profile) {
+            case 'ingrid':
+                this.instance = new ingridFactory();
+                break;
             case 'mcloud':
                 this.instance = new mcloudFactory();
                 break;

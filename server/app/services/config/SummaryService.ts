@@ -41,7 +41,9 @@ export class SummaryService {
 
         if (existsSync(this.summaryPath)) {
             let summaryFile = readFileSync(this.summaryPath);
-            this.summaries = JSON.parse(summaryFile.toString());
+            if (summaryFile.toString().trim().length > 0){
+                this.summaries = JSON.parse(summaryFile.toString());
+            }
         } else {
             if (!existsSync('data')) mkdirSync('data');
 

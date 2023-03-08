@@ -211,9 +211,14 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
 
     async bulk(bulkOperations: any[], closeAfterBulk: boolean): Promise<BulkResponse> {
         try {
+            let profile = ProfileFactoryLoader.get();
+            let indexName = this.addPrefixIfNotExists(this.indexName) as string;
+            let isPresent = await this.isIndexPresent(indexName);
+            if (!isPresent){
+                await this.prepareIndex(profile.getIndexMappings(), profile.getIndexSettings())
+            }
             let { body: response } = await this.client.bulk({
                 index: this.indexName,
-                type: this.config.indexType || 'base',
                 body: bulkOperations
             });
             if (response.errors) {
@@ -248,7 +253,6 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
             try {
                 this.client.bulk({
                     index,
-                    type: type,
                     body: data
                 })
                 .then(({ body: response }) => {
@@ -481,7 +485,7 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
 
     async index(index: string, document: object) {
         index = this.addPrefixIfNotExists(index) as string;
-        await this.client.index({ index, type: 'base', body: document });
+        await this.client.index({ index,  body: document });
     }
 
     async deleteByQuery(days: number) {
@@ -503,7 +507,6 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
         index = this.addPrefixIfNotExists(index) as string;
         await this.client.delete({
             index,
-            type: 'base',
             id
         });
     }
