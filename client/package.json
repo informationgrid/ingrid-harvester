@@ -6,7 +6,7 @@
     "start": "ng serve --host 0.0.0.0 --disable-host-check",
     "hmr": "ng serve --configuration hmr",
     "build": "ng build",
-    "prod": "ng build --prod",
+    "prod": "ng build --configuration production",
     "update": "ng update @angular/cli @angular/core --allow-dirty",
     "test": "ng test",
     "lint": "ng lint",
