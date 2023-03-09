@@ -857,10 +857,10 @@ export class CswMapper extends BaseMapper {
                 planState = this.settings.pluPlanState;
             }
         }
-        if (['ja', 'festgesetzt'].includes(planState.toLowerCase())) {
+        if (['ja', 'festgesetzt'].includes(planState?.toLowerCase())) {
             return pluPlanState.FESTGES;
         }
-        else if (['nein', 'in aufstellung'].includes(planState.toLowerCase())) {
+        else if (['nein', 'in aufstellung'].includes(planState?.toLowerCase())) {
             return pluPlanState.IN_AUFST;
         }
         return pluPlanState.UNBEKANNT;
