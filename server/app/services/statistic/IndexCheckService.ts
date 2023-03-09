@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { elasticsearchMapping } from '../../statistic/url_check.mapping';
+import { elasticsearchMapping } from '../../statistic/index_check.mapping';
 import { now } from 'moment';
 import { ConfigService } from '../config/ConfigService';
 import { ElasticQueries } from '../../utils/elastic.queries';
