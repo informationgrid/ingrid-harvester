@@ -21,11 +21,13 @@
  * ==================================================
  */
 
+import { elasticsearchMapping } from '../../statistic/statistic.mapping';
 import { ConfigService } from '../config/ConfigService';
 import { ElasticQueries } from '../../utils/elastic.queries';
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
 import { ElasticSearchUtils } from '../../utils/elastic.utils';
 import { ElasticSettings } from '../../utils/elastic.setting';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary';
 
@@ -33,6 +35,7 @@ import { Summary } from '../../model/summary';
 export class HistoryService {
 
     private elasticUtils: ElasticSearchUtils;
+    private elasticsearchSettings: ElasticSettings;
 
     constructor() {
         let generalSettings = ConfigService.getGeneralSettings();
@@ -43,15 +46,20 @@ export class HistoryService {
             elasticSearchPassword: generalSettings.elasticSearchPassword,
             alias: generalSettings.alias,
             includeTimestamp: true,
-            index: ''
+            index: 'mcloud_harvester_statistic'
         };
         // @ts-ignore
         const summary: Summary = {};
         this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
+        this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
     }
 
     async getHistory(id: number): Promise<any> {
         const harvester = ConfigService.get().find(h => h.id === id);
+        let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
+        if (!indexExists) {
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
+        }
         let history = await this.elasticUtils.getHistory('mcloud_harvester_statistic', ElasticQueries.findHistory(harvester.index));
         return {
             harvester: harvester.description,
