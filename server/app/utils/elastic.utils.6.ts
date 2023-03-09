@@ -395,7 +395,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     }
 
     private handleError(message: string, error: any) {
-        this.summary.elasticErrors.push(message);
+        this.summary.elasticErrors?.push(message);
         log.error(message, error);
     }
 

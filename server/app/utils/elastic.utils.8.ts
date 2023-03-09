@@ -211,7 +211,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
             let response = await this.client.bulk({
                 index: this.indexName,
                 // type: this.settings.indexType || 'base',
-                ...data
+                operations: data
             });
             if (response.errors) {
                 response.items.forEach(item => {
@@ -245,7 +245,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
                 this.client.bulk({
                     index: indexName,
                     // type: type,
-                    ...data
+                    operations: data
                 })
                 .then(response => {
                     if (response.errors) {
@@ -344,7 +344,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
             try {
                 let result: any = await this.client.msearch({
                     index: this.settings.alias,
-                    ...slice
+                    searches: slice
                 });
 
                 if (result.responses) {
@@ -389,7 +389,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
     }
 
     private handleError(message: string, error: any) {
-        this.summary.elasticErrors.push(message);
+        this.summary.elasticErrors?.push(message);
         log.error(message, error);
     }
 
