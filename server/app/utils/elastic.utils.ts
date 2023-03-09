@@ -25,7 +25,6 @@ import { AbstractDeduplicateUtils } from './abstract.deduplicate.utils';
 import { Client as Client6 } from 'elasticsearch6';
 import { Client as Client7 } from 'elasticsearch7';
 import { Client as Client8 } from 'elasticsearch8';
-import { ElasticSettings } from './elastic.setting';
 import { Index } from '@shared/index.model';
 
 export interface BulkResponse {
@@ -159,6 +158,8 @@ export abstract class ElasticSearchUtils {
     abstract deleteByQuery(days: number): Promise<void>;
 
     abstract deleteDocument(index: string, id: string): Promise<void>;
+
+    abstract ping(): Promise<boolean>;
 
     // abstract health(status?: 'green' | 'GREEN' | 'yellow' | 'YELLOW' | 'red' | 'RED'): Promise<any>;
     async health(status: 'green' | 'yellow' | 'red' = 'yellow'): Promise<any> {

@@ -564,6 +564,10 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
             id
         });
     }
+    
+    async ping() {
+        return await this.client.ping();
+    }
 
     // async health(status: 'green' | 'GREEN' | 'yellow' | 'YELLOW' | 'red' | 'RED' = 'yellow'): Promise<ClusterHealthResponse> {
     //     return this.client.cluster.health({ wait_for_status: status });

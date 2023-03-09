@@ -577,6 +577,11 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         });
     }
 
+    async ping() {
+        let { body: response } = await this.client.ping();
+        return response;
+    }
+
     // async health(status: 'green' | 'yellow' | 'red' = 'yellow'): Promise<any> {
     //     return this.client.cluster.health({ wait_for_status: status });
     // }
