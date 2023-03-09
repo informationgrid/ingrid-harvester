@@ -60,6 +60,10 @@ export class UrlCheckService {
     }
 
     async getHistory() {
+        let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
+        if (!indexExists) {
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
+        }
         return this.elasticUtils.getHistory(this.elasticUtils.indexName, ElasticQueries.getUrlCheckHistory());
     }
 
