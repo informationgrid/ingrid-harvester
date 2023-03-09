@@ -43,6 +43,10 @@ export class UrlCheckService {
     private generalSettings;
 
     constructor() {
+        this.initialize();
+    }
+
+    initialize() {
         this.generalSettings = ConfigService.getGeneralSettings();
         let settings = {
             elasticSearchUrl: this.generalSettings.elasticSearchUrl,

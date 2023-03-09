@@ -37,6 +37,8 @@ export class MonitoringCtrl {
 
     @Get('/urlcheck')
     async getUrlCheckHistory(): Promise<any> {
+        // re-initialize in case settings have changed
+        this.urlCheckService.initialize();
         return this.urlCheckService.getHistory()
     }
 
