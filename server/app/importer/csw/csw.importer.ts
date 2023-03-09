@@ -410,7 +410,10 @@ export class CswImporter implements Importer {
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
-        await Promise.all(promises)
+        // TODO the following line raises
+        // MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 abort listeners added to [EventEmitter]. Use emitter.setMaxListeners() to increase limit
+        // may be harmless; investigate if limit increase suffices or if a real leak is occurring
+        await Promise.allSettled(promises)
             .catch(err => log.error('Error indexing CSW record', err));
     }
 
