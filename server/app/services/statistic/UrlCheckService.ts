@@ -85,11 +85,13 @@ export class UrlCheckService {
                 return statusMap.then(statusMap => {
                     return urlStatus.then(
                         urlStatus => {
-                            let status = urlStatus.status;
-                            (statusMap[status] = statusMap[status] || []).push(urlStatus.url);
-                            statusMap['status_list'] = statusMap['status_list'] || [];
-                            if (statusMap['status_list'].indexOf(status) === -1) {
-                                statusMap['status_list'].push(status);
+                            if (urlStatus) {
+                                let status = urlStatus.status;
+                                (statusMap[status] = statusMap[status] || []).push(urlStatus.url);
+                                statusMap['status_list'] = statusMap['status_list'] || [];
+                                if (statusMap['status_list'].indexOf(status) === -1) {
+                                    statusMap['status_list'].push(status);
+                                }
                             }
                             return statusMap;
                         });
