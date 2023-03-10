@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import {ElasticSettings} from '../../utils/elastic.setting';
 import {ImporterSettings} from '../../importer.settings';
 
 export type WfsSettings = {
@@ -49,7 +48,7 @@ export type WfsSettings = {
     featureFilter?: string,
     resolveWithFullResponse?: boolean,
     encoding?: string
-} & ElasticSettings & ImporterSettings;
+} & ImporterSettings;
 
 export const DefaultXpathSettings: Partial<WfsSettings> = {
     xpaths: {

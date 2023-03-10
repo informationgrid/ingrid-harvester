@@ -24,22 +24,22 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ConfigComponent} from './config.component';
-import {MatButtonModule} from "@angular/material/button";
+import {MatLegacyButtonModule as MatButtonModule} from "@angular/material/legacy-button";
 import {RouterModule, Routes} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
 import {ReactiveFormsModule} from '@angular/forms';
-import {MatTabsModule} from "@angular/material/tabs";
+import {MatLegacyTabsModule as MatTabsModule} from "@angular/material/legacy-tabs";
 import { ConfigMappingComponent } from './config-mapping/config-mapping.component';
 import { ConfigGeneralComponent } from './config-general/config-general.component';
 import { ConfigImportExportComponent } from './config-import-export/config-import-export.component';
-import {MatListModule} from "@angular/material/list";
+import {MatLegacyListModule as MatListModule} from "@angular/material/legacy-list";
 import {MatIconModule} from "@angular/material/icon";
 import { AddMappingItemComponent } from './config-mapping/add-mapping-item/add-mapping-item.component';
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatLegacyAutocompleteModule as MatAutocompleteModule} from "@angular/material/legacy-autocomplete";
 import {FlexModule} from "@angular/flex-layout";
-import {MatSlideToggleModule} from "@angular/material/slide-toggle";
-import {MatCardModule} from "@angular/material/card";
-import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatLegacySlideToggleModule as MatSlideToggleModule} from "@angular/material/legacy-slide-toggle";
+import {MatLegacyCardModule as MatCardModule} from "@angular/material/legacy-card";
+import {MatLegacyCheckboxModule as MatCheckboxModule} from "@angular/material/legacy-checkbox";
 
 const configRoutes: Routes = [
   {
@@ -49,25 +49,24 @@ const configRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ConfigComponent, ConfigMappingComponent, ConfigGeneralComponent, ConfigImportExportComponent, AddMappingItemComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(configRoutes),
-    SharedModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatTabsModule,
-    MatListModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    FlexModule,
-    MatSlideToggleModule,
-    MatCardModule,
-    MatCheckboxModule
-  ],
-  exports: [
-    ConfigComponent
-  ],
-  entryComponents: [AddMappingItemComponent]
+    declarations: [ConfigComponent, ConfigMappingComponent, ConfigGeneralComponent, ConfigImportExportComponent, AddMappingItemComponent],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(configRoutes),
+        SharedModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatTabsModule,
+        MatListModule,
+        MatIconModule,
+        MatAutocompleteModule,
+        FlexModule,
+        MatSlideToggleModule,
+        MatCardModule,
+        MatCheckboxModule
+    ],
+    exports: [
+        ConfigComponent
+    ]
 })
 export class ConfigModule { }

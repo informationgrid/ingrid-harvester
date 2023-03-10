@@ -38,7 +38,7 @@ configure('./log4js.json');
 @ServerSettings({
     rootDir,
     httpPort: serverConfig.httpPort,
-    socketIO: {},
+    socketIO: { },
     acceptMimes: ['application/json'],
     passport: {},
     statics: {
@@ -62,7 +62,7 @@ export class Server extends ServerLoader {
      * This method let you configure the express middleware required by your application to works.
      * @returns {Server}
      */
-    public $onMountingMiddlewares(): void | Promise<any> {
+    public $beforeRoutesInit(): void | Promise<any> {
 
         // on startup make sure the configuration has IDs for each harvester
         ConfigService.fixIDs();

@@ -23,8 +23,8 @@
 
 import {Component, Inject, OnInit} from '@angular/core';
 import {Harvester} from '@shared/harvester';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef} from '@angular/material/legacy-dialog';
+import {UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-dialog-edit',
@@ -35,11 +35,11 @@ export class DialogEditComponent implements OnInit {
 
   dialogTitle = 'Neuen Harvester anlegen';
 
-  harvesterForm: FormGroup;
+  harvesterForm: UntypedFormGroup;
 
   constructor(@Inject(MAT_DIALOG_DATA) public harvester: Harvester,
               public dialogRef: MatDialogRef<DialogEditComponent>,
-              private formBuilder: FormBuilder) {
+              private formBuilder: UntypedFormBuilder) {
       if (harvester.id !== -1) {
         this.dialogTitle = 'Harvester bearbeiten';
       }

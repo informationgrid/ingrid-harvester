@@ -22,7 +22,9 @@
  */
 
 import {UrlUtils} from '../../utils/url.utils';
-import {DateRange, Distribution, GenericMapper, Organization, Person} from '../../model/generic.mapper';
+import {BaseMapper} from '../base.mapper';
+import {Distribution} from "../../model/distribution";
+import {DateRange} from "../../model/dateRange";
 // import {License} from '@shared/license.model';
 import {Summary} from '../../model/summary';
 import {ExcelSparseSettings} from './excelsparse.settings';
@@ -32,10 +34,11 @@ import {ImporterSettings} from "../../importer.settings";
 // import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Columns} from './excelsparse.importer';
 import { MiscUtils } from '../../utils/misc.utils';
+import {Organization, Person} from "../../model/agent";
 
 const log = require('log4js').getLogger(__filename);
 
-export class ExcelSparseMapper extends GenericMapper {
+export class ExcelSparseMapper extends BaseMapper {
 
     data;
     id;
@@ -71,11 +74,11 @@ export class ExcelSparseMapper extends GenericMapper {
         super.init();
     }
 
-    protected getSettings(): ImporterSettings {
+    public getSettings(): ImporterSettings {
         return this.settings;
     }
 
-    protected getSummary(): Summary{
+    public getSummary(): Summary{
         return this.summary;
     }
 
@@ -161,7 +164,7 @@ export class ExcelSparseMapper extends GenericMapper {
     }
 
     _getMetadataSource() {
-        return GenericMapper.createSourceAttribution('mcloud-excel');
+        return BaseMapper.createSourceAttribution('mcloud-excel');
     }
 
     // TODO

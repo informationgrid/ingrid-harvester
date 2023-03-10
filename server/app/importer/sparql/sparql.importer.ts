@@ -21,10 +21,7 @@
  * ==================================================
  */
 
-import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
-import {elasticsearchMapping} from '../../elastic.mapping';
-import {elasticsearchSettings} from '../../elastic.settings';
-import {IndexDocument} from '../../model/index.document';
+import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {SparqlMapper} from './sparql.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -36,6 +33,9 @@ import {FilterUtils} from "../../utils/filter.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
 import {ConfigService} from "../../services/config/ConfigService";
 import { MiscUtils } from '../../utils/misc.utils';
+import {ProfileFactory} from "../../profiles/profile.factory";
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import {ElasticSettings} from "../../utils/elastic.setting";
 
 const plain_fetch = require('node-fetch');
 const HttpsProxyAgent = require('https-proxy-agent');
@@ -62,6 +62,7 @@ export class SparqlSummary extends Summary {
 }
 
 export class SparqlImporter implements Importer {
+    private profile: ProfileFactory<SparqlMapper>;
     private readonly settings: SparqlSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
@@ -72,7 +73,6 @@ export class SparqlImporter implements Importer {
     private generalSettings = ConfigService.getGeneralSettings();
 
     static defaultSettings: SparqlSettings = {
-        ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         endpointUrl: '',
         query: '',
@@ -90,7 +90,9 @@ export class SparqlImporter implements Importer {
 
     private observer: Observer<ImportLogMessage>;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(profile: ProfileFactory<SparqlMapper>, settings, requestDelegate?: RequestDelegate) {
+        this.profile = profile;
+
         // merge default settings with configured ones
         settings = MiscUtils.merge(SparqlImporter.defaultSettings, settings);
 
@@ -99,7 +101,8 @@ export class SparqlImporter implements Importer {
 
         this.summary = new SparqlSummary(settings);
 
-        this.elastic = new ElasticSearchUtils(settings, this.summary);
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
+        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -111,7 +114,7 @@ export class SparqlImporter implements Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
                 await this.harvest().catch(err => {
                     this.summary.appErrors.push(err.message ? err.message : err);
                     log.error('Error during SPARQL import', err);
@@ -245,7 +248,7 @@ export class SparqlImporter implements Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary);
 
-            let doc: any = await IndexDocument.create(mapper).catch(e => {
+            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;

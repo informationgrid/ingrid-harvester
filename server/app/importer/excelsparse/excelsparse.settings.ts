@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import {ElasticSettings} from '../../utils/elastic.setting';
 import {ImporterSettings} from '../../importer.settings';
 
 export type ExcelSparseSettings = {
@@ -31,7 +30,7 @@ export type ExcelSparseSettings = {
         title: string
     },
     filePath: string
-} & ElasticSettings & ImporterSettings;
+} & ImporterSettings;
 
 export const DefaultCatalogSettings: Partial<ExcelSparseSettings> = {
     catalog: {

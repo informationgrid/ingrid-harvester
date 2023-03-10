@@ -21,26 +21,31 @@
  * ==================================================
  */
 
-import {Service} from '@tsed/di';
-import {ElasticSearchUtils} from "../../utils/elastic.utils";
-import {ConfigService} from "../config/ConfigService";
-import {Summary} from "../../model/summary";
-import {now} from "moment";
-import {elasticsearchMapping} from "../../statistic/url_check.mapping";
-import {elasticsearchSettings} from "../../statistic/url_check.settings";
+import { elasticsearchMapping } from '../../statistic/index_check.mapping';
+import { now } from 'moment';
+import { ConfigService } from '../config/ConfigService';
 import { ElasticQueries } from '../../utils/elastic.queries';
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import { ElasticSearchUtils } from '../../utils/elastic.utils';
+import { ElasticSettings } from 'utils/elastic.setting';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { Service } from '@tsed/di';
+import { Summary } from '../../model/summary';
 
-let log = require('log4js').getLogger(__filename);
-
-require('url').URL;
+const log = require('log4js').getLogger(__filename);
 
 @Service()
-export class IndexCheckService extends ElasticSearchUtils {
+export class IndexCheckService {
+
+    private elasticUtils: ElasticSearchUtils;
+    private elasticsearchSettings: ElasticSettings;
 
     constructor() {
         let generalSettings = ConfigService.getGeneralSettings();
         let settings = {
             elasticSearchUrl: generalSettings.elasticSearchUrl,
+            elasticSearchVersion: generalSettings.elasticSearchVersion,
+            elasticSearchUser: generalSettings.elasticSearchUser,
             elasticSearchPassword: generalSettings.elasticSearchPassword,
             alias: generalSettings.alias,
             includeTimestamp: false,
@@ -48,35 +53,33 @@ export class IndexCheckService extends ElasticSearchUtils {
         };
         // @ts-ignore
         const summary: Summary = {};
-        super(settings, summary);
+        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
+        this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
     }
 
     async getHistory() {
-        let result = await this.client.search({
-            index: [this.indexName],
-            body: ElasticQueries.getIndexCheckHistory(),
-            size: 30
-        });
-        return {
-            history: result.hits.hits.map(entry => entry._source)
+        let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
+        if (!indexExists) {
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
         }
+        return this.elasticUtils.getHistory(this.elasticUtils.indexName, ElasticQueries.getIndexCheckHistory());
     }
 
     async start() {
-        log.info('IndexCheck started!')
+        log.info('IndexCheck started!');
         let start = now();
-        let facetsByAttribution = await this.getFacetsByAttribution();
+        let facetsByAttribution = await this.elasticUtils.getFacetsByAttribution();
         this.saveResult(facetsByAttribution, new Date(start));
     }
 
     async saveResult(result, timestamp) {
         try {
-            await this.addDocToBulk({
+            await this.elasticUtils.addDocToBulk({
                 timestamp: timestamp,
                 attributions: result
             }, timestamp.toISOString());
-            await this.prepareIndex(elasticsearchMapping, elasticsearchSettings, true);
-            await this.finishIndex(false);
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
+            await this.elasticUtils.finishIndex(false);
         }
         catch(err) {
             let message = 'Error occurred creating UrlCheck index';

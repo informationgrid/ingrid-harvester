@@ -36,9 +36,9 @@ export class IndicesCtrl {
 
     @Get('/')
     async getIndices(): Promise<Index[]> {
-
-        return this.indexService.getIndices();
-
+        // re-initialize in case settings have changed
+        this.indexService.initialize();
+        return await this.indexService.getIndices();
     }
 
     @Delete('/:name')

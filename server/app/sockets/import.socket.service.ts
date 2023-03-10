@@ -32,6 +32,7 @@ import {Mail, MailServer} from "../utils/nodemailer.utils";
 import {ImportLogMessage} from "../model/import.result";
 import {StatisticUtils} from "../statistic/statistic.utils";
 import { MiscUtils } from '../utils/misc.utils';
+import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
 
 @SocketService('/import')
 export class ImportSocketService {
@@ -64,11 +65,11 @@ export class ImportSocketService {
             let lastExecution = new Date();
             let configGeneral = ConfigService.getGeneralSettings();
             let configData = ConfigService.get().filter(config => config.id === id)[0];
-            configData.deduplicationAlias = configData.index + 'dedup';
+            //configData.deduplicationAlias = configData.index + 'dedup';
 
             let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });
 
-            let importer = ImporterFactory.get(configHarvester);
+            let importer = ImporterFactory.get(ProfileFactoryLoader.get(), configHarvester);
             let mode = isIncremental ? 'incr' : 'full';
             this.log.info('>> Running importer: ' + configHarvester.description);
 

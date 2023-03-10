@@ -23,13 +23,13 @@
 
 import {NgModule} from "@angular/core";
 import {HarvesterComponent} from "./harvester.component";
-import {MatButtonModule} from "@angular/material/button";
-import {MatDialogModule} from "@angular/material/dialog";
+import {MatLegacyButtonModule as MatButtonModule} from "@angular/material/legacy-button";
+import {MatLegacyDialogModule as MatDialogModule} from "@angular/material/legacy-dialog";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatIconModule} from "@angular/material/icon";
-import {MatProgressBarModule} from "@angular/material/progress-bar";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatLegacyProgressBarModule as MatProgressBarModule} from "@angular/material/legacy-progress-bar";
+import {MatLegacyProgressSpinnerModule as MatProgressSpinnerModule} from "@angular/material/legacy-progress-spinner";
+import {MatLegacySlideToggleModule as MatSlideToggleModule} from "@angular/material/legacy-slide-toggle";
 import {CommonModule} from "@angular/common";
 import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.component';
 import {DialogLogComponent} from './dialog-log/dialog-log.component';
@@ -44,10 +44,14 @@ import {WfsHarvesterComponent} from './dialog-edit/wfs-harvester/wfs-harvester.c
 import {DialogHistoryComponent} from './dialog-history/dialog-history.component';
 import {ImporterDetailComponent} from './importer-detail/importer-detail.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
-import {MatCardModule, MatCheckboxModule, MatChipsModule, MatListModule, MatTabsModule} from '@angular/material';
+import {MatLegacyChipsModule as MatChipsModule} from '@angular/material/legacy-chips';
+import {MatLegacyCardModule as MatCardModule} from '@angular/material/legacy-card';
+import {MatLegacyCheckboxModule as MatCheckboxModule} from '@angular/material/legacy-checkbox';
+import {MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
+import {MatLegacyTabsModule as MatTabsModule} from '@angular/material/legacy-tabs';
 import {RouterModule, Routes} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatLegacySnackBarModule as MatSnackBarModule} from '@angular/material/legacy-snack-bar';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ChipListComponent} from './dialog-edit/chip-list/chip-list.component';
 import {MatBadgeModule} from "@angular/material/badge";
@@ -62,23 +66,23 @@ const harvesterRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    HarvesterComponent,
-    DialogSchedulerComponent,
-    DialogLogComponent,
-    DialogEditComponent,
-    DialogHistoryComponent,
-    ExcelHarvesterComponent,
-    ExcelSparseHarvesterComponent,
-    CkanHarvesterComponent,
-    CswHarvesterComponent,
-    OaiHarvesterComponent,
-    DcatHarvesterComponent,
-    SparqlHarvesterComponent,
-    WfsHarvesterComponent,
-    ImporterDetailComponent,
-    ChipListComponent
-  ],
+    declarations: [
+        HarvesterComponent,
+        DialogSchedulerComponent,
+        DialogLogComponent,
+        DialogEditComponent,
+        DialogHistoryComponent,
+        ExcelHarvesterComponent,
+        ExcelSparseHarvesterComponent,
+        CkanHarvesterComponent,
+        CswHarvesterComponent,
+        OaiHarvesterComponent,
+        DcatHarvesterComponent,
+        SparqlHarvesterComponent,
+        WfsHarvesterComponent,
+        ImporterDetailComponent,
+        ChipListComponent
+    ],
     imports: [
         CommonModule,
         RouterModule.forChild(harvesterRoutes),
@@ -101,15 +105,9 @@ const harvesterRoutes: Routes = [
         MatBadgeModule,
         ScrollingModule
     ],
-  entryComponents: [
-    DialogSchedulerComponent,
-    DialogLogComponent,
-    DialogEditComponent,
-    DialogHistoryComponent
-  ],
-  exports: [
-    HarvesterComponent
-  ]
+    exports: [
+        HarvesterComponent
+    ]
 })
 export class HarvesterModule {
 }

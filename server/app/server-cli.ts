@@ -29,6 +29,7 @@ import {ImportLogMessage} from './model/import.result';
 import {ImporterFactory} from "./importer/importer.factory";
 import {ConfigService} from './services/config/ConfigService';
 import { MiscUtils } from './utils/misc.utils';
+import {ProfileFactoryLoader} from "./profiles/profile.factory.loader";
 
 let config = ConfigService.get(),
     configGeneral = ConfigService.getGeneralSettings(),
@@ -78,7 +79,7 @@ async function startProcess() {
 
         let configHarvester = MiscUtils.merge(importerConfig, configGeneral);
 
-        let importer = ImporterFactory.get( configHarvester );
+        let importer = ImporterFactory.get(ProfileFactoryLoader.get(), configHarvester );
         if (!importer) {
             log.error( 'Importer not defined for: ' + configHarvester.type );
             return;

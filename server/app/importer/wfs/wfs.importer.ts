@@ -22,24 +22,25 @@
  */
 
 import { decode } from 'iconv-lite';
-import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
-import {elasticsearchMapping} from '../../elastic.mapping';
-import {elasticsearchSettings} from '../../elastic.settings';
-import {IndexDocument} from '../../model/index.document';
-import {WfsMapper} from './wfs.mapper';
-import {Summary} from '../../model/summary';
-import {getLogger} from 'log4js';
-import {WfsParameters, RequestDelegate} from '../../utils/http-request.utils';
-import {OptionsWithUri} from 'request-promise';
-import {DefaultImporterSettings, Importer} from '../../importer';
-import {Observable, Observer} from 'rxjs';
-import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {DefaultXpathSettings, WfsSettings} from './wfs.settings';
-import {FilterUtils} from "../../utils/filter.utils";
-import { Catalog } from 'model/dcatApPlu.document';
-import { Contact } from "../../model/generic.mapper";
-import { GeoJsonUtils } from "../../utils/geojson.utils";
+import { getLogger } from 'log4js';
+import { Catalog } from '../../model/dcatApPlu.model';
+import { ConfigService } from '../../services/config/ConfigService';
+import { Contact } from '../../model/agent';
+import { DefaultImporterSettings, Importer } from '../../importer';
+import { DefaultXpathSettings, WfsSettings } from './wfs.settings';
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import { ElasticSearchUtils } from '../../utils/elastic.utils';
+import { ElasticSettings } from '../../utils/elastic.setting';
+import { FilterUtils } from '../../utils/filter.utils';
+import { GeoJsonUtils } from '../../utils/geojson.utils';
+import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
+import { Observable, Observer } from 'rxjs';
+import { OptionsWithUri } from 'request-promise';
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { Summary } from '../../model/summary';
+import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils';
+import { WfsMapper } from './wfs.mapper';
 import { XPathUtils } from '../../utils/xpath.utils';
 
 const fs = require('fs');
@@ -48,7 +49,7 @@ const xpath = require('xpath');
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
     logRequest = getLogger('requests'),
-    DomParser = require('xmldom').DOMParser;
+    DomParser = require('@xmldom/xmldom').DOMParser;
 
 export class WfsSummary extends Summary {
     additionalSummary() {
@@ -91,6 +92,7 @@ export class WfsSummary extends Summary {
 // }
 
 export class WfsImporter implements Importer {
+    private profile: ProfileFactory<WfsMapper>;
     private readonly settings: WfsSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
@@ -99,7 +101,6 @@ export class WfsImporter implements Importer {
     private numIndexDocs = 0;
 
     static defaultSettings: Partial<WfsSettings> = {
-        ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         ...DefaultXpathSettings,
         // getFeaturesUrl: '',
@@ -124,7 +125,9 @@ export class WfsImporter implements Importer {
 
     private observer: Observer<ImportLogMessage>;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(profile: ProfileFactory<WfsMapper>, settings, requestDelegate?: RequestDelegate) {
+        this.profile = profile;
+
         // merge default settings with configured ones
         settings = MiscUtils.merge(WfsImporter.defaultSettings, settings);
 
@@ -142,7 +145,8 @@ export class WfsImporter implements Importer {
 
         this.summary = new WfsSummary(settings);
 
-        this.elastic = new ElasticSearchUtils(settings, this.summary);
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
+        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -154,7 +158,7 @@ export class WfsImporter implements Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
                 await this.harvest();
                 if(this.numIndexDocs > 0) {
                     await this.elastic.sendBulkData(false);
@@ -433,7 +437,7 @@ export class WfsImporter implements Importer {
 
             let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.generalInfo, geojsonUtils);
 
-            let doc: any = await IndexDocument.create(mapper).catch(e => {
+            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;

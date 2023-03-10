@@ -25,10 +25,10 @@ import {Summary} from '../app/model/summary';
 import {expect} from 'chai';
 import {configure} from 'log4js';
 import {doc1, doc2, doc3, doc5, doc6} from './data/docs.deduplication';
-import {elasticsearchMapping} from '../app/elastic.mapping';
-import {elasticsearchSettings} from '../app/elastic.settings';
+import {elasticsearchMapping} from '../app/profiles/mcloud/elastic/elastic.mapping';
+import {elasticsearchSettings} from '../app/profiles/mcloud/elastic/elastic.settings';
 import {ElasticSettings} from '../app/utils/elastic.setting';
-import {ElasticSearchUtils} from '../app/utils/elastic.utils';
+import { ElasticSearchFactory } from '../app/utils/elastic.factory';
 
 let elasticsearch = require('elasticsearch');
 configure('./test/log4js-test.json');
@@ -41,8 +41,10 @@ xdescribe('deduplication by exact title', function() {
 
     // @ts-ignore
     let settings: ElasticSettings = {
-        elasticSearchUrl: 'localhost:9200',
-        deduplicationAlias: 'test-dedup'
+        elasticSearchUrl: 'http://localhost:9200',
+        deduplicationAlias: 'test-dedup',
+        elasticSearchUser: 'elastic',
+        elasticSearchPassword: 'elastic'
     };
 
     let deduplicationIndices = ['test-deduplicate1', 'test-deduplicate2'];
@@ -51,31 +53,20 @@ xdescribe('deduplication by exact title', function() {
     let summary: Summary = {
         elasticErrors: []
     };
-    const url = new URL(settings.elasticSearchUrl);
-    let client = new elasticsearch.Client({
-        // log: 'trace',
-        host: {
-            host: url.hostname,
-            port: url.port,
-            protocol: url.protocol,
-            auth: 'elastic:elastic',
-        },
-        requestTimeout: 30000
-    });
 
-    let elasticSearchUtils = new ElasticSearchUtils(settings, summary);
+    let elasticSearchUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
     let deduplicateUtils = elasticSearchUtils.deduplicationUtils;
-    deduplicateUtils.deduplicationIndices = deduplicationIndices;
+    //deduplicateUtils.deduplicationIndices = deduplicationIndices;
 
     /**
      * Initialize test indices with mapping and settings
      */
     before(async function() {
         let indicesToDelete = [...deduplicationIndices, 'test-deduplicate3'];
-        await client.indices.delete({
-            index: indicesToDelete,
-            ignore: [404]
-        });
+        // TODO this is missing "ignore: [404]"
+        await elasticSearchUtils.deleteIndex(
+            indicesToDelete
+        );
         await flush();
         elasticSearchUtils.indexName = deduplicationIndices[0];
         await elasticSearchUtils.prepareIndex(elasticsearchMapping, elasticsearchSettings);
@@ -89,15 +80,14 @@ xdescribe('deduplication by exact title', function() {
      */
     beforeEach(async function() {
         await deduplicationIndices.forEach(async (index) => {
-            let searchResponse = await client.search({
-                index: index
-            });
+            let searchResponse = await elasticSearchUtils.search(
+                index
+            );
             await searchResponse.hits.hits.forEach(async (hit) =>
-                await client.delete({
-                    index: index,
-                    type: 'base',
-                    id: hit._id
-                }));
+                await elasticSearchUtils.deleteDocument(
+                    index,
+                    hit._id
+                ));
             await flush();
         });
     });
@@ -105,9 +95,9 @@ xdescribe('deduplication by exact title', function() {
     it('should remove same document from one index by exact title', async function() {
         // add same document to two different indices
         await index(doc1, doc2);
-        let searchResponse = await client.search({
-            index: deduplicationIndices
-        });
+        let searchResponse = await elasticSearchUtils.search(
+            deduplicationIndices
+        );
         expect(searchResponse.hits.total).to.be.equal(2);
 
         // deduplicate
@@ -115,9 +105,9 @@ xdescribe('deduplication by exact title', function() {
 
         // check only one document exists
         await flush();
-        searchResponse = await client.search({
-            index: deduplicationIndices
-        });
+        searchResponse = await elasticSearchUtils.search(
+            deduplicationIndices
+        );
         expect(searchResponse.hits.total).to.be.equal(1);
         expect(searchResponse.hits.hits[0]._source['modified']).to.be.equal(new Date('2019-06-15').toISOString());
     });
@@ -126,9 +116,9 @@ xdescribe('deduplication by exact title', function() {
     it('should keep most recent document by exact title', async function() {
         // add same document to two different indices
         await index(doc2, doc1);
-        let searchResponse = await client.search({
-            index: deduplicationIndices
-        });
+        let searchResponse = await elasticSearchUtils.search(
+            deduplicationIndices
+        );
         expect(searchResponse.hits.total).to.be.equal(2);
 
         // deduplicate
@@ -136,9 +126,9 @@ xdescribe('deduplication by exact title', function() {
 
         // check only one document exists
         await flush();
-        searchResponse = await client.search({
-            index: deduplicationIndices
-        });
+        searchResponse = await elasticSearchUtils.search(
+            deduplicationIndices
+        );
         expect(searchResponse.hits.total).to.be.equal(1);
         expect(searchResponse.hits.hits[0]._source['modified']).to.be.equal(new Date('2019-06-15').toISOString());
     });
@@ -146,14 +136,14 @@ xdescribe('deduplication by exact title', function() {
     // same test again but just switch document order
     it('should query with alias except old index', async function() {
         // add same document to two different indices
-        await client.index({index: 'test-deduplicate3', type: 'base', body: doc1});
+        await elasticSearchUtils.index('test-deduplicate3', doc1);
         await index(doc1, doc3);
 
         // alias is added to only first two indices
-        let searchResponse = await client.search({
+        let searchResponse = await elasticSearchUtils.search(
             // index: ['test*']
-            index: ['test-dedup', 'test-deduplicate3']
-        });
+            ['test-dedup', 'test-deduplicate3']
+        );
         expect(searchResponse.hits.total).to.be.equal(3);
 
         let queryBody = {
@@ -167,10 +157,10 @@ xdescribe('deduplication by exact title', function() {
                 }
             }
         };
-        searchResponse = await client.search({
-            index: ['test-dedup', 'test-deduplicate3'],
-            body: queryBody
-        });
+        searchResponse = await elasticSearchUtils.search(
+            ['test-dedup', 'test-deduplicate3'],
+            queryBody
+        );
         expect(searchResponse.hits.total).to.be.equal(2);
 
         // deduplicate
@@ -178,26 +168,26 @@ xdescribe('deduplication by exact title', function() {
 
         // check only one document exists
         await flush();
-        searchResponse = await client.search({
-            index: ['test-dedup', 'test-deduplicate3'],
-            body: queryBody
-        });
+        searchResponse = await elasticSearchUtils.search(
+            ['test-dedup', 'test-deduplicate3'],
+            queryBody
+        );
         expect(searchResponse.hits.total).to.be.equal(1);
         expect(searchResponse.hits.hits[0]._source['modified']).to.be.equal(new Date('2019-06-15').toISOString());
     });
 
     it('should remove document with same uuid from index', async function() {
         await index(doc5, doc6);
-        let searchResponse = await client.search({
-            index: deduplicationIndices
-        });
+        let searchResponse = await elasticSearchUtils.search(
+            deduplicationIndices
+        );
         expect(searchResponse.hits.total).to.be.equal(2);
 
         await deduplicateUtils._deduplicateByTitle();
         await flush();
-        searchResponse = await client.search({
-            index: deduplicationIndices
-        });
+        searchResponse = await elasticSearchUtils.search(
+            deduplicationIndices
+        );
 
         expect(searchResponse.hits.total).to.be.equal(1);
         //most recent doc is kept
@@ -211,18 +201,18 @@ xdescribe('deduplication by exact title', function() {
      */
     async function index(doc1, doc2) {
         if (doc1) {
-            await client.index({index: deduplicationIndices[0], type: 'base', body: doc1});
+            await elasticSearchUtils.index(deduplicationIndices[0], doc1);
         }
         if (doc2) {
-            await client.index({index: deduplicationIndices[1], type: 'base', body: doc2});
+            await elasticSearchUtils.index(deduplicationIndices[1], doc2);
         }
         await flush();
     }
 
     async function flush() {
-        await client.indices.flush({index: deduplicationIndices[0], ignore: [404]});
-        await client.indices.flush({index: deduplicationIndices[1], ignore: [404]});
-        await client.indices.flush({index: 'test-deduplicate3', ignore: [404]});
+        await elasticSearchUtils.flush({ index: deduplicationIndices[0], ignore: [404] });
+        await elasticSearchUtils.flush({ index: deduplicationIndices[1], ignore: [404] });
+        await elasticSearchUtils.flush({ index: 'test-deduplicate3', ignore: [404] });
     }
 
 });

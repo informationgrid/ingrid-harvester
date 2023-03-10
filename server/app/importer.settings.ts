@@ -27,6 +27,7 @@ export interface CronData {
 }
 
 export type ImporterSettings = {
+    index: string,
     priority?: number,
     blacklistedIds?: string[],
     cron?: {

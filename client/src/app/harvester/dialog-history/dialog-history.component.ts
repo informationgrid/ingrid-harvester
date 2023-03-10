@@ -23,8 +23,8 @@
 
 import {AfterViewInit, Component, Inject, OnInit} from '@angular/core';
 import {Harvester} from '@shared/harvester';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef} from '@angular/material/legacy-dialog';
+import {UntypedFormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Chart } from 'chart.js';
 
 
@@ -45,7 +45,7 @@ export class DialogHistoryComponent implements OnInit, AfterViewInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public history: any,
               public dialogRef: MatDialogRef<DialogHistoryComponent>,
-              private formBuilder: FormBuilder) {
+              private formBuilder: UntypedFormBuilder) {
 
       this.data = history;
   }

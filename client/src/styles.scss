@@ -76,8 +76,8 @@ snack-bar-container.error {
 
 // for npm roboto-fontface package (to load local files)
 $roboto-font-path: "~roboto-fontface/fonts" !default;
-@import "~roboto-fontface/css/roboto/sass/roboto-fontface";
+@import "roboto-fontface/css/roboto/sass/roboto-fontface";
 
 // for npm material-icons package (to load local files)
 $material-icons-font-path: '~material-icons/iconfont/';
-@import '~material-icons/iconfont/material-icons.scss';
+@import 'material-icons/iconfont/material-icons.scss';

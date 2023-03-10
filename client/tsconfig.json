@@ -4,12 +4,12 @@
     "baseUrl": ".",
     "outDir": "./dist/out-tsc",
     "declaration": false,
-    "module": "es2015",
+    "module": "es2020",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es5",
+    "target": "ES2022",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -18,8 +18,13 @@
       "dom"
     ],
     "paths": {
-      "@shared/*": ["../shared/*"],
-      "tslib": ["node_modules/tslib"]
-    }
+      "@shared/*": [
+        "../shared/*"
+      ],
+      "tslib": [
+        "node_modules/tslib"
+      ]
+    },
+    "useDefineForClassFields": false
   }
 }

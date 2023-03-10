@@ -26,9 +26,9 @@ import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
 import {TestUtils} from "./utils/test-utils";
-import {IndexDocument} from '../app/model/index.document';
 import {CswSettings} from '../app/importer/csw/csw.settings';
 import {CswImporter} from '../app/importer/csw/csw.importer';
+import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
 
 let log = getLogger();
 configure('./log4js.json');
@@ -66,11 +66,11 @@ describe('Import CSW BFG', function () {
                 </ogc:Filter>`
         };
 
-        let importer = new CswImporter(settings);
+        let importer = new CswImporter(ProfileFactoryLoader.get(), settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 
-        indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
+        indexDocumentCreateSpy = sinon.spy(ProfileFactoryLoader.get().getIndexDocument(), 'create');
 
         importer.run.subscribe({
             complete: async () => {

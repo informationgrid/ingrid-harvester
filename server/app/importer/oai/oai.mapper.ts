@@ -24,7 +24,10 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Agent, Contact, DateRange, Distribution, GenericMapper, Organization, Person} from "../../model/generic.mapper";
+
+import {BaseMapper} from '../base.mapper';
+import {Distribution} from "../../model/distribution";
+import {DateRange} from "../../model/dateRange";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -37,10 +40,11 @@ import doc = Mocha.reporters.doc;
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Summary} from "../../model/summary";
+import {Agent, Contact, Organization, Person} from "../../model/agent";
 
 let xpath = require('xpath');
 
-export class OaiMapper extends GenericMapper {
+export class OaiMapper extends BaseMapper {
 
     static GMD = 'http://www.isotc211.org/2005/gmd';
     static GCO = 'http://www.isotc211.org/2005/gco';
@@ -91,11 +95,11 @@ export class OaiMapper extends GenericMapper {
         super.init();
     }
 
-    protected getSettings(): ImporterSettings {
+    public getSettings(): ImporterSettings {
         return this.settings;
     }
 
-    protected getSummary(): Summary{
+    public getSummary(): Summary{
         return this.summary;
     }
 
@@ -607,7 +611,7 @@ export class OaiMapper extends GenericMapper {
         if (!themes || themes.length === 0) {
             // Fall back to default value
             themes = this.settings.defaultDCATCategory
-                .map( category => GenericMapper.DCAT_CATEGORY_URL + category);
+                .map( category => BaseMapper.DCAT_CATEGORY_URL + category);
         }
 
         this.fetched.themes = themes;

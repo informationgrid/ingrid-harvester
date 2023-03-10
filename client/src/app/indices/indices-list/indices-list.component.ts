@@ -27,7 +27,7 @@ import {forkJoin, Observable} from 'rxjs';
 import {Index} from '@shared/index.model';
 import {tap} from 'rxjs/operators';
 import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
-import {MatDialog} from '@angular/material';
+import {MatLegacyDialog as MatDialog} from '@angular/material/legacy-dialog';
 import {ConfigService} from "../../config/config.service";
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 

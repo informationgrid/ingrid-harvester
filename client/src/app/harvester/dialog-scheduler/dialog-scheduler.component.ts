@@ -23,7 +23,7 @@
 
 import {Component, Inject, OnInit, Optional} from '@angular/core';
 import cronstrue from 'cronstrue/i18n';
-import {MAT_DIALOG_DATA} from '@angular/material';
+import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA} from '@angular/material/legacy-dialog';
 import {CronData} from '../../../../../server/app/importer.settings';
 import { isValidCron } from 'cron-validator';
 

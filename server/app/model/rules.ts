@@ -21,7 +21,8 @@
  * ==================================================
  */
 
-import {Distribution} from './generic.mapper';
+
+import {Distribution} from "./distribution";
 
 export class RuleResult {
     constructor(

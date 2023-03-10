@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import {ElasticSettings} from '../../utils/elastic.setting';
 import {ImporterSettings} from '../../importer.settings';
 
 export type SparqlSettings = {
@@ -32,4 +31,4 @@ export type SparqlSettings = {
     defaultProvider?: string,
     eitherKeywords?: string[],
     recordFilter?: string
-} & ElasticSettings & ImporterSettings;
+} & ImporterSettings;

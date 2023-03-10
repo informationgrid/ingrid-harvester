@@ -21,11 +21,12 @@
  * ==================================================
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {GeneralSettings} from '@shared/general-config.settings';
-import {MappingItem} from '@shared/mapping.model';
+import { ElasticSettings } from '../../../../server/app/utils/elastic.setting';
+import { GeneralSettings } from '@shared/general-config.settings';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { MappingItem } from '@shared/mapping.model';
+import { Observable } from 'rxjs';
 
 export interface MappingDistribution {
   name: string;
@@ -67,6 +68,10 @@ export class ConfigService {
 
     const options = {params: httpParams};
     return this.http.delete('rest/api/config/mapping/distribution', options);
+  }
+
+  checkEsConnection(data: Partial<ElasticSettings>): Observable<boolean> {
+    return this.http.post<boolean>('rest/api/config/escheck', data);
   }
 
   save(data: GeneralSettings): Observable<void> {

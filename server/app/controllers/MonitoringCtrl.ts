@@ -21,13 +21,10 @@
  * ==================================================
  */
 
-import {Authenticated, BodyParams, Controller, Delete, Get, PathParams} from '@tsed/common';
-import {IndexService} from '../services/IndexService';
-import {Index} from '@shared/index.model';
-import {UrlCheckService} from "../services/statistic/UrlCheckService";
-import {ScheduleService} from "../services/ScheduleService";
-import {HistoryService} from "../services/statistic/HistoryService";
-import {IndexCheckService} from "../services/statistic/IndexCheckService";
+import { Authenticated, BodyParams, Controller, Get } from '@tsed/common';
+import { HistoryService } from "../services/statistic/HistoryService";
+import { IndexCheckService } from "../services/statistic/IndexCheckService";
+import { UrlCheckService } from "../services/statistic/UrlCheckService";
 
 @Controller('/api/monitoring')
 @Authenticated()
@@ -38,10 +35,10 @@ export class MonitoringCtrl {
                 private historyService: HistoryService) {
     }
 
-
-
     @Get('/urlcheck')
     async getUrlCheckHistory(): Promise<any> {
+        // re-initialize in case settings have changed
+        this.urlCheckService.initialize();
         return this.urlCheckService.getHistory()
     }
 
@@ -54,5 +51,4 @@ export class MonitoringCtrl {
     getAllHarvesterHistory(@BodyParams() request: any) {
         return this.historyService.getHistoryAll();
     }
-
 }

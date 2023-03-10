@@ -24,8 +24,8 @@
 import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {SparqlSettings} from '../../../../../../server/app/importer/sparql/sparql.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatChipInputEvent} from '@angular/material';
-import {FormControl, FormGroup} from '@angular/forms';
+import {MatLegacyChipInputEvent as MatChipInputEvent} from '@angular/material/legacy-chips';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-sparql-harvester',
@@ -34,7 +34,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 })
 export class SparqlHarvesterComponent implements OnInit, OnDestroy {
 
-  @Input() form: FormGroup;
+  @Input() form: UntypedFormGroup;
   @Input() model: SparqlSettings;
   @Input() rulesTemplate: TemplateRef<any>;
 
@@ -43,8 +43,8 @@ export class SparqlHarvesterComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    this.form.addControl('endpointUrl', new FormControl(this.model.endpointUrl));
-    this.form.addControl('query', new FormControl(this.model.query));
+    this.form.addControl('endpointUrl', new UntypedFormControl(this.model.endpointUrl));
+    this.form.addControl('query', new UntypedFormControl(this.model.query));
 
     if (!this.model.eitherKeywords) {
       this.model.eitherKeywords = [];

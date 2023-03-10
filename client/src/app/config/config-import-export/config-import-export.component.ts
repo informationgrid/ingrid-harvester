@@ -24,7 +24,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ConfigService} from '../config.service';
 import {HarvesterService} from '../../harvester/harvester.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {forkJoin, of} from 'rxjs';
 import {GeneralSettings} from '@shared/general-config.settings';
 import {ConfigGeneralComponent} from "../config-general/config-general.component";
@@ -37,9 +37,9 @@ import {ConfigModule} from "../config.module";
 })
 export class ConfigImportExportComponent implements OnInit {
 
-  configForm: FormGroup;
+  configForm: UntypedFormGroup;
 
-  constructor(private formBuilder: FormBuilder, private configService: ConfigService, private harvesterService: HarvesterService) {
+  constructor(private formBuilder: UntypedFormBuilder, private configService: ConfigService, private harvesterService: HarvesterService) {
   }
 
   ngOnInit() {

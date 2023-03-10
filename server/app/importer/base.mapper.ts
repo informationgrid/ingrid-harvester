@@ -26,72 +26,17 @@ import {License} from '@shared/license.model';
 import * as moment from 'moment';
 import {ImporterSettings} from "../importer.settings";
 import {getLogger} from "log4js";
-import {Summary} from "./summary";
-import {Rules} from "./rules";
-import { Catalog } from './dcatApPlu.document';
+import {Summary} from "../model/summary";
+import {Rules} from "../model/rules";
+import {Contact, Organization, Person, Agent} from "../model/agent";
+import {Distribution} from "../model/distribution";
+import {DateRange} from "../model/dateRange";
 
 moment.locale('de');
 
-export interface Distribution {
-    format?: string[];
-    accessURL: string;
-    downloadURL?: string;
-    id?: string;
-    title?: string;
-    description?: string;
-    issued?: Date;
-    modified?: Date;
-    byteSize?: number;
-    period?: DateRange;
-    pluDocType?: string;
-}
-export interface Agent {
-    homepage?: string;
-    mbox?: string;
-    type?: string;
-}
-export interface Person extends Agent {
-    name: string;
-}
-export interface Organization extends Agent {
-    organization: string;
-}
-export interface DateRange {
-    gte?: Date,
-    lte?: Date
-}
-export interface Contact {
-    fn: string,
-    hasCountryName?: string,
-    hasLocality?: string,
-    hasPostalCode?: string,
-    hasRegion?: string,
-    hasStreetAddress?: string,
-    hasEmail?: string,
-    hasTelephone?: string,
-    hasUID?: string,
-    hasURL?: string,
-    hasOrganizationName?: string
-}
-
-
-export abstract class GenericMapper {
+export abstract class BaseMapper {
 
     protected moment = moment;
-
-    protected sizeMap = {
-        byte: 1,
-        bytes: 1,
-        kilobyte: 1000,
-        kilobytes: 1000,
-        kb: 1000,
-        megabyte: 10000000,
-        megabytes: 10000000,
-        mb: 10000000,
-        gigabyte: 10000000000,
-        gigabytes: 10000000000,
-        gb: 10000000000,
-    };
 
     protected static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
 
@@ -117,8 +62,8 @@ export abstract class GenericMapper {
         }
     }
 
-    protected abstract getSettings(): ImporterSettings;
-    protected abstract getSummary(): Summary;
+    public abstract getSettings(): ImporterSettings;
+    public abstract getSummary(): Summary;
 
     abstract _getTitle(): string;
 
@@ -266,65 +211,6 @@ export abstract class GenericMapper {
         return this._getCitation();
     }
 
-    abstract _getCategories(): string[];
-
-    getCategories(): string[]{
-        return this._getCategories();
-    }
-
-
-    _getMFundFKZ(): string {
-        // Detect mFund properties
-        let keywords = this.getKeywords();
-        if (keywords) {
-            let fkzKeyword = keywords.find(kw => kw.toLowerCase().startsWith('mfund-fkz:') || kw.toLowerCase().startsWith('mfund-fkz '));
-
-            if (fkzKeyword) {
-                let idx_colon = fkzKeyword.indexOf(':');
-                let idx_blank = fkzKeyword.indexOf(' ');
-                let idx = (idx_colon > -1 && idx_blank > -1)?Math.min(idx_colon, idx_blank):Math.max(idx_colon, idx_blank);
-
-                let fkz = fkzKeyword.substr(idx + 1);
-
-                if (fkz) return fkz.trim();
-            }
-        }
-        return undefined;
-    }
-
-    getMFundFKZ(): string {
-        return this._getMFundFKZ();
-    }
-
-    _getMFundProjectTitle(): string{
-        // Detect mFund properties
-        let keywords = this.getKeywords();
-        if (keywords) {
-            let mfKeyword: string = keywords.find(kw => kw.toLowerCase().startsWith('mfund-projekt:') || kw.toLowerCase().startsWith('mfund-projekt '));
-
-            if (mfKeyword) {
-                let idx_colon = mfKeyword.indexOf(':');
-                let idx_blank = mfKeyword.indexOf(' ');
-                let idx = (idx_colon > -1 && idx_blank > -1)?Math.min(idx_colon, idx_blank):Math.max(idx_colon, idx_blank);
-
-                let mfName = mfKeyword.substr(idx + 1);
-
-                if (mfName) return mfName.trim();
-            }
-        }
-        return undefined;
-    }
-
-    getMFundProjectTitle(): string{
-        return this._getMFundProjectTitle();
-    }
-
-    abstract _getDisplayContacts(): Promise<Organization[] | Person[]>;
-
-    async getDisplayContacts(): Promise<Organization[] | Person[]>{
-        return await this._getDisplayContacts();
-    }
-
     abstract _getKeywords(): string[];
 
     getKeywords(): string[]{
@@ -397,22 +283,6 @@ export abstract class GenericMapper {
         return this._getGroups();
     }
 
-    getExtrasAllData(): any[] {
-        let all = [];
-
-        let keywords = this.getKeywords();
-        if (keywords) {
-            keywords.forEach(kw => all.push(kw));
-        }
-
-        let mfundFkz = this.getMFundFKZ();
-        if (mfundFkz) { // mfund_fkz exists and isn't zero (falsy)
-            all.push(mfundFkz);
-            all.push('mFUND'); // Add an additional keyword as aid for search
-        }
-        return all;
-    }
-
     isValid(doc?: any) {
         return this.valid;
     }
@@ -437,86 +307,6 @@ export abstract class GenericMapper {
 
     getUrlCheckRequestConfig(uri: string): OptionsWithUri{
         return this._getUrlCheckRequestConfig(uri);
-    }
-
-
-    getPriority(){
-        if(this.getSettings().priority){
-            return this.getSettings().priority;
-        }
-        return undefined;
-    }
-
-    abstract _getBoundingBoxGml();
-
-    getBoundingBoxGml() {
-        return this._getBoundingBoxGml();
-    }
-
-    abstract _getBoundingBox();
-
-    getBoundingBox() {
-        return this._getBoundingBox();
-    }
-
-    abstract _getSpatialGml();
-
-    getSpatialGml() {
-        return this._getSpatialGml();
-    }
-
-    abstract _getCentroid();
-
-    getCentroid() {
-        return this._getCentroid();
-    }
-
-    abstract _getCatalog(): Promise<Catalog>;
-
-    async getCatalog(): Promise<Catalog> {
-        return this._getCatalog();
-    }
-
-    abstract _getPluPlanState();
-
-    getPluPlanState() {
-        return this._getPluPlanState();
-    }
-
-    abstract _getPluPlanType();
-
-    getPluPlanType() {
-        return this._getPluPlanType();
-    }
-
-    abstract _getPluPlanTypeFine();
-
-    getPluPlanTypeFine() {
-        return this._getPluPlanTypeFine();
-    }
-
-    abstract _getPluProcedureStartDate();
-
-    getPluProcedureStartDate() {
-        return this._getPluProcedureStartDate();
-    }
-
-    abstract _getPluProcedureState();
-
-    getPluProcedureState() {
-        return this._getPluProcedureState();
-    }
-
-    abstract _getPluProcedureType();
-
-    getPluProcedureType() {
-        return this._getPluProcedureType();
-    }
-
-    abstract _getPluProcessSteps();
-
-    getPluProcessSteps() {
-        return this._getPluProcessSteps();
     }
 
     executeCustomCode(doc: any) {
@@ -605,7 +395,7 @@ export abstract class GenericMapper {
             default:
                 return null;
         }
-        return code ? GenericMapper.DCAT_CATEGORY_URL + code : null;
+        return code ? BaseMapper.DCAT_CATEGORY_URL + code : null;
     }
 }
 

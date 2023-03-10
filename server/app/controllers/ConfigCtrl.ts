@@ -25,9 +25,12 @@ import {Authenticated, BodyParams, Controller, Delete, Get, Post, QueryParams} f
 import {ConfigService} from "../services/config/ConfigService";
 import {GeneralSettings} from '@shared/general-config.settings';
 import {MappingDistribution, MappingItem} from '@shared/mapping.model';
-import * as fs from "fs";
-import {IndexService} from "../services/IndexService";
 import {ScheduleService} from "../services/ScheduleService";
+import { ElasticSearchFactory } from '../utils/elastic.factory';
+import { ElasticSearchUtils } from '../utils/elastic.utils';
+import { ElasticSettings } from '../utils/elastic.setting';
+
+const log = require('log4js').getLogger(__filename);
 
 @Controller("/api/config")
 @Authenticated()
@@ -35,6 +38,18 @@ export class ConfigCtrl {
 
     constructor(
         private scheduleService: ScheduleService) {
+    }
+
+    @Post('/escheck')
+    async checkEsConnection(@BodyParams() body: Partial<ElasticSettings>): Promise<boolean> {
+        try {
+            // @ts-ignore
+            let esUtils: ElasticSearchUtils = ElasticSearchFactory.getElasticUtils(body, { elasticErrors: [] });
+            return await esUtils.ping();
+        } catch (error) {
+            log.warn(error);
+            return false;
+        }
     }
 
     @Get('/general')

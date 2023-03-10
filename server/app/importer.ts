@@ -27,6 +27,7 @@ import {Summary} from './model/summary';
 import {ImporterSettings} from './importer.settings';
 
 export const DefaultImporterSettings: ImporterSettings = {
+    index: '',
     priority: null,
     type: '',
     maxRecords: 100,

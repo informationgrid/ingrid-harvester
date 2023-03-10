@@ -21,33 +21,35 @@
  * ==================================================
  */
 
-import {Summary} from '../model/summary';
-import {elasticsearchMapping} from "./statistic.mapping";
-import {elasticsearchSettings} from "./statistic.settings";
-import {ImportLogMessage} from "../model/import.result";
-import { MiscUtils } from '../utils/misc.utils';
-import { Client } from '@elastic/elasticsearch';
+import { elasticsearchMapping} from './statistic.mapping';
+import { ElasticSearchFactory } from '../utils/elastic.factory';
 import { ElasticSearchUtils } from '../utils/elastic.utils';
+import { ElasticSettings } from 'utils/elastic.setting';
+import { ImportLogMessage} from '../model/import.result';
+import { MiscUtils } from '../utils/misc.utils';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
+import { Summary} from '../model/summary';
 
-let log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
-require('url').URL;
+export class StatisticUtils {
 
-export class StatisticUtils extends ElasticSearchUtils {
-    public static maxBulkSize = 100;
+    private elasticUtils: ElasticSearchUtils;
+    private elasticsearchSettings: ElasticSettings;
+    private static maxBulkSize = 100;
 
     constructor(settings) {
-        // let generalSettings = ConfigService.getGeneralSettings();
         settings = {
             ...settings,
             index: 'mcloud_harvester_statistic'
         };
         // @ts-ignore
         const summary: Summary = {};
-        super(settings, summary);
+        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
+        this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
     }
 
-    async saveSummary(logMessage: ImportLogMessage, baseIndex: string){
+    async saveSummary(logMessage: ImportLogMessage, baseIndex: string) {
         let timestamp = new Date();
 
         let errors = new Map();
@@ -57,7 +59,7 @@ export class StatisticUtils extends ElasticSearchUtils {
         let warnings = new Map();
         this.collectErrorsOrWarnings(warnings, logMessage.summary.warnings.map(entry => entry[1]?entry[0]+": "+entry[1]:entry[0]));
 
-        this.addDocToBulk({
+        this.elasticUtils.addDocToBulk({
                 timestamp: timestamp,
                 base_index: baseIndex,
                 numRecords: logMessage.summary.numDocs,
@@ -67,13 +69,13 @@ export class StatisticUtils extends ElasticSearchUtils {
                 numAppErrors: logMessage.summary.appErrors.length,
                 numESErrors: logMessage.summary.elasticErrors.length,
                 duration: logMessage.duration,
-                warnings: Array.from(warnings.entries()).map(entry => {return {message: entry[0], count: entry[1]}}),
-                errors: Array.from(errors.entries()).map(entry => {return {message: entry[0], count: entry[1]}})
+                warnings: Array.from(warnings.entries()).map(entry => ({ message: entry[0], count: entry[1] })),
+                errors: Array.from(errors.entries()).map(entry => ({ message: entry[0], count: entry[1] }))
         }, baseIndex+"_"+timestamp.toISOString(), StatisticUtils.maxBulkSize);
 
         try {
-            await this.prepareIndex(elasticsearchMapping, elasticsearchSettings, true)
-            await this.finishIndex(false);
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
+            await this.elasticUtils.finishIndex(false);
         }
         catch(err) {
             let message = 'Error occurred creating statistic index';
@@ -81,16 +83,18 @@ export class StatisticUtils extends ElasticSearchUtils {
         }
     }
 
-    collectErrorsOrWarnings(result: Map<string, number>, messages: string[]){
+    collectErrorsOrWarnings(result: Map<string, number>, messages: string[]) {
         messages.forEach(message => {
             // truncate too long messages:
             // a) because usually the content is not needed for debugging after a few lines
             // b) because elasticsearch complains for too long messages in a document
             let truncatedMessage = MiscUtils.truncateErrorMessage(message);
-            if(result.has(truncatedMessage))
+            if (result.has(truncatedMessage)) {
                 result.set(truncatedMessage, result.get(truncatedMessage)+1);
-            else
+            }
+            else {
                 result.set(truncatedMessage, 1);
-        })
+            }
+        });
     }
 }

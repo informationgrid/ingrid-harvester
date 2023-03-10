@@ -26,11 +26,12 @@ import * as chaiAsPromised from 'chai-as-promised';
 import {configure, getLogger} from 'log4js';
 import * as sinon from 'sinon';
 import {TestUtils} from './utils/test-utils';
-import {IndexDocument} from '../app/model/index.document';
+import {mcloudDocument} from '../app/profiles/mcloud/model/index.document';
 import {CkanSettings} from '../app/importer/ckan/ckan.settings';
 import {CkanImporter} from '../app/importer/ckan/ckan.importer';
 import {CkanMapper} from '../app/importer/ckan/ckan.mapper';
-import {Organization} from '../app/model/generic.mapper';
+import {Organization} from "../app/model/agent";
+import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
 
 const ckanDoc = require('./data/ckan_doc.json');
 
@@ -64,11 +65,11 @@ describe('Import CKAN Bahn', function () {
             index: undefined,
             filterTags: ['Fernverkehr', 'Wagenreihung']
         };
-        let importer = new CkanImporter(settings);
+        let importer = new CkanImporter(ProfileFactoryLoader.get(), settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 
-        indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
+        indexDocumentCreateSpy = sinon.spy(ProfileFactoryLoader.get().getIndexDocument(), 'create');
 
         importer.run.subscribe({
             complete: async () => {
@@ -107,7 +108,7 @@ describe('Import CKAN Bahn', function () {
             // @ts-ignore
             summary: {warnings: []}
         });
-        const result = await IndexDocument.create(mapper);
+        const result = await ProfileFactoryLoader.get().getIndexDocument().create(mapper);
         chai.expect(result.title).to.eq('Reisezentren');
         chai.expect(result.description).to.eq('Die Reisezentren enthalten eine Liste der Verkaufsstellen inkl. Adressen, Koordinaten und Öffnungszeiten.');
         chai.expect(result.modified.toString()).to.eq(new Date('2019-09-11T07:16:44.317Z').toString());

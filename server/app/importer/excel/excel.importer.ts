@@ -21,12 +21,9 @@
  * ==================================================
  */
 
-import {IndexDocument} from '../../model/index.document';
-import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
+import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {ExcelMapper} from './excel.mapper';
 import {Workbook, Worksheet} from 'exceljs';
-import {elasticsearchMapping} from '../../elastic.mapping';
-import {elasticsearchSettings} from '../../elastic.settings';
 import {Summary} from '../../model/summary';
 import {DefaultImporterSettings, Importer} from '../../importer';
 import {Observable, Observer} from 'rxjs';
@@ -34,18 +31,21 @@ import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {ExcelSettings} from './excel.settings';
 import {FilterUtils} from "../../utils/filter.utils";
 import { MiscUtils } from '../../utils/misc.utils';
+import {ProfileFactory} from "../../profiles/profile.factory";
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import {ElasticSettings} from "../../utils/elastic.setting";
+import {ConfigService} from "../../services/config/ConfigService";
 
 let log = require('log4js').getLogger(__filename);
 
 export class ExcelImporter implements Importer {
-
+    private profile: ProfileFactory<ExcelMapper>;
     settings: ExcelSettings;
     elastic: ElasticSearchUtils;
     excelFilepath: string;
     names = {};
 
     static defaultSettings: ExcelSettings = {
-        ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         filePath: './data.xlsx'
     };
@@ -59,7 +59,9 @@ export class ExcelImporter implements Importer {
      * Create the importer and initialize with settings.
      * @param { {filePath, mapper} }settings
      */
-    constructor(settings) {
+    constructor(profile: ProfileFactory<ExcelMapper>, settings) {
+        this.profile = profile;
+
         // merge default settings with configured ones
         settings = MiscUtils.merge(ExcelImporter.defaultSettings, settings);
 
@@ -67,7 +69,8 @@ export class ExcelImporter implements Importer {
         this.filterUtils = new FilterUtils(settings);
 
         this.settings = settings;
-        this.elastic = new ElasticSearchUtils(settings, this.summary);
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
+        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
         this.excelFilepath = settings.filePath;
     }
 
@@ -117,7 +120,7 @@ export class ExcelImporter implements Importer {
             if (this.settings.dryRun) {
                 log.debug('Dry run option enabled. Skipping index creation.');
             } else {
-                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
             }
             await workbook.xlsx.readFile(this.excelFilepath);
 
@@ -159,7 +162,7 @@ export class ExcelImporter implements Importer {
                     currentIndexName: this.elastic.indexName,
                     summary: this.summary
                 });
-                let doc = await IndexDocument.create(mapper)
+                let doc = await this.profile.getIndexDocument().create(mapper)
                     .catch(e => this.handleIndexDocError(e, mapper));
 
                 // add document to buffer and send to elasticsearch if full

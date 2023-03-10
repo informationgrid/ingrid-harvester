@@ -21,39 +21,18 @@
  * ==================================================
  */
 
-import {Summary} from '../model/summary';
-import {ElasticSettings} from './elastic.setting';
-import {ImporterSettings} from '../importer.settings';
-import {ElasticSearchUtils} from './elastic.utils';
-import {ElasticQueries} from './elastic.queries';
-import { Client } from '@elastic/elasticsearch';
+import { AbstractDeduplicateUtils } from '../../../utils/abstract.deduplicate.utils';
+import { ElasticSearchUtils } from '../../../utils/elastic.utils';
+import { ElasticQueries } from '../../../utils/elastic.queries';
+import { Summary } from '../../../model/summary';
 
-let log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
 
-export class DeduplicateUtils {
+export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
-    /*duplicateStaging: {
-        id: string,
-        modified: Date,
-        title: string,
-        query: any
-    }[];*/
-    deduplicationIndices: string[];
-
-    settings: ElasticSettings & ImporterSettings;
-    summary: Summary;
-
-    client: Client;
-    private elastic: ElasticSearchUtils;
-
-
-    constructor(elasticUtils: ElasticSearchUtils, settings, summary) {
-        this.summary = summary;
-        this.elastic = elasticUtils;
-        this.client = elasticUtils.client;
-        this.settings = settings;
-        // this.duplicateStaging = [];
+    constructor(elasticUtils: ElasticSearchUtils, settings: any, summary: Summary) {
+        super(elasticUtils, settings, summary);
     }
 
     // FIXME: deduplication must work differently when import is not started for all harvesters
@@ -166,7 +145,7 @@ export class DeduplicateUtils {
         if (!generatedId) generatedId = '';
 
         let urls = [];
-        doc.distributions.forEach(dist => {
+        doc.distribution.forEach(dist => {
             if (dist.accessURL) {
                 urls.push(dist.accessURL);
             }
@@ -200,11 +179,11 @@ export class DeduplicateUtils {
         // By default elasticsearch limits the count of aggregates to 10. Ask it
         // to return a lot more results!
         try {
-            let response: any = await this.client.search({
-                index: [this.settings.alias],
-                body: ElasticQueries.findSameTitle(),
-                size: 50
-            });
+            let response = await this.elastic.search(
+                this.settings.alias,
+                ElasticQueries.findSameTitle(),
+                50
+            );
 
             let count = 0;
             log.debug(`Count of buckets for deduplication aggregates query: ${response.aggregations.duplicates.buckets.length}`);
@@ -224,8 +203,8 @@ export class DeduplicateUtils {
                             // collect URLs from hits we want to compare
                             let urlsFromHit = [];
                             let urlsFromOtherHit = [];
-                            hit0._source.distributions.forEach(dist => urlsFromHit.push(dist.accessURL));
-                            hit1._source.distributions.forEach(dist => urlsFromOtherHit.push(dist.accessURL));
+                            hit0._source.distributions?.forEach(dist => urlsFromHit.push(dist.accessURL));
+                            hit1._source.distributions?.forEach(dist => urlsFromOtherHit.push(dist.accessURL));
 
                             // only if all URLs are the same in both hits, we expect them to be equal AND have the same length
                             let remove =
@@ -264,16 +243,11 @@ export class DeduplicateUtils {
 
         // TODO: send flush request to immediately remove documents from index
         try {
-            await this.client.indices.flush();
+            await this.elastic.flush();
         } catch (e) {
             log.error('Error occurred during flush', e);
         }
 
         log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.elastic.indexName}`);
-    }
-
-    private handleError(message: string, error: any) {
-        this.summary.elasticErrors.push(message);
-        log.error(message, error);
     }
 }

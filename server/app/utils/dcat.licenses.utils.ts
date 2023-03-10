@@ -82,7 +82,7 @@ export class DcatLicensesUtils {
         try {
             const data = fs.readFileSync('def_licenses.rdf');
 
-            let DomParser = require('xmldom').DOMParser;
+            let DomParser = require('@xmldom/xmldom').DOMParser;
             let responseDom = new DomParser().parseFromString(data.toString());
 
             let concepts = responseDom.getElementsByTagNameNS(DcatLicensesUtils.SKOS, 'Concept');
