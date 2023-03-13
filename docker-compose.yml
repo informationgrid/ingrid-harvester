@@ -3,7 +3,7 @@ services:
 
   mcloud:
     build: .
-    container_name: mcloud
+    container_name: ingrid-harvester
     environment:
      - NODE_ENV=production
      - ELASTIC_URL=http://elastic:9200
@@ -13,15 +13,5 @@ services:
      - IMPORTER_PROFILE=diplanung
     ports:
       - 8090:8090
-    working_dir: /opt/mcloud
-    command: cd server && node app/index.js
-    depends_on:
-        - elastic
-    networks:
-      - mcloudnetwork
-
-volumes:
-  esdata:
-
-networks: 
-  mcloudnetwork:
+    working_dir: /opt/ingrid/harvester/server
+    command: node app/index.js

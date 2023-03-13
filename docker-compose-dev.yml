@@ -5,7 +5,7 @@ services:
     image: docker-registry.wemove.com/ingrid-elasticsearch-with-decompound:6.8.4
     container_name: mcloud-elastic
     environment:
-      - cluster.name=mcloud
+      - cluster.name=ingrid-harvester
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - xpack.security.enabled=true
@@ -26,7 +26,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: mcloud
+    container_name: ingrid-harvester
     environment:
      - NODE_ENV=development
      - ELASTIC_URL=http://elastic:9200
@@ -36,7 +36,7 @@ services:
     ports:
       - 4200:4200
       - 8090:8090
-    working_dir: /opt/mcloud
+    working_dir: /opt/ingrid/harvester
     command: sh entrypoint-dev.sh
     depends_on:
         - elastic
