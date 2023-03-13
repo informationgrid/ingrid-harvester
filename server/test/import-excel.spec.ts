@@ -1,23 +1,23 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
@@ -26,10 +26,10 @@ import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
 import {configure, getLogger} from "log4js";
 import {TestUtils} from "./utils/test-utils";
-import {IndexDocument} from '../app/model/index.document';
 import {ExcelImporter} from '../app/importer/excel/excel.importer';
 import {ExcelSettings} from '../app/importer/excel/excel.settings';
 import {ExcelMapper} from '../app/importer/excel/excel.mapper';
+import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
 
 let log = getLogger();
 configure('./log4js.json');
@@ -52,19 +52,16 @@ describe('Import Excel', function () {
             dryRun: true,
             filePath: 'test/data/data-test.xlsx',
             defaultDCATCategory: ['DEFAULT_TRAN', "XXX"],
-            alias: undefined,
-            elasticSearchUrl: undefined,
             type: undefined,
-            includeTimestamp: undefined,
             index: undefined,
             isIncremental: false,
             maxConcurrent: 1
         };
-        let importer = new ExcelImporter(settings);
+        let importer = new ExcelImporter(ProfileFactoryLoader.get(), settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(3, {issued: "2019-01-08T16:33:11.168Z"}));
 
-        indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
+        indexDocumentCreateSpy = sinon.spy(ProfileFactoryLoader.get().getIndexDocument(), 'create');
 
         importer.run.subscribe({
             complete: async () => {

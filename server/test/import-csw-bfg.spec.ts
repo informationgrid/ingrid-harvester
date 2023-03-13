@@ -1,23 +1,23 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
@@ -26,9 +26,9 @@ import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
 import {TestUtils} from "./utils/test-utils";
-import {IndexDocument} from '../app/model/index.document';
 import {CswSettings} from '../app/importer/csw/csw.settings';
 import {CswImporter} from '../app/importer/csw/csw.importer';
+import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
 
 let log = getLogger();
 configure('./log4js.json');
@@ -55,7 +55,6 @@ describe('Import CSW BFG', function () {
             defaultDCATCategory: ["TRAN", "TECH"],
             defaultAttribution: "Bundesanstalt für Gewässerkunde",
             defaultAttributionLink: "https://www.bafg.de/",
-            includeTimestamp: true,
             httpMethod: "POST",
             recordFilter: `
                 <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
@@ -66,11 +65,11 @@ describe('Import CSW BFG', function () {
                 </ogc:Filter>`
         };
 
-        let importer = new CswImporter(settings);
+        let importer = new CswImporter(ProfileFactoryLoader.get(), settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 
-        indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
+        indexDocumentCreateSpy = sinon.spy(ProfileFactoryLoader.get().getIndexDocument(), 'create');
 
         importer.run.subscribe({
             complete: async () => {

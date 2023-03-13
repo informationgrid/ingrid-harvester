@@ -1,33 +1,30 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
-import {Authenticated, BodyParams, Controller, Delete, Get, PathParams} from '@tsed/common';
-import {IndexService} from '../services/IndexService';
-import {Index} from '@shared/index.model';
-import {UrlCheckService} from "../services/statistic/UrlCheckService";
-import {ScheduleService} from "../services/ScheduleService";
-import {HistoryService} from "../services/statistic/HistoryService";
-import {IndexCheckService} from "../services/statistic/IndexCheckService";
+import { Authenticated, BodyParams, Controller, Get } from '@tsed/common';
+import { HistoryService } from "../services/statistic/HistoryService";
+import { IndexCheckService } from "../services/statistic/IndexCheckService";
+import { UrlCheckService } from "../services/statistic/UrlCheckService";
 
 @Controller('/api/monitoring')
 @Authenticated()
@@ -38,10 +35,10 @@ export class MonitoringCtrl {
                 private historyService: HistoryService) {
     }
 
-
-
     @Get('/urlcheck')
     async getUrlCheckHistory(): Promise<any> {
+        // re-initialize in case settings have changed
+        this.urlCheckService.initialize();
         return this.urlCheckService.getHistory()
     }
 
@@ -54,5 +51,4 @@ export class MonitoringCtrl {
     getAllHarvesterHistory(@BodyParams() request: any) {
         return this.historyService.getHistoryAll();
     }
-
 }

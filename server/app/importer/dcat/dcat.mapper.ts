@@ -1,30 +1,30 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {Contact, DateRange, Distribution, GenericMapper, Person} from "../../model/generic.mapper";
+import {BaseMapper} from "../base.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
@@ -37,10 +37,13 @@ import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Summary} from "../../model/summary";
+import {Contact, Person} from "../../model/agent";
+import {Distribution} from "../../model/distribution";
+import {DateRange} from "../../model/dateRange";
 
 let xpath = require('xpath');
 
-export class DcatMapper extends GenericMapper {
+export class DcatMapper extends BaseMapper {
 
     static FOAF = 'http://xmlns.com/foaf/0.1/';
     static LOCN = 'http://www.w3.org/ns/locn#';
@@ -86,6 +89,7 @@ export class DcatMapper extends GenericMapper {
     private keywordsAlreadyFetched = false;
     private fetched: any = {
         contactPoint: null,
+        publishers: null,
         keywords: {},
         themes: null
     };
@@ -107,7 +111,7 @@ export class DcatMapper extends GenericMapper {
 
         this.linkedDistributions = distributions.filter(distribution => distributionIDs.includes(distribution.getAttribute('rdf:about')))
 
-        let uuid = DcatMapper.select('.//dct:identifier', record, true).textContent;
+        let uuid = DcatMapper.select('./dct:identifier', record, true).textContent;
         if(!uuid) {
             uuid = DcatMapper.select('./dct:identifier/@rdf:resource', record, true).textContent;
         }
@@ -116,18 +120,18 @@ export class DcatMapper extends GenericMapper {
             super.init();
     }
 
-    protected getSettings(): ImporterSettings {
+    public getSettings(): ImporterSettings {
         return this.settings;
     }
 
-    protected getSummary(): Summary{
+    public getSummary(): Summary{
         return this.summary;
     }
 
     _getDescription() {
-        let description = DcatMapper.select('.//dct:description', this.record, true);
+        let description = DcatMapper.select('./dct:description', this.record, true);
         if (!description) {
-            description = DcatMapper.select('.//dct:abstract', this.record, true);
+            description = DcatMapper.select('./dct:abstract', this.record, true);
         }
         if (!description) {
             let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.catalogUrl}\'`;
@@ -208,13 +212,20 @@ export class DcatMapper extends GenericMapper {
 
 
     async _getPublisher(): Promise<any[]> {
+        if(this.fetched.publishers != null){
+            return this.fetched.publishers
+        }
+
         let publishers = [];
 
-        let creators = DcatMapper.select('.//dct:creator', this.record);
-        for (let i = 0; i < creators.length; i++) {
-            let organization = DcatMapper.select('.//foaf:Organization', creators[i], true);
+        let dctPublishers = DcatMapper.select('./dct:publisher', this.record);
+        for (let i = 0; i < dctPublishers.length; i++) {
+            let organization = DcatMapper.select('./foaf:Organization', dctPublishers[i], true);
+            if(!organization){
+                organization = DcatMapper.select('./foaf:Organization[@rdf:about="'+dctPublishers[i].getAttribute('rdf:resource')+'"]', this.catalogPage, true)
+            }
             if (organization) {
-                let name = DcatMapper.select('.//foaf:name', organization, true);
+                let name = DcatMapper.select('./foaf:name', organization, true);
                 if(name) {
                     let infos: any = {
                         organization: name.textContent
@@ -225,16 +236,35 @@ export class DcatMapper extends GenericMapper {
             }
         }
 
+
+        if (publishers.length === 0) {
+            let creators = DcatMapper.select('./dct:creator', this.record);
+            for (let i = 0; i < creators.length; i++) {
+                let organization = DcatMapper.select('./foaf:Organization', creators[i], true);
+                if (organization) {
+                    let name = DcatMapper.select('./foaf:name', organization, true);
+                    if (name) {
+                        let infos: any = {
+                            organization: name.textContent
+                        };
+
+                        publishers.push(infos);
+                    }
+                }
+            }
+        }
+
         if (publishers.length === 0) {
             this.summary.missingPublishers++;
             return undefined;
         } else {
+            this.fetched.publishers = publishers;
             return publishers;
         }
     }
 
     _getTitle() {
-        let title = DcatMapper.select('.//dct:title', this.record, true).textContent;
+        let title = DcatMapper.select('./dct:title', this.record, true).textContent;
         return title && title.trim() !== '' ? title : undefined;
     }
 
@@ -325,6 +355,13 @@ export class DcatMapper extends GenericMapper {
                         displayHomepage = originator[0].homepage
                     }
                     break;
+                case "publisher":
+                    let publisher = await this._getPublisher();
+                    if (publisher.length > 0) {
+                        displayName = publisher[0].organization;
+                        displayHomepage = null;
+                    }
+                    break;
             }
         }
 
@@ -339,6 +376,13 @@ export class DcatMapper extends GenericMapper {
                 }
 
                 displayHomepage = contactPoint.hasURL
+            }
+        }
+
+        if(!displayName){
+            let publisher = await this.getPublisher();
+            if (publisher && publisher[0]['organization']) {
+                displayName = publisher[0]['organization'];
             }
         }
 
@@ -618,12 +662,12 @@ export class DcatMapper extends GenericMapper {
     _getCreator(): Person[] {
         let creators = [];
 
-        let creatorNodes = DcatMapper.select('.//dct:creator', this.record);
+        let creatorNodes = DcatMapper.select('./dct:creator', this.record);
         for (let i = 0; i < creatorNodes.length; i++) {
-            let organization = DcatMapper.select('.//foaf:Organization', creatorNodes[i], true);
+            let organization = DcatMapper.select('./foaf:Organization', creatorNodes[i], true);
             if (organization) {
-                let name = DcatMapper.select('.//foaf:name', organization, true);
-                let mbox = DcatMapper.select('.//foaf:mbox', organization, true);
+                let name = DcatMapper.select('./foaf:name', organization, true);
+                let mbox = DcatMapper.select('./foaf:mbox', organization, true);
                 if(name) {
                     let infos: any = {
                         name: name.textContent
@@ -641,12 +685,12 @@ export class DcatMapper extends GenericMapper {
     getMaintainer(): Person[] {
         let maintainers = [];
 
-        let maintainerNodes = DcatMapper.select('.//dct:maintainer', this.record);
+        let maintainerNodes = DcatMapper.select('./dct:maintainer', this.record);
         for (let i = 0; i < maintainerNodes.length; i++) {
-            let organization = DcatMapper.select('.//foaf:Organization', maintainerNodes[i], true);
+            let organization = DcatMapper.select('./foaf:Organization', maintainerNodes[i], true);
             if (organization) {
-                let name = DcatMapper.select('.//foaf:name', organization, true);
-                let mbox = DcatMapper.select('.//foaf:mbox', organization, true);
+                let name = DcatMapper.select('./foaf:name', organization, true);
+                let mbox = DcatMapper.select('./foaf:mbox', organization, true);
                 if(name) {
                     let infos: any = {
                         name: name.textContent
@@ -682,12 +726,12 @@ export class DcatMapper extends GenericMapper {
 
         let originators = [];
 
-        let originatorNode = DcatMapper.select('.//dcatde:originator', this.record);
+        let originatorNode = DcatMapper.select('./dcatde:originator', this.record);
         for (let i = 0; i < originatorNode.length; i++) {
-            let organization = DcatMapper.select('.//foaf:Organization', originatorNode[i], true);
+            let organization = DcatMapper.select('./foaf:Organization', originatorNode[i], true);
             if (organization) {
-                let name = DcatMapper.select('.//foaf:name', organization, true);
-                let mbox = DcatMapper.select('.//foaf:mbox', organization, true);
+                let name = DcatMapper.select('./foaf:name', organization, true);
+                let mbox = DcatMapper.select('./foaf:mbox', organization, true);
                 let infos: any = {
                     name: name.textContent
                 };
@@ -770,54 +814,6 @@ export class DcatMapper extends GenericMapper {
 
     protected getUuid(): string {
         return this.uuid;
-    }
-
-    _getBoundingBoxGml() {
-        return undefined;
-    }
-
-    _getBoundingBox() {
-        return undefined;
-    }
-
-    _getSpatialGml() {
-        return undefined;
-    }
-
-    _getCentroid() {
-        return undefined;
-    }
-
-    async _getCatalog() {
-        return undefined;
-    }
-
-    _getPluPlanState() {
-        return undefined;
-    }
-
-    _getPluPlanType() {
-        return undefined;
-    }
-
-    _getPluPlanTypeFine() {
-        return undefined;
-    }
-
-    _getPluProcedureStartDate() {
-        return undefined;
-    }
-
-    _getPluProcedureState() {
-        return undefined;
-    }
-
-    _getPluProcedureType() {
-        return undefined;
-    }
-
-    _getPluProcessSteps() {
-        return undefined;
     }
 
     executeCustomCode(doc: any) {

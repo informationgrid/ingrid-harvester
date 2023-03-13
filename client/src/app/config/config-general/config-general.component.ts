@@ -1,34 +1,35 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
 import {Component, OnInit} from '@angular/core';
 import {ConfigService} from '../config.service';
 import {HarvesterService} from '../../harvester/harvester.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {of} from 'rxjs';
 import {GeneralSettings} from '@shared/general-config.settings';
 import cronstrue from 'cronstrue/i18n';
 import { isValidCron } from 'cron-validator';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-config-general',
@@ -37,22 +38,22 @@ import { isValidCron } from 'cron-validator';
 })
 export class ConfigGeneralComponent implements OnInit {
 
-  configForm: FormGroup;
+  configForm: UntypedFormGroup;
 
-  constructor(private formBuilder: FormBuilder, private configService: ConfigService, private harvesterService: HarvesterService) {
+  constructor(private formBuilder: UntypedFormBuilder, private configService: ConfigService, private harvesterService: HarvesterService) {
   }
 
   ngOnInit() {
     this.reset();
   }
 
-  private static noWhitespaceValidator(control: FormControl) {
+  private static noWhitespaceValidator(control: UntypedFormControl) {
     const isWhitespace = (control.value || '').trim().length === 0;
     const isValid = !isWhitespace;
     return of(isValid ? null : {'whitespace': true});
   }
 
-  private static elasticUrlValidator(control: FormControl) {
+  private static elasticUrlValidator(control: UntypedFormControl) {
     if (!control.value) {
       return of(null);
     }
@@ -68,6 +69,33 @@ export class ConfigGeneralComponent implements OnInit {
       }
     }
     return of(isValid ? null : {'elasticUrl': true});
+  }
+
+  esStatus = { 
+    success: ['check', 'Test erfolgreich'],
+    fail: ['report_problem', 'Test fehlgeschlagen'],
+    working: ['sync', '... wird getestet']
+  };
+
+  esStatusIcon(value: string) {
+    return this.esStatus[value][0];
+  }
+
+  esStatusMsg(value: string) {
+    return this.esStatus[value][1];
+  }
+
+  checkEsConnection() {
+    this.connectionCheck = 'working';
+    let checkResult = this.configService.checkEsConnection({
+      elasticSearchUrl: this.configForm.get('elasticSearchUrl').value,
+      elasticSearchVersion: this.configForm.get('elasticSearchVersion').value,
+      elasticSearchUser: this.configForm.get('elasticSearchUser').value,
+      elasticSearchPassword: this.configForm.get('elasticSearchPassword').value
+    });
+    checkResult.pipe(delay(1000)).subscribe(response => {
+      this.connectionCheck = response ? 'success' : 'fail';
+    });
   }
 
   save() {
@@ -107,6 +135,8 @@ export class ConfigGeneralComponent implements OnInit {
 
     this.configForm = this.formBuilder.group({
       elasticSearchUrl: [settings.elasticSearchUrl, Validators.required, ConfigGeneralComponent.elasticUrlValidator],
+      elasticSearchVersion: [settings.elasticSearchVersion],
+      elasticSearchUser: [settings.elasticSearchUser],
       elasticSearchPassword: [settings.elasticSearchPassword],
       alias: [settings.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
       numberOfShards: [settings.numberOfShards],
@@ -152,7 +182,7 @@ export class ConfigGeneralComponent implements OnInit {
     this.indexBackupCronTranslate(settings.indexBackup.cronPattern);
   }
 
-
+  connectionCheck: string;
   urlCheckTranslation: string;
   indexCheckTranslation: string;
   indexBackupCronTranslation: string;

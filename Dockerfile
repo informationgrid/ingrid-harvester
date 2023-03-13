@@ -5,16 +5,16 @@ FROM node:16.18.0-bullseye-slim AS build-server
 LABEL stage=build
 
 # install build dependencies
-WORKDIR /opt/mcloud/server
-COPY ./server/package.json package.json
-RUN npm install
+WORKDIR /opt/ingrid/harvester/server
+COPY ./server/package.json ./server/package-lock.json .
+RUN npm ci
 
 # copy src files
-WORKDIR /opt/mcloud
+WORKDIR /opt/ingrid/harvester
 COPY . .
 
 # build (transpile) server
-WORKDIR /opt/mcloud/server
+WORKDIR /opt/ingrid/harvester/server
 RUN npm run build
 
 
@@ -25,16 +25,16 @@ FROM node:16.18.0-bullseye-slim AS build-client
 LABEL stage=build
 
 # install build dependencies
-WORKDIR /opt/mcloud/client
-COPY ./client/package.json package.json
-RUN npm install
+WORKDIR /opt/ingrid/harvester/client
+COPY ./client/package.json ./client/package-lock.json .
+RUN npm ci
 
 # copy src files
-WORKDIR /opt/mcloud
+WORKDIR /opt/ingrid/harvester
 COPY . .
 
 # build client
-WORKDIR /opt/mcloud/client
+WORKDIR /opt/ingrid/harvester/client
 RUN npm run prod
 
 
@@ -51,19 +51,19 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # install production dependencies
-WORKDIR /opt/mcloud/server
-COPY ./server/package.json package.json
+WORKDIR /opt/ingrid/harvester/server
+COPY ./server/package.json ./server/package-lock.json .
 RUN npm run install-production
 
 # copy built files from server and client
-WORKDIR /opt/mcloud
-COPY --from=build-server /opt/mcloud/server/build .
-COPY --from=build-client /opt/mcloud/client/dist/webapp server/app/webapp
+WORKDIR /opt/ingrid/harvester
+COPY --from=build-server /opt/ingrid/harvester/server/build .
+COPY --from=build-client /opt/ingrid/harvester/client/dist/webapp server/app/webapp
 
 EXPOSE 8090
 
 RUN adduser --uid 1001 --group --system metadata && \
-    chown -R metadata:metadata /opt/mcloud
+    chown -R metadata:metadata /opt/ingrid/harvester
 
 USER metadata
 

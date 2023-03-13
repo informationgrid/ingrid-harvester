@@ -1,8 +1,8 @@
 
 # tail -f /dev/null
 
-cd /opt/mcloud/client
+cd /opt/ingrid/harvester/client
 npm run start &
 
-cd /opt/mcloud/server
+cd /opt/ingrid/harvester/server
 npm run start-dev-16

@@ -3,18 +3,14 @@ services:
 
   harvester:
     build: .
-    container_name: metadata-harvester
+    container_name: ingrid-harvester
     environment:
      - NODE_ENV=production
      - ES_HOST=elastic
      - ELASTIC_URL=http://elastic:9200
      - ELASTIC_PASSWORD=elastic
+     - IMPORTER_PROFILE=diplanung
     ports:
       - 8090:8090
-    working_dir: /opt/mcloud/server
+    working_dir: /opt/ingrid/harvester/server
     command: node app/index.js
-    networks:
-      - metadata-network
-
-networks:
-  metadata-network:

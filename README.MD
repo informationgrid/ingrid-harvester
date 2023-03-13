@@ -22,12 +22,13 @@ You can use the same setup as outlined in the section `Test setup` below, but wi
 
 Prerequisites:
 * node.js v16
-* an Elasticsearch index (either on your machine or the one from docker-compose.yml)
+* Elasticsearch v8
 
 You may wish to run the server and the client outside of the docker container, for debugging and faster deployment/development purposes. Currently you have to change some files to achieve this, outlined below:
 
-* `server/config-general.json`: change the value of `elasticSearchUrl` to `http://localhost:9200` 
-* `server/config-general.json`: change the value of `elasticSearchPassword`
+* `server/config-general.json`: 
+  * change the value of `elasticSearchUrl` to `http://localhost:9200` 
+  * change the value of `elasticSearchPassword`
 * Now, first start an Elasticsearch instance (either from the docker container or directly on your machine), then run the client and server separately:
   ```bash
   cd client

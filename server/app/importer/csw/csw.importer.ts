@@ -1,30 +1,27 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
-import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
-import {elasticsearchMapping} from '../../elastic.mapping';
-import {elasticsearchSettings} from '../../elastic.settings';
-import {IndexDocument} from '../../model/index.document';
+import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {CswMapper} from './csw.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -35,13 +32,18 @@ import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DefaultXpathSettings, CswSettings} from './csw.settings';
 import {FilterUtils} from "../../utils/filter.utils";
+import { Catalog } from '../../model/dcatApPlu.model';
 import { MiscUtils } from '../../utils/misc.utils';
 import { SummaryService } from '../../services/config/SummaryService';
+import {ProfileFactory} from "../../profiles/profile.factory";
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import {ElasticSettings} from "../../utils/elastic.setting";
+import {ConfigService} from "../../services/config/ConfigService";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
     logRequest = getLogger('requests'),
-    DomParser = require('xmldom').DOMParser;
+    DomParser = require('@xmldom/xmldom').DOMParser;
 
 export class CswSummary extends Summary {
     additionalSummary() {
@@ -54,6 +56,7 @@ export class CswSummary extends Summary {
 }
 
 export class CswImporter implements Importer {
+    private profile: ProfileFactory<CswMapper>;
     private readonly settings: CswSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
@@ -62,7 +65,6 @@ export class CswImporter implements Importer {
     private numIndexDocs = 0;
 
     static defaultSettings: Partial<CswSettings> = {
-        ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         ...DefaultXpathSettings,
         getRecordsUrl: '',
@@ -82,7 +84,9 @@ export class CswImporter implements Importer {
 
     private observer: Observer<ImportLogMessage>;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(profile: ProfileFactory<CswMapper>, settings, requestDelegate?: RequestDelegate) {
+        this.profile = profile;
+
         // merge default settings with configured ones
         settings = MiscUtils.merge(CswImporter.defaultSettings, settings);
 
@@ -115,7 +119,8 @@ export class CswImporter implements Importer {
 
         this.summary = new CswSummary(settings);
 
-        this.elastic = new ElasticSearchUtils(settings, this.summary);
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
+        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     static addModifiedFilter(recordFilter: string, lastRunDate: Date): string {
@@ -144,10 +149,10 @@ export class CswImporter implements Importer {
                 // when running an incremental harvest,
                 // clone the old index instead of preparing a new one
                 if (this.summary.isIncremental) {
-                    await this.elastic.cloneIndex(elasticsearchMapping, elasticsearchSettings);
+                    await this.elastic.cloneIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
                 }
                 else {
-                    await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                    await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
                 }
                 await this.harvest();
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
@@ -185,12 +190,15 @@ export class CswImporter implements Importer {
         let capabilitiesResponseDom = new DomParser().parseFromString(capabilitiesResponse);
 
         // store catalog info from getCapabilities in generalInfo
-        this.generalInfo['catalog'] = {
+        let catalog: Catalog = {
             description: CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
             homepage: this.settings.getRecordsUrl,
-            publisher: [{ name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent }],
+            // TODO we need a unique ID for each catalog - where to get one from?
+            id: this.settings.getRecordsUrl,
+            publisher: { name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent },
             title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
         };
+        this.generalInfo['catalog'] = catalog;
 
         if (this.settings.maxConcurrent > 1) {
             await this.harvestConcurrently();
@@ -300,7 +308,7 @@ export class CswImporter implements Importer {
                         servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distributions);
                     }
                 } else {
-                    identifierList = CswMapper.select('./gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn', xml)
+                    identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn', xml)
                     if (identifierList && identifierList.length > 0) {
                         for (let j = 0; j < identifierList.length; j++) {
                             let identifer = identifierList[j].getAttribute("uuidref")
@@ -319,7 +327,7 @@ export class CswImporter implements Importer {
             if(doc.extras){
                 let harvestedData = doc.extras.harvested_data;
                 let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = CswMapper.select('./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
+                let identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
                 if(identifierList){
                     for(let j = 0; j < identifierList.length; j++){
                         let identifer = identifierList[j].textContent;
@@ -328,7 +336,7 @@ export class CswImporter implements Importer {
                         }
                     }
                 }
-                identifierList = CswMapper.select('./gmd:fileIdentifier/gco:CharacterString', xml)
+                identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString', xml)
                 if(identifierList){
                     for(let j = 0; j < identifierList.length; j++){
                         let identifer = identifierList[j].textContent;
@@ -377,7 +385,7 @@ export class CswImporter implements Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary, this.generalInfo);
 
-            let doc: any = await IndexDocument.create(mapper).catch(e => {
+            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
@@ -406,7 +414,10 @@ export class CswImporter implements Importer {
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
-        await Promise.all(promises)
+        // TODO the following line raises
+        // MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 abort listeners added to [EventEmitter]. Use emitter.setMaxListeners() to increase limit
+        // may be harmless; investigate if limit increase suffices or if a real leak is occurring
+        await Promise.allSettled(promises)
             .catch(err => log.error('Error indexing CSW record', err));
     }
 

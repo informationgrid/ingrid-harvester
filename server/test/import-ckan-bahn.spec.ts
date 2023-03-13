@@ -1,23 +1,23 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
@@ -26,11 +26,12 @@ import * as chaiAsPromised from 'chai-as-promised';
 import {configure, getLogger} from 'log4js';
 import * as sinon from 'sinon';
 import {TestUtils} from './utils/test-utils';
-import {IndexDocument} from '../app/model/index.document';
+import {mcloudDocument} from '../app/profiles/mcloud/model/index.document';
 import {CkanSettings} from '../app/importer/ckan/ckan.settings';
 import {CkanImporter} from '../app/importer/ckan/ckan.importer';
 import {CkanMapper} from '../app/importer/ckan/ckan.mapper';
-import {Organization} from '../app/model/generic.mapper';
+import {Organization} from "../app/model/agent";
+import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
 
 const ckanDoc = require('./data/ckan_doc.json');
 
@@ -51,24 +52,21 @@ describe('Import CKAN Bahn', function () {
 
         var settings: CkanSettings = {
             ...CkanImporter.defaultSettings,
-            alias: undefined,
             ckanBaseUrl: 'https://data.deutschebahn.com',
             defaultAttribution: 'Deutsche Bahn Datenportal',
             defaultDCATCategory: ['TRAN', 'TECH'],
             defaultMcloudSubgroup: ['railway'],
             providerField: 'organization',
             dryRun: true,
-            elasticSearchUrl: undefined,
             type: undefined,
-            includeTimestamp: true,
             index: undefined,
             filterTags: ['Fernverkehr', 'Wagenreihung']
         };
-        let importer = new CkanImporter(settings);
+        let importer = new CkanImporter(ProfileFactoryLoader.get(), settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 
-        indexDocumentCreateSpy = sinon.spy(IndexDocument, 'create');
+        indexDocumentCreateSpy = sinon.spy(ProfileFactoryLoader.get().getIndexDocument(), 'create');
 
         importer.run.subscribe({
             complete: async () => {
@@ -97,7 +95,6 @@ describe('Import CKAN Bahn', function () {
             ...CkanImporter.defaultSettings,
             ckanBaseUrl: 'https://data.deutschebahn.com',
             index: 'xxx',
-            includeTimestamp: true,
             markdownAsDescription: false
         }, {
             source: ckanDoc,
@@ -107,7 +104,7 @@ describe('Import CKAN Bahn', function () {
             // @ts-ignore
             summary: {warnings: []}
         });
-        const result = await IndexDocument.create(mapper);
+        const result = await ProfileFactoryLoader.get().getIndexDocument().create(mapper);
         chai.expect(result.title).to.eq('Reisezentren');
         chai.expect(result.description).to.eq('Die Reisezentren enthalten eine Liste der Verkaufsstellen inkl. Adressen, Koordinaten und Öffnungszeiten.');
         chai.expect(result.modified.toString()).to.eq(new Date('2019-09-11T07:16:44.317Z').toString());

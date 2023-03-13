@@ -1,23 +1,23 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
@@ -32,6 +32,7 @@ import {Mail, MailServer} from "../utils/nodemailer.utils";
 import {ImportLogMessage} from "../model/import.result";
 import {StatisticUtils} from "../statistic/statistic.utils";
 import { MiscUtils } from '../utils/misc.utils';
+import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
 
 @SocketService('/import')
 export class ImportSocketService {
@@ -64,11 +65,11 @@ export class ImportSocketService {
             let lastExecution = new Date();
             let configGeneral = ConfigService.getGeneralSettings();
             let configData = ConfigService.get().filter(config => config.id === id)[0];
-            configData.deduplicationAlias = configData.index + 'dedup';
+            //configData.deduplicationAlias = configData.index + 'dedup';
 
             let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });
 
-            let importer = ImporterFactory.get(configHarvester);
+            let importer = ImporterFactory.get(ProfileFactoryLoader.get(), configHarvester);
             let mode = isIncremental ? 'incr' : 'full';
             this.log.info('>> Running importer: ' + configHarvester.description);
 

@@ -18,7 +18,8 @@
     "baseUrl": "./app",
     "paths": {
       "@shared/*": ["../../shared/*"]
-    }
+    },
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules"

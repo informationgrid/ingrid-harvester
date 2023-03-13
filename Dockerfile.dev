@@ -1,12 +1,12 @@
 FROM node:16.18.0-bullseye-slim
 
-WORKDIR /opt/mcloud
+WORKDIR /opt/ingrid/harvester
 COPY . ./
 
-WORKDIR /opt/mcloud/server
+WORKDIR /opt/ingrid/harvester/server
 RUN npm install
 
-WORKDIR /opt/mcloud/client
+WORKDIR /opt/ingrid/harvester/client
 RUN npm install
 
 EXPOSE 4200 8090 9200

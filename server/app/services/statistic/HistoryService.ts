@@ -1,71 +1,69 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
-import {Service} from '@tsed/di';
-import {ImportSocketService} from '../../sockets/import.socket.service';
-import {ElasticSearchUtils} from "../../utils/elastic.utils";
-import {ConfigService} from "../config/ConfigService";
-import {ElasticSettings} from "../../utils/elastic.setting";
-import {Summary} from "../../model/summary";
-import {now} from "moment";
-import {elasticsearchMapping} from "../../statistic/url_check.mapping";
-import {elasticsearchSettings} from "../../statistic/url_check.settings";
-import {BulkResponse} from "../../statistic/statistic.utils";
-
-let elasticsearch = require('elasticsearch'), log = require('log4js').getLogger(__filename);
-
-const http = require('http');
-const https = require('https');
-const request = require('request');
-
-//const ftp = require('basic-ftp');
+import { elasticsearchMapping } from '../../statistic/statistic.mapping';
+import { ConfigService } from '../config/ConfigService';
+import { ElasticQueries } from '../../utils/elastic.queries';
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import { ElasticSearchUtils } from '../../utils/elastic.utils';
+import { ElasticSettings } from '../../utils/elastic.setting';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { Service } from '@tsed/di';
+import { Summary } from '../../model/summary';
 
 @Service()
 export class HistoryService {
-    private elasticUtils: ElasticSearchUtils;
-    private alias: string;
 
-    constructor(private socketService: ImportSocketService) {
+    private elasticUtils: ElasticSearchUtils;
+    private elasticsearchSettings: ElasticSettings;
+
+    constructor() {
         let generalSettings = ConfigService.getGeneralSettings();
-        this.alias = generalSettings.alias;
         const settings: ElasticSettings = {
             elasticSearchUrl: generalSettings.elasticSearchUrl,
+            elasticSearchVersion: generalSettings.elasticSearchVersion,
+            elasticSearchUser: generalSettings.elasticSearchUser,
             elasticSearchPassword: generalSettings.elasticSearchPassword,
             alias: generalSettings.alias,
             includeTimestamp: true,
-            index: ''
+            index: 'mcloud_harvester_statistic'
         };
         // @ts-ignore
         const summary: Summary = {};
-        this.elasticUtils = new ElasticSearchUtils(settings, summary);
+        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
+        this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
     }
 
     async getHistory(id: number): Promise<any> {
         const harvester = ConfigService.get().find(h => h.id === id);
-        let history = await this.elasticUtils.getHistory(harvester.index);
+        let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
+        if (!indexExists) {
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
+        }
+        let history = await this.elasticUtils.getHistory('mcloud_harvester_statistic', ElasticQueries.findHistory(harvester.index));
         return {
             harvester: harvester.description,
-            history: history
+            ...history
         }
     }
 
@@ -86,7 +84,7 @@ export class HistoryService {
         Object.entries(dates).forEach(([date, harvester]) => {
             reduced_history.push({
                 timestamp: date,
-                harvester: Object.keys(harvester).map((index => {return {base_index: index, count: (harvester[index]["numRecords"] - harvester[index]["numSkipped"])}})),
+                harvester: Object.keys(harvester).map((index => ({ base_index: index, count: (harvester[index]["numRecords"] - harvester[index]["numSkipped"]) }))),
                 numRecords: Object.values(harvester).map(h => h["numRecords"]).reduce(this.SUM),
                 numSkipped: Object.values(harvester).map(h => h["numSkipped"]).reduce(this.SUM),
                 numWarnings: Object.values(harvester).map(h => h["numWarnings"]).reduce(this.SUM),
@@ -95,7 +93,7 @@ export class HistoryService {
                 numESErrors: Object.values(harvester).map(h => h["numESErrors"]).reduce(this.SUM),
                 duration: Object.values(harvester).map(h => h["duration"]).reduce(this.SUM)
             });
-        })
+        });
 
         return {
             history: reduced_history

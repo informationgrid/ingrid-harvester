@@ -1,23 +1,23 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
@@ -29,6 +29,7 @@ import {ImportLogMessage} from './model/import.result';
 import {ImporterFactory} from "./importer/importer.factory";
 import {ConfigService} from './services/config/ConfigService';
 import { MiscUtils } from './utils/misc.utils';
+import {ProfileFactoryLoader} from "./profiles/profile.factory.loader";
 
 let config = ConfigService.get(),
     configGeneral = ConfigService.getGeneralSettings(),
@@ -74,11 +75,11 @@ async function startProcess() {
         importerConfig.dryRun = myArgs.includes('-n') || myArgs.includes('--dry-run') || importerConfig.dryRun === true;
 
         // Set the same elasticsearch alias for deduplication for all importers
-        importerConfig.deduplicationAlias = deduplicationAlias;
+        //importerConfig.deduplicationAlias = deduplicationAlias;
 
         let configHarvester = MiscUtils.merge(importerConfig, configGeneral);
 
-        let importer = ImporterFactory.get( configHarvester );
+        let importer = ImporterFactory.get(ProfileFactoryLoader.get(), configHarvester );
         if (!importer) {
             log.error( 'Importer not defined for: ' + configHarvester.type );
             return;

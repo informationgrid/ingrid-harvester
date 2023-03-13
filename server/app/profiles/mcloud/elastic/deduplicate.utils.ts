@@ -1,58 +1,38 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
-import {Summary} from '../model/summary';
-import {ElasticSettings} from './elastic.setting';
-import {ImporterSettings} from '../importer.settings';
-import {ElasticSearchUtils} from './elastic.utils';
-import {ElasticQueries} from './elastic.queries';
+import { AbstractDeduplicateUtils } from '../../../utils/abstract.deduplicate.utils';
+import { ElasticSearchUtils } from '../../../utils/elastic.utils';
+import { ElasticQueries } from '../../../utils/elastic.queries';
+import { Summary } from '../../../model/summary';
 
-let log = require('log4js').getLogger(__filename);
-
-
-export class DeduplicateUtils {
-
-    /*duplicateStaging: {
-        id: string,
-        modified: Date,
-        title: string,
-        query: any
-    }[];*/
-    deduplicationIndices: string[];
-
-    settings: ElasticSettings & ImporterSettings;
-    summary: Summary;
-
-    client: any;
-    private elastic: ElasticSearchUtils;
+const log = require('log4js').getLogger(__filename);
 
 
-    constructor(elasticUtils: ElasticSearchUtils, settings, summary) {
-        this.summary = summary;
-        this.elastic = elasticUtils;
-        this.client = elasticUtils.client;
-        this.settings = settings;
-        // this.duplicateStaging = [];
+export class DeduplicateUtils extends AbstractDeduplicateUtils {
+
+    constructor(elasticUtils: ElasticSearchUtils, settings: any, summary: Summary) {
+        super(elasticUtils, settings, summary);
     }
 
     // FIXME: deduplication must work differently when import is not started for all harvesters
@@ -199,11 +179,11 @@ export class DeduplicateUtils {
         // By default elasticsearch limits the count of aggregates to 10. Ask it
         // to return a lot more results!
         try {
-            let response = await this.client.search({
-                index: [this.settings.alias],
-                body: ElasticQueries.findSameTitle(),
-                size: 50
-            });
+            let response = await this.elastic.search(
+                this.settings.alias,
+                ElasticQueries.findSameTitle(),
+                50
+            );
 
             let count = 0;
             log.debug(`Count of buckets for deduplication aggregates query: ${response.aggregations.duplicates.buckets.length}`);
@@ -263,16 +243,11 @@ export class DeduplicateUtils {
 
         // TODO: send flush request to immediately remove documents from index
         try {
-            await this.client.indices.flush();
+            await this.elastic.flush();
         } catch (e) {
             log.error('Error occurred during flush', e);
         }
 
         log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.elastic.indexName}`);
-    }
-
-    private handleError(message: string, error: any) {
-        this.summary.elasticErrors.push(message);
-        log.error(message, error);
     }
 }

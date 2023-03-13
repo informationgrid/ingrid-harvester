@@ -1,30 +1,27 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
-import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
-import {elasticsearchSettings} from '../../elastic.settings';
-import {elasticsearchMapping} from '../../elastic.mapping';
-import {IndexDocument} from '../../model/index.document';
+import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {Summary} from '../../model/summary';
 import {DefaultImporterSettings, Importer} from '../../importer';
 import {RequestDelegate} from '../../utils/http-request.utils';
@@ -34,19 +31,23 @@ import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {CkanSettings} from './ckan.settings';
 import {FilterUtils} from '../../utils/filter.utils';
 import { MiscUtils } from '../../utils/misc.utils';
+import {ProfileFactory} from "../../profiles/profile.factory";
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import {ElasticSettings} from '../../utils/elastic.setting';
+import {ConfigService} from "../../services/config/ConfigService";
 
 let log = require('log4js').getLogger(__filename);
 const uuidv5 = require('uuid/v5');
 const UUID_NAMESPACE = '6891a617-ab3b-4060-847f-61e31d6ccf6f';
 
 export class CkanImporter implements Importer {
+    private profile: ProfileFactory<CkanMapper>;
     private readonly settings: CkanSettings;
     elastic: ElasticSearchUtils;
     private requestDelegate: RequestDelegate;
     private docsByParent: any[][] = [];
 
     static defaultSettings: CkanSettings = {
-        ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         ckanBaseUrl: '',
         filterTags: [],
@@ -78,9 +79,13 @@ export class CkanImporter implements Importer {
      * Create the importer and initialize with settings.
      * @param { {ckanBaseUrl, defaultMcloudSubgroup, mapper} }settings
      */
-    constructor(settings: CkanSettings) {
+    constructor(profile: ProfileFactory<CkanMapper>, settings: CkanSettings) {
+        this.profile = profile;
+
         // merge default settings with configured ones
         settings = MiscUtils.merge(CkanImporter.defaultSettings, settings);
+
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
 
         this.summary = new Summary(settings);
 
@@ -91,7 +96,7 @@ export class CkanImporter implements Importer {
         }
         this.settings = settings;
         this.filterUtils = new FilterUtils(settings);
-        this.elastic = new ElasticSearchUtils(settings, this.summary);
+        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
 
         let requestConfig = CkanMapper.createRequestConfig(settings);
         let requestConfigCount = CkanMapper.createRequestConfigCount(settings);
@@ -114,7 +119,7 @@ export class CkanImporter implements Importer {
             // Execute the mappers
             let mapper = new CkanMapper(this.settings, data);
 
-            let doc: any = await IndexDocument.create(mapper)
+            let doc: any = await this.profile.getIndexDocument().create(mapper)
                 .catch(e => {
                     log.error('Error creating index document', e);
                     this.summary.appErrors.push(e.toString());
@@ -149,7 +154,7 @@ export class CkanImporter implements Importer {
                     if (!response.queued) {
                         this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
                     }
-                }).then(() => this.elastic.client.cluster.health({waitForStatus: 'yellow'}));
+                }).then(() => this.elastic.health('yellow'));
         }
     }
 
@@ -198,7 +203,7 @@ export class CkanImporter implements Importer {
         if (this.settings.dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
         } else {
-            await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+            await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
         }
     }
 
@@ -341,7 +346,7 @@ export class CkanImporter implements Importer {
                         if (!response.queued) {
                             this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
                         }
-                    }).then(() => this.elastic.client.cluster.health({waitForStatus: 'yellow'}));
+                    }).then(() => this.elastic.health('yellow'));
             });
         }
     }

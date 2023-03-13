@@ -31,11 +31,16 @@
               "src/theme.scss"
             ],
             "scripts": [],
-            "es5BrowserSupport": true,
-            "aot": false
+            "aot": true
           },
           "configurations": {
             "hmr": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -50,11 +55,10 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "baseHref": "/",
+              "baseHref": ".",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -65,6 +69,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
@@ -158,5 +166,7 @@
       }
     }
   },
-  "defaultProject": "client"
+  "cli": {
+    "analytics": false
+  }
 }

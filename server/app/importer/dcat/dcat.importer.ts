@@ -1,30 +1,27 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
-import {DefaultElasticsearchSettings, ElasticSearchUtils} from '../../utils/elastic.utils';
-import {elasticsearchMapping} from '../../elastic.mapping';
-import {elasticsearchSettings} from '../../elastic.settings';
-import {IndexDocument} from '../../model/index.document';
+import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {DcatMapper} from './dcat.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
@@ -36,11 +33,15 @@ import {DcatSettings} from './dcat.settings';
 import {FilterUtils} from "../../utils/filter.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
 import { MiscUtils } from '../../utils/misc.utils';
+import {ProfileFactory} from "../../profiles/profile.factory";
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
+import {ElasticSettings} from "../../utils/elastic.setting";
+import {ConfigService} from "../../services/config/ConfigService";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
     logRequest = getLogger('requests'),
-    DomParser = require('xmldom').DOMParser;
+    DomParser = require('@xmldom/xmldom').DOMParser;
 
 export class DcatSummary extends Summary {
     opendata = 0;
@@ -59,6 +60,7 @@ export class DcatSummary extends Summary {
 }
 
 export class DcatImporter implements Importer {
+    private profile: ProfileFactory<DcatMapper>;
     private readonly settings: DcatSettings;
     elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
@@ -67,7 +69,6 @@ export class DcatImporter implements Importer {
     private numIndexDocs = 0;
 
     static defaultSettings: DcatSettings = {
-        ...DefaultElasticsearchSettings,
         ...DefaultImporterSettings,
         catalogUrl: '',
         filterTags: [],
@@ -84,7 +85,9 @@ export class DcatImporter implements Importer {
 
     private observer: Observer<ImportLogMessage>;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(profile: ProfileFactory<DcatMapper>, settings, requestDelegate?: RequestDelegate) {
+        this.profile = profile;
+
         // merge default settings with configured ones
         settings = MiscUtils.merge(DcatImporter.defaultSettings, settings);
 
@@ -100,7 +103,8 @@ export class DcatImporter implements Importer {
 
         this.summary = new DcatSummary(settings);
 
-        this.elastic = new ElasticSearchUtils(settings, this.summary);
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
+        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -112,7 +116,7 @@ export class DcatImporter implements Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
                 await this.harvest();
                 await this.elastic.sendBulkData(false);
                 await this.elastic.finishIndex();
@@ -240,7 +244,7 @@ export class DcatImporter implements Importer {
 
             let mapper = this.getMapper(this.settings, records[i], rootNode, harvestTime, storedData[i], this.summary);
 
-            let doc: any = await IndexDocument.create(mapper).catch(e => {
+            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;

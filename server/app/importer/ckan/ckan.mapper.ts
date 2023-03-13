@@ -1,23 +1,23 @@
 /*
- *  ==================================================
- *  mcloud-importer
- *  ==================================================
- *  Copyright (C) 2017 - 2022 wemove digital solutions GmbH
- *  ==================================================
- *  Licensed under the EUPL, Version 1.2 or – as soon they will be
- *  approved by the European Commission - subsequent versions of the
- *  EUPL (the "Licence");
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
  *
- *  You may not use this work except in compliance with the Licence.
- *  You may obtain a copy of the Licence at:
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  * ==================================================
  */
 
@@ -27,7 +27,7 @@
 import {getLogger} from 'log4js';
 import {OptionsWithUri} from 'request-promise';
 import {CkanSettings, ProviderField} from './ckan.settings';
-import {DateRange, Distribution, GenericMapper, Organization, Person} from '../../model/generic.mapper';
+import {BaseMapper} from '../base.mapper';
 import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from '../../utils/http-request.utils';
 import {UrlUtils} from '../../utils/url.utils';
 import {Summary} from '../../model/summary';
@@ -35,6 +35,9 @@ import {throwError} from 'rxjs';
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
+import {Organization, Person} from "../../model/agent";
+import {Distribution} from "../../model/distribution";
+import {DateRange} from "../../model/dateRange";
 
 let mapping = require('../../../mappings.json');
 let markdown = require('markdown').markdown;
@@ -47,7 +50,21 @@ export interface CkanMapperData {
     summary: Summary;
 }
 
-export class CkanMapper extends GenericMapper {
+export class CkanMapper extends BaseMapper {
+
+    protected sizeMap = {
+        byte: 1,
+        bytes: 1,
+        kilobyte: 1000,
+        kilobytes: 1000,
+        kb: 1000,
+        megabyte: 10000000,
+        megabytes: 10000000,
+        mb: 10000000,
+        gigabyte: 10000000000,
+        gigabytes: 10000000000,
+        gb: 10000000000,
+    };
 
     private log = getLogger();
 
@@ -67,11 +84,11 @@ export class CkanMapper extends GenericMapper {
         super.init();
     }
 
-    protected getSettings(): ImporterSettings {
+    public getSettings(): CkanSettings {
         return this.settings;
     }
 
-    protected getSummary(): Summary{
+    public getSummary(): Summary{
         return this.summary;
     }
 
@@ -80,21 +97,7 @@ export class CkanMapper extends GenericMapper {
     }
 
     _getCategories() {
-        let subgroups = [];
-        let keywords = this.getKeywords();
-        if (keywords) {
-            keywords.forEach(k => {
-                k = k.trim();
-                if (k === 'mcloud_category_roads' || k === 'mcloud-kategorie-straßen') subgroups.push('roads');
-                if (k === 'mcloud_category_climate' || k === 'mcloud-kategorie-klima-und-wetter') subgroups.push('climate');
-                if (k === 'mcloud_category_waters' || k === 'mcloud-kategorie-wasserstraßen-und-gewässer') subgroups.push('waters');
-                if (k === 'mcloud_category_railway' || k === 'mcloud-kategorie-bahn') subgroups.push('railway');
-                if (k === 'mcloud_category_infrastructure' || k === 'mcloud-kategorie-infrastuktur') subgroups.push('infrastructure');
-                if (k === 'mcloud_category_aviation' || k === 'mcloud-kategorie-luft--und-raumfahrt') subgroups.push('aviation');
-            });
-        }
-        if (subgroups.length === 0) subgroups.push(...this.settings.defaultMcloudSubgroup);
-        return subgroups;
+        return undefined;
     }
 
     _getCitation() {
@@ -110,15 +113,7 @@ export class CkanMapper extends GenericMapper {
     }
 
     async _getDisplayContacts() {
-        let person = await this.getDisplayContactByField(this.settings.providerField);
-
-        if (person.length === 0) {
-            return [{
-                name: this.settings.providerPrefix + this.settings.description.trim()
-            }];
-        }
-
-        return person;
+        return undefined;
     }
 
     async _getDistributions(): Promise<Distribution[]> {
@@ -223,7 +218,7 @@ export class CkanMapper extends GenericMapper {
         return publisher ? [publisher] : [];
     }
 
-    private getMaintainer(): Person[] {
+    public getMaintainer(): Person[] {
         let maintainer: Person;
         if (this.source.maintainer) {
             maintainer = {
@@ -235,7 +230,7 @@ export class CkanMapper extends GenericMapper {
         return maintainer ? [maintainer] : [];
     }
 
-    private getAuthor(): Person[] {
+    public getAuthor(): Person[] {
         let author: Person;
         if (this.source.author) {
             author = {
@@ -310,7 +305,7 @@ export class CkanMapper extends GenericMapper {
             mappedThemes = this.settings.defaultDCATCategory;
         }
         return mappedThemes
-            .map(category => GenericMapper.DCAT_CATEGORY_URL + category);
+            .map(category => BaseMapper.DCAT_CATEGORY_URL + category);
     }
 
     _getTitle() {
@@ -530,46 +525,14 @@ export class CkanMapper extends GenericMapper {
             for (let i = 0; i < extras.length; i++) {
                 let extra = extras[i];
                 if(extra.key === 'spatial') {
-                    return this.checkAndFixSpatialData(JSON.parse(extra.value));
+                    return JSON.parse(extra.value);
                 }
             }
         }
         else if (this.source.spatial) {
-            return this.checkAndFixSpatialData(JSON.parse(this.source.spatial));
+            return JSON.parse(this.source.spatial);
         }
         return undefined;
-    }
-
-    checkAndFixSpatialData(spatial : any): any {
-        if(spatial.coordinates) {
-            spatial.coordinates = this.checkAndFixSpatialCoordinates(spatial.coordinates);
-        }
-        if(spatial.coordinates.length == 0) {
-            spatial = null;
-        }
-        return spatial;
-    }
-
-    checkAndFixSpatialCoordinates(coordinates : any): any {
-        if(coordinates instanceof Array && coordinates[0] instanceof Array && coordinates[0][0] instanceof Array) {
-            for (let i = 0; i < coordinates.length; i++) {
-                coordinates[i] = this.checkAndFixSpatialCoordinates(coordinates[i]);
-                if(coordinates[i].length == 0){
-                    coordinates.splice(i, 1)
-                }
-            }
-        }
-        else if (coordinates instanceof Array) {
-            for (let i = 1; i < coordinates.length; i++) {
-                if((coordinates[i-1][0] === coordinates[i][0]) && (coordinates[i-1][1] === coordinates[i][1])){
-                    coordinates.splice(i--, 1);
-                }
-            }
-            if(coordinates.length < 4){
-                coordinates = [];
-            }
-        }
-        return coordinates;
     }
 
 
@@ -599,54 +562,6 @@ export class CkanMapper extends GenericMapper {
             }
         }
         return super._getParent();
-    }
-
-    _getBoundingBoxGml() {
-        return undefined;
-    }
-
-    _getBoundingBox() {
-        return undefined;
-    }
-
-    _getSpatialGml() {
-        return undefined;
-    }
-
-    _getCentroid() {
-        return undefined;
-    }
-
-    async _getCatalog() {
-        return undefined;
-    }
-
-    _getPluPlanState() {
-        return undefined;
-    }
-
-    _getPluPlanType() {
-        return undefined;
-    }
-
-    _getPluPlanTypeFine() {
-        return undefined;
-    }
-
-    _getPluProcedureStartDate() {
-        return undefined;
-    }
-
-    _getPluProcedureState() {
-        return undefined;
-    }
-
-    _getPluProcedureType() {
-        return undefined;
-    }
-
-    _getPluProcessSteps() {
-        return undefined;
     }
 
     private getExtra(key){
@@ -796,25 +711,6 @@ export class CkanMapper extends GenericMapper {
         }
 
         return size === '' ? undefined : size;
-    }
-
-    private async getDisplayContactByField(providerField: ProviderField): Promise<Person[]> {
-        switch (providerField) {
-            case 'organization':
-                const publisher = await this._getPublisher();
-                if (publisher.length > 0) {
-                    return [{
-                        name: this.settings.providerPrefix + (publisher[0].organization ? publisher[0].organization.trim() : this.settings.description.trim()),
-                        homepage: publisher[0].homepage ? publisher[0].homepage : undefined
-                    }];
-                } else {
-                    return [];
-                }
-            case 'author':
-                return this.getAuthor();
-            default:
-                return this.getMaintainer();
-        }
     }
 
     executeCustomCode(doc: any) {

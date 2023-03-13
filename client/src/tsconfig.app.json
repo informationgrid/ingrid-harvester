@@ -2,15 +2,16 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
-    "module": "esnext",
     "types": ["node"]
   },
   "angularCompilerOptions": {
     "enableIvy": false
   },
-  "exclude": [
-    "test.ts",
-    "**/*.spec.ts",
-    "**/server/node_modules/**"
+  "files": [
+    "main.ts",
+    "polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts"
   ]
 }
