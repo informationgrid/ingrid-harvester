@@ -6,7 +6,7 @@ LABEL stage=build
 
 # install build dependencies
 WORKDIR /opt/ingrid/harvester/server
-COPY ./server/package.json ./server/package-lock.json .
+COPY ./server/package*.json ./
 RUN npm ci
 
 # copy src files
@@ -26,7 +26,7 @@ LABEL stage=build
 
 # install build dependencies
 WORKDIR /opt/ingrid/harvester/client
-COPY ./client/package.json ./client/package-lock.json .
+COPY ./client/package*.json ./
 RUN npm ci
 
 # copy src files
@@ -52,7 +52,7 @@ RUN apt-get update && \
 
 # install production dependencies
 WORKDIR /opt/ingrid/harvester/server
-COPY ./server/package.json ./server/package-lock.json .
+COPY ./server/package*.json ./
 RUN npm run install-production
 
 # copy built files from server and client
