@@ -9,6 +9,7 @@ services:
      - ES_HOST=elastic
      - ELASTIC_URL=http://elastic:9200
      - ELASTIC_PASSWORD=elastic
+     - IMPORTER_PROFILE=diplanung
     ports:
       - 8090:8090
     working_dir: /opt/mcloud
