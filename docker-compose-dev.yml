@@ -5,7 +5,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
     container_name: metadata-elasticsearch-node1
     environment:
-      - cluster.name=mcloud
+      - cluster.name=ingrid-harvester
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - xpack.security.enabled=true
@@ -26,7 +26,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: metadata-harvester
+    container_name: ingrid-harvester
     environment:
      - NODE_ENV=development
      - ES_HOST=elastic
@@ -34,7 +34,7 @@ services:
     ports:
       - 4200:4200
       - 8090:8090
-    working_dir: /opt/mcloud
+    working_dir: /opt/ingrid/harvester
     command: sh entrypoint-dev.sh
     depends_on:
         - elastic
