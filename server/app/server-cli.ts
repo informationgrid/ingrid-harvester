@@ -75,7 +75,7 @@ async function startProcess() {
         importerConfig.dryRun = myArgs.includes('-n') || myArgs.includes('--dry-run') || importerConfig.dryRun === true;
 
         // Set the same elasticsearch alias for deduplication for all importers
-        importerConfig.deduplicationAlias = deduplicationAlias;
+        //importerConfig.deduplicationAlias = deduplicationAlias;
 
         let configHarvester = MiscUtils.merge(importerConfig, configGeneral);
 

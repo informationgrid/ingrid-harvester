@@ -1,7 +1,7 @@
 license {
     header = project.file("gradle/check/license-header.txt")
     ext {
-        year = 2022
+        year = 2023
     }
     include("**/*.ts", "**/*.html", "**/*.scss")
     style {
@@ -10,7 +10,7 @@ license {
     }
     tasks {
         directory {
-            files = project.files('server/app/', 'server/test/', 'client/src/','shared/')
+            files.from('server/app/', 'server/test/', 'client/src/','shared/')
         }
     }
 }
