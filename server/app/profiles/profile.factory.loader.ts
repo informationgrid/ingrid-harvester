@@ -21,34 +21,45 @@
  * ==================================================
  */
 
-import {mcloudFactory} from "./mcloud/profile.factory";
-import {DiplanungFactory} from "./diplanung/profile.factory";
-import {ProfileFactory} from "./profile.factory";
-import {BaseMapper} from "../importer/base.mapper";
+import { mcloudFactory } from './mcloud/profile.factory';
+import { BaseMapper } from '../importer/base.mapper';
+import { DiplanungFactory } from './diplanung/profile.factory';
+import { ProfileFactory } from './profile.factory';
+
+const log = require('log4js').getLogger(__filename);
 
 export class ProfileFactoryLoader {
+
     private static instance: ProfileFactory<BaseMapper>;
 
-    static get(): ProfileFactory<BaseMapper> {
-       if(this.instance) return this.instance;
-
-        console.log('Find Profile')
-        for(let i = 0; i < process.argv.length; i++){
-            let val = process.argv[i]
-            if(val.toLowerCase().startsWith('--profile=')) {
-                let profile = val.substring('--profile='.length).toLowerCase()
-
-                console.log('Found Profile: '+profile);
-                switch (profile) {
-                    case 'mcloud':
-                        this.instance = new mcloudFactory();
-                        break;
-                    case 'diplanung':
-                        this.instance = new DiplanungFactory();
-                        break;
-                }
-            }
+    public static get(): ProfileFactory<BaseMapper> {
+        if (this.instance) {
+            return this.instance;
         }
+
+        log.info('Finding profile');
+        let profile = process.env.IMPORTER_PROFILE;
+        if (!profile) {
+            profile = process.argv.find(arg => arg.toLowerCase().startsWith('--profile=')) ?? '';
+            profile = profile.toLowerCase().replace('--profile=', '');
+        }
+        this.createInstance(profile);
         return this.instance;
+    }
+
+    private static createInstance(profile: string) {
+        switch (profile) {
+            case 'mcloud':
+                this.instance = new mcloudFactory();
+                break;
+            case 'diplanung':
+                this.instance = new DiplanungFactory();
+                break;
+            default:
+                let errorMsg = `No supported profile specified: [${profile}]`;
+                log.error(errorMsg);
+                throw new Error(errorMsg);
+        }
+        log.info('Found Profile: ' + profile);
     }
 }
