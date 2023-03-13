@@ -19,7 +19,6 @@
   "author": "andre.wallat@wemove.com",
   "license": "EUPL",
   "dependencies": {
-    "@elastic/elasticsearch": "^8.5.3",
     "@tsed/common": "^5.36.2",
     "@tsed/core": "^5.36.2",
     "@tsed/di": "^5.36.2",
