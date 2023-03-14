@@ -44,11 +44,15 @@ export class MonitoringCtrl {
 
     @Get('/indexcheck')
     async getIndexCheckHistory(): Promise<any> {
+        // re-initialize in case settings have changed
+        this.indexCheckService.initialize();
         return this.indexCheckService.getHistory()
     }
 
     @Get('/harvester')
     getAllHarvesterHistory(@BodyParams() request: any) {
+        // re-initialize in case settings have changed
+        this.historyService.initialize();
         return this.historyService.getHistoryAll();
     }
 }
