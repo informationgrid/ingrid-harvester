@@ -6,9 +6,10 @@ services:
     container_name: ingrid-harvester
     environment:
      - NODE_ENV=production
-     - ES_HOST=elastic
      - ELASTIC_URL=http://elastic:9200
-     - ELASTIC_PASSWORD=elastic
+     - ELASTIC_VERSION=8
+     - ELASTIC_USER=elastic
+     - ELASTIC_PASSWORD=
      - IMPORTER_PROFILE=diplanung
     ports:
       - 8090:8090
