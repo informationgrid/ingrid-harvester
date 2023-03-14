@@ -21,17 +21,16 @@
  * ==================================================
  */
 
-import {BaseMapper } from "../../../importer/base.mapper";
-import {Contact, Organization, Person} from "../../../model/agent";
-import {Distribution} from "../../../model/distribution";
-import {DateRange} from "../../../model/dateRange";
-import {Record, ProcessStep} from "../../../model/dcatApPlu.model";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
-import {ExcelSparseMapper} from "../../../importer/excelsparse/excelsparse.mapper";
-import {WfsMapper} from "../../../importer/wfs/wfs.mapper";
-import {DiplanungMapper} from "../mapper/diplanung.mapper";
-import {DiplanungMapperFactory} from "../mapper/diplanung.mapper.factory";
-var esc = require('xml-escape');
+import { Contact, Organization, Person } from '../../../model/agent';
+import { CswMapper } from '../../../importer/csw/csw.mapper';
+import { DateRange } from '../../../model/dateRange';
+import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
+import { Distribution } from '../../../model/distribution';
+import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
+import { ProcessStep, Record } from '../../../model/dcatApPlu.model';
+import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
+
+const esc = require('xml-escape');
 
 function optional(wrapper: string | Function, variable: any | any[]) {
     if (!variable) {
@@ -53,9 +52,9 @@ const DCAT_AP_PLU_NSMAP = {
     dcatde: 'http://dcat-ap.de/def/dcatde/',
     dct: 'http://purl.org/dc/terms/',
     foaf: 'http://xmlns.com/foaf/0.1/',
-    gml: 'http://www.opengis.net/gml/3.2',
+    gml: 'http://www.opengis.net/gml/3.2#',
     locn: 'http://www.w3.org/ns/locn#',
-    plu: 'http://a.placeholder.url.for.dcat-ap-plu',    // TODO
+    plu: 'http://a.placeholder.url.for.dcat-ap-plu/',    // TODO
     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     vcard: 'http://www.w3.org/2006/vcard/ns#'
 };
@@ -71,15 +70,17 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
         let centroid = mapper.getCentroid();
+        let publisher = await mapper.getPublisher()?.[0];
         let contributors = null;    // TODO
         let maintainers = null;     // TODO
         let relation = null;        // TODO
         let xmlString = `<?xml version="1.0"?>
         <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
             <dcat:Catalog>
+                <dct:identifier>${esc(catalog.id)}</dct:identifier>
                 <dct:description>${esc(catalog.description)}</dct:description>
                 <dct:title>${esc(catalog.title)}</dct:title>
-                ${DcatApPluDocument.xmlFoafAgent('dct:publisher', catalog.publisher[0])}
+                ${DcatApPluDocument.xmlFoafAgent('dct:publisher', catalog.publisher)}
                 ${optional('dcat:themeTaxonomy', esc(catalog.themeTaxonomy))}
                 ${optional('dct:issued', esc(catalog.issued))}
                 ${optional('dct:language', esc(catalog.language))}
@@ -88,7 +89,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
             </dcat:Catalog>
             <dcat:Dataset>
-                ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher[0].name)}
+                ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher.name)}
                 <dct:description xml:lang="${esc(catalog.language)}">${esc(mapper.getDescription())}</dct:description>
                 <dct:identifier>${esc(mapper.getGeneratedId())}</dct:identifier>
                 <dct:title xml:lang="${esc(catalog.language)}">${esc(mapper.getTitle())}</dct:title>
@@ -103,7 +104,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                         ${optional('locn:geographicName', esc(mapper.getSpatialText()))}
                     </dct:Location>
                 </dct:spatial>
-                ${DcatApPluDocument.xmlFoafAgent('dct:publisher', (await mapper.getPublisher())[0])}
+                ${DcatApPluDocument.xmlFoafAgent('dct:publisher', publisher)}
                 ${optional(m => DcatApPluDocument.xmlFoafAgent('dcatde:maintainer', m), maintainers)}
                 ${optional(c => DcatApPluDocument.xmlFoafAgent('dct:contributor', c), contributors)}
                 ${optional(DcatApPluDocument.xmlDistribution, await mapper.getDistributions())}
@@ -129,24 +130,26 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     }
 
     private static xmlDistribution(distribution: Distribution): string {
-        return `<dcat:Distribution>
-            <dcat:accessURL>${esc(distribution.accessURL)}</dcat:accessURL>
-            ${optional('dct:description', esc(distribution.description))}
-            ${optional('dcat:downloadURL', esc(distribution.downloadURL))}
-            ${optional('dct:format', esc(distribution.format?.[0]))}
-            ${optional('dct:issued', distribution.issued)}
-            ${optional('dct:modified', distribution.modified)}
-            ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period)}
-            ${optional('plu:docType', esc(distribution.pluDocType))}
-            ${optional('dct:title', esc(distribution.title))}
-        </dcat:Distribution>`;
+        return `<dcat:distribution>
+            <dcat:Distribution>
+                <dcat:accessURL>${esc(distribution.accessURL)}</dcat:accessURL>
+                ${optional('dct:description', esc(distribution.description))}
+                ${optional('dcat:downloadURL', esc(distribution.downloadURL))}
+                ${optional('dct:format', esc(distribution.format?.[0]))}
+                ${optional('dct:issued', distribution.issued)}
+                ${optional('dct:modified', distribution.modified)}
+                ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period)}
+                ${optional('plu:docType', esc(distribution.pluDocType))}
+                ${optional('dct:title', esc(distribution.title))}
+            </dcat:Distribution>
+        </dcat:distribution>`;
     }
 
     private static xmlFoafAgent(parent: string, agent: Person | Organization): string {
         let name = (<Organization>agent)?.organization ?? (<Person>agent)?.name;
         return `<${parent}><foaf:Agent>
             <foaf:name>${esc(name)}</foaf:name>
-            ${optional('dct:type', esc(agent.type))}
+            ${optional('dct:type', esc(agent?.type))}
         </foaf:Agent></${parent}>`;
     }
 
@@ -161,10 +164,12 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
 
     private static xmlProcessStep({ distributions, identifier, period, type }: ProcessStep): string {
         return `<plu:processStep>
-            <plu:processStepType>${type}</plu:processStepType>
-            ${optional('dct:identifier', esc(identifier))}
-            ${optional(DcatApPluDocument.xmlDistribution, distributions)}
-            ${optional(DcatApPluDocument.xmlPeriodOfTime, period)}
+            <plu:ProcessStep>
+                <plu:processStepType>${type}</plu:processStepType>
+                ${optional('dct:identifier', esc(identifier))}
+                ${optional(DcatApPluDocument.xmlDistribution, distributions)}
+                ${optional(DcatApPluDocument.xmlPeriodOfTime, period)}
+            </plu:ProcessStep>
         </plu:processStep>`;
     }
 
