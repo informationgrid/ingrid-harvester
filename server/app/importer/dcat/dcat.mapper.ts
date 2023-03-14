@@ -29,7 +29,6 @@ import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
-import {DcatSummary} from "./dcat.importer";
 import {OptionsWithUri} from "request-promise";
 import {DcatSettings} from './dcat.settings';
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
@@ -84,7 +83,7 @@ export class DcatMapper extends BaseMapper {
 //    protected readonly idInfo; // : SelectedValue;
     private settings: DcatSettings;
     private readonly uuid: string;
-    private summary: DcatSummary;
+    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {

@@ -28,7 +28,7 @@ import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
 import {WfsParameters, RequestDelegate} from '../../utils/http-request.utils';
 import {OptionsWithUri} from 'request-promise';
-import {DefaultImporterSettings, Importer} from '../../importer';
+import {DefaultImporterSettings, Importer} from '../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DefaultXpathSettings, WfsSettings} from './wfs.settings';
@@ -50,15 +50,6 @@ let log = require('log4js').getLogger(__filename),
     logRequest = getLogger('requests'),
     DomParser = require('@xmldom/xmldom').DOMParser;
 
-export class WfsSummary extends Summary {
-    additionalSummary() {
-        logSummary.info(`Number of records with at least one mandatory keyword: ${this.opendata}`);
-        logSummary.info(`Number of records with missing links: ${this.missingLinks}`);
-        logSummary.info(`Number of records with missing license: ${this.missingLicense}`);
-        logSummary.info(`Number of records with missing publishers: ${this.missingPublishers}`);
-        logSummary.info(`Number of records imported as valid: ${this.ok}`);
-    }
-}
 
 // export const DefaultXplanSettings: any = {
 //     xpaths: {
@@ -90,10 +81,9 @@ export class WfsSummary extends Summary {
 //     }
 // }
 
-export class WfsImporter implements Importer {
+export class WfsImporter extends Importer {
     private profile: ProfileFactory<WfsMapper>;
     private readonly settings: WfsSettings;
-    elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
 
     private totalFeatures = 0;
@@ -108,8 +98,6 @@ export class WfsImporter implements Importer {
         resultType: 'results'
     };
 
-    private readonly summary: WfsSummary;
-    private filterUtils: FilterUtils;
     private generalInfo: object = {};
     private supportsPaging: boolean = false;
     private select: Function;
@@ -117,14 +105,9 @@ export class WfsImporter implements Importer {
     private crsList: string[][];
     private defaultCrs: string;
 
-    run = new Observable<ImportLogMessage>(observer => {
-        this.observer = observer;
-        this.exec(observer);
-    });
-
-    private observer: Observer<ImportLogMessage>;
-
     constructor(profile: ProfileFactory<WfsMapper>, settings, requestDelegate?: RequestDelegate) {
+        super(settings);
+
         this.profile = profile;
 
         // merge default settings with configured ones
@@ -140,12 +123,6 @@ export class WfsImporter implements Importer {
         }
 
         this.settings = settings;
-        this.filterUtils = new FilterUtils(settings);
-
-        this.summary = new WfsSummary(settings);
-
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -532,7 +509,4 @@ export class WfsImporter implements Importer {
         }
     }
 
-    getSummary(): Summary {
-        return this.summary;
-    }
 }

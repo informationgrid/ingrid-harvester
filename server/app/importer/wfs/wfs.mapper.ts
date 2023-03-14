@@ -31,7 +31,6 @@ import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
-import {WfsSummary} from "./wfs.importer";
 import {OptionsWithUri} from "request-promise";
 import {WfsSettings} from './wfs.settings';
 import {throwError} from "rxjs";
@@ -52,7 +51,7 @@ export class WfsMapper extends BaseMapper {
 
     private settings: WfsSettings;
     private readonly uuid: string;
-    private summary: WfsSummary;
+    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {

@@ -25,7 +25,7 @@ import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {SparqlMapper} from './sparql.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
-import {DefaultImporterSettings, Importer} from '../../importer';
+import {DefaultImporterSettings, Importer} from '../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {SparqlSettings} from './sparql.settings';
@@ -45,26 +45,9 @@ let log = require('log4js').getLogger(__filename),
     logRequest = getLogger('requests'),
     SimpleClient = require('sparql-http-client/SimpleClient');
 
-export class SparqlSummary extends Summary {
-    opendata = 0;
-    missingLinks = 0;
-    missingPublishers = 0;
-    missingLicense = 0;
-    ok = 0;
-
-    additionalSummary() {
-        logSummary.info(`Number of records with at least one mandatory keyword: ${this.opendata}`);
-        logSummary.info(`Number of records with missing links: ${this.missingLinks}`);
-        logSummary.info(`Number of records with missing license: ${this.missingLicense}`);
-        logSummary.info(`Number of records with missing publishers: ${this.missingPublishers}`);
-        logSummary.info(`Number of records imported as valid: ${this.ok}`);
-    }
-}
-
-export class SparqlImporter implements Importer {
+export class SparqlImporter extends Importer {
     private profile: ProfileFactory<SparqlMapper>;
     private readonly settings: SparqlSettings;
-    elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
 
     private totalRecords = 0;
@@ -80,29 +63,15 @@ export class SparqlImporter implements Importer {
         filterThemes: []
     };
 
-    private readonly summary: SparqlSummary;
-    private filterUtils: FilterUtils;
-
-    run = new Observable<ImportLogMessage>(observer => {
-        this.observer = observer;
-        this.exec(observer);
-    });
-
-    private observer: Observer<ImportLogMessage>;
-
     constructor(profile: ProfileFactory<SparqlMapper>, settings, requestDelegate?: RequestDelegate) {
+        super(settings);
+
         this.profile = profile;
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(SparqlImporter.defaultSettings, settings);
 
         this.settings = settings;
-        this.filterUtils = new FilterUtils(settings);
-
-        this.summary = new SparqlSummary(settings);
-
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {

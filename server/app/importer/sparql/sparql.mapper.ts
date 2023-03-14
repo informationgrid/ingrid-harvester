@@ -30,7 +30,6 @@ import {DateRange} from "../../model/dateRange";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {RequestDelegate} from "../../utils/http-request.utils";
-import {SparqlSummary} from "./sparql.importer";
 import {OptionsWithUri} from "request-promise";
 import {SparqlSettings} from './sparql.settings';
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
@@ -54,7 +53,7 @@ export class SparqlMapper extends BaseMapper {
 //    protected readonly idInfo; // : SelectedValue;
     private settings: SparqlSettings;
     private readonly uuid: string;
-    private summary: SparqlSummary;
+    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {

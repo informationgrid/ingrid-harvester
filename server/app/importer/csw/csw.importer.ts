@@ -27,7 +27,7 @@ import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
 import {CswParameters, RequestDelegate} from '../../utils/http-request.utils';
 import {OptionsWithUri} from 'request-promise';
-import {DefaultImporterSettings, Importer} from '../../importer';
+import {DefaultImporterSettings, Importer} from '../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DefaultXpathSettings, CswSettings} from './csw.settings';
@@ -44,20 +44,9 @@ let log = require('log4js').getLogger(__filename),
     logRequest = getLogger('requests'),
     DomParser = require('@xmldom/xmldom').DOMParser;
 
-export class CswSummary extends Summary {
-    additionalSummary() {
-        logSummary.info(`Number of records with at least one mandatory keyword: ${this.opendata}`);
-        logSummary.info(`Number of records with missing links: ${this.missingLinks}`);
-        logSummary.info(`Number of records with missing license: ${this.missingLicense}`);
-        logSummary.info(`Number of records with missing publishers: ${this.missingPublishers}`);
-        logSummary.info(`Number of records imported as valid: ${this.ok}`);
-    }
-}
-
-export class CswImporter implements Importer {
+export class CswImporter extends Importer {
     private profile: ProfileFactory<CswMapper>;
     private readonly settings: CswSettings;
-    elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
 
     private totalRecords = 0;
@@ -72,18 +61,11 @@ export class CswImporter implements Importer {
         resultType: 'results'
     };
 
-    private readonly summary: CswSummary;
-    private filterUtils: FilterUtils;
     private generalInfo: object = {};
 
-    run = new Observable<ImportLogMessage>(observer => {
-        this.observer = observer;
-        this.exec(observer);
-    });
-
-    private observer: Observer<ImportLogMessage>;
-
     constructor(profile: ProfileFactory<CswMapper>, settings, requestDelegate?: RequestDelegate) {
+        super(settings)
+
         this.profile = profile;
 
         // merge default settings with configured ones
@@ -114,12 +96,6 @@ export class CswImporter implements Importer {
         }
 
         this.settings = settings;
-        this.filterUtils = new FilterUtils(settings);
-
-        this.summary = new CswSummary(settings);
-
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     static addModifiedFilter(recordFilter: string, lastRunDate: Date): string {

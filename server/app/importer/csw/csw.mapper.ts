@@ -29,7 +29,6 @@ import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
-import {CswSummary} from "./csw.importer";
 import {OptionsWithUri} from "request-promise";
 import {CswSettings} from './csw.settings';
 import {throwError} from "rxjs";
@@ -84,7 +83,7 @@ export class CswMapper extends BaseMapper {
     protected readonly idInfo; // : SelectedValue;
     private settings: CswSettings;
     private readonly uuid: string;
-    private summary: CswSummary;
+    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {
