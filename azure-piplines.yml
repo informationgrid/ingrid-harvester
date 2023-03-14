@@ -11,10 +11,10 @@ pool:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'c7837f80-8c31-47d5-ab7a-db8a0c3752cc'
-  imageRepository: 'harvester'
+  imageRepository: 'diplan-metadaten/harvester'
   containerRegistry: 'diplanung.azurecr.io'
   dockerfilePath: 'Dockerfile'
-  tag: 'harvester_dev'
+  tag: '0.0.1'
 
 stages:
 - stage: Build
