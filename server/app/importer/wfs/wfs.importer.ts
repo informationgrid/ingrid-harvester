@@ -446,15 +446,7 @@ export class WfsImporter implements Importer {
                 }
 
                 if (!this.settings.dryRun) {
-                    promises.push(
-                        this.elastic.addDocToBulk(doc, uuid)
-                            .then(response => {
-                                if (!response.queued) {
-                                    // numIndexDocs += ElasticSearchUtils.maxBulkSize;
-                                    // this.observer.next(ImportResult.running(numIndexDocs, records.length));
-                                }
-                            })
-                    );
+                    promises.push(this.elastic.addDocToBulk(doc, uuid));
                 }
 
             } else {
