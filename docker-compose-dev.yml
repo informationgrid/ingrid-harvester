@@ -29,8 +29,10 @@ services:
     container_name: mcloud
     environment:
      - NODE_ENV=development
-     - ES_HOST=elastic
      - ELASTIC_URL=http://elastic:9200
+     - ELASTIC_VERSION=8
+     - ELASTIC_USER=elastic
+     - ELASTIC_PASSWORD=
     ports:
       - 4200:4200
       - 8090:8090
