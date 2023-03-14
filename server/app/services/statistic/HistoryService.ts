@@ -38,8 +38,12 @@ export class HistoryService {
     private elasticsearchSettings: ElasticSettings;
 
     constructor() {
+		this.initialize();
+	}
+
+	initialize() {
         let generalSettings = ConfigService.getGeneralSettings();
-        const settings: ElasticSettings = {
+        let settings = {
             elasticSearchUrl: generalSettings.elasticSearchUrl,
             elasticSearchVersion: generalSettings.elasticSearchVersion,
             elasticSearchUser: generalSettings.elasticSearchUser,

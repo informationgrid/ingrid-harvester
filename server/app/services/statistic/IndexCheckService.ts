@@ -41,6 +41,10 @@ export class IndexCheckService {
     private elasticsearchSettings: ElasticSettings;
 
     constructor() {
+		this.initialize();
+	}
+
+	initialize() {
         let generalSettings = ConfigService.getGeneralSettings();
         let settings = {
             elasticSearchUrl: generalSettings.elasticSearchUrl,
