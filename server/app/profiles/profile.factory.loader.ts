@@ -38,7 +38,7 @@ export class ProfileFactoryLoader {
         }
 
         log.info('Finding profile');
-        let profile = process.env.IMPORTER_PROFILE;
+        let profile = process.env.IMPORTER_PROFILE?.toLowerCase();
         if (!profile) {
             profile = process.argv.find(arg => arg.toLowerCase().startsWith('--profile=')) ?? '';
             profile = profile.toLowerCase().replace('--profile=', '');
