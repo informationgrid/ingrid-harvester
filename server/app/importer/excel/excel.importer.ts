@@ -25,7 +25,7 @@ import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {ExcelMapper} from './excel.mapper';
 import {Workbook, Worksheet} from 'exceljs';
 import {Summary} from '../../model/summary';
-import {DefaultImporterSettings, Importer} from '../../importer';
+import {DefaultImporterSettings, Importer} from '../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {ExcelSettings} from './excel.settings';
@@ -38,10 +38,9 @@ import {ConfigService} from "../../services/config/ConfigService";
 
 let log = require('log4js').getLogger(__filename);
 
-export class ExcelImporter implements Importer {
+export class ExcelImporter extends Importer {
     private profile: ProfileFactory<ExcelMapper>;
     settings: ExcelSettings;
-    elastic: ElasticSearchUtils;
     excelFilepath: string;
     names = {};
 
@@ -50,27 +49,19 @@ export class ExcelImporter implements Importer {
         filePath: './data.xlsx'
     };
 
-    summary: Summary;
-    private filterUtils: FilterUtils;
-
-    run = new Observable<ImportLogMessage>(observer => {this.exec(observer)});
-
     /**
      * Create the importer and initialize with settings.
      * @param { {filePath, mapper} }settings
      */
     constructor(profile: ProfileFactory<ExcelMapper>, settings) {
+        super(settings);
+
         this.profile = profile;
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(ExcelImporter.defaultSettings, settings);
 
-        this.summary = new Summary(settings);
-        this.filterUtils = new FilterUtils(settings);
-
         this.settings = settings;
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
         this.excelFilepath = settings.filePath;
     }
 

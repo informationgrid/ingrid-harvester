@@ -26,7 +26,7 @@ import {DcatMapper} from './dcat.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
 import {OptionsWithUri} from 'request-promise';
-import {DefaultImporterSettings, Importer} from '../../importer';
+import {DefaultImporterSettings, Importer} from '../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DcatSettings} from './dcat.settings';
@@ -43,26 +43,9 @@ let log = require('log4js').getLogger(__filename),
     logRequest = getLogger('requests'),
     DomParser = require('@xmldom/xmldom').DOMParser;
 
-export class DcatSummary extends Summary {
-    opendata = 0;
-    missingLinks = 0;
-    missingPublishers = 0;
-    missingLicense = 0;
-    ok = 0;
-
-    additionalSummary() {
-        logSummary.info(`Number of records with at least one mandatory keyword: ${this.opendata}`);
-        logSummary.info(`Number of records with missing links: ${this.missingLinks}`);
-        logSummary.info(`Number of records with missing license: ${this.missingLicense}`);
-        logSummary.info(`Number of records with missing publishers: ${this.missingPublishers}`);
-        logSummary.info(`Number of records imported as valid: ${this.ok}`);
-    }
-}
-
-export class DcatImporter implements Importer {
+export class DcatImporter extends Importer {
     private profile: ProfileFactory<DcatMapper>;
     private readonly settings: DcatSettings;
-    elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
 
     private totalRecords = 0;
@@ -75,17 +58,9 @@ export class DcatImporter implements Importer {
         filterThemes: []
     };
 
-    private readonly summary: DcatSummary;
-    private filterUtils: FilterUtils;
-
-    run = new Observable<ImportLogMessage>(observer => {
-        this.observer = observer;
-        this.exec(observer);
-    });
-
-    private observer: Observer<ImportLogMessage>;
-
     constructor(profile: ProfileFactory<DcatMapper>, settings, requestDelegate?: RequestDelegate) {
+        super(settings);
+
         this.profile = profile;
 
         // merge default settings with configured ones
@@ -99,12 +74,6 @@ export class DcatImporter implements Importer {
         }
 
         this.settings = settings;
-        this.filterUtils = new FilterUtils(settings);
-
-        this.summary = new DcatSummary(settings);
-
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {

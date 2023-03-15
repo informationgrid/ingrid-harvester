@@ -23,7 +23,7 @@
 
 import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {Summary} from '../../model/summary';
-import {DefaultImporterSettings, Importer} from '../../importer';
+import {DefaultImporterSettings, Importer} from '../importer';
 import {RequestDelegate} from '../../utils/http-request.utils';
 import {CkanMapper, CkanMapperData} from './ckan.mapper';
 import {Observable, Observer} from 'rxjs';
@@ -40,10 +40,10 @@ let log = require('log4js').getLogger(__filename);
 const uuidv5 = require('uuid/v5');
 const UUID_NAMESPACE = '6891a617-ab3b-4060-847f-61e31d6ccf6f';
 
-export class CkanImporter implements Importer {
+export class CkanImporter extends Importer {
     private profile: ProfileFactory<CkanMapper>;
     private readonly settings: CkanSettings;
-    elastic: ElasticSearchUtils;
+
     private requestDelegate: RequestDelegate;
     private docsByParent: any[][] = [];
 
@@ -61,15 +61,6 @@ export class CkanImporter implements Importer {
         defaultLicense: null
     };
 
-    summary: Summary;
-    private filterUtils: FilterUtils;
-
-    run: Observable<ImportLogMessage> = new Observable<ImportLogMessage>(observer => {
-        this.observer = observer;
-        this.exec(observer);
-    });
-
-    private observer: Observer<ImportLogMessage>;
 
     private numIndexDocs = 0;
     private requestDelegateCount: RequestDelegate;
@@ -80,14 +71,12 @@ export class CkanImporter implements Importer {
      * @param { {ckanBaseUrl, defaultMcloudSubgroup, mapper} }settings
      */
     constructor(profile: ProfileFactory<CkanMapper>, settings: CkanSettings) {
+        super(settings);
+
         this.profile = profile;
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(CkanImporter.defaultSettings, settings);
-
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-
-        this.summary = new Summary(settings);
 
         // Trim trailing slash
         let url = settings.ckanBaseUrl;
@@ -95,8 +84,6 @@ export class CkanImporter implements Importer {
             settings.ckanBaseUrl = url.substring(0, url.length - 1);
         }
         this.settings = settings;
-        this.filterUtils = new FilterUtils(settings);
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
 
         let requestConfig = CkanMapper.createRequestConfig(settings);
         let requestConfigCount = CkanMapper.createRequestConfigCount(settings);
@@ -444,5 +431,4 @@ export class CkanImporter implements Importer {
     getSummary(): Summary {
         return this.summary;
     }
-
 }

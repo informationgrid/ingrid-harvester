@@ -25,7 +25,7 @@ import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {ExcelSparseMapper} from './excelsparse.mapper';
 import {Workbook, Worksheet} from 'exceljs';
 import {Summary} from '../../model/summary';
-import {DefaultImporterSettings, Importer} from '../../importer';
+import {DefaultImporterSettings, Importer} from '../importer';
 import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DefaultCatalogSettings, ExcelSparseSettings} from './excelsparse.settings';
@@ -38,10 +38,9 @@ import {ConfigService} from "../../services/config/ConfigService";
 
 let log = require('log4js').getLogger(__filename);
 
-export class ExcelSparseImporter implements Importer {
+export class ExcelSparseImporter extends Importer {
     private profile: ProfileFactory<ExcelSparseMapper>;
     settings: ExcelSparseSettings;
-    elastic: ElasticSearchUtils;
     excelFilepath: string;
     names = {};
     columnMap: Columns;
@@ -52,27 +51,19 @@ export class ExcelSparseImporter implements Importer {
         filePath: './data.xlsx'
     };
 
-    summary: Summary;
-    private filterUtils: FilterUtils;
-
-    run = new Observable<ImportLogMessage>(observer => {this.exec(observer)});
-
     /**
      * Create the importer and initialize with settings.
      * @param { {filePath, mapper} }settings
      */
     constructor(profile: ProfileFactory<ExcelSparseMapper>, settings) {
+        super(settings);
+
         this.profile = profile;
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(ExcelSparseImporter.defaultSettings, settings);
 
-        this.summary = new Summary(settings);
-        this.filterUtils = new FilterUtils(settings);
-
         this.settings = settings;
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
         this.excelFilepath = settings.filePath;
     }
 

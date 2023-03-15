@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {Importer} from "../importer";
+import {Importer} from "./importer";
 import {CkanImporter} from "./ckan/ckan.importer";
 import {ExcelImporter} from "./excel/excel.importer";
 import {ExcelSparseImporter} from "./excelsparse/excelsparse.importer";

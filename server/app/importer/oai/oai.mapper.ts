@@ -32,7 +32,6 @@ import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
-import {OaiSummary} from "./oai.importer";
 import {OptionsWithUri} from "request-promise";
 import {OaiSettings} from './oai.settings';
 import {throwError} from "rxjs";
@@ -70,7 +69,7 @@ export class OaiMapper extends BaseMapper {
     protected readonly idInfo; // : SelectedValue;
     private settings: OaiSettings;
     private readonly uuid: string;
-    private summary: OaiSummary;
+    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {

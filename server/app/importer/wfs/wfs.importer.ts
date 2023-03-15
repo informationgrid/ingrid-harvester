@@ -24,21 +24,15 @@
 import { decode } from 'iconv-lite';
 import { getLogger } from 'log4js';
 import { Catalog } from '../../model/dcatApPlu.model';
-import { ConfigService } from '../../services/config/ConfigService';
 import { Contact } from '../../model/agent';
-import { DefaultImporterSettings, Importer } from '../../importer';
+import { DefaultImporterSettings, Importer } from '../importer';
 import { DefaultXpathSettings, WfsSettings } from './wfs.settings';
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import { ElasticSearchUtils } from '../../utils/elastic.utils';
-import { ElasticSettings } from '../../utils/elastic.setting';
-import { FilterUtils } from '../../utils/filter.utils';
-import { GeoJsonUtils } from '../../utils/geojson.utils';
+import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
-import { Observable, Observer } from 'rxjs';
+import { Observer } from 'rxjs';
 import { OptionsWithUri } from 'request-promise';
 import { ProfileFactory } from '../../profiles/profile.factory';
-import { Summary } from '../../model/summary';
 import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils';
 import { WfsMapper } from './wfs.mapper';
 import { XPathUtils } from '../../utils/xpath.utils';
@@ -46,20 +40,10 @@ import { XPathUtils } from '../../utils/xpath.utils';
 const fs = require('fs');
 const xpath = require('xpath');
 
-let log = require('log4js').getLogger(__filename),
-    logSummary = getLogger('summary'),
+const log = getLogger(__filename),
     logRequest = getLogger('requests'),
     DomParser = require('@xmldom/xmldom').DOMParser;
 
-export class WfsSummary extends Summary {
-    additionalSummary() {
-        logSummary.info(`Number of records with at least one mandatory keyword: ${this.opendata}`);
-        logSummary.info(`Number of records with missing links: ${this.missingLinks}`);
-        logSummary.info(`Number of records with missing license: ${this.missingLicense}`);
-        logSummary.info(`Number of records with missing publishers: ${this.missingPublishers}`);
-        logSummary.info(`Number of records imported as valid: ${this.ok}`);
-    }
-}
 
 // export const DefaultXplanSettings: any = {
 //     xpaths: {
@@ -91,10 +75,9 @@ export class WfsSummary extends Summary {
 //     }
 // }
 
-export class WfsImporter implements Importer {
+export class WfsImporter extends Importer {
     private profile: ProfileFactory<WfsMapper>;
     private readonly settings: WfsSettings;
-    elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
 
     private totalFeatures = 0;
@@ -109,8 +92,6 @@ export class WfsImporter implements Importer {
         resultType: 'results'
     };
 
-    private readonly summary: WfsSummary;
-    private filterUtils: FilterUtils;
     private generalInfo: object = {};
     private supportsPaging: boolean = false;
     private select: Function;
@@ -118,14 +99,9 @@ export class WfsImporter implements Importer {
     private crsList: string[][];
     private defaultCrs: string;
 
-    run = new Observable<ImportLogMessage>(observer => {
-        this.observer = observer;
-        this.exec(observer);
-    });
-
-    private observer: Observer<ImportLogMessage>;
-
     constructor(profile: ProfileFactory<WfsMapper>, settings, requestDelegate?: RequestDelegate) {
+        super(settings);
+
         this.profile = profile;
 
         // merge default settings with configured ones
@@ -141,12 +117,6 @@ export class WfsImporter implements Importer {
         }
 
         this.settings = settings;
-        this.filterUtils = new FilterUtils(settings);
-
-        this.summary = new WfsSummary(settings);
-
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -536,7 +506,4 @@ export class WfsImporter implements Importer {
         }
     }
 
-    getSummary(): Summary {
-        return this.summary;
-    }
 }
