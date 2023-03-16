@@ -33,6 +33,8 @@ import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper
 import { ProfileFactory } from '../profile.factory';
 import { Summary } from '../../model/summary';
 import { WfsMapper } from '../../importer/wfs/wfs.mapper';
+import {ImporterFactory} from "../../importer/importer.factory";
+import {DiplanungImporterFactory} from "./importer/diplanung.importer.factory";
 
 export class DiplanungFactory extends ProfileFactory<CswMapper | ExcelSparseMapper | WfsMapper> {
 
@@ -50,5 +52,9 @@ export class DiplanungFactory extends ProfileFactory<CswMapper | ExcelSparseMapp
 
     getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: ElasticSettings, summary: Summary): AbstractDeduplicateUtils {
         return new DeduplicateUtils(elasticUtils, elasticSettings, summary);
+    }
+
+    getImporterFactory(): ImporterFactory {
+        return new DiplanungImporterFactory();
     }
 }

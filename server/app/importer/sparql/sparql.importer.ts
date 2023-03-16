@@ -21,21 +21,18 @@
  * ==================================================
  */
 
-import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {SparqlMapper} from './sparql.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
-import {DefaultImporterSettings, Importer} from '../importer';
-import {Observable, Observer} from 'rxjs';
+import {Importer} from '../importer';
+import {Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {SparqlSettings} from './sparql.settings';
-import {FilterUtils} from "../../utils/filter.utils";
 import {RequestDelegate} from "../../utils/http-request.utils";
 import {ConfigService} from "../../services/config/ConfigService";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import {ElasticSettings} from "../../utils/elastic.setting";
+import {DefaultImporterSettings} from "../../importer.settings";
 
 const plain_fetch = require('node-fetch');
 const HttpsProxyAgent = require('https-proxy-agent');
@@ -64,7 +61,7 @@ export class SparqlImporter extends Importer {
     };
 
     constructor(profile: ProfileFactory<SparqlMapper>, settings, requestDelegate?: RequestDelegate) {
-        super(settings);
+        super(profile, settings);
 
         this.profile = profile;
 
@@ -224,10 +221,6 @@ export class SparqlImporter extends Importer {
             });
 
             if (!mapper.shouldBeSkipped()) {
-                if (doc.extras.metadata.isValid && doc.distribution.length > 0) {
-                    this.summary.ok++;
-                }
-
                 if (!this.settings.dryRun) {
                     promises.push(
                         this.elastic.addDocToBulk(doc, uuid)

@@ -35,6 +35,8 @@ import { DeduplicateUtils } from "./elastic/deduplicate.utils";
 import { ElasticSearchUtils } from "../../utils/elastic.utils";
 import { ElasticSettings } from "../../utils/elastic.setting";
 import { Summary } from "../../model/summary";
+import {McloudImporterFactory} from "./importer/mcloud.importer.factory";
+import {ImporterFactory} from "../../importer/importer.factory";
 
 export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper> {
 
@@ -52,5 +54,9 @@ export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatM
 
     getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: ElasticSettings, summary: Summary): DeduplicateUtils {
         return new DeduplicateUtils(elasticUtils, elasticSettings, summary);
+    }
+
+    getImporterFactory(): ImporterFactory {
+        return new McloudImporterFactory();
     }
 }

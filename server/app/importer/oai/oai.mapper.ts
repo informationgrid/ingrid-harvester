@@ -35,7 +35,6 @@ import {RequestDelegate} from "../../utils/http-request.utils";
 import {OptionsWithUri} from "request-promise";
 import {OaiSettings} from './oai.settings';
 import {throwError} from "rxjs";
-import doc = Mocha.reporters.doc;
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Summary} from "../../model/summary";

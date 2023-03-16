@@ -29,6 +29,7 @@ import {Summary} from '../model/summary';
 import {Index} from '@shared/index.model';
 import * as fs from "fs";
 import { ElasticSearchFactory } from '../utils/elastic.factory';
+import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
 
 let log = require('log4js').getLogger(__filename);
 var path = require('path');
@@ -62,7 +63,7 @@ export class IndexService {
         };
         // @ts-ignore
         const summary: Summary = {elasticErrors: []};
-        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
+        this.elasticUtils = ElasticSearchFactory.getElasticUtils(ProfileFactoryLoader.get(), settings, summary);
     }
 
     async addToAlias(id: number) {

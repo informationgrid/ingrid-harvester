@@ -21,7 +21,13 @@
  * ==================================================
  */
 
-import {ImporterSettings} from '../../importer.settings';
+import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
+
+
+export const defaultExcelSettings: ExcelSettings = {
+    ...DefaultImporterSettings,
+    filePath: './data.xlsx'
+};
 
 export type ExcelSettings = {
     filePath: string

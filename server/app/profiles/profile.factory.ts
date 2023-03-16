@@ -26,12 +26,14 @@ import { BaseMapper } from '../importer/base.mapper';
 import { ElasticSearchUtils } from '../utils/elastic.utils';
 import { IndexDocument } from '../model/index.document';
 import { Summary } from '../model/summary';
+import {ImporterFactory} from "../importer/importer.factory";
 
 export abstract class ProfileFactory<M extends BaseMapper> {
     abstract getIndexDocument() : IndexDocument<M>;
 
     abstract getElasticSettings(): any;
     abstract getElasticMapping(): any;
+    abstract getImporterFactory(): ImporterFactory;
 
     abstract getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: any, summary: Summary): AbstractDeduplicateUtils;
 }

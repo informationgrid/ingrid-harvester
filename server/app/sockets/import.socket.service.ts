@@ -69,7 +69,8 @@ export class ImportSocketService {
 
             let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });
 
-            let importer = ImporterFactory.get(ProfileFactoryLoader.get(), configHarvester);
+            let profile = ProfileFactoryLoader.get();
+            let importer = profile.getImporterFactory().get(profile, configHarvester);
             let mode = isIncremental ? 'incr' : 'full';
             this.log.info('>> Running importer: ' + configHarvester.description);
 

@@ -29,6 +29,7 @@ import {ScheduleService} from "../services/ScheduleService";
 import { ElasticSearchFactory } from '../utils/elastic.factory';
 import { ElasticSearchUtils } from '../utils/elastic.utils';
 import { ElasticSettings } from '../utils/elastic.setting';
+import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -44,7 +45,7 @@ export class ConfigCtrl {
     async checkEsConnection(@BodyParams() body: Partial<ElasticSettings>): Promise<boolean> {
         try {
             // @ts-ignore
-            let esUtils: ElasticSearchUtils = ElasticSearchFactory.getElasticUtils(body, { elasticErrors: [] });
+            let esUtils: ElasticSearchUtils = ElasticSearchFactory.getElasticUtils(ProfileFactoryLoader.get(), body, { elasticErrors: [] });
             return await esUtils.ping();
         } catch (error) {
             log.warn(error);

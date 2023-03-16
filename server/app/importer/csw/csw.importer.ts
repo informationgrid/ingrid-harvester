@@ -21,23 +21,18 @@
  * ==================================================
  */
 
-import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {CswMapper} from './csw.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
 import {CswParameters, RequestDelegate} from '../../utils/http-request.utils';
 import {OptionsWithUri} from 'request-promise';
-import {DefaultImporterSettings, Importer} from '../importer';
-import {Observable, Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {DefaultXpathSettings, CswSettings} from './csw.settings';
-import {FilterUtils} from "../../utils/filter.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import { SummaryService } from '../../services/config/SummaryService';
 import {ProfileFactory} from "../../profiles/profile.factory";
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import {ElasticSettings} from "../../utils/elastic.setting";
-import {ConfigService} from "../../services/config/ConfigService";
+import {Importer} from "../importer";
+import {CswSettings, defaultCSWSettings} from "./csw.settings";
+import {Observer} from "rxjs";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -46,30 +41,22 @@ let log = require('log4js').getLogger(__filename),
 
 export class CswImporter extends Importer {
     private profile: ProfileFactory<CswMapper>;
-    private readonly settings: CswSettings;
+    protected readonly settings: CswSettings;
     private readonly requestDelegate: RequestDelegate;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    static defaultSettings: Partial<CswSettings> = {
-        ...DefaultImporterSettings,
-        ...DefaultXpathSettings,
-        getRecordsUrl: '',
-        eitherKeywords: [],
-        httpMethod: 'GET',
-        resultType: 'results'
-    };
 
     private generalInfo: object = {};
 
     constructor(profile: ProfileFactory<CswMapper>, settings, requestDelegate?: RequestDelegate) {
-        super(settings)
+        super(profile, settings)
 
         this.profile = profile;
 
         // merge default settings with configured ones
-        settings = MiscUtils.merge(CswImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(defaultCSWSettings, settings);
 
         // if we are looking for incremental updates, add a date filter to the existing record filter
         if (settings.isIncremental) {
@@ -180,8 +167,10 @@ export class CswImporter extends Importer {
             // harvestConcurrently() also supports this.settings.maxConcurrent=1
             await this.harvestSequentially();
         }
+    }
 
-        this.createDataServiceCoupling();
+    protected async postHarvestingHandling(){
+        // For Profile specific Handling
     }
 
     async handleHarvest(delegate: RequestDelegate): Promise<void> {
@@ -261,66 +250,6 @@ export class CswImporter extends Importer {
         }
     }
 
-    createDataServiceCoupling(){
-        let bulkData = this.elastic._bulkData;
-        let servicesByDataIdentifier = [];
-        let servicesByFileIdentifier = [];
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = CswMapper.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
-                if(identifierList && identifierList.length > 0){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(!servicesByDataIdentifier[identifer]){
-                            servicesByDataIdentifier[identifer] = [];
-                        }
-                        servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distribution);
-                    }
-                } else {
-                    identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn', xml)
-                    if (identifierList && identifierList.length > 0) {
-                        for (let j = 0; j < identifierList.length; j++) {
-                            let identifer = identifierList[j].getAttribute("uuidref")
-                            if (!servicesByFileIdentifier[identifer]) {
-                                servicesByFileIdentifier[identifer] = [];
-                            }
-                            servicesByFileIdentifier[identifer] = servicesByFileIdentifier[identifer].concat(doc.distribution);
-                        }
-                    }
-                }
-            }
-        }
-
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByDataIdentifier[identifer]){
-                            doc.distribution = doc.distribution.concat(servicesByDataIdentifier[identifer]);
-                        }
-                    }
-                }
-                identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByFileIdentifier[identifer]){
-                            doc.distribution = doc.distribution.concat(servicesByFileIdentifier[identifer]);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     async extractRecords(getRecordsResponse, harvestTime) {
         let promises = [];
         let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
@@ -364,11 +293,6 @@ export class CswImporter extends Importer {
             });
 
             if (!mapper.shouldBeSkipped()) {
-
-                if (doc.extras.metadata.isValid && doc.distribution.length > 0) {
-                    this.summary.ok++;
-                }
-
                 if (!this.settings.dryRun) {
                     promises.push(
                         this.elastic.addDocToBulk(doc, uuid)

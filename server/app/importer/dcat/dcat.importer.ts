@@ -21,22 +21,17 @@
  * ==================================================
  */
 
-import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {DcatMapper} from './dcat.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
 import {OptionsWithUri} from 'request-promise';
-import {DefaultImporterSettings, Importer} from '../importer';
-import {Observable, Observer} from 'rxjs';
+import {Importer} from '../importer';
+import {Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {DcatSettings} from './dcat.settings';
-import {FilterUtils} from "../../utils/filter.utils";
+import {DcatSettings, defaultDCATSettings} from './dcat.settings';
 import {RequestDelegate} from "../../utils/http-request.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import {ElasticSettings} from "../../utils/elastic.setting";
-import {ConfigService} from "../../services/config/ConfigService";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -51,20 +46,14 @@ export class DcatImporter extends Importer {
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    static defaultSettings: DcatSettings = {
-        ...DefaultImporterSettings,
-        catalogUrl: '',
-        filterTags: [],
-        filterThemes: []
-    };
 
     constructor(profile: ProfileFactory<DcatMapper>, settings, requestDelegate?: RequestDelegate) {
-        super(settings);
+        super(profile, settings);
 
         this.profile = profile;
 
         // merge default settings with configured ones
-        settings = MiscUtils.merge(DcatImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(defaultDCATSettings, settings);
 
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
@@ -220,11 +209,6 @@ export class DcatImporter extends Importer {
             });
 
             if (!mapper.shouldBeSkipped()) {
-
-                if (doc.extras.metadata.isValid && doc.distribution.length > 0) {
-                    this.summary.ok++;
-                }
-
                 if (!this.settings.dryRun) {
                     promises.push(
                         this.elastic.addDocToBulk(doc, uuid)

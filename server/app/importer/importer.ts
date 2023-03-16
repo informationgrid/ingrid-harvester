@@ -31,27 +31,7 @@ import {ElasticSettings} from "../utils/elastic.setting";
 import {MiscUtils} from "../utils/misc.utils";
 import {ConfigService} from "../services/config/ConfigService";
 import {ElasticSearchFactory} from "../utils/elastic.factory";
-
-export const DefaultImporterSettings: ImporterSettings = {
-    index: '',
-    priority: null,
-    type: '',
-    maxRecords: 100,
-    startPosition: 0,
-    customCode: '',
-    defaultMcloudSubgroup: [],
-    defaultDCATCategory: [],
-    dateSourceFormats: [],
-    blacklistedIds: [],
-    whitelistedIds: [],
-    rejectUnauthorizedSSL: true,
-    rules: {
-            containsDocumentsWithData: false
-    },
-    isIncremental: false,
-    maxConcurrent: 1,
-    skipUrlCheckOnHarvest: false
-};
+import {ProfileFactory} from "../profiles/profile.factory";
 
 export abstract class Importer {
     protected observer: Observer<ImportLogMessage>;
@@ -59,12 +39,12 @@ export abstract class Importer {
     protected filterUtils: FilterUtils;
     protected elastic: ElasticSearchUtils;
 
-    constructor(settings: ImporterSettings) {
+    protected constructor(profile: ProfileFactory<any>, settings: ImporterSettings) {
         this.summary = new Summary(settings);
         this.filterUtils = new FilterUtils(settings);
 
         let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
+        this.elastic = ElasticSearchFactory.getElasticUtils(profile, elasticsearchSettings, this.summary);
     }
 
     //run: Observable<ImportLogMessage>;

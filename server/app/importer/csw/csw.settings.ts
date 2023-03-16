@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {ImporterSettings} from '../../importer.settings';
+import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
 
 export type CswSettings = {
     xpaths: {
@@ -48,3 +48,12 @@ export const DefaultXpathSettings: Partial<CswSettings> = {
         }
     }
 }
+
+export const defaultCSWSettings: Partial<CswSettings> = {
+    ...DefaultImporterSettings,
+    ...DefaultXpathSettings,
+    getRecordsUrl: '',
+    eitherKeywords: [],
+    httpMethod: 'GET',
+    resultType: 'results'
+};

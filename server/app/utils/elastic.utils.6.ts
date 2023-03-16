@@ -30,6 +30,7 @@ import { ImporterSettings } from '../importer.settings';
 import { Index } from '@shared/index.model';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
+import {ProfileFactory} from "../profiles/profile.factory";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -41,7 +42,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
 
     public deduplicationUtils: AbstractDeduplicateUtils;
 
-    constructor(settings, summary: Summary) {
+    constructor(profile: ProfileFactory<any>, settings, summary: Summary) {
         super();
         this.settings = settings;
         this.summary = summary;
@@ -58,7 +59,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         this._bulkData = [];
         this.indexName = settings.index;
 
-        this.deduplicationUtils = ProfileFactoryLoader.get().getDeduplicationUtils(this, settings, this.summary);
+        this.deduplicationUtils = profile.getDeduplicationUtils(this, settings, this.summary);
     }
 
     async cloneIndex(mapping, settings) {
