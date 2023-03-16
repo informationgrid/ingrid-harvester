@@ -922,6 +922,10 @@ export class CswMapper extends BaseMapper {
         return this.fetched.catalog;
     }
 
+    _getPluDevelopmentFreezePeriod() {
+        return undefined;
+    }
+
     _getPluPlanTypeFine() {
         return undefined;
     }

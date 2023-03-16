@@ -74,6 +74,10 @@ export class DiplanungMapper<M extends CswMapper | ExcelSparseMapper | WfsMapper
         return this.baseMapper.getTemporal();
     }
 
+    getPluDevelopmentFreezePeriod(): DateRange{
+        return this.baseMapper._getPluDevelopmentFreezePeriod();
+    }
+
     getPluProcedureStartDate(): string{
         return this.baseMapper._getPluProcedureStartDate();
     }
