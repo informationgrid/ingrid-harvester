@@ -637,6 +637,10 @@ export class WfsMapper extends BaseMapper {
         return this.fetched.catalog;
     }
 
+    _getPluDevelopmentFreezePeriod() {
+        return undefined;
+    }
+
     /**
      * This is currently XPlan specific.
      * 

@@ -32,7 +32,7 @@ import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
 const esc = require('xml-escape');
 
-function optional(wrapper: string | Function, variable: any | any[]) {
+function optional(wrapper: string | Function, variable: any | any[], ...remainder: any) {
     if (!variable) {
         return '';
     }
@@ -43,7 +43,7 @@ function optional(wrapper: string | Function, variable: any | any[]) {
         return variable.map(v => `<${wrapper}>${v}</${wrapper}>`).join('\n');
     }
     else {
-        return variable.map(v => wrapper(v)).join(' ');
+        return variable.map(v => wrapper(v, remainder)).join(' ');
     }
 }
 
@@ -111,6 +111,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional('dct:issued', mapper.getIssued())}
                 ${optional('dct:modified', mapper.getModifiedDate())}
                 ${optional('dct:relation', esc(relation))}
+                ${optional(DcatApPluDocument.xmlPeriodOfTime, mapper.getPluDevelopmentFreezePeriod(), 'plu:developmentFreezePeriod')}
                 ${optional('plu:planType', mapper.getPluPlanType())}
                 ${optional('plu:planTypeFine', mapper.getPluPlanTypeFine())}
                 ${optional('plu:procedureType', mapper.getPluProcedureType())}
@@ -153,13 +154,13 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         </foaf:Agent></${parent}>`;
     }
 
-    private static xmlPeriodOfTime({ lte: start, gte: end }: DateRange): string {
-        return `<dct:temporal>
+    private static xmlPeriodOfTime({ lte: start, gte: end }: DateRange, relation: string = 'dct:temporal'): string {
+        return `<${relation}>
             <dct:PeriodOfTime>
                 ${optional('dcat:startDate', start)}
                 ${optional('dcat:endDate', end)}
             </dct:PeriodOfTime>
-        </dct:temporal>`;
+        </${relation}>`;
     }
 
     private static xmlProcessStep({ distributions, identifier, period, type }: ProcessStep): string {

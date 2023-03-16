@@ -488,6 +488,10 @@ export class ExcelSparseMapper extends BaseMapper {
         }
     }
 
+    _getPluDevelopmentFreezePeriod() {
+        return undefined;
+    }
+
     _getPluPlanState() {
         return undefined;
     }
