@@ -26,9 +26,11 @@ export type ElasticSettings = {
     elasticSearchVersion: string,
     elasticSearchUser: string,
     elasticSearchPassword?: string,
+    dryRun?: boolean,
     index: string,
     indexType?: string,
     alias?: string,
+    addAlias?: boolean
     deduplicationAlias?: string,
     includeTimestamp: boolean,
     numberOfShards?: number,

@@ -37,13 +37,13 @@ let log = require('log4js').getLogger(__filename);
 
 export class ElasticSearchUtils8 extends ElasticSearchUtils {
 
-    private settings: ElasticSettings & ImporterSettings;
+    private settings: ElasticSettings;
     protected client: Client;
     private summary: Summary;
 
     public deduplicationUtils: AbstractDeduplicateUtils;
 
-    constructor(profile: ProfileFactory<any>, settings, summary: Summary) {
+    constructor(profile: ProfileFactory<any>, settings: ElasticSettings, summary: Summary) {
         super();
         this.settings = settings;
         this.summary = summary;
@@ -143,7 +143,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
             await this.sendBulkData(false);
             if (closeIndex) {
                 await this.deleteOldIndices(this.settings.index, this.indexName);
-                if (!this.settings.disable) {
+                if (this.settings.addAlias) {
                     await this.addAlias(this.indexName, this.settings.alias);
                 }
                 await this.deduplicationUtils.deduplicate();

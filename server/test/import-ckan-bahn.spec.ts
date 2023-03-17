@@ -26,8 +26,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 import {configure, getLogger} from 'log4js';
 import * as sinon from 'sinon';
 import {TestUtils} from './utils/test-utils';
-import {mcloudDocument} from '../app/profiles/mcloud/model/index.document';
-import {CkanSettings} from '../app/importer/ckan/ckan.settings';
+import {CkanSettings, defaultCKANSettings} from '../app/importer/ckan/ckan.settings';
 import {CkanImporter} from '../app/importer/ckan/ckan.importer';
 import {CkanMapper} from '../app/importer/ckan/ckan.mapper';
 import {Organization} from "../app/model/agent";
@@ -51,7 +50,7 @@ describe('Import CKAN Bahn', function () {
         log.info('Start test ...');
 
         var settings: CkanSettings = {
-            ...CkanImporter.defaultSettings,
+            ...defaultCKANSettings,
             ckanBaseUrl: 'https://data.deutschebahn.com',
             defaultAttribution: 'Deutsche Bahn Datenportal',
             defaultDCATCategory: ['TRAN', 'TECH'],
@@ -92,7 +91,7 @@ describe('Import CKAN Bahn', function () {
 
     it('should map ckan to index correctly', async () => {
         const mapper = new CkanMapper({
-            ...CkanImporter.defaultSettings,
+            ...defaultCKANSettings,
             ckanBaseUrl: 'https://data.deutschebahn.com',
             index: 'xxx',
             markdownAsDescription: false

@@ -26,7 +26,7 @@ import {ExcelMapper} from "../../../importer/excel/excel.mapper";
 
 export class mcloudExcelMapper extends mcloudMapper<ExcelMapper> {
     getCategories(): any {
-        this.baseMapper._getCategories();
+        return this.baseMapper._getCategories();
     }
 }
 

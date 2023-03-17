@@ -370,8 +370,8 @@ export class OaiMapper extends BaseMapper {
         if (contactPoint) {
             let displayName;
 
-            if (contactPoint['organization-name']) {
-                displayName = contactPoint['organization-name'];
+            if (contactPoint.hasOrganizationName) {
+                displayName = contactPoint.hasOrganizationName;
             } else if (contactPoint.fn) {
                 displayName = contactPoint.fn;
             }
@@ -840,8 +840,6 @@ export class OaiMapper extends BaseMapper {
                     let infos: Contact = {
                         fn: name?.textContent,
                     };
-
-                    if (org) infos.hasOrganizationName = org.textContent;
 
                     if (contact.getAttribute('uuid')) {
                         infos.hasUID = contact.getAttribute('uuid');

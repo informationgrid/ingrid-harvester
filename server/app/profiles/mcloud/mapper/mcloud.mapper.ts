@@ -239,7 +239,24 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
     }
 
     async getContactPoint(): Promise<Contact>{
-        return await this.baseMapper.getContactPoint();
+        let baseContactPoint = await this.baseMapper.getContactPoint();
+        let contactPoint = undefined;
+        if(baseContactPoint){
+            contactPoint = {}
+            if(baseContactPoint.fn) contactPoint.fn = baseContactPoint.fn;
+            //if(baseContactPoint.hasLocality) contactPoint.hasLocality = baseContactPoint.hasLocality;
+            if(baseContactPoint.hasEmail) contactPoint.hasEmail = baseContactPoint.hasEmail;
+            if(baseContactPoint.hasTelephone) contactPoint.hasTelephone = baseContactPoint.hasTelephone;
+            if(baseContactPoint.hasUID) contactPoint.hasUID = baseContactPoint.hasUID;
+            if(baseContactPoint.hasURL) contactPoint.hasURL = baseContactPoint.hasURL;
+            if(baseContactPoint.hasOrganizationName) contactPoint['organization-name'] = baseContactPoint.hasOrganizationName;
+            else if(baseContactPoint['organization-name']) contactPoint['organization-name'] = baseContactPoint['organization-name'];
+            if(baseContactPoint.hasStreetAddress) contactPoint['street-address'] = baseContactPoint.hasStreetAddress;
+            if(baseContactPoint.hasRegion) contactPoint.region = baseContactPoint.hasRegion;
+            if(baseContactPoint.hasCountryName) contactPoint['country-name'] = baseContactPoint.hasCountryName;
+            if(baseContactPoint.hasPostalCode) contactPoint['postal-code'] = baseContactPoint.hasPostalCode;
+        }
+        return contactPoint;
     }
 
     getCreator(): Agent[] | Agent{

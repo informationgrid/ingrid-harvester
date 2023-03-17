@@ -23,7 +23,7 @@
       "homepage": "http://www1.deutschebahn.com/ecm2-db-de/ir/db_konzern/geschaeftsfelder/fernverkehr.html"
     }
   ],
-  "distributions": [
+  "distribution": [
     {
       "id": "a306f97c-fc51-4e6b-976b-40c34f573dbf",
       "title": "Zugbildungsplan A -Reihung- (ZpAR)",

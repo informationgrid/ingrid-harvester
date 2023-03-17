@@ -43,6 +43,7 @@ xdescribe('deduplication by similar title', function () {
     // @ts-ignore
     let settings: ElasticSettings = {
         elasticSearchUrl: 'http://localhost:9200',
+        elasticSearchVersion: "6",
         deduplicationAlias: 'test-dedup'
     };
 
@@ -53,7 +54,8 @@ xdescribe('deduplication by similar title', function () {
         elasticErrors: []
     };
 
-    let elasticSearchUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
+    let profile = ProfileFactoryLoader.get();
+    let elasticSearchUtils = ElasticSearchFactory.getElasticUtils(profile, settings, summary);
     let deduplicateUtils: DeduplicateUtils = (new mcloudFactory()).getDeduplicationUtils(elasticSearchUtils, settings, summary);
     //deduplicateUtils.deduplicationIndices = deduplicationIndices;
 

@@ -37,13 +37,13 @@ export abstract class Importer {
     protected observer: Observer<ImportLogMessage>;
     protected summary: Summary;
     protected filterUtils: FilterUtils;
-    protected elastic: ElasticSearchUtils;
+    elastic: ElasticSearchUtils;
 
     protected constructor(profile: ProfileFactory<any>, settings: ImporterSettings) {
         this.summary = new Summary(settings);
         this.filterUtils = new FilterUtils(settings);
 
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index, dryRun: settings.dryRun, addAlias: !settings.disable});
         this.elastic = ElasticSearchFactory.getElasticUtils(profile, elasticsearchSettings, this.summary);
     }
 

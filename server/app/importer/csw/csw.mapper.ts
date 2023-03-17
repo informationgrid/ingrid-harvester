@@ -1110,7 +1110,7 @@ export class CswMapper extends BaseMapper {
 
                     let line1 = delPt.map(n => CswMapper.getCharacterStringContent(n));
                     line1 = line1.join(', ');
-                    if (line1?.textContent) infos.hasStreetAddress = line1;
+                    if (line1) infos.hasStreetAddress = line1;
                     if (locality?.textContent) infos.hasLocality = locality.textContent;
                     if (region?.textContent) infos.hasRegion = region.textContent;
                     if (country?.textContent) infos.hasCountryName = country.textContent;
