@@ -22,11 +22,9 @@
  */
 
 import {Summary} from './model/summary';
-import * as fs from 'fs';
 import {configure, getLogger} from 'log4js';
 import {concat, Observable} from 'rxjs';
 import {ImportLogMessage} from './model/import.result';
-import {ImporterFactory} from "./importer/importer.factory";
 import {ConfigService} from './services/config/ConfigService';
 import { MiscUtils } from './utils/misc.utils';
 import {ProfileFactoryLoader} from "./profiles/profile.factory.loader";

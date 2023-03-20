@@ -24,7 +24,6 @@
 import {Authenticated, BodyParams, Controller, Delete, Get, PathParams, Post} from '@tsed/common';
 import {IndexService} from '../services/IndexService';
 import {Index} from '@shared/index.model';
-import {ConfigService} from "../services/config/ConfigService";
 
 @Controller('/api/indices')
 @Authenticated()

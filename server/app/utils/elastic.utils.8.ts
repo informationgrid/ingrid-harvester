@@ -24,12 +24,9 @@
 import { AbstractDeduplicateUtils } from './abstract.deduplicate.utils';
 import { BulkResponse, ElasticSearchUtils } from './elastic.utils';
 import { Client } from 'elasticsearch8';
-import { ClusterHealthResponse } from 'elasticsearch8/lib/api/types';
 import { ElasticQueries } from "./elastic.queries";
 import { ElasticSettings } from './elastic.setting';
-import { ImporterSettings } from '../importer.settings';
 import { Index } from '@shared/index.model';
-//import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 import {ProfileFactory} from "../profiles/profile.factory";
 

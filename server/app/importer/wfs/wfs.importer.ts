@@ -29,7 +29,7 @@ import {OptionsWithUri} from 'request-promise';
 import {Importer} from '../importer';
 import {Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {defaultWfsSettings, DefaultXpathSettings, WfsSettings} from './wfs.settings';
+import {defaultWfsSettings, WfsSettings} from './wfs.settings';
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import { XPathUtils } from '../../utils/xpath.utils';

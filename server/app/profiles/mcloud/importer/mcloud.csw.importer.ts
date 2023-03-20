@@ -25,7 +25,6 @@ import {CswImporter} from "../../../importer/csw/csw.importer";
 import {ProfileFactory} from "../../profile.factory";
 import {CswMapper} from "../../../importer/csw/csw.mapper";
 import {RequestDelegate} from "../../../utils/http-request.utils";
-import {getLogger} from "log4js";
 
 let DomParser = require('@xmldom/xmldom').DOMParser;
 

@@ -340,24 +340,6 @@ export class OaiMapper extends BaseMapper {
         return undefined;
     }
 
-    _getCategories(): string[] {
-        let subgroups = [];
-        let keywords = this.getKeywords();
-        if (keywords) {
-            keywords.forEach(k => {
-                k = k.trim();
-                if (k === 'mcloud_category_roads' || k === 'mcloud-kategorie-straßen') subgroups.push('roads');
-                if (k === 'mcloud_category_climate' || k === 'mcloud-kategorie-klima-und-wetter') subgroups.push('climate');
-                if (k === 'mcloud_category_waters' || k === 'mcloud-kategorie-wasserstraßen-und-gewässer') subgroups.push('waters');
-                if (k === 'mcloud_category_railway' || k === 'mcloud-kategorie-bahn') subgroups.push('railway');
-                if (k === 'mcloud_category_infrastructure' || k === 'mcloud-kategorie-infrastuktur') subgroups.push('infrastructure');
-                if (k === 'mcloud_category_aviation' || k === 'mcloud-kategorie-luft--und-raumfahrt') subgroups.push('aviation');
-            });
-        }
-        if (subgroups.length === 0) subgroups.push(...this.settings.defaultMcloudSubgroup);
-        return subgroups;
-    }
-
     _getCitation(): string {
         return undefined;
     }
@@ -887,50 +869,6 @@ export class OaiMapper extends BaseMapper {
 
     protected getUuid(): string {
         return this.uuid;
-    }
-
-    _getBoundingBoxGml() {
-        return undefined;
-    }
-
-    _getSpatialGml() {
-        return undefined;
-    }
-
-    _getCentroid() {
-        return undefined;
-    }
-
-    async _getCatalog() {
-        return undefined;
-    }
-
-    _getPluPlanState() {
-        return undefined;
-    }
-
-    _getPluPlanType() {
-        return undefined;
-    }
-
-    _getPluPlanTypeFine() {
-        return undefined;
-    }
-
-    _getPluProcedureStartDate() {
-        return undefined;
-    }
-
-    _getPluProcedureState() {
-        return undefined;
-    }
-
-    _getPluProcedureType() {
-        return undefined;
-    }
-
-    _getPluProcessSteps() {
-        return undefined;
     }
 
     executeCustomCode(doc: any) {

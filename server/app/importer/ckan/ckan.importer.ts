@@ -33,8 +33,6 @@ import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
 
 let log = require('log4js').getLogger(__filename);
-const uuidv5 = require('uuid/v5');
-const UUID_NAMESPACE = '6891a617-ab3b-4060-847f-61e31d6ccf6f';
 
 export class CkanImporter extends Importer {
     private profile: ProfileFactory<CkanMapper>;

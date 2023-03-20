@@ -21,9 +21,7 @@
  * ==================================================
  */
 
-import {BaseMapper} from "../../../importer/base.mapper";
 import {IndexDocument} from "../../../model/index.document";
-import {mcloudMapper} from "../mapper/mcloud.mapper";
 import {CkanMapper} from "../../../importer/ckan/ckan.mapper";
 import {CswMapper} from "../../../importer/csw/csw.mapper";
 import {DcatMapper} from "../../../importer/dcat/dcat.mapper";

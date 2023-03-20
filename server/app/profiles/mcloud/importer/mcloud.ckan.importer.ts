@@ -22,10 +22,8 @@
  */
 
 import {CkanMapper} from "../../../importer/ckan/ckan.mapper";
-import {CkanSettings} from "../../../importer/ckan/ckan.settings";
 import {ProfileFactory} from "../../profile.factory";
 import {CkanImporter} from "../../../importer/ckan/ckan.importer";
-import {mcloudDocument} from "../model/index.document";
 import {ElasticSearchUtils} from "../../../utils/elastic.utils";
 
 let log = require('log4js').getLogger(__filename);

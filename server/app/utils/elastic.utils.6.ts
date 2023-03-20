@@ -26,9 +26,7 @@ import { BulkResponse, ElasticSearchUtils } from './elastic.utils';
 import { Client } from 'elasticsearch6';
 import { ElasticQueries } from "./elastic.queries";
 import { ElasticSettings } from './elastic.setting';
-import { ImporterSettings } from '../importer.settings';
 import { Index } from '@shared/index.model';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 import {ProfileFactory} from "../profiles/profile.factory";
 

@@ -22,7 +22,6 @@
  */
 
 import {mcloudMapper} from "./mcloud.mapper";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
 import {OaiMapper} from "../../../importer/oai/oai.mapper";
 
 export class mcloudOaiMapper extends mcloudMapper<OaiMapper> {

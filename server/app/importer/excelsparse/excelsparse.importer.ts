@@ -245,4 +245,4 @@ export interface Columns {
     MITGLIEDSGEMEINDEN: string,
     KONTAKT_EMAIL_1?: string,
     KONTAKT_EMAIL_2?: string
-};
+}

@@ -21,8 +21,7 @@
  * ==================================================
  */
 
-import {BaseMapper } from "../importer/base.mapper";
-import {Agent, Contact, Organization, Person} from "./agent";
+import {Organization, Person} from "./agent";
 import {Distribution} from "./distribution";
 import {DateRange} from "./dateRange";
 
