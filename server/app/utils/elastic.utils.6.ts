@@ -463,7 +463,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
 
     async getFacetsByAttribution(): Promise<any> {
         let { body: response }: any = await this.client.search({
-            index: this.indexName,
+            index: this.settings.alias,
             body: ElasticQueries.getFacetsByAttribution(),
             size: 0
         });
