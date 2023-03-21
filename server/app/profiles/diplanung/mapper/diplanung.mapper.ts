@@ -83,7 +83,7 @@ export class DiplanungMapper<M extends CswMapper | ExcelSparseMapper | WfsMapper
     }
 
     getPluPlanType(): string{
-        return this.baseMapper._getPluProcedureStartDate();
+        return this.baseMapper._getPluPlanType();
     }
 
     getPluPlanTypeFine(): string{
