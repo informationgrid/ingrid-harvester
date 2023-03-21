@@ -75,7 +75,19 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
     }
 
     async getDistributions(): Promise<Distribution[]>{
-        return await this.baseMapper.getDistributions();
+        let distributions = await this.baseMapper.getDistributions();
+        if (distributions.length === 0) {
+            this.baseMapper.valid = false;
+            let msg = `Dataset has no links for download/access. It will not be displayed in the portal. Title: '${this.getTitle()}', Id: '${this.getGeneratedId()}'.`;
+
+            this.baseMapper.getSummary().missingLinks++;
+
+            this.baseMapper.valid = false;
+            this.baseMapper.getSummary().warnings.push(['No links', msg]);
+
+            this._log.warn(msg);
+        }
+        return distributions;
     }
 
     getGeneratedId(): string{

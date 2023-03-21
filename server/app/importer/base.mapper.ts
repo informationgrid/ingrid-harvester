@@ -42,7 +42,7 @@ export abstract class BaseMapper {
 
     protected errors: string[] = [];
 
-    protected valid = true;
+    valid = true;
 
     public skipped = false;
 

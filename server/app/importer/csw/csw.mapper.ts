@@ -32,7 +32,6 @@ import {RequestDelegate} from "../../utils/http-request.utils";
 import {OptionsWithUri} from "request-promise";
 import {CswSettings} from './csw.settings';
 import {throwError} from "rxjs";
-import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {Summary} from "../../model/summary";
@@ -108,7 +107,7 @@ export class CswMapper extends BaseMapper {
         super.init();
     }
 
-    public getSettings(): ImporterSettings {
+    public getSettings(): CswSettings {
         return this.settings;
     }
 

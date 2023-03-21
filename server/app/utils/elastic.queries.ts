@@ -34,7 +34,7 @@ export class ElasticQueries {
             size: 0,
             query: {
                 bool: {
-                    must_not: {term: {'extras.metadata.isValid': false}}
+                    must_not: {term: {'extras.metadata.is_valid': false}}
                 }
             },
             aggregations: {

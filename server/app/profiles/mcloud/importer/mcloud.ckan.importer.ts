@@ -37,14 +37,14 @@ export class McloudCkanImporter extends CkanImporter {
         super(profile, settings);
     }
 
-    protected posthandlingDocument(doc: any){
-        let parent = doc.extras.parent;
+    protected posthandlingDocument(mapper: CkanMapper, doc: any){
+        let parent = doc.extras?.parent;
         if (this.settings.groupChilds && parent) {
             if (!this.docsByParent[parent]) {
                 this.docsByParent[parent] = [];
             }
             this.docsByParent[parent].push(doc);
-            return;
+            mapper.skipped = true;
         }
     }
 

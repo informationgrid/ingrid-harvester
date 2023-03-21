@@ -167,6 +167,7 @@ export class CswImporter extends Importer {
             // harvestConcurrently() also supports this.settings.maxConcurrent=1
             await this.harvestSequentially();
         }
+        this.postHarvestingHandling();
     }
 
     protected async postHarvestingHandling(){

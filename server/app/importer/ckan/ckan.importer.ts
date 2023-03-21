@@ -93,6 +93,8 @@ export class CkanImporter extends Importer {
                     mapper.skipped = true;
                 });
 
+            this.posthandlingDocument(mapper, doc);
+
             if (mapper.shouldBeSkipped()) {
                 this.summary.skippedDocs.push(data.source.id);
                 return;
@@ -105,7 +107,7 @@ export class CkanImporter extends Importer {
         }
     }
 
-    protected posthandlingDocument(doc: any){
+    protected posthandlingDocument(mapper: CkanMapper, doc: any){
         // For Profile specific Handling
     }
 
