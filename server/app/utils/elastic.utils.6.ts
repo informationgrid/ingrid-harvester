@@ -21,14 +21,14 @@
  * ==================================================
  */
 
-import { AbstractDeduplicateUtils } from './abstract.deduplicate.utils';
 import { BulkResponse, ElasticSearchUtils } from './elastic.utils';
 import { Client } from 'elasticsearch6';
-import { ElasticQueries } from "./elastic.queries";
+import { DeduplicateUtils } from './deduplicate.utils';
+import { ElasticQueries } from './elastic.queries';
 import { ElasticSettings } from './elastic.setting';
 import { Index } from '@shared/index.model';
+import { ProfileFactory } from '../profiles/profile.factory';
 import { Summary } from '../model/summary';
-import {ProfileFactory} from "../profiles/profile.factory";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -38,7 +38,8 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     protected client: Client;
     private summary: Summary;
 
-    public deduplicationUtils: AbstractDeduplicateUtils;
+    public deduplicationUtils: DeduplicateUtils;
+    public elasticQueries: ElasticQueries;
 
     constructor(profile: ProfileFactory<any>, settings: ElasticSettings, summary: Summary) {
         super();
@@ -58,6 +59,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         this.indexName = settings.index;
 
         this.deduplicationUtils = profile.getDeduplicationUtils(this, settings, this.summary);
+        this.elasticQueries = profile.getElasticQueries();
     }
 
     async cloneIndex(mapping, settings) {
@@ -436,7 +438,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     async getHistories(): Promise<any> {
         let { body: response } = await this.client.search({
             index: 'mcloud_harvester_statistic',
-            body: ElasticQueries.findHistories(),
+            body: this.elasticQueries.findHistories(),
             size: 1000
         });
         return response.hits.hits.map(entry => entry._source);
@@ -445,7 +447,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     async getAccessUrls(after_key): Promise<any> {
         let { body: response }: any = await this.client.search({
             index: '',
-            body: ElasticQueries.getAccessUrls(after_key),
+            body: this.elasticQueries.getAccessUrls(after_key),
             size: 0
         });
         return {
@@ -464,7 +466,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     async getFacetsByAttribution(): Promise<any> {
         let { body: response }: any = await this.client.search({
             index: this.settings.alias,
-            body: ElasticQueries.getFacetsByAttribution(),
+            body: this.elasticQueries.getFacetsByAttribution(),
             size: 0
         });
         return response.aggregations.attribution.buckets.map(entry =>

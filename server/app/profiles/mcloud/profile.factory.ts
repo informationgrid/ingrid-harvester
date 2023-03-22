@@ -32,6 +32,7 @@ import {ExcelMapper} from "../../importer/excel/excel.mapper";
 import {OaiMapper} from "../../importer/oai/oai.mapper";
 import {SparqlMapper} from "../../importer/sparql/sparql.mapper";
 import { DeduplicateUtils } from "./elastic/deduplicate.utils";
+import { ElasticQueries } from "./elastic/elastic.queries";
 import { ElasticSearchUtils } from "../../utils/elastic.utils";
 import { ElasticSettings } from "../../utils/elastic.setting";
 import { Summary } from "../../model/summary";
@@ -48,12 +49,16 @@ export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatM
         return elasticsearchMapping;
     }
 
+    getElasticQueries(): any {
+        return ElasticQueries.getInstance();
+    }
+
     getElasticSettings(): any {
         return elasticsearchSettings;
     }
 
     getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: ElasticSettings, summary: Summary): DeduplicateUtils {
-        return new DeduplicateUtils(elasticUtils, elasticSettings, summary);
+        return new DeduplicateUtils(elasticUtils, ElasticQueries.getInstance(), elasticSettings, summary);
     }
 
     getImporterFactory(): ImporterFactory {

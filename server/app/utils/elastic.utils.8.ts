@@ -21,14 +21,14 @@
  * ==================================================
  */
 
-import { AbstractDeduplicateUtils } from './abstract.deduplicate.utils';
 import { BulkResponse, ElasticSearchUtils } from './elastic.utils';
 import { Client } from 'elasticsearch8';
-import { ElasticQueries } from "./elastic.queries";
+import { DeduplicateUtils } from './deduplicate.utils';
+import { ElasticQueries } from './elastic.queries';
 import { ElasticSettings } from './elastic.setting';
 import { Index } from '@shared/index.model';
+import { ProfileFactory } from '../profiles/profile.factory';
 import { Summary } from '../model/summary';
-import {ProfileFactory} from "../profiles/profile.factory";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -38,7 +38,8 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
     protected client: Client;
     private summary: Summary;
 
-    public deduplicationUtils: AbstractDeduplicateUtils;
+    public deduplicationUtils: DeduplicateUtils;
+    public elasticQueries: ElasticQueries;
 
     constructor(profile: ProfileFactory<any>, settings: ElasticSettings, summary: Summary) {
         super();
@@ -58,6 +59,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         this.indexName = settings.index;
 
         this.deduplicationUtils = profile.getDeduplicationUtils(this, settings, this.summary);
+        this.elasticQueries = profile.getElasticQueries();
     }
 
     async cloneIndex(mapping, settings) {
@@ -428,7 +430,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
     async getHistories(): Promise<any> {
         let response = await this.client.search({
             index: 'mcloud_harvester_statistic',
-            ...ElasticQueries.findHistories(),
+            ...this.elasticQueries.findHistories(),
             size: 1000
         });
         return response.hits.hits.map(entry => entry._source);
@@ -437,7 +439,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
     async getAccessUrls(after_key): Promise<any> {
         let response: any = await this.client.search({
             index: '',
-            ...ElasticQueries.getAccessUrls(after_key),
+            ...this.elasticQueries.getAccessUrls(after_key),
             size: 0
         });
         return {
@@ -456,38 +458,38 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
     async getFacetsByAttribution(): Promise<any> {
         let response: any = await this.client.search({
             index: this.indexName,
-            ...ElasticQueries.getFacetsByAttribution(),
+            ...this.elasticQueries.getFacetsByAttribution(),
             size: 0
         });
-        return response.aggregations.attribution.buckets.map(entry => {
-                return {
-                    attribution: entry.key,
-                    count: entry.doc_count,
-                    is_valid:  entry.is_valid.buckets.map(entry => {
-                        return {value: entry.key_as_string, count: entry.doc_count}
-                    }),
-                    spatial: entry.spatial.doc_count,
-                    temporal: entry.temporal.doc_count,
-                    license: entry.license.buckets.map(entry => {
-                        return {name: entry.key, count: entry.doc_count}
-                    }),
-                    display_contact: entry.display_contact.buckets.map(entry => {
-                        return {name: entry.key, count: entry.doc_count}
-                    }),
-                    format: entry.format.buckets.map(entry => {
-                        return {name: entry.key, count: entry.doc_count}
-                    }),
-                    categories: entry.categories.buckets.map(entry => {
-                        return {name: entry.key, count: entry.doc_count}
-                    }),
-                    accrual_periodicity: entry.accrual_periodicity.buckets.map(entry => {
-                        return {name: entry.key, count: entry.doc_count}
-                    }),
-                    distributions: entry.distributions.buckets.map(entry => {
-                        return {number: entry.key, count: entry.doc_count}
-                    })
-                }
-            });
+        return response.aggregations.attribution.buckets.map(entry =>
+            ({
+                attribution: entry.key,
+                count: entry.doc_count,
+                is_valid:  entry.is_valid.buckets.map(entry => {
+                    return {value: entry.key_as_string, count: entry.doc_count}
+                }),
+                spatial: entry.spatial.doc_count,
+                temporal: entry.temporal.doc_count,
+                license: entry.license.buckets.map(entry => {
+                    return {name: entry.key, count: entry.doc_count}
+                }),
+                display_contact: entry.display_contact.buckets.map(entry => {
+                    return {name: entry.key, count: entry.doc_count}
+                }),
+                format: entry.format.buckets.map(entry => {
+                    return {name: entry.key, count: entry.doc_count}
+                }),
+                categories: entry.categories.buckets.map(entry => {
+                    return {name: entry.key, count: entry.doc_count}
+                }),
+                accrual_periodicity: entry.accrual_periodicity.buckets.map(entry => {
+                    return {name: entry.key, count: entry.doc_count}
+                }),
+                distributions: entry.distributions.buckets.map(entry => {
+                    return {number: entry.key, count: entry.doc_count}
+                })
+            })
+        );
     }
 
     async getIndexSettings(indexName): Promise<any>{

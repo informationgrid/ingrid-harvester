@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { ElasticQueries } from './elastic.queries';
 import { ElasticSearchUtils } from './elastic.utils';
 import { ElasticSettings } from './elastic.setting';
 import { ImporterSettings } from '../importer.settings';
@@ -28,16 +29,18 @@ import { Summary } from '../model/summary';
 
 const log = require('log4js').getLogger(__filename);
 
-export abstract class AbstractDeduplicateUtils {
+export abstract class DeduplicateUtils {
 
     protected elastic: ElasticSearchUtils;
+    protected queries: ElasticQueries;
     protected settings: ElasticSettings & ImporterSettings;
     protected summary: Summary;
 
-    constructor(elasticUtils: ElasticSearchUtils, settings: any, summary: Summary) {
-        this.summary = summary;
+    constructor(elasticUtils: ElasticSearchUtils, elasticQueries: ElasticQueries, settings: any, summary: Summary) {
         this.elastic = elasticUtils;
+        this.queries = elasticQueries;
         this.settings = settings;
+        this.summary = summary;
     }
 
     abstract deduplicate(): Promise<void>;

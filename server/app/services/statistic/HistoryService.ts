@@ -36,6 +36,7 @@ export class HistoryService {
 
     private elasticUtils: ElasticSearchUtils;
     private elasticsearchSettings: ElasticSettings;
+    private elasticQueries: ElasticQueries;
 
     constructor() {
 		this.initialize();
@@ -57,6 +58,7 @@ export class HistoryService {
         let profile = ProfileFactoryLoader.get();
         this.elasticUtils = ElasticSearchFactory.getElasticUtils(profile, settings, summary);
         this.elasticsearchSettings = profile.getElasticSettings();
+        this.elasticQueries = profile.getElasticQueries();
     }
 
     async getHistory(id: number): Promise<any> {
@@ -65,7 +67,7 @@ export class HistoryService {
         if (!indexExists) {
             await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
         }
-        let history = await this.elasticUtils.getHistory('mcloud_harvester_statistic', ElasticQueries.findHistory(harvester.index));
+        let history = await this.elasticUtils.getHistory('mcloud_harvester_statistic', this.elasticQueries.findHistory(harvester.index));
         return {
             harvester: harvester.description,
             ...history

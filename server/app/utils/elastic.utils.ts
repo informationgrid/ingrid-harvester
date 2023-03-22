@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { AbstractDeduplicateUtils } from './abstract.deduplicate.utils';
+import { DeduplicateUtils } from './deduplicate.utils';
 import { Client as Client6 } from 'elasticsearch6';
 import { Client as Client7 } from 'elasticsearch7';
 import { Client as Client8 } from 'elasticsearch8';
@@ -38,7 +38,7 @@ export abstract class ElasticSearchUtils {
     protected static readonly LENGTH_OF_TIMESTAMP = 18;
 
     public static maxBulkSize: number = 50;
-    public deduplicationUtils: AbstractDeduplicateUtils;
+    public deduplicationUtils: DeduplicateUtils;
     public indexName: string;
     public _bulkData: any[];
 

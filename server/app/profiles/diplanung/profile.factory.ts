@@ -23,18 +23,18 @@
 
 import { elasticsearchMapping } from './elastic/elastic.mapping';
 import { elasticsearchSettings } from './elastic/elastic.settings';
-import { AbstractDeduplicateUtils } from '../../utils/abstract.deduplicate.utils';
 import { CswMapper } from '../../importer/csw/csw.mapper';
 import { DeduplicateUtils } from './elastic/deduplicate.utils';
 import { DiPlanungDocument } from './model/index.document';
+import { DiplanungImporterFactory } from './importer/diplanung.importer.factory';
+import { ElasticQueries } from './elastic//elastic.queries';
 import { ElasticSearchUtils } from '../../utils/elastic.utils';
 import { ElasticSettings } from '../../utils/elastic.setting';
 import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper';
+import { ImporterFactory } from '../../importer/importer.factory';
 import { ProfileFactory } from '../profile.factory';
 import { Summary } from '../../model/summary';
 import { WfsMapper } from '../../importer/wfs/wfs.mapper';
-import {ImporterFactory} from "../../importer/importer.factory";
-import {DiplanungImporterFactory} from "./importer/diplanung.importer.factory";
 
 export class DiplanungFactory extends ProfileFactory<CswMapper | ExcelSparseMapper | WfsMapper> {
 
@@ -46,12 +46,16 @@ export class DiplanungFactory extends ProfileFactory<CswMapper | ExcelSparseMapp
         return elasticsearchMapping;
     }
 
+    getElasticQueries(): any {
+        return ElasticQueries.getInstance();
+    }
+
     getElasticSettings(): any {
         return elasticsearchSettings;
     }
 
-    getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: ElasticSettings, summary: Summary): AbstractDeduplicateUtils {
-        return new DeduplicateUtils(elasticUtils, elasticSettings, summary);
+    getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: ElasticSettings, summary: Summary): DeduplicateUtils {
+        return new DeduplicateUtils(elasticUtils, ElasticQueries.getInstance(), elasticSettings, summary);
     }
 
     getImporterFactory(): ImporterFactory {

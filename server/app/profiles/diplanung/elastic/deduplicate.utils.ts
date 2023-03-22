@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import { AbstractDeduplicateUtils } from '../../../utils/abstract.deduplicate.utils';
-import { ElasticSearchUtils } from '../../../utils/elastic.utils';
+import { DeduplicateUtils as AbstractDeduplicateUtils } from '../../../utils/deduplicate.utils';
 import { ElasticQueries } from '../../../utils/elastic.queries';
+import { ElasticSearchUtils } from '../../../utils/elastic.utils';
 import { Summary } from '../../../model/summary';
 
 const log = require('log4js').getLogger(__filename);
@@ -31,8 +31,8 @@ const log = require('log4js').getLogger(__filename);
 
 export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
-    constructor(elasticUtils: ElasticSearchUtils, settings: any, summary: Summary) {
-        super(elasticUtils, settings, summary);
+    constructor(elasticUtils: ElasticSearchUtils, elasticQueries: ElasticQueries, settings: any, summary: Summary) {
+        super(elasticUtils, elasticQueries, settings, summary);
     }
 
     // FIXME: deduplication must work differently when import is not started for all harvesters
@@ -181,7 +181,7 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
         try {
             let response = await this.elastic.search(
                 this.settings.alias,
-                ElasticQueries.findSameTitle(),
+                this.queries.findSameTitle(),
                 50
             );
 
