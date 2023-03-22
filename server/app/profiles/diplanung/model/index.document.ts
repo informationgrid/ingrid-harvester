@@ -37,7 +37,7 @@ export class DiPlanungDocument extends IndexDocument<CswMapper | ExcelSparseMapp
         let result = {
             // basic information
             contact_point: {
-                fn: contactPoint.fn,
+                fn: contactPoint?.fn,
                 has_country_name: contactPoint.hasCountryName,
                 has_locality: contactPoint.hasLocality,
                 has_postal_code: contactPoint.hasPostalCode,
