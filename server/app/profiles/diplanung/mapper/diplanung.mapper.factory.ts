@@ -21,10 +21,7 @@
  * ==================================================
  */
 
-import {CswMapper} from "../../../importer/csw/csw.mapper";
-import {DiplanungMapper} from "./diplanung.mapper";
-import {ExcelSparseMapper} from "../../../importer/excelsparse/excelsparse.mapper";
-import {WfsMapper} from "../../../importer/wfs/wfs.mapper";
+import { DiplanungMapper } from "./diplanung.mapper";
 
 export class DiplanungMapperFactory {
     static getMapper(mapper) : DiplanungMapper<any> {
