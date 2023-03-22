@@ -127,7 +127,7 @@ export class UrlCheckService {
                 let options: any = { timeout: 10000, proxy: this.generalSettings.proxy, rejectUnauthorized: false };
                 request.head(url, options, function (error, response) {
                     if (error) {
-                        throw Error(error);
+                        return { url: urlAggregation, status: UrlCheckService.mapErrorMsg(error.code)};
                     }
                     return { url: urlAggregation, status: response.statusCode };
                 });
