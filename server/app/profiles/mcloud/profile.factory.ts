@@ -58,7 +58,7 @@ export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatM
     }
 
     getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: ElasticSettings, summary: Summary): DeduplicateUtils {
-        return new DeduplicateUtils(elasticUtils, ElasticQueries.getInstance(), elasticSettings, summary);
+        return new DeduplicateUtils(elasticUtils, elasticSettings, summary);
     }
 
     getImporterFactory(): ImporterFactory {
