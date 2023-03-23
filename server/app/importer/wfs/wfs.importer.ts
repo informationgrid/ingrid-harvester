@@ -22,30 +22,28 @@
  */
 
 import { decode } from 'iconv-lite';
-import {WfsMapper} from './wfs.mapper';
-import {getLogger} from 'log4js';
-import {WfsParameters, RequestDelegate} from '../../utils/http-request.utils';
-import {OptionsWithUri} from 'request-promise';
-import {Importer} from '../importer';
-import {Observer} from 'rxjs';
-import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {defaultWfsSettings, WfsSettings} from './wfs.settings';
+import { defaultWfsSettings, WfsSettings } from './wfs.settings';
+import { getLogger } from 'log4js';
+import { Catalog } from '../../model/dcatApPlu.model';
+import { Contact } from '../../model/agent';
 import { GeoJsonUtils } from "../../utils/geojson.utils";
+import { Importer } from '../importer';
+import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
+import { Observer } from 'rxjs';
+import { OptionsWithUri } from 'request-promise';
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils';
+import { WfsMapper } from './wfs.mapper';
 import { XPathUtils } from '../../utils/xpath.utils';
-import {ProfileFactory} from "../../profiles/profile.factory";
-import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
-import {Contact} from "../../model/agent";
 
 const fs = require('fs');
 const xpath = require('xpath');
 
-let log = require('log4js').getLogger(__filename),
-    logSummary = getLogger('summary'),
+const log = getLogger(__filename),
     logRequest = getLogger('requests'),
     DomParser = require('@xmldom/xmldom').DOMParser;
-
-
 
 export class WfsImporter extends Importer {
     private profile: ProfileFactory<WfsMapper>;
@@ -189,13 +187,16 @@ export class WfsImporter extends Importer {
         this.generalInfo['contactPoint'] = contact;
 
         // store catalog info from getCapabilities in generalInfo
-        this.generalInfo['catalog'] = {
+        let catalog: Catalog = {
             description: this.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
             homepage: this.settings.getFeaturesUrl,
+            // TODO we need a unique ID for each catalog - where to get one from?
+            id: this.settings.getFeaturesUrl,
             language: this.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true)?.textContent ?? this.settings.xpaths.capabilities.language,
-            publisher: [{ name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent }],
+            publisher: { name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent },
             title: this.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
         };
+        this.generalInfo['catalog'] = catalog;
 
         while (true) {
             log.debug('Requesting next features');

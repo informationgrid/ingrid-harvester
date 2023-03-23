@@ -2,8 +2,8 @@ version: '3'
 services:
 
   elastic:
-    image: docker-registry.wemove.com/ingrid-elasticsearch-with-decompound:6.8.4
-    container_name: mcloud-elastic
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
+    container_name: ingrid-elastic-8
     environment:
       - cluster.name=ingrid-harvester
       - bootstrap.memory_lock=true
@@ -20,15 +20,17 @@ services:
       - 9200:9200
       - 9300:9300
     networks:
-      - mcloudnetwork
+      - ingrid-harvester-network
 
-  mcloud:
+  harvester:
     build:
       context: .
       dockerfile: Dockerfile.dev
     container_name: ingrid-harvester
+    image-name: ingrid-harvester
     environment:
      - NODE_ENV=development
+     - IMPORTER_PROFILE=
      - ELASTIC_URL=http://elastic:9200
      - ELASTIC_VERSION=8
      - ELASTIC_USER=elastic
@@ -41,10 +43,10 @@ services:
     depends_on:
         - elastic
     networks:
-      - mcloudnetwork
+      - ingrid-harvester-network
 
 volumes:
   esdata:
 
-networks: 
-  mcloudnetwork:
+networks:
+  ingrid-harvester-network:

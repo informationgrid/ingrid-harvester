@@ -132,7 +132,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
                 });
             }
             catch (err) {
-                let message = 'Error occurred opening existing index' + indexName;
+                let message = 'Error occurred opening existing index ' + indexName;
                 this.handleError(message, err);
                 return message;
             }

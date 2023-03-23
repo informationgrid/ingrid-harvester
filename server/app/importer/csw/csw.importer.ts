@@ -21,19 +21,20 @@
  * ==================================================
  */
 
-import {CswMapper} from './csw.mapper';
-import {Summary} from '../../model/summary';
-import {getLogger} from 'log4js';
-import {CswParameters, RequestDelegate} from '../../utils/http-request.utils';
-import {OptionsWithUri} from 'request-promise';
-import {ImportLogMessage, ImportResult} from '../../model/import.result';
+import { defaultCSWSettings, CswSettings } from './csw.settings';
+import { getLogger } from 'log4js';
+import { Catalog } from '../../model/dcatApPlu.model';
+import { CswMapper } from './csw.mapper';
+import { CswParameters, RequestDelegate } from '../../utils/http-request.utils';
+import { Importer } from '../importer';
+import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
+import { Observer } from 'rxjs';
+import { OptionsWithUri } from 'request-promise';
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { Summary } from '../../model/summary';
 import { SummaryService } from '../../services/config/SummaryService';
-import {ProfileFactory} from "../../profiles/profile.factory";
-import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
-import {Importer} from "../importer";
-import {CswSettings, defaultCSWSettings} from "./csw.settings";
-import {Observer} from "rxjs";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -47,7 +48,6 @@ export class CswImporter extends Importer {
 
     private totalRecords = 0;
     private numIndexDocs = 0;
-
 
     private generalInfo: object = {};
 
@@ -153,12 +153,15 @@ export class CswImporter extends Importer {
         let capabilitiesResponseDom = new DomParser().parseFromString(capabilitiesResponse);
 
         // store catalog info from getCapabilities in generalInfo
-        this.generalInfo['catalog'] = {
+        let catalog: Catalog = {
             description: CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
             homepage: this.settings.getRecordsUrl,
-            publisher: [{ name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent }],
+            // TODO we need a unique ID for each catalog - where to get one from?
+            id: this.settings.getRecordsUrl,
+            publisher: { name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent },
             title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
         };
+        this.generalInfo['catalog'] = catalog;
 
         if (this.settings.maxConcurrent > 1) {
             await this.harvestConcurrently();

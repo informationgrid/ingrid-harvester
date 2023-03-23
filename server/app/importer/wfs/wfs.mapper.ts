@@ -213,7 +213,7 @@ export class WfsMapper extends BaseMapper {
     }
 
     async _getPublisher(): Promise<Person[] | Organization[]> {
-        return this.fetched.catalog.publisher;
+        return [this.fetched.catalog.publisher];
     }
 
     _getTitle() {

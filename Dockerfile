@@ -1,7 +1,7 @@
 #
-# IMAGE: build server and client
+# IMAGE: build server
 #
-FROM node:16.18.0-bullseye-slim AS build
+FROM node:16.18.0-bullseye-slim AS build-server
 LABEL stage=build
 
 # install build dependencies
@@ -41,7 +41,7 @@ RUN npm run prod
 #
 # IMAGE: final
 #
-FROM node:16.18.0-bullseye-slim as final
+FROM node:16.18.0-bullseye-slim AS final
 
 # TODO: remove these dev tools for production
 RUN apt-get update && \
@@ -62,9 +62,9 @@ COPY --from=build-client /opt/ingrid/harvester/client/dist/webapp server/app/web
 
 EXPOSE 8090
 
-RUN adduser --uid 1001 --group --system metadata && \
-    chown -R metadata:metadata /opt/ingrid/harvester
+RUN adduser --uid 1001 --group --system harvester && \
+    chown -R harvester:harvester /opt/ingrid/harvester
 
-USER metadata
+USER harvester
 
 CMD ["dumb-init"]
