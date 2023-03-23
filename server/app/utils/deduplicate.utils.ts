@@ -25,7 +25,7 @@ import { ElasticQueries } from './elastic.queries';
 import { ElasticSearchUtils } from './elastic.utils';
 import { ElasticSettings } from './elastic.setting';
 import { ImporterSettings } from '../importer.settings';
-import { ProfileFactoryLoader } from 'profiles/profile.factory.loader';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 
 const log = require('log4js').getLogger(__filename);
