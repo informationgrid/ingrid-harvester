@@ -23,11 +23,11 @@
 
 import { elasticsearchMapping } from './elastic/elastic.mapping';
 import { elasticsearchSettings } from './elastic/elastic.settings';
-import { CswMapper } from '../../importer/csw/csw.mapper';
 import { DeduplicateUtils } from './elastic/deduplicate.utils';
+import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper';
 import { DiPlanungDocument } from './model/index.document';
 import { DiplanungImporterFactory } from './importer/diplanung.importer.factory';
-import { ElasticQueries } from './elastic//elastic.queries';
+import { ElasticQueries } from './elastic/elastic.queries';
 import { ElasticSearchUtils } from '../../utils/elastic.utils';
 import { ElasticSettings } from '../../utils/elastic.setting';
 import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper';
@@ -36,7 +36,7 @@ import { ProfileFactory } from '../profile.factory';
 import { Summary } from '../../model/summary';
 import { WfsMapper } from '../../importer/wfs/wfs.mapper';
 
-export class DiplanungFactory extends ProfileFactory<CswMapper | ExcelSparseMapper | WfsMapper> {
+export class DiplanungFactory extends ProfileFactory<DiplanungCswMapper | ExcelSparseMapper | WfsMapper> {
 
     getIndexDocument(): DiPlanungDocument {
         return new DiPlanungDocument();

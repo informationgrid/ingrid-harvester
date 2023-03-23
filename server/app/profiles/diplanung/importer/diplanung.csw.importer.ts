@@ -21,14 +21,16 @@
  * ==================================================
  */
 
-import { DiplanungMapper } from "./diplanung.mapper";
+import { CswImporter } from '../../../importer/csw/csw.importer';
+import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
+import { RequestDelegate } from '../../../utils/http-request.utils';
 
-export class DiplanungMapperFactory {
-    static getMapper(mapper) : DiplanungMapper<any> {
-        switch (mapper.constructor.name) {
-            case 'DiplanungCswMapper': return new DiplanungMapper(mapper)
-            case 'ExcelSparseMapper': return new DiplanungMapper(mapper)
-            case 'WfsMapper': return new DiplanungMapper(mapper)
-        }
+export class DiplanungCswImporter extends CswImporter {
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        super(settings, requestDelegate);
+    }
+
+    getMapper(settings, record, harvestTime, storedData, summary, generalInfo): DiplanungCswMapper {
+        return new DiplanungCswMapper(settings, record, harvestTime, storedData, summary, generalInfo);
     }
 }

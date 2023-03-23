@@ -21,21 +21,19 @@
  * ==================================================
  */
 
-import {ExcelSparseImporter} from "../../../importer/excelsparse/excelsparse.importer";
-import {CswImporter} from "../../../importer/csw/csw.importer";
-import {WfsImporter} from "../../../importer/wfs/wfs.importer";
-import { Harvester } from "@shared/harvester";
-import {BaseMapper} from "../../../importer/base.mapper";
-import {Importer} from "../../../importer/importer";
-import {ProfileFactory} from "../../profile.factory";
-import {ImporterFactory} from "../../../importer/importer.factory";
+import { DiplanungCswImporter } from './diplanung.csw.importer';
+import { ExcelSparseImporter } from '../../../importer/excelsparse/excelsparse.importer';
+import { Harvester } from '@shared/harvester';
+import { Importer } from '../../../importer/importer';
+import { ImporterFactory } from '../../../importer/importer.factory';
+import { WfsImporter } from '../../../importer/wfs/wfs.importer';
 
 export class DiplanungImporterFactory extends ImporterFactory{
 
     public get(config: Harvester): Importer {
         switch (config.type) {
             case 'EXCEL_SPARSE': return new ExcelSparseImporter(config);
-            case 'CSW': return new CswImporter(config);
+            case 'CSW': return new DiplanungCswImporter(config);
             case 'WFS': return new WfsImporter(config);
             default: {
                 console.error('Importer not found: ' + config.type);
