@@ -32,6 +32,7 @@ import {RequestDelegate} from "../../utils/http-request.utils";
 import {ConfigService} from "../../services/config/ConfigService";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
+import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
 import {DefaultImporterSettings} from "../../importer.settings";
 
 const plain_fetch = require('node-fetch');
@@ -60,10 +61,10 @@ export class SparqlImporter extends Importer {
         filterThemes: []
     };
 
-    constructor(profile: ProfileFactory<SparqlMapper>, settings, requestDelegate?: RequestDelegate) {
-        super(profile, settings);
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        super(settings);
 
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(SparqlImporter.defaultSettings, settings);

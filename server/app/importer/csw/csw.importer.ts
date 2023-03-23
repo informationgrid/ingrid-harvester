@@ -30,6 +30,7 @@ import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
 import { SummaryService } from '../../services/config/SummaryService';
 import {ProfileFactory} from "../../profiles/profile.factory";
+import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
 import {Importer} from "../importer";
 import {CswSettings, defaultCSWSettings} from "./csw.settings";
 import {Observer} from "rxjs";
@@ -50,10 +51,10 @@ export class CswImporter extends Importer {
 
     private generalInfo: object = {};
 
-    constructor(profile: ProfileFactory<CswMapper>, settings, requestDelegate?: RequestDelegate) {
-        super(profile, settings)
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        super(settings);
 
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultCSWSettings, settings);

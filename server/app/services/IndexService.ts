@@ -63,7 +63,7 @@ export class IndexService {
         };
         // @ts-ignore
         const summary: Summary = {elasticErrors: []};
-        this.elasticUtils = ElasticSearchFactory.getElasticUtils(ProfileFactoryLoader.get(), settings, summary);
+        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
     }
 
     async addToAlias(id: number) {

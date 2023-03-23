@@ -58,7 +58,7 @@ describe('Import Excel', function () {
             isIncremental: false,
             maxConcurrent: 1
         };
-        let importer = new ExcelImporter(ProfileFactoryLoader.get(), settings);
+        let importer = new ExcelImporter(settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(3, {issued: "2019-01-08T16:33:11.168Z"}));
 

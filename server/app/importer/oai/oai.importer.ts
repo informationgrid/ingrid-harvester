@@ -32,6 +32,7 @@ import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {defaultOAISettings, OaiSettings} from './oai.settings';
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
+import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -46,12 +47,10 @@ export class OaiImporter extends Importer {
     private totalRecords = 0;
     private numIndexDocs = 0;
 
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        super(settings);
 
-
-    constructor(profile: ProfileFactory<OaiMapper>, settings, requestDelegate?: RequestDelegate) {
-        super(profile, settings);
-
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultOAISettings, settings);

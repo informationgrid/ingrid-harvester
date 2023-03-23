@@ -54,8 +54,7 @@ xdescribe('deduplication by similar title', function () {
         elasticErrors: []
     };
 
-    let profile = ProfileFactoryLoader.get();
-    let elasticSearchUtils = ElasticSearchFactory.getElasticUtils(profile, settings, summary);
+    let elasticSearchUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
     let deduplicateUtils: DeduplicateUtils = (new mcloudFactory()).getDeduplicationUtils(elasticSearchUtils, settings, summary);
     //deduplicateUtils.deduplicationIndices = deduplicationIndices;
 

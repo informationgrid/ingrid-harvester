@@ -30,5 +30,5 @@ export * from "./importer"
 
 export abstract class ImporterFactory {
 
-    public abstract get(profile: ProfileFactory<BaseMapper>, config: Harvester): Importer;
+    public abstract get(config: Harvester): Importer;
 }

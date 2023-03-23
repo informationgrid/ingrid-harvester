@@ -31,6 +31,7 @@ import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {CkanSettings, defaultCKANSettings} from './ckan.settings';
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
+import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -50,10 +51,10 @@ export class CkanImporter extends Importer {
      * Create the importer and initialize with settings.
      * @param { {ckanBaseUrl, defaultMcloudSubgroup, mapper} }settings
      */
-    constructor(profile: ProfileFactory<CkanMapper>, settings) {
-        super(profile, settings);
+    constructor(settings) {
+        super(settings);
 
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultCKANSettings, settings);

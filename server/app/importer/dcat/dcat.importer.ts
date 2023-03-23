@@ -32,6 +32,7 @@ import {DcatSettings, defaultDCATSettings} from './dcat.settings';
 import {RequestDelegate} from "../../utils/http-request.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
+import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -47,10 +48,10 @@ export class DcatImporter extends Importer {
     private numIndexDocs = 0;
 
 
-    constructor(profile: ProfileFactory<DcatMapper>, settings, requestDelegate?: RequestDelegate) {
-        super(profile, settings);
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        super(settings);
 
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultDCATSettings, settings);

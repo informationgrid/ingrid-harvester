@@ -55,10 +55,8 @@ xdescribe('deduplication by exact title', function() {
         elasticErrors: []
     };
 
-    let profile = ProfileFactoryLoader.get();
-    let elasticSearchUtils = ElasticSearchFactory.getElasticUtils(profile, settings, summary);
+    let elasticSearchUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
     let deduplicateUtils = elasticSearchUtils.deduplicationUtils;
-    //deduplicateUtils.deduplicationIndices = deduplicationIndices;
 
     /**
      * Initialize test indices with mapping and settings

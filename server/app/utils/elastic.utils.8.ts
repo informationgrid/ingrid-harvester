@@ -27,7 +27,7 @@ import { DeduplicateUtils } from './deduplicate.utils';
 import { ElasticQueries } from './elastic.queries';
 import { ElasticSettings } from './elastic.setting';
 import { Index } from '@shared/index.model';
-import { ProfileFactory } from '../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 
 let log = require('log4js').getLogger(__filename);
@@ -41,7 +41,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
     public deduplicationUtils: DeduplicateUtils;
     public elasticQueries: ElasticQueries;
 
-    constructor(profile: ProfileFactory<any>, settings: ElasticSettings, summary: Summary) {
+    constructor(settings: ElasticSettings, summary: Summary) {
         super();
         this.settings = settings;
         this.summary = summary;
@@ -58,6 +58,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         this._bulkData = [];
         this.indexName = settings.index;
 
+        let profile = ProfileFactoryLoader.get();
         this.deduplicationUtils = profile.getDeduplicationUtils(this, settings, this.summary);
         this.elasticQueries = profile.getElasticQueries();
     }

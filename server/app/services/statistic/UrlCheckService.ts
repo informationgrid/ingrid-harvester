@@ -61,7 +61,7 @@ export class UrlCheckService {
         // @ts-ignore
         const summary: Summary = {};
         let profile = ProfileFactoryLoader.get();
-        this.elasticUtils = ElasticSearchFactory.getElasticUtils(profile, settings, summary);
+        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
         this.elasticsearchSettings = profile.getElasticSettings();
         this.elasticQueries = profile.getElasticQueries();
     }

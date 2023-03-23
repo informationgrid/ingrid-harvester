@@ -32,11 +32,11 @@ import {ImporterFactory} from "../../../importer/importer.factory";
 
 export class DiplanungImporterFactory extends ImporterFactory{
 
-    public get(profile: ProfileFactory<BaseMapper>, config: Harvester): Importer {
+    public get(config: Harvester): Importer {
         switch (config.type) {
-            case 'EXCEL_SPARSE': return new ExcelSparseImporter(profile, config);
-            case 'CSW': return new CswImporter(profile, config);
-            case 'WFS': return new WfsImporter(profile, config);
+            case 'EXCEL_SPARSE': return new ExcelSparseImporter(config);
+            case 'CSW': return new CswImporter(config);
+            case 'WFS': return new WfsImporter(config);
             default: {
                 console.error('Importer not found: ' + config.type);
             }

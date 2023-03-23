@@ -64,9 +64,7 @@ describe('Import OAI DWD', function () {
             defaultAttributionLink: "https://oai.dwd.de/oai/provider?verb=ListRecords&metadataPrefix=iso19139&set=mCLOUD"
         };
 
-        let profile = ProfileFactoryLoader.get()
-
-        let importer = new OaiImporter(profile, settings);
+        let importer = new OaiImporter(settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 

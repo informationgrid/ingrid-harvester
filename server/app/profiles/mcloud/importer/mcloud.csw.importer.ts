@@ -29,8 +29,8 @@ import {RequestDelegate} from "../../../utils/http-request.utils";
 let DomParser = require('@xmldom/xmldom').DOMParser;
 
 export class McloudCswImporter extends CswImporter {
-    constructor(profile: ProfileFactory<CswMapper>, settings, requestDelegate?: RequestDelegate) {
-        super(profile, settings, requestDelegate)
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        super(settings, requestDelegate)
     }
 
     protected async postHarvestingHandling(){

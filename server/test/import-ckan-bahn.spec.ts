@@ -61,7 +61,7 @@ describe('Import CKAN Bahn', function () {
             index: undefined,
             filterTags: ['Fernverkehr', 'Wagenreihung']
         };
-        let importer = new CkanImporter(ProfileFactoryLoader.get(), settings);
+        let importer = new CkanImporter(settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 

@@ -34,14 +34,14 @@ import {OaiImporter} from "../../../importer/oai/oai.importer";
 
 export class McloudImporterFactory extends ImporterFactory{
 
-    public get(profile: ProfileFactory<BaseMapper>, config: Harvester) {
+    public get(config: Harvester) {
         switch (config.type) {
-            case 'CKAN': return new McloudCkanImporter(profile, config);
-            case 'EXCEL': return new ExcelImporter(profile, config);
-            case 'CSW': return new McloudCswImporter(profile, config);
-            case 'OAI': return new OaiImporter(profile, config);
-            case 'DCAT': return new DcatImporter(profile, config);
-            case 'SPARQL': return new SparqlImporter(profile, config);
+            case 'CKAN': return new McloudCkanImporter(config);
+            case 'EXCEL': return new ExcelImporter(config);
+            case 'CSW': return new McloudCswImporter(config);
+            case 'OAI': return new OaiImporter(config);
+            case 'DCAT': return new DcatImporter(config);
+            case 'SPARQL': return new SparqlImporter(config);
             default: {
                 console.error('Importer not found: ' + config.type);
             }

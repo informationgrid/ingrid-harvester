@@ -33,8 +33,8 @@ const UUID_NAMESPACE = '6891a617-ab3b-4060-847f-61e31d6ccf6f';
 export class McloudCkanImporter extends CkanImporter {
     private docsByParent: any[][] = [];
 
-    constructor(profile: ProfileFactory<CkanMapper>, settings) {
-        super(profile, settings);
+    constructor(settings) {
+        super(settings);
     }
 
     protected posthandlingDocument(mapper: CkanMapper, doc: any){

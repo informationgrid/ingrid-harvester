@@ -34,6 +34,7 @@ import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import { XPathUtils } from '../../utils/xpath.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
+import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
 import {Contact} from "../../model/agent";
 
 const fs = require('fs');
@@ -61,10 +62,10 @@ export class WfsImporter extends Importer {
     private crsList: string[][];
     private defaultCrs: string;
 
-    constructor(profile: ProfileFactory<WfsMapper>, settings, requestDelegate?: RequestDelegate) {
-        super(profile, settings);
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        super(settings);
 
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultWfsSettings, settings);

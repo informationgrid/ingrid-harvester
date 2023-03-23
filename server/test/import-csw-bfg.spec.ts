@@ -67,9 +67,7 @@ describe('Import CSW BFG', function () {
                 </ogc:Filter>`
         };
 
-        let profile = ProfileFactoryLoader.get()
-
-        let importer = new CswImporter(profile, settings);
+        let importer = new CswImporter(settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 
