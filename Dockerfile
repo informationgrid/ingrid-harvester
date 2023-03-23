@@ -62,9 +62,9 @@ COPY --from=build-client /opt/ingrid/harvester/client/dist/webapp server/app/web
 
 EXPOSE 8090
 
-RUN adduser --uid 1001 --group --system metadata && \
-    chown -R metadata:metadata /opt/ingrid/harvester
+RUN adduser --uid 1001 --group --system harvester && \
+    chown -R harvester:harvester /opt/ingrid/harvester
 
-USER metadata
+USER harvester
 
 CMD ["dumb-init"]
