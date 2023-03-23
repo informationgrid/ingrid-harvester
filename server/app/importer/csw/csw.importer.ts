@@ -207,7 +207,7 @@ export class CswImporter extends Importer {
 
         // 1) create paged request delegates
         let delegates = [];
-        for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords; startPosition += this.settings.maxRecords) {
+        for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
             let requestConfig = CswImporter.createRequestConfig({ ...this.settings, startPosition });
             delegates.push(new RequestDelegate(requestConfig));
         }
