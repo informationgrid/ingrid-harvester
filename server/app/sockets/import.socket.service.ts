@@ -24,11 +24,10 @@
 import {Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession} from '@tsed/socketio';
 import * as SocketIO from 'socket.io';
 import {ConfigService} from '../services/config/ConfigService';
-import {ImporterFactory} from '../importer/importer.factory';
 import {SummaryService} from '../services/config/SummaryService';
 import {CronJob} from 'cron';
 import {getLogger} from 'log4js';
-import {Mail, MailServer} from "../utils/nodemailer.utils";
+import {MailServer} from "../utils/nodemailer.utils";
 import {ImportLogMessage} from "../model/import.result";
 import {StatisticUtils} from "../statistic/statistic.utils";
 import { MiscUtils } from '../utils/misc.utils';
@@ -69,7 +68,8 @@ export class ImportSocketService {
 
             let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });
 
-            let importer = ImporterFactory.get(ProfileFactoryLoader.get(), configHarvester);
+            let profile = ProfileFactoryLoader.get();
+            let importer = profile.getImporterFactory().get(configHarvester);
             let mode = isIncremental ? 'incr' : 'full';
             this.log.info('>> Running importer: ' + configHarvester.description);
 

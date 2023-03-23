@@ -21,9 +21,16 @@
  * ==================================================
  */
 
-import {ImporterSettings} from '../../importer.settings';
+import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
 
 export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';
+
+export const defaultDCATSettings: DcatSettings = {
+    ...DefaultImporterSettings,
+    catalogUrl: '',
+    filterTags: [],
+    filterThemes: []
+};
 
 export type DcatSettings = {
     catalogUrl: string,

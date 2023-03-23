@@ -40,6 +40,7 @@ export class UrlCheckService {
 
     private elasticUtils: ElasticSearchUtils;
     private elasticsearchSettings: ElasticSettings;
+    private elasticQueries: ElasticQueries;
     private generalSettings;
 
     constructor() {
@@ -59,8 +60,10 @@ export class UrlCheckService {
         };
         // @ts-ignore
         const summary: Summary = {};
+        let profile = ProfileFactoryLoader.get();
         this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
-        this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
+        this.elasticsearchSettings = profile.getElasticSettings();
+        this.elasticQueries = profile.getElasticQueries();
     }
 
     async getHistory() {
@@ -68,7 +71,7 @@ export class UrlCheckService {
         if (!indexExists) {
             await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
         }
-        return this.elasticUtils.getHistory(this.elasticUtils.indexName, ElasticQueries.getUrlCheckHistory());
+        return this.elasticUtils.getHistory(this.elasticUtils.indexName, this.elasticQueries.getUrlCheckHistory());
     }
 
     async start() {
@@ -126,7 +129,7 @@ export class UrlCheckService {
                 let options: any = { timeout: 10000, proxy: this.generalSettings.proxy, rejectUnauthorized: false };
                 request.head(url, options, function (error, response) {
                     if (error) {
-                        throw Error(error);
+                        return { url: urlAggregation, status: UrlCheckService.mapErrorMsg(error.code)};
                     }
                     return { url: urlAggregation, status: response.statusCode };
                 });

@@ -24,9 +24,8 @@
 import {Service} from '@tsed/di';
 import {ConfigService} from './config/ConfigService';
 import {ImportSocketService} from '../sockets/import.socket.service';
-import {CronJob, CronTime} from 'cron';
+import {CronJob} from 'cron';
 import {CronData} from '../importer.settings';
-import {Moment} from "moment";
 import {UrlCheckService} from "./statistic/UrlCheckService";
 import {IndexCheckService} from "./statistic/IndexCheckService";
 import {IndexService} from "./IndexService";

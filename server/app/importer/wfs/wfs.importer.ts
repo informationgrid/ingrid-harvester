@@ -22,17 +22,18 @@
  */
 
 import { decode } from 'iconv-lite';
+import { defaultWfsSettings, WfsSettings } from './wfs.settings';
 import { getLogger } from 'log4js';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { Contact } from '../../model/agent';
-import { DefaultImporterSettings, Importer } from '../importer';
-import { DefaultXpathSettings, WfsSettings } from './wfs.settings';
 import { GeoJsonUtils } from "../../utils/geojson.utils";
+import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { OptionsWithUri } from 'request-promise';
 import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils';
 import { WfsMapper } from './wfs.mapper';
 import { XPathUtils } from '../../utils/xpath.utils';
@@ -44,37 +45,6 @@ const log = getLogger(__filename),
     logRequest = getLogger('requests'),
     DomParser = require('@xmldom/xmldom').DOMParser;
 
-
-// export const DefaultXplanSettings: any = {
-//     xpaths: {
-//         featureParent: './wfs:FeatureCollection/wfs:member',
-//         name: './*/xplan:name',
-//         description: './*/xplan:beschreibung',
-//         spatial: './*/xplan:raeumlicherGeltungsbereich',
-//         capabilities: {
-//             abstract: './ows:ServiceIdentification/ows:Abstract',
-//             language: './ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language',
-//             serviceProvider: './*[local-name="WFS_Capabilities"]/ows:ServiceProvider',
-//             title: './ows:ServiceIdentification/ows:Title'
-//         }
-//     }
-// };
-
-// export const DefaultFisSettings: any = {
-//     xpaths: {
-//         featureParent: './wfs:FeatureCollection/gml:featureMember',
-//         name: './*/fis:PLANNAME',
-//         description: './*/fis:BEREICH',
-//         spatial: './*/fis:SHAPE_25833',
-//         capabilities: {
-//             abstract: './ows:ServiceIdentification/ows:Abstract',
-//             language: '',
-//             serviceProvider: './*[local-name="WFS_Capabilities"]/ows:ServiceProvider',
-//             title: './ows:ServiceIdentification/ows:Title'
-//         }
-//     }
-// }
-
 export class WfsImporter extends Importer {
     private profile: ProfileFactory<WfsMapper>;
     private readonly settings: WfsSettings;
@@ -83,15 +53,6 @@ export class WfsImporter extends Importer {
     private totalFeatures = 0;
     private numIndexDocs = 0;
 
-    static defaultSettings: Partial<WfsSettings> = {
-        ...DefaultImporterSettings,
-        ...DefaultXpathSettings,
-        // getFeaturesUrl: '',
-        eitherKeywords: [],
-        httpMethod: 'GET',
-        resultType: 'results'
-    };
-
     private generalInfo: object = {};
     private supportsPaging: boolean = false;
     private select: Function;
@@ -99,13 +60,13 @@ export class WfsImporter extends Importer {
     private crsList: string[][];
     private defaultCrs: string;
 
-    constructor(profile: ProfileFactory<WfsMapper>, settings, requestDelegate?: RequestDelegate) {
+    constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings);
 
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
-        settings = MiscUtils.merge(WfsImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(defaultWfsSettings, settings);
 
         // TODO disallow setting "//" in xpaths in the UI
 
@@ -285,67 +246,6 @@ export class WfsImporter extends Importer {
         }
         // TODO: how to couple WFS?
         // this.createDataServiceCoupling();
-    }
-
-    // ED: TODO
-    createDataServiceCoupling(){
-        let bulkData = this.elastic._bulkData;
-        let servicesByDataIdentifier = [];
-        let servicesByFileIdentifier = [];
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = this.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
-                if(identifierList && identifierList.length > 0){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(!servicesByDataIdentifier[identifer]){
-                            servicesByDataIdentifier[identifer] = [];
-                        }
-                        servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distributions);
-                    }
-                } else {
-                    identifierList = this.select('.//srv:operatesOn', xml)
-                    if (identifierList && identifierList.length > 0) {
-                        for (let j = 0; j < identifierList.length; j++) {
-                            let identifer = identifierList[j].getAttribute("uuidref")
-                            if (!servicesByFileIdentifier[identifer]) {
-                                servicesByFileIdentifier[identifer] = [];
-                            }
-                            servicesByFileIdentifier[identifer] = servicesByFileIdentifier[identifer].concat(doc.distributions);
-                        }
-                    }
-                }
-            }
-        }
-
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = this.select('.//gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByDataIdentifier[identifer]){
-                            doc.distributions = doc.distributions.concat(servicesByDataIdentifier[identifer]);
-                        }
-                    }
-                }
-                identifierList = this.select('.//gmd:fileIdentifier/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByFileIdentifier[identifer]){
-                            doc.distributions = doc.distributions.concat(servicesByFileIdentifier[identifer]);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     // ED: TODO

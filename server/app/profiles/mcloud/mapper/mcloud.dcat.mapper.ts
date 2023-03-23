@@ -26,7 +26,21 @@ import {DcatMapper} from "../../../importer/dcat/dcat.mapper";
 
 export class mcloudDcatMapper extends mcloudMapper<DcatMapper> {
     getCategories(): string[] {
-        return [];
+        let subgroups = [];
+        let keywords = this.getKeywords();
+        if (keywords) {
+            keywords.forEach(k => {
+                k = k.trim();
+                if (k === 'mcloud_category_roads' || k === 'mcloud-kategorie-straßen') subgroups.push('roads');
+                if (k === 'mcloud_category_climate' || k === 'mcloud-kategorie-klima-und-wetter') subgroups.push('climate');
+                if (k === 'mcloud_category_waters' || k === 'mcloud-kategorie-wasserstraßen-und-gewässer') subgroups.push('waters');
+                if (k === 'mcloud_category_railway' || k === 'mcloud-kategorie-bahn') subgroups.push('railway');
+                if (k === 'mcloud_category_infrastructure' || k === 'mcloud-kategorie-infrastuktur') subgroups.push('infrastructure');
+                if (k === 'mcloud_category_aviation' || k === 'mcloud-kategorie-luft--und-raumfahrt') subgroups.push('aviation');
+            });
+        }
+        if (subgroups.length === 0) subgroups.push(...this.baseMapper.getSettings().defaultMcloudSubgroup);
+        return subgroups;
     }
 }
 

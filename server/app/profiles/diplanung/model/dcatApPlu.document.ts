@@ -22,8 +22,8 @@
  */
 
 import { Contact, Organization, Person } from '../../../model/agent';
-import { CswMapper } from '../../../importer/csw/csw.mapper';
 import { DateRange } from '../../../model/dateRange';
+import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
 import { Distribution } from '../../../model/distribution';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
@@ -66,7 +66,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         return 'dcat_ap_plu';
     }
 
-    static async create(_mapper: CswMapper | ExcelSparseMapper | WfsMapper): Promise<string> {
+    static async create(_mapper: DiplanungCswMapper | ExcelSparseMapper | WfsMapper): Promise<string> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
         let centroid = mapper.getCentroid();

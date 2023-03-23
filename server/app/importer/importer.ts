@@ -31,39 +31,19 @@ import {ElasticSettings} from "../utils/elastic.setting";
 import {MiscUtils} from "../utils/misc.utils";
 import {ConfigService} from "../services/config/ConfigService";
 import {ElasticSearchFactory} from "../utils/elastic.factory";
-
-export const DefaultImporterSettings: ImporterSettings = {
-    index: '',
-    priority: null,
-    type: '',
-    maxRecords: 100,
-    startPosition: 0,
-    customCode: '',
-    defaultMcloudSubgroup: [],
-    defaultDCATCategory: [],
-    dateSourceFormats: [],
-    blacklistedIds: [],
-    whitelistedIds: [],
-    rejectUnauthorizedSSL: true,
-    rules: {
-            containsDocumentsWithData: false
-    },
-    isIncremental: false,
-    maxConcurrent: 1,
-    skipUrlCheckOnHarvest: false
-};
+import {ProfileFactory} from "../profiles/profile.factory";
 
 export abstract class Importer {
     protected observer: Observer<ImportLogMessage>;
     protected summary: Summary;
     protected filterUtils: FilterUtils;
-    protected elastic: ElasticSearchUtils;
+    elastic: ElasticSearchUtils;
 
-    constructor(settings: ImporterSettings) {
+    protected constructor(settings: ImporterSettings) {
         this.summary = new Summary(settings);
         this.filterUtils = new FilterUtils(settings);
 
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
+        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index, dryRun: settings.dryRun, addAlias: !settings.disable});
         this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 

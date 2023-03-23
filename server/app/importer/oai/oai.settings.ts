@@ -21,8 +21,15 @@
  * ==================================================
  */
 
-import {ElasticSettings} from '../../utils/elastic.setting';
-import {ImporterSettings} from '../../importer.settings';
+import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
+
+
+export const defaultOAISettings: OaiSettings = {
+    ...DefaultImporterSettings,
+    providerUrl: '',
+    eitherKeywords: [],
+    set: ''
+};
 
 export type OaiSettings = {
     providerUrl: string,

@@ -38,8 +38,6 @@ import {ImporterSettings} from "../../importer.settings";
 import {Summary} from "../../model/summary";
 import {Person} from "../../model/agent";
 
-let xpath = require('xpath');
-
 export class SparqlMapper extends BaseMapper {
 
     private log = getLogger();

@@ -23,46 +23,27 @@
 
 import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {Summary} from '../../model/summary';
-import {DefaultImporterSettings, Importer} from '../importer';
+import {Importer} from '../importer';
 import {RequestDelegate} from '../../utils/http-request.utils';
 import {CkanMapper, CkanMapperData} from './ckan.mapper';
-import {Observable, Observer} from 'rxjs';
+import {Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {CkanSettings} from './ckan.settings';
-import {FilterUtils} from '../../utils/filter.utils';
+import {CkanSettings, defaultCKANSettings} from './ckan.settings';
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import {ElasticSettings} from '../../utils/elastic.setting';
-import {ConfigService} from "../../services/config/ConfigService";
+import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
 
 let log = require('log4js').getLogger(__filename);
-const uuidv5 = require('uuid/v5');
-const UUID_NAMESPACE = '6891a617-ab3b-4060-847f-61e31d6ccf6f';
 
 export class CkanImporter extends Importer {
     private profile: ProfileFactory<CkanMapper>;
-    private readonly settings: CkanSettings;
+    protected readonly settings: CkanSettings;
 
     private requestDelegate: RequestDelegate;
-    private docsByParent: any[][] = [];
-
-    static defaultSettings: CkanSettings = {
-        ...DefaultImporterSettings,
-        ckanBaseUrl: '',
-        filterTags: [],
-        filterGroups: [],
-        providerPrefix: '',
-        providerField: 'organization',
-        dateSourceFormats: [],
-        requestType: 'ListWithResources',
-        markdownAsDescription: true,
-        groupChilds: false,
-        defaultLicense: null
-    };
 
 
-    private numIndexDocs = 0;
+
+    protected numIndexDocs = 0;
     private requestDelegateCount: RequestDelegate;
     private totalCount: number = -1;
 
@@ -70,13 +51,13 @@ export class CkanImporter extends Importer {
      * Create the importer and initialize with settings.
      * @param { {ckanBaseUrl, defaultMcloudSubgroup, mapper} }settings
      */
-    constructor(profile: ProfileFactory<CkanMapper>, settings: CkanSettings) {
+    constructor(settings) {
         super(settings);
 
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
-        settings = MiscUtils.merge(CkanImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(defaultCKANSettings, settings);
 
         // Trim trailing slash
         let url = settings.ckanBaseUrl;
@@ -113,17 +94,10 @@ export class CkanImporter extends Importer {
                     mapper.skipped = true;
                 });
 
+            this.posthandlingDocument(mapper, doc);
+
             if (mapper.shouldBeSkipped()) {
                 this.summary.skippedDocs.push(data.source.id);
-                return;
-            }
-
-            let parent = doc.extras.parent;
-            if (this.settings.groupChilds && parent) {
-                if (!this.docsByParent[parent]) {
-                    this.docsByParent[parent] = [];
-                }
-                this.docsByParent[parent].push(doc);
                 return;
             }
 
@@ -132,6 +106,10 @@ export class CkanImporter extends Importer {
         } catch (e) {
             log.error('Error: ' + e);
         }
+    }
+
+    protected posthandlingDocument(mapper: CkanMapper, doc: any){
+        // For Profile specific Handling
     }
 
     private indexDocument(doc, sourceID) {
@@ -238,105 +216,14 @@ export class CkanImporter extends Importer {
             this.updateRequestMethod(offset);
 
         }
-        if (Object.keys(this.docsByParent).length > 0) {
-            let storedData = await await this.elastic.getStoredData(Object.keys(this.docsByParent).map(key => uuidv5(key, UUID_NAMESPACE)));
-            await this.indexGroupedChilds(storedData).then(result => result.forEach(promise => promises.push(promise)));
-        }
+        await this.postHarvestingHandling(promises)
         return total;
     }
 
-    private async indexGroupedChilds(storedData){
-        if (!this.settings.dryRun) {
-            log.info(`Received ${Object.keys(this.docsByParent).length} groups of records by parent`);
-            return Object.keys(this.docsByParent).map(key => {
-                let docs = this.docsByParent[key];
-                let doc = docs[0];
-                if (docs.length > 1) {
-                    let uuid = uuidv5(key, UUID_NAMESPACE);
-                    log.info(`Group ${docs.length} records by parent: ${key} -> ${uuid}`);
-                    let child_ids = [doc.extras.generated_id];
-                    if(doc.extras.temporal && doc.extras.temporal.length > 0) {
-                        for (let j = 0; j < doc.distributions.length; j++) {
-                            let distribution = doc.distributions[j];
-                            if (doc.extras.temporal && doc.extras.temporal.length > 0) {
-                                distribution.temporal = [{
-                                    "gte": doc.extras.temporal[0].gte,
-                                    "lte": doc.extras.temporal[0].lte
-                                }];
-                            }
-                        }
-                    }
-                    for (let i = 1; i < docs.length; i++) {
-                        let newDoc = docs[i];
-                        child_ids.push(newDoc.extras.generated_id);
-                        if(newDoc.extras.temporal && newDoc.extras.temporal.length > 0) {
-                            for (let j = 0; j < newDoc.distributions.length; j++) {
-                                let distribution = newDoc.distributions[j];
-                                if (newDoc.extras.temporal && newDoc.extras.temporal.length > 0) {
-                                    distribution.temporal = [{
-                                        "gte": newDoc.extras.temporal[0].gte,
-                                        "lte": newDoc.extras.temporal[0].lte
-                                    }];
-                                }
-                            }
-                        }
-                        if (newDoc.modified > doc.modified) {
-                            if (doc.issued < newDoc.issued) {
-                                newDoc.issued = doc.issued;
-                            }
-                            newDoc.distributions = newDoc.distributions.concat(doc.distributions);
-                            if (newDoc.extras.temporal && newDoc.extras.temporal.length > 0 && doc.extras.temporal && doc.extras.temporal.length > 0) {
-                                if (doc.extras.temporal[0].gte && (!newDoc.extras.temporal[0].gte || doc.extras.temporal[0].gte < newDoc.extras.temporal[0].gte)) {
-                                    newDoc.extras.temporal[0].gte = doc.extras.temporal[0].gte;
-                                }
-                                if (doc.extras.temporal[0].lte && (!newDoc.extras.temporal[0].lte || doc.extras.temporal[0].lte > newDoc.extras.temporal[0].lte)) {
-                                    newDoc.extras.temporal[0].lte = doc.extras.temporal[0].lte;
-                                }
-                            }
-                            doc = newDoc;
-                        } else {
-                            if (newDoc.issued < doc.issued) {
-                                doc.issued = newDoc.issued;
-                            }
-                            doc.distributions = doc.distributions.concat(newDoc.distributions);
-                            if (doc.extras.temporal && doc.extras.temporal.length > 0 && newDoc.extras.temporal && newDoc.extras.temporal.length > 0) {
-                                if (newDoc.extras.temporal[0].gte && (!doc.extras.temporal[0].gte || newDoc.extras.temporal[0].gte < doc.extras.temporal[0].gte)) {
-                                    doc.extras.temporal[0].gte = newDoc.extras.temporal[0].gte;
-                                }
-                                if (newDoc.extras.temporal[0].lte && (!doc.extras.temporal[0].lte || newDoc.extras.temporal[0].lte > doc.extras.temporal[0].lte)) {
-                                    doc.extras.temporal[0].lte = newDoc.extras.temporal[0].lte;
-                                }
-                            }
-                        }
-                    }
-                    doc.extras.child_ids = child_ids;
-                    doc.extras.generated_id = uuid;
-                    //doc.extras.metadata.source.portal_link = this.settings.defaultAttributionLink;
-                    doc.title += " (aggregiert)";
-                    doc.description  = "Dieser Metadatensatz wurde von der <a href=\"https://www.mcloud.de\">mCLOUD</a> generiert und fasst alle einzelnen Metadatensätze dieser Datenserie zusammen.\r\n\r\n" + doc.description;
-
-                    let stored = storedData.find(element => element.id === uuid);
-                    if (stored && stored.issued) {
-                        doc.extras.metadata.issued = new Date(stored.issued);
-                    } else {
-                        doc.extras.metadata.issued = new Date(Date.now());
-                    }
-                    doc.extras.metadata.modified = new Date();
-                    if(stored && stored.modified && stored.dataset_modified){
-                        let storedDataset_modified: Date = new Date(stored.dataset_modified);
-                        if(storedDataset_modified.valueOf() === doc.modified.valueOf()  )
-                            doc.extras.metadata.modified = new Date(stored.modified);
-                    }
-                }
-                return this.elastic.addDocToBulk(doc, doc.extras.generated_id)
-                    .then(response => {
-                        if (!response.queued) {
-                            this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
-                        }
-                    }).then(() => this.elastic.health('yellow'));
-            });
-        }
+    protected async postHarvestingHandling(promises: any[]){
+        // For Profile specific Handling
     }
+
 
     private async getStoredData(filteredResults: any[]) {
         let ids = filteredResults.map(result => result.id);

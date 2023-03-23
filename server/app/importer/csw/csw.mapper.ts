@@ -32,11 +32,9 @@ import {RequestDelegate} from "../../utils/http-request.utils";
 import {OptionsWithUri} from "request-promise";
 import {CswSettings} from './csw.settings';
 import {throwError} from "rxjs";
-import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {Summary} from "../../model/summary";
-import { pluPlanState, pluPlanType, pluProcedureState } from "../../model/dcatApPlu.model";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import {Agent, Contact, Organization, Person} from "../../model/agent";
@@ -76,17 +74,17 @@ export class CswMapper extends BaseMapper {
 
     private log = getLogger();
 
-    private readonly record: any;
+    protected readonly record: any;
     private harvestTime: any;
     private readonly storedData: any;
 
     protected readonly idInfo; // : SelectedValue;
-    private settings: CswSettings;
+    protected settings: CswSettings;
     private readonly uuid: string;
     private summary: Summary;
 
     private keywordsAlreadyFetched = false;
-    private fetched: any = {
+    protected fetched: any = {
         contactPoint: null,
         keywords: {},
         themes: null
@@ -108,7 +106,7 @@ export class CswMapper extends BaseMapper {
         super.init();
     }
 
-    public getSettings(): ImporterSettings {
+    public getSettings(): CswSettings {
         return this.settings;
     }
 
@@ -128,18 +126,7 @@ export class CswMapper extends BaseMapper {
         return abstract;
     }
 
-    // TODO ED:2022-09-16: handle filtering of distributions by accessURL not here, but in dcatApPlu.document?
     async _getDistributions(): Promise<Distribution[]> {
-        let distributions = [];
-        for (let distribution of await this._getDistributions_Original()) {
-            if (distribution.accessURL) {
-                distributions.push({ ...distribution, format: distribution.format });
-            }
-        }
-        return distributions;
-    }
-
-    async _getDistributions_Original(): Promise<Distribution[]> {
         let dists = [];
         let urlsFound = [];
 
@@ -845,131 +832,6 @@ export class CswMapper extends BaseMapper {
         return license;
     }
 
-    // TODO check
-    _getPluPlanState(): string {
-        let planState;
-        try {
-            planState = CswMapper.select(this.settings.pluPlanState, this.record, true)?.textContent;
-        }
-        finally {
-            if (!planState) {
-                planState = this.settings.pluPlanState;
-            }
-        }
-        if (['ja', 'festgesetzt'].includes(planState?.toLowerCase())) {
-            return pluPlanState.FESTGES;
-        }
-        else if (['nein', 'in aufstellung'].includes(planState?.toLowerCase())) {
-            return pluPlanState.IN_AUFST;
-        }
-        return pluPlanState.UNBEKANNT;
-    }
-
-    /**
-     * Heuristic based on metadata harvested from gdi-de.
-     * 
-     * // TODO extend
-     */
-    _getPluPlanType(): string {
-        // consider title, description, and keywords
-        let searchFields = [];
-        searchFields.push(this._getTitle());
-        searchFields.push(this._getDescription());
-        searchFields.push(...this._getKeywords());
-        let haystack = searchFields.join('#').toLowerCase();
-
-        // TODO especially in keywords - if set - there can be ambiguities, e.g. keywords contain multiple determination words
-        if (['bebauungsplan'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.BEBAU_PLAN;
-        }
-        if (['flächennutzungsplan', 'fnp'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.FLAECHENN_PLAN;
-        }
-        if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.PLAN_FESTST_VERF;
-        }
-        if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.PW_BES_STAEDT_BAUR;
-        }
-        if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.PW_LANDSCH_PLAN;
-        }
-        if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.RAUM_ORDN_PLAN;
-        }
-        if (['raumordnungsverfahren'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.RAUM_ORDN_VERF;
-        }
-        if (['städtebauliche satzungen'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.STAEDT_BAUL_SATZ;
-        }
-        return pluPlanType.UNBEKANNT;
-    }
-
-    _getPluProcedureState(): string {
-        switch (this._getPluPlanState()) {
-            case pluPlanState.FESTGES: return pluProcedureState.ABGESCHLOSSEN;
-            case pluPlanState.IN_AUFST: return pluProcedureState.LAUFEND;
-            default: return pluProcedureState.UNBEKANNT;
-        }
-    }
-
-    _getBoundingBoxGml() {
-        return undefined;
-    }
-
-    _getBoundingBox() {
-        let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
-        let geometries = [];
-        for(let i=0; i < geographicBoundingBoxes.length; i++){
-            let geographicBoundingBox = geographicBoundingBoxes[i];
-            let west = parseFloat(CswMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let east = parseFloat(CswMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let south = parseFloat(CswMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-
-            geometries.push({
-                'type': 'Envelope',
-                'coordinates': [[west, north], [east, south]]
-            });
-        }
-        if(geometries.length == 1){
-            return geometries[0];
-        }
-        else if(geometries.length > 1){
-            return {
-                'type': 'GeometryCollection',
-                'geometries': geometries
-            }
-        }
-
-        return undefined;
-    }
-
-    async _getCatalog() {
-        return this.fetched.catalog;
-    }
-
-    _getPluDevelopmentFreezePeriod() {
-        return undefined;
-    }
-
-    _getPluPlanTypeFine() {
-        return undefined;
-    }
-
-    _getPluProcedureStartDate() {
-        return undefined;
-    }
-
-    _getPluProcedureType() {
-        return undefined;
-    }
-
-    _getPluProcessSteps() {
-        return undefined;
-    }
-
     getErrorSuffix(uuid, title) {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'.`;
     }
@@ -1138,7 +1000,7 @@ export class CswMapper extends BaseMapper {
 
                     let line1 = delPt.map(n => CswMapper.getCharacterStringContent(n));
                     line1 = line1.join(', ');
-                    if (line1?.textContent) infos.hasStreetAddress = line1;
+                    if (line1) infos.hasStreetAddress = line1;
                     if (locality?.textContent) infos.hasLocality = locality.textContent;
                     if (region?.textContent) infos.hasRegion = region.textContent;
                     if (country?.textContent) infos.hasCountryName = country.textContent;

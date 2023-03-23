@@ -21,10 +21,25 @@
  * ==================================================
  */
 
-import {ImporterSettings} from '../../importer.settings';
+import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
 import {License} from '@shared/license.model';
 
 export type ProviderField = 'maintainer' | 'organization' | 'author';
+
+
+export const defaultCKANSettings: CkanSettings = {
+    ...DefaultImporterSettings,
+    ckanBaseUrl: '',
+    filterTags: [],
+    filterGroups: [],
+    providerPrefix: '',
+    providerField: 'organization',
+    dateSourceFormats: [],
+    requestType: 'ListWithResources',
+    markdownAsDescription: true,
+    groupChilds: false,
+    defaultLicense: null
+};
 
 export type CkanSettings = {
     ckanBaseUrl: string,

@@ -25,16 +25,13 @@ import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {ExcelSparseMapper} from './excelsparse.mapper';
 import {Workbook, Worksheet} from 'exceljs';
 import {Summary} from '../../model/summary';
-import {DefaultImporterSettings, Importer} from '../importer';
-import {Observable, Observer} from 'rxjs';
+import {Importer} from '../importer';
+import {Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {DefaultCatalogSettings, ExcelSparseSettings} from './excelsparse.settings';
-import {FilterUtils} from "../../utils/filter.utils";
+import {DefaultCatalogSettings, defaultExcelSparseSettings, ExcelSparseSettings} from './excelsparse.settings';
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import {ElasticSettings} from "../../utils/elastic.setting";
-import {ConfigService} from "../../services/config/ConfigService";
+import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -45,23 +42,17 @@ export class ExcelSparseImporter extends Importer {
     names = {};
     columnMap: Columns;
 
-    static defaultSettings: Partial<ExcelSparseSettings> = {
-        ...DefaultImporterSettings,
-        ...DefaultCatalogSettings,
-        filePath: './data.xlsx'
-    };
-
     /**
      * Create the importer and initialize with settings.
      * @param { {filePath, mapper} }settings
      */
-    constructor(profile: ProfileFactory<ExcelSparseMapper>, settings) {
+    constructor(settings) {
         super(settings);
 
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
-        settings = MiscUtils.merge(ExcelSparseImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(defaultExcelSparseSettings, settings);
 
         this.settings = settings;
         this.excelFilepath = settings.filePath;
@@ -255,4 +246,4 @@ export interface Columns {
     MITGLIEDSGEMEINDEN: string,
     KONTAKT_EMAIL_1?: string,
     KONTAKT_EMAIL_2?: string
-};
+}

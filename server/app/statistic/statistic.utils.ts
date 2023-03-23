@@ -45,8 +45,9 @@ export class StatisticUtils {
         };
         // @ts-ignore
         const summary: Summary = {};
+        let profile = ProfileFactoryLoader.get();
         this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
-        this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
+        this.elasticsearchSettings = profile.getElasticSettings();
     }
 
     async saveSummary(logMessage: ImportLogMessage, baseIndex: string) {

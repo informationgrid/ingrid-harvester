@@ -21,14 +21,23 @@
  * ==================================================
  */
 
-import {Importer} from "./importer";
-import { Harvester } from "@shared/harvester";
-import {ProfileFactory} from "../profiles/profile.factory";
-import {BaseMapper} from "./base.mapper";
+import { DiplanungCswImporter } from './diplanung.csw.importer';
+import { ExcelSparseImporter } from '../../../importer/excelsparse/excelsparse.importer';
+import { Harvester } from '@shared/harvester';
+import { Importer } from '../../../importer/importer';
+import { ImporterFactory } from '../../../importer/importer.factory';
+import { WfsImporter } from '../../../importer/wfs/wfs.importer';
 
-export * from "./importer"
+export class DiplanungImporterFactory extends ImporterFactory{
 
-export abstract class ImporterFactory {
-
-    public abstract get(config: Harvester): Importer;
+    public get(config: Harvester): Importer {
+        switch (config.type) {
+            case 'EXCEL_SPARSE': return new ExcelSparseImporter(config);
+            case 'CSW': return new DiplanungCswImporter(config);
+            case 'WFS': return new WfsImporter(config);
+            default: {
+                console.error('Importer not found: ' + config.type);
+            }
+        }
+    }
 }

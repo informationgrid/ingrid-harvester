@@ -26,6 +26,27 @@ export interface CronData {
     active: boolean;
 }
 
+export const DefaultImporterSettings: ImporterSettings = {
+    index: '',
+    priority: null,
+    type: '',
+    maxRecords: 100,
+    startPosition: 0,
+    customCode: '',
+    defaultMcloudSubgroup: [],
+    defaultDCATCategory: [],
+    dateSourceFormats: [],
+    blacklistedIds: [],
+    whitelistedIds: [],
+    rejectUnauthorizedSSL: true,
+    rules: {
+        containsDocumentsWithData: false
+    },
+    isIncremental: false,
+    maxConcurrent: 1,
+    skipUrlCheckOnHarvest: false
+};
+
 export type ImporterSettings = {
     index: string,
     priority?: number,

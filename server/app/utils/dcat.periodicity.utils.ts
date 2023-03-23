@@ -21,10 +21,6 @@
  * ==================================================
  */
 
-import {DcatMapper} from "../importer/dcat/dcat.mapper";
-import {License} from '@shared/license.model';
-import {getLogger} from "log4js";
-
 export class DcatPeriodicityUtils {
     static getPeriodicity(raw: string) :string {
         let result = undefined;

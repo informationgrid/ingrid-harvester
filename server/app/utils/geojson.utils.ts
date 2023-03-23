@@ -41,7 +41,7 @@ import centroid from '@turf/centroid';
 import rewind from '@turf/rewind';
 import * as xpath from 'xpath';
 import { AllGeoJSON, GeometryCollection } from "@turf/helpers";
-import { XPathUtils } from '../utils/xpath.utils';
+import { XPathUtils } from './xpath.utils';
 const deepEqual = require('deep-equal');
 const proj4 = require('proj4');
 
@@ -195,7 +195,7 @@ export class GeoJsonUtils {
 
         if (points.length === 0) {
             throw new Error(_.nodeName + ' must have > 0 points');
-        };
+        }
         return points;
     }
 

@@ -21,22 +21,18 @@
  * ==================================================
  */
 
-import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {OaiMapper} from './oai.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
-import {CswParameters, RequestDelegate, RequestPaging} from '../../utils/http-request.utils';
+import {RequestDelegate} from '../../utils/http-request.utils';
 import {OptionsWithUri} from 'request-promise';
-import {DefaultImporterSettings, Importer} from '../importer';
-import {Observable, Observer} from 'rxjs';
+import {Importer} from '../importer';
+import {Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {OaiSettings} from './oai.settings';
-import {FilterUtils} from "../../utils/filter.utils";
+import {defaultOAISettings, OaiSettings} from './oai.settings';
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import {ElasticSettings} from "../../utils/elastic.setting";
-import {ConfigService} from "../../services/config/ConfigService";
+import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -51,21 +47,13 @@ export class OaiImporter extends Importer {
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    static defaultSettings: OaiSettings = {
-        ...DefaultImporterSettings,
-        providerUrl: '',
-        eitherKeywords: [],
-        set: ''
-    };
-
-
-    constructor(profile: ProfileFactory<OaiMapper>, settings, requestDelegate?: RequestDelegate) {
+    constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings);
 
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
-        settings = MiscUtils.merge(OaiImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(defaultOAISettings, settings);
 
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
@@ -186,11 +174,6 @@ export class OaiImporter extends Importer {
             });
 
             if (!mapper.shouldBeSkipped()) {
-
-                if (doc.extras.metadata.isValid && doc.distributions.length > 0) {
-                    this.summary.ok++;
-                }
-
                 if (!this.settings.dryRun) {
                     promises.push(
                         this.elastic.addDocToBulk(doc, uuid)

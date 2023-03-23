@@ -21,24 +21,20 @@
  * ==================================================
  */
 
-import {ElasticSearchUtils} from '../../utils/elastic.utils';
-import {CswMapper} from './csw.mapper';
-import {Summary} from '../../model/summary';
-import {getLogger} from 'log4js';
-import {CswParameters, RequestDelegate} from '../../utils/http-request.utils';
-import {OptionsWithUri} from 'request-promise';
-import {DefaultImporterSettings, Importer} from '../importer';
-import {Observable, Observer} from 'rxjs';
-import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {DefaultXpathSettings, CswSettings} from './csw.settings';
-import {FilterUtils} from "../../utils/filter.utils";
+import { defaultCSWSettings, CswSettings } from './csw.settings';
+import { getLogger } from 'log4js';
 import { Catalog } from '../../model/dcatApPlu.model';
+import { CswMapper } from './csw.mapper';
+import { CswParameters, RequestDelegate } from '../../utils/http-request.utils';
+import { Importer } from '../importer';
+import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
+import { Observer } from 'rxjs';
+import { OptionsWithUri } from 'request-promise';
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { Summary } from '../../model/summary';
 import { SummaryService } from '../../services/config/SummaryService';
-import {ProfileFactory} from "../../profiles/profile.factory";
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import {ElasticSettings} from "../../utils/elastic.setting";
-import {ConfigService} from "../../services/config/ConfigService";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -47,30 +43,21 @@ let log = require('log4js').getLogger(__filename),
 
 export class CswImporter extends Importer {
     private profile: ProfileFactory<CswMapper>;
-    private readonly settings: CswSettings;
+    protected readonly settings: CswSettings;
     private readonly requestDelegate: RequestDelegate;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    static defaultSettings: Partial<CswSettings> = {
-        ...DefaultImporterSettings,
-        ...DefaultXpathSettings,
-        getRecordsUrl: '',
-        eitherKeywords: [],
-        httpMethod: 'GET',
-        resultType: 'results'
-    };
-
     private generalInfo: object = {};
 
-    constructor(profile: ProfileFactory<CswMapper>, settings, requestDelegate?: RequestDelegate) {
-        super(settings)
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        super(settings);
 
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
-        settings = MiscUtils.merge(CswImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(defaultCSWSettings, settings);
 
         // if we are looking for incremental updates, add a date filter to the existing record filter
         if (settings.isIncremental) {
@@ -184,8 +171,11 @@ export class CswImporter extends Importer {
             // harvestConcurrently() also supports this.settings.maxConcurrent=1
             await this.harvestSequentially();
         }
+        this.postHarvestingHandling();
+    }
 
-        this.createDataServiceCoupling();
+    protected async postHarvestingHandling(){
+        // For Profile specific Handling
     }
 
     async handleHarvest(delegate: RequestDelegate): Promise<void> {
@@ -220,7 +210,7 @@ export class CswImporter extends Importer {
 
         // 1) create paged request delegates
         let delegates = [];
-        for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords; startPosition += this.settings.maxRecords) {
+        for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
             let requestConfig = CswImporter.createRequestConfig({ ...this.settings, startPosition });
             delegates.push(new RequestDelegate(requestConfig));
         }
@@ -262,66 +252,6 @@ export class CswImporter extends Importer {
               * maxRecords * numRetries
               */
             if (this.totalRecords < this.requestDelegate.getStartRecordIndex()) break;
-        }
-    }
-
-    createDataServiceCoupling(){
-        let bulkData = this.elastic._bulkData;
-        let servicesByDataIdentifier = [];
-        let servicesByFileIdentifier = [];
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = CswMapper.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
-                if(identifierList && identifierList.length > 0){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(!servicesByDataIdentifier[identifer]){
-                            servicesByDataIdentifier[identifer] = [];
-                        }
-                        servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distributions);
-                    }
-                } else {
-                    identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn', xml)
-                    if (identifierList && identifierList.length > 0) {
-                        for (let j = 0; j < identifierList.length; j++) {
-                            let identifer = identifierList[j].getAttribute("uuidref")
-                            if (!servicesByFileIdentifier[identifer]) {
-                                servicesByFileIdentifier[identifer] = [];
-                            }
-                            servicesByFileIdentifier[identifer] = servicesByFileIdentifier[identifer].concat(doc.distributions);
-                        }
-                    }
-                }
-            }
-        }
-
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByDataIdentifier[identifer]){
-                            doc.distributions = doc.distributions.concat(servicesByDataIdentifier[identifer]);
-                        }
-                    }
-                }
-                identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByFileIdentifier[identifer]){
-                            doc.distributions = doc.distributions.concat(servicesByFileIdentifier[identifer]);
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -374,15 +304,7 @@ export class CswImporter extends Importer {
                 }
 
                 if (!this.settings.dryRun) {
-                    promises.push(
-                        this.elastic.addDocToBulk(doc, uuid)
-                            .then(response => {
-                                if (!response.queued) {
-                                    // numIndexDocs += ElasticSearchUtils.maxBulkSize;
-                                    // this.observer.next(ImportResult.running(numIndexDocs, records.length));
-                                }
-                            })
-                    );
+                    promises.push(this.elastic.addDocToBulk(doc, uuid));
                 }
 
             } else {

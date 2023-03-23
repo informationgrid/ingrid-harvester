@@ -35,7 +35,6 @@ import {RequestDelegate} from "../../utils/http-request.utils";
 import {OptionsWithUri} from "request-promise";
 import {OaiSettings} from './oai.settings';
 import {throwError} from "rxjs";
-import doc = Mocha.reporters.doc;
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Summary} from "../../model/summary";
@@ -341,24 +340,6 @@ export class OaiMapper extends BaseMapper {
         return undefined;
     }
 
-    _getCategories(): string[] {
-        let subgroups = [];
-        let keywords = this.getKeywords();
-        if (keywords) {
-            keywords.forEach(k => {
-                k = k.trim();
-                if (k === 'mcloud_category_roads' || k === 'mcloud-kategorie-straßen') subgroups.push('roads');
-                if (k === 'mcloud_category_climate' || k === 'mcloud-kategorie-klima-und-wetter') subgroups.push('climate');
-                if (k === 'mcloud_category_waters' || k === 'mcloud-kategorie-wasserstraßen-und-gewässer') subgroups.push('waters');
-                if (k === 'mcloud_category_railway' || k === 'mcloud-kategorie-bahn') subgroups.push('railway');
-                if (k === 'mcloud_category_infrastructure' || k === 'mcloud-kategorie-infrastuktur') subgroups.push('infrastructure');
-                if (k === 'mcloud_category_aviation' || k === 'mcloud-kategorie-luft--und-raumfahrt') subgroups.push('aviation');
-            });
-        }
-        if (subgroups.length === 0) subgroups.push(...this.settings.defaultMcloudSubgroup);
-        return subgroups;
-    }
-
     _getCitation(): string {
         return undefined;
     }
@@ -371,8 +352,8 @@ export class OaiMapper extends BaseMapper {
         if (contactPoint) {
             let displayName;
 
-            if (contactPoint['organization-name']) {
-                displayName = contactPoint['organization-name'];
+            if (contactPoint.hasOrganizationName) {
+                displayName = contactPoint.hasOrganizationName;
             } else if (contactPoint.fn) {
                 displayName = contactPoint.fn;
             }
@@ -842,8 +823,6 @@ export class OaiMapper extends BaseMapper {
                         fn: name?.textContent,
                     };
 
-                    if (org) infos.hasOrganizationName = org.textContent;
-
                     if (contact.getAttribute('uuid')) {
                         infos.hasUID = contact.getAttribute('uuid');
                     }
@@ -890,54 +869,6 @@ export class OaiMapper extends BaseMapper {
 
     protected getUuid(): string {
         return this.uuid;
-    }
-
-    _getBoundingBoxGml() {
-        return undefined;
-    }
-
-    _getBoundingBox() {
-        return undefined;
-    }
-
-    _getSpatialGml() {
-        return undefined;
-    }
-
-    _getCentroid() {
-        return undefined;
-    }
-
-    async _getCatalog() {
-        return undefined;
-    }
-
-    _getPluPlanState() {
-        return undefined;
-    }
-
-    _getPluPlanType() {
-        return undefined;
-    }
-
-    _getPluPlanTypeFine() {
-        return undefined;
-    }
-
-    _getPluProcedureStartDate() {
-        return undefined;
-    }
-
-    _getPluProcedureState() {
-        return undefined;
-    }
-
-    _getPluProcedureType() {
-        return undefined;
-    }
-
-    _getPluProcessSteps() {
-        return undefined;
     }
 
     executeCustomCode(doc: any) {

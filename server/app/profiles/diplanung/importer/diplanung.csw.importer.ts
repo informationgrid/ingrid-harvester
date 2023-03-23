@@ -21,31 +21,16 @@
  * ==================================================
  */
 
-import { ElasticSearchUtils } from './elastic.utils';
-import { ElasticSettings } from './elastic.setting';
-import { ImporterSettings } from '../importer.settings';
-import { Summary } from '../model/summary';
+import { CswImporter } from '../../../importer/csw/csw.importer';
+import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
+import { RequestDelegate } from '../../../utils/http-request.utils';
 
-const log = require('log4js').getLogger(__filename);
-
-export abstract class AbstractDeduplicateUtils {
-
-    protected elastic: ElasticSearchUtils;
-    protected settings: ElasticSettings & ImporterSettings;
-    protected summary: Summary;
-
-    constructor(elasticUtils: ElasticSearchUtils, settings: any, summary: Summary) {
-        this.summary = summary;
-        this.elastic = elasticUtils;
-        this.settings = settings;
+export class DiplanungCswImporter extends CswImporter {
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        super(settings, requestDelegate);
     }
 
-    abstract deduplicate(): Promise<void>;
-
-    abstract _deduplicateByTitle(): Promise<void>;
-
-    protected handleError(message: string, error: any): void {
-        this.summary.elasticErrors.push(message);
-        log.error(message, error);
+    getMapper(settings, record, harvestTime, storedData, summary, generalInfo): DiplanungCswMapper {
+        return new DiplanungCswMapper(settings, record, harvestTime, storedData, summary, generalInfo);
     }
 }

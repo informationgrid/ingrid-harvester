@@ -21,23 +21,12 @@
  * ==================================================
  */
 
-import {CkanMapper} from "../../../importer/ckan/ckan.mapper";
-import {ProviderField} from "../../../importer/ckan/ckan.settings";
-import {Person} from "../../../model/agent";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
-import {DcatMapper} from "../../../importer/dcat/dcat.mapper";
-import {ExcelMapper} from "../../../importer/excel/excel.mapper";
-import {OaiMapper} from "../../../importer/oai/oai.mapper";
-import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
-import {BaseMapper} from "../../../importer/base.mapper";
-import {DiplanungMapper} from "./diplanung.mapper";
-import {ExcelSparseMapper} from "../../../importer/excelsparse/excelsparse.mapper";
-import {WfsMapper} from "../../../importer/wfs/wfs.mapper";
+import { DiplanungMapper } from "./diplanung.mapper";
 
 export class DiplanungMapperFactory {
     static getMapper(mapper) : DiplanungMapper<any> {
         switch (mapper.constructor.name) {
-            case 'CswMapper': return new DiplanungMapper(mapper)
+            case 'DiplanungCswMapper': return new DiplanungMapper(mapper)
             case 'ExcelSparseMapper': return new DiplanungMapper(mapper)
             case 'WfsMapper': return new DiplanungMapper(mapper)
         }

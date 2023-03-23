@@ -29,6 +29,8 @@ import {TestUtils} from "./utils/test-utils";
 import {CswSettings} from '../app/importer/csw/csw.settings';
 import {CswImporter} from '../app/importer/csw/csw.importer';
 import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
+import {IndexDocument} from "../app/model/index.document";
+import {mcloudDocument} from "../app/profiles/mcloud/model/index.document";
 
 let log = getLogger();
 configure('./log4js.json');
@@ -65,11 +67,11 @@ describe('Import CSW BFG', function () {
                 </ogc:Filter>`
         };
 
-        let importer = new CswImporter(ProfileFactoryLoader.get(), settings);
+        let importer = new CswImporter(settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 
-        indexDocumentCreateSpy = sinon.spy(ProfileFactoryLoader.get().getIndexDocument(), 'create');
+        indexDocumentCreateSpy = sinon.spy(mcloudDocument.prototype, 'create');
 
         importer.run.subscribe({
             complete: async () => {

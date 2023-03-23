@@ -22,7 +22,6 @@
  */
 
 import {mcloudMapper} from "./mcloud.mapper";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
 import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
 
 export class mcloudSparqlMapper extends mcloudMapper<SparqlMapper> {

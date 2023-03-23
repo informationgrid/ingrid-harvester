@@ -21,12 +21,11 @@
  * ==================================================
  */
 
-import { AbstractDeduplicateUtils } from './abstract.deduplicate.utils';
 import { BulkResponse, ElasticSearchUtils } from './elastic.utils';
 import { Client } from 'elasticsearch6';
-import { ElasticQueries } from "./elastic.queries";
+import { DeduplicateUtils } from './deduplicate.utils';
+import { ElasticQueries } from './elastic.queries';
 import { ElasticSettings } from './elastic.setting';
-import { ImporterSettings } from '../importer.settings';
 import { Index } from '@shared/index.model';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
@@ -35,13 +34,14 @@ let log = require('log4js').getLogger(__filename);
 
 export class ElasticSearchUtils6 extends ElasticSearchUtils {
 
-    private settings: ElasticSettings & ImporterSettings;
+    private settings: ElasticSettings;
     protected client: Client;
     private summary: Summary;
 
-    public deduplicationUtils: AbstractDeduplicateUtils;
+    public deduplicationUtils: DeduplicateUtils;
+    public elasticQueries: ElasticQueries;
 
-    constructor(settings, summary: Summary) {
+    constructor(settings: ElasticSettings, summary: Summary) {
         super();
         this.settings = settings;
         this.summary = summary;
@@ -58,7 +58,9 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         this._bulkData = [];
         this.indexName = settings.index;
 
-        this.deduplicationUtils = ProfileFactoryLoader.get().getDeduplicationUtils(this, settings, this.summary);
+        let profile = ProfileFactoryLoader.get();
+        this.deduplicationUtils = profile.getDeduplicationUtils(this, settings, this.summary);
+        this.elasticQueries = profile.getElasticQueries();
     }
 
     async cloneIndex(mapping, settings) {
@@ -148,7 +150,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
             await this.sendBulkData(false);
             if (closeIndex) {
                 await this.deleteOldIndices(this.settings.index, this.indexName);
-                if (!this.settings.disable) {
+                if (this.settings.addAlias) {
                     await this.addAlias(this.indexName, this.settings.alias);
                 }
                 await this.deduplicationUtils.deduplicate();
@@ -437,7 +439,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     async getHistories(): Promise<any> {
         let { body: response } = await this.client.search({
             index: 'mcloud_harvester_statistic',
-            body: ElasticQueries.findHistories(),
+            body: this.elasticQueries.findHistories(),
             size: 1000
         });
         return response.hits.hits.map(entry => entry._source);
@@ -446,7 +448,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     async getAccessUrls(after_key): Promise<any> {
         let { body: response }: any = await this.client.search({
             index: '',
-            body: ElasticQueries.getAccessUrls(after_key),
+            body: this.elasticQueries.getAccessUrls(after_key),
             size: 0
         });
         return {
@@ -464,8 +466,8 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
 
     async getFacetsByAttribution(): Promise<any> {
         let { body: response }: any = await this.client.search({
-            index: this.indexName,
-            body: ElasticQueries.getFacetsByAttribution(),
+            index: this.settings.alias,
+            body: this.elasticQueries.getFacetsByAttribution(),
             size: 0
         });
         return response.aggregations.attribution.buckets.map(entry =>

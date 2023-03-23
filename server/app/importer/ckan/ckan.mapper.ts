@@ -32,7 +32,6 @@ import {CkanParameters, CkanParametersListWithResources, RequestDelegate, Reques
 import {UrlUtils} from '../../utils/url.utils';
 import {Summary} from '../../model/summary';
 import {throwError} from 'rxjs';
-import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {Organization, Person} from "../../model/agent";
@@ -93,10 +92,6 @@ export class CkanMapper extends BaseMapper {
     }
 
     _getAccessRights() {
-        return undefined;
-    }
-
-    _getCategories() {
         return undefined;
     }
 

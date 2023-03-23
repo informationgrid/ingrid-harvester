@@ -39,6 +39,7 @@ export class IndexCheckService {
 
     private elasticUtils: ElasticSearchUtils;
     private elasticsearchSettings: ElasticSettings;
+    private elasticQueries: ElasticQueries;
 
     constructor() {
 		this.initialize();
@@ -57,8 +58,10 @@ export class IndexCheckService {
         };
         // @ts-ignore
         const summary: Summary = {};
+        let profile = ProfileFactoryLoader.get();
         this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
-        this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
+        this.elasticsearchSettings = profile.getElasticSettings();
+        this.elasticQueries = profile.getElasticQueries();
     }
 
     async getHistory() {
@@ -66,7 +69,7 @@ export class IndexCheckService {
         if (!indexExists) {
             await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
         }
-        return this.elasticUtils.getHistory(this.elasticUtils.indexName, ElasticQueries.getIndexCheckHistory());
+        return this.elasticUtils.getHistory(this.elasticUtils.indexName, this.elasticQueries.getIndexCheckHistory());
     }
 
     async start() {

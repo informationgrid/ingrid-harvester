@@ -25,16 +25,13 @@ import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {ExcelMapper} from './excel.mapper';
 import {Workbook, Worksheet} from 'exceljs';
 import {Summary} from '../../model/summary';
-import {DefaultImporterSettings, Importer} from '../importer';
-import {Observable, Observer} from 'rxjs';
+import {Importer} from '../importer';
+import {Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {ExcelSettings} from './excel.settings';
-import {FilterUtils} from "../../utils/filter.utils";
+import {defaultExcelSettings, ExcelSettings} from './excel.settings';
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import {ElasticSettings} from "../../utils/elastic.setting";
-import {ConfigService} from "../../services/config/ConfigService";
+import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -44,22 +41,17 @@ export class ExcelImporter extends Importer {
     excelFilepath: string;
     names = {};
 
-    static defaultSettings: ExcelSettings = {
-        ...DefaultImporterSettings,
-        filePath: './data.xlsx'
-    };
-
     /**
      * Create the importer and initialize with settings.
      * @param { {filePath, mapper} }settings
      */
-    constructor(profile: ProfileFactory<ExcelMapper>, settings) {
+    constructor(settings) {
         super(settings);
 
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
-        settings = MiscUtils.merge(ExcelImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(defaultExcelSettings, settings);
 
         this.settings = settings;
         this.excelFilepath = settings.filePath;

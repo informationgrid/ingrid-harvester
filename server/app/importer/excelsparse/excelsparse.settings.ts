@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {ImporterSettings} from '../../importer.settings';
+import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
 
 export type ExcelSparseSettings = {
     catalog: {
@@ -39,3 +39,9 @@ export const DefaultCatalogSettings: Partial<ExcelSparseSettings> = {
         title: ''
     }
 }
+
+export const defaultExcelSparseSettings: Partial<ExcelSparseSettings> = {
+    ...DefaultImporterSettings,
+    ...DefaultCatalogSettings,
+    filePath: './data.xlsx'
+};

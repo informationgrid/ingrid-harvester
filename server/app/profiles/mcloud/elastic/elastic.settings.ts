@@ -26,10 +26,7 @@ export const elasticsearchSettings = {
         'analysis': {
             'filter': {
                 'decomp': {
-                    'type': 'ngram',
-                    'min_gram': 3,
-                    'max_gram': 8,
-                    'preserve_original': true
+                    'type': 'decompound'
                 },
                 'german_stemmer': {
                     'type': 'stemmer',

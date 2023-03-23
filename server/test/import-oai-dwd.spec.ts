@@ -26,52 +26,49 @@ import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
 import {TestUtils} from "./utils/test-utils";
-import {CswImporter} from '../app/importer/csw/csw.importer';
+import {IndexDocument} from '../app/model/index.document';
+import {OaiSettings} from "../app/importer/oai/oai.settings";
+import {OaiImporter} from "../app/importer/oai/oai.importer";
 import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
+import {mcloudDocument} from "../app/profiles/mcloud/model/index.document";
 
 let log = getLogger();
 configure('./log4js.json');
 
-let resultFlussgebietseinheiten = require('./data/result_csw_dwd_RelativeFeuchteanRBSNStationen.json');
+let resultWMSDienst = require('./data/result_oai_dwd_WMS-Dienst.json');
 
 chai.use(chaiAsPromised);
 
-describe('Import CSW DWD', function () {
+describe('Import OAI DWD', function () {
 
     let indexDocumentCreateSpy;
 
-    it('correct import of CSW-DWD data', function (done) {
+    it('correct import of OAI-DWD data', function (done) {
 
         log.info('Start test ...');
 
         // @ts-ignore
-        const settings: CswSettings = {
+        const settings: OaiSettings = {
             dryRun: true,
-            type: "CSW",
+            index: "oai_dwd",
+            priority: null,
+            type: "OAI",
+            maxRecords: 100,
             startPosition: 1,
-            elasticSearchUrl: "http://localhost:9200",
-            index: "csw_dwd",
-            indexType: "base",
-            alias: "mcloud",
-            getRecordsUrl: "https://cdc.dwd.de/catalogue/srv/en/csw",
-            proxy: null,
+            customCode: null,
             defaultMcloudSubgroup: ["climate"],
-            defaultDCATCategory: ["TRAN"],
-            defaultAttribution: "Climate Data Centre (CDC) Katalog des DWD",
-            includeTimestamp: true,
-            recordFilter: `
-                <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-                    <ogc:PropertyIsEqualTo>
-                        <ogc:PropertyName>identifier</ogc:PropertyName>
-                        <ogc:Literal>de.dwd.geoserver.fach.RBSN_RH</ogc:Literal>
-                    </ogc:PropertyIsEqualTo>
-                </ogc:Filter>`
+            defaultDCATCategory: ["ENVI"],
+            providerUrl: "https://oai.dwd.de/oai/provider",
+            set: "mCLOUD",
+            defaultAttribution: "DWD",
+            defaultAttributionLink: "https://oai.dwd.de/oai/provider?verb=ListRecords&metadataPrefix=iso19139&set=mCLOUD"
         };
-        let importer = new CswImporter(ProfileFactoryLoader.get(), settings);
+
+        let importer = new OaiImporter(settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 
-        indexDocumentCreateSpy = sinon.spy(ProfileFactoryLoader.get().getIndexDocument(), 'create');
+        indexDocumentCreateSpy = sinon.spy(mcloudDocument.prototype, 'create');
 
         importer.run.subscribe({
             complete: async () => {
@@ -83,7 +80,7 @@ describe('Import CSW DWD', function () {
                 // await chai.expect(indexDocumentCreateSpy.getCall(0).returnValue).to.eventually.deep.include(resultFlussgebietseinheiten);
 
                 try {
-                    await indexDocumentCreateSpy.getCall(0).returnValue.then(value => TestUtils.compareDocuments(value, resultFlussgebietseinheiten, extraChecks));
+                    await indexDocumentCreateSpy.getCall(0).returnValue.then(value => TestUtils.compareDocuments(value, resultWMSDienst, extraChecks));
                     done();
                 } catch (e) {
                     done(e);

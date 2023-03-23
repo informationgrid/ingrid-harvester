@@ -21,9 +21,8 @@
  * ==================================================
  */
 
-import { AbstractDeduplicateUtils } from '../../../utils/abstract.deduplicate.utils';
+import { DeduplicateUtils as AbstractDeduplicateUtils } from '../../../utils/deduplicate.utils';
 import { ElasticSearchUtils } from '../../../utils/elastic.utils';
-import { ElasticQueries } from '../../../utils/elastic.queries';
 import { Summary } from '../../../model/summary';
 
 const log = require('log4js').getLogger(__filename);
@@ -181,7 +180,7 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
         try {
             let response = await this.elastic.search(
                 this.settings.alias,
-                ElasticQueries.findSameTitle(),
+                this.queries.findSameTitle(),
                 50
             );
 
