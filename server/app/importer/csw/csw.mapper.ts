@@ -957,7 +957,17 @@ export class CswMapper extends BaseMapper {
         if (contactPoint) {
             return contactPoint;
         }
+        let contacts = await this._getContactPoints();
+        contacts = contacts.filter(extContact => !['originator', 'author', 'publisher'].includes(extContact.role));
+        for (let extContact of contacts) {
+            delete extContact['role'];
+        }
+        contactPoint = contacts.length === 0 ? undefined : contacts[0];
+        this.fetched.contactPoint = contactPoint;
+        return contactPoint; // TODO index all contacts
+    }
 
+    async _getContactPoints(): Promise<(Contact & { role?: string })[]> {
         let others = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
@@ -969,55 +979,51 @@ export class CswMapper extends BaseMapper {
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
                 let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
-
-                if (role !== 'originator' && role !== 'author' && role !== 'publisher') {
-                    let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
-                    let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                    let delPt = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
-                    let locality = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:city/gco:CharacterString', contact, true);
-                    let region = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
-                    let country = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
-                    let postCode = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
-                    let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
-                    let phone = CswMapper.select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
-                    let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
-                    let url = null;
-                    if (urlNode) {
-                        let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                        url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
-                    }
-
-                    let infos: Contact = {
-                        fn: name?.textContent,
-                    };
-
-                    if (contact.getAttribute('uuid')) {
-                        infos.hasUID = contact.getAttribute('uuid');
-                    }
-
-                    if (!infos.fn) infos.fn = org?.textContent;
-                    if (org) infos['organization-name'] = org.textContent;                    
-
-                    let line1 = delPt.map(n => CswMapper.getCharacterStringContent(n));
-                    line1 = line1.join(', ');
-                    if (line1) infos.hasStreetAddress = line1;
-                    if (locality?.textContent) infos.hasLocality = locality.textContent;
-                    if (region?.textContent) infos.hasRegion = region.textContent;
-                    if (country?.textContent) infos.hasCountryName = country.textContent;
-                    if (postCode?.textContent) infos.hasPostalCode = postCode.textContent;
-
-                    if (email) infos.hasEmail = email.textContent;
-                    if (phone) infos.hasTelephone = phone.textContent;
-                    if (url) infos.hasURL = url;
-
-                    others.push(infos);
+                let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                let delPt = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
+                let locality = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:city/gco:CharacterString', contact, true);
+                let region = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
+                let country = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
+                let postCode = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
+                let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                let phone = CswMapper.select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let url = null;
+                if (urlNode) {
+                    let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 }
+
+                let infos: Contact & { role?: string } = {
+                    fn: name?.textContent,
+                };
+
+                if (contact.getAttribute('uuid')) {
+                    infos.hasUID = contact.getAttribute('uuid');
+                }
+
+                if (!infos.fn) infos.fn = org?.textContent;
+                if (org) infos['organization-name'] = org.textContent;                    
+
+                let line1 = delPt.map(n => CswMapper.getCharacterStringContent(n));
+                line1 = line1.join(', ');
+                if (line1) infos.hasStreetAddress = line1;
+                if (locality?.textContent) infos.hasLocality = locality.textContent;
+                if (region?.textContent) infos.hasRegion = region.textContent;
+                if (country?.textContent) infos.hasCountryName = country.textContent;
+                if (postCode?.textContent) infos.hasPostalCode = postCode.textContent;
+
+                if (email) infos.hasEmail = email.textContent;
+                if (phone) infos.hasTelephone = phone.textContent;
+                if (url) infos.hasURL = url;
+
+                infos.role = role;
+
+                others.push(infos);
             }
         }
-
-        contactPoint = others.length === 0 ? undefined : others[0];
-        this.fetched.contactPoint = contactPoint;
-        return contactPoint; // TODO index all contacts
+        return others;
     }
 
     _getUrlCheckRequestConfig(uri: string): OptionsWithUri {

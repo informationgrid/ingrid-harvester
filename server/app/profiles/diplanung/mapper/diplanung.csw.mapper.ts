@@ -22,10 +22,30 @@
  */
 
 import { pluPlanState, pluPlanType, pluProcedureState } from '../../../model/dcatApPlu.model';
+import { Contact } from '../../../model/agent';
 import { CswMapper } from '../../../importer/csw/csw.mapper';
 import { Distribution } from '../../../model/distribution';
 
 export class DiplanungCswMapper extends CswMapper {
+
+    async _getContactPoint(): Promise<Contact> {
+        let contactPoint = this.fetched.contactPoint;
+        if (contactPoint) {
+            return contactPoint;
+        }
+        let contacts = await this._getContactPoints();
+        if (contacts.length > 0) {
+            // use pointOfContact if available
+            contactPoint = contacts.find(extContact => extContact.role === 'pointOfContact');
+            // otherwise, use the next best
+            if (!contactPoint) {
+                contactPoint = contacts[0];
+            }
+            delete contactPoint['role'];
+        }
+        this.fetched.contactPoint = contactPoint;
+        return contactPoint; // TODO index all contacts
+    }
 
     _getBoundingBoxGml() {
         return undefined;
