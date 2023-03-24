@@ -23,6 +23,7 @@
 
 import { ElasticSearchUtils } from './elastic.utils';
 import { ElasticSearchUtils6 } from './elastic.utils.6';
+import { ElasticSearchUtils7 } from './elastic.utils.7';
 import { ElasticSearchUtils8 } from './elastic.utils.8';
 import { ElasticSettings } from './elastic.setting';
 import { Summary } from '../model/summary';
@@ -34,7 +35,7 @@ export class ElasticSearchFactory {
             case '6':
                 return new ElasticSearchUtils6(settings, summary);
             case '7':
-                break;
+                return new ElasticSearchUtils7(settings, summary);
             case '8':
                 return new ElasticSearchUtils8(settings, summary);
             default: 
