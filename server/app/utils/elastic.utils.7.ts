@@ -106,8 +106,10 @@ export class ElasticSearchUtils7 extends ElasticSearchUtils {
                 return await this.client.indices.create({
                     index: indexName,
                     wait_for_active_shards: '1',
-                    // mappings,
-                    body: settings
+                    body: {
+                        mappings,
+                        settings
+                    }
                 });
             }
             catch(err) {
@@ -397,10 +399,12 @@ export class ElasticSearchUtils7 extends ElasticSearchUtils {
     }
 
     async deleteIndex(indicesToDelete: string | string[]): Promise<any> {
-        log.debug('Deleting indices: ' + indicesToDelete);
-        return await this.client.indices.delete({
-            index: indicesToDelete
-        });
+        if (indicesToDelete) {
+            log.debug('Deleting indices: ' + indicesToDelete);
+            return await this.client.indices.delete({
+                index: indicesToDelete
+            });
+        }
     }
 
     async search(index: string | string[], body?: object, size?: number): Promise<{ hits: any }> {
@@ -440,7 +444,7 @@ export class ElasticSearchUtils7 extends ElasticSearchUtils {
     }
 
     async getAccessUrls(after_key): Promise<any> {
-        let { body: response } = await this.client.search({
+        let { body: response }: any = await this.client.search({
             index: '',
             body: this.elasticQueries.getAccessUrls(after_key),
             size: 0
@@ -459,7 +463,7 @@ export class ElasticSearchUtils7 extends ElasticSearchUtils {
     }
 
     async getFacetsByAttribution(): Promise<any> {
-        let { body: response } = await this.client.search({
+        let { body: response }: any = await this.client.search({
             index: this.settings.alias,
             body: this.elasticQueries.getFacetsByAttribution(),
             size: 0
@@ -572,7 +576,7 @@ export class ElasticSearchUtils7 extends ElasticSearchUtils {
             id
         });
     }
-    
+
     async ping() {
         let { body: response } = await this.client.ping();
         return response;
