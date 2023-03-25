@@ -22,7 +22,6 @@
  */
 
 import { elasticsearchMapping} from './statistic.mapping';
-import { ElasticSearchFactory } from '../utils/elastic.factory';
 import { ElasticSearchUtils } from '../utils/elastic.utils';
 import { ElasticSettings } from 'utils/elastic.setting';
 import { ImportLogMessage} from '../model/import.result';
@@ -46,7 +45,7 @@ export class StatisticUtils {
         // @ts-ignore
         const summary: Summary = {};
         let profile = ProfileFactoryLoader.get();
-        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
+        this.elasticUtils = new ElasticSearchUtils(settings, summary);
         this.elasticsearchSettings = profile.getElasticSettings();
     }
 
