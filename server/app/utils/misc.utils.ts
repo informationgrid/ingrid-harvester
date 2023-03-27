@@ -23,7 +23,7 @@
 
 'use strict';
 
-import { merge as lodashMerge } from 'lodash';
+import { merge as lodashMerge, isEqual as lodashIsEqual } from 'lodash';
 import { Catalog } from '../model/dcatApPlu.model';
 import { ConfigService } from '../services/config/ConfigService';
 import { OptionsWithUri } from 'request-promise';
@@ -46,9 +46,20 @@ export class MiscUtils {
      * @param objs the objects to merge
      * @returns the merged object
      */
-    public static merge(...objs) {
+    public static merge(...objs: object[]) {
         // lodash mutates the first object on which it merges subsequent objects
-        return lodashMerge({}, ...objs)
+        return lodashMerge({}, ...objs);
+    }
+
+    /**
+     * Deep compare objects using lodash.
+     * 
+     * @param obj1 
+     * @param obj2 
+     * @returns true if both objects have the same properties with the same values (nested); false otherwise
+     */
+    public static equals(obj1: object, obj2: object) {
+        return lodashIsEqual(obj1, obj2);
     }
 
     /**
