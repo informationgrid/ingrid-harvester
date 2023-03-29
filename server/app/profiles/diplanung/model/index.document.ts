@@ -67,6 +67,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | ExcelS
             spatial_text: mapper.getSpatialText(),
             temporal: mapper.getTemporal(),
             // additional information and metadata
+            catalog: await mapper.getCatalog(),
             publisher: (await mapper.getPublisher())?.[0],
             distributions: await mapper.getDistributions(),
             extras: {

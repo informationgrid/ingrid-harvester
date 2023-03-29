@@ -24,6 +24,7 @@
 import { defaultCSWSettings, CswSettings } from './csw.settings';
 import { getLogger } from 'log4js';
 import { Catalog } from '../../model/dcatApPlu.model';
+import { ConfigService } from '../../services/config/ConfigService';
 import { CswMapper } from './csw.mapper';
 import { CswParameters, RequestDelegate } from '../../utils/http-request.utils';
 import { Importer } from '../importer';
@@ -156,8 +157,9 @@ export class CswImporter extends Importer {
         let catalog: Catalog = {
             description: CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
             homepage: this.settings.getRecordsUrl,
-            // TODO we need a unique ID for each catalog - where to get one from?
-            id: this.settings.getRecordsUrl,
+            // TODO we need a unique ID for each catalog - currently using the alias (used as "global" catalog)
+            // TODO or assign a different catalog for each record, depending on a property (address, publisher, etc)? expensive?
+            id: ConfigService.getGeneralSettings().alias,
             publisher: { name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent },
             title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
         };

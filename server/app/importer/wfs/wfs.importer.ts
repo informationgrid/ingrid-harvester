@@ -25,6 +25,7 @@ import { decode } from 'iconv-lite';
 import { defaultWfsSettings, WfsSettings } from './wfs.settings';
 import { getLogger } from 'log4js';
 import { Catalog } from '../../model/dcatApPlu.model';
+import { ConfigService } from '../../services/config/ConfigService';
 import { Contact } from '../../model/agent';
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { Importer } from '../importer';
@@ -190,8 +191,9 @@ export class WfsImporter extends Importer {
         let catalog: Catalog = {
             description: this.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
             homepage: this.settings.getFeaturesUrl,
-            // TODO we need a unique ID for each catalog - where to get one from?
-            id: this.settings.getFeaturesUrl,
+            // TODO we need a unique ID for each catalog - currently using the alias (used as "global" catalog)
+            // TODO or assign a different catalog for each record, depending on a property (address, publisher, etc)? expensive?
+            id: ConfigService.getGeneralSettings().alias,
             language: this.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true)?.textContent ?? this.settings.xpaths.capabilities.language,
             publisher: { name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent },
             title: this.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent

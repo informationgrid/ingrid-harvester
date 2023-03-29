@@ -634,7 +634,7 @@ export class WfsMapper extends BaseMapper {
         return license;
     }
 
-    async _getCatalog() {
+    _getCatalog() {
         return this.fetched.catalog;
     }
 
