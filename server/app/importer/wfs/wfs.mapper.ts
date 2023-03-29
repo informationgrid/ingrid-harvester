@@ -40,6 +40,7 @@ import { pluDocType, pluPlanState, pluPlanType, pluProcedureState, pluProcedureT
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { XPathUtils } from "../../utils/xpath.utils";
 import {Contact, Organization, Person} from "../../model/agent";
+import { MiscUtils } from '../../utils/misc.utils';
 
 export class WfsMapper extends BaseMapper {
 
@@ -875,9 +876,9 @@ export class WfsMapper extends BaseMapper {
      * FIS: fis:AFS_BESCHL
      * XPLAN: xplan:aufstellungsbeschlussDatum
      */
-    _getPluProcedureStartDate(): Date {
+    _getPluProcedureStartDate(): string {
         let procedureStartDate = this.select(this.settings.xpaths.pluProcedureStartDate, this.feature, true)?.textContent;
-        return procedureStartDate;
+        return MiscUtils.normalizeDateTime(procedureStartDate);
     }
 
     getErrorSuffix(uuid, title) {

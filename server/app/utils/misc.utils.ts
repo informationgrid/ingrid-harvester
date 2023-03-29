@@ -24,7 +24,12 @@
 'use strict';
 
 import { merge as lodashMerge } from 'lodash';
+const log = require('log4js').getLogger(__filename);
+const dayjs = require('dayjs');
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat);
 
+const CUSTOM_DATE_TIME_FORMATS = ["YYYY-MM-DDZ"];
 const MAX_MSG_LENGTH = 4096;
 const TRUNC_STR = '... (truncated)';
 
@@ -50,5 +55,21 @@ export class MiscUtils {
      */
     public static truncateErrorMessage(msg: string) {
         return msg?.length > MAX_MSG_LENGTH ? msg.substring(0, MAX_MSG_LENGTH - TRUNC_STR.length) + TRUNC_STR : msg;
+    }
+
+    /**
+     * Normalize datetime strings
+     */
+    public static normalizeDateTime(datetime: string): string {
+        let parsedDatetime = dayjs(datetime);
+        // if format is not recognizable ISO8601, try to parse with custom formats
+        if (!parsedDatetime.isValid()) {
+            parsedDatetime = dayjs(datetime, CUSTOM_DATE_TIME_FORMATS);
+        }
+        if (parsedDatetime.isValid()) {
+            return parsedDatetime.format();
+        }
+        log.warn("Could not parse datetime: " + datetime);
+        return datetime;
     }
 }
