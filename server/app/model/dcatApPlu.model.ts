@@ -28,7 +28,7 @@ import {DateRange} from "./dateRange";
 export interface Catalog {
     description: string,
     homepage?: string,
-    id?: string,
+    identifier?: string,
     issued?: string,
     language?: string,
     modified?: string,

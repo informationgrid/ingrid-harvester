@@ -193,7 +193,7 @@ export class WfsImporter extends Importer {
             homepage: this.settings.getFeaturesUrl,
             // TODO we need a unique ID for each catalog - currently using the alias (used as "global" catalog)
             // TODO or assign a different catalog for each record, depending on a property (address, publisher, etc)? expensive?
-            id: ConfigService.getGeneralSettings().alias,
+            identifier: ConfigService.getGeneralSettings().alias,
             language: this.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true)?.textContent ?? this.settings.xpaths.capabilities.language,
             publisher: { name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent },
             title: this.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
