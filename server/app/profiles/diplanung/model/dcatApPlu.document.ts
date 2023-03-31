@@ -90,9 +90,9 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
             </dcat:Catalog>
             <dcat:Dataset>
                 ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher.name)}
-                <dct:description xml:lang="${esc(catalog.language)}">${esc(mapper.getDescription())}</dct:description>
+                <dct:description>${esc(mapper.getDescription())}</dct:description>
                 <dct:identifier>${esc(mapper.getGeneratedId())}</dct:identifier>
-                <dct:title xml:lang="${esc(catalog.language)}">${esc(mapper.getTitle())}</dct:title>
+                <dct:title>${esc(mapper.getTitle())}</dct:title>
                 <plu:planState>${mapper.getPluPlanState()}</plu:planState>
                 <plu:procedureState>${mapper.getPluProcedureState()}</plu:procedureState>
                 ${optional('plu:procedureStartDate', esc(mapper.getPluProcedureStartDate()))}

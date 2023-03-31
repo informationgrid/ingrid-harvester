@@ -56,10 +56,7 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
     this.form.addControl('xpaths',
       new UntypedFormGroup({
         capabilities: new UntypedFormGroup({
-          // abstract: new FormControl(this.model.xpaths.capabilities.abstract),
-          language: new UntypedFormControl(this.model.xpaths.capabilities.language),
-          // serviceProvider: new FormControl(this.model.xpaths.capabilities.serviceProvider),
-          // title: new FormControl(this.model.xpaths.capabilities.title)
+          serviceProvider: new UntypedFormControl(this.model.xpaths.capabilities.serviceProvider)
         }),
         description: new UntypedFormControl(this.model.xpaths.description),
         featureParent: new UntypedFormControl(this.model.xpaths.featureParent),

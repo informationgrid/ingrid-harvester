@@ -27,10 +27,7 @@ export type WfsSettings = {
     version: "2.0.0" | "1.1.0",
     xpaths: {
         capabilities: {
-            abstract: string,
-            language: string,
-            serviceProvider: string,
-            title: string
+            serviceProvider: string
         },
         description: string,
         featureParent: string,
@@ -54,10 +51,7 @@ export type WfsSettings = {
 export const DefaultXpathSettings: Partial<WfsSettings> = {
     xpaths: {
         capabilities: {
-            abstract: '/*[local-name()="WFS_Capabilities"]/ows:ServiceIdentification/ows:Abstract',
-            language: '',
-            serviceProvider: '/*[local-name()="WFS_Capabilities"]/ows:ServiceProvider',
-            title: '/*[local-name()="WFS_Capabilities"]/ows:ServiceIdentification/ows:Title'
+            serviceProvider: '/*[local-name()="WFS_Capabilities"]/ows:ServiceProvider'
         },
         description: '',
         featureParent: '/*[local-name()="FeatureCollection"]/*[local-name()="member"]',
