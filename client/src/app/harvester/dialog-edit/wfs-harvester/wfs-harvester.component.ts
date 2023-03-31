@@ -48,6 +48,7 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
     this.form.addControl('featuresFilter', new UntypedFormControl(this.model.featureFilter));
     this.form.addControl('version', new UntypedFormControl(this.model.version));
     this.form.addControl('typename', new UntypedFormControl(this.model.typename));
+    this.form.addControl('catalogId', new UntypedFormControl(this.model.catalogId));
 
     if (!this.model.xpaths) {
       this.model.xpaths = DefaultXpathSettings.xpaths;

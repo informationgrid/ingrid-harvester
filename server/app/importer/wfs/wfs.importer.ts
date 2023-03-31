@@ -188,17 +188,15 @@ export class WfsImporter extends Importer {
         this.generalInfo['contactPoint'] = contact;
 
         // store catalog info from getCapabilities in generalInfo
-        let catalog: Catalog = {
-            description: this.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
-            homepage: this.settings.getFeaturesUrl,
-            // TODO we need a unique ID for each catalog - currently using the alias (used as "global" catalog)
-            // TODO or assign a different catalog for each record, depending on a property (address, publisher, etc)? expensive?
-            identifier: ConfigService.getGeneralSettings().alias,
-            language: this.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true)?.textContent ?? this.settings.xpaths.capabilities.language,
-            publisher: { name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent },
-            title: this.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
-        };
-        this.generalInfo['catalog'] = catalog;
+        try {
+            let catalog: Catalog = await MiscUtils.fetchCatalogFromOgcRecordsApi(this.settings.catalogId);
+            this.generalInfo['catalog'] = catalog;
+        }
+        catch (e) {
+            // don't continue without catalog
+            log.error('Did not run harvester because the catalog was not available');
+            return;
+        }
 
         while (true) {
             log.debug('Requesting next features');

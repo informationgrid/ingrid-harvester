@@ -39,6 +39,7 @@ export type WfsSettings = {
         pluProcedureStartDate: string,
         spatial: string
     },
+    catalogId: string,
     count: number,
     resultType?: "hits" | "results",
     typename: string,

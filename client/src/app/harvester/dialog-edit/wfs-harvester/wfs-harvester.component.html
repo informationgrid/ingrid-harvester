@@ -59,6 +59,11 @@
       <mat-card-title>WFS XPaths (oder default-Werte) zu ...</mat-card-title>
     </mat-card-header>
     <mat-card-content>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Katalog-ID" formControlName="catalogId" required>
+        </mat-form-field>
+      </div>
       <div formGroupName="xpaths">
         <div fxLayout="column">
           <div formGroupName="capabilities">
