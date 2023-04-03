@@ -38,6 +38,45 @@ export class ElasticQueries implements IElasticQueries {
     }
 
     /**
+     * 
+     */
+    findSameAlternateTitle(overwriteFields: string[]): any {
+        let maxAggregates = 10000;
+        return {
+            size: 0,
+            query: {
+                bool: {
+                    must_not: {term: {'extras.metadata.is_valid': false}}
+                }
+            },
+            aggregations: {
+                duplicates: {
+                    terms: {
+                        field: 'alternateTitle.raw',
+                        min_doc_count: 2,
+                        size: maxAggregates
+                    },
+                    aggregations: {
+                        duplicates: {
+                            top_hits: {
+                                sort: [{
+                                    'priority': {
+                                        unmapped_type: 'short',
+                                        missing: 0,
+                                        order: 'desc'
+                                    }
+                                }, {'modified': {order: 'desc'}}],
+                                size: 100,
+                                _source: {include: overwriteFields}
+                            }
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    /**
      *
      */
     findSameTitle(): any {

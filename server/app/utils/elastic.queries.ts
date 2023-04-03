@@ -25,6 +25,8 @@ export interface ElasticQueries {
 
     findSameTitle(): any;
 
+    findSameAlternateTitle(overwriteFields: string[]): any;
+
     findSameIdTitleUrls(id, generatedId, urls, title): any;
 
     findHistory(baseIndex: string): any;

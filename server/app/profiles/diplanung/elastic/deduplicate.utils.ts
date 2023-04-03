@@ -27,6 +27,8 @@ import { Summary } from '../../../model/summary';
 
 const log = require('log4js').getLogger(__filename);
 
+// fields occurring in CSW that should be overwritten by WFS data
+const overwriteFields = ['bounding_box', 'centroid', 'spatial'];
 
 export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
@@ -36,8 +38,98 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
     // FIXME: deduplication must work differently when import is not started for all harvesters
     async deduplicate() {
-        await this._deduplicateByTitle();
+        await this._mergeByAlternateTitle('csw_');
+        // await this._deduplicateByTitle();
         // await this._deduplicateUsingQuery();
+    }
+
+    /**
+     * Merge metadata from CSW and WFS if IDs match.
+     * - base information from CSW (i.e., update CSW index)
+     * - overwrite (update) specified fields with WFS data
+     * - remove WFS entry after successful merge
+     */
+    async _mergeByAlternateTitle(mainIndexPrefix: string = 'csw_') {
+        // INFO 2 approaches:
+        // 1) update in CSW index, remove from WFS index -> update, remove
+        // 2) remove in CSW index, remove from WFS index, insert merged into new "merged" index -> remove x2, insert
+        //      - ES transform?
+
+        // we'll go with 1) for now
+        // first, use update in the CSW index
+        // then, remove the document from the WFS index
+        try {
+            let response = await this.elastic.search(
+                this.settings.alias,
+                // this.queries.findSameId(),
+                this.queries.findSameAlternateTitle(overwriteFields),
+                50
+            );
+
+            let count = 0;
+            log.debug(`Count of buckets for deduplication aggregates query: ${response.aggregations.duplicates.buckets.length}`);
+            response.aggregations.duplicates.buckets.forEach(bucket => {
+                // TODO sort hits by newest metadata modified data
+                try {
+                    let hits = bucket.duplicates.hits.hits;
+
+                    // the first index starting with mainIndexPrefix is considered the base index
+                    let mainHit = hits.find(hit => hit._index.startsWith(mainIndexPrefix));
+
+                    if (!mainHit) {
+                        return;
+                    }
+
+                    // merge all hits from other indices into the mainHit, remove them afterwards
+                    hits.filter(hit => hit._index != mainHit._index).forEach(hit => {
+                        // overwrite predefined fields
+                        let updatedFields = {};
+                        for (const field of overwriteFields) {
+                            updatedFields[field] = hit._source[field];
+                        }
+
+                        let deleted = `Item to delete -> ID: '${hit._id}', Title: '${hit._source.title}', Index: '${hit._index}'`;
+                        let merged = `Item to merge into -> ID: '${mainHit._id}', Title: '${mainHit._source.title}', Index: '${mainHit._index}'`;
+                        log.warn(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${merged}`);
+                        this.elastic._bulkData.push(
+                            {
+                                update: {
+                                    _index: mainHit._index,
+                                    _type: mainHit._type,
+                                    _id: mainHit._id
+                                }
+                            },
+                            {
+                                doc: updatedFields
+                            },
+                            {
+                                delete: {
+                                    _index: hit._index,
+                                    _type: hit._type,
+                                    _id: hit._id
+                                }
+                            }
+                        );
+                        count++;
+                    });
+                    return count;
+                } catch (err) {
+                    this.handleError(`Error deduplicating hits for URL ${bucket.key}`, err);
+                }
+            });
+            log.info(`${count} duplicates found using the aggregates query will be deleted from index '${this.elastic.indexName}'.`);
+        } catch (err) {
+            this.handleError('Error processing results of aggregate query for duplicates', err);
+        }
+
+        await this.elastic.sendBulkData(false);
+
+        // TODO: send flush request to immediately remove documents from index
+        try {
+            await this.elastic.flush();
+        } catch (e) {
+            log.error('Error occurred during flush', e);
+        }
     }
 
     // FIXME: deduplication must work differently when import is not started for all harvesters

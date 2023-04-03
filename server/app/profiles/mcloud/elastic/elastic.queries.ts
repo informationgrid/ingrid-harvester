@@ -37,6 +37,10 @@ export class ElasticQueries implements IElasticQueries {
         return ElasticQueries.instance;
     }
 
+    findSameAlternateTitle(overwriteFields: string[]) {
+        throw new Error("Method not implemented.");
+    }
+
     /**
      *
      */
