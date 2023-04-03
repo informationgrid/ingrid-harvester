@@ -86,6 +86,10 @@ export class ExcelSparseMapper extends BaseMapper {
         return this.columnValues[this.columnMap.NAME];
     }
 
+    _getAlternateTitle() {
+        return this._getTitle();
+    }
+
     // TODO
     _getDescription() {
         // return this.columnValues[this.columnMap.Kurzbeschreibung];

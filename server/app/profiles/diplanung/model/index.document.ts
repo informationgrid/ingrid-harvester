@@ -52,6 +52,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | ExcelS
             description: mapper.getDescription(),
             identifier: mapper.getGeneratedId(),
             title: mapper.getTitle(),
+            alternateTitle: mapper.getAlternateTitle(),
             // plan and procedure information
             plan_state: mapper.getPluPlanState(),
             plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),

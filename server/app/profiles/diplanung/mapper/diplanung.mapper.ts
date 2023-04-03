@@ -59,6 +59,10 @@ export class DiplanungMapper<M extends DiplanungCswMapper | ExcelSparseMapper | 
         return this.baseMapper.getTitle();
     }
 
+    getAlternateTitle(): string{
+        return this.baseMapper._getAlternateTitle();
+    }
+
     getPluPlanState(): string{
         return this.baseMapper._getPluPlanState();
     }

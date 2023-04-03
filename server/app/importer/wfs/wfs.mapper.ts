@@ -222,6 +222,10 @@ export class WfsMapper extends BaseMapper {
         return title && title.trim() !== '' ? title : undefined;
     }
 
+    _getAlternateTitle() {
+        return this._getTitle();
+    }
+
     /**
      * For Open Data, GDI-DE expects access rights to be defined three times:
      * - As text in useLimitation

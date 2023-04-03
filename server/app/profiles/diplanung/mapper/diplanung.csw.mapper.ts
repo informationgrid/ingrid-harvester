@@ -28,6 +28,14 @@ import { Distribution } from '../../../model/distribution';
 
 export class DiplanungCswMapper extends CswMapper {
 
+    _getAlternateTitle(): string {
+        let alternateTitle = CswMapper.getCharacterStringContent(this.idInfo, 'alternateTitle');
+        if (!alternateTitle) {
+            alternateTitle = this._getTitle();
+        }
+        return alternateTitle;
+    }
+
     async _getContactPoint(): Promise<Contact> {
         let contactPoint = this.fetched.contactPoint;
         if (contactPoint) {
