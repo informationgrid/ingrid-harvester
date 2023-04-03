@@ -63,6 +63,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | ExcelS
             procedure_type: mapper.getPluProcedureType(),
             process_steps: mapper.getPluProcessSteps(),
             // spatial and temporal features
+            bounding_box: mapper.getBoundingBox(),
             centroid: mapper.getCentroid(),
             spatial: mapper.getSpatial(),
             spatial_text: mapper.getSpatialText(),
