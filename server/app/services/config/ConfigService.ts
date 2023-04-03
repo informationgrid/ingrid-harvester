@@ -132,6 +132,23 @@ export class ConfigService {
     }
 
     /**
+     * Replaces config vars with values given by appropriate ENV vars.
+     * Should only be called once, at the start of the application.
+     */
+    static adoptEnvs() {
+        let generalSettings = ConfigService.getGeneralSettings();
+        let ENV = {
+            elasticSearchUrl: process.env.ELASTIC_URL ?? generalSettings.elasticSearchUrl,
+            elasticSearchVersion: process.env.ELASTIC_VERSION ?? generalSettings.elasticSearchVersion,
+            elasticSearchUser: process.env.ELASTIC_USER ?? generalSettings.elasticSearchUser,
+            elasticSearchPassword: process.env.ELASTIC_PASSWORD ?? generalSettings.elasticSearchPassword
+        };
+        let updatedSettings: GeneralSettings = MiscUtils.merge(generalSettings, ENV);
+        log.info('Updating general config from environment variables');
+        ConfigService.setGeneralConfig(updatedSettings);
+    }
+
+    /**
      * Read the config.json file and return the json content, which
      * represents a collection of harvester.
      *
