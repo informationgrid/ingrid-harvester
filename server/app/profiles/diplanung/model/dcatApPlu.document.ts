@@ -47,17 +47,17 @@ function optional(wrapper: string | Function, variable: any | any[], ...remainde
     }
 }
 
-const DCAT_AP_PLU_NSMAP = {
-    dcat: 'http://www.w3.org/ns/dcat#',
-    dcatde: 'http://dcat-ap.de/def/dcatde/',
-    dct: 'http://purl.org/dc/terms/',
-    foaf: 'http://xmlns.com/foaf/0.1/',
-    gml: 'http://www.opengis.net/gml/3.2#',
-    locn: 'http://www.w3.org/ns/locn#',
-    plu: 'http://a.placeholder.url.for.dcat-ap-plu/',    // TODO
-    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    vcard: 'http://www.w3.org/2006/vcard/ns#'
-};
+// const DCAT_AP_PLU_NSMAP = {
+//     dcat: 'http://www.w3.org/ns/dcat#',
+//     dcatde: 'http://dcat-ap.de/def/dcatde/',
+//     dct: 'http://purl.org/dc/terms/',
+//     foaf: 'http://xmlns.com/foaf/0.1/',
+//     gml: 'http://www.opengis.net/gml/3.2#',
+//     locn: 'http://www.w3.org/ns/locn#',
+//     plu: 'http://a.placeholder.url.for.dcat-ap-plu/',    // TODO
+//     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+//     vcard: 'http://www.w3.org/2006/vcard/ns#'
+// };
 
 
 export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
@@ -74,21 +74,21 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let contributors = null;    // TODO
         let maintainers = null;     // TODO
         let relation = null;        // TODO
-        let xmlString = `<?xml version="1.0"?>
-        <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
-            <dcat:Catalog>
-                <dct:identifier>${esc(catalog.identifier)}</dct:identifier>
-                <dct:description>${esc(catalog.description)}</dct:description>
-                <dct:title>${esc(catalog.title)}</dct:title>
-                ${DcatApPluDocument.xmlFoafAgent('dct:publisher', catalog.publisher)}
-                ${optional('dcat:themeTaxonomy', esc(catalog.themeTaxonomy))}
-                ${optional('dct:issued', esc(catalog.issued))}
-                ${optional('dct:language', esc(catalog.language))}
-                ${optional('dct:modified', esc(catalog.modified))}
-                ${optional('foaf:homepage', esc(catalog.homepage))}
-                ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
-            </dcat:Catalog>
-            <dcat:Dataset>
+        // let xmlString = `<?xml version="1.0"?>
+        // <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
+        //     <dcat:Catalog>
+        //         <dct:identifier>${esc(catalog.identifier)}</dct:identifier>
+        //         <dct:description>${esc(catalog.description)}</dct:description>
+        //         <dct:title>${esc(catalog.title)}</dct:title>
+        //         ${DcatApPluDocument.xmlFoafAgent('dct:publisher', catalog.publisher)}
+        //         ${optional('dcat:themeTaxonomy', esc(catalog.themeTaxonomy))}
+        //         ${optional('dct:issued', esc(catalog.issued))}
+        //         ${optional('dct:language', esc(catalog.language))}
+        //         ${optional('dct:modified', esc(catalog.modified))}
+        //         ${optional('foaf:homepage', esc(catalog.homepage))}
+        //         ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
+        //     </dcat:Catalog>`;
+        let xmlString = `<dcat:Dataset>
                 ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher.name)}
                 <dct:description>${esc(mapper.getDescription())}</dct:description>
                 <dct:identifier>${esc(mapper.getGeneratedId())}</dct:identifier>
@@ -116,8 +116,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional('plu:planTypeFine', mapper.getPluPlanTypeFine())}
                 ${optional('plu:procedureType', mapper.getPluProcedureType())}
                 ${optional(DcatApPluDocument.xmlProcessStep, mapper.getPluProcessSteps())}
-            </dcat:Dataset>
-        </rdf:RDF>`;
+            </dcat:Dataset>`;
+        // </rdf:RDF>`;
 
         return xmlString.replace(/^\s*\n/gm, '');
     }
