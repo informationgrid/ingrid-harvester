@@ -88,7 +88,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         //         ${optional('foaf:homepage', esc(catalog.homepage))}
         //         ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
         //     </dcat:Catalog>`;
-        let xmlString = `<dcat:Dataset>
+        let xmlString = `<dcat:Dataset rdf:about="https://portal.diplanung.de/planwerke/${esc(mapper.getGeneratedId())}">
                 ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher.name)}
                 <dct:description>${esc(mapper.getDescription())}</dct:description>
                 <dct:identifier>${esc(mapper.getGeneratedId())}</dct:identifier>
