@@ -28,7 +28,7 @@ import { Summary } from '../../../model/summary';
 const log = require('log4js').getLogger(__filename);
 
 // fields occurring in CSW that should be overwritten by WFS data
-const overwriteFields = ['bounding_box', 'centroid', 'spatial'];
+const overwriteFields = ['catalog', 'bounding_box', 'centroid', 'spatial'];
 
 export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
@@ -62,7 +62,7 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
             let response = await this.elastic.search(
                 this.settings.alias,
                 // this.queries.findSameId(),
-                this.queries.findSameAlternateTitle(overwriteFields),
+                this.queries.findSameAlternateTitle(['title', ...overwriteFields]),
                 50
             );
 
