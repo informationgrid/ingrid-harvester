@@ -90,6 +90,7 @@ export const elasticsearchMapping = {
         'description': {
             'type': 'text',
             'analyzer': 'decomp',
+            'search_analyzer': 'german_simple',
             'fields': {
                 'decomp_german': {
                     'type': 'text',
