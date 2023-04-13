@@ -26,6 +26,7 @@ import { getLogger } from "log4js";
 import { Contact, Organization, Person } from "../../../model/agent";
 import { DateRange } from "../../../model/dateRange";
 import { DiplanungCswMapper } from './diplanung.csw.mapper';
+import { DiplanungVirtualMapper } from './diplanung.virtual.mapper';
 import { Distribution } from "../../../model/distribution";
 import { ExcelSparseMapper } from "../../../importer/excelsparse/excelsparse.mapper";
 import { WfsMapper } from "../../../importer/wfs/wfs.mapper";
@@ -33,7 +34,7 @@ import { WfsMapper } from "../../../importer/wfs/wfs.mapper";
 moment.locale('de');
 
 
-export class DiplanungMapper<M extends DiplanungCswMapper | ExcelSparseMapper | WfsMapper>{
+export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapper| ExcelSparseMapper | WfsMapper> {
 
     protected baseMapper: M;
 

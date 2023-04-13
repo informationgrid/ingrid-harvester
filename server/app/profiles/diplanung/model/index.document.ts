@@ -25,13 +25,14 @@ import { Contact } from '../../../model/agent';
 import { DcatApPluDocument } from './dcatApPlu.document';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
+import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { IndexDocument } from '../../../model/index.document';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
-export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | ExcelSparseMapper | WfsMapper> {
+export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
 
-    async create(_mapper: DiplanungCswMapper | ExcelSparseMapper | WfsMapper) : Promise<any> {
+    async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper) : Promise<any> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let contactPoint: Contact = await mapper.getContactPoint();
         let result = {

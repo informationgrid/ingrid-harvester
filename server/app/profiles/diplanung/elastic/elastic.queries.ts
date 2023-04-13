@@ -40,7 +40,7 @@ export class ElasticQueries implements IElasticQueries {
     /**
      * 
      */
-    findSameAlternateTitle(overwriteFields: string[]): any {
+    findSameAlternateTitle(): any {
         let maxAggregates = 10000;
         return {
             size: 0,
@@ -66,8 +66,7 @@ export class ElasticQueries implements IElasticQueries {
                                         order: 'desc'
                                     }
                                 }, {'modified': {order: 'desc'}}],
-                                size: 100,
-                                _source: {include: overwriteFields}
+                                size: 100
                             }
                         }
                     }
