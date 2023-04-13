@@ -302,15 +302,15 @@ export class CswMapper extends BaseMapper {
         }
 
         if (publishers.length === 0) {
-            if (otherContacts.length === 0) {
-                this.summary.missingPublishers++;
-                return undefined;
-            }
-            else {
-                // ED: 2022-09-15: use other contacts as fallback instead
-                // TODO add a toggle in UI whether to use this fallback
-                return otherContacts;
-            }
+            // if (otherContacts.length === 0) {
+            this.summary.missingPublishers++;
+            return undefined;
+            // }
+            // else {
+            //     // ED: 2022-09-15: use other contacts as fallback instead
+            //     // TODO add a toggle in UI whether to use this fallback
+            //     return otherContacts;
+            // }
         } else {
             return publishers;
         }
