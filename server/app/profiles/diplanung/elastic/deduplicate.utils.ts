@@ -27,8 +27,13 @@ import { Summary } from '../../../model/summary';
 
 const log = require('log4js').getLogger(__filename);
 
-// fields occurring in CSW that should be overwritten by WFS data
-const overwriteFields = ['catalog', 'bounding_box', 'centroid', 'spatial'];
+// fields potentially occurring in CSW that should be overwritten by WFS data
+const overwriteFields = [
+    'catalog',
+    // spatial fields
+    'bounding_box', 'centroid', 'spatial',
+    // PLU fields
+    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_start_date', 'procedure_state', 'procedure_type'];
 
 export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
@@ -77,7 +82,7 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
                     let mainHit = hits.find(hit => hit._index.startsWith(mainIndexPrefix));
 
                     if (!mainHit) {
-                        return;
+                        continue;
                     }
 
                     // merge all hits from other indices into the mainHit, remove them afterwards
@@ -86,6 +91,10 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
                         let updatedFields = {};
                         for (const field of overwriteFields) {
                             updatedFields[field] = hit._source[field];
+                        }
+                        // use publisher from WFS if not specified in CSW
+                        if (!mainHit._source.publisher?.name && !mainHit._source.publisher?.organization) {
+                            updatedFields['publisher'] = hit._source.publisher;
                         }
 
                         let deleted = `Item to delete -> ID: '${hit._id}', Title: '${hit._source.title}', Index: '${hit._index}'`;
