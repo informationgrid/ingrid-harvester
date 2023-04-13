@@ -55,7 +55,7 @@ export class GeoJsonUtils {
         // define the retrieved CRSs for proj4
         proj4.defs(crsMap);
         // function to project from specified CRS to WGS84
-        this.transformer = (crs: string) => (x: number, y: number) => proj4(crs ?? defaultCrs, 'WGS84').forward([x, y]);
+        this.transformer = (crs: string) => (x: number, y: number) => proj4(crs || defaultCrs, 'WGS84').forward([x, y]);
     }
 
     // static noTransform = (...coords) => coords;
