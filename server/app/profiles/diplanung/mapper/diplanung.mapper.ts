@@ -116,7 +116,7 @@ export class DiplanungMapper<M extends DiplanungCswMapper | ExcelSparseMapper | 
     }
 
     getPublisher(): Promise<Person[] | Organization[]>{
-        return this.baseMapper.getPublisher();
+        return this.baseMapper._getPublisher();
     }
 
     getMaintainers(): Promise<Person[] | Organization[]> {

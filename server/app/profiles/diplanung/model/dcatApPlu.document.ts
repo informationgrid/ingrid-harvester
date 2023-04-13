@@ -69,7 +69,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     static async create(_mapper: DiplanungCswMapper | ExcelSparseMapper | WfsMapper): Promise<string> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
-        let publisher = await mapper.getPublisher()?.[0];
+        let publisher = (await mapper.getPublisher())?.[0];
         let contributors = null;    // TODO
         let maintainers = await mapper.getMaintainers();
         let relation = null;        // TODO
