@@ -316,6 +316,47 @@ export class CswMapper extends BaseMapper {
         }
     }
 
+    async _getMaintainers(): Promise<Person[] | Organization[]> {
+        let maintainers = [];
+        let otherContacts = [];
+        // Look up contacts for the dataset first and then the metadata contact
+        let queries = [
+            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:contact/gmd:CI_ResponsibleParty'
+        ];
+        for (let i = 0; i < queries.length; i++) {
+            let contacts = CswMapper.select(queries[i], this.record);
+            for (let j = 0; j < contacts.length; j++) {
+                let contact = contacts[j];
+                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+
+                let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+
+                let url = null;
+                if (urlNode) {
+                    let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                }
+
+                let infos: any = {};
+                if (name) infos.name = name.textContent;
+                if (url) infos.homepage = url;
+                if (org) infos.organization = org.textContent;
+
+                if (role === 'custodian' || role === 'pointOfContact') {
+                    maintainers.push(infos);
+                }
+                else {
+                    otherContacts.push(infos);
+                }
+            }
+        }
+
+        return maintainers.length > 0 ? maintainers : undefined;
+    }
+
     _getTitle() {
         let title = CswMapper.getCharacterStringContent(this.idInfo, 'title');
         return title && title.trim() !== '' ? title : undefined;

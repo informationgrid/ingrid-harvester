@@ -217,6 +217,10 @@ export class WfsMapper extends BaseMapper {
         return [this.fetched.catalog.publisher];
     }
 
+    _getMaintainers() {
+        return undefined;
+    }
+
     _getTitle() {
         let title = this.select(this.settings.xpaths.name, this.feature, true)?.textContent;
         return title && title.trim() !== '' ? title : undefined;

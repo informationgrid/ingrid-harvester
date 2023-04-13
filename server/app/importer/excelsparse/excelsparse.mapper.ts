@@ -105,6 +105,10 @@ export class ExcelSparseMapper extends BaseMapper {
         return this.fetched.publisher;
     }
 
+    _getMaintainers() {
+        return undefined;
+    }
+
     // TODO
     _getThemes(): string[] {
 

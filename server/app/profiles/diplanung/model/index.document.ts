@@ -72,6 +72,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | ExcelS
             // additional information and metadata
             catalog: await mapper.getCatalog(),
             publisher: (await mapper.getPublisher())?.[0],
+            maintainers: (await mapper.getMaintainers()),
             distributions: await mapper.getDistributions(),
             extras: {
                 harvested_data: mapper.getHarvestedData(),

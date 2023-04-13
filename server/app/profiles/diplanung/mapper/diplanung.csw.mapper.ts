@@ -87,6 +87,10 @@ export class DiplanungCswMapper extends CswMapper {
         return undefined;
     }
 
+    _getMaintainers() {
+        return super._getMaintainers();
+    }
+
     _getCatalog() {
         return this.fetched.catalog;
     }

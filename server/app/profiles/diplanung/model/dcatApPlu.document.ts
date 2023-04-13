@@ -72,7 +72,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let centroid = mapper.getCentroid();
         let publisher = await mapper.getPublisher()?.[0];
         let contributors = null;    // TODO
-        let maintainers = null;     // TODO
+        let maintainers = await mapper.getMaintainers();
         let relation = null;        // TODO
         // let xmlString = `<?xml version="1.0"?>
         // <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
