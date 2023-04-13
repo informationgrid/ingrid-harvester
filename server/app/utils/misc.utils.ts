@@ -65,6 +65,9 @@ export class MiscUtils {
      * Normalize datetime strings
      */
     public static normalizeDateTime(datetime: string): string {
+        if (!datetime) {
+            return undefined;
+        }
         let parsedDatetime = dayjs(datetime);
         // if format is not recognizable ISO8601, try to parse with custom formats
         if (!parsedDatetime.isValid()) {
