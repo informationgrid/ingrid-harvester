@@ -69,7 +69,6 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     static async create(_mapper: DiplanungCswMapper | ExcelSparseMapper | WfsMapper): Promise<string> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
-        let centroid = mapper.getCentroid();
         let publisher = await mapper.getPublisher()?.[0];
         let contributors = null;    // TODO
         let maintainers = await mapper.getMaintainers();
@@ -98,9 +97,9 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional('plu:procedureStartDate', esc(mapper.getPluProcedureStartDate()))}
                 <dct:spatial>
                     <dct:Location>
-                        ${optional('dcat:bbox', mapper.getBoundingBoxGml())}
-                        ${optional('locn:geometry', mapper.getSpatialGml())}
-                        ${optional(DcatApPluDocument.xmlCentroid, centroid ? [centroid] : null)}
+                        ${DcatApPluDocument.xmlSpatial('dcat:bbox', mapper.getBoundingBoxGml(), mapper.getBoundingBox())}
+                        ${DcatApPluDocument.xmlSpatial('locn:geometry', mapper.getSpatialGml(), mapper.getSpatial())}
+                        ${DcatApPluDocument.xmlSpatial('dcat:centroid', null, mapper.getCentroid())}
                         ${optional('locn:geographicName', esc(mapper.getSpatialText()))}
                     </dct:Location>
                 </dct:spatial>
@@ -122,12 +121,20 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         return xmlString.replace(/^\s*\n/gm, '');
     }
 
-    private static xmlCentroid(centroid: number[]): string {
-        return `<dcat:centroid>
-            <gml:Point>
-                <gml:pos>${centroid.join(' ')}</gml:pos>
-            </gml:Point>
-        </dcat:centroid>`;
+    private static xmlSpatial(tagname: string, gml: string, json: object): string {
+        if (gml) {
+            return `<${tagname}>
+                ${gml}
+            </${tagname}>`;
+        }
+        else if (json) {
+            return `<${tagname} rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json">
+                ${JSON.stringify(json)}
+            </${tagname}>`;
+        }
+        else {
+            return '';
+        }
     }
 
     private static xmlDistribution(distribution: Distribution): string {

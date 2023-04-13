@@ -24,6 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over WFS.
  */
+import { AllGeoJSON } from "@turf/helpers";
 import {BaseMapper} from '../base.mapper';
 import {Distribution} from "../../model/distribution";
 import {DateRange} from "../../model/dateRange";
@@ -343,7 +344,7 @@ export class WfsMapper extends BaseMapper {
         return envelope.toString();
     }
 
-    _getBoundingBox(): any {
+    _getBoundingBox(): object {
         if (this.fetched.boundingBox) {
             return this.fetched.boundingBox;
         }
@@ -374,7 +375,7 @@ export class WfsMapper extends BaseMapper {
         return child.toString();
     }
 
-    _getSpatial(): any {
+    _getSpatial(): object {
         let spatialContainer = this.select(this.settings.xpaths.spatial, this.feature, true);
         if (!spatialContainer) {
             // use bounding box as fallback
@@ -444,9 +445,9 @@ export class WfsMapper extends BaseMapper {
         return undefined;
     }
 
-    _getCentroid(): number[] {
+    _getCentroid(): object {
         let spatial = this._getSpatial() ?? this._getBoundingBox();
-        return GeoJsonUtils.getCentroid(spatial)?.geometry.coordinates;
+        return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
     }
 
     // TODO

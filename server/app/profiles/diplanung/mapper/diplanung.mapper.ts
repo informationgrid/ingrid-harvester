@@ -99,15 +99,15 @@ export class DiplanungMapper<M extends DiplanungCswMapper | ExcelSparseMapper | 
         return this.baseMapper._getPluProcessSteps();
     }
 
-    getBoundingBox(): number[]{
+    getBoundingBox(): object {
         return this.baseMapper._getBoundingBox();
     }
 
-    getCentroid(): number[]{
+    getCentroid(): object {
         return this.baseMapper._getCentroid();
     }
 
-    getSpatial(): string{
+    getSpatial(): object {
         return this.baseMapper.getSpatial();
     }
 

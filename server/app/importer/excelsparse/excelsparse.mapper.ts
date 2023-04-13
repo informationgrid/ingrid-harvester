@@ -187,10 +187,10 @@ export class ExcelSparseMapper extends BaseMapper {
         </gml:Point>`;
     }
 
-    _getSpatial(): any {
+    _getSpatial(): object {
         return {
             'type': 'point',
-            'coordinates': [this.columnMap.LON, this.columnMap.LAT]
+            'coordinates': [parseFloat(this.columnMap.LON), parseFloat(this.columnMap.LAT)]
         };
     }
 
@@ -198,8 +198,8 @@ export class ExcelSparseMapper extends BaseMapper {
         return undefined;
     }
 
-    _getCentroid(): number[] {
-        return this._getSpatial().coordinates;
+    _getCentroid(): object {
+        return this._getSpatial();
     }
 
     // TODO

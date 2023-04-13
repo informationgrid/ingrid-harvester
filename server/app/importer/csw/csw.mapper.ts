@@ -24,6 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
+import { AllGeoJSON } from "@turf/helpers";
 import {BaseMapper} from "../base.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
@@ -535,7 +536,7 @@ export class CswMapper extends BaseMapper {
         return geographicBoundingBoxes.toString();
     }
 
-    _getSpatial(): any {
+    _getSpatial(): object {
         let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];
         for(let i=0; i < geographicBoundingBoxes.length; i++){
@@ -593,9 +594,9 @@ export class CswMapper extends BaseMapper {
         return undefined;
     }
 
-    _getCentroid(): number[] {
+    _getCentroid(): object {
         let spatial = this._getSpatial();
-        return GeoJsonUtils.getCentroid(spatial)?.geometry.coordinates;
+        return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
     }
 
     _getTemporal(): DateRange[] {
