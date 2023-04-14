@@ -52,7 +52,7 @@
     "p-limit": "^4.0.0",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "proj4": "^2.8.0",
+    "proj4": "^2.9.0",
     "promise": "^8.0.3",
     "rxjs": "^6.5.2",
     "socket.io": "^2.5.0",
