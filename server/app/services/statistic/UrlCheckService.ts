@@ -23,7 +23,6 @@
 
 import fetch, { RequestInit } from 'node-fetch';
 import { elasticsearchMapping } from '../../statistic/url_check.mapping';
-import { now } from 'moment';
 import { Agent } from 'https';
 import { ConfigService } from '../config/ConfigService';
 import { ElasticQueries } from '../../utils/elastic.queries';
@@ -35,6 +34,7 @@ import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary';
 
+const dayjs = require('dayjs');
 const log = require('log4js').getLogger(__filename);
 
 @Service()
@@ -93,7 +93,7 @@ export class UrlCheckService {
 
     async start() {
         log.info('UrlCheck started!');
-        let start = now();
+        let start = dayjs();
         let result = [];
         let after_key = undefined;
         let count = 0;
@@ -122,9 +122,9 @@ export class UrlCheckService {
             log.info('UrlCheck: ' + count);
         } while (after_key);
 
-        let duration = now() - start;
+        let duration = dayjs().diff(start);
         log.info('UrlCheck: ' + (duration / 1000) + 's');
-        await this.saveResult(result, new Date(start), duration);
+        await this.saveResult(result, start.toDate(), duration);
 
         log.info('Cleanup UrlCheckHistory');
         await this.elasticUtils.deleteByQuery(40);

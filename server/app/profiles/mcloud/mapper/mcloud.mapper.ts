@@ -21,8 +21,8 @@
  * ==================================================
  */
 
+import 'dayjs/locale/de';
 import {License} from '@shared/license.model';
-import * as moment from 'moment';
 import {getLogger} from "log4js";
 import {Distribution} from "../../../model/distribution";
 import {Agent, Contact, Organization, Person} from "../../../model/agent";
@@ -35,8 +35,8 @@ import {OaiMapper} from "../../../importer/oai/oai.mapper";
 import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
 import { RequestOptions } from 'utils/http-request.utils';
 
-moment.locale('de');
-
+const dayjs = require('dayjs');
+dayjs.locale('de');
 
 export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper>{
 

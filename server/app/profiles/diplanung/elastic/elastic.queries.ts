@@ -21,8 +21,9 @@
  * ==================================================
  */
 
-import {now} from "moment";
 import { ElasticQueries as IElasticQueries } from '../../../utils/elastic.queries';
+
+const dayjs = require('dayjs');
 
 export class ElasticQueries implements IElasticQueries {
 
@@ -183,9 +184,7 @@ export class ElasticQueries implements IElasticQueries {
 
 
     findHistories(): any {
-        const DAYS = 24*60*60*1000;
-        let timestamp = now();
-        timestamp -= 30*DAYS;
+        let timestamp = dayjs().subtract(30, 'day').valueOf();
 
         return {
             size: 1000,

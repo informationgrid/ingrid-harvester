@@ -656,7 +656,8 @@ export class CkanMapper extends BaseMapper {
             return null;
         } else {
             if (this.settings.dateSourceFormats && this.settings.dateSourceFormats.length > 0) {
-                let dateObj = this.moment(date, this.settings.dateSourceFormats);
+                // let dateObj = this.moment(date, this.settings.dateSourceFormats);
+                let dateObj = this.dayjs(date, this.settings.dateSourceFormats);
 
                 if (dateObj.isValid()) {
                     return dateObj.toDate();

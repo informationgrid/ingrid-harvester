@@ -27,10 +27,10 @@ import { merge as lodashMerge } from 'lodash';
 import { Catalog } from '../model/dcatApPlu.model';
 import { ConfigService } from '../services/config/ConfigService';
 import { RequestDelegate, RequestOptions } from './http-request.utils';
-const log = require('log4js').getLogger(__filename);
+
 const dayjs = require('dayjs');
-const customParseFormat = require('dayjs/plugin/customParseFormat');
-dayjs.extend(customParseFormat);
+const log = require('log4js').getLogger(__filename);
+dayjs.extend(require('dayjs/plugin/customParseFormat'));
 
 const CUSTOM_DATE_TIME_FORMATS = ["YYYY-MM-DDZ"];
 const MAX_MSG_LENGTH = 4096;

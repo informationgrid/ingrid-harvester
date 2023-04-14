@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import * as moment from 'moment';
+import 'dayjs/locale/de';
 import { getLogger } from "log4js";
 import { Contact, Organization, Person } from "../../../model/agent";
 import { DateRange } from "../../../model/dateRange";
@@ -31,8 +31,8 @@ import { Distribution } from "../../../model/distribution";
 import { ExcelSparseMapper } from "../../../importer/excelsparse/excelsparse.mapper";
 import { WfsMapper } from "../../../importer/wfs/wfs.mapper";
 
-moment.locale('de');
-
+const dayjs = require('dayjs');
+dayjs.locale('de');
 
 export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapper| ExcelSparseMapper | WfsMapper> {
 

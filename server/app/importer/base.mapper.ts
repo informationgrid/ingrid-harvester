@@ -21,8 +21,8 @@
  * ==================================================
  */
 
+import 'dayjs/locale/de';
 import {License} from '@shared/license.model';
-import * as moment from 'moment';
 import {ImporterSettings} from "../importer.settings";
 import {getLogger} from "log4js";
 import {Summary} from "../model/summary";
@@ -32,11 +32,12 @@ import {Distribution} from "../model/distribution";
 import {DateRange} from "../model/dateRange";
 import { RequestOptions } from 'utils/http-request.utils';
 
-moment.locale('de');
+const dayjs = require('dayjs');
+dayjs.locale('de');
 
 export abstract class BaseMapper {
 
-    protected moment = moment;
+    protected dayjs = dayjs;
 
     protected static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
 
