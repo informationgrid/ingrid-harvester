@@ -29,8 +29,7 @@ import {Distribution} from "../../model/distribution";
 import {DateRange} from "../../model/dateRange";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
-import {RequestDelegate} from "../../utils/http-request.utils";
-import {OptionsWithUri} from "request-promise";
+import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
 import {SparqlSettings} from './sparql.settings';
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {throwError} from "rxjs";
@@ -316,8 +315,8 @@ export class SparqlMapper extends BaseMapper {
         return infos;
     }
 
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
-        let config: OptionsWithUri = {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),

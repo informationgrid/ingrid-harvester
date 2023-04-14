@@ -28,8 +28,7 @@ import {DateRange} from "../../model/dateRange";
 // import {License} from '@shared/license.model';
 import {Summary} from '../../model/summary';
 import {ExcelSparseSettings} from './excelsparse.settings';
-import {RequestDelegate} from '../../utils/http-request.utils';
-import {OptionsWithUri} from 'request-promise';
+import {RequestDelegate, RequestOptions} from '../../utils/http-request.utils';
 import {ImporterSettings} from "../../importer.settings";
 // import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Columns} from './excelsparse.importer';
@@ -464,8 +463,8 @@ export class ExcelSparseMapper extends BaseMapper {
         return undefined;
     }
 
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
-        let config: OptionsWithUri = {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),

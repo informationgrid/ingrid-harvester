@@ -31,8 +31,7 @@ import {DateRange} from "../../model/dateRange";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
-import {RequestDelegate} from "../../utils/http-request.utils";
-import {OptionsWithUri} from "request-promise";
+import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
 import {WfsSettings} from './wfs.settings';
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
@@ -1020,8 +1019,8 @@ export class WfsMapper extends BaseMapper {
     }
 
     // TODO
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
-        let config: OptionsWithUri = {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),

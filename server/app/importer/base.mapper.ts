@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import {OptionsWithUri} from 'request-promise';
 import {License} from '@shared/license.model';
 import * as moment from 'moment';
 import {ImporterSettings} from "../importer.settings";
@@ -31,6 +30,7 @@ import {Rules} from "../model/rules";
 import {Contact, Organization, Person, Agent} from "../model/agent";
 import {Distribution} from "../model/distribution";
 import {DateRange} from "../model/dateRange";
+import { RequestOptions } from 'utils/http-request.utils';
 
 moment.locale('de');
 
@@ -303,9 +303,9 @@ export abstract class BaseMapper {
         return await this._getLicense();
     }
 
-    abstract _getUrlCheckRequestConfig(uri: string): OptionsWithUri;
+    abstract _getUrlCheckRequestConfig(uri: string): RequestOptions;
 
-    getUrlCheckRequestConfig(uri: string): OptionsWithUri{
+    getUrlCheckRequestConfig(uri: string): RequestOptions{
         return this._getUrlCheckRequestConfig(uri);
     }
 

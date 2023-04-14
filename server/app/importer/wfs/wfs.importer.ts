@@ -32,9 +32,10 @@ import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
-import { OptionsWithUri } from 'request-promise';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RequestOptions } from '../../utils/http-request.utils';
+import { Response } from 'node-fetch';
 import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils';
 import { WfsMapper } from './wfs.mapper';
 import { XPathUtils } from '../../utils/xpath.utils';
@@ -122,12 +123,12 @@ export class WfsImporter extends Importer {
 
     async harvest() {
 
-        let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resolveWithFullResponse: true, encoding: null }, 'GetCapabilities');
+        let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resolveWithFullResponse: true }, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
-        let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
-        let contentType = capabilitiesResponse.headers['content-type'].split(';');
+        let capabilitiesResponse: Response = await capabilitiesRequestDelegate.doRequest();
+        let contentType = capabilitiesResponse.headers.get('content-type').split(';');
         let charset = contentType.find(ct => ct.toLowerCase().startsWith('charset'))?.split('=')?.[1];
-        let responseBody = capabilitiesResponse.body;
+        let responseBody: Buffer | string = await capabilitiesResponse.buffer();
         if (charset.toLowerCase() == "utf-8") {
             responseBody = responseBody.toString();
         }
@@ -331,8 +332,8 @@ export class WfsImporter extends Importer {
         return new WfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils);
     }
 
-    static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): OptionsWithUri {
-        let requestConfig: OptionsWithUri = {
+    static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
+        let requestConfig: RequestOptions = {
             method: settings.httpMethod || "GET",
             uri: settings.getFeaturesUrl,
             json: false,
@@ -340,9 +341,6 @@ export class WfsImporter extends Importer {
             proxy: settings.proxy || null,
             resolveWithFullResponse: settings.resolveWithFullResponse ?? false
         };
-        if (settings.hasOwnProperty('encoding')) {
-            requestConfig.encoding = settings.encoding;
-        }
 
         // TODO
         // * correct namespaces

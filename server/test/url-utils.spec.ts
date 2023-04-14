@@ -21,10 +21,9 @@
  * ==================================================
  */
 
-import {expect} from "chai";
-import {OptionsWithUri} from "request-promise";
-import {UrlUtils} from '../app/utils/url.utils';
-import {RequestDelegate} from '../app/utils/http-request.utils';
+import { expect } from 'chai';
+import { RequestDelegate, RequestOptions } from '../app/utils/http-request.utils';
+import { UrlUtils } from '../app/utils/url.utils';
 
 describe('validateUrl()', function () {
 
@@ -94,7 +93,7 @@ describe('validateUrl()', function () {
     });
 });
 
-function getRequestConfigFor(uri): OptionsWithUri {
+function getRequestConfigFor(uri): RequestOptions {
     return {
         method: 'GET',
         json: false,

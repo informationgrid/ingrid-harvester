@@ -29,8 +29,7 @@ import {BaseMapper} from "../base.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
-import {RequestDelegate} from "../../utils/http-request.utils";
-import {OptionsWithUri} from "request-promise";
+import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
 import {CswSettings} from './csw.settings';
 import {throwError} from "rxjs";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
@@ -1068,8 +1067,8 @@ export class CswMapper extends BaseMapper {
         return others;
     }
 
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
-        let config: OptionsWithUri = {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),

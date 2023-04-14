@@ -26,12 +26,11 @@ import { getLogger } from 'log4js';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { ConfigService } from '../../services/config/ConfigService';
 import { CswMapper } from './csw.mapper';
-import { CswParameters, RequestDelegate } from '../../utils/http-request.utils';
+import { CswParameters, RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
-import { OptionsWithUri } from 'request-promise';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { Summary } from '../../model/summary';
@@ -320,8 +319,8 @@ export class CswImporter extends Importer {
         return new CswMapper(settings, record, harvestTime, storedData, summary, generalInfo);
     }
 
-    static createRequestConfig(settings: CswSettings, request = 'GetRecords'): OptionsWithUri {
-        let requestConfig: OptionsWithUri = {
+    static createRequestConfig(settings: CswSettings, request = 'GetRecords'): RequestOptions {
+        let requestConfig: RequestOptions = {
             method: settings.httpMethod || "GET",
             uri: settings.getRecordsUrl,
             json: false,

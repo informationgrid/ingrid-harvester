@@ -27,7 +27,7 @@ import { DateRange } from '../../../model/dateRange';
 import { Distribution } from '../../../model/distribution';
 import { ImporterSettings } from '../../../importer.settings';
 import { License } from '@shared/license.model';
-import { OptionsWithUri } from 'request-promise';
+import { RequestOptions } from '../../../utils/http-request.utils';
 import { Summary } from '../../../model/summary';
 
 export class DiplanungVirtualMapper extends BaseMapper {
@@ -211,7 +211,7 @@ export class DiplanungVirtualMapper extends BaseMapper {
     _getLicense(): Promise<License> {
         throw new Error('Method not implemented.');
     }
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
         throw new Error('Method not implemented.');
     }
 }

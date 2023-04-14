@@ -26,8 +26,7 @@
 import { merge as lodashMerge } from 'lodash';
 import { Catalog } from '../model/dcatApPlu.model';
 import { ConfigService } from '../services/config/ConfigService';
-import { OptionsWithUri } from 'request-promise';
-import { RequestDelegate } from './http-request.utils';
+import { RequestDelegate, RequestOptions } from './http-request.utils';
 const log = require('log4js').getLogger(__filename);
 const dayjs = require('dayjs');
 const customParseFormat = require('dayjs/plugin/customParseFormat');
@@ -86,11 +85,11 @@ export class MiscUtils {
     static async fetchCatalogFromOgcRecordsApi(catalogId: string): Promise<Catalog> {
         let genSettings = ConfigService.getGeneralSettings();
         let authString = genSettings.ogcRecordsApiUser + ':' + genSettings.ogcRecordsApiPassword;
-        let config: OptionsWithUri = {
+        let config: RequestOptions = {
             method: 'GET',
             json: true,
             headers: {
-                'User-Agent': 'InGrid Harvester. Request-Promise',
+                'User-Agent': 'InGrid Harvester. node-fetch',
                 'Content-Type': 'application/json',
                 'Authorization': 'Basic ' + Buffer.from(authString, 'utf8').toString('base64')
             },
