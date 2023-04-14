@@ -31,7 +31,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.4",
     "cron": "^1.7.2",
-    "deep-equal": "^2.0.5",
+    "deep-equal": "^2.2.0",
     "elasticsearch6": "npm:@elastic/elasticsearch@^6.8.7",
     "elasticsearch7": "npm:@elastic/elasticsearch@^7.17.0",
     "elasticsearch8": "npm:@elastic/elasticsearch@^8.5.0",
