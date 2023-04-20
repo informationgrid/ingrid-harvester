@@ -157,14 +157,14 @@ export class UrlCheckService {
 
     static mapErrorMsg(msg: string): string {
         let result = msg;
-        if (msg.indexOf('ETIMEDOUT') !== -1) result = 'ETIMEDOUT';
+        if (msg.indexOf('ETIMEDOUT') !== -1 || msg.indexOf('network timeout')) result = 'ETIMEDOUT';
         if (msg.indexOf('ESOCKETTIMEDOUT') !== -1) result = 'ESOCKETTIMEDOUT';
         if (msg.indexOf('ENOTFOUND') !== -1) result = 'ENOTFOUND';
         if (msg.indexOf('ECONNRESET') !== -1) result = 'ECONNRESET';
         if (msg.indexOf('ERR_INVALID_URL') !== -1 || msg.indexOf('Only absolute URLs') !== -1) result = 'ERR_INVALID_URL';
         if (msg.indexOf('ERR_UNESCAPED_CHARACTERS') !== -1) result = 'ERR_UNESCAPED_CHARACTERS';
         if (msg.indexOf('ECONNREFUSED') !== -1) result = 'ECONNREFUSED';
-        if (msg.indexOf('Exceeded maxRedirects') !== -1) result = 'Exceeded maxRedirects';
+        if (msg.indexOf('maximum redirect')) result = 'Exceeded maxRedirects';
         return result;
     }
 

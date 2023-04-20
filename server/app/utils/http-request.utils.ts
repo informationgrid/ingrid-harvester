@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import fetch, { HeadersInit, RequestInfo, RequestInit } from 'node-fetch';
+import fetch, { HeadersInit, RequestInit } from 'node-fetch';
 import { getLogger } from 'log4js';
 import { Agent } from 'https';
 import { HttpsProxyAgent } from 'https-proxy-agent';
