@@ -187,16 +187,9 @@ export class WfsImporter extends Importer {
         Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
         this.generalInfo['contactPoint'] = contact;
 
-        // store catalog info from getCapabilities in generalInfo
-        try {
-            let catalog: Catalog = await MiscUtils.fetchCatalogFromOgcRecordsApi(this.settings.catalogId);
-            this.generalInfo['catalog'] = catalog;
-        }
-        catch (e) {
-            // don't continue without catalog
-            log.error('Did not run harvester because the catalog was not available');
-            return;
-        }
+        // store catalog info from OGC Records response
+        let catalog: Catalog = await MiscUtils.fetchCatalogFromOgcRecordsApi(this.settings.catalogId);
+        this.generalInfo['catalog'] = catalog;
 
         while (true) {
             log.debug('Requesting next features');
