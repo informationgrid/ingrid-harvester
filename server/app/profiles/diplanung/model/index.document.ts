@@ -66,7 +66,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             process_steps: mapper.getPluProcessSteps(),
             // spatial and temporal features
             bounding_box: mapper.getBoundingBox(),
-            centroid: mapper.getCentroid(),
+            centroid: mapper.getCentroid()?.['coordinates'],
             spatial: mapper.getSpatial(),
             spatial_text: mapper.getSpatialText(),
             temporal: mapper.getTemporal(),
