@@ -23,6 +23,7 @@
     "@tsed/core": "^5.36.2",
     "@tsed/di": "^5.36.2",
     "@tsed/socketio": "^5.36.2",
+    "@turf/bbox": "^6.5.0",
     "@turf/centroid": "^6.5.0",
     "@turf/rewind": "^6.5.0",
     "@xmldom/xmldom": "^0.8.7",

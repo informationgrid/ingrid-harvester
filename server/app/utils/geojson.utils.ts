@@ -37,6 +37,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import bbox from '@turf/bbox';
 import centroid from '@turf/centroid';
 import rewind from '@turf/rewind';
 import * as xpath from 'xpath';
@@ -84,6 +85,13 @@ export class GeoJsonUtils {
             };
         }
     };
+
+    static getBbox = (spatial: AllGeoJSON) => {
+        if (!spatial) {
+            return undefined;
+        }
+        return bbox(spatial);
+    }
 
     static getCentroid = (spatial: AllGeoJSON) => {
         if (!spatial) {
