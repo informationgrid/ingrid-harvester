@@ -352,6 +352,10 @@ export class WfsMapper extends BaseMapper {
                 return this.fetched.geojsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
             }
         }
+        // if spatial exists, create bbox from it
+        else if (this.select(this.settings.xpaths.spatial, this.feature, true)) {
+            GeoJsonUtils.getBbox(this.getSpatial());
+        }
         return undefined;
     }
 
