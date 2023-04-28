@@ -34,11 +34,11 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
 
     async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper) : Promise<any> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
-        let contactPoint: Contact = await mapper.getContactPoint();
+        let contactPoint: Contact = await mapper.getContactPoint() ?? { fn: '' };
         let result = {
             // basic information
             contact_point: {
-                fn: contactPoint?.fn,
+                fn: contactPoint.fn,
                 has_country_name: contactPoint.hasCountryName,
                 has_locality: contactPoint.hasLocality,
                 has_postal_code: contactPoint.hasPostalCode,
@@ -66,7 +66,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             process_steps: mapper.getPluProcessSteps(),
             // spatial and temporal features
             bounding_box: mapper.getBoundingBox(),
-            centroid: mapper.getCentroid(),
+            centroid: mapper.getCentroid()?.['coordinates'],
             spatial: mapper.getSpatial(),
             spatial_text: mapper.getSpatialText(),
             temporal: mapper.getTemporal(),

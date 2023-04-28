@@ -100,15 +100,14 @@ export class MiscUtils {
             uri: genSettings.ogcRecordsApiUrl + '/collections/' + catalogId
         };
         let requestDelegate = new RequestDelegate(config);
-        let catalog = { identifier: catalogId, description: '', publisher: { organization: 'hhh' }, title: '' };
+        let catalog = { identifier: catalogId, description: '', publisher: { organization: '' }, title: '' };
         try {
             catalog = await requestDelegate.doRequest();
             log.info('Successfully fetched catalog info from OGC Records API');
-            return catalog;
         }
         catch (e) {
-            log.warn(`Could not access OGC Records API at [${config.uri}]: ${e}`);
-            throw e;
+            log.error(`Could not access OGC Records API at [${config.uri}]: ${e}`);
         }
+        return catalog;
     }
 }
