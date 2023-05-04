@@ -24,12 +24,12 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
+import { AllGeoJSON } from "@turf/helpers";
 import {BaseMapper} from "../base.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
-import {RequestDelegate} from "../../utils/http-request.utils";
-import {OptionsWithUri} from "request-promise";
+import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
 import {CswSettings} from './csw.settings';
 import {throwError} from "rxjs";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
@@ -302,18 +302,59 @@ export class CswMapper extends BaseMapper {
         }
 
         if (publishers.length === 0) {
-            if (otherContacts.length === 0) {
-                this.summary.missingPublishers++;
-                return undefined;
-            }
-            else {
-                // ED: 2022-09-15: use other contacts as fallback instead
-                // TODO add a toggle in UI whether to use this fallback
-                return otherContacts;
-            }
+            // if (otherContacts.length === 0) {
+            this.summary.missingPublishers++;
+            return undefined;
+            // }
+            // else {
+            //     // ED: 2022-09-15: use other contacts as fallback instead
+            //     // TODO add a toggle in UI whether to use this fallback
+            //     return otherContacts;
+            // }
         } else {
             return publishers;
         }
+    }
+
+    async _getMaintainers(): Promise<Person[] | Organization[]> {
+        let maintainers = [];
+        let otherContacts = [];
+        // Look up contacts for the dataset first and then the metadata contact
+        let queries = [
+            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:contact/gmd:CI_ResponsibleParty'
+        ];
+        for (let i = 0; i < queries.length; i++) {
+            let contacts = CswMapper.select(queries[i], this.record);
+            for (let j = 0; j < contacts.length; j++) {
+                let contact = contacts[j];
+                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+
+                let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+
+                let url = null;
+                if (urlNode) {
+                    let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                }
+
+                let infos: any = {};
+                if (name) infos.name = name.textContent;
+                if (url) infos.homepage = url;
+                if (org) infos.organization = org.textContent;
+
+                if (role === 'custodian' || role === 'pointOfContact') {
+                    maintainers.push(infos);
+                }
+                else {
+                    otherContacts.push(infos);
+                }
+            }
+        }
+
+        return maintainers.length > 0 ? maintainers : undefined;
     }
 
     _getTitle() {
@@ -494,7 +535,7 @@ export class CswMapper extends BaseMapper {
         return geographicBoundingBoxes.toString();
     }
 
-    _getSpatial(): any {
+    _getSpatial(): object {
         let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];
         for(let i=0; i < geographicBoundingBoxes.length; i++){
@@ -552,9 +593,9 @@ export class CswMapper extends BaseMapper {
         return undefined;
     }
 
-    _getCentroid(): number[] {
+    _getCentroid(): object {
         let spatial = this._getSpatial();
-        return GeoJsonUtils.getCentroid(spatial)?.geometry.coordinates;
+        return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
     }
 
     _getTemporal(): DateRange[] {
@@ -1026,8 +1067,8 @@ export class CswMapper extends BaseMapper {
         return others;
     }
 
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
-        let config: OptionsWithUri = {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),

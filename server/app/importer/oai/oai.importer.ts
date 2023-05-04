@@ -24,8 +24,8 @@
 import {OaiMapper} from './oai.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
-import {RequestDelegate} from '../../utils/http-request.utils';
-import {OptionsWithUri} from 'request-promise';
+import {RequestDelegate, RequestOptions} from '../../utils/http-request.utils';
+
 import {Importer} from '../importer';
 import {Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
@@ -199,8 +199,8 @@ export class OaiImporter extends Importer {
         return new OaiMapper(settings, record, harvestTime, storedData, summary);
     }
 
-    static createRequestConfig(settings: OaiSettings, resumptionToken?: string): OptionsWithUri {
-        let requestConfig: OptionsWithUri = {
+    static createRequestConfig(settings: OaiSettings, resumptionToken?: string): RequestOptions {
+        let requestConfig: RequestOptions = {
             method: "GET",
             uri: settings.providerUrl,
             json: false,

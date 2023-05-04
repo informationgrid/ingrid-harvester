@@ -24,14 +24,14 @@
 /**
  * A mapper for ISO-XML documents harvested over WFS.
  */
+import { AllGeoJSON } from "@turf/helpers";
 import {BaseMapper} from '../base.mapper';
 import {Distribution} from "../../model/distribution";
 import {DateRange} from "../../model/dateRange";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
-import {RequestDelegate} from "../../utils/http-request.utils";
-import {OptionsWithUri} from "request-promise";
+import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
 import {WfsSettings} from './wfs.settings';
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
@@ -217,6 +217,10 @@ export class WfsMapper extends BaseMapper {
         return [this.fetched.catalog.publisher];
     }
 
+    _getMaintainers() {
+        return undefined;
+    }
+
     _getTitle() {
         let title = this.select(this.settings.xpaths.name, this.feature, true)?.textContent;
         return title && title.trim() !== '' ? title : undefined;
@@ -339,7 +343,7 @@ export class WfsMapper extends BaseMapper {
         return envelope.toString();
     }
 
-    _getBoundingBox(): any {
+    _getBoundingBox(): object {
         if (this.fetched.boundingBox) {
             return this.fetched.boundingBox;
         }
@@ -374,7 +378,7 @@ export class WfsMapper extends BaseMapper {
         return child.toString();
     }
 
-    _getSpatial(): any {
+    _getSpatial(): object {
         let spatialContainer = this.select(this.settings.xpaths.spatial, this.feature, true);
         if (!spatialContainer) {
             // use bounding box as fallback
@@ -444,9 +448,9 @@ export class WfsMapper extends BaseMapper {
         return undefined;
     }
 
-    _getCentroid(): number[] {
+    _getCentroid(): object {
         let spatial = this._getSpatial() ?? this._getBoundingBox();
-        return GeoJsonUtils.getCentroid(spatial)?.geometry.coordinates;
+        return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
     }
 
     // TODO
@@ -1019,8 +1023,8 @@ export class WfsMapper extends BaseMapper {
     }
 
     // TODO
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
-        let config: OptionsWithUri = {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),

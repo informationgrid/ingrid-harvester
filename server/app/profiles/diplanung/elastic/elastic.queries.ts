@@ -21,8 +21,9 @@
  * ==================================================
  */
 
-import {now} from "moment";
 import { ElasticQueries as IElasticQueries } from '../../../utils/elastic.queries';
+
+const dayjs = require('dayjs');
 
 export class ElasticQueries implements IElasticQueries {
 
@@ -40,7 +41,7 @@ export class ElasticQueries implements IElasticQueries {
     /**
      * 
      */
-    findSameAlternateTitle(overwriteFields: string[]): any {
+    findSameAlternateTitle(): any {
         let maxAggregates = 10000;
         return {
             size: 0,
@@ -66,8 +67,7 @@ export class ElasticQueries implements IElasticQueries {
                                         order: 'desc'
                                     }
                                 }, {'modified': {order: 'desc'}}],
-                                size: 100,
-                                _source: {include: overwriteFields}
+                                size: 100
                             }
                         }
                     }
@@ -184,9 +184,7 @@ export class ElasticQueries implements IElasticQueries {
 
 
     findHistories(): any {
-        const DAYS = 24*60*60*1000;
-        let timestamp = now();
-        timestamp -= 30*DAYS;
+        let timestamp = dayjs().subtract(30, 'day').valueOf();
 
         return {
             size: 1000,

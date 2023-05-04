@@ -25,10 +25,9 @@
  * A mapper for CKAN documents.
  */
 import {getLogger} from 'log4js';
-import {OptionsWithUri} from 'request-promise';
 import {CkanSettings, ProviderField} from './ckan.settings';
 import {BaseMapper} from '../base.mapper';
-import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestPaging} from '../../utils/http-request.utils';
+import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestOptions, RequestPaging} from '../../utils/http-request.utils';
 import {UrlUtils} from '../../utils/url.utils';
 import {Summary} from '../../model/summary';
 import {throwError} from 'rxjs';
@@ -498,8 +497,8 @@ export class CkanMapper extends BaseMapper {
         }
     }
 
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
-        let config: OptionsWithUri = {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),
@@ -572,7 +571,7 @@ export class CkanMapper extends BaseMapper {
         return null;
     }
 
-    static createRequestConfig(settings: CkanSettings): OptionsWithUri {
+    static createRequestConfig(settings: CkanSettings): RequestOptions {
 
         if (settings.requestType === 'ListWithResources') {
             return {
@@ -581,9 +580,6 @@ export class CkanMapper extends BaseMapper {
                 json: true,
                 headers: RequestDelegate.defaultRequestHeaders(),
                 proxy: settings.proxy || null,
-                agentOptions: {
-                    rejectUnauthorized: settings.rejectUnauthorizedSSL
-                },
                 rejectUnauthorized: settings.rejectUnauthorizedSSL,
                 qs: <CkanParametersListWithResources> {
                     offset: settings.startPosition,
@@ -614,9 +610,6 @@ export class CkanMapper extends BaseMapper {
                 json: true,
                 headers: RequestDelegate.defaultRequestHeaders(),
                 proxy: settings.proxy,
-                agentOptions: {
-                    rejectUnauthorized: settings.rejectUnauthorizedSSL
-                },
                 rejectUnauthorized: settings.rejectUnauthorizedSSL,
                 qs: <CkanParameters> {
                     sort: 'id asc',
@@ -629,16 +622,13 @@ export class CkanMapper extends BaseMapper {
 
     }
 
-    static createRequestConfigCount(settings: CkanSettings): OptionsWithUri {
+    static createRequestConfigCount(settings: CkanSettings): RequestOptions {
         return {
             method: 'GET',
             uri: settings.ckanBaseUrl + '/api/3/action/package_list', // See http://docs.ckan.org/en/ckan-2.7.3/api/
             json: true,
             headers: RequestDelegate.defaultRequestHeaders(),
             proxy: settings.proxy,
-            agentOptions: {
-                rejectUnauthorized: settings.rejectUnauthorizedSSL
-            },
             rejectUnauthorized: settings.rejectUnauthorizedSSL
         };
     }
@@ -666,7 +656,8 @@ export class CkanMapper extends BaseMapper {
             return null;
         } else {
             if (this.settings.dateSourceFormats && this.settings.dateSourceFormats.length > 0) {
-                let dateObj = this.moment(date, this.settings.dateSourceFormats);
+                // let dateObj = this.moment(date, this.settings.dateSourceFormats);
+                let dateObj = this.dayjs(date, this.settings.dateSourceFormats);
 
                 if (dateObj.isValid()) {
                     return dateObj.toDate();

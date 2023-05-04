@@ -22,7 +22,6 @@
  */
 
 import { elasticsearchMapping } from '../../statistic/index_check.mapping';
-import { now } from 'moment';
 import { ConfigService } from '../config/ConfigService';
 import { ElasticQueries } from '../../utils/elastic.queries';
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
@@ -32,6 +31,7 @@ import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary';
 
+const dayjs = require('dayjs');
 const log = require('log4js').getLogger(__filename);
 
 @Service()
@@ -74,9 +74,9 @@ export class IndexCheckService {
 
     async start() {
         log.info('IndexCheck started!');
-        let start = now();
+        let start = dayjs();
         let facetsByAttribution = await this.elasticUtils.getFacetsByAttribution();
-        this.saveResult(facetsByAttribution, new Date(start));
+        this.saveResult(facetsByAttribution, start.toDate());
     }
 
     async saveResult(result, timestamp) {

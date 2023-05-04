@@ -28,8 +28,8 @@ import {DateRange} from "../../model/dateRange";
 import {License} from '@shared/license.model';
 import {Summary} from '../../model/summary';
 import {ExcelSettings} from './excel.settings';
-import {RequestDelegate} from '../../utils/http-request.utils';
-import {OptionsWithUri} from 'request-promise';
+import {RequestDelegate, RequestOptions} from '../../utils/http-request.utils';
+
 import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Organization, Person} from "../../model/agent";
@@ -403,8 +403,8 @@ export class ExcelMapper extends BaseMapper {
 
     }
 
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
-        let config: OptionsWithUri = {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),
