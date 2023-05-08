@@ -141,7 +141,10 @@ export class ConfigService {
             elasticSearchUrl: process.env.ELASTIC_URL ?? generalSettings.elasticSearchUrl,
             elasticSearchVersion: process.env.ELASTIC_VERSION ?? generalSettings.elasticSearchVersion,
             elasticSearchUser: process.env.ELASTIC_USER ?? generalSettings.elasticSearchUser,
-            elasticSearchPassword: process.env.ELASTIC_PASSWORD ?? generalSettings.elasticSearchPassword
+            elasticSearchPassword: process.env.ELASTIC_PASSWORD ?? generalSettings.elasticSearchPassword,
+            ogcRecordsApiUrl: process.env.OGCAPI_URL ?? generalSettings.ogcRecordsApiUrl,
+            ogcRecordsApiUser: process.env.OGCAPI_USER ?? generalSettings.ogcRecordsApiUser,
+            ogcRecordsApiPassword: process.env.OGCAPI_PASSWORD ?? generalSettings.ogcRecordsApiPassword
         };
         let updatedSettings: GeneralSettings = MiscUtils.merge(generalSettings, ENV);
         log.info('Updating general config from environment variables');
