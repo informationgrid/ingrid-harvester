@@ -93,13 +93,6 @@ export class GeoJsonUtils {
         return bbox(spatial);
     }
 
-    static getBbox = (spatial: AllGeoJSON) => {
-        if (!spatial) {
-            return undefined;
-        }
-        return bbox(spatial);
-    }
-
     static getCentroid = (spatial: AllGeoJSON) => {
         if (!spatial) {
             return undefined;
