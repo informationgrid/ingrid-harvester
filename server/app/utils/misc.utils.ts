@@ -97,16 +97,21 @@ export class MiscUtils {
                 f: "json",
                 v: "1"
             },
+            resolveWithFullResponse: true,
             uri: genSettings.ogcRecordsApiUrl + '/collections/' + catalogId
         };
         let requestDelegate = new RequestDelegate(config);
-        let catalog = { identifier: catalogId, description: '', publisher: { organization: '' }, title: '' };
+        let catalog = { identifier: catalogId, description: '', publisher: { name: '', organization: '' }, title: '' };
         try {
-            catalog = await requestDelegate.doRequest();
+            let response = await requestDelegate.doRequest();
+            if (response.status != 200) {
+                throw Error(`status code: ${response.status} ${response.statusText}`);
+            }
+            catalog = await response.json();
             log.info('Successfully fetched catalog info from OGC Records API');
         }
         catch (e) {
-            log.error(`Could not access OGC Records API at [${config.uri}]: ${e}`);
+            log.error(`Error fetching catalog "${catalogId}" from OGC Records API at [${config.uri}]: ${e}`);
         }
         return catalog;
     }
