@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -26,8 +26,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 import {configure, getLogger} from 'log4js';
 import * as sinon from 'sinon';
 import {TestUtils} from './utils/test-utils';
-import {mcloudDocument} from '../app/profiles/mcloud/model/index.document';
-import {CkanSettings} from '../app/importer/ckan/ckan.settings';
+import {CkanSettings, defaultCKANSettings} from '../app/importer/ckan/ckan.settings';
 import {CkanImporter} from '../app/importer/ckan/ckan.importer';
 import {CkanMapper} from '../app/importer/ckan/ckan.mapper';
 import {Organization} from "../app/model/agent";
@@ -51,7 +50,7 @@ describe('Import CKAN Bahn', function () {
         log.info('Start test ...');
 
         var settings: CkanSettings = {
-            ...CkanImporter.defaultSettings,
+            ...defaultCKANSettings,
             ckanBaseUrl: 'https://data.deutschebahn.com',
             defaultAttribution: 'Deutsche Bahn Datenportal',
             defaultDCATCategory: ['TRAN', 'TECH'],
@@ -62,7 +61,7 @@ describe('Import CKAN Bahn', function () {
             index: undefined,
             filterTags: ['Fernverkehr', 'Wagenreihung']
         };
-        let importer = new CkanImporter(ProfileFactoryLoader.get(), settings);
+        let importer = new CkanImporter(settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 
@@ -92,7 +91,7 @@ describe('Import CKAN Bahn', function () {
 
     it('should map ckan to index correctly', async () => {
         const mapper = new CkanMapper({
-            ...CkanImporter.defaultSettings,
+            ...defaultCKANSettings,
             ckanBaseUrl: 'https://data.deutschebahn.com',
             index: 'xxx',
             markdownAsDescription: false
@@ -112,13 +111,13 @@ describe('Import CKAN Bahn', function () {
         chai.expect(result.keywords[0]).to.eq('Koordinaten');
         chai.expect(result.publisher.length).to.eq(1);
         chai.expect((<Organization>result.publisher[0]).organization).to.eq('DB Vertrieb GmbH');
-        chai.expect(result.distributions.length).to.eq(1);
-        chai.expect(result.distributions[0].title).to.eq('Reisezentrenliste (Stand: 09/2018)');
-        chai.expect(result.distributions[0].accessURL).to.eq('http://download-data.deutschebahn.com/static/datasets/reisezentren/VSRz201703.csv');
-        chai.expect(result.distributions[0].format[0]).to.eq('CSV');
-        chai.expect(result.distributions[0].description).to.eq('Reisezentrenliste der DB Vertrieb GmbH');
-        chai.expect(result.distributions[0].modified.toString()).to.eq(new Date('2018-09-24T09:12:55.1358119').toString());
-        chai.expect(result.distributions[0].byteSize).to.eq(10325);
+        chai.expect(result.distribution.length).to.eq(1);
+        chai.expect(result.distribution[0].title).to.eq('Reisezentrenliste (Stand: 09/2018)');
+        chai.expect(result.distribution[0].accessURL).to.eq('http://download-data.deutschebahn.com/static/datasets/reisezentren/VSRz201703.csv');
+        chai.expect(result.distribution[0].format[0]).to.eq('CSV');
+        chai.expect(result.distribution[0].description).to.eq('Reisezentrenliste der DB Vertrieb GmbH');
+        chai.expect(result.distribution[0].modified.toString()).to.eq(new Date('2018-09-24T09:12:55.1358119').toString());
+        chai.expect(result.distribution[0].byteSize).to.eq(10325);
     });
 
     after(() => indexDocumentCreateSpy?indexDocumentCreateSpy.restore():null);

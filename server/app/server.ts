@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -66,6 +66,8 @@ export class Server extends ServerLoader {
 
         // on startup make sure the configuration has IDs for each harvester
         ConfigService.fixIDs();
+        // on startup make sure ENV variables - if set - replace existing configuration vars
+        ConfigService.adoptEnvs();
 
         this
             .use(GlobalAcceptMimesMiddleware)

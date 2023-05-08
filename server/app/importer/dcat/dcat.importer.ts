@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -21,75 +21,40 @@
  * ==================================================
  */
 
-import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {DcatMapper} from './dcat.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
-import {OptionsWithUri} from 'request-promise';
-import {DefaultImporterSettings, Importer} from '../../importer';
-import {Observable, Observer} from 'rxjs';
+
+import {Importer} from '../importer';
+import {Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {DcatSettings} from './dcat.settings';
-import {FilterUtils} from "../../utils/filter.utils";
-import {RequestDelegate} from "../../utils/http-request.utils";
+import {DcatSettings, defaultDCATSettings} from './dcat.settings';
+import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import {ElasticSettings} from "../../utils/elastic.setting";
-import {ConfigService} from "../../services/config/ConfigService";
+import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
     logRequest = getLogger('requests'),
     DomParser = require('@xmldom/xmldom').DOMParser;
 
-export class DcatSummary extends Summary {
-    opendata = 0;
-    missingLinks = 0;
-    missingPublishers = 0;
-    missingLicense = 0;
-    ok = 0;
-
-    additionalSummary() {
-        logSummary.info(`Number of records with at least one mandatory keyword: ${this.opendata}`);
-        logSummary.info(`Number of records with missing links: ${this.missingLinks}`);
-        logSummary.info(`Number of records with missing license: ${this.missingLicense}`);
-        logSummary.info(`Number of records with missing publishers: ${this.missingPublishers}`);
-        logSummary.info(`Number of records imported as valid: ${this.ok}`);
-    }
-}
-
-export class DcatImporter implements Importer {
+export class DcatImporter extends Importer {
     private profile: ProfileFactory<DcatMapper>;
     private readonly settings: DcatSettings;
-    elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    static defaultSettings: DcatSettings = {
-        ...DefaultImporterSettings,
-        catalogUrl: '',
-        filterTags: [],
-        filterThemes: []
-    };
 
-    private readonly summary: DcatSummary;
-    private filterUtils: FilterUtils;
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        super(settings);
 
-    run = new Observable<ImportLogMessage>(observer => {
-        this.observer = observer;
-        this.exec(observer);
-    });
-
-    private observer: Observer<ImportLogMessage>;
-
-    constructor(profile: ProfileFactory<DcatMapper>, settings, requestDelegate?: RequestDelegate) {
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
-        settings = MiscUtils.merge(DcatImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(defaultDCATSettings, settings);
 
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
@@ -99,12 +64,6 @@ export class DcatImporter implements Importer {
         }
 
         this.settings = settings;
-        this.filterUtils = new FilterUtils(settings);
-
-        this.summary = new DcatSummary(settings);
-
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -251,11 +210,6 @@ export class DcatImporter implements Importer {
             });
 
             if (!mapper.shouldBeSkipped()) {
-
-                if (doc.extras.metadata.isValid && doc.distributions.length > 0) {
-                    this.summary.ok++;
-                }
-
                 if (!this.settings.dryRun) {
                     promises.push(
                         this.elastic.addDocToBulk(doc, uuid)
@@ -281,8 +235,8 @@ export class DcatImporter implements Importer {
         return new DcatMapper(settings, record, catalogPage, harvestTime, storedData, summary);
     }
 
-    static createRequestConfig(settings: DcatSettings): OptionsWithUri {
-        let requestConfig: OptionsWithUri = {
+    static createRequestConfig(settings: DcatSettings): RequestOptions {
+        let requestConfig: RequestOptions = {
             method: "GET",
             uri: settings.catalogUrl,
             json: false,

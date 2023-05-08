@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -24,9 +24,8 @@
 import {Service} from '@tsed/di';
 import {ConfigService} from './config/ConfigService';
 import {ImportSocketService} from '../sockets/import.socket.service';
-import {CronJob, CronTime} from 'cron';
+import {CronJob} from 'cron';
 import {CronData} from '../importer.settings';
-import {Moment} from "moment";
 import {UrlCheckService} from "./statistic/UrlCheckService";
 import {IndexCheckService} from "./statistic/IndexCheckService";
 import {IndexService} from "./IndexService";

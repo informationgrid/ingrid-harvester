@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -22,18 +22,19 @@
  */
 
 import { Contact } from '../../../model/agent';
-import { CswMapper } from '../../../importer/csw/csw.mapper';
 import { DcatApPluDocument } from './dcatApPlu.document';
+import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
+import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { IndexDocument } from '../../../model/index.document';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
-export class DiPlanungDocument extends IndexDocument<CswMapper | ExcelSparseMapper | WfsMapper> {
+export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
 
-    async create(_mapper: CswMapper | ExcelSparseMapper | WfsMapper) : Promise<any> {
+    async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper) : Promise<any> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
-        let contactPoint: Contact = await mapper.getContactPoint();
+        let contactPoint: Contact = await mapper.getContactPoint() ?? { fn: '' };
         let result = {
             // basic information
             contact_point: {
@@ -52,7 +53,9 @@ export class DiPlanungDocument extends IndexDocument<CswMapper | ExcelSparseMapp
             description: mapper.getDescription(),
             identifier: mapper.getGeneratedId(),
             title: mapper.getTitle(),
+            alternateTitle: mapper.getAlternateTitle(),
             // plan and procedure information
+            development_freeze_period: mapper.getPluDevelopmentFreezePeriod(),
             plan_state: mapper.getPluPlanState(),
             plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),
             plan_type: mapper.getPluPlanType(),
@@ -62,12 +65,15 @@ export class DiPlanungDocument extends IndexDocument<CswMapper | ExcelSparseMapp
             procedure_type: mapper.getPluProcedureType(),
             process_steps: mapper.getPluProcessSteps(),
             // spatial and temporal features
-            centroid: mapper.getCentroid(),
+            bounding_box: mapper.getBoundingBox(),
+            centroid: mapper.getCentroid()?.['coordinates'],
             spatial: mapper.getSpatial(),
             spatial_text: mapper.getSpatialText(),
             temporal: mapper.getTemporal(),
             // additional information and metadata
+            catalog: await mapper.getCatalog(),
             publisher: (await mapper.getPublisher())?.[0],
+            maintainers: (await mapper.getMaintainers()),
             distributions: await mapper.getDistributions(),
             extras: {
                 harvested_data: mapper.getHarvestedData(),

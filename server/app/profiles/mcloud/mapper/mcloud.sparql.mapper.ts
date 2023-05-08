@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -22,7 +22,6 @@
  */
 
 import {mcloudMapper} from "./mcloud.mapper";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
 import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
 
 export class mcloudSparqlMapper extends mcloudMapper<SparqlMapper> {

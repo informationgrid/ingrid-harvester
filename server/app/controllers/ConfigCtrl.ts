@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -29,6 +29,7 @@ import {ScheduleService} from "../services/ScheduleService";
 import { ElasticSearchFactory } from '../utils/elastic.factory';
 import { ElasticSearchUtils } from '../utils/elastic.utils';
 import { ElasticSettings } from '../utils/elastic.setting';
+import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
 
 const log = require('log4js').getLogger(__filename);
 

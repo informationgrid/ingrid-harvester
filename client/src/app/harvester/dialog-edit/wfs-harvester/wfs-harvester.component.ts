@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -48,6 +48,7 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
     this.form.addControl('featuresFilter', new UntypedFormControl(this.model.featureFilter));
     this.form.addControl('version', new UntypedFormControl(this.model.version));
     this.form.addControl('typename', new UntypedFormControl(this.model.typename));
+    this.form.addControl('catalogId', new UntypedFormControl(this.model.catalogId));
 
     if (!this.model.xpaths) {
       this.model.xpaths = DefaultXpathSettings.xpaths;
@@ -55,10 +56,7 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
     this.form.addControl('xpaths',
       new UntypedFormGroup({
         capabilities: new UntypedFormGroup({
-          // abstract: new FormControl(this.model.xpaths.capabilities.abstract),
-          language: new UntypedFormControl(this.model.xpaths.capabilities.language),
-          // serviceProvider: new FormControl(this.model.xpaths.capabilities.serviceProvider),
-          // title: new FormControl(this.model.xpaths.capabilities.title)
+          serviceProvider: new UntypedFormControl(this.model.xpaths.capabilities.serviceProvider)
         }),
         description: new UntypedFormControl(this.model.xpaths.description),
         featureParent: new UntypedFormControl(this.model.xpaths.featureParent),

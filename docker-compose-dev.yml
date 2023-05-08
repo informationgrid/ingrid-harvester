@@ -1,9 +1,9 @@
 version: '3'
 services:
 
-  elastic:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
-    container_name: metadata-elasticsearch-node1
+  elastic-6:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.4
+    container_name: ingrid-elastic-6
     environment:
       - cluster.name=ingrid-harvester
       - bootstrap.memory_lock=true
@@ -13,38 +13,87 @@ services:
       - network.host=0.0.0.0
       - network.publish_host=127.0.0.1
     volumes:
-      - esdata:/usr/share/elasticsearch/data
+      - esdata6:/usr/share/elasticsearch/data
       - ./elasticsearch/set-pw-es:/usr/share/elasticsearch/bin/set-pw-es
     restart: unless-stopped
     ports:
       - 9200:9200
-      - 9300:9300
     networks:
-      - metadata-network
+      - ingrid-harvester-network
+
+  kibana-6:
+    image: docker.elastic.co/kibana/kibana:6.8.4
+    container_name: ingrid-kibana-6
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elastic-6:9200
+      - ELASTICSEARCH_USERNAME=kibana
+      - ELASTICSEARCH_PASSWORD=oNtTufuTFDg1S1lt
+    restart: unless-stopped
+    ports:
+      - 5601:5601
+    depends_on:
+      - elastic-6
+    networks:
+      - ingrid-harvester-network
+
+  elastic-8:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
+    container_name: ingrid-elastic-8
+    environment:
+      - cluster.name=ingrid-harvester
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - xpack.security.enabled=true
+      - discovery.type=single-node
+      - network.host=0.0.0.0
+      - network.publish_host=127.0.0.1
+    volumes:
+      - esdata8:/usr/share/elasticsearch/data
+      - ./elasticsearch/set-pw-es:/usr/share/elasticsearch/bin/set-pw-es
+    restart: unless-stopped
+    ports:
+      - 9201:9200
+    networks:
+      - ingrid-harvester-network
+
+  kibana-8:
+    image: docker.elastic.co/kibana/kibana:8.5.3-amd64
+    container_name: ingrid-kibana-8
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elastic-8:9201
+      - ELASTICSEARCH_USERNAME=kibana
+      - ELASTICSEARCH_PASSWORD=oNtTufuTFDg1S1lt
+    restart: unless-stopped
+    ports:
+      - 5602:5601
+    depends_on:
+      - elastic-8
+    networks:
+      - ingrid-harvester-network
 
   harvester:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     container_name: ingrid-harvester
+    image: ingrid-harvester
     environment:
      - NODE_ENV=development
+     - IMPORTER_PROFILE=diplanung
      - ELASTIC_URL=http://elastic:9200
      - ELASTIC_VERSION=8
      - ELASTIC_USER=elastic
      - ELASTIC_PASSWORD=
     ports:
-      - 4200:4200
       - 8090:8090
-    working_dir: /opt/ingrid/harvester
-    command: sh entrypoint-dev.sh
-    depends_on:
-        - elastic
+    working_dir: /opt/ingrid/harvester/server
+    command: node app/index.js
     networks:
-      - metadata-network
+      - ingrid-harvester-network
 
 volumes:
-  esdata:
+  esdata6:
+  esdata8:
 
 networks:
-  metadata-network:
+  ingrid-harvester-network:

@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -31,10 +31,10 @@ export const elasticsearchSettings = {
                     'max_gram': 8,
                     'preserve_original': true
                 },
-                'german_stemmer': {
-                    'type': 'stemmer',
-                    'name': 'light_german'
-                },
+                // 'german_stemmer': {
+                //     'type': 'stemmer',
+                //     'name': 'light_german'
+                // },
                 'decomp_shingle': {
                     'type': 'shingle',
                     'max_shingle_size': '8',
@@ -62,7 +62,7 @@ export const elasticsearchSettings = {
                     'filter': [
                         'lowercase',
                         'german_normalization',
-                        'german_stemmer'
+                        // 'german_stemmer'
                     ]
                 },
                 'decomp_german': {
@@ -72,7 +72,7 @@ export const elasticsearchSettings = {
                         'lowercase',
                         'decomp',
                         'german_normalization',
-                        'german_stemmer'
+                        // 'german_stemmer'
                     ]
                 },
                 'decomp_shingles': {

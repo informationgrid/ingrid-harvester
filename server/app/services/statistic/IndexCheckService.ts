@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -22,7 +22,6 @@
  */
 
 import { elasticsearchMapping } from '../../statistic/index_check.mapping';
-import { now } from 'moment';
 import { ConfigService } from '../config/ConfigService';
 import { ElasticQueries } from '../../utils/elastic.queries';
 import { ElasticSearchFactory } from '../../utils/elastic.factory';
@@ -32,6 +31,7 @@ import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary';
 
+const dayjs = require('dayjs');
 const log = require('log4js').getLogger(__filename);
 
 @Service()
@@ -39,6 +39,7 @@ export class IndexCheckService {
 
     private elasticUtils: ElasticSearchUtils;
     private elasticsearchSettings: ElasticSettings;
+    private elasticQueries: ElasticQueries;
 
     constructor() {
 		this.initialize();
@@ -57,8 +58,10 @@ export class IndexCheckService {
         };
         // @ts-ignore
         const summary: Summary = {};
+        let profile = ProfileFactoryLoader.get();
         this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
-        this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
+        this.elasticsearchSettings = profile.getElasticSettings();
+        this.elasticQueries = profile.getElasticQueries();
     }
 
     async getHistory() {
@@ -66,14 +69,14 @@ export class IndexCheckService {
         if (!indexExists) {
             await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
         }
-        return this.elasticUtils.getHistory(this.elasticUtils.indexName, ElasticQueries.getIndexCheckHistory());
+        return this.elasticUtils.getHistory(this.elasticUtils.indexName, this.elasticQueries.getIndexCheckHistory());
     }
 
     async start() {
         log.info('IndexCheck started!');
-        let start = now();
+        let start = dayjs();
         let facetsByAttribution = await this.elasticUtils.getFacetsByAttribution();
-        this.saveResult(facetsByAttribution, new Date(start));
+        this.saveResult(facetsByAttribution, start.toDate());
     }
 
     async saveResult(result, timestamp) {

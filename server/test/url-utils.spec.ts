@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -21,10 +21,9 @@
  * ==================================================
  */
 
-import {expect} from "chai";
-import {OptionsWithUri} from "request-promise";
-import {UrlUtils} from '../app/utils/url.utils';
-import {RequestDelegate} from '../app/utils/http-request.utils';
+import { expect } from 'chai';
+import { RequestDelegate, RequestOptions } from '../app/utils/http-request.utils';
+import { UrlUtils } from '../app/utils/url.utils';
 
 describe('validateUrl()', function () {
 
@@ -94,7 +93,7 @@ describe('validateUrl()', function () {
     });
 });
 
-function getRequestConfigFor(uri): OptionsWithUri {
+function getRequestConfigFor(uri): RequestOptions {
     return {
         method: 'GET',
         json: false,

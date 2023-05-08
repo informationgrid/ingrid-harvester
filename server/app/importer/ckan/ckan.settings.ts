@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -21,10 +21,25 @@
  * ==================================================
  */
 
-import {ImporterSettings} from '../../importer.settings';
+import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
 import {License} from '@shared/license.model';
 
 export type ProviderField = 'maintainer' | 'organization' | 'author';
+
+
+export const defaultCKANSettings: CkanSettings = {
+    ...DefaultImporterSettings,
+    ckanBaseUrl: '',
+    filterTags: [],
+    filterGroups: [],
+    providerPrefix: '',
+    providerField: 'organization',
+    dateSourceFormats: [],
+    requestType: 'ListWithResources',
+    markdownAsDescription: true,
+    groupChilds: false,
+    defaultLicense: null
+};
 
 export type CkanSettings = {
     ckanBaseUrl: string,

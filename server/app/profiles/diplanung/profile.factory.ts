@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -23,18 +23,21 @@
 
 import { elasticsearchMapping } from './elastic/elastic.mapping';
 import { elasticsearchSettings } from './elastic/elastic.settings';
-import { AbstractDeduplicateUtils } from '../../utils/abstract.deduplicate.utils';
-import { CswMapper } from '../../importer/csw/csw.mapper';
 import { DeduplicateUtils } from './elastic/deduplicate.utils';
+import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper';
 import { DiPlanungDocument } from './model/index.document';
+import { DiplanungImporterFactory } from './importer/diplanung.importer.factory';
+import { DiplanungVirtualMapper } from './mapper/diplanung.virtual.mapper';
+import { ElasticQueries } from './elastic/elastic.queries';
 import { ElasticSearchUtils } from '../../utils/elastic.utils';
 import { ElasticSettings } from '../../utils/elastic.setting';
 import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper';
+import { ImporterFactory } from '../../importer/importer.factory';
 import { ProfileFactory } from '../profile.factory';
 import { Summary } from '../../model/summary';
 import { WfsMapper } from '../../importer/wfs/wfs.mapper';
 
-export class DiplanungFactory extends ProfileFactory<CswMapper | ExcelSparseMapper | WfsMapper> {
+export class DiplanungFactory extends ProfileFactory<DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
 
     getIndexDocument(): DiPlanungDocument {
         return new DiPlanungDocument();
@@ -44,11 +47,19 @@ export class DiplanungFactory extends ProfileFactory<CswMapper | ExcelSparseMapp
         return elasticsearchMapping;
     }
 
+    getElasticQueries(): any {
+        return ElasticQueries.getInstance();
+    }
+
     getElasticSettings(): any {
         return elasticsearchSettings;
     }
 
-    getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: ElasticSettings, summary: Summary): AbstractDeduplicateUtils {
+    getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: ElasticSettings, summary: Summary): DeduplicateUtils {
         return new DeduplicateUtils(elasticUtils, elasticSettings, summary);
+    }
+
+    getImporterFactory(): ImporterFactory {
+        return new DiplanungImporterFactory();
     }
 }

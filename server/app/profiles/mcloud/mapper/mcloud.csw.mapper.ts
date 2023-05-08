@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -24,7 +24,21 @@
 import {mcloudMapper} from "./mcloud.mapper";
 import {CswMapper} from "../../../importer/csw/csw.mapper";
 
+let log = require('log4js').getLogger(__filename);
+
 export class mcloudCswMapper extends mcloudMapper<CswMapper> {
+    _getDescription() {
+        let description = this.baseMapper._getDescription();
+        if (!description) {
+            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.getGeneratedId()}\', title: \'${this.getTitle()}\', source: \'${this.baseMapper.getSettings().getRecordsUrl}\'`;
+            log.warn(msg);
+            this.baseMapper.getSummary().warnings.push(['No description', msg]);
+            this.baseMapper.valid = false;
+        }
+
+        return description;
+    }
+
     getCategories(): string[] {
         let subgroups = [];
         let keywords = this.getKeywords();

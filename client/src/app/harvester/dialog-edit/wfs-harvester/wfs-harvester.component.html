@@ -4,7 +4,7 @@
     ==================================================
     Copyright (C) 2017 - 2023 wemove digital solutions GmbH
     ==================================================
-    Licensed under the EUPL, Version 1.2 or – as soon they will be
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
     approved by the European Commission - subsequent versions of the
     EUPL (the "Licence");
 
@@ -56,25 +56,21 @@
 
   <mat-card>
     <mat-card-header>
-      <mat-card-title>WFS XPaths (oder default-Werte) zu ...</mat-card-title>
+      <mat-card-title>WFS XPaths, Default-Werte</mat-card-title>
     </mat-card-header>
     <mat-card-content>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Katalog-ID" formControlName="catalogId" required>
+        </mat-form-field>
+      </div>
       <div formGroupName="xpaths">
         <div fxLayout="column">
           <div formGroupName="capabilities">
             <div fxLayout="column">
-              <!-- <mat-form-field fxFlex>
-                <input matInput placeholder="Katalogtitel" formControlName="title" required>
-              </mat-form-field>
               <mat-form-field fxFlex>
-                <input matInput placeholder="Katalogbeschreibung" formControlName="abstract" required>
-              </mat-form-field> -->
-              <mat-form-field fxFlex>
-                <input matInput placeholder="Sprache des Katalogs" formControlName="language" required>
-              </mat-form-field>
-              <!-- <mat-form-field fxFlex>
                 <input matInput placeholder="ServiceProvider" formControlName="serviceProvider" required>
-              </mat-form-field> -->
+              </mat-form-field>
             </div>
           </div>
           <mat-form-field fxFlex>

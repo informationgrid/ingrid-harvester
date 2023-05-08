@@ -30,7 +30,7 @@
     "Nutzungseinschränkungen: Es gelten keine Einschränkungen.",
     "Nutzungsbedingungen: Es gilt die Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes (GeoNutzV), Einzelheiten unter \"http://www.geodatenzentrum.de/docpdf/geonutzv.pdf\" und \"http://www.dwd.de/DE/service/copyright/copyright_artikel.html\"."
   ],
-  "distributions": [
+  "distribution": [
     {
       "format": ["WMS"],
       "accessURL": "https://maps.dwd.de/geoserver/dwd/RBSN_RH/ows?service=wms&version=1.3.0&request=GetCapabilities",

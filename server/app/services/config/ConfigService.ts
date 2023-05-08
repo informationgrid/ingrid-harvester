@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -24,18 +24,15 @@
 import {Harvester} from '@shared/harvester';
 import {GeneralSettings} from '@shared/general-config.settings';
 import * as fs from 'fs';
-import {CkanImporter} from '../../importer/ckan/ckan.importer';
-import {ExcelImporter} from '../../importer/excel/excel.importer';
-import {ExcelSparseImporter} from '../../importer/excelsparse/excelsparse.importer';
-import {CswImporter} from '../../importer/csw/csw.importer';
 import {getLogger} from "log4js";
 import {MappingDistribution, MappingItem} from '@shared/mapping.model';
 import {UrlUtils} from "../../utils/url.utils";
-import {OaiImporter} from "../../importer/oai/oai.importer";
-import {DcatImporter} from "../../importer/dcat/dcat.importer";
-import {SparqlImporter} from "../../importer/sparql/sparql.importer";
-import {WfsImporter} from "../../importer/wfs/wfs.importer";
 import { MiscUtils } from '../../utils/misc.utils';
+import {defaultCKANSettings} from "../../importer/ckan/ckan.settings";
+import {defaultExcelSettings} from "../../importer/excel/excel.settings";
+import {defaultCSWSettings} from "../../importer/csw/csw.settings";
+import {defaultOAISettings} from "../../importer/oai/oai.settings";
+import {defaultDCATSettings} from "../../importer/dcat/dcat.settings";
 
 const log = getLogger();
 
@@ -135,6 +132,26 @@ export class ConfigService {
     }
 
     /**
+     * Replaces config vars with values given by appropriate ENV vars.
+     * Should only be called once, at the start of the application.
+     */
+    static adoptEnvs() {
+        let generalSettings = ConfigService.getGeneralSettings();
+        let ENV = {
+            elasticSearchUrl: process.env.ELASTIC_URL ?? generalSettings.elasticSearchUrl,
+            elasticSearchVersion: process.env.ELASTIC_VERSION ?? generalSettings.elasticSearchVersion,
+            elasticSearchUser: process.env.ELASTIC_USER ?? generalSettings.elasticSearchUser,
+            elasticSearchPassword: process.env.ELASTIC_PASSWORD ?? generalSettings.elasticSearchPassword,
+            ogcRecordsApiUrl: process.env.OGCAPI_URL ?? generalSettings.ogcRecordsApiUrl,
+            ogcRecordsApiUser: process.env.OGCAPI_USER ?? generalSettings.ogcRecordsApiUser,
+            ogcRecordsApiPassword: process.env.OGCAPI_PASSWORD ?? generalSettings.ogcRecordsApiPassword
+        };
+        let updatedSettings: GeneralSettings = MiscUtils.merge(generalSettings, ENV);
+        log.info('Updating general config from environment variables');
+        ConfigService.setGeneralConfig(updatedSettings);
+    }
+
+    /**
      * Read the config.json file and return the json content, which
      * represents a collection of harvester.
      *
@@ -153,15 +170,14 @@ export class ConfigService {
                 .map(config => {
                     let defaultSettings = {};
                     switch (config.type) {
-                        case 'CKAN': defaultSettings = CkanImporter.defaultSettings; break;
-                        case 'CSW': defaultSettings = CswImporter.defaultSettings; break;
-                        case 'CODEDE-CSW': defaultSettings = CswImporter.defaultSettings; break;
-                        case 'DCAT': defaultSettings = DcatImporter.defaultSettings; break;
-                        case 'EXCEL': defaultSettings = ExcelImporter.defaultSettings; break;
-                        case 'EXCEL_SPARSE': defaultSettings = ExcelSparseImporter.defaultSettings; break;
-                        case 'OAI': defaultSettings = OaiImporter.defaultSettings; break;
-                        case 'SPARQL': defaultSettings = SparqlImporter.defaultSettings; break;
-                        case 'WFS': defaultSettings = WfsImporter.defaultSettings; break;
+                        case 'CKAN': defaultSettings = defaultCKANSettings; break;
+                        case 'CSW': defaultSettings = defaultCSWSettings; break;
+                        case 'DCAT': defaultSettings = defaultDCATSettings; break;
+                        case 'EXCEL': defaultSettings = defaultExcelSettings; break;
+                        //case 'EXCEL_SPARSE': defaultSettings = ExcelSparseImporter.defaultSettings; break;
+                        case 'OAI': defaultSettings = defaultOAISettings; break;
+                        //case 'SPARQL': defaultSettings = SparqlImporter.defaultSettings; break;
+                        //case 'WFS': defaultSettings = WfsImporter.defaultSettings; break;
                     }
                     return MiscUtils.merge(defaultSettings, config);
                 })

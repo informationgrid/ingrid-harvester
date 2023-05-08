@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -54,6 +54,29 @@ export const elasticsearchMapping = {
                 }
             }
         },
+        'alternateTitle': {
+            'type': 'text',
+            'store': true,
+            'fields': {
+                'decomp_german': {
+                    'type': 'text',
+                    'analyzer': 'decomp_german',
+                    'search_analyzer': 'german_simple'
+                },
+                'decomp_shingles': {
+                    'type': 'text',
+                    'analyzer': 'decomp_shingles'
+                },
+                'suggest_shingles': {
+                    'type': 'text',
+                    'analyzer': 'suggest_shingles'
+                },
+                'raw': {
+                    'type': 'keyword',
+                    'store': true,
+                }
+            }
+        },
         'catalog': {
             'properties': {
                 'identifier': {
@@ -67,6 +90,7 @@ export const elasticsearchMapping = {
         'description': {
             'type': 'text',
             'analyzer': 'decomp',
+            'search_analyzer': 'german_simple',
             'fields': {
                 'decomp_german': {
                     'type': 'text',

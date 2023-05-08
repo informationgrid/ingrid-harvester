@@ -22,7 +22,7 @@ You can use the same setup as outlined in the section `Test setup` below, but wi
 
 Prerequisites:
 * node.js v16
-* Elasticsearch v8
+* Elasticsearch, supports v6 and v8
 
 You may wish to run the server and the client outside of the docker container, for debugging and faster deployment/development purposes. Currently you have to change some files to achieve this, outlined below:
 

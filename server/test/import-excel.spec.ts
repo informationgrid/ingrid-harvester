@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -30,6 +30,7 @@ import {ExcelImporter} from '../app/importer/excel/excel.importer';
 import {ExcelSettings} from '../app/importer/excel/excel.settings';
 import {ExcelMapper} from '../app/importer/excel/excel.mapper';
 import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
+import {mcloudDocument} from "../app/profiles/mcloud/model/index.document";
 
 let log = getLogger();
 configure('./log4js.json');
@@ -53,15 +54,15 @@ describe('Import Excel', function () {
             filePath: 'test/data/data-test.xlsx',
             defaultDCATCategory: ['DEFAULT_TRAN', "XXX"],
             type: undefined,
-            index: undefined,
+            index: 'excel',
             isIncremental: false,
             maxConcurrent: 1
         };
-        let importer = new ExcelImporter(ProfileFactoryLoader.get(), settings);
+        let importer = new ExcelImporter(settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(3, {issued: "2019-01-08T16:33:11.168Z"}));
 
-        indexDocumentCreateSpy = sinon.spy(ProfileFactoryLoader.get().getIndexDocument(), 'create');
+        indexDocumentCreateSpy = sinon.spy(mcloudDocument.prototype, 'create');
 
         importer.run.subscribe({
             complete: async () => {

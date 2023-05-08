@@ -4,7 +4,7 @@
     ==================================================
     Copyright (C) 2017 - 2023 wemove digital solutions GmbH
     ==================================================
-    Licensed under the EUPL, Version 1.2 or – as soon they will be
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
     approved by the European Commission - subsequent versions of the
     EUPL (the "Licence");
 
@@ -78,6 +78,27 @@
             <mat-icon class="inline-valigned">{{esStatusIcon(connectionCheck)}}</mat-icon>&nbsp;
             <b>{{esStatusMsg(connectionCheck)}}</b>
           </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>OGC Records API</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
+          <mat-form-field fxFlex="30">
+            <input matInput type="text" placeholder="REST Basis-URL" formControlName="ogcRecordsApiUrl">
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
+          <mat-form-field fxFlex="15">
+            <input matInput type="text" placeholder="Benutzername" formControlName="ogcRecordsApiUser">
+          </mat-form-field>
+          <mat-form-field fxFlex="15">
+            <input matInput type="password" placeholder="Passwort" formControlName="ogcRecordsApiPassword">
+          </mat-form-field>
         </div>
       </mat-card-content>
     </mat-card>

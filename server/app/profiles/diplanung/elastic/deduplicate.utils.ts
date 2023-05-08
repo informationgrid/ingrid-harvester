@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -21,13 +21,21 @@
  * ==================================================
  */
 
-import { AbstractDeduplicateUtils } from '../../../utils/abstract.deduplicate.utils';
+import { DcatApPluDocument } from '../model/dcatApPlu.document';
+import { DeduplicateUtils as AbstractDeduplicateUtils } from '../../../utils/deduplicate.utils';
+import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { ElasticSearchUtils } from '../../../utils/elastic.utils';
-import { ElasticQueries } from '../../../utils/elastic.queries';
 import { Summary } from '../../../model/summary';
 
 const log = require('log4js').getLogger(__filename);
 
+// fields potentially occurring in CSW that should be overwritten by WFS data
+const overwriteFields = [
+    'catalog',
+    // spatial fields
+    'bounding_box', 'centroid', 'spatial',
+    // PLU fields
+    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_start_date', 'procedure_state', 'procedure_type'];
 
 export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
@@ -37,141 +45,106 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
     // FIXME: deduplication must work differently when import is not started for all harvesters
     async deduplicate() {
-        await this._deduplicateByTitle();
+        await this._mergeByAlternateTitle('csw_');
+        // await this._deduplicateByTitle();
         // await this._deduplicateUsingQuery();
     }
 
-    // FIXME: deduplication must work differently when import is not started for all harvesters
-    /*async _deduplicateUsingQuery() {
-        log.debug(`Looking for duplicates for items in index '${this.elastic.indexName}`);
-        // TODO: make sure the index was refreshed to get the updated results (e.g. previous deletion of duplicated items)
+    /**
+     * Merge metadata from CSW and WFS if IDs match.
+     * - base information from CSW (i.e., update CSW index)
+     * - overwrite (update) specified fields with WFS data
+     * - remove WFS entry after successful merge
+     */
+    async _mergeByAlternateTitle(mainIndexPrefix: string = 'csw_') {
+        // INFO 2 approaches:
+        // 1) update in CSW index, remove from WFS index -> update, remove
+        // 2) remove in CSW index, remove from WFS index, insert merged into new "merged" index -> remove x2, insert
+        //      - ES transform?
 
-        // Send data in chunks. Don't send too much at once.
-        let maxSize = 5;
-        let count = 0;
-        for (let i = 0; i < this.duplicateStaging.length; i += maxSize) {
-            let body = [];
-            let end = Math.min(this.duplicateStaging.length, i + maxSize);
+        // we'll go with 1) for now
+        // first, use update in the CSW index
+        // then, remove the document from the WFS index
+        try {
+            let response = await this.elastic.search(
+                this.settings.alias,
+                // this.queries.findSameId(),
+                this.queries.findSameAlternateTitle(),
+                50
+            );
 
-            let slice = this.duplicateStaging.slice(i, end);
+            let count = 0;
+            log.debug(`Count of buckets for deduplication aggregates query: ${response.aggregations.duplicates.buckets.length}`);
+            for (let bucket of response.aggregations.duplicates.buckets) {
+                // TODO sort hits by newest metadata modified data
+                try {
+                    let hits = bucket.duplicates.hits.hits;
 
-            slice.forEach(item => {
-                body.push({index: this.deduplicationIndices});
-                body.push(item.query);
-            });
+                    // the first index starting with mainIndexPrefix is considered the base index
+                    let mainHit = hits.find(hit => hit._index.startsWith(mainIndexPrefix));
 
-            if (body.length < 1) return; // Don't send an empty query
-
-            try {
-                let results = await this.client.msearch({body: body});
-                for (let j = 0; j < results.responses.length; j++) {
-                    let response = results.responses[j];
-
-                    if (response.error) {
-                        this.handleError("Error in one of the search responses:", response.error);
+                    if (!mainHit) {
                         continue;
                     }
-                    if (!response.hits) continue;
 
-                    response.hits.hits.forEach(hit => {
-                        let item = slice[j];
-                        let title = item.title;
-
-                        let myDate = item.modified;
-                        let hitDate = hit._source.modified;
-
-                        // Make sure we aren't comparing apples to oranges.
-                        // Convert to dates, if not already the case.
-                        if (typeof myDate === 'string') myDate = new Date(Date.parse(myDate));
-                        if (typeof hitDate === 'string') hitDate = new Date(Date.parse(hitDate));
-
-                        if (typeof myDate === 'number') myDate = new Date(myDate);
-                        if (typeof hitDate === 'number') hitDate = new Date(hitDate);
-
-                        let q = {'delete': <any>{}};
-                        let retained = '';
-                        if (hitDate > myDate) {
-                            // Hit is newer. Delete document from current index.
-                            q.delete._index = this.elastic.indexName;
-                            q.delete._type = this.settings.indexType;
-                            q.delete._id = item.id;
-
-                            retained = `Item to retain -> ID: '${hit._id}', Title: '${hit._source.title}', Index: '${hit._index};`;
-                        } else { // Hit is older. Delete (h)it.
-                            q.delete._index = hit._index;
-                            q.delete._type = hit._type;
-                            q.delete._id = hit._id;
-
-                            title = hit._source.title;
-                            retained = `Item to retain -> ID: '${item.id}', Title: '${title}', Index: '${this.elastic.indexName};`;
+                    // merge all hits from other indices into the mainHit, remove them afterwards
+                    for (let hit of hits.filter(hit => hit._index != mainHit._index)) {
+                        // overwrite predefined fields
+                        let updatedFields = {};
+                        for (const field of overwriteFields) {
+                            updatedFields[field] = hit._source[field];
                         }
+                        // use publisher from WFS if not specified in CSW
+                        if (!mainHit._source.publisher?.name && !mainHit._source.publisher?.organization) {
+                            updatedFields['publisher'] = hit._source.publisher;
+                        }
+                        // create new dcat-ap-plu xml document from merged index document
+                        let mergedDoc = { ...mainHit._source, ...updatedFields };
+                        let dcatappluDocument = await DcatApPluDocument.create(new DiplanungVirtualMapper(mergedDoc));
+                        updatedFields['extras'] = { transformed_data: { dcat_ap_plu: dcatappluDocument } };
 
-                        let deleted = `Item to delete -> ID: '${q.delete._id}', Title: '${title}', Index: '${q.delete._index}'`;
-
-                        log.warn(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${retained}`);
-                        this.elastic._bulkData.push(q);
+                        let deleted = `Item to delete -> ID: '${hit._id}', Title: '${hit._source.title}', Index: '${hit._index}'`;
+                        let merged = `Item to merge into -> ID: '${mainHit._id}', Title: '${mainHit._source.title}', Index: '${mainHit._index}'`;
+                        log.info(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${merged}`);
+                        this.elastic._bulkData.push(
+                            {
+                                update: {
+                                    _index: mainHit._index,
+                                    _type: mainHit._type,
+                                    _id: mainHit._id
+                                }
+                            },
+                            {
+                                doc: updatedFields
+                            },
+                            {
+                                delete: {
+                                    _index: hit._index,
+                                    _type: hit._type,
+                                    _id: hit._id
+                                }
+                            }
+                        );
                         count++;
-                    });
+                    }
+                } catch (err) {
+                    this.handleError(`Error deduplicating hits for URL ${bucket.key}`, err);
                 }
-            } catch (e) {
-                this.handleError('Error during deduplication', e);
             }
+            log.info(`${count} duplicates found using the aggregates query will be deleted from index '${this.elastic.indexName}'.`);
+        } catch (err) {
+            this.handleError('Error processing results of aggregate query for duplicates', err);
         }
 
-        // Perform bulk delete and resolve/reject the promise
-        log.debug(`${count} duplicates found using the duplicates query will be deleted from the index '${this.elastic.indexName}'.`);
         await this.elastic.sendBulkData(false);
-        log.debug(`Finished deleting duplicates found using the duplicates query in index ${this.elastic.indexName}`);
-    }*/
 
-    /**
-     * Create a query for searching for duplicates of the given document and add
-     * it to a queue to be executed later.
-     *
-     * @param doc document for which to search duplicates
-     * @param id value to be assigned to the _id field of the document above
-     */
-    /*_queueForDuplicateSearch(doc, id) {
-        // Don't search duplicates for invalid documents. Firstly, it is not
-        // strictly necessarily and secondly, don't delete valid duplicates of
-        // an invalid document
-        if (doc.extras.metadata.isValid === false) return;
-
-        let generatedId = doc.extras.generated_id;
-        let modified = doc.modified;
-        let title = doc.title;
-
-        // Make sure there are no nulls
-        if (!generatedId) generatedId = '';
-
-        let urls = [];
-        doc.distribution.forEach(dist => {
-            if (dist.accessURL) {
-                urls.push(dist.accessURL);
-            }
-        });
-
-        const query = ElasticQueries.findSameIdTitleUrls(id, generatedId, urls, title);
-
-        // if modified date does not exist then it should exist for another (do not compare doc to itself!)
-        if (!modified || isNaN(modified)) {
-            query.query.bool.must.push({
-                exists: {field: "modified"}
-            });
-        } else {
-            // otherwise the modified date must be different
-            query.query.bool.must_not.push({
-                term: {modified: modified}
-            });
+        // TODO: send flush request to immediately remove documents from index
+        try {
+            await this.elastic.flush();
+        } catch (e) {
+            log.error('Error occurred during flush', e);
         }
-
-        this.duplicateStaging.push({
-            id: id,
-            modified: modified,
-            title: doc.title,
-            query: query
-        });
-    }*/
+    }
 
     // FIXME: deduplication must work differently when import is not started for all harvesters
     async _deduplicateByTitle() {
@@ -181,7 +154,7 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
         try {
             let response = await this.elastic.search(
                 this.settings.alias,
-                ElasticQueries.findSameTitle(),
+                this.queries.findSameTitle(),
                 50
             );
 

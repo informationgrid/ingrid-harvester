@@ -1,5 +1,5 @@
 {
-  "title": "Flussgebietseinheiten-DE (Wasserrahmenrichtlinie 2. Zyklus 2016-2021)",
+  "title": "Flussgebietseinheiten-DE (Wasserrahmenrichtlinie 3. Zyklus 2022-2027)",
   "description": "Dieser Metadatensatz beschreibt \"Flussgebietseinheiten\" und Untereinheiten (Bearbeitungsgebiet/Koordinierungsraum/sub-unit) als Gebietstyp der Objektart „Bewirtschaftungsgebiet, Schutzgebiet, geregeltes Gebiet“ des INSPIRE Annex- Thema III \"Bewirtschaftungsgebiete, Schutzgebiete, geregelte Gebiete und Berichterstattungseinheiten\". Die Bundesanstalt für Gewässerkunde (BfG) verwaltet im Auftrag der Wasserwirtschaftsverwaltungen in Deutschland im nationalen Berichtsportal Wasser (WasserBLIcK) die Daten der Berichterstattung zu diversen wasserbezogenen EG-Umweltrichtlinien. Auf Basis dieser Datengrundlage stellt die BfG in Abstimmung mit der Länderarbeitsgemeinschaft Wasser (LAWA) ausgewählte Karten- und Datendienste bereit. Die hier bereitgestellten Dienste basieren auf national flächendeckend homogenisierten Datenbeständen. Andere administrative Ebenen in Deutschland (Land, Bezirk, Kreis, Kommune) stellen gegebenenfalls zu diesem Thema Dienste in einer höheren räumlichen und zeitlichen Auflösung bereit.",
   "extras": {
     "metadata": {
@@ -55,11 +55,11 @@
   },
   "contact_point": {
     "fn": "Busskamp, Ralf",
-    "hasOrganizationName": "Bundesanstalt für Gewässerkunde",
-    "hasStreetAddress": "Am Mainzer Tor 1",
-    "hasRegion": "Rheinland-Pfalz",
-    "hasCountryName": "Deutschland",
-    "hasPostalCode": "56068",
+    "organization-name": "Bundesanstalt für Gewässerkunde",
+    "street-address": "Am Mainzer Tor 1",
+    "region": "Rheinland-Pfalz",
+    "country-name": "Deutschland",
+    "postal-code": "56068",
     "hasEmail": "geoportal@bafg.de",
     "hasTelephone": "+49 (0)261 1306 5255"
   },
@@ -93,8 +93,8 @@
     "National"
   ],
   "theme": [
-    "http://publications.europa.eu/resource/authority/data-theme/TRAN",
-    "http://publications.europa.eu/resource/authority/data-theme/TECH"
+    "http://publications.europa.eu/resource/authority/data-theme/REGI",
+    "http://publications.europa.eu/resource/authority/data-theme/GOVE"
   ],
   "modified": "2019-01-08",
   "accrual_periodicity": "IRREG",
@@ -102,21 +102,7 @@
     "Die Bundesanstalt für Gewässerkunde stellt die Geodaten im Rahmen der Geodatennutzungsverordnung des Bundes (GeoNutzV) bereit. Die Daten sind für alle Zwecke kommerzieller und nicht kommerzieller Nutzung geldleistungsfrei verfügbar. Die bundesweite Flächendeckung des Datenbestandes ist nicht in jedem Fall gewährleistet. Einzelne Bundesländer belegen ihren Datenbestand im Berichtsportal WasserBLIcK mit Zugriffsbeschränkungen, die mit Verweis auf §2 der GeoNutzV bei der Bereitstellung des nationalen Gesamtdatenbestandes berücksichtigt werden. Seitens der Bundesanstalt für Gewässerkunde wird keine Haftung für die Aktualität, Richtigkeit und Vollständigkeit der zur Verfügung gestellten Informationen und Daten übernommen. Für die Bereitstellung der Informationen und Daten kann kein Gewohnheitsrecht abgeleitet werden. Die Datenquelle ist ergänzt um das Datum des Datenbezugs wie folgt anzugeben: \"WasserBLIcK/BfG und Zuständige Behörden der Länder, Datum\".",
     "Dieser Datensatz kann gemäß der „Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes“ (https://www.gesetze-im-internet.de/geonutzv/GeoNutzV.pdf) genutzt werden."
   ],
-  "distributions": [
-    {
-      "accessURL": "https://registry.gdi-de.org/id/de.bund.bfg.csw/46c44922-b067-4ef6-8f66-6640124d5392",
-      "format": [
-        "GML",
-        "x-filegdb"
-      ]
-    },
-    {
-      "accessURL": "https://registry.gdi-de.org/id/de.bund.bfg.csw/5177683d-5c40-42e5-9a58-f20fa98f0d78",
-      "format": [
-        "GML",
-        "x-filegdb"
-      ]
-    },
+  "distribution": [
     {
       "accessURL": "https://geoportal.bafg.de/arcgis1/rest/services/INSPIRE/AM/MapServer/exts/InspireView/service?VERSION=1.3.0&SERVICE=WMS&REQUEST=Getcapabilities",
       "format": [

@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -28,8 +28,7 @@ import {DateRange} from "../../model/dateRange";
 // import {License} from '@shared/license.model';
 import {Summary} from '../../model/summary';
 import {ExcelSparseSettings} from './excelsparse.settings';
-import {RequestDelegate} from '../../utils/http-request.utils';
-import {OptionsWithUri} from 'request-promise';
+import {RequestDelegate, RequestOptions} from '../../utils/http-request.utils';
 import {ImporterSettings} from "../../importer.settings";
 // import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Columns} from './excelsparse.importer';
@@ -86,6 +85,10 @@ export class ExcelSparseMapper extends BaseMapper {
         return this.columnValues[this.columnMap.NAME];
     }
 
+    _getAlternateTitle() {
+        return this._getTitle();
+    }
+
     // TODO
     _getDescription() {
         // return this.columnValues[this.columnMap.Kurzbeschreibung];
@@ -99,6 +102,10 @@ export class ExcelSparseMapper extends BaseMapper {
 
         // return publishers.map(p => GenericMapper.createPublisher(p.name, p.url));
         return this.fetched.publisher;
+    }
+
+    _getMaintainers() {
+        return undefined;
     }
 
     // TODO
@@ -179,10 +186,10 @@ export class ExcelSparseMapper extends BaseMapper {
         </gml:Point>`;
     }
 
-    _getSpatial(): any {
+    _getSpatial(): object {
         return {
             'type': 'point',
-            'coordinates': [this.columnMap.LON, this.columnMap.LAT]
+            'coordinates': [parseFloat(this.columnMap.LON), parseFloat(this.columnMap.LAT)]
         };
     }
 
@@ -190,8 +197,8 @@ export class ExcelSparseMapper extends BaseMapper {
         return undefined;
     }
 
-    _getCentroid(): number[] {
-        return this._getSpatial().coordinates;
+    _getCentroid(): object {
+        return this._getSpatial();
     }
 
     // TODO
@@ -456,8 +463,8 @@ export class ExcelSparseMapper extends BaseMapper {
         return undefined;
     }
 
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
-        let config: OptionsWithUri = {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),
@@ -486,6 +493,10 @@ export class ExcelSparseMapper extends BaseMapper {
             title: this.fetched.title,
             publisher: await this._getPublisher()[0]
         }
+    }
+
+    _getPluDevelopmentFreezePeriod() {
+        return undefined;
     }
 
     _getPluPlanState() {
