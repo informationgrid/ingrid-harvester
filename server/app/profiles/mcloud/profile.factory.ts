@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -32,9 +32,12 @@ import {ExcelMapper} from "../../importer/excel/excel.mapper";
 import {OaiMapper} from "../../importer/oai/oai.mapper";
 import {SparqlMapper} from "../../importer/sparql/sparql.mapper";
 import { DeduplicateUtils } from "./elastic/deduplicate.utils";
+import { ElasticQueries } from "./elastic/elastic.queries";
 import { ElasticSearchUtils } from "../../utils/elastic.utils";
 import { ElasticSettings } from "../../utils/elastic.setting";
 import { Summary } from "../../model/summary";
+import {McloudImporterFactory} from "./importer/mcloud.importer.factory";
+import {ImporterFactory} from "../../importer/importer.factory";
 
 export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper> {
 
@@ -46,11 +49,19 @@ export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatM
         return elasticsearchMapping;
     }
 
+    getElasticQueries(): any {
+        return ElasticQueries.getInstance();
+    }
+
     getElasticSettings(): any {
         return elasticsearchSettings;
     }
 
     getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: ElasticSettings, summary: Summary): DeduplicateUtils {
         return new DeduplicateUtils(elasticUtils, elasticSettings, summary);
+    }
+
+    getImporterFactory(): ImporterFactory {
+        return new McloudImporterFactory();
     }
 }

@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -24,20 +24,17 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
+import { AllGeoJSON } from "@turf/helpers";
 import {BaseMapper} from "../base.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
-import {RequestDelegate} from "../../utils/http-request.utils";
-import {CswSummary} from "./csw.importer";
-import {OptionsWithUri} from "request-promise";
+import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
 import {CswSettings} from './csw.settings';
 import {throwError} from "rxjs";
-import {ImporterSettings} from "../../importer.settings";
 import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {Summary} from "../../model/summary";
-import { pluPlanState, pluPlanType, pluProcedureState } from "../../model/dcatApPlu.model";
 import { GeoJsonUtils } from "../../utils/geojson.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import {Agent, Contact, Organization, Person} from "../../model/agent";
@@ -77,17 +74,17 @@ export class CswMapper extends BaseMapper {
 
     private log = getLogger();
 
-    private readonly record: any;
+    protected readonly record: any;
     private harvestTime: any;
     private readonly storedData: any;
 
     protected readonly idInfo; // : SelectedValue;
-    private settings: CswSettings;
+    protected settings: CswSettings;
     private readonly uuid: string;
-    private summary: CswSummary;
+    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
-    private fetched: any = {
+    protected fetched: any = {
         contactPoint: null,
         keywords: {},
         themes: null
@@ -109,7 +106,7 @@ export class CswMapper extends BaseMapper {
         super.init();
     }
 
-    public getSettings(): ImporterSettings {
+    public getSettings(): CswSettings {
         return this.settings;
     }
 
@@ -129,18 +126,7 @@ export class CswMapper extends BaseMapper {
         return abstract;
     }
 
-    // TODO ED:2022-09-16: handle filtering of distributions by accessURL not here, but in dcatApPlu.document?
     async _getDistributions(): Promise<Distribution[]> {
-        let distributions = [];
-        for (let distribution of await this._getDistributions_Original()) {
-            if (distribution.accessURL) {
-                distributions.push({ ...distribution, format: distribution.format });
-            }
-        }
-        return distributions;
-    }
-
-    async _getDistributions_Original(): Promise<Distribution[]> {
         let dists = [];
         let urlsFound = [];
 
@@ -316,18 +302,59 @@ export class CswMapper extends BaseMapper {
         }
 
         if (publishers.length === 0) {
-            if (otherContacts.length === 0) {
-                this.summary.missingPublishers++;
-                return undefined;
-            }
-            else {
-                // ED: 2022-09-15: use other contacts as fallback instead
-                // TODO add a toggle in UI whether to use this fallback
-                return otherContacts;
-            }
+            // if (otherContacts.length === 0) {
+            this.summary.missingPublishers++;
+            return undefined;
+            // }
+            // else {
+            //     // ED: 2022-09-15: use other contacts as fallback instead
+            //     // TODO add a toggle in UI whether to use this fallback
+            //     return otherContacts;
+            // }
         } else {
             return publishers;
         }
+    }
+
+    async _getMaintainers(): Promise<Person[] | Organization[]> {
+        let maintainers = [];
+        let otherContacts = [];
+        // Look up contacts for the dataset first and then the metadata contact
+        let queries = [
+            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:contact/gmd:CI_ResponsibleParty'
+        ];
+        for (let i = 0; i < queries.length; i++) {
+            let contacts = CswMapper.select(queries[i], this.record);
+            for (let j = 0; j < contacts.length; j++) {
+                let contact = contacts[j];
+                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
+
+                let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+
+                let url = null;
+                if (urlNode) {
+                    let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                }
+
+                let infos: any = {};
+                if (name) infos.name = name.textContent;
+                if (url) infos.homepage = url;
+                if (org) infos.organization = org.textContent;
+
+                if (role === 'custodian' || role === 'pointOfContact') {
+                    maintainers.push(infos);
+                }
+                else {
+                    otherContacts.push(infos);
+                }
+            }
+        }
+
+        return maintainers.length > 0 ? maintainers : undefined;
     }
 
     _getTitle() {
@@ -508,7 +535,7 @@ export class CswMapper extends BaseMapper {
         return geographicBoundingBoxes.toString();
     }
 
-    _getSpatial(): any {
+    _getSpatial(): object {
         let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];
         for(let i=0; i < geographicBoundingBoxes.length; i++){
@@ -566,9 +593,9 @@ export class CswMapper extends BaseMapper {
         return undefined;
     }
 
-    _getCentroid(): number[] {
+    _getCentroid(): object {
         let spatial = this._getSpatial();
-        return GeoJsonUtils.getCentroid(spatial)?.geometry.coordinates;
+        return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
     }
 
     _getTemporal(): DateRange[] {
@@ -846,127 +873,6 @@ export class CswMapper extends BaseMapper {
         return license;
     }
 
-    // TODO check
-    _getPluPlanState(): string {
-        let planState;
-        try {
-            planState = CswMapper.select(this.settings.pluPlanState, this.record, true)?.textContent;
-        }
-        finally {
-            if (!planState) {
-                planState = this.settings.pluPlanState;
-            }
-        }
-        if (['ja', 'festgesetzt'].includes(planState?.toLowerCase())) {
-            return pluPlanState.FESTGES;
-        }
-        else if (['nein', 'in aufstellung'].includes(planState?.toLowerCase())) {
-            return pluPlanState.IN_AUFST;
-        }
-        return pluPlanState.UNBEKANNT;
-    }
-
-    /**
-     * Heuristic based on metadata harvested from gdi-de.
-     * 
-     * // TODO extend
-     */
-    _getPluPlanType(): string {
-        // consider title, description, and keywords
-        let searchFields = [];
-        searchFields.push(this._getTitle());
-        searchFields.push(this._getDescription());
-        searchFields.push(...this._getKeywords());
-        let haystack = searchFields.join('#').toLowerCase();
-
-        // TODO especially in keywords - if set - there can be ambiguities, e.g. keywords contain multiple determination words
-        if (['bebauungsplan'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.BEBAU_PLAN;
-        }
-        if (['flächennutzungsplan', 'fnp'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.FLAECHENN_PLAN;
-        }
-        if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.PLAN_FESTST_VERF;
-        }
-        if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.PW_BES_STAEDT_BAUR;
-        }
-        if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.PW_LANDSCH_PLAN;
-        }
-        if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.RAUM_ORDN_PLAN;
-        }
-        if (['raumordnungsverfahren'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.RAUM_ORDN_VERF;
-        }
-        if (['städtebauliche satzungen'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.STAEDT_BAUL_SATZ;
-        }
-        return pluPlanType.UNBEKANNT;
-    }
-
-    _getPluProcedureState(): string {
-        switch (this._getPluPlanState()) {
-            case pluPlanState.FESTGES: return pluProcedureState.ABGESCHLOSSEN;
-            case pluPlanState.IN_AUFST: return pluProcedureState.LAUFEND;
-            default: return pluProcedureState.UNBEKANNT;
-        }
-    }
-
-    _getBoundingBoxGml() {
-        return undefined;
-    }
-
-    _getBoundingBox() {
-        let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
-        let geometries = [];
-        for(let i=0; i < geographicBoundingBoxes.length; i++){
-            let geographicBoundingBox = geographicBoundingBoxes[i];
-            let west = parseFloat(CswMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let east = parseFloat(CswMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let south = parseFloat(CswMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-
-            geometries.push({
-                'type': 'Envelope',
-                'coordinates': [[west, north], [east, south]]
-            });
-        }
-        if(geometries.length == 1){
-            return geometries[0];
-        }
-        else if(geometries.length > 1){
-            return {
-                'type': 'GeometryCollection',
-                'geometries': geometries
-            }
-        }
-
-        return undefined;
-    }
-
-    async _getCatalog() {
-        return this.fetched.catalog;
-    }
-
-    _getPluPlanTypeFine() {
-        return undefined;
-    }
-
-    _getPluProcedureStartDate() {
-        return undefined;
-    }
-
-    _getPluProcedureType() {
-        return undefined;
-    }
-
-    _getPluProcessSteps() {
-        return undefined;
-    }
-
     getErrorSuffix(uuid, title) {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'.`;
     }
@@ -1092,7 +998,17 @@ export class CswMapper extends BaseMapper {
         if (contactPoint) {
             return contactPoint;
         }
+        let contacts = await this._getContactPoints();
+        contacts = contacts.filter(extContact => !['originator', 'author', 'publisher'].includes(extContact.role));
+        for (let extContact of contacts) {
+            delete extContact['role'];
+        }
+        contactPoint = contacts.length === 0 ? undefined : contacts[0];
+        this.fetched.contactPoint = contactPoint;
+        return contactPoint; // TODO index all contacts
+    }
 
+    async _getContactPoints(): Promise<(Contact & { role?: string })[]> {
         let others = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
@@ -1104,59 +1020,55 @@ export class CswMapper extends BaseMapper {
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
                 let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
-
-                if (role !== 'originator' && role !== 'author' && role !== 'publisher') {
-                    let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
-                    let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                    let delPt = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
-                    let locality = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:city/gco:CharacterString', contact, true);
-                    let region = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
-                    let country = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
-                    let postCode = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
-                    let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
-                    let phone = CswMapper.select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
-                    let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
-                    let url = null;
-                    if (urlNode) {
-                        let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                        url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
-                    }
-
-                    let infos: Contact = {
-                        fn: name?.textContent,
-                    };
-
-                    if (contact.getAttribute('uuid')) {
-                        infos.hasUID = contact.getAttribute('uuid');
-                    }
-
-                    if (!infos.fn) infos.fn = org?.textContent;
-                    if (org) infos['organization-name'] = org.textContent;                    
-
-                    let line1 = delPt.map(n => CswMapper.getCharacterStringContent(n));
-                    line1 = line1.join(', ');
-                    if (line1?.textContent) infos.hasStreetAddress = line1;
-                    if (locality?.textContent) infos.hasLocality = locality.textContent;
-                    if (region?.textContent) infos.hasRegion = region.textContent;
-                    if (country?.textContent) infos.hasCountryName = country.textContent;
-                    if (postCode?.textContent) infos.hasPostalCode = postCode.textContent;
-
-                    if (email) infos.hasEmail = email.textContent;
-                    if (phone) infos.hasTelephone = phone.textContent;
-                    if (url) infos.hasURL = url;
-
-                    others.push(infos);
+                let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
+                let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
+                let delPt = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
+                let locality = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:city/gco:CharacterString', contact, true);
+                let region = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
+                let country = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
+                let postCode = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
+                let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                let phone = CswMapper.select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let url = null;
+                if (urlNode) {
+                    let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 }
+
+                let infos: Contact & { role?: string } = {
+                    fn: name?.textContent,
+                };
+
+                if (contact.getAttribute('uuid')) {
+                    infos.hasUID = contact.getAttribute('uuid');
+                }
+
+                if (!infos.fn) infos.fn = org?.textContent;
+                if (org) infos['organization-name'] = org.textContent;                    
+
+                let line1 = delPt.map(n => CswMapper.getCharacterStringContent(n));
+                line1 = line1.join(', ');
+                if (line1) infos.hasStreetAddress = line1;
+                if (locality?.textContent) infos.hasLocality = locality.textContent;
+                if (region?.textContent) infos.hasRegion = region.textContent;
+                if (country?.textContent) infos.hasCountryName = country.textContent;
+                if (postCode?.textContent) infos.hasPostalCode = postCode.textContent;
+
+                if (email) infos.hasEmail = email.textContent;
+                if (phone) infos.hasTelephone = phone.textContent;
+                if (url) infos.hasURL = url;
+
+                infos.role = role;
+
+                others.push(infos);
             }
         }
-
-        contactPoint = others.length === 0 ? undefined : others[0];
-        this.fetched.contactPoint = contactPoint;
-        return contactPoint; // TODO index all contacts
+        return others;
     }
 
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
-        let config: OptionsWithUri = {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),

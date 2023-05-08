@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -21,9 +21,11 @@
  * ==================================================
  */
 
-import { AbstractDeduplicateUtils } from '../utils/abstract.deduplicate.utils';
+import { DeduplicateUtils } from '../utils/deduplicate.utils';
 import { BaseMapper } from '../importer/base.mapper';
+import { ElasticQueries } from '../utils/elastic.queries';
 import { ElasticSearchUtils } from '../utils/elastic.utils';
+import { ImporterFactory } from '../importer/importer.factory';
 import { IndexDocument } from '../model/index.document';
 import { Summary } from '../model/summary';
 
@@ -32,6 +34,8 @@ export abstract class ProfileFactory<M extends BaseMapper> {
 
     abstract getElasticSettings(): any;
     abstract getElasticMapping(): any;
+    abstract getElasticQueries(): ElasticQueries;
+    abstract getImporterFactory(): ImporterFactory;
 
-    abstract getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: any, summary: Summary): AbstractDeduplicateUtils;
+    abstract getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: any, summary: Summary): DeduplicateUtils;
 }

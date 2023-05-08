@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -25,52 +25,35 @@ import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {ExcelMapper} from './excel.mapper';
 import {Workbook, Worksheet} from 'exceljs';
 import {Summary} from '../../model/summary';
-import {DefaultImporterSettings, Importer} from '../../importer';
-import {Observable, Observer} from 'rxjs';
+import {Importer} from '../importer';
+import {Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {ExcelSettings} from './excel.settings';
-import {FilterUtils} from "../../utils/filter.utils";
+import {defaultExcelSettings, ExcelSettings} from './excel.settings';
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import {ElasticSettings} from "../../utils/elastic.setting";
-import {ConfigService} from "../../services/config/ConfigService";
+import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
 
 let log = require('log4js').getLogger(__filename);
 
-export class ExcelImporter implements Importer {
+export class ExcelImporter extends Importer {
     private profile: ProfileFactory<ExcelMapper>;
     settings: ExcelSettings;
-    elastic: ElasticSearchUtils;
     excelFilepath: string;
     names = {};
-
-    static defaultSettings: ExcelSettings = {
-        ...DefaultImporterSettings,
-        filePath: './data.xlsx'
-    };
-
-    summary: Summary;
-    private filterUtils: FilterUtils;
-
-    run = new Observable<ImportLogMessage>(observer => {this.exec(observer)});
 
     /**
      * Create the importer and initialize with settings.
      * @param { {filePath, mapper} }settings
      */
-    constructor(profile: ProfileFactory<ExcelMapper>, settings) {
-        this.profile = profile;
+    constructor(settings) {
+        super(settings);
+
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
-        settings = MiscUtils.merge(ExcelImporter.defaultSettings, settings);
-
-        this.summary = new Summary(settings);
-        this.filterUtils = new FilterUtils(settings);
+        settings = MiscUtils.merge(defaultExcelSettings, settings);
 
         this.settings = settings;
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
         this.excelFilepath = settings.filePath;
     }
 

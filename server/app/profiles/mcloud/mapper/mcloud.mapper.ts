@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -21,9 +21,8 @@
  * ==================================================
  */
 
-import {OptionsWithUri} from 'request-promise';
+import 'dayjs/locale/de';
 import {License} from '@shared/license.model';
-import * as moment from 'moment';
 import {getLogger} from "log4js";
 import {Distribution} from "../../../model/distribution";
 import {Agent, Contact, Organization, Person} from "../../../model/agent";
@@ -34,9 +33,10 @@ import {DcatMapper} from "../../../importer/dcat/dcat.mapper";
 import {ExcelMapper} from "../../../importer/excel/excel.mapper";
 import {OaiMapper} from "../../../importer/oai/oai.mapper";
 import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
+import { RequestOptions } from 'utils/http-request.utils';
 
-moment.locale('de');
-
+const dayjs = require('dayjs');
+dayjs.locale('de');
 
 export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper>{
 
@@ -75,7 +75,19 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
     }
 
     async getDistributions(): Promise<Distribution[]>{
-        return await this.baseMapper.getDistributions();
+        let distributions = await this.baseMapper.getDistributions();
+        if (distributions.length === 0) {
+            this.baseMapper.valid = false;
+            let msg = `Dataset has no links for download/access. It will not be displayed in the portal. Title: '${this.getTitle()}', Id: '${this.getGeneratedId()}'.`;
+
+            this.baseMapper.getSummary().missingLinks++;
+
+            this.baseMapper.valid = false;
+            this.baseMapper.getSummary().warnings.push(['No links', msg]);
+
+            this._log.warn(msg);
+        }
+        return distributions;
     }
 
     getGeneratedId(): string{
@@ -239,7 +251,24 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
     }
 
     async getContactPoint(): Promise<Contact>{
-        return await this.baseMapper.getContactPoint();
+        let baseContactPoint = await this.baseMapper.getContactPoint();
+        let contactPoint = undefined;
+        if(baseContactPoint){
+            contactPoint = {}
+            if(baseContactPoint.fn) contactPoint.fn = baseContactPoint.fn;
+            //if(baseContactPoint.hasLocality) contactPoint.hasLocality = baseContactPoint.hasLocality;
+            if(baseContactPoint.hasEmail) contactPoint.hasEmail = baseContactPoint.hasEmail;
+            if(baseContactPoint.hasTelephone) contactPoint.hasTelephone = baseContactPoint.hasTelephone;
+            if(baseContactPoint.hasUID) contactPoint.hasUID = baseContactPoint.hasUID;
+            if(baseContactPoint.hasURL) contactPoint.hasURL = baseContactPoint.hasURL;
+            if(baseContactPoint.hasOrganizationName) contactPoint['organization-name'] = baseContactPoint.hasOrganizationName;
+            else if(baseContactPoint['organization-name']) contactPoint['organization-name'] = baseContactPoint['organization-name'];
+            if(baseContactPoint.hasStreetAddress) contactPoint['street-address'] = baseContactPoint.hasStreetAddress;
+            if(baseContactPoint.hasRegion) contactPoint.region = baseContactPoint.hasRegion;
+            if(baseContactPoint.hasCountryName) contactPoint['country-name'] = baseContactPoint.hasCountryName;
+            if(baseContactPoint.hasPostalCode) contactPoint['postal-code'] = baseContactPoint.hasPostalCode;
+        }
+        return contactPoint;
     }
 
     getCreator(): Agent[] | Agent{
@@ -302,7 +331,7 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
         return await this.baseMapper.getLicense();
     }
 
-    getUrlCheckRequestConfig(uri: string): OptionsWithUri{
+    getUrlCheckRequestConfig(uri: string): RequestOptions{
         return this.baseMapper.getUrlCheckRequestConfig(uri);
     }
 

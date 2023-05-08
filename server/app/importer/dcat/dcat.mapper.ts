@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -28,9 +28,7 @@ import {BaseMapper} from "../base.mapper";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
-import {RequestDelegate} from "../../utils/http-request.utils";
-import {DcatSummary} from "./dcat.importer";
-import {OptionsWithUri} from "request-promise";
+import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
 import {DcatSettings} from './dcat.settings';
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {throwError} from "rxjs";
@@ -84,7 +82,7 @@ export class DcatMapper extends BaseMapper {
 //    protected readonly idInfo; // : SelectedValue;
     private settings: DcatSettings;
     private readonly uuid: string;
-    private summary: DcatSummary;
+    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {
@@ -291,24 +289,6 @@ export class DcatMapper extends BaseMapper {
         return undefined;
     }
 
-    _getCategories(): string[] {
-        let subgroups = [];
-        let keywords = this.getKeywords();
-        if (keywords) {
-            keywords.forEach(k => {
-                k = k.trim();
-                if (k === 'mcloud_category_roads' || k === 'mcloud-kategorie-straßen') subgroups.push('roads');
-                if (k === 'mcloud_category_climate' || k === 'mcloud-kategorie-klima-und-wetter') subgroups.push('climate');
-                if (k === 'mcloud_category_waters' || k === 'mcloud-kategorie-wasserstraßen-und-gewässer') subgroups.push('waters');
-                if (k === 'mcloud_category_railway' || k === 'mcloud-kategorie-bahn') subgroups.push('railway');
-                if (k === 'mcloud_category_infrastructure' || k === 'mcloud-kategorie-infrastuktur') subgroups.push('infrastructure');
-                if (k === 'mcloud_category_aviation' || k === 'mcloud-kategorie-luft--und-raumfahrt') subgroups.push('aviation');
-            });
-        }
-        if (subgroups.length === 0) subgroups.push(...this.settings.defaultMcloudSubgroup);
-        return subgroups;
-    }
-
     _getCitation(): string {
         return undefined;
     }
@@ -499,9 +479,9 @@ export class DcatMapper extends BaseMapper {
             var coordsPos = wkt.indexOf("(");
             var type = wkt.substring(0, coordsPos).trim();
             if(type.lastIndexOf(' ') > -1){
-                var type = type.substring(type.lastIndexOf(' ')).trim();
+                type = type.substring(type.lastIndexOf(' ')).trim();
             }
-            var type = type.toLowerCase();
+            type = type.toLowerCase();
             var coords = wkt.substring(coordsPos).trim();
             coords = coords.replace(/\(/g, "[").replace(/\)/g, "]");
             coords = coords.replace(/\[(\s*[-0-9][^\]]*\,[^\]]*[0-9]\s*)\]/g, "[[$1]]");
@@ -796,8 +776,8 @@ export class DcatMapper extends BaseMapper {
         return infos;
     }
 
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
-        let config: OptionsWithUri = {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),

@@ -14,7 +14,7 @@
     "organization" : "DB Cargo AG",
     "homepage" : "https://www.dbcargo.com/"
   } ],
-  "distributions" : [ {
+  "distribution" : [ {
     "id" : "04e9934a-8043-4b16-a6eb-6d5fb5c0a6b9",
     "title" : "Ist-Verkehrsdaten der DB Cargo auf Bst8-Ebene",
     "description" : "",

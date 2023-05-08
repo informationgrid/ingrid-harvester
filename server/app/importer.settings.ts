@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -25,6 +25,27 @@ export interface CronData {
     pattern: string;
     active: boolean;
 }
+
+export const DefaultImporterSettings: ImporterSettings = {
+    index: '',
+    priority: null,
+    type: '',
+    maxRecords: 100,
+    startPosition: 0,
+    customCode: '',
+    defaultMcloudSubgroup: [],
+    defaultDCATCategory: [],
+    dateSourceFormats: [],
+    blacklistedIds: [],
+    whitelistedIds: [],
+    rejectUnauthorizedSSL: true,
+    rules: {
+        containsDocumentsWithData: false
+    },
+    isIncremental: false,
+    maxConcurrent: 1,
+    skipUrlCheckOnHarvest: false
+};
 
 export type ImporterSettings = {
     index: string,

@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -45,8 +45,9 @@ export class StatisticUtils {
         };
         // @ts-ignore
         const summary: Summary = {};
+        let profile = ProfileFactoryLoader.get();
         this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
-        this.elasticsearchSettings = ProfileFactoryLoader.get().getElasticSettings();
+        this.elasticsearchSettings = profile.getElasticSettings();
     }
 
     async saveSummary(logMessage: ImportLogMessage, baseIndex: string) {

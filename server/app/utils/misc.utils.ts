@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -24,7 +24,15 @@
 'use strict';
 
 import { merge as lodashMerge } from 'lodash';
+import { Catalog } from '../model/dcatApPlu.model';
+import { ConfigService } from '../services/config/ConfigService';
+import { RequestDelegate, RequestOptions } from './http-request.utils';
 
+const dayjs = require('dayjs');
+const log = require('log4js').getLogger(__filename);
+dayjs.extend(require('dayjs/plugin/customParseFormat'));
+
+const CUSTOM_DATE_TIME_FORMATS = ["YYYY-MM-DDZ"];
 const MAX_MSG_LENGTH = 4096;
 const TRUNC_STR = '... (truncated)';
 
@@ -50,5 +58,61 @@ export class MiscUtils {
      */
     public static truncateErrorMessage(msg: string) {
         return msg?.length > MAX_MSG_LENGTH ? msg.substring(0, MAX_MSG_LENGTH - TRUNC_STR.length) + TRUNC_STR : msg;
+    }
+
+    /**
+     * Normalize datetime strings
+     */
+    public static normalizeDateTime(datetime: string): string {
+        if (!datetime) {
+            return undefined;
+        }
+        let parsedDatetime = dayjs(datetime);
+        // if format is not recognizable ISO8601, try to parse with custom formats
+        if (!parsedDatetime.isValid()) {
+            parsedDatetime = dayjs(datetime, CUSTOM_DATE_TIME_FORMATS);
+        }
+        if (parsedDatetime.isValid()) {
+            return parsedDatetime.format();
+        }
+        log.warn("Could not parse datetime: " + datetime);
+        return datetime;
+    }
+
+    /**
+     * Get catalog information from OGC-Records-API
+     */
+    static async fetchCatalogFromOgcRecordsApi(catalogId: string): Promise<Catalog> {
+        let genSettings = ConfigService.getGeneralSettings();
+        let authString = genSettings.ogcRecordsApiUser + ':' + genSettings.ogcRecordsApiPassword;
+        let config: RequestOptions = {
+            method: 'GET',
+            json: true,
+            headers: {
+                'User-Agent': 'InGrid Harvester. node-fetch',
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + Buffer.from(authString, 'utf8').toString('base64')
+            },
+            qs: {
+                f: "json",
+                v: "1"
+            },
+            resolveWithFullResponse: true,
+            uri: genSettings.ogcRecordsApiUrl + '/collections/' + catalogId
+        };
+        let requestDelegate = new RequestDelegate(config);
+        let catalog = { identifier: catalogId, description: '', publisher: { name: '', organization: '' }, title: '' };
+        try {
+            let response = await requestDelegate.doRequest();
+            if (response.status != 200) {
+                throw Error(`status code: ${response.status} ${response.statusText}`);
+            }
+            catalog = await response.json();
+            log.info('Successfully fetched catalog info from OGC Records API');
+        }
+        catch (e) {
+            log.error(`Error fetching catalog "${catalogId}" from OGC Records API at [${config.uri}]: ${e}`);
+        }
+        return catalog;
     }
 }

@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -29,17 +29,13 @@ import {Distribution} from "../../model/distribution";
 import {DateRange} from "../../model/dateRange";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
-import {RequestDelegate} from "../../utils/http-request.utils";
-import {SparqlSummary} from "./sparql.importer";
-import {OptionsWithUri} from "request-promise";
+import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
 import {SparqlSettings} from './sparql.settings';
 import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
 import {Summary} from "../../model/summary";
 import {Person} from "../../model/agent";
-
-let xpath = require('xpath');
 
 export class SparqlMapper extends BaseMapper {
 
@@ -54,7 +50,7 @@ export class SparqlMapper extends BaseMapper {
 //    protected readonly idInfo; // : SelectedValue;
     private settings: SparqlSettings;
     private readonly uuid: string;
-    private summary: SparqlSummary;
+    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {
@@ -319,8 +315,8 @@ export class SparqlMapper extends BaseMapper {
         return infos;
     }
 
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
-        let config: OptionsWithUri = {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),

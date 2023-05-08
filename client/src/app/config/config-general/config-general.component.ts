@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -141,6 +141,9 @@ export class ConfigGeneralComponent implements OnInit {
       alias: [settings.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
       numberOfShards: [settings.numberOfShards],
       numberOfReplicas: [settings.numberOfReplicas],
+      ogcRecordsApiUrl: [settings.ogcRecordsApiUrl],
+      ogcRecordsApiUser: [settings.ogcRecordsApiUser],
+      ogcRecordsApiPassword: [settings.ogcRecordsApiPassword],
       cronOffset: [settings.cronOffset],
       proxy: [settings.proxy],
       portalUrl: [settings.portalUrl],

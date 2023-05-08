@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -22,11 +22,9 @@
  */
 
 import {Summary} from './model/summary';
-import * as fs from 'fs';
 import {configure, getLogger} from 'log4js';
 import {concat, Observable} from 'rxjs';
 import {ImportLogMessage} from './model/import.result';
-import {ImporterFactory} from "./importer/importer.factory";
 import {ConfigService} from './services/config/ConfigService';
 import { MiscUtils } from './utils/misc.utils';
 import {ProfileFactoryLoader} from "./profiles/profile.factory.loader";
@@ -79,7 +77,8 @@ async function startProcess() {
 
         let configHarvester = MiscUtils.merge(importerConfig, configGeneral);
 
-        let importer = ImporterFactory.get(ProfileFactoryLoader.get(), configHarvester );
+        let profile = ProfileFactoryLoader.get();
+        let importer = profile.getImporterFactory().get(configHarvester);
         if (!importer) {
             log.error( 'Importer not defined for: ' + configHarvester.type );
             return;

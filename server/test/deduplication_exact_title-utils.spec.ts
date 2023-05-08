@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -29,8 +29,8 @@ import {elasticsearchMapping} from '../app/profiles/mcloud/elastic/elastic.mappi
 import {elasticsearchSettings} from '../app/profiles/mcloud/elastic/elastic.settings';
 import {ElasticSettings} from '../app/utils/elastic.setting';
 import { ElasticSearchFactory } from '../app/utils/elastic.factory';
+import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
 
-let elasticsearch = require('elasticsearch');
 configure('./test/log4js-test.json');
 
 require('url').URL;
@@ -42,6 +42,7 @@ xdescribe('deduplication by exact title', function() {
     // @ts-ignore
     let settings: ElasticSettings = {
         elasticSearchUrl: 'http://localhost:9200',
+        elasticSearchVersion: "6",
         deduplicationAlias: 'test-dedup',
         elasticSearchUser: 'elastic',
         elasticSearchPassword: 'elastic'
@@ -56,7 +57,6 @@ xdescribe('deduplication by exact title', function() {
 
     let elasticSearchUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
     let deduplicateUtils = elasticSearchUtils.deduplicationUtils;
-    //deduplicateUtils.deduplicationIndices = deduplicationIndices;
 
     /**
      * Initialize test indices with mapping and settings

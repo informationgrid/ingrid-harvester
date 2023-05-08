@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -43,6 +43,7 @@ xdescribe('deduplication by similar title', function () {
     // @ts-ignore
     let settings: ElasticSettings = {
         elasticSearchUrl: 'http://localhost:9200',
+        elasticSearchVersion: "6",
         deduplicationAlias: 'test-dedup'
     };
 

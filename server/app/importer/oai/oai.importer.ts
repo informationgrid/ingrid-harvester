@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -21,75 +21,39 @@
  * ==================================================
  */
 
-import {ElasticSearchUtils} from '../../utils/elastic.utils';
 import {OaiMapper} from './oai.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
-import {CswParameters, RequestDelegate, RequestPaging} from '../../utils/http-request.utils';
-import {OptionsWithUri} from 'request-promise';
-import {DefaultImporterSettings, Importer} from '../../importer';
-import {Observable, Observer} from 'rxjs';
+import {RequestDelegate, RequestOptions} from '../../utils/http-request.utils';
+
+import {Importer} from '../importer';
+import {Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {OaiSettings} from './oai.settings';
-import {FilterUtils} from "../../utils/filter.utils";
+import {defaultOAISettings, OaiSettings} from './oai.settings';
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import {ElasticSettings} from "../../utils/elastic.setting";
-import {ConfigService} from "../../services/config/ConfigService";
+import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
     logRequest = getLogger('requests'),
     DomParser = require('@xmldom/xmldom').DOMParser;
 
-export class OaiSummary extends Summary {
-    opendata = 0;
-    missingLinks = 0;
-    missingPublishers = 0;
-    missingLicense = 0;
-    ok = 0;
-
-    additionalSummary() {
-        logSummary.info(`Number of records with at least one mandatory keyword: ${this.opendata}`);
-        logSummary.info(`Number of records with missing links: ${this.missingLinks}`);
-        logSummary.info(`Number of records with missing license: ${this.missingLicense}`);
-        logSummary.info(`Number of records with missing publishers: ${this.missingPublishers}`);
-        logSummary.info(`Number of records imported as valid: ${this.ok}`);
-    }
-}
-
-export class OaiImporter implements Importer {
+export class OaiImporter extends Importer {
     private profile: ProfileFactory<OaiMapper>;
     private readonly settings: OaiSettings;
-    elastic: ElasticSearchUtils;
     private requestDelegate: RequestDelegate;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    static defaultSettings: OaiSettings = {
-        ...DefaultImporterSettings,
-        providerUrl: '',
-        eitherKeywords: [],
-        set: ''
-    };
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        super(settings);
 
-    private readonly summary: OaiSummary;
-    private filterUtils: FilterUtils;
-
-    run = new Observable<ImportLogMessage>(observer => {
-        this.observer = observer;
-        this.exec(observer);
-    });
-
-    private observer: Observer<ImportLogMessage>;
-
-    constructor(profile: ProfileFactory<OaiMapper>, settings, requestDelegate?: RequestDelegate) {
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
-        settings = MiscUtils.merge(OaiImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(defaultOAISettings, settings);
 
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
@@ -99,12 +63,6 @@ export class OaiImporter implements Importer {
         }
 
         this.settings = settings;
-        this.filterUtils = new FilterUtils(settings);
-
-        this.summary = new OaiSummary(settings);
-
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -216,11 +174,6 @@ export class OaiImporter implements Importer {
             });
 
             if (!mapper.shouldBeSkipped()) {
-
-                if (doc.extras.metadata.isValid && doc.distributions.length > 0) {
-                    this.summary.ok++;
-                }
-
                 if (!this.settings.dryRun) {
                     promises.push(
                         this.elastic.addDocToBulk(doc, uuid)
@@ -246,8 +199,8 @@ export class OaiImporter implements Importer {
         return new OaiMapper(settings, record, harvestTime, storedData, summary);
     }
 
-    static createRequestConfig(settings: OaiSettings, resumptionToken?: string): OptionsWithUri {
-        let requestConfig: OptionsWithUri = {
+    static createRequestConfig(settings: OaiSettings, resumptionToken?: string): RequestOptions {
+        let requestConfig: RequestOptions = {
             method: "GET",
             uri: settings.providerUrl,
             json: false,

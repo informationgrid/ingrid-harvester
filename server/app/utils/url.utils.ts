@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -23,9 +23,9 @@
 
 'use strict';
 
-import {RequestDelegate} from "./http-request.utils";
-import {OptionsWithUri} from "request-promise";
 import * as fs from "fs";
+import { MiscUtils } from "./misc.utils";
+import { RequestDelegate, RequestOptions } from "./http-request.utils";
 
 let log = require('log4js').getLogger(__filename);
 
@@ -52,7 +52,7 @@ export class UrlUtils {
      * or the uri prefixed with 'https://' or 'http://' if these are reachable,
      * or undefined otherwise
      */
-    static async urlWithProtocolFor(requestConfig: OptionsWithUri, skip = false): Promise<string> {
+    static async urlWithProtocolFor(requestConfig: RequestOptions, skip = false): Promise<string> {
         let url = <string>requestConfig.uri;
 
         if (url && url.trim()) {
@@ -86,7 +86,7 @@ export class UrlUtils {
      * @param requestConfig the configuration to use for HTTP requests
      * @private
      */
-    private static async checkUrlWithProtocol(requestConfig: OptionsWithUri): Promise<boolean> {
+    private static async checkUrlWithProtocol(requestConfig: RequestOptions): Promise<boolean> {
         let urlResult = UrlUtils.cache[<string>requestConfig.uri];
         if (urlResult !== undefined) {
             return urlResult;
@@ -94,10 +94,9 @@ export class UrlUtils {
 
         let found = false;
         try {
-            let delegate = new RequestDelegate(requestConfig);
-            let callback = (err, resp) => found = resp && resp.statusCode === 200;
-
-            await delegate.doRequest(callback);
+            let delegate = new RequestDelegate(MiscUtils.merge(requestConfig, { resolveWithFullResponse: true }));
+            let response: Response = await delegate.doRequest();
+            found = response?.status === 200;
             UrlUtils.cache[<string>requestConfig.uri] = found;
             return found;
         } catch (err) {

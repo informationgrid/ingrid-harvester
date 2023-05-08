@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -21,16 +21,13 @@
  * ==================================================
  */
 
-import {ImporterSettings} from '../../importer.settings';
+import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
 
 export type WfsSettings = {
     version: "2.0.0" | "1.1.0",
     xpaths: {
         capabilities: {
-            abstract: string,
-            language: string,
-            serviceProvider: string,
-            title: string
+            serviceProvider: string
         },
         description: string,
         featureParent: string,
@@ -39,6 +36,7 @@ export type WfsSettings = {
         pluProcedureStartDate: string,
         spatial: string
     },
+    catalogId: string,
     count: number,
     resultType?: "hits" | "results",
     typename: string,
@@ -46,17 +44,13 @@ export type WfsSettings = {
     eitherKeywords: string[],
     httpMethod: "GET" | "POST",
     featureFilter?: string,
-    resolveWithFullResponse?: boolean,
-    encoding?: string
+    resolveWithFullResponse?: boolean
 } & ImporterSettings;
 
 export const DefaultXpathSettings: Partial<WfsSettings> = {
     xpaths: {
         capabilities: {
-            abstract: '/*[local-name()="WFS_Capabilities"]/ows:ServiceIdentification/ows:Abstract',
-            language: '',
-            serviceProvider: '/*[local-name()="WFS_Capabilities"]/ows:ServiceProvider',
-            title: '/*[local-name()="WFS_Capabilities"]/ows:ServiceIdentification/ows:Title'
+            serviceProvider: '/*[local-name()="WFS_Capabilities"]/ows:ServiceProvider'
         },
         description: '',
         featureParent: '/*[local-name()="FeatureCollection"]/*[local-name()="member"]',
@@ -66,3 +60,13 @@ export const DefaultXpathSettings: Partial<WfsSettings> = {
         spatial: ''
     }
 }
+
+
+export const defaultWfsSettings: Partial<WfsSettings> = {
+    ...DefaultImporterSettings,
+    ...DefaultXpathSettings,
+    // getFeaturesUrl: '',
+    eitherKeywords: [],
+    httpMethod: 'GET',
+    resultType: 'results'
+};

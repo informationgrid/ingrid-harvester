@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -22,23 +22,20 @@
  */
 
 import { decode } from 'iconv-lite';
+import { defaultWfsSettings, WfsSettings } from './wfs.settings';
 import { getLogger } from 'log4js';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { ConfigService } from '../../services/config/ConfigService';
 import { Contact } from '../../model/agent';
-import { DefaultImporterSettings, Importer } from '../../importer';
-import { DefaultXpathSettings, WfsSettings } from './wfs.settings';
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import { ElasticSearchUtils } from '../../utils/elastic.utils';
-import { ElasticSettings } from '../../utils/elastic.setting';
-import { FilterUtils } from '../../utils/filter.utils';
-import { GeoJsonUtils } from '../../utils/geojson.utils';
+import { GeoJsonUtils } from "../../utils/geojson.utils";
+import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
-import { Observable, Observer } from 'rxjs';
-import { OptionsWithUri } from 'request-promise';
+import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
-import { Summary } from '../../model/summary';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RequestOptions } from '../../utils/http-request.utils';
+import { Response } from 'node-fetch';
 import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils';
 import { WfsMapper } from './wfs.mapper';
 import { XPathUtils } from '../../utils/xpath.utils';
@@ -46,71 +43,18 @@ import { XPathUtils } from '../../utils/xpath.utils';
 const fs = require('fs');
 const xpath = require('xpath');
 
-let log = require('log4js').getLogger(__filename),
-    logSummary = getLogger('summary'),
+const log = getLogger(__filename),
     logRequest = getLogger('requests'),
     DomParser = require('@xmldom/xmldom').DOMParser;
 
-export class WfsSummary extends Summary {
-    additionalSummary() {
-        logSummary.info(`Number of records with at least one mandatory keyword: ${this.opendata}`);
-        logSummary.info(`Number of records with missing links: ${this.missingLinks}`);
-        logSummary.info(`Number of records with missing license: ${this.missingLicense}`);
-        logSummary.info(`Number of records with missing publishers: ${this.missingPublishers}`);
-        logSummary.info(`Number of records imported as valid: ${this.ok}`);
-    }
-}
-
-// export const DefaultXplanSettings: any = {
-//     xpaths: {
-//         featureParent: './wfs:FeatureCollection/wfs:member',
-//         name: './*/xplan:name',
-//         description: './*/xplan:beschreibung',
-//         spatial: './*/xplan:raeumlicherGeltungsbereich',
-//         capabilities: {
-//             abstract: './ows:ServiceIdentification/ows:Abstract',
-//             language: './ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language',
-//             serviceProvider: './*[local-name="WFS_Capabilities"]/ows:ServiceProvider',
-//             title: './ows:ServiceIdentification/ows:Title'
-//         }
-//     }
-// };
-
-// export const DefaultFisSettings: any = {
-//     xpaths: {
-//         featureParent: './wfs:FeatureCollection/gml:featureMember',
-//         name: './*/fis:PLANNAME',
-//         description: './*/fis:BEREICH',
-//         spatial: './*/fis:SHAPE_25833',
-//         capabilities: {
-//             abstract: './ows:ServiceIdentification/ows:Abstract',
-//             language: '',
-//             serviceProvider: './*[local-name="WFS_Capabilities"]/ows:ServiceProvider',
-//             title: './ows:ServiceIdentification/ows:Title'
-//         }
-//     }
-// }
-
-export class WfsImporter implements Importer {
+export class WfsImporter extends Importer {
     private profile: ProfileFactory<WfsMapper>;
     private readonly settings: WfsSettings;
-    elastic: ElasticSearchUtils;
     private readonly requestDelegate: RequestDelegate;
 
     private totalFeatures = 0;
     private numIndexDocs = 0;
 
-    static defaultSettings: Partial<WfsSettings> = {
-        ...DefaultImporterSettings,
-        ...DefaultXpathSettings,
-        // getFeaturesUrl: '',
-        eitherKeywords: [],
-        httpMethod: 'GET',
-        resultType: 'results'
-    };
-
-    private readonly summary: WfsSummary;
-    private filterUtils: FilterUtils;
     private generalInfo: object = {};
     private supportsPaging: boolean = false;
     private select: Function;
@@ -118,18 +62,13 @@ export class WfsImporter implements Importer {
     private crsList: string[][];
     private defaultCrs: string;
 
-    run = new Observable<ImportLogMessage>(observer => {
-        this.observer = observer;
-        this.exec(observer);
-    });
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        super(settings);
 
-    private observer: Observer<ImportLogMessage>;
-
-    constructor(profile: ProfileFactory<WfsMapper>, settings, requestDelegate?: RequestDelegate) {
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
-        settings = MiscUtils.merge(WfsImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(defaultWfsSettings, settings);
 
         // TODO disallow setting "//" in xpaths in the UI
 
@@ -141,12 +80,6 @@ export class WfsImporter implements Importer {
         }
 
         this.settings = settings;
-        this.filterUtils = new FilterUtils(settings);
-
-        this.summary = new WfsSummary(settings);
-
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -190,12 +123,12 @@ export class WfsImporter implements Importer {
 
     async harvest() {
 
-        let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resolveWithFullResponse: true, encoding: null }, 'GetCapabilities');
+        let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resolveWithFullResponse: true }, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
-        let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
-        let contentType = capabilitiesResponse.headers['content-type'].split(';');
+        let capabilitiesResponse: Response = await capabilitiesRequestDelegate.doRequest();
+        let contentType = capabilitiesResponse.headers.get('content-type').split(';');
         let charset = contentType.find(ct => ct.toLowerCase().startsWith('charset'))?.split('=')?.[1];
-        let responseBody = capabilitiesResponse.body;
+        let responseBody: Buffer | string = await capabilitiesResponse.buffer();
         if (charset.toLowerCase() == "utf-8") {
             responseBody = responseBody.toString();
         }
@@ -255,16 +188,8 @@ export class WfsImporter implements Importer {
         Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
         this.generalInfo['contactPoint'] = contact;
 
-        // store catalog info from getCapabilities in generalInfo
-        let catalog: Catalog = {
-            description: this.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
-            homepage: this.settings.getFeaturesUrl,
-            // TODO we need a unique ID for each catalog - where to get one from?
-            id: this.settings.getFeaturesUrl,
-            language: this.select(this.settings.xpaths.capabilities.language, capabilitiesResponseDom, true)?.textContent ?? this.settings.xpaths.capabilities.language,
-            publisher: { name: this.select('./ows:ProviderName', serviceProvider, true)?.textContent },
-            title: this.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
-        };
+        // store catalog info from OGC Records response
+        let catalog: Catalog = await MiscUtils.fetchCatalogFromOgcRecordsApi(this.settings.catalogId);
         this.generalInfo['catalog'] = catalog;
 
         while (true) {
@@ -315,67 +240,6 @@ export class WfsImporter implements Importer {
         }
         // TODO: how to couple WFS?
         // this.createDataServiceCoupling();
-    }
-
-    // ED: TODO
-    createDataServiceCoupling(){
-        let bulkData = this.elastic._bulkData;
-        let servicesByDataIdentifier = [];
-        let servicesByFileIdentifier = [];
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = this.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
-                if(identifierList && identifierList.length > 0){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(!servicesByDataIdentifier[identifer]){
-                            servicesByDataIdentifier[identifer] = [];
-                        }
-                        servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distributions);
-                    }
-                } else {
-                    identifierList = this.select('.//srv:operatesOn', xml)
-                    if (identifierList && identifierList.length > 0) {
-                        for (let j = 0; j < identifierList.length; j++) {
-                            let identifer = identifierList[j].getAttribute("uuidref")
-                            if (!servicesByFileIdentifier[identifer]) {
-                                servicesByFileIdentifier[identifer] = [];
-                            }
-                            servicesByFileIdentifier[identifer] = servicesByFileIdentifier[identifer].concat(doc.distributions);
-                        }
-                    }
-                }
-            }
-        }
-
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = this.select('.//gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByDataIdentifier[identifer]){
-                            doc.distributions = doc.distributions.concat(servicesByDataIdentifier[identifer]);
-                        }
-                    }
-                }
-                identifierList = this.select('.//gmd:fileIdentifier/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByFileIdentifier[identifer]){
-                            doc.distributions = doc.distributions.concat(servicesByFileIdentifier[identifer]);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     // ED: TODO
@@ -444,11 +308,6 @@ export class WfsImporter implements Importer {
             });
 
             if (!mapper.shouldBeSkipped()) {
-
-                if (doc.extras.metadata.isValid && doc.distributions.length > 0) {
-                    this.summary.ok++;
-                }
-
                 if (!this.settings.dryRun) {
                     promises.push(this.elastic.addDocToBulk(doc, uuid));
                 }
@@ -466,8 +325,8 @@ export class WfsImporter implements Importer {
         return new WfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils);
     }
 
-    static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): OptionsWithUri {
-        let requestConfig: OptionsWithUri = {
+    static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
+        let requestConfig: RequestOptions = {
             method: settings.httpMethod || "GET",
             uri: settings.getFeaturesUrl,
             json: false,
@@ -475,9 +334,6 @@ export class WfsImporter implements Importer {
             proxy: settings.proxy || null,
             resolveWithFullResponse: settings.resolveWithFullResponse ?? false
         };
-        if (settings.hasOwnProperty('encoding')) {
-            requestConfig.encoding = settings.encoding;
-        }
 
         // TODO
         // * correct namespaces
@@ -536,7 +392,4 @@ export class WfsImporter implements Importer {
         }
     }
 
-    getSummary(): Summary {
-        return this.summary;
-    }
 }

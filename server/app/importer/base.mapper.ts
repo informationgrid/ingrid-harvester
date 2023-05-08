@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -21,9 +21,8 @@
  * ==================================================
  */
 
-import {OptionsWithUri} from 'request-promise';
+import 'dayjs/locale/de';
 import {License} from '@shared/license.model';
-import * as moment from 'moment';
 import {ImporterSettings} from "../importer.settings";
 import {getLogger} from "log4js";
 import {Summary} from "../model/summary";
@@ -31,18 +30,20 @@ import {Rules} from "../model/rules";
 import {Contact, Organization, Person, Agent} from "../model/agent";
 import {Distribution} from "../model/distribution";
 import {DateRange} from "../model/dateRange";
+import { RequestOptions } from 'utils/http-request.utils';
 
-moment.locale('de');
+const dayjs = require('dayjs');
+dayjs.locale('de');
 
 export abstract class BaseMapper {
 
-    protected moment = moment;
+    protected dayjs = dayjs;
 
     protected static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
 
     protected errors: string[] = [];
 
-    protected valid = true;
+    public valid = true;
 
     public skipped = false;
 
@@ -303,9 +304,9 @@ export abstract class BaseMapper {
         return await this._getLicense();
     }
 
-    abstract _getUrlCheckRequestConfig(uri: string): OptionsWithUri;
+    abstract _getUrlCheckRequestConfig(uri: string): RequestOptions;
 
-    getUrlCheckRequestConfig(uri: string): OptionsWithUri{
+    getUrlCheckRequestConfig(uri: string): RequestOptions{
         return this._getUrlCheckRequestConfig(uri);
     }
 

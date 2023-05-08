@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -22,9 +22,10 @@
  */
 
 import { Contact, Organization, Person } from '../../../model/agent';
-import { CswMapper } from '../../../importer/csw/csw.mapper';
 import { DateRange } from '../../../model/dateRange';
+import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
+import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { Distribution } from '../../../model/distribution';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { ProcessStep, Record } from '../../../model/dcatApPlu.model';
@@ -32,7 +33,7 @@ import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
 const esc = require('xml-escape');
 
-function optional(wrapper: string | Function, variable: any | any[]) {
+function optional(wrapper: string | Function, variable: any | any[], ...remainder: any) {
     if (!variable) {
         return '';
     }
@@ -43,21 +44,21 @@ function optional(wrapper: string | Function, variable: any | any[]) {
         return variable.map(v => `<${wrapper}>${v}</${wrapper}>`).join('\n');
     }
     else {
-        return variable.map(v => wrapper(v)).join(' ');
+        return variable.map(v => wrapper(v, remainder)).join('\n');
     }
 }
 
-const DCAT_AP_PLU_NSMAP = {
-    dcat: 'http://www.w3.org/ns/dcat#',
-    dcatde: 'http://dcat-ap.de/def/dcatde/',
-    dct: 'http://purl.org/dc/terms/',
-    foaf: 'http://xmlns.com/foaf/0.1/',
-    gml: 'http://www.opengis.net/gml/3.2#',
-    locn: 'http://www.w3.org/ns/locn#',
-    plu: 'http://a.placeholder.url.for.dcat-ap-plu/',    // TODO
-    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    vcard: 'http://www.w3.org/2006/vcard/ns#'
-};
+// const DCAT_AP_PLU_NSMAP = {
+//     dcat: 'http://www.w3.org/ns/dcat#',
+//     dcatde: 'http://dcat-ap.de/def/dcatde/',
+//     dct: 'http://purl.org/dc/terms/',
+//     foaf: 'http://xmlns.com/foaf/0.1/',
+//     gml: 'http://www.opengis.net/gml/3.2#',
+//     locn: 'http://www.w3.org/ns/locn#',
+//     plu: 'http://a.placeholder.url.for.dcat-ap-plu/',    // TODO
+//     rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+//     vcard: 'http://www.w3.org/2006/vcard/ns#'
+// };
 
 
 export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
@@ -66,41 +67,40 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         return 'dcat_ap_plu';
     }
 
-    static async create(_mapper: CswMapper | ExcelSparseMapper | WfsMapper): Promise<string> {
+    static async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper): Promise<string> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
-        let centroid = mapper.getCentroid();
-        let publisher = await mapper.getPublisher()?.[0];
+        let publisher = (await mapper.getPublisher())?.[0];
         let contributors = null;    // TODO
-        let maintainers = null;     // TODO
+        let maintainers = await mapper.getMaintainers();
         let relation = null;        // TODO
-        let xmlString = `<?xml version="1.0"?>
-        <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
-            <dcat:Catalog>
-                <dct:identifier>${esc(catalog.id)}</dct:identifier>
-                <dct:description>${esc(catalog.description)}</dct:description>
-                <dct:title>${esc(catalog.title)}</dct:title>
-                ${DcatApPluDocument.xmlFoafAgent('dct:publisher', catalog.publisher)}
-                ${optional('dcat:themeTaxonomy', esc(catalog.themeTaxonomy))}
-                ${optional('dct:issued', esc(catalog.issued))}
-                ${optional('dct:language', esc(catalog.language))}
-                ${optional('dct:modified', esc(catalog.modified))}
-                ${optional('foaf:homepage', esc(catalog.homepage))}
-                ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
-            </dcat:Catalog>
-            <dcat:Dataset>
+        // let xmlString = `<?xml version="1.0"?>
+        // <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
+        //     <dcat:Catalog>
+        //         <dct:identifier>${esc(catalog.identifier)}</dct:identifier>
+        //         <dct:description>${esc(catalog.description)}</dct:description>
+        //         <dct:title>${esc(catalog.title)}</dct:title>
+        //         ${DcatApPluDocument.xmlFoafAgent('dct:publisher', catalog.publisher)}
+        //         ${optional('dcat:themeTaxonomy', esc(catalog.themeTaxonomy))}
+        //         ${optional('dct:issued', esc(catalog.issued))}
+        //         ${optional('dct:language', esc(catalog.language))}
+        //         ${optional('dct:modified', esc(catalog.modified))}
+        //         ${optional('foaf:homepage', esc(catalog.homepage))}
+        //         ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
+        //     </dcat:Catalog>`;
+        let xmlString = `<dcat:Dataset rdf:about="https://portal.diplanung.de/planwerke/${esc(mapper.getGeneratedId())}">
                 ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher.name)}
-                <dct:description xml:lang="${esc(catalog.language)}">${esc(mapper.getDescription())}</dct:description>
+                <dct:description>${esc(mapper.getDescription())}</dct:description>
                 <dct:identifier>${esc(mapper.getGeneratedId())}</dct:identifier>
-                <dct:title xml:lang="${esc(catalog.language)}">${esc(mapper.getTitle())}</dct:title>
+                <dct:title>${esc(mapper.getTitle())}</dct:title>
                 <plu:planState>${mapper.getPluPlanState()}</plu:planState>
                 <plu:procedureState>${mapper.getPluProcedureState()}</plu:procedureState>
                 ${optional('plu:procedureStartDate', esc(mapper.getPluProcedureStartDate()))}
                 <dct:spatial>
                     <dct:Location>
-                        ${optional('dcat:bbox', mapper.getBoundingBoxGml())}
-                        ${optional('locn:geometry', mapper.getSpatialGml())}
-                        ${optional(DcatApPluDocument.xmlCentroid, centroid ? [centroid] : null)}
+                        ${DcatApPluDocument.xmlSpatial('dcat:bbox', mapper.getBoundingBoxGml(), mapper.getBoundingBox())}
+                        ${DcatApPluDocument.xmlSpatial('locn:geometry', mapper.getSpatialGml(), mapper.getSpatial())}
+                        ${DcatApPluDocument.xmlSpatial('dcat:centroid', null, mapper.getCentroid())}
                         ${optional('locn:geographicName', esc(mapper.getSpatialText()))}
                     </dct:Location>
                 </dct:spatial>
@@ -111,22 +111,31 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional('dct:issued', mapper.getIssued())}
                 ${optional('dct:modified', mapper.getModifiedDate())}
                 ${optional('dct:relation', esc(relation))}
+                ${optional(DcatApPluDocument.xmlPeriodOfTime, mapper.getPluDevelopmentFreezePeriod(), 'plu:developmentFreezePeriod')}
                 ${optional('plu:planType', mapper.getPluPlanType())}
                 ${optional('plu:planTypeFine', mapper.getPluPlanTypeFine())}
                 ${optional('plu:procedureType', mapper.getPluProcedureType())}
                 ${optional(DcatApPluDocument.xmlProcessStep, mapper.getPluProcessSteps())}
-            </dcat:Dataset>
-        </rdf:RDF>`;
+            </dcat:Dataset>`;
+        // </rdf:RDF>`;
 
         return xmlString.replace(/^\s*\n/gm, '');
     }
 
-    private static xmlCentroid(centroid: number[]): string {
-        return `<dcat:centroid>
-            <gml:Point>
-                <gml:pos>${centroid.join(' ')}</gml:pos>
-            </gml:Point>
-        </dcat:centroid>`;
+    private static xmlSpatial(tagname: string, gml: string, json: object): string {
+        if (gml) {
+            return `<${tagname}>
+                ${gml}
+            </${tagname}>`;
+        }
+        else if (json) {
+            return `<${tagname} rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json">
+                ${JSON.stringify(json)}
+            </${tagname}>`;
+        }
+        else {
+            return '';
+        }
     }
 
     private static xmlDistribution(distribution: Distribution): string {
@@ -147,19 +156,21 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
 
     private static xmlFoafAgent(parent: string, agent: Person | Organization): string {
         let name = (<Organization>agent)?.organization ?? (<Person>agent)?.name;
-        return `<${parent}><foaf:Agent>
-            <foaf:name>${esc(name)}</foaf:name>
-            ${optional('dct:type', esc(agent?.type))}
-        </foaf:Agent></${parent}>`;
+        return `<${parent}>
+            <foaf:Agent>
+                <foaf:name>${esc(name)}</foaf:name>
+                ${optional('dct:type', esc(agent?.type))}
+            </foaf:Agent>
+        </${parent}>`;
     }
 
-    private static xmlPeriodOfTime({ lte: start, gte: end }: DateRange): string {
-        return `<dct:temporal>
+    private static xmlPeriodOfTime({ lte: start, gte: end }: DateRange, relation: string = 'dct:temporal'): string {
+        return `<${relation}>
             <dct:PeriodOfTime>
                 ${optional('dcat:startDate', start)}
                 ${optional('dcat:endDate', end)}
             </dct:PeriodOfTime>
-        </dct:temporal>`;
+        </${relation}>`;
     }
 
     private static xmlProcessStep({ distributions, identifier, period, type }: ProcessStep): string {

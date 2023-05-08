@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -21,74 +21,43 @@
  * ==================================================
  */
 
-import {ElasticSearchUtils} from '../../utils/elastic.utils';
-import {CswMapper} from './csw.mapper';
-import {Summary} from '../../model/summary';
-import {getLogger} from 'log4js';
-import {CswParameters, RequestDelegate} from '../../utils/http-request.utils';
-import {OptionsWithUri} from 'request-promise';
-import {DefaultImporterSettings, Importer} from '../../importer';
-import {Observable, Observer} from 'rxjs';
-import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {DefaultXpathSettings, CswSettings} from './csw.settings';
-import {FilterUtils} from "../../utils/filter.utils";
+import { defaultCSWSettings, CswSettings } from './csw.settings';
+import { getLogger } from 'log4js';
 import { Catalog } from '../../model/dcatApPlu.model';
+import { ConfigService } from '../../services/config/ConfigService';
+import { CswMapper } from './csw.mapper';
+import { CswParameters, RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
+import { Importer } from '../importer';
+import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
+import { Observer } from 'rxjs';
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { Summary } from '../../model/summary';
 import { SummaryService } from '../../services/config/SummaryService';
-import {ProfileFactory} from "../../profiles/profile.factory";
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import {ElasticSettings} from "../../utils/elastic.setting";
-import {ConfigService} from "../../services/config/ConfigService";
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
     logRequest = getLogger('requests'),
     DomParser = require('@xmldom/xmldom').DOMParser;
 
-export class CswSummary extends Summary {
-    additionalSummary() {
-        logSummary.info(`Number of records with at least one mandatory keyword: ${this.opendata}`);
-        logSummary.info(`Number of records with missing links: ${this.missingLinks}`);
-        logSummary.info(`Number of records with missing license: ${this.missingLicense}`);
-        logSummary.info(`Number of records with missing publishers: ${this.missingPublishers}`);
-        logSummary.info(`Number of records imported as valid: ${this.ok}`);
-    }
-}
-
-export class CswImporter implements Importer {
+export class CswImporter extends Importer {
     private profile: ProfileFactory<CswMapper>;
-    private readonly settings: CswSettings;
-    elastic: ElasticSearchUtils;
+    protected readonly settings: CswSettings;
     private readonly requestDelegate: RequestDelegate;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    static defaultSettings: Partial<CswSettings> = {
-        ...DefaultImporterSettings,
-        ...DefaultXpathSettings,
-        getRecordsUrl: '',
-        eitherKeywords: [],
-        httpMethod: 'GET',
-        resultType: 'results'
-    };
-
-    private readonly summary: CswSummary;
-    private filterUtils: FilterUtils;
     private generalInfo: object = {};
 
-    run = new Observable<ImportLogMessage>(observer => {
-        this.observer = observer;
-        this.exec(observer);
-    });
+    constructor(settings, requestDelegate?: RequestDelegate) {
+        super(settings);
 
-    private observer: Observer<ImportLogMessage>;
-
-    constructor(profile: ProfileFactory<CswMapper>, settings, requestDelegate?: RequestDelegate) {
-        this.profile = profile;
+        this.profile = ProfileFactoryLoader.get();
 
         // merge default settings with configured ones
-        settings = MiscUtils.merge(CswImporter.defaultSettings, settings);
+        settings = MiscUtils.merge(defaultCSWSettings, settings);
 
         // if we are looking for incremental updates, add a date filter to the existing record filter
         if (settings.isIncremental) {
@@ -115,12 +84,6 @@ export class CswImporter implements Importer {
         }
 
         this.settings = settings;
-        this.filterUtils = new FilterUtils(settings);
-
-        this.summary = new CswSummary(settings);
-
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index});
-        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     static addModifiedFilter(recordFilter: string, lastRunDate: Date): string {
@@ -193,8 +156,9 @@ export class CswImporter implements Importer {
         let catalog: Catalog = {
             description: CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
             homepage: this.settings.getRecordsUrl,
-            // TODO we need a unique ID for each catalog - where to get one from?
-            id: this.settings.getRecordsUrl,
+            // TODO we need a unique ID for each catalog - currently using the alias (used as "global" catalog)
+            // TODO or assign a different catalog for each record, depending on a property (address, publisher, etc)? expensive?
+            identifier: ConfigService.getGeneralSettings().alias,
             publisher: { name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent },
             title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
         };
@@ -208,8 +172,11 @@ export class CswImporter implements Importer {
             // harvestConcurrently() also supports this.settings.maxConcurrent=1
             await this.harvestSequentially();
         }
+        this.postHarvestingHandling();
+    }
 
-        this.createDataServiceCoupling();
+    protected async postHarvestingHandling(){
+        // For Profile specific Handling
     }
 
     async handleHarvest(delegate: RequestDelegate): Promise<void> {
@@ -244,7 +211,7 @@ export class CswImporter implements Importer {
 
         // 1) create paged request delegates
         let delegates = [];
-        for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords; startPosition += this.settings.maxRecords) {
+        for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
             let requestConfig = CswImporter.createRequestConfig({ ...this.settings, startPosition });
             delegates.push(new RequestDelegate(requestConfig));
         }
@@ -286,66 +253,6 @@ export class CswImporter implements Importer {
               * maxRecords * numRetries
               */
             if (this.totalRecords < this.requestDelegate.getStartRecordIndex()) break;
-        }
-    }
-
-    createDataServiceCoupling(){
-        let bulkData = this.elastic._bulkData;
-        let servicesByDataIdentifier = [];
-        let servicesByFileIdentifier = [];
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = CswMapper.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
-                if(identifierList && identifierList.length > 0){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(!servicesByDataIdentifier[identifer]){
-                            servicesByDataIdentifier[identifer] = [];
-                        }
-                        servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distributions);
-                    }
-                } else {
-                    identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn', xml)
-                    if (identifierList && identifierList.length > 0) {
-                        for (let j = 0; j < identifierList.length; j++) {
-                            let identifer = identifierList[j].getAttribute("uuidref")
-                            if (!servicesByFileIdentifier[identifer]) {
-                                servicesByFileIdentifier[identifer] = [];
-                            }
-                            servicesByFileIdentifier[identifer] = servicesByFileIdentifier[identifer].concat(doc.distributions);
-                        }
-                    }
-                }
-            }
-        }
-
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByDataIdentifier[identifer]){
-                            doc.distributions = doc.distributions.concat(servicesByDataIdentifier[identifer]);
-                        }
-                    }
-                }
-                identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByFileIdentifier[identifer]){
-                            doc.distributions = doc.distributions.concat(servicesByFileIdentifier[identifer]);
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -392,21 +299,8 @@ export class CswImporter implements Importer {
             });
 
             if (!mapper.shouldBeSkipped()) {
-
-                if (doc.extras.metadata.isValid && doc.distributions.length > 0) {
-                    this.summary.ok++;
-                }
-
                 if (!this.settings.dryRun) {
-                    promises.push(
-                        this.elastic.addDocToBulk(doc, uuid)
-                            .then(response => {
-                                if (!response.queued) {
-                                    // numIndexDocs += ElasticSearchUtils.maxBulkSize;
-                                    // this.observer.next(ImportResult.running(numIndexDocs, records.length));
-                                }
-                            })
-                    );
+                    promises.push(this.elastic.addDocToBulk(doc, uuid));
                 }
 
             } else {
@@ -425,8 +319,8 @@ export class CswImporter implements Importer {
         return new CswMapper(settings, record, harvestTime, storedData, summary, generalInfo);
     }
 
-    static createRequestConfig(settings: CswSettings, request = 'GetRecords'): OptionsWithUri {
-        let requestConfig: OptionsWithUri = {
+    static createRequestConfig(settings: CswSettings, request = 'GetRecords'): RequestOptions {
+        let requestConfig: RequestOptions = {
             method: settings.httpMethod || "GET",
             uri: settings.getRecordsUrl,
             json: false,

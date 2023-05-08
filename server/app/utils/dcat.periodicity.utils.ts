@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -20,10 +20,6 @@
  * limitations under the Licence.
  * ==================================================
  */
-
-import {DcatMapper} from "../importer/dcat/dcat.mapper";
-import {License} from '@shared/license.model';
-import {getLogger} from "log4js";
 
 export class DcatPeriodicityUtils {
     static getPeriodicity(raw: string) :string {

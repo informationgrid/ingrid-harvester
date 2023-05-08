@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -21,23 +21,27 @@
  * ==================================================
  */
 
+import { ElasticQueries } from './elastic.queries';
 import { ElasticSearchUtils } from './elastic.utils';
 import { ElasticSettings } from './elastic.setting';
 import { ImporterSettings } from '../importer.settings';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 
 const log = require('log4js').getLogger(__filename);
 
-export abstract class AbstractDeduplicateUtils {
+export abstract class DeduplicateUtils {
 
     protected elastic: ElasticSearchUtils;
+    protected queries: ElasticQueries;
     protected settings: ElasticSettings & ImporterSettings;
     protected summary: Summary;
 
     constructor(elasticUtils: ElasticSearchUtils, settings: any, summary: Summary) {
-        this.summary = summary;
         this.elastic = elasticUtils;
         this.settings = settings;
+        this.summary = summary;
+        this.queries = ProfileFactoryLoader.get().getElasticQueries();
     }
 
     abstract deduplicate(): Promise<void>;

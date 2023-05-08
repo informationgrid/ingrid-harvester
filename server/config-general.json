@@ -1,20 +1,23 @@
 {
   "elasticSearchUrl": "http://localhost:9200",
-  "elasticSearchVersion": "6",
+  "elasticSearchVersion": "8",
   "elasticSearchUser": "elastic",
-  "elasticSearchPassword": "",
-  "alias": "mcloud",
+  "elasticSearchPassword": "elastic",
+  "alias": "harvester",
   "numberOfShards": 1,
   "numberOfReplicas": 0,
+  "ogcRecordsApiUrl": "http://localhost:8080/v1",
+  "ogcRecordsApiUser": "admin",
+  "ogcRecordsApiPassword": "admin",
   "cronOffset": 0,
   "proxy": "",
-  "portalUrl": "http://localhost:8080/",
+  "portalUrl": "",
   "urlCheck": {
-    "active": true,
+    "active": false,
     "pattern": "30 04 * * *"
   },
   "indexCheck": {
-    "active": true,
+    "active": false,
     "pattern": "10 04 * * *"
   },
   "mail": {

@@ -4,7 +4,7 @@
  * ==================================================
  * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
- * Licensed under the EUPL, Version 1.2 or – as soon they will be
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
  * EUPL (the "Licence");
  *
@@ -26,9 +26,11 @@ export type ElasticSettings = {
     elasticSearchVersion: string,
     elasticSearchUser: string,
     elasticSearchPassword?: string,
+    dryRun?: boolean,
     index: string,
     indexType?: string,
     alias?: string,
+    addAlias?: boolean
     deduplicationAlias?: string,
     includeTimestamp: boolean,
     numberOfShards?: number,
