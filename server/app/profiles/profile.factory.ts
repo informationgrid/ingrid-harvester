@@ -30,12 +30,13 @@ import { IndexDocument } from '../model/index.document';
 import { Summary } from '../model/summary';
 
 export abstract class ProfileFactory<M extends BaseMapper> {
-    abstract getIndexDocument() : IndexDocument<M>;
-
-    abstract getElasticSettings(): any;
-    abstract getElasticMapping(): any;
-    abstract getElasticQueries(): ElasticQueries;
-    abstract getImporterFactory(): ImporterFactory;
 
     abstract getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: any, summary: Summary): DeduplicateUtils;
+    abstract getElasticMapping(): any;
+    abstract getElasticQueries(): ElasticQueries;
+    abstract getElasticSettings(): any;
+    abstract getImporterFactory(): ImporterFactory;
+    abstract getIndexDocument(): IndexDocument<M>;
+    abstract getProfileName(): string;
+
 }
