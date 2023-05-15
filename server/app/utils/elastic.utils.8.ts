@@ -517,7 +517,8 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
                     results.push(hit);
                 });
 
-                if (response.hits.total !== results.length) {
+                let totalHits = typeof response.hits.total == 'number' ? response.hits.total : response.hits.total.value;
+                if (totalHits !== results.length) {
                     client.scroll({
                         scroll_id: response._scroll_id,
                         scroll: '5s'
