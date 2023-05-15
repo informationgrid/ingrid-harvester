@@ -36,7 +36,17 @@
     "recordFilter": "<ogc:Filter>\n    <ogc:And>\n        <ogc:Or>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Bauleitplanung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Bauleitpläne</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Bebauungsplan</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>B-Plan</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Flächennutzungsplan</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>FNP</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumordnung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumordnungsprogramm</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumordnungsverfahren</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumverträglichkeit</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Regionalplan</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Regionalplanung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Landesplanung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Landesentwicklung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Landesraumordnungsprogramm</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Milieuschutzgebiete</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Milieugebiet</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungssatzungsgebiete</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungssatzung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungsverordnung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungsverordnungsgebiete</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>städtebauliche Satzungen</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>§ 172 BauGB Städtebauliche Förderung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Beteiligung der Öffentlichkeit</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Öffentlichkeitsbeteiligung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>XPlanung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>XPlanGML</ogc:Literal></ogc:PropertyIsEqualTo>\n        </ogc:Or>\n        <ogc:Or>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Berlin*</ogc:Literal>\n            </ogc:PropertyIsLike>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Hamburg*</ogc:Literal>\n            </ogc:PropertyIsLike>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Freiburg*</ogc:Literal>\n            </ogc:PropertyIsLike>\n        </ogc:Or>\n    </ogc:And>\n</ogc:Filter>",
     "pluPlanState": "festgesetzt",
     "disable": false,
-    "deduplicationAlias": "csw_geoportal_de_dedup"
+    "deduplicationAlias": "csw_geoportal_de_dedup",
+    "cron": {
+      "full": {
+        "pattern": "54 0 * * 1-6",
+        "active": true
+      },
+      "incr": {
+        "pattern": "54 0 * * 0",
+        "active": true
+      }
+    }
   },
   {
     "index": "wfs_hh_xplanungsplattform_de_51",
@@ -54,12 +64,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "hh",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -108,12 +116,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "hh",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -162,12 +168,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "hh",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -216,12 +220,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "hh",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -270,12 +272,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "hh",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -324,12 +324,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "hh",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -378,12 +376,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "hh",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -432,12 +428,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "hh",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -486,12 +480,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "bw",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -540,12 +532,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "bw",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -594,12 +584,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "bw",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -648,12 +636,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "bw",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -702,12 +688,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "bw",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -756,12 +740,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "bw",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -810,12 +792,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "bw",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -864,12 +844,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "bw",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "/*[local-name()='WFS_Capabilities']/ows:OperationsMetadata/ows:ExtendedCapabilities/inspire_dls:ExtendedCapabilities/inspire_common:ResponseLanguage/inspire_common:Language",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/xplan:beschreibung",
       "featureParent": "/wfs:FeatureCollection/wfs:member",
@@ -918,12 +896,10 @@
     "rules": {
       "containsDocumentsWithData": null
     },
+    "catalogId": "be",
     "xpaths": {
       "capabilities": {
-        "abstract": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Abstract",
-        "language": "ger",
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider",
-        "title": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceIdentification/ows:Title"
+        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
       },
       "description": "./*/fis:BEREICH",
       "featureParent": "/wfs:FeatureCollection/gml:featureMember",
