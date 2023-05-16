@@ -58,9 +58,9 @@
         </mat-form-field>
       </div>
 
-      <mat-card>
+      <mat-card *ngIf="profile == 'mcloud'">
         <mat-card-header>
-          <mat-card-title>Allgemeine Einstellungen</mat-card-title>
+          <mat-card-title>mCloud Einstellungen</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
@@ -109,7 +109,14 @@
                      formControlName="defaultAttributionLink">
             </mat-form-field>
           </div>
+        </mat-card-content>
+      </mat-card>
 
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Allgemeine Einstellungen</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
           <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
             <mat-form-field fxFlex>
               <input matInput type="number" min="1" max="1000" minlength="1" placeholder="Max. Datensätze pro Anfrage"
