@@ -149,6 +149,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional('dct:modified', distribution.modified)}
                 ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period)}
                 ${optional('plu:docType', esc(distribution.pluDocType))}
+                ${optional('plu:mapLayerNames', esc(distribution.mapLayerNames?.join(',')))}
                 ${optional('dct:title', esc(distribution.title))}
             </dcat:Distribution>
         </dcat:distribution>`;

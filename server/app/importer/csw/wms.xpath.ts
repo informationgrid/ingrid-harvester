@@ -21,22 +21,18 @@
  * ==================================================
  */
 
-import {DateRange} from "./dateRange";
+const xpath = require('xpath');
 
-export interface Distribution {
-    format?: string[];
-    accessURL: string;
-    downloadURL?: string;
-    id?: string;
-    title?: string;
-    description?: string;
-    issued?: Date;
-    modified?: Date;
-    byteSize?: number;
-    period?: DateRange;
-    pluDocType?: string;
-    mapLayerNames?: string[];
+export class WmsXPath {
+
+    static nsMap = {
+        'wms': "http://www.opengis.net/wms",
+        'gmd': 'http://www.isotc211.org/2005/gmd',
+        'inspire_common': 'http://inspire.ec.europa.eu/schemas/common/1.0',
+        'inspire_vs': 'http://inspire.ec.europa.eu/schemas/inspire_vs/1.0',
+        'xlink': 'http://www.w3.org/1999/xlink',
+        'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
+    };
+
+    static select = xpath.useNamespaces(WmsXPath.nsMap);
 }
-
-
-
