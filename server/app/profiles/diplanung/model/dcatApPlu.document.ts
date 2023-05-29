@@ -196,12 +196,14 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     }
 
     private static xmlContact(contact: Contact, backupFn: string): string {
-        // if fn is not set, use orgName instead; in this case, don't repeat orgName in an extra element
-        let useFn = contact.fn && !['-'].includes(contact.fn);
+        if (!contact) {
+            contact = { fn: '' };
+        }
+        // if fn is not set, use orgName instead
         return `<dcat:contactPoint>
             <vcard:Organization>
-                <vcard:fn>${useFn ? esc(contact.fn) : esc(contact.hasOrganizationName) ?? esc(backupFn)}</vcard:fn>
-                ${optional('vcard:hasOrganizationName', useFn ? contact.hasOrganizationName : null)}
+                <vcard:fn>${contact?.fn ? esc(contact.fn) : esc(contact.hasOrganizationName) ?? esc(backupFn)}</vcard:fn>
+                ${optional('vcard:hasOrganizationName', esc(contact.hasOrganizationName))}
                 ${optional('vcard:hasPostalCode', esc(contact.hasPostalCode))}
                 ${optional('vcard:hasStreetAddress', esc(contact.hasStreetAddress))}
                 ${optional('vcard:hasLocality', esc(contact.hasLocality))}
