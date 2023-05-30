@@ -41,6 +41,7 @@ import {Agent, Contact, Organization, Person} from "../../model/agent";
 import {DateRange} from "../../model/dateRange";
 import {Distribution} from "../../model/distribution";
 import { WmsXPath } from "./wms.xpath";
+import { ProfileFactoryLoader } from "../../profiles/profile.factory.loader";
 
 const DomParser = require('@xmldom/xmldom').DOMParser;
 const xpath = require('xpath');
@@ -182,7 +183,7 @@ export class CswMapper extends BaseMapper {
                     };
 
                     // add layer names for WMS services
-                    if (url.toLowerCase().includes('wms')) {
+                    if (ProfileFactoryLoader.get().getProfileName() == 'diplanung' && url.toLowerCase().includes('wms')) {
                         let layerNames = await this.getMapLayerNames(url);
                         if (layerNames) {
                             dist.mapLayerNames = layerNames;
