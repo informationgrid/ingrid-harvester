@@ -45,6 +45,10 @@ export class ConfigService {
     return this.http.get<any>('rest/api/config/general');
   }
 
+  getProfileName(): Observable<string> {
+    return this.http.get('rest/api/config/profile', { responseType: 'text' });
+  }
+
   getMapping(): Observable<MappingDistribution[]> {
     return this.http.get<MappingDistribution[]>('rest/api/config/mapping/distribution');
   }

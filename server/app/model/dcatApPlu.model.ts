@@ -59,7 +59,14 @@ export const pluProcedureType = {
     NORM_VERF: '1001',          // normales Verfahren
     VEREINF_VERF: '1002', 	    // vereinfachtes Verfahren
     BEBAU_PLAN_INNEN: '1003',	// Bebauungsplan der Innenentwicklung
-    UNBEKANNT: '1004'           // unbekannt
+    EINBEZ_AUSSEN_BESCHLEU: '1004',	// Einbeziehung von Außenbereichsflächen in das beschleunigte Verfahren
+    AEND: '1005',               // Änderung
+    TEIL_FORT: '1006',          // Teilfortschreibung
+    NEU_AUFST: '1007',          // Neuaufstellung
+    GESAMT_FORT: '1008',        // Gesamtfortschreibung
+    AKTUAL: '1009',             // Aktualisierung
+    NEU_BEKANNT: '1010',        // Neubekanntmachung
+    UNBEKANNT: '9000'
 };
 
 /**
@@ -69,7 +76,7 @@ export const pluProcedureState = {
     GEPLANT: '2001',        // geplant
     LAUFEND: '2002',        // laufend
     ABGESCHLOSSEN: '2003',  // abgeschlossen
-    UNBEKANNT: '2004'       // unbekannt
+    UNBEKANNT: '9000'
 };
 
 /**
@@ -78,7 +85,7 @@ export const pluProcedureState = {
 export const pluPlanState = {
     IN_AUFST: '3001',   // in Aufstellung
     FESTGES: '3002',    // festgesetzt
-    UNBEKANNT: '3004'   // unbekannt
+    UNBEKANNT: '9000'
 };
 
 /**
@@ -94,7 +101,7 @@ export const pluPlanType = {
     RAUM_ORDN_VERF: '7000',     // Raumordnungsverfahren
     PLAN_FESTST_VERF: '8000',   // Planfeststellungsverfahren
     SONST_PLAN: '8500',         // Sonstige raumbezogene Planwerke
-    UNBEKANNT: '9000'           // unbekannt
+    UNBEKANNT: '9000'
 };
 
 /**
@@ -106,7 +113,8 @@ export const pluProcessStepType = {
     BETEIL_OEFFTL_TRAEGER: '3003', 	// Beteiligung der Träger öffentlicher Belange
     OEFFTL_AUSL: '3004', 	        // Öffentliche Auslegung
     INTERN_BEARB: '3005', 	        // Interne Bearbeitung
-    ABGESCHLOSSEN: '3006'           // Abgeschlossen
+    ABGESCHLOSSEN: '3006',          // Abgeschlossen
+    UNBEKANNT: '9000'
 };
 
 /**
@@ -116,5 +124,6 @@ export const pluDocType = {
     AUSLEG_INFO: '4001',    // Auslegungsinformationen
     ERLAEUT_BER: '4002', 	// Erläuterungsbericht
     PLAN_ZEICHN: '4003',	// Planzeichnung
+    UNBEKANNT: '9000'
     // TODO not finalized yet
 };

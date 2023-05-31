@@ -41,6 +41,10 @@ import {ImporterFactory} from "../../importer/importer.factory";
 
 export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper> {
 
+    getProfileName(): string {
+        return 'mcloud';
+    }
+
     getIndexDocument(): mcloudDocument{
         return new mcloudDocument;
     }

@@ -166,6 +166,9 @@ export const elasticsearchMapping = {
                         },
                         'pluDocType': {
                             'type': 'keyword'
+                        },
+                        'mapLayerNames': {
+                            'type': 'keyword'
                         }
                     }
                 },
@@ -306,6 +309,9 @@ export const elasticsearchMapping = {
                 },
                 'pluDocType': {
                     'type': 'keyword'
+                },
+                'mapLayerNames': {
+                    'type': 'keyword'
                 }
             }
         },
@@ -316,7 +322,8 @@ export const elasticsearchMapping = {
             'type': 'geo_shape'
         },
         'spatial': {
-            'type': 'geo_shape'
+            'type': 'geo_shape',
+            'coerce': true
         },
         'spatial_text': {
             'type': 'text'
