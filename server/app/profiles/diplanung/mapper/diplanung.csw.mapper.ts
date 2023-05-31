@@ -29,7 +29,6 @@ import { RequestDelegate, RequestOptions } from '../../../utils/http-request.uti
 import { WmsXPath } from "../../../importer/csw/wms.xpath";
 
 const DomParser = require('@xmldom/xmldom').DOMParser;
-const log = require('log4js').getLogger(__filename);
 
 export class DiplanungCswMapper extends CswMapper {
 
@@ -111,8 +110,9 @@ export class DiplanungCswMapper extends CswMapper {
                     try {
                         response = await this.getWmsResponse(distribution.accessURL);
                     }
-                    catch (e) {
-                        log.error(e.getMessage());
+                    catch (err) {
+                        this.log.warn(err.message);
+                        this.summary.warnings.push(['No layer names added for distribution', err.message]);
                     }
                     // rudimentary check for XML
                     if (response.startsWith('<?xml')) {

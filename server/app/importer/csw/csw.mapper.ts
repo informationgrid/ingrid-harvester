@@ -71,7 +71,7 @@ export class CswMapper extends BaseMapper {
 
     static select = xpath.useNamespaces(CswMapper.nsMap);
 
-    private log = getLogger();
+    protected log = getLogger();
 
     protected readonly record: any;
     private harvestTime: any;
@@ -80,7 +80,7 @@ export class CswMapper extends BaseMapper {
     protected readonly idInfo; // : SelectedValue;
     protected settings: CswSettings;
     private readonly uuid: string;
-    private summary: Summary;
+    protected summary: Summary;
 
     private keywordsAlreadyFetched = false;
     protected fetched: any = {
