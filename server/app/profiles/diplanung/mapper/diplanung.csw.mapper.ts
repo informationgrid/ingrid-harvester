@@ -25,6 +25,11 @@ import { pluPlanState, pluPlanType, pluProcedureState } from '../../../model/dca
 import { Contact } from '../../../model/agent';
 import { CswMapper } from '../../../importer/csw/csw.mapper';
 import { Distribution } from '../../../model/distribution';
+import { RequestDelegate, RequestOptions } from '../../../utils/http-request.utils';
+import { WmsXPath } from "../../../importer/csw/wms.xpath";
+
+const DomParser = require('@xmldom/xmldom').DOMParser;
+const log = require('log4js').getLogger(__filename);
 
 export class DiplanungCswMapper extends CswMapper {
 
@@ -98,11 +103,85 @@ export class DiplanungCswMapper extends CswMapper {
     async _getDistributions(): Promise<Distribution[]> {
         let distributions = [];
         for (let distribution of await super._getDistributions()) {
+            // for Diplanung, only use distributions that contain an accessURL
             if (distribution.accessURL) {
+                // add layer names for WMS services
+                if (distribution.format.includes('WMS') || distribution.accessURL.toLowerCase().includes('wms')) {
+                    let response = '';
+                    try {
+                        response = await this.getWmsResponse(distribution.accessURL);
+                    }
+                    catch (e) {
+                        log.error(e.getMessage());
+                    }
+                    // rudimentary check for XML
+                    if (response.startsWith('<?xml')) {
+                        let layerNames = await this.getMapLayerNames(response);
+                        if (layerNames) {
+                            distribution.mapLayerNames = layerNames;
+                        }
+                        if (!distribution.format.includes('WMS')) {
+                            distribution.format.push('WMS');
+                        }
+                    }
+                }
+                // TODO handle Format
                 distributions.push({ ...distribution, format: distribution.format });
+                // // add layer names for WMS services (version with filtering out non-accessible or non-XML "WMS"-urls)
+                // if (distribution.format.includes('WMS') || distribution.accessURL.toLowerCase().includes('wms')) {
+                //     try {
+                //         let response = await this.getWmsResponse(distribution.accessURL);
+                //         // rudimentary check for XML
+                //         if (response.startsWith('<?xml')) {
+                //             let layerNames = await this.getMapLayerNames(response);
+                //             if (layerNames) {
+                //                 distribution.mapLayerNames = layerNames;
+                //             }
+                //             if (!distribution.format.includes('WMS')) {
+                //                 distribution.format.push('WMS');
+                //             }
+                //         }
+                //         else {
+                //             distribution.format = distribution.format.filter(elem => elem != 'WMS');
+                //         }
+                //         distributions.push({ ...distribution, format: distribution.format });
+                //     }
+                //     // catch and re-throw connection errors
+                //     catch (e) {
+                //         throw e;
+                //     }
+                // }
+                // else {
+                //     // TODO handle Format
+                //     distributions.push({ ...distribution, format: distribution.format });
+                // }
             }
         }
         return distributions;
+    }
+
+    private async getWmsResponse(url: string) {
+        let serviceRequestConfig: RequestOptions = {
+            uri: url.split('?')[0],
+            qs: { service: 'WMS', request: 'GetCapabilities' },
+        };
+        let serviceRequestDelegate = new RequestDelegate(serviceRequestConfig);
+        // return await serviceRequestDelegate.doRequest(2, 500);   // retry 2 times, wait 500ms between
+        return await serviceRequestDelegate.doRequest();
+    }
+
+    private async getMapLayerNames(response: string): Promise<string[]> {
+        let serviceResponseDom = new DomParser().parseFromString(response);
+        // layer * 2
+        let layers = WmsXPath.select('./wms:WMS_Capabilities/wms:Capability/wms:Layer/wms:Layer', serviceResponseDom);
+        let layerNames = [];
+        for (let layer of layers) {
+            let layerName = WmsXPath.select('./wms:Name', layer, true)?.textContent;
+            if (layerName) {
+                layerNames.push(layerName);
+            }
+        }
+        return layerNames;
     }
 
     _getPluDevelopmentFreezePeriod() {

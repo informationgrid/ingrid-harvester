@@ -40,10 +40,6 @@ import { MiscUtils } from '../../utils/misc.utils';
 import {Agent, Contact, Organization, Person} from "../../model/agent";
 import {DateRange} from "../../model/dateRange";
 import {Distribution} from "../../model/distribution";
-import { WmsXPath } from "./wms.xpath";
-import { ProfileFactoryLoader } from "../../profiles/profile.factory.loader";
-
-const DomParser = require('@xmldom/xmldom').DOMParser;
 const xpath = require('xpath');
 
 export class CswMapper extends BaseMapper {
@@ -182,14 +178,6 @@ export class CswMapper extends BaseMapper {
                         format: UrlUtils.mapFormat(formatArray, this.summary.warnings)
                     };
 
-                    // add layer names for WMS services
-                    if (ProfileFactoryLoader.get().getProfileName() == 'diplanung' && url.toLowerCase().includes('wms')) {
-                        let layerNames = await this.getMapLayerNames(url);
-                        if (layerNames) {
-                            dist.mapLayerNames = layerNames;
-                        }
-                    }
-
                     urls.push(dist);
                 }
             }
@@ -274,26 +262,6 @@ export class CswMapper extends BaseMapper {
 
         return serviceLinks;
 
-    }
-
-    async getMapLayerNames(url: string): Promise<string[]> {
-        let serviceRequestConfig: RequestOptions = {
-            uri: url.split('?')[0],
-            qs: { service: 'WMS', request: 'GetCapabilities' },
-        };
-        let serviceRequestDelegate = new RequestDelegate(serviceRequestConfig);
-        let serviceResponse = await serviceRequestDelegate.doRequest();
-        let serviceResponseDom = new DomParser().parseFromString(serviceResponse);
-        // layer * 2
-        let layers = WmsXPath.select('./wms:WMS_Capabilities/wms:Capability/wms:Layer/wms:Layer', serviceResponseDom);
-        let layerNames = [];
-        for (let layer of layers) {
-            let layerName = WmsXPath.select('./wms:Name', layer, true)?.textContent;
-            if (layerName) {
-                layerNames.push(layerName);
-            }
-        }
-        return layerNames;
     }
 
     async _getPublisher(): Promise<Person[] | Organization[]> {
