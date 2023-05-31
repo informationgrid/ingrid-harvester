@@ -166,6 +166,9 @@ export const elasticsearchMapping = {
                         },
                         'pluDocType': {
                             'type': 'keyword'
+                        },
+                        'mapLayerNames': {
+                            'type': 'keyword'
                         }
                     }
                 },
@@ -305,6 +308,9 @@ export const elasticsearchMapping = {
                     'type': 'date_range'
                 },
                 'pluDocType': {
+                    'type': 'keyword'
+                },
+                'mapLayerNames': {
                     'type': 'keyword'
                 }
             }
