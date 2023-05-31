@@ -75,8 +75,8 @@ export class DiplanungCswMapper extends CswMapper {
             let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
 
             geometries.push({
-                'type': 'Envelope',
-                'coordinates': [[west, north], [east, south]]
+                'type': 'Polygon',
+                'coordinates': [[[west, north], [west, south], [east, south], [east, north], [west, north]]]
             });
         }
         if(geometries.length == 1){
