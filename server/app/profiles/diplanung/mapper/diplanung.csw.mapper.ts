@@ -22,6 +22,7 @@
  */
 
 import { pluPlanState, pluPlanType, pluProcedureState } from '../../../model/dcatApPlu.model';
+import { uniqBy } from 'lodash';
 import { Contact } from '../../../model/agent';
 import { CswMapper } from '../../../importer/csw/csw.mapper';
 import { Distribution } from '../../../model/distribution';
@@ -91,8 +92,9 @@ export class DiplanungCswMapper extends CswMapper {
         return undefined;
     }
 
-    _getMaintainers() {
-        return super._getMaintainers();
+    async _getMaintainers() {
+        let maintainers = await super._getMaintainers();
+        return uniqBy(maintainers, JSON.stringify);
     }
 
     _getCatalog() {
