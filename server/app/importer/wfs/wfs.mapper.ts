@@ -358,7 +358,7 @@ export class WfsMapper extends BaseMapper {
         }
         // if spatial exists, create bbox from it
         else if (this.select(this.settings.xpaths.spatial, this.feature, true)) {
-            GeoJsonUtils.getBbox(this.getSpatial());
+            return GeoJsonUtils.getBbox(this.getSpatial());
         }
         return undefined;
     }
