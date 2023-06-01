@@ -39,6 +39,10 @@ import { WfsMapper } from '../../importer/wfs/wfs.mapper';
 
 export class DiplanungFactory extends ProfileFactory<DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
 
+    getProfileName(): string {
+        return 'diplanung';
+    }
+
     getIndexDocument(): DiPlanungDocument {
         return new DiPlanungDocument();
     }

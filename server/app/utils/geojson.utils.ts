@@ -38,6 +38,7 @@
  */
 
 import bbox from '@turf/bbox';
+import bboxPolygon from '@turf/bbox-polygon';
 import centroid from '@turf/centroid';
 import rewind from '@turf/rewind';
 import * as xpath from 'xpath';
@@ -80,8 +81,8 @@ export class GeoJsonUtils {
         }
         else {
             return {
-                'type': 'envelope',
-                'coordinates': [[west, north], [east, south]]
+                'type': 'Polygon',
+                'coordinates': [[[west, north], [west, south], [east, south], [east, north], [west, north]]]
             };
         }
     };
@@ -90,7 +91,7 @@ export class GeoJsonUtils {
         if (!spatial) {
             return undefined;
         }
-        return bbox(spatial);
+        return bboxPolygon(bbox(spatial))?.geometry;
     }
 
     static getCentroid = (spatial: AllGeoJSON) => {

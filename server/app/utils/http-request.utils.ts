@@ -202,13 +202,12 @@ export class RequestDelegate {
     }
 
     /**
-     * Performs the HTTP request and returns the result of this operation. If
-     * the optional callback is provided, then it too if forwarded to the
-     * request.
-     *
-     * @param callback optional callback for the request library
+     * Performs the HTTP request and returns the result of this operation. 
+     * 
+     * @param retry how often the request should be retried if it fails
+     * @param waitMilliSeconds wait time between retries in milliseconds
      */
-    async doRequest(): Promise<any> {
+    async doRequest(retry: number = 0, waitMilliSeconds: number = 0): Promise<any> {
         logRequest.debug('Requesting: ' + this.config.uri);
         if (this.config.proxy) {
             let url = new URL(this.config.proxy);
@@ -224,7 +223,28 @@ export class RequestDelegate {
                 rejectUnauthorized: false
             });
         }
-        let response = fetch(this.config.uri + '?' + new URLSearchParams(this.config.qs), this.config);
+        let fullURL = this.config.uri + '?' + new URLSearchParams(this.config.qs);
+        let response = fetch(fullURL, this.config);
+
+        while (retry > 0) {
+            try {
+                await response;
+                break;
+            }
+            catch (e) {
+                // if a connection error occurs, retry
+                if (retry > 0) {
+                    retry -= 1;
+                    logRequest.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
+                    this.sleep(waitMilliSeconds);
+                    response = fetch(fullURL, this.config);
+                }
+                else {
+                    throw e;
+                }
+            }
+        };
+
         if (this.config.resolveWithFullResponse) {
             return response;
         }
@@ -234,6 +254,12 @@ export class RequestDelegate {
         else {
             return (await response).text();
         }
+    }
+
+    private sleep(ms: number) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, ms);
+        });
     }
 }
 

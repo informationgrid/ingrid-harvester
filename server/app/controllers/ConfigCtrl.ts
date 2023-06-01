@@ -53,6 +53,12 @@ export class ConfigCtrl {
         }
     }
 
+    @Get('/profile')
+    getProfile(): string {
+        let profile = ProfileFactoryLoader.get();
+        return profile.getProfileName();
+    }
+
     @Get('/general')
     getGeneralConfig(): GeneralSettings {
 

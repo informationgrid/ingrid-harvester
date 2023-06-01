@@ -40,8 +40,7 @@ import { MiscUtils } from '../../utils/misc.utils';
 import {Agent, Contact, Organization, Person} from "../../model/agent";
 import {DateRange} from "../../model/dateRange";
 import {Distribution} from "../../model/distribution";
-
-let xpath = require('xpath');
+const xpath = require('xpath');
 
 export class CswMapper extends BaseMapper {
 
@@ -72,7 +71,7 @@ export class CswMapper extends BaseMapper {
 
     static select = xpath.useNamespaces(CswMapper.nsMap);
 
-    private log = getLogger();
+    protected log = getLogger();
 
     protected readonly record: any;
     private harvestTime: any;
@@ -81,7 +80,7 @@ export class CswMapper extends BaseMapper {
     protected readonly idInfo; // : SelectedValue;
     protected settings: CswSettings;
     private readonly uuid: string;
-    private summary: Summary;
+    protected summary: Summary;
 
     private keywordsAlreadyFetched = false;
     protected fetched: any = {
@@ -173,11 +172,13 @@ export class CswMapper extends BaseMapper {
                         ? [protocolNode[0].textContent]
                         : formats;
 
-                    urls.push({
+                    let dist: Distribution = {
                         accessURL: url,
                         title: title.length > 0 ? title[0].textContent : undefined,
                         format: UrlUtils.mapFormat(formatArray, this.summary.warnings)
-                    });
+                    };
+
+                    urls.push(dist);
                 }
             }
 
