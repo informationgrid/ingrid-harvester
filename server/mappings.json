@@ -60,6 +60,12 @@
     "Excel": [
       "application/vnd.ms-excel"
     ],
+    "GeoDatabase": [
+      "ArcGIS: mdb",
+      "ESRI Geodatabaseformate (*.mdb",
+      "*gdb)",
+      "FileGeodatabase"
+    ],
     "GEOJSON": [
       "http://publications.europa.eu/resource/authority/file-type/geojson",
       "geojson"

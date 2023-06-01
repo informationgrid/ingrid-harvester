@@ -292,7 +292,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
 
         // send data to elasticsearch if limit is reached
         // TODO: don't use document size but bytes instead
-        await this.client.cluster.health({wait_for_status: 'yellow'});
+        // await this.client.cluster.health({ wait_for_status: 'yellow' });
         if (this._bulkData.length >= (maxBulkSize * 2)) {
             return this.sendBulkData();
         } else {
@@ -517,7 +517,8 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
                     results.push(hit);
                 });
 
-                if (response.hits.total !== results.length) {
+                let totalHits = typeof response.hits.total == 'number' ? response.hits.total : response.hits.total.value;
+                if (totalHits !== results.length) {
                     client.scroll({
                         scroll_id: response._scroll_id,
                         scroll: '5s'

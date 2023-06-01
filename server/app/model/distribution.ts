@@ -35,6 +35,7 @@ export interface Distribution {
     byteSize?: number;
     period?: DateRange;
     pluDocType?: string;
+    mapLayerNames?: string[];
 }
 
 

@@ -126,10 +126,10 @@ export class WfsImporter extends Importer {
         let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resolveWithFullResponse: true }, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
         let capabilitiesResponse: Response = await capabilitiesRequestDelegate.doRequest();
-        let contentType = capabilitiesResponse.headers.get('content-type').split(';');
-        let charset = contentType.find(ct => ct.toLowerCase().startsWith('charset'))?.split('=')?.[1];
+        let contentType = capabilitiesResponse.headers.get('content-type')?.split(';');
+        let charset = contentType?.find(ct => ct.toLowerCase().startsWith('charset'))?.split('=')?.[1];
         let responseBody: Buffer | string = await capabilitiesResponse.buffer();
-        if (charset.toLowerCase() == "utf-8") {
+        if (!charset || charset.toLowerCase() == "utf-8") {
             responseBody = responseBody.toString();
         }
         else {
