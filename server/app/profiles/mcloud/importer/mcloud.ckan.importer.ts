@@ -24,7 +24,7 @@
 import {CkanMapper} from "../../../importer/ckan/ckan.mapper";
 import {ProfileFactory} from "../../profile.factory";
 import {CkanImporter} from "../../../importer/ckan/ckan.importer";
-import {ElasticSearchUtils} from "../../../utils/elastic.utils";
+import {ElasticSearchUtils} from "../../../persistence/elastic.utils";
 
 let log = require('log4js').getLogger(__filename);
 const uuidv5 = require('uuid/v5');

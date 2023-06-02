@@ -27,8 +27,8 @@ import {configure} from 'log4js';
 import {doc1, doc2, doc3, doc5, doc6} from './data/docs.deduplication';
 import {elasticsearchMapping} from '../app/profiles/mcloud/elastic/elastic.mapping';
 import {elasticsearchSettings} from '../app/profiles/mcloud/elastic/elastic.settings';
-import {ElasticSettings} from '../app/utils/elastic.setting';
-import { ElasticSearchFactory } from '../app/utils/elastic.factory';
+import {ElasticSettings} from '../app/persistence/elastic.setting';
+import { ElasticSearchFactory } from '../app/persistence/elastic.factory';
 import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
 
 configure('./test/log4js-test.json');

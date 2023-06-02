@@ -22,9 +22,9 @@
  */
 
 import { elasticsearchMapping} from './statistic.mapping';
-import { ElasticSearchFactory } from '../utils/elastic.factory';
-import { ElasticSearchUtils } from '../utils/elastic.utils';
-import { ElasticSettings } from 'utils/elastic.setting';
+import { ElasticSearchFactory } from '../persistence/elastic.factory';
+import { ElasticSearchUtils } from '../persistence/elastic.utils';
+import { ElasticSettings } from '../persistence/elastic.setting';
 import { ImportLogMessage} from '../model/import.result';
 import { MiscUtils } from '../utils/misc.utils';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';

@@ -1,4 +1,4 @@
-import {ElasticSearchUtils} from "../server/utils/elastic.utils";
+import {ElasticSearchUtils} from "../server/persistence/elastic.utils";
 import {expect} from "chai";
 import {Summary} from '../server/model/summary';
 import {ImporterSettings} from '../server/importer';

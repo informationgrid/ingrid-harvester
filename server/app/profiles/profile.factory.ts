@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-import { DeduplicateUtils } from '../utils/deduplicate.utils';
+import { DeduplicateUtils } from '../persistence/deduplicate.utils';
 import { BaseMapper } from '../importer/base.mapper';
-import { ElasticQueries } from '../utils/elastic.queries';
-import { ElasticSearchUtils } from '../utils/elastic.utils';
+import { ElasticQueries } from '../persistence/elastic.queries';
+import { ElasticSearchUtils } from '../persistence/elastic.utils';
 import { ImporterFactory } from '../importer/importer.factory';
 import { IndexDocument } from '../model/index.document';
 import { Summary } from '../model/summary';

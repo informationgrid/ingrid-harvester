@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {ElasticSearchUtils} from '../../utils/elastic.utils';
+import {ElasticSearchUtils} from '../../persistence/elastic.utils';
 import {Summary} from '../../model/summary';
 import {Importer} from '../importer';
 import {RequestDelegate} from '../../utils/http-request.utils';
