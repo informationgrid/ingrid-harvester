@@ -23,12 +23,12 @@
 
 import {Service} from '@tsed/di';
 import {ConfigService} from './config/ConfigService';
-import {BulkResponse, ElasticSearchUtils} from '../utils/elastic.utils';
-import {ElasticSettings} from '../utils/elastic.setting';
+import {BulkResponse, ElasticSearchUtils} from '../persistence/elastic.utils';
+import {ElasticSettings} from '../persistence/elastic.setting';
 import {Summary} from '../model/summary';
 import {Index} from '@shared/index.model';
 import * as fs from "fs";
-import { ElasticSearchFactory } from '../utils/elastic.factory';
+import { ElasticSearchFactory } from '../persistence/elastic.factory';
 import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
 
 let log = require('log4js').getLogger(__filename);

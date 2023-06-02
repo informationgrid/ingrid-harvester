@@ -23,10 +23,10 @@
 
 import { elasticsearchMapping } from '../../statistic/index_check.mapping';
 import { ConfigService } from '../config/ConfigService';
-import { ElasticQueries } from '../../utils/elastic.queries';
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import { ElasticSearchUtils } from '../../utils/elastic.utils';
-import { ElasticSettings } from 'utils/elastic.setting';
+import { ElasticQueries } from '../../persistence/elastic.queries';
+import { ElasticSearchFactory } from '../../persistence/elastic.factory';
+import { ElasticSearchUtils } from '../../persistence/elastic.utils';
+import { ElasticSettings } from '../../persistence/elastic.setting';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary';

@@ -26,9 +26,9 @@ import {ConfigService} from "../services/config/ConfigService";
 import {GeneralSettings} from '@shared/general-config.settings';
 import {MappingDistribution, MappingItem} from '@shared/mapping.model';
 import {ScheduleService} from "../services/ScheduleService";
-import { ElasticSearchFactory } from '../utils/elastic.factory';
-import { ElasticSearchUtils } from '../utils/elastic.utils';
-import { ElasticSettings } from '../utils/elastic.setting';
+import { ElasticSearchFactory } from '../persistence/elastic.factory';
+import { ElasticSearchUtils } from '../persistence/elastic.utils';
+import { ElasticSettings } from '../persistence/elastic.setting';
 import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
 
 const log = require('log4js').getLogger(__filename);

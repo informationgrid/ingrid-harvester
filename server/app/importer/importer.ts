@@ -26,11 +26,11 @@ import {ImportLogMessage} from '../model/import.result';
 import {Summary} from '../model/summary';
 import {ImporterSettings} from '../importer.settings';
 import {FilterUtils} from "../utils/filter.utils";
-import {ElasticSearchUtils} from "../utils/elastic.utils";
-import {ElasticSettings} from "../utils/elastic.setting";
+import {ElasticSearchUtils} from "../persistence/elastic.utils";
+import {ElasticSettings} from "../persistence/elastic.setting";
 import {MiscUtils} from "../utils/misc.utils";
 import {ConfigService} from "../services/config/ConfigService";
-import {ElasticSearchFactory} from "../utils/elastic.factory";
+import {ElasticSearchFactory} from "../persistence/elastic.factory";
 import {ProfileFactory} from "../profiles/profile.factory";
 
 export abstract class Importer {

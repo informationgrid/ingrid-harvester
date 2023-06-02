@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {ElasticSearchUtils} from '../../utils/elastic.utils';
+import {ElasticSearchUtils} from '../../persistence/elastic.utils';
 import {ExcelSparseMapper} from './excelsparse.mapper';
 import {Workbook, Worksheet} from 'exceljs';
 import {Summary} from '../../model/summary';
