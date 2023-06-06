@@ -269,7 +269,7 @@ export class CswMapper extends BaseMapper {
         let otherContacts = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
-            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i = 0; i < queries.length; i++) {
@@ -280,7 +280,7 @@ export class CswMapper extends BaseMapper {
 
                 let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                 let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', contact, true);
 
                 let url = null;
                 if (urlNode) {
@@ -322,7 +322,7 @@ export class CswMapper extends BaseMapper {
         let otherContacts = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
-            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i = 0; i < queries.length; i++) {
@@ -333,7 +333,7 @@ export class CswMapper extends BaseMapper {
 
                 let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                 let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', contact, true);
 
                 let url = null;
                 if (urlNode) {
@@ -474,7 +474,7 @@ export class CswMapper extends BaseMapper {
         }
 
         keywords = [];
-        CswMapper.select('./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString|./gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', this.record).forEach(node => {
+        CswMapper.select('./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|./gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString', this.record).forEach(node => {
             keywords.push(node.textContent);
         });
 
@@ -604,7 +604,7 @@ export class CswMapper extends BaseMapper {
 
         let result: DateRange[] = [];
 
-        let nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod|./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml32:TimePeriod', this.idInfo);
+        let nodes = CswMapper.select('./gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod|./gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod', this.idInfo);
 
         for (let i = 0; i < nodes.length; i++) {
             let begin = this.getTimeValue(nodes[i], 'begin');
@@ -617,7 +617,7 @@ export class CswMapper extends BaseMapper {
                 });
             }
         }
-        nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimeInstant/gml:timePosition|./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml32:TimeInstant/gml32:timePosition', this.idInfo);
+        nodes = CswMapper.select('./gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimeInstant/gml:timePosition|./gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimeInstant/gml32:timePosition', this.idInfo);
 
         let times = nodes.map(node => node.textContent);
         for (let i = 0; i < times.length; i++) {
@@ -805,13 +805,10 @@ export class CswMapper extends BaseMapper {
 
     static getCharacterStringContent(element, cname?): string {
         if (cname) {
-            let node = CswMapper.select(`.//gmd:${cname}/gco:CharacterString`, element, true);
-            if (node) {
-                return node.textContent;
-            }
-        } else {
-            let node = CswMapper.select('./gco:CharacterString', element, true);
-            return node ? node.textContent : null;
+            return CswMapper.select(`./gmd:${cname}/gco:CharacterString`, element, true)?.textContent;
+        }
+        else {
+            return CswMapper.select(`./gco:CharacterString`, element, true)?.textContent;
         }
     }
 
@@ -886,7 +883,7 @@ export class CswMapper extends BaseMapper {
         let creators = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
-            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i = 0; i < queries.length; i++) {
@@ -897,7 +894,7 @@ export class CswMapper extends BaseMapper {
 
                 let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                 let organisation = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                let email = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString', contact, true);
 
                 if (role === 'originator' || role === 'author') {
                     let creator: creatorType = {};
@@ -950,7 +947,7 @@ export class CswMapper extends BaseMapper {
         let originators: any[] = [];
 
         let queries = [
-            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i = 0; i < queries.length; i++) {
@@ -962,8 +959,8 @@ export class CswMapper extends BaseMapper {
                 if (role === 'originator') {
                     let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                     let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                    let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
-                    let url = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                    let email = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                    let url = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', contact, true);
 
                     if (!name && !org) continue;
 
@@ -1013,7 +1010,7 @@ export class CswMapper extends BaseMapper {
         let others = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
-            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i = 0; i < queries.length; i++) {
@@ -1023,14 +1020,14 @@ export class CswMapper extends BaseMapper {
                 let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
                 let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                 let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let delPt = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
-                let locality = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:city/gco:CharacterString', contact, true);
-                let region = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
-                let country = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
-                let postCode = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
-                let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
-                let phone = CswMapper.select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
-                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let delPt = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:deliveryPoint', contact);
+                let locality = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:city/gco:CharacterString', contact, true);
+                let region = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:administrativeArea/gco:CharacterString', contact, true);
+                let country = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:country/gco:CharacterString', contact, true);
+                let postCode = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:postalCode/gco:CharacterString', contact, true);
+                let email = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                let phone = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', contact, true);
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
