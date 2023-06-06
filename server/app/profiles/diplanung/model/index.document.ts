@@ -48,7 +48,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
                 has_telephone: contactPoint.hasTelephone,
                 has_uid: contactPoint.hasUID,
                 has_url: contactPoint.hasURL,
-                has_orgnaization_name: contactPoint.hasOrganizationName
+                has_organization_name: contactPoint.hasOrganizationName
             },
             description: mapper.getDescription(),
             identifier: mapper.getGeneratedId(),
