@@ -600,8 +600,6 @@ export class CswMapper extends BaseMapper {
     }
 
     _getTemporal(): DateRange[] {
-        let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
-
         let result: DateRange[] = [];
 
         let nodes = CswMapper.select('./gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod|./gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod', this.idInfo);
