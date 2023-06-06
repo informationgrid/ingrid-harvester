@@ -30,7 +30,7 @@ import {Rules} from "../model/rules";
 import {Contact, Organization, Person, Agent} from "../model/agent";
 import {Distribution} from "../model/distribution";
 import {DateRange} from "../model/dateRange";
-import { RequestOptions } from 'utils/http-request.utils';
+import { RequestOptions } from '../utils/http-request.utils';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
