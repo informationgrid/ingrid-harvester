@@ -36,7 +36,7 @@ export class DiplanungCswMapper extends CswMapper {
     _getAlternateTitle(): string {
         let alternateTitle = CswMapper.getCharacterStringContent(this.idInfo, 'alternateTitle');
         if (!alternateTitle) {
-            alternateTitle = this._getTitle();
+            alternateTitle = this.getTitle();
         }
         return alternateTitle;
     }
@@ -218,9 +218,9 @@ export class DiplanungCswMapper extends CswMapper {
     _getPluPlanType(): string {
         // consider title, description, and keywords
         let searchFields = [];
-        searchFields.push(this._getTitle());
-        searchFields.push(this._getDescription());
-        searchFields.push(...this._getKeywords());
+        searchFields.push(this.getTitle());
+        searchFields.push(this.getDescription());
+        searchFields.push(...this.getKeywords());
         let haystack = searchFields.join('#').toLowerCase();
 
         // TODO especially in keywords - if set - there can be ambiguities, e.g. keywords contain multiple determination words

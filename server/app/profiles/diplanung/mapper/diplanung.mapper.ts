@@ -117,11 +117,11 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
     }
 
     getPublisher(): Promise<Person[] | Organization[]> {
-        return this.baseMapper._getPublisher();
+        return this.baseMapper.getPublisher();
     }
 
     getMaintainers(): Promise<Person[] | Organization[]> {
-        return this.baseMapper._getMaintainers();
+        return this.baseMapper.getMaintainers();
     }
 
     getDistributions(): Promise<Distribution[]> {

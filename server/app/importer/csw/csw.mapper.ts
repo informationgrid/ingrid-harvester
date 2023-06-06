@@ -427,7 +427,7 @@ export class CswMapper extends BaseMapper {
                 homepage: contactPoint.hasURL
             };
         } else {
-            let publisher = await this._getPublisher();
+            let publisher = await this.getPublisher();
 
             if (publisher) {
                 let displayName;
@@ -595,7 +595,7 @@ export class CswMapper extends BaseMapper {
     }
 
     _getCentroid(): object {
-        let spatial = this._getSpatial();
+        let spatial = this.getSpatial();
         return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
     }
 
@@ -661,7 +661,7 @@ export class CswMapper extends BaseMapper {
 
         let xpath = './gmd:identificationInfo[1]/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode';
         let categories = CswMapper.select(xpath, this.record);
-        let keywords = this._getKeywords()
+        let keywords = this.getKeywords();
 
         if(categories && categories.length > 0){
             themes = this.mapCategoriesToThemes(categories, keywords);
