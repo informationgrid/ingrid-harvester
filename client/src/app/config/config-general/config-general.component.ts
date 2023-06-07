@@ -76,22 +76,22 @@ export class ConfigGeneralComponent implements OnInit {
     return of(isValid ? null : {'elasticUrl': true});
   }
 
-  esStatus = { 
+  connectionStatus = {
     success: ['check', 'Test erfolgreich'],
     fail: ['report_problem', 'Test fehlgeschlagen'],
     working: ['sync', '... wird getestet']
   };
 
-  esStatusIcon(value: string) {
-    return this.esStatus[value][0];
+  statusIcon(value: string) {
+    return this.connectionStatus[value][0];
   }
 
-  esStatusMsg(value: string) {
-    return this.esStatus[value][1];
+  statusMsg(value: string) {
+    return this.connectionStatus[value][1];
   }
 
   checkEsConnection() {
-    this.connectionCheck = 'working';
+    this.esConnectionCheck = 'working';
     let checkResult = this.configService.checkEsConnection({
       elasticSearchUrl: this.configForm.get('elasticsearch.url').value,
       elasticSearchVersion: this.configForm.get('elasticsearch.version').value,
@@ -99,7 +99,7 @@ export class ConfigGeneralComponent implements OnInit {
       elasticSearchPassword: this.configForm.get('elasticsearch.password').value
     });
     checkResult.pipe(delay(1000)).subscribe(response => {
-      this.connectionCheck = response ? 'success' : 'fail';
+      this.esConnectionCheck = response ? 'success' : 'fail';
     });
   }
 
@@ -194,7 +194,7 @@ export class ConfigGeneralComponent implements OnInit {
     this.indexBackupCronTranslate(settings.indexBackup.cronPattern);
   }
 
-  connectionCheck: string;
+  esConnectionCheck: string;
   urlCheckTranslation: string;
   indexCheckTranslation: string;
   indexBackupCronTranslation: string;
