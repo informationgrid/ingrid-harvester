@@ -27,6 +27,7 @@ import { Catalog } from '../../model/dcatApPlu.model';
 import { ConfigService } from '../../services/config/ConfigService';
 import { CswMapper } from './csw.mapper';
 import { CswParameters, RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
+import { Entity } from '../../model/entity';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
@@ -118,7 +119,9 @@ export class CswImporter extends Importer {
                     await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
                 }
                 await this.harvest();
+                // send leftovers
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
+                    await this.database.sendBulkData();
                     await this.elastic.sendBulkData(false);
                     await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
@@ -297,9 +300,17 @@ export class CswImporter extends Importer {
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
             });
+            let entity: Entity = {
+                identifier: uuid,
+                source: this.settings.getRecordsUrl,
+                collection_id: 'harvester',
+                dataset: doc,
+                raw: mapper.getHarvestedData()
+            };
 
             if (!mapper.shouldBeSkipped()) {
                 if (!this.settings.dryRun) {
+                    promises.push(this.database.addEntityToBulk(entity));
                     promises.push(this.elastic.addDocToBulk(doc, uuid));
                 }
 
