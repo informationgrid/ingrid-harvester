@@ -49,6 +49,14 @@ export class ConfigService {
     static highestID: number = 0;
 
     private static readonly defaultSettings = {
+        database: {
+            type: 'postgresql' as 'postgresql',
+            host: process.env.DB_URL,
+            port: parseInt(process.env.DB_PORT),
+            database: process.env.DB_NAME,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD
+        },
         elasticsearch: {
             url: process.env.ELASTIC_URL || "http://elastic:9200",
             version: process.env.ELASTIC_VERSION || "8",

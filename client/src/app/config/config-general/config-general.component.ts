@@ -90,6 +90,21 @@ export class ConfigGeneralComponent implements OnInit {
     return this.connectionStatus[value][1];
   }
 
+  checkDbConnection() {
+    this.dbConnectionCheck = 'working';
+    let checkResult = this.configService.checkDbConnection({
+      type: this.configForm.get('database.type').value,
+      host: this.configForm.get('database.host').value,
+      port: this.configForm.get('database.port').value,
+      database: this.configForm.get('database.database').value,
+      user: this.configForm.get('database.user').value,
+      password: this.configForm.get('database.password').value
+    });
+    checkResult.pipe(delay(1000)).subscribe(response => {
+      this.dbConnectionCheck = response ? 'success' : 'fail';
+    });
+  }
+
   checkEsConnection() {
     this.esConnectionCheck = 'working';
     let checkResult = this.configService.checkEsConnection({
@@ -139,6 +154,14 @@ export class ConfigGeneralComponent implements OnInit {
     }
 
     this.configForm = this.formBuilder.group({
+      database: this.formBuilder.group({
+        type: [settings.database.type],
+        host: [settings.database.host, Validators.required],
+        port: [settings.database.port],
+        database: [settings.database.database, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
+        user: [settings.database.user],
+        password: [settings.database.password]
+      }),
       elasticsearch: this.formBuilder.group({
         url: [settings.elasticsearch.url, Validators.required, ConfigGeneralComponent.elasticUrlValidator],
         version: [settings.elasticsearch.version],
@@ -194,6 +217,7 @@ export class ConfigGeneralComponent implements OnInit {
     this.indexBackupCronTranslate(settings.indexBackup.cronPattern);
   }
 
+  dbConnectionCheck: string;
   esConnectionCheck: string;
   urlCheckTranslation: string;
   indexCheckTranslation: string;

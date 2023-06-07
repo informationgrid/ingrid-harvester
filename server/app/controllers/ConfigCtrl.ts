@@ -23,13 +23,14 @@
 
 import {Authenticated, BodyParams, Controller, Delete, Get, Post, QueryParams} from '@tsed/common';
 import {ConfigService} from "../services/config/ConfigService";
-import {GeneralSettings} from '@shared/general-config.settings';
+import {DatabaseConfiguration, GeneralSettings} from '@shared/general-config.settings';
 import {MappingDistribution, MappingItem} from '@shared/mapping.model';
 import {ScheduleService} from "../services/ScheduleService";
 import { ElasticSearchFactory } from '../persistence/elastic.factory';
 import { ElasticSearchUtils } from '../persistence/elastic.utils';
 import { ElasticSettings } from '../persistence/elastic.setting';
 import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
+import { DatabaseFactory } from '../persistence/database.factory';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -39,6 +40,16 @@ export class ConfigCtrl {
 
     constructor(
         private scheduleService: ScheduleService) {
+    }
+
+    @Post('/dbcheck')
+    async checkDbConnection(@BodyParams() body: DatabaseConfiguration): Promise<boolean> {
+        try {
+            return await DatabaseFactory.ping(body);
+        } catch (error) {
+            log.warn(error);
+            return false;
+        }
     }
 
     @Post('/escheck')
