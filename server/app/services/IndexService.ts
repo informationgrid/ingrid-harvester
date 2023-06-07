@@ -50,17 +50,17 @@ export class IndexService {
      * Start all cron jobs configured in each harvester
      */
     initialize() {
-        let generalSettings = ConfigService.getGeneralSettings();
-        this.alias = generalSettings.alias;
+        let elasticsearchConfiguration = ConfigService.getGeneralSettings().elasticsearch;
         const settings: ElasticSettings = {
-            elasticSearchUrl: generalSettings.elasticSearchUrl,
-            elasticSearchVersion: generalSettings.elasticSearchVersion,
-            elasticSearchUser: generalSettings.elasticSearchUser,
-            elasticSearchPassword: generalSettings.elasticSearchPassword,
-            alias: generalSettings.alias,
+            elasticSearchUrl: elasticsearchConfiguration.url,
+            elasticSearchVersion: elasticsearchConfiguration.version,
+            elasticSearchUser: elasticsearchConfiguration.user,
+            elasticSearchPassword: elasticsearchConfiguration.password,
+            alias: elasticsearchConfiguration.alias,
             includeTimestamp: true,
             index: ''
         };
+        this.alias = elasticsearchConfiguration.alias;
         // @ts-ignore
         const summary: Summary = {elasticErrors: []};
         this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);

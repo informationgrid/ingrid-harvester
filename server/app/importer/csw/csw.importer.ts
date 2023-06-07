@@ -158,7 +158,7 @@ export class CswImporter extends Importer {
             homepage: this.settings.getRecordsUrl,
             // TODO we need a unique ID for each catalog - currently using the alias (used as "global" catalog)
             // TODO or assign a different catalog for each record, depending on a property (address, publisher, etc)? expensive?
-            identifier: ConfigService.getGeneralSettings().alias,
+            identifier: ConfigService.getGeneralSettings().elasticsearch.alias,
             publisher: { name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent },
             title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
         };

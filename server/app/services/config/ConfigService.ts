@@ -49,13 +49,15 @@ export class ConfigService {
     static highestID: number = 0;
 
     private static readonly defaultSettings = {
-        elasticSearchUrl: process.env.ELASTIC_URL || "http://elastic:9200",
-        elasticSearchVersion: process.env.ELASTIC_VERSION || "8",
-        elasticSearchUser: process.env.ELASTIC_USER || "elastic",
-        elasticSearchPassword: process.env.ELASTIC_PASSWORD || "elastic",
-        alias: "mcloud",
-        numberOfShards: 1,
-        numberOfReplicas: 0,
+        elasticsearch: {
+            url: process.env.ELASTIC_URL || "http://elastic:9200",
+            version: process.env.ELASTIC_VERSION || "8",
+            user: process.env.ELASTIC_USER || "elastic",
+            password: process.env.ELASTIC_PASSWORD || "elastic",
+            alias: "mcloud",
+            numberOfShards: 1,
+            numberOfReplicas: 0
+        },
         proxy: "",
         portalUrl: "https://mcloud.de/",
         urlCheck:{
@@ -138,13 +140,17 @@ export class ConfigService {
     static adoptEnvs() {
         let generalSettings = ConfigService.getGeneralSettings();
         let ENV = {
-            elasticSearchUrl: process.env.ELASTIC_URL ?? generalSettings.elasticSearchUrl,
-            elasticSearchVersion: process.env.ELASTIC_VERSION ?? generalSettings.elasticSearchVersion,
-            elasticSearchUser: process.env.ELASTIC_USER ?? generalSettings.elasticSearchUser,
-            elasticSearchPassword: process.env.ELASTIC_PASSWORD ?? generalSettings.elasticSearchPassword,
-            ogcRecordsApiUrl: process.env.OGCAPI_URL ?? generalSettings.ogcRecordsApiUrl,
-            ogcRecordsApiUser: process.env.OGCAPI_USER ?? generalSettings.ogcRecordsApiUser,
-            ogcRecordsApiPassword: process.env.OGCAPI_PASSWORD ?? generalSettings.ogcRecordsApiPassword
+            elasticsearch: {
+                url: process.env.ELASTIC_URL ?? generalSettings.elasticsearch.url,
+                version: process.env.ELASTIC_VERSION ?? generalSettings.elasticsearch.version,
+                user: process.env.ELASTIC_USER ?? generalSettings.elasticsearch.user,
+                password: process.env.ELASTIC_PASSWORD ?? generalSettings.elasticsearch.password
+            },
+            ogcRecordsApi: {
+                url: process.env.OGCAPI_URL ?? generalSettings.ogcRecordsApi?.url,
+                user: process.env.OGCAPI_USER ?? generalSettings.ogcRecordsApi?.user,
+                password: process.env.OGCAPI_PASSWORD ?? generalSettings.ogcRecordsApi?.password
+            }
         };
         let updatedSettings: GeneralSettings = MiscUtils.merge(generalSettings, ENV);
         log.info('Updating general config from environment variables');

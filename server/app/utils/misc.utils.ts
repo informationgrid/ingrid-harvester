@@ -83,23 +83,25 @@ export class MiscUtils {
      * Get catalog information from OGC-Records-API
      */
     static async fetchCatalogFromOgcRecordsApi(catalogId: string): Promise<Catalog> {
-        let genSettings = ConfigService.getGeneralSettings();
-        let authString = genSettings.ogcRecordsApiUser + ':' + genSettings.ogcRecordsApiPassword;
+        let generalSettings = ConfigService.getGeneralSettings();
         let config: RequestOptions = {
             method: 'GET',
             json: true,
             headers: {
                 'User-Agent': 'InGrid Harvester. node-fetch',
-                'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + Buffer.from(authString, 'utf8').toString('base64')
+                'Content-Type': 'application/json'
             },
             qs: {
                 f: "json",
                 v: "1"
             },
             resolveWithFullResponse: true,
-            uri: genSettings.ogcRecordsApiUrl + '/collections/' + catalogId
+            uri: generalSettings.ogcRecordsApi?.url + '/collections/' + catalogId
         };
+        if (generalSettings.ogcRecordsApi?.user && generalSettings.ogcRecordsApi?.password) {
+            let authString = generalSettings.ogcRecordsApi.user + ':' + generalSettings.ogcRecordsApi.password;
+            config.headers['Authorization'] = 'Basic ' + Buffer.from(authString, 'utf8').toString('base64');
+        }
         let requestDelegate = new RequestDelegate(config);
         let catalog = { identifier: catalogId, description: '', publisher: { name: '', organization: '' }, title: '' };
         try {
