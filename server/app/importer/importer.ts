@@ -43,7 +43,18 @@ export abstract class Importer {
         this.summary = new Summary(settings);
         this.filterUtils = new FilterUtils(settings);
 
-        let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index, dryRun: settings.dryRun, addAlias: !settings.disable});
+        let elasticsearchConfiguration = ConfigService.getGeneralSettings().elasticsearch;
+        let elasticsearchSettings: ElasticSettings = {
+            elasticSearchUrl: elasticsearchConfiguration.url,
+            elasticSearchVersion: elasticsearchConfiguration.version,
+            elasticSearchUser: elasticsearchConfiguration.user,
+            elasticSearchPassword: elasticsearchConfiguration.password,
+            alias: elasticsearchConfiguration.alias,
+            includeTimestamp: true,
+            index: settings.index,
+            dryRun: settings.dryRun,
+            addAlias: !settings.disable
+        };
         this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 

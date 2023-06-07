@@ -29,6 +29,7 @@ import { ElasticQueries } from '../../persistence/elastic.queries';
 import { ElasticSearchFactory } from '../../persistence/elastic.factory';
 import { ElasticSearchUtils } from '../../persistence/elastic.utils';
 import { ElasticSettings } from '../../persistence/elastic.setting';
+import { GeneralSettings } from '@shared/general-config.settings';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { Service } from '@tsed/di';
@@ -43,7 +44,7 @@ export class UrlCheckService {
     private elasticUtils: ElasticSearchUtils;
     private elasticsearchSettings: ElasticSettings;
     private elasticQueries: ElasticQueries;
-    private generalSettings;
+    private generalSettings: GeneralSettings;
 
     private httpsAgent: Agent;
 
@@ -67,11 +68,11 @@ export class UrlCheckService {
     initialize() {
         this.generalSettings = ConfigService.getGeneralSettings();
         let settings = {
-            elasticSearchUrl: this.generalSettings.elasticSearchUrl,
-            elasticSearchVersion: this.generalSettings.elasticSearchVersion,
-            elasticSearchUser: this.generalSettings.elasticSearchUser,
-            elasticSearchPassword: this.generalSettings.elasticSearchPassword,
-            alias: this.generalSettings.alias,
+            elasticSearchUrl: this.generalSettings.elasticsearch.url,
+            elasticSearchVersion: this.generalSettings.elasticsearch.version,
+            elasticSearchUser: this.generalSettings.elasticsearch.user,
+            elasticSearchPassword: this.generalSettings.elasticsearch.password,
+            alias: this.generalSettings.elasticsearch.alias,
             includeTimestamp: false,
             index: 'url_check_history'
         };

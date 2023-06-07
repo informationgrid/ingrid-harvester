@@ -29,6 +29,7 @@ import { ImportLogMessage} from '../model/import.result';
 import { MiscUtils } from '../utils/misc.utils';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary} from '../model/summary';
+import { GeneralSettings } from '@shared/general-config.settings';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -38,9 +39,14 @@ export class StatisticUtils {
     private elasticsearchSettings: ElasticSettings;
     private static maxBulkSize = 100;
 
-    constructor(settings) {
-        settings = {
-            ...settings,
+    constructor(generalSettings: GeneralSettings) {
+        let settings = {
+            elasticSearchUrl: generalSettings.elasticsearch.url,
+            elasticSearchVersion: generalSettings.elasticsearch.version,
+            elasticSearchUser: generalSettings.elasticsearch.user,
+            elasticSearchPassword: generalSettings.elasticsearch.password,
+            alias: generalSettings.elasticsearch.alias,
+            includeTimestamp: false,
             index: 'mcloud_harvester_statistic'
         };
         // @ts-ignore

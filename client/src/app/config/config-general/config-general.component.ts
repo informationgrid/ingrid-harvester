@@ -93,10 +93,10 @@ export class ConfigGeneralComponent implements OnInit {
   checkEsConnection() {
     this.connectionCheck = 'working';
     let checkResult = this.configService.checkEsConnection({
-      elasticSearchUrl: this.configForm.get('elasticSearchUrl').value,
-      elasticSearchVersion: this.configForm.get('elasticSearchVersion').value,
-      elasticSearchUser: this.configForm.get('elasticSearchUser').value,
-      elasticSearchPassword: this.configForm.get('elasticSearchPassword').value
+      elasticSearchUrl: this.configForm.get('elasticsearch.url').value,
+      elasticSearchVersion: this.configForm.get('elasticsearch.version').value,
+      elasticSearchUser: this.configForm.get('elasticsearch.user').value,
+      elasticSearchPassword: this.configForm.get('elasticsearch.password').value
     });
     checkResult.pipe(delay(1000)).subscribe(response => {
       this.connectionCheck = response ? 'success' : 'fail';
@@ -139,16 +139,20 @@ export class ConfigGeneralComponent implements OnInit {
     }
 
     this.configForm = this.formBuilder.group({
-      elasticSearchUrl: [settings.elasticSearchUrl, Validators.required, ConfigGeneralComponent.elasticUrlValidator],
-      elasticSearchVersion: [settings.elasticSearchVersion],
-      elasticSearchUser: [settings.elasticSearchUser],
-      elasticSearchPassword: [settings.elasticSearchPassword],
-      alias: [settings.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
-      numberOfShards: [settings.numberOfShards],
-      numberOfReplicas: [settings.numberOfReplicas],
-      ogcRecordsApiUrl: [settings.ogcRecordsApiUrl],
-      ogcRecordsApiUser: [settings.ogcRecordsApiUser],
-      ogcRecordsApiPassword: [settings.ogcRecordsApiPassword],
+      elasticsearch: this.formBuilder.group({
+        url: [settings.elasticsearch.url, Validators.required, ConfigGeneralComponent.elasticUrlValidator],
+        version: [settings.elasticsearch.version],
+        user: [settings.elasticsearch.user],
+        password: [settings.elasticsearch.password],
+        alias: [settings.elasticsearch.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
+        numberOfShards: [settings.elasticsearch.numberOfShards],
+        numberOfReplicas: [settings.elasticsearch.numberOfReplicas]
+      }),
+      ogcRecordsApi: this.formBuilder.group({
+        url: [settings.ogcRecordsApi?.url],
+        user: [settings.ogcRecordsApi?.user],
+        password: [settings.ogcRecordsApi?.password]
+      }),
       cronOffset: [settings.cronOffset],
       proxy: [settings.proxy],
       portalUrl: [settings.portalUrl],

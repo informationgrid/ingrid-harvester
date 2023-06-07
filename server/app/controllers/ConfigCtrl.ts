@@ -68,7 +68,7 @@ export class ConfigCtrl {
 
     @Post('/general')
     setGeneralConfig(@BodyParams() body: GeneralSettings): void {
-        if(body.elasticSearchUrl && body.alias) {
+        if(body.elasticsearch.url && body.elasticsearch.alias) {
             ConfigService.setGeneralConfig(body);
             this.scheduleService.initialize();
         }

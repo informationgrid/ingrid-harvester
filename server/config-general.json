@@ -1,15 +1,21 @@
 {
-  "elasticSearchUrl": "http://localhost:9200",
-  "elasticSearchVersion": "6",
-  "elasticSearchUser": "elastic",
-  "elasticSearchPassword": "",
-  "alias": "mcloud",
-  "numberOfShards": 1,
-  "numberOfReplicas": 0,
-  "ogcRecordsApiUrl": "http://localhost:8080/v1",
-  "ogcRecordsApiUser": "admin",
-  "ogcRecordsApiPassword": "admin",
-  "cronOffset": 0,
+  "database": {
+    "type": "postgresql",
+    "host": "localhost",
+    "port": 5433,
+    "database": "ogcrecords",
+    "user": "ogcrecords",
+    "password": "ogcrecords"
+  },
+  "elasticsearch": {
+    "url": "http://localhost:9200",
+    "version": "6",
+    "user": "elastic",
+    "password": "",
+    "alias": "mcloud",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0
+  },
   "proxy": "",
   "portalUrl": "http://localhost:8080/",
   "urlCheck": {
@@ -41,5 +47,11 @@
     "cronPattern": "30 05 * * *",
     "dir": ""
   },
-  "maxDiff": 10
+  "maxDiff": 10,
+  "ogcRecordsApi": {
+    "url": "http://localhost:8080/v1",
+    "user": "admin",
+    "password": "admin"
+  },
+  "cronOffset": 0
 }
