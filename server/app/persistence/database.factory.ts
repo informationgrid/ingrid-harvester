@@ -27,21 +27,21 @@ import { PostgresUtils } from './postgres.utils.no.transactions';
 
 export class DatabaseFactory {
 
-    public static getDatabaseUtils(settings: DatabaseConfiguration): DatabaseUtils {
-        switch (settings.type) {
+    public static getDatabaseUtils(configuration: DatabaseConfiguration): DatabaseUtils {
+        switch (configuration.type) {
             case 'postgresql':
                 return new PostgresUtils();
             default: 
-                throw new Error('Only PostgreSQL ist supported; [' + settings.type + '] was specified');
+                throw new Error('Only PostgreSQL ist supported; [' + configuration.type + '] was specified');
         }
     }
 
-    public static async ping(settings: DatabaseConfiguration): Promise<boolean> {
-        switch (settings.type) {
+    public static async ping(configuration: DatabaseConfiguration): Promise<boolean> {
+        switch (configuration.type) {
             case 'postgresql':
-                return PostgresUtils.ping(settings);
+                return PostgresUtils.ping(configuration);
             default: 
-                throw new Error('Only PostgreSQL ist supported; [' + settings.type + '] was specified');
+                throw new Error('Only PostgreSQL ist supported; [' + configuration.type + '] was specified');
         }
     }
 }

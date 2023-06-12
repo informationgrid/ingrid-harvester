@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import { BaseMapper } from '../importer/base.mapper';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DeduplicateUtils } from './deduplicate.utils';
 import { Entity } from '../model/entity';
@@ -59,7 +58,7 @@ export abstract class DatabaseUtils {
 
     // abstract ping(): Promise<boolean>;
 
-    static ping(databaseConfiguration: Partial<DatabaseConfiguration>): Promise<boolean> {
+    static ping(configuration: Partial<DatabaseConfiguration>): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 }
