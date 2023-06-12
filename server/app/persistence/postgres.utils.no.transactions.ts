@@ -23,13 +23,13 @@
 
 import { tableName, PostgresQueries } from './postgres.queries';
 import { BulkResponse, DatabaseUtils } from './database.utils';
-import { ConfigService } from '../services/config/ConfigService';
+import { Client } from 'pg';
+import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DeduplicateUtils } from './deduplicate.utils';
 import { Entity } from '../model/entity';
-import { Client, Pool, PoolClient, QueryResult } from 'pg';
-import pgpt from 'pg-promise';
 import { IClient } from 'pg-promise/typescript/pg-subset';
-import { DatabaseConfiguration } from '@shared/general-config.settings';
+import { IDatabase, IMain, QueryColumns } from 'pg-promise';
+import { Summary } from '../model/summary';
 
 const log = require('log4js').getLogger(__filename);
 const pgp = require('pg-promise');
@@ -37,47 +37,27 @@ const pgp = require('pg-promise');
 
 export class PostgresUtils extends DatabaseUtils {
 
-    // private pool: Pool;
-    private connection: pgpt.IMain<{}, IClient>;
+    private connection: IMain<{}, IClient>;
 
-    private static db: pgpt.IDatabase<{}, IClient>;
+    private static db: IDatabase<{}, IClient>;
 
-    private columns: pgpt.QueryColumns<Entity>;
+    private columns: QueryColumns<Entity>;
 
-    constructor(databaseConfiguration?: DatabaseConfiguration) {
+    private summary: Summary;
+
+    constructor(configuration?: DatabaseConfiguration) {
         super();
-        // this.pool = new Pool({
-        //     connectionString: ,
-        //     user: ,
-        //     password: 
-        // });
-        // let databaseConfiguration = ConfigService.getGeneralSettings().database;
         this.connection = pgp();
 
-        // const cn = {
-        //     host: 'localhost',
-        //     port: 5433,
-        //     database: 'my-database-name',
-        //     user: 'user-name',
-        //     password: 'user-password',
-        //     max: 30 // use up to 30 connections
-        
-        //     // "types" - in case you want to set custom type parsers on the pool level
-        // };
         if (!PostgresUtils.db) {
-            PostgresUtils.db = this.connection(ConfigService.getGeneralSettings().database);
+            PostgresUtils.db = this.connection(configuration);
         }
 
         this._bulkData = [];
-
         this.columns = new this.connection.helpers.ColumnSet(['identifier', 'source', 'collection_id', 'dataset', 'raw'],
                         { table: tableName });
         this.createTables();
     }
-
-    // preparedQuery(client: PoolClient, name: string, ...values: any[]) {
-    //     client.query()
-    // }
 
     createTables() {
         PostgresUtils.db.none(PostgresQueries.createTable);

@@ -41,7 +41,7 @@ export abstract class DatabaseUtils {
 
     abstract write(entity: Entity);
 
-    abstract bulk(entity: Entity[]);
+    abstract bulk(entities: Entity[], commitTransaction: boolean): Promise<BulkResponse>;
 
     /**
      * Add an entity to the bulk array which will be sent to the database
