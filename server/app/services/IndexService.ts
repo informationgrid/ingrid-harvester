@@ -62,7 +62,7 @@ export class IndexService {
         };
         this.alias = elasticsearchConfiguration.alias;
         // @ts-ignore
-        const summary: Summary = {elasticErrors: []};
+        const summary: Summary = {databaseErrors: [], elasticErrors: []};
         this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
     }
 

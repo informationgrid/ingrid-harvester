@@ -37,12 +37,14 @@ export class DialogLogComponent implements OnInit {
   viewPort: CdkVirtualScrollViewport;
 
   appErrors: string[] = [];
+  databaseErrors: string[] = [];
   elasticSearchErrors: string[] = [];
   appWarnings: string[][] = [];
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
     const message: ImportLogMessage = data.content;
     this.appErrors = message.summary.appErrors;
+    this.databaseErrors = message.summary.databaseErrors;
     this.elasticSearchErrors = message.summary.elasticErrors;
     this.appWarnings = message.summary.warnings;
   }
@@ -53,10 +55,12 @@ export class DialogLogComponent implements OnInit {
   getInitialIndex() {
     if (this.appErrors.length > 0) {
       return 0;
-    } else if (this.elasticSearchErrors.length > 0) {
+    } else if (this.databaseErrors.length > 0) {
       return 1;
-    } else {
+    } else if (this.elasticSearchErrors.length > 0) {
       return 2;
+    } else {
+      return 3;
     }
   }
 }

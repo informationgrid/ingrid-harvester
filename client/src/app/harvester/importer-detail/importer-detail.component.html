@@ -48,8 +48,8 @@
             <mat-card (click)="showLog.next()" class="clickable">
                 <mat-card-header>
                     <div mat-card-avatar class="numberCircle" data-test="num-errors"
-                         [class.error]="data.summary?.numErrors > 0 || data.summary?.elasticErrors.length > 0 || data.summary?.appErrors.length > 0">
-                      {{data.summary?.numErrors + data.summary?.elasticErrors.length + data.summary?.appErrors.length}}
+                         [class.error]="data.summary?.numErrors > 0 || data.summary?.databaseErrors.length > 0 || data.summary?.elasticErrors.length > 0 || data.summary?.appErrors.length > 0">
+                      {{data.summary?.numErrors + data.summary?.databaseErrors.length + data.summary?.elasticErrors.length + data.summary?.appErrors.length}}
                     </div>
                     <mat-card-title>Fehler</mat-card-title>
                 </mat-card-header>

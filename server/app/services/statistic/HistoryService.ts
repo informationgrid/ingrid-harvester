@@ -97,6 +97,7 @@ export class HistoryService {
                 numWarnings: Object.values(harvester).map(h => h["numWarnings"]).reduce(this.SUM),
                 numRecordErrors: Object.values(harvester).map(h => h["numRecordErrors"]).reduce(this.SUM),
                 numAppErrors: Object.values(harvester).map(h => h["numAppErrors"]).reduce(this.SUM),
+                numDBErrors: Object.values(harvester).map(h => h["numDBErrors"]).reduce(this.SUM),
                 numESErrors: Object.values(harvester).map(h => h["numESErrors"]).reduce(this.SUM),
                 duration: Object.values(harvester).map(h => h["duration"]).reduce(this.SUM)
             });
