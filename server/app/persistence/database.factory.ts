@@ -23,7 +23,7 @@
 
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DatabaseUtils } from './database.utils';
-import { PostgresUtils } from './postgres.utils.no.transactions';
+import { PostgresUtils } from './postgres.utils';
 import { Summary } from '../model/summary';
 
 export class DatabaseFactory {

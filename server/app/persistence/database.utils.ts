@@ -33,8 +33,7 @@ export interface BulkResponse {
 
 export abstract class DatabaseUtils {
 
-    protected client;
-    public static maxBulkSize: number = 50;
+    protected static maxBulkSize: number = 50;
     protected summary: Summary;
     public deduplicationUtils: DeduplicateUtils;
     
@@ -58,7 +57,11 @@ export abstract class DatabaseUtils {
      */
     abstract sendBulkData(): Promise<BulkResponse>;
 
-    // abstract ping(): Promise<boolean>;
+    abstract beginTransaction(): Promise<void>;
+    
+    abstract commitTransaction(): Promise<void>;
+
+    abstract rollbackTransaction(): Promise<void>;
 
     static ping(configuration: Partial<DatabaseConfiguration>): Promise<boolean> {
         throw new Error('Method not implemented.');

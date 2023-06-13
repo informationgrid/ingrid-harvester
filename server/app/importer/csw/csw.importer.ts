@@ -118,10 +118,17 @@ export class CswImporter extends Importer {
                 else {
                     await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
                 }
+                await this.database.beginTransaction();
                 await this.harvest();
                 // send leftovers
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
                     await this.database.sendBulkData();
+                    if (this.summary.databaseErrors.length == 0) {
+                        await this.database.commitTransaction();
+                    }
+                    else {
+                        await this.database.rollbackTransaction();
+                    }
                     await this.elastic.sendBulkData(false);
                     await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
