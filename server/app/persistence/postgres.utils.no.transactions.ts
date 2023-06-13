@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { tableName, PostgresQueries } from './postgres.queries';
+import { PostgresQueries } from './postgres.queries';
 import { BulkResponse, DatabaseUtils } from './database.utils';
 import { Client } from 'pg';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
@@ -54,7 +54,7 @@ export class PostgresUtils extends DatabaseUtils {
         this._bulkData = [];
         this.summary = summary;
         this.columns = new this.connection.helpers.ColumnSet(['identifier', 'source', 'collection_id', 'dataset', 'raw'],
-                        { table: tableName });
+                        { table: PostgresQueries.tableName });
         this.createTables();
     }
 

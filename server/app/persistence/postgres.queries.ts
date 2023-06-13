@@ -21,20 +21,21 @@
  * ==================================================
  */
 
-export const tableName = 'dataset';
-
 export class PostgresQueries {
 
-    static select = ``;
+    static tableName = 'dataset';
 
-    static bulkUpsert = ``;
-
-    static onConflict = ` ON CONFLICT ON CONSTRAINT ${tableName}_pkey DO UPDATE SET
+    static onConflict = ` ON CONFLICT ON CONSTRAINT ${PostgresQueries.tableName}_pkey DO UPDATE SET
         dataset = EXCLUDED.dataset, 
         raw = EXCLUDED.raw, 
         last_modified = NOW()`;
 
-    static createTable = `CREATE TABLE IF NOT EXISTS public.${tableName} (
+    static bulkUpsert = `INSERT INTO ${PostgresQueries.tableName} (identifier, source, collection_id, dataset, raw)
+        SELECT identifier, source, collection_id, dataset, raw
+        FROM json_populate_recordset(null::${PostgresQueries.tableName}, $1)
+        ${PostgresQueries.onConflict}`;
+
+    static createTable = `CREATE TABLE IF NOT EXISTS public.${PostgresQueries.tableName} (
         id SERIAL,
         identifier VARCHAR(255),
         source VARCHAR(255),
