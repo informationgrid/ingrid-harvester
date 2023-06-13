@@ -57,7 +57,7 @@ export abstract class Importer {
             addAlias: !settings.disable
         };
         this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
-        this.database = DatabaseFactory.getDatabaseUtils(generalConfiguration.database);
+        this.database = DatabaseFactory.getDatabaseUtils(generalConfiguration.database, this.summary);
     }
 
     run: Observable<ImportLogMessage> = new Observable<ImportLogMessage>(observer => {

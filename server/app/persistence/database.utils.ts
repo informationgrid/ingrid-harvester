@@ -24,6 +24,7 @@
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DeduplicateUtils } from './deduplicate.utils';
 import { Entity } from '../model/entity';
+import { Summary } from '../model/summary';
 
 export interface BulkResponse {
     queued: boolean;
@@ -34,6 +35,7 @@ export abstract class DatabaseUtils {
 
     protected client;
     public static maxBulkSize: number = 50;
+    protected summary: Summary;
     public deduplicationUtils: DeduplicateUtils;
     
     public _bulkData: Entity[];

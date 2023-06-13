@@ -24,13 +24,14 @@
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DatabaseUtils } from './database.utils';
 import { PostgresUtils } from './postgres.utils.no.transactions';
+import { Summary } from '../model/summary';
 
 export class DatabaseFactory {
 
-    public static getDatabaseUtils(configuration: DatabaseConfiguration): DatabaseUtils {
+    public static getDatabaseUtils(configuration: DatabaseConfiguration, summary: Summary): DatabaseUtils {
         switch (configuration.type) {
             case 'postgresql':
-                return new PostgresUtils();
+                return new PostgresUtils(configuration, summary);
             default: 
                 throw new Error('Only PostgreSQL ist supported; [' + configuration.type + '] was specified');
         }

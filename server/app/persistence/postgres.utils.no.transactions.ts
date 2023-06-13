@@ -43,9 +43,7 @@ export class PostgresUtils extends DatabaseUtils {
 
     private columns: QueryColumns<Entity>;
 
-    private summary: Summary;
-
-    constructor(configuration?: DatabaseConfiguration) {
+    constructor(configuration?: DatabaseConfiguration, summary?: Summary) {
         super();
         this.connection = pgp();
 
@@ -54,6 +52,7 @@ export class PostgresUtils extends DatabaseUtils {
         }
 
         this._bulkData = [];
+        this.summary = summary;
         this.columns = new this.connection.helpers.ColumnSet(['identifier', 'source', 'collection_id', 'dataset', 'raw'],
                         { table: tableName });
         this.createTables();
