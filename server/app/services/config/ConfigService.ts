@@ -50,6 +50,7 @@ export class ConfigService {
 
     private static readonly defaultSettings = {
         database: {
+            active: false,
             type: 'postgresql' as 'postgresql',
             host: process.env.DB_URL,
             port: parseInt(process.env.DB_PORT),

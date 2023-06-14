@@ -58,6 +58,7 @@ export interface ElasticsearchConfiguration {
 }
 
 export interface DatabaseConfiguration {
+    active: boolean,
     type: 'postgresql',
     host: string,
     port: number,
