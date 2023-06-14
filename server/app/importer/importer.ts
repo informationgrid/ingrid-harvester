@@ -30,6 +30,8 @@ import {ElasticSearchUtils} from "../utils/elastic.utils";
 import {ElasticSettings} from "../utils/elastic.setting";
 import {MiscUtils} from "../utils/misc.utils";
 import {ConfigService} from "../services/config/ConfigService";
+import {ElasticSearchFactory} from "../utils/elastic.factory";
+import {ProfileFactory} from "../profiles/profile.factory";
 
 export abstract class Importer {
     protected observer: Observer<ImportLogMessage>;
@@ -42,7 +44,7 @@ export abstract class Importer {
         this.filterUtils = new FilterUtils(settings);
 
         let elasticsearchSettings: ElasticSettings = MiscUtils.merge(ConfigService.getGeneralSettings(), {includeTimestamp: true, index: settings.index, dryRun: settings.dryRun, addAlias: !settings.disable});
-        this.elastic = new ElasticSearchUtils(elasticsearchSettings, this.summary);
+        this.elastic = ElasticSearchFactory.getElasticUtils(elasticsearchSettings, this.summary);
     }
 
     //run: Observable<ImportLogMessage>;

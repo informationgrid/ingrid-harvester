@@ -27,8 +27,11 @@ import {configure} from 'log4js';
 import {doc1, doc3, doc4} from './data/docs.deduplication';
 import {elasticsearchMapping} from '../app/profiles/mcloud/elastic/elastic.mapping';
 import {elasticsearchSettings} from '../app/profiles/mcloud/elastic/elastic.settings';
-import { ElasticSearchUtils } from '../app/utils/elastic.utils';
+import { ElasticSearchFactory } from '../app/utils/elastic.factory';
 import { ElasticSettings } from '../app/utils/elastic.setting';
+import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
+import {mcloudFactory} from "../app/profiles/mcloud/profile.factory";
+import {DeduplicateUtils} from "../app/profiles/mcloud/elastic/deduplicate.utils";
 
 configure('./test/log4js-test.json');
 
@@ -51,7 +54,9 @@ xdescribe('deduplication by similar title', function () {
         elasticErrors: []
     };
 
-    let elasticSearchUtils = new ElasticSearchUtils(settings, summary);
+    let elasticSearchUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
+    let deduplicateUtils: DeduplicateUtils = (new mcloudFactory()).getDeduplicationUtils(elasticSearchUtils, settings, summary);
+    //deduplicateUtils.deduplicationIndices = deduplicationIndices;
 
     /**
      * Initialize test indices with mapping and settings

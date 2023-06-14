@@ -25,6 +25,7 @@ import { elasticsearchMapping } from '../../statistic/url_check.mapping';
 import { now } from 'moment';
 import { ConfigService } from '../config/ConfigService';
 import { ElasticQueries } from '../../utils/elastic.queries';
+import { ElasticSearchFactory } from '../../utils/elastic.factory';
 import { ElasticSearchUtils } from '../../utils/elastic.utils';
 import { ElasticSettings } from 'utils/elastic.setting';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -60,7 +61,7 @@ export class UrlCheckService {
         // @ts-ignore
         const summary: Summary = {};
         let profile = ProfileFactoryLoader.get();
-        this.elasticUtils = new ElasticSearchUtils(settings, summary);
+        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
         this.elasticsearchSettings = profile.getElasticSettings();
         this.elasticQueries = profile.getElasticQueries();
     }
