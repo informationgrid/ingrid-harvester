@@ -24,12 +24,12 @@
 import {DcatMapper} from './dcat.mapper';
 import {Summary} from '../../model/summary';
 import {getLogger} from 'log4js';
-import {OptionsWithUri} from 'request-promise';
+
 import {Importer} from '../importer';
 import {Observer} from 'rxjs';
 import {ImportLogMessage, ImportResult} from '../../model/import.result';
 import {DcatSettings, defaultDCATSettings} from './dcat.settings';
-import {RequestDelegate} from "../../utils/http-request.utils";
+import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
 import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
@@ -235,8 +235,8 @@ export class DcatImporter extends Importer {
         return new DcatMapper(settings, record, catalogPage, harvestTime, storedData, summary);
     }
 
-    static createRequestConfig(settings: DcatSettings): OptionsWithUri {
-        let requestConfig: OptionsWithUri = {
+    static createRequestConfig(settings: DcatSettings): RequestOptions {
+        let requestConfig: RequestOptions = {
             method: "GET",
             uri: settings.catalogUrl,
             json: false,

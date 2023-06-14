@@ -21,12 +21,12 @@
  * ==================================================
  */
 
-import {getLogger} from "log4js";
-import {OptionsWithUri} from "request-promise";
-import {Headers} from "request";
+import fetch, { HeadersInit, RequestInit } from 'node-fetch';
+import { getLogger } from 'log4js';
+import { Agent } from 'https';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import { MiscUtils } from './misc.utils';
 
-let request = require('request-promise');
 let DomParser = require('@xmldom/xmldom').DOMParser;
 let logRequest = getLogger('requests');
 
@@ -97,11 +97,22 @@ export interface RequestPaging {
 
 }
 
+// TODO most of these could be made obsolete
+// for a quicker migration we just emulate old request(-promise) options
+export interface RequestOptions extends RequestInit {
+    json?: boolean,
+    proxy?: string,
+    qs?: string | string[][] | Record<string, any> | URLSearchParams,
+    rejectUnauthorized?: boolean,
+    resolveWithFullResponse?: boolean,
+    uri: string;
+}
+
 /**
  * Delegate class for handling HTTP-requests.
  */
 export class RequestDelegate {
-    private config: OptionsWithUri;
+    private config: RequestOptions;
     private readonly postBodyXml: any;
     private paging: RequestPaging;
 
@@ -111,7 +122,7 @@ export class RequestDelegate {
      * @param config configuration to use for the HTTP requests
      * @param paging
      */
-    constructor(config: OptionsWithUri, paging?: RequestPaging) {
+    constructor(config: RequestOptions, paging?: RequestPaging) {
         this.config = config;
         if (config.body) {
             this.postBodyXml = new DomParser().parseFromString(config.body, 'application/xml');
@@ -123,23 +134,23 @@ export class RequestDelegate {
     /**
      * Returns the default HTTP headers that can be used for harvesting requests.
      * The headers only consist of the User-Agent set to a value of:
-     * "mCLOUD Harvester. Request-Promise"
+     * 'Ingrid Harvester. node-fetch'
      */
-    static defaultRequestHeaders(): Headers {
+    static defaultRequestHeaders(): HeadersInit {
         return {
-            "User-Agent": "mCLOUD Harvester. Request-Promise"
+            'User-Agent': 'Ingrid Harvester. node-fetch'
         };
     }
 
     /**
      * Returns the default HTTP request headers that can be used for CSW
      * harvesting requests. The headers that are set are:
-     * - User-Agent: mCLOUD Harvester. Request-Promise
-     * - Content-Type: text/xml
+     * - User-Agent: Ingrid Harvester. node-fetch
+     * - Content-Type: application/xml
      */
-    static cswRequestHeaders(): Headers {
+    static cswRequestHeaders(): HeadersInit {
         return {
-            'User-Agent': 'mCLOUD Harvester. Request-Promise',
+            'User-Agent': 'Ingrid Harvester. node-fetch',
             'Content-Type': 'application/xml'
         };
     }
@@ -147,12 +158,12 @@ export class RequestDelegate {
     /**
      * Returns the default HTTP request headers that can be used for WFS
      * harvesting requests. The headers that are set are:
-     * - User-Agent: mCLOUD Harvester. Request-Promise
-     * - Content-Type: text/xml
+     * - User-Agent: Ingrid Harvester. node-fetch
+     * - Content-Type: application/xml
      */
-    static wfsRequestHeaders(): Headers {
+    static wfsRequestHeaders(): HeadersInit {
         return {
-            'User-Agent': 'mCLOUD Harvester. Request-Promise',
+            'User-Agent': 'Ingrid Harvester. node-fetch',
             'Content-Type': 'application/xml'
         };
     }
@@ -191,21 +202,64 @@ export class RequestDelegate {
     }
 
     /**
-     * Performs the HTTP request and returns the result of this operation. If
-     * the optional callback is provided, then it too if forwarded to the
-     * request.
-     *
-     * @param callback optional callback for the request library
+     * Performs the HTTP request and returns the result of this operation. 
+     * 
+     * @param retry how often the request should be retried if it fails
+     * @param waitMilliSeconds wait time between retries in milliseconds
      */
-    async doRequest(callback?: (error: any, response: any) => boolean): Promise<any> {
-
+    async doRequest(retry: number = 0, waitMilliSeconds: number = 0): Promise<any> {
         logRequest.debug('Requesting: ' + this.config.uri);
-        if (callback) {
-            return request(this.config, callback);
-        } else {
-            return request(this.config);
+        if (this.config.proxy) {
+            let url = new URL(this.config.proxy);
+            this.config.agent = new HttpsProxyAgent({
+                rejectUnauthorized: this.config.rejectUnauthorized ?? true,
+                host: url.hostname,
+                port: url.port
+            });
         }
+        // `== false` is important here since rejectUnauthorized could be falsy (e.g. undefined)
+        else if (this.config.rejectUnauthorized == false) {
+            this.config.agent = new Agent({
+                rejectUnauthorized: false
+            });
+        }
+        let fullURL = this.config.uri + '?' + new URLSearchParams(this.config.qs);
+        let response = fetch(fullURL, this.config);
 
+        while (retry > 0) {
+            try {
+                await response;
+                break;
+            }
+            catch (e) {
+                // if a connection error occurs, retry
+                if (retry > 0) {
+                    retry -= 1;
+                    logRequest.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
+                    this.sleep(waitMilliSeconds);
+                    response = fetch(fullURL, this.config);
+                }
+                else {
+                    throw e;
+                }
+            }
+        };
+
+        if (this.config.resolveWithFullResponse) {
+            return response;
+        }
+        else if (this.config.json) {
+            return (await response).json();
+        }
+        else {
+            return (await response).text();
+        }
+    }
+
+    private sleep(ms: number) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, ms);
+        });
     }
 }
 

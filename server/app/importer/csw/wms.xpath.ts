@@ -21,22 +21,18 @@
  * ==================================================
  */
 
-import { DeduplicateUtils } from '../utils/deduplicate.utils';
-import { BaseMapper } from '../importer/base.mapper';
-import { ElasticQueries } from '../utils/elastic.queries';
-import { ElasticSearchUtils } from '../utils/elastic.utils';
-import { ImporterFactory } from '../importer/importer.factory';
-import { IndexDocument } from '../model/index.document';
-import { Summary } from '../model/summary';
+const xpath = require('xpath');
 
-export abstract class ProfileFactory<M extends BaseMapper> {
+export class WmsXPath {
 
-    abstract getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: any, summary: Summary): DeduplicateUtils;
-    abstract getElasticMapping(): any;
-    abstract getElasticQueries(): ElasticQueries;
-    abstract getElasticSettings(): any;
-    abstract getImporterFactory(): ImporterFactory;
-    abstract getIndexDocument(): IndexDocument<M>;
-    abstract getProfileName(): string;
+    static nsMap = {
+        'wms': "http://www.opengis.net/wms",
+        'gmd': 'http://www.isotc211.org/2005/gmd',
+        'inspire_common': 'http://inspire.ec.europa.eu/schemas/common/1.0',
+        'inspire_vs': 'http://inspire.ec.europa.eu/schemas/inspire_vs/1.0',
+        'xlink': 'http://www.w3.org/1999/xlink',
+        'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
+    };
 
+    static select = xpath.useNamespaces(WmsXPath.nsMap);
 }

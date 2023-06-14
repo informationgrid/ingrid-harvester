@@ -26,12 +26,11 @@
 import { merge as lodashMerge } from 'lodash';
 import { Catalog } from '../model/dcatApPlu.model';
 import { ConfigService } from '../services/config/ConfigService';
-import { OptionsWithUri } from 'request-promise';
-import { RequestDelegate } from './http-request.utils';
-const log = require('log4js').getLogger(__filename);
+import { RequestDelegate, RequestOptions } from './http-request.utils';
+
 const dayjs = require('dayjs');
-const customParseFormat = require('dayjs/plugin/customParseFormat');
-dayjs.extend(customParseFormat);
+const log = require('log4js').getLogger(__filename);
+dayjs.extend(require('dayjs/plugin/customParseFormat'));
 
 const CUSTOM_DATE_TIME_FORMATS = ["YYYY-MM-DDZ"];
 const MAX_MSG_LENGTH = 4096;
@@ -65,6 +64,9 @@ export class MiscUtils {
      * Normalize datetime strings
      */
     public static normalizeDateTime(datetime: string): string {
+        if (!datetime) {
+            return undefined;
+        }
         let parsedDatetime = dayjs(datetime);
         // if format is not recognizable ISO8601, try to parse with custom formats
         if (!parsedDatetime.isValid()) {
@@ -83,11 +85,11 @@ export class MiscUtils {
     static async fetchCatalogFromOgcRecordsApi(catalogId: string): Promise<Catalog> {
         let genSettings = ConfigService.getGeneralSettings();
         let authString = genSettings.ogcRecordsApiUser + ':' + genSettings.ogcRecordsApiPassword;
-        let config: OptionsWithUri = {
+        let config: RequestOptions = {
             method: 'GET',
             json: true,
             headers: {
-                'User-Agent': 'InGrid Harvester. Request-Promise',
+                'User-Agent': 'InGrid Harvester. node-fetch',
                 'Content-Type': 'application/json',
                 'Authorization': 'Basic ' + Buffer.from(authString, 'utf8').toString('base64')
             },
@@ -95,18 +97,22 @@ export class MiscUtils {
                 f: "json",
                 v: "1"
             },
+            resolveWithFullResponse: true,
             uri: genSettings.ogcRecordsApiUrl + '/collections/' + catalogId
         };
         let requestDelegate = new RequestDelegate(config);
-        let catalog = { identifier: catalogId, description: '', publisher: { organization: 'hhh' }, title: '' };
+        let catalog = { identifier: catalogId, description: '', publisher: { name: '', organization: '' }, title: '' };
         try {
-            catalog = await requestDelegate.doRequest();
+            let response = await requestDelegate.doRequest();
+            if (response.status != 200) {
+                throw Error(`status code: ${response.status} ${response.statusText}`);
+            }
+            catalog = await response.json();
             log.info('Successfully fetched catalog info from OGC Records API');
-            return catalog;
         }
         catch (e) {
-            log.warn(`Could not access OGC Records API at [${config.uri}]: ${e}`);
-            throw e;
+            log.error(`Error fetching catalog "${catalogId}" from OGC Records API at [${config.uri}]: ${e}`);
         }
+        return catalog;
     }
 }

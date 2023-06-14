@@ -37,6 +37,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import bbox from '@turf/bbox';
+import bboxPolygon from '@turf/bbox-polygon';
 import centroid from '@turf/centroid';
 import rewind from '@turf/rewind';
 import * as xpath from 'xpath';
@@ -55,7 +57,7 @@ export class GeoJsonUtils {
         // define the retrieved CRSs for proj4
         proj4.defs(crsMap);
         // function to project from specified CRS to WGS84
-        this.transformer = (crs: string) => (x: number, y: number) => proj4(crs ?? defaultCrs, 'WGS84').forward([x, y]);
+        this.transformer = (crs: string) => (x: number, y: number) => proj4(crs || defaultCrs, 'WGS84').forward([x, y]);
     }
 
     // static noTransform = (...coords) => coords;
@@ -79,10 +81,17 @@ export class GeoJsonUtils {
         }
         else {
             return {
-                'type': 'envelope',
-                'coordinates': [[west, north], [east, south]]
+                'type': 'Polygon',
+                'coordinates': [[[west, north], [west, south], [east, south], [east, north], [west, north]]]
             };
         }
+    };
+
+    static getBbox = (spatial: AllGeoJSON) => {
+        if (!spatial) {
+            return undefined;
+        }
+        return bboxPolygon(bbox(spatial))?.geometry;
     }
 
     static getCentroid = (spatial: AllGeoJSON) => {
@@ -97,7 +106,7 @@ export class GeoJsonUtils {
             (<GeometryCollection>spatial).geometries.filter((geometry: AllGeoJSON) => geometry.type == 'Envelope').forEach((geometry: AllGeoJSON) => geometry.type = 'LineString');
         }
         return centroid(spatial);
-    }
+    };
 
     parseCoords = (s, opts: { crs?: string, stride?: number } = { crs: null, stride: 2 }, ctx = { srsDimension: null }) => {
         const stride = ctx.srsDimension || opts.stride || 2
@@ -115,11 +124,11 @@ export class GeoJsonUtils {
         }
 
         return points;
-    }
+    };
 
     findIn = (root: Node, ...tags) => {
         return this.select(`.//${tags.join('/')}`, root, true);
-    }
+    };
 
     createChildContext = (_, opts, ctx) => {
         const srsDimensionAttribute = _.getAttribute('srsDimension');
@@ -136,7 +145,7 @@ export class GeoJsonUtils {
         }
 
         return ctx;
-    }
+    };
 
     parsePosList = (_, opts, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
@@ -147,7 +156,7 @@ export class GeoJsonUtils {
         }
 
         return this.parseCoords(coords, opts, childCtx);
-    }
+    };
 
     parsePos = (_, opts, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
@@ -162,7 +171,7 @@ export class GeoJsonUtils {
             throw new Error('gml:pos must have 1 point');
         }
         return points[0];
-    }
+    };
 
     parsePoint = (_, opts, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
@@ -173,7 +182,7 @@ export class GeoJsonUtils {
             throw new Error('invalid gml:Point element, expected a gml:pos subelement');
         }
         return this.parsePos(pos, opts, childCtx);
-    }
+    };
 
     parseLinearRingOrLineString = (_, opts, ctx = {}) => { // or a LineStringSegment
         const childCtx = this.createChildContext(_, opts, ctx);
@@ -197,7 +206,7 @@ export class GeoJsonUtils {
             throw new Error(_.nodeName + ' must have > 0 points');
         }
         return points;
-    }
+    };
 
     parseCurveSegments = (_, opts, ctx = {}) => {
         let points = [];
@@ -218,7 +227,7 @@ export class GeoJsonUtils {
             throw new Error('gml:Curve > gml:segments must have > 0 points');
         }
         return points;
-    }
+    };
 
     parseRing = (_, opts, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
@@ -252,7 +261,7 @@ export class GeoJsonUtils {
             throw new Error(_.nodeName + ' must have >= 4 points');
         }
         return points;
-    }
+    };
 
     parseExteriorOrInterior = (_, opts, ctx = {}) => {
         const linearRing = this.findIn(_, 'gml:LinearRing');
@@ -265,7 +274,7 @@ export class GeoJsonUtils {
             return this.parseRing(ring, opts, ctx);
         }
         throw new Error('invalid ' + _.nodeName + ' element');
-    }
+    };
 
     parsePolygonOrRectangle = (_, opts, ctx = {}) => { // or PolygonPatch
         const childCtx = this.createChildContext(_, opts, ctx);
@@ -283,7 +292,7 @@ export class GeoJsonUtils {
         });
 
         return pointLists;
-    }
+    };
 
     parseSurface = (_, opts, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
@@ -301,7 +310,7 @@ export class GeoJsonUtils {
             throw new Error(_.nodeName + ' must have > 0 polygons');
         }
         return polygons;
-    }
+    };
 
     parseCompositeSurface = (_, opts, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
@@ -320,7 +329,7 @@ export class GeoJsonUtils {
             throw new Error(_.nodeName + ' must have > 0 polygons');
         }
         return polygons;
-    }
+    };
 
     parseMultiSurface = (_, opts, ctx = {}) => {
         let el = _;
@@ -352,7 +361,7 @@ export class GeoJsonUtils {
             throw new Error(_.nodeName + ' must have > 0 polygons');
         }
         return polygons;
-    }
+    };
 
     parse = (_: Node, opts: { crs?: any, stride?: number } = { crs: null, stride: 2 }, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
@@ -374,5 +383,5 @@ export class GeoJsonUtils {
             });
         }
         return null;
-    }
+    };
 }

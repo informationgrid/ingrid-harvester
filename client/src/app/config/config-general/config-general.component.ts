@@ -40,11 +40,16 @@ export class ConfigGeneralComponent implements OnInit {
 
   configForm: UntypedFormGroup;
 
+  profile: string;
+
   constructor(private formBuilder: UntypedFormBuilder, private configService: ConfigService, private harvesterService: HarvesterService) {
   }
 
   ngOnInit() {
     this.reset();
+    this.configService.getProfileName().subscribe(data => {
+      this.profile = data;
+    });
   }
 
   private static noWhitespaceValidator(control: UntypedFormControl) {

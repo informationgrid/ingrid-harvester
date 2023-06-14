@@ -21,9 +21,8 @@
  * ==================================================
  */
 
-import {OptionsWithUri} from 'request-promise';
+import 'dayjs/locale/de';
 import {License} from '@shared/license.model';
-import * as moment from 'moment';
 import {getLogger} from "log4js";
 import {Distribution} from "../../../model/distribution";
 import {Agent, Contact, Organization, Person} from "../../../model/agent";
@@ -34,9 +33,10 @@ import {DcatMapper} from "../../../importer/dcat/dcat.mapper";
 import {ExcelMapper} from "../../../importer/excel/excel.mapper";
 import {OaiMapper} from "../../../importer/oai/oai.mapper";
 import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
+import { RequestOptions } from 'utils/http-request.utils';
 
-moment.locale('de');
-
+const dayjs = require('dayjs');
+dayjs.locale('de');
 
 export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper>{
 
@@ -331,7 +331,7 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
         return await this.baseMapper.getLicense();
     }
 
-    getUrlCheckRequestConfig(uri: string): OptionsWithUri{
+    getUrlCheckRequestConfig(uri: string): RequestOptions{
         return this.baseMapper.getUrlCheckRequestConfig(uri);
     }
 

@@ -21,9 +21,8 @@
  * ==================================================
  */
 
-import {OptionsWithUri} from 'request-promise';
+import 'dayjs/locale/de';
 import {License} from '@shared/license.model';
-import * as moment from 'moment';
 import {ImporterSettings} from "../importer.settings";
 import {getLogger} from "log4js";
 import {Summary} from "../model/summary";
@@ -31,12 +30,16 @@ import {Rules} from "../model/rules";
 import {Contact, Organization, Person, Agent} from "../model/agent";
 import {Distribution} from "../model/distribution";
 import {DateRange} from "../model/dateRange";
+import { RequestOptions } from '../utils/http-request.utils';
 
-moment.locale('de');
+const dayjs = require('dayjs');
+dayjs.locale('de');
 
 export abstract class BaseMapper {
 
-    protected moment = moment;
+    private cache: any = {};
+
+    protected dayjs = dayjs;
 
     protected static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
 
@@ -74,36 +77,55 @@ export abstract class BaseMapper {
     abstract _getDescription(): string;
 
     getDescription(): string{
-        return this._getDescription();
+        if (!this.cache.description) {
+            this.cache.description = this._getDescription();
+        }
+        return this.cache.description;
     }
 
     abstract _getPublisher(): Promise<Person[]|Organization[]>;
 
     async getPublisher(): Promise<Person[]|Organization[]>{
-        return await this._getPublisher();
+        if (!this.cache.publisher) {
+            this.cache.publisher = await this._getPublisher();
+        }
+        return this.cache.publisher;
     }
 
     abstract _getThemes(): string[];
 
     getThemes(): string[]{
-        return this._getThemes();
+        if (!this.cache.themes) {
+            this.cache.themes = this._getThemes();
+        }
+        return this.cache.themes;
     }
 
     abstract _getModifiedDate(): Date;
 
     getModifiedDate(): Date{
-        return this._getModifiedDate()
+        if (!this.cache.modifiedDate) {
+            this.cache.modifiedDate = this._getModifiedDate();
+        }
+        return this.cache.modifiedDate;
     }
 
     abstract _getAccessRights(): string[];
 
     getAccessRights(): string[]{
-        return this._getAccessRights();
+        if (!this.cache.accessRights) {
+            this.cache.accessRights = this._getAccessRights();
+        }
+        return this.cache.accessRights;
     }
 
     abstract _getDistributions(): Promise<Distribution[]>;
 
     async getDistributions(): Promise<Distribution[]>{
+        if (this.cache.distributions) {
+            return this.cache.distributions;
+        }
+
         let distributions = await this._getDistributions();
         distributions.forEach(dist => {
             if(dist.format){
@@ -146,55 +168,80 @@ export abstract class BaseMapper {
                 }
             }
         }
+        this.cache.distributions = distributions;
         return distributions;
     }
 
     abstract _getGeneratedId(): string;
 
     getGeneratedId(): string{
-        return this._getGeneratedId()
+        if (!this.cache.generatedId) {
+            this.cache.generatedId = this._getGeneratedId();
+        }
+        return this.cache.generatedId;
     }
 
     abstract _getMetadataModified(): Date;
 
     getMetadataModified(): Date{
-        return this._getMetadataModified();
+        if (!this.cache.metadataModified) {
+            this.cache.metadataModified = this._getMetadataModified();
+        }
+        return this.cache.metadataModified;
     }
 
     abstract _getMetadataSource(): any;
 
     getMetadataSource(): any{
-        return this._getMetadataSource();
+        if (!this.cache.metadataSource) {
+            this.cache.metadataSource = this._getMetadataSource();
+        }
+        return this.cache.metadataSource;
     }
 
     abstract _getMetadataIssued(): Date;
 
     getMetadataIssued(): Date{
-        return this._getMetadataIssued();
+        if (!this.cache.metadataIssued) {
+            this.cache.metadataIssued = this._getMetadataIssued();
+        }
+        return this.cache.metadataIssued;
     }
 
     abstract _isRealtime(): boolean;
 
     isRealtime(): boolean{
-        return this._isRealtime();
+        if (!this.cache.isRealtime) {
+            this.cache.isRealtime = this._isRealtime();
+        }
+        return this.cache.isRealtime;
     }
 
     abstract _getSpatial(): any;
 
     getSpatial(): any{
-        return this._getSpatial();
+        if (!this.cache.spatial) {
+            this.cache.spatial = this._getSpatial();
+        }
+        return this.cache.spatial;
     }
 
     abstract _getSpatialText(): string;
 
     getSpatialText(): string{
-        return this._getSpatialText();
+        if (!this.cache.spatialText) {
+            this.cache.spatialText = this._getSpatialText();
+        }
+        return this.cache.spatialText;
     }
 
     abstract _getTemporal(): DateRange[];
 
     getTemporal(): DateRange[]{
-        return this._getTemporal();
+        if (!this.cache.temporal) {
+            this.cache.temporal = this._getTemporal();
+        }
+        return this.cache.temporal;
     }
 
     _getParent(): string{
@@ -202,22 +249,28 @@ export abstract class BaseMapper {
     }
 
     getParent(): string{
-        return this._getParent();
+        if (!this.cache.parent) {
+            this.cache.parent = this._getParent();
+        }
+        return this.cache.parent;
     }
 
     abstract _getCitation(): string;
 
     getCitation(): string{
-        return this._getCitation();
+        if (!this.cache.citation) {
+            this.cache.citation = this._getCitation();
+        }
+        return this.cache.citation;
     }
 
     abstract _getKeywords(): string[];
 
     getKeywords(): string[]{
-        let keywords = this._getKeywords()
-        if(keywords != undefined)
-            return keywords.map(keyword => keyword.trim());
-        return undefined;
+        if (!this.cache.keywords) {
+            this.cache.keywords = this._getKeywords()?.map(keyword => keyword.trim());
+        }
+        return this.cache.keywords;
     }
 
     getAutoCompletion(): string[]{
@@ -234,25 +287,48 @@ export abstract class BaseMapper {
     abstract _getAccrualPeriodicity(): string;
 
     getAccrualPeriodicity(): string{
-        return this._getAccrualPeriodicity();
+        if (!this.cache.accrualPeriod) {
+            this.cache.accrualPeriod = this._getAccrualPeriodicity();
+        }
+        return this.cache.accrualPeriod;
     }
 
     abstract _getContactPoint(): Promise<Contact>;
 
     async getContactPoint(): Promise<Contact>{
-        return await this._getContactPoint();
+        if (!this.cache.contactPoint) {
+            this.cache.contactPoint = await this._getContactPoint();
+        }
+        return this.cache.contactPoint;
     }
 
     abstract _getCreator(): Person[] | Person;
 
     getCreator(): Agent[] | Agent{
-        return this._getCreator();
+        if (!this.cache.creator) {
+            this.cache.creator = this._getCreator();
+        }
+        return this.cache.creator;
+    }
+
+    _getMaintainers(): Promise<Person[] | Organization[]> {
+        return undefined;
+    }
+
+    async getMaintainers(): Promise<Person[] | Organization[]> {
+        if (!this.cache.maintainers) {
+            this.cache.maintainers = await this._getMaintainers();
+        }
+        return this.cache.maintainers;
     }
 
     abstract _getHarvestedData(): string;
 
     getHarvestedData(): string{
-        return this._getHarvestedData();
+        if (!this.cache.harvestedData) {
+            this.cache.harvestedData = this._getHarvestedData();
+        }
+        return this.cache.harvestedData;
     }
 
     getHarvestErrors() {
@@ -262,25 +338,37 @@ export abstract class BaseMapper {
     abstract _getIssued(): Date;
 
     getIssued(): Date{
-        return this._getIssued();
+        if (!this.cache.issued) {
+            this.cache.issued = this._getIssued();
+        }
+        return this.cache.issued;
     }
 
     abstract _getMetadataHarvested(): Date;
 
     getMetadataHarvested(): Date{
-        return this._getMetadataHarvested();
+        if (!this.cache.metadataHarvested) {
+            this.cache.metadataHarvested = this._getMetadataHarvested();
+        }
+        return this.cache.metadataHarvested;
     }
 
     abstract _getSubSections(): any[];
 
     getSubSections(): any[]{
-        return this._getSubSections();
+        if (!this.cache.subSections) {
+            this.cache.subSections = this._getSubSections();
+        }
+        return this.cache.subSections;
     }
 
     abstract _getGroups(): string[];
 
     getGroups(): string[]{
-        return this._getGroups();
+        if (!this.cache.groups) {
+            this.cache.groups = this._getGroups();
+        }
+        return this.cache.groups;
     }
 
     isValid(doc?: any) {
@@ -294,18 +382,24 @@ export abstract class BaseMapper {
     abstract _getOriginator(): Agent[];
 
     getOriginator(): Agent[]{
-        return this._getOriginator();
+        if (!this.cache.originator) {
+            this.cache.originator = this._getOriginator();
+        }
+        return this.cache.originator;
     }
 
     abstract _getLicense(): Promise<License>;
 
     async getLicense(): Promise<License>{
-        return await this._getLicense();
+        if (!this.cache.license) {
+            this.cache.license = await this._getLicense();
+        }
+        return this.cache.license;
     }
 
-    abstract _getUrlCheckRequestConfig(uri: string): OptionsWithUri;
+    abstract _getUrlCheckRequestConfig(uri: string): RequestOptions;
 
-    getUrlCheckRequestConfig(uri: string): OptionsWithUri{
+    getUrlCheckRequestConfig(uri: string): RequestOptions{
         return this._getUrlCheckRequestConfig(uri);
     }
 

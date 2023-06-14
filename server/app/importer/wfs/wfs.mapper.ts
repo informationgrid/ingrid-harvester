@@ -24,14 +24,14 @@
 /**
  * A mapper for ISO-XML documents harvested over WFS.
  */
+import { AllGeoJSON } from "@turf/helpers";
 import {BaseMapper} from '../base.mapper';
 import {Distribution} from "../../model/distribution";
 import {DateRange} from "../../model/dateRange";
 import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
-import {RequestDelegate} from "../../utils/http-request.utils";
-import {OptionsWithUri} from "request-promise";
+import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
 import {WfsSettings} from './wfs.settings';
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
@@ -217,6 +217,10 @@ export class WfsMapper extends BaseMapper {
         return [this.fetched.catalog.publisher];
     }
 
+    _getMaintainers() {
+        return undefined;
+    }
+
     _getTitle() {
         let title = this.select(this.settings.xpaths.name, this.feature, true)?.textContent;
         return title && title.trim() !== '' ? title : undefined;
@@ -339,7 +343,7 @@ export class WfsMapper extends BaseMapper {
         return envelope.toString();
     }
 
-    _getBoundingBox(): any {
+    _getBoundingBox(): object {
         if (this.fetched.boundingBox) {
             return this.fetched.boundingBox;
         }
@@ -351,6 +355,10 @@ export class WfsMapper extends BaseMapper {
                 let crs = envelope.getAttribute('srsName');
                 return this.fetched.geojsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
             }
+        }
+        // if spatial exists, create bbox from it
+        else if (this.select(this.settings.xpaths.spatial, this.feature, true)) {
+            return GeoJsonUtils.getBbox(this.getSpatial());
         }
         return undefined;
     }
@@ -370,7 +378,7 @@ export class WfsMapper extends BaseMapper {
         return child.toString();
     }
 
-    _getSpatial(): any {
+    _getSpatial(): object {
         let spatialContainer = this.select(this.settings.xpaths.spatial, this.feature, true);
         if (!spatialContainer) {
             // use bounding box as fallback
@@ -440,9 +448,9 @@ export class WfsMapper extends BaseMapper {
         return undefined;
     }
 
-    _getCentroid(): number[] {
+    _getCentroid(): object {
         let spatial = this._getSpatial() ?? this._getBoundingBox();
-        return GeoJsonUtils.getCentroid(spatial)?.geometry.coordinates;
+        return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
     }
 
     // TODO
@@ -707,11 +715,41 @@ export class WfsMapper extends BaseMapper {
      */
     _getPluPlanType(): string {
         let typename = this.select('./*', this.feature, true)?.localName;
+        let planart = this.select('./*/xplan:planArt', this.feature, true)?.textContent;
         switch (typename) {
-            case 'BP_Plan': return pluPlanType.BEBAU_PLAN;
-            case 'FP_Plan': return pluPlanType.FLAECHENN_PLAN;
-            case 'RP_Plan': return pluPlanType.RAUM_ORDN_PLAN;
-            case 'SO_Plan': return pluPlanType.SONST_PLAN;
+            case 'BP_Plan':
+                switch (planart) {
+                    case '7000': return pluPlanType.PW_BES_STAEDT_BAUR;
+                    case '9999': return pluPlanType.PW_BES_STAEDT_BAUR;
+                    default: return pluPlanType.BEBAU_PLAN;
+                }
+            case 'FP_Plan':
+                switch (planart) {
+                    case '9999': return pluPlanType.PW_BES_STAEDT_BAUR;
+                    default: return pluPlanType.FLAECHENN_PLAN;
+                }
+            case 'RP_Plan':
+                switch (planart) {
+                    default: return pluPlanType.RAUM_ORDN_PLAN;
+                }
+            case 'SO_Plan':
+                switch (planart) {
+                    case '01': return pluPlanType.PW_BES_STAEDT_BAUR;
+                    case '02': return pluPlanType.PW_BES_STAEDT_BAUR;
+                    case '03': return pluPlanType.PW_BES_STAEDT_BAUR;
+                    case '04': return pluPlanType.PW_BES_STAEDT_BAUR;
+                    default: return pluPlanType.SONST_PLAN;
+                }
+            case 'LP_PLAN':
+                switch (planart) {
+                    // TODO case '1000' is from the sheet 'Abgleich Codelistenwerte.xlsx', but is it correct?
+                    case '1000': return pluPlanType.RAUM_ORDN_PLAN;
+                    // case '1000': return pluPlanType.PW_LANDSCH_PLAN;
+                    case '2000': return pluPlanType.PW_LANDSCH_PLAN;
+                    case '4000': return pluPlanType.PW_LANDSCH_PLAN;
+                    case '9999': return pluPlanType.PW_LANDSCH_PLAN;
+                    default: this.log.debug('No pluPlanType available for typename', typename); return pluPlanType.UNBEKANNT;
+                }
             case 'sach_bplan': return pluPlanType.BEBAU_PLAN;   // TODO check
             default: this.log.debug('No pluPlanType available for typename', typename); return pluPlanType.UNBEKANNT;
         }
@@ -719,11 +757,14 @@ export class WfsMapper extends BaseMapper {
 
     /**
      * This is currently XPlan specific.
+     * 
      * This is based on:
      * - https://xleitstelle.de/sites/default/files/objektartenkataloge/5_4/html/xplan_BP_Plan.html#xplan_BP_Plan_planArt
      * - https://xleitstelle.de/sites/default/files/objektartenkataloge/5_4/html/xplan_FP_Plan.html#xplan_FP_Plan_planArt
      * - https://xleitstelle.de/sites/default/files/objektartenkataloge/5_4/html/xplan_RP_Plan.html#xplan_RP_Plan_planArt
      *
+     * and on 'Abgleich Codelistenwerte.xlsx'.
+     * 
      * Note especially that we use the XPlan 5.4 codelists for all XPlan documents!
      * 
      * The mappings targets are taken from the INSPIRE codelist for plan type name:
@@ -744,27 +785,27 @@ export class WfsMapper extends BaseMapper {
                     case '1000': return '6_Bebauungsplan';    // BPlan
                     case '10000': return '6_3_EinfacherBPlan';    // EinfacherBPlan
                     case '10001': return '6_1_QualifizierterBPlan';   // QualifizierterBPlan
-                    // case 10002: return pluPlanTypeFine.;    // BebauungsplanZurWohnraumversorgung
+                    case '10002': return '6_6_BebauungsplanZurWohnraumversorgung';    // BebauungsplanZurWohnraumversorgung
                     case '3000': return '6_2_VorhabenbezogenerBPlan'; // VorhabenbezogenerBPlan
-                    // case 3100: return pluPlanTypeFine.; // VorhabenUndErschliessungsplan
+                    case '3100': return '6_5_VorhabenUndErschliessungsplan'; // VorhabenUndErschliessungsplan
                     case '4000': return '7_InnenbereichsSatzung';     // InnenbereichsSatzung
                     case '40000': return '7_1_KlarstellungsSatzung';  // KlarstellungsSatzung
                     case '40001': return '7_2_EntwicklungsSatzung';   // EntwicklungsSatzung
                     case '40002': return '7_3_ErgaenzungsSatzung';    // ErgaenzungsSatzung
                     case '5000': return '8_AussenbereichsSatzung';    // AussenbereichsSatzung
-                    // case 7000: return pluPlanTypeFine.; // OertlicheBauvorschrift
-                    // case 9999: return pluPlanTypeFine.; // Sonstiges
-                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return undefined;
+                    case '7000': return '9_2_SonstigesPlanwerkStaedtebaurecht'; // OertlicheBauvorschrift
+                    case '9999': return '9_2_SonstigesPlanwerkStaedtebaurecht'; // Sonstiges
+                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart);
                 }
             case 'FP_Plan':
                 switch(planart) {
                     case '1000': return '5_2_FPlan';  // FPlan
                     case '2000': return '4_2_GemeinsamerFPlan';   // GemeinsamerFPlan
                     case '3000': return '4_1_RegFPlan';   // RegFPlan
-                    // case 4000: return '';   // FPlanRegPlan
+                    case '4000': return '5_1_FPlanRegPlan';   // FPlanRegPlan
                     case '5000': return '5_3_SachlicherTeilplan'; // SachlicherTeilplan
-                    // case 9999: return pluPlanTypeFine.; // Sonstiges
-                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return undefined;
+                    case '9999': return '9_2_SonstigesPlanwerkStaedtebaurecht'; // Sonstiges
+                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart);
                 }
             case 'RP_Plan':
                 switch(planart) {
@@ -776,8 +817,8 @@ export class WfsMapper extends BaseMapper {
                     case '5000': return '1_1_StandortkonzeptBund';    // StandortkonzeptBund
                     case '5001': return '1_2_AWZPlan';    // AWZPlan
                     case '6000': return '3_2_RaeumlicherTeilplan';    // RaeumlicherTeilplan
-                    // case 9999: return pluPlanTypeFine.; // Sonstiges
-                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return undefined;
+                    case '9999': return '9_1_SonstigerRaumordnungsplan'; // Sonstiges
+                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart);
                 }
             case 'SO_Plan':
                 // TODO no codelists found!
@@ -786,11 +827,14 @@ export class WfsMapper extends BaseMapper {
                     // TODO possibly more values possible; these are the ones found in the data so far
                     // case 2000: return pluPlanTypeFine.;
                     // case 17200: return pluPlanTypeFine.;
-                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart); return undefined;
+                    case '01': return '9_4_ErhaltungssatzungVerordnungStaedtebaulicheGestalt';
+                    case '02': return '9_5_ErhaltungssatzungVerordnungWohnbevoelkerung';
+                    case '03': return '9_6_ErhaltungssatzungVerordnungUmstrukturierung';
+                    case '04': return '9_7_VerordnungGebietMitAngespanntemWohnungsmarkt';
+                    default: this.log.debug('No planTypeFine available for xplan:planArt', planart);
                 }
-            default:
-                return undefined;
         }
+        return undefined;
     }
 
     _getPluProcedureState(): string {
@@ -808,14 +852,35 @@ export class WfsMapper extends BaseMapper {
      * // TODO what about other WFS sources?
      */
     _getPluProcedureType(): string {
+        let typename = this.select('./*', this.feature, true)?.localName;
         let procedureType = this.select('./*/xplan:verfahren', this.feature, true)?.textContent;
-        switch (procedureType) {
-            case '1000': return pluProcedureType.NORM_VERF;         // Normal
-            case '2000': return pluProcedureType.VEREINF_VERF;      // Parag13
-            case '3000': return pluProcedureType.BEBAU_PLAN_INNEN;  // Parag13a
-            // case '4000': return pluProcedureType.;     // Parag13b
-            default: this.log.debug('No procedure type available for xplan:verfahren', procedureType); return pluProcedureType.UNBEKANNT;
+        switch (typename) {
+            case 'BP_Plan': 
+                switch (procedureType) {
+                    case '1000': return pluProcedureType.NORM_VERF;                 // Normal
+                    case '2000': return pluProcedureType.VEREINF_VERF;              // Parag13
+                    case '3000': return pluProcedureType.BEBAU_PLAN_INNEN;          // Parag13a
+                    case '4000': return pluProcedureType.EINBEZ_AUSSEN_BESCHLEU;    // Parag13b
+                    default: this.log.debug('No procedure type available for xplan:verfahren', procedureType);
+                }
+            case 'FP_Plan':
+                switch (procedureType) {
+                    case '1000': return pluProcedureType.NORM_VERF;     // Normal
+                    case '2000': return pluProcedureType.VEREINF_VERF;  // Parag13
+                    default: this.log.debug('No procedure type available for xplan:verfahren', procedureType);
+                }
+            case 'RP_Plan':
+                switch (procedureType) {
+                    case '1000': return pluProcedureType.AEND;          // Änderung
+                    case '2000': return pluProcedureType.TEIL_FORT;     // Teilfortschreibung
+                    case '3000': return pluProcedureType.NEU_AUFST;     // Neuaufstellung
+                    case '4000': return pluProcedureType.GESAMT_FORT;   // Gesamtfortschreibung
+                    case '5000': return pluProcedureType.AKTUAL;        // Aktualisierung
+                    case '6000': return pluProcedureType.NEU_BEKANNT;   // Neubekanntmachung
+                    default: this.log.debug('No procedure type available for xplan:verfahren', procedureType);
+                }
         }
+        return pluProcedureType.UNBEKANNT;
     }
 
     /**
@@ -1015,8 +1080,8 @@ export class WfsMapper extends BaseMapper {
     }
 
     // TODO
-    _getUrlCheckRequestConfig(uri: string): OptionsWithUri {
-        let config: OptionsWithUri = {
+    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),

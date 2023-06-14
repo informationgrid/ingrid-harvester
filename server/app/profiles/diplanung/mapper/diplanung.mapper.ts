@@ -21,19 +21,20 @@
  * ==================================================
  */
 
-import * as moment from 'moment';
+import 'dayjs/locale/de';
 import { getLogger } from "log4js";
 import { Contact, Organization, Person } from "../../../model/agent";
 import { DateRange } from "../../../model/dateRange";
 import { DiplanungCswMapper } from './diplanung.csw.mapper';
+import { DiplanungVirtualMapper } from './diplanung.virtual.mapper';
 import { Distribution } from "../../../model/distribution";
 import { ExcelSparseMapper } from "../../../importer/excelsparse/excelsparse.mapper";
 import { WfsMapper } from "../../../importer/wfs/wfs.mapper";
 
-moment.locale('de');
+const dayjs = require('dayjs');
+dayjs.locale('de');
 
-
-export class DiplanungMapper<M extends DiplanungCswMapper | ExcelSparseMapper | WfsMapper>{
+export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapper| ExcelSparseMapper | WfsMapper> {
 
     protected baseMapper: M;
 
@@ -43,115 +44,119 @@ export class DiplanungMapper<M extends DiplanungCswMapper | ExcelSparseMapper | 
         this.baseMapper = baseMapper;
     }
 
-    async getContactPoint(): Promise<Contact>{
+    async getContactPoint(): Promise<Contact> {
         return await this.baseMapper.getContactPoint();
     }
 
-    getDescription(): string{
+    getDescription(): string {
         return this.baseMapper.getDescription();
     }
 
-    getGeneratedId(): string{
+    getGeneratedId(): string {
         return this.baseMapper.getGeneratedId();
     }
 
-    getTitle(): string{
+    getTitle(): string {
         return this.baseMapper.getTitle();
     }
 
-    getAlternateTitle(): string{
+    getAlternateTitle(): string {
         return this.baseMapper._getAlternateTitle();
     }
 
-    getPluPlanState(): string{
+    getPluPlanState(): string {
         return this.baseMapper._getPluPlanState();
     }
 
-    getTemporal(): DateRange[]{
+    getTemporal(): DateRange[] {
         return this.baseMapper.getTemporal();
     }
 
-    getPluDevelopmentFreezePeriod(): DateRange{
+    getPluDevelopmentFreezePeriod(): DateRange {
         return this.baseMapper._getPluDevelopmentFreezePeriod();
     }
 
-    getPluProcedureStartDate(): string{
+    getPluProcedureStartDate(): string {
         return this.baseMapper._getPluProcedureStartDate();
     }
 
-    getPluPlanType(): string{
+    getPluPlanType(): string {
         return this.baseMapper._getPluPlanType();
     }
 
-    getPluPlanTypeFine(): string{
+    getPluPlanTypeFine(): string {
         return this.baseMapper._getPluPlanTypeFine();
     }
 
-    getPluProcedureState(): string{
+    getPluProcedureState(): string {
         return this.baseMapper._getPluProcedureState();
     }
 
-    getPluProcedureType(): string{
+    getPluProcedureType(): string {
         return this.baseMapper._getPluProcedureType();
     }
 
-    getPluProcessSteps(): string{
+    getPluProcessSteps(): string {
         return this.baseMapper._getPluProcessSteps();
     }
 
-    getBoundingBox(): number[]{
+    getBoundingBox(): object {
         return this.baseMapper._getBoundingBox();
     }
 
-    getCentroid(): number[]{
+    getCentroid(): object {
         return this.baseMapper._getCentroid();
     }
 
-    getSpatial(): string{
+    getSpatial(): object {
         return this.baseMapper.getSpatial();
     }
 
-    getSpatialText(): string{
+    getSpatialText(): string {
         return this.baseMapper.getSpatialText();
     }
 
-    getPublisher(): Promise<Person[] | Organization[]>{
+    getPublisher(): Promise<Person[] | Organization[]> {
         return this.baseMapper.getPublisher();
     }
 
-    getDistributions(): Promise<Distribution[]>{
+    getMaintainers(): Promise<Person[] | Organization[]> {
+        return this.baseMapper.getMaintainers();
+    }
+
+    getDistributions(): Promise<Distribution[]> {
         return this.baseMapper.getDistributions();
     }
 
-    getHarvestedData(): string{
+    getHarvestedData(): string {
         return this.baseMapper.getHarvestedData();
     }
 
-    getMetadataHarvested(): Date{
+    getMetadataHarvested(): Date {
         return this.baseMapper.getMetadataHarvested();
     }
 
-    getMetadataIssued(): Date{
+    getMetadataIssued(): Date {
         return this.baseMapper.getMetadataIssued();
     }
 
-    getMetadataModified(): Date{
+    getMetadataModified(): Date {
         return this.baseMapper.getMetadataModified();
     }
 
-    getMetadataSource(): string{
+    getMetadataSource(): string {
         return this.baseMapper.getMetadataSource();
     }
 
-    getIssued(): Date{
+    getIssued(): Date {
         return this.baseMapper.getIssued();
     }
 
-    getKeywords(): string[]{
+    getKeywords(): string[] {
         return this.baseMapper.getKeywords();
     }
 
-    getModifiedDate(): Date{
+    getModifiedDate(): Date {
         return this.baseMapper.getModifiedDate();
     }
 
@@ -159,15 +164,15 @@ export class DiplanungMapper<M extends DiplanungCswMapper | ExcelSparseMapper | 
         return this.baseMapper._getCatalog();
     }
 
-    getBoundingBoxGml(): string{
+    getBoundingBoxGml(): string {
         return this.baseMapper._getBoundingBoxGml();
     }
 
-    getSpatialGml(): string{
+    getSpatialGml(): string {
         return this.baseMapper._getSpatialGml();
     }
 
-    getHarvestErrors(): string[]{
+    getHarvestErrors(): string[] {
         return this.baseMapper.getHarvestErrors();
     }
 

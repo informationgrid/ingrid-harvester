@@ -25,6 +25,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {Harvester} from '@shared/harvester';
 import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef} from '@angular/material/legacy-dialog';
 import {UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import { ConfigService } from '../../config/config.service';
 
 @Component({
   selector: 'app-dialog-edit',
@@ -37,9 +38,12 @@ export class DialogEditComponent implements OnInit {
 
   harvesterForm: UntypedFormGroup;
 
+  profile: string;
+
   constructor(@Inject(MAT_DIALOG_DATA) public harvester: Harvester,
               public dialogRef: MatDialogRef<DialogEditComponent>,
-              private formBuilder: UntypedFormBuilder) {
+              private formBuilder: UntypedFormBuilder,
+              private configService: ConfigService) {
       if (harvester.id !== -1) {
         this.dialogTitle = 'Harvester bearbeiten';
       }
@@ -47,7 +51,9 @@ export class DialogEditComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.configService.getProfileName().subscribe(data => {
+      this.profile = data;
+    });
   }
 
   private buildForm(harvester: Harvester) {

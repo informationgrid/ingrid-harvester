@@ -21,14 +21,21 @@
  * ==================================================
  */
 
+import { DcatApPluDocument } from '../model/dcatApPlu.document';
 import { DeduplicateUtils as AbstractDeduplicateUtils } from '../../../utils/deduplicate.utils';
+import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { ElasticSearchUtils } from '../../../utils/elastic.utils';
 import { Summary } from '../../../model/summary';
 
 const log = require('log4js').getLogger(__filename);
 
-// fields occurring in CSW that should be overwritten by WFS data
-const overwriteFields = ['catalog', 'bounding_box', 'centroid', 'spatial'];
+// fields potentially occurring in CSW that should be overwritten by WFS data
+const overwriteFields = [
+    'catalog',
+    // spatial fields
+    'bounding_box', 'centroid', 'spatial',
+    // PLU fields
+    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_start_date', 'procedure_state', 'procedure_type'];
 
 export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
@@ -62,13 +69,13 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
             let response = await this.elastic.search(
                 this.settings.alias,
                 // this.queries.findSameId(),
-                this.queries.findSameAlternateTitle(['title', ...overwriteFields]),
+                this.queries.findSameAlternateTitle(),
                 50
             );
 
             let count = 0;
             log.debug(`Count of buckets for deduplication aggregates query: ${response.aggregations.duplicates.buckets.length}`);
-            response.aggregations.duplicates.buckets.forEach(bucket => {
+            for (let bucket of response.aggregations.duplicates.buckets) {
                 // TODO sort hits by newest metadata modified data
                 try {
                     let hits = bucket.duplicates.hits.hits;
@@ -77,16 +84,24 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
                     let mainHit = hits.find(hit => hit._index.startsWith(mainIndexPrefix));
 
                     if (!mainHit) {
-                        return;
+                        continue;
                     }
 
                     // merge all hits from other indices into the mainHit, remove them afterwards
-                    hits.filter(hit => hit._index != mainHit._index).forEach(hit => {
+                    for (let hit of hits.filter(hit => hit._index != mainHit._index)) {
                         // overwrite predefined fields
                         let updatedFields = {};
                         for (const field of overwriteFields) {
                             updatedFields[field] = hit._source[field];
                         }
+                        // use publisher from WFS if not specified in CSW
+                        if (!mainHit._source.publisher?.name && !mainHit._source.publisher?.organization) {
+                            updatedFields['publisher'] = hit._source.publisher;
+                        }
+                        // create new dcat-ap-plu xml document from merged index document
+                        let mergedDoc = { ...mainHit._source, ...updatedFields };
+                        let dcatappluDocument = await DcatApPluDocument.create(new DiplanungVirtualMapper(mergedDoc));
+                        updatedFields['extras'] = { transformed_data: { dcat_ap_plu: dcatappluDocument } };
 
                         let deleted = `Item to delete -> ID: '${hit._id}', Title: '${hit._source.title}', Index: '${hit._index}'`;
                         let merged = `Item to merge into -> ID: '${mainHit._id}', Title: '${mainHit._source.title}', Index: '${mainHit._index}'`;
@@ -111,12 +126,11 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
                             }
                         );
                         count++;
-                    });
-                    return count;
+                    }
                 } catch (err) {
                     this.handleError(`Error deduplicating hits for URL ${bucket.key}`, err);
                 }
-            });
+            }
             log.info(`${count} duplicates found using the aggregates query will be deleted from index '${this.elastic.indexName}'.`);
         } catch (err) {
             this.handleError('Error processing results of aggregate query for duplicates', err);
