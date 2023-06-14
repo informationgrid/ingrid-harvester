@@ -111,7 +111,7 @@
       <input matInput placeholder="Proxy" formControlName="proxy">
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field *ngIf="profile == 'mcloud'">
       <input matInput placeholder="Portal URL" formControlName="portalUrl">
     </mat-form-field>
 
