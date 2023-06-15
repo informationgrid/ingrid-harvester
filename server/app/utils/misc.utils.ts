@@ -63,7 +63,7 @@ export class MiscUtils {
     /**
      * Normalize datetime strings
      */
-    public static normalizeDateTime(datetime: string): string {
+    public static normalizeDateTime(datetime: string): Date {
         if (!datetime) {
             return undefined;
         }
@@ -73,10 +73,11 @@ export class MiscUtils {
             parsedDatetime = dayjs(datetime, CUSTOM_DATE_TIME_FORMATS);
         }
         if (parsedDatetime.isValid()) {
-            return parsedDatetime.format();
+            // return parsedDatetime.format();
+            return parsedDatetime.toDate();
         }
         log.warn("Could not parse datetime: " + datetime);
-        return datetime;
+        return null;
     }
 
     /**

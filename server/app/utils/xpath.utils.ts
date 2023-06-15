@@ -82,3 +82,8 @@ function _extractNamespaces(attributes: NamedNodeMap): object {
     }
     return nsMap;
 }
+
+export interface XPathNodeSelect {
+    (expression: string, node?: Node): Array<Node>;
+    (expression: string, node: Node, single: true): Node;
+}

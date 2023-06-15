@@ -95,7 +95,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 <dct:title>${esc(mapper.getTitle())}</dct:title>
                 <plu:planState>${mapper.getPluPlanState()}</plu:planState>
                 <plu:procedureState>${mapper.getPluProcedureState()}</plu:procedureState>
-                ${optional('plu:procedureStartDate', esc(mapper.getPluProcedureStartDate()))}
+                ${optional('plu:procedureStartDate', mapper.getPluProcedureStartDate())}
                 <dct:spatial>
                     <dct:Location>
                         ${DcatApPluDocument.xmlSpatial('dcat:bbox', mapper.getBoundingBoxGml(), mapper.getBoundingBox())}

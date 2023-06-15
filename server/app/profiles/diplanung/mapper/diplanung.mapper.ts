@@ -76,7 +76,7 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper._getPluDevelopmentFreezePeriod();
     }
 
-    getPluProcedureStartDate(): string {
+    getPluProcedureStartDate(): Date {
         return this.baseMapper._getPluProcedureStartDate();
     }
 

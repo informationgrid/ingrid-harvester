@@ -137,7 +137,7 @@ export class DiplanungVirtualMapper extends BaseMapper {
         return this.fields.plan_type_fine;
     }
 
-    _getPluProcedureStartDate() {
+    _getPluProcedureStartDate(): Date {
         return this.fields.procedure_start_date;
     }
 
