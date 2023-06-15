@@ -26,7 +26,6 @@ import { MiscUtils } from '../../../utils/misc.utils';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WfsImporter } from '../wfs.importer';
 import { WfsMapper } from '../wfs.mapper';
-import { WfsSettings } from '../wfs.settings';
 import { XplanWfsMapper } from './xplan.wfs.mapper';
 
 export class XplanWfsImporter extends WfsImporter {

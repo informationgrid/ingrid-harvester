@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
+import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
 
 export type WfsSettings = {
     version: "2.0.0" | "1.1.0",

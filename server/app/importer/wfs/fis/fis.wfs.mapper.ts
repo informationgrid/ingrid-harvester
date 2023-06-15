@@ -39,7 +39,7 @@ export class FisWfsMapper extends WfsMapper {
         let distributions = [];
         for (let elem of this.select('./*/fis:*[local-name()="SCAN_WWW" or local-name()="GRUND_WWW"]', this.feature)) {
             let distribution: Distribution = { accessURL: elem.textContent };
-            if (isMaybeDownloadUrl(distribution.accessURL)) {
+            if (MiscUtils.isMaybeDownloadUrl(distribution.accessURL)) {
                 distribution.downloadURL = distribution.accessURL;
             }
             distributions.push(distribution);
@@ -68,15 +68,6 @@ export class FisWfsMapper extends WfsMapper {
     }
 
     _getSpatial(): object {
-        // let spatialContainer = this.select('./*/fis:SHAPE_25833', this.feature, true);
-        // if (!spatialContainer) {
-        //     // use bounding box as fallback
-        //     return this.fetched.boundingBox;
-        // }
-        // let child = XPathUtils.firstElementChild(spatialContainer);
-        // if (child == null) {
-        //     return undefined;
-        // }
         let spatialContainer = this.select('./*/fis:SHAPE_25833/*', this.feature, true);
         if (!spatialContainer) {
             // use bounding box as fallback
@@ -205,11 +196,4 @@ export class FisWfsMapper extends WfsMapper {
         }
         return period;
     }
-}
-
-// very simple heuristic
-// TODO expand/improve
-function isMaybeDownloadUrl(url: string) {
-    let ext = url.slice(url.lastIndexOf('.') + 1).toLowerCase();
-    return ['jpeg', 'jpg', 'pdf', 'zip'].includes(ext) || url.toLowerCase().indexOf('service=wfs') > -1;
 }

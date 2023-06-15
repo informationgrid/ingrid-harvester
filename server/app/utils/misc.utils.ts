@@ -43,7 +43,7 @@ export class MiscUtils {
      * Helper method to prevent accidents.
      * 
      * @param objs the objects to merge
-     * @returns the merged object
+     * @return the merged object
      */
     public static merge(...objs) {
         // lodash mutates the first object on which it merges subsequent objects
@@ -52,16 +52,20 @@ export class MiscUtils {
 
     /**
      * For log output overview and ES indexing reasons, messages might want/need to be truncated.
-     * We set an arbitrary limit for message length in `MAX_MESSAGE_LENGTH`.
+     * We set an arbitrary limit for message length in `MAX_MSG_LENGTH`.
      * 
      * @param msg the message to be truncated
+     * @return the string truncated to `MAX_MSG_LENGTH` characters
      */
-    public static truncateErrorMessage(msg: string) {
+    public static truncateErrorMessage(msg: string): string {
         return msg?.length > MAX_MSG_LENGTH ? msg.substring(0, MAX_MSG_LENGTH - TRUNC_STR.length) + TRUNC_STR : msg;
     }
 
     /**
-     * Normalize datetime strings
+     * Parse ISO8601-like datetime strings into `Date`s
+     * 
+     * @param datetime a datetime string in an ISO8601-like format
+     * @return the Date object represented by the given datetime string
      */
     public static normalizeDateTime(datetime: string): Date {
         if (!datetime) {
@@ -82,6 +86,9 @@ export class MiscUtils {
 
     /**
      * Get catalog information from OGC-Records-API
+     * 
+     * @param catalogId identifier of the requested catalog
+     * @return the `Catalog` represented by the given catalogId
      */
     static async fetchCatalogFromOgcRecordsApi(catalogId: string): Promise<Catalog> {
         let generalSettings = ConfigService.getGeneralSettings();
@@ -117,5 +124,17 @@ export class MiscUtils {
             log.error(`Error fetching catalog "${catalogId}" from OGC Records API at [${config.uri}]: ${e}`);
         }
         return catalog;
+    }
+
+    /**
+     * Simple heuristic to detect if a URL contains a downloadable resource
+     * 
+     * @param url the URL to check
+     * @return true if the URL represents a downloadable resource, false  otherwise
+     */
+    // TODO expand/improve
+    static isMaybeDownloadUrl(url: string): boolean {
+        let ext = url.slice(url.lastIndexOf('.') + 1).toLowerCase();
+        return ['jpeg', 'jpg', 'pdf', 'zip'].includes(ext) || url.toLowerCase().indexOf('service=wfs') > -1;
     }
 }
