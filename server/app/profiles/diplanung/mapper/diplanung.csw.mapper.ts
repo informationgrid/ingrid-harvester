@@ -60,10 +60,6 @@ export class DiplanungCswMapper extends CswMapper {
         return contactPoint; // TODO index all contacts
     }
 
-    _getBoundingBoxGml() {
-        return undefined;
-    }
-
     _getBoundingBox() {
         let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];

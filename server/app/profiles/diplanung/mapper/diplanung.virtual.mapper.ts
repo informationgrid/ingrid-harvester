@@ -79,16 +79,8 @@ export class DiplanungVirtualMapper extends BaseMapper {
         return this.fields.spatial;
     }
 
-    _getSpatialGml(): string {
-        return null;
-    }
-
     _getBoundingBox(): object {
         return this.fields.bounding_box;
-    }
-
-    _getBoundingBoxGml() {
-        return null;
     }
 
     _getCentroid(): object {

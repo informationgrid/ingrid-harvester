@@ -98,9 +98,9 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional('plu:procedureStartDate', mapper.getPluProcedureStartDate())}
                 <dct:spatial>
                     <dct:Location>
-                        ${DcatApPluDocument.xmlSpatial('dcat:bbox', mapper.getBoundingBoxGml(), mapper.getBoundingBox())}
-                        ${DcatApPluDocument.xmlSpatial('locn:geometry', mapper.getSpatialGml(), mapper.getSpatial())}
-                        ${DcatApPluDocument.xmlSpatial('dcat:centroid', null, mapper.getCentroid())}
+                        ${DcatApPluDocument.xmlSpatial('dcat:bbox', mapper.getBoundingBox())}
+                        ${DcatApPluDocument.xmlSpatial('locn:geometry', mapper.getSpatial())}
+                        ${DcatApPluDocument.xmlSpatial('dcat:centroid', mapper.getCentroid())}
                         ${optional('locn:geographicName', esc(mapper.getSpatialText()))}
                     </dct:Location>
                 </dct:spatial>
@@ -118,24 +118,16 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional(DcatApPluDocument.xmlProcessStep, mapper.getPluProcessSteps())}
             </dcat:Dataset>`;
         // </rdf:RDF>`;
-
         return xmlString.replace(/^\s*\n/gm, '');
     }
 
-    private static xmlSpatial(tagname: string, gml: string, json: object): string {
-        if (gml) {
-            return `<${tagname}>
-                ${gml}
-            </${tagname}>`;
-        }
-        else if (json) {
-            return `<${tagname} rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json">
-                ${JSON.stringify(json)}
-            </${tagname}>`;
-        }
-        else {
+    private static xmlSpatial(tagname: string, json: object): string {
+        if (!json) {
             return '';
         }
+        return `<${tagname} rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json">
+            ${JSON.stringify(json)}
+        </${tagname}>`;
     }
 
     private static xmlDistribution(distribution: Distribution): string {

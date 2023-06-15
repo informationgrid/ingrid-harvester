@@ -164,14 +164,6 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper._getCatalog();
     }
 
-    getBoundingBoxGml(): string {
-        return this.baseMapper._getBoundingBoxGml();
-    }
-
-    getSpatialGml(): string {
-        return this.baseMapper._getSpatialGml();
-    }
-
     getHarvestErrors(): string[] {
         return this.baseMapper.getHarvestErrors();
     }
