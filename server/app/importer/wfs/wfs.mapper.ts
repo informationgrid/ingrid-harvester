@@ -22,13 +22,12 @@
  */
 
 import { getLogger } from 'log4js';
-import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../model/dcatApPlu.model';
+import { Catalog, PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../model/dcatApPlu.model';
 import { throwError } from 'rxjs';
 import { AllGeoJSON } from '@turf/helpers';
 import { BaseMapper } from '../base.mapper';
 import { Contact, Organization, Person } from '../../model/agent';
 import { DateRange } from '../../model/dateRange';
-import { Distribution } from '../../model/distribution';
 import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { ImporterSettings } from '../../importer.settings';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
@@ -79,24 +78,13 @@ export abstract class WfsMapper extends BaseMapper {
         super.init();
     }
 
-    public getSettings(): ImporterSettings {
+    getSettings(): ImporterSettings {
         return this.settings;
     }
 
-    public getSummary(): Summary {
+    getSummary(): Summary {
         return this.summary;
     }
-
-    abstract _getDescription(): string;
-
-    /**
-     * This is currently very proprietary...
-     *
-     * // TODO try to generalize it a bit more
-     *
-     *  @returns 
-     */
-    abstract _getDistributions(): Promise<Distribution[]>;
 
     async _getPublisher(): Promise<Person[] | Organization[]> {
         return [this.fetched.catalog.publisher];
@@ -105,8 +93,6 @@ export abstract class WfsMapper extends BaseMapper {
     _getMaintainers() {
         return undefined;
     }
-
-    abstract _getTitle(): string;
 
     abstract _getAlternateTitle(): string;
 
@@ -150,7 +136,7 @@ export abstract class WfsMapper extends BaseMapper {
     _getMetadataModified(): Date {
         if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
             let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
-            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
+            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf())
                 return new Date(this.storedData.modified);
         }
         return new Date(Date.now());
@@ -174,10 +160,6 @@ export abstract class WfsMapper extends BaseMapper {
 
     abstract _getBoundingBox(): object;
 
-    abstract _getSpatial(): object;
-
-    abstract _getSpatialText(): string;
-
     _getCentroid(): object {
         let spatial = this._getSpatial() ?? this._getBoundingBox();
         return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
@@ -191,10 +173,6 @@ export abstract class WfsMapper extends BaseMapper {
         return [];
     }
 
-    protected mapCategoriesToThemes(categories, keywords): string[] {
-        return undefined;
-    }
-
     _isRealtime(): boolean {
         return undefined;
     }
@@ -203,15 +181,15 @@ export abstract class WfsMapper extends BaseMapper {
         return undefined;
     }
 
-    async _getLicense() {
+    _getLicense() {
         return undefined;
     }
 
-    _getCatalog() {
+    _getCatalog(): Catalog {
         return this.fetched.catalog;
     }
 
-    _getPluDevelopmentFreezePeriod() {
+    _getPluDevelopmentFreezePeriod(): DateRange {
         return undefined;
     }
 
@@ -240,19 +218,9 @@ export abstract class WfsMapper extends BaseMapper {
 
     abstract _getPluProcedureType(): PluProcedureType;
 
-    /**
-     * This is currently FIS specific.
-     * 
-     * // TODO more process steps?
-     * // TODO what about other WFS sources?
-     */
     abstract _getPluProcessSteps(): ProcessStep[];
 
     abstract _getPluProcedureStartDate(): Date;
-
-    getErrorSuffix(uuid, title) {
-        return `Id: '${uuid}', title: '${title}', source: '${this.settings.getFeaturesUrl}'.`;
-    }
 
     _getHarvestedData(): string {
         return this.feature.toString();
@@ -265,8 +233,6 @@ export abstract class WfsMapper extends BaseMapper {
     _getGroups(): string[] {
         return undefined;
     }
-
-    abstract _getIssued(): Date;
 
     _getMetadataHarvested(): Date {
         return new Date(Date.now());

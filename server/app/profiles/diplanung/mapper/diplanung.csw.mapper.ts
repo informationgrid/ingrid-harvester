@@ -186,31 +186,19 @@ export class DiplanungCswMapper extends CswMapper {
         return undefined;
     }
 
-    // TODO check
-    _getPluPlanState(): string {
-        let planState;
-        try {
-            planState = CswMapper.select(this.settings.pluPlanState, this.record, true)?.textContent;
+    _getPluPlanState(): PluPlanState {
+        let planState = this.settings.pluPlanState;
+        switch (planState?.toLowerCase()) {
+            case 'festgesetzt': return PluPlanState.FESTGES;
+            case 'in aufstellung': return PluPlanState.IN_AUFST;
+            default: return PluPlanState.UNBEKANNT;
         }
-        finally {
-            if (!planState) {
-                planState = this.settings.pluPlanState;
-            }
-        }
-        if (['ja', 'festgesetzt'].includes(planState?.toLowerCase())) {
-            return PluPlanState.FESTGES;
-        }
-        else if (['nein', 'in aufstellung'].includes(planState?.toLowerCase())) {
-            return PluPlanState.IN_AUFST;
-        }
-        return PluPlanState.UNBEKANNT;
     }
 
     /**
      * Heuristic based on metadata harvested from gdi-de.
-     * 
-     * // TODO extend
      */
+    // TODO extend
     _getPluPlanType(): string {
         // consider title, description, and keywords
         let searchFields = [];

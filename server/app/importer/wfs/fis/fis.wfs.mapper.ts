@@ -61,7 +61,7 @@ export class FisWfsMapper extends WfsMapper {
         if (this.select('./*/fis:SHAPE_25833', this.feature, true)) {
             return GeoJsonUtils.getBbox(this.getSpatial());
         }
-        // otherwise, use the bbox defined at the start of the WFS response
+        // otherwise, use the general bbox defined at the start of the WFS response
         else {
             return this.fetched.boundingBox;
         }
@@ -85,14 +85,6 @@ export class FisWfsMapper extends WfsMapper {
 
     _getSpatialText(): string {
         return this.getTextContent('./*/fis:BEZIRK');
-    }
-
-    _getCatalog() {
-        return this.fetched.catalog;
-    }
-
-    _getPluDevelopmentFreezePeriod() {
-        return undefined;
     }
 
     _getPluDocType(code: string): PluDocType {

@@ -60,7 +60,6 @@ export class XplanWfsMapper extends WfsMapper {
     _getBoundingBox(): object {
         let envelope = this.select('./*/gml:boundedBy/gml:Envelope', this.feature, true);
         if (envelope) {
-
             let lowerCorner = this.getTextContent('./gml:lowerCorner', envelope);
             let upperCorner = this.getTextContent('./gml:upperCorner', envelope);
             if (lowerCorner && upperCorner) {
@@ -136,7 +135,6 @@ export class XplanWfsMapper extends WfsMapper {
         return DocTypeMapping[code] ?? PluDocType.UNBEKANNT;
     }
 
-    // TODO fill in the gaps
     _getPluPlanType(): PluPlanType {
         let typename = this.getTypename();
         let planart = this.getTextContent('./*/xplan:planArt');
@@ -147,25 +145,6 @@ export class XplanWfsMapper extends WfsMapper {
         return PluPlanType.UNBEKANNT;
     }
 
-    /**
-     * This mapping is based on:
-     * - https://xleitstelle.de/sites/default/files/objektartenkataloge/5_4/html/xplan_BP_Plan.html#xplan_BP_Plan_planArt
-     * - https://xleitstelle.de/sites/default/files/objektartenkataloge/5_4/html/xplan_FP_Plan.html#xplan_FP_Plan_planArt
-     * - https://xleitstelle.de/sites/default/files/objektartenkataloge/5_4/html/xplan_RP_Plan.html#xplan_RP_Plan_planArt
-     *
-     * and on 'Abgleich Codelistenwerte.xlsx'.
-     * 
-     * Note especially that we use the XPlan 5.4 codelists for all XPlan documents!
-     * 
-     * The mappings targets are taken from the INSPIRE codelist for plan type name:
-     * https://registry.gdi-de.org/codelist/de.xleitstelle.inspire_plu/PlanTypeNameValue
-     * 
-     * // TODO fill in the gaps
-     * // TODO what about other WFS sources?
-     * // TODO check differently versioned codelists for discrepancies
-     * 
-     * @returns 
-     */
     _getPluPlanTypeFine(): string {
         let typename = this.getTypename();
         let planart = this.getTextContent('./*/xplan:planArt');
@@ -180,12 +159,6 @@ export class XplanWfsMapper extends WfsMapper {
         return super._getPluProcedureState();
     }
 
-    /**
-     * This is currently XPlan specific.
-     * 
-     * // TODO more process steps?
-     * // TODO what about other WFS sources?
-     */
     _getPluProcedureType(): PluProcedureType {
         let typename = this.getTypename();
         let procedureType = this.getTextContent('./*/xplan:verfahren');
