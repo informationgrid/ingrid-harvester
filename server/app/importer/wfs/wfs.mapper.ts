@@ -215,44 +215,7 @@ export abstract class WfsMapper extends BaseMapper {
         return undefined;
     }
 
-    /**
-     * This is currently XPlan specific.
-     * 
-     * // TODO fill in the gaps
-     * // TODO what about other WFS sources?
-     * 
-     * @param code 
-     * @returns 
-     */
-    _getPluDocType(code: string): PluDocType {
-        switch (code) {
-            // case '1000': return pluDocType.;// Beschreibung
-            // case '1010': return pluDocType.;// Begründung
-            // case '1020': return pluDocType.;// Legende
-            // case '1030': return pluDocType.;// Rechtsplan
-            // case '1040': return pluDocType.;// Plangrundlage - Abbildung auf BackgroundMapValue (siehe Tabelle 17)
-            // case '1050': return pluDocType.;// Umweltbericht
-            // case '1060': return pluDocType.;// Satzung
-            // case '1065': return pluDocType.;// Verordnung
-            // case '1070': return pluDocType.;// Karte
-            case '1080': return PluDocType.ERLAEUT_BER; // Erläuterung
-            // case '1090': return pluDocType.;// Zusammenfassende Erklärung
-            // case '2000': return pluDocType.;// Koordinatenliste
-            // case '2100': return pluDocType.;// Grundstücksverzeichnis
-            // case '2200': return pluDocType.;// Pflanzliste
-            // case '2300': return pluDocType.;// Grünordnungsplan
-            // case '2400': return pluDocType.;// Erschließungsvertrag
-            // case '2500': return pluDocType.;// Durchführungsvertrag
-            // case '2600': return pluDocType.;// Städtebaulicher Vertrag
-            // case '2700': return pluDocType.;// Umweltbezogene Stellungnahmen
-            // case '2800': return pluDocType.;// Beschluss
-            // case '2900': return pluDocType.;// Vorhaben- und Erschliessungsplan
-            // case '3000': return pluDocType.;// Metadaten von Plan
-            // case '9998': return pluDocType.;// Rechtsverbindlich
-            // case '9999': return pluDocType.;// Informell
-            default: return PluDocType.UNBEKANNT;
-        }
-    }
+    abstract _getPluDocType(code: string): PluDocType;
 
     _getPluPlanState(): PluPlanState {
         let planState = this.settings.pluPlanState;
