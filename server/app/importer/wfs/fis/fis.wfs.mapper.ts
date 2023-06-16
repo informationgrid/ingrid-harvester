@@ -21,12 +21,12 @@
  * ==================================================
  */
 
-import { pluPlanState, pluPlanType, pluProcedureState, pluProcedureType, pluProcessStepType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { AllGeoJSON } from '@turf/helpers';
 import { DateRange } from '../../../model/dateRange';
 import { Distribution } from '../../../model/distribution';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { MiscUtils } from '../../../utils/misc.utils';
+import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../wfs.mapper';
 
 export class FisWfsMapper extends WfsMapper {
@@ -95,27 +95,27 @@ export class FisWfsMapper extends WfsMapper {
         return undefined;
     }
 
-    _getPluDocType(code: string): string {
+    _getPluDocType(code: string): PluDocType {
         switch (code) {
             default: return undefined;
         }
     }
 
-    _getPluPlanState(): string {
+    _getPluPlanState(): PluPlanState {
         let planState = this.getTextContent('./*/fis:FESTSG');
         switch (planState?.toLowerCase()) {
-            case 'ja': return pluPlanState.FESTGES;
-            case 'nein': return pluPlanState.IN_AUFST;
-            default: return pluPlanState.UNBEKANNT;
+            case 'ja': return PluPlanState.FESTGES;
+            case 'nein': return PluPlanState.IN_AUFST;
+            default: return PluPlanState.UNBEKANNT;
         }
     }
 
     // TODO make use of fis:PLANARTNAME
-    _getPluPlanType(): string {
+    _getPluPlanType(): PluPlanType {
         let typename = this.getTypename();
         switch (typename) {
-            case 'sach_bplan': return pluPlanType.BEBAU_PLAN;   // TODO check
-            default: this.log.debug('No pluPlanType available for typename', typename); return pluPlanType.UNBEKANNT;
+            case 'sach_bplan': return PluPlanType.BEBAU_PLAN;   // TODO check
+            default: this.log.debug('No pluPlanType available for typename', typename); return PluPlanType.UNBEKANNT;
         }
     }
 
@@ -123,20 +123,16 @@ export class FisWfsMapper extends WfsMapper {
         return undefined;
     }
 
-    _getPluProcedureState(): string {
-        let planState = super._getPluPlanState();
-        if (planState) {
-            return planState;
-        }
+    _getPluProcedureState(): PluProcedureState {
         switch (this._getPluPlanState()) {
-            case pluPlanState.FESTGES: return pluProcedureState.ABGESCHLOSSEN;
-            case pluPlanState.IN_AUFST: return pluProcedureState.LAUFEND;
-            default: return pluProcedureState.UNBEKANNT;
+            case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
+            case PluPlanState.IN_AUFST: return PluProcedureState.LAUFEND;
+            default: return PluProcedureState.UNBEKANNT;
         }
     }
 
-    _getPluProcedureType(): string {
-        return pluProcedureType.UNBEKANNT;
+    _getPluProcedureType(): PluProcedureType {
+        return PluProcedureType.UNBEKANNT;
     }
 
     _getPluProcessSteps(): ProcessStep[] {
@@ -152,7 +148,7 @@ export class FisWfsMapper extends WfsMapper {
         if (period_frzBuergerBet) {
             processSteps.push({
                 period: period_frzBuergerBet,
-                type: pluProcessStepType.FRUEHZ_OEFFTL_BETEIL
+                type: PluProcessStepType.FRUEHZ_OEFFTL_BETEIL
             });
         }
         let period_oefftlAusleg = this.getPeriod('./*/fis:AUL_ANFANG', './*/fis:AUL_ENDE');
@@ -161,7 +157,7 @@ export class FisWfsMapper extends WfsMapper {
             processSteps.push({
                 ...link && { distributions: [{ accessURL: link }] },
                 period: period_oefftlAusleg,
-                type: pluProcessStepType.OEFFTL_AUSL
+                type: PluProcessStepType.OEFFTL_AUSL
             });
         }
         return processSteps;

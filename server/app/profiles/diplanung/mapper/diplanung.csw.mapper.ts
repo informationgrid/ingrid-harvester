@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { pluPlanState, pluPlanType, pluProcedureState } from '../../../model/dcatApPlu.model';
+import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model';
 import { uniqBy } from 'lodash';
 import { Contact } from '../../../model/agent';
 import { CswMapper } from '../../../importer/csw/csw.mapper';
@@ -198,12 +198,12 @@ export class DiplanungCswMapper extends CswMapper {
             }
         }
         if (['ja', 'festgesetzt'].includes(planState?.toLowerCase())) {
-            return pluPlanState.FESTGES;
+            return PluPlanState.FESTGES;
         }
         else if (['nein', 'in aufstellung'].includes(planState?.toLowerCase())) {
-            return pluPlanState.IN_AUFST;
+            return PluPlanState.IN_AUFST;
         }
-        return pluPlanState.UNBEKANNT;
+        return PluPlanState.UNBEKANNT;
     }
 
     /**
@@ -221,37 +221,37 @@ export class DiplanungCswMapper extends CswMapper {
 
         // TODO especially in keywords - if set - there can be ambiguities, e.g. keywords contain multiple determination words
         if (['bebauungsplan'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.BEBAU_PLAN;
+            return PluPlanType.BEBAU_PLAN;
         }
         if (['flächennutzungsplan', 'fnp'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.FLAECHENN_PLAN;
+            return PluPlanType.FLAECHENN_PLAN;
         }
         if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.PLAN_FESTST_VERF;
+            return PluPlanType.PLAN_FESTST_VERF;
         }
         if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.PW_BES_STAEDT_BAUR;
+            return PluPlanType.PW_BES_STAEDT_BAUR;
         }
         if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.PW_LANDSCH_PLAN;
+            return PluPlanType.PW_LANDSCH_PLAN;
         }
         if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.RAUM_ORDN_PLAN;
+            return PluPlanType.RAUM_ORDN_PLAN;
         }
         if (['raumordnungsverfahren'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.RAUM_ORDN_VERF;
+            return PluPlanType.RAUM_ORDN_VERF;
         }
         if (['städtebauliche satzungen'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.STAEDT_BAUL_SATZ;
+            return PluPlanType.STAEDT_BAUL_SATZ;
         }
-        return pluPlanType.UNBEKANNT;
+        return PluPlanType.UNBEKANNT;
     }
 
     _getPluProcedureState(): string {
         switch (this._getPluPlanState()) {
-            case pluPlanState.FESTGES: return pluProcedureState.ABGESCHLOSSEN;
-            case pluPlanState.IN_AUFST: return pluProcedureState.LAUFEND;
-            default: return pluProcedureState.UNBEKANNT;
+            case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
+            case PluPlanState.IN_AUFST: return PluProcedureState.LAUFEND;
+            default: return PluProcedureState.UNBEKANNT;
         }
     }
 
@@ -264,7 +264,7 @@ export class DiplanungCswMapper extends CswMapper {
     }
 
     _getPluProcedureType() {
-        return undefined;
+        return PluProcedureType.UNBEKANNT;
     }
 
     _getPluProcessSteps() {

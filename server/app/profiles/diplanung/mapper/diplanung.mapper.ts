@@ -29,6 +29,7 @@ import { DiplanungCswMapper } from './diplanung.csw.mapper';
 import { DiplanungVirtualMapper } from './diplanung.virtual.mapper';
 import { Distribution } from "../../../model/distribution";
 import { ExcelSparseMapper } from "../../../importer/excelsparse/excelsparse.mapper";
+import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from 'model/dcatApPlu.model';
 import { WfsMapper } from "../../../importer/wfs/wfs.mapper";
 
 const dayjs = require('dayjs');
@@ -64,7 +65,7 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper._getAlternateTitle();
     }
 
-    getPluPlanState(): string {
+    getPluPlanState(): PluPlanState {
         return this.baseMapper._getPluPlanState();
     }
 
@@ -80,7 +81,7 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper._getPluProcedureStartDate();
     }
 
-    getPluPlanType(): string {
+    getPluPlanType(): PluPlanType {
         return this.baseMapper._getPluPlanType();
     }
 
@@ -88,15 +89,15 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper._getPluPlanTypeFine();
     }
 
-    getPluProcedureState(): string {
+    getPluProcedureState(): PluProcedureState {
         return this.baseMapper._getPluProcedureState();
     }
 
-    getPluProcedureType(): string {
+    getPluProcedureType(): PluProcedureType {
         return this.baseMapper._getPluProcedureType();
     }
 
-    getPluProcessSteps(): string {
+    getPluProcessSteps(): ProcessStep[] {
         return this.baseMapper._getPluProcessSteps();
     }
 

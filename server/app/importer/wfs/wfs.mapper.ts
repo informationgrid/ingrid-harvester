@@ -22,7 +22,7 @@
  */
 
 import { getLogger } from 'log4js';
-import { pluDocType, pluPlanState, pluProcedureState, ProcessStep } from '../../model/dcatApPlu.model';
+import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../model/dcatApPlu.model';
 import { throwError } from 'rxjs';
 import { AllGeoJSON } from '@turf/helpers';
 import { BaseMapper } from '../base.mapper';
@@ -224,7 +224,7 @@ export abstract class WfsMapper extends BaseMapper {
      * @param code 
      * @returns 
      */
-    _getPluDocType(code: string): string {
+    _getPluDocType(code: string): PluDocType {
         switch (code) {
             // case '1000': return pluDocType.;// Beschreibung
             // case '1010': return pluDocType.;// Begründung
@@ -235,7 +235,7 @@ export abstract class WfsMapper extends BaseMapper {
             // case '1060': return pluDocType.;// Satzung
             // case '1065': return pluDocType.;// Verordnung
             // case '1070': return pluDocType.;// Karte
-            case '1080': return pluDocType.ERLAEUT_BER; // Erläuterung
+            case '1080': return PluDocType.ERLAEUT_BER; // Erläuterung
             // case '1090': return pluDocType.;// Zusammenfassende Erklärung
             // case '2000': return pluDocType.;// Koordinatenliste
             // case '2100': return pluDocType.;// Grundstücksverzeichnis
@@ -250,32 +250,32 @@ export abstract class WfsMapper extends BaseMapper {
             // case '3000': return pluDocType.;// Metadaten von Plan
             // case '9998': return pluDocType.;// Rechtsverbindlich
             // case '9999': return pluDocType.;// Informell
-            default: return undefined;
+            default: return PluDocType.UNBEKANNT;
         }
     }
 
-    _getPluPlanState(): string {
+    _getPluPlanState(): PluPlanState {
         let planState = this.settings.pluPlanState;
         switch (planState?.toLowerCase()) {
-            case 'festgesetzt': return pluPlanState.FESTGES;
-            case 'in aufstellung': return pluPlanState.IN_AUFST;
-            default: return pluPlanState.UNBEKANNT;
+            case 'festgesetzt': return PluPlanState.FESTGES;
+            case 'in aufstellung': return PluPlanState.IN_AUFST;
+            default: return PluPlanState.UNBEKANNT;
         }
     }
 
-    abstract _getPluPlanType(): string;
+    abstract _getPluPlanType(): PluPlanType;
 
     abstract _getPluPlanTypeFine(): string;
 
-    _getPluProcedureState(): string {
+    _getPluProcedureState(): PluProcedureState {
         switch (this._getPluPlanState()) {
-            case pluPlanState.FESTGES: return pluProcedureState.ABGESCHLOSSEN;
-            case pluPlanState.IN_AUFST: return pluProcedureState.LAUFEND;
-            default: return pluProcedureState.UNBEKANNT;
+            case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
+            case PluPlanState.IN_AUFST: return PluProcedureState.LAUFEND;
+            default: return PluProcedureState.UNBEKANNT;
         }
     }
 
-    abstract _getPluProcedureType(): string;
+    abstract _getPluProcedureType(): PluProcedureType;
 
     /**
      * This is currently FIS specific.
