@@ -98,14 +98,15 @@ export class GeoJsonUtils {
         if (!spatial) {
             return undefined;
         }
+        let modifiedSpatial = { ...spatial };
         // turf/centroid does not support envelope, so we turn it into a linestring which has the same centroid
-        if (spatial.type?.toLowerCase() == 'envelope') {
-            spatial.type = 'LineString';
+        if (modifiedSpatial.type?.toLowerCase() == 'envelope') {
+            modifiedSpatial.type = 'LineString';
         }
-        if (spatial.type == 'GeometryCollection') {
-            (<GeometryCollection>spatial).geometries.filter((geometry: AllGeoJSON) => geometry.type == 'Envelope').forEach((geometry: AllGeoJSON) => geometry.type = 'LineString');
+        if (modifiedSpatial.type == 'GeometryCollection') {
+            (<GeometryCollection>modifiedSpatial).geometries.filter((geometry: AllGeoJSON) => geometry.type == 'Envelope').forEach((geometry: AllGeoJSON) => geometry.type = 'LineString');
         }
-        return centroid(spatial);
+        return centroid(modifiedSpatial);
     };
 
     parseCoords = (s, opts: { crs?: string, stride?: number } = { crs: null, stride: 2 }, ctx = { srsDimension: null }) => {

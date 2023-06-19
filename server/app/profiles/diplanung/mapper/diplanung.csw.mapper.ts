@@ -61,19 +61,41 @@ export class DiplanungCswMapper extends CswMapper {
     }
 
     _getBoundingBox() {
+        return this.getGeometry(true);
+    }
+
+    _getSpatial(): object {
+        return this.getGeometry(false);
+    }
+
+    private getGeometry(forcePolygon: boolean) {
         let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];
         for(let i=0; i < geographicBoundingBoxes.length; i++){
             let geographicBoundingBox = geographicBoundingBoxes[i];
-            let west = parseFloat(CswMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let east = parseFloat(CswMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let south = parseFloat(CswMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let west = parseFloat(CswMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trim());
+            let east = parseFloat(CswMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trim());
+            let south = parseFloat(CswMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trim());
+            let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trim());
 
-            geometries.push({
-                'type': 'Polygon',
-                'coordinates': [[[west, north], [west, south], [east, south], [east, north], [west, north]]]
-            });
+            if (!forcePolygon && (west === east && north === south)) {
+                geometries.push({
+                    'type': 'Point',
+                    'coordinates': [west, north]
+                });
+            }
+            else if (!forcePolygon && (west === east || north === south)) {
+                geometries.push({
+                    'type': 'LineString',
+                    'coordinates': [[west, north], [east, south]]
+                });
+            }
+            else {
+                geometries.push({
+                    'type': 'Polygon',
+                    'coordinates': [[[west, north], [west, south], [east, south], [east, north], [west, north]]]
+                });
+            }
         }
         if(geometries.length == 1){
             return geometries[0];
