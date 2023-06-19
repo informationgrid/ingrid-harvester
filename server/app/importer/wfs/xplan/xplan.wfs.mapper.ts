@@ -22,7 +22,7 @@
  */
 
 import { Distribution} from '../../../model/distribution';
-import { DocTypeMapping, PlanTypeMapping, ProcedureTypeMapping } from './xplan.codelist.mappings.js';
+import { DocTypeMapping, PlanTypeMapping, ProcedureTypeMapping } from './xplan.codelist.mappings';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { MiscUtils } from '../../../utils/misc.utils';
 import { PluDocType, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
