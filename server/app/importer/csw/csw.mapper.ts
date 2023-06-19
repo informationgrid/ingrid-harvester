@@ -114,7 +114,7 @@ export class CswMapper extends BaseMapper {
     }
 
     _getDescription() {
-        let abstract = CswMapper.getCharacterStringContent(this.idInfo, 'abstract');
+        let abstract = CswMapper.select('./*/gmd:abstract/gco:CharacterString', this.idInfo, true)?.textContent;
         // if (!abstract) {
         //     let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.getRecordsUrl}\'`;
         //     this.log.warn(msg);
@@ -359,7 +359,7 @@ export class CswMapper extends BaseMapper {
     }
 
     _getTitle() {
-        let title = CswMapper.getCharacterStringContent(this.idInfo, 'title');
+        let title = CswMapper.select('./*/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString', this.idInfo, true)?.textContent;
         return title && title.trim() !== '' ? title : undefined;
     }
 
