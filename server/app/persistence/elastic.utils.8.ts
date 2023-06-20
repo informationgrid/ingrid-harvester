@@ -56,6 +56,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
             requestTimeout: 30000
         });
         this._bulkData = [];
+        this._bulkUpdateData = [];
         this.indexName = settings.index;
 
         let profile = ProfileFactoryLoader.get();
@@ -307,6 +308,63 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
             log.debug('Sending BULK message with ' + (this._bulkData.length / 2) + ' items to index ' + this.indexName);
             let promise = this.bulk(this._bulkData, closeAfterBulk);
             this._bulkData = [];
+            return promise;
+        }
+        return new Promise(resolve => resolve({
+            queued: true
+        }));
+    }
+
+    async bulkUpdate(updateDocuments: any[], closeAfterBulk?: boolean): Promise<BulkResponse> {        
+        try {
+            let response = await this.client.bulk({
+                index: this.indexName,
+                // type: this.settings.indexType || 'base',
+                operations: updateDocuments
+            });
+            if (response.errors) {
+                response.items.forEach(item => {
+                    let err = item.update.error;
+                    if (err) {
+                        this.handleError(`Error during bulk updating on index '${this.indexName}' for item.id '${item.update._id}': ${JSON.stringify(err)}`, err);
+                    }
+                });
+            }
+            log.debug('Bulk update finished of data #items: ' + updateDocuments.length / 2);
+            return {
+                queued: false,
+                response: response
+            };
+        }
+        catch (e) {
+            this.handleError('Error during bulk updating of #items: ' + updateDocuments.length / 2, e);
+        }
+    }
+
+    async addDocsToBulkUpdate(updateDocuments: any[], maxBulkSize=ElasticSearchUtils.maxBulkSize): Promise<BulkResponse> {
+        for (let updateDocument of updateDocuments) {
+            let { _id, ...doc } = updateDocument;
+            this._bulkUpdateData.push(
+                { update: { _index: this.indexName, _id } },
+                { doc }
+            );
+        }
+
+        if (this._bulkUpdateData.length >= (maxBulkSize * 2)) {
+            return this.sendBulkUpdate();
+        }
+        else {
+            return new Promise(resolve => resolve({
+                queued: true
+            }));
+        }
+    }
+
+    sendBulkUpdate(closeAfterBulk?: boolean): Promise<BulkResponse> {
+        if (this._bulkUpdateData.length > 0) {
+            log.debug('Sending BULK update message with ' + (this._bulkUpdateData.length / 2) + ' items to index ' + this.indexName);
+            let promise = this.bulkUpdate(this._bulkUpdateData, closeAfterBulk);
+            this._bulkUpdateData = [];
             return promise;
         }
         return new Promise(resolve => resolve({
