@@ -114,15 +114,7 @@ export class CswMapper extends BaseMapper {
     }
 
     _getDescription() {
-        let abstract = CswMapper.select('./*/gmd:abstract/gco:CharacterString', this.idInfo, true)?.textContent;
-        // if (!abstract) {
-        //     let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.getRecordsUrl}\'`;
-        //     this.log.warn(msg);
-        //     this.summary.warnings.push(['No description', msg]);
-        //     this.valid = false;
-        // }
-
-        return abstract;
+        return CswMapper.select('./*/gmd:abstract/gco:CharacterString', this.idInfo, true)?.textContent;
     }
 
     async _getDistributions(): Promise<Distribution[]> {
@@ -159,7 +151,7 @@ export class CswMapper extends BaseMapper {
                 let onlineResource = onlineResources[j];
 
                 let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource);
-                let title = CswMapper.select('gmd:name/gco:CharacterString', onlineResource);
+                let title = CswMapper.select('gmd:name/gco:CharacterString', onlineResource, true)?.textContent;
                 let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource);
 
                 let url = null;
@@ -174,7 +166,7 @@ export class CswMapper extends BaseMapper {
 
                     let dist: Distribution = {
                         accessURL: url,
-                        title: title.length > 0 ? title[0].textContent : undefined,
+                        title: title,
                         format: UrlUtils.mapFormat(formatArray, this.summary.warnings)
                     };
 
@@ -197,19 +189,14 @@ export class CswMapper extends BaseMapper {
 
     async handleDistributionforService(srvIdent, urlsFound): Promise<Distribution[]> {
 
-        let getCapabilitiesElement = CswMapper.select(
+        let getCapablitiesUrl = CswMapper.select(
             // convert containing text to lower case
             './srv:containsOperations/srv:SV_OperationMetadata[./srv:operationName/gco:CharacterString/text()[contains(translate(\'GetCapabilities\', \'ABCEGILPST\', \'abcegilpst\'), "getcapabilities")]]/srv:connectPoint/*/gmd:linkage/gmd:URL',
             srvIdent,
-            true);
-        let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
-        let serviceFormat = CswMapper.select('./srv:serviceType/gco:LocalName', srvIdent, true);
+            true)?.textContent;
+        let serviceFormat = CswMapper.select('./srv:serviceType/gco:LocalName', srvIdent, true)?.textContent;
         let serviceTypeVersion = CswMapper.select('./srv:serviceTypeVersion/gco:CharacterString', srvIdent);
         let serviceLinks: Distribution[] = [];
-
-        if(serviceFormat){
-            serviceFormat = serviceFormat.textContent;
-        }
 
         if (getCapablitiesUrl) {
             let lowercase = getCapablitiesUrl.toLowerCase();
@@ -229,31 +216,26 @@ export class CswMapper extends BaseMapper {
             }
         }
 
-
         let operations = CswMapper
             .select('./srv:containsOperations/srv:SV_OperationMetadata', srvIdent);
 
+        let title = this.getTitle();
         for (let i = 0; i < operations.length; i++) {
             let onlineResource = CswMapper.select('./srv:connectPoint/gmd:CI_OnlineResource', operations[i], true);
 
-            if(onlineResource) {
+            if (onlineResource) {
                 let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource, true);
-                let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true);
-
-                let title = this.getTitle();
-
-                let operationNameNode = CswMapper.select('srv:operationName/gco:CharacterString', operations[i], true);
-                if(operationNameNode){
-                    title = title + " - " + operationNameNode.textContent;
-                }
+                let protocol = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true)?.textContent;
+                let operationName = CswMapper.select('srv:operationName/gco:CharacterString', operations[i], true)?.textContent;
+                let currentTitle = operationName ? title + " - " + operationName : title;
 
                 let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
                 let url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 if (url && !urlsFound.includes(url)) {
                     serviceLinks.push({
                         accessURL: url,
-                        format: [protocolNode ? protocolNode.textContent : serviceFormat],
-                        title: (title && title.length > 0) ? title : undefined
+                        format: [protocol ?? serviceFormat],
+                        title: currentTitle
                     });
                     urlsFound.push(url);
                 }
@@ -575,10 +557,11 @@ export class CswMapper extends BaseMapper {
                 geometries.push(this.getGeoJson(west, east, north, south, forcePolygon));
             }
         }
-        if(geometries.length == 1){
+
+        if (geometries.length == 1) {
             return geometries[0];
         }
-        else if(geometries.length > 1){
+        else if (geometries.length > 1) {
             return {
                 'type': 'GeometryCollection',
                 'geometries': geometries

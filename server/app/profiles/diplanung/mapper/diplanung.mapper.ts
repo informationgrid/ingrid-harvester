@@ -178,7 +178,7 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
     }
 
     executeCustomCode(doc: any) {
-        this.baseMapper.executeCustomCode(doc)
+        this.baseMapper.executeCustomCode(doc);
     }
 }
 

@@ -24,7 +24,7 @@
 import { DiplanungMapper } from './diplanung.mapper';
 
 export class DiplanungMapperFactory {
-    static getMapper(mapper) : DiplanungMapper<any> {
+    static getMapper(mapper): DiplanungMapper<any> {
         switch (mapper.constructor.name) {
             case 'DiplanungCswMapper': return new DiplanungMapper(mapper);
             case 'DiplanungVirtualMapper': return new DiplanungMapper(mapper);
