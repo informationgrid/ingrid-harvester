@@ -267,7 +267,7 @@ export class CswImporter extends Importer {
         }
     }
 
-    async extractRecords(getRecordsResponse, harvestTime) {
+    async extractRecords(getRecordsResponse, harvestTime): Promise<string[]> {
         let promises = [];
         let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
         let records = xml.getElementsByTagNameNS(CswMapper.GMD, 'MD_Metadata');
