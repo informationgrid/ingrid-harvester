@@ -34,7 +34,7 @@ const DomParser = require('@xmldom/xmldom').DOMParser;
 export class DiplanungCswMapper extends CswMapper {
 
     _getAlternateTitle(): string {
-        let alternateTitle = CswMapper.getCharacterStringContent(this.idInfo, 'alternateTitle');
+        let alternateTitle = CswMapper.select('./*/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', this.idInfo, true)?.textContent;
         if (!alternateTitle) {
             alternateTitle = this.getTitle();
         }
