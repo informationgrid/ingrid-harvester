@@ -532,30 +532,47 @@ export class CswMapper extends BaseMapper {
     }
 
     _getSpatial(): object {
+        return this.getGeometry(false);
+    }
+
+    protected getGeometry(forcePolygon: boolean) {
         let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];
-        for(let i=0; i < geographicBoundingBoxes.length; i++){
+        for (let i=0; i < geographicBoundingBoxes.length; i++){
             let geographicBoundingBox = geographicBoundingBoxes[i];
             let west = parseFloat(CswMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trim());
             let east = parseFloat(CswMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trim());
             let south = parseFloat(CswMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trim());
             let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trim());
 
-            if (west === east && north === south) {
-                geometries.push({
-                    'type': 'Point',
-                    'coordinates': [west, north]
-                });
-            } else if (west === east || north === south) {
-                geometries.push({
-                    'type': 'LineString',
-                    'coordinates': [[west, north], [east, south]]
-                });
-            } else {
-                geometries.push({
-                    'type': 'Envelope',
-                    'coordinates': [[west, north], [east, south]]
-                });
+            // check if within bounds
+            let geometryValid = true;
+            if (Math.abs(west) > 180) {
+                geometryValid = false;
+                this.addInvalidationReason(`westBoundLongitude is out of bounds (${west})`);
+            }
+            if (Math.abs(east) > 180) {
+                geometryValid = false;
+                this.addInvalidationReason(`eastBoundLongitude is out of bounds (${east})`);
+            }
+            if (Math.abs(south) > 90) {
+                geometryValid = false;
+                this.addInvalidationReason(`southBoundLatitude is out of bounds (${south})`);
+            }
+            if (Math.abs(north) > 90) {
+                geometryValid = false;
+                this.addInvalidationReason(`northBoundLatitude is out of bounds (${north})`);
+            }
+            if (south > north) {
+                geometryValid = false;
+                this.addInvalidationReason(`southBoundLatitude > northBoundLatitude (${south} > ${north})`);
+            }
+
+            if (!geometryValid) {
+                this.valid = false;
+            }
+            else {
+                geometries.push(this.getGeoJson(west, east, north, south, forcePolygon));
             }
         }
         if(geometries.length == 1){
@@ -569,6 +586,27 @@ export class CswMapper extends BaseMapper {
         }
 
         return undefined;
+    }
+
+    protected getGeoJson(west: number, east: number, north: number, south: number, forcePolygon: boolean): any {
+        if (west === east && north === south) {
+            return {
+                'type': 'Point',
+                'coordinates': [west, north]
+            };
+        }
+        else if (west === east || north === south) {
+            return {
+                'type': 'LineString',
+                'coordinates': [[west, north], [east, south]]
+            };
+        }
+        else {
+            return {
+                'type': 'Envelope',
+                'coordinates': [[west, north], [east, south]]
+            };
+        }
     }
 
     _getSpatialText(): string {
