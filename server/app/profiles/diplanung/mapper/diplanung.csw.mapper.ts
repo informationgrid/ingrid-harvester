@@ -89,6 +89,11 @@ export class DiplanungCswMapper extends CswMapper {
         }
     }
 
+    _getSpatialText(): string {
+        let spatialText = super._getSpatialText();
+        return spatialText?.match(/(\d{12}).+/)?.[1] ?? spatialText;
+    }
+
     async _getMaintainers() {
         let maintainers = await super._getMaintainers();
         return uniqBy(maintainers, JSON.stringify);
