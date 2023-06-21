@@ -41,6 +41,8 @@ export abstract class ElasticSearchUtils {
     public deduplicationUtils: DeduplicateUtils;
     public indexName: string;
     public _bulkData: any[];
+    // TODO put everything in the same bulk array :)
+    public _bulkUpdateData: any[];
 
     /**
      *
@@ -118,6 +120,12 @@ export abstract class ElasticSearchUtils {
      * @param {boolean} closeAfterBulk
      */
     abstract sendBulkData(closeAfterBulk?: boolean): Promise<BulkResponse>;
+
+    abstract bulkUpdate(updateDocuments: any[], closeAfterBulk: boolean): Promise<BulkResponse>;
+
+    abstract addDocsToBulkUpdate(docs: any[], maxBulkSize?: number): Promise<BulkResponse>;
+
+    abstract sendBulkUpdate(closeAfterBulk?: boolean): Promise<BulkResponse>;
 
     /**
      * Searches the index for documents with the given ids and copies a set of the issued

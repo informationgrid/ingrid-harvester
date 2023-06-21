@@ -120,6 +120,7 @@ export class CswImporter extends Importer {
                 await this.harvest();
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
                     await this.elastic.sendBulkData(false);
+                    await this.elastic.sendBulkUpdate(false);
                     // TODO postHarvestingHandling has to be here, after indexing all data but before deduplicating
                     // TODO this needs a rewrite of the data-service-coupling
                     // this.postHarvestingHandling();
@@ -194,7 +195,8 @@ export class CswImporter extends Importer {
         if (resultsNode) {
             let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
             log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
-            await this.extractRecords(response, harvestTime)
+            let importedDocuments = await this.extractRecords(response, harvestTime);
+            await this.updateRecords(importedDocuments);
         } else {
             const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
             log.error(message);
@@ -265,7 +267,7 @@ export class CswImporter extends Importer {
         }
     }
 
-    async extractRecords(getRecordsResponse, harvestTime) {
+    async extractRecords(getRecordsResponse, harvestTime): Promise<string[]> {
         let promises = [];
         let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
         let records = xml.getElementsByTagNameNS(CswMapper.GMD, 'MD_Metadata');
@@ -283,6 +285,7 @@ export class CswImporter extends Importer {
             storedData = await this.elastic.getStoredData(ids);
         }
 
+        let docsToImport = [];
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
 
@@ -301,11 +304,16 @@ export class CswImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary, this.generalInfo);
 
-            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
+            let doc: any;
+            try {
+                doc = await this.profile.getIndexDocument().create(mapper);
+                docsToImport.push(doc);
+            }
+            catch (e) {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
-            });
+            }
 
             if (!mapper.shouldBeSkipped()) {
                 if (!this.settings.dryRun) {
@@ -320,6 +328,16 @@ export class CswImporter extends Importer {
         // MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 abort listeners added to [EventEmitter]. Use emitter.setMaxListeners() to increase limit
         // may be harmless; investigate if limit increase suffices or if a real leak is occurring
         await Promise.allSettled(promises).catch(err => log.error('Error indexing CSW record', err));
+        // TODO we should return the actually imported documents, not the ones which should be imported (of which some could fail)
+        return docsToImport;
+    }
+
+    /**
+     * Is called after a batch of records has been added to the bulk indexing queue.
+     * They may not necessarily have been indexed yet.
+     */
+    protected async updateRecords(documents: any[]) {
+        // For Profile specific Handling
     }
 
     getMapper(settings, record, harvestTime, storedData, summary, generalInfo): CswMapper {

@@ -318,6 +318,18 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         }));
     }
 
+    bulkUpdate(updateDocuments: any[]): Promise<BulkResponse> {
+        throw new Error('Method not implemented.');
+    }
+
+    addDocsToBulkUpdate(docs: any[], maxBulkSize?: number): Promise<BulkResponse> {
+        throw new Error('Method not implemented.');
+    }
+
+    sendBulkUpdate(closeAfterBulk?: boolean): Promise<BulkResponse> {
+        throw new Error('Method not implemented.');
+    }
+
     async getStoredData(ids) {
         if (ids.length < 1) return [];
 
