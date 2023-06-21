@@ -25,9 +25,8 @@ import { decode } from 'iconv-lite';
 import { defaultWfsSettings, WfsSettings } from './wfs.settings';
 import { getLogger } from 'log4js';
 import { Catalog } from '../../model/dcatApPlu.model';
-import { ConfigService } from '../../services/config/ConfigService';
 import { Contact } from '../../model/agent';
-import { GeoJsonUtils } from "../../utils/geojson.utils";
+import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
@@ -36,9 +35,9 @@ import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { RequestOptions } from '../../utils/http-request.utils';
 import { Response } from 'node-fetch';
-import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils';
 import { WfsMapper } from './wfs.mapper';
-import { XPathUtils } from '../../utils/xpath.utils';
+import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils';
+import { XPathNodeSelect, XPathUtils } from '../../utils/xpath.utils';
 
 const fs = require('fs');
 const xpath = require('xpath');
@@ -47,7 +46,7 @@ const log = getLogger(__filename),
     logRequest = getLogger('requests'),
     DomParser = require('@xmldom/xmldom').DOMParser;
 
-export class WfsImporter extends Importer {
+export abstract class WfsImporter extends Importer {
     private profile: ProfileFactory<WfsMapper>;
     private readonly settings: WfsSettings;
     private readonly requestDelegate: RequestDelegate;
@@ -57,7 +56,7 @@ export class WfsImporter extends Importer {
 
     private generalInfo: object = {};
     private supportsPaging: boolean = false;
-    private select: Function;
+    // private select: XPathNodeSelect;
     private nsMap: {};
     private crsList: string[][];
     private defaultCrs: string;
@@ -139,24 +138,24 @@ export class WfsImporter extends Importer {
 
         // extract the namespace map for the capabilities
         this.nsMap = MiscUtils.merge(XPathUtils.getNsMap(capabilitiesResponseDom), XPathUtils.getExtendedNsMap(capabilitiesResponseDom));
-        this.select = xpath.useNamespaces(this.nsMap);
+        let select: XPathNodeSelect = xpath.useNamespaces(this.nsMap);
 
         // get used CRSs through getCapabilities
-        let featureTypes = this.select('/*[local-name()="WFS_Capabilities"]/*[local-name()="FeatureTypeList"]/*[local-name()="FeatureType"]', capabilitiesResponseDom, false);
+        let featureTypes = select('/*[local-name()="WFS_Capabilities"]/*[local-name()="FeatureTypeList"]/*[local-name()="FeatureType"]', capabilitiesResponseDom);
         // import proj4 strings for all EPSGs
         const crs_data = fs.readFileSync('app/importer/proj4.json', { encoding: 'utf8', flag: 'r' });
         let proj4Json = JSON.parse(crs_data);
         // save only those that we need
         this.crsList = [];
         for (let featureType of featureTypes) {
-            let typename = this.select('./*[local-name()="Name"]', featureType, true).textContent;
+            let typename = select('./*[local-name()="Name"]', featureType, true).textContent;
             if (!this.settings.typename.split(',').includes(typename)) {
                 continue;
             }
-            let crsNodes = this.select('./*[local-name()="DefaultCRS" or local-name()="OtherCRS" or local-name()="DefaultSRS" or local-name()="OtherSRS"]', featureType, false);
+            let crsNodes = select('./*[local-name()="DefaultCRS" or local-name()="OtherCRS" or local-name()="DefaultSRS" or local-name()="OtherSRS"]', featureType);
             for (let node of crsNodes) {
                 this.crsList.push([node.textContent, proj4Json[node.textContent.replace('EPSG:', '')]]);
-                if (node.localName === 'DefaultCRS' || node.localName === 'DefaultSRS') {
+                if ((<Element>node).localName === 'DefaultCRS' || (<Element>node).localName === 'DefaultSRS') {
                     this.defaultCrs = node.textContent;
                 }
             }
@@ -167,22 +166,22 @@ export class WfsImporter extends Importer {
         const rs_data = fs.readFileSync('app/importer/regionalschluessel.json', { encoding: 'utf8', flag: 'r' });
         this.generalInfo['regionalschluessel'] = JSON.parse(rs_data);
 
-        let serviceProvider = this.select(this.settings.xpaths.capabilities.serviceProvider, capabilitiesResponseDom, true);
+        let serviceProvider = select('/*[local-name()="WFS_Capabilities"]/ows:ServiceProvider', capabilitiesResponseDom, true);
         // TODO for FIS, there is additional metadata info in a linked CSW
         // TODO do we grab this as well? if yes:
         // - select the CSW link
         // - retrieve the XML from the CSW link
         // - select the appropriate nodes (gmd:contact or gmd:pointOfContact)
         let contact: Contact = {
-            fn: this.select('./ows:ServiceContact/ows:IndividualName', serviceProvider, true)?.textContent,
-            hasCountryName: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', serviceProvider, true)?.textContent,
-            hasLocality: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', serviceProvider, true)?.textContent,
-            hasPostalCode: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', serviceProvider, true)?.textContent,
-            hasRegion: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', serviceProvider, true)?.textContent,
-            hasStreetAddress: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', serviceProvider, true)?.textContent,
-            hasEmail: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', serviceProvider, true)?.textContent,
+            fn: select('./ows:ServiceContact/ows:IndividualName', serviceProvider, true)?.textContent,
+            hasCountryName: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', serviceProvider, true)?.textContent,
+            hasLocality: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', serviceProvider, true)?.textContent,
+            hasPostalCode: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', serviceProvider, true)?.textContent,
+            hasRegion: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', serviceProvider, true)?.textContent,
+            hasStreetAddress: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', serviceProvider, true)?.textContent,
+            hasEmail: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', serviceProvider, true)?.textContent,
             hasOrganizationName: this.generalInfo['publisher']?.[0]?.name,
-            hasTelephone: this.select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', serviceProvider, true)?.textContent,
+            hasTelephone: select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', serviceProvider, true)?.textContent,
             // hasURL: this.select('./ows:ServiceContact/ows:ContactInfo/ows:OnlineResource/@xlink:href', serviceProvider, true)?.textContent
         };
         Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
@@ -251,24 +250,24 @@ export class WfsImporter extends Importer {
         // this.nsMap = { ...XPathUtils.getNsMap(xml), ...XPathUtils.getExtendedNsMap(xml) };
         // TODO: the above does not work, because it doesn't contain the NS for the FeatureType;
         let nsMap = MiscUtils.merge(this.nsMap, XPathUtils.getNsMap(xml));
-        let select = xpath.useNamespaces(nsMap);
+        let select: XPathNodeSelect = xpath.useNamespaces(nsMap);
 
         // store xpath handling stuff in general info
         this.generalInfo['nsMap'] = nsMap;
         this.generalInfo['select'] = select;
 
-        let geojsonUtils = new GeoJsonUtils(nsMap, this.crsList, this.defaultCrs);
         // bounding box if given
-        let envelope = select('./gml:Envelope/gml:boundedBy', xml, true);
-        if (envelope != null) {
-            let lowerCorner = select('./gml:lowerCorner/text()', envelope, true);
-            let upperCorner = select('./gml:upperCorner/text()', envelope, true);
-            let crs = envelope.getAttribute('srsName');            
+        let geojsonUtils = new GeoJsonUtils(nsMap, this.crsList, this.defaultCrs);
+        let envelope = select('/wfs:FeatureCollection/gml:boundedBy/gml:Envelope', xml, true);
+        if (envelope) {
+            let lowerCorner = select('./gml:lowerCorner', envelope, true)?.textContent;
+            let upperCorner = select('./gml:upperCorner', envelope, true)?.textContent;
+            let crs = (<Element>envelope).getAttribute('srsName');            
             this.generalInfo['boundingBox'] = geojsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
         }
 
         // some documents may use wfs:member, some gml:featureMember, some maybe something else: use settings
-        let features = select(this.settings.xpaths.featureParent, xml, false);
+        let features = select(`/wfs:FeatureCollection/${this.settings.memberElement}`, xml);
         let ids = [];
         for (let i = 0; i < features.length; i++) {
             ids.push(XPathUtils.firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id'));
@@ -321,9 +320,7 @@ export class WfsImporter extends Importer {
             .catch(err => log.error('Error indexing WFS record', err));
     }
 
-    getMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils): WfsMapper {
-        return new WfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils);
-    }
+    abstract getMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils): WfsMapper;
 
     static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
         let requestConfig: RequestOptions = {
@@ -391,5 +388,4 @@ export class WfsImporter extends Importer {
             count: settings.maxRecords
         }
     }
-
 }

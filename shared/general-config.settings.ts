@@ -70,7 +70,7 @@ export interface DatabaseConfiguration {
 export interface OgcRecordsApiConfiguration {
     url: string,
     user?: string,
-    password?: string, 
+    password?: string,
 }
 
 export interface MailServerConfiguration {

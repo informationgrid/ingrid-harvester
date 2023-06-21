@@ -134,6 +134,9 @@ export class CswImporter extends Importer {
                         }
                     }
                     await this.elastic.sendBulkData(false);
+                    // TODO postHarvestingHandling has to be here, after indexing all data but before deduplicating
+                    // TODO this needs a rewrite of the data-service-coupling
+                    // this.postHarvestingHandling();
                     await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
@@ -186,6 +189,8 @@ export class CswImporter extends Importer {
             // harvestConcurrently() also supports this.settings.maxConcurrent=1
             await this.harvestSequentially();
         }
+        // TODO this is at the wrong position and works on the wrong data
+        // TODO needs to work on indexed data, not on (mostly) at this point not-anymore-existing _bulkData
         this.postHarvestingHandling();
     }
 
@@ -194,7 +199,7 @@ export class CswImporter extends Importer {
     }
 
     async handleHarvest(delegate: RequestDelegate): Promise<void> {
-        log.debug('Requesting next records');
+        log.debug('Requesting next records, starting at', delegate.getStartRecordIndex());
         let response = await delegate.doRequest();
         let harvestTime = new Date(Date.now());
 
@@ -219,15 +224,16 @@ export class CswImporter extends Importer {
         let hitsResponseDom = new DomParser().parseFromString(hitsResponse);
         let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(CswMapper.CSW, 'SearchResults')[0];
         this.totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
-        if (log.isInfoEnabled()) {
-            log.info(`Finished getting number of records: ${this.totalRecords}`);
-        }
+        log.info(`Number of records to fetch: ${this.totalRecords}`);
 
         // 1) create paged request delegates
         let delegates = [];
         for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
             let requestConfig = CswImporter.createRequestConfig({ ...this.settings, startPosition });
-            delegates.push(new RequestDelegate(requestConfig));
+            delegates.push(new RequestDelegate(requestConfig, CswImporter.createPaging({
+                startPosition: startPosition,
+                maxRecords: this.settings.maxRecords
+            })));
         }
         // 2) run in parallel
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
@@ -250,7 +256,8 @@ export class CswImporter extends Importer {
                     log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
                 }
                 await this.extractRecords(response, harvestTime)
-            } else {
+            }
+            else {
                 const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
                 log.error(message);
                 this.summary.appErrors.push(message);
@@ -266,7 +273,9 @@ export class CswImporter extends Importer {
               * updated. The easiest solution would be to set numMatched to
               * maxRecords * numRetries
               */
-            if (this.totalRecords < this.requestDelegate.getStartRecordIndex()) break;
+            if (this.totalRecords < this.requestDelegate.getStartRecordIndex()) {
+                break;
+            }
         }
     }
 
@@ -324,7 +333,6 @@ export class CswImporter extends Importer {
                     promises.push(this.database.addEntityToBulk(entity));
                     promises.push(this.elastic.addDocToBulk(doc, uuid));
                 }
-
             } else {
                 this.summary.skippedDocs.push(uuid);
             }
@@ -333,8 +341,7 @@ export class CswImporter extends Importer {
         // TODO the following line raises
         // MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 abort listeners added to [EventEmitter]. Use emitter.setMaxListeners() to increase limit
         // may be harmless; investigate if limit increase suffices or if a real leak is occurring
-        await Promise.allSettled(promises)
-            .catch(err => log.error('Error indexing CSW record', err));
+        await Promise.allSettled(promises).catch(err => log.error('Error indexing CSW record', err));
     }
 
     getMapper(settings, record, harvestTime, storedData, summary, generalInfo): CswMapper {
@@ -401,7 +408,7 @@ export class CswImporter extends Importer {
         return requestConfig;
     }
 
-    static createPaging(settings: CswSettings) {
+    static createPaging(settings: Partial<CswSettings>) {
         return {
             startFieldName: 'startPosition',
             startPosition: settings.startPosition,

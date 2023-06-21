@@ -47,6 +47,8 @@ export abstract class BaseMapper {
 
     public valid = true;
 
+    private invalidationReasons = [];
+
     public skipped = false;
 
     private _log = getLogger();
@@ -373,6 +375,16 @@ export abstract class BaseMapper {
 
     isValid(doc?: any) {
         return this.valid;
+    }
+
+    getInvalidationReasons(): string[] {
+        return this.invalidationReasons;
+    }
+
+    addInvalidationReason(reason: string): void {
+        if (!this.invalidationReasons.includes(reason)) {
+            this.invalidationReasons.push(reason);
+        }
     }
 
     shouldBeSkipped() {

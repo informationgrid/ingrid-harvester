@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { pluPlanState, pluPlanType, pluProcedureState } from '../../../model/dcatApPlu.model';
+import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model';
 import { uniqBy } from 'lodash';
 import { Contact } from '../../../model/agent';
 import { CswMapper } from '../../../importer/csw/csw.mapper';
@@ -34,7 +34,7 @@ const DomParser = require('@xmldom/xmldom').DOMParser;
 export class DiplanungCswMapper extends CswMapper {
 
     _getAlternateTitle(): string {
-        let alternateTitle = CswMapper.getCharacterStringContent(this.idInfo, 'alternateTitle');
+        let alternateTitle = CswMapper.select('./*/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', this.idInfo, true)?.textContent;
         if (!alternateTitle) {
             alternateTitle = this.getTitle();
         }
@@ -60,36 +60,38 @@ export class DiplanungCswMapper extends CswMapper {
         return contactPoint; // TODO index all contacts
     }
 
-    _getBoundingBoxGml() {
-        return undefined;
+    _getBoundingBox() {
+        return this.getGeometry(true);
     }
 
-    _getBoundingBox() {
-        let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
-        let geometries = [];
-        for(let i=0; i < geographicBoundingBoxes.length; i++){
-            let geographicBoundingBox = geographicBoundingBoxes[i];
-            let west = parseFloat(CswMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let east = parseFloat(CswMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let south = parseFloat(CswMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+    _getSpatial(): object {
+        return this.getGeometry(false);
+    }
 
-            geometries.push({
+    protected getGeoJson(west: number, east: number, north: number, south: number, forcePolygon: boolean): any {
+        if (!forcePolygon && (west === east && north === south)) {
+            return {
+                'type': 'Point',
+                'coordinates': [west, north]
+            };
+        }
+        else if (!forcePolygon && (west === east || north === south)) {
+            return {
+                'type': 'LineString',
+                'coordinates': [[west, north], [east, south]]
+            };
+        }
+        else {
+            return {
                 'type': 'Polygon',
                 'coordinates': [[[west, north], [west, south], [east, south], [east, north], [west, north]]]
-            });
+            };
         }
-        if(geometries.length == 1){
-            return geometries[0];
-        }
-        else if(geometries.length > 1){
-            return {
-                'type': 'GeometryCollection',
-                'geometries': geometries
-            }
-        }
+    }
 
-        return undefined;
+    _getSpatialText(): string {
+        let spatialText = super._getSpatialText();
+        return spatialText?.match(/(\d{12}).+/)?.[1] ?? spatialText;
     }
 
     async _getMaintainers() {
@@ -190,31 +192,19 @@ export class DiplanungCswMapper extends CswMapper {
         return undefined;
     }
 
-    // TODO check
-    _getPluPlanState(): string {
-        let planState;
-        try {
-            planState = CswMapper.select(this.settings.pluPlanState, this.record, true)?.textContent;
+    _getPluPlanState(): PluPlanState {
+        let planState = this.settings.pluPlanState;
+        switch (planState?.toLowerCase()) {
+            case 'festgesetzt': return PluPlanState.FESTGES;
+            case 'in aufstellung': return PluPlanState.IN_AUFST;
+            default: return PluPlanState.UNBEKANNT;
         }
-        finally {
-            if (!planState) {
-                planState = this.settings.pluPlanState;
-            }
-        }
-        if (['ja', 'festgesetzt'].includes(planState?.toLowerCase())) {
-            return pluPlanState.FESTGES;
-        }
-        else if (['nein', 'in aufstellung'].includes(planState?.toLowerCase())) {
-            return pluPlanState.IN_AUFST;
-        }
-        return pluPlanState.UNBEKANNT;
     }
 
     /**
      * Heuristic based on metadata harvested from gdi-de.
-     * 
-     * // TODO extend
      */
+    // TODO extend
     _getPluPlanType(): string {
         // consider title, description, and keywords
         let searchFields = [];
@@ -225,37 +215,37 @@ export class DiplanungCswMapper extends CswMapper {
 
         // TODO especially in keywords - if set - there can be ambiguities, e.g. keywords contain multiple determination words
         if (['bebauungsplan'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.BEBAU_PLAN;
+            return PluPlanType.BEBAU_PLAN;
         }
         if (['flächennutzungsplan', 'fnp'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.FLAECHENN_PLAN;
+            return PluPlanType.FLAECHENN_PLAN;
         }
         if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.PLAN_FESTST_VERF;
+            return PluPlanType.PLAN_FESTST_VERF;
         }
         if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.PW_BES_STAEDT_BAUR;
+            return PluPlanType.PW_BES_STAEDT_BAUR;
         }
         if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.PW_LANDSCH_PLAN;
+            return PluPlanType.PW_LANDSCH_PLAN;
         }
         if ([].some(needle => haystack.includes(needle))) {
-            return pluPlanType.RAUM_ORDN_PLAN;
+            return PluPlanType.RAUM_ORDN_PLAN;
         }
         if (['raumordnungsverfahren'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.RAUM_ORDN_VERF;
+            return PluPlanType.RAUM_ORDN_VERF;
         }
         if (['städtebauliche satzungen'].some(needle => haystack.includes(needle))) {
-            return pluPlanType.STAEDT_BAUL_SATZ;
+            return PluPlanType.STAEDT_BAUL_SATZ;
         }
-        return pluPlanType.UNBEKANNT;
+        return PluPlanType.UNBEKANNT;
     }
 
     _getPluProcedureState(): string {
         switch (this._getPluPlanState()) {
-            case pluPlanState.FESTGES: return pluProcedureState.ABGESCHLOSSEN;
-            case pluPlanState.IN_AUFST: return pluProcedureState.LAUFEND;
-            default: return pluProcedureState.UNBEKANNT;
+            case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
+            case PluPlanState.IN_AUFST: return PluProcedureState.LAUFEND;
+            default: return PluProcedureState.UNBEKANNT;
         }
     }
 
@@ -268,7 +258,7 @@ export class DiplanungCswMapper extends CswMapper {
     }
 
     _getPluProcedureType() {
-        return undefined;
+        return PluProcedureType.UNBEKANNT;
     }
 
     _getPluProcessSteps() {

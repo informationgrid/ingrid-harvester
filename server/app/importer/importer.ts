@@ -28,10 +28,12 @@ import {ImporterSettings} from '../importer.settings';
 import {FilterUtils} from "../utils/filter.utils";
 import {ElasticSearchUtils} from "../persistence/elastic.utils";
 import {ElasticSettings} from "../persistence/elastic.setting";
+import {MiscUtils} from "../utils/misc.utils";
 import {ConfigService} from "../services/config/ConfigService";
 import {ElasticSearchFactory} from "../persistence/elastic.factory";
 import { DatabaseFactory } from "../persistence/database.factory";
 import { DatabaseUtils } from "../persistence/database.utils";
+import {ProfileFactory} from "../profiles/profile.factory";
 
 export abstract class Importer {
     protected observer: Observer<ImportLogMessage>;

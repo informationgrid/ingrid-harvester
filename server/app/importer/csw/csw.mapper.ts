@@ -114,15 +114,7 @@ export class CswMapper extends BaseMapper {
     }
 
     _getDescription() {
-        let abstract = CswMapper.getCharacterStringContent(this.idInfo, 'abstract');
-        // if (!abstract) {
-        //     let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.getRecordsUrl}\'`;
-        //     this.log.warn(msg);
-        //     this.summary.warnings.push(['No description', msg]);
-        //     this.valid = false;
-        // }
-
-        return abstract;
+        return CswMapper.select('./*/gmd:abstract/gco:CharacterString', this.idInfo, true)?.textContent;
     }
 
     async _getDistributions(): Promise<Distribution[]> {
@@ -159,7 +151,7 @@ export class CswMapper extends BaseMapper {
                 let onlineResource = onlineResources[j];
 
                 let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource);
-                let title = CswMapper.select('gmd:name/gco:CharacterString', onlineResource);
+                let title = CswMapper.select('gmd:name/gco:CharacterString', onlineResource, true)?.textContent;
                 let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource);
 
                 let url = null;
@@ -174,7 +166,7 @@ export class CswMapper extends BaseMapper {
 
                     let dist: Distribution = {
                         accessURL: url,
-                        title: title.length > 0 ? title[0].textContent : undefined,
+                        title: title,
                         format: UrlUtils.mapFormat(formatArray, this.summary.warnings)
                     };
 
@@ -197,19 +189,14 @@ export class CswMapper extends BaseMapper {
 
     async handleDistributionforService(srvIdent, urlsFound): Promise<Distribution[]> {
 
-        let getCapabilitiesElement = CswMapper.select(
+        let getCapablitiesUrl = CswMapper.select(
             // convert containing text to lower case
             './srv:containsOperations/srv:SV_OperationMetadata[./srv:operationName/gco:CharacterString/text()[contains(translate(\'GetCapabilities\', \'ABCEGILPST\', \'abcegilpst\'), "getcapabilities")]]/srv:connectPoint/*/gmd:linkage/gmd:URL',
             srvIdent,
-            true);
-        let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
-        let serviceFormat = CswMapper.select('./srv:serviceType/gco:LocalName', srvIdent, true);
+            true)?.textContent;
+        let serviceFormat = CswMapper.select('./srv:serviceType/gco:LocalName', srvIdent, true)?.textContent;
         let serviceTypeVersion = CswMapper.select('./srv:serviceTypeVersion/gco:CharacterString', srvIdent);
         let serviceLinks: Distribution[] = [];
-
-        if(serviceFormat){
-            serviceFormat = serviceFormat.textContent;
-        }
 
         if (getCapablitiesUrl) {
             let lowercase = getCapablitiesUrl.toLowerCase();
@@ -229,31 +216,26 @@ export class CswMapper extends BaseMapper {
             }
         }
 
-
         let operations = CswMapper
             .select('./srv:containsOperations/srv:SV_OperationMetadata', srvIdent);
 
+        let title = this.getTitle();
         for (let i = 0; i < operations.length; i++) {
             let onlineResource = CswMapper.select('./srv:connectPoint/gmd:CI_OnlineResource', operations[i], true);
 
-            if(onlineResource) {
+            if (onlineResource) {
                 let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource, true);
-                let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true);
-
-                let title = this.getTitle();
-
-                let operationNameNode = CswMapper.select('srv:operationName/gco:CharacterString', operations[i], true);
-                if(operationNameNode){
-                    title = title + " - " + operationNameNode.textContent;
-                }
+                let protocol = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true)?.textContent;
+                let operationName = CswMapper.select('srv:operationName/gco:CharacterString', operations[i], true)?.textContent;
+                let currentTitle = operationName ? title + " - " + operationName : title;
 
                 let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
                 let url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 if (url && !urlsFound.includes(url)) {
                     serviceLinks.push({
                         accessURL: url,
-                        format: [protocolNode ? protocolNode.textContent : serviceFormat],
-                        title: (title && title.length > 0) ? title : undefined
+                        format: [protocol ?? serviceFormat],
+                        title: currentTitle
                     });
                     urlsFound.push(url);
                 }
@@ -359,7 +341,7 @@ export class CswMapper extends BaseMapper {
     }
 
     _getTitle() {
-        let title = CswMapper.getCharacterStringContent(this.idInfo, 'title');
+        let title = CswMapper.select('./*/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString', this.idInfo, true)?.textContent;
         return title && title.trim() !== '' ? title : undefined;
     }
 
@@ -531,42 +513,55 @@ export class CswMapper extends BaseMapper {
         return new Date(CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent);
     }
 
-    _getSpatialGml(): string {
-        let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
-        return geographicBoundingBoxes.toString();
+    _getSpatial(): object {
+        return this.getGeometry(false);
     }
 
-    _getSpatial(): object {
+    protected getGeometry(forcePolygon: boolean) {
         let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];
-        for(let i=0; i < geographicBoundingBoxes.length; i++){
+        for (let i=0; i < geographicBoundingBoxes.length; i++){
             let geographicBoundingBox = geographicBoundingBoxes[i];
-            let west = parseFloat(CswMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let east = parseFloat(CswMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let south = parseFloat(CswMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let west = parseFloat(CswMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trim());
+            let east = parseFloat(CswMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trim());
+            let south = parseFloat(CswMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trim());
+            let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trim());
 
-            if (west === east && north === south) {
-                geometries.push({
-                    'type': 'Point',
-                    'coordinates': [west, north]
-                });
-            } else if (west === east || north === south) {
-                geometries.push({
-                    'type': 'LineString',
-                    'coordinates': [[west, north], [east, south]]
-                });
-            } else {
-                geometries.push({
-                    'type': 'Envelope',
-                    'coordinates': [[west, north], [east, south]]
-                });
+            // check if within bounds
+            let geometryValid = true;
+            if (Math.abs(west) > 180) {
+                geometryValid = false;
+                this.addInvalidationReason(`westBoundLongitude is out of bounds (${west})`);
+            }
+            if (Math.abs(east) > 180) {
+                geometryValid = false;
+                this.addInvalidationReason(`eastBoundLongitude is out of bounds (${east})`);
+            }
+            if (Math.abs(south) > 90) {
+                geometryValid = false;
+                this.addInvalidationReason(`southBoundLatitude is out of bounds (${south})`);
+            }
+            if (Math.abs(north) > 90) {
+                geometryValid = false;
+                this.addInvalidationReason(`northBoundLatitude is out of bounds (${north})`);
+            }
+            if (south > north) {
+                geometryValid = false;
+                this.addInvalidationReason(`southBoundLatitude > northBoundLatitude (${south} > ${north})`);
+            }
+
+            if (!geometryValid) {
+                this.valid = false;
+            }
+            else {
+                geometries.push(this.getGeoJson(west, east, north, south, forcePolygon));
             }
         }
-        if(geometries.length == 1){
+
+        if (geometries.length == 1) {
             return geometries[0];
         }
-        else if(geometries.length > 1){
+        else if (geometries.length > 1) {
             return {
                 'type': 'GeometryCollection',
                 'geometries': geometries
@@ -574,6 +569,27 @@ export class CswMapper extends BaseMapper {
         }
 
         return undefined;
+    }
+
+    protected getGeoJson(west: number, east: number, north: number, south: number, forcePolygon: boolean): any {
+        if (west === east && north === south) {
+            return {
+                'type': 'Point',
+                'coordinates': [west, north]
+            };
+        }
+        else if (west === east || north === south) {
+            return {
+                'type': 'LineString',
+                'coordinates': [[west, north], [east, south]]
+            };
+        }
+        else {
+            return {
+                'type': 'Envelope',
+                'coordinates': [[west, north], [east, south]]
+            };
+        }
     }
 
     _getSpatialText(): string {

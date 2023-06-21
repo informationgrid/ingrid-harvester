@@ -21,16 +21,20 @@
  * ==================================================
  */
 
-import { DiplanungMapper } from './diplanung.mapper';
+import { Harvester } from '@shared/harvester';
+import { MiscUtils } from '../../../utils/misc.utils';
+import { RequestDelegate } from '../../../utils/http-request.utils';
+import { WfsImporter } from '../wfs.importer';
+import { WfsMapper } from '../wfs.mapper';
+import { XplanWfsMapper } from './xplan.wfs.mapper';
 
-export class DiplanungMapperFactory {
-    static getMapper(mapper): DiplanungMapper<any> {
-        switch (mapper.constructor.name) {
-            case 'DiplanungCswMapper': return new DiplanungMapper(mapper);
-            case 'DiplanungVirtualMapper': return new DiplanungMapper(mapper);
-            case 'ExcelSparseMapper': return new DiplanungMapper(mapper);
-            case 'FisWfsMapper': return new DiplanungMapper(mapper);
-            case 'XplanWfsMapper': return new DiplanungMapper(mapper);
-        }
+export class XplanWfsImporter extends WfsImporter {
+
+    constructor(settings: Harvester, requestDelegate?: RequestDelegate) {
+        super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
+    }
+
+    getMapper(settings: Harvester, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils): WfsMapper {
+        return new XplanWfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils);
     }
 }
