@@ -1,12 +1,4 @@
 {
-  "database": {
-    "type": "postgresql",
-    "host": "localhost",
-    "port": 5433,
-    "database": "ogcrecords",
-    "user": "ogcrecords",
-    "password": "ogcrecords"
-  },
   "elasticsearch": {
     "url": "http://localhost:9200",
     "version": "6",
