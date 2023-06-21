@@ -202,8 +202,8 @@ export class RequestDelegate {
     }
 
     /**
-     * Performs the HTTP request and returns the result of this operation. 
-     * 
+     * Performs the HTTP request and returns the result of this operation.
+     *
      * @param retry how often the request should be retried if it fails
      * @param waitMilliSeconds wait time between retries in milliseconds
      */
@@ -223,7 +223,11 @@ export class RequestDelegate {
                 rejectUnauthorized: false
             });
         }
-        let fullURL = this.config.uri + '?' + new URLSearchParams(this.config.qs);
+        let fullURL = this.config.uri;
+        if (this.config.qs) {
+            fullURL += (this.config.uri.indexOf('?') > -1) ? '&' : '?';
+            fullURL += new URLSearchParams(this.config.qs);
+        }
         let response = fetch(fullURL, this.config);
 
         while (retry > 0) {
