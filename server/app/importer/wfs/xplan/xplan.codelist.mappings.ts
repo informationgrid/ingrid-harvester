@@ -35,7 +35,7 @@ export const PlanTypeMapping: { [key: string]: { [key: string]: [PluPlanType, st
     FP_Plan: {
         1000: [PluPlanType.FLAECHENN_PLAN, '5_2_FPlan'],
         2000: [PluPlanType.FLAECHENN_PLAN, '4_2_GemeinsamerFPlan'],
-        3000: [PluPlanType.FLAECHENN_PLAN, '4_1_RegFPlan'],   // this clashes in the mapping table: with "Landschaftsplan = 3000" -> "5_4_Landschaftsplan"
+        3000: [PluPlanType.FLAECHENN_PLAN, '4_1_RegFPlan'],
         4000: [PluPlanType.FLAECHENN_PLAN, '5_1_FPlanRegPlan'],
         5000: [PluPlanType.FLAECHENN_PLAN, '5_3_SachlicherTeilplan'],
         9999: [PluPlanType.PW_BES_STAEDT_BAUR, '9_2_SonstigesPlanwerkStaedtebaurecht'],
@@ -44,6 +44,7 @@ export const PlanTypeMapping: { [key: string]: { [key: string]: [PluPlanType, st
     LP_PLAN: {
         1000: [PluPlanType.RAUM_ORDN_PLAN, '2_4_Landschaftsprogramm'],
         2000: [PluPlanType.PW_LANDSCH_PLAN, '3_4_Landschaftsrahmenplan'],
+        3000: [PluPlanType.PW_LANDSCH_PLAN, '5_4_Landschaftsplan'],
         4000: [PluPlanType.PW_LANDSCH_PLAN, '6_4_Gruenordnungsplan'],
         9999: [PluPlanType.PW_LANDSCH_PLAN, '9_3_SonstigesPlanwerkNaturschutzrecht'],
         // default: [PluPlanType.UNBEKANNT, undefined]
