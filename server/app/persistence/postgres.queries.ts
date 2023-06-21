@@ -45,4 +45,6 @@ export class PostgresQueries {
         created_on TIMESTAMP(6) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
         last_modified TIMESTAMP(6) with time zone NULL,
         PRIMARY KEY(identifier, source))`;
+
+    static readDatasets = `SELECT dataset FROM public.${PostgresQueries.tableName}`;
 }

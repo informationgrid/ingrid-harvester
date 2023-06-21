@@ -28,10 +28,6 @@
     <mat-card class="margin-below" [formGroup]="configForm.get('database')">
       <mat-card-header>
         <mat-card-title>Datenbank</mat-card-title>
-        <mat-slide-toggle color="primary"
-                          [checked]="configForm.get('database.active').value"
-                          formControlName="active"
-                          title="Datenbank-Persistierung aktivieren/deaktivieren"></mat-slide-toggle>
       </mat-card-header>
       <mat-card-content>
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">

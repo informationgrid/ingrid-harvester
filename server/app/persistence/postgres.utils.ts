@@ -25,12 +25,15 @@ import { BulkResponse, DatabaseUtils } from './database.utils';
 import { Client, Pool, PoolClient, QueryResult } from 'pg';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DeduplicateUtils } from './deduplicate.utils';
+import { ElasticSearchUtils } from './elastic.utils';
 import { Entity } from '../model/entity';
 import { PostgresQueries } from './postgres.queries';
 import { Summary } from '../model/summary';
 
 const log = require('log4js').getLogger(__filename);
-
+const QueryStream = require('pg-query-stream');
+const TransformToBulk = require('elasticsearch-streams').TransformToBulk;
+const WritableBulk = require('elasticsearch-streams').WritableBulk;
 
 export class PostgresUtils extends DatabaseUtils {
 
@@ -70,6 +73,28 @@ export class PostgresUtils extends DatabaseUtils {
 
     async createTables() {
         await PostgresUtils.pool.query(PostgresQueries.createTable);
+    }
+
+    async pushToElastic(elastic: ElasticSearchUtils, source: string) {
+
+        const bulkExec = (bulkCmds, callback) => {
+            // console.log('Before ' + JSON.stringify(bulkCmds));
+            bulkCmds = bulkCmds.map(body => body[PostgresQueries.tableName] ?? body);
+            // console.log('After ' + JSON.stringify(bulkCmds));
+            elastic.bulk(bulkCmds, false);
+        };
+
+        const toBulk = new TransformToBulk(function getIndexTypeId(doc) { return { '_id': doc.dataset.identifier }; });
+
+        const client: PoolClient = await PostgresUtils.pool.connect();
+        log.debug('Connection started');
+        const queryStream = new QueryStream(PostgresQueries.readDatasets + (source ? ` WHERE source = '${source}'` : ''));
+        const stream = client.query(queryStream);
+        stream.pipe(toBulk).pipe(new WritableBulk(bulkExec));
+        stream.on('end', () => {
+            log.debug('Connection released');
+            client.release();
+        });
     }
 
     write(entity: Entity) {

@@ -26,6 +26,7 @@ import { BulkResponse, DatabaseUtils } from './database.utils';
 import { Client } from 'pg';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DeduplicateUtils } from './deduplicate.utils';
+import { ElasticSearchUtils } from './elastic.utils';
 import { Entity } from '../model/entity';
 import { IClient } from 'pg-promise/typescript/pg-subset';
 import { IDatabase, IMain, QueryColumns } from 'pg-promise';
@@ -60,6 +61,10 @@ export class PostgresUtils extends DatabaseUtils {
 
     createTables() {
         PostgresUtils.db.none(PostgresQueries.createTable);
+    }
+
+    async pushToElastic(elastic: ElasticSearchUtils, source: string) {
+        throw new Error('Method not implemented.');
     }
 
     write(entity: Entity) {

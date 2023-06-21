@@ -58,7 +58,6 @@ export interface ElasticsearchConfiguration {
 }
 
 export interface DatabaseConfiguration {
-    active: boolean,
     type: 'postgresql',
     host: string,
     port: number,
@@ -70,7 +69,7 @@ export interface DatabaseConfiguration {
 export interface OgcRecordsApiConfiguration {
     url: string,
     user?: string,
-    password?: string,
+    password?: string
 }
 
 export interface MailServerConfiguration {

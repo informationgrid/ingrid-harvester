@@ -110,33 +110,22 @@ export class CswImporter extends Importer {
             observer.complete();
         } else {
             try {
-                // when running an incremental harvest,
-                // clone the old index instead of preparing a new one
-                if (this.summary.isIncremental) {
-                    await this.elastic.cloneIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
-                }
-                else {
-                    await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
-                }
-                if (ConfigService.getGeneralSettings().database.active) {
-                    await this.database.beginTransaction();
-                }
+                // TODO to decide: 1 index/harvester (keep next line), 1 unified index for all harvesters (don't prepare here)
+                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
+                await this.database.beginTransaction();
                 await this.harvest();
                 // send leftovers
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
-                    if (ConfigService.getGeneralSettings().database.active) {
-                        await this.database.sendBulkData();
-                        if (this.summary.databaseErrors.length == 0) {
-                            await this.database.commitTransaction();
-                        }
-                        else {
-                            await this.database.rollbackTransaction();
-                        }
+                    await this.database.sendBulkData();
+                    if (this.summary.databaseErrors.length == 0) {
+                        await this.database.commitTransaction();
+                        await this.database.pushToElastic(this.elastic, this.settings.getRecordsUrl);
                     }
-                    await this.elastic.sendBulkData(false);
-                    // TODO postHarvestingHandling has to be here, after indexing all data but before deduplicating
-                    // TODO this needs a rewrite of the data-service-coupling
-                    // this.postHarvestingHandling();
+                    else {
+                        await this.database.rollbackTransaction();
+                    }
+                    // TODO 1) move deduplication from ES to here (affect DB)
+                    // TODO 2) move data-service-coupling to here (affect DB)
                     await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
@@ -331,7 +320,6 @@ export class CswImporter extends Importer {
             if (!mapper.shouldBeSkipped()) {
                 if (!this.settings.dryRun) {
                     promises.push(this.database.addEntityToBulk(entity));
-                    promises.push(this.elastic.addDocToBulk(doc, uuid));
                 }
             } else {
                 this.summary.skippedDocs.push(uuid);

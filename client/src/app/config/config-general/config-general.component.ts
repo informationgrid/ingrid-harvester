@@ -155,7 +155,6 @@ export class ConfigGeneralComponent implements OnInit {
 
     this.configForm = this.formBuilder.group({
       database: this.formBuilder.group({
-        active: [settings.database.active],
         type: [settings.database.type],
         host: [settings.database.host, Validators.required],
         port: [settings.database.port],
