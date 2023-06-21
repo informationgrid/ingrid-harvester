@@ -81,6 +81,37 @@ export const elasticsearchMapping = {
             'properties': {
                 'identifier': {
                     'type': 'keyword'
+                },
+                'description': {
+                    'type': 'text',
+                    'analyzer': 'decomp'
+                },
+                'homepage': {
+                    'type': 'keyword'
+                },
+                'publisher': {
+                    'properties': {
+                        'name': {
+                            'type': 'text',
+                            'fields': {
+                                'raw': {
+                                    'type': 'keyword'
+                                }
+                            }
+                        },
+                        'organization': {
+                            'type': 'text',
+                            'fields': {
+                                'raw': {
+                                    'type': 'keyword'
+                                }
+                            }
+                        }
+                    }
+                },
+                'title': {
+                    'type': 'text',
+                    'analyzer': 'decomp'
                 }
             }
         },
@@ -199,6 +230,29 @@ export const elasticsearchMapping = {
             }
         },
         'publisher': {
+            'properties': {
+                'name': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
+                        }
+                    }
+                },
+                'homepage': {
+                    'type': 'keyword'
+                },
+                'organization': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
+                        }
+                    }
+                }
+            }
+        },
+        'maintainers': {
             'properties': {
                 'name': {
                     'type': 'text',
