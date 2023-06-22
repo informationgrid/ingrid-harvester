@@ -52,7 +52,7 @@ export class ElasticQueries implements IElasticQueries {
      * 
      */
     findSameAlternateTitle(): any {
-        let maxAggregates = 10000;
+        let maxAggregates = 100000;
         return {
             size: 0,
             query: {
