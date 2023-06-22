@@ -76,30 +76,30 @@ export class ConfigGeneralComponent implements OnInit {
     return of(isValid ? null : {'elasticUrl': true});
   }
 
-  esStatus = { 
+  connectionStatus = {
     success: ['check', 'Test erfolgreich'],
     fail: ['report_problem', 'Test fehlgeschlagen'],
     working: ['sync', '... wird getestet']
   };
 
-  esStatusIcon(value: string) {
-    return this.esStatus[value][0];
+  statusIcon(value: string) {
+    return this.connectionStatus[value][0];
   }
 
-  esStatusMsg(value: string) {
-    return this.esStatus[value][1];
+  statusMsg(value: string) {
+    return this.connectionStatus[value][1];
   }
 
   checkEsConnection() {
-    this.connectionCheck = 'working';
+    this.esConnectionCheck = 'working';
     let checkResult = this.configService.checkEsConnection({
-      elasticSearchUrl: this.configForm.get('elasticSearchUrl').value,
-      elasticSearchVersion: this.configForm.get('elasticSearchVersion').value,
-      elasticSearchUser: this.configForm.get('elasticSearchUser').value,
-      elasticSearchPassword: this.configForm.get('elasticSearchPassword').value
+      elasticSearchUrl: this.configForm.get('elasticsearch.url').value,
+      elasticSearchVersion: this.configForm.get('elasticsearch.version').value,
+      elasticSearchUser: this.configForm.get('elasticsearch.user').value,
+      elasticSearchPassword: this.configForm.get('elasticsearch.password').value
     });
     checkResult.pipe(delay(1000)).subscribe(response => {
-      this.connectionCheck = response ? 'success' : 'fail';
+      this.esConnectionCheck = response ? 'success' : 'fail';
     });
   }
 
@@ -139,16 +139,20 @@ export class ConfigGeneralComponent implements OnInit {
     }
 
     this.configForm = this.formBuilder.group({
-      elasticSearchUrl: [settings.elasticSearchUrl, Validators.required, ConfigGeneralComponent.elasticUrlValidator],
-      elasticSearchVersion: [settings.elasticSearchVersion],
-      elasticSearchUser: [settings.elasticSearchUser],
-      elasticSearchPassword: [settings.elasticSearchPassword],
-      alias: [settings.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
-      numberOfShards: [settings.numberOfShards],
-      numberOfReplicas: [settings.numberOfReplicas],
-      ogcRecordsApiUrl: [settings.ogcRecordsApiUrl],
-      ogcRecordsApiUser: [settings.ogcRecordsApiUser],
-      ogcRecordsApiPassword: [settings.ogcRecordsApiPassword],
+      elasticsearch: this.formBuilder.group({
+        url: [settings.elasticsearch.url, Validators.required, ConfigGeneralComponent.elasticUrlValidator],
+        version: [settings.elasticsearch.version],
+        user: [settings.elasticsearch.user],
+        password: [settings.elasticsearch.password],
+        alias: [settings.elasticsearch.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
+        numberOfShards: [settings.elasticsearch.numberOfShards],
+        numberOfReplicas: [settings.elasticsearch.numberOfReplicas]
+      }),
+      ogcRecordsApi: this.formBuilder.group({
+        url: [settings.ogcRecordsApi?.url],
+        user: [settings.ogcRecordsApi?.user],
+        password: [settings.ogcRecordsApi?.password]
+      }),
       cronOffset: [settings.cronOffset],
       proxy: [settings.proxy],
       portalUrl: [settings.portalUrl],
@@ -190,7 +194,7 @@ export class ConfigGeneralComponent implements OnInit {
     this.indexBackupCronTranslate(settings.indexBackup.cronPattern);
   }
 
-  connectionCheck: string;
+  esConnectionCheck: string;
   urlCheckTranslation: string;
   indexCheckTranslation: string;
   indexBackupCronTranslation: string;

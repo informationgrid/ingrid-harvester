@@ -114,15 +114,7 @@ export class CswMapper extends BaseMapper {
     }
 
     _getDescription() {
-        let abstract = CswMapper.getCharacterStringContent(this.idInfo, 'abstract');
-        // if (!abstract) {
-        //     let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.getRecordsUrl}\'`;
-        //     this.log.warn(msg);
-        //     this.summary.warnings.push(['No description', msg]);
-        //     this.valid = false;
-        // }
-
-        return abstract;
+        return CswMapper.select('./*/gmd:abstract/gco:CharacterString', this.idInfo, true)?.textContent;
     }
 
     async _getDistributions(): Promise<Distribution[]> {
@@ -159,7 +151,7 @@ export class CswMapper extends BaseMapper {
                 let onlineResource = onlineResources[j];
 
                 let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource);
-                let title = CswMapper.select('gmd:name/gco:CharacterString', onlineResource);
+                let title = CswMapper.select('gmd:name/gco:CharacterString', onlineResource, true)?.textContent;
                 let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource);
 
                 let url = null;
@@ -174,7 +166,7 @@ export class CswMapper extends BaseMapper {
 
                     let dist: Distribution = {
                         accessURL: url,
-                        title: title.length > 0 ? title[0].textContent : undefined,
+                        title: title,
                         format: UrlUtils.mapFormat(formatArray, this.summary.warnings)
                     };
 
@@ -197,19 +189,14 @@ export class CswMapper extends BaseMapper {
 
     async handleDistributionforService(srvIdent, urlsFound): Promise<Distribution[]> {
 
-        let getCapabilitiesElement = CswMapper.select(
+        let getCapablitiesUrl = CswMapper.select(
             // convert containing text to lower case
             './srv:containsOperations/srv:SV_OperationMetadata[./srv:operationName/gco:CharacterString/text()[contains(translate(\'GetCapabilities\', \'ABCEGILPST\', \'abcegilpst\'), "getcapabilities")]]/srv:connectPoint/*/gmd:linkage/gmd:URL',
             srvIdent,
-            true);
-        let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
-        let serviceFormat = CswMapper.select('./srv:serviceType/gco:LocalName', srvIdent, true);
+            true)?.textContent;
+        let serviceFormat = CswMapper.select('./srv:serviceType/gco:LocalName', srvIdent, true)?.textContent;
         let serviceTypeVersion = CswMapper.select('./srv:serviceTypeVersion/gco:CharacterString', srvIdent);
         let serviceLinks: Distribution[] = [];
-
-        if(serviceFormat){
-            serviceFormat = serviceFormat.textContent;
-        }
 
         if (getCapablitiesUrl) {
             let lowercase = getCapablitiesUrl.toLowerCase();
@@ -229,31 +216,26 @@ export class CswMapper extends BaseMapper {
             }
         }
 
-
         let operations = CswMapper
             .select('./srv:containsOperations/srv:SV_OperationMetadata', srvIdent);
 
+        let title = this.getTitle();
         for (let i = 0; i < operations.length; i++) {
             let onlineResource = CswMapper.select('./srv:connectPoint/gmd:CI_OnlineResource', operations[i], true);
 
-            if(onlineResource) {
+            if (onlineResource) {
                 let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource, true);
-                let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true);
-
-                let title = this.getTitle();
-
-                let operationNameNode = CswMapper.select('srv:operationName/gco:CharacterString', operations[i], true);
-                if(operationNameNode){
-                    title = title + " - " + operationNameNode.textContent;
-                }
+                let protocol = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true)?.textContent;
+                let operationName = CswMapper.select('srv:operationName/gco:CharacterString', operations[i], true)?.textContent;
+                let currentTitle = operationName ? title + " - " + operationName : title;
 
                 let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
                 let url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 if (url && !urlsFound.includes(url)) {
                     serviceLinks.push({
                         accessURL: url,
-                        format: [protocolNode ? protocolNode.textContent : serviceFormat],
-                        title: (title && title.length > 0) ? title : undefined
+                        format: [protocol ?? serviceFormat],
+                        title: currentTitle
                     });
                     urlsFound.push(url);
                 }
@@ -269,7 +251,7 @@ export class CswMapper extends BaseMapper {
         let otherContacts = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
-            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i = 0; i < queries.length; i++) {
@@ -280,7 +262,7 @@ export class CswMapper extends BaseMapper {
 
                 let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                 let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', contact, true);
 
                 let url = null;
                 if (urlNode) {
@@ -322,7 +304,7 @@ export class CswMapper extends BaseMapper {
         let otherContacts = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
-            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i = 0; i < queries.length; i++) {
@@ -333,7 +315,7 @@ export class CswMapper extends BaseMapper {
 
                 let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                 let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', contact, true);
 
                 let url = null;
                 if (urlNode) {
@@ -359,7 +341,7 @@ export class CswMapper extends BaseMapper {
     }
 
     _getTitle() {
-        let title = CswMapper.getCharacterStringContent(this.idInfo, 'title');
+        let title = CswMapper.select('./*/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString', this.idInfo, true)?.textContent;
         return title && title.trim() !== '' ? title : undefined;
     }
 
@@ -427,7 +409,7 @@ export class CswMapper extends BaseMapper {
                 homepage: contactPoint.hasURL
             };
         } else {
-            let publisher = await this._getPublisher();
+            let publisher = await this.getPublisher();
 
             if (publisher) {
                 let displayName;
@@ -474,7 +456,7 @@ export class CswMapper extends BaseMapper {
         }
 
         keywords = [];
-        CswMapper.select('./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString|./gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString', this.record).forEach(node => {
+        CswMapper.select('./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|./gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString', this.record).forEach(node => {
             keywords.push(node.textContent);
         });
 
@@ -531,42 +513,55 @@ export class CswMapper extends BaseMapper {
         return new Date(CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent);
     }
 
-    _getSpatialGml(): string {
-        let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
-        return geographicBoundingBoxes.toString();
+    _getSpatial(): object {
+        return this.getGeometry(false);
     }
 
-    _getSpatial(): object {
+    protected getGeometry(forcePolygon: boolean) {
         let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];
-        for(let i=0; i < geographicBoundingBoxes.length; i++){
+        for (let i=0; i < geographicBoundingBoxes.length; i++){
             let geographicBoundingBox = geographicBoundingBoxes[i];
-            let west = parseFloat(CswMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let east = parseFloat(CswMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let south = parseFloat(CswMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
-            let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trimLeft().trim());
+            let west = parseFloat(CswMapper.select('./gmd:westBoundLongitude', geographicBoundingBox, true).textContent.trim());
+            let east = parseFloat(CswMapper.select('./gmd:eastBoundLongitude', geographicBoundingBox, true).textContent.trim());
+            let south = parseFloat(CswMapper.select('./gmd:southBoundLatitude', geographicBoundingBox, true).textContent.trim());
+            let north = parseFloat(CswMapper.select('./gmd:northBoundLatitude', geographicBoundingBox, true).textContent.trim());
 
-            if (west === east && north === south) {
-                geometries.push({
-                    'type': 'Point',
-                    'coordinates': [west, north]
-                });
-            } else if (west === east || north === south) {
-                geometries.push({
-                    'type': 'LineString',
-                    'coordinates': [[west, north], [east, south]]
-                });
-            } else {
-                geometries.push({
-                    'type': 'Envelope',
-                    'coordinates': [[west, north], [east, south]]
-                });
+            // check if within bounds
+            let geometryValid = true;
+            if (Math.abs(west) > 180) {
+                geometryValid = false;
+                this.addInvalidationReason(`westBoundLongitude is out of bounds (${west})`);
+            }
+            if (Math.abs(east) > 180) {
+                geometryValid = false;
+                this.addInvalidationReason(`eastBoundLongitude is out of bounds (${east})`);
+            }
+            if (Math.abs(south) > 90) {
+                geometryValid = false;
+                this.addInvalidationReason(`southBoundLatitude is out of bounds (${south})`);
+            }
+            if (Math.abs(north) > 90) {
+                geometryValid = false;
+                this.addInvalidationReason(`northBoundLatitude is out of bounds (${north})`);
+            }
+            if (south > north) {
+                geometryValid = false;
+                this.addInvalidationReason(`southBoundLatitude > northBoundLatitude (${south} > ${north})`);
+            }
+
+            if (!geometryValid) {
+                this.valid = false;
+            }
+            else {
+                geometries.push(this.getGeoJson(west, east, north, south, forcePolygon));
             }
         }
-        if(geometries.length == 1){
+
+        if (geometries.length == 1) {
             return geometries[0];
         }
-        else if(geometries.length > 1){
+        else if (geometries.length > 1) {
             return {
                 'type': 'GeometryCollection',
                 'geometries': geometries
@@ -574,6 +569,27 @@ export class CswMapper extends BaseMapper {
         }
 
         return undefined;
+    }
+
+    protected getGeoJson(west: number, east: number, north: number, south: number, forcePolygon: boolean): any {
+        if (west === east && north === south) {
+            return {
+                'type': 'Point',
+                'coordinates': [west, north]
+            };
+        }
+        else if (west === east || north === south) {
+            return {
+                'type': 'LineString',
+                'coordinates': [[west, north], [east, south]]
+            };
+        }
+        else {
+            return {
+                'type': 'Envelope',
+                'coordinates': [[west, north], [east, south]]
+            };
+        }
     }
 
     _getSpatialText(): string {
@@ -595,16 +611,14 @@ export class CswMapper extends BaseMapper {
     }
 
     _getCentroid(): object {
-        let spatial = this._getSpatial();
+        let spatial = this.getSpatial();
         return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
     }
 
     _getTemporal(): DateRange[] {
-        let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
-
         let result: DateRange[] = [];
 
-        let nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod|./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml32:TimePeriod', this.idInfo);
+        let nodes = CswMapper.select('./gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod|./gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod', this.idInfo);
 
         for (let i = 0; i < nodes.length; i++) {
             let begin = this.getTimeValue(nodes[i], 'begin');
@@ -617,7 +631,7 @@ export class CswMapper extends BaseMapper {
                 });
             }
         }
-        nodes = CswMapper.select('./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimeInstant/gml:timePosition|./*/gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml32:TimeInstant/gml32:timePosition', this.idInfo);
+        nodes = CswMapper.select('./gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimeInstant/gml:timePosition|./gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimeInstant/gml32:timePosition', this.idInfo);
 
         let times = nodes.map(node => node.textContent);
         for (let i = 0; i < times.length; i++) {
@@ -661,7 +675,7 @@ export class CswMapper extends BaseMapper {
 
         let xpath = './gmd:identificationInfo[1]/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode';
         let categories = CswMapper.select(xpath, this.record);
-        let keywords = this._getKeywords()
+        let keywords = this.getKeywords();
 
         if(categories && categories.length > 0){
             themes = this.mapCategoriesToThemes(categories, keywords);
@@ -805,13 +819,10 @@ export class CswMapper extends BaseMapper {
 
     static getCharacterStringContent(element, cname?): string {
         if (cname) {
-            let node = CswMapper.select(`.//gmd:${cname}/gco:CharacterString`, element, true);
-            if (node) {
-                return node.textContent;
-            }
-        } else {
-            let node = CswMapper.select('./gco:CharacterString', element, true);
-            return node ? node.textContent : null;
+            return CswMapper.select(`./gmd:${cname}/gco:CharacterString`, element, true)?.textContent;
+        }
+        else {
+            return CswMapper.select(`./gco:CharacterString`, element, true)?.textContent;
         }
     }
 
@@ -886,7 +897,7 @@ export class CswMapper extends BaseMapper {
         let creators = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
-            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i = 0; i < queries.length; i++) {
@@ -897,7 +908,7 @@ export class CswMapper extends BaseMapper {
 
                 let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                 let organisation = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                let email = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString', contact, true);
 
                 if (role === 'originator' || role === 'author') {
                     let creator: creatorType = {};
@@ -950,7 +961,7 @@ export class CswMapper extends BaseMapper {
         let originators: any[] = [];
 
         let queries = [
-            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i = 0; i < queries.length; i++) {
@@ -962,8 +973,8 @@ export class CswMapper extends BaseMapper {
                 if (role === 'originator') {
                     let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                     let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                    let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
-                    let url = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                    let email = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                    let url = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', contact, true);
 
                     if (!name && !org) continue;
 
@@ -1013,7 +1024,7 @@ export class CswMapper extends BaseMapper {
         let others = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
-            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
         ];
         for (let i = 0; i < queries.length; i++) {
@@ -1023,14 +1034,14 @@ export class CswMapper extends BaseMapper {
                 let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
                 let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                 let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let delPt = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:deliveryPoint', contact);
-                let locality = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:city/gco:CharacterString', contact, true);
-                let region = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:administrativeArea/gco:CharacterString', contact, true);
-                let country = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:country/gco:CharacterString', contact, true);
-                let postCode = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:postalCode/gco:CharacterString', contact, true);
-                let email = CswMapper.select('./gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString', contact, true);
-                let phone = CswMapper.select('./gmd:contactInfo/*/gmd:phone/*/gmd:voice/gco:CharacterString', contact, true);
-                let urlNode = CswMapper.select('./gmd:contactInfo/*/gmd:onlineResource/*/gmd:linkage/gmd:URL', contact, true);
+                let delPt = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:deliveryPoint', contact);
+                let locality = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:city/gco:CharacterString', contact, true);
+                let region = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:administrativeArea/gco:CharacterString', contact, true);
+                let country = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:country/gco:CharacterString', contact, true);
+                let postCode = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:postalCode/gco:CharacterString', contact, true);
+                let email = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString', contact, true);
+                let phone = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString', contact, true);
+                let urlNode = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', contact, true);
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);

@@ -79,16 +79,8 @@ export class DiplanungVirtualMapper extends BaseMapper {
         return this.fields.spatial;
     }
 
-    _getSpatialGml(): string {
-        return null;
-    }
-
     _getBoundingBox(): object {
         return this.fields.bounding_box;
-    }
-
-    _getBoundingBoxGml() {
-        return null;
     }
 
     _getCentroid(): object {
@@ -137,7 +129,7 @@ export class DiplanungVirtualMapper extends BaseMapper {
         return this.fields.plan_type_fine;
     }
 
-    _getPluProcedureStartDate() {
+    _getPluProcedureStartDate(): Date {
         return this.fields.procedure_start_date;
     }
 

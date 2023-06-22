@@ -39,15 +39,28 @@
 
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
+import booleanWithin from '@turf/boolean-within';
 import centroid from '@turf/centroid';
+import flip from '@turf/flip';
 import rewind from '@turf/rewind';
 import * as xpath from 'xpath';
-import { AllGeoJSON, GeometryCollection } from "@turf/helpers";
+import { AllGeoJSON, Geometry, GeometryCollection, Point } from "@turf/helpers";
 import { XPathUtils } from './xpath.utils';
+
 const deepEqual = require('deep-equal');
 const proj4 = require('proj4');
 
 export class GeoJsonUtils {
+
+    static BBOX_GERMANY = {
+        'type': 'Polygon',
+        'coordinates': [[
+            [5.98865807458, 54.983104153], 
+            [5.98865807458, 47.3024876979],
+            [15.0169958839, 47.3024876979],
+            [15.0169958839, 54.983104153],
+            [5.98865807458, 54.983104153]]]
+    };
 
     private select: Function;
     private transformer: Function;
@@ -92,20 +105,39 @@ export class GeoJsonUtils {
             return undefined;
         }
         return bboxPolygon(bbox(spatial))?.geometry;
-    }
+    };
+
+    static within = (point: number[] | Point, bbox: Geometry): boolean => {
+        if ('coordinates' in point) {
+            return booleanWithin(point, bbox);
+        }
+        else {
+            return booleanWithin({ type: 'Point', coordinates: point }, bbox);
+        }
+    };
+
+    static flip = <T>(spatial: number[] | Geometry): T => {
+        if ('coordinates' in spatial) {
+            return flip(spatial);
+        }
+        else {
+            return flip({ type: 'Point', coordinates: spatial });
+        }
+    };
 
     static getCentroid = (spatial: AllGeoJSON) => {
         if (!spatial) {
             return undefined;
         }
+        let modifiedSpatial = { ...spatial };
         // turf/centroid does not support envelope, so we turn it into a linestring which has the same centroid
-        if (spatial.type?.toLowerCase() == 'envelope') {
-            spatial.type = 'LineString';
+        if (modifiedSpatial.type?.toLowerCase() == 'envelope') {
+            modifiedSpatial.type = 'LineString';
         }
-        if (spatial.type == 'GeometryCollection') {
-            (<GeometryCollection>spatial).geometries.filter((geometry: AllGeoJSON) => geometry.type == 'Envelope').forEach((geometry: AllGeoJSON) => geometry.type = 'LineString');
+        if (modifiedSpatial.type == 'GeometryCollection') {
+            (<GeometryCollection>modifiedSpatial).geometries.filter((geometry: AllGeoJSON) => geometry.type == 'Envelope').forEach((geometry: AllGeoJSON) => geometry.type = 'LineString');
         }
-        return centroid(spatial);
+        return centroid(modifiedSpatial);
     };
 
     parseCoords = (s, opts: { crs?: string, stride?: number } = { crs: null, stride: 2 }, ctx = { srsDimension: null }) => {

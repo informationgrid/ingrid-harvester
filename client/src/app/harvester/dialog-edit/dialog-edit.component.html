@@ -40,7 +40,8 @@
             <mat-option value="OAI">OAI</mat-option>
             <mat-option value="DCAT">DCAT</mat-option>
             <mat-option value="SPARQL">SPARQL</mat-option>
-            <mat-option value="WFS">WFS</mat-option>
+            <mat-option value="WFS.FIS">WFS (FIS)</mat-option>
+            <mat-option value="WFS.XPLAN">WFS (XPLAN)</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -173,7 +174,13 @@
                           class="flex-column">
       </app-sparql-harvester>
 
-      <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS'" [form]="harvesterForm"
+      <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS.FIS'" [form]="harvesterForm"
+                         [model]="harvester"
+                         [rulesTemplate]="rules"
+                         class="flex-column">
+      </app-wfs-harvester>
+
+      <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS.XPLAN'" [form]="harvesterForm"
                          [model]="harvester"
                          [rulesTemplate]="rules"
                          class="flex-column">

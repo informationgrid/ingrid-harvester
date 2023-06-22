@@ -21,15 +21,16 @@
  * ==================================================
  */
 
-import { DiplanungMapper } from "./diplanung.mapper";
+import { DiplanungMapper } from './diplanung.mapper';
 
 export class DiplanungMapperFactory {
-    static getMapper(mapper) : DiplanungMapper<any> {
+    static getMapper(mapper): DiplanungMapper<any> {
         switch (mapper.constructor.name) {
             case 'DiplanungCswMapper': return new DiplanungMapper(mapper);
             case 'DiplanungVirtualMapper': return new DiplanungMapper(mapper);
             case 'ExcelSparseMapper': return new DiplanungMapper(mapper);
-            case 'WfsMapper': return new DiplanungMapper(mapper);
+            case 'FisWfsMapper': return new DiplanungMapper(mapper);
+            case 'XplanWfsMapper': return new DiplanungMapper(mapper);
         }
     }
 }

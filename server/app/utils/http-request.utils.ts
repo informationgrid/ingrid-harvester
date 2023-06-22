@@ -112,6 +112,7 @@ export interface RequestOptions extends RequestInit {
  * Delegate class for handling HTTP-requests.
  */
 export class RequestDelegate {
+
     private config: RequestOptions;
     private readonly postBodyXml: any;
     private paging: RequestPaging;
@@ -202,29 +203,44 @@ export class RequestDelegate {
     }
 
     /**
-     * Performs the HTTP request and returns the result of this operation. 
-     * 
-     * @param retry how often the request should be retried if it fails
-     * @param waitMilliSeconds wait time between retries in milliseconds
+     * Performs the HTTP request and returns the result of this operation.
+     *
+     * @param retry how often the request should be retried if it fails (default: 0)
+     * @param waitMilliSeconds wait time between retries in milliseconds (default: 0)
      */
     async doRequest(retry: number = 0, waitMilliSeconds: number = 0): Promise<any> {
-        logRequest.debug('Requesting: ' + this.config.uri);
-        if (this.config.proxy) {
-            let url = new URL(this.config.proxy);
-            this.config.agent = new HttpsProxyAgent({
-                rejectUnauthorized: this.config.rejectUnauthorized ?? true,
+        return RequestDelegate.doRequest(this.config, retry, waitMilliSeconds);
+    }
+
+    /**
+     * Performs a HTTP request and returns the result of this operation.
+     *
+     * @param config the configuration to use when sending the request
+     * @param retry how often the request should be retried if it fails (default: 0)
+     * @param waitMilliSeconds wait time between retries in milliseconds (default: 0)
+     */
+    static async doRequest(config: RequestOptions, retry: number = 0, waitMilliSeconds: number = 0): Promise<any> {
+        logRequest.debug('Requesting: ' + config.uri);
+        if (config.proxy) {
+            let url = new URL(config.proxy);
+            config.agent = new HttpsProxyAgent({
+                rejectUnauthorized: config.rejectUnauthorized ?? true,
                 host: url.hostname,
                 port: url.port
             });
         }
-        // `== false` is important here since rejectUnauthorized could be falsy (e.g. undefined)
-        else if (this.config.rejectUnauthorized == false) {
-            this.config.agent = new Agent({
+        // `=== false` is important here since rejectUnauthorized could be falsy (e.g. undefined)
+        else if (config.rejectUnauthorized === false) {
+            config.agent = new Agent({
                 rejectUnauthorized: false
             });
         }
-        let fullURL = this.config.uri + '?' + new URLSearchParams(this.config.qs);
-        let response = fetch(fullURL, this.config);
+        let fullURL = config.uri;
+        if (config.qs) {
+            fullURL += (config.uri.indexOf('?') > -1) ? '&' : '?';
+            fullURL += new URLSearchParams(config.qs);
+        }
+        let response = fetch(fullURL, config);
 
         while (retry > 0) {
             try {
@@ -236,8 +252,8 @@ export class RequestDelegate {
                 if (retry > 0) {
                     retry -= 1;
                     logRequest.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
-                    this.sleep(waitMilliSeconds);
-                    response = fetch(fullURL, this.config);
+                    RequestDelegate.sleep(waitMilliSeconds);
+                    response = fetch(fullURL, config);
                 }
                 else {
                     throw e;
@@ -245,10 +261,10 @@ export class RequestDelegate {
             }
         };
 
-        if (this.config.resolveWithFullResponse) {
+        if (config.resolveWithFullResponse) {
             return response;
         }
-        else if (this.config.json) {
+        else if (config.json) {
             return (await response).json();
         }
         else {
@@ -256,7 +272,7 @@ export class RequestDelegate {
         }
     }
 
-    private sleep(ms: number) {
+    private static sleep(ms: number) {
         return new Promise((resolve) => {
             setTimeout(resolve, ms);
         });

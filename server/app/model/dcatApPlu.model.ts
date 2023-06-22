@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import {Organization, Person} from "./agent";
-import {Distribution} from "./distribution";
-import {DateRange} from "./dateRange";
+import { DateRange } from './dateRange';
+import { Distribution } from './distribution';
+import { Organization, Person } from './agent';
 
 export interface Catalog {
     description: string,
@@ -42,7 +42,7 @@ export interface ProcessStep {
     distributions?: Distribution[],
     identifier?: string,
     period?: DateRange,
-    type: typeof pluProcessStepType[keyof typeof pluProcessStepType];
+    type: PluProcessStepType;
 }
 
 export interface Record {
@@ -55,75 +55,75 @@ export interface Record {
 /**
  * Codeliste Arten von Verfahren zur Aufstellung raumbezogener Planwerke (5.1)
  */
-export const pluProcedureType = {
-    NORM_VERF: '1001',          // normales Verfahren
-    VEREINF_VERF: '1002', 	    // vereinfachtes Verfahren
-    BEBAU_PLAN_INNEN: '1003',	// Bebauungsplan der Innenentwicklung
-    EINBEZ_AUSSEN_BESCHLEU: '1004',	// Einbeziehung von Außenbereichsflächen in das beschleunigte Verfahren
-    AEND: '1005',               // Änderung
-    TEIL_FORT: '1006',          // Teilfortschreibung
-    NEU_AUFST: '1007',          // Neuaufstellung
-    GESAMT_FORT: '1008',        // Gesamtfortschreibung
-    AKTUAL: '1009',             // Aktualisierung
-    NEU_BEKANNT: '1010',        // Neubekanntmachung
-    UNBEKANNT: '9000'
-};
+export enum PluProcedureType {
+    NORM_VERF = '1001',         // normales Verfahren
+    VEREINF_VERF = '1002', 	    // vereinfachtes Verfahren
+    BEBAU_PLAN_INNEN = '1003',	// Bebauungsplan der Innenentwicklung
+    EINBEZ_AUSSEN_BESCHLEU = '1004',	// Einbeziehung von Außenbereichsflächen in das beschleunigte Verfahren
+    AEND = '1005',              // Änderung
+    TEIL_FORT = '1006',         // Teilfortschreibung
+    NEU_AUFST = '1007',         // Neuaufstellung
+    GESAMT_FORT = '1008',       // Gesamtfortschreibung
+    AKTUAL = '1009',            // Aktualisierung
+    NEU_BEKANNT = '1010',       // Neubekanntmachung
+    UNBEKANNT = '9000'
+}
 
 /**
  * Codeliste für übergeordneten Status eines Verfahrens (5.2)
  */
-export const pluProcedureState = {
-    GEPLANT: '2001',        // geplant
-    LAUFEND: '2002',        // laufend
-    ABGESCHLOSSEN: '2003',  // abgeschlossen
-    UNBEKANNT: '9000'
-};
+export enum PluProcedureState {
+    GEPLANT = '2001',       // geplant
+    LAUFEND = '2002',       // laufend
+    ABGESCHLOSSEN = '2003', // abgeschlossen
+    UNBEKANNT = '9000'
+}
 
 /**
  * Codeliste für Status eines Plans (5.3)
  */
-export const pluPlanState = {
-    IN_AUFST: '3001',   // in Aufstellung
-    FESTGES: '3002',    // festgesetzt
-    UNBEKANNT: '9000'
-};
+export enum PluPlanState {
+    IN_AUFST = '3001',  // in Aufstellung
+    FESTGES = '3002',   // festgesetzt
+    UNBEKANNT = '9000'
+}
 
 /**
  * Codeliste für Arten von raumbezogenen Planwerken (5.4)
  */
-export const pluPlanType = {
-    BEBAU_PLAN: '1000',         // Bebauungsplan
-    FLAECHENN_PLAN: '2000',     // Flächennutzungsplan
-    STAEDT_BAUL_SATZ: '3000',   // städtebauliche Satzungen
-    PW_BES_STAEDT_BAUR: '4000', // Planwerke besonderes Städtebaurecht
-    PW_LANDSCH_PLAN: '5000',    // Planwerke der Landschaftsplanung
-    RAUM_ORDN_PLAN: '6000',     // Raumordnungsplan
-    RAUM_ORDN_VERF: '7000',     // Raumordnungsverfahren
-    PLAN_FESTST_VERF: '8000',   // Planfeststellungsverfahren
-    SONST_PLAN: '8500',         // Sonstige raumbezogene Planwerke
-    UNBEKANNT: '9000'
-};
+export enum PluPlanType {
+    BEBAU_PLAN = '1000',            // Bebauungsplan
+    FLAECHENN_PLAN = '2000',        // Flächennutzungsplan
+    STAEDT_BAUL_SATZ = '3000',      // städtebauliche Satzungen
+    PW_BES_STAEDT_BAUR = '4000',    // Planwerke besonderes Städtebaurecht
+    PW_LANDSCH_PLAN = '5000',       // Planwerke der Landschaftsplanung
+    RAUM_ORDN_PLAN = '6000',        // Raumordnungsplan
+    RAUM_ORDN_VERF = '7000',        // Raumordnungsverfahren
+    PLAN_FESTST_VERF = '8000',      // Planfeststellungsverfahren
+    SONST_PLAN = '8500',            // Sonstige raumbezogene Planwerke
+    UNBEKANNT = '9000'
+}
 
 /**
  * Codeliste für Arten von Verfahrensschritten bei raumbezogenen Verfahren (5.5)
  */
-export const pluProcessStepType = {
-    FRUEHZ_BEH_BETEIL: '3001',   	// Frühzeitige Behördenbeteiligung
-    FRUEHZ_OEFFTL_BETEIL: '3002', 	// Frühzeitige Öffentlichkeitsbeteiligung
-    BETEIL_OEFFTL_TRAEGER: '3003', 	// Beteiligung der Träger öffentlicher Belange
-    OEFFTL_AUSL: '3004', 	        // Öffentliche Auslegung
-    INTERN_BEARB: '3005', 	        // Interne Bearbeitung
-    ABGESCHLOSSEN: '3006',          // Abgeschlossen
-    UNBEKANNT: '9000'
-};
+export enum PluProcessStepType {
+    FRUEHZ_BEH_BETEIL = '3001',     // Frühzeitige Behördenbeteiligung
+    FRUEHZ_OEFFTL_BETEIL = '3002', 	// Frühzeitige Öffentlichkeitsbeteiligung
+    BETEIL_OEFFTL_TRAEGER = '3003', // Beteiligung der Träger öffentlicher Belange
+    OEFFTL_AUSL = '3004', 	        // Öffentliche Auslegung
+    INTERN_BEARB = '3005', 	        // Interne Bearbeitung
+    ABGESCHLOSSEN = '3006',         // Abgeschlossen
+    UNBEKANNT = '9000'
+}
 
 /**
  * Codeliste für Arten von Dokumenten (5.6)
  */
-export const pluDocType = {
-    AUSLEG_INFO: '4001',    // Auslegungsinformationen
-    ERLAEUT_BER: '4002', 	// Erläuterungsbericht
-    PLAN_ZEICHN: '4003',	// Planzeichnung
-    UNBEKANNT: '9000'
+export enum PluDocType {
+    AUSLEG_INFO = '4001',   // Auslegungsinformationen
+    ERLAEUT_BER = '4002', 	// Erläuterungsbericht
+    PLAN_ZEICHN = '4003',	// Planzeichnung
+    UNBEKANNT = '9000'
     // TODO not finalized yet
-};
+}

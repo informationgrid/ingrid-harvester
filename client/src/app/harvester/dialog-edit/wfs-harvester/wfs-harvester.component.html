@@ -56,7 +56,7 @@
 
   <mat-card>
     <mat-card-header>
-      <mat-card-title>WFS XPaths, Default-Werte</mat-card-title>
+      <mat-card-title>Weitere WFS Einstellungen</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
@@ -64,34 +64,10 @@
           <input matInput placeholder="Katalog-ID" formControlName="catalogId" required>
         </mat-form-field>
       </div>
-      <div formGroupName="xpaths">
-        <div fxLayout="column">
-          <div formGroupName="capabilities">
-            <div fxLayout="column">
-              <mat-form-field fxFlex>
-                <input matInput placeholder="ServiceProvider" formControlName="serviceProvider" required>
-              </mat-form-field>
-            </div>
-          </div>
-          <mat-form-field fxFlex>
-            <input matInput placeholder="Feature XML Element" formControlName="featureParent" required>
-          </mat-form-field>
-          <mat-form-field fxFlex>
-            <input matInput placeholder="Name des Metadatensatzes (Feature-relativ)" formControlName="name" required>
-          </mat-form-field>
-          <mat-form-field fxFlex>
-            <input matInput placeholder="Beschreibung des Metadatensatzes (Feature-relativ)" formControlName="description" required>
-          </mat-form-field>
-          <mat-form-field fxFlex>
-            <input matInput placeholder="Räumliche Ausdehnung (Feature-relativ)" formControlName="spatial" required>
-          </mat-form-field>
-          <mat-form-field fxFlex>
-            <input matInput placeholder="Plan Status (Feature-relativ)" formControlName="pluPlanState" required>
-          </mat-form-field>
-          <mat-form-field fxFlex>
-            <input matInput placeholder="Aufstellungsbeschlussdatum (Feature-relativ)" formControlName="pluProcedureStartDate" required>
-          </mat-form-field>
-        </div>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Plan Status (üb)" formControlName="pluPlanState">
+        </mat-form-field>
       </div>
     </mat-card-content>
   </mat-card>
