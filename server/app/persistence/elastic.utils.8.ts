@@ -468,6 +468,14 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         return response;
     }
 
+    async get(index: string, id: string): Promise<any> {
+        let response = await this.client.get({
+            index,
+            id
+        });
+        return response;
+    }
+
     // async getHistory(baseIndex: string): Promise<{ history: any }> {
     //     let response = await this.client.search({
     //         index: ['mcloud_harvester_statistic'],

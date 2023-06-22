@@ -144,6 +144,8 @@ export abstract class ElasticSearchUtils {
 
     abstract search(index: string | string[], body?: object, size?: number): Promise<{ hits: any, aggregations?: any }>;
 
+    abstract get(index: string, id: string): Promise<any>;
+
     // abstract getHistory(baseIndex: string): Promise<any>;
     abstract getHistory(index: string, body: object): Promise<{ history: any }>;
 

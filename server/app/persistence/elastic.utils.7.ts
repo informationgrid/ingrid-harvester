@@ -428,6 +428,10 @@ export class ElasticSearchUtils7 extends ElasticSearchUtils {
         return { hits: [], ...response };
     }
 
+    get(index: string, id: string): Promise<any> {
+        throw new Error('Method not implemented.');
+    }
+
     // async getHistory(baseIndex: string): Promise<any> {
     //     let { body: response } = await this.client.search({
     //         index: ['mcloud_harvester_statistic'],
