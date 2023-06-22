@@ -109,7 +109,7 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
                         let deleted = `Item to delete -> ID: '${hit._id}', Title: '${hit._source.title}', Index: '${hit._index}'`;
                         let merged = `Item to merge into -> ID: '${mainHit._id}', Title: '${mainHit._source.title}', Index: '${mainHit._index}'`;
-                        log.warn(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${merged}`);
+                        log.debug(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${merged}`);
                         this.elastic._bulkData.push(
                             {
                                 update: {

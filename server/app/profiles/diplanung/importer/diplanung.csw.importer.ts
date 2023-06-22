@@ -166,8 +166,8 @@ export class DiplanungCswImporter extends CswImporter {
                     }
                 }
                 else {
-                    let msg = `Response for ${distribution.accessURL} is not valid XML`
-                    log.warn(msg);
+                    let msg = `Response for ${distribution.accessURL} is not valid XML`;
+                    log.debug(msg);
                     this.summary.warnings.push([msg, 'does not begin with <!xml']);
                 }
             }
