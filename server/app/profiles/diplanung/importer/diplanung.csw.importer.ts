@@ -149,26 +149,25 @@ export class DiplanungCswImporter extends CswImporter {
         for (let distribution of distributions) {
             // add layer names for WMS services
             if (distribution.format?.includes('WMS') && distribution.accessURL.includes('GetCapabilities')) {
-                let response = '';
                 try {
-                    response = await this.getWmsResponse(distribution.accessURL);
+                    let response = await RequestDelegate.doRequest({ uri: distribution.accessURL });
+                    // surface heuristic for XML
+                    if (response.startsWith('<?xml')) {
+                        let layerNames = this.getMapLayerNames(response);
+                        if (layerNames) {
+                            distribution.mapLayerNames = layerNames;
+                            updated = true;
+                        }
+                    }
+                    else {
+                        let msg = `Response for ${distribution.accessURL} is not valid XML`;
+                        log.debug(msg);
+                        this.summary.warnings.push([msg, response.replaceAll('\n', ' ')]);
+                    }
                 }
                 catch (err) {
                     log.warn(err.message);
                     this.summary.warnings.push([`Could not get response for ${distribution.accessURL}`, err.message]);
-                }
-                // surface heuristic for XML
-                if (response.startsWith('<?xml')) {
-                    let layerNames = this.getMapLayerNames(response);
-                    if (layerNames) {
-                        distribution.mapLayerNames = layerNames;
-                        updated = true;
-                    }
-                }
-                else {
-                    let msg = `Response for ${distribution.accessURL} is not valid XML`;
-                    log.debug(msg);
-                    this.summary.warnings.push([msg, 'does not begin with <!xml']);
                 }
             }
             updatedDistributions.push(distribution);
@@ -176,15 +175,18 @@ export class DiplanungCswImporter extends CswImporter {
         return updated ? updatedDistributions : null;
     }
 
-    private async getWmsResponse(url: string) {
-        let serviceRequestConfig: RequestOptions = {
-            uri: url.split('?')[0],
-            qs: { service: 'WMS', request: 'GetCapabilities' },
-        };
-        let serviceRequestDelegate = new RequestDelegate(serviceRequestConfig);
-        // return await serviceRequestDelegate.doRequest(2, 500);   // retry 2 times, wait 500ms between
-        return await serviceRequestDelegate.doRequest();
-    }
+    // private async getWmsResponse(uri: string) {
+    //     let qs = {};
+    //     if (!uri.toLowerCase().includes('service=wms')) {
+    //         qs['service'] = 'WMS';
+    //     }
+    //     if (!uri.toLowerCase().includes('request=getcapabilities')) {
+    //         qs['request'] = 'GetCapabilities';
+    //     }
+    //     let serviceRequestDelegate = new RequestDelegate({ uri, qs });
+    //     return await serviceRequestDelegate.doRequest();
+    //     // return await serviceRequestDelegate.doRequest(2, 500);   // retry 2 times, wait 500ms between
+    // }
 
     private getMapLayerNames(response: string): string[] {
         let serviceResponseDom = new DomParser().parseFromString(response);
