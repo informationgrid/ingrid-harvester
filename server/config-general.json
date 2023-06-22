@@ -1,15 +1,13 @@
 {
-  "elasticSearchUrl": "http://localhost:9200",
-  "elasticSearchVersion": "8",
-  "elasticSearchUser": "elastic",
-  "elasticSearchPassword": "elastic",
-  "alias": "harvester",
-  "numberOfShards": 1,
-  "numberOfReplicas": 0,
-  "ogcRecordsApiUrl": "http://localhost:8080/v1",
-  "ogcRecordsApiUser": "admin",
-  "ogcRecordsApiPassword": "admin",
-  "cronOffset": 0,
+  "elasticsearch": {
+    "url": "http://localhost:9200",
+    "version": "8",
+    "user": "elastic",
+    "password": "elastic",
+    "alias": "harvester",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0
+  },
   "proxy": "",
   "portalUrl": "",
   "urlCheck": {
@@ -41,5 +39,11 @@
     "cronPattern": "30 05 * * *",
     "dir": ""
   },
-  "maxDiff": 10
+  "maxDiff": 10,
+  "ogcRecordsApi": {
+    "url": "http://localhost:8080/v1",
+    "user": "admin",
+    "password": "admin"
+  },
+  "cronOffset": 0
 }

@@ -120,6 +120,10 @@ export class CswImporter extends Importer {
                 await this.harvest();
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
                     await this.elastic.sendBulkData(false);
+                    await this.elastic.sendBulkUpdate(false);
+                    // TODO postHarvestingHandling has to be here, after indexing all data but before deduplicating
+                    // TODO this needs a rewrite of the data-service-coupling
+                    // this.postHarvestingHandling();
                     await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
@@ -158,7 +162,7 @@ export class CswImporter extends Importer {
             homepage: this.settings.getRecordsUrl,
             // TODO we need a unique ID for each catalog - currently using the alias (used as "global" catalog)
             // TODO or assign a different catalog for each record, depending on a property (address, publisher, etc)? expensive?
-            identifier: ConfigService.getGeneralSettings().alias,
+            identifier: ConfigService.getGeneralSettings().elasticsearch.alias,
             publisher: { name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent },
             title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
         };
@@ -172,6 +176,8 @@ export class CswImporter extends Importer {
             // harvestConcurrently() also supports this.settings.maxConcurrent=1
             await this.harvestSequentially();
         }
+        // TODO this is at the wrong position and works on the wrong data
+        // TODO needs to work on indexed data, not on (mostly) at this point not-anymore-existing _bulkData
         this.postHarvestingHandling();
     }
 
@@ -180,7 +186,7 @@ export class CswImporter extends Importer {
     }
 
     async handleHarvest(delegate: RequestDelegate): Promise<void> {
-        log.debug('Requesting next records');
+        log.debug('Requesting next records, starting at', delegate.getStartRecordIndex());
         let response = await delegate.doRequest();
         let harvestTime = new Date(Date.now());
 
@@ -189,7 +195,8 @@ export class CswImporter extends Importer {
         if (resultsNode) {
             let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
             log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
-            await this.extractRecords(response, harvestTime)
+            let importedDocuments = await this.extractRecords(response, harvestTime);
+            await this.updateRecords(importedDocuments);
         } else {
             const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
             log.error(message);
@@ -205,15 +212,16 @@ export class CswImporter extends Importer {
         let hitsResponseDom = new DomParser().parseFromString(hitsResponse);
         let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(CswMapper.CSW, 'SearchResults')[0];
         this.totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
-        if (log.isInfoEnabled()) {
-            log.info(`Finished getting number of records: ${this.totalRecords}`);
-        }
+        log.info(`Number of records to fetch: ${this.totalRecords}`);
 
         // 1) create paged request delegates
         let delegates = [];
         for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
             let requestConfig = CswImporter.createRequestConfig({ ...this.settings, startPosition });
-            delegates.push(new RequestDelegate(requestConfig));
+            delegates.push(new RequestDelegate(requestConfig, CswImporter.createPaging({
+                startPosition: startPosition,
+                maxRecords: this.settings.maxRecords
+            })));
         }
         // 2) run in parallel
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
@@ -236,7 +244,8 @@ export class CswImporter extends Importer {
                     log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
                 }
                 await this.extractRecords(response, harvestTime)
-            } else {
+            }
+            else {
                 const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
                 log.error(message);
                 this.summary.appErrors.push(message);
@@ -252,11 +261,13 @@ export class CswImporter extends Importer {
               * updated. The easiest solution would be to set numMatched to
               * maxRecords * numRetries
               */
-            if (this.totalRecords < this.requestDelegate.getStartRecordIndex()) break;
+            if (this.totalRecords < this.requestDelegate.getStartRecordIndex()) {
+                break;
+            }
         }
     }
 
-    async extractRecords(getRecordsResponse, harvestTime) {
+    async extractRecords(getRecordsResponse, harvestTime): Promise<string[]> {
         let promises = [];
         let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
         let records = xml.getElementsByTagNameNS(CswMapper.GMD, 'MD_Metadata');
@@ -274,6 +285,7 @@ export class CswImporter extends Importer {
             storedData = await this.elastic.getStoredData(ids);
         }
 
+        let docsToImport = [];
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
 
@@ -292,17 +304,21 @@ export class CswImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary, this.generalInfo);
 
-            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
+            let doc: any;
+            try {
+                doc = await this.profile.getIndexDocument().create(mapper);
+                docsToImport.push(doc);
+            }
+            catch (e) {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
-            });
+            }
 
             if (!mapper.shouldBeSkipped()) {
                 if (!this.settings.dryRun) {
                     promises.push(this.elastic.addDocToBulk(doc, uuid));
                 }
-
             } else {
                 this.summary.skippedDocs.push(uuid);
             }
@@ -311,8 +327,17 @@ export class CswImporter extends Importer {
         // TODO the following line raises
         // MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 abort listeners added to [EventEmitter]. Use emitter.setMaxListeners() to increase limit
         // may be harmless; investigate if limit increase suffices or if a real leak is occurring
-        await Promise.allSettled(promises)
-            .catch(err => log.error('Error indexing CSW record', err));
+        await Promise.allSettled(promises).catch(err => log.error('Error indexing CSW record', err));
+        // TODO we should return the actually imported documents, not the ones which should be imported (of which some could fail)
+        return docsToImport;
+    }
+
+    /**
+     * Is called after a batch of records has been added to the bulk indexing queue.
+     * They may not necessarily have been indexed yet.
+     */
+    protected async updateRecords(documents: any[]) {
+        // For Profile specific Handling
     }
 
     getMapper(settings, record, harvestTime, storedData, summary, generalInfo): CswMapper {
@@ -379,7 +404,7 @@ export class CswImporter extends Importer {
         return requestConfig;
     }
 
-    static createPaging(settings: CswSettings) {
+    static createPaging(settings: Partial<CswSettings>) {
         return {
             startFieldName: 'startPosition',
             startPosition: settings.startPosition,

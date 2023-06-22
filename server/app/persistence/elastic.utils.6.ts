@@ -22,7 +22,7 @@
  */
 
 import { BulkResponse, ElasticSearchUtils } from './elastic.utils';
-import { Client } from 'elasticsearch8';
+import { Client } from 'elasticsearch6';
 import { DeduplicateUtils } from './deduplicate.utils';
 import { ElasticQueries } from './elastic.queries';
 import { ElasticSettings } from './elastic.setting';
@@ -32,7 +32,7 @@ import { Summary } from '../model/summary';
 
 let log = require('log4js').getLogger(__filename);
 
-export class ElasticSearchUtils8 extends ElasticSearchUtils {
+export class ElasticSearchUtils6 extends ElasticSearchUtils {
 
     private settings: ElasticSettings;
     protected client: Client;
@@ -74,11 +74,13 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         await this.client.reindex({
             wait_for_completion: true,
             refresh: true,
-            source: {
-                index: oldIndexName
-            },
-            dest: {
-                index: this.indexName
+            body: {
+                source: {
+                    index: oldIndexName
+                },
+                dest: {
+                    index: this.indexName
+                }
             }
         });
     }
@@ -103,9 +105,11 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
             try {
                 return await this.client.indices.create({
                     index: indexName,
-                    wait_for_active_shards: 1,
-                    mappings,
-                    settings
+                    wait_for_active_shards: '1',
+                    body: {
+                        mappings,
+                        settings
+                    }
                 });
             }
             catch(err) {
@@ -121,7 +125,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
             try {
                 return await this.client.indices.open({
                     index: indexName,
-                    wait_for_active_shards: 1
+                    wait_for_active_shards: '1'
                 });
             }
             catch (err) {
@@ -186,7 +190,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
     }
 
     async getIndicesFromBasename(baseName: string): Promise<Index[]> {
-        let response = await this.client.cat.indices({
+        let { body: response } = await this.client.cat.indices({
             h: ['index', 'docs.count', 'health', 'status'],
             format: 'json'
         });
@@ -209,10 +213,10 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
 
     async bulk(data, closeAfterBulk): Promise<BulkResponse> {
         try {
-            let response = await this.client.bulk({
+            let { body: response } = await this.client.bulk({
                 index: this.indexName,
-                // type: this.settings.indexType || 'base',
-                operations: data
+                type: this.settings.indexType || 'base',
+                body: data
             });
             if (response.errors) {
                 response.items.forEach(item => {
@@ -245,10 +249,10 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
             try {
                 this.client.bulk({
                     index: indexName,
-                    // type: type,
-                    operations: data
+                    type: type,
+                    body: data
                 })
-                .then(response => {
+                .then(({ body: response }) => {
                     if (response.errors) {
                         response.items.forEach(item => {
                             let err = item.index.error;
@@ -280,7 +284,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         });
     }
 
-    async addDocToBulk(doc, id, maxBulkSize=ElasticSearchUtils8.maxBulkSize): Promise<BulkResponse> {
+    async addDocToBulk(doc, id, maxBulkSize=ElasticSearchUtils6.maxBulkSize): Promise<BulkResponse> {
         this._bulkData.push({
             index: {
                 _id: id
@@ -292,7 +296,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
 
         // send data to elasticsearch if limit is reached
         // TODO: don't use document size but bytes instead
-        // await this.client.cluster.health({ wait_for_status: 'yellow' });
+        // await this.client.cluster.health({wait_for_status: 'yellow'});
         if (this._bulkData.length >= (maxBulkSize * 2)) {
             return this.sendBulkData();
         } else {
@@ -312,6 +316,18 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         return new Promise(resolve => resolve({
             queued: true
         }));
+    }
+
+    bulkUpdate(updateDocuments: any[]): Promise<BulkResponse> {
+        throw new Error('Method not implemented.');
+    }
+
+    addDocsToBulkUpdate(docs: any[], maxBulkSize?: number): Promise<BulkResponse> {
+        throw new Error('Method not implemented.');
+    }
+
+    sendBulkUpdate(closeAfterBulk?: boolean): Promise<BulkResponse> {
+        throw new Error('Method not implemented.');
     }
 
     async getStoredData(ids) {
@@ -345,7 +361,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
             try {
                 let result: any = await this.client.msearch({
                     index: this.settings.alias,
-                    searches: slice
+                    body: slice
                 });
 
                 if (result.responses) {
@@ -395,23 +411,29 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
     }
 
     async deleteIndex(indicesToDelete: string | string[]): Promise<any> {
-        log.debug('Deleting indices: ' + indicesToDelete);
-        return await this.client.indices.delete({
-            index: indicesToDelete
-        });
+        if (indicesToDelete) {
+            log.debug('Deleting indices: ' + indicesToDelete);
+            return await this.client.indices.delete({
+                index: indicesToDelete
+            });
+        }
     }
 
     async search(index: string | string[], body?: object, size?: number): Promise<{ hits: any }> {
-        let response = await this.client.search({
+        let { body: response } = await this.client.search({
             index,
-            ...body,
+            body,
             size
         });
         return response;
     }
 
-    // async getHistory(baseIndex: string): Promise<{ history: any }> {
-    //     let response = await this.client.search({
+    get(index: string, id: string): Promise<any> {
+        throw new Error('Method not implemented.');
+    }
+
+    // async getHistory(baseIndex: string): Promise<any> {
+    //     let { body: response } = await this.client.search({
     //         index: ['mcloud_harvester_statistic'],
     //         body: ElasticQueries.findHistory(baseIndex),
     //         size: 30
@@ -420,27 +442,27 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
     // }
 
     async getHistory(index: string, body: object): Promise<{ history: any }> {
-        let response = await this.client.search({
+        let { body: response } = await this.client.search({
             index,
-            ...body,
+            body,
             size: 30
         });
         return { history: response.hits.hits.map(entry => entry._source) };
     }
 
     async getHistories(): Promise<any> {
-        let response = await this.client.search({
+        let { body: response } = await this.client.search({
             index: 'mcloud_harvester_statistic',
-            ...this.elasticQueries.findHistories(),
+            body: this.elasticQueries.findHistories(),
             size: 1000
         });
         return response.hits.hits.map(entry => entry._source);
     }
 
     async getAccessUrls(after_key): Promise<any> {
-        let response: any = await this.client.search({
+        let { body: response }: any = await this.client.search({
             index: '',
-            ...this.elasticQueries.getAccessUrls(after_key),
+            body: this.elasticQueries.getAccessUrls(after_key),
             size: 0
         });
         return {
@@ -457,9 +479,9 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
     }
 
     async getFacetsByAttribution(): Promise<any> {
-        let response: any = await this.client.search({
-            index: this.indexName,
-            ...this.elasticQueries.getFacetsByAttribution(),
+        let { body: response }: any = await this.client.search({
+            index: this.settings.alias,
+            body: this.elasticQueries.getFacetsByAttribution(),
             size: 0
         });
         return response.aggregations.attribution.buckets.map(entry =>
@@ -509,16 +531,17 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
             this.client.search({
                 index: indexName,
                 scroll: '5s',
-                query: {
-                    "match_all": {}
+                body: {
+                    query: {
+                        "match_all": {}
+                    }
                 }
-            }).then(function getMoreUntilDone(response) {
+            }).then(function getMoreUntilDone({ body: response }) {
                 response.hits.hits.forEach(function (hit) {
                     results.push(hit);
                 });
 
-                let totalHits = typeof response.hits.total == 'number' ? response.hits.total : response.hits.total.value;
-                if (totalHits !== results.length) {
+                if (response.hits.total !== results.length) {
                     client.scroll({
                         scroll_id: response._scroll_id,
                         scroll: '5s'
@@ -532,7 +555,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
 
     async isIndexPresent(index: string) {
         try {
-            let response = await this.client.cat.indices({
+            let { body: response } = await this.client.cat.indices({
                 h: ['index'],
                 format: 'json'
             })
@@ -544,16 +567,18 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
     }
 
     async index(index: string, document: object) {
-        await this.client.index({ index, document });
+        await this.client.index({ index, type: 'base', body: document });
     }
 
     async deleteByQuery(days: number) {
         await this.client.deleteByQuery({
             index: this.indexName,
-            query: {
-                range: {
-                    timestamp: {
-                        lt: "now-" + days + "d/d"
+            body: {
+                query: {
+                    range: {
+                        timestamp: {
+                            lt: "now-" + days + "d/d"
+                        }
                     }
                 }
             }
@@ -563,15 +588,17 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
     async deleteDocument(index: string, id: string) {
         await this.client.delete({
             index,
+            type: 'base',
             id
         });
     }
-    
+
     async ping() {
-        return await this.client.ping();
+        let { body: response } = await this.client.ping();
+        return response;
     }
 
-    // async health(status: 'green' | 'GREEN' | 'yellow' | 'YELLOW' | 'red' | 'RED' = 'yellow'): Promise<ClusterHealthResponse> {
+    // async health(status: 'green' | 'yellow' | 'red' = 'yellow'): Promise<any> {
     //     return this.client.cluster.health({ wait_for_status: status });
     // }
 

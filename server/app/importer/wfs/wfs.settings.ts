@@ -21,22 +21,13 @@
  * ==================================================
  */
 
-import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
+import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
 
 export type WfsSettings = {
     version: "2.0.0" | "1.1.0",
-    xpaths: {
-        capabilities: {
-            serviceProvider: string
-        },
-        description: string,
-        featureParent: string,
-        name: string,
-        pluPlanState: string,
-        pluProcedureStartDate: string,
-        spatial: string
-    },
+    memberElement: string,
     catalogId: string,
+    pluPlanState: string,
     count: number,
     resultType?: "hits" | "results",
     typename: string,
@@ -47,24 +38,8 @@ export type WfsSettings = {
     resolveWithFullResponse?: boolean
 } & ImporterSettings;
 
-export const DefaultXpathSettings: Partial<WfsSettings> = {
-    xpaths: {
-        capabilities: {
-            serviceProvider: '/*[local-name()="WFS_Capabilities"]/ows:ServiceProvider'
-        },
-        description: '',
-        featureParent: '/*[local-name()="FeatureCollection"]/*[local-name()="member"]',
-        name: '',
-        pluPlanState: '',
-        pluProcedureStartDate: '',
-        spatial: ''
-    }
-}
-
-
 export const defaultWfsSettings: Partial<WfsSettings> = {
     ...DefaultImporterSettings,
-    ...DefaultXpathSettings,
     // getFeaturesUrl: '',
     eitherKeywords: [],
     httpMethod: 'GET',

@@ -23,10 +23,11 @@
 
 import { DiplanungCswImporter } from './diplanung.csw.importer';
 import { ExcelSparseImporter } from '../../../importer/excelsparse/excelsparse.importer';
+import { FisWfsImporter } from '../../../importer/wfs/fis/fis.wfs.importer';
 import { Harvester } from '@shared/harvester';
 import { Importer } from '../../../importer/importer';
 import { ImporterFactory } from '../../../importer/importer.factory';
-import { WfsImporter } from '../../../importer/wfs/wfs.importer';
+import { XplanWfsImporter } from '../../../importer/wfs/xplan/xplan.wfs.importer';
 
 export class DiplanungImporterFactory extends ImporterFactory{
 
@@ -34,7 +35,8 @@ export class DiplanungImporterFactory extends ImporterFactory{
         switch (config.type) {
             case 'EXCEL_SPARSE': return new ExcelSparseImporter(config);
             case 'CSW': return new DiplanungCswImporter(config);
-            case 'WFS': return new WfsImporter(config);
+            case 'WFS.FIS': return new FisWfsImporter(config);
+            case 'WFS.XPLAN': return new XplanWfsImporter(config);
             default: {
                 console.error('Importer not found: ' + config.type);
             }

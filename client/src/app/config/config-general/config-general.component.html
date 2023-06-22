@@ -25,79 +25,79 @@
 
   <form [formGroup]="configForm">
 
-    <mat-card class="margin-below">
+    <mat-card class="margin-below" [formGroup]="configForm.get('elasticsearch')">
       <mat-card-header>
         <mat-card-title>Elasticsearch</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
           <mat-form-field fxFlex="4">
-            <mat-select placeholder="Version" formControlName="elasticSearchVersion" required>
+            <mat-select placeholder="Version" formControlName="version" required>
               <mat-option value="6">6</mat-option>
-              <!-- <mat-option value="7">7</mat-option> -->
+              <mat-option value="7">7</mat-option>
               <mat-option value="8">8</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field fxFlex="26">
-            <input matInput type="url" placeholder="Host-URL" formControlName="elasticSearchUrl" required>
-            <mat-error *ngIf="configForm.get('elasticSearchUrl').hasError('required')">
+            <input matInput type="url" placeholder="Host-URL" formControlName="url" required>
+            <mat-error *ngIf="configForm.get('elasticsearch.url').hasError('required')">
               Dies ist ein Pflichtfeld
             </mat-error>
-            <mat-error *ngIf="configForm.get('elasticSearchUrl').hasError('elasticUrl')">
+            <mat-error *ngIf="configForm.get('elasticsearch.url').hasError('elasticUrl')">
               Dies ist keine gültige Elasticsearch-URL (Bsp: http://localhost:9200)
             </mat-error>
           </mat-form-field>
         </div>
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
             <mat-form-field fxFlex="15">
-              <input matInput type="text" placeholder="Benutzername" formControlName="elasticSearchUser" required>
+              <input matInput type="text" placeholder="Benutzername" formControlName="user" required>
             </mat-form-field>
             <mat-form-field fxFlex="15">
-              <input matInput type="password" placeholder="Passwort" formControlName="elasticSearchPassword">
+              <input matInput type="password" placeholder="Passwort" formControlName="password">
             </mat-form-field>
         </div>
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
           <mat-form-field fxFlex="30">
             <input matInput placeholder="Alias-Name" formControlName="alias" required>
-            <mat-error *ngIf="configForm.get('alias').hasError('whitespace')">
+            <mat-error *ngIf="configForm.get('elasticsearch.alias').hasError('whitespace')">
               Es dürfen nicht nur Leerzeichen eingegeben sein
             </mat-error>
-            <mat-error *ngIf="configForm.get('alias').hasError('required')">
+            <mat-error *ngIf="configForm.get('elasticsearch.alias').hasError('required')">
               Dies ist ein Pflichtfeld
             </mat-error>
           </mat-form-field>
         </div>
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left center" class="margin-below">
           <div class="form-buttons">
-            <button mat-button color="primary" (click)="checkEsConnection()" [disabled]="connectionCheck == 'working'" data-test="checkEsConnection">
+            <button mat-button color="primary" (click)="checkEsConnection()" [disabled]="esConnectionCheck == 'working'" data-test="checkEsConnection">
               <mat-icon class="inline-valigned">cloud</mat-icon>
               Verbindung testen
             </button>
           </div>
-          <div *ngIf="connectionCheck != null" fxLayoutAlign="left center">
-            <mat-icon class="inline-valigned">{{esStatusIcon(connectionCheck)}}</mat-icon>&nbsp;
-            <b>{{esStatusMsg(connectionCheck)}}</b>
+          <div *ngIf="esConnectionCheck != null" fxLayoutAlign="left center">
+            <mat-icon class="inline-valigned">{{statusIcon(esConnectionCheck)}}</mat-icon>&nbsp;
+            <b>{{statusMsg(esConnectionCheck)}}</b>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="margin-below" *ngIf="profile == 'diplanung'">
+    <mat-card class="margin-below" *ngIf="profile == 'diplanung'" [formGroup]="configForm.get('ogcRecordsApi')">
       <mat-card-header>
         <mat-card-title>OGC Records API</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
           <mat-form-field fxFlex="30">
-            <input matInput type="text" placeholder="REST Basis-URL" formControlName="ogcRecordsApiUrl">
+            <input matInput type="text" placeholder="REST Basis-URL" formControlName="url">
           </mat-form-field>
         </div>
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
           <mat-form-field fxFlex="15">
-            <input matInput type="text" placeholder="Benutzername" formControlName="ogcRecordsApiUser">
+            <input matInput type="text" placeholder="Benutzername" formControlName="user">
           </mat-form-field>
           <mat-form-field fxFlex="15">
-            <input matInput type="password" placeholder="Passwort" formControlName="ogcRecordsApiPassword">
+            <input matInput type="password" placeholder="Passwort" formControlName="password">
           </mat-form-field>
         </div>
       </mat-card-content>
@@ -111,7 +111,7 @@
       <input matInput placeholder="Proxy" formControlName="proxy">
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field *ngIf="profile == 'mcloud'">
       <input matInput placeholder="Portal URL" formControlName="portalUrl">
     </mat-form-field>
 

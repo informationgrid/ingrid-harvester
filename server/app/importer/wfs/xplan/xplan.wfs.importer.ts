@@ -21,24 +21,20 @@
  * ==================================================
  */
 
-import { ElasticSearchUtils } from './elastic.utils';
-import { ElasticSearchUtils6 } from './elastic.utils.6';
-import { ElasticSearchUtils8 } from './elastic.utils.8';
-import { ElasticSettings } from './elastic.setting';
-import { Summary } from '../model/summary';
+import { Harvester } from '@shared/harvester';
+import { MiscUtils } from '../../../utils/misc.utils';
+import { RequestDelegate } from '../../../utils/http-request.utils';
+import { WfsImporter } from '../wfs.importer';
+import { WfsMapper } from '../wfs.mapper';
+import { XplanWfsMapper } from './xplan.wfs.mapper';
 
-export class ElasticSearchFactory {
+export class XplanWfsImporter extends WfsImporter {
 
-    public static getElasticUtils(settings: ElasticSettings, summary: Summary): ElasticSearchUtils {
-        switch (settings.elasticSearchVersion) {
-            case '6':
-                return new ElasticSearchUtils6(settings, summary);
-            case '7':
-                break;
-            case '8':
-                return new ElasticSearchUtils8(settings, summary);
-            default: 
-                throw new Error('Only ES versions 6 and 8 are supported; [' + settings.elasticSearchVersion + '] was specified');
-        }
+    constructor(settings: Harvester, requestDelegate?: RequestDelegate) {
+        super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
+    }
+
+    getMapper(settings: Harvester, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils): WfsMapper {
+        return new XplanWfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils);
     }
 }

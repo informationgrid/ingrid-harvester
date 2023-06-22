@@ -21,22 +21,20 @@
  * ==================================================
  */
 
-import { DeduplicateUtils } from '../persistence/deduplicate.utils';
-import { BaseMapper } from '../importer/base.mapper';
-import { ElasticQueries } from '../persistence/elastic.queries';
-import { ElasticSearchUtils } from '../persistence/elastic.utils';
-import { ImporterFactory } from '../importer/importer.factory';
-import { IndexDocument } from '../model/index.document';
-import { Summary } from '../model/summary';
+import { MiscUtils } from '../../../utils/misc.utils';
+import { RequestDelegate } from '../../../utils/http-request.utils';
+import { FisWfsMapper } from './fis.wfs.mapper';
+import { Harvester } from '@shared/harvester';
+import { WfsImporter } from '../wfs.importer';
+import { WfsMapper } from '../wfs.mapper';
 
-export abstract class ProfileFactory<M extends BaseMapper> {
+export class FisWfsImporter extends WfsImporter {
 
-    abstract getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: any, summary: Summary): DeduplicateUtils;
-    abstract getElasticMapping(): any;
-    abstract getElasticQueries(): ElasticQueries;
-    abstract getElasticSettings(): any;
-    abstract getImporterFactory(): ImporterFactory;
-    abstract getIndexDocument(): IndexDocument<M>;
-    abstract getProfileName(): string;
+    constructor(settings: Harvester, requestDelegate?: RequestDelegate) {
+        super(MiscUtils.merge(settings, { memberElement: 'gml:featureMember'}));
+    }
 
+    getMapper(settings: Harvester, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils): WfsMapper {
+        return new FisWfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils);
+    }
 }
