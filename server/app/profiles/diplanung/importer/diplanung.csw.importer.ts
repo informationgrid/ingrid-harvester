@@ -26,7 +26,9 @@ import { CswMapper } from '../../../importer/csw/csw.mapper';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { Distribution } from '../../../model/distribution';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
-import { RequestDelegate, RequestOptions } from '../../../utils/http-request.utils';
+import { GeoJsonUtils } from '../../../utils/geojson.utils';
+import { Geometry, Point } from "@turf/helpers";
+import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WmsXPath } from './wms.xpath';
 
 const log = require('log4js').getLogger(__filename);
@@ -54,16 +56,38 @@ export class DiplanungCswImporter extends CswImporter {
                     _id: doc.identifier
                 };
                 let docIsUpdated = false;
+
                 // update WMS distributions with layer names
                 let updatedDistributions = await this.updateDistributions(doc.distributions);
                 if (updatedDistributions?.length > 0) {
                     updateDoc['distributions'] = updatedDistributions;
                     docIsUpdated = true;
                 }
-                // plausibility checks and validation flag
-                // TODO check and correct geodata
+
+                // purposely simplistic heuristic: is centroid inside bbox for Germany?
+                if (!GeoJsonUtils.within(doc.centroid, GeoJsonUtils.BBOX_GERMANY)) {
+                    // if not, try to swap lat and lon
+                    let swappedCentroid = GeoJsonUtils.flip<Point>(doc.centroid);
+                    if (GeoJsonUtils.within(swappedCentroid, GeoJsonUtils.BBOX_GERMANY)) {
+                        updateDoc['spatial'] = GeoJsonUtils.flip<Geometry>(doc.spatial);
+                        updateDoc['bounding_box'] = GeoJsonUtils.flip<Geometry>(doc.bounding_box);
+                        updateDoc['centroid'] = swappedCentroid;
+                        if (!('extras.metadata.notes' in updateDoc)) {
+                            updateDoc['extras.metadata.notes'] = [];
+                        }
+                        updateDoc['extras.metadata.notes'].push('Geo data has been corrected (swapped lat and lon)');
+                    }
+                    else {
+                        updateDoc['extras.metadata.is_valid '] = false;
+                        if (!('extras.metadata.invalidationReasons' in updateDoc)) {
+                            updateDoc['extras.metadata.invalidationReasons'] = [];
+                        }
+                        updateDoc['extras.metadata.invalidationReasons'].push('Centroid not within Germany');
+                    }
+                    docIsUpdated = true;
+                }
                 // TODO more?
-                // TODO set flag
+
                 if (docIsUpdated) {
                     resolve(updateDoc);
                 }
