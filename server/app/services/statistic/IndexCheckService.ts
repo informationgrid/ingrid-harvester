@@ -23,10 +23,10 @@
 
 import { elasticsearchMapping } from '../../statistic/index_check.mapping';
 import { ConfigService } from '../config/ConfigService';
-import { ElasticQueries } from '../../utils/elastic.queries';
-import { ElasticSearchFactory } from '../../utils/elastic.factory';
-import { ElasticSearchUtils } from '../../utils/elastic.utils';
-import { ElasticSettings } from 'utils/elastic.setting';
+import { ElasticQueries } from '../../persistence/elastic.queries';
+import { ElasticSearchFactory } from '../../persistence/elastic.factory';
+import { ElasticSearchUtils } from '../../persistence/elastic.utils';
+import { ElasticSettings } from '../../persistence/elastic.setting';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary';
@@ -48,11 +48,11 @@ export class IndexCheckService {
 	initialize() {
         let generalSettings = ConfigService.getGeneralSettings();
         let settings = {
-            elasticSearchUrl: generalSettings.elasticSearchUrl,
-            elasticSearchVersion: generalSettings.elasticSearchVersion,
-            elasticSearchUser: generalSettings.elasticSearchUser,
-            elasticSearchPassword: generalSettings.elasticSearchPassword,
-            alias: generalSettings.alias,
+            elasticSearchUrl: generalSettings.elasticsearch.url,
+            elasticSearchVersion: generalSettings.elasticsearch.version,
+            elasticSearchUser: generalSettings.elasticsearch.user,
+            elasticSearchPassword: generalSettings.elasticsearch.password,
+            alias: generalSettings.elasticsearch.alias,
             includeTimestamp: false,
             index: 'index_check_history'
         };

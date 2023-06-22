@@ -33,7 +33,7 @@ import {DcatMapper} from "../../../importer/dcat/dcat.mapper";
 import {ExcelMapper} from "../../../importer/excel/excel.mapper";
 import {OaiMapper} from "../../../importer/oai/oai.mapper";
 import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
-import { RequestOptions } from 'utils/http-request.utils';
+import { RequestOptions } from '../../../utils/http-request.utils';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');

@@ -587,10 +587,14 @@ export class CkanMapper extends BaseMapper {
                 }
             };
         } else {
-            let fq;
+            let qs = <CkanParameters> {
+                sort: 'id asc',
+                start: settings.startPosition,
+                rows: settings.maxRecords
+            };
             if(settings.filterGroups.length > 0 || settings.filterTags.length > 0 || settings.additionalSearchFilter)
             {
-                fq = '';
+                let fq = '';
                 if(settings.filterGroups.length > 0) {
                     fq += '+groups:(' + settings.filterGroups.join(' OR ') + ')';
                 }
@@ -603,6 +607,7 @@ export class CkanMapper extends BaseMapper {
                 if(settings.whitelistedIds.length > 0){
                     fq = '(('+fq+ ') OR id:('+settings.whitelistedIds.join(' OR ')+'))'
                 }
+                qs['fq'] = fq;
             }
             return {
                 method: 'GET',
@@ -611,12 +616,7 @@ export class CkanMapper extends BaseMapper {
                 headers: RequestDelegate.defaultRequestHeaders(),
                 proxy: settings.proxy,
                 rejectUnauthorized: settings.rejectUnauthorizedSSL,
-                qs: <CkanParameters> {
-                    sort: 'id asc',
-                    start: settings.startPosition,
-                    rows: settings.maxRecords,
-                    fq: fq
-                }
+                qs
             };
         }
 

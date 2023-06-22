@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { ElasticSettings } from '../../../../server/app/utils/elastic.setting';
+import { ElasticSettings } from '../../../../server/app/persistence/elastic.setting';
 import { GeneralSettings } from '@shared/general-config.settings';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';

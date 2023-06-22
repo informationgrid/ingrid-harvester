@@ -21,22 +21,25 @@
  * ==================================================
  */
 
-import { DeduplicateUtils } from '../persistence/deduplicate.utils';
-import { BaseMapper } from '../importer/base.mapper';
-import { ElasticQueries } from '../persistence/elastic.queries';
-import { ElasticSearchUtils } from '../persistence/elastic.utils';
-import { ImporterFactory } from '../importer/importer.factory';
-import { IndexDocument } from '../model/index.document';
+import { ElasticSearchUtils } from './elastic.utils';
+import { ElasticSearchUtils6 } from './elastic.utils.6';
+import { ElasticSearchUtils7 } from './elastic.utils.7';
+import { ElasticSearchUtils8 } from './elastic.utils.8';
+import { ElasticSettings } from './elastic.setting';
 import { Summary } from '../model/summary';
 
-export abstract class ProfileFactory<M extends BaseMapper> {
+export class ElasticSearchFactory {
 
-    abstract getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: any, summary: Summary): DeduplicateUtils;
-    abstract getElasticMapping(): any;
-    abstract getElasticQueries(): ElasticQueries;
-    abstract getElasticSettings(): any;
-    abstract getImporterFactory(): ImporterFactory;
-    abstract getIndexDocument(): IndexDocument<M>;
-    abstract getProfileName(): string;
-
+    public static getElasticUtils(settings: ElasticSettings, summary: Summary): ElasticSearchUtils {
+        switch (settings.elasticSearchVersion) {
+            case '6':
+                return new ElasticSearchUtils6(settings, summary);
+            case '7':
+                return new ElasticSearchUtils7(settings, summary);
+            case '8':
+                return new ElasticSearchUtils8(settings, summary);
+            default: 
+                throw new Error('Only ES versions 6 and 8 are supported; [' + settings.elasticSearchVersion + '] was specified');
+        }
+    }
 }

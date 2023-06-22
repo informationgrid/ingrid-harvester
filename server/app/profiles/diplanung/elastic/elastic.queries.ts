@@ -21,9 +21,19 @@
  * ==================================================
  */
 
-import { ElasticQueries as IElasticQueries } from '../../../utils/elastic.queries';
+import { ElasticQueries as IElasticQueries } from '../../../persistence/elastic.queries';
 
 const dayjs = require('dayjs');
+
+
+// fields potentially occurring in CSW that should be overwritten by WFS data
+export const overwriteFields = [
+    'catalog',
+    // spatial fields
+    'bounding_box', 'centroid', 'spatial',
+    // PLU fields
+    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_start_date', 'procedure_state', 'procedure_type'
+];
 
 export class ElasticQueries implements IElasticQueries {
 
@@ -42,7 +52,7 @@ export class ElasticQueries implements IElasticQueries {
      * 
      */
     findSameAlternateTitle(): any {
-        let maxAggregates = 10000;
+        let maxAggregates = 100000;
         return {
             size: 0,
             query: {
@@ -67,7 +77,9 @@ export class ElasticQueries implements IElasticQueries {
                                         order: 'desc'
                                     }
                                 }, {'modified': {order: 'desc'}}],
-                                size: 100
+                                size: 100,
+                                // workaround: we retrieve the full document for recreating the DCAT-AP-PLU XML later
+                                _source: { include: [...overwriteFields, 'title', 'publisher'] }
                             }
                         }
                     }

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {ElasticSearchUtils} from '../../utils/elastic.utils';
+import {ElasticSearchUtils} from '../../persistence/elastic.utils';
 import {Summary} from '../../model/summary';
 import {Importer} from '../importer';
 import {RequestDelegate} from '../../utils/http-request.utils';
@@ -288,9 +288,15 @@ export class CkanImporter extends Importer {
                 }
             });
         } else {
-            let fq;
+            let partialConfig = {
+                qs: {
+                    sort: 'id asc',
+                    start: offset,
+                    rows: this.settings.maxRecords
+                }
+            };
             if (this.settings.filterGroups.length > 0 || this.settings.filterTags.length > 0 || this.settings.additionalSearchFilter) {
-                fq = '';
+                let fq = '';
                 if (this.settings.filterGroups.length > 0) {
                     fq += '+groups:(' + this.settings.filterGroups.join(' OR ') + ')';
                 }
@@ -303,15 +309,9 @@ export class CkanImporter extends Importer {
                 if (this.settings.whitelistedIds.length > 0) {
                     fq = '((' + fq + ') OR id:(' + this.settings.whitelistedIds.join(' OR ') + '))';
                 }
+                partialConfig['fq'] = fq;
             }
-            this.requestDelegate.updateConfig({
-                qs: {
-                    sort: 'id asc',
-                    start: offset,
-                    rows: this.settings.maxRecords,
-                    fq: fq
-                }
-            });
+            this.requestDelegate.updateConfig(partialConfig);
         }
     }
 

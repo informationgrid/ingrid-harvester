@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import { DeduplicateUtils as AbstractDeduplicateUtils } from '../../../utils/deduplicate.utils';
-import { ElasticSearchUtils } from '../../../utils/elastic.utils';
+import { DeduplicateUtils as AbstractDeduplicateUtils } from '../../../persistence/deduplicate.utils';
+import { ElasticSearchUtils } from '../../../persistence/elastic.utils';
 import { Summary } from '../../../model/summary';
 
 const log = require('log4js').getLogger(__filename);

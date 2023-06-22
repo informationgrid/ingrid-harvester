@@ -22,7 +22,7 @@
  */
 
 import { BulkResponse, ElasticSearchUtils } from './elastic.utils';
-import { Client } from 'elasticsearch6';
+import { Client } from 'elasticsearch7';
 import { DeduplicateUtils } from './deduplicate.utils';
 import { ElasticQueries } from './elastic.queries';
 import { ElasticSettings } from './elastic.setting';
@@ -32,7 +32,7 @@ import { Summary } from '../model/summary';
 
 let log = require('log4js').getLogger(__filename);
 
-export class ElasticSearchUtils6 extends ElasticSearchUtils {
+export class ElasticSearchUtils7 extends ElasticSearchUtils {
 
     private settings: ElasticSettings;
     protected client: Client;
@@ -103,16 +103,13 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         }
         if (!openIfPresent || !isPresent) {
             try {
-                let index = await this.client.indices.create({
+                return await this.client.indices.create({
                     index: indexName,
                     wait_for_active_shards: '1',
-                    // mappings,
-                    body: settings
-                });
-                await this.client.indices.put_mapping({
-                    index: indexName,
-                    type: this.settings.indexType || 'base',
-                    body: mappings
+                    body: {
+                        mappings,
+                        settings
+                    }
                 });
             }
             catch(err) {
@@ -287,7 +284,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         });
     }
 
-    async addDocToBulk(doc, id, maxBulkSize=ElasticSearchUtils6.maxBulkSize): Promise<BulkResponse> {
+    async addDocToBulk(doc, id, maxBulkSize=ElasticSearchUtils7.maxBulkSize): Promise<BulkResponse> {
         this._bulkData.push({
             index: {
                 _id: id
@@ -319,6 +316,18 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         return new Promise(resolve => resolve({
             queued: true
         }));
+    }
+
+    bulkUpdate(updateDocuments: any[]): Promise<BulkResponse> {
+        throw new Error('Method not implemented.');
+    }
+
+    addDocsToBulkUpdate(docs: any[], maxBulkSize?: number): Promise<BulkResponse> {
+        throw new Error('Method not implemented.');
+    }
+
+    sendBulkUpdate(closeAfterBulk?: boolean): Promise<BulkResponse> {
+        throw new Error('Method not implemented.');
     }
 
     async getStoredData(ids) {
@@ -416,7 +425,11 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
             body,
             size
         });
-        return response;
+        return { hits: [], ...response };
+    }
+
+    get(index: string, id: string): Promise<any> {
+        throw new Error('Method not implemented.');
     }
 
     // async getHistory(baseIndex: string): Promise<any> {
@@ -427,7 +440,8 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     //     });
     //     return { history: response.hits.hits.map(entry => entry._source) };
     // }
-    async getHistory(index: string, body: object): Promise<{ history: any; }> {
+
+    async getHistory(index: string, body: object): Promise<{ history: any }> {
         let { body: response } = await this.client.search({
             index,
             body,
@@ -552,8 +566,8 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         }
     }
 
-    async index(index: string, body: object) {
-        await this.client.index({ index, type: 'base', body });
+    async index(index: string, document: object) {
+        await this.client.index({ index, type: 'base', body: document });
     }
 
     async deleteByQuery(days: number) {

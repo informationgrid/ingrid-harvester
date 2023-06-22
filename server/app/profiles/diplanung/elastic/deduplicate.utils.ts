@@ -21,21 +21,14 @@
  * ==================================================
  */
 
+import { overwriteFields } from './elastic.queries';
 import { DcatApPluDocument } from '../model/dcatApPlu.document';
-import { DeduplicateUtils as AbstractDeduplicateUtils } from '../../../utils/deduplicate.utils';
+import { DeduplicateUtils as AbstractDeduplicateUtils } from '../../../persistence/deduplicate.utils';
 import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
-import { ElasticSearchUtils } from '../../../utils/elastic.utils';
+import { ElasticSearchUtils } from '../../../persistence/elastic.utils';
 import { Summary } from '../../../model/summary';
 
 const log = require('log4js').getLogger(__filename);
-
-// fields potentially occurring in CSW that should be overwritten by WFS data
-const overwriteFields = [
-    'catalog',
-    // spatial fields
-    'bounding_box', 'centroid', 'spatial',
-    // PLU fields
-    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_start_date', 'procedure_state', 'procedure_type'];
 
 export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
@@ -98,6 +91,17 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
                         if (!mainHit._source.publisher?.name && !mainHit._source.publisher?.organization) {
                             updatedFields['publisher'] = hit._source.publisher;
                         }
+
+                        // TODO revisit deduplication in general and this bit specifically once the DB layer is done
+                        /*
+                         * Problem: if we fetch the complete documents in the aggregate query, it becomes too large
+                         * very quickly, crashing the query.
+                         *
+                         * An expensive workaround until the DB layer is incorporated:
+                         * get the main hit again (this time fully)
+                         */
+                        mainHit = await this.elastic.get(mainHit._index, mainHit._id);
+
                         // create new dcat-ap-plu xml document from merged index document
                         let mergedDoc = { ...mainHit._source, ...updatedFields };
                         let dcatappluDocument = await DcatApPluDocument.create(new DiplanungVirtualMapper(mergedDoc));
@@ -105,7 +109,7 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
                         let deleted = `Item to delete -> ID: '${hit._id}', Title: '${hit._source.title}', Index: '${hit._index}'`;
                         let merged = `Item to merge into -> ID: '${mainHit._id}', Title: '${mainHit._source.title}', Index: '${mainHit._index}'`;
-                        log.info(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${merged}`);
+                        log.debug(`Duplicate item found and will be deleted.\n        ${deleted}\n        ${merged}`);
                         this.elastic._bulkData.push(
                             {
                                 update: {

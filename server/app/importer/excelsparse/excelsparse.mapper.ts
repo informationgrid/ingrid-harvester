@@ -180,12 +180,6 @@ export class ExcelSparseMapper extends BaseMapper {
         return undefined;
     }
 
-    _getSpatialGml(): string {
-        return `<gml:Point>
-            <gml:pos>${this.columnMap.LON} ${this.columnMap.LAT}</gml:pos>
-        </gml:Point>`;
-    }
-
     _getSpatial(): object {
         return {
             'type': 'point',
@@ -477,10 +471,6 @@ export class ExcelSparseMapper extends BaseMapper {
         }
 
         return config;
-    }
-
-    _getBoundingBoxGml() {
-        return undefined;
     }
 
     _getBoundingBox() {

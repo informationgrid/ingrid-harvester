@@ -22,17 +22,9 @@
  */
 
 export type GeneralSettings = {
-    elasticSearchUrl: string,
-    elasticSearchVersion: string,
-    elasticSearchUser: string,
-    elasticSearchPassword?: string,
+    elasticsearch: ElasticsearchConfiguration,
+    ogcRecordsApi?: OgcRecordsApiConfiguration,
     cronOffset?: number,
-    alias: string,
-    numberOfShards?: number,
-    numberOfReplicas?: number,
-    ogcRecordsApiUrl?: string,
-    ogcRecordsApiUser?: string,
-    ogcRecordsApiPassword?: string, 
     proxy: string,
     portalUrl?: string,
     urlCheck?: CronData,
@@ -53,6 +45,22 @@ export type GeneralSettings = {
     },
     maxDiff?: number
 };
+
+export interface ElasticsearchConfiguration {
+    url: string,
+    version: string,
+    user?: string,
+    password?: string
+    alias: string,
+    numberOfShards?: number,
+    numberOfReplicas?: number
+}
+
+export interface OgcRecordsApiConfiguration {
+    url: string,
+    user?: string,
+    password?: string, 
+}
 
 export interface MailServerConfiguration {
     host: string,
