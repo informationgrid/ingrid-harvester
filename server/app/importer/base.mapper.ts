@@ -47,7 +47,9 @@ export abstract class BaseMapper {
 
     public valid = true;
 
-    private invalidationReasons = [];
+    public changed = false;
+
+    private qualityNotes = [];
 
     public skipped = false;
 
@@ -377,13 +379,17 @@ export abstract class BaseMapper {
         return this.valid;
     }
 
-    getInvalidationReasons(): string[] {
-        return this.invalidationReasons;
+    isChanged(doc?: any) {
+        return this.changed;
     }
 
-    addInvalidationReason(reason: string): void {
-        if (!this.invalidationReasons.includes(reason)) {
-            this.invalidationReasons.push(reason);
+    getQualityNotes(): string[] {
+        return this.qualityNotes;
+    }
+
+    addQualityNotes(reason: string): void {
+        if (!this.qualityNotes.includes(reason)) {
+            this.qualityNotes.push(reason);
         }
     }
 

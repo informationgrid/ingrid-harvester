@@ -531,23 +531,23 @@ export class CswMapper extends BaseMapper {
             let geometryValid = true;
             if (Math.abs(west) > 180) {
                 geometryValid = false;
-                this.addInvalidationReason(`westBoundLongitude is out of bounds (${west})`);
+                this.addQualityNotes(`westBoundLongitude is out of bounds (${west})`);
             }
             if (Math.abs(east) > 180) {
                 geometryValid = false;
-                this.addInvalidationReason(`eastBoundLongitude is out of bounds (${east})`);
+                this.addQualityNotes(`eastBoundLongitude is out of bounds (${east})`);
             }
             if (Math.abs(south) > 90) {
                 geometryValid = false;
-                this.addInvalidationReason(`southBoundLatitude is out of bounds (${south})`);
+                this.addQualityNotes(`southBoundLatitude is out of bounds (${south})`);
             }
             if (Math.abs(north) > 90) {
                 geometryValid = false;
-                this.addInvalidationReason(`northBoundLatitude is out of bounds (${north})`);
+                this.addQualityNotes(`northBoundLatitude is out of bounds (${north})`);
             }
             if (south > north) {
                 geometryValid = false;
-                this.addInvalidationReason(`southBoundLatitude > northBoundLatitude (${south} > ${north})`);
+                this.addQualityNotes(`southBoundLatitude > northBoundLatitude (${south} > ${north})`);
             }
 
             if (!geometryValid) {

@@ -72,17 +72,18 @@ export class DiplanungCswImporter extends CswImporter {
                         updateDoc['spatial'] = GeoJsonUtils.flip<Geometry>(doc.spatial);
                         updateDoc['bounding_box'] = GeoJsonUtils.flip<Geometry>(doc.bounding_box);
                         updateDoc['centroid'] = swappedCentroid;
-                        if (!('extras.metadata.notes' in updateDoc)) {
-                            updateDoc['extras.metadata.notes'] = [];
+                        if (!('extras.metadata.quality_notes' in updateDoc)) {
+                            updateDoc['extras.metadata.quality_notes'] = [];
                         }
-                        updateDoc['extras.metadata.notes'].push('Geo data has been corrected (swapped lat and lon)');
+                        updateDoc['extras.metadata.is_changed '] = true;
+                        updateDoc['extras.metadata.quality_notes'].push('Swapped lat and lon');
                     }
                     else {
                         updateDoc['extras.metadata.is_valid '] = false;
-                        if (!('extras.metadata.invalidationReasons' in updateDoc)) {
-                            updateDoc['extras.metadata.invalidationReasons'] = [];
+                        if (!('extras.metadata.quality_notes' in updateDoc)) {
+                            updateDoc['extras.metadata.quality_notes'] = [];
                         }
-                        updateDoc['extras.metadata.invalidationReasons'].push('Centroid not within Germany');
+                        updateDoc['extras.metadata.quality_notes'].push('Centroid not within Germany');
                     }
                     docIsUpdated = true;
                 }
