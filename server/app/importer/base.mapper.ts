@@ -387,9 +387,9 @@ export abstract class BaseMapper {
         return this.qualityNotes;
     }
 
-    addQualityNotes(reason: string): void {
-        if (!this.qualityNotes.includes(reason)) {
-            this.qualityNotes.push(reason);
+    addQualityNotes(note: string): void {
+        if (!this.qualityNotes.includes(note)) {
+            this.qualityNotes.push(note);
         }
     }
 
