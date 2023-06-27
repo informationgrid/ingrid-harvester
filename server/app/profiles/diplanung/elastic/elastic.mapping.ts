@@ -419,6 +419,13 @@ export const elasticsearchMapping = {
                         },
                         'harvesting_errors': {
                             'type': 'text'
+                        },
+                        'is_changed': {
+                            'type': 'boolean',
+                            'null_value': true
+                        },
+                        'quality_notes': {
+                            'type': 'text'
                         }
                     }
                 },

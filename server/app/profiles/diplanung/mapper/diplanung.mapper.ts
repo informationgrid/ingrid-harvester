@@ -173,8 +173,8 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper.isValid(doc);
     }
 
-    getInvalidationReasons(doc? : any): string[] {
-        return this.baseMapper.getInvalidationReasons();
+    getQualityNotes(doc? : any): string[] {
+        return this.baseMapper.getQualityNotes();
     }
 
     executeCustomCode(doc: any) {

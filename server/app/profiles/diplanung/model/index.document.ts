@@ -97,7 +97,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
         result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
         result.extras.metadata.is_valid = mapper.isValid(result);
         if (!result.extras.metadata.is_valid) {
-            result.extras.metadata['invalidationReasons'] = mapper.getInvalidationReasons();
+            result.extras.metadata['quality_notes'] = mapper.getQualityNotes();
         }
         mapper.executeCustomCode(result);
 

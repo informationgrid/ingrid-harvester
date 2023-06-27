@@ -66,23 +66,23 @@ export class DiplanungCswImporter extends CswImporter {
 
                 // purposely simplistic heuristic: is centroid inside bbox for Germany?
                 if (!GeoJsonUtils.within(doc.centroid, GeoJsonUtils.BBOX_GERMANY)) {
+                    // copy and/or create relevant metadata structure
+                    updateDoc['extras'] = { ...doc['extras'] };
+                    if (!updateDoc['extras']['metadata']['quality_notes']) {
+                        updateDoc['extras']['metadata']['quality_notes'] = [];
+                    }
                     // if not, try to swap lat and lon
                     let swappedCentroid = GeoJsonUtils.flip<Point>(doc.centroid);
                     if (GeoJsonUtils.within(swappedCentroid, GeoJsonUtils.BBOX_GERMANY)) {
                         updateDoc['spatial'] = GeoJsonUtils.flip<Geometry>(doc.spatial);
                         updateDoc['bounding_box'] = GeoJsonUtils.flip<Geometry>(doc.bounding_box);
                         updateDoc['centroid'] = swappedCentroid;
-                        if (!('extras.metadata.notes' in updateDoc)) {
-                            updateDoc['extras.metadata.notes'] = [];
-                        }
-                        updateDoc['extras.metadata.notes'].push('Geo data has been corrected (swapped lat and lon)');
+                        updateDoc['extras']['metadata']['is_changed'] = true;
+                        updateDoc['extras']['metadata']['quality_notes'].push('Swapped lat and lon');
                     }
                     else {
-                        updateDoc['extras.metadata.is_valid '] = false;
-                        if (!('extras.metadata.invalidationReasons' in updateDoc)) {
-                            updateDoc['extras.metadata.invalidationReasons'] = [];
-                        }
-                        updateDoc['extras.metadata.invalidationReasons'].push('Centroid not within Germany');
+                        updateDoc['extras']['metadata']['is_valid'] = false;
+                        updateDoc['extras']['metadata']['quality_notes'].push('Centroid not within Germany');
                     }
                     docIsUpdated = true;
                 }
@@ -213,7 +213,7 @@ export class DiplanungCswImporter extends CswImporter {
     // }
 
     private getMapLayerNames(response: string): string[] {
-        let serviceResponseDom = new DomParser().parseFromString(response);
+        let serviceResponseDom = new DomParser().parseFromString(response, 'application/xml');
         // layer * 2
         let layers = WmsXPath.select('./wms:WMS_Capabilities/wms:Capability/wms:Layer/wms:Layer', serviceResponseDom);
         let layerNames = [];
