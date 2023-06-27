@@ -16,7 +16,7 @@
       "containsDocumentsWithData": null
     },
     "isIncremental": false,
-    "maxConcurrent": 10,
+    "maxConcurrent": 6,
     "skipUrlCheckOnHarvest": false,
     "xpaths": {
       "capabilities": {
@@ -51,7 +51,7 @@
   {
     "index": "wfs_hh_xplanungsplattform_de_51",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -65,17 +65,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -103,7 +93,7 @@
   {
     "index": "wfs_hh_xplanungsplattform_de_52",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -117,17 +107,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -155,7 +135,7 @@
   {
     "index": "wfs_hh_xplanungsplattform_de_53",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -169,17 +149,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -207,7 +177,7 @@
   {
     "index": "wfs_hh_xplanungsplattform_de_54",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -221,17 +191,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -259,7 +219,7 @@
   {
     "index": "wfs_hh_xplanungsplattform_de_51pre",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -273,17 +233,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "in aufstellung",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -311,7 +261,7 @@
   {
     "index": "wfs_hh_xplanungsplattform_de_52pre",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -325,17 +275,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "in aufstellung",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -363,7 +303,7 @@
   {
     "index": "wfs_hh_xplanungsplattform_de_53pre",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -377,17 +317,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "in aufstellung",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -415,7 +345,7 @@
   {
     "index": "wfs_hh_xplanungsplattform_de_54pre",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -429,17 +359,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "in aufstellung",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -467,7 +387,7 @@
   {
     "index": "wfs_xplanung_freiburg_de_30",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -481,17 +401,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -519,7 +429,7 @@
   {
     "index": "wfs_xplanung_freiburg_de_40",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -533,17 +443,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -571,7 +471,7 @@
   {
     "index": "wfs_xplanung_freiburg_de_41",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -585,17 +485,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -623,7 +513,7 @@
   {
     "index": "wfs_xplanung_freiburg_de_50",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -637,17 +527,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -675,7 +555,7 @@
   {
     "index": "wfs_xplanung_freiburg_de_51",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -689,17 +569,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -727,7 +597,7 @@
   {
     "index": "wfs_xplanung_freiburg_de_52",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -741,17 +611,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -779,7 +639,7 @@
   {
     "index": "wfs_xplanung_freiburg_de_53",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -793,17 +653,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -831,7 +681,7 @@
   {
     "index": "wfs_xplanung_freiburg_de_54",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -845,17 +695,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -883,10 +723,10 @@
   {
     "index": "wfs_berliner_umringe",
     "priority": null,
-    "type": "WFS",
+    "type": "WFS.FIS",
     "maxRecords": null,
     "startPosition": null,
-    "customCode": null,
+    "customCode": "doc.spatial_text = `Berlin ${doc.spatial_text}`;",
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "dateSourceFormats": [],
@@ -897,17 +737,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "be",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/fis:BEREICH",
-      "featureParent": "/wfs:FeatureCollection/gml:featureMember",
-      "name": "./*/fis:PLANNAME",
-      "pluPlanState": "./*/fis:FESTSG",
-      "pluProcedureStartDate": "./*/fis:AFS_BESCHL",
-      "spatial": "./*/fis:SHAPE_25833"
-    },
+    "pluPlanState": null,
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -930,6 +760,7 @@
         "pattern": "",
         "active": false
       }
-    }
+    },
+    "maxConcurrent": null
   }
 ]
