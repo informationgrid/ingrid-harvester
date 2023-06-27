@@ -213,7 +213,7 @@ export class DiplanungCswImporter extends CswImporter {
     // }
 
     private getMapLayerNames(response: string): string[] {
-        let serviceResponseDom = new DomParser().parseFromString(response);
+        let serviceResponseDom = new DomParser().parseFromString(response, 'application/xml');
         // layer * 2
         let layers = WmsXPath.select('./wms:WMS_Capabilities/wms:Capability/wms:Layer/wms:Layer', serviceResponseDom);
         let layerNames = [];

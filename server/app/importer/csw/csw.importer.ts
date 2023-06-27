@@ -23,6 +23,7 @@
 
 import { defaultCSWSettings, CswSettings } from './csw.settings';
 import { getLogger } from 'log4js';
+import { BulkResponse } from 'persistence/elastic.utils';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { ConfigService } from '../../services/config/ConfigService';
 import { CswMapper } from './csw.mapper';
@@ -333,9 +334,13 @@ export class CswImporter extends Importer {
         // TODO the following line raises
         // MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 abort listeners added to [EventEmitter]. Use emitter.setMaxListeners() to increase limit
         // may be harmless; investigate if limit increase suffices or if a real leak is occurring
-        await Promise.allSettled(promises).catch(err => log.error('Error indexing CSW record', err));
-        // TODO we should return the actually imported documents, not the ones which should be imported (of which some could fail)
-        return docsToImport;
+        let settledPromises: PromiseSettledResult<BulkResponse>[] = await Promise.allSettled(promises).catch(err => log.error('Error indexing CSW record', err));
+        // filter for the actually imported documents
+        let insertedIds = settledPromises.filter(result => result.status == 'fulfilled' && !result.value.queued).reduce((ids, result) => {
+            ids.push(...(result as PromiseFulfilledResult<BulkResponse>).value.response.items.filter(item => item.index.result == 'created').map(item => item.index._id));
+            return ids;
+        }, []);
+        return docsToImport.filter(doc => insertedIds.includes(doc.identifier));
     }
 
     /**
