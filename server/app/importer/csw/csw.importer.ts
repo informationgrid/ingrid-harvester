@@ -197,6 +197,12 @@ export class CswImporter extends Importer {
             log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
             let importedDocuments = await this.extractRecords(response, harvestTime);
             await this.updateRecords(importedDocuments);
+            // logging
+            let beforePercentage = Math.floor(100 * (delegate.getStartRecordIndex() - this.settings.maxRecords) / this.totalRecords);
+            let percentage = Math.floor(100 * delegate.getStartRecordIndex() / this.totalRecords);
+            if (percentage % 10 == 0 && percentage != beforePercentage && percentage > 0) {
+                log.info(`Processing watermark: ${percentage}% (${delegate.getStartRecordIndex()} records)`);
+            }
         } else {
             const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
             log.error(message);
