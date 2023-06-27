@@ -108,6 +108,9 @@ export class GeoJsonUtils {
     };
 
     static within = (point: number[] | Point, bbox: Geometry): boolean => {
+        if (point == null) {
+            return undefined;
+        }
         if ('coordinates' in point) {
             return booleanWithin(point, bbox);
         }
@@ -117,6 +120,9 @@ export class GeoJsonUtils {
     };
 
     static flip = <T>(spatial: number[] | Geometry): T => {
+        if (spatial == null) {
+            return undefined;
+        }
         if ('coordinates' in spatial) {
             return flip(spatial);
         }

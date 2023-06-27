@@ -66,24 +66,23 @@ export class DiplanungCswImporter extends CswImporter {
 
                 // purposely simplistic heuristic: is centroid inside bbox for Germany?
                 if (!GeoJsonUtils.within(doc.centroid, GeoJsonUtils.BBOX_GERMANY)) {
+                    // copy and/or create relevant metadata structure
+                    updateDoc['extras'] = { ...doc['extras'] };
+                    if (!updateDoc['extras']['metadata']['quality_notes']) {
+                        updateDoc['extras']['metadata']['quality_notes'] = [];
+                    }
                     // if not, try to swap lat and lon
                     let swappedCentroid = GeoJsonUtils.flip<Point>(doc.centroid);
                     if (GeoJsonUtils.within(swappedCentroid, GeoJsonUtils.BBOX_GERMANY)) {
                         updateDoc['spatial'] = GeoJsonUtils.flip<Geometry>(doc.spatial);
                         updateDoc['bounding_box'] = GeoJsonUtils.flip<Geometry>(doc.bounding_box);
                         updateDoc['centroid'] = swappedCentroid;
-                        if (!('extras.metadata.quality_notes' in updateDoc)) {
-                            updateDoc['extras.metadata.quality_notes'] = [];
-                        }
-                        updateDoc['extras.metadata.is_changed '] = true;
-                        updateDoc['extras.metadata.quality_notes'].push('Swapped lat and lon');
+                        updateDoc['extras']['metadata']['is_changed'] = true;
+                        updateDoc['extras']['metadata']['quality_notes'].push('Swapped lat and lon');
                     }
                     else {
-                        updateDoc['extras.metadata.is_valid '] = false;
-                        if (!('extras.metadata.quality_notes' in updateDoc)) {
-                            updateDoc['extras.metadata.quality_notes'] = [];
-                        }
-                        updateDoc['extras.metadata.quality_notes'].push('Centroid not within Germany');
+                        updateDoc['extras']['metadata']['is_valid'] = false;
+                        updateDoc['extras']['metadata']['quality_notes'].push('Centroid not within Germany');
                     }
                     docIsUpdated = true;
                 }
