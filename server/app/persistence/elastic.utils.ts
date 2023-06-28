@@ -146,10 +146,7 @@ export abstract class ElasticSearchUtils {
 
     abstract get(index: string, id: string): Promise<any>;
 
-    // abstract getHistory(baseIndex: string): Promise<any>;
-    abstract getHistory(index: string, body: object): Promise<{ history: any }>;
-
-    abstract getHistories(): Promise<any>;
+    abstract getHistory(body: object, size?: number): Promise<{ history: any }>;
 
     abstract getAccessUrls(after_key): Promise<any>;
 

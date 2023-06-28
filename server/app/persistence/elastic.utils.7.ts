@@ -432,31 +432,13 @@ export class ElasticSearchUtils7 extends ElasticSearchUtils {
         throw new Error('Method not implemented.');
     }
 
-    // async getHistory(baseIndex: string): Promise<any> {
-    //     let { body: response } = await this.client.search({
-    //         index: ['mcloud_harvester_statistic'],
-    //         body: ElasticQueries.findHistory(baseIndex),
-    //         size: 30
-    //     });
-    //     return { history: response.hits.hits.map(entry => entry._source) };
-    // }
-
-    async getHistory(index: string, body: object): Promise<{ history: any }> {
+    async getHistory(body: object, size = 30): Promise<{ history: any }> {
         let { body: response } = await this.client.search({
-            index,
+            index: this.indexName,
             body,
-            size: 30
+            size
         });
         return { history: response.hits.hits.map(entry => entry._source) };
-    }
-
-    async getHistories(): Promise<any> {
-        let { body: response } = await this.client.search({
-            index: 'mcloud_harvester_statistic',
-            body: this.elasticQueries.findHistories(),
-            size: 1000
-        });
-        return response.hits.hits.map(entry => entry._source);
     }
 
     async getAccessUrls(after_key): Promise<any> {

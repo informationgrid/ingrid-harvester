@@ -69,7 +69,7 @@ export class IndexCheckService {
         if (!indexExists) {
             await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
         }
-        return this.elasticUtils.getHistory(this.elasticUtils.indexName, this.elasticQueries.getIndexCheckHistory());
+        return this.elasticUtils.getHistory(this.elasticQueries.getIndexCheckHistory());
     }
 
     async start() {

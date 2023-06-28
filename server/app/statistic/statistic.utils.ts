@@ -47,7 +47,7 @@ export class StatisticUtils {
             elasticSearchPassword: generalSettings.elasticsearch.password,
             alias: generalSettings.elasticsearch.alias,
             includeTimestamp: false,
-            index: 'mcloud_harvester_statistic'
+            index: 'harvester_statistic'
         };
         // @ts-ignore
         const summary: Summary = {};

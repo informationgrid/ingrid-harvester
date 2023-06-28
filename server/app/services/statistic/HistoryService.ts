@@ -51,7 +51,7 @@ export class HistoryService {
             elasticSearchPassword: generalSettings.elasticsearch.password,
             alias: generalSettings.elasticsearch.alias,
             includeTimestamp: true,
-            index: 'mcloud_harvester_statistic'
+            index: 'harvester_statistic'
         };
         // @ts-ignore
         const summary: Summary = {};
@@ -67,7 +67,7 @@ export class HistoryService {
         if (!indexExists) {
             await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
         }
-        let history = await this.elasticUtils.getHistory('mcloud_harvester_statistic', this.elasticQueries.findHistory(harvester.index));
+        let history = await this.elasticUtils.getHistory(this.elasticQueries.findHistory(harvester.index));
         return {
             harvester: harvester.description,
             ...history
@@ -77,7 +77,7 @@ export class HistoryService {
     private SUM = (accumulator, currentValue) => accumulator + currentValue;
 
     async getHistoryAll(): Promise<any> {
-        let history = await this.elasticUtils.getHistories();
+        let { history } = await this.elasticUtils.getHistory(this.elasticQueries.findHistories(), 1000);
 
         let dates = [];
 

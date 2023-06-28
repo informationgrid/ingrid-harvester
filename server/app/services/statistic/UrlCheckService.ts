@@ -89,7 +89,7 @@ export class UrlCheckService {
         if (!indexExists) {
             await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
         }
-        return this.elasticUtils.getHistory(this.elasticUtils.indexName, this.elasticQueries.getUrlCheckHistory());
+        return this.elasticUtils.getHistory(this.elasticQueries.getUrlCheckHistory());
     }
 
     async start() {
