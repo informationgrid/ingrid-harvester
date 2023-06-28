@@ -47,6 +47,8 @@ export class StatisticUtils {
             elasticSearchPassword: generalSettings.elasticsearch.password,
             alias: generalSettings.elasticsearch.alias,
             prefix: generalSettings.elasticsearch.prefix,
+            numberOfShards: generalSettings.elasticsearch.numberOfShards,
+            numberOfReplicas: generalSettings.elasticsearch.numberOfReplicas,
             includeTimestamp: false,
             index: 'harvester_statistic'
         };

@@ -74,6 +74,8 @@ export class UrlCheckService {
             elasticSearchPassword: this.generalSettings.elasticsearch.password,
             alias: this.generalSettings.elasticsearch.alias,
             prefix: this.generalSettings.elasticsearch.prefix,
+            numberOfShards: this.generalSettings.elasticsearch.numberOfShards,
+            numberOfReplicas: this.generalSettings.elasticsearch.numberOfReplicas,
             includeTimestamp: false,
             index: 'url_check_history'
         };

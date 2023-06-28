@@ -46,14 +46,16 @@ export class IndexCheckService {
 	}
 
 	initialize() {
-        let generalSettings = ConfigService.getGeneralSettings();
+        let { elasticsearch } = ConfigService.getGeneralSettings();
         let settings = {
-            elasticSearchUrl: generalSettings.elasticsearch.url,
-            elasticSearchVersion: generalSettings.elasticsearch.version,
-            elasticSearchUser: generalSettings.elasticsearch.user,
-            elasticSearchPassword: generalSettings.elasticsearch.password,
-            alias: generalSettings.elasticsearch.alias,
-            prefix: generalSettings.elasticsearch.prefix,
+            elasticSearchUrl: elasticsearch.url,
+            elasticSearchVersion: elasticsearch.version,
+            elasticSearchUser: elasticsearch.user,
+            elasticSearchPassword: elasticsearch.password,
+            alias: elasticsearch.alias,
+            prefix: elasticsearch.prefix,
+            numberOfShards: elasticsearch.numberOfShards,
+            numberOfReplicas: elasticsearch.numberOfReplicas,
             includeTimestamp: false,
             index: 'index_check_history'
         };
