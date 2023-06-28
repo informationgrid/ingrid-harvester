@@ -242,6 +242,7 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
     }
 
     bulkWithIndexName(index: string, type, data, closeAfterBulk): Promise<BulkResponse> {
+        index = this.addPrefixIfNotExists(index) as string;
         return new Promise((resolve, reject) => {
             try {
                 this.client.bulk({
