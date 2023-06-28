@@ -24,9 +24,9 @@
 import { elasticsearchMapping } from '../../statistic/index_check.mapping';
 import { ConfigService } from '../config/ConfigService';
 import { ElasticQueries } from '../../persistence/elastic.queries';
-import { ElasticSearchFactory } from '../../persistence/elastic.factory';
-import { ElasticSearchUtils } from '../../persistence/elastic.utils';
-import { ElasticSettings } from '../../persistence/elastic.setting';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils';
+import { IndexSettings } from '../../persistence/elastic.setting';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary';
@@ -37,40 +37,32 @@ const log = require('log4js').getLogger(__filename);
 @Service()
 export class IndexCheckService {
 
-    private elasticUtils: ElasticSearchUtils;
-    private elasticsearchSettings: ElasticSettings;
     private elasticQueries: ElasticQueries;
+    private elasticUtils: ElasticsearchUtils;
+    private indexSettings: IndexSettings;
 
     constructor() {
 		this.initialize();
 	}
 
 	initialize() {
-        let { elasticsearch } = ConfigService.getGeneralSettings();
-        let settings = {
-            elasticSearchUrl: elasticsearch.url,
-            elasticSearchVersion: elasticsearch.version,
-            elasticSearchUser: elasticsearch.user,
-            elasticSearchPassword: elasticsearch.password,
-            alias: elasticsearch.alias,
-            prefix: elasticsearch.prefix,
-            numberOfShards: elasticsearch.numberOfShards,
-            numberOfReplicas: elasticsearch.numberOfReplicas,
+        let config = {
+            ...ConfigService.getGeneralSettings().elasticsearch,
             includeTimestamp: false,
             index: 'index_check_history'
         };
         // @ts-ignore
         const summary: Summary = {};
         let profile = ProfileFactoryLoader.get();
-        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
-        this.elasticsearchSettings = profile.getElasticSettings();
+        this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, summary);
+        this.indexSettings = profile.getIndexSettings();
         this.elasticQueries = profile.getElasticQueries();
     }
 
     async getHistory() {
         let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
         if (!indexExists) {
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
         }
         return this.elasticUtils.getHistory(this.elasticQueries.getIndexCheckHistory());
     }
@@ -88,7 +80,7 @@ export class IndexCheckService {
                 timestamp: timestamp,
                 attributions: result
             }, timestamp.toISOString());
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
             await this.elasticUtils.finishIndex(false);
         }
         catch(err) {

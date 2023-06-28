@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-export const elasticsearchMapping = {
+export const indexMappings = {
     properties: {
         'priority': {
             'type': 'short'
@@ -54,9 +54,9 @@ export const elasticsearchMapping = {
                 }
             }
         },
-        'description': {
+        'alternateTitle': {
             'type': 'text',
-            'analyzer': 'decomp',
+            'store': true,
             'fields': {
                 'decomp_german': {
                     'type': 'text',
@@ -70,6 +70,147 @@ export const elasticsearchMapping = {
                 'suggest_shingles': {
                     'type': 'text',
                     'analyzer': 'suggest_shingles'
+                },
+                'raw': {
+                    'type': 'keyword',
+                    'store': true,
+                }
+            }
+        },
+        'catalog': {
+            'properties': {
+                'identifier': {
+                    'type': 'keyword'
+                },
+                'description': {
+                    'type': 'text',
+                    'analyzer': 'decomp'
+                },
+                'homepage': {
+                    'type': 'keyword'
+                },
+                'publisher': {
+                    'properties': {
+                        'name': {
+                            'type': 'text',
+                            'fields': {
+                                'raw': {
+                                    'type': 'keyword'
+                                }
+                            }
+                        },
+                        'organization': {
+                            'type': 'text',
+                            'fields': {
+                                'raw': {
+                                    'type': 'keyword'
+                                }
+                            }
+                        }
+                    }
+                },
+                'title': {
+                    'type': 'text',
+                    'analyzer': 'decomp'
+                }
+            }
+        },
+        'identifier': {
+            'type': 'keyword'
+        },
+        'description': {
+            'type': 'text',
+            'analyzer': 'decomp',
+            'search_analyzer': 'german_simple',
+            'fields': {
+                'decomp_german': {
+                    'type': 'text',
+                    'analyzer': 'decomp_german',
+                    'search_analyzer': 'german_simple'
+                },
+                'decomp_shingles': {
+                    'type': 'text',
+                    'analyzer': 'decomp_shingles'
+                },
+                'suggest_shingles': {
+                    'type': 'text',
+                    'analyzer': 'suggest_shingles'
+                }
+            }
+        },
+        'plan_or_procedure_start_date': {
+            'type': 'date'
+        },
+        'plan_state': {
+            'type': 'keyword'
+        },
+        'plan_type': {
+            'type': 'keyword'
+        },
+        'plan_type_fine': {
+            'type': 'keyword'
+        },
+        'procedure_state': {
+            'type': 'keyword'
+        },
+        'procedure_type': {
+            'type': 'keyword'
+        },
+        'procedure_start_date': {
+            'type': 'date'
+        },
+        'process_steps': {
+            'properties': {
+                'distributions': {
+                    'properties': {
+                        'id': {
+                            'type': 'keyword'
+                        },
+                        'title': {
+                            'type': 'text',
+                            'analyzer': 'decomp'
+                        },
+                        'description': {
+                            'type': 'text',
+                            'analyzer': 'decomp'
+                        },
+                        'format': {
+                            'type': 'keyword'
+                        },
+                        'accessURL': {
+                            'type': 'keyword'
+                        },
+                        'downloadURL': {
+                            'type': 'keyword'
+                        },
+                        'issued': {
+                            'type': 'date'
+                        },
+                        'modified': {
+                            'type': 'date'
+                        },
+                        'byteSize': {
+                            'type': 'long'
+                        },
+                        'period': {
+                            'type': 'date_range'
+                        },
+                        'pluDocType': {
+                            'type': 'keyword'
+                        },
+                        'mapLayerNames': {
+                            'type': 'keyword'
+                        }
+                    }
+                },
+                'identifier': {
+                    'type': 'keyword'
+                },
+                'period': {
+                    'type': 'date_range'
+                },
+                'type': {
+                    'type': 'keyword'
                 }
             }
         },
@@ -111,15 +252,9 @@ export const elasticsearchMapping = {
                 }
             }
         },
-        'contact_point': {
+        'maintainers': {
             'properties': {
-                'hasUID': {
-                    'type': 'keyword'
-                },
-                'fn': {
-                    'type': 'keyword'
-                },
-                'organization-name': {
+                'name': {
                     'type': 'text',
                     'fields': {
                         'raw': {
@@ -127,25 +262,52 @@ export const elasticsearchMapping = {
                         }
                     }
                 },
-                'street-address': {
+                'homepage': {
                     'type': 'keyword'
                 },
-                'region': {
+                'organization': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
+                        }
+                    }
+                }
+            }
+        },
+        'contact_point': {
+            'properties': {
+                'has_uid': {
                     'type': 'keyword'
                 },
-                'country-name': {
+                'fn': {
                     'type': 'keyword'
                 },
-                'postal-code': {
+                'has_organization_name': {
                     'type': 'keyword'
                 },
-                'hasEmail': {
+                'has_street_address': {
                     'type': 'keyword'
                 },
-                'hasTelephone': {
+                'has_region': {
                     'type': 'keyword'
                 },
-                'hasURL': {
+                'has_country_name': {
+                    'type': 'keyword'
+                },
+                'has_postal_code': {
+                    'type': 'keyword'
+                },
+                'has_locality': {
+                    'type': 'keyword'
+                },
+                'has_email': {
+                    'type': 'keyword'
+                },
+                'has_telephone': {
+                    'type': 'keyword'
+                },
+                'has_url': {
                     'type': 'keyword'
                 }
             }
@@ -165,13 +327,7 @@ export const elasticsearchMapping = {
         'modified': {
             'type': 'date'
         },
-        'accrual_periodicity': {
-            'type': 'keyword'
-        },
-        'access_rights': {
-            'type': 'text'
-        },
-        'distribution': {
+        'distributions': {
             'properties': {
                 'id': {
                     'type': 'keyword'
@@ -190,6 +346,9 @@ export const elasticsearchMapping = {
                 'accessURL': {
                     'type': 'keyword'
                 },
+                'downloadURL': {
+                    'type': 'keyword'
+                },
                 'issued': {
                     'type': 'date'
                 },
@@ -199,10 +358,32 @@ export const elasticsearchMapping = {
                 'byteSize': {
                     'type': 'long'
                 },
-                'temporal': {
-                    "type": "date_range"
+                'period': {
+                    'type': 'date_range'
+                },
+                'pluDocType': {
+                    'type': 'keyword'
+                },
+                'mapLayerNames': {
+                    'type': 'keyword'
                 }
             }
+        },
+        'centroid': {
+            'type': 'geo_point'
+        },
+        'bounding_box': {
+            'type': 'geo_shape'
+        },
+        'spatial': {
+            'type': 'geo_shape',
+            'coerce': true
+        },
+        'spatial_text': {
+            'type': 'text'
+        },
+        'temporal': {
+            "type": "date_range"
         },
         'extras': {
             'properties': {
@@ -266,38 +447,6 @@ export const elasticsearchMapping = {
                         }
                     }
                 },
-                'license': {
-                    'properties': {
-                        'id': {
-                            'type': 'keyword',
-                            'fields': {
-                                'analyzed': {
-                                    'type': 'text'
-                                }
-                            }
-                        },
-                        'title': {
-                            'type': 'keyword',
-                            'fields': {
-                                'analyzed': {
-                                    'type': 'text'
-                                }
-                            }
-                        },
-                        'url': {
-                            'type': 'keyword'
-                        }
-                    }
-                },
-                'spatial': {
-                    'type': 'geo_shape'
-                },
-                'spatial_text': {
-                    'type': 'text'
-                },
-                'temporal': {
-                    "type": "date_range"
-                },
                 'groups': {
                     'type': 'keyword'
                 },
@@ -308,15 +457,11 @@ export const elasticsearchMapping = {
                     'type': 'text',
                     'index': false
                 },
-                'mfund_fkz': {
-                    'type': 'keyword'
-                },
-                'mfund_project_title': {
-                    'type': 'text',
-                    'analyzer': 'decomp',
-                    'fields': {
-                        'raw': {
-                            'type': 'keyword'
+                'transformed_data': {
+                    'properties': {
+                        'dcat_ap_plu': {
+                            'type': 'text',
+                            'index': false
                         }
                     }
                 },

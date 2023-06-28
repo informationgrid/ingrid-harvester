@@ -48,7 +48,7 @@ export class ConfigService {
 
     static highestID: number = 0;
 
-    private static readonly defaultSettings = {
+    private static readonly defaultSettings: GeneralSettings = {
         elasticsearch: {
             url: process.env.ELASTIC_URL || "http://elastic:9200",
             version: process.env.ELASTIC_VERSION || "8",

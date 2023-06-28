@@ -22,41 +22,34 @@
  */
 
 import { elasticsearchMapping} from './statistic.mapping';
-import { ElasticSearchFactory } from '../persistence/elastic.factory';
-import { ElasticSearchUtils } from '../persistence/elastic.utils';
-import { ElasticSettings } from '../persistence/elastic.setting';
+import { ElasticsearchFactory } from '../persistence/elastic.factory';
+import { ElasticsearchUtils } from '../persistence/elastic.utils';
+import { GeneralSettings } from '@shared/general-config.settings';
 import { ImportLogMessage} from '../model/import.result';
+import { IndexSettings } from '../persistence/elastic.setting';
 import { MiscUtils } from '../utils/misc.utils';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary} from '../model/summary';
-import { GeneralSettings } from '@shared/general-config.settings';
 
 const log = require('log4js').getLogger(__filename);
 
 export class StatisticUtils {
 
-    private elasticUtils: ElasticSearchUtils;
-    private elasticsearchSettings: ElasticSettings;
+    private elasticUtils: ElasticsearchUtils;
+    private indexSettings: IndexSettings;
     private static maxBulkSize = 100;
 
     constructor(generalSettings: GeneralSettings) {
-        let settings = {
-            elasticSearchUrl: generalSettings.elasticsearch.url,
-            elasticSearchVersion: generalSettings.elasticsearch.version,
-            elasticSearchUser: generalSettings.elasticsearch.user,
-            elasticSearchPassword: generalSettings.elasticsearch.password,
-            alias: generalSettings.elasticsearch.alias,
-            prefix: generalSettings.elasticsearch.prefix,
-            numberOfShards: generalSettings.elasticsearch.numberOfShards,
-            numberOfReplicas: generalSettings.elasticsearch.numberOfReplicas,
+        let config = {
+            ...generalSettings.elasticsearch,
             includeTimestamp: false,
             index: 'harvester_statistic'
         };
         // @ts-ignore
         const summary: Summary = {};
         let profile = ProfileFactoryLoader.get();
-        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
-        this.elasticsearchSettings = profile.getElasticSettings();
+        this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, summary);
+        this.indexSettings = profile.getIndexSettings();
     }
 
     async saveSummary(logMessage: ImportLogMessage, baseIndex: string) {
@@ -84,7 +77,7 @@ export class StatisticUtils {
         }, baseIndex+"_"+timestamp.toISOString(), StatisticUtils.maxBulkSize);
 
         try {
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
             await this.elasticUtils.finishIndex(false);
         }
         catch(err) {

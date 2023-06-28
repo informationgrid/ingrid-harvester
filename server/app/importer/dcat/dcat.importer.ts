@@ -75,7 +75,7 @@ export class DcatImporter extends Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
+                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
                 await this.harvest();
                 await this.elastic.sendBulkData(false);
                 await this.elastic.finishIndex();
@@ -215,7 +215,7 @@ export class DcatImporter extends Importer {
                         this.elastic.addDocToBulk(doc, uuid)
                             .then(response => {
                                 if (!response.queued) {
-                                    // numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                                    // numIndexDocs += ElasticsearchUtils.maxBulkSize;
                                     // this.observer.next(ImportResult.running(numIndexDocs, records.length));
                                 }
                             })

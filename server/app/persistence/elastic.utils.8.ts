@@ -21,43 +21,42 @@
  * ==================================================
  */
 
-import { BulkResponse, ElasticSearchUtils } from './elastic.utils';
+import { BulkResponse, ElasticsearchUtils } from './elastic.utils';
 import { Client } from 'elasticsearch8';
-import { ElasticSettings } from './elastic.setting';
 import { Index } from '@shared/index.model';
+import { IndexConfiguration, IndexSettings } from './elastic.setting';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 
 let log = require('log4js').getLogger(__filename);
 
-export class ElasticSearchUtils8 extends ElasticSearchUtils {
+export class ElasticsearchUtils8 extends ElasticsearchUtils {
 
     protected client: Client;
 
-    constructor(settings: ElasticSettings, summary: Summary) {
-        super();
-        this.settings = settings;
+    constructor(config: IndexConfiguration, summary: Summary) {
+        super(config);
         this.summary = summary;
 
         // the elasticsearch client for accessing the cluster
         this.client = new Client({
-            node: settings.elasticSearchUrl,
+            node: config.url,
             auth: {
-                username: settings.elasticSearchUser,
-                password: settings.elasticSearchPassword
+                username: config.user,
+                password: config.password
             },
             requestTimeout: 30000
         });
         this._bulkData = [];
         this._bulkUpdateData = [];
-        this.indexName = settings.prefix + settings.index;
+        this.indexName = config.prefix + config.index;
 
         let profile = ProfileFactoryLoader.get();
-        this.deduplicationUtils = profile.getDeduplicationUtils(this, settings, this.summary);
+        this.deduplicationUtils = profile.getDeduplicationUtils(this, this.summary);
         this.elasticQueries = profile.getElasticQueries();
     }
 
-    async cloneIndex(mapping, settings) {
+    async cloneIndex(mapping, settings: IndexSettings) {
         // find newest existing index
         let existingIndices = await this.getIndicesFromBasename(this.indexName);
         let oldIndexName = existingIndices.map(index => index.name).sort().pop();
@@ -77,20 +76,20 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         });
     }
 
-    async prepareIndex(mappings, settings, openIfPresent=false) {
-        if (this.settings.includeTimestamp) {
+    async prepareIndex(mappings, settings: IndexSettings, openIfPresent=false) {
+        if (this.config.includeTimestamp) {
             this.indexName += '_' + this.getTimeStamp(new Date());
         }
         return await this.prepareIndexWithName(this.indexName, mappings, settings, openIfPresent);
     }
 
-    async prepareIndexWithName(indexName: string, mappings, settings, openIfPresent=false) {
+    async prepareIndexWithName(indexName: string, mappings, settings: IndexSettings, openIfPresent=false) {
         indexName = this.addPrefixIfNotExists(indexName) as string;
         let isPresent = await this.isIndexPresent(indexName);
         settings = {
             ...settings,
-            number_of_shards: this.settings.numberOfShards,
-            number_of_replicas: this.settings.numberOfReplicas,
+            number_of_shards: this.config.numberOfShards,
+            number_of_replicas: this.config.numberOfReplicas,
             max_shingle_diff: 6,
             max_ngram_diff: 7
         }
@@ -128,7 +127,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
     }
 
     async finishIndex(closeIndex: boolean = true) {
-        if (this.settings.dryRun) {
+        if (this.config.dryRun) {
             log.debug('Skipping finalisation of index for dry run.');
             return;
         }
@@ -137,9 +136,9 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
             await this.client.cluster.health({wait_for_status: 'yellow'});
             await this.sendBulkData(false);
             if (closeIndex) {
-                await this.deleteOldIndices(this.settings.index, this.indexName);
-                if (this.settings.addAlias) {
-                    await this.addAlias(this.indexName, this.settings.alias);
+                await this.deleteOldIndices(this.config.index, this.indexName);
+                if (this.config.addAlias) {
+                    await this.addAlias(this.indexName, this.config.alias);
                 }
                 await this.deduplicationUtils.deduplicate();
                 await this.client.close();
@@ -194,7 +193,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
                 // the index name must consist of the base name + the date string which is
                 // 18 characters long
                 // in case we want to get all indices just request with an empty baseName
-                return baseName === this.settings.prefix || (json.index.startsWith(baseName) && json.index.length === baseName.length + ElasticSearchUtils.LENGTH_OF_TIMESTAMP);
+                return baseName === this.config.prefix || (json.index.startsWith(baseName) && json.index.length === baseName.length + ElasticsearchUtils.LENGTH_OF_TIMESTAMP);
             })
             .map(item => {
                 return {
@@ -210,7 +209,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         try {
             let response = await this.client.bulk({
                 index: this.indexName,
-                // type: this.settings.indexType || 'base',
+                // type: this.config.indexType || 'base',
                 operations: data
             });
             if (response.errors) {
@@ -280,7 +279,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         });
     }
 
-    async addDocToBulk(doc, id, maxBulkSize=ElasticSearchUtils8.maxBulkSize): Promise<BulkResponse> {
+    async addDocToBulk(doc, id, maxBulkSize=ElasticsearchUtils.maxBulkSize): Promise<BulkResponse> {
         this._bulkData.push({
             index: {
                 _id: id
@@ -318,7 +317,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         try {
             let response = await this.client.bulk({
                 index: this.indexName,
-                // type: this.settings.indexType || 'base',
+                // type: this.config.indexType || 'base',
                 operations: updateDocuments
             });
             if (response.errors) {
@@ -340,7 +339,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         }
     }
 
-    async addDocsToBulkUpdate(updateDocuments: any[], maxBulkSize=ElasticSearchUtils.maxBulkSize): Promise<BulkResponse> {
+    async addDocsToBulkUpdate(updateDocuments: any[], maxBulkSize=ElasticsearchUtils.maxBulkSize): Promise<BulkResponse> {
         for (let updateDocument of updateDocuments) {
             let { _id, ...doc } = updateDocument;
             this._bulkUpdateData.push(
@@ -375,7 +374,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
         if (ids.length < 1) return [];
 
         const aliasExists = await this.client.indices.existsAlias({
-            name: this.settings.alias
+            name: this.config.alias
         });
         if (!aliasExists) {
             return [];
@@ -401,7 +400,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
 
             try {
                 let result: any = await this.client.msearch({
-                    index: this.settings.alias,
+                    index: this.config.alias,
                     searches: slice
                 });
 
@@ -489,7 +488,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
 
     async getAccessUrls(after_key): Promise<any> {
         let response: any = await this.client.search({
-            index: this.settings.prefix + '*',
+            index: this.config.prefix + '*',
             ...this.elasticQueries.getAccessUrls(after_key),
             size: 0
         });
@@ -508,7 +507,7 @@ export class ElasticSearchUtils8 extends ElasticSearchUtils {
 
     async getFacetsByAttribution(): Promise<any> {
         let response: any = await this.client.search({
-            index: this.settings.alias,
+            index: this.config.alias,
             ...this.elasticQueries.getFacetsByAttribution(),
             size: 0
         });

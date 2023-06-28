@@ -26,9 +26,9 @@ import { elasticsearchMapping } from '../../statistic/url_check.mapping';
 import { Agent } from 'https';
 import { ConfigService } from '../config/ConfigService';
 import { ElasticQueries } from '../../persistence/elastic.queries';
-import { ElasticSearchFactory } from '../../persistence/elastic.factory';
-import { ElasticSearchUtils } from '../../persistence/elastic.utils';
-import { ElasticSettings } from '../../persistence/elastic.setting';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils';
+import { IndexSettings } from '../../persistence/elastic.setting';
 import { GeneralSettings } from '@shared/general-config.settings';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -41,10 +41,10 @@ const log = require('log4js').getLogger(__filename);
 @Service()
 export class UrlCheckService {
 
-    private elasticUtils: ElasticSearchUtils;
-    private elasticsearchSettings: ElasticSettings;
     private elasticQueries: ElasticQueries;
+    private elasticUtils: ElasticsearchUtils;
     private generalSettings: GeneralSettings;
+    private indexSettings: IndexSettings;
 
     private httpsAgent: Agent;
 
@@ -67,30 +67,23 @@ export class UrlCheckService {
 
     initialize() {
         this.generalSettings = ConfigService.getGeneralSettings();
-        let settings = {
-            elasticSearchUrl: this.generalSettings.elasticsearch.url,
-            elasticSearchVersion: this.generalSettings.elasticsearch.version,
-            elasticSearchUser: this.generalSettings.elasticsearch.user,
-            elasticSearchPassword: this.generalSettings.elasticsearch.password,
-            alias: this.generalSettings.elasticsearch.alias,
-            prefix: this.generalSettings.elasticsearch.prefix,
-            numberOfShards: this.generalSettings.elasticsearch.numberOfShards,
-            numberOfReplicas: this.generalSettings.elasticsearch.numberOfReplicas,
+        let config = {
+            ...this.generalSettings.elasticsearch,
             includeTimestamp: false,
             index: 'url_check_history'
         };
         // @ts-ignore
         const summary: Summary = {};
         let profile = ProfileFactoryLoader.get();
-        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
-        this.elasticsearchSettings = profile.getElasticSettings();
+        this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, summary);
+        this.indexSettings = profile.getIndexSettings();
         this.elasticQueries = profile.getElasticQueries();
     }
 
     async getHistory() {
         let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
         if (!indexExists) {
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
         }
         return this.elasticUtils.getHistory(this.elasticQueries.getUrlCheckHistory());
     }
@@ -192,7 +185,7 @@ export class UrlCheckService {
             }, timestamp.toISOString());
 
             try {
-                await this.elasticUtils.prepareIndex(elasticsearchMapping, this.elasticsearchSettings, true);
+                await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
                 await this.elasticUtils.finishIndex(false);
             }
             catch(err) {

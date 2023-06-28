@@ -21,15 +21,13 @@
  * ==================================================
  */
 
-import {Service} from '@tsed/di';
-import {ConfigService} from './config/ConfigService';
-import {BulkResponse, ElasticSearchUtils} from '../persistence/elastic.utils';
-import {ElasticSettings} from '../persistence/elastic.setting';
-import {Summary} from '../model/summary';
-import {Index} from '@shared/index.model';
 import * as fs from "fs";
-import { ElasticSearchFactory } from '../persistence/elastic.factory';
-import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
+import { BulkResponse, ElasticsearchUtils} from '../persistence/elastic.utils';
+import { ConfigService} from './config/ConfigService';
+import { ElasticsearchFactory } from '../persistence/elastic.factory';
+import { Index} from '@shared/index.model';
+import { Service} from '@tsed/di';
+import { Summary} from '../model/summary';
 
 let log = require('log4js').getLogger(__filename);
 var path = require('path');
@@ -40,7 +38,7 @@ const Readable = require('stream').Readable
 export class IndexService {
 
     private alias: string;
-    private elasticUtils: ElasticSearchUtils;
+    private elasticUtils: ElasticsearchUtils;
 
     constructor() {
         this.initialize();
@@ -51,20 +49,15 @@ export class IndexService {
      */
     initialize() {
         let elasticsearchConfiguration = ConfigService.getGeneralSettings().elasticsearch;
-        const settings: ElasticSettings = {
-            elasticSearchUrl: elasticsearchConfiguration.url,
-            elasticSearchVersion: elasticsearchConfiguration.version,
-            elasticSearchUser: elasticsearchConfiguration.user,
-            elasticSearchPassword: elasticsearchConfiguration.password,
-            alias: elasticsearchConfiguration.alias,
-            prefix: elasticsearchConfiguration.prefix,
+        let config = {
+            ...elasticsearchConfiguration,
             includeTimestamp: true,
             index: ''
         };
         this.alias = elasticsearchConfiguration.alias;
         // @ts-ignore
         const summary: Summary = {elasticErrors: []};
-        this.elasticUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
+        this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, summary);
     }
 
     async addToAlias(id: number) {
@@ -175,7 +168,7 @@ export class IndexService {
             });
             bulkData.push(entry._source)
 
-            if (bulkData.length >= (ElasticSearchUtils.maxBulkSize * 2)) {
+            if (bulkData.length >= (ElasticsearchUtils.maxBulkSize * 2)) {
                 let data = [];
                 bulkData.forEach(entry => data.push(entry));
                 bulkData = [];
