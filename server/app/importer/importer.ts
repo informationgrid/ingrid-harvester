@@ -50,6 +50,7 @@ export abstract class Importer {
             elasticSearchUser: elasticsearchConfiguration.user,
             elasticSearchPassword: elasticsearchConfiguration.password,
             alias: elasticsearchConfiguration.alias,
+            prefix: elasticsearchConfiguration.prefix,
             includeTimestamp: true,
             index: settings.index,
             dryRun: settings.dryRun,

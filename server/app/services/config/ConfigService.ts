@@ -144,7 +144,8 @@ export class ConfigService {
                 url: process.env.ELASTIC_URL ?? generalSettings.elasticsearch.url,
                 version: process.env.ELASTIC_VERSION ?? generalSettings.elasticsearch.version,
                 user: process.env.ELASTIC_USER ?? generalSettings.elasticsearch.user,
-                password: process.env.ELASTIC_PASSWORD ?? generalSettings.elasticsearch.password
+                password: process.env.ELASTIC_PASSWORD ?? generalSettings.elasticsearch.password,
+                prefix: process.env.ELASTIC_PREFIX ?? ''
             },
             ogcRecordsApi: {
                 url: process.env.OGCAPI_URL ?? generalSettings.ogcRecordsApi?.url,

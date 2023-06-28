@@ -50,6 +50,7 @@ export class HistoryService {
             elasticSearchUser: generalSettings.elasticsearch.user,
             elasticSearchPassword: generalSettings.elasticsearch.password,
             alias: generalSettings.elasticsearch.alias,
+            prefix: generalSettings.elasticsearch.prefix,
             includeTimestamp: true,
             index: 'harvester_statistic'
         };

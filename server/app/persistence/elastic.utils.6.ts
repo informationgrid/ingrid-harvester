@@ -23,8 +23,6 @@
 
 import { BulkResponse, ElasticSearchUtils } from './elastic.utils';
 import { Client } from 'elasticsearch6';
-import { DeduplicateUtils } from './deduplicate.utils';
-import { ElasticQueries } from './elastic.queries';
 import { ElasticSettings } from './elastic.setting';
 import { Index } from '@shared/index.model';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
@@ -34,12 +32,7 @@ let log = require('log4js').getLogger(__filename);
 
 export class ElasticSearchUtils6 extends ElasticSearchUtils {
 
-    private settings: ElasticSettings;
     protected client: Client;
-    private summary: Summary;
-
-    public deduplicationUtils: DeduplicateUtils;
-    public elasticQueries: ElasticQueries;
 
     constructor(settings: ElasticSettings, summary: Summary) {
         super();
@@ -56,7 +49,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
             requestTimeout: 30000
         });
         this._bulkData = [];
-        this.indexName = settings.index;
+        this.indexName = settings.prefix + settings.index;
 
         let profile = ProfileFactoryLoader.get();
         this.deduplicationUtils = profile.getDeduplicationUtils(this, settings, this.summary);
@@ -93,7 +86,8 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     }
 
     async prepareIndexWithName(indexName: string, mappings, settings, openIfPresent=false) {
-        let isPresent = await this.isIndexPresent(this.indexName);
+        indexName = this.addPrefixIfNotExists(indexName) as string;
+        let isPresent = await this.isIndexPresent(indexName);
         settings = {
             ...settings,
             number_of_shards: this.settings.numberOfShards,
@@ -160,21 +154,24 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         }
     }
 
-    async addAlias(index, alias): Promise<any> {
+    async addAlias(index: string, alias: string): Promise<any> {
+        index = this.addPrefixIfNotExists(index) as string;
         return await this.client.indices.putAlias({
-            index: index,
+            index,
             name: alias
         });
     }
 
-    async removeAlias(index, alias): Promise<any> {
+    async removeAlias(index: string, alias: string): Promise<any> {
+        index = this.addPrefixIfNotExists(index) as string;
         return await this.client.indices.deleteAlias({
-            index: index,
+            index,
             name: alias
         });
     }
 
-    async deleteOldIndices(indexBaseName, ignoreIndexName) {
+    async deleteOldIndices(indexBaseName: string, ignoreIndexName: string) {
+        indexBaseName = this.addPrefixIfNotExists(indexBaseName) as string;
         //  match index to be deleted with indexBaseName_timestamp!
         //  otherwise other indices with same prefix will be removed
         try {
@@ -190,6 +187,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     }
 
     async getIndicesFromBasename(baseName: string): Promise<Index[]> {
+        baseName = this.addPrefixIfNotExists(baseName) as string;
         let { body: response } = await this.client.cat.indices({
             h: ['index', 'docs.count', 'health', 'status'],
             format: 'json'
@@ -199,7 +197,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
                 // the index name must consist of the base name + the date string which is
                 // 18 characters long
                 // in case we want to get all indices just request with an empty baseName
-                return baseName === '' || (json.index.startsWith(baseName) && json.index.length === baseName.length + ElasticSearchUtils.LENGTH_OF_TIMESTAMP);
+                return baseName === this.settings.prefix || (json.index.startsWith(baseName) && json.index.length === baseName.length + ElasticSearchUtils.LENGTH_OF_TIMESTAMP);
             })
             .map(item => {
                 return {
@@ -244,11 +242,11 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         }
     }
 
-    bulkWithIndexName(indexName, type, data, closeAfterBulk): Promise<BulkResponse> {
+    bulkWithIndexName(index: string, type, data, closeAfterBulk): Promise<BulkResponse> {
         return new Promise((resolve, reject) => {
             try {
                 this.client.bulk({
-                    index: indexName,
+                    index,
                     type: type,
                     body: data
                 })
@@ -257,7 +255,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
                         response.items.forEach(item => {
                             let err = item.index.error;
                             if (err) {
-                                this.handleError(`Error during indexing on index '${indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
+                                this.handleError(`Error during indexing on index '${index}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
                             }
                         });
                     }
@@ -412,6 +410,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
 
     async deleteIndex(indicesToDelete: string | string[]): Promise<any> {
         if (indicesToDelete) {
+            indicesToDelete = this.addPrefixIfNotExists(indicesToDelete);
             log.debug('Deleting indices: ' + indicesToDelete);
             return await this.client.indices.delete({
                 index: indicesToDelete
@@ -420,6 +419,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     }
 
     async search(index: string | string[], body?: object, size?: number): Promise<{ hits: any }> {
+        index = this.addPrefixIfNotExists(index);
         let { body: response } = await this.client.search({
             index,
             body,
@@ -443,7 +443,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
 
     async getAccessUrls(after_key): Promise<any> {
         let { body: response }: any = await this.client.search({
-            index: '',
+            index: this.settings.prefix + '*',
             body: this.elasticQueries.getAccessUrls(after_key),
             size: 0
         });
@@ -497,21 +497,24 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
         );
     }
 
-    async getIndexSettings(indexName): Promise<any>{
-        return await this.client.indices.getSettings({index: indexName});
+    async getIndexSettings(index: string): Promise<any>{
+        index = this.addPrefixIfNotExists(index) as string;
+        return await this.client.indices.getSettings({ index });
     }
 
-    async getIndexMapping(indexName): Promise<any>{
-        return await this.client.indices.getMapping({index: indexName});
+    async getIndexMapping(index: string): Promise<any>{
+        index = this.addPrefixIfNotExists(index) as string;
+        return await this.client.indices.getMapping({ index });
     }
 
-    async getAllEntries(indexName): Promise<any>{
+    async getAllEntries(index: string): Promise<any>{
+        index = this.addPrefixIfNotExists(index) as string;
         return new Promise((resolve) => {
             let results = [];
             let client = this.client;
 
             this.client.search({
-                index: indexName,
+                index,
                 scroll: '5s',
                 body: {
                     query: {
@@ -536,6 +539,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     }
 
     async isIndexPresent(index: string) {
+        index = this.addPrefixIfNotExists(index) as string;
         try {
             let { body: response } = await this.client.cat.indices({
                 h: ['index'],
@@ -549,6 +553,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     }
 
     async index(index: string, document: object) {
+        index = this.addPrefixIfNotExists(index) as string;
         await this.client.index({ index, type: 'base', body: document });
     }
 
@@ -568,6 +573,7 @@ export class ElasticSearchUtils6 extends ElasticSearchUtils {
     }
 
     async deleteDocument(index: string, id: string) {
+        index = this.addPrefixIfNotExists(index) as string;
         await this.client.delete({
             index,
             type: 'base',

@@ -30,7 +30,8 @@ export type ElasticSettings = {
     index: string,
     indexType?: string,
     alias?: string,
-    addAlias?: boolean
+    prefix?: string,
+    addAlias?: boolean,
     deduplicationAlias?: string,
     includeTimestamp: boolean,
     numberOfShards?: number,

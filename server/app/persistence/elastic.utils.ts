@@ -25,7 +25,10 @@ import { DeduplicateUtils } from './deduplicate.utils';
 import { Client as Client6 } from 'elasticsearch6';
 import { Client as Client7 } from 'elasticsearch7';
 import { Client as Client8 } from 'elasticsearch8';
+import { ElasticQueries } from './elastic.queries';
+import { ElasticSettings } from './elastic.setting';
 import { Index } from '@shared/index.model';
+import { Summary } from '../model/summary';
 
 export interface BulkResponse {
     queued: boolean;
@@ -36,9 +39,12 @@ export abstract class ElasticSearchUtils {
 
     protected client: Client6 | Client7 | Client8;
     protected static readonly LENGTH_OF_TIMESTAMP = 18;
+    protected settings: ElasticSettings;
+    protected summary: Summary;
 
     public static maxBulkSize: number = 50;
     public deduplicationUtils: DeduplicateUtils;
+    public elasticQueries: ElasticQueries;
     public indexName: string;
     public _bulkData: any[];
     // TODO put everything in the same bulk array :)
@@ -191,5 +197,22 @@ export abstract class ElasticSearchUtils {
         stamp += ('0' + date.getSeconds()).slice(-2);
         stamp += ('00' + date.getMilliseconds()).slice(-3);
         return stamp;
+    }
+
+    protected addPrefixIfNotExists(index: string | string[]): string | string[] {
+        const addPrefix = (index: string) => {
+            let prefix = '';
+            if (index != this.settings.alias && !index.startsWith(this.settings.prefix)) {
+                prefix = this.settings.prefix;
+            }
+            return prefix + index;
+        }
+
+        if (typeof index == 'string') {
+            return addPrefix(index);
+        }
+        else if (typeof index == 'object') {
+            return index.map(addPrefix);
+        }
     }
 }

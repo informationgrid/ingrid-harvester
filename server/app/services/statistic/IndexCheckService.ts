@@ -53,6 +53,7 @@ export class IndexCheckService {
             elasticSearchUser: generalSettings.elasticsearch.user,
             elasticSearchPassword: generalSettings.elasticsearch.password,
             alias: generalSettings.elasticsearch.alias,
+            prefix: generalSettings.elasticsearch.prefix,
             includeTimestamp: false,
             index: 'index_check_history'
         };

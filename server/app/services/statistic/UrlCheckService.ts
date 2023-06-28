@@ -73,6 +73,7 @@ export class UrlCheckService {
             elasticSearchUser: this.generalSettings.elasticsearch.user,
             elasticSearchPassword: this.generalSettings.elasticsearch.password,
             alias: this.generalSettings.elasticsearch.alias,
+            prefix: this.generalSettings.elasticsearch.prefix,
             includeTimestamp: false,
             index: 'url_check_history'
         };

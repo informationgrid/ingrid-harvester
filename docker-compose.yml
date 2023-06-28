@@ -12,6 +12,7 @@ services:
      - ELASTIC_VERSION=8
      - ELASTIC_USER=elastic
      - ELASTIC_PASSWORD=
+     - ELASTIC_PREFIX=
     ports:
       - 8090:8090
     working_dir: /opt/ingrid/harvester/server
