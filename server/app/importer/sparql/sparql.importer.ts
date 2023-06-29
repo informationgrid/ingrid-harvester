@@ -81,7 +81,7 @@ export class SparqlImporter extends Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
+                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
                 await this.harvest().catch(err => {
                     this.summary.appErrors.push(err.message ? err.message : err);
                     log.error('Error during SPARQL import', err);
@@ -227,7 +227,7 @@ export class SparqlImporter extends Importer {
                         this.elastic.addDocToBulk(doc, uuid)
                             .then(response => {
                                 if (!response.queued) {
-                                    // numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                                    // numIndexDocs += ElasticsearchUtils.maxBulkSize;
                                     // this.observer.next(ImportResult.running(numIndexDocs, records.length));
                                 }
                             })

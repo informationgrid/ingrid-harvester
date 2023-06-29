@@ -21,18 +21,23 @@
  * ==================================================
  */
 
-export type ElasticSettings = {
-    elasticSearchUrl: string,
-    elasticSearchVersion: string,
-    elasticSearchUser: string,
-    elasticSearchPassword?: string,
+import { ElasticsearchConfiguration } from '@shared/general-config.settings';
+
+export interface IndexConfiguration extends ElasticsearchConfiguration {
     dryRun?: boolean,
     index: string,
     indexType?: string,
-    alias?: string,
-    addAlias?: boolean
+    addAlias?: boolean,
     deduplicationAlias?: string,
-    includeTimestamp: boolean,
-    numberOfShards?: number,
-    numberOfReplicas?: number
+    includeTimestamp: boolean
+}
+
+export interface IndexSettings {
+    index: {
+        analysis: object
+    },
+    number_of_shards?: number,
+    number_of_replicas?: number,
+    max_shingle_diff?: number,
+    max_ngram_diff?: number
 }

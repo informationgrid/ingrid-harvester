@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {ElasticSearchUtils} from '../../persistence/elastic.utils';
+import {ElasticsearchUtils} from '../../persistence/elastic.utils';
 import {ExcelSparseMapper} from './excelsparse.mapper';
 import {Workbook, Worksheet} from 'exceljs';
 import {Summary} from '../../model/summary';
@@ -80,7 +80,7 @@ export class ExcelSparseImporter extends Importer {
             if (this.settings.dryRun) {
                 log.debug('Dry run option enabled. Skipping index creation.');
             } else {
-                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
+                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
             }
             await workbook.xlsx.readFile(this.excelFilepath);
 
@@ -136,7 +136,7 @@ export class ExcelSparseImporter extends Importer {
                         this.elastic.addDocToBulk(doc, unit.id).then(response => {
                             if (!response.queued) {
                                 //let currentPos = this.summary.numDocs++;
-                                numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                                numIndexDocs += ElasticsearchUtils.maxBulkSize;
                                 observer.next(ImportResult.running(numIndexDocs, workUnits.length));
                             }
                         })

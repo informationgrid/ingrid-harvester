@@ -37,7 +37,6 @@ export class ProfileFactoryLoader {
             return this.instance;
         }
 
-        log.info('Finding profile');
         let profile = process.env.IMPORTER_PROFILE?.toLowerCase();
         if (!profile) {
             profile = process.argv.find(arg => arg.toLowerCase().startsWith('--profile=')) ?? '';
@@ -56,10 +55,10 @@ export class ProfileFactoryLoader {
                 this.instance = new DiplanungFactory();
                 break;
             default:
-                let errorMsg = `No supported profile specified: [${profile}]`;
+                let errorMsg = `Could not find profile: ${profile}`;
                 log.error(errorMsg);
                 throw new Error(errorMsg);
         }
-        log.info('Found Profile: ' + profile);
+        log.info(`Loaded profile: ${profile}`);
     }
 }

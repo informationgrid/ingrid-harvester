@@ -22,7 +22,7 @@
  */
 
 import { DeduplicateUtils as AbstractDeduplicateUtils } from '../../../persistence/deduplicate.utils';
-import { ElasticSearchUtils } from '../../../persistence/elastic.utils';
+import { ElasticsearchUtils } from '../../../persistence/elastic.utils';
 import { Summary } from '../../../model/summary';
 
 const log = require('log4js').getLogger(__filename);
@@ -30,8 +30,8 @@ const log = require('log4js').getLogger(__filename);
 
 export class DeduplicateUtils extends AbstractDeduplicateUtils {
 
-    constructor(elasticUtils: ElasticSearchUtils, settings: any, summary: Summary) {
-        super(elasticUtils, settings, summary);
+    constructor(elasticUtils: ElasticsearchUtils, summary: Summary) {
+        super(elasticUtils, summary);
     }
 
     // FIXME: deduplication must work differently when import is not started for all harvesters
@@ -47,7 +47,7 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
         // to return a lot more results!
         try {
             let response = await this.elastic.search(
-                this.settings.alias,
+                this.elastic.config.alias,
                 this.queries.findSameTitle(),
                 50
             );
