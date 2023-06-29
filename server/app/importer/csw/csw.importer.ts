@@ -113,10 +113,10 @@ export class CswImporter extends Importer {
                 // when running an incremental harvest,
                 // clone the old index instead of preparing a new one
                 if (this.summary.isIncremental) {
-                    await this.elastic.cloneIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
+                    await this.elastic.cloneIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
                 }
                 else {
-                    await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
+                    await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
                 }
                 await this.harvest();
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {

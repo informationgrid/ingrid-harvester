@@ -90,7 +90,7 @@ export abstract class WfsImporter extends Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
+                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
                 await this.harvest();
                 if(this.numIndexDocs > 0) {
                     await this.elastic.sendBulkData(false);

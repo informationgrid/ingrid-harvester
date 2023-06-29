@@ -21,7 +21,9 @@
  * ==================================================
  */
 
-export const elasticsearchSettings = {
+import { IndexSettings } from '../../../persistence/elastic.setting';
+
+export const indexSettings: IndexSettings = {
     'index': {
         'analysis': {
             'filter': {

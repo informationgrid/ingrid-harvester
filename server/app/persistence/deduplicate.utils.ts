@@ -22,9 +22,7 @@
  */
 
 import { ElasticQueries } from './elastic.queries';
-import { ElasticSearchUtils } from './elastic.utils';
-import { ElasticSettings } from './elastic.setting';
-import { ImporterSettings } from '../importer.settings';
+import { ElasticsearchUtils } from './elastic.utils';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 
@@ -32,14 +30,12 @@ const log = require('log4js').getLogger(__filename);
 
 export abstract class DeduplicateUtils {
 
-    protected elastic: ElasticSearchUtils;
+    protected elastic: ElasticsearchUtils;
     protected queries: ElasticQueries;
-    protected settings: ElasticSettings & ImporterSettings;
     protected summary: Summary;
 
-    constructor(elasticUtils: ElasticSearchUtils, settings: any, summary: Summary) {
+    constructor(elasticUtils: ElasticsearchUtils, summary: Summary) {
         this.elastic = elasticUtils;
-        this.settings = settings;
         this.summary = summary;
         this.queries = ProfileFactoryLoader.get().getElasticQueries();
     }
