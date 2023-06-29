@@ -145,8 +145,9 @@ export class ConfigGeneralComponent implements OnInit {
         user: [settings.elasticsearch.user],
         password: [settings.elasticsearch.password],
         alias: [settings.elasticsearch.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
-        numberOfShards: [settings.elasticsearch.numberOfShards],
-        numberOfReplicas: [settings.elasticsearch.numberOfReplicas]
+        prefix: [{ value: settings.elasticsearch.prefix, disabled: true }],
+        numberOfShards: [{ value: settings.elasticsearch.numberOfShards, disabled: true }],
+        numberOfReplicas: [{ value: settings.elasticsearch.numberOfReplicas, disabled: true }]
       }),
       ogcRecordsApi: this.formBuilder.group({
         url: [settings.ogcRecordsApi?.url],
