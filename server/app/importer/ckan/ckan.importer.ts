@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {ElasticSearchUtils} from '../../persistence/elastic.utils';
+import {ElasticsearchUtils} from '../../persistence/elastic.utils';
 import {Summary} from '../../model/summary';
 import {Importer} from '../importer';
 import {RequestDelegate} from '../../utils/http-request.utils';
@@ -117,7 +117,7 @@ export class CkanImporter extends Importer {
             return this.elastic.addDocToBulk(doc, sourceID)
                 .then(response => {
                     if (!response.queued) {
-                        this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                        this.numIndexDocs += ElasticsearchUtils.maxBulkSize;
                     }
                 }).then(() => this.elastic.health('yellow'));
         }
@@ -168,7 +168,7 @@ export class CkanImporter extends Importer {
         if (this.settings.dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
         } else {
-            await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
+            await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
         }
     }
 

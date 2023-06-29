@@ -5,6 +5,7 @@
     "user": "elastic",
     "password": "elastic",
     "alias": "harvester",
+    "prefix": "",
     "numberOfShards": 1,
     "numberOfReplicas": 0
   },

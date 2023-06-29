@@ -21,25 +21,25 @@
  * ==================================================
  */
 
-import { ElasticSearchUtils } from './elastic.utils';
-import { ElasticSearchUtils6 } from './elastic.utils.6';
-import { ElasticSearchUtils7 } from './elastic.utils.7';
-import { ElasticSearchUtils8 } from './elastic.utils.8';
-import { ElasticSettings } from './elastic.setting';
+import { ElasticsearchUtils } from './elastic.utils';
+import { ElasticsearchUtils6 } from './elastic.utils.6';
+import { ElasticsearchUtils7 } from './elastic.utils.7';
+import { ElasticsearchUtils8 } from './elastic.utils.8';
+import { IndexConfiguration } from './elastic.setting';
 import { Summary } from '../model/summary';
 
-export class ElasticSearchFactory {
+export class ElasticsearchFactory {
 
-    public static getElasticUtils(settings: ElasticSettings, summary: Summary): ElasticSearchUtils {
-        switch (settings.elasticSearchVersion) {
+    public static getElasticUtils(config: IndexConfiguration, summary: Summary): ElasticsearchUtils {
+        switch (config.version) {
             case '6':
-                return new ElasticSearchUtils6(settings, summary);
+                return new ElasticsearchUtils6(config, summary);
             case '7':
-                return new ElasticSearchUtils7(settings, summary);
+                return new ElasticsearchUtils7(config, summary);
             case '8':
-                return new ElasticSearchUtils8(settings, summary);
+                return new ElasticsearchUtils8(config, summary);
             default: 
-                throw new Error('Only ES versions 6 and 8 are supported; [' + settings.elasticSearchVersion + '] was specified');
+                throw new Error('Only ES versions 6 and 8 are supported; [' + config.version + '] was specified');
         }
     }
 }

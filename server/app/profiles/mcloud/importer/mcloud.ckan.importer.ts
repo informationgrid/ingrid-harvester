@@ -24,7 +24,7 @@
 import {CkanMapper} from "../../../importer/ckan/ckan.mapper";
 import {ProfileFactory} from "../../profile.factory";
 import {CkanImporter} from "../../../importer/ckan/ckan.importer";
-import {ElasticSearchUtils} from "../../../persistence/elastic.utils";
+import {ElasticsearchUtils} from "../../../persistence/elastic.utils";
 
 let log = require('log4js').getLogger(__filename);
 const uuidv5 = require('uuid/v5');
@@ -141,7 +141,7 @@ export class McloudCkanImporter extends CkanImporter {
                 return this.elastic.addDocToBulk(doc, doc.extras.generated_id)
                     .then(response => {
                         if (!response.queued) {
-                            this.numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                            this.numIndexDocs += ElasticsearchUtils.maxBulkSize;
                         }
                     }).then(() => this.elastic.health('yellow'));
             });

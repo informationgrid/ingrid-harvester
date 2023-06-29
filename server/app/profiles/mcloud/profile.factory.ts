@@ -23,8 +23,8 @@
 
 import {mcloudDocument} from "./model/index.document";
 import {ProfileFactory} from "../profile.factory";
-import {elasticsearchMapping} from "./elastic/elastic.mapping";
-import {elasticsearchSettings} from "./elastic/elastic.settings";
+import {indexMappings} from "./elastic/elastic.mappings";
+import {indexSettings} from "./elastic/elastic.settings";
 import {CkanMapper} from "../../importer/ckan/ckan.mapper";
 import {CswMapper} from "../../importer/csw/csw.mapper";
 import {DcatMapper} from "../../importer/dcat/dcat.mapper";
@@ -33,8 +33,8 @@ import {OaiMapper} from "../../importer/oai/oai.mapper";
 import {SparqlMapper} from "../../importer/sparql/sparql.mapper";
 import { DeduplicateUtils } from "./elastic/deduplicate.utils";
 import { ElasticQueries } from "./elastic/elastic.queries";
-import { ElasticSearchUtils } from "../../persistence/elastic.utils";
-import { ElasticSettings } from "../../persistence/elastic.setting";
+import { ElasticsearchUtils } from "../../persistence/elastic.utils";
+import { IndexSettings } from "../../persistence/elastic.setting";
 import { Summary } from "../../model/summary";
 import {McloudImporterFactory} from "./importer/mcloud.importer.factory";
 import {ImporterFactory} from "../../importer/importer.factory";
@@ -49,20 +49,20 @@ export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatM
         return new mcloudDocument;
     }
 
-    getElasticMapping(): any {
-        return elasticsearchMapping;
+    getIndexMappings(): any {
+        return indexMappings;
     }
 
     getElasticQueries(): any {
         return ElasticQueries.getInstance();
     }
 
-    getElasticSettings(): any {
-        return elasticsearchSettings;
+    getIndexSettings(): IndexSettings {
+        return indexSettings;
     }
 
-    getDeduplicationUtils(elasticUtils: ElasticSearchUtils, elasticSettings: ElasticSettings, summary: Summary): DeduplicateUtils {
-        return new DeduplicateUtils(elasticUtils, elasticSettings, summary);
+    getDeduplicationUtils(elasticUtils: ElasticsearchUtils, summary: Summary): DeduplicateUtils {
+        return new DeduplicateUtils(elasticUtils, summary);
     }
 
     getImporterFactory(): ImporterFactory {

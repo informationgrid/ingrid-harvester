@@ -32,10 +32,10 @@
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
-      <span [matBadge]="elasticSearchErrors.length" [matBadgeColor]="elasticSearchErrors.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Elasticsearch-Fehler</span>
+      <span [matBadge]="elasticsearchErrors.length" [matBadgeColor]="elasticsearchErrors.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Elasticsearch-Fehler</span>
     </ng-template>
     <cdk-virtual-scroll-viewport class="logContainer" itemSize="20" minBufferPx="500" maxBufferPx="500">
-      <div *cdkVirtualFor="let error of elasticSearchErrors">{{error}}</div>
+      <div *cdkVirtualFor="let error of elasticsearchErrors">{{error}}</div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
   <mat-tab>
