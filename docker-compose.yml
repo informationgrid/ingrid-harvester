@@ -12,6 +12,7 @@ services:
      - ELASTIC_VERSION=8
      - ELASTIC_USER=elastic
      - ELASTIC_PASSWORD=
+     - ELASTIC_ALIAS=harvester
      - ELASTIC_PREFIX=
     ports:
       - 8090:8090
