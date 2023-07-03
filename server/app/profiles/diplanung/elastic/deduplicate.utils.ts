@@ -22,6 +22,7 @@
  */
 
 import { overwriteFields } from './elastic.queries';
+import { ConfigService } from '../../../services/config/ConfigService';
 import { DcatApPluDocument } from '../model/dcatApPlu.document';
 import { DeduplicateUtils as AbstractDeduplicateUtils } from '../../../persistence/deduplicate.utils';
 import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
@@ -50,6 +51,9 @@ export class DeduplicateUtils extends AbstractDeduplicateUtils {
      * - remove WFS entry after successful merge
      */
     async _mergeByAlternateTitle(mainIndexPrefix: string = 'csw_') {
+
+        mainIndexPrefix = ConfigService.getGeneralSettings().elasticsearch.prefix + mainIndexPrefix;
+
         // INFO 2 approaches:
         // 1) update in CSW index, remove from WFS index -> update, remove
         // 2) remove in CSW index, remove from WFS index, insert merged into new "merged" index -> remove x2, insert

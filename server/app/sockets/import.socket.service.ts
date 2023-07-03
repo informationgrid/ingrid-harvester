@@ -71,7 +71,7 @@ export class ImportSocketService {
             let profile = ProfileFactoryLoader.get();
             let importer = profile.getImporterFactory().get(configHarvester);
             let mode = isIncremental ? 'incr' : 'full';
-            this.log.info('>> Running importer: ' + configHarvester.description);
+            this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
 
             try {
                 importer.run.subscribe(response => {
@@ -101,9 +101,9 @@ export class ImportSocketService {
                         if ((importedLastRun - (importedLastRun*maxDiff/100) >= imported) || (imported === 0)) {
                             let subject: string;
                             if (imported === 0)
-                                subject = `Importer "${configData.description}" ohne Ergebnisse!`;
+                                subject = `Importer [${configHarvester.type}] "${configData.description}" ohne Ergebnisse!`;
                             else
-                                subject = `Importer "${configData.description}" mit weniger Ergebnissen!`;
+                                subject = `Importer [${configHarvester.type}] "${configData.description}" mit weniger Ergebnissen!`;
                             let text = `Current Run:\n`
                                 + importer.getSummary().toString();
                             if (summaryLastRun) {
@@ -119,7 +119,7 @@ export class ImportSocketService {
                 }, error => {
                     console.error('There was an error:', error);
 
-                    MailServer.getInstance().send(`Importer ${configData.description} failed`, error.toString());
+                    MailServer.getInstance().send(`Importer [${configHarvester.type}] ${configData.description} failed`, error.toString());
                 });
             } catch (e) {
                 console.error('An error: ', e);
