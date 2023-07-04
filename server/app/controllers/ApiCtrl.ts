@@ -57,8 +57,9 @@ export class ApiCtrl {
         if (!this.importAllProcessIsRunning) {
             this.importAllProcessIsRunning = true;
 
-            let activeConfigs = ConfigService.get()
-                .filter(config => !config.disable);
+            let activeConfigs = ConfigService.get().filter(config => !config.disable);
+            // run higher priority harvesters first (sort descending)
+            activeConfigs.sort((harvesterA, harvesterB) => harvesterB.priority - harvesterA.priority);
 
             for (var i = 0; i < activeConfigs.length; i++) {
                 await this.importSocketService.runImport(activeConfigs[i].id);
