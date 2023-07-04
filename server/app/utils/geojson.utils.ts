@@ -107,24 +107,42 @@ export class GeoJsonUtils {
         return bboxPolygon(bbox(spatial))?.geometry;
     };
 
-    static within = (point: number[] | Point, bbox: Geometry): boolean => {
-        if (point == null) {
-            return undefined;
-        }
-        if ('coordinates' in point) {
-            return booleanWithin(point, bbox);
-        }
-        else {
-            return booleanWithin({ type: 'Point', coordinates: point }, bbox);
-        }
-    };
-
-    static flip = <T>(spatial: number[] | Geometry): T => {
+    static within = (spatial: number[] | Point | Geometry | GeometryCollection, bbox: Geometry): boolean => {
         if (spatial == null) {
             return undefined;
         }
-        if ('coordinates' in spatial) {
-            return flip(spatial);
+        if ('type' in spatial) {
+            if ('coordinates' in spatial) {
+                return booleanWithin(spatial, bbox);
+            }
+            else if ('geometries' in spatial) {
+                return spatial.geometries.every(subGeom => GeoJsonUtils.within(subGeom, bbox));
+            }
+            else {
+                // TODO log unexpected input
+                return undefined;
+            }
+        }
+        else {
+            return booleanWithin({ type: 'Point', coordinates: spatial }, bbox);
+        }
+    };
+
+    static flip = <T>(spatial: number[] | Point | Geometry | GeometryCollection): T => {
+        if (spatial == null) {
+            return undefined;
+        }
+        if ('type' in spatial) {
+            if ('coordinates' in spatial) {
+                return flip(spatial);
+            }
+            else if ('geometries' in spatial) {
+                return <T>{ ...spatial, geometries: spatial.geometries.map<Geometry>(geom => flip<Geometry>(geom)) };
+            }
+            else {
+                // TODO log unexpected input
+                return undefined;
+            }
         }
         else {
             return flip({ type: 'Point', coordinates: spatial });
