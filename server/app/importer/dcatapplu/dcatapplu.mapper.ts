@@ -29,11 +29,11 @@ import {License} from '@shared/license.model';
 import {getLogger} from "log4js";
 import {UrlUtils} from "../../utils/url.utils";
 import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
-import {DcatSettings} from './dcat.settings';
-import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
+import {DcatappluSettings} from './dcatapplu.settings';
+// import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
 import {throwError} from "rxjs";
 import {ImporterSettings} from "../../importer.settings";
-import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
+// import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
 import {Summary} from "../../model/summary";
 import {Contact, Person} from "../../model/agent";
 import {Distribution} from "../../model/distribution";
@@ -41,7 +41,7 @@ import {DateRange} from "../../model/dateRange";
 
 let xpath = require('xpath');
 
-export class DcatMapper extends BaseMapper {
+export class DcatappluMapper extends BaseMapper {
 
     static FOAF = 'http://xmlns.com/foaf/0.1/';
     static LOCN = 'http://www.w3.org/ns/locn#';
@@ -57,18 +57,18 @@ export class DcatMapper extends BaseMapper {
     static OGC = 'http://www.opengis.net/rdf#'
 
     static select = xpath.useNamespaces({
-        'foaf': DcatMapper.FOAF,
-        'locn': DcatMapper.LOCN,
-        'hydra': DcatMapper.HYDRA,
-        'rdf': DcatMapper.RDF,
-        'rdfs': DcatMapper.RDFS,
-        'dcat': DcatMapper.DCAT,
-        'dct': DcatMapper.DCT,
-        'skos': DcatMapper.SKOS,
-        'schema': DcatMapper.SCHEMA,
-        'vcard': DcatMapper.VCARD,
-        'dcatde': DcatMapper.DCATDE,
-        'ogc': DcatMapper.OGC
+        'foaf': DcatappluMapper.FOAF,
+        'locn': DcatappluMapper.LOCN,
+        'hydra': DcatappluMapper.HYDRA,
+        'rdf': DcatappluMapper.RDF,
+        'rdfs': DcatappluMapper.RDFS,
+        'dcat': DcatappluMapper.DCAT,
+        'dct': DcatappluMapper.DCT,
+        'skos': DcatappluMapper.SKOS,
+        'schema': DcatappluMapper.SCHEMA,
+        'vcard': DcatappluMapper.VCARD,
+        'dcatde': DcatappluMapper.DCATDE,
+        'ogc': DcatappluMapper.OGC
     });
 
     private log = getLogger();
@@ -80,7 +80,7 @@ export class DcatMapper extends BaseMapper {
     private readonly storedData: any;
 
 //    protected readonly idInfo; // : SelectedValue;
-    private settings: DcatSettings;
+    private settings: DcatappluSettings;
     private readonly uuid: string;
     private summary: Summary;
 
@@ -102,16 +102,16 @@ export class DcatMapper extends BaseMapper {
         this.summary = summary;
         this.catalogPage = catalogPage;
 
-        let distributions = DcatMapper.select('./dcat:Distribution', catalogPage);
-        let distributionIDs = DcatMapper.select('./dcat:distribution', record)
+        let distributions = DcatappluMapper.select('./dcat:Distribution', catalogPage);
+        let distributionIDs = DcatappluMapper.select('./dcat:distribution', record)
             .map(node => node.getAttribute('rdf:resource'))
             .filter(distibution => distibution);
 
         this.linkedDistributions = distributions.filter(distribution => distributionIDs.includes(distribution.getAttribute('rdf:about')))
 
-        let uuid = DcatMapper.select('./dct:identifier', record, true).textContent;
+        let uuid = DcatappluMapper.select('./dct:identifier', record, true).textContent;
         if(!uuid) {
-            uuid = DcatMapper.select('./dct:identifier/@rdf:resource', record, true).textContent;
+            uuid = DcatappluMapper.select('./dct:identifier/@rdf:resource', record, true).textContent;
         }
         this.uuid = uuid;
 
@@ -127,9 +127,9 @@ export class DcatMapper extends BaseMapper {
     }
 
     _getDescription() {
-        let description = DcatMapper.select('./dct:description', this.record, true);
+        let description = DcatappluMapper.select('./dct:description', this.record, true);
         if (!description) {
-            description = DcatMapper.select('./dct:abstract', this.record, true);
+            description = DcatappluMapper.select('./dct:abstract', this.record, true);
         }
         if (!description) {
             let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.catalogUrl}\'`;
@@ -152,11 +152,11 @@ export class DcatMapper extends BaseMapper {
                 this.linkedDistributions[i]
 
                 let format: string = "Unbekannt";
-                let formatNode = DcatMapper.select('./dct:format', this.linkedDistributions[i], true);
-                let mediaTypeNode = DcatMapper.select('./dcat:mediaType', this.linkedDistributions[i], true);
+                let formatNode = DcatappluMapper.select('./dct:format', this.linkedDistributions[i], true);
+                let mediaTypeNode = DcatappluMapper.select('./dcat:mediaType', this.linkedDistributions[i], true);
                 if (formatNode) {
-                    let formatLabel = DcatMapper.select('.//rdfs:label', formatNode, true);
-                    let formatValue = DcatMapper.select('.//rdf:value', formatNode, true);
+                    let formatLabel = DcatappluMapper.select('.//rdfs:label', formatNode, true);
+                    let formatValue = DcatappluMapper.select('.//rdf:value', formatNode, true);
                     if(formatLabel){
                         format = formatLabel.textContent;
                     }
@@ -182,12 +182,12 @@ export class DcatMapper extends BaseMapper {
                     }
                 }
 
-                let url = DcatMapper.select('./dcat:accessURL', this.linkedDistributions[i], true);
-                let title = DcatMapper.select('./dct:title', this.linkedDistributions[i], true);
-                let description = DcatMapper.select('./dct:description', this.linkedDistributions[i], true);
-                let issued = DcatMapper.select('./dct:issued', this.linkedDistributions[i], true);
-                let modified = DcatMapper.select('./dct:modified', this.linkedDistributions[i], true);
-                let size = DcatMapper.select('./dcat:byteSize', this.linkedDistributions[i], true);
+                let url = DcatappluMapper.select('./dcat:accessURL', this.linkedDistributions[i], true);
+                let title = DcatappluMapper.select('./dct:title', this.linkedDistributions[i], true);
+                let description = DcatappluMapper.select('./dct:description', this.linkedDistributions[i], true);
+                let issued = DcatappluMapper.select('./dct:issued', this.linkedDistributions[i], true);
+                let modified = DcatappluMapper.select('./dct:modified', this.linkedDistributions[i], true);
+                let size = DcatappluMapper.select('./dcat:byteSize', this.linkedDistributions[i], true);
 
                 if(url) {
                     let distribution = {
@@ -216,14 +216,14 @@ export class DcatMapper extends BaseMapper {
 
         let publishers = [];
 
-        let dctPublishers = DcatMapper.select('./dct:publisher', this.record);
+        let dctPublishers = DcatappluMapper.select('./dct:publisher', this.record);
         for (let i = 0; i < dctPublishers.length; i++) {
-            let organization = DcatMapper.select('./foaf:Organization', dctPublishers[i], true);
+            let organization = DcatappluMapper.select('./foaf:Organization', dctPublishers[i], true);
             if(!organization){
-                organization = DcatMapper.select('./foaf:Organization[@rdf:about="'+dctPublishers[i].getAttribute('rdf:resource')+'"]', this.catalogPage, true)
+                organization = DcatappluMapper.select('./foaf:Organization[@rdf:about="'+dctPublishers[i].getAttribute('rdf:resource')+'"]', this.catalogPage, true)
             }
             if (organization) {
-                let name = DcatMapper.select('./foaf:name', organization, true);
+                let name = DcatappluMapper.select('./foaf:name', organization, true);
                 if(name) {
                     let infos: any = {
                         organization: name.textContent
@@ -236,11 +236,11 @@ export class DcatMapper extends BaseMapper {
 
 
         if (publishers.length === 0) {
-            let creators = DcatMapper.select('./dct:creator', this.record);
+            let creators = DcatappluMapper.select('./dct:creator', this.record);
             for (let i = 0; i < creators.length; i++) {
-                let organization = DcatMapper.select('./foaf:Organization', creators[i], true);
+                let organization = DcatappluMapper.select('./foaf:Organization', creators[i], true);
                 if (organization) {
-                    let name = DcatMapper.select('./foaf:name', organization, true);
+                    let name = DcatappluMapper.select('./foaf:name', organization, true);
                     if (name) {
                         let infos: any = {
                             organization: name.textContent
@@ -262,7 +262,7 @@ export class DcatMapper extends BaseMapper {
     }
 
     _getTitle() {
-        let title = DcatMapper.select('./dct:title', this.record, true).textContent;
+        let title = DcatappluMapper.select('./dct:title', this.record, true).textContent;
         return title && title.trim() !== '' ? title : undefined;
     }
 
@@ -420,7 +420,7 @@ export class DcatMapper extends BaseMapper {
      */
     _getKeywords(): string[] {
         let keywords = [];
-        let keywordNodes = DcatMapper.select('./dcat:keyword', this.record);
+        let keywordNodes = DcatappluMapper.select('./dcat:keyword', this.record);
         if (keywordNodes) {
             for (let i = 0; i < keywordNodes.length; i++) {
                 keywords.push(keywordNodes[i].textContent)
@@ -448,7 +448,7 @@ export class DcatMapper extends BaseMapper {
     }
 
     _getMetadataSource(): any {
-        let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
+        let dcatLink; //=  DcatappluMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');
         return {
             raw_data_source: dcatLink,
@@ -458,16 +458,16 @@ export class DcatMapper extends BaseMapper {
     }
 
     _getModifiedDate() {
-        let modified = DcatMapper.select('./dct:modified', this.record, true);
+        let modified = DcatappluMapper.select('./dct:modified', this.record, true);
         return modified?new Date(modified.textContent):undefined;
     }
 
     _getSpatial(): any {
-        let geometry = DcatMapper.select('./dct:spatial/dct:Location/locn:geometry[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
+        let geometry = DcatappluMapper.select('./dct:spatial/dct:Location/locn:geometry[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
         if(geometry){
             return JSON.parse(geometry.textContent);
         }
-        geometry = DcatMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
+        geometry = DcatappluMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
         if(geometry){
             return this.wktToGeoJson(geometry.textContent);
         }
@@ -497,7 +497,7 @@ export class DcatMapper extends BaseMapper {
     }
 
     _getSpatialText(): string {
-        let prefLabel = DcatMapper.select('./dct:spatial/dct:Location/skos:prefLabel', this.record, true);
+        let prefLabel = DcatappluMapper.select('./dct:spatial/dct:Location/skos:prefLabel', this.record, true);
         if(prefLabel){
             return prefLabel.textContent;
         }
@@ -507,7 +507,7 @@ export class DcatMapper extends BaseMapper {
     _getTemporal(): DateRange[] {
         let result: DateRange[] = [];
 
-        let nodes : string[] = DcatMapper.select('./dct:temporal/dct:PeriodOfTime', this.record)
+        let nodes : string[] = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', this.record)
         for (let i = 0; i < nodes.length; i++) {
             let begin = this.getTimeValue(nodes[i], 'startDate');
             let end = this.getTimeValue(nodes[i], 'endDate');
@@ -527,7 +527,7 @@ export class DcatMapper extends BaseMapper {
     }
 
     getTimeValue(node, beginOrEnd: 'startDate' | 'endDate'): Date {
-        let dateNode = DcatMapper.select('./schema:' + beginOrEnd, node, true);
+        let dateNode = DcatappluMapper.select('./schema:' + beginOrEnd, node, true);
         if (dateNode) {
             let text = dateNode.textContent;
             let date = new Date(Date.parse(text));
@@ -545,7 +545,7 @@ export class DcatMapper extends BaseMapper {
         if (this.fetched.themes) return this.fetched.themes;
 
         // Evaluate the themes
-        let themes : string[] = DcatMapper.select('./dcat:theme', this.record)
+        let themes : string[] = DcatappluMapper.select('./dcat:theme', this.record)
             .map(node => node.getAttribute('rdf:resource'))
             .filter(theme => theme); // Filter out falsy values
 
@@ -562,7 +562,7 @@ export class DcatMapper extends BaseMapper {
     }
 
     _getAccrualPeriodicity(): string {
-        // let accrualPeriodicity = DcatMapper.select('./dct:accrualPeriodicity', this.record, true);
+        // let accrualPeriodicity = DcatappluMapper.select('./dct:accrualPeriodicity', this.record, true);
         // if (accrualPeriodicity) {
         //     let res = accrualPeriodicity.getAttribute('rdf:resource');
         //     let periodicity;
@@ -586,47 +586,47 @@ export class DcatMapper extends BaseMapper {
     async _getLicense() {
         let license: License;
 
-        let accessRights = DcatMapper.select('./dct:accessRights', this.record);
-        if(accessRights){
-            for(let i=0; i < accessRights.length; i++){
-                try {
-                    let json = JSON.parse(accessRights[i]);
+    //     let accessRights = DcatappluMapper.select('./dct:accessRights', this.record);
+    //     if(accessRights){
+    //         for(let i=0; i < accessRights.length; i++){
+    //             try {
+    //                 let json = JSON.parse(accessRights[i]);
 
-                    if (!json.id || !json.url) continue;
+    //                 if (!json.id || !json.url) continue;
 
-                    let requestConfig = this.getUrlCheckRequestConfig(json.url);
-                    license = {
-                        id: json.id,
-                        title: json.name,
-                        url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
-                    };
+    //                 let requestConfig = this.getUrlCheckRequestConfig(json.url);
+    //                 license = {
+    //                     id: json.id,
+    //                     title: json.name,
+    //                     url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
+    //                 };
 
-                } catch(ignored) {}
+    //             } catch(ignored) {}
 
-            }
-        }
-        if(!license){
-            for(let i = 0; i < this.linkedDistributions.length; i++) {
-                let licenseResource = DcatMapper.select('dct:license', this.linkedDistributions[i], true);
-                if(licenseResource) {
-                    license = await DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
-                    break;
-                }
-            }
-        }
+    //         }
+    //     }
+    //     if(!license){
+    //         for(let i = 0; i < this.linkedDistributions.length; i++) {
+    //             let licenseResource = DcatappluMapper.select('dct:license', this.linkedDistributions[i], true);
+    //             if(licenseResource) {
+    //                 license = await DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
+    //                 break;
+    //             }
+    //         }
+    //     }
 
-        if (!license) {
-            let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
-            this.summary.missingLicense++;
+    //     if (!license) {
+    //         let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
+    //         this.summary.missingLicense++;
 
-            this.log.warn(msg);
-            this.summary.warnings.push(['Missing license', msg]);
-            return {
-                id: 'unknown',
-                title: 'Unbekannt',
-                url: undefined
-            };
-        }
+    //         this.log.warn(msg);
+    //         this.summary.warnings.push(['Missing license', msg]);
+    //         return {
+    //             id: 'unknown',
+    //             title: 'Unbekannt',
+    //             url: undefined
+    //         };
+    //     }
 
         return license;
     }
@@ -642,12 +642,12 @@ export class DcatMapper extends BaseMapper {
     _getCreator(): Person[] {
         let creators = [];
 
-        let creatorNodes = DcatMapper.select('./dct:creator', this.record);
+        let creatorNodes = DcatappluMapper.select('./dct:creator', this.record);
         for (let i = 0; i < creatorNodes.length; i++) {
-            let organization = DcatMapper.select('./foaf:Organization', creatorNodes[i], true);
+            let organization = DcatappluMapper.select('./foaf:Organization', creatorNodes[i], true);
             if (organization) {
-                let name = DcatMapper.select('./foaf:name', organization, true);
-                let mbox = DcatMapper.select('./foaf:mbox', organization, true);
+                let name = DcatappluMapper.select('./foaf:name', organization, true);
+                let mbox = DcatappluMapper.select('./foaf:mbox', organization, true);
                 if(name) {
                     let infos: any = {
                         name: name.textContent
@@ -665,12 +665,12 @@ export class DcatMapper extends BaseMapper {
     getMaintainer(): Person[] {
         let maintainers = [];
 
-        let maintainerNodes = DcatMapper.select('./dct:maintainer', this.record);
+        let maintainerNodes = DcatappluMapper.select('./dct:maintainer', this.record);
         for (let i = 0; i < maintainerNodes.length; i++) {
-            let organization = DcatMapper.select('./foaf:Organization', maintainerNodes[i], true);
+            let organization = DcatappluMapper.select('./foaf:Organization', maintainerNodes[i], true);
             if (organization) {
-                let name = DcatMapper.select('./foaf:name', organization, true);
-                let mbox = DcatMapper.select('./foaf:mbox', organization, true);
+                let name = DcatappluMapper.select('./foaf:name', organization, true);
+                let mbox = DcatappluMapper.select('./foaf:mbox', organization, true);
                 if(name) {
                     let infos: any = {
                         name: name.textContent
@@ -690,7 +690,7 @@ export class DcatMapper extends BaseMapper {
     }
 
     _getIssued(): Date {
-        let modified = DcatMapper.select('./dct:modified', this.record, true);
+        let modified = DcatappluMapper.select('./dct:modified', this.record, true);
         return modified?new Date(modified.textContent):undefined;
     }
 
@@ -706,12 +706,12 @@ export class DcatMapper extends BaseMapper {
 
         let originators = [];
 
-        let originatorNode = DcatMapper.select('./dcatde:originator', this.record);
+        let originatorNode = DcatappluMapper.select('./dcatde:originator', this.record);
         for (let i = 0; i < originatorNode.length; i++) {
-            let organization = DcatMapper.select('./foaf:Organization', originatorNode[i], true);
+            let organization = DcatappluMapper.select('./foaf:Organization', originatorNode[i], true);
             if (organization) {
-                let name = DcatMapper.select('./foaf:name', organization, true);
-                let mbox = DcatMapper.select('./foaf:mbox', organization, true);
+                let name = DcatappluMapper.select('./foaf:name', organization, true);
+                let mbox = DcatappluMapper.select('./foaf:mbox', organization, true);
                 let infos: any = {
                     name: name.textContent
                 };
@@ -730,21 +730,21 @@ export class DcatMapper extends BaseMapper {
             return contactPoint;
         }
         let infos: any = {};
-        let contact = DcatMapper.select('./dcat:contactPoint', this.record, true);
+        let contact = DcatappluMapper.select('./dcat:contactPoint', this.record, true);
         if (contact) {
-            let organization = DcatMapper.select('./vcard:Organization', contact, true);
+            let organization = DcatappluMapper.select('./vcard:Organization', contact, true);
             if(contact.getAttribute('rdf:resource')){
-                organization = DcatMapper.select('(vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"]|./*/*/vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"])', this.catalogPage, true)
+                organization = DcatappluMapper.select('(vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"]|./*/*/vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"])', this.catalogPage, true)
             }
             if(organization) {
-                let name = DcatMapper.select('./vcard:fn', organization, true);
-                let org = DcatMapper.select('./organization-name', organization, true);
-                let region = DcatMapper.select('./vcard:region', organization, true);
-                let country = DcatMapper.select('./vcard:hasCountryName', organization, true);
-                let postCode = DcatMapper.select('./vcard:hasPostalCode', organization, true);
-                let email = DcatMapper.select('./vcard:hasEmail', organization, true);
-                let phone = DcatMapper.select('./vcard:hasTelephone', organization, true);
-                let urlNode = DcatMapper.select('./vcard:hasURL', organization, true);
+                let name = DcatappluMapper.select('./vcard:fn', organization, true);
+                let org = DcatappluMapper.select('./organization-name', organization, true);
+                let region = DcatappluMapper.select('./vcard:region', organization, true);
+                let country = DcatappluMapper.select('./vcard:hasCountryName', organization, true);
+                let postCode = DcatappluMapper.select('./vcard:hasPostalCode', organization, true);
+                let email = DcatappluMapper.select('./vcard:hasEmail', organization, true);
+                let phone = DcatappluMapper.select('./vcard:hasTelephone', organization, true);
+                let urlNode = DcatappluMapper.select('./vcard:hasURL', organization, true);
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.getAttribute('rdf:resource'));
