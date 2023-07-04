@@ -340,7 +340,10 @@ export class CswImporter extends Importer {
             ids.push(...(result as PromiseFulfilledResult<BulkResponse>).value.response.items.filter(item => item.index.result == 'created').map(item => item.index._id));
             return ids;
         }, []);
-        return docsToImport.filter(doc => insertedIds.includes(doc.identifier));
+        // TODO not filtering produces some (inconsequential) ES errors we ignore for now
+        // TODO but with filtering (here), we miss some updates -> don't filter atm
+        // TODO this has to be handled differently with the database layer anyhow
+        return docsToImport;//.filter(doc => insertedIds.includes(doc.identifier));
     }
 
     /**

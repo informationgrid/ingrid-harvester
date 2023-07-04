@@ -27,7 +27,7 @@ import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { Distribution } from '../../../model/distribution';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
-import { Geometry, Point } from "@turf/helpers";
+import { Geometry, GeometryCollection, Point } from "@turf/helpers";
 import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WmsXPath } from './wms.xpath';
 
@@ -64,25 +64,25 @@ export class DiplanungCswImporter extends CswImporter {
                     docIsUpdated = true;
                 }
 
-                // purposely simplistic heuristic: is centroid inside bbox for Germany?
-                if (!GeoJsonUtils.within(doc.centroid, GeoJsonUtils.BBOX_GERMANY)) {
+                // purposely simplistic heuristic: is bbox inside bbox for Germany?
+                if (!GeoJsonUtils.within(doc.bounding_box, GeoJsonUtils.BBOX_GERMANY)) {
                     // copy and/or create relevant metadata structure
                     updateDoc['extras'] = { ...doc['extras'] };
                     if (!updateDoc['extras']['metadata']['quality_notes']) {
                         updateDoc['extras']['metadata']['quality_notes'] = [];
                     }
                     // if not, try to swap lat and lon
-                    let swappedCentroid = GeoJsonUtils.flip<Point>(doc.centroid);
-                    if (GeoJsonUtils.within(swappedCentroid, GeoJsonUtils.BBOX_GERMANY)) {
-                        updateDoc['spatial'] = GeoJsonUtils.flip<Geometry>(doc.spatial);
-                        updateDoc['bounding_box'] = GeoJsonUtils.flip<Geometry>(doc.bounding_box);
-                        updateDoc['centroid'] = swappedCentroid;
+                    let flippedBbox = GeoJsonUtils.flip<Geometry | GeometryCollection>(doc.bounding_box);
+                    if (GeoJsonUtils.within(flippedBbox, GeoJsonUtils.BBOX_GERMANY)) {
+                        updateDoc['spatial'] = GeoJsonUtils.flip<Geometry | GeometryCollection>(doc.spatial);
+                        updateDoc['bounding_box'] = flippedBbox;
+                        updateDoc['centroid'] = GeoJsonUtils.flip<Point>(doc.centroid);
                         updateDoc['extras']['metadata']['is_changed'] = true;
                         updateDoc['extras']['metadata']['quality_notes'].push('Swapped lat and lon');
                     }
                     else {
                         updateDoc['extras']['metadata']['is_valid'] = false;
-                        updateDoc['extras']['metadata']['quality_notes'].push('Centroid not within Germany');
+                        updateDoc['extras']['metadata']['quality_notes'].push('Bounding box not within Germany');
                     }
                     docIsUpdated = true;
                 }
