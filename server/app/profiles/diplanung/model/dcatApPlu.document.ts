@@ -30,7 +30,7 @@ import { Distribution } from '../../../model/distribution';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { ProcessStep, Record } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
-
+import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper'
 const esc = require('xml-escape');
 
 function optional(wrapper: string | Function, variable: any | any[], ...remainder: any) {
@@ -67,7 +67,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         return 'dcat_ap_plu';
     }
 
-    static async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper): Promise<string> {
+    static async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper | DcatappluMapper): Promise<string> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
         let publisher = (await mapper.getPublisher())?.[0];

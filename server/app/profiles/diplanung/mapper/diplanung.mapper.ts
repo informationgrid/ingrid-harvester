@@ -31,11 +31,12 @@ import { Distribution } from "../../../model/distribution";
 import { ExcelSparseMapper } from "../../../importer/excelsparse/excelsparse.mapper";
 import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from 'model/dcatApPlu.model';
 import { WfsMapper } from "../../../importer/wfs/wfs.mapper";
+import { DcatappluMapper } from "../../../importer/dcatapplu/dcatapplu.mapper";
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
 
-export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapper| ExcelSparseMapper | WfsMapper> {
+export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapper| ExcelSparseMapper | WfsMapper | DcatappluMapper > {
 
     protected baseMapper: M;
 

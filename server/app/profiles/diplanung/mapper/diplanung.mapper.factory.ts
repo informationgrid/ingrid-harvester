@@ -31,6 +31,7 @@ export class DiplanungMapperFactory {
             case 'ExcelSparseMapper': return new DiplanungMapper(mapper);
             case 'FisWfsMapper': return new DiplanungMapper(mapper);
             case 'XplanWfsMapper': return new DiplanungMapper(mapper);
+            case 'DcatappluMapper': return new DiplanungMapper(mapper);
         }
     }
 }

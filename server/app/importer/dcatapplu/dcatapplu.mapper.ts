@@ -218,15 +218,15 @@ export class DcatappluMapper extends BaseMapper {
 
         let dctPublishers = DcatappluMapper.select('./dct:publisher', this.record);
         for (let i = 0; i < dctPublishers.length; i++) {
-            let organization = DcatappluMapper.select('./foaf:Organization', dctPublishers[i], true);
-            if(!organization){
-                organization = DcatappluMapper.select('./foaf:Organization[@rdf:about="'+dctPublishers[i].getAttribute('rdf:resource')+'"]', this.catalogPage, true)
+            let agent = DcatappluMapper.select('./foaf:Agent', dctPublishers[i], true);
+            if(!agent){
+                agent = DcatappluMapper.select('./foaf:Agent[@rdf:about="'+dctPublishers[i].getAttribute('rdf:resource')+'"]', this.catalogPage, true)
             }
-            if (organization) {
-                let name = DcatappluMapper.select('./foaf:name', organization, true);
+            if (agent) {
+                let name = DcatappluMapper.select('./foaf:name', agent, true);
                 if(name) {
                     let infos: any = {
-                        organization: name.textContent
+                        name: name.textContent
                     };
 
                     publishers.push(infos);
@@ -235,22 +235,22 @@ export class DcatappluMapper extends BaseMapper {
         }
 
 
-        if (publishers.length === 0) {
-            let creators = DcatappluMapper.select('./dct:creator', this.record);
-            for (let i = 0; i < creators.length; i++) {
-                let organization = DcatappluMapper.select('./foaf:Organization', creators[i], true);
-                if (organization) {
-                    let name = DcatappluMapper.select('./foaf:name', organization, true);
-                    if (name) {
-                        let infos: any = {
-                            organization: name.textContent
-                        };
+        // if (publishers.length === 0) {
+        //     let creators = DcatappluMapper.select('./dct:creator', this.record);
+        //     for (let i = 0; i < creators.length; i++) {
+        //         let agent = DcatappluMapper.select('./foaf:Agent', creators[i], true);
+        //         if (agent) {
+        //             let name = DcatappluMapper.select('./foaf:name', agent, true);
+        //             if (name) {
+        //                 let infos: any = {
+        //                     name: name.textContent
+        //                 };
 
-                        publishers.push(infos);
-                    }
-                }
-            }
-        }
+        //                 publishers.push(infos);
+        //             }
+        //         }
+        //     }
+        // }
 
         if (publishers.length === 0) {
             this.summary.missingPublishers++;
@@ -264,6 +264,59 @@ export class DcatappluMapper extends BaseMapper {
     _getTitle() {
         let title = DcatappluMapper.select('./dct:title', this.record, true).textContent;
         return title && title.trim() !== '' ? title : undefined;
+    }
+
+    _getAlternateTitle() {
+        return this._getTitle();
+    }
+
+    
+    _getPluPlanState() {
+        return undefined;
+    }
+
+    _getPluPlanType() {
+        return undefined;
+    }
+
+    _getPluPlanTypeFine() {
+        return undefined;
+    }
+
+    _getPluProcedureStartDate() {
+        return undefined;
+    }
+
+    _getPluProcedureState() {
+        return undefined;
+    }
+
+    _getPluProcedureType() {
+        return undefined;
+    }
+
+    _getPluProcessSteps() {
+        return undefined;
+    }
+
+    _getBoundingBox() {
+        return undefined;
+    }
+
+    async _getCatalog() {
+        return {
+            description: this.fetched.description,
+            title: this.fetched.title,
+            publisher: (await this._getPublisher())[0]
+        }
+    }
+
+    _getPluDevelopmentFreezePeriod() {
+        return undefined;
+    }
+    
+    _getCentroid(): object {
+        return this._getSpatial();
     }
 
     /**
@@ -299,8 +352,8 @@ export class DcatappluMapper extends BaseMapper {
         let displayName;
         let displayHomepage;
 
-        if(this.settings.dcatProviderField) {
-            switch (this.settings.dcatProviderField) {
+        if(this.settings.dcatappluProviderField) {
+            switch (this.settings.dcatappluProviderField) {
                 case "contactPoint":
                     let contactPoint = await this.getContactPoint();
                     if (contactPoint) {

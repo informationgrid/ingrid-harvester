@@ -37,5 +37,5 @@ export type DcatappluSettings = {
     filterTags?: string[],
     filterThemes?: string[],
     providerPrefix?: string,
-    dcatProviderField?: DCATAPPLUProviderField,
+    dcatappluProviderField?: DCATAPPLUProviderField,
 } & ImporterSettings;
