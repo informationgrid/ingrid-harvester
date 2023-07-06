@@ -316,7 +316,16 @@ export class DcatappluMapper extends BaseMapper {
     }
     
     _getCentroid(): object {
-        return this._getSpatial();
+        // return this._getSpatial();
+        let centroid = DcatappluMapper.select('./dct:spatial/dct:Location/dcat:centroid[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
+        if(centroid){
+            return JSON.parse(centroid.textContent);
+        }
+        centroid = DcatappluMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
+        if(centroid){
+            return this.wktToGeoJson(centroid.textContent);
+        }
+        return undefined;
     }
 
     /**
@@ -782,48 +791,22 @@ export class DcatappluMapper extends BaseMapper {
         if (contactPoint) {
             return contactPoint;
         }
-        let infos: any = {};
-        let contact = DcatappluMapper.select('./dcat:contactPoint', this.record, true);
-        if (contact) {
-            let organization = DcatappluMapper.select('./vcard:Organization', contact, true);
-            if(contact.getAttribute('rdf:resource')){
-                organization = DcatappluMapper.select('(vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"]|./*/*/vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"])', this.catalogPage, true)
-            }
-            if(organization) {
-                let name = DcatappluMapper.select('./vcard:fn', organization, true);
-                let org = DcatappluMapper.select('./organization-name', organization, true);
-                let region = DcatappluMapper.select('./vcard:region', organization, true);
-                let country = DcatappluMapper.select('./vcard:hasCountryName', organization, true);
-                let postCode = DcatappluMapper.select('./vcard:hasPostalCode', organization, true);
-                let email = DcatappluMapper.select('./vcard:hasEmail', organization, true);
-                let phone = DcatappluMapper.select('./vcard:hasTelephone', organization, true);
-                let urlNode = DcatappluMapper.select('./vcard:hasURL', organization, true);
-                let url = null;
-                if (urlNode) {
-                    let requestConfig = this.getUrlCheckRequestConfig(urlNode.getAttribute('rdf:resource'));
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
-                }
+        let infos: Contact = {
+            fn: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:fn', this.record, true)?.textContent,
+            hasCountryName: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasCountryName', this.record, true)?.textContent,
+            hasLocality: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasLocality', this.record, true)?.textContent,
+            hasPostalCode: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasPostalCode', this.record, true)?.textContent,
+            hasRegion: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasRegion', this.record, true)?.textContent,
+            hasStreetAddress: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasStreetAddress', this.record, true)?.textContent,
+            hasEmail: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasEmail', this.record, true)?.textContent.replace('mailto:', ''),
+            hasTelephone: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasTelephone', this.record, true)?.textContent.replace('tel:', ''),
+            hasUID: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasUID', this.record, true)?.textContent,
+            hasURL: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasURL', this.record, true)?.textContent,
+            hasOrganizationName: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasOrganizationName', this.record, true)?.textContent,
+        };
 
-                let infos: Contact = {
-                    fn: name?.textContent,
-                };                 
-
-                if (contact.getAttribute('uuid')) {
-                    infos.hasUID = contact.getAttribute('uuid');
-                }
-
-                if (org) infos['organization-name'] = org.textContent;
-
-                if (region) infos.hasRegion = region.textContent;
-                if (country) infos.hasCountryName = country.textContent.trim();
-                if (postCode) infos.hasPostalCode = postCode.textContent;
-
-                if (email) infos.hasEmail = email.getAttribute('rdf:resource').replace('mailto:', '');
-                if (phone) infos.hasTelephone = phone.getAttribute('rdf:resource').replace('tel:', '');
-                if (url) infos.hasURL = url;
-            }
-
-        }
+        // if (email) infos.hasEmail = email.getAttribute('rdf:resource').replace('mailto:', '');
+        // if (phone) infos.hasTelephone = phone.getAttribute('rdf:resource').replace('tel:', '');
 
         this.fetched.contactPoint = infos;
         return infos;
