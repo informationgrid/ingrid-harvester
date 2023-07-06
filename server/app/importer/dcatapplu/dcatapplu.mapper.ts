@@ -38,6 +38,7 @@ import {Summary} from "../../model/summary";
 import {Contact, Person} from "../../model/agent";
 import {Distribution} from "../../model/distribution";
 import {DateRange} from "../../model/dateRange";
+import { PluPlanState, PluPlanType, PluProcedureState } from "../../model/dcatApPlu.model";
 
 let xpath = require('xpath');
 
@@ -55,6 +56,7 @@ export class DcatappluMapper extends BaseMapper {
     static VCARD = 'http://www.w3.org/2006/vcard/ns#';
     static DCATDE = 'http://dcat-ap.de/def/dcatde/';
     static OGC = 'http://www.opengis.net/rdf#'
+    static PLU = 'http://a.placeholder.url.for.dcat-ap-plu/'
 
     static select = xpath.useNamespaces({
         'foaf': DcatappluMapper.FOAF,
@@ -68,7 +70,8 @@ export class DcatappluMapper extends BaseMapper {
         'schema': DcatappluMapper.SCHEMA,
         'vcard': DcatappluMapper.VCARD,
         'dcatde': DcatappluMapper.DCATDE,
-        'ogc': DcatappluMapper.OGC
+        'ogc': DcatappluMapper.OGC,
+        'plu': DcatappluMapper.PLU
     });
 
     private log = getLogger();
@@ -118,6 +121,108 @@ export class DcatappluMapper extends BaseMapper {
             super.init();
     }
 
+    async _getContactPoint(): Promise<any> {
+        let contactPoint = this.fetched.contactPoint;
+        if (contactPoint) {
+            return contactPoint;
+        }
+        let infos: Contact;
+        let organization = DcatappluMapper.select('./dcat:contactPoint/vcard:Organization', this.record, true);
+        if (organization) {
+            infos = {
+                fn: DcatappluMapper.select('./vcard:fn', organization, true)?.textContent ?? "",
+                hasCountryName: DcatappluMapper.select('./vcard:hasCountryName', organization, true)?.textContent,
+                hasLocality: DcatappluMapper.select('./vcard:hasLocality', organization, true)?.textContent,
+                hasPostalCode: DcatappluMapper.select('./vcard:hasPostalCode', organization, true)?.textContent,
+                hasRegion: DcatappluMapper.select('./vcard:hasRegion', organization, true)?.textContent,
+                hasStreetAddress: DcatappluMapper.select('./vcard:hasStreetAddress', organization, true)?.textContent,
+                hasEmail: DcatappluMapper.select('./vcard:hasEmail', organization, true)?.textContent,
+                hasTelephone: DcatappluMapper.select('./vcard:hasTelephone', organization, true)?.textContent,
+                hasUID: DcatappluMapper.select('./vcard:hasUID', organization, true)?.textContent,
+                hasURL: DcatappluMapper.select('./vcard:hasURL', organization, true)?.textContent,
+                hasOrganizationName: DcatappluMapper.select('./vcard:hasOrganizationName', organization, true)?.textContent
+            };
+        }
+        this.fetched.contactPoint = infos;
+        return infos;
+    }
+
+    _getDescription() {
+        let description = DcatappluMapper.select('./dct:description', this.record, true)?.textContent;
+        return description ?? "";
+    }
+
+    _getTitle() {
+        let title = DcatappluMapper.select('./dct:title', this.record, true)?.textContent;
+        return title ?? "";
+    }
+
+    _getAlternateTitle() {
+        return this._getTitle();
+    }
+
+    // --------------------------------------------------------- important: check ProcessStep, Distribution, Dataset
+    // --------------------------------------------------------- important: check if gte and lte is correct
+    _getPluDevelopmentFreezePeriod() {
+        let PeriodOfTime: any;
+        let PeriodObject = DcatappluMapper.select('./plu:developmentFreezePeriod/dct:PeriodOfTime', this.record, true);
+        if(PeriodObject){
+            PeriodOfTime = {
+                gte: DcatappluMapper.select('./dcat:startDate', PeriodObject, true)?.textContent,
+                lte: DcatappluMapper.select('./dcat:endDate', PeriodObject, true)?.textContent
+            }
+        }
+        return PeriodOfTime;
+    }
+
+    _getPluPlanState() {
+        let PlanState = DcatappluMapper.select('./plu:planState', this.record, true)?.textContent;
+        return PlanState ?? PluPlanState.UNBEKANNT;
+    }
+
+    _getPluPlanType() {
+        let PlanType = DcatappluMapper.select('./plu:planType', this.record, true)?.textContent;
+        return PlanType ?? PluPlanType.UNBEKANNT;
+    }
+
+    _getPluPlanTypeFine() {
+        let PlanTypeFine = DcatappluMapper.select('./plu:planTypeFine', this.record, true)?.textContent;
+        return PlanTypeFine ?? "";
+    }
+
+    _getPluProcedureState() {
+        let ProcedureState = DcatappluMapper.select('./plu:procedureState', this.record, true)?.textContent;
+        return ProcedureState ?? PluProcedureState.UNBEKANNT;
+    }
+
+    // ------------------------------------------------------------- 
+    // -------------------------- TEST STAGE ----------------------- 
+    // ------------------------------------------------------------- 
+    
+
+
+    // --------------------------------------------------------- Question: Format of Date ?
+    _getPluProcedureStartDate() {
+        let ProcedureStartDate = DcatappluMapper.select('./plu:procedureStartDate', this.record, true)?.textContent;
+        let StartDate =  new Date(ProcedureStartDate)
+        return StartDate ?? ""
+    }
+
+    // NEXT: procedure_type: mapper.getPluProcedureType(),
+
+    
+    // ------------------------------------------------------------- 
+    // -------------------------- BACKLOG --------------------------
+    // ------------------------------------------------------------- 
+    // plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),
+    // identifier: mapper.getGeneratedId(),
+
+
+    _getGeneratedId(): string {
+        return this.uuid;
+    }
+
+
     public getSettings(): ImporterSettings {
         return this.settings;
     }
@@ -126,22 +231,6 @@ export class DcatappluMapper extends BaseMapper {
         return this.summary;
     }
 
-    _getDescription() {
-        let description = DcatappluMapper.select('./dct:description', this.record, true);
-        if (!description) {
-            description = DcatappluMapper.select('./dct:abstract', this.record, true);
-        }
-        if (!description) {
-            let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.catalogUrl}\'`;
-            this.log.warn(msg);
-            this.summary.warnings.push(['No description', msg]);
-            this.valid = false;
-        } else {
-            return description.textContent;
-        }
-
-        return undefined;
-    }
 
 
     async _getDistributions(): Promise<Distribution[]> {
@@ -261,35 +350,15 @@ export class DcatappluMapper extends BaseMapper {
         }
     }
 
-    _getTitle() {
-        let title = DcatappluMapper.select('./dct:title', this.record, true).textContent;
-        return title && title.trim() !== '' ? title : undefined;
-    }
 
-    _getAlternateTitle() {
-        return this._getTitle();
-    }
 
     
-    _getPluPlanState() {
-        return undefined;
-    }
 
-    _getPluPlanType() {
-        return undefined;
-    }
 
-    _getPluPlanTypeFine() {
-        return undefined;
-    }
 
-    _getPluProcedureStartDate() {
-        return undefined;
-    }
 
-    _getPluProcedureState() {
-        return undefined;
-    }
+
+
 
     _getPluProcedureType() {
         return undefined;
@@ -311,9 +380,7 @@ export class DcatappluMapper extends BaseMapper {
         }
     }
 
-    _getPluDevelopmentFreezePeriod() {
-        return undefined;
-    }
+
     
     _getCentroid(): object {
         // return this._getSpatial();
@@ -468,9 +535,7 @@ export class DcatappluMapper extends BaseMapper {
         return [displayContact];
     }
 
-    _getGeneratedId(): string {
-        return this.uuid;
-    }
+
 
     /**
      * Extracts and returns an array of keywords defined in the ISO-XML document.
@@ -786,31 +851,7 @@ export class DcatappluMapper extends BaseMapper {
         return originators.length === 0 ? undefined : originators;
     }
 
-    async _getContactPoint(): Promise<any> {
-        let contactPoint = this.fetched.contactPoint;
-        if (contactPoint) {
-            return contactPoint;
-        }
-        let infos: Contact;
-        let organization = DcatappluMapper.select('./dcat:contactPoint/vcard:Organization', this.record, true);
-        if (organization) {
-            infos = {
-                fn: DcatappluMapper.select('./vcard:fn', organization, true)?.textContent ?? "",
-                hasCountryName: DcatappluMapper.select('./vcard:hasCountryName', organization, true)?.textContent,
-                hasLocality: DcatappluMapper.select('./vcard:hasLocality', organization, true)?.textContent,
-                hasPostalCode: DcatappluMapper.select('./vcard:hasPostalCode', organization, true)?.textContent,
-                hasRegion: DcatappluMapper.select('./vcard:hasRegion', organization, true)?.textContent,
-                hasStreetAddress: DcatappluMapper.select('./vcard:hasStreetAddress', organization, true)?.textContent,
-                hasEmail: DcatappluMapper.select('./vcard:hasEmail', organization, true)?.textContent,
-                hasTelephone: DcatappluMapper.select('./vcard:hasTelephone', organization, true)?.textContent,
-                hasUID: DcatappluMapper.select('./vcard:hasUID', organization, true)?.textContent,
-                hasURL: DcatappluMapper.select('./vcard:hasURL', organization, true)?.textContent,
-                hasOrganizationName: DcatappluMapper.select('./vcard:hasOrganizationName', organization, true)?.textContent,
-            };
-        }
-        this.fetched.contactPoint = infos;
-        return infos;
-    }
+
 
     _getUrlCheckRequestConfig(uri: string): RequestOptions {
         let config: RequestOptions = {

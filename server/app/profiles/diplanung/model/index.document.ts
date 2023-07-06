@@ -63,6 +63,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             plan_type_fine: mapper.getPluPlanTypeFine(),
             procedure_state: mapper.getPluProcedureState(),
             procedure_start_date: mapper.getPluProcedureStartDate(),
+            // --------------------------- MARKER --------------------------- 
             procedure_type: mapper.getPluProcedureType(),
             process_steps: mapper.getPluProcessSteps(),
             // spatial and temporal features
