@@ -791,23 +791,23 @@ export class DcatappluMapper extends BaseMapper {
         if (contactPoint) {
             return contactPoint;
         }
-        let infos: Contact = {
-            fn: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:fn', this.record, true)?.textContent,
-            hasCountryName: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasCountryName', this.record, true)?.textContent,
-            hasLocality: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasLocality', this.record, true)?.textContent,
-            hasPostalCode: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasPostalCode', this.record, true)?.textContent,
-            hasRegion: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasRegion', this.record, true)?.textContent,
-            hasStreetAddress: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasStreetAddress', this.record, true)?.textContent,
-            hasEmail: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasEmail', this.record, true)?.textContent.replace('mailto:', ''),
-            hasTelephone: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasTelephone', this.record, true)?.textContent.replace('tel:', ''),
-            hasUID: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasUID', this.record, true)?.textContent,
-            hasURL: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasURL', this.record, true)?.textContent,
-            hasOrganizationName: DcatappluMapper.select('./dcat:contactPoint/vcard:Organization/vcard:hasOrganizationName', this.record, true)?.textContent,
-        };
-
-        // if (email) infos.hasEmail = email.getAttribute('rdf:resource').replace('mailto:', '');
-        // if (phone) infos.hasTelephone = phone.getAttribute('rdf:resource').replace('tel:', '');
-
+        let infos: Contact;
+        let organization = DcatappluMapper.select('./dcat:contactPoint/vcard:Organization', this.record, true);
+        if (organization) {
+            infos = {
+                fn: DcatappluMapper.select('./vcard:fn', organization, true)?.textContent ?? "",
+                hasCountryName: DcatappluMapper.select('./vcard:hasCountryName', organization, true)?.textContent,
+                hasLocality: DcatappluMapper.select('./vcard:hasLocality', organization, true)?.textContent,
+                hasPostalCode: DcatappluMapper.select('./vcard:hasPostalCode', organization, true)?.textContent,
+                hasRegion: DcatappluMapper.select('./vcard:hasRegion', organization, true)?.textContent,
+                hasStreetAddress: DcatappluMapper.select('./vcard:hasStreetAddress', organization, true)?.textContent,
+                hasEmail: DcatappluMapper.select('./vcard:hasEmail', organization, true)?.textContent,
+                hasTelephone: DcatappluMapper.select('./vcard:hasTelephone', organization, true)?.textContent,
+                hasUID: DcatappluMapper.select('./vcard:hasUID', organization, true)?.textContent,
+                hasURL: DcatappluMapper.select('./vcard:hasURL', organization, true)?.textContent,
+                hasOrganizationName: DcatappluMapper.select('./vcard:hasOrganizationName', organization, true)?.textContent,
+            };
+        }
         this.fetched.contactPoint = infos;
         return infos;
     }
