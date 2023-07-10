@@ -24,21 +24,22 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {BaseMapper} from "../base.mapper";
-import {License} from '@shared/license.model';
-import {getLogger} from "log4js";
-import {UrlUtils} from "../../utils/url.utils";
-import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
-import {DcatappluSettings} from './dcatapplu.settings';
+import { BaseMapper } from "../base.mapper";
+import { License } from '@shared/license.model';
+import { getLogger } from "log4js";
+import { UrlUtils } from "../../utils/url.utils";
+import { MiscUtils } from "../../utils/misc.utils"
+import { RequestDelegate, RequestOptions } from "../../utils/http-request.utils";
+import { DcatappluSettings } from './dcatapplu.settings';
 // import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
-import {throwError} from "rxjs";
-import {ImporterSettings} from "../../importer.settings";
+import { throwError } from "rxjs";
+import { ImporterSettings } from "../../importer.settings";
 // import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
-import {Summary} from "../../model/summary";
-import {Contact, Person} from "../../model/agent";
-import {Distribution} from "../../model/distribution";
-import {DateRange} from "../../model/dateRange";
-import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep,PluProcessStepType, PluDocType } from "../../model/dcatApPlu.model";
+import { Summary } from "../../model/summary";
+import { Contact, Person } from "../../model/agent";
+import { Distribution } from "../../model/distribution";
+import { DateRange } from "../../model/dateRange";
+import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep, PluProcessStepType, PluDocType } from "../../model/dcatApPlu.model";
 
 let xpath = require('xpath');
 
@@ -78,12 +79,15 @@ export class DcatappluMapper extends BaseMapper {
 
     private readonly record: any;
     private readonly catalogPage: any;
-    private readonly linkedDistributions: any;
-    private readonly linkedProcessSteps: any;
+    // private readonly linkedDatasetDistributions: any;
+    // private readonly linkedProcessStepDistributions: any;
+    // private readonly linkedProcessSteps: any;
+    private readonly linkedDistributions: any[];
+    private readonly linkedProcessSteps: any[];
     private harvestTime: any;
     private readonly storedData: any;
 
-//    protected readonly idInfo; // : SelectedValue;
+    //    protected readonly idInfo; // : SelectedValue;
     private settings: DcatappluSettings;
     private readonly uuid: string;
     private summary: Summary;
@@ -106,27 +110,34 @@ export class DcatappluMapper extends BaseMapper {
         this.storedData = storedData;
         this.summary = summary;
         this.catalogPage = catalogPage;
+        this.linkedDistributions = DcatappluMapper.select('./dcat:Distribution', catalogPage);
+        this.linkedProcessSteps = DcatappluMapper.select('./plu:ProcessStep', catalogPage);
 
-        let processSteps = DcatappluMapper.select('./plu:ProcessStep', catalogPage);
-        let processStepIDs = DcatappluMapper.select('./plu:processStep', record)
-            .map(node => node.getAttribute('rdf:resource'))
-            .filter(processStep => processStep);
-        this.linkedProcessSteps = processSteps.filter(processStep => processStepIDs.includes(processStep.getAttribute('rdf:about')))
+        // let processSteps = DcatappluMapper.select('./plu:ProcessStep', catalogPage);
+        // let processStepIDs = DcatappluMapper.select('./plu:processStep', record)
+        //     .map(node => node.getAttribute('rdf:resource'))
+        //     .filter(processStep => processStep);
+        // this.linkedProcessSteps = processSteps.filter(processStep => processStepIDs.includes(processStep.getAttribute('rdf:about')))
 
-        let distributions = DcatappluMapper.select('./dcat:Distribution', catalogPage);
-        let distributionIDs = DcatappluMapper.select('./dcat:distribution', record)
-            .map(node => node.getAttribute('rdf:resource'))
-            .filter(distibution => distibution);
+        // let distributions = DcatappluMapper.select('./dcat:Distribution', catalogPage);
 
-        this.linkedDistributions = distributions.filter(distribution => distributionIDs.includes(distribution.getAttribute('rdf:about')))
+        // let datasetDistributionIDs = DcatappluMapper.select('./dcat:distribution', record)
+        //     .map(node => node.getAttribute('rdf:resource'))
+        //     .filter(distibution => distibution);
+        // this.linkedDatasetDistributions = distributions.filter(distribution => datasetDistributionIDs.includes(distribution.getAttribute('rdf:about')))
+
+        // let processStepDistributionIDs = DcatappluMapper.select('./plu:ProcessStep/dcat:distribution', record)
+        //     .map(node => node.getAttribute('rdf:resource'))
+        //     .filter(distibution => distibution);
+        // this.linkedProcessStepDistributions = distributions.filter(distribution => processStepDistributionIDs.includes(distribution.getAttribute('rdf:about')))
 
         let uuid = DcatappluMapper.select('./dct:identifier', record, true).textContent;
-        if(!uuid) {
+        if (!uuid) {
             uuid = DcatappluMapper.select('./dct:identifier/@rdf:resource', record, true).textContent;
         }
         this.uuid = uuid;
 
-            super.init();
+        super.init();
     }
 
     async _getContactPoint(): Promise<any> {
@@ -193,103 +204,76 @@ export class DcatappluMapper extends BaseMapper {
         let procedureType = DcatappluMapper.select('./plu:procedureType', this.record, true)?.textContent;
         return procedureType ?? PluProcedureType.UNBEKANNT;
     }
-    
+
+
+    _getPluProcedureStartDate() {
+        let procedureStartDate = DcatappluMapper.select('./plu:procedureStartDate', this.record, true)?.textContent;
+        let StartDate = MiscUtils.normalizeDateTime(procedureStartDate)
+        return StartDate ?? ""
+    }
+
     // ---------------------- ↑ already checked ↑ ---------------------- 
     // ----------------------------------------------------------------- 
     // ----------------------------------------------------------------- 
     // ----------------------------------------------------------------- 
     // ---------------------- ↓ not yet checked ↓ ---------------------- 
-    
-// ------ Question: check ProcessStep, Distribution, Dataset
-// ------ Question: check if gte and lte is correct
+
+    // ------ Question: check ProcessStep, Distribution, Dataset
     _getPluDevelopmentFreezePeriod() {
         let periodOfTime: any;
         let periodObject = DcatappluMapper.select('./plu:developmentFreezePeriod/dct:PeriodOfTime', this.record, true);
-        if(periodObject){
+        if (periodObject) {
             periodOfTime = {
-                gte: DcatappluMapper.select('./dcat:startDate', periodObject, true)?.textContent,
-                lte: DcatappluMapper.select('./dcat:endDate', periodObject, true)?.textContent
+                gte: MiscUtils.normalizeDateTime(DcatappluMapper.select('./dcat:startDate', periodObject, true)?.textContent),
+                lte: MiscUtils.normalizeDateTime(DcatappluMapper.select('./dcat:endDate', periodObject, true)?.textContent)
             }
         }
         return periodOfTime;
     }
 
-// ------ Question: Format of Date ?
-    _getPluProcedureStartDate() {
-        let procedureStartDate = DcatappluMapper.select('./plu:procedureStartDate', this.record, true)?.textContent;
-        let StartDate =  new Date(procedureStartDate)
-        return StartDate ?? ""
-    }
 
-    _getPluProcessSteps() {
-        let processSteps = [];
-        this.linkedProcessSteps?.map((step: any) => { 
-// ------ QUESTION: How to implement _getDistributions() ?
-            let distributions = this._getDistributions()
-// ------ QUESTION: How to implement _getTemporal() ?
-            let temporal : DateRange = {
-                gte: DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime/dcat:startDate', step, true)?.textContent ?? undefined,  // DATE
-                lte: DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime/dcat:endDate', step, true)?.textContent ?? undefined   // DATE
-            }
+    async _getPluProcessSteps() {
+        let processSteps:any[] = []
+
+        let processStepIDs = DcatappluMapper.select('./plu:processStep', this.record)
+            .map(node => node.getAttribute('rdf:resource'))
+            .filter(processStep => processStep);
+        const linked = this.linkedProcessSteps.filter(processStep => processStepIDs.includes(processStep.getAttribute('rdf:about')) )
+        const local = DcatappluMapper.select('./plu:processStep/plu:ProcessStep', this.record)        
+        let pluProcessSteps:any[] = [...linked, ...local]
+        
+        pluProcessSteps?.map((step: any) => {
+            let distributionArray = this._getDistibutionArray(step)
+            let distributions = this._mapDistributionArray(distributionArray)
+
+            let nodes: string[] = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', step, true);
+            let period = this._getTemporalInternal(nodes);
             let processStep: ProcessStep = {
                 identifier: DcatappluMapper.select('./dct:identifier', step, true)?.textContent ?? undefined,
-// ------ QUESTION: How to implement _getDistributions() ?
-                distributions: undefined,
-                period: temporal,
+                distributions,
+                period: period?.[0],
                 type: DcatappluMapper.select('./plu:ProcessStepType', step, true)?.textContent ?? PluProcessStepType.UNBEKANNT
             }
-            processSteps.push(processStep)
+            processSteps.push(processStep);
         })
         return processSteps;
     }
 
-    async _getDistributions(): Promise<Distribution[]> {
-        let dists = this.fetched.distributions;
-        if (dists) {
-            return dists;
-        }
-        dists = [];
-        this.linkedDistributions?.map((dist: any) =>{
-// ------ QUESTION: No temporal in Distribution !
-// ------ QUESTION: Take Temporal from ProcessSTep
-// ------ QUESTION: Use _getTemporal() or call directly with DcatappluMapper ?
-            // let period = this._getTemporal()
-            let period : DateRange = {
-                gte: undefined,  // DATE
-                lte: undefined   // DATE
-            }
+    _getDistibutionArray(node){
+        let distributionIDs = DcatappluMapper.select('./dcat:distribution', node)
+            .map(node => node.getAttribute('rdf:resource'))
+            .filter(processStep => processStep);
+        const linked = this.linkedDistributions.filter(distribution => distributionIDs.includes(distribution.getAttribute('rdf:about')) )
+        const local = DcatappluMapper.select('./dcat:distribution/dcat:Distribution', node)        
+        return [...linked, ...local];
+    }
 
-            // let format: string = "Unbekannt";
-            // let formatNode = DcatappluMapper.select('./dct:format', this.linkedDistributions[i], true);
-            // let mediaTypeNode = DcatappluMapper.select('./dcat:mediaType', this.linkedDistributions[i], true);
-            // if (formatNode) {
-            //     let formatLabel = DcatappluMapper.select('.//rdfs:label', formatNode, true);
-            //     let formatValue = DcatappluMapper.select('.//rdf:value', formatNode, true);
-            //     if(formatLabel){
-            //         format = formatLabel.textContent;
-            //     }
-            //     else if(formatValue){
-            //         format = formatValue.textContent;
-            //     }
-            //     else if (formatNode.textContent) {
-            //         format = formatNode.textContent.trim();
-            //     } else {
-            //         format = formatNode.getAttribute('rdf:resource');
-            //     }
-            //     if(format.startsWith("http://publications.europa.eu/resource/authority/file-type/")){
-            //         format = format.substring("http://publications.europa.eu/resource/authority/file-type/".length)
-            //     }
-            // } else if (mediaTypeNode) {
-            //     if (mediaTypeNode.textContent) {
-            //         format = mediaTypeNode.textContent;
-            //     } else {
-            //         format = mediaTypeNode.getAttribute('rdf:resource');
-            //     }
-            //     if(format.startsWith("https://www.iana.org/assignments/media-types/")){
-            //         format = format.substring("https://www.iana.org/assignments/media-types/".length)
-            //     }
-            // }
-            let distribution:Distribution = {
+    _mapDistributionArray(array: any[]){
+        let dists = [];
+        array?.map((dist: any) => {
+            let nodes: string[] = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', dist, true);
+            let period = this._getTemporalInternal(nodes);
+            let distribution: Distribution = {
                 accessURL: DcatappluMapper.select('./dct:accessURL', dist, true)?.textContent ?? undefined,
                 downloadURL: DcatappluMapper.select('./dct:downloadURL', dist, true)?.textContent,
                 title: DcatappluMapper.select('./dct:title', dist, true)?.textContent,
@@ -297,31 +281,90 @@ export class DcatappluMapper extends BaseMapper {
                 issued: DcatappluMapper.select('./dct:issued', dist, true)?.textContent,
                 modified: DcatappluMapper.select('./dct:modified', dist, true)?.textContent,
                 pluDocType: DcatappluMapper.select('./plu:docType', dist, true)?.textContent ?? PluDocType.UNBEKANNT,
-// ------ QUESTION Why array?
-                period: period,
-// ------ QUESTION: Following 2 attributes are of type "string[]". What is does "string[]" mean ?
-                mapLayerNames: [DcatappluMapper.select('./plu:mapLayerNames', dist, true)?.textContent ?? undefined ],
+                period: period?.[0],
+                // ------ QUESTION: Following 2 attributes are of type "string[]". What is does "string[]" mean ?
+                mapLayerNames: [DcatappluMapper.select('./plu:mapLayerNames', dist, true)?.textContent ?? undefined],
                 format: [DcatappluMapper.select('./dct:format', dist, true)?.textContent ?? undefined],
-// ------ QUESTION: Following 2 attributes are defined in Distribution enum but not in Documentation (Chapter 4.4 -> Klasse: Distribution)
+                // ------ QUESTION: Following 2 attributes are defined in Distribution enum but not in Documentation (Chapter 4.4 -> Klasse: Distribution)
                 id: DcatappluMapper.select('./dct:id', dist, true)?.textContent,
                 byteSize: DcatappluMapper.select('./dcat:byteSize', dist, true)?.textContent, // number
             }
-            dists.push(distribution);     
+            dists.push(distribution);
         })
         return dists;
     }
 
-    _getTemporal(): DateRange[] {
-// ------ Question: Distribution, ProcessStep can have temporal ? 
-// ------ Question: Do they share the same temporal ?
-// !!!!!!!!!!!!!! this function is not yet modernized !!!!!!!!!!!!!!
+    async _getDistributions(): Promise<Distribution[]> {
+// ----- QUESTION: Do i have to get all linked Distributions again?
+        return this._mapDistributionArray(this.linkedDistributions)
+
+        // let dists = this.fetched.distributions;
+        // if (dists) {
+        //     return dists;
+        // }
+        // dists = [];
+        // const linkedDists = this.linkedDatasetDistributions
+        // this.linkedDatasetDistributions?.map((dist: any) => {
+        //     // let format: string = "Unbekannt";
+        //     // let formatNode = DcatappluMapper.select('./dct:format', this.linkedDistributions[i], true);
+        //     // let mediaTypeNode = DcatappluMapper.select('./dcat:mediaType', this.linkedDistributions[i], true);
+        //     // if (formatNode) {
+        //     //     let formatLabel = DcatappluMapper.select('.//rdfs:label', formatNode, true);
+        //     //     let formatValue = DcatappluMapper.select('.//rdf:value', formatNode, true);
+        //     //     if(formatLabel){
+        //     //         format = formatLabel.textContent;
+        //     //     }
+        //     //     else if(formatValue){
+        //     //         format = formatValue.textContent;
+        //     //     }
+        //     //     else if (formatNode.textContent) {
+        //     //         format = formatNode.textContent.trim();
+        //     //     } else {
+        //     //         format = formatNode.getAttribute('rdf:resource');
+        //     //     }
+        //     //     if(format.startsWith("http://publications.europa.eu/resource/authority/file-type/")){
+        //     //         format = format.substring("http://publications.europa.eu/resource/authority/file-type/".length)
+        //     //     }
+        //     // } else if (mediaTypeNode) {
+        //     //     if (mediaTypeNode.textContent) {
+        //     //         format = mediaTypeNode.textContent;
+        //     //     } else {
+        //     //         format = mediaTypeNode.getAttribute('rdf:resource');
+        //     //     }
+        //     //     if(format.startsWith("https://www.iana.org/assignments/media-types/")){
+        //     //         format = format.substring("https://www.iana.org/assignments/media-types/".length)
+        //     //     }
+        //     // }
+        //     let nodes: string[] = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', dist, true);
+        //     let period = this._getTemporalInternal(nodes);
+        //     // let period = this._getTemporalInternal(nodes)?.[0];
+        //     // let period = undefined
+        //     let distribution: Distribution = {
+        //         accessURL: DcatappluMapper.select('./dct:accessURL', dist, true)?.textContent ?? undefined,
+        //         downloadURL: DcatappluMapper.select('./dct:downloadURL', dist, true)?.textContent,
+        //         title: DcatappluMapper.select('./dct:title', dist, true)?.textContent,
+        //         description: DcatappluMapper.select('./dct:description', dist, true)?.textContent,
+        //         issued: DcatappluMapper.select('./dct:issued', dist, true)?.textContent,
+        //         modified: DcatappluMapper.select('./dct:modified', dist, true)?.textContent,
+        //         pluDocType: DcatappluMapper.select('./plu:docType', dist, true)?.textContent ?? PluDocType.UNBEKANNT,
+        //         period: period?.[0],
+        //         // ------ QUESTION: Following 2 attributes are of type "string[]". What is does "string[]" mean ?
+        //         mapLayerNames: [DcatappluMapper.select('./plu:mapLayerNames', dist, true)?.textContent ?? undefined],
+        //         format: [DcatappluMapper.select('./dct:format', dist, true)?.textContent ?? undefined],
+        //         // ------ QUESTION: Following 2 attributes are defined in Distribution enum but not in Documentation (Chapter 4.4 -> Klasse: Distribution)
+        //         id: DcatappluMapper.select('./dct:id', dist, true)?.textContent,
+        //         byteSize: DcatappluMapper.select('./dcat:byteSize', dist, true)?.textContent, // number
+        //     }
+        //     dists.push(distribution);
+        // })
+        // return dists;
+    }
+
+    _getTemporalInternal(nodes: string[]): DateRange[] {
         let result: DateRange[] = [];
-
-        let nodes : string[] = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', this.record)
-        for (let i = 0; i < nodes.length; i++) {
-            let begin = this.getTimeValue(nodes[i], 'startDate');
-            let end = this.getTimeValue(nodes[i], 'endDate');
-
+        if (nodes) {
+            let begin = this.getTimeValue(nodes, 'startDate');
+            let end = this.getTimeValue(nodes, 'endDate');
             if (begin || end) {
                 result.push({
                     gte: begin ?? undefined,
@@ -329,18 +372,20 @@ export class DcatappluMapper extends BaseMapper {
                 });
             }
         }
+        return result.length ? result : undefined;
+    }
 
-        if(result.length)
-            return result;
-
-        return undefined;
+    _getTemporal(): DateRange[] {
+        let nodes: string[] = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', this.record, true);
+        return this._getTemporalInternal(nodes) ?? undefined;
     }
 
     getTimeValue(node, beginOrEnd: 'startDate' | 'endDate'): Date {
-        let dateNode = DcatappluMapper.select('./schema:' + beginOrEnd, node, true);
+        let dateNode = DcatappluMapper.select('./dcat:' + beginOrEnd, node, true);
         if (dateNode) {
-            let text = dateNode.textContent;
-            let date = new Date(Date.parse(text));
+            let text = dateNode?.textContent;
+            // let date = text; // new Date(Date.parse(text));
+            let date = MiscUtils.normalizeDateTime(text);
             if (date) {
                 return date;
             } else {
@@ -352,47 +397,47 @@ export class DcatappluMapper extends BaseMapper {
 
     _getBoundingBox() {
         let bboxObject = DcatappluMapper.select('./dct:spatial/dct:Location/dcat:bbox[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
-        if(bboxObject){
+        if (bboxObject) {
             return JSON.parse(bboxObject.textContent);
         }
-// ----- QUESTION: implment Fallback
+        // ----- QUESTION: implment Fallback
         return undefined;
     }
-    
+
     _getCentroid(): object {
         // return this._getSpatial();
         let centroid = DcatappluMapper.select('./dct:spatial/dct:Location/dcat:centroid[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
-        if(centroid){
+        if (centroid) {
             return JSON.parse(centroid.textContent);
         }
-// ------ QuUESTION: What Kind of Fallback ?
+        // ------ QuUESTION: What Kind of Fallback ?
         centroid = DcatappluMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
-        if(centroid){
+        if (centroid) {
             return this.wktToGeoJson(centroid.textContent);
         }
         return undefined;
     }
 
-    
 
-    async _getPublisher(): Promise<any[]> {        
-        if(this.fetched.publishers != null){
+
+    async _getPublisher(): Promise<any[]> {
+        if (this.fetched.publishers != null) {
             return this.fetched.publishers
         }
         let publishers = [];
         let dctPublishers = DcatappluMapper.select('./dct:publisher', this.record);
-        dctPublishers?.map((publisher:any) => {
+        dctPublishers?.map((publisher: any) => {
             let agent = DcatappluMapper.select('./foaf:Agent', publisher, true);
-            if(!agent){
-// ------ QuUESTION: What Kind of Fallback ?
-                agent = DcatappluMapper.select('./foaf:Agent[@rdf:about="'+publisher.getAttribute('rdf:resource')+'"]', this.catalogPage, true)
+            if (!agent) {
+                // ------ QuUESTION: What Kind of Fallback ?
+                agent = DcatappluMapper.select('./foaf:Agent[@rdf:about="' + publisher.getAttribute('rdf:resource') + '"]', this.catalogPage, true)
             }
             if (agent) {
                 let infos: any = {
                     name: DcatappluMapper.select('./foaf:name', agent, true)?.textContent ?? undefined,
                     type: DcatappluMapper.select('./dct:type', agent, true)?.textContent ?? undefined
                 };
-                
+
                 publishers.push(infos);
             }
         })
@@ -407,7 +452,7 @@ export class DcatappluMapper extends BaseMapper {
 
 
 
-    
+
 
 
     // ------------------------------------------------------------- 
@@ -427,13 +472,13 @@ export class DcatappluMapper extends BaseMapper {
         return this.settings;
     }
 
-    public getSummary(): Summary{
+    public getSummary(): Summary {
         return this.summary;
     }
 
 
 
-   
+
 
 
 
@@ -484,7 +529,7 @@ export class DcatappluMapper extends BaseMapper {
         let displayName;
         let displayHomepage;
 
-        if(this.settings.dcatappluProviderField) {
+        if (this.settings.dcatappluProviderField) {
             switch (this.settings.dcatappluProviderField) {
                 case "contactPoint":
                     let contactPoint = await this.getContactPoint();
@@ -530,7 +575,7 @@ export class DcatappluMapper extends BaseMapper {
             }
         }
 
-        if(!displayName){
+        if (!displayName) {
             let contactPoint = await this.getContactPoint();
             if (contactPoint) {
 
@@ -544,14 +589,14 @@ export class DcatappluMapper extends BaseMapper {
             }
         }
 
-        if(!displayName){
+        if (!displayName) {
             let publisher = await this.getPublisher();
             if (publisher && publisher[0]['organization']) {
                 displayName = publisher[0]['organization'];
             }
         }
 
-        if(!displayName){
+        if (!displayName) {
             let creator = this.getCreator();
             if (creator) {
                 displayName = creator[0].name;
@@ -559,7 +604,7 @@ export class DcatappluMapper extends BaseMapper {
             }
         }
 
-        if(!displayName) {
+        if (!displayName) {
             let maintainer = this.getMaintainer();
             if (maintainer) {
                 displayName = maintainer[0].name;
@@ -567,7 +612,7 @@ export class DcatappluMapper extends BaseMapper {
             }
         }
 
-        if(!displayName) {
+        if (!displayName) {
             let originator = this._getOriginator();
             if (originator) {
                 displayName = originator[0].name;
@@ -575,12 +620,12 @@ export class DcatappluMapper extends BaseMapper {
             }
         }
 
-        if(!displayName) {
+        if (!displayName) {
             displayName = this.settings.description.trim()
         }
 
-        if(this.settings.providerPrefix){
-            displayName = this.settings.providerPrefix+displayName;
+        if (this.settings.providerPrefix) {
+            displayName = this.settings.providerPrefix + displayName;
         }
 
         let displayContact: Person = {
@@ -610,7 +655,7 @@ export class DcatappluMapper extends BaseMapper {
             }
         }
 
-        if(this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))){
+        if (this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))) {
             this.skipped = true;
         }
 
@@ -622,9 +667,9 @@ export class DcatappluMapper extends BaseMapper {
     }
 
     _getMetadataModified(): Date {
-        if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
+        if (this.storedData && this.storedData.modified && this.storedData.dataset_modified) {
             let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
-            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
+            if (storedDataset_modified.valueOf() === this.getModifiedDate().valueOf())
                 return new Date(this.storedData.modified);
         }
         return new Date(Date.now());
@@ -642,26 +687,26 @@ export class DcatappluMapper extends BaseMapper {
 
     _getModifiedDate() {
         let modified = DcatappluMapper.select('./dct:modified', this.record, true);
-        return modified?new Date(modified.textContent):undefined;
+        return modified ? new Date(modified.textContent) : undefined;
     }
 
     _getSpatial(): any {
         let geometry = DcatappluMapper.select('./dct:spatial/dct:Location/locn:geometry[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
-        if(geometry){
+        if (geometry) {
             return JSON.parse(geometry.textContent);
         }
         geometry = DcatappluMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
-        if(geometry){
+        if (geometry) {
             return this.wktToGeoJson(geometry.textContent);
         }
         return undefined;
     }
 
-    wktToGeoJson(wkt: string):any{
+    wktToGeoJson(wkt: string): any {
         try {
             var coordsPos = wkt.indexOf("(");
             var type = wkt.substring(0, coordsPos).trim();
-            if(type.lastIndexOf(' ') > -1){
+            if (type.lastIndexOf(' ') > -1) {
                 type = type.substring(type.lastIndexOf(' ')).trim();
             }
             type = type.toLowerCase();
@@ -674,14 +719,14 @@ export class DcatappluMapper extends BaseMapper {
                 'type': type,
                 'coordinates': JSON.parse(coords)
             };
-        } catch(e) {
-            this.summary.appErrors.push("Can't parse WKT: "+e.message);
+        } catch (e) {
+            this.summary.appErrors.push("Can't parse WKT: " + e.message);
         }
     }
 
     _getSpatialText(): string {
         let prefLabel = DcatappluMapper.select('./dct:spatial/dct:Location/skos:prefLabel', this.record, true);
-        if(prefLabel){
+        if (prefLabel) {
             return prefLabel.textContent;
         }
         return undefined;
@@ -694,11 +739,11 @@ export class DcatappluMapper extends BaseMapper {
         if (this.fetched.themes) return this.fetched.themes;
 
         // Evaluate the themes
-        let themes : string[] = DcatappluMapper.select('./dcat:theme', this.record)
+        let themes: string[] = DcatappluMapper.select('./dcat:theme', this.record)
             .map(node => node.getAttribute('rdf:resource'))
             .filter(theme => theme); // Filter out falsy values
 
-        if(this.settings.filterThemes && this.settings.filterThemes.length > 0 && !themes.some(theme => this.settings.filterThemes.includes(theme.substr(theme.lastIndexOf('/')+1)))){
+        if (this.settings.filterThemes && this.settings.filterThemes.length > 0 && !themes.some(theme => this.settings.filterThemes.includes(theme.substr(theme.lastIndexOf('/') + 1)))) {
             this.skipped = true;
         }
 
@@ -735,47 +780,47 @@ export class DcatappluMapper extends BaseMapper {
     async _getLicense() {
         let license: License;
 
-    //     let accessRights = DcatappluMapper.select('./dct:accessRights', this.record);
-    //     if(accessRights){
-    //         for(let i=0; i < accessRights.length; i++){
-    //             try {
-    //                 let json = JSON.parse(accessRights[i]);
+        //     let accessRights = DcatappluMapper.select('./dct:accessRights', this.record);
+        //     if(accessRights){
+        //         for(let i=0; i < accessRights.length; i++){
+        //             try {
+        //                 let json = JSON.parse(accessRights[i]);
 
-    //                 if (!json.id || !json.url) continue;
+        //                 if (!json.id || !json.url) continue;
 
-    //                 let requestConfig = this.getUrlCheckRequestConfig(json.url);
-    //                 license = {
-    //                     id: json.id,
-    //                     title: json.name,
-    //                     url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
-    //                 };
+        //                 let requestConfig = this.getUrlCheckRequestConfig(json.url);
+        //                 license = {
+        //                     id: json.id,
+        //                     title: json.name,
+        //                     url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
+        //                 };
 
-    //             } catch(ignored) {}
+        //             } catch(ignored) {}
 
-    //         }
-    //     }
-    //     if(!license){
-    //         for(let i = 0; i < this.linkedDistributions.length; i++) {
-    //             let licenseResource = DcatappluMapper.select('dct:license', this.linkedDistributions[i], true);
-    //             if(licenseResource) {
-    //                 license = await DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
-    //                 break;
-    //             }
-    //         }
-    //     }
+        //         }
+        //     }
+        //     if(!license){
+        //         for(let i = 0; i < this.linkedDistributions.length; i++) {
+        //             let licenseResource = DcatappluMapper.select('dct:license', this.linkedDistributions[i], true);
+        //             if(licenseResource) {
+        //                 license = await DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
+        //                 break;
+        //             }
+        //         }
+        //     }
 
-    //     if (!license) {
-    //         let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
-    //         this.summary.missingLicense++;
+        //     if (!license) {
+        //         let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
+        //         this.summary.missingLicense++;
 
-    //         this.log.warn(msg);
-    //         this.summary.warnings.push(['Missing license', msg]);
-    //         return {
-    //             id: 'unknown',
-    //             title: 'Unbekannt',
-    //             url: undefined
-    //         };
-    //     }
+        //         this.log.warn(msg);
+        //         this.summary.warnings.push(['Missing license', msg]);
+        //         return {
+        //             id: 'unknown',
+        //             title: 'Unbekannt',
+        //             url: undefined
+        //         };
+        //     }
 
         return license;
     }
@@ -797,7 +842,7 @@ export class DcatappluMapper extends BaseMapper {
             if (organization) {
                 let name = DcatappluMapper.select('./foaf:name', organization, true);
                 let mbox = DcatappluMapper.select('./foaf:mbox', organization, true);
-                if(name) {
+                if (name) {
                     let infos: any = {
                         name: name.textContent
                     };
@@ -820,7 +865,7 @@ export class DcatappluMapper extends BaseMapper {
             if (organization) {
                 let name = DcatappluMapper.select('./foaf:name', organization, true);
                 let mbox = DcatappluMapper.select('./foaf:mbox', organization, true);
-                if(name) {
+                if (name) {
                     let infos: any = {
                         name: name.textContent
                     };
@@ -840,7 +885,7 @@ export class DcatappluMapper extends BaseMapper {
 
     _getIssued(): Date {
         let modified = DcatappluMapper.select('./dct:modified', this.record, true);
-        return modified?new Date(modified.textContent):undefined;
+        return modified ? new Date(modified.textContent) : undefined;
     }
 
     _getMetadataHarvested(): Date {
@@ -864,7 +909,7 @@ export class DcatappluMapper extends BaseMapper {
                 let infos: any = {
                     name: name.textContent
                 };
-                if(mbox) infos.mbox = mbox.textContent;
+                if (mbox) infos.mbox = mbox.textContent;
 
                 originators.push(infos);
             }
@@ -898,7 +943,7 @@ export class DcatappluMapper extends BaseMapper {
     executeCustomCode(doc: any) {
         try {
             if (this.settings.customCode) {
-                eval(this.settings.customCode);doc
+                eval(this.settings.customCode); doc
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

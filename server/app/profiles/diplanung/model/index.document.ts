@@ -67,7 +67,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             // --------------------------- MARKER --------------------------- 
             // --------------------------- MARKER --------------------------- 
             // --------------------------- MARKER --------------------------- 
-            process_steps: mapper.getPluProcessSteps(),
+            process_steps: await mapper.getPluProcessSteps(),
             // spatial and temporal features
             bounding_box: mapper.getBoundingBox(),
             centroid: mapper.getCentroid()?.['coordinates'],
@@ -81,7 +81,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             catalog: await mapper.getCatalog(),
             publisher: (await mapper.getPublisher())?.[0],
             maintainers: (await mapper.getMaintainers()),
-            distributions: await mapper.getDistributions(),
+            distributions: await mapper.getDistributions(), // nochmal abspeichern?
             extras: {
                 harvested_data: mapper.getHarvestedData(),
                 metadata: {
