@@ -39,11 +39,11 @@
     "deduplicationAlias": "csw_geoportal_de_dedup",
     "cron": {
       "full": {
-        "pattern": "0 2 * * 1-6",
+        "pattern": "30 0 * * 1-6",
         "active": true
       },
       "incr": {
-        "pattern": "0 2 * * 0",
+        "pattern": "30 0 * * 0",
         "active": true
       }
     }
