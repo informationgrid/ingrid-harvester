@@ -326,6 +326,17 @@ export abstract class BaseMapper {
         return this.cache.maintainers;
     }
 
+    _getContributors(): Promise<Person[] | Organization[]> {
+        return undefined;
+    }
+
+    async getContributors(): Promise<Person[] | Organization[]> {
+        if (!this.cache.maintainers) {
+            this.cache.maintainers = await this._getContributors();
+        }
+        return this.cache.maintainers;
+    }
+
     abstract _getHarvestedData(): string;
 
     getHarvestedData(): string{

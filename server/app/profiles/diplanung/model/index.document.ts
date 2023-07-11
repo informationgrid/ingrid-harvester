@@ -58,30 +58,31 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             // plan and procedure information
             development_freeze_period: mapper.getPluDevelopmentFreezePeriod(),
             plan_state: mapper.getPluPlanState(),
-            plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),
+            plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),  // check this one again
             plan_type: mapper.getPluPlanType(),
             plan_type_fine: mapper.getPluPlanTypeFine(),
             procedure_state: mapper.getPluProcedureState(),
             procedure_start_date: mapper.getPluProcedureStartDate(),
             procedure_type: mapper.getPluProcedureType(),
-            // --------------------------- MARKER --------------------------- 
-            // --------------------------- MARKER --------------------------- 
-            // --------------------------- MARKER --------------------------- 
             process_steps: await mapper.getPluProcessSteps(),
+            // --------------------------- MARKER --------------------------- 
+            // --------------------------- MARKER --------------------------- 
+            // --------------------------- MARKER --------------------------- 
             // spatial and temporal features
             bounding_box: mapper.getBoundingBox(),
             centroid: mapper.getCentroid()?.['coordinates'],
             spatial: mapper.getSpatial(),
             spatial_text: mapper.getSpatialText(),
-            temporal: mapper.getTemporal(),
-            // --------------------------- MARKER --------------------------- 
-            // --------------------------- MARKER --------------------------- 
-            // --------------------------- MARKER --------------------------- 
+            temporal: mapper.getTemporal(), // already checked
             // additional information and metadata
             catalog: await mapper.getCatalog(),
+            // --------------------------- MARKER --------------------------- 
+            // --------------------------- MARKER --------------------------- 
+            // --------------------------- MARKER --------------------------- 
             publisher: (await mapper.getPublisher())?.[0],
             maintainers: (await mapper.getMaintainers()),
-            distributions: await mapper.getDistributions(), // nochmal abspeichern?
+            contributors: (await mapper.getContributors() ?? undefined),         // new element !!! 
+            distributions: await mapper.getDistributions(),
             extras: {
                 harvested_data: mapper.getHarvestedData(),
                 metadata: {

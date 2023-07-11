@@ -108,6 +108,10 @@ export class ExcelSparseMapper extends BaseMapper {
         return undefined;
     }
 
+    async _getContributors(): Promise<Person[] | Organization[]> {
+        return undefined
+    }
+
     // TODO
     _getThemes(): string[] {
 

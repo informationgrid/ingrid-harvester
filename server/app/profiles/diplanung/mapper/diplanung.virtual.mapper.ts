@@ -63,6 +63,10 @@ export class DiplanungVirtualMapper extends BaseMapper {
         return this.fields.maintainers;
     }
 
+    async _getContributors(): Promise<Person[] | Organization[]> {
+        return undefined
+    }
+
     _getModifiedDate(): Date {
         return this.fields.modified;
     }

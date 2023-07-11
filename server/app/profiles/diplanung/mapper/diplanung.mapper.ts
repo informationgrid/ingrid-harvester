@@ -125,6 +125,9 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
     getMaintainers(): Promise<Person[] | Organization[]> {
         return this.baseMapper.getMaintainers();
     }
+    getContributors(): Promise<Person[] | Organization[]> {
+        return this.baseMapper.getContributors();
+    }
 
     getDistributions(): Promise<Distribution[]> {
         return this.baseMapper.getDistributions();
