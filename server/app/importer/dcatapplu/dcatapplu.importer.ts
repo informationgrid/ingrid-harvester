@@ -165,10 +165,6 @@ export class DcatappluImporter extends Importer {
         // let records =  DcatappluMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
         let records =  DcatappluMapper.select('./dcat:Dataset', rootNode);
 
-        // -------------------------
-        // ---------- NEW ----------
-        // -------------------------
-
         let catalogs = DcatappluMapper.select('./dcat:Catalog', rootNode);
         let catalogAboutsToCatalogs = {};
         let datasetAboutsToCatalogAbouts = {};
@@ -197,9 +193,7 @@ export class DcatappluImporter extends Importer {
                 datasetAboutsToCatalogAbouts[datasetAbout] =  catalogAbout
             });
         })
-        // -------------------------
-        // ---------- NEW ----------
-        // -------------------------
+
         let ids = [];
         for (let i = 0; i < records.length; i++) {
             let uuid = DcatappluMapper.select('./dct:identifier', records[i], true).textContent;

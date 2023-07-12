@@ -191,9 +191,8 @@ export class DcatappluMapper extends BaseMapper {
 
     _getPluProcedureStartDate() {
         let procedureStartDate = DcatappluMapper.select('./plu:procedureStartDate', this.record, true)?.textContent;
-        let StartDate = MiscUtils.normalizeDateTime(procedureStartDate)
-        // ---------------------------------------------------------------------------------------------------- QUESTION: Return empty string or undefined
-        return StartDate ?? ""
+        let startDate = MiscUtils.normalizeDateTime(procedureStartDate)
+        return startDate; 
     }
     
     _getPluDevelopmentFreezePeriod() {
@@ -237,7 +236,7 @@ export class DcatappluMapper extends BaseMapper {
             let nodes: string[] = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', dist, true);
             let period = this._getTemporalInternal(nodes);
             let distribution: Distribution = {
-                accessURL: DcatappluMapper.select('./dct:accessURL', dist, true)?.textContent ?? undefined,
+                accessURL: DcatappluMapper.select('./dct:accessURL', dist, true)?.textContent ?? "",
                 downloadURL: DcatappluMapper.select('./dct:downloadURL', dist, true)?.textContent,
                 title: DcatappluMapper.select('./dct:title', dist, true)?.textContent,
                 description: DcatappluMapper.select('./dct:description', dist, true)?.textContent,
@@ -245,12 +244,8 @@ export class DcatappluMapper extends BaseMapper {
                 modified: MiscUtils.normalizeDateTime(DcatappluMapper.select('./dct:modified', dist, true)?.textContent),
                 pluDocType: DcatappluMapper.select('./plu:docType', dist, true)?.textContent ?? PluDocType.UNBEKANNT,
                 period: period?.[0],
-                mapLayerNames: [DcatappluMapper.select('./plu:mapLayerNames', dist, true)?.textContent ?? undefined],
-                // ---------------------------------------------------------------------------------------------------- QUESTION: Welche Bonderheiten sind Format zu beachten?
+                mapLayerNames: [DcatappluMapper.select('./plu:mapLayerNames', dist, true)?.textContent ],
                 format: [DcatappluMapper.select('./dct:format', dist, true)?.textContent ?? undefined],
-                // ---------------------------------------------------------------------------------------------------- QUESTION: Following 2 attributes are defined in Distribution enum but not in Documentation (Chapter 4.4 -> Klasse: Distribution)
-                // id: DcatappluMapper.select('./dct:id', dist, true)?.textContent,
-                // byteSize: DcatappluMapper.select('./dcat:byteSize', dist, true)?.textContent, // number
             }
             distributions.push(distribution);
         })
@@ -372,7 +367,6 @@ export class DcatappluMapper extends BaseMapper {
         return new Date(Date.now());
     }
     
-    // ---------------------------------------------------------------------------------------------------- QUESTION: dcatLink & attribution undefined
     _getMetadataSource(): any {
         let dcatLink; //=  DcatappluMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');
@@ -399,7 +393,7 @@ export class DcatappluMapper extends BaseMapper {
     public getSummary(): Summary {
         return this.summary;
     }
-// -------------------------------------------------- Question: What is it good for?
+
     executeCustomCode(doc: any) {
         try {
             if (this.settings.customCode) {
@@ -440,21 +434,14 @@ export class DcatappluMapper extends BaseMapper {
         if (bboxObject) {
             return JSON.parse(bboxObject.textContent);
         }
-        // ----- QUESTION: implment Fallback
         return undefined;
     }
 
     _getCentroid(): object {
-        // return this._getSpatial();
         let centroid = DcatappluMapper.select('./dct:spatial/dct:Location/dcat:centroid[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
         if (centroid) {
             return JSON.parse(centroid.textContent);
         }
-        // centroid = DcatappluMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
-        // if (centroid) {
-        //     return this.wktToGeoJson(centroid.textContent);
-        // }
-        // ------ QuUESTION: What Kind of Fallback ?
         return undefined;
     }
 
@@ -463,10 +450,6 @@ export class DcatappluMapper extends BaseMapper {
         if (geometry) {
             return JSON.parse(geometry.textContent);
         }
-        // geometry = DcatappluMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
-        // if (geometry) {
-        //     return this.wktToGeoJson(geometry.textContent);
-        // }
         return undefined;
     }
 
