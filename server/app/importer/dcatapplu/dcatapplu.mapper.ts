@@ -39,7 +39,7 @@ import { Summary } from "../../model/summary";
 import { Contact, Person } from "../../model/agent";
 import { Distribution } from "../../model/distribution";
 import { DateRange } from "../../model/dateRange";
-import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep, PluProcessStepType, PluDocType } from "../../model/dcatApPlu.model";
+import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep, PluProcessStepType, PluDocType, Catalog } from "../../model/dcatApPlu.model";
 
 let xpath = require('xpath');
 
@@ -94,15 +94,17 @@ export class DcatappluMapper extends BaseMapper {
         contactPoint: null,
         distributions: null,
         publishers: null,
+        catalog: null,
         keywords: {},
         themes: null
     };
 
 
-    constructor(settings, record, catalogPage, harvestTime, storedData, summary) {
+    constructor(settings, record, catalog, catalogPage, harvestTime, storedData, summary) {
         super();
         this.settings = settings;
         this.record = record;
+        this.fetched.catalog = catalog;
         this.harvestTime = harvestTime;
         this.storedData = storedData;
         this.summary = summary;
@@ -150,11 +152,14 @@ export class DcatappluMapper extends BaseMapper {
         return description ?? "";
     }
 
+    _getGeneratedId(): string {
+        return this.uuid;
+    }
     _getTitle() {
         let title = DcatappluMapper.select('./dct:title', this.record, true)?.textContent;
         return title ?? "";
     }
-
+    
     _getAlternateTitle() {
         return this._getTitle();
     }
@@ -183,7 +188,6 @@ export class DcatappluMapper extends BaseMapper {
         let procedureType = DcatappluMapper.select('./plu:procedureType', this.record, true)?.textContent;
         return procedureType ?? PluProcedureType.UNBEKANNT;
     }
-
 
     _getPluProcedureStartDate() {
         let procedureStartDate = DcatappluMapper.select('./plu:procedureStartDate', this.record, true)?.textContent;
@@ -293,7 +297,6 @@ export class DcatappluMapper extends BaseMapper {
 
     getAgent(nodes){
         let agents = [];
-        // let dctPublishers = DcatappluMapper.select('./dct:publisher', this.record);
         nodes?.map((publisher: any) => {
             let agent = DcatappluMapper.select('./foaf:Agent', publisher, true);
             if (agent) {
@@ -313,8 +316,6 @@ export class DcatappluMapper extends BaseMapper {
         }
         let node = DcatappluMapper.select('./dct:publisher', this.record);
         let publishers: any[] = this.getAgent(node)
-        // ---------------------------------------------------------------------------------------------------- QUESTION: What kind of fallback?
-        // ---------------------------------------------------------------------------------------------------- QUESTION: Does it needs to be cached?
         if (publishers.length === 0) {
             this.summary.missingPublishers++;
             return undefined;
@@ -359,8 +360,6 @@ export class DcatappluMapper extends BaseMapper {
 
 
     _getMetadataIssued(): Date {
-        // ---------------------------------------------------------------------------------------------------- QUESTION: Where does storedData comes from ?
-        // ---------------------------------------------------------------------------------------------------- QUESTION: Fallback now() ok ?
         return (this.storedData && this.storedData.issued) ? MiscUtils.normalizeDateTime(this.storedData.issued) : new Date(Date.now());
     }
     
@@ -384,111 +383,23 @@ export class DcatappluMapper extends BaseMapper {
         };
     }
 
-
-
-
-    // ---------------------- ↑ already checked ↑ ---------------------- 
-    // ----------------------------------------------------------------- 
-    // ----------------------------------------------------------------- 
-    // ----------------------------------------------------------------- 
-    // ---------------------- ↓ not yet checked ↓ ---------------------- 
-
-    _getBoundingBox() {
-        let bboxObject = DcatappluMapper.select('./dct:spatial/dct:Location/dcat:bbox[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
-        if (bboxObject) {
-            return JSON.parse(bboxObject.textContent);
-        }
-        // ----- QUESTION: implment Fallback
-        return undefined;
-    }
-
-    _getCentroid(): object {
-        // return this._getSpatial();
-        let centroid = DcatappluMapper.select('./dct:spatial/dct:Location/dcat:centroid[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
-        if (centroid) {
-            return JSON.parse(centroid.textContent);
-        }
-        // ------ QuUESTION: What Kind of Fallback ?
-        centroid = DcatappluMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
-        if (centroid) {
-            return this.wktToGeoJson(centroid.textContent);
-        }
-        return undefined;
-    }
-
-    _getSpatial(): any {
-        let geometry = DcatappluMapper.select('./dct:spatial/dct:Location/locn:geometry[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
-        if (geometry) {
-            return JSON.parse(geometry.textContent);
-        }
-        geometry = DcatappluMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
-        if (geometry) {
-            return this.wktToGeoJson(geometry.textContent);
-        }
-        return undefined;
-    }
-
-    wktToGeoJson(wkt: string): any {
-        try {
-            var coordsPos = wkt.indexOf("(");
-            var type = wkt.substring(0, coordsPos).trim();
-            if (type.lastIndexOf(' ') > -1) {
-                type = type.substring(type.lastIndexOf(' ')).trim();
-            }
-            type = type.toLowerCase();
-            var coords = wkt.substring(coordsPos).trim();
-            coords = coords.replace(/\(/g, "[").replace(/\)/g, "]");
-            coords = coords.replace(/\[(\s*[-0-9][^\]]*\,[^\]]*[0-9]\s*)\]/g, "[[$1]]");
-            coords = coords.replace(/([0-9])\s*\,\s*([-0-9])/g, "$1], [$2");
-            coords = coords.replace(/([0-9])\s+([-0-9])/g, "$1, $2");
-            return {
-                'type': type,
-                'coordinates': JSON.parse(coords)
-            };
-        } catch (e) {
-            this.summary.appErrors.push("Can't parse WKT: " + e.message);
-        }
+    _getCatalog() {
+        return this.fetched.catalog
     }
 
     _getSpatialText(): string {
-        let prefLabel = DcatappluMapper.select('./dct:spatial/dct:Location/skos:prefLabel', this.record, true);
-        if (prefLabel) {
-            return prefLabel.textContent;
-        }
-        return undefined;
+        let geographicName = DcatappluMapper.select('./dct:spatial/dct:Location/locn:geographicName', this.record, true)?.textContent;
+        return geographicName ?? undefined;
     }
 
-
-
-
-    // ------------------------------------------------------------- 
-    // ------------------------ ↓ BACKLOG ↓ ------------------------ 
-    // ------------------------------------------------------------- 
-
-    // → plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),
-    // → identifier: mapper.getGeneratedId(),
-    // → extras: { transformed_data: {  [DcatApPluDocument.getExportFormat()]: await DcatApPluDocument.create(_mapper),  } }
-
-    _getGeneratedId(): string {
-        return this.uuid;
+    public getSettings(): ImporterSettings {
+        return this.settings;
     }
-
-    async _getCatalog() {
-        return {
-            description: this.fetched.description,
-            title: this.fetched.title,
-            publisher: (await this._getPublisher())[0],
-            homepage: undefined,
-            identifier: undefined,
-            issued: undefined,
-            language: undefined,
-            modified: undefined,
-            records: undefined,
-            themeTaxonomy: undefined
-
-        }
+    
+    public getSummary(): Summary {
+        return this.summary;
     }
-
+// -------------------------------------------------- Question: What is it good for?
     executeCustomCode(doc: any) {
         try {
             if (this.settings.customCode) {
@@ -498,20 +409,8 @@ export class DcatappluMapper extends BaseMapper {
             throwError('An error occurred in custom code: ' + error.message);
         }
     }
+    
 
-
-    // ------------------------------------------------------------- 
-    // -------------------- ↓ other functions ↓ -------------------- 
-    // ------------------------------------------------------------- 
-    
-    public getSettings(): ImporterSettings {
-        return this.settings;
-    }
-    
-    public getSummary(): Summary {
-        return this.summary;
-    }
-    
     // ------------------------------------------------------------- 
     // -------------------- ↓ return undefined ↓ ------------------- 
     // ------------------------------------------------------------- 
@@ -528,6 +427,81 @@ export class DcatappluMapper extends BaseMapper {
     _getOriginator(): Person[]  { return undefined ;}
     _getThemes() { return undefined ;}
     _getUrlCheckRequestConfig(uri: string): RequestOptions { return undefined ;}
+
+    // ---------------------- ↑ already checked ↑ ---------------------- 
+    // ----------------------------------------------------------------- 
+    // ----------------------------------------------------------------- 
+    // ----------------------------------------------------------------- 
+    // ---------------------- ↓ not yet checked ↓ ---------------------- 
+
+
+    _getBoundingBox() {
+        let bboxObject = DcatappluMapper.select('./dct:spatial/dct:Location/dcat:bbox[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
+        if (bboxObject) {
+            return JSON.parse(bboxObject.textContent);
+        }
+        // ----- QUESTION: implment Fallback
+        return undefined;
+    }
+
+    _getCentroid(): object {
+        // return this._getSpatial();
+        let centroid = DcatappluMapper.select('./dct:spatial/dct:Location/dcat:centroid[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
+        if (centroid) {
+            return JSON.parse(centroid.textContent);
+        }
+        // centroid = DcatappluMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
+        // if (centroid) {
+        //     return this.wktToGeoJson(centroid.textContent);
+        // }
+        // ------ QuUESTION: What Kind of Fallback ?
+        return undefined;
+    }
+
+    _getSpatial(): any {
+        let geometry = DcatappluMapper.select('./dct:spatial/dct:Location/locn:geometry[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
+        if (geometry) {
+            return JSON.parse(geometry.textContent);
+        }
+        // geometry = DcatappluMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
+        // if (geometry) {
+        //     return this.wktToGeoJson(geometry.textContent);
+        // }
+        return undefined;
+    }
+
+    // wktToGeoJson(wkt: string): any {
+    //     try {
+    //         var coordsPos = wkt.indexOf("(");
+    //         var type = wkt.substring(0, coordsPos).trim();
+    //         if (type.lastIndexOf(' ') > -1) {
+    //             type = type.substring(type.lastIndexOf(' ')).trim();
+    //         }
+    //         type = type.toLowerCase();
+    //         var coords = wkt.substring(coordsPos).trim();
+    //         coords = coords.replace(/\(/g, "[").replace(/\)/g, "]");
+    //         coords = coords.replace(/\[(\s*[-0-9][^\]]*\,[^\]]*[0-9]\s*)\]/g, "[[$1]]");
+    //         coords = coords.replace(/([0-9])\s*\,\s*([-0-9])/g, "$1], [$2");
+    //         coords = coords.replace(/([0-9])\s+([-0-9])/g, "$1, $2");
+    //         return {
+    //             'type': type,
+    //             'coordinates': JSON.parse(coords)
+    //         };
+    //     } catch (e) {
+    //         this.summary.appErrors.push("Can't parse WKT: " + e.message);
+    //     }
+    // }
+
+
+
+
+
+  
+
+
+
+    
+
 
     // ------------------------------------------------------------- 
     // --------------------- ↓ unused archive ↓ -------------------- 

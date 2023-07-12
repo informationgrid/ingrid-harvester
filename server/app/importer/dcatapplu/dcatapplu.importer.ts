@@ -33,6 +33,8 @@ import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
 import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
+import { Catalog } from 'model/dcatApPlu.model';
+import { DcatApPluDocument } from 'profiles/diplanung/model/dcatApPlu.document';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -160,9 +162,44 @@ export class DcatappluImporter extends Importer {
         let promises = [];
         let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
         let rootNode = xml.getElementsByTagNameNS(DcatappluMapper.RDF, 'RDF')[0];
-        let records =  DcatappluMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
+        // let records =  DcatappluMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
+        let records =  DcatappluMapper.select('./dcat:Dataset', rootNode);
 
+        // -------------------------
+        // ---------- NEW ----------
+        // -------------------------
 
+        let catalogs = DcatappluMapper.select('./dcat:Catalog', rootNode);
+        let catalogAboutsToCatalogs = {};
+        let datasetAboutsToCatalogAbouts = {};
+
+        catalogs.forEach((catalogElement) => {
+            let catalogAbout = DcatappluMapper.select('./@rdf:about', catalogElement, true)?.textContent;
+            let catalog: Catalog = {
+                title:  DcatappluMapper.select('./dct:title', catalogElement, true)?.textContent ?? "",
+                description: DcatappluMapper.select('./dct:description', catalogElement, true)?.textContent ?? "",
+                homepage: DcatappluMapper.select('./foaf:homepage/@rdf:resource', catalogElement, true)?.textContent,
+                identifier: DcatappluMapper.select('./dct:identifier', catalogElement, true)?.textContent,
+                issued: DcatappluMapper.select('./dct:issued', catalogElement, true)?.textContent,
+                language: DcatappluMapper.select('./dct:language', catalogElement, true)?.textContent,
+                modified: DcatappluMapper.select('./dct:modified', catalogElement, true)?.textContent,
+                publisher: {
+                    name: DcatappluMapper.select('./dct:publisher/foaf:Agent/foaf:name', catalogElement, true)?.textContent ?? undefined,
+                    type: DcatappluMapper.select('./dct:publisher/foaf:Agent/dct:type', catalogElement, true)?.textContent ?? undefined
+                },
+                themeTaxonomy: DcatappluMapper.select('./dcat:themeTaxonomy', catalogElement, true)?.textContent,
+                // records?: Record[],
+            };
+            catalogAboutsToCatalogs[catalogAbout] = catalog;
+            let catalogDatasets = DcatappluMapper.select('./dcat:dataset', catalogElement);
+            catalogDatasets.forEach((datasetElement) => {
+                let datasetAbout = DcatappluMapper.select('./@rdf:resource', datasetElement, true)?.textContent;
+                datasetAboutsToCatalogAbouts[datasetAbout] =  catalogAbout
+            });
+        })
+        // -------------------------
+        // ---------- NEW ----------
+        // -------------------------
         let ids = [];
         for (let i = 0; i < records.length; i++) {
             let uuid = DcatappluMapper.select('./dct:identifier', records[i], true).textContent;
@@ -201,7 +238,10 @@ export class DcatappluImporter extends Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], rootNode, harvestTime, storedData[i], this.summary);
+            let rdfAboutAttribute = DcatappluMapper.select('./@rdf:about', records[i], true)?.textContent;
+            let catalogId = datasetAboutsToCatalogAbouts[rdfAboutAttribute];
+            let catalog = catalogAboutsToCatalogs[catalogId];
+            let mapper = this.getMapper(this.settings, records[i], catalog, rootNode, harvestTime, storedData[i], this.summary);
 
             let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -231,8 +271,8 @@ export class DcatappluImporter extends Importer {
             .catch(err => log.error('Error indexing DCAT record', err));
     }
 
-    getMapper(settings, record, catalogPage, harvestTime, storedData, summary): DcatappluMapper {
-        return new DcatappluMapper(settings, record, catalogPage, harvestTime, storedData, summary);
+    getMapper(settings, record, catalog, catalogPage, harvestTime, storedData, summary): DcatappluMapper {
+        return new DcatappluMapper(settings, record, catalog, catalogPage, harvestTime, storedData, summary);
     }
 
     static createRequestConfig(settings: DcatappluSettings): RequestOptions {

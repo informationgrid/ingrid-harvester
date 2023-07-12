@@ -58,16 +58,13 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             // plan and procedure information
             development_freeze_period: mapper.getPluDevelopmentFreezePeriod(),
             plan_state: mapper.getPluPlanState(),
-            plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),  // check this one again
+            plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(), 
             plan_type: mapper.getPluPlanType(),
             plan_type_fine: mapper.getPluPlanTypeFine(),
             procedure_state: mapper.getPluProcedureState(),
             procedure_start_date: mapper.getPluProcedureStartDate(),
             procedure_type: mapper.getPluProcedureType(),
             process_steps: await mapper.getPluProcessSteps(),
-            // --------------------------- MARKER --------------------------- 
-            // --------------------------- MARKER --------------------------- 
-            // --------------------------- MARKER --------------------------- 
             // spatial and temporal features
             bounding_box: mapper.getBoundingBox(),
             centroid: mapper.getCentroid()?.['coordinates'],
@@ -76,12 +73,9 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             temporal: mapper.getTemporal(), // already checked
             // additional information and metadata
             catalog: await mapper.getCatalog(),
-            // --------------------------- MARKER --------------------------- 
-            // --------------------------- MARKER --------------------------- 
-            // --------------------------- MARKER --------------------------- 
             publisher: (await mapper.getPublisher())?.[0],
             maintainers: (await mapper.getMaintainers()),
-            contributors: (await mapper.getContributors() ?? undefined),         // new element !!! 
+            contributors: (await mapper.getContributors() ?? undefined),
             distributions: await mapper.getDistributions(),
             extras: {
                 harvested_data: mapper.getHarvestedData(),
