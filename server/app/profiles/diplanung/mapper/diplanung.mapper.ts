@@ -57,6 +57,9 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
     getGeneratedId(): string {
         return this.baseMapper.getGeneratedId();
     }
+    getAdmsIdentifier(): string {
+        return this.baseMapper._getAdmsIdentifier();
+    }
 
     getTitle(): string {
         return this.baseMapper.getTitle();
@@ -100,6 +103,10 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
 
     getPluProcessSteps(): ProcessStep[] {
         return this.baseMapper._getPluProcessSteps();
+    }
+    
+    getPluNotification(): ProcessStep[] {
+        return this.baseMapper._getPluNotification();
     }
 
     getBoundingBox(): object {
@@ -163,6 +170,10 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
 
     getModifiedDate(): Date {
         return this.baseMapper.getModifiedDate();
+    }
+
+    getRelation() {
+        return this.baseMapper._getRelation();
     }
 
     getCatalog() {

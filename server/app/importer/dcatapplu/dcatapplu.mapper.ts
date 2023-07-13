@@ -45,6 +45,7 @@ let xpath = require('xpath');
 
 export class DcatappluMapper extends BaseMapper {
 
+    static ADMS = 'http://www.w3.org/ns/adms#';
     static FOAF = 'http://xmlns.com/foaf/0.1/';
     static LOCN = 'http://www.w3.org/ns/locn#';
     static HYDRA = 'http://www.w3.org/ns/hydra/core#';
@@ -57,9 +58,10 @@ export class DcatappluMapper extends BaseMapper {
     static VCARD = 'http://www.w3.org/2006/vcard/ns#';
     static DCATDE = 'http://dcat-ap.de/def/dcatde/';
     static OGC = 'http://www.opengis.net/rdf#'
-    static PLU = 'http://a.placeholder.url.for.dcat-ap-plu/'
+    static PLU = 'https://specs.diplanung.de/plu/'
 
     static select = xpath.useNamespaces({
+        'adms': DcatappluMapper.ADMS,
         'foaf': DcatappluMapper.FOAF,
         'locn': DcatappluMapper.LOCN,
         'hydra': DcatappluMapper.HYDRA,
@@ -155,6 +157,12 @@ export class DcatappluMapper extends BaseMapper {
     _getGeneratedId(): string {
         return this.uuid;
     }
+
+    _getAdmsIdentifier(){
+        let admsIdentifier = DcatappluMapper.select('./adms:identifier/adms:Identifier/skos:notation', this.record, true)?.textContent;
+        return getUrlHashCode(admsIdentifier);
+    }
+
     _getTitle() {
         let title = DcatappluMapper.select('./dct:title', this.record, true)?.textContent;
         return title ?? "";
@@ -165,28 +173,33 @@ export class DcatappluMapper extends BaseMapper {
     }
 
     _getPluPlanState() {
-        let planState = DcatappluMapper.select('./plu:planState', this.record, true)?.textContent;
-        return planState ?? PluPlanState.UNBEKANNT;
+        let planState = DcatappluMapper.select('./plu:planState/@rdf:resource', this.record, true)?.textContent;
+        return getUrlHashCode(planState) ?? PluPlanState.UNBEKANNT;
     }
 
     _getPluPlanType() {
-        let planType = DcatappluMapper.select('./plu:planType', this.record, true)?.textContent;
-        return planType ?? PluPlanType.UNBEKANNT;
+        let planType = DcatappluMapper.select('./plu:planType/@rdf:resource', this.record, true)?.textContent;
+        return getUrlHashCode(planType) ?? PluPlanType.UNBEKANNT;
     }
 
     _getPluPlanTypeFine() {
-        let planTypeFine = DcatappluMapper.select('./plu:planTypeFine', this.record, true)?.textContent;
-        return planTypeFine ?? "";
+        let planTypeFine = DcatappluMapper.select('./plu:planTypeFine/@rdf:resource', this.record, true)?.textContent;
+        return planTypeFine;
     }
 
     _getPluProcedureState() {
-        let procedureState = DcatappluMapper.select('./plu:procedureState', this.record, true)?.textContent;
-        return procedureState ?? PluProcedureState.UNBEKANNT;
+        let procedureState = DcatappluMapper.select('./plu:procedureState/@rdf:resource', this.record, true)?.textContent;
+        return getUrlHashCode(procedureState) ?? PluProcedureState.UNBEKANNT;
     }
 
     _getPluProcedureType() {
-        let procedureType = DcatappluMapper.select('./plu:procedureType', this.record, true)?.textContent;
-        return procedureType ?? PluProcedureType.UNBEKANNT;
+        let procedureType = DcatappluMapper.select('./plu:procedureType/@rdf:resource', this.record, true)?.textContent;
+        return getUrlHashCode(procedureType) ?? PluProcedureType.UNBEKANNT;
+    }
+
+    _getRelation() {
+        let relation = DcatappluMapper.select('./dct:relation/@rdf:resource', this.record, true)?.textContent;
+        return relation;
     }
 
     _getPluProcedureStartDate() {
@@ -202,6 +215,11 @@ export class DcatappluMapper extends BaseMapper {
         return periodOfTime;
     }
 
+    _getPluNotification(){
+        let notification = DcatappluMapper.select('./plu:notification', this.record, true)?.textContent;
+        return notification;
+    }
+
     async _getPluProcessSteps() {
         let processSteps:any[] = []
         let processStepIDs = DcatappluMapper.select('./plu:processStep', this.record)
@@ -212,10 +230,11 @@ export class DcatappluMapper extends BaseMapper {
         let pluProcessSteps:any[] = [...linked, ...local]
         pluProcessSteps?.map((step: any) => {
             let nodes: string[] = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', step, true);
+            let type =  getUrlHashCode(DcatappluMapper.select('./plu:ProcessStepType/@rdf:resource', step, true)?.textContent);
             let period = this._getTemporalInternal(nodes);
             let processStep: ProcessStep = {
                 identifier: DcatappluMapper.select('./dct:identifier', step, true)?.textContent ?? undefined,
-                type: DcatappluMapper.select('./plu:ProcessStepType', step, true)?.textContent ?? PluProcessStepType.UNBEKANNT,
+                type: type ?? PluProcessStepType.UNBEKANNT,
                 distributions: this._getRelevantDistibutions(step),
                 period: period?.[0]
             }
@@ -236,16 +255,16 @@ export class DcatappluMapper extends BaseMapper {
             let nodes: string[] = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', dist, true);
             let period = this._getTemporalInternal(nodes);
             let distribution: Distribution = {
-                accessURL: DcatappluMapper.select('./dct:accessURL', dist, true)?.textContent ?? "",
-                downloadURL: DcatappluMapper.select('./dct:downloadURL', dist, true)?.textContent,
+                accessURL: DcatappluMapper.select('./dcat:accessURL/@rdf:resource', dist, true)?.textContent ?? "",
+                downloadURL: DcatappluMapper.select('./dcat:downloadURL/@rdf:resource', dist, true)?.textContent,
                 title: DcatappluMapper.select('./dct:title', dist, true)?.textContent,
                 description: DcatappluMapper.select('./dct:description', dist, true)?.textContent,
                 issued: MiscUtils.normalizeDateTime(DcatappluMapper.select('./dct:issued', dist, true)?.textContent),
                 modified: MiscUtils.normalizeDateTime(DcatappluMapper.select('./dct:modified', dist, true)?.textContent),
-                pluDocType: DcatappluMapper.select('./plu:docType', dist, true)?.textContent ?? PluDocType.UNBEKANNT,
+                pluDocType: getUrlHashCode(DcatappluMapper.select('./plu:docType/@rdf:resource', dist, true)?.textContent) ?? PluDocType.UNBEKANNT,
                 period: period?.[0],
                 mapLayerNames: [DcatappluMapper.select('./plu:mapLayerNames', dist, true)?.textContent ],
-                format: [DcatappluMapper.select('./dct:format', dist, true)?.textContent ?? undefined],
+                format: [DcatappluMapper.select('./dct:format/@rdf:resource', dist, true)?.textContent ?? undefined],
             }
             distributions.push(distribution);
         })
@@ -297,7 +316,7 @@ export class DcatappluMapper extends BaseMapper {
             if (agent) {
                 let infos: any = {
                     name: DcatappluMapper.select('./foaf:name', agent, true)?.textContent ?? undefined,
-                    type: DcatappluMapper.select('./dct:type', agent, true)?.textContent ?? undefined
+                    type: DcatappluMapper.select('./dct:type/@rdf:resource', agent, true)?.textContent ?? undefined
                 };
                 agents.push(infos);
             }
@@ -734,8 +753,6 @@ export class DcatappluMapper extends BaseMapper {
 
 }
 
-// Private interface. Do not export
-interface creatorType {
-    name?: string;
-    mbox?: string;
+function getUrlHashCode(string:any){
+    return string?.split("#")?.pop();
 }

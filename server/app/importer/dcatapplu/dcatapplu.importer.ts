@@ -177,13 +177,13 @@ export class DcatappluImporter extends Importer {
                 homepage: DcatappluMapper.select('./foaf:homepage/@rdf:resource', catalogElement, true)?.textContent,
                 identifier: DcatappluMapper.select('./dct:identifier', catalogElement, true)?.textContent,
                 issued: DcatappluMapper.select('./dct:issued', catalogElement, true)?.textContent,
-                language: DcatappluMapper.select('./dct:language', catalogElement, true)?.textContent,
+                language: DcatappluMapper.select('./dct:language/@rdf:resource', catalogElement, true)?.textContent,
                 modified: DcatappluMapper.select('./dct:modified', catalogElement, true)?.textContent,
                 publisher: {
                     name: DcatappluMapper.select('./dct:publisher/foaf:Agent/foaf:name', catalogElement, true)?.textContent ?? undefined,
                     type: DcatappluMapper.select('./dct:publisher/foaf:Agent/dct:type', catalogElement, true)?.textContent ?? undefined
                 },
-                themeTaxonomy: DcatappluMapper.select('./dcat:themeTaxonomy', catalogElement, true)?.textContent,
+                themeTaxonomy: DcatappluMapper.select('./dcat:themeTaxonomy/skos:ConceptScheme/dct:title', catalogElement, true)?.textContent,
                 // records?: Record[],
             };
             catalogAboutsToCatalogs[catalogAbout] = catalog;
