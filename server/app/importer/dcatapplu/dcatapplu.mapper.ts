@@ -220,7 +220,7 @@ export class DcatappluMapper extends BaseMapper {
         return notification;
     }
 
-    async _getPluProcessSteps() {
+    _getPluProcessSteps() {
         let processSteps:any[] = []
         let processStepIDs = DcatappluMapper.select('./plu:processStep', this.record)
             .map(node => node.getAttribute('rdf:resource'))
