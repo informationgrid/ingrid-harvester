@@ -202,6 +202,19 @@ export class RequestDelegate {
         this.config = MiscUtils.merge(this.config, partialConfig);
     }
 
+    getFullURL(): string {
+        return RequestDelegate.getFullURL(this.config);
+    }
+
+    static getFullURL(config: RequestOptions): string {
+        let fullURL = config.uri;
+        if (config.qs) {
+            fullURL += (config.uri.indexOf('?') > -1) ? '&' : '?';
+            fullURL += new URLSearchParams(config.qs);
+        }
+        return fullURL;
+    }
+
     /**
      * Performs the HTTP request and returns the result of this operation.
      *
@@ -235,11 +248,7 @@ export class RequestDelegate {
                 rejectUnauthorized: false
             });
         }
-        let fullURL = config.uri;
-        if (config.qs) {
-            fullURL += (config.uri.indexOf('?') > -1) ? '&' : '?';
-            fullURL += new URLSearchParams(config.qs);
-        }
+        let fullURL = RequestDelegate.getFullURL(config);
         let response = fetch(fullURL, config);
 
         while (retry > 0) {

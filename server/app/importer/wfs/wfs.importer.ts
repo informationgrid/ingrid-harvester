@@ -140,6 +140,11 @@ export abstract class WfsImporter extends Importer {
         this.nsMap = MiscUtils.merge(XPathUtils.getNsMap(capabilitiesResponseDom), XPathUtils.getExtendedNsMap(capabilitiesResponseDom));
         let select: XPathNodeSelect = xpath.useNamespaces(this.nsMap);
 
+        // fail early
+        if (!select('/*[local-name()="WFS_Capabilities"]', capabilitiesResponseDom, true)) {
+            throw new Error(`Could not retrieve WFS_Capabilities from ${capabilitiesRequestDelegate.getFullURL()}: ${responseBody}`);
+        }
+
         // get used CRSs through getCapabilities
         let featureTypes = select('/*[local-name()="WFS_Capabilities"]/*[local-name()="FeatureTypeList"]/*[local-name()="FeatureType"]', capabilitiesResponseDom);
         // import proj4 strings for all EPSGs

@@ -54,11 +54,16 @@ export class ApiCtrl {
 
     @Post('/importAll')
     async importAllFromHarvester() {
-        if (!this.importAllProcessIsRunning) {
+        if (this.importAllProcessIsRunning) {
+            log.info('Import process for all harvesters is already running - not starting again');
+        }
+        else {
+            log.info('Started import process for all harvesters');
             this.importAllProcessIsRunning = true;
 
-            let activeConfigs = ConfigService.get()
-                .filter(config => !config.disable);
+            let activeConfigs = ConfigService.get().filter(config => !config.disable);
+            // run higher priority harvesters first (sort descending)
+            activeConfigs.sort((harvesterA, harvesterB) => harvesterB.priority - harvesterA.priority);
 
             for (var i = 0; i < activeConfigs.length; i++) {
                 await this.importSocketService.runImport(activeConfigs[i].id);

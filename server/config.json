@@ -1,7 +1,7 @@
 [
   {
     "index": "csw_geoportal_de",
-    "priority": null,
+    "priority": 5,
     "type": "CSW",
     "maxRecords": 200,
     "startPosition": 1,
@@ -16,7 +16,7 @@
       "containsDocumentsWithData": null
     },
     "isIncremental": false,
-    "maxConcurrent": 10,
+    "maxConcurrent": 6,
     "skipUrlCheckOnHarvest": false,
     "xpaths": {
       "capabilities": {
@@ -30,7 +30,7 @@
     "httpMethod": "POST",
     "resultType": "results",
     "id": 18,
-    "description": "CSW geoportal.de",
+    "description": "geoportal.de",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n    <ogc:And>\n        <ogc:Or>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Bauleitplanung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Bauleitpläne</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Bebauungsplan</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>B-Plan</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Flächennutzungsplan</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>FNP</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumordnung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumordnungsprogramm</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumordnungsverfahren</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumverträglichkeit</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Regionalplan</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Regionalplanung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Landesplanung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Landesentwicklung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Landesraumordnungsprogramm</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Milieuschutzgebiete</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Milieugebiet</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungssatzungsgebiete</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungssatzung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungsverordnung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungsverordnungsgebiete</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>städtebauliche Satzungen</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>§ 172 BauGB Städtebauliche Förderung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Beteiligung der Öffentlichkeit</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Öffentlichkeitsbeteiligung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>XPlanung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>XPlanGML</ogc:Literal></ogc:PropertyIsEqualTo>\n        </ogc:Or>\n        <ogc:Or>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Berlin*</ogc:Literal>\n            </ogc:PropertyIsLike>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Hamburg*</ogc:Literal>\n            </ogc:PropertyIsLike>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Freiburg*</ogc:Literal>\n            </ogc:PropertyIsLike>\n        </ogc:Or>\n    </ogc:And>\n</ogc:Filter>",
@@ -39,19 +39,19 @@
     "deduplicationAlias": "csw_geoportal_de_dedup",
     "cron": {
       "full": {
-        "pattern": "54 0 * * 1-6",
+        "pattern": "0 2 * * 1-6",
         "active": true
       },
       "incr": {
-        "pattern": "54 0 * * 0",
+        "pattern": "0 2 * * 0",
         "active": true
       }
     }
   },
   {
     "index": "wfs_hh_xplanungsplattform_de_51",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -65,23 +65,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs51",
     "id": 1,
-    "description": "WFS hh.xplanungsplattform.de v51",
+    "description": "hh.xplanungsplattform.de v51",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -91,7 +81,7 @@
     "deduplicationAlias": "wfs_hh_xplanungsplattform_de_51_dedup",
     "cron": {
       "full": {
-        "pattern": "3 0 * * *",
+        "pattern": "9 2 * * *",
         "active": true
       },
       "incr": {
@@ -102,8 +92,8 @@
   },
   {
     "index": "wfs_hh_xplanungsplattform_de_52",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -117,23 +107,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs52",
     "id": 2,
-    "description": "WFS hh.xplanungsplattform.de v52",
+    "description": "hh.xplanungsplattform.de v52",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -143,7 +123,7 @@
     "deduplicationAlias": "wfs_hh_xplanungsplattform_de_52_dedup",
     "cron": {
       "full": {
-        "pattern": "6 0 * * *",
+        "pattern": "12 2 * * *",
         "active": true
       },
       "incr": {
@@ -154,8 +134,8 @@
   },
   {
     "index": "wfs_hh_xplanungsplattform_de_53",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -169,23 +149,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs53",
     "id": 3,
-    "description": "WFS hh.xplanungsplattform.de v53",
+    "description": "hh.xplanungsplattform.de v53",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -195,7 +165,7 @@
     "deduplicationAlias": "wfs_hh_xplanungsplattform_de_53_dedup",
     "cron": {
       "full": {
-        "pattern": "9 0 * * *",
+        "pattern": "15 2 * * *",
         "active": true
       },
       "incr": {
@@ -206,8 +176,8 @@
   },
   {
     "index": "wfs_hh_xplanungsplattform_de_54",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -221,23 +191,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs54",
     "id": 4,
-    "description": "WFS hh.xplanungsplattform.de v54",
+    "description": "hh.xplanungsplattform.de v54",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -247,7 +207,7 @@
     "deduplicationAlias": "wfs_hh_xplanungsplattform_de_54_dedup",
     "cron": {
       "full": {
-        "pattern": "12 0 * * *",
+        "pattern": "18 2 * * *",
         "active": true
       },
       "incr": {
@@ -258,8 +218,8 @@
   },
   {
     "index": "wfs_hh_xplanungsplattform_de_51pre",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -273,23 +233,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "in aufstellung",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs51pre",
     "id": 5,
-    "description": "WFS hh.xplanungsplattform.de v51pre",
+    "description": "hh.xplanungsplattform.de v51pre",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -299,7 +249,7 @@
     "deduplicationAlias": "wfs_hh_xplanungsplattform_de_51pre_dedup",
     "cron": {
       "full": {
-        "pattern": "15 0 * * *",
+        "pattern": "21 2 * * *",
         "active": true
       },
       "incr": {
@@ -310,8 +260,8 @@
   },
   {
     "index": "wfs_hh_xplanungsplattform_de_52pre",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -325,23 +275,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "in aufstellung",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs52pre",
     "id": 6,
-    "description": "WFS hh.xplanungsplattform.de v52pre",
+    "description": "hh.xplanungsplattform.de v52pre",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -351,7 +291,7 @@
     "deduplicationAlias": "wfs_hh_xplanungsplattform_de_52pre_dedup",
     "cron": {
       "full": {
-        "pattern": "18 0 * * *",
+        "pattern": "24 2 * * *",
         "active": true
       },
       "incr": {
@@ -362,8 +302,8 @@
   },
   {
     "index": "wfs_hh_xplanungsplattform_de_53pre",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -377,23 +317,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "in aufstellung",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs53pre",
     "id": 7,
-    "description": "WFS hh.xplanungsplattform.de v53pre",
+    "description": "hh.xplanungsplattform.de v53pre",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -403,7 +333,7 @@
     "deduplicationAlias": "wfs_hh_xplanungsplattform_de_53pre_dedup",
     "cron": {
       "full": {
-        "pattern": "21 0 * * *",
+        "pattern": "27 2 * * *",
         "active": true
       },
       "incr": {
@@ -414,8 +344,8 @@
   },
   {
     "index": "wfs_hh_xplanungsplattform_de_54pre",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -429,23 +359,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "in aufstellung",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs54pre",
     "id": 8,
-    "description": "WFS hh.xplanungsplattform.de v54pre",
+    "description": "hh.xplanungsplattform.de v54pre",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -455,7 +375,7 @@
     "deduplicationAlias": "wfs_hh_xplanungsplattform_de_54pre_dedup",
     "cron": {
       "full": {
-        "pattern": "24 0 * * *",
+        "pattern": "30 2 * * *",
         "active": true
       },
       "incr": {
@@ -466,8 +386,8 @@
   },
   {
     "index": "wfs_xplanung_freiburg_de_30",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -481,23 +401,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs30",
     "id": 9,
-    "description": "WFS xplanung.freiburg.de v30",
+    "description": "xplanung.freiburg.de v30",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -507,7 +417,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_30_dedup",
     "cron": {
       "full": {
-        "pattern": "27 0 * * *",
+        "pattern": "33 2 * * *",
         "active": true
       },
       "incr": {
@@ -518,8 +428,8 @@
   },
   {
     "index": "wfs_xplanung_freiburg_de_40",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -533,23 +443,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs40",
     "id": 10,
-    "description": "WFS xplanung.freiburg.de v40",
+    "description": "xplanung.freiburg.de v40",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -559,7 +459,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_40_dedup",
     "cron": {
       "full": {
-        "pattern": "30 0 * * *",
+        "pattern": "36 2 * * *",
         "active": true
       },
       "incr": {
@@ -570,8 +470,8 @@
   },
   {
     "index": "wfs_xplanung_freiburg_de_41",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -585,23 +485,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs41",
     "id": 11,
-    "description": "WFS xplanung.freiburg.de v41",
+    "description": "xplanung.freiburg.de v41",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -611,7 +501,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_41_dedup",
     "cron": {
       "full": {
-        "pattern": "33 0 * * *",
+        "pattern": "39 2 * * *",
         "active": true
       },
       "incr": {
@@ -622,8 +512,8 @@
   },
   {
     "index": "wfs_xplanung_freiburg_de_50",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -637,23 +527,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs50",
     "id": 12,
-    "description": "WFS xplanung.freiburg.de v50",
+    "description": "xplanung.freiburg.de v50",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -663,7 +543,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_50_dedup",
     "cron": {
       "full": {
-        "pattern": "36 0 * * *",
+        "pattern": "42 2 * * *",
         "active": true
       },
       "incr": {
@@ -674,8 +554,8 @@
   },
   {
     "index": "wfs_xplanung_freiburg_de_51",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -689,23 +569,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs51",
     "id": 13,
-    "description": "WFS xplanung.freiburg.de v51",
+    "description": "xplanung.freiburg.de v51",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -715,7 +585,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_51_dedup",
     "cron": {
       "full": {
-        "pattern": "39 0 * * *",
+        "pattern": "45 2 * * *",
         "active": true
       },
       "incr": {
@@ -726,8 +596,8 @@
   },
   {
     "index": "wfs_xplanung_freiburg_de_52",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -741,23 +611,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs52",
     "id": 14,
-    "description": "WFS xplanung.freiburg.de v52",
+    "description": "xplanung.freiburg.de v52",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -767,7 +627,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_52_dedup",
     "cron": {
       "full": {
-        "pattern": "42 0 * * *",
+        "pattern": "48 2 * * *",
         "active": true
       },
       "incr": {
@@ -778,8 +638,8 @@
   },
   {
     "index": "wfs_xplanung_freiburg_de_53",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -793,23 +653,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs53",
     "id": 15,
-    "description": "WFS xplanung.freiburg.de v53",
+    "description": "xplanung.freiburg.de v53",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -819,7 +669,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_53_dedup",
     "cron": {
       "full": {
-        "pattern": "45 0 * * *",
+        "pattern": "51 2 * * *",
         "active": true
       },
       "incr": {
@@ -830,8 +680,8 @@
   },
   {
     "index": "wfs_xplanung_freiburg_de_54",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.XPLAN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -845,23 +695,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/xplan:beschreibung",
-      "featureParent": "/wfs:FeatureCollection/wfs:member",
-      "name": "./*/xplan:name",
-      "pluPlanState": "festgesetzt",
-      "pluProcedureStartDate": "./*/xplan:aufstellungsbeschlussDatum",
-      "spatial": "./*/xplan:raeumlicherGeltungsbereich"
-    },
+    "pluPlanState": "festgesetzt",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://xplanung.freiburg.de/xplan-wfs/services/wfs54",
     "id": 16,
-    "description": "WFS xplanung.freiburg.de v54",
+    "description": "xplanung.freiburg.de v54",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -871,7 +711,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_54_dedup",
     "cron": {
       "full": {
-        "pattern": "48 0 * * *",
+        "pattern": "54 2 * * *",
         "active": true
       },
       "incr": {
@@ -882,11 +722,11 @@
   },
   {
     "index": "wfs_berliner_umringe",
-    "priority": null,
-    "type": "WFS",
+    "priority": 0,
+    "type": "WFS.FIS",
     "maxRecords": null,
     "startPosition": null,
-    "customCode": null,
+    "customCode": "doc.spatial_text = `Berlin ${doc.spatial_text}`;",
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "dateSourceFormats": [],
@@ -897,23 +737,13 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "be",
-    "xpaths": {
-      "capabilities": {
-        "serviceProvider": "/*[local-name()=\"WFS_Capabilities\"]/ows:ServiceProvider"
-      },
-      "description": "./*/fis:BEREICH",
-      "featureParent": "/wfs:FeatureCollection/gml:featureMember",
-      "name": "./*/fis:PLANNAME",
-      "pluPlanState": "./*/fis:FESTSG",
-      "pluProcedureStartDate": "./*/fis:AFS_BESCHL",
-      "spatial": "./*/fis:SHAPE_25833"
-    },
+    "pluPlanState": null,
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
     "getFeaturesUrl": "https://fbinter.stadt-berlin.de/fb/wfs/data/senstadt/sach_bplan",
     "id": 17,
-    "description": "WFS Berliner Umringe",
+    "description": "Berliner Umringe",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
@@ -923,13 +753,14 @@
     "deduplicationAlias": "wfs_berliner_umringe_dedup",
     "cron": {
       "full": {
-        "pattern": "51 0 * * *",
+        "pattern": "57 2 * * *",
         "active": true
       },
       "incr": {
         "pattern": "",
         "active": false
       }
-    }
+    },
+    "maxConcurrent": null
   }
 ]
