@@ -24,6 +24,7 @@
 import { decode } from 'iconv-lite';
 import { defaultWfsSettings, WfsSettings } from './wfs.settings';
 import { getLogger } from 'log4js';
+import { namespaces } from '../../importer/namespaces';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { Contact } from '../../model/agent';
 import { GeoJsonUtils } from '../../utils/geojson.utils';
@@ -344,11 +345,11 @@ export abstract class WfsImporter extends Importer {
         if (settings.httpMethod === "POST") {
             if (request === 'GetFeature') {
                 requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
-                <GetFeatures xmlns="http://www.opengis.net/cat/csw/2.0.2"
-                            xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                            xmlns:ogc="http://www.opengis.net/ogc"
-                            xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
+                <GetFeatures xmlns="${namespaces.CSW}"
+                            xmlns:gmd="${namespaces.GMD}"
+                            xmlns:xsi="${namespaces.XSI}"
+                            xmlns:ogc="${namespaces.OGC}"
+                            xsi:schemaLocation="${namespaces.CSW}"
                             service="WFS"
                             version="${settings.version}"
                             resultType="${settings.resultType}"
