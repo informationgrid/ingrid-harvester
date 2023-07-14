@@ -46,8 +46,8 @@ export interface ProcessStep {
 }
 
 export interface Record {
-    issued?: string,
-    modified?: string,
+    issued?: Date,
+    modified?: Date,
     primaryTopic: string,
     title: string
 }

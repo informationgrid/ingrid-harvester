@@ -117,8 +117,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional(m => DcatApPluDocument.xmlFoafAgent('dcatde:maintainer', m), maintainers)}
                 ${optional(c => DcatApPluDocument.xmlFoafAgent('dct:contributor', c), contributors)}
                 ${optional(DcatApPluDocument.xmlDistribution, await mapper.getDistributions())}
-                ${optional('dct:issued', mapper.getIssued())}
-                ${optional('dct:modified', mapper.getModifiedDate())}
+                ${optional('dct:issued', mapper.getIssued()?.toISOString())}
+                ${optional('dct:modified', mapper.getModifiedDate()?.toISOString())}
                 ${resource('dct:relation', esc(relation))}
                 ${optional(DcatApPluDocument.xmlPeriodOfTime, mapper.getPluDevelopmentFreezePeriod(), 'plu:developmentFreezePeriod')}
                 ${resource('plu:planType', mapper.getPluPlanType(), `${diplanUriPrefix}/planType#`)}
@@ -146,9 +146,9 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional('dct:description', esc(distribution.description))}
                 ${resource('dcat:downloadURL', esc(distribution.downloadURL))}
                 ${resource('dct:format', esc(distribution.format?.[0]))}
-                ${optional('dct:issued', distribution.issued)}
-                ${optional('dct:modified', distribution.modified)}
-                ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period)}
+                ${optional('dct:issued', distribution.issued?.toISOString())}
+                ${optional('dct:modified', distribution.modified?.toISOString())}
+                ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period, 'dct:temporal')}
                 ${resource('plu:docType', esc(distribution.pluDocType), `${diplanUriPrefix}/docType#`)}
                 ${optional('plu:mapLayerNames', esc(distribution.mapLayerNames?.join(',')))}
                 ${optional('dct:title', esc(distribution.title))}
@@ -166,11 +166,11 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         </${parent}>`;
     }
 
-    private static xmlPeriodOfTime({ lte: start, gte: end }: DateRange, relation: string = 'dct:temporal'): string {
+    private static xmlPeriodOfTime({ lte: start, gte: end }: DateRange, relation: string): string {
         return `<${relation}>
             <dct:PeriodOfTime>
-                ${optional('dcat:startDate', start)}
-                ${optional('dcat:endDate', end)}
+                ${optional('dcat:startDate', start?.toISOString())}
+                ${optional('dcat:endDate', end?.toISOString())}
             </dct:PeriodOfTime>
         </${relation}>`;
     }
@@ -181,7 +181,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 <plu:processStepType rdf:resource="${diplanUriPrefix}/processStepType#${type}"/>
                 ${optional('dct:identifier', esc(identifier))}
                 ${optional(DcatApPluDocument.xmlDistribution, distributions)}
-                ${optional(DcatApPluDocument.xmlPeriodOfTime, period)}
+                ${optional(DcatApPluDocument.xmlPeriodOfTime, period, 'dct:temporal')}
             </plu:ProcessStep>
         </plu:processStep>`;
     }
@@ -191,8 +191,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
             <dcat:CatalogRecord>
                 <dct:title>${esc(title)}</dct:title>
                 <foaf:primaryTopic>${esc(primaryTopic)}</foaf:primaryTopic>
-                ${optional('dct:issued', esc(issued))}
-                ${optional('dct:modified', esc(modified))}
+                ${optional('dct:issued', issued?.toISOString())}
+                ${optional('dct:modified', modified?.toISOString())}
             </dcat:CatalogRecord>
         </dcat:record>`;
     }
