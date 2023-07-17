@@ -37,7 +37,7 @@ export const namespaces = {
     INSPIRE_COMMON: 'http://inspire.ec.europa.eu/schemas/common/1.0',
     INSPIRE_VS: 'http://inspire.ec.europa.eu/schemas/inspire_vs/1.0',
     LOCN: 'http://www.w3.org/ns/locn#',
-    OGC: 'http://www.opengis.net/ogc#',
+    OGC: 'http://www.opengis.net/ogc',
     ORG: 'http://www.w3.org/ns/org#',
     OWL: 'http://www.w3.org/2002/07/owl#',
     OWS: 'http://www.opengis.net/ows',
