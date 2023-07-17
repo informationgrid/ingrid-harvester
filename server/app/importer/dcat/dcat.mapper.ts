@@ -24,51 +24,39 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {BaseMapper} from "../base.mapper";
-import {License} from '@shared/license.model';
-import {getLogger} from "log4js";
-import {UrlUtils} from "../../utils/url.utils";
-import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
-import {DcatSettings} from './dcat.settings';
-import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
-import {throwError} from "rxjs";
-import {ImporterSettings} from "../../importer.settings";
-import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
-import {Summary} from "../../model/summary";
-import {Contact, Person} from "../../model/agent";
-import {Distribution} from "../../model/distribution";
-import {DateRange} from "../../model/dateRange";
+import { getLogger } from 'log4js';
+import { namespaces } from '../../importer/namespaces';
+import { throwError } from 'rxjs';
+import { BaseMapper } from '../base.mapper';
+import { Contact, Person } from '../../model/agent';
+import { DateRange } from '../../model/dateRange';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
+import { DcatSettings } from './dcat.settings';
+import { Distribution } from '../../model/distribution';
+import { ImporterSettings } from '../../importer.settings';
+import { License } from '@shared/license.model';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
+import { Summary } from '../../model/summary';
+import { UrlUtils } from '../../utils/url.utils';
 
 let xpath = require('xpath');
 
 export class DcatMapper extends BaseMapper {
 
-    static FOAF = 'http://xmlns.com/foaf/0.1/';
-    static LOCN = 'http://www.w3.org/ns/locn#';
-    static HYDRA = 'http://www.w3.org/ns/hydra/core#';
-    static RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-    static RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
-    static DCAT = 'http://www.w3.org/ns/dcat#';
-    static DCT = 'http://purl.org/dc/terms/';
-    static SKOS = 'http://www.w3.org/2004/02/skos/core#';
-    static SCHEMA = 'http://schema.org/';
-    static VCARD = 'http://www.w3.org/2006/vcard/ns#';
-    static DCATDE = 'http://dcat-ap.de/def/dcatde/';
-    static OGC = 'http://www.opengis.net/rdf#'
-
     static select = xpath.useNamespaces({
-        'foaf': DcatMapper.FOAF,
-        'locn': DcatMapper.LOCN,
-        'hydra': DcatMapper.HYDRA,
-        'rdf': DcatMapper.RDF,
-        'rdfs': DcatMapper.RDFS,
-        'dcat': DcatMapper.DCAT,
-        'dct': DcatMapper.DCT,
-        'skos': DcatMapper.SKOS,
-        'schema': DcatMapper.SCHEMA,
-        'vcard': DcatMapper.VCARD,
-        'dcatde': DcatMapper.DCATDE,
-        'ogc': DcatMapper.OGC
+        'foaf': namespaces.FOAF,
+        'locn': namespaces.LOCN,
+        'hydra': namespaces.HYDRA,
+        'rdf': namespaces.RDF,
+        'rdfs': namespaces.RDFS,
+        'dcat': namespaces.DCAT,
+        'dct': namespaces.DCT,
+        'skos': namespaces.SKOS,
+        'schema': namespaces.SCHEMA,
+        'vcard': namespaces.VCARD,
+        'dcatde': namespaces.DCATDE,
+        'ogc': namespaces.OGC
     });
 
     private log = getLogger();

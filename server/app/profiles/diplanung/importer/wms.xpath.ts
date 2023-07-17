@@ -21,17 +21,19 @@
  * ==================================================
  */
 
+import { namespaces } from '../../../importer/namespaces';
+
 const xpath = require('xpath');
 
 export class WmsXPath {
 
     static nsMap = {
-        'wms': "http://www.opengis.net/wms",
-        'gmd': 'http://www.isotc211.org/2005/gmd',
-        'inspire_common': 'http://inspire.ec.europa.eu/schemas/common/1.0',
-        'inspire_vs': 'http://inspire.ec.europa.eu/schemas/inspire_vs/1.0',
-        'xlink': 'http://www.w3.org/1999/xlink',
-        'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
+        'wms': namespaces.WMS,
+        'gmd': namespaces.GMD,
+        'inspire_common': namespaces.INSPIRE_COMMON,
+        'inspire_vs': namespaces.INSPIRE_VS,
+        'xlink': namespaces.XLINK,
+        'xsi': namespaces.XSI
     };
 
     static select = xpath.useNamespaces(WmsXPath.nsMap);
