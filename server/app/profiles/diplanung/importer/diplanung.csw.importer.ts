@@ -61,6 +61,12 @@ export class DiplanungCswImporter extends CswImporter {
                 let updatedDistributions = await this.updateDistributions(doc.distributions);
                 if (updatedDistributions?.length > 0) {
                     updateDoc['distributions'] = updatedDistributions;
+                    updateDoc['extras'] = { ...doc['extras'] };
+                    if (!updateDoc['extras']['metadata']['quality_notes']) {
+                        updateDoc['extras']['metadata']['quality_notes'] = [];
+                    }
+                    updateDoc['extras']['metadata']['is_changed'] = true;
+                    updateDoc['extras']['metadata']['quality_notes'].push('WMS layer names have been added to a distribution');
                     docIsUpdated = true;
                 }
 
@@ -81,7 +87,7 @@ export class DiplanungCswImporter extends CswImporter {
                         updateDoc['extras']['metadata']['quality_notes'].push('Swapped lat and lon');
                     }
                     else {
-                        updateDoc['extras']['metadata']['is_valid'] = false;
+                        updateDoc['extras']['metadata']['is_valid'] = updateDoc['extras']['metadata']['is_valid'] ?? false;
                         updateDoc['extras']['metadata']['quality_notes'].push('Bounding box not within Germany');
                     }
                     docIsUpdated = true;
@@ -162,7 +168,7 @@ export class DiplanungCswImporter extends CswImporter {
     }
 
     /**
-     * Add layer names to all WMS distributions of the given.
+     * Add layer names to the given distributions that can be deduced to point to a WMS.
      * 
      * @param distributions the distributions to potentially retrieve WMS layer names for
      * @returns all distributions, including the modified ones if any; null, if no distribution was modified
@@ -172,19 +178,31 @@ export class DiplanungCswImporter extends CswImporter {
         let updated = false;
         for (let distribution of distributions) {
             // add layer names for WMS services
-            if (distribution.format?.includes('WMS') && distribution.accessURL.includes('GetCapabilities')) {
+            let accessURL = distribution.accessURL.toLowerCase();
+            if (distribution.format?.includes('WMS') || (accessURL.includes('getcapabilities') && accessURL.includes('wms'))) {
                 try {
-                    let response = await RequestDelegate.doRequest({ uri: distribution.accessURL });
+                    let accessURL = distribution.accessURL;
+                    if (!accessURL.toLowerCase().includes('service=wms')) {
+                        accessURL += (accessURL.includes('?') ? '&' : '?') + 'service=WMS';
+                    }
+                    if (!accessURL.toLowerCase().includes('request=getcapabilities')) {
+                        accessURL += (accessURL.includes('?') ? '&' : '?') + 'request=GetCapabilities';
+                    }
+                    let response = await RequestDelegate.doRequest({ uri: accessURL });
                     // surface heuristic for XML
                     if (response.startsWith('<?xml')) {
                         let layerNames = this.getMapLayerNames(response);
                         if (layerNames) {
+                            distribution.accessURL = accessURL;
+                            if (!distribution.format?.includes('WMS')) {
+                                distribution.format = [...distribution.format, 'WMS'];
+                            }
                             distribution.mapLayerNames = layerNames;
                             updated = true;
                         }
                     }
                     else {
-                        let msg = `Response for ${distribution.accessURL} is not valid XML`;
+                        let msg = `Response for ${accessURL} is not valid XML`;
                         log.debug(msg);
                         this.summary.warnings.push([msg, response.replaceAll('\n', ' ')]);
                     }
