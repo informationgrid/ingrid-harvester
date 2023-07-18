@@ -23,23 +23,24 @@
 
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
-import {configure, getLogger} from "log4js";
+import { configure, getLogger } from "log4js";
 import * as sinon from "sinon";
-import {TestUtils} from "./utils/test-utils";
+import { TestUtils } from "./utils/test-utils";
 // import {CswSettings} from '../app/importer/csw/csw.settings';
 // import {CswImporter} from '../app/importer/csw/csw.importer';
-import {DcatappluImporter} from '../app/importer/dcatapplu/dcatapplu.importer'
-import {DcatappluSettings} from '../app/importer/dcatapplu/dcatapplu.settings'
-import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
-import {IndexDocument} from "../app/model/index.document";
+import { DcatappluImporter } from '../app/importer/dcatapplu/dcatapplu.importer'
+import { DcatappluSettings } from '../app/importer/dcatapplu/dcatapplu.settings'
+import { ProfileFactoryLoader } from "../app/profiles/profile.factory.loader";
+import { IndexDocument } from "../app/model/index.document";
 // import {mcloudDocument} from "../app/profiles/mcloud/model/index.document";
 import { DiPlanungDocument } from "../app/profiles/diplanung/model/index.document";
 import { DcatappluMapper } from "importer/dcatapplu/dcatapplu.mapper";
 
-import {DataFactory} from "rdf-data-factory";
+import { DataFactory } from "rdf-data-factory";
+import { RdfXmlParser } from "rdfxml-streaming-parser";
 import { isomorphic } from "rdf-isomorphic";
-import rdfParser from "rdf-parse";
 const fs = require('fs');
+var Readable = require('node:stream').Readable;
 
 let log = getLogger();
 configure('./log4js.json');
@@ -47,13 +48,25 @@ configure('./log4js.json');
 chai.use(chaiAsPromised);
 
 describe('Import DCAT AP PLU', function () {
-    let xmlInputFile = fs.readFileSync('../server/test/data/input-dcatapplu-example.xml');
-    xmlInputFile = xmlInputFile.replace(/\s+/, " ")  
-        
+    const myParser = new RdfXmlParser();
+    const secondParser = new RdfXmlParser();
+
+    // load xml file and transform to graph
+    let xmlInputFile = fs.readFileSync('../server/test/data/input-dcatapplu-example.xml', 'utf-8');
+    xmlInputFile = xmlInputFile.replace(/\s+/, " ");
+    const xmlStream = Readable.from([xmlInputFile]);
+
+    let inputGraph = [];
+    xmlStream.pipe(myParser)
+        .on('data', (incomingData) => { inputGraph.push(incomingData); })
+        // .on('data', console.log)
+        .on('error', console.error)
+        .on('end', () => console.log('All triples were parsed!'));
+
     let indexDocumentCreateSpy;
-    
+
     it('correct import of DCAT AP PLU', function (done) {
-            
+
         log.info('Start test ...');
 
         // @ts-ignore
@@ -72,33 +85,80 @@ describe('Import DCAT AP PLU', function () {
 
         let importer = new DcatappluImporter(settings);
 
-        sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(1, {issued: '2019-01-09T17:51:38.934Z'}));
+        sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(1, { issued: '2019-01-09T17:51:38.934Z' }));
 
         indexDocumentCreateSpy = sinon.spy(DiPlanungDocument.prototype, 'create');
+
+        let outputGraph = [];
+
+        
+        function compareGraphs(){
+            let sortedInputGraph = inputGraph.sort();
+            let sortedOutputGraph = outputGraph.sort();
+            let isomorph = isomorphic(sortedInputGraph, sortedOutputGraph);
+            if(isomorph){
+                log.info('YES, data is isomorph');
+            } else {
+                log.info('NO, data is not isomorph. \nLength of Input:', sortedInputGraph.length, '\nLength of Output', sortedOutputGraph.length);
+                sortedInputGraph.map((input, index) => {
+                    // if(input.subject.value == sortedOutputGraph[index]?.subject.value ){
+                    // if(JSON.stringify(input) == JSON.stringify(sortedOutputGraph[index]) ){
+                    // if(JSON.stringify(input).length == JSON.stringify(sortedOutputGraph[index]).length ){
+                        console.log("\n",index,". Element ---- input -------------------")
+                        console.log("subject:", input.subject?.value)
+                        console.log("predicate:", input.predicate?.value)
+                        console.log("object:", input.object?.value)
+                        // console.log("subject:", sortedOutputGraph[index]?.subject.value)
+                        // console.log("predicate:", sortedOutputGraph[index]?.predicate.value)
+                        // console.log("object:", sortedOutputGraph[index]?.object?.value)
+                        
+                    // } else {
+                    //     console.log("\nElement", index, "is NOT equal\n----------------------------")
+                    //     console.log(JSON.stringify(input))
+                    //     console.log("----------------------------")
+                    //     console.log(JSON.stringify(sortedOutputGraph[index]))
+
+                    // }
+
+                })
+            }
+        }
 
         importer.run.subscribe({
             complete: async () => {
                 chai.expect(indexDocumentCreateSpy.called, 'Create method of index document has not been called').to.be.true;
                 // let extraChecks = (actual, expected) => {
-                //     // chai.expect(actual.extras.metadata.harvested).not.to.be.null.and.empty;
-                // };
+                    //     // chai.expect(actual.extras.metadata.harvested).not.to.be.null.and.empty;
+                    // };
 
                 try {
                     let transformed_data = await indexDocumentCreateSpy.getCall(0).returnValue.then(value => {
-                        const data = startString + value.extras.transformed_data.dcat_ap_plu + endString
+                        const data = startString + value.extras.transformed_data.dcat_ap_plu + endString;
                         return data.replace(/\s+/, " ")
                     });
-                    
-                    // let isomorph = isomorphic(xmlInputFile, transformed_data)
+                    const transformedDataStream = Readable.from([transformed_data]);
+
+                    transformedDataStream.pipe(secondParser)
+                        .on('data', (incomingData) => { 
+                            outputGraph.push(incomingData);
+                            // console.log("incomingdata: ", incomingData)
+                        })
+                        .on('error', console.error)
+                        .on('end', () => {
+                            console.log('All triples were parsed!'); 
+                            // log.info("final string: ", outputGraph); 
+                            compareGraphs();
+                        });
+                    // log.info('message: ', newdata);
+                    // let isomorph = isomorphic(inputXml, transformedXml)
                     // let message = isomorph ? "YES, data is isomorph" : "NO, data is not isomorph"
-                    // log.info('message: ', isomorph);
+                    // log.info('message: ', message);
                     done();
-                } catch(e) {
+                } catch (e) {
                     done(e);
                 }
             }
         });
-
 
     }).timeout(10000);
 
@@ -107,8 +167,7 @@ describe('Import DCAT AP PLU', function () {
 });
 
 const endString = `</rdf:RDF>`
-const startString = `
-<?xml version="1.0"?>
+const startString = `<?xml version="1.0"?>
 <rdf:RDF
     xmlns:adms="http://www.w3.org/ns/adms#"
     xmlns:dcat="http://www.w3.org/ns/dcat#"
