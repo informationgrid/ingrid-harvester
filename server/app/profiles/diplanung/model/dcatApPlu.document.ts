@@ -80,9 +80,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
         let publisher = (await mapper.getPublisher())?.[0];
-        let contributors = null;    // TODO
+        let contributors = await mapper.getContributors();
         let maintainers = await mapper.getMaintainers();
-        let relation = null;        // TODO
         // let xmlString = `<?xml version="1.0"?>
         // <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
         //     <dcat:Catalog>
