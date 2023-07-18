@@ -103,7 +103,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 <dct:title>${esc(mapper.getTitle())}</dct:title>
                 <plu:planState rdf:resource="${diplanUriPrefix}/planState#${mapper.getPluPlanState()}"/>
                 <plu:procedureState rdf:resource="${diplanUriPrefix}/procedureState#${mapper.getPluProcedureState()}"/>
-                ${optional('plu:procedureStartDate', mapper.getPluProcedureStartDate())}
+                ${optional('plu:procedureStartDate', mapper.getPluProcedureStartDate()?.toISOString())}
                 <dct:spatial>
                     <dct:Location>
                         ${DcatApPluDocument.xmlSpatial('dcat:bbox', mapper.getBoundingBox())}

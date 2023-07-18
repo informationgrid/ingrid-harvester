@@ -359,7 +359,7 @@ export class DcatappluMapper extends BaseMapper {
     }
 
     _getIssued(): Date {
-        let issued = DcatappluMapper.select('./dct:modified', this.record, true);
+        let issued = DcatappluMapper.select('./dct:issued', this.record, true);
         return issued ? MiscUtils.normalizeDateTime(issued.textContent) : undefined;
     }
 

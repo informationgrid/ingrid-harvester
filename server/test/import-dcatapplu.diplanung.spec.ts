@@ -91,7 +91,6 @@ describe('Import DCAT AP PLU', function () {
 
         let outputGraph = [];
 
-        
         function compareGraphs(){
             let sortedInputGraph = inputGraph.sort();
             let sortedOutputGraph = outputGraph.sort();
@@ -105,12 +104,12 @@ describe('Import DCAT AP PLU', function () {
                     // if(JSON.stringify(input) == JSON.stringify(sortedOutputGraph[index]) ){
                     // if(JSON.stringify(input).length == JSON.stringify(sortedOutputGraph[index]).length ){
                         console.log("\n",index,". Element ---- input -------------------")
-                        console.log("subject:", input.subject?.value)
-                        console.log("predicate:", input.predicate?.value)
-                        console.log("object:", input.object?.value)
-                        // console.log("subject:", sortedOutputGraph[index]?.subject.value)
-                        // console.log("predicate:", sortedOutputGraph[index]?.predicate.value)
-                        // console.log("object:", sortedOutputGraph[index]?.object?.value)
+                        // console.log("subject:", input.subject?.value)
+                        // console.log("predicate:", input.predicate?.value)
+                        // console.log("object:", input.object?.value)
+                        console.log("subject:", sortedOutputGraph[index]?.subject.value)
+                        console.log("predicate:", sortedOutputGraph[index]?.predicate.value)
+                        console.log("object:", sortedOutputGraph[index]?.object?.value)
                         
                     // } else {
                     //     console.log("\nElement", index, "is NOT equal\n----------------------------")
@@ -149,10 +148,7 @@ describe('Import DCAT AP PLU', function () {
                             // log.info("final string: ", outputGraph); 
                             compareGraphs();
                         });
-                    // log.info('message: ', newdata);
-                    // let isomorph = isomorphic(inputXml, transformedXml)
-                    // let message = isomorph ? "YES, data is isomorph" : "NO, data is not isomorph"
-                    // log.info('message: ', message);
+                    
                     done();
                 } catch (e) {
                     done(e);
@@ -199,6 +195,6 @@ const startString = `<?xml version="1.0"?>
                 <dct:title>helo</dct:title>
             </skos:ConceptScheme>
         </dcat:themeTaxonomy>
-        <dcat:dataset rdf:resource="https://bauleitplanung.hamburg.de/verfahren/17b94f6a-28ba-11e7-af94-0050568a354d/public/detail/1" />
+        <dcat:dataset rdf:resource="https://portal.diplanung.de/planwerke/22222222-2222-2222-2222-222222222222" />
     </dcat:Catalog>
 `
