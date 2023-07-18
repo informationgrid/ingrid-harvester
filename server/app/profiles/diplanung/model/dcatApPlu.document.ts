@@ -117,6 +117,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional(m => DcatApPluDocument.xmlFoafAgent('dcatde:maintainer', m), maintainers)}
                 ${optional(c => DcatApPluDocument.xmlFoafAgent('dct:contributor', c), contributors)}
                 ${optional(DcatApPluDocument.xmlDistribution, await mapper.getDistributions())}
+                ${optional(DcatApPluDocument.xmlAdmsIdenifier, await mapper.getgetAdmsIdentifier())}
                 ${optional('dct:issued', mapper.getIssued()?.toISOString())}
                 ${optional('dct:modified', mapper.getModifiedDate()?.toISOString())}
                 ${resource('dct:relation', esc(relation))}
@@ -125,6 +126,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${resource('plu:planTypeFine', mapper.getPluPlanTypeFine())}
                 ${resource('plu:procedureType', mapper.getPluProcedureType(), `${diplanUriPrefix}/procedureType#`)}
                 ${optional(DcatApPluDocument.xmlProcessStep, mapper.getPluProcessSteps())}
+                ${optional('plu:notification', mapper.getPluNotification())}
             </dcat:Dataset>`;
         // </rdf:RDF>`;
         return xmlString.replace(/^\s*\n/gm, '');
@@ -213,7 +215,18 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional('vcard:hasCountryName', esc(contact.hasCountryName))}
                 ${optional('vcard:hasEmail', esc(contact.hasEmail))}
                 ${optional('vcard:hasTelephone', esc(contact.hasTelephone))}
+                ${optional('vcard:hasUID', esc(contact.hasUID))}
+                ${optional('vcard:hasURL', esc(contact.hasURL))}
             </vcard:Organization>
         </dcat:contactPoint>`;
     }
+
+    private static xmlAdmsIdenifier(admsIdenifier: Distribution){
+        return`adms:identifier>
+            <adms:Identifier>
+                ${optional('skos:notation', esc(admsIdenifier))}
+            </adms:Identifier>
+        </adms:identifier>`;
+    }
+
 }
