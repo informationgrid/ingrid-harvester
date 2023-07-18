@@ -120,7 +120,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional(DcatApPluDocument.xmlAdmsIdenifier, await mapper.getAdmsIdentifier())}
                 ${optional('dct:issued', mapper.getIssued()?.toISOString())}
                 ${optional('dct:modified', mapper.getModifiedDate()?.toISOString())}
-                ${resource('dct:relation', esc(relation))}
+                ${resource('dct:relation', mapper.getRelation())}
                 ${optional(DcatApPluDocument.xmlPeriodOfTime, mapper.getPluDevelopmentFreezePeriod(), 'plu:developmentFreezePeriod')}
                 ${resource('plu:planType', mapper.getPluPlanType(), `${diplanUriPrefix}/planType#`)}
                 ${resource('plu:planTypeFine', mapper.getPluPlanTypeFine())}
@@ -222,7 +222,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     }
 
     private static xmlAdmsIdenifier(admsIdenifier: Distribution){
-        return`adms:identifier>
+        return`<adms:identifier>
             <adms:Identifier>
                 ${optional('skos:notation', esc(admsIdenifier))}
             </adms:Identifier>
