@@ -117,7 +117,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional(m => DcatApPluDocument.xmlFoafAgent('dcatde:maintainer', m), maintainers)}
                 ${optional(c => DcatApPluDocument.xmlFoafAgent('dct:contributor', c), contributors)}
                 ${optional(DcatApPluDocument.xmlDistribution, await mapper.getDistributions())}
-                ${optional(DcatApPluDocument.xmlAdmsIdenifier, await mapper.getgetAdmsIdentifier())}
+                ${optional(DcatApPluDocument.xmlAdmsIdenifier, await mapper.getAdmsIdentifier())}
                 ${optional('dct:issued', mapper.getIssued()?.toISOString())}
                 ${optional('dct:modified', mapper.getModifiedDate()?.toISOString())}
                 ${resource('dct:relation', esc(relation))}
