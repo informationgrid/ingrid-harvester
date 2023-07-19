@@ -69,7 +69,7 @@ export class MiscUtils {
      * @return the Date object represented by the given datetime string
      */
     public static normalizeDateTime(datetime: string): Date {
-        if (!datetime) {
+        if (datetime == null) {
             return undefined;
         }
         let parsedDatetime = dayjs(datetime);

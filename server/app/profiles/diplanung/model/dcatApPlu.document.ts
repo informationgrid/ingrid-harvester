@@ -34,7 +34,7 @@ import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 const esc = require('xml-escape');
 
 function optional(wrapper: string | Function, variable: any | any[], ...remainder: any) {
-    if (!variable) {
+    if (variable == null) {
         return '';
     }
     if (!Array.isArray(variable)) {
