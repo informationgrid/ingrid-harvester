@@ -55,6 +55,18 @@ function resource(wrapper: string, variable: any, prefix: string = '') {
     return `<${wrapper} rdf:resource="${prefix}${variable}"/>`;
 }
 
+function dateAsIsoString(date: Date | string) {
+    if (date == null) {
+        return undefined;
+    }
+    if (date instanceof Date) {
+        return date.toISOString();
+    }
+    else {
+        return date;
+    }
+}
+
 // const DCAT_AP_PLU_NSMAP = {
 //     dcat: 'http://www.w3.org/ns/dcat#',
 //     dcatde: 'http://dcat-ap.de/def/dcatde/',
@@ -103,7 +115,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 <dct:title>${esc(mapper.getTitle())}</dct:title>
                 <plu:planState rdf:resource="${diplanUriPrefix}/planState#${mapper.getPluPlanState()}"/>
                 <plu:procedureState rdf:resource="${diplanUriPrefix}/procedureState#${mapper.getPluProcedureState()}"/>
-                ${optional('plu:procedureStartDate', mapper.getPluProcedureStartDate())}
+                ${optional('plu:procedureStartDate', dateAsIsoString(mapper.getPluProcedureStartDate()))}
                 <dct:spatial>
                     <dct:Location>
                         ${DcatApPluDocument.xmlSpatial('dcat:bbox', mapper.getBoundingBox())}
@@ -117,8 +129,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional(c => DcatApPluDocument.xmlFoafAgent('dct:contributor', c), contributors)}
                 ${optional(DcatApPluDocument.xmlDistribution, await mapper.getDistributions())}
                 ${optional(DcatApPluDocument.xmlAdmsIdenifier, await mapper.getAdmsIdentifier())}
-                ${optional('dct:issued', mapper.getIssued()?.toISOString())}
-                ${optional('dct:modified', mapper.getModifiedDate()?.toISOString())}
+                ${optional('dct:issued', dateAsIsoString(mapper.getIssued()))}
+                ${optional('dct:modified', dateAsIsoString(mapper.getModifiedDate()))}
                 ${resource('dct:relation', mapper.getRelation())}
                 ${optional(DcatApPluDocument.xmlPeriodOfTime, mapper.getPluDevelopmentFreezePeriod(), 'plu:developmentFreezePeriod')}
                 ${resource('plu:planType', mapper.getPluPlanType(), `${diplanUriPrefix}/planType#`)}
@@ -147,8 +159,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional('dct:description', esc(distribution.description))}
                 ${resource('dcat:downloadURL', esc(distribution.downloadURL))}
                 ${resource('dct:format', esc(distribution.format?.[0]))}
-                ${optional('dct:issued', distribution.issued?.toISOString())}
-                ${optional('dct:modified', distribution.modified?.toISOString())}
+                ${optional('dct:issued', dateAsIsoString(distribution.issued))}
+                ${optional('dct:modified', dateAsIsoString(distribution.modified))}
                 ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period, 'dct:temporal')}
                 ${resource('plu:docType', esc(distribution.pluDocType), `${diplanUriPrefix}/docType#`)}
                 ${optional('plu:mapLayerNames', esc(distribution.mapLayerNames?.join(',')))}
@@ -170,8 +182,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     private static xmlPeriodOfTime({ lte: start, gte: end }: DateRange, relation: string): string {
         return `<${relation}>
             <dct:PeriodOfTime>
-                ${optional('dcat:startDate', start?.toISOString())}
-                ${optional('dcat:endDate', end?.toISOString())}
+                ${optional('dcat:startDate', dateAsIsoString(start))}
+                ${optional('dcat:endDate', dateAsIsoString(end))}
             </dct:PeriodOfTime>
         </${relation}>`;
     }
@@ -192,8 +204,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
             <dcat:CatalogRecord>
                 <dct:title>${esc(title)}</dct:title>
                 <foaf:primaryTopic>${esc(primaryTopic)}</foaf:primaryTopic>
-                ${optional('dct:issued', issued?.toISOString())}
-                ${optional('dct:modified', modified?.toISOString())}
+                ${optional('dct:issued', dateAsIsoString(issued))}
+                ${optional('dct:modified', dateAsIsoString(modified))}
             </dcat:CatalogRecord>
         </dcat:record>`;
     }
