@@ -27,7 +27,8 @@ import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { Distribution } from '../../../model/distribution';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
-import { Geometry, GeometryCollection, Point } from "@turf/helpers";
+import { Geometry, GeometryCollection, Point } from '@turf/helpers';
+import { MiscUtils } from '../../../utils/misc.utils';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WmsXPath } from './wms.xpath';
 
@@ -179,13 +180,21 @@ export class DiplanungCswImporter extends CswImporter {
         for (let distribution of distributions) {
             // add layer names for WMS services
             let accessURL = distribution.accessURL.toLowerCase();
+            // short-circuit for performance reasons
+            let skippedExtensions = ['.jpg', '.html', '.pdf', '.png', '/'];
+            if (skippedExtensions.some(ext => accessURL.endsWith(ext))) {
+                continue;
+            }
+            if (accessURL.includes('request=') && !accessURL.includes('getcapabilities')) {
+                continue;
+            }
             if (distribution.format?.includes('WMS') || (accessURL.includes('getcapabilities') && accessURL.includes('wms'))) {
                 try {
                     let accessURL = distribution.accessURL;
-                    if (!accessURL.toLowerCase().includes('service=wms')) {
+                    if (!accessURL.includes('service=wms')) {
                         accessURL += (accessURL.includes('?') ? '&' : '?') + 'service=WMS';
                     }
-                    if (!accessURL.toLowerCase().includes('request=getcapabilities')) {
+                    if (!accessURL.includes('request=getcapabilities')) {
                         accessURL += (accessURL.includes('?') ? '&' : '?') + 'request=GetCapabilities';
                     }
                     let response = await RequestDelegate.doRequest({ uri: accessURL });
@@ -204,7 +213,7 @@ export class DiplanungCswImporter extends CswImporter {
                     else {
                         let msg = `Response for ${accessURL} is not valid XML`;
                         log.debug(msg);
-                        this.summary.warnings.push([msg, response.replaceAll('\n', ' ')]);
+                        this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response.replaceAll('\n', ' '), 1024)]);
                     }
                 }
                 catch (err) {

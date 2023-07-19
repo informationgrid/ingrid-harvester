@@ -55,10 +55,11 @@ export class MiscUtils {
      * We set an arbitrary limit for message length in `MAX_MSG_LENGTH`.
      * 
      * @param msg the message to be truncated
-     * @return the string truncated to `MAX_MSG_LENGTH` characters
+     * @param maxLength the maximum length of the resulting string
+     * @return the string truncated to `maxLength` characters
      */
-    public static truncateErrorMessage(msg: string): string {
-        return msg?.length > MAX_MSG_LENGTH ? msg.substring(0, MAX_MSG_LENGTH - TRUNC_STR.length) + TRUNC_STR : msg;
+    public static truncateErrorMessage(msg: string, maxLength: number = MAX_MSG_LENGTH): string {
+        return msg?.length > maxLength ? msg.substring(0, maxLength - TRUNC_STR.length) + TRUNC_STR : msg;
     }
 
     /**
