@@ -220,12 +220,11 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         </dcat:contactPoint>`;
     }
 
-    private static xmlAdmsIdenifier(admsIdenifier: Distribution){
+    private static xmlAdmsIdenifier(admsIdentifier: string){
         return`<adms:identifier>
             <adms:Identifier>
-                ${optional('skos:notation', esc(admsIdenifier))}
+                ${optional('skos:notation', esc(admsIdentifier))}
             </adms:Identifier>
         </adms:identifier>`;
     }
-
 }

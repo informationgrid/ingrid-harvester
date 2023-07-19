@@ -52,6 +52,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             },
             description: mapper.getDescription(),
             identifier: mapper.getGeneratedId(),
+            adms_identifier: mapper.getAdmsIdentifier(),
             title: mapper.getTitle(),
             alternateTitle: mapper.getAlternateTitle(),
             // plan and procedure information
@@ -64,6 +65,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             procedure_start_date: mapper.getPluProcedureStartDate(),
             procedure_type: mapper.getPluProcedureType(),
             process_steps: mapper.getPluProcessSteps(),
+            notification: mapper.getPluNotification(),
             // spatial and temporal features
             bounding_box: mapper.getBoundingBox(),
             centroid: mapper.getCentroid()?.['coordinates'],
@@ -71,9 +73,11 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             spatial_text: mapper.getSpatialText(),
             temporal: mapper.getTemporal(),
             // additional information and metadata
+            relation: mapper.getRelation(),
             catalog: await mapper.getCatalog(),
             publisher: (await mapper.getPublisher())?.[0],
-            maintainers: (await mapper.getMaintainers()),
+            maintainers: await mapper.getMaintainers(),
+            contributors: await mapper.getContributors(),
             distributions: await mapper.getDistributions(),
             extras: {
                 harvested_data: mapper.getHarvestedData(),

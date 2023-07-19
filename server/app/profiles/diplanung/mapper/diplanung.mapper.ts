@@ -35,7 +35,7 @@ import { WfsMapper } from "../../../importer/wfs/wfs.mapper";
 const dayjs = require('dayjs');
 dayjs.locale('de');
 
-export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapper| ExcelSparseMapper | WfsMapper> {
+export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
 
     protected baseMapper: M;
 
@@ -55,6 +55,10 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
 
     getGeneratedId(): string {
         return this.baseMapper.getGeneratedId();
+    }
+
+    getAdmsIdentifier(): string {
+        return this.baseMapper._getAdmsIdentifier();
     }
 
     getTitle(): string {
@@ -101,6 +105,10 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper._getPluProcessSteps();
     }
 
+    getPluNotification(): string[] {
+        return this.baseMapper._getPluNotification();
+    }
+
     getBoundingBox(): object {
         return this.baseMapper._getBoundingBox();
     }
@@ -125,8 +133,16 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper.getMaintainers();
     }
 
+    getContributors(): Promise<Person[] | Organization[]> {
+        return this.baseMapper.getContributors();
+    }
+
     getDistributions(): Promise<Distribution[]> {
         return this.baseMapper.getDistributions();
+    }
+
+    getRelation(): string {
+        return this.baseMapper._getRelation();
     }
 
     getHarvestedData(): string {

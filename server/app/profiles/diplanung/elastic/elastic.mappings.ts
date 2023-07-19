@@ -118,6 +118,9 @@ export const indexMappings = {
         'identifier': {
             'type': 'keyword'
         },
+        'adms_identifier': {
+            'type': 'keyword'
+        },
         'description': {
             'type': 'text',
             'analyzer': 'decomp',
@@ -214,6 +217,10 @@ export const indexMappings = {
                 }
             }
         },
+        'notification': {
+            'type': 'text',
+            'analyzer': 'decomp'
+        },
         'creator': {
             'properties': {
                 'name': {
@@ -275,6 +282,29 @@ export const indexMappings = {
                 }
             }
         },
+        'contributors': {
+            'properties': {
+                'name': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
+                        }
+                    }
+                },
+                'homepage': {
+                    'type': 'keyword'
+                },
+                'organization': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
+                        }
+                    }
+                }
+            }
+        },
         'contact_point': {
             'properties': {
                 'has_uid': {
@@ -311,6 +341,9 @@ export const indexMappings = {
                     'type': 'keyword'
                 }
             }
+        },
+        'relation': {
+            'type': 'keyword'
         },
         'type': {
             'type': 'keyword'
