@@ -128,7 +128,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional(m => DcatApPluDocument.xmlFoafAgent('dcatde:maintainer', m), maintainers)}
                 ${optional(c => DcatApPluDocument.xmlFoafAgent('dct:contributor', c), contributors)}
                 ${optional(DcatApPluDocument.xmlDistribution, await mapper.getDistributions())}
-                ${optional(DcatApPluDocument.xmlAdmsIdenifier, await mapper.getAdmsIdentifier())}
+                ${optional(DcatApPluDocument.xmlAdmsIdentifier, esc(mapper.getAdmsIdentifier()))}
                 ${optional('dct:issued', dateAsIsoString(mapper.getIssued()))}
                 ${optional('dct:modified', dateAsIsoString(mapper.getModifiedDate()))}
                 ${resource('dct:relation', mapper.getRelation())}
@@ -137,7 +137,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${resource('plu:planTypeFine', mapper.getPluPlanTypeFine())}
                 ${resource('plu:procedureType', mapper.getPluProcedureType(), `${diplanUriPrefix}/procedureType#`)}
                 ${optional(DcatApPluDocument.xmlProcessStep, mapper.getPluProcessSteps())}
-                ${optional('plu:notification', mapper.getPluNotification())}
+                ${optional('plu:notification', esc(mapper.getPluNotification()))}
             </dcat:Dataset>`;
         // </rdf:RDF>`;
         return xmlString.replace(/^\s*\n/gm, '');
@@ -232,7 +232,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         </dcat:contactPoint>`;
     }
 
-    private static xmlAdmsIdenifier(admsIdentifier: string){
+    private static xmlAdmsIdentifier(admsIdentifier: string) {
         return`<adms:identifier>
             <adms:Identifier>
                 ${optional('skos:notation', esc(admsIdentifier))}
