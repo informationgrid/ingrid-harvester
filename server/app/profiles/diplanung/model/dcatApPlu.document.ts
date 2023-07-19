@@ -80,9 +80,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
         let publisher = (await mapper.getPublisher())?.[0];
-        let contributors = null;    // TODO
+        let contributors = await mapper.getContributors();
         let maintainers = await mapper.getMaintainers();
-        let relation = null;        // TODO
         // let xmlString = `<?xml version="1.0"?>
         // <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
         //     <dcat:Catalog>
@@ -117,14 +116,16 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional(m => DcatApPluDocument.xmlFoafAgent('dcatde:maintainer', m), maintainers)}
                 ${optional(c => DcatApPluDocument.xmlFoafAgent('dct:contributor', c), contributors)}
                 ${optional(DcatApPluDocument.xmlDistribution, await mapper.getDistributions())}
+                ${optional(DcatApPluDocument.xmlAdmsIdenifier, await mapper.getAdmsIdentifier())}
                 ${optional('dct:issued', mapper.getIssued()?.toISOString())}
                 ${optional('dct:modified', mapper.getModifiedDate()?.toISOString())}
-                ${resource('dct:relation', esc(relation))}
+                ${resource('dct:relation', mapper.getRelation())}
                 ${optional(DcatApPluDocument.xmlPeriodOfTime, mapper.getPluDevelopmentFreezePeriod(), 'plu:developmentFreezePeriod')}
                 ${resource('plu:planType', mapper.getPluPlanType(), `${diplanUriPrefix}/planType#`)}
                 ${resource('plu:planTypeFine', mapper.getPluPlanTypeFine())}
                 ${resource('plu:procedureType', mapper.getPluProcedureType(), `${diplanUriPrefix}/procedureType#`)}
                 ${optional(DcatApPluDocument.xmlProcessStep, mapper.getPluProcessSteps())}
+                ${optional('plu:notification', mapper.getPluNotification())}
             </dcat:Dataset>`;
         // </rdf:RDF>`;
         return xmlString.replace(/^\s*\n/gm, '');
@@ -213,7 +214,18 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional('vcard:hasCountryName', esc(contact.hasCountryName))}
                 ${optional('vcard:hasEmail', esc(contact.hasEmail))}
                 ${optional('vcard:hasTelephone', esc(contact.hasTelephone))}
+                ${optional('vcard:hasUID', esc(contact.hasUID))}
+                ${optional('vcard:hasURL', esc(contact.hasURL))}
             </vcard:Organization>
         </dcat:contactPoint>`;
     }
+
+    private static xmlAdmsIdenifier(admsIdenifier: Distribution){
+        return`<adms:identifier>
+            <adms:Identifier>
+                ${optional('skos:notation', esc(admsIdenifier))}
+            </adms:Identifier>
+        </adms:identifier>`;
+    }
+
 }
