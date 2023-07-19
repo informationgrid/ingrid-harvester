@@ -67,7 +67,9 @@ export class mcloudDocument extends IndexDocument<CkanMapper | CswMapper | DcatM
                 spatial: mapper.getSpatial(),
                 spatial_text: mapper.getSpatialText(),
                 temporal: mapper.getTemporal(),
-                parent: mapper.getParent()
+                parent: mapper.getParent(),
+                hierarchy_level: mapper.getHierarchyLevel(),    // csw only
+                operates_on: mapper.getOperatesOn()             // csw only
             },
             issued: mapper.getIssued(),
             keywords: mapper.getKeywords(),

@@ -85,6 +85,13 @@ export class MiscUtils {
         return null;
     }
 
+    public static isUuid(s: string): boolean {
+        if (s == null) {
+            return false;
+        }
+        return /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(s);
+    }
+
     /**
      * Get catalog information from OGC-Records-API
      * 

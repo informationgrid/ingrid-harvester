@@ -368,6 +368,28 @@ export abstract class BaseMapper {
         return this.cache.metadataHarvested;
     }
 
+    _getHierarchyLevel(): string {
+        return undefined;
+    };
+
+    getHierarchyLevel(): string {
+        if (!this.cache.hierarchyLevel) {
+            this.cache.hierarchyLevel = this._getHierarchyLevel();
+        }
+        return this.cache.hierarchyLevel;
+    }
+
+    _getOperatesOn(): string[] {
+        return undefined;
+    };
+
+    getOperatesOn(): string[] {
+        if (!this.cache.operatesOn) {
+            this.cache.operatesOn = this._getOperatesOn();
+        }
+        return this.cache.operatesOn;
+    }
+
     abstract _getSubSections(): any[];
 
     getSubSections(): any[]{

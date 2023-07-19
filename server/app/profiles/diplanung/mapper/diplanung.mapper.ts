@@ -22,15 +22,15 @@
  */
 
 import 'dayjs/locale/de';
-import { getLogger } from "log4js";
-import { Contact, Organization, Person } from "../../../model/agent";
-import { DateRange } from "../../../model/dateRange";
+import { getLogger } from 'log4js';
+import { Contact, Organization, Person } from '../../../model/agent';
+import { DateRange } from '../../../model/dateRange';
 import { DiplanungCswMapper } from './diplanung.csw.mapper';
 import { DiplanungVirtualMapper } from './diplanung.virtual.mapper';
-import { Distribution } from "../../../model/distribution";
-import { ExcelSparseMapper } from "../../../importer/excelsparse/excelsparse.mapper";
+import { Distribution } from '../../../model/distribution';
+import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from 'model/dcatApPlu.model';
-import { WfsMapper } from "../../../importer/wfs/wfs.mapper";
+import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
@@ -165,6 +165,14 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper.getMetadataSource();
     }
 
+    getHierarchyLevel() {
+        return this.baseMapper.getHierarchyLevel();
+    }
+
+    getOperatesOn() {
+        return this.baseMapper.getOperatesOn();
+    }
+
     getIssued(): Date {
         return this.baseMapper.getIssued();
     }
@@ -197,5 +205,3 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         this.baseMapper.executeCustomCode(doc);
     }
 }
-
-
