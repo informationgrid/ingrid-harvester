@@ -26,6 +26,7 @@
 import { merge as lodashMerge } from 'lodash';
 import { Catalog } from '../model/dcatApPlu.model';
 import { ConfigService } from '../services/config/ConfigService';
+import { Distribution } from '../model/distribution';
 import { RequestDelegate, RequestOptions } from './http-request.utils';
 
 const dayjs = require('dayjs');
@@ -90,6 +91,31 @@ export class MiscUtils {
             return false;
         }
         return /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(s);
+    }
+
+    /**
+     * Create a hash for a given distribution
+     * 
+     * @param distribution the Distribution from which the hash should be created
+     * @return a simple hash for the given distribution
+     */
+    public static createDistHash(distribution: Distribution) {
+        let s = [
+            distribution.accessURL,
+            distribution.format,
+            distribution.issued,
+            distribution.modified,
+            distribution.title,
+            distribution.period?.gte,
+            distribution.period?.lte
+        ].join('#');
+        let hash = 0;
+        for (let i = 0, len = s.length; i < len; i++) {
+            let chr = s.charCodeAt(i);
+            hash = (hash << 5) - hash + chr;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
     }
 
     /**
