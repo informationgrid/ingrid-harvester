@@ -38,8 +38,18 @@ const log = require('log4js').getLogger(__filename);
 
 export class DiplanungCswImporter extends CswImporter {
 
+    private domParser: DomParser;
+
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings, requestDelegate);
+        this.domParser = new DomParser({
+            errorHandler: (level, msg) => {
+                // throw on error, swallow rest
+                if (level == 'error') {
+                    throw new Error(msg);
+                }
+            }
+        });
     }
 
     getMapper(settings, record, harvestTime, storedData, summary, generalInfo): DiplanungCswMapper {
@@ -214,28 +224,40 @@ export class DiplanungCswImporter extends CswImporter {
         let updatedDistributions: Distribution[] = [];
         let updated = false;
         for (let distribution of distributions) {
-            // add layer names for WMS services
-            let accessURL = distribution.accessURL.toLowerCase();
-            // short-circuit for performance reasons
+            let accessURL = distribution.accessURL;
+            let accessURL_lc = distribution.accessURL.toLowerCase();
+            // short-circuits
             let skippedExtensions = ['.jpg', '.html', '.pdf', '.png', '/'];
-            if (skippedExtensions.some(ext => accessURL.endsWith(ext))) {
+            if (skippedExtensions.some(ext => accessURL_lc.endsWith(ext))) {
                 continue;
             }
-            if (accessURL.includes('request=') && !accessURL.includes('getcapabilities')) {
+            if (accessURL_lc.includes('request=') && !accessURL_lc.includes('getcapabilities')) {
                 continue;
             }
-            if (distribution.format?.includes('WMS') || (accessURL.includes('getcapabilities') && accessURL.includes('wms'))) {
+            if (distribution.format?.includes('WMS') || (accessURL_lc.includes('getcapabilities') && accessURL_lc.includes('wms'))) {
+                if (!accessURL_lc.includes('service=wms')) {
+                    accessURL += (accessURL.includes('?') ? '&' : '?') + 'service=WMS';
+                }
+                if (!accessURL_lc.includes('request=getcapabilities')) {
+                    accessURL += (accessURL.includes('?') ? '&' : '?') + 'request=GetCapabilities';
+                }
+                let response;
                 try {
-                    let accessURL = distribution.accessURL;
-                    if (!accessURL.includes('service=wms')) {
-                        accessURL += (accessURL.includes('?') ? '&' : '?') + 'service=WMS';
-                    }
-                    if (!accessURL.includes('request=getcapabilities')) {
-                        accessURL += (accessURL.includes('?') ? '&' : '?') + 'request=GetCapabilities';
-                    }
-                    let response = await RequestDelegate.doRequest({ uri: accessURL });
-                    // surface heuristic for XML
-                    if (response.startsWith('<?xml')) {
+                    response = await RequestDelegate.doRequest({ uri: accessURL, accept: 'text/xml' });
+                }
+                catch (err) {
+                    let msg = `Could not parse response from ${accessURL}`;
+                    log.warn(msg);
+                    this.summary.warnings.push([msg, err.message]);
+                }
+                // surface heuristic for XML
+                if (response == null) {
+                    let msg = `Content-Type for ${accessURL} was not "text/xml", skipping`;
+                    log.debug(msg);
+                    // this.summary.warnings.push([msg]);
+                }
+                else if (response.startsWith('<?xml')) {
+                    try {
                         let layerNames = this.getMapLayerNames(response);
                         if (layerNames) {
                             distribution.accessURL = accessURL;
@@ -246,16 +268,16 @@ export class DiplanungCswImporter extends CswImporter {
                             updated = true;
                         }
                     }
-                    else {
-                        let msg = `Response for ${accessURL} is not valid XML`;
+                    catch (err) {
+                        let msg = `Could not parse response from ${accessURL}`;
                         log.debug(msg);
-                        // TODO too many, disable for now until we can filter better
-                        // this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response.replaceAll('\n', ' '), 1024)]);
+                        this.summary.warnings.push([msg, err.message]);
                     }
                 }
-                catch (err) {
-                    log.warn(err.message);
-                    this.summary.warnings.push([`Could not get response for ${distribution.accessURL}`, err.message]);
+                else {
+                    let msg = `Response for ${accessURL} is not valid XML`;
+                    log.debug(msg);
+                    this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response.replaceAll('\n', ' '), 1024)]);
                 }
             }
             updatedDistributions.push(distribution);
@@ -263,21 +285,8 @@ export class DiplanungCswImporter extends CswImporter {
         return updated ? updatedDistributions : null;
     }
 
-    // private async getWmsResponse(uri: string) {
-    //     let qs = {};
-    //     if (!uri.toLowerCase().includes('service=wms')) {
-    //         qs['service'] = 'WMS';
-    //     }
-    //     if (!uri.toLowerCase().includes('request=getcapabilities')) {
-    //         qs['request'] = 'GetCapabilities';
-    //     }
-    //     let serviceRequestDelegate = new RequestDelegate({ uri, qs });
-    //     return await serviceRequestDelegate.doRequest();
-    //     // return await serviceRequestDelegate.doRequest(2, 500);   // retry 2 times, wait 500ms between
-    // }
-
     private getMapLayerNames(response: string): string[] {
-        let serviceResponseDom = new DomParser().parseFromString(response, 'application/xml');
+        let serviceResponseDom = this.domParser.parseFromString(response, 'application/xml');
         // layer * 2
         let layers = WmsXPath.select('./wms:WMS_Capabilities/wms:Capability/wms:Layer/wms:Layer', serviceResponseDom);
         let layerNames = [];
