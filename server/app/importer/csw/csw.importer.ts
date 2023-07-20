@@ -123,9 +123,9 @@ export class CswImporter extends Importer {
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
                     await this.elastic.sendBulkData(false);
                     await this.elastic.sendBulkUpdate(false);
-                    // TODO postHarvestingHandling has to be here, after indexing all data but before deduplicating
-                    // TODO this needs a rewrite of the data-service-coupling
-                    // this.postHarvestingHandling();
+                    // postHarvestingHandling has to be here, after indexing all data but before deduplicating
+                    await this.postHarvestingHandling();
+                    // deduplicatin happens in finishIndex()
                     await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
@@ -178,9 +178,6 @@ export class CswImporter extends Importer {
             // harvestConcurrently() also supports this.settings.maxConcurrent=1
             await this.harvestSequentially();
         }
-        // TODO this is at the wrong position and works on the wrong data
-        // TODO needs to work on indexed data, not on (mostly) at this point not-anymore-existing _bulkData
-        this.postHarvestingHandling();
     }
 
     protected async postHarvestingHandling(){

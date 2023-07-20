@@ -22,13 +22,15 @@
  */
 
 import { CswImporter } from '../../../importer/csw/csw.importer';
-import { CswMapper } from '../../../importer/csw/csw.mapper';
+import { DcatApPluDocument } from '../model/dcatApPlu.document';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
+import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { Distribution } from '../../../model/distribution';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { MiscUtils } from '../../../utils/misc.utils';
+import { ProfileFactoryLoader } from '../../profile.factory.loader';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WmsXPath } from './wms.xpath';
 
@@ -36,16 +38,121 @@ const log = require('log4js').getLogger(__filename);
 
 export class DiplanungCswImporter extends CswImporter {
 
+    private domParser: DomParser;
+
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings, requestDelegate);
+        this.domParser = new DomParser({
+            errorHandler: (level, msg) => {
+                // throw on error, swallow rest
+                if (level == 'error') {
+                    throw new Error(msg);
+                }
+            }
+        });
     }
 
     getMapper(settings, record, harvestTime, storedData, summary, generalInfo): DiplanungCswMapper {
         return new DiplanungCswMapper(settings, record, harvestTime, storedData, summary, generalInfo);
     }
 
+    /**
+     * IDEA: After harvesting datasets and services (not even necessarily in that order)
+     *
+     * 1) save operatesOn for all services
+     * 2) save own ID in operatesOn for datasets
+     * 3) aggregate over operatesOn (datasets + services)
+     * 4) merge distributions on dataset (which has _id == operatesOn)
+     *
+     * Current implementation:
+     * 1) save operatesOn for all services
+     * 2) (skip)
+     * 3) aggregate over operatesOn (services)
+     * 4) get dataset which has _id == operatesOn separately
+     * 5) merge on it
+     *
+     * We skip 2 because we have to retrieve the dataset in 4 separately.
+     * We have to retrieve the dataset separately because we cannot retrieve the full documents in the aggregation
+     * (due to memory limitations).
+     * We need to retrieve the whole dataset document because after the merge, we have to recreate the DCAT-AP-PLU
+     * xml fragment.
+     *
+     * A way around the last step - to be more close to the original idea, saving a roundtrip - would be to just
+     * retrieve the dcat-ap-plu document of the dataset and replacing all distributions with the newly merged set.
+     * TODO This is left as an exercise to the reader :)
+     */
     protected async postHarvestingHandling() {
-        this.createDataServiceCoupling();
+        await this.createDataServiceCoupling();
+    }
+
+    private async createDataServiceCoupling() {
+        try {
+            let response = await this.elastic.search(
+                this.elastic.indexName,
+                ProfileFactoryLoader.get().getElasticQueries().findSameOperatesOn(),
+                50
+            );
+
+            log.debug(`Count of buckets for data-service-coupling aggregates query: ${response.aggregations.operatesOn.buckets.length}`);
+            for (let bucket of response.aggregations.operatesOn.buckets) {
+                try {
+                    let hits = bucket.operatesOn.hits.hits;
+                    let uuid = bucket.key;
+                    let dataset = await this.elastic.get(this.elastic.indexName, uuid);
+
+                    // if we don't have the dataset on which services operatesOn, skip
+                    if (!dataset) {
+                        continue;
+                    }
+
+                    // merge all distributions from the operating services into the dataset
+                    let distributions = {};
+                    for (let dist of dataset._source.distributions) {
+                        distributions[MiscUtils.createDistHash(dist)] = dist;
+                    }
+                    let serviceIds = [];
+                    for (let hit of hits) {
+                        for (let dist of hit._source.distributions) {
+                            distributions[MiscUtils.createDistHash(dist)] = dist;
+                        }
+                        serviceIds.push(hit._id);
+                    }
+                    distributions = Object.values(distributions);
+
+                    // create new dcat-ap-plu xml document from merged index document
+                    let mergedDoc = {
+                        ...dataset._source,
+                        distributions
+                    };
+                    let dcatappluDocument = await DcatApPluDocument.create(new DiplanungVirtualMapper(mergedDoc));
+                    let updateDoc = {
+                        _id: uuid,
+                        distributions,
+                        extras: { ...dataset._source.extras, transformed_data: { dcat_ap_plu: dcatappluDocument } }
+                    };
+
+                    let servicesMsg = `Services which operate on dataset -> ${serviceIds}`;
+                    let datasetMsg = `Concerned dataset -> ${uuid}'`;
+                    log.trace(`Distributions from services are merged into dataset in index ${this.elastic.indexName}.\n        ${servicesMsg}\n        ${datasetMsg}`);
+                    await this.elastic.addDocsToBulkUpdate([updateDoc]);
+                }
+                catch (err) {
+                    log.warn(`Error creating data-service coupling for dataset ${bucket.key}`, err);
+                }
+            }
+            // log.info(`${count} duplicates found using the aggregates query will be deleted`);
+        } catch (err) {
+            log.error('Error executing the aggregate query for data-service coupling', err);
+        }
+
+        // push remaining updates
+        await this.elastic.sendBulkUpdate(false);
+
+        try {
+            await this.elastic.flush();
+        } catch (e) {
+            log.error('Error occurred during flush', e);
+        }
     }
 
     protected async updateRecords(documents: any[]) {
@@ -93,7 +200,6 @@ export class DiplanungCswImporter extends CswImporter {
                     }
                     docIsUpdated = true;
                 }
-                // TODO more?
 
                 if (docIsUpdated) {
                     resolve(updateDoc);
@@ -108,66 +214,6 @@ export class DiplanungCswImporter extends CswImporter {
         await this.elastic.addDocsToBulkUpdate(updateDocs);
     }
 
-    private createDataServiceCoupling() {
-        let bulkData = this.elastic._bulkData;
-        let servicesByDataIdentifier = [];
-        let servicesByFileIdentifier = [];
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = CswMapper.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
-                if(identifierList && identifierList.length > 0){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(!servicesByDataIdentifier[identifer]){
-                            servicesByDataIdentifier[identifer] = [];
-                        }
-                        servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distributions);
-                    }
-                } else {
-                    identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn', xml)
-                    if (identifierList && identifierList.length > 0) {
-                        for (let j = 0; j < identifierList.length; j++) {
-                            let identifer = identifierList[j].getAttribute("uuidref")
-                            if (!servicesByFileIdentifier[identifer]) {
-                                servicesByFileIdentifier[identifer] = [];
-                            }
-                            servicesByFileIdentifier[identifer] = servicesByFileIdentifier[identifer].concat(doc.distributions);
-                        }
-                    }
-                }
-            }
-        }
-
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByDataIdentifier[identifer]){
-                            doc.distributions = doc.distributions.concat(servicesByDataIdentifier[identifer]);
-                        }
-                    }
-                }
-                identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByFileIdentifier[identifer]){
-                            doc.distributions = doc.distributions.concat(servicesByFileIdentifier[identifer]);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     /**
      * Add layer names to the given distributions that can be deduced to point to a WMS.
      * 
@@ -178,28 +224,40 @@ export class DiplanungCswImporter extends CswImporter {
         let updatedDistributions: Distribution[] = [];
         let updated = false;
         for (let distribution of distributions) {
-            // add layer names for WMS services
-            let accessURL = distribution.accessURL.toLowerCase();
-            // short-circuit for performance reasons
+            let accessURL = distribution.accessURL;
+            let accessURL_lc = distribution.accessURL.toLowerCase();
+            // short-circuits
             let skippedExtensions = ['.jpg', '.html', '.pdf', '.png', '/'];
-            if (skippedExtensions.some(ext => accessURL.endsWith(ext))) {
+            if (skippedExtensions.some(ext => accessURL_lc.endsWith(ext))) {
                 continue;
             }
-            if (accessURL.includes('request=') && !accessURL.includes('getcapabilities')) {
+            if (accessURL_lc.includes('request=') && !accessURL_lc.includes('getcapabilities')) {
                 continue;
             }
-            if (distribution.format?.includes('WMS') || (accessURL.includes('getcapabilities') && accessURL.includes('wms'))) {
+            if (distribution.format?.includes('WMS') || (accessURL_lc.includes('getcapabilities') && accessURL_lc.includes('wms'))) {
+                if (!accessURL_lc.includes('service=wms')) {
+                    accessURL += (accessURL.includes('?') ? '&' : '?') + 'service=WMS';
+                }
+                if (!accessURL_lc.includes('request=getcapabilities')) {
+                    accessURL += (accessURL.includes('?') ? '&' : '?') + 'request=GetCapabilities';
+                }
+                let response;
                 try {
-                    let accessURL = distribution.accessURL;
-                    if (!accessURL.includes('service=wms')) {
-                        accessURL += (accessURL.includes('?') ? '&' : '?') + 'service=WMS';
-                    }
-                    if (!accessURL.includes('request=getcapabilities')) {
-                        accessURL += (accessURL.includes('?') ? '&' : '?') + 'request=GetCapabilities';
-                    }
-                    let response = await RequestDelegate.doRequest({ uri: accessURL });
-                    // surface heuristic for XML
-                    if (response.startsWith('<?xml')) {
+                    response = await RequestDelegate.doRequest({ uri: accessURL, accept: 'text/xml' });
+                }
+                catch (err) {
+                    let msg = `Could not parse response from ${accessURL}`;
+                    log.warn(msg);
+                    this.summary.warnings.push([msg, err.message]);
+                }
+                // surface heuristic for XML
+                if (response == null) {
+                    let msg = `Content-Type for ${accessURL} was not "text/xml", skipping`;
+                    log.debug(msg);
+                    // this.summary.warnings.push([msg]);
+                }
+                else if (response.startsWith('<?xml')) {
+                    try {
                         let layerNames = this.getMapLayerNames(response);
                         if (layerNames) {
                             distribution.accessURL = accessURL;
@@ -210,15 +268,16 @@ export class DiplanungCswImporter extends CswImporter {
                             updated = true;
                         }
                     }
-                    else {
-                        let msg = `Response for ${accessURL} is not valid XML`;
+                    catch (err) {
+                        let msg = `Could not parse response from ${accessURL}`;
                         log.debug(msg);
-                        this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response.replaceAll('\n', ' '), 1024)]);
+                        this.summary.warnings.push([msg, err.message]);
                     }
                 }
-                catch (err) {
-                    log.warn(err.message);
-                    this.summary.warnings.push([`Could not get response for ${distribution.accessURL}`, err.message]);
+                else {
+                    let msg = `Response for ${accessURL} is not valid XML`;
+                    log.debug(msg);
+                    this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response.replaceAll('\n', ' '), 1024)]);
                 }
             }
             updatedDistributions.push(distribution);
@@ -226,21 +285,8 @@ export class DiplanungCswImporter extends CswImporter {
         return updated ? updatedDistributions : null;
     }
 
-    // private async getWmsResponse(uri: string) {
-    //     let qs = {};
-    //     if (!uri.toLowerCase().includes('service=wms')) {
-    //         qs['service'] = 'WMS';
-    //     }
-    //     if (!uri.toLowerCase().includes('request=getcapabilities')) {
-    //         qs['request'] = 'GetCapabilities';
-    //     }
-    //     let serviceRequestDelegate = new RequestDelegate({ uri, qs });
-    //     return await serviceRequestDelegate.doRequest();
-    //     // return await serviceRequestDelegate.doRequest(2, 500);   // retry 2 times, wait 500ms between
-    // }
-
     private getMapLayerNames(response: string): string[] {
-        let serviceResponseDom = new DomParser().parseFromString(response, 'application/xml');
+        let serviceResponseDom = this.domParser.parseFromString(response, 'application/xml');
         // layer * 2
         let layers = WmsXPath.select('./wms:WMS_Capabilities/wms:Capability/wms:Layer/wms:Layer', serviceResponseDom);
         let layerNames = [];

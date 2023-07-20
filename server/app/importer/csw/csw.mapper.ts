@@ -1083,6 +1083,34 @@ export class CswMapper extends BaseMapper {
         return config;
     }
 
+    _getHierarchyLevel(): string {
+        return CswMapper.select('./gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue', this.record, true)?.textContent;
+    }
+
+    _getOperatesOn(): string[] {
+        let serviceIdentification = CswMapper.select('./gmd:identificationInfo/srv:SV_ServiceIdentification', this.record, true);
+        let operatesOnIds = [];
+        if (serviceIdentification) {
+            // retrieve via coupled resources
+            let coupled = CswMapper.select('./srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', serviceIdentification);
+            // throw away non-UUIDs, i.e. throw away reference-IDs
+            operatesOnIds.push(...coupled.map(elem => elem.textContent).filter(id => !id.startsWith('http')));
+            // retrieve via operatesOn
+            let operatesOn = CswMapper.select('./srv:operatesOn', serviceIdentification);
+            for (let o of operatesOn) {
+                let uuidref = o.getAttribute('uuidref');
+                if (MiscUtils.isUuid(uuidref)) {
+                    operatesOnIds.push(uuidref);
+                }
+                let href = o.getAttribute('xlink:href')?.split('/').slice(-1);
+                if (MiscUtils.isUuid(href)) {
+                    operatesOnIds.push(href);
+                }
+            }
+        }
+        return operatesOnIds || undefined;
+    }
+
     protected getUuid(): string {
         return this.uuid;
     }

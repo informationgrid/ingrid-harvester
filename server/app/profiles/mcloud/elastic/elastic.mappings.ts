@@ -245,6 +245,12 @@ export const indexMappings = {
                         },
                         'quality_notes': {
                             'type': 'text'
+                        },
+                        'hierarchy_level': {
+                            'type': 'keyword'
+                        },
+                        'operates_on': {
+                            'type': 'keyword'
                         }
                     }
                 },

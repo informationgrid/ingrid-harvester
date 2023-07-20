@@ -81,6 +81,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             distributions: await mapper.getDistributions(),
             extras: {
                 harvested_data: mapper.getHarvestedData(),
+                hierarchy_level: mapper.getHierarchyLevel(),    // only csw
                 metadata: {
                     harvested: mapper.getMetadataHarvested(),
                     harvesting_errors: null, // get errors after all operations been done
@@ -89,6 +90,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
                     modified: mapper.getMetadataModified(),
                     source: mapper.getMetadataSource()
                 },
+                operates_on: mapper.getOperatesOn(),    // only csw
                 transformed_data: {
                     [DcatApPluDocument.getExportFormat()]: await DcatApPluDocument.create(_mapper),
                 }
