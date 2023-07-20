@@ -222,6 +222,18 @@ export abstract class WfsMapper extends BaseMapper {
 
     abstract _getPluProcedureStartDate(): Date;
 
+    _getPluNotification() {
+        return undefined;
+    }
+
+    _getAdmsIdentifier() {
+        return undefined;
+    }
+
+    _getRelation() {
+        return undefined;
+    }
+
     _getHarvestedData(): string {
         return this.feature.toString();
     }

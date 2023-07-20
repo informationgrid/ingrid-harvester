@@ -145,6 +145,18 @@ export class DiplanungVirtualMapper extends BaseMapper {
         return this.fields.process_steps;
     }
 
+    _getPluNotification() {
+        return this.fields.notification;
+    }
+
+    _getAdmsIdentifier() {
+        return this.fields.adms_identifier;
+    }
+
+    _getRelation() {
+        return this.fields.relation;
+    }
+
 
     public getSettings(): ImporterSettings {
         throw new Error('Method not implemented.');
