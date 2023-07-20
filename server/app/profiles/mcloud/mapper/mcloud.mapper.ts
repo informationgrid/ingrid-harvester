@@ -107,6 +107,14 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
         return this.baseMapper.getMetadataIssued();
     }
 
+    getHierarchyLevel() {
+        return this.baseMapper.getHierarchyLevel();
+    }
+
+    getOperatesOn() {
+        return this.baseMapper.getOperatesOn();
+    }
+
     isRealtime(): boolean{
         return this.baseMapper.isRealtime();
     }

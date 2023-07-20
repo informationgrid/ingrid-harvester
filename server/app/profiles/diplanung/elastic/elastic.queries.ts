@@ -89,6 +89,46 @@ export class ElasticQueries implements IElasticQueries {
     }
 
     /**
+     * 
+     */
+    findSameOperatesOn(): any {
+        let maxAggregates = 100000;
+        return {
+            size: 0,
+            query: {
+                bool: {
+                    must_not: { term: { 'extras.metadata.is_valid': false } }
+                }
+            },
+            aggregations: {
+                operatesOn: {
+                    terms: {
+                        field: 'extras.operates_on.keyword',
+                        min_doc_count: 1,
+                        size: maxAggregates
+                    },
+                    aggregations: {
+                        operatesOn: {
+                            top_hits: {
+                                sort: [{
+                                    'priority': {
+                                        unmapped_type: 'short',
+                                        missing: 0,
+                                        order: 'desc'
+                                    }
+                                }, {'modified': {order: 'desc'}}],
+                                size: 100,
+                                // workaround: we retrieve the full document for recreating the DCAT-AP-PLU XML later
+                                _source: { include: [ 'distributions' ] }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    /**
      *
      */
     findSameTitle(): any {

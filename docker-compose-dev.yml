@@ -60,9 +60,9 @@ services:
     image: docker.elastic.co/kibana/kibana:8.5.3-amd64
     container_name: ingrid-kibana-8
     environment:
-      - ELASTICSEARCH_HOSTS=http://elastic-8:9201
-      - ELASTICSEARCH_USERNAME=kibana
-      - ELASTICSEARCH_PASSWORD=oNtTufuTFDg1S1lt
+      - ELASTICSEARCH_HOSTS=http://elastic-8:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=
     restart: unless-stopped
     ports:
       - 5602:5601

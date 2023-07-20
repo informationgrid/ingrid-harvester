@@ -517,6 +517,18 @@ export class ExcelSparseMapper extends BaseMapper {
         return undefined;
     }
 
+    _getPluNotification() {
+        return undefined;
+    }
+
+    _getAdmsIdentifier() {
+        return undefined;
+    }
+
+    _getRelation() {
+        return undefined;
+    }
+
     /**
      * Parse a string of format "dd.mm.yyyy" and convert it to a date object.
      * @param input

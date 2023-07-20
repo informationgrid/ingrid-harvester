@@ -23,6 +23,7 @@
 
 import { defaultCSWSettings, CswSettings } from './csw.settings';
 import { getLogger } from 'log4js';
+import { namespaces } from '../../importer/namespaces';
 import { BulkResponse } from 'persistence/elastic.utils';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { ConfigService } from '../../services/config/ConfigService';
@@ -122,9 +123,9 @@ export class CswImporter extends Importer {
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
                     await this.elastic.sendBulkData(false);
                     await this.elastic.sendBulkUpdate(false);
-                    // TODO postHarvestingHandling has to be here, after indexing all data but before deduplicating
-                    // TODO this needs a rewrite of the data-service-coupling
-                    // this.postHarvestingHandling();
+                    // postHarvestingHandling has to be here, after indexing all data but before deduplicating
+                    await this.postHarvestingHandling();
+                    // deduplicatin happens in finishIndex()
                     await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
@@ -177,9 +178,6 @@ export class CswImporter extends Importer {
             // harvestConcurrently() also supports this.settings.maxConcurrent=1
             await this.harvestSequentially();
         }
-        // TODO this is at the wrong position and works on the wrong data
-        // TODO needs to work on indexed data, not on (mostly) at this point not-anymore-existing _bulkData
-        this.postHarvestingHandling();
     }
 
     protected async postHarvestingHandling(){
@@ -192,7 +190,7 @@ export class CswImporter extends Importer {
         let harvestTime = new Date(Date.now());
 
         let responseDom = new DomParser().parseFromString(response);
-        let resultsNode = responseDom.getElementsByTagNameNS(CswMapper.CSW, 'SearchResults')[0];
+        let resultsNode = responseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
         if (resultsNode) {
             let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
             log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
@@ -217,7 +215,7 @@ export class CswImporter extends Importer {
         let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
         let hitsResponse = await hitsRequestDelegate.doRequest();
         let hitsResponseDom = new DomParser().parseFromString(hitsResponse);
-        let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(CswMapper.CSW, 'SearchResults')[0];
+        let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
         this.totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
         log.info(`Number of records to fetch: ${this.totalRecords}`);
 
@@ -243,7 +241,7 @@ export class CswImporter extends Importer {
             let harvestTime = new Date(Date.now());
 
             let responseDom = new DomParser().parseFromString(response);
-            let resultsNode = responseDom.getElementsByTagNameNS(CswMapper.CSW, 'SearchResults')[0];
+            let resultsNode = responseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
             if (resultsNode) {
                 let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
                 this.totalRecords = resultsNode.getAttribute('numberOfRecordsMatched');
@@ -277,7 +275,7 @@ export class CswImporter extends Importer {
     async extractRecords(getRecordsResponse, harvestTime): Promise<string[]> {
         let promises = [];
         let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
-        let records = xml.getElementsByTagNameNS(CswMapper.GMD, 'MD_Metadata');
+        let records = xml.getElementsByTagNameNS(namespaces.GMD, 'MD_Metadata');
         let ids = [];
         for (let i = 0; i < records.length; i++) {
             ids.push(CswMapper.getCharacterStringContent(records[i], 'fileIdentifier'));
@@ -370,16 +368,16 @@ export class CswImporter extends Importer {
         if (settings.httpMethod === "POST") {
             if (request === 'GetRecords') {
                 requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
-                <GetRecords xmlns="http://www.opengis.net/cat/csw/2.0.2"
-                            xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                            xmlns:ogc="http://www.opengis.net/ogc"
-                            xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2"
+                <GetRecords xmlns="${namespaces.CSW}"
+                            xmlns:gmd="${namespaces.GMD}"
+                            xmlns:xsi="${namespaces.XSI}"
+                            xmlns:ogc="${namespaces.OGC}"
+                            xsi:schemaLocation="${namespaces.CSW}"
                             service="CSW"
                             version="2.0.2"
                             resultType="${settings.resultType}"
                             outputFormat="application/xml"
-                            outputSchema="http://www.isotc211.org/2005/gmd"
+                            outputSchema="${namespaces.GMD}"
                             startPosition="${settings.startPosition}"
                             maxRecords="${settings.maxRecords}">
                     <DistributedSearch/>
@@ -402,7 +400,7 @@ export class CswImporter extends Importer {
                 VERSION: '2.0.2',
                 resultType: settings.resultType,
                 outputFormat: 'application/xml',
-                outputSchema: 'http://www.isotc211.org/2005/gmd',
+                outputSchema: namespaces.GMD,
                 typeNames: 'gmd:MD_Metadata',
                 CONSTRAINTLANGUAGE: 'FILTER',
                 startPosition: settings.startPosition,

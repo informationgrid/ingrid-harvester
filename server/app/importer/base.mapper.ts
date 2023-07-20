@@ -326,6 +326,17 @@ export abstract class BaseMapper {
         return this.cache.maintainers;
     }
 
+    _getContributors(): Promise<Person[] | Organization[]> {
+        return undefined;
+    }
+
+    async getContributors(): Promise<Person[] | Organization[]> {
+        if (!this.cache.contributors) {
+            this.cache.contributors = await this._getContributors();
+        }
+        return this.cache.contributors;
+    }
+
     abstract _getHarvestedData(): string;
 
     getHarvestedData(): string{
@@ -355,6 +366,28 @@ export abstract class BaseMapper {
             this.cache.metadataHarvested = this._getMetadataHarvested();
         }
         return this.cache.metadataHarvested;
+    }
+
+    _getHierarchyLevel(): string {
+        return undefined;
+    };
+
+    getHierarchyLevel(): string {
+        if (!this.cache.hierarchyLevel) {
+            this.cache.hierarchyLevel = this._getHierarchyLevel();
+        }
+        return this.cache.hierarchyLevel;
+    }
+
+    _getOperatesOn(): string[] {
+        return undefined;
+    };
+
+    getOperatesOn(): string[] {
+        if (!this.cache.operatesOn) {
+            this.cache.operatesOn = this._getOperatesOn();
+        }
+        return this.cache.operatesOn;
     }
 
     abstract _getSubSections(): any[];

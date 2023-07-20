@@ -64,7 +64,8 @@
       "ArcGIS: mdb",
       "ESRI Geodatabaseformate (*.mdb",
       "*gdb)",
-      "FileGeodatabase"
+      "FileGeodatabase",
+      "WebGIS"
     ],
     "GEOJSON": [
       "http://publications.europa.eu/resource/authority/file-type/geojson",

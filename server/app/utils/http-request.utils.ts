@@ -105,7 +105,8 @@ export interface RequestOptions extends RequestInit {
     qs?: string | string[][] | Record<string, any> | URLSearchParams,
     rejectUnauthorized?: boolean,
     resolveWithFullResponse?: boolean,
-    uri: string;
+    uri: string,
+    accept?: string
 }
 
 /**
@@ -202,6 +203,19 @@ export class RequestDelegate {
         this.config = MiscUtils.merge(this.config, partialConfig);
     }
 
+    getFullURL(): string {
+        return RequestDelegate.getFullURL(this.config);
+    }
+
+    static getFullURL(config: RequestOptions): string {
+        let fullURL = config.uri;
+        if (config.qs) {
+            fullURL += (config.uri.indexOf('?') > -1) ? '&' : '?';
+            fullURL += new URLSearchParams(config.qs);
+        }
+        return fullURL;
+    }
+
     /**
      * Performs the HTTP request and returns the result of this operation.
      *
@@ -235,11 +249,7 @@ export class RequestDelegate {
                 rejectUnauthorized: false
             });
         }
-        let fullURL = config.uri;
-        if (config.qs) {
-            fullURL += (config.uri.indexOf('?') > -1) ? '&' : '?';
-            fullURL += new URLSearchParams(config.qs);
-        }
+        let fullURL = RequestDelegate.getFullURL(config);
         let response = fetch(fullURL, config);
 
         while (retry > 0) {
@@ -264,11 +274,16 @@ export class RequestDelegate {
         if (config.resolveWithFullResponse) {
             return response;
         }
+
+        let resolvedResponse = await response;
+        if (config.accept && !resolvedResponse.headers.get('content-type').includes(config.accept)) {
+            return null;
+        }
         else if (config.json) {
-            return (await response).json();
+            return resolvedResponse.json();
         }
         else {
-            return (await response).text();
+            return resolvedResponse.text();
         }
     }
 

@@ -470,11 +470,17 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
 
     async get(index: string, id: string): Promise<any> {
         index = this.addPrefixIfNotExists(index) as string;
-        let response = await this.client.get({
-            index,
-            id
-        });
-        return response;
+        try {
+            return await this.client.get({
+                index,
+                id
+            });
+        }
+        catch (err) {
+            // swallow quietly and just return undefined
+            // this.handleError(`Could not retrieve document with ID [${id}] from index [${index}]`, err);
+        }
+        return undefined;
     }
 
     async getHistory(body: object, size = 30): Promise<{ history: any }> {

@@ -26,6 +26,7 @@
 import { merge as lodashMerge } from 'lodash';
 import { Catalog } from '../model/dcatApPlu.model';
 import { ConfigService } from '../services/config/ConfigService';
+import { Distribution } from '../model/distribution';
 import { RequestDelegate, RequestOptions } from './http-request.utils';
 
 const dayjs = require('dayjs');
@@ -55,10 +56,11 @@ export class MiscUtils {
      * We set an arbitrary limit for message length in `MAX_MSG_LENGTH`.
      * 
      * @param msg the message to be truncated
-     * @return the string truncated to `MAX_MSG_LENGTH` characters
+     * @param maxLength the maximum length of the resulting string
+     * @return the string truncated to `maxLength` characters
      */
-    public static truncateErrorMessage(msg: string): string {
-        return msg?.length > MAX_MSG_LENGTH ? msg.substring(0, MAX_MSG_LENGTH - TRUNC_STR.length) + TRUNC_STR : msg;
+    public static truncateErrorMessage(msg: string, maxLength: number = MAX_MSG_LENGTH): string {
+        return msg?.length > maxLength ? msg.substring(0, maxLength - TRUNC_STR.length) + TRUNC_STR : msg;
     }
 
     /**
@@ -68,7 +70,7 @@ export class MiscUtils {
      * @return the Date object represented by the given datetime string
      */
     public static normalizeDateTime(datetime: string): Date {
-        if (!datetime) {
+        if (datetime == null) {
             return undefined;
         }
         let parsedDatetime = dayjs(datetime);
@@ -82,6 +84,38 @@ export class MiscUtils {
         }
         log.warn("Could not parse datetime: " + datetime);
         return null;
+    }
+
+    public static isUuid(s: string): boolean {
+        if (s == null) {
+            return false;
+        }
+        return /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(s);
+    }
+
+    /**
+     * Create a hash for a given distribution
+     * 
+     * @param distribution the Distribution from which the hash should be created
+     * @return a simple hash for the given distribution
+     */
+    public static createDistHash(distribution: Distribution) {
+        let s = [
+            distribution.accessURL,
+            distribution.format,
+            distribution.issued,
+            distribution.modified,
+            distribution.title,
+            distribution.period?.gte,
+            distribution.period?.lte
+        ].join('#');
+        let hash = 0;
+        for (let i = 0, len = s.length; i < len; i++) {
+            let chr = s.charCodeAt(i);
+            hash = (hash << 5) - hash + chr;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
     }
 
     /**
