@@ -21,8 +21,9 @@
  * ==================================================
  */
 
-import {License} from '@shared/license.model';
-import {getLogger} from "log4js";
+import { getLogger } from 'log4js';
+import { namespaces } from '../importer/namespaces';
+import { License } from '@shared/license.model';
 
 export class DcatLicensesUtils {
 
@@ -32,34 +33,20 @@ export class DcatLicensesUtils {
 
     private static xpath = require('xpath');
 
-    static DC = 'http://purl.org/dc/elements/1.1/';
-    static DCAT = 'http://www.w3.org/ns/dcat#';
-    static DCT = 'http://purl.org/dc/terms/';
-    static FOAF = 'http://xmlns.com/foaf/0.1/';
-    static OWL = 'http://www.w3.org/2002/07/owl#';
-    static ORG = 'http://www.w3.org/ns/org#';
-    static RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-    static RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
-    static SKOS = 'http://www.w3.org/2004/02/skos/core#';
-    static SKOS_XL = 'http://www.w3.org/2008/05/skos-xl#';
-    static VOID = 'http://rdfs.org/ns/void#';
-    static XSD = 'http://www.w3.org/2001/XMLSchema';
-    static ADMS = 'http://www.w3.org/ns/adms#';
-
     static select = DcatLicensesUtils.xpath.useNamespaces({
-        'dc': DcatLicensesUtils.DC,
-        'dcat': DcatLicensesUtils.DCAT,
-        'dct': DcatLicensesUtils.DCT,
-        'foaf': DcatLicensesUtils.FOAF,
-        'owl': DcatLicensesUtils.OWL,
-        'org': DcatLicensesUtils.ORG,
-        'rdf': DcatLicensesUtils.RDF,
-        'rdfs': DcatLicensesUtils.RDFS,
-        'skos': DcatLicensesUtils.SKOS,
-        'skos-xl': DcatLicensesUtils.SKOS_XL,
-        'void': DcatLicensesUtils.VOID,
-        'xsd': DcatLicensesUtils.XSD,
-        'adms': DcatLicensesUtils.ADMS
+        'dc': namespaces.DC,
+        'dcat': namespaces.DCAT,
+        'dct': namespaces.DCT,
+        'foaf': namespaces.FOAF,
+        'owl': namespaces.OWL,
+        'org': namespaces.ORG,
+        'rdf': namespaces.RDF,
+        'rdfs': namespaces.RDFS,
+        'skos': namespaces.SKOS,
+        'skos-xl': namespaces.SKOS_XL,
+        'void': namespaces.VOID,
+        'xsd': namespaces.XSD,
+        'adms': namespaces.ADMS
     });
 
     constructor() {
@@ -84,7 +71,7 @@ export class DcatLicensesUtils {
             let DomParser = require('@xmldom/xmldom').DOMParser;
             let responseDom = new DomParser().parseFromString(data.toString());
 
-            let concepts = responseDom.getElementsByTagNameNS(DcatLicensesUtils.SKOS, 'Concept');
+            let concepts = responseDom.getElementsByTagNameNS(namespaces.SKOS, 'Concept');
 
             if (concepts) {
                 DcatLicensesUtils.licenses = [];

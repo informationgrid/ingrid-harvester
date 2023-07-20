@@ -24,49 +24,37 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import { AllGeoJSON } from "@turf/helpers";
-import {BaseMapper} from "../base.mapper";
-import {License} from '@shared/license.model';
-import {getLogger} from "log4js";
-import {UrlUtils} from "../../utils/url.utils";
-import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
-import {CswSettings} from './csw.settings';
-import {throwError} from "rxjs";
-import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
-import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
-import {Summary} from "../../model/summary";
-import { GeoJsonUtils } from "../../utils/geojson.utils";
+import { getLogger } from 'log4js';
+import { namespaces } from '../../importer/namespaces';
+import { throwError } from 'rxjs';
+import { Agent, Contact, Organization, Person } from '../../model/agent';
+import { AllGeoJSON } from '@turf/helpers';
+import { BaseMapper } from '../base.mapper';
+import { CswSettings } from './csw.settings';
+import { DateRange } from '../../model/dateRange';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
+import { Distribution } from '../../model/distribution';
+import { GeoJsonUtils } from '../../utils/geojson.utils';
+import { License } from '@shared/license.model';
 import { MiscUtils } from '../../utils/misc.utils';
-import {Agent, Contact, Organization, Person} from "../../model/agent";
-import {DateRange} from "../../model/dateRange";
-import {Distribution} from "../../model/distribution";
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
+import { Summary } from '../../model/summary';
+import { UrlUtils } from '../../utils/url.utils';
+
 const xpath = require('xpath');
 
 export class CswMapper extends BaseMapper {
 
-    static GMD = 'http://www.isotc211.org/2005/gmd';
-    static GCO = 'http://www.isotc211.org/2005/gco';
-    static GML = 'http://www.opengis.net/gml';
-    static GML_3_2 = 'http://www.opengis.net/gml/3.2';
-    static CSW = 'http://www.opengis.net/cat/csw/2.0.2';
-    static OWS = 'http://www.opengis.net/ows';
-    static PLU = 'here goes the custom PLU URL';
-    static SRV = 'http://www.isotc211.org/2005/srv';
-    static RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-    static RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
-    static DCAT = 'http://www.w3.org/ns/dcat#';
-    static DCT = 'http://purl.org/dc/terms/';
-    static VCARD = 'http://www.w3.org/2006/vcard/ns#';
-
     static nsMap = {
-        'csw': CswMapper.CSW,
-        'gmd': CswMapper.GMD,
-        'gco': CswMapper.GCO,
-        'gml': CswMapper.GML,
-        'gml32': CswMapper.GML_3_2,
-        'ows': CswMapper.OWS,
-        'plu': CswMapper.PLU,
-        'srv': CswMapper.SRV
+        'csw': namespaces.CSW,
+        'gmd': namespaces.GMD,
+        'gco': namespaces.GCO,
+        'gml': namespaces.GML,
+        'gml32': namespaces.GML_3_2,
+        'ows': namespaces.OWS,
+        'plu': namespaces.PLU,
+        'srv': namespaces.SRV
     };
 
     static select = xpath.useNamespaces(CswMapper.nsMap);
@@ -500,7 +488,7 @@ export class CswMapper extends BaseMapper {
     }
 
     _getMetadataSource(): any {
-        let gmdEncoded = encodeURIComponent(CswMapper.GMD);
+        let gmdEncoded = encodeURIComponent(namespaces.GMD);
         let cswLink = `${this.settings.getRecordsUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
         return {
             raw_data_source: cswLink,
@@ -1093,6 +1081,34 @@ export class CswMapper extends BaseMapper {
         }
 
         return config;
+    }
+
+    _getHierarchyLevel(): string {
+        return CswMapper.select('./gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue', this.record, true)?.textContent;
+    }
+
+    _getOperatesOn(): string[] {
+        let serviceIdentification = CswMapper.select('./gmd:identificationInfo/srv:SV_ServiceIdentification', this.record, true);
+        let operatesOnIds = [];
+        if (serviceIdentification) {
+            // retrieve via coupled resources
+            let coupled = CswMapper.select('./srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', serviceIdentification);
+            // throw away non-UUIDs, i.e. throw away reference-IDs
+            operatesOnIds.push(...coupled.map(elem => elem.textContent).filter(id => !id.startsWith('http')));
+            // retrieve via operatesOn
+            let operatesOn = CswMapper.select('./srv:operatesOn', serviceIdentification);
+            for (let o of operatesOn) {
+                let uuidref = o.getAttribute('uuidref');
+                if (MiscUtils.isUuid(uuidref)) {
+                    operatesOnIds.push(uuidref);
+                }
+                let href = o.getAttribute('xlink:href')?.split('/').slice(-1);
+                if (MiscUtils.isUuid(href)) {
+                    operatesOnIds.push(href);
+                }
+            }
+        }
+        return operatesOnIds || undefined;
     }
 
     protected getUuid(): string {

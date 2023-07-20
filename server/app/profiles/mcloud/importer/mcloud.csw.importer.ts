@@ -21,12 +21,12 @@
  * ==================================================
  */
 
-import {CswImporter} from "../../../importer/csw/csw.importer";
-import {ProfileFactory} from "../../profile.factory";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
-import {RequestDelegate} from "../../../utils/http-request.utils";
+import { CswImporter } from '../../../importer/csw/csw.importer';
+import { MiscUtils } from '../../../utils/misc.utils';
+import { ProfileFactoryLoader } from '../../../profiles/profile.factory.loader';
+import { RequestDelegate } from '../../../utils/http-request.utils';
 
-let DomParser = require('@xmldom/xmldom').DOMParser;
+const log = require('log4js').getLogger(__filename);
 
 export class McloudCswImporter extends CswImporter {
     constructor(settings, requestDelegate?: RequestDelegate) {
@@ -37,64 +37,65 @@ export class McloudCswImporter extends CswImporter {
         this.createDataServiceCoupling();
     }
 
+    private async createDataServiceCoupling() {
+        try {
+            let response = await this.elastic.search(
+                this.elastic.indexName,
+                ProfileFactoryLoader.get().getElasticQueries().findSameOperatesOn(),
+                50
+            );
 
-    createDataServiceCoupling(){
-        let bulkData = this.elastic._bulkData;
-        let servicesByDataIdentifier = [];
-        let servicesByFileIdentifier = [];
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = CswMapper.select('.//srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', xml)
-                if(identifierList && identifierList.length > 0){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(!servicesByDataIdentifier[identifer]){
-                            servicesByDataIdentifier[identifer] = [];
-                        }
-                        servicesByDataIdentifier[identifer] = servicesByDataIdentifier[identifer].concat(doc.distribution);
+            log.debug(`Count of buckets for deduplication aggregates query: ${response.aggregations.operatesOn.buckets.length}`);
+            for (let bucket of response.aggregations.operatesOn.buckets) {
+                try {
+                    let hits = bucket.operatesOn.hits.hits;
+                    let uuid = bucket.key;
+                    let dataset = await this.elastic.get(this.elastic.indexName, uuid);
+
+                    // if we don't have the dataset on which services operatesOn, skip
+                    if (!dataset) {
+                        continue;
                     }
-                } else {
-                    identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn', xml)
-                    if (identifierList && identifierList.length > 0) {
-                        for (let j = 0; j < identifierList.length; j++) {
-                            let identifer = identifierList[j].getAttribute("uuidref")
-                            if (!servicesByFileIdentifier[identifer]) {
-                                servicesByFileIdentifier[identifer] = [];
-                            }
-                            servicesByFileIdentifier[identifer] = servicesByFileIdentifier[identifer].concat(doc.distribution);
-                        }
+
+                    // merge all distributions from the operating services into the dataset
+                    let distributions = {};
+                    for (let dist of dataset._source.distributions) {
+                        distributions[MiscUtils.createDistHash(dist)] = dist;
                     }
+                    let serviceIds = [];
+                    for (let hit of hits) {
+                        for (let dist of hit._source.distributions) {
+                            distributions[MiscUtils.createDistHash(dist)] = dist;
+                        }
+                        serviceIds.push(hit._id);
+                    }
+                    distributions = Object.values(distributions);
+
+                    let updateDoc = {
+                        _id: uuid,
+                        distributions,
+                    };
+
+                    let servicesMsg = `Services which operate on dataset -> ${serviceIds}`;
+                    let datasetMsg = `Concerned dataset -> ${uuid}'`;
+                    log.info(`Distributions from services are merged into dataset in index ${this.elastic.indexName}.\n        ${servicesMsg}\n        ${datasetMsg}`);
+                    await this.elastic.addDocsToBulkUpdate([updateDoc]);
+                }
+                catch (err) {
+                    log.warn(`Error creating data-service coupling for dataset ${bucket.key}`, err);
                 }
             }
+        } catch (err) {
+            log.error('Error executing the aggregate query for data-service coupling', err);
         }
 
-        for(let i = 0; i < bulkData.length; i++){
-            let doc = bulkData[i];
-            if(doc.extras){
-                let harvestedData = doc.extras.harvested_data;
-                let xml = new DomParser().parseFromString(harvestedData, 'application/xml');
-                let identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByDataIdentifier[identifer]){
-                            doc.distribution = doc.distribution.concat(servicesByDataIdentifier[identifer]);
-                        }
-                    }
-                }
-                identifierList = CswMapper.select('./gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString', xml)
-                if(identifierList){
-                    for(let j = 0; j < identifierList.length; j++){
-                        let identifer = identifierList[j].textContent;
-                        if(servicesByFileIdentifier[identifer]){
-                            doc.distribution = doc.distribution.concat(servicesByFileIdentifier[identifer]);
-                        }
-                    }
-                }
-            }
+        // push remaining updates
+        await this.elastic.sendBulkUpdate(false);
+
+        try {
+            await this.elastic.flush();
+        } catch (e) {
+            log.error('Error occurred during flush', e);
         }
     }
 }
