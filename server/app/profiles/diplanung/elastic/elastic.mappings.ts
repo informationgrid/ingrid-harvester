@@ -369,6 +369,9 @@ export const indexMappings = {
                 }
             }
         },
+        'development_freeze_period': {
+            'type': 'date_range'
+        },
         'centroid': {
             'type': 'geo_point'
         },

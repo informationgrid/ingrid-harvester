@@ -167,7 +167,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         </${parent}>`;
     }
 
-    private static xmlPeriodOfTime({ lte: start, gte: end }: DateRange, relation: string): string {
+    private static xmlPeriodOfTime({ gte: start, lte: end }: DateRange, relation: string): string {
         return `<${relation}>
             <dct:PeriodOfTime>
                 ${optional('dcat:startDate', start?.toISOString())}

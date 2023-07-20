@@ -208,10 +208,10 @@ export class DcatappluMapper extends BaseMapper {
         return startDate; 
     }
     
-    _getPluDevelopmentFreezePeriod() {
-        let periodOfTime: any;
+    _getPluDevelopmentFreezePeriod():DateRange {
+        let periodOfTime: DateRange;
         let periodObject = DcatappluMapper.select('./plu:developmentFreezePeriod/dct:PeriodOfTime', this.record, true);
-        if (periodObject) periodOfTime = this._getTemporalInternal(periodObject);
+        if (periodObject) periodOfTime = this._getTemporalInternal(periodObject)?.[0];
         return periodOfTime;
     }
 
@@ -263,7 +263,7 @@ export class DcatappluMapper extends BaseMapper {
                 modified: MiscUtils.normalizeDateTime(DcatappluMapper.select('./dct:modified', dist, true)?.textContent),
                 pluDocType: getUrlHashCode(DcatappluMapper.select('./plu:docType/@rdf:resource', dist, true)?.textContent) ?? PluDocType.UNBEKANNT,
                 period: period?.[0],
-                mapLayerNames: [DcatappluMapper.select('./plu:mapLayerNames', dist, true)?.textContent ],
+                mapLayerNames: DcatappluMapper.select('./plu:mapLayerNames', dist, true)?.textContent?.split(",").map((layerName: string) => layerName.trim()),
                 format: [DcatappluMapper.select('./dct:format/@rdf:resource', dist, true)?.textContent ?? undefined],
             }
             distributions.push(distribution);
@@ -342,12 +342,12 @@ export class DcatappluMapper extends BaseMapper {
     async _getMaintainers(): Promise<any[]> {
         let nodes = DcatappluMapper.select('./dcatde:maintainer', this.record);
         let maintainers: any[] = this.getAgent(nodes)
-        return maintainers
+        return maintainers;
     }
     async _getContributors(): Promise<any[]> {
-        let nodes = DcatappluMapper.select('./dcatde:contributor', this.record);
-        let maintainers: any[] = this.getAgent(nodes)
-        return maintainers
+        let nodes = DcatappluMapper.select('./dct:contributor', this.record);
+        let contributors: any[] = this.getAgent(nodes)
+        return contributors;
     }
 
     _getHarvestedData(): string {

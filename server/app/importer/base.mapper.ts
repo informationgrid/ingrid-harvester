@@ -331,10 +331,10 @@ export abstract class BaseMapper {
     }
 
     async getContributors(): Promise<Person[] | Organization[]> {
-        if (!this.cache.maintainers) {
-            this.cache.maintainers = await this._getContributors();
+        if (!this.cache.contributors) {
+            this.cache.contributors = await this._getContributors();
         }
-        return this.cache.maintainers;
+        return this.cache.contributors;
     }
 
     abstract _getHarvestedData(): string;
