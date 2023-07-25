@@ -23,6 +23,7 @@
 
 import { Agent, Contact, Organization, Person } from '../../../model/agent';
 import { BaseMapper } from '../../../importer/base.mapper';
+import { Catalog } from '../../../model/dcatApPlu.model';
 import { DateRange } from '../../../model/dateRange';
 import { Distribution } from '../../../model/distribution';
 import { ImporterSettings } from '../../../importer.settings';
@@ -39,7 +40,7 @@ export class DiplanungVirtualMapper extends BaseMapper {
         this.fields = fields;
     }
 
-    _getCatalog(): string {
+    _getCatalog(): Catalog {
         return this.fields.catalog;
     }
 

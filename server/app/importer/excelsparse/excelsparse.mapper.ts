@@ -21,19 +21,18 @@
  * ==================================================
  */
 
-import {UrlUtils} from '../../utils/url.utils';
-import {BaseMapper} from '../base.mapper';
-import {Distribution} from "../../model/distribution";
-import {DateRange} from "../../model/dateRange";
-// import {License} from '@shared/license.model';
-import {Summary} from '../../model/summary';
-import {ExcelSparseSettings} from './excelsparse.settings';
-import {RequestDelegate, RequestOptions} from '../../utils/http-request.utils';
-import {ImporterSettings} from "../../importer.settings";
-// import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
-import {Columns} from './excelsparse.importer';
+import { BaseMapper } from '../base.mapper';
+import { Catalog } from '../../model/dcatApPlu.model';
+import { Columns } from './excelsparse.importer';
+import { DateRange } from '../../model/dateRange';
+import { Distribution } from '../../model/distribution';
+import { ExcelSparseSettings } from './excelsparse.settings';
+import { ImporterSettings } from '../../importer.settings';
 import { MiscUtils } from '../../utils/misc.utils';
-import {Organization, Person} from "../../model/agent";
+import { Organization, Person } from '../../model/agent';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
+import { Summary } from '../../model/summary';
+import { UrlUtils } from '../../utils/url.utils';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -477,7 +476,7 @@ export class ExcelSparseMapper extends BaseMapper {
         return undefined;
     }
 
-    async _getCatalog() {
+    async _getCatalog(): Promise<Catalog> {
         return {
             description: this.fetched.description,
             title: this.fetched.title,

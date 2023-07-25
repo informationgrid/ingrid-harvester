@@ -22,10 +22,11 @@
  */
 
 import { uniqBy } from 'lodash';
+import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model';
+import { ConfigService } from '../../../services/config/ConfigService';
 import { Contact } from '../../../model/agent';
 import { CswMapper } from '../../../importer/csw/csw.mapper';
 import { Distribution } from '../../../model/distribution';
-import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model';
 
 export class DiplanungCswMapper extends CswMapper {
 
@@ -95,7 +96,7 @@ export class DiplanungCswMapper extends CswMapper {
         return uniqBy(maintainers, JSON.stringify);
     }
 
-    _getCatalog() {
+    _getCatalog(): Catalog {
         return this.fetched.catalog;
     }
 
