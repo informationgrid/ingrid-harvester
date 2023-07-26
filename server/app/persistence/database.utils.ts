@@ -23,7 +23,7 @@
 
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DeduplicateUtils } from './deduplicate.utils';
-import { ElasticSearchUtils } from './elastic.utils';
+import { ElasticsearchUtils } from './elastic.utils';
 import { Entity } from '../model/entity';
 import { Summary } from '../model/summary';
 
@@ -64,7 +64,7 @@ export abstract class DatabaseUtils {
 
     abstract rollbackTransaction(): Promise<void>;
 
-    abstract pushToElastic(elastic: ElasticSearchUtils, source: string): Promise<void>;
+    abstract pushToElastic(elastic: ElasticsearchUtils, source: string): Promise<void>;
 
     static ping(configuration: Partial<DatabaseConfiguration>): Promise<boolean> {
         throw new Error('Method not implemented.');

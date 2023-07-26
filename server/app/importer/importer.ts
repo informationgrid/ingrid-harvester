@@ -21,35 +21,40 @@
  * ==================================================
  */
 
-import {Observer, Observable} from 'rxjs';
-import {ImportLogMessage} from '../model/import.result';
-import {Summary} from '../model/summary';
-import {ImporterSettings} from '../importer.settings';
-import {FilterUtils} from "../utils/filter.utils";
-import {ElasticsearchUtils} from "../persistence/elastic.utils";
-import {IndexConfiguration} from "../persistence/elastic.setting";
-import {ConfigService} from "../services/config/ConfigService";
-import {ElasticsearchFactory} from "../persistence/elastic.factory";
+import { ConfigService } from '../services/config/ConfigService';
+import { DatabaseFactory } from '../persistence/database.factory';
+import { DatabaseUtils } from '../persistence/database.utils';
+import { ElasticsearchFactory } from '../persistence/elastic.factory';
+import { ElasticsearchUtils } from '../persistence/elastic.utils';
+import { FilterUtils } from '../utils/filter.utils';
+import { ImporterSettings } from '../importer.settings';
+import { ImportLogMessage } from '../model/import.result';
+import { IndexConfiguration } from '../persistence/elastic.setting';
+import { Observable, Observer } from 'rxjs';
+import { Summary } from '../model/summary';
 
 export abstract class Importer {
 
     protected observer: Observer<ImportLogMessage>;
     protected summary: Summary;
     protected filterUtils: FilterUtils;
+    database: DatabaseUtils;
     elastic: ElasticsearchUtils;
 
     protected constructor(settings: ImporterSettings) {
         this.summary = new Summary(settings);
         this.filterUtils = new FilterUtils(settings);
 
-        let config: IndexConfiguration = {
-            ...ConfigService.getGeneralSettings().elasticsearch,
+        let generalConfig = ConfigService.getGeneralSettings();
+        let elasticSearchConfig: IndexConfiguration = {
+            ...generalConfig.elasticsearch,
             includeTimestamp: true,
             index: settings.index,
             dryRun: settings.dryRun,
             addAlias: !settings.disable
         };
-        this.elastic = ElasticsearchFactory.getElasticUtils(config, this.summary);
+        this.database = DatabaseFactory.getDatabaseUtils(generalConfig.database, this.summary);
+        this.elastic = ElasticsearchFactory.getElasticUtils(elasticSearchConfig, this.summary);
     }
 
     run: Observable<ImportLogMessage> = new Observable<ImportLogMessage>(observer => {

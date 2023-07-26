@@ -25,7 +25,7 @@ import { BulkResponse, DatabaseUtils } from './database.utils';
 import { Client, Pool, PoolClient, QueryResult } from 'pg';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DeduplicateUtils } from './deduplicate.utils';
-import { ElasticSearchUtils } from './elastic.utils';
+import { ElasticsearchUtils } from './elastic.utils';
 import { Entity } from '../model/entity';
 import { PostgresQueries } from './postgres.queries';
 import { Summary } from '../model/summary';
@@ -75,7 +75,7 @@ export class PostgresUtils extends DatabaseUtils {
         await PostgresUtils.pool.query(PostgresQueries.createTable);
     }
 
-    async pushToElastic(elastic: ElasticSearchUtils, source: string) {
+    async pushToElastic(elastic: ElasticsearchUtils, source: string) {
 
         const bulkExec = (bulkCmds, callback) => {
             // console.log('Before ' + JSON.stringify(bulkCmds));

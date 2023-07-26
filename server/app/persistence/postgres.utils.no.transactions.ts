@@ -21,15 +21,15 @@
  * ==================================================
  */
 
-import { PostgresQueries } from './postgres.queries';
 import { BulkResponse, DatabaseUtils } from './database.utils';
 import { Client } from 'pg';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DeduplicateUtils } from './deduplicate.utils';
-import { ElasticSearchUtils } from './elastic.utils';
+import { ElasticsearchUtils } from './elastic.utils';
 import { Entity } from '../model/entity';
 import { IClient } from 'pg-promise/typescript/pg-subset';
 import { IDatabase, IMain, QueryColumns } from 'pg-promise';
+import { PostgresQueries } from './postgres.queries';
 import { Summary } from '../model/summary';
 
 const log = require('log4js').getLogger(__filename);
@@ -63,7 +63,7 @@ export class PostgresUtils extends DatabaseUtils {
         PostgresUtils.db.none(PostgresQueries.createTable);
     }
 
-    async pushToElastic(elastic: ElasticSearchUtils, source: string) {
+    async pushToElastic(elastic: ElasticsearchUtils, source: string) {
         throw new Error('Method not implemented.');
     }
 
