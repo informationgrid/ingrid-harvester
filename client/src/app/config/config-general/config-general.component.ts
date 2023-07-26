@@ -108,10 +108,10 @@ export class ConfigGeneralComponent implements OnInit {
   checkEsConnection() {
     this.esConnectionCheck = 'working';
     let checkResult = this.configService.checkEsConnection({
-      elasticSearchUrl: this.configForm.get('elasticsearch.url').value,
-      elasticSearchVersion: this.configForm.get('elasticsearch.version').value,
-      elasticSearchUser: this.configForm.get('elasticsearch.user').value,
-      elasticSearchPassword: this.configForm.get('elasticsearch.password').value
+      url: this.configForm.get('elasticsearch.url').value,
+      version: this.configForm.get('elasticsearch.version').value,
+      user: this.configForm.get('elasticsearch.user').value,
+      password: this.configForm.get('elasticsearch.password').value
     });
     checkResult.pipe(delay(1000)).subscribe(response => {
       this.esConnectionCheck = response ? 'success' : 'fail';
@@ -168,8 +168,9 @@ export class ConfigGeneralComponent implements OnInit {
         user: [settings.elasticsearch.user],
         password: [settings.elasticsearch.password],
         alias: [settings.elasticsearch.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
-        numberOfShards: [settings.elasticsearch.numberOfShards],
-        numberOfReplicas: [settings.elasticsearch.numberOfReplicas]
+        prefix: [{ value: settings.elasticsearch.prefix, disabled: true }],
+        numberOfShards: [{ value: settings.elasticsearch.numberOfShards, disabled: true }],
+        numberOfReplicas: [{ value: settings.elasticsearch.numberOfReplicas, disabled: true }]
       }),
       ogcRecordsApi: this.formBuilder.group({
         url: [settings.ogcRecordsApi?.url],

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-export const elasticsearchMapping = {
+export const indexMappings = {
     properties: {
         'priority': {
             'type': 'short'
@@ -238,6 +238,19 @@ export const elasticsearchMapping = {
                         },
                         'harvesting_errors': {
                             'type': 'text'
+                        },
+                        'is_changed': {
+                            'type': 'boolean',
+                            'null_value': true
+                        },
+                        'quality_notes': {
+                            'type': 'text'
+                        },
+                        'hierarchy_level': {
+                            'type': 'keyword'
+                        },
+                        'operates_on': {
+                            'type': 'keyword'
                         }
                     }
                 },

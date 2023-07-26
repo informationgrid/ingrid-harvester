@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-export const elasticsearchMapping = {
+export const indexMappings = {
     properties: {
         'priority': {
             'type': 'short'
@@ -81,10 +81,44 @@ export const elasticsearchMapping = {
             'properties': {
                 'identifier': {
                     'type': 'keyword'
+                },
+                'description': {
+                    'type': 'text',
+                    'analyzer': 'decomp'
+                },
+                'homepage': {
+                    'type': 'keyword'
+                },
+                'publisher': {
+                    'properties': {
+                        'name': {
+                            'type': 'text',
+                            'fields': {
+                                'raw': {
+                                    'type': 'keyword'
+                                }
+                            }
+                        },
+                        'organization': {
+                            'type': 'text',
+                            'fields': {
+                                'raw': {
+                                    'type': 'keyword'
+                                }
+                            }
+                        }
+                    }
+                },
+                'title': {
+                    'type': 'text',
+                    'analyzer': 'decomp'
                 }
             }
         },
         'identifier': {
+            'type': 'keyword'
+        },
+        'adms_identifier': {
             'type': 'keyword'
         },
         'description': {
@@ -183,6 +217,10 @@ export const elasticsearchMapping = {
                 }
             }
         },
+        'notification': {
+            'type': 'text',
+            'analyzer': 'decomp'
+        },
         'creator': {
             'properties': {
                 'name': {
@@ -199,6 +237,52 @@ export const elasticsearchMapping = {
             }
         },
         'publisher': {
+            'properties': {
+                'name': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
+                        }
+                    }
+                },
+                'homepage': {
+                    'type': 'keyword'
+                },
+                'organization': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
+                        }
+                    }
+                }
+            }
+        },
+        'maintainers': {
+            'properties': {
+                'name': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
+                        }
+                    }
+                },
+                'homepage': {
+                    'type': 'keyword'
+                },
+                'organization': {
+                    'type': 'text',
+                    'fields': {
+                        'raw': {
+                            'type': 'keyword'
+                        }
+                    }
+                }
+            }
+        },
+        'contributors': {
             'properties': {
                 'name': {
                     'type': 'text',
@@ -258,6 +342,9 @@ export const elasticsearchMapping = {
                 }
             }
         },
+        'relation': {
+            'type': 'keyword'
+        },
         'type': {
             'type': 'keyword'
         },
@@ -315,6 +402,9 @@ export const elasticsearchMapping = {
                 }
             }
         },
+        'development_freeze_period': {
+            'type': 'date_range',
+        },
         'centroid': {
             'type': 'geo_point'
         },
@@ -365,6 +455,19 @@ export const elasticsearchMapping = {
                         },
                         'harvesting_errors': {
                             'type': 'text'
+                        },
+                        'is_changed': {
+                            'type': 'boolean',
+                            'null_value': true
+                        },
+                        'quality_notes': {
+                            'type': 'text'
+                        },
+                        'hierarchy_level': {
+                            'type': 'keyword'
+                        },
+                        'operates_on': {
+                            'type': 'keyword'
                         }
                     }
                 },

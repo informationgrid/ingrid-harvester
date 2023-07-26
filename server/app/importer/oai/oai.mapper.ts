@@ -25,37 +25,31 @@
  * A mapper for ISO-XML documents harvested over CSW.
  */
 
-import {BaseMapper} from '../base.mapper';
-import {Distribution} from "../../model/distribution";
-import {DateRange} from "../../model/dateRange";
-import {License} from '@shared/license.model';
-import {getLogger} from "log4js";
-import {UrlUtils} from "../../utils/url.utils";
-import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
-import {OaiSettings} from './oai.settings';
-import {throwError} from "rxjs";
-import {ImporterSettings} from "../../importer.settings";
-import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
-import {Summary} from "../../model/summary";
-import {Agent, Contact, Organization, Person} from "../../model/agent";
+import { getLogger } from 'log4js';
+import { namespaces } from '../../importer/namespaces';
+import { throwError } from 'rxjs';
+import { Agent, Contact, Organization, Person } from '../../model/agent';
+import { BaseMapper } from '../base.mapper';
+import { DateRange } from '../../model/dateRange';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
+import { Distribution } from '../../model/distribution';
+import { ImporterSettings } from '../../importer.settings';
+import { License } from '@shared/license.model';
+import { OaiSettings } from './oai.settings';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
+import { Summary } from '../../model/summary';
+import { UrlUtils } from '../../utils/url.utils';
 
 let xpath = require('xpath');
 
 export class OaiMapper extends BaseMapper {
 
-    static GMD = 'http://www.isotc211.org/2005/gmd';
-    static GCO = 'http://www.isotc211.org/2005/gco';
-    static GML = 'http://www.opengis.net/gml';
-    static GML_3_2 = 'http://www.opengis.net/gml/3.2';
-    static CSW = 'http://www.opengis.net/cat/csw/2.0.2';
-    static SRV = 'http://www.isotc211.org/2005/srv';
-
     static select = xpath.useNamespaces({
-        'gmd': OaiMapper.GMD,
-        'gco': OaiMapper.GCO,
-        'gml': OaiMapper.GML,
-        'gml32': OaiMapper.GML_3_2,
-        'srv': OaiMapper.SRV
+        'gmd': namespaces.GMD,
+        'gco': namespaces.GCO,
+        'gml': namespaces.GML,
+        'gml32': namespaces.GML_3_2,
+        'srv': namespaces.SRV
     });
 
     private log = getLogger();

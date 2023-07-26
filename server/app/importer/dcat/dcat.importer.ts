@@ -21,18 +21,18 @@
  * ==================================================
  */
 
-import {DcatMapper} from './dcat.mapper';
-import {Summary} from '../../model/summary';
-import {getLogger} from 'log4js';
-
-import {Importer} from '../importer';
-import {Observer} from 'rxjs';
-import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {DcatSettings, defaultDCATSettings} from './dcat.settings';
-import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
+import { namespaces } from '../../importer/namespaces';
+import { getLogger } from 'log4js';
+import { DcatMapper } from './dcat.mapper';
+import { DcatSettings, defaultDCATSettings } from './dcat.settings';
+import { Importer } from '../importer';
+import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
-import {ProfileFactory} from "../../profiles/profile.factory";
-import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
+import { Observer } from 'rxjs';
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
+import { Summary } from '../../model/summary';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -75,7 +75,7 @@ export class DcatImporter extends Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
+                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
                 await this.harvest();
                 await this.elastic.sendBulkData(false);
                 await this.elastic.finishIndex();
@@ -106,11 +106,11 @@ export class DcatImporter extends Importer {
 
             let isLastPage = false;
 
-            let pagedCollection = responseDom.getElementsByTagNameNS(DcatMapper.HYDRA, 'PagedCollection')[0];
+            let pagedCollection = responseDom.getElementsByTagNameNS(namespaces.HYDRA, 'PagedCollection')[0];
             if (pagedCollection) {
                 retries = 0;
 
-                let numReturned = responseDom.getElementsByTagNameNS(DcatMapper.DCAT, 'Dataset').length;
+                let numReturned = responseDom.getElementsByTagNameNS(namespaces.DCAT, 'Dataset').length;
                 let itemsPerPage = DcatMapper.select('./hydra:itemsPerPage', pagedCollection, true).textContent;
                 this.totalRecords = DcatMapper.select('./hydra:totalItems', pagedCollection, true).textContent;
 
@@ -136,7 +136,7 @@ export class DcatImporter extends Importer {
                 log.debug(`Received ${numReturned} records from ${this.settings.catalogUrl} - Page: ${thisPage}`);
                 await this.extractRecords(response, harvestTime)
             } else {
-                let numReturned = responseDom.getElementsByTagNameNS(DcatMapper.DCAT, 'Dataset').length;
+                let numReturned = responseDom.getElementsByTagNameNS(namespaces.DCAT, 'Dataset').length;
                 if(numReturned > 0){
                     await this.extractRecords(response, harvestTime);
                     isLastPage = true;
@@ -159,7 +159,7 @@ export class DcatImporter extends Importer {
     async extractRecords(getRecordsResponse, harvestTime) {
         let promises = [];
         let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
-        let rootNode = xml.getElementsByTagNameNS(DcatMapper.RDF, 'RDF')[0];
+        let rootNode = xml.getElementsByTagNameNS(namespaces.RDF, 'RDF')[0];
         let records =  DcatMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
 
 
@@ -215,7 +215,7 @@ export class DcatImporter extends Importer {
                         this.elastic.addDocToBulk(doc, uuid)
                             .then(response => {
                                 if (!response.queued) {
-                                    // numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                                    // numIndexDocs += ElasticsearchUtils.maxBulkSize;
                                     // this.observer.next(ImportResult.running(numIndexDocs, records.length));
                                 }
                             })

@@ -25,46 +25,56 @@ import { DeduplicateUtils } from './deduplicate.utils';
 import { Client as Client6 } from 'elasticsearch6';
 import { Client as Client7 } from 'elasticsearch7';
 import { Client as Client8 } from 'elasticsearch8';
+import { ElasticQueries } from './elastic.queries';
 import { Index } from '@shared/index.model';
+import { IndexConfiguration, IndexSettings } from './elastic.setting';
+import { Summary } from '../model/summary';
 
 export interface BulkResponse {
     queued: boolean;
     response?: any;
 }
 
-export abstract class ElasticSearchUtils {
+export abstract class ElasticsearchUtils {
 
     protected client: Client6 | Client7 | Client8;
     protected static readonly LENGTH_OF_TIMESTAMP = 18;
+    protected summary: Summary;
 
     public static maxBulkSize: number = 50;
     public deduplicationUtils: DeduplicateUtils;
+    public elasticQueries: ElasticQueries;
     public indexName: string;
     public _bulkData: any[];
+    // TODO put everything in the same bulk array :)
+    public _bulkUpdateData: any[];
+
+    constructor(readonly config: IndexConfiguration) {
+    }
 
     /**
      *
      * @param mapping
-     * @param {object} settings
+     * @param {IndexSettings} settings
      */
-    abstract cloneIndex(mapping, settings: object): Promise<void>;
+    abstract cloneIndex(mapping, settings: IndexSettings): Promise<void>;
 
     /**
      *
      * @param mappings
-     * @param {object} settings
+     * @param {IndexSettings} settings
      * @param {boolean} openIfPresent
      */
-    abstract prepareIndex(mappings, settings: object, openIfPresent?: boolean);
+    abstract prepareIndex(mappings, settings: IndexSettings, openIfPresent?: boolean);
 
     /**
      *
      * @param {string} index
      * @param mappings
-     * @param {object} settings
+     * @param {IndexSettings} settings
      * @param {boolean} openIfPresent
      */
-    abstract prepareIndexWithName(index: string, mappings, settings: object, openIfPresent?: boolean);
+    abstract prepareIndexWithName(index: string, mappings, settings: IndexSettings, openIfPresent?: boolean);
 
     abstract finishIndex(closeIndex?: boolean);
 
@@ -119,6 +129,12 @@ export abstract class ElasticSearchUtils {
      */
     abstract sendBulkData(closeAfterBulk?: boolean): Promise<BulkResponse>;
 
+    abstract bulkUpdate(updateDocuments: any[], closeAfterBulk: boolean): Promise<BulkResponse>;
+
+    abstract addDocsToBulkUpdate(docs: any[], maxBulkSize?: number): Promise<BulkResponse>;
+
+    abstract sendBulkUpdate(closeAfterBulk?: boolean): Promise<BulkResponse>;
+
     /**
      * Searches the index for documents with the given ids and copies a set of the issued
      * date, modified date and harvested data from existing documents, if any exist. If multiple documents with
@@ -136,10 +152,9 @@ export abstract class ElasticSearchUtils {
 
     abstract search(index: string | string[], body?: object, size?: number): Promise<{ hits: any, aggregations?: any }>;
 
-    // abstract getHistory(baseIndex: string): Promise<any>;
-    abstract getHistory(index: string, body: object): Promise<{ history: any }>;
+    abstract get(index: string, id: string): Promise<any>;
 
-    abstract getHistories(): Promise<any>;
+    abstract getHistory(body: object, size?: number): Promise<{ history: any }>;
 
     abstract getAccessUrls(after_key): Promise<any>;
 
@@ -184,5 +199,22 @@ export abstract class ElasticSearchUtils {
         stamp += ('0' + date.getSeconds()).slice(-2);
         stamp += ('00' + date.getMilliseconds()).slice(-3);
         return stamp;
+    }
+
+    protected addPrefixIfNotExists(index: string | string[]): string | string[] {
+        const addPrefix = (index: string) => {
+            let prefix = '';
+            if (index != this.config.alias && !index.startsWith(this.config.prefix)) {
+                prefix = this.config.prefix;
+            }
+            return prefix + index;
+        }
+
+        if (typeof index == 'string') {
+            return addPrefix(index);
+        }
+        else if (typeof index == 'object') {
+            return index.map(addPrefix);
+        }
     }
 }

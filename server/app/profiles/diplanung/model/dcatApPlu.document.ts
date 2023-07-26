@@ -34,7 +34,7 @@ import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 const esc = require('xml-escape');
 
 function optional(wrapper: string | Function, variable: any | any[], ...remainder: any) {
-    if (!variable) {
+    if (variable == null) {
         return '';
     }
     if (!Array.isArray(variable)) {
@@ -45,6 +45,25 @@ function optional(wrapper: string | Function, variable: any | any[], ...remainde
     }
     else {
         return variable.map(v => wrapper(v, remainder)).join('\n');
+    }
+}
+
+function resource(wrapper: string, variable: any, prefix: string = '') {
+    if (!variable) {
+        return '';
+    }
+    return `<${wrapper} rdf:resource="${prefix}${variable}"/>`;
+}
+
+function dateAsIsoString(date: Date | string) {
+    if (date == null) {
+        return undefined;
+    }
+    if (date instanceof Date) {
+        return date.toISOString();
+    }
+    else {
+        return date;
     }
 }
 
@@ -60,6 +79,8 @@ function optional(wrapper: string | Function, variable: any | any[], ...remainde
 //     vcard: 'http://www.w3.org/2006/vcard/ns#'
 // };
 
+const diplanUriPrefix = 'https://specs.diplanung.de/resource';
+
 
 export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
 
@@ -71,9 +92,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
         let publisher = (await mapper.getPublisher())?.[0];
-        let contributors = null;    // TODO
+        let contributors = await mapper.getContributors();
         let maintainers = await mapper.getMaintainers();
-        let relation = null;        // TODO
         // let xmlString = `<?xml version="1.0"?>
         // <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
         //     <dcat:Catalog>
@@ -89,13 +109,13 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         //         ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
         //     </dcat:Catalog>`;
         let xmlString = `<dcat:Dataset rdf:about="https://portal.diplanung.de/planwerke/${esc(mapper.getGeneratedId())}">
-                ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher.name)}
+                ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher['name'])}
                 <dct:description>${esc(mapper.getDescription())}</dct:description>
                 <dct:identifier>${esc(mapper.getGeneratedId())}</dct:identifier>
                 <dct:title>${esc(mapper.getTitle())}</dct:title>
-                <plu:planState>${mapper.getPluPlanState()}</plu:planState>
-                <plu:procedureState>${mapper.getPluProcedureState()}</plu:procedureState>
-                ${optional('plu:procedureStartDate', mapper.getPluProcedureStartDate())}
+                <plu:planState rdf:resource="${diplanUriPrefix}/planState#${mapper.getPluPlanState()}"/>
+                <plu:procedureState rdf:resource="${diplanUriPrefix}/procedureState#${mapper.getPluProcedureState()}"/>
+                ${optional('plu:procedureStartDate', dateAsIsoString(mapper.getPluProcedureStartDate()))}
                 <dct:spatial>
                     <dct:Location>
                         ${DcatApPluDocument.xmlSpatial('dcat:bbox', mapper.getBoundingBox())}
@@ -108,14 +128,16 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional(m => DcatApPluDocument.xmlFoafAgent('dcatde:maintainer', m), maintainers)}
                 ${optional(c => DcatApPluDocument.xmlFoafAgent('dct:contributor', c), contributors)}
                 ${optional(DcatApPluDocument.xmlDistribution, await mapper.getDistributions())}
-                ${optional('dct:issued', mapper.getIssued())}
-                ${optional('dct:modified', mapper.getModifiedDate())}
-                ${optional('dct:relation', esc(relation))}
+                ${optional(DcatApPluDocument.xmlAdmsIdentifier, esc(mapper.getAdmsIdentifier()))}
+                ${optional('dct:issued', dateAsIsoString(mapper.getIssued()))}
+                ${optional('dct:modified', dateAsIsoString(mapper.getModifiedDate()))}
+                ${resource('dct:relation', mapper.getRelation())}
                 ${optional(DcatApPluDocument.xmlPeriodOfTime, mapper.getPluDevelopmentFreezePeriod(), 'plu:developmentFreezePeriod')}
-                ${optional('plu:planType', mapper.getPluPlanType())}
-                ${optional('plu:planTypeFine', mapper.getPluPlanTypeFine())}
-                ${optional('plu:procedureType', mapper.getPluProcedureType())}
+                ${resource('plu:planType', mapper.getPluPlanType(), `${diplanUriPrefix}/planType#`)}
+                ${resource('plu:planTypeFine', mapper.getPluPlanTypeFine())}
+                ${resource('plu:procedureType', mapper.getPluProcedureType(), `${diplanUriPrefix}/procedureType#`)}
                 ${optional(DcatApPluDocument.xmlProcessStep, mapper.getPluProcessSteps())}
+                ${optional('plu:notification', esc(mapper.getPluNotification()))}
             </dcat:Dataset>`;
         // </rdf:RDF>`;
         return xmlString.replace(/^\s*\n/gm, '');
@@ -133,14 +155,14 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     private static xmlDistribution(distribution: Distribution): string {
         return `<dcat:distribution>
             <dcat:Distribution>
-                <dcat:accessURL>${esc(distribution.accessURL)}</dcat:accessURL>
+                <dcat:accessURL rdf:resource="${esc(distribution.accessURL)}"/>
                 ${optional('dct:description', esc(distribution.description))}
-                ${optional('dcat:downloadURL', esc(distribution.downloadURL))}
-                ${optional('dct:format', esc(distribution.format?.[0]))}
-                ${optional('dct:issued', distribution.issued)}
-                ${optional('dct:modified', distribution.modified)}
-                ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period)}
-                ${optional('plu:docType', esc(distribution.pluDocType))}
+                ${resource('dcat:downloadURL', esc(distribution.downloadURL))}
+                ${resource('dct:format', esc(distribution.format?.[0]))}
+                ${optional('dct:issued', dateAsIsoString(distribution.issued))}
+                ${optional('dct:modified', dateAsIsoString(distribution.modified))}
+                ${optional(DcatApPluDocument.xmlPeriodOfTime, distribution.period, 'dct:temporal')}
+                ${resource('plu:docType', esc(distribution.pluDocType), `${diplanUriPrefix}/docType#`)}
                 ${optional('plu:mapLayerNames', esc(distribution.mapLayerNames?.join(',')))}
                 ${optional('dct:title', esc(distribution.title))}
             </dcat:Distribution>
@@ -152,16 +174,16 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         return `<${parent}>
             <foaf:Agent>
                 <foaf:name>${esc(name)}</foaf:name>
-                ${optional('dct:type', esc(agent?.type))}
+                ${resource('dct:type', esc(agent?.type))}
             </foaf:Agent>
         </${parent}>`;
     }
 
-    private static xmlPeriodOfTime({ lte: start, gte: end }: DateRange, relation: string = 'dct:temporal'): string {
+    private static xmlPeriodOfTime({ gte: start, lte: end }: DateRange, relation: string): string {
         return `<${relation}>
             <dct:PeriodOfTime>
-                ${optional('dcat:startDate', start)}
-                ${optional('dcat:endDate', end)}
+                ${optional('dcat:startDate', dateAsIsoString(start))}
+                ${optional('dcat:endDate', dateAsIsoString(end))}
             </dct:PeriodOfTime>
         </${relation}>`;
     }
@@ -169,10 +191,10 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
     private static xmlProcessStep({ distributions, identifier, period, type }: ProcessStep): string {
         return `<plu:processStep>
             <plu:ProcessStep>
-                <plu:processStepType>${type}</plu:processStepType>
+                <plu:processStepType rdf:resource="${diplanUriPrefix}/processStepType#${type}"/>
                 ${optional('dct:identifier', esc(identifier))}
                 ${optional(DcatApPluDocument.xmlDistribution, distributions)}
-                ${optional(DcatApPluDocument.xmlPeriodOfTime, period)}
+                ${optional(DcatApPluDocument.xmlPeriodOfTime, period, 'dct:temporal')}
             </plu:ProcessStep>
         </plu:processStep>`;
     }
@@ -182,8 +204,8 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
             <dcat:CatalogRecord>
                 <dct:title>${esc(title)}</dct:title>
                 <foaf:primaryTopic>${esc(primaryTopic)}</foaf:primaryTopic>
-                ${optional('dct:issued', esc(issued))}
-                ${optional('dct:modified', esc(modified))}
+                ${optional('dct:issued', dateAsIsoString(issued))}
+                ${optional('dct:modified', dateAsIsoString(modified))}
             </dcat:CatalogRecord>
         </dcat:record>`;
     }
@@ -204,7 +226,17 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
                 ${optional('vcard:hasCountryName', esc(contact.hasCountryName))}
                 ${optional('vcard:hasEmail', esc(contact.hasEmail))}
                 ${optional('vcard:hasTelephone', esc(contact.hasTelephone))}
+                ${optional('vcard:hasUID', esc(contact.hasUID))}
+                ${optional('vcard:hasURL', esc(contact.hasURL))}
             </vcard:Organization>
         </dcat:contactPoint>`;
+    }
+
+    private static xmlAdmsIdentifier(admsIdentifier: string) {
+        return`<adms:identifier>
+            <adms:Identifier>
+                ${optional('skos:notation', esc(admsIdentifier))}
+            </adms:Identifier>
+        </adms:identifier>`;
     }
 }

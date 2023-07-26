@@ -21,8 +21,7 @@
  * ==================================================
  */
 
-import { ElasticSettings } from '../../../../server/app/persistence/elastic.setting';
-import { DatabaseConfiguration, GeneralSettings } from '@shared/general-config.settings';
+import { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MappingItem } from '@shared/mapping.model';
@@ -78,7 +77,7 @@ export class ConfigService {
     return this.http.post<boolean>('rest/api/config/dbcheck', data);
   }
 
-  checkEsConnection(data: Partial<ElasticSettings>): Observable<boolean> {
+  checkEsConnection(data: Partial<ElasticsearchConfiguration>): Observable<boolean> {
     return this.http.post<boolean>('rest/api/config/escheck', data);
   }
 

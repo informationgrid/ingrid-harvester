@@ -39,15 +39,28 @@
 
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
+import booleanWithin from '@turf/boolean-within';
 import centroid from '@turf/centroid';
+import flip from '@turf/flip';
 import rewind from '@turf/rewind';
 import * as xpath from 'xpath';
-import { AllGeoJSON, GeometryCollection } from "@turf/helpers";
+import { AllGeoJSON, Geometry, GeometryCollection, Point } from "@turf/helpers";
 import { XPathUtils } from './xpath.utils';
+
 const deepEqual = require('deep-equal');
 const proj4 = require('proj4');
 
 export class GeoJsonUtils {
+
+    static BBOX_GERMANY = {
+        'type': 'Polygon',
+        'coordinates': [[
+            [5.98865807458, 54.983104153], 
+            [5.98865807458, 47.3024876979],
+            [15.0169958839, 47.3024876979],
+            [15.0169958839, 54.983104153],
+            [5.98865807458, 54.983104153]]]
+    };
 
     private select: Function;
     private transformer: Function;
@@ -92,7 +105,49 @@ export class GeoJsonUtils {
             return undefined;
         }
         return bboxPolygon(bbox(spatial))?.geometry;
-    }
+    };
+
+    static within = (spatial: number[] | Point | Geometry | GeometryCollection, bbox: Geometry): boolean => {
+        if (spatial == null) {
+            return undefined;
+        }
+        if ('type' in spatial) {
+            if ('coordinates' in spatial) {
+                return booleanWithin(spatial, bbox);
+            }
+            else if ('geometries' in spatial) {
+                return spatial.geometries.every(subGeom => GeoJsonUtils.within(subGeom, bbox));
+            }
+            else {
+                // TODO log unexpected input
+                return undefined;
+            }
+        }
+        else {
+            return booleanWithin({ type: 'Point', coordinates: spatial }, bbox);
+        }
+    };
+
+    static flip = <T>(spatial: number[] | Point | Geometry | GeometryCollection): T => {
+        if (spatial == null) {
+            return undefined;
+        }
+        if ('type' in spatial) {
+            if ('coordinates' in spatial) {
+                return flip(spatial);
+            }
+            else if ('geometries' in spatial) {
+                return <T>{ ...spatial, geometries: spatial.geometries.map<Geometry>(geom => flip<Geometry>(geom)) };
+            }
+            else {
+                // TODO log unexpected input
+                return undefined;
+            }
+        }
+        else {
+            return flip({ type: 'Point', coordinates: spatial });
+        }
+    };
 
     static getCentroid = (spatial: AllGeoJSON) => {
         if (!spatial) {

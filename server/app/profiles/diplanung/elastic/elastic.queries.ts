@@ -25,6 +25,16 @@ import { ElasticQueries as IElasticQueries } from '../../../persistence/elastic.
 
 const dayjs = require('dayjs');
 
+
+// fields potentially occurring in CSW that should be overwritten by WFS data
+export const overwriteFields = [
+    'catalog',
+    // spatial fields
+    'bounding_box', 'centroid', 'spatial',
+    // PLU fields
+    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_start_date', 'procedure_state', 'procedure_type'
+];
+
 export class ElasticQueries implements IElasticQueries {
 
     private static instance: ElasticQueries;
@@ -42,7 +52,7 @@ export class ElasticQueries implements IElasticQueries {
      * 
      */
     findSameAlternateTitle(): any {
-        let maxAggregates = 10000;
+        let maxAggregates = 100000;
         return {
             size: 0,
             query: {
@@ -67,7 +77,49 @@ export class ElasticQueries implements IElasticQueries {
                                         order: 'desc'
                                     }
                                 }, {'modified': {order: 'desc'}}],
-                                size: 100
+                                size: 100,
+                                // workaround: we retrieve the full document for recreating the DCAT-AP-PLU XML later
+                                _source: { include: [...overwriteFields, 'title', 'publisher'] }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    /**
+     * 
+     */
+    findSameOperatesOn(): any {
+        let maxAggregates = 100000;
+        return {
+            size: 0,
+            query: {
+                bool: {
+                    must_not: { term: { 'extras.metadata.is_valid': false } }
+                }
+            },
+            aggregations: {
+                operatesOn: {
+                    terms: {
+                        field: 'extras.operates_on.keyword',
+                        min_doc_count: 1,
+                        size: maxAggregates
+                    },
+                    aggregations: {
+                        operatesOn: {
+                            top_hits: {
+                                sort: [{
+                                    'priority': {
+                                        unmapped_type: 'short',
+                                        missing: 0,
+                                        order: 'desc'
+                                    }
+                                }, {'modified': {order: 'desc'}}],
+                                size: 100,
+                                // workaround: we retrieve the full document for recreating the DCAT-AP-PLU XML later
+                                _source: { include: [ 'distributions' ] }
                             }
                         }
                     }

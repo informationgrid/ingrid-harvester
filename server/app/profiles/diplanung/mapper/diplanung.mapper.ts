@@ -22,20 +22,20 @@
  */
 
 import 'dayjs/locale/de';
-import { getLogger } from "log4js";
-import { Contact, Organization, Person } from "../../../model/agent";
-import { DateRange } from "../../../model/dateRange";
+import { getLogger } from 'log4js';
+import { Contact, Organization, Person } from '../../../model/agent';
+import { DateRange } from '../../../model/dateRange';
 import { DiplanungCswMapper } from './diplanung.csw.mapper';
 import { DiplanungVirtualMapper } from './diplanung.virtual.mapper';
-import { Distribution } from "../../../model/distribution";
-import { ExcelSparseMapper } from "../../../importer/excelsparse/excelsparse.mapper";
+import { Distribution } from '../../../model/distribution';
+import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from 'model/dcatApPlu.model';
-import { WfsMapper } from "../../../importer/wfs/wfs.mapper";
+import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
 
-export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapper| ExcelSparseMapper | WfsMapper> {
+export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
 
     protected baseMapper: M;
 
@@ -55,6 +55,10 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
 
     getGeneratedId(): string {
         return this.baseMapper.getGeneratedId();
+    }
+
+    getAdmsIdentifier(): string {
+        return this.baseMapper._getAdmsIdentifier();
     }
 
     getTitle(): string {
@@ -101,6 +105,10 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper._getPluProcessSteps();
     }
 
+    getPluNotification(): string[] {
+        return this.baseMapper._getPluNotification();
+    }
+
     getBoundingBox(): object {
         return this.baseMapper._getBoundingBox();
     }
@@ -125,8 +133,16 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper.getMaintainers();
     }
 
+    getContributors(): Promise<Person[] | Organization[]> {
+        return this.baseMapper.getContributors();
+    }
+
     getDistributions(): Promise<Distribution[]> {
         return this.baseMapper.getDistributions();
+    }
+
+    getRelation(): string {
+        return this.baseMapper._getRelation();
     }
 
     getHarvestedData(): string {
@@ -147,6 +163,14 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
 
     getMetadataSource(): string {
         return this.baseMapper.getMetadataSource();
+    }
+
+    getHierarchyLevel() {
+        return this.baseMapper.getHierarchyLevel();
+    }
+
+    getOperatesOn() {
+        return this.baseMapper.getOperatesOn();
     }
 
     getIssued(): Date {
@@ -173,13 +197,11 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper.isValid(doc);
     }
 
-    getInvalidationReasons(doc? : any): string[] {
-        return this.baseMapper.getInvalidationReasons();
+    getQualityNotes(doc? : any): string[] {
+        return this.baseMapper.getQualityNotes();
     }
 
     executeCustomCode(doc: any) {
         this.baseMapper.executeCustomCode(doc);
     }
 }
-
-

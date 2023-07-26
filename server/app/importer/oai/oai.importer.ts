@@ -21,18 +21,19 @@
  * ==================================================
  */
 
-import {OaiMapper} from './oai.mapper';
-import {Summary} from '../../model/summary';
-import {getLogger} from 'log4js';
-import {RequestDelegate, RequestOptions} from '../../utils/http-request.utils';
+import { defaultOAISettings, OaiSettings } from './oai.settings';
+import { namespaces } from '../../importer/namespaces';
+import { getLogger } from 'log4js';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 
-import {Importer} from '../importer';
-import {Observer} from 'rxjs';
-import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {defaultOAISettings, OaiSettings} from './oai.settings';
+import { Importer } from '../importer';
+import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
-import {ProfileFactory} from "../../profiles/profile.factory";
-import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
+import { OaiMapper } from './oai.mapper';
+import { Observer } from 'rxjs';
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { Summary } from '../../model/summary';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
@@ -74,7 +75,7 @@ export class OaiImporter extends Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
+                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
                 await this.harvest();
                 await this.elastic.sendBulkData(false);
                 await this.elastic.finishIndex();
@@ -134,7 +135,7 @@ export class OaiImporter extends Importer {
     async extractRecords(getRecordsResponse, harvestTime) {
         let promises = [];
         let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
-        let records = xml.getElementsByTagNameNS(OaiMapper.GMD, 'MD_Metadata');
+        let records = xml.getElementsByTagNameNS(namespaces.GMD, 'MD_Metadata');
         let ids = [];
         for (let i = 0; i < records.length; i++) {
             ids.push(OaiMapper.getCharacterStringContent(records[i], 'fileIdentifier'));
@@ -179,7 +180,7 @@ export class OaiImporter extends Importer {
                         this.elastic.addDocToBulk(doc, uuid)
                             .then(response => {
                                 if (!response.queued) {
-                                    // numIndexDocs += ElasticSearchUtils.maxBulkSize;
+                                    // numIndexDocs += ElasticsearchUtils.maxBulkSize;
                                     // this.observer.next(ImportResult.running(numIndexDocs, records.length));
                                 }
                             })

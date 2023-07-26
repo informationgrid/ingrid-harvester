@@ -58,6 +58,12 @@ configure('./log4js.json');
     ],
 })
 export class Server extends ServerLoader {
+
+    public $beforeInit(): void | Promise<any> {
+        // on startup make sure ENV variables - if set - replace existing configuration vars
+        ConfigService.adoptEnvs();
+    }
+
     /**
      * This method let you configure the express middleware required by your application to works.
      * @returns {Server}
@@ -66,8 +72,6 @@ export class Server extends ServerLoader {
 
         // on startup make sure the configuration has IDs for each harvester
         ConfigService.fixIDs();
-        // on startup make sure ENV variables - if set - replace existing configuration vars
-        ConfigService.adoptEnvs();
 
         this
             .use(GlobalAcceptMimesMiddleware)

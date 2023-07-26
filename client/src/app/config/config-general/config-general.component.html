@@ -89,14 +89,14 @@
       </mat-card-header>
       <mat-card-content>
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
-          <mat-form-field fxFlex="4">
+          <mat-form-field fxFlex="5">
             <mat-select placeholder="Version" formControlName="version" required>
               <mat-option value="6">6</mat-option>
               <mat-option value="7">7</mat-option>
               <mat-option value="8">8</mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field fxFlex="26">
+          <mat-form-field fxFlex="25">
             <input matInput type="url" placeholder="Host-URL" formControlName="url" required>
             <mat-error *ngIf="configForm.get('elasticsearch.url').hasError('required')">
               Dies ist ein Pflichtfeld
@@ -116,13 +116,25 @@
         </div>
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
           <mat-form-field fxFlex="30">
-            <input matInput placeholder="Alias-Name" formControlName="alias" required>
+            <input matInput type="text" placeholder="Alias-Name" formControlName="alias" required>
             <mat-error *ngIf="configForm.get('elasticsearch.alias').hasError('whitespace')">
               Es dürfen nicht nur Leerzeichen eingegeben sein
             </mat-error>
             <mat-error *ngIf="configForm.get('elasticsearch.alias').hasError('required')">
               Dies ist ein Pflichtfeld
             </mat-error>
+          </mat-form-field>
+        </div>
+        <h4>Index-Settings (readonly, werden beim Start durch Umgebungsvariablen gesetzt):</h4>
+        <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
+          <mat-form-field fxFlex="20" floatLabel="always">
+            <input matInput type="text" placeholder="Index-Präfix" formControlName="prefix">
+          </mat-form-field>
+          <mat-form-field fxFlex="5">
+            <input matInput type="text" placeholder="Shards" formControlName="numberOfShards">
+          </mat-form-field>
+          <mat-form-field fxFlex="5">
+            <input matInput type="text" placeholder="Replicas" formControlName="numberOfReplicas">
           </mat-form-field>
         </div>
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left center" class="margin-below">

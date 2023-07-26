@@ -1,29 +1,22 @@
 {
-  "database": {
-    "type": "postgresql",
-    "host": "localhost",
-    "port": 5433,
-    "database": "ogcrecords",
-    "user": "ogcrecords",
-    "password": "ogcrecords"
-  },
   "elasticsearch": {
     "url": "http://localhost:9200",
-    "version": "6",
+    "version": "8",
     "user": "elastic",
-    "password": "",
-    "alias": "mcloud",
+    "password": "elastic",
+    "alias": "harvester",
+    "prefix": "",
     "numberOfShards": 1,
     "numberOfReplicas": 0
   },
   "proxy": "",
-  "portalUrl": "http://localhost:8080/",
+  "portalUrl": "",
   "urlCheck": {
-    "active": true,
+    "active": false,
     "pattern": "30 04 * * *"
   },
   "indexCheck": {
-    "active": true,
+    "active": false,
     "pattern": "10 04 * * *"
   },
   "mail": {

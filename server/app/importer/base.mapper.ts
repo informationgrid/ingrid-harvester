@@ -47,7 +47,9 @@ export abstract class BaseMapper {
 
     public valid = true;
 
-    private invalidationReasons = [];
+    public changed = false;
+
+    private qualityNotes = [];
 
     public skipped = false;
 
@@ -324,6 +326,17 @@ export abstract class BaseMapper {
         return this.cache.maintainers;
     }
 
+    _getContributors(): Promise<Person[] | Organization[]> {
+        return undefined;
+    }
+
+    async getContributors(): Promise<Person[] | Organization[]> {
+        if (!this.cache.contributors) {
+            this.cache.contributors = await this._getContributors();
+        }
+        return this.cache.contributors;
+    }
+
     abstract _getHarvestedData(): string;
 
     getHarvestedData(): string{
@@ -355,6 +368,28 @@ export abstract class BaseMapper {
         return this.cache.metadataHarvested;
     }
 
+    _getHierarchyLevel(): string {
+        return undefined;
+    };
+
+    getHierarchyLevel(): string {
+        if (!this.cache.hierarchyLevel) {
+            this.cache.hierarchyLevel = this._getHierarchyLevel();
+        }
+        return this.cache.hierarchyLevel;
+    }
+
+    _getOperatesOn(): string[] {
+        return undefined;
+    };
+
+    getOperatesOn(): string[] {
+        if (!this.cache.operatesOn) {
+            this.cache.operatesOn = this._getOperatesOn();
+        }
+        return this.cache.operatesOn;
+    }
+
     abstract _getSubSections(): any[];
 
     getSubSections(): any[]{
@@ -377,13 +412,17 @@ export abstract class BaseMapper {
         return this.valid;
     }
 
-    getInvalidationReasons(): string[] {
-        return this.invalidationReasons;
+    isChanged(doc?: any) {
+        return this.changed;
     }
 
-    addInvalidationReason(reason: string): void {
-        if (!this.invalidationReasons.includes(reason)) {
-            this.invalidationReasons.push(reason);
+    getQualityNotes(): string[] {
+        return this.qualityNotes;
+    }
+
+    addQualityNotes(note: string): void {
+        if (!this.qualityNotes.includes(note)) {
+            this.qualityNotes.push(note);
         }
     }
 

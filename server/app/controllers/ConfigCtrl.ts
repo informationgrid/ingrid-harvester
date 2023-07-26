@@ -21,16 +21,15 @@
  * ==================================================
  */
 
-import {Authenticated, BodyParams, Controller, Delete, Get, Post, QueryParams} from '@tsed/common';
-import {ConfigService} from "../services/config/ConfigService";
-import {DatabaseConfiguration, GeneralSettings} from '@shared/general-config.settings';
-import {MappingDistribution, MappingItem} from '@shared/mapping.model';
-import {ScheduleService} from "../services/ScheduleService";
-import { ElasticSearchFactory } from '../persistence/elastic.factory';
-import { ElasticSearchUtils } from '../persistence/elastic.utils';
-import { ElasticSettings } from '../persistence/elastic.setting';
-import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
+import { Authenticated, BodyParams, Controller, Delete, Get, Post, QueryParams } from '@tsed/common';
+import { ConfigService } from '../services/config/ConfigService';
+import { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
 import { DatabaseFactory } from '../persistence/database.factory';
+import { ElasticsearchFactory } from '../persistence/elastic.factory';
+import { ElasticsearchUtils } from '../persistence/elastic.utils';
+import { MappingDistribution, MappingItem } from '@shared/mapping.model';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
+import { ScheduleService } from '../services/ScheduleService';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -53,10 +52,10 @@ export class ConfigCtrl {
     }
 
     @Post('/escheck')
-    async checkEsConnection(@BodyParams() body: Partial<ElasticSettings>): Promise<boolean> {
+    async checkEsConnection(@BodyParams() body: Partial<ElasticsearchConfiguration>): Promise<boolean> {
         try {
             // @ts-ignore
-            let esUtils: ElasticSearchUtils = ElasticSearchFactory.getElasticUtils(body, { elasticErrors: [] });
+            let esUtils: ElasticsearchUtils = ElasticsearchFactory.getElasticUtils(body, { elasticErrors: [] });
             return await esUtils.ping();
         } catch (error) {
             log.warn(error);

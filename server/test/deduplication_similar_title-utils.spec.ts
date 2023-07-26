@@ -25,10 +25,10 @@ import {Summary} from '../app/model/summary';
 import {expect} from "chai";
 import {configure} from 'log4js';
 import {doc1, doc3, doc4} from './data/docs.deduplication';
-import {elasticsearchMapping} from '../app/profiles/mcloud/elastic/elastic.mapping';
-import {elasticsearchSettings} from '../app/profiles/mcloud/elastic/elastic.settings';
-import { ElasticSearchFactory } from '../app/persistence/elastic.factory';
-import { ElasticSettings } from '../app/persistence/elastic.setting';
+import {indexMappings} from '../app/profiles/mcloud/elastic/elastic.mappings';
+import {indexSettings} from '../app/profiles/mcloud/elastic/elastic.settings';
+import { ElasticsearchFactory } from '../app/persistence/elastic.factory';
+import { IndexConfiguration } from '../app/persistence/elastic.setting';
 import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
 import {mcloudFactory} from "../app/profiles/mcloud/profile.factory";
 import {DeduplicateUtils} from "../app/profiles/mcloud/elastic/deduplicate.utils";
@@ -41,9 +41,9 @@ xdescribe('deduplication by similar title', function () {
     this.timeout(10000);
 
     // @ts-ignore
-    let settings: ElasticSettings = {
-        elasticSearchUrl: 'http://localhost:9200',
-        elasticSearchVersion: "6",
+    let config: IndexConfiguration = {
+        url: 'http://localhost:9200',
+        version: "6",
         deduplicationAlias: 'test-dedup'
     };
 
@@ -54,8 +54,8 @@ xdescribe('deduplication by similar title', function () {
         elasticErrors: []
     };
 
-    let elasticSearchUtils = ElasticSearchFactory.getElasticUtils(settings, summary);
-    let deduplicateUtils: DeduplicateUtils = (new mcloudFactory()).getDeduplicationUtils(elasticSearchUtils, settings, summary);
+    let elasticsearchUtils = ElasticsearchFactory.getElasticUtils(config, summary);
+    let deduplicateUtils: DeduplicateUtils = (new mcloudFactory()).getDeduplicationUtils(elasticsearchUtils, summary);
     //deduplicateUtils.deduplicationIndices = deduplicationIndices;
 
     /**
@@ -63,14 +63,14 @@ xdescribe('deduplication by similar title', function () {
      */
     before(async function () {
         // TODO this is missing "ignore: [404]"
-        await elasticSearchUtils.deleteIndex(
+        await elasticsearchUtils.deleteIndex(
             deduplicationIndices
         );
         await flush();
-        elasticSearchUtils.indexName = deduplicationIndices[0];
-        await elasticSearchUtils.prepareIndex(elasticsearchMapping, elasticsearchSettings);
-        elasticSearchUtils.indexName = deduplicationIndices[1];
-        await elasticSearchUtils.prepareIndex(elasticsearchMapping, elasticsearchSettings);
+        elasticsearchUtils.indexName = deduplicationIndices[0];
+        await elasticsearchUtils.prepareIndex(indexMappings, indexSettings);
+        elasticsearchUtils.indexName = deduplicationIndices[1];
+        await elasticsearchUtils.prepareIndex(indexMappings, indexSettings);
         await flush();
     });
 
@@ -79,11 +79,11 @@ xdescribe('deduplication by similar title', function () {
      */
     beforeEach(async function () {
         await deduplicationIndices.forEach(async (index) => {
-            let searchResponse = await elasticSearchUtils.search(
+            let searchResponse = await elasticsearchUtils.search(
                 index
             );
             await searchResponse.hits.hits.forEach(async (hit) =>
-                await elasticSearchUtils.deleteDocument(
+                await elasticsearchUtils.deleteDocument(
                     index,
                     hit._index
                 ));
@@ -102,7 +102,7 @@ xdescribe('deduplication by similar title', function () {
 
         // check only one document exists
         await flush();
-        let searchResponse = await elasticSearchUtils.search(deduplicationIndices);
+        let searchResponse = await elasticsearchUtils.search(deduplicationIndices);
         expect(searchResponse.hits.total).to.be.equal(1);
     });
 
@@ -112,13 +112,13 @@ xdescribe('deduplication by similar title', function () {
      * @param doc2
      */
     async function index(doc1, doc2) {
-        if (doc1) await elasticSearchUtils.index(deduplicationIndices[0], doc1);
-        if (doc2) await elasticSearchUtils.index(deduplicationIndices[1], doc2);
+        if (doc1) await elasticsearchUtils.index(deduplicationIndices[0], doc1);
+        if (doc2) await elasticsearchUtils.index(deduplicationIndices[1], doc2);
         await flush();
     }
 
     async function flush() {
-        await elasticSearchUtils.flush({ index: deduplicationIndices[0], ignore: [404] });
-        await elasticSearchUtils.flush({ index: deduplicationIndices[1], ignore: [404] });
+        await elasticsearchUtils.flush({ index: deduplicationIndices[0], ignore: [404] });
+        await elasticsearchUtils.flush({ index: deduplicationIndices[1], ignore: [404] });
     }
 });
