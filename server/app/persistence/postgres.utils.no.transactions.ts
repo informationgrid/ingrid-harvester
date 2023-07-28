@@ -21,11 +21,12 @@
  * ==================================================
  */
 
+import { Bucket } from './postgres.utils';
 import { BulkResponse, DatabaseUtils } from './database.utils';
 import { Client } from 'pg';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DeduplicateUtils } from './deduplicate.utils';
-import { ElasticsearchUtils } from './elastic.utils';
+import { ElasticsearchUtils, EsOperation } from './elastic.utils';
 import { Entity } from '../model/entity';
 import { IClient } from 'pg-promise/typescript/pg-subset';
 import { IDatabase, IMain, QueryColumns } from 'pg-promise';
@@ -63,7 +64,7 @@ export class PostgresUtils extends DatabaseUtils {
         PostgresUtils.db.none(PostgresQueries.createTable);
     }
 
-    async pushToElastic(elastic: ElasticsearchUtils, source: string) {
+    async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, processBucket: (bucket: Bucket) => Promise<EsOperation[]>): Promise<void> {
         throw new Error('Method not implemented.');
     }
 

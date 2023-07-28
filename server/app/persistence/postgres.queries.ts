@@ -47,4 +47,18 @@ export class PostgresQueries {
         PRIMARY KEY(identifier, source))`;
 
     static readDatasets = `SELECT dataset FROM public.${PostgresQueries.tableName}`;
+
+    static getBuckets = (source: string) => `SELECT A.id as primary_id, B.id as id, B.identifier as identifier,
+        B.dataset as dataset, A.id = B.id as is_primary,
+        (A.dataset->>'alternateTitle' = B.dataset->>'alternateTitle' AND A.id != B.id) as is_duplicate,
+        B.dataset->'extras'->'operates_on' ? A.identifier as is_operating_service
+        FROM ${PostgresQueries.tableName} as A
+        LEFT JOIN ${PostgresQueries.tableName} as B
+        ON (
+            A.dataset->>'alternateTitle' = B.dataset->>'alternateTitle'
+            OR B.dataset->'extras'->'operates_on' ? A.identifier
+        )
+        WHERE A.source = '${source}'
+            AND A.dataset->'extras'->>'hierarchy_level' = 'dataset'
+        ORDER BY primary_id`;
 }

@@ -21,9 +21,10 @@
  * ==================================================
  */
 
+import { Bucket } from './postgres.utils';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DeduplicateUtils } from './deduplicate.utils';
-import { ElasticsearchUtils } from './elastic.utils';
+import { ElasticsearchUtils, EsOperation } from './elastic.utils';
 import { Entity } from '../model/entity';
 import { Summary } from '../model/summary';
 
@@ -64,7 +65,11 @@ export abstract class DatabaseUtils {
 
     abstract rollbackTransaction(): Promise<void>;
 
-    abstract pushToElastic(elastic: ElasticsearchUtils, source: string): Promise<void>;
+    // abstract pushToElastic(elastic: ElasticsearchUtils, source: string): Promise<void>;
+
+    // abstract pushToElastic2ElectricBoogaloo(elastic: ElasticsearchUtils, source: string): Promise<void>;
+
+    abstract pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, processBucket: (bucket: Bucket) => Promise<EsOperation[]>): Promise<void>;
 
     static ping(configuration: Partial<DatabaseConfiguration>): Promise<boolean> {
         throw new Error('Method not implemented.');

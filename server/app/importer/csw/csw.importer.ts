@@ -24,7 +24,7 @@
 import { defaultCSWSettings, CswSettings } from './csw.settings';
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
-import { BulkResponse } from 'persistence/elastic.utils';
+import { BulkResponse } from '../../persistence/elastic.utils';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { ConfigService } from '../../services/config/ConfigService';
 import { CswMapper } from './csw.mapper';
@@ -112,36 +112,16 @@ export class CswImporter extends Importer {
             observer.complete();
         } else {
             try {
-                // when running an incremental harvest,
-                // clone the old index instead of preparing a new one
-                if (this.summary.isIncremental) {
-                    await this.elastic.cloneIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
-                }
-                else {
-                    await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
-                }
-                // TODO to decide: 1 index/harvester (keep next line), 1 unified index for all harvesters (don't prepare here)
-                await this.elastic.prepareIndex(this.profile.getElasticMapping(), this.profile.getElasticSettings());
                 await this.database.beginTransaction();
                 await this.harvest();
-                // send leftovers
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
-                    await this.elastic.sendBulkData(false);
-                    await this.elastic.sendBulkUpdate(false);
-                    // postHarvestingHandling has to be here, after indexing all data but before deduplicating
-                    await this.postHarvestingHandling();
-                    // deduplicatin happens in finishIndex()
-                    await this.database.sendBulkData();
                     if (this.summary.databaseErrors.length == 0) {
                         await this.database.commitTransaction();
-                        await this.database.pushToElastic(this.elastic, this.settings.getRecordsUrl);
+                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getRecordsUrl, this.processBucket);
                     }
                     else {
                         await this.database.rollbackTransaction();
                     }
-                    // TODO 1) move deduplication from ES to here (affect DB)
-                    // TODO 2) move data-service-coupling to here (affect DB)
-                    await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
                 } else {
@@ -151,18 +131,12 @@ export class CswImporter extends Importer {
                     log.error('No results during CSW import - Keep old index');
                     observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
                     observer.complete();
-
-                    // clean up index
-                    this.elastic.deleteIndex(this.elastic.indexName);
                 }
             } catch (err) {
                 this.summary.appErrors.push(err.message ? err.message : err);
                 log.error('Error during CSW import', err);
                 observer.next(ImportResult.complete(this.summary, 'Error happened'));
                 observer.complete();
-
-                // clean up index
-                this.elastic.deleteIndex(this.elastic.indexName);
             }
         }
     }
@@ -193,6 +167,8 @@ export class CswImporter extends Importer {
             // harvestConcurrently() also supports this.settings.maxConcurrent=1
             await this.harvestSequentially();
         }
+        // send leftovers
+        await this.database.sendBulkData();
     }
 
     protected async postHarvestingHandling(){

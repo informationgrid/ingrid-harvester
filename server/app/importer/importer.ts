@@ -21,11 +21,12 @@
  * ==================================================
  */
 
+import { Bucket } from '../persistence/postgres.utils';
 import { ConfigService } from '../services/config/ConfigService';
 import { DatabaseFactory } from '../persistence/database.factory';
 import { DatabaseUtils } from '../persistence/database.utils';
 import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { ElasticsearchUtils } from '../persistence/elastic.utils';
+import { ElasticsearchUtils, EsOperation } from '../persistence/elastic.utils';
 import { FilterUtils } from '../utils/filter.utils';
 import { ImporterSettings } from '../importer.settings';
 import { ImportLogMessage } from '../model/import.result';
@@ -66,5 +67,22 @@ export abstract class Importer {
 
     getSummary(): Summary {
         return this.summary;
+    }
+
+    /**
+     * Process a bucket of similar database rows and send a list of instructions to Elasticsearch,
+     * detailing how to handle the given documents.
+     * 
+     * This method is the right place to handle:
+     * - deduplication
+     * - data-service-coupling (CSW)
+     * - last-minute document updates
+     * 
+     * @param bucket 
+     * @returns a list of operations to send to Elasticsearch
+     */
+    protected async processBucket(bucket: Bucket): Promise<EsOperation[]> {
+        let { id, ...document } = bucket.primary;
+        return [{ operation: 'index', _id: id, document }];
     }
 }

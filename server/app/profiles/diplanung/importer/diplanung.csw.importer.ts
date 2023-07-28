@@ -21,12 +21,14 @@
  * ==================================================
  */
 
+import { Bucket } from '../../../persistence/postgres.utils';
 import { CswImporter } from '../../../importer/csw/csw.importer';
 import { DcatApPluDocument } from '../model/dcatApPlu.document';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { Distribution } from '../../../model/distribution';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
+import { EsOperation } from '../../../persistence/elastic.utils';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { MiscUtils } from '../../../utils/misc.utils';
@@ -54,6 +56,38 @@ export class DiplanungCswImporter extends CswImporter {
 
     getMapper(settings, record, harvestTime, storedData, summary, generalInfo): DiplanungCswMapper {
         return new DiplanungCswMapper(settings, record, harvestTime, storedData, summary, generalInfo);
+    }
+
+    protected async processBucket(bucket: Bucket): Promise<EsOperation[]> {
+        let box: EsOperation[] = [];
+        let { id: primary_id, source_type, ...document } = bucket.primary;
+        for (let service of bucket.operatingServices) {
+            document = this.resolveCoupling(document, service);
+            box.push({ operation: 'delete', _id: service.id });
+        }
+        for (let duplicate of bucket.duplicates) {
+            document = this.deduplicate(document, duplicate);
+            box.push({ operation: 'delete', _id: duplicate.id });
+        }
+        document = this.updateDataset(document);
+        document['extras']['transformed_data']['dcat_ap_plu'] = await DcatApPluDocument.create(new DiplanungVirtualMapper(document));
+        box.push({ operation: 'index', _id: primary_id, document });
+        return box;
+    }
+
+    private resolveCoupling(document, service): any {
+        log.warn("Coupling service and dataset");
+        return document;
+    }
+
+    private deduplicate(document, duplicate): any {
+        log.warn("Deduplicating dataset");
+        return document;
+    }
+
+    private updateDataset(document): any {
+        log.warn("Updating dataset");
+        return document;
     }
 
     /**
