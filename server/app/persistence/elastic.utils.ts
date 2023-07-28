@@ -54,9 +54,7 @@ export abstract class ElasticsearchUtils {
     public deduplicationUtils: DeduplicateUtils;
     public elasticQueries: ElasticQueries;
     public indexName: string;
-    public _bulkData: any[];
-    // TODO put everything in the same bulk array :)
-    public _bulkUpdateData: any[];
+    public _bulkOperationChunks: any[][];
 
     constructor(readonly config: IndexConfiguration) {
     }
@@ -115,6 +113,7 @@ export abstract class ElasticsearchUtils {
 
     /**
      * Index data in batches
+     *
      * @param {object} data
      * @param {boolean} closeAfterBulk
      */
@@ -123,8 +122,19 @@ export abstract class ElasticsearchUtils {
     abstract bulkWithIndexName(index: string, type, data, closeAfterBulk: boolean): Promise<BulkResponse>;
 
     /**
+     * Add multiple operations to the bulk array which will be sent to the elasticsearch node
+     * if a certain limit {{maxBulkSize}} is reached.
+     *
+     * The operations are sent in the same request.
+     *
+     * @param boxedOperations 
+     */
+    abstract addOperationChunksToBulk(boxedOperations: EsOperation[]): Promise<BulkResponse>;
+
+    /**
      * Add a document to the bulk array which will be sent to the elasticsearch node
      * if a certain limit {{maxBulkSize}} is reached.
+     *
      * @param doc
      * @param {string|number} id
      * @param {number} maxBulkSize
@@ -136,13 +146,7 @@ export abstract class ElasticsearchUtils {
      *
      * @param {boolean} closeAfterBulk
      */
-    abstract sendBulkData(closeAfterBulk?: boolean): Promise<BulkResponse>;
-
-    abstract bulkUpdate(updateDocuments: any[], closeAfterBulk: boolean): Promise<BulkResponse>;
-
-    abstract addDocsToBulkUpdate(docs: any[], maxBulkSize?: number): Promise<BulkResponse>;
-
-    abstract sendBulkUpdate(closeAfterBulk?: boolean): Promise<BulkResponse>;
+    abstract sendBulkOperations(closeAfterBulk?: boolean): Promise<BulkResponse>;
 
     /**
      * Searches the index for documents with the given ids and copies a set of the issued

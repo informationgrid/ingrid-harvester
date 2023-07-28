@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { BulkResponse, ElasticsearchUtils } from './elastic.utils';
+import { BulkResponse, ElasticsearchUtils, EsOperation } from './elastic.utils';
 import { Client } from 'elasticsearch7';
 import { Index } from '@shared/index.model';
 import { IndexConfiguration, IndexSettings } from './elastic.setting';
@@ -47,7 +47,7 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
             },
             requestTimeout: 30000
         });
-        this._bulkData = [];
+        this._bulkOperationChunks = [];
         this.indexName = config.prefix + config.index;
 
         let profile = ProfileFactoryLoader.get();
@@ -208,12 +208,12 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
             });
     }
 
-    async bulk(data, closeAfterBulk): Promise<BulkResponse> {
+    async bulk(bulkOperations: any[], closeAfterBulk: boolean): Promise<BulkResponse> {
         try {
             let { body: response } = await this.client.bulk({
                 index: this.indexName,
                 type: this.config.indexType || 'base',
-                body: data
+                body: bulkOperations
             });
             if (response.errors) {
                 response.items.forEach(item => {
@@ -227,7 +227,7 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
                 log.debug('Closing client connection to Elasticsearch');
                 this.client.close();
             }
-            log.debug('Bulk finished of data #items: ' + data.length / 2);
+            log.debug('Bulk finished of #operations + #docs: ' + bulkOperations.length);
             return {
                 queued: false,
                 response: response
@@ -237,7 +237,7 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
             if (closeAfterBulk) {
                 this.client.close();
             }
-            this.handleError('Error during bulk indexing of #items: ' + data.length / 2, e);
+            this.handleError('Error during bulk #operations + #docs: ' + bulkOperations.length, e);
         }
     }
 
@@ -282,21 +282,29 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
         });
     }
 
-    async addDocToBulk(doc, id, maxBulkSize=ElasticsearchUtils.maxBulkSize): Promise<BulkResponse> {
-        this._bulkData.push({
-            index: {
-                _id: id
+    async addOperationChunksToBulk(boxedOperations: EsOperation[]): Promise<BulkResponse> {
+        let operationChunk = [];
+        for (let { operation, _id, document } of boxedOperations) {
+            operationChunk.push({ [operation]: { _id } });
+            switch (operation) {
+                case 'index':
+                    operationChunk.push(document);
+                    break;
+                case 'create':
+                    operationChunk.push(document);
+                    break;
+                case 'update':
+                    operationChunk.push({ doc: document });
+                    break;
+                case 'delete':
+                    // delete expects no document
+                    break;
             }
-        });
-        this._bulkData.push(doc);
+        }
+        this._bulkOperationChunks.push(operationChunk);
 
-        // this.deduplicationUtils._queueForDuplicateSearch(doc, id);
-
-        // send data to elasticsearch if limit is reached
-        // TODO: don't use document size but bytes instead
-        // await this.client.cluster.health({ wait_for_status: 'yellow' });
-        if (this._bulkData.length >= (maxBulkSize * 2)) {
-            return this.sendBulkData();
+        if (this._bulkOperationChunks.length >= ElasticsearchUtils.maxBulkSize) {
+            return this.sendBulkOperations();
         } else {
             return new Promise(resolve => resolve({
                 queued: true
@@ -304,28 +312,21 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
         }
     }
 
-    sendBulkData(closeAfterBulk?): Promise<BulkResponse> {
-        if (this._bulkData.length > 0) {
-            log.debug('Sending BULK message with ' + (this._bulkData.length / 2) + ' items to index ' + this.indexName);
-            let promise = this.bulk(this._bulkData, closeAfterBulk);
-            this._bulkData = [];
+    async addDocToBulk(document, id, maxBulkSize=ElasticsearchUtils.maxBulkSize): Promise<BulkResponse> {
+        return this.addOperationChunksToBulk([{ operation: 'index', _id: id, document }]);
+    }
+
+    sendBulkOperations(closeAfterBulk?: boolean): Promise<BulkResponse> {
+        if (this._bulkOperationChunks.length > 0) {
+            let bulkOperations = this._bulkOperationChunks.flat(1);
+            log.debug('Sending BULK message with ' + this._bulkOperationChunks.length + ' operation chunks to ' + this.indexName);
+            let promise = this.bulk(bulkOperations, closeAfterBulk);
+            this._bulkOperationChunks = [];
             return promise;
         }
         return new Promise(resolve => resolve({
             queued: true
         }));
-    }
-
-    bulkUpdate(updateDocuments: any[]): Promise<BulkResponse> {
-        throw new Error('Method not implemented.');
-    }
-
-    addDocsToBulkUpdate(docs: any[], maxBulkSize?: number): Promise<BulkResponse> {
-        throw new Error('Method not implemented.');
-    }
-
-    sendBulkUpdate(closeAfterBulk?: boolean): Promise<BulkResponse> {
-        throw new Error('Method not implemented.');
     }
 
     async getStoredData(ids) {
