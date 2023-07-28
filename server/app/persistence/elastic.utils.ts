@@ -35,6 +35,15 @@ export interface BulkResponse {
     response?: any;
 }
 
+/**
+ * Contains an operation to send to Elasticsearch via bulk request.
+ */
+export interface EsOperation {
+    operation: 'index' | 'create' | 'update' | 'delete',
+    _id: any,
+    document?: any
+}
+
 export abstract class ElasticsearchUtils {
 
     protected client: Client6 | Client7 | Client8;

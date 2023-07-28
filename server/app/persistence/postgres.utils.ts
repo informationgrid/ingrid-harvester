@@ -35,6 +35,15 @@ const QueryStream = require('pg-query-stream');
 const TransformToBulk = require('elasticsearch-streams').TransformToBulk;
 const WritableBulk = require('elasticsearch-streams').WritableBulk;
 
+/**
+ * Contains a primary dataset, a list of duplicates, and a list of services operating on the primary dataset.
+ */
+export interface Bucket {
+    primary: any,
+    duplicates: any[],
+    operatingServices: any[]
+}
+
 export class PostgresUtils extends DatabaseUtils {
 
     static pool: Pool;
