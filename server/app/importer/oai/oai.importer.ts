@@ -24,8 +24,7 @@
 import { defaultOAISettings, OaiSettings } from './oai.settings';
 import { namespaces } from '../../importer/namespaces';
 import { getLogger } from 'log4js';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-
+import { Entity } from '../../model/entity';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
@@ -33,6 +32,7 @@ import { OaiMapper } from './oai.mapper';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 
 let log = require('log4js').getLogger(__filename),
@@ -75,10 +75,10 @@ export class OaiImporter extends Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+                // await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
                 await this.harvest();
-                await this.elastic.sendBulkData(false);
-                await this.elastic.finishIndex();
+                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.providerUrl, this.processBucket);
+                // await this.elastic.finishIndex();
                 observer.next(ImportResult.complete(this.summary));
                 observer.complete();
 
@@ -89,7 +89,7 @@ export class OaiImporter extends Importer {
                 observer.complete();
 
                 // clean up index
-                this.elastic.deleteIndex(this.elastic.indexName);
+                // this.elastic.deleteIndex(this.elastic.indexName);
             }
         }
     }
@@ -129,7 +129,7 @@ export class OaiImporter extends Importer {
                 break;
             }
         }
-
+        this.database.sendBulkData();
     }
 
     async extractRecords(getRecordsResponse, harvestTime) {
@@ -174,19 +174,23 @@ export class OaiImporter extends Importer {
                 mapper.skipped = true;
             });
 
-            if (!mapper.shouldBeSkipped()) {
-                if (!this.settings.dryRun) {
-                    promises.push(
-                        this.elastic.addDocToBulk(doc, uuid)
-                            .then(response => {
-                                if (!response.queued) {
-                                    // numIndexDocs += ElasticsearchUtils.maxBulkSize;
-                                    // this.observer.next(ImportResult.running(numIndexDocs, records.length));
-                                }
-                            })
-                    );
-                }
-
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+                let entity: Entity = {
+                    identifier: uuid,
+                    source: this.settings.providerUrl,
+                    collection_id: 'harvester',
+                    dataset: doc,
+                    raw: mapper.getHarvestedData()
+                };
+                promises.push(
+                    this.database.addEntityToBulk(entity)
+                        .then(response => {
+                            if (!response.queued) {
+                                // numIndexDocs += ElasticsearchUtils.maxBulkSize;
+                                // this.observer.next(ImportResult.running(numIndexDocs, records.length));
+                            }
+                        })
+                );
             } else {
                 this.summary.skippedDocs.push(uuid);
             }

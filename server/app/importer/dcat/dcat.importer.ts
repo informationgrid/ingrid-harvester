@@ -25,6 +25,7 @@ import { namespaces } from '../../importer/namespaces';
 import { getLogger } from 'log4js';
 import { DcatMapper } from './dcat.mapper';
 import { DcatSettings, defaultDCATSettings } from './dcat.settings';
+import { Entity } from '../../model/entity';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
@@ -75,10 +76,10 @@ export class DcatImporter extends Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+                // await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
                 await this.harvest();
-                await this.elastic.sendBulkData(false);
-                await this.elastic.finishIndex();
+                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.catalogUrl, this.processBucket);
+                // await this.elastic.finishIndex();
                 observer.next(ImportResult.complete(this.summary));
                 observer.complete();
 
@@ -89,7 +90,7 @@ export class DcatImporter extends Importer {
                 observer.complete();
 
                 // clean up index
-                this.elastic.deleteIndex(this.elastic.indexName);
+                // this.elastic.deleteIndex(this.elastic.indexName);
             }
         }
     }
@@ -153,7 +154,7 @@ export class DcatImporter extends Importer {
 
             if (isLastPage) break;
         }
-
+        await this.database.sendBulkData();
     }
 
     async extractRecords(getRecordsResponse, harvestTime) {
@@ -209,19 +210,23 @@ export class DcatImporter extends Importer {
                 mapper.skipped = true;
             });
 
-            if (!mapper.shouldBeSkipped()) {
-                if (!this.settings.dryRun) {
-                    promises.push(
-                        this.elastic.addDocToBulk(doc, uuid)
-                            .then(response => {
-                                if (!response.queued) {
-                                    // numIndexDocs += ElasticsearchUtils.maxBulkSize;
-                                    // this.observer.next(ImportResult.running(numIndexDocs, records.length));
-                                }
-                            })
-                    );
-                }
-
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+                let entity: Entity = {
+                    identifier: uuid,
+                    source: this.settings.catalogUrl,
+                    collection_id: 'harvester',
+                    dataset: doc,
+                    raw: mapper.getHarvestedData()
+                };
+                promises.push(
+                    this.database.addEntityToBulk(entity)
+                        .then(response => {
+                            if (!response.queued) {
+                                // numIndexDocs += ElasticsearchUtils.maxBulkSize;
+                                // this.observer.next(ImportResult.running(numIndexDocs, records.length));
+                            }
+                        })
+                );
             } else {
                 this.summary.skippedDocs.push(uuid);
             }

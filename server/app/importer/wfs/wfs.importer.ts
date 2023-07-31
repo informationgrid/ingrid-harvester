@@ -27,6 +27,7 @@ import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { Contact } from '../../model/agent';
+import { Entity } from '../../model/entity';
 import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
@@ -91,11 +92,11 @@ export abstract class WfsImporter extends Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+                // await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
                 await this.harvest();
                 if(this.numIndexDocs > 0) {
-                    await this.elastic.sendBulkData(false);
-                    await this.elastic.finishIndex();
+                    await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getFeaturesUrl, this.processBucket);
+                    // await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
                 } else {
@@ -107,7 +108,7 @@ export abstract class WfsImporter extends Importer {
                     observer.complete();
 
                     // clean up index
-                    this.elastic.deleteIndex(this.elastic.indexName);
+                    // this.elastic.deleteIndex(this.elastic.indexName);
                 }
             } catch (err) {
                 this.summary.appErrors.push(err.message ? err.message : err);
@@ -116,13 +117,12 @@ export abstract class WfsImporter extends Importer {
                 observer.complete();
 
                 // clean up index
-                this.elastic.deleteIndex(this.elastic.indexName);
+                // this.elastic.deleteIndex(this.elastic.indexName);
             }
         }
     }
 
     async harvest() {
-
         let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resolveWithFullResponse: true }, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
         let capabilitiesResponse: Response = await capabilitiesRequestDelegate.doRequest();
@@ -242,12 +242,10 @@ export abstract class WfsImporter extends Importer {
             if (!this.supportsPaging || this.totalFeatures < this.requestDelegate.getStartRecordIndex()) {
                 break;
             }
+            await this.database.sendBulkData();
         }
-        // TODO: how to couple WFS?
-        // this.createDataServiceCoupling();
     }
 
-    // ED: TODO
     async extractFeatures(getFeatureResponse, harvestTime) {
         let promises = [];
         let xml = new DomParser().parseFromString(getFeatureResponse, 'application/xml');
@@ -312,11 +310,15 @@ export abstract class WfsImporter extends Importer {
                 mapper.skipped = true;
             });
 
-            if (!mapper.shouldBeSkipped()) {
-                if (!this.settings.dryRun) {
-                    promises.push(this.elastic.addDocToBulk(doc, uuid));
-                }
-
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+                let entity: Entity = {
+                    identifier: uuid,
+                    source: this.settings.getFeaturesUrl,
+                    collection_id: 'harvester',
+                    dataset: doc,
+                    raw: mapper.getHarvestedData()
+                };
+                promises.push(this.database.addEntityToBulk(entity));
             } else {
                 this.summary.skippedDocs.push(uuid);
             }

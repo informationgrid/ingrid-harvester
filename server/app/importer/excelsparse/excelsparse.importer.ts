@@ -21,17 +21,18 @@
  * ==================================================
  */
 
-import {ElasticsearchUtils} from '../../persistence/elastic.utils';
-import {ExcelSparseMapper} from './excelsparse.mapper';
-import {Workbook, Worksheet} from 'exceljs';
-import {Summary} from '../../model/summary';
-import {Importer} from '../importer';
-import {Observer} from 'rxjs';
-import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {DefaultCatalogSettings, defaultExcelSparseSettings, ExcelSparseSettings} from './excelsparse.settings';
+import { defaultExcelSparseSettings, ExcelSparseSettings } from './excelsparse.settings';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils';
+import { Entity } from '../../model/entity';
+import { ExcelSparseMapper } from './excelsparse.mapper';
+import { Importer } from '../importer';
+import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
-import {ProfileFactory} from "../../profiles/profile.factory";
-import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
+import { Observer } from 'rxjs';
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { Summary } from '../../model/summary';
+import { Workbook, Worksheet } from 'exceljs';
 
 let log = require('log4js').getLogger(__filename);
 
@@ -77,11 +78,11 @@ export class ExcelSparseImporter extends Importer {
 
         let promises = [];
         try {
-            if (this.settings.dryRun) {
-                log.debug('Dry run option enabled. Skipping index creation.');
-            } else {
-                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
-            }
+            // if (this.settings.dryRun) {
+            //     log.debug('Dry run option enabled. Skipping index creation.');
+            // } else {
+            //     await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+            // }
             await workbook.xlsx.readFile(this.excelFilepath);
 
             log.debug('done loading file');
@@ -127,13 +128,20 @@ export class ExcelSparseImporter extends Importer {
                     currentIndexName: this.elastic.indexName,
                     summary: this.summary
                 }, generalInfo);
-                let doc = await this.profile.getIndexDocument().create(mapper)
-                    .catch(e => this.handleIndexDocError(e, mapper));
 
                 // add document to buffer and send to elasticsearch if full
                 if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+                    let doc = await this.profile.getIndexDocument().create(mapper)
+                        .catch(e => this.handleIndexDocError(e, mapper));
+                    let entity: Entity = {
+                        identifier: unit.id,
+                        source: this.settings.filePath,
+                        collection_id: 'harvester',
+                        dataset: doc,
+                        raw: mapper.getHarvestedData()
+                    };
                     promises.push(
-                        this.elastic.addDocToBulk(doc, unit.id).then(response => {
+                        this.database.addEntityToBulk(entity).then(response => {
                             if (!response.queued) {
                                 //let currentPos = this.summary.numDocs++;
                                 numIndexDocs += ElasticsearchUtils.maxBulkSize;
@@ -142,13 +150,13 @@ export class ExcelSparseImporter extends Importer {
                         })
                     );
                 }
-
             }
 
             log.debug('Waiting for #promises to finish: ' + promises.length);
             Promise.all(promises)
+                .then(() => this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.filePath, this.processBucket))
                 .then(() => observer.next(ImportResult.message('Running post operations')))
-                .then(() => this.elastic.finishIndex())
+                // .then(() => this.elastic.finishIndex())
                 .then( () => {
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
@@ -162,7 +170,7 @@ export class ExcelSparseImporter extends Importer {
             observer.complete();
 
             // clean up index
-            await this.elastic.deleteIndex(this.elastic.indexName);
+            // await this.elastic.deleteIndex(this.elastic.indexName);
         }
     }
 

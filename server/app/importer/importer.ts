@@ -47,15 +47,15 @@ export abstract class Importer {
         this.filterUtils = new FilterUtils(settings);
 
         let generalConfig = ConfigService.getGeneralSettings();
-        let elasticSearchConfig: IndexConfiguration = {
+        let elasticsearchConfig: IndexConfiguration = {
             ...generalConfig.elasticsearch,
             includeTimestamp: true,
-            index: settings.index,
+            index: "index_name_here",   // TODO
             dryRun: settings.dryRun,
             addAlias: !settings.disable
         };
         this.database = DatabaseFactory.getDatabaseUtils(generalConfig.database, this.summary);
-        this.elastic = ElasticsearchFactory.getElasticUtils(elasticSearchConfig, this.summary);
+        this.elastic = ElasticsearchFactory.getElasticUtils(elasticsearchConfig, this.summary);
     }
 
     run: Observable<ImportLogMessage> = new Observable<ImportLogMessage>(observer => {

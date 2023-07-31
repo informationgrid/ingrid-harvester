@@ -310,18 +310,16 @@ export class CswImporter extends Importer {
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
             }
-            let entity: Entity = {
-                identifier: uuid,
-                source: this.settings.getRecordsUrl,
-                collection_id: 'harvester',
-                dataset: doc,
-                raw: mapper.getHarvestedData()
-            };
 
-            if (!mapper.shouldBeSkipped()) {
-                if (!this.settings.dryRun) {
-                    promises.push(this.database.addEntityToBulk(entity));
-                }
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+                let entity: Entity = {
+                    identifier: uuid,
+                    source: this.settings.getRecordsUrl,
+                    collection_id: 'harvester',
+                    dataset: doc,
+                    raw: mapper.getHarvestedData()
+                };
+                promises.push(this.database.addEntityToBulk(entity));
             } else {
                 this.summary.skippedDocs.push(uuid);
             }

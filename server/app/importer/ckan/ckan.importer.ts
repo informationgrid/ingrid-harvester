@@ -21,17 +21,18 @@
  * ==================================================
  */
 
-import {ElasticsearchUtils} from '../../persistence/elastic.utils';
-import {Summary} from '../../model/summary';
-import {Importer} from '../importer';
-import {RequestDelegate} from '../../utils/http-request.utils';
-import {CkanMapper, CkanMapperData} from './ckan.mapper';
-import {Observer} from 'rxjs';
-import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {CkanSettings, defaultCKANSettings} from './ckan.settings';
+import { CkanMapper, CkanMapperData } from './ckan.mapper';
+import { CkanSettings, defaultCKANSettings } from './ckan.settings';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils';
+import { Entity } from '../../model/entity';
+import { Importer } from '../importer';
+import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
-import {ProfileFactory} from "../../profiles/profile.factory";
-import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
+import { Observer } from 'rxjs';
+import { ProfileFactory } from "../../profiles/profile.factory";
+import { ProfileFactoryLoader } from "../../profiles/profile.factory.loader";
+import { RequestDelegate } from '../../utils/http-request.utils';
+import { Summary } from '../../model/summary';
 
 let log = require('log4js').getLogger(__filename);
 
@@ -101,7 +102,7 @@ export class CkanImporter extends Importer {
                 return;
             }
 
-            return this.indexDocument(doc, data.source.id);
+            return this.indexDocument(doc, mapper.getHarvestedData(), data.source.id);
 
         } catch (e) {
             log.error('Error: ' + e);
@@ -112,14 +113,21 @@ export class CkanImporter extends Importer {
         // For Profile specific Handling
     }
 
-    private indexDocument(doc, sourceID) {
+    private indexDocument(doc, harvestedData, sourceID) {
         if (!this.settings.dryRun) {
-            return this.elastic.addDocToBulk(doc, sourceID)
+            let entity: Entity = {
+                identifier: sourceID,
+                source: this.settings.ckanBaseUrl,
+                collection_id: 'harvester',
+                dataset: doc,
+                raw: harvestedData
+            };
+            return this.database.addEntityToBulk(entity)
                 .then(response => {
                     if (!response.queued) {
                         this.numIndexDocs += ElasticsearchUtils.maxBulkSize;
                     }
-                }).then(() => this.elastic.health('yellow'));
+                });
         }
     }
 
@@ -127,7 +135,7 @@ export class CkanImporter extends Importer {
         let promises = [];
 
         try {
-            await this.prepareIndex();
+            // await this.prepareIndex();
 
             // get total number of documents
             let countJson = await this.requestDelegateCount.doRequest();
@@ -139,7 +147,7 @@ export class CkanImporter extends Importer {
                 let warnMessage = `Could not harvest any datasets from ${this.settings.ckanBaseUrl}`;
                 await this.handleImportError(warnMessage, observer);
             } else {
-                return this.finishImport(promises, observer);
+                // return this.finishImport(promises, observer);
             }
 
         } catch (err) {
@@ -153,8 +161,8 @@ export class CkanImporter extends Importer {
         this.sendFinishMessage(observer, message);
 
         // clean up index
-        await this.elastic.deleteIndex(this.elastic.indexName)
-            .catch(e => log.error(e.message));
+        // await this.elastic.deleteIndex(this.elastic.indexName)
+        //     .catch(e => log.error(e.message));
     }
 
     private finishImport(promises: any[], observer: Observer<ImportLogMessage>) {
@@ -248,11 +256,12 @@ export class CkanImporter extends Importer {
     }
 
     private postIndexActions() {
-        if (this.settings.dryRun) {
-            log.debug('Skipping finalisation of index for dry run.');
-        } else {
-            return this.elastic.finishIndex();
-        }
+        // if (this.settings.dryRun) {
+        //     log.debug('Skipping finalisation of index for dry run.');
+        // }
+        // else {
+        //     return this.elastic.finishIndex();
+        // }
     }
 
     private sendFinishMessage(observer: Observer<ImportLogMessage>, message?: string) {
