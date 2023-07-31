@@ -35,7 +35,7 @@ export interface BulkResponse {
 
 export abstract class DatabaseUtils {
 
-    protected static maxBulkSize: number = 50;
+    public static maxBulkSize: number = 50;
     protected summary: Summary;
     public deduplicationUtils: DeduplicateUtils;
     
@@ -52,7 +52,7 @@ export abstract class DatabaseUtils {
      * @param entity
      * @param {number} maxBulkSize
      */
-    abstract addEntityToBulk(entity: Entity, maxBulkSize?: number): Promise<BulkResponse>;
+    abstract addEntityToBulk(entity: Entity): Promise<BulkResponse>;
 
     /**
      * Send all collected bulk data if any.

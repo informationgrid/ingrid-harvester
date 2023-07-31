@@ -38,7 +38,6 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
         super(config);
         this.summary = summary;
 
-        // the elasticsearch client for accessing the cluster
         this.client = new Client({
             node: config.url,
             auth: {
@@ -78,9 +77,9 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
     }
 
     async prepareIndex(mappings, settings: IndexSettings, openIfPresent=false) {
-        if (this.config.includeTimestamp) {
-            this.indexName += '_' + this.getTimeStamp(new Date());
-        }
+        // if (this.config.includeTimestamp) {
+        //     this.indexName += '_' + this.getTimeStamp(new Date());
+        // }
         return await this.prepareIndexWithName(this.indexName, mappings, settings, openIfPresent);
     }
 
@@ -136,14 +135,14 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
         }
 
         try {
-            await this.client.cluster.health({wait_for_status: 'yellow'});
+            await this.client.cluster.health({ wait_for_status: 'yellow' });
             await this.sendBulkOperations(false);
             if (closeIndex) {
-                await this.deleteOldIndices(this.config.index, this.indexName);
-                if (this.config.addAlias) {
-                    await this.addAlias(this.indexName, this.config.alias);
-                }
-                await this.deduplicationUtils.deduplicate();
+                // await this.deleteOldIndices(this.config.index, this.indexName);
+                // if (this.config.addAlias) {
+                //     await this.addAlias(this.indexName, this.config.alias);
+                // }
+                // await this.deduplicationUtils.deduplicate();
                 await this.client.close();
             }
             log.info('Successfully added data into index: ' + this.indexName);
@@ -586,12 +585,4 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
         let { body: response } = await this.client.ping();
         return response;
     }
-
-    // async health(status: 'green' | 'yellow' | 'red' = 'yellow'): Promise<any> {
-    //     return this.client.cluster.health({ wait_for_status: status });
-    // }
-
-    // async flush(): Promise<any> {
-    //     await this.client.indices.flush();
-    // };
 }

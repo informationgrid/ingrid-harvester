@@ -29,7 +29,7 @@ export interface IndexConfiguration extends ElasticsearchConfiguration {
     indexType?: string,
     addAlias?: boolean,
     deduplicationAlias?: string,
-    includeTimestamp: boolean
+    includeTimestamp?: boolean
 }
 
 export interface IndexSettings {

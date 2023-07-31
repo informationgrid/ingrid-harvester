@@ -252,13 +252,13 @@ export class PostgresUtils extends DatabaseUtils {
         }));
     }
 
-    addEntityToBulk(entity: Entity, maxBulkSize=DatabaseUtils.maxBulkSize): Promise<BulkResponse> {
+    addEntityToBulk(entity: Entity): Promise<BulkResponse> {
         this._bulkData.push(entity);
 
         // this.deduplicationUtils._queueForDuplicateSearch(doc, id);
 
         // send data to elasticsearch if limit is reached
-        if (this._bulkData.length >= maxBulkSize) {
+        if (this._bulkData.length >= DatabaseUtils.maxBulkSize) {
             return this.sendBulkData();
         }
         else {
