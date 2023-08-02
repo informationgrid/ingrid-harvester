@@ -252,9 +252,14 @@ export class RequestDelegate {
         let fullURL = RequestDelegate.getFullURL(config);
         let response = fetch(fullURL, config);
 
+        if (config.resolveWithFullResponse) {
+            return response;
+        }
+
+        let resolvedResponse;
         while (retry > 0) {
             try {
-                await response;
+                resolvedResponse = await response;
                 break;
             }
             catch (e) {
@@ -271,11 +276,6 @@ export class RequestDelegate {
             }
         };
 
-        if (config.resolveWithFullResponse) {
-            return response;
-        }
-
-        let resolvedResponse = await response;
         if (config.accept && !resolvedResponse.headers.get('content-type').includes(config.accept)) {
             return null;
         }
