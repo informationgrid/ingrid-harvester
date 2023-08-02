@@ -21,18 +21,20 @@
  * ==================================================
  */
 
-import { Contact } from '../../../model/agent';
-import { DcatApPluDocument } from './dcatApPlu.document';
+import { Contact, Organization, Person } from '../../../model/agent';
+import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from 'model/dcatApPlu.model';
+import { DateRange } from '../../../model/dateRange';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
 import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
+import { Distribution } from '../../../model/distribution';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { IndexDocument } from '../../../model/index.document';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
 export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
 
-    async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper) : Promise<any> {
+    async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper) : Promise<DiplanungIndexDocument> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let contactPoint: Contact = await mapper.getContactPoint() ?? { fn: '' };
         let result = {
@@ -71,7 +73,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             centroid: mapper.getCentroid()?.['coordinates'],
             spatial: mapper.getSpatial(),
             spatial_text: mapper.getSpatialText(),
-            temporal: mapper.getTemporal(),
+            // temporal: mapper.getTemporal(),
             // additional information and metadata
             relation: mapper.getRelation(),
             catalog: await mapper.getCatalog(),
@@ -80,7 +82,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             contributors: await mapper.getContributors(),
             distributions: await mapper.getDistributions(),
             extras: {
-                harvested_data: mapper.getHarvestedData(),
+                // harvested_data: mapper.getHarvestedData(),
                 hierarchy_level: mapper.getHierarchyLevel(),    // only csw
                 metadata: {
                     harvested: mapper.getMetadataHarvested(),
@@ -91,9 +93,9 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
                     source: mapper.getMetadataSource()
                 },
                 operates_on: mapper.getOperatesOn(),    // only csw
-                transformed_data: {
-                    [DcatApPluDocument.getExportFormat()]: await DcatApPluDocument.create(_mapper),
-                }
+                // transformed_data: {
+                //     [DcatApPluDocument.getExportFormat()]: await DcatApPluDocument.create(_mapper),
+                // }
             },
             issued: mapper.getIssued(),
             keywords: mapper.getKeywords(),
@@ -110,3 +112,64 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
         return result;
     }
 }
+
+export type DiplanungIndexDocument = {
+    // mandatory
+    contact_point: {
+        fn: string,
+        has_country_name?: string,
+        has_locality?: string,
+        has_postal_code?: string,
+        has_region?: string,
+        has_street_address?: string,
+        has_email?: string,
+        has_telephone?: string,
+        has_uid?: string,
+        has_url?: string,
+        has_organization_name?: string
+    },
+    description: string,
+    identifier: string,
+    title: string,
+    plan_state: PluPlanState,
+    procedure_state: PluProcedureState,
+    publisher: Person | Organization,
+    // recommended
+    adms_identifier: string,
+    plan_type: PluPlanType,
+    plan_type_fine: string,
+    procedure_type: PluProcedureType,
+    distributions: Distribution[],
+    process_steps: ProcessStep[],
+    bounding_box: any,
+    spatial: any,
+    // optional
+    issued: Date,
+    modified: Date,
+    relation: string,
+    notification: string,
+    procedure_start_date: Date,
+    development_freeze_period: DateRange,
+    maintainers: Person[] | Organization[],
+    contributors: Person[] | Organization[],
+    centroid: any,
+    spatial_text: string,
+    // additional information and metadata
+    alternateTitle: string,
+    catalog: Catalog,
+    plan_or_procedure_start_date: Date,
+    // temporal: DateRange[],
+    extras: {
+        hierarchy_level: string,
+        metadata: {
+            harvested: Date,
+            harvesting_errors: null, // get errors after all operations been done
+            issued: Date,
+            is_valid: null, // checks validity after all operations been done
+            modified: Date,
+            source: string
+        },
+        operates_on: string[]
+    },
+    keywords: string[]
+};

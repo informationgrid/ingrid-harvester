@@ -24,6 +24,7 @@
 import { Bucket } from '../../../persistence/postgres.utils';
 import { CswImporter } from '../../../importer/csw/csw.importer';
 import { DcatApPluDocument } from '../model/dcatApPlu.document';
+import { DcatApPluDocumentFactory } from '../model/dcatapplu.document.factory';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { Distribution } from '../../../model/distribution';
@@ -70,7 +71,7 @@ export class DiplanungCswImporter extends CswImporter {
             box.push({ operation: 'delete', _id: duplicate.id });
         }
         document = this.updateDataset(document);
-        document['extras']['transformed_data']['dcat_ap_plu'] = await DcatApPluDocument.create(new DiplanungVirtualMapper(document));
+        document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
         box.push({ operation: 'index', _id: primary_id, document });
         return box;
     }
