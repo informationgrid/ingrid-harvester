@@ -29,7 +29,7 @@ import { DiplanungCswMapper } from './diplanung.csw.mapper';
 import { DiplanungVirtualMapper } from './diplanung.virtual.mapper';
 import { Distribution } from '../../../model/distribution';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
-import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from 'model/dcatApPlu.model';
+import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
 const dayjs = require('dayjs');
@@ -105,7 +105,7 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper._getPluProcessSteps();
     }
 
-    getPluNotification(): string[] {
+    getPluNotification(): string {
         return this.baseMapper._getPluNotification();
     }
 
