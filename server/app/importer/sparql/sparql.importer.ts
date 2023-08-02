@@ -83,6 +83,7 @@ export class SparqlImporter extends Importer {
         } else {
             try {
                 // await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+                await this.database.beginTransaction();
                 await this.harvest().catch(err => {
                     this.summary.appErrors.push(err.message ? err.message : err);
                     log.error('Error during SPARQL import', err);
@@ -92,7 +93,8 @@ export class SparqlImporter extends Importer {
                 await this.database.sendBulkData();
 
                 if(this.numIndexDocs > 0) {
-                    await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.endpointUrl, this.processBucket);
+                    await this.database.commitTransaction();
+                    await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.endpointUrl, (bucket) => this.processBucket(bucket));
                     // await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();

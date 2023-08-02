@@ -171,8 +171,12 @@ export class ExcelImporter extends Importer {
             }
 
             log.debug('Waiting for #promises to finish: ' + promises.length);
+            await this.database.beginTransaction();
             Promise.all(promises)
-                .then(() => this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.filePath, this.processBucket))
+                .then(async () => {
+                    await this.database.commitTransaction();
+                    this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.filePath, (bucket) => this.processBucket(bucket))
+                })
                 .then(() => observer.next(ImportResult.message('Running post operations')))
                 // .then(() => this.elastic.finishIndex())
                 .then( () => {

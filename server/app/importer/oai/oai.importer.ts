@@ -76,8 +76,10 @@ export class OaiImporter extends Importer {
         } else {
             try {
                 // await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+                await this.database.beginTransaction();
                 await this.harvest();
-                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.providerUrl, this.processBucket);
+                await this.database.commitTransaction();
+                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.providerUrl, (bucket) => this.processBucket(bucket));
                 // await this.elastic.finishIndex();
                 observer.next(ImportResult.complete(this.summary));
                 observer.complete();

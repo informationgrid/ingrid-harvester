@@ -93,9 +93,16 @@ export abstract class WfsImporter extends Importer {
         } else {
             try {
                 // await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+                await this.database.beginTransaction();
                 await this.harvest();
                 if(this.numIndexDocs > 0) {
-                    await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getFeaturesUrl, this.processBucket);
+                    if (this.summary.databaseErrors.length == 0) {
+                        await this.database.commitTransaction();
+                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getFeaturesUrl, (bucket) => this.processBucket(bucket));
+                    }
+                    else {
+                        await this.database.rollbackTransaction();
+                    }
                     // await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
