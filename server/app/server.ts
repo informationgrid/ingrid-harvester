@@ -21,9 +21,13 @@
  * ==================================================
  */
 
-import {GlobalAcceptMimesMiddleware, ServerLoader, ServerSettings} from '@tsed/common';
-import {ConfigService} from './services/config/ConfigService';
-import {configure} from 'log4js';
+import { configure } from 'log4js';
+import { ConfigService } from './services/config/ConfigService';
+import { ElasticsearchFactory } from './persistence/elastic.factory';
+import { GlobalAcceptMimesMiddleware, ServerLoader, ServerSettings } from '@tsed/common';
+import { IndexConfiguration } from './persistence/elastic.setting';
+import { ProfileFactoryLoader } from './profiles/profile.factory.loader';
+import { Summary } from './model/summary';
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const serverConfig = require('../server-config.json');
@@ -99,6 +103,17 @@ export class Server extends ServerLoader {
     }
 
     $onReady() {
+        // try to initialize the ES index if it does not exist
+        let profile = ProfileFactoryLoader.get();
+        let indexConfig: IndexConfiguration = {
+            ...ConfigService.getGeneralSettings().elasticsearch,
+            // includeTimestamp: true,
+            index: "index_name_here",   // TODO
+            // dryRun: settings.dryRun,
+            // addAlias: !settings.disable
+        };
+        let elastic = ElasticsearchFactory.getElasticUtils(indexConfig, new Summary({ index: '', isIncremental: false, maxConcurrent: 0, type: '' }));
+        elastic.prepareIndex(profile.getIndexMappings(), profile.getIndexSettings());
         console.log("Server initialized");
     }
 
