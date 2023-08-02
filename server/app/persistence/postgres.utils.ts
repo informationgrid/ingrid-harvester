@@ -30,7 +30,8 @@ import { PostgresQueries } from './postgres.queries';
 import { Summary } from '../model/summary';
 
 const log = require('log4js').getLogger(__filename);
-const QueryStream = require('pg-query-stream');
+const Cursor = require('pg-cursor');
+// const QueryStream = require('pg-query-stream');
 // const TransformToBulk = require('elasticsearch-streams').TransformToBulk;
 // const WritableBulk = require('elasticsearch-streams').WritableBulk;
 
@@ -179,37 +180,44 @@ export class PostgresUtils extends DatabaseUtils {
         log.debug('Connection started');
         // TODO we also need to store SOURCE_TYPE in postgres and subsequently fetch it here (B.source_type)
         let q = PostgresQueries.getBuckets(source);
-        const query = new QueryStream(q);
-        const stream = client.query(query);
+        console.log(q);
+        // const query = new QueryStream(q);
+        // const stream = client.query(query);
+        const cursor = client.query(new Cursor(q));
         let currentId: string | number;
         let currentBucket: Bucket;
-        for await (let row of stream) {
-            if (row.primary_id != currentId) {
-                // process current bucket, then create new
-                currentId = row.primary_id;
-                if (currentBucket) {
-                    let operationChunks = await processBucket(currentBucket);
-                    elastic.addOperationChunksToBulk(operationChunks);
+        const maxRows = 100;
+        let rows = await cursor.read(maxRows);
+        while (rows.length > 0) {
+            for (let row of rows) {
+                if (row.primary_id != currentId) {
+                    // process current bucket, then create new
+                    currentId = row.primary_id;
+                    if (currentBucket) {
+                        let operationChunks = await processBucket(currentBucket);
+                        elastic.addOperationChunksToBulk(operationChunks);
+                    }
+                    currentBucket = {
+                        primary: null,
+                        duplicates: [],
+                        operatingServices: []
+                    };
                 }
-                currentBucket = {
-                    primary: null,
-                    duplicates: [],
-                    operatingServices: []
-                };
+                // add to current bucket
+                if (row.is_primary) {
+                    currentBucket.primary = { id: row.id, ...row.dataset };
+                }
+                else if (row.is_duplicate) {
+                    currentBucket.duplicates.push({ id: row.id, ...row.dataset });
+                }
+                else if (row.is_service) {
+                    currentBucket.operatingServices.push({ id: row.id, ...row.dataset });
+                }
+                else {
+                    throw new Error('Document should be either primary, duplicate, or operating service; was neither');
+                }
             }
-            // add to current bucket
-            if (row.is_primary) {
-                currentBucket.primary = { id: row.id, ...row.dataset };
-            }
-            else if (row.is_duplicate) {
-                currentBucket.duplicates.push({ id: row.id, ...row.dataset });
-            }
-            else if (row.is_operating_service) {
-                currentBucket.operatingServices.push({ id: row.id, ...row.dataset });
-            }
-            else {
-                throw new Error('Document should be either primary, duplicate, or operating service; was neither');
-            }
+            rows = await cursor.read(maxRows);
         }
         // process last bucket
         if (currentBucket) {
