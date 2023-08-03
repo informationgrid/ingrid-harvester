@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import fetch, { HeadersInit, RequestInit } from 'node-fetch';
+import fetch, { HeadersInit, RequestInit, Response } from 'node-fetch';
 import { getLogger } from 'log4js';
 import { Agent } from 'https';
 import { HttpsProxyAgent } from 'https-proxy-agent';
@@ -256,8 +256,8 @@ export class RequestDelegate {
             return response;
         }
 
-        let resolvedResponse;
-        while (retry > 0) {
+        let resolvedResponse: Response;
+        do {
             try {
                 resolvedResponse = await response;
                 break;
@@ -274,12 +274,9 @@ export class RequestDelegate {
                     throw e;
                 }
             }
-        };
+        } while (retry > 0);
 
-        if (config.accept && !resolvedResponse.headers.get('content-type').includes(config.accept)) {
-            return null;
-        }
-        else if (config.json) {
+        if (config.json) {
             return resolvedResponse.json();
         }
         else {
@@ -293,4 +290,3 @@ export class RequestDelegate {
         });
     }
 }
-
