@@ -25,7 +25,6 @@ import { Bucket } from './postgres.utils';
 import { BulkResponse, DatabaseUtils } from './database.utils';
 import { Client } from 'pg';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
-import { DeduplicateUtils } from './deduplicate.utils';
 import { ElasticsearchUtils, EsOperation } from './elastic.utils';
 import { Entity } from '../model/entity';
 import { IClient } from 'pg-promise/typescript/pg-subset';

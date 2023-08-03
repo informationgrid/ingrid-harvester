@@ -23,7 +23,6 @@
 
 import { indexMappings } from './elastic/elastic.mappings';
 import { indexSettings } from './elastic/elastic.settings';
-import { DeduplicateUtils } from './elastic/deduplicate.utils';
 import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper';
 import { DiPlanungDocument } from './model/index.document';
 import { DiplanungImporterFactory } from './importer/diplanung.importer.factory';
@@ -57,10 +56,6 @@ export class DiplanungFactory extends ProfileFactory<DiplanungCswMapper | Diplan
 
     getIndexSettings(): IndexSettings {
         return indexSettings;
-    }
-
-    getDeduplicationUtils(elasticUtils: ElasticsearchUtils, summary: Summary): DeduplicateUtils {
-        return new DeduplicateUtils(elasticUtils, summary);
     }
 
     getImporterFactory(): ImporterFactory {

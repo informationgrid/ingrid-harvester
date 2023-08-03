@@ -23,7 +23,6 @@
 
 import { Bucket } from './postgres.utils';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
-import { DeduplicateUtils } from './deduplicate.utils';
 import { ElasticsearchUtils, EsOperation } from './elastic.utils';
 import { Entity } from '../model/entity';
 import { Summary } from '../model/summary';
@@ -37,7 +36,6 @@ export abstract class DatabaseUtils {
 
     public static maxBulkSize: number = 50;
     protected summary: Summary;
-    public deduplicationUtils: DeduplicateUtils;
     
     public _bulkData: Entity[];
 

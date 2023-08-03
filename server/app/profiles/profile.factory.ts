@@ -21,18 +21,14 @@
  * ==================================================
  */
 
-import { DeduplicateUtils } from '../persistence/deduplicate.utils';
 import { BaseMapper } from '../importer/base.mapper';
 import { ElasticQueries } from '../persistence/elastic.queries';
-import { ElasticsearchUtils } from '../persistence/elastic.utils';
 import { ImporterFactory } from '../importer/importer.factory';
 import { IndexDocument } from '../model/index.document';
 import { IndexSettings } from '../persistence/elastic.setting';
-import { Summary } from '../model/summary';
 
 export abstract class ProfileFactory<M extends BaseMapper> {
 
-    abstract getDeduplicationUtils(elasticUtils: ElasticsearchUtils, summary: Summary): DeduplicateUtils;
     abstract getElasticQueries(): ElasticQueries;
     abstract getImporterFactory(): ImporterFactory;
     abstract getIndexDocument(): IndexDocument<M>;

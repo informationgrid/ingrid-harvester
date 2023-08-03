@@ -50,7 +50,6 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
         this.indexName = config.prefix + config.index;
 
         let profile = ProfileFactoryLoader.get();
-        this.deduplicationUtils = profile.getDeduplicationUtils(this, this.summary);
         this.elasticQueries = profile.getElasticQueries();
     }
 
@@ -138,7 +137,6 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
                 // if (this.config.addAlias) {
                 //     await this.addAlias(this.indexName, this.config.alias);
                 // }
-                // await this.deduplicationUtils.deduplicate();
                 await this.client.close();
             }
             log.info('Successfully added data into index: ' + this.indexName);

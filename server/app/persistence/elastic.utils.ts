@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import { DeduplicateUtils } from './deduplicate.utils';
 import { Client as Client6 } from 'elasticsearch6';
 import { Client as Client7 } from 'elasticsearch7';
 import { Client as Client8 } from 'elasticsearch8';
@@ -51,7 +50,6 @@ export abstract class ElasticsearchUtils {
     protected summary: Summary;
 
     public static maxBulkSize: number = 50;
-    public deduplicationUtils: DeduplicateUtils;
     public elasticQueries: ElasticQueries;
     public indexName: string;
     public _bulkOperationChunks: any[][];
