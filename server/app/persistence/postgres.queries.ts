@@ -26,12 +26,13 @@ export class PostgresQueries {
     static tableName = 'dataset';
 
     static onConflict = ` ON CONFLICT ON CONSTRAINT ${PostgresQueries.tableName}_pkey DO UPDATE SET
+        operates_on = EXCLUDED.operates_on,
         dataset = EXCLUDED.dataset, 
         raw = EXCLUDED.raw, 
         last_modified = NOW()`;
 
-    static bulkUpsert = `INSERT INTO ${PostgresQueries.tableName} (identifier, source, collection_id, dataset, raw)
-        SELECT identifier, source, collection_id, dataset, raw
+    static bulkUpsert = `INSERT INTO ${PostgresQueries.tableName} (identifier, source, collection_id, operates_on, dataset, raw)
+        SELECT identifier, source, collection_id, operates_on, dataset, raw
         FROM json_populate_recordset(null::${PostgresQueries.tableName}, $1)
         ${PostgresQueries.onConflict}`;
 

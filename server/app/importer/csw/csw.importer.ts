@@ -316,6 +316,7 @@ export class CswImporter extends Importer {
                     identifier: uuid,
                     source: this.settings.getRecordsUrl,
                     collection_id: 'harvester',
+                    operates_on: mapper.getOperatesOn(),
                     dataset: doc,
                     raw: mapper.getHarvestedData()
                 };
