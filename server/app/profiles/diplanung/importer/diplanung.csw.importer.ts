@@ -23,21 +23,27 @@
 
 import { Bucket } from '../../../persistence/postgres.utils';
 import { CswImporter } from '../../../importer/csw/csw.importer';
-import { DcatApPluDocument } from '../model/dcatApPlu.document';
 import { DcatApPluDocumentFactory } from '../model/dcatapplu.document.factory';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
-import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
+import { DiplanungIndexDocument } from '../model/index.document';
 import { Distribution } from '../../../model/distribution';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
 import { EsOperation } from '../../../persistence/elastic.utils';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { MiscUtils } from '../../../utils/misc.utils';
-import { ProfileFactoryLoader } from '../../profile.factory.loader';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WmsXPath } from './wms.xpath';
 
 const log = require('log4js').getLogger(__filename);
+
+const overwriteFields = [
+    'catalog',
+    // spatial fields
+    'bounding_box', 'centroid', 'spatial',
+    // PLU fields
+    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_start_date', 'procedure_state', 'procedure_type'
+];
 
 export class DiplanungCswImporter extends CswImporter {
 
@@ -103,118 +109,49 @@ export class DiplanungCswImporter extends CswImporter {
         return { primary_id: candidates[0], document, duplicates };
     }
 
-    private resolveCoupling(document, service): any {
-        log.warn("Coupling service and dataset");
-        return document;
-    }
-
-    private deduplicate(document, duplicate): any {
-        log.warn("Deduplicating dataset");
-        return document;
-    }
-
-    private updateDataset(document): any {
-        log.warn("Updating dataset");
-        return document;
+    /**
+     * Resolve data-service coupling. For a given dataset and a given service, merge the service's distributions into
+     * the dataset's.
+     * 
+     * @param document the dataset whose distributions should be extended
+     * @param service the service whose distributions should be moved to the dataset
+     * @returns the augmented dataset
+     */
+    private resolveCoupling(document: DiplanungIndexDocument, service: DiplanungIndexDocument): DiplanungIndexDocument {
+        let distributions = {};
+        for (let dist of document.distributions) {
+            distributions[MiscUtils.createDistHash(dist)] = dist;
+        }
+        for (let dist of service.distributions) {
+            distributions[MiscUtils.createDistHash(dist)] = dist;
+        }
+        return { ...document, distributions: Object.values(distributions) };
     }
 
     /**
-     * IDEA: After harvesting datasets and services (not even necessarily in that order)
-     *
-     * 1) save operatesOn for all services
-     * 2) save own ID in operatesOn for datasets
-     * 3) aggregate over operatesOn (datasets + services)
-     * 4) merge distributions on dataset (which has _id == operatesOn)
-     *
-     * Current implementation:
-     * 1) save operatesOn for all services
-     * 2) (skip)
-     * 3) aggregate over operatesOn (services)
-     * 4) get dataset which has _id == operatesOn separately
-     * 5) merge on it
-     *
-     * We skip 2 because we have to retrieve the dataset in 4 separately.
-     * We have to retrieve the dataset separately because we cannot retrieve the full documents in the aggregation
-     * (due to memory limitations).
-     * We need to retrieve the whole dataset document because after the merge, we have to recreate the DCAT-AP-PLU
-     * xml fragment.
-     *
-     * A way around the last step - to be more close to the original idea, saving a roundtrip - would be to just
-     * retrieve the dcat-ap-plu document of the dataset and replacing all distributions with the newly merged set.
-     * TODO This is left as an exercise to the reader :)
+     * Deduplicate datasets across the whole database. For a given dataset and a given duplicate, merge specified
+     * properties of the duplicate into the dataset.
+     * 
+     * @param document 
+     * @param duplicate 
+     * @returns the augmented dataset
      */
-    protected async postHarvestingHandling() {
-        await this.createDataServiceCoupling();
+    private deduplicate(document: DiplanungIndexDocument, duplicate: DiplanungIndexDocument): DiplanungIndexDocument {
+        // log.warn(`Merging ${duplicate.identifier} (${duplicate.extras.metadata.source.source_base}) into ${document.identifier} (${document.extras.metadata.source.source_base})`);
+        let updatedFields = {};
+        for (const field of overwriteFields) {
+            updatedFields[field] = duplicate[field];
+        }
+        // use publisher from WFS if not specified in CSW
+        if (!document.publisher?.['name'] && !document.publisher?.['organization']) {
+            updatedFields['publisher'] = duplicate.publisher;
+        }
+        return { ...document, ...updatedFields };
     }
 
-    private async createDataServiceCoupling() {
-        try {
-            let response = await this.elastic.search(
-                this.elastic.indexName,
-                ProfileFactoryLoader.get().getElasticQueries().findSameOperatesOn(),
-                50
-            );
-
-            log.debug(`Count of buckets for data-service-coupling aggregates query: ${response.aggregations.operatesOn.buckets.length}`);
-            for (let bucket of response.aggregations.operatesOn.buckets) {
-                try {
-                    let hits = bucket.operatesOn.hits.hits;
-                    let uuid = bucket.key;
-                    let dataset = await this.elastic.get(this.elastic.indexName, uuid);
-
-                    // if we don't have the dataset on which services operatesOn, skip
-                    if (!dataset) {
-                        continue;
-                    }
-
-                    // merge all distributions from the operating services into the dataset
-                    let distributions = {};
-                    for (let dist of dataset._source.distributions) {
-                        distributions[MiscUtils.createDistHash(dist)] = dist;
-                    }
-                    let serviceIds = [];
-                    for (let hit of hits) {
-                        for (let dist of hit._source.distributions) {
-                            distributions[MiscUtils.createDistHash(dist)] = dist;
-                        }
-                        serviceIds.push(hit._id);
-                    }
-                    distributions = Object.values(distributions);
-
-                    // create new dcat-ap-plu xml document from merged index document
-                    let mergedDoc = {
-                        ...dataset._source,
-                        distributions
-                    };
-                    let dcatappluDocument = await DcatApPluDocument.create(new DiplanungVirtualMapper(mergedDoc));
-                    let updateDoc = {
-                        _id: uuid,
-                        distributions,
-                        extras: { ...dataset._source.extras, transformed_data: { dcat_ap_plu: dcatappluDocument } }
-                    };
-
-                    let servicesMsg = `Services which operate on dataset -> ${serviceIds}`;
-                    let datasetMsg = `Concerned dataset -> ${uuid}'`;
-                    log.trace(`Distributions from services are merged into dataset in index ${this.elastic.indexName}.\n        ${servicesMsg}\n        ${datasetMsg}`);
-                    await this.elastic.addDocsToBulkUpdate([updateDoc]);
-                }
-                catch (err) {
-                    log.warn(`Error creating data-service coupling for dataset ${bucket.key}`, err);
-                }
-            }
-            // log.info(`${count} duplicates found using the aggregates query will be deleted`);
-        } catch (err) {
-            log.error('Error executing the aggregate query for data-service coupling', err);
-        }
-
-        // push remaining updates
-        await this.elastic.sendBulkUpdate(false);
-
-        try {
-            await this.elastic.flush();
-        } catch (e) {
-            log.error('Error occurred during flush', e);
-        }
+    private updateDataset(document: DiplanungIndexDocument): any {
+        log.debug(`Updating dataset ${document.identifier} (${document.extras.metadata.source.source_base})`);
+        return document;
     }
 
     protected async updateRecords(documents: any[]) {
@@ -273,7 +210,7 @@ export class DiplanungCswImporter extends CswImporter {
         }
         let results = (await Promise.allSettled(promises)).filter(result => result.status === 'fulfilled');
         let updateDocs = (results as PromiseFulfilledResult<any>[]).map(result => result.value);
-        await this.elastic.addDocsToBulkUpdate(updateDocs);
+        // await this.elastic.addDocsToBulkUpdate(updateDocs);
     }
 
     /**
