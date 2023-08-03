@@ -167,7 +167,12 @@ export type DiplanungIndexDocument = {
             issued: Date,
             is_valid: null, // checks validity after all operations been done
             modified: Date,
-            source: string
+            source: {
+                source_base: string,
+                raw_data_source?: string,
+                portal_link?: string,
+                attribution?: string
+            }
         },
         operates_on: string[]
     },

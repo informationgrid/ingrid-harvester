@@ -491,6 +491,7 @@ export class CswMapper extends BaseMapper {
         let gmdEncoded = encodeURIComponent(namespaces.GMD);
         let cswLink = `${this.settings.getRecordsUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
         return {
+            source_base: this.settings.getRecordsUrl,
             raw_data_source: cswLink,
             portal_link: this.settings.defaultAttributionLink,
             attribution: this.settings.defaultAttribution

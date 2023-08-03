@@ -142,7 +142,10 @@ export class ExcelMapper extends BaseMapper {
     }
 
     _getMetadataSource() {
-        return BaseMapper.createSourceAttribution('mcloud-excel');
+        return {
+            source_base: this.settings.filePath,
+            attribution: 'mcloud-excel'
+        };
     }
 
     _isRealtime() {

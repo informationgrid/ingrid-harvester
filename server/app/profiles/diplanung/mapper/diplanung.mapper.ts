@@ -161,7 +161,7 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper.getMetadataModified();
     }
 
-    getMetadataSource(): string {
+    getMetadataSource(): any {
         return this.baseMapper.getMetadataSource();
     }
 

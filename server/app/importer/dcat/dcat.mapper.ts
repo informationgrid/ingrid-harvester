@@ -439,6 +439,7 @@ export class DcatMapper extends BaseMapper {
         let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');
         return {
+            source_base: this.settings.catalogUrl,
             raw_data_source: dcatLink,
             portal_link: portalLink,
             attribution: this.settings.defaultAttribution

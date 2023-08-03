@@ -197,6 +197,7 @@ export class SparqlMapper extends BaseMapper {
         let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.source_link.value;
         return {
+            source_base: this.settings.endpointUrl,
             raw_data_source: dcatLink,
             portal_link: portalLink,
             attribution: this.settings.defaultAttribution

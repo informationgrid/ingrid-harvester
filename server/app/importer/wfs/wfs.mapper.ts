@@ -146,6 +146,7 @@ export abstract class WfsMapper extends BaseMapper {
     _getMetadataSource(): any {
         let wfsLink = `${this.settings.getFeaturesUrl}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&outputFormat=application/xml&featureId=${this.uuid}`;
         return {
+            source_base: this.settings.getFeaturesUrl,
             raw_data_source: wfsLink,
             portal_link: this.settings.defaultAttributionLink,
             attribution: this.settings.defaultAttribution

@@ -449,6 +449,7 @@ export class OaiMapper extends BaseMapper {
     _getMetadataSource(): any {
         let oaiLink = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=iso19139&identifier=${this.uuid}`;
         return {
+            source_base: this.settings.providerUrl,
             raw_data_source: oaiLink,
             portal_link: this.settings.defaultAttributionLink,
             attribution: this.settings.defaultAttribution
