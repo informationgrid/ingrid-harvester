@@ -82,7 +82,6 @@ export abstract class Importer {
      * @returns a list of operations to send to Elasticsearch
      */
     protected async processBucket(bucket: Bucket): Promise<EsOperation[]> {
-        let { id, ...document } = bucket.primary;
-        return [{ operation: 'index', _id: id, document }];
+        return [{ operation: 'index', _id: bucket.anchor_id, document: bucket.duplicates.get(bucket.anchor_id) }];
     }
 }

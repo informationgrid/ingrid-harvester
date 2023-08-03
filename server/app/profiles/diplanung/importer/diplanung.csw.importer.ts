@@ -61,19 +61,46 @@ export class DiplanungCswImporter extends CswImporter {
 
     protected async processBucket(bucket: Bucket): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
-        let { id: primary_id, source_type, ...document } = bucket.primary;
-        for (let service of bucket.operatingServices) {
+        // find primary document
+        let { primary_id, document, duplicates } = this.prioritize(bucket);
+        // data-service-coupling
+        for (let [id, service] of bucket.operatingServices) {
             document = this.resolveCoupling(document, service);
-            box.push({ operation: 'delete', _id: service.id });
+            box.push({ operation: 'delete', _id: id });
         }
-        for (let duplicate of bucket.duplicates) {
+        // deduplication
+        for (let [id, duplicate] of duplicates) {
             document = this.deduplicate(document, duplicate);
-            box.push({ operation: 'delete', _id: duplicate.id });
+            box.push({ operation: 'delete', _id: id });
         }
         document = this.updateDataset(document);
         document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
         box.push({ operation: 'index', _id: primary_id, document });
         return box;
+    }
+
+    private prioritize(bucket: Bucket): { primary_id: string | number, document: DiplanungIndexDocument, duplicates: Map<string | number, DiplanungIndexDocument> } {
+        let candidates = [];
+        let reserveCandidate: string | number;
+        for (let [id, document] of bucket.duplicates) {
+            if (document.extras.metadata.source.source_base?.endsWith('csw')) {
+                candidates.push(id);
+            }
+            if (id == bucket.anchor_id) {
+                reserveCandidate = id;
+            }
+        }
+        if (candidates.includes(reserveCandidate)) {
+            candidates = [reserveCandidate];
+        }
+        else {
+            candidates.push(reserveCandidate);
+        }
+
+        let document = bucket.duplicates.get(candidates[0]);
+        let duplicates = bucket.duplicates;
+        duplicates.delete(candidates[0]);
+        return { primary_id: candidates[0], document, duplicates };
     }
 
     private resolveCoupling(document, service): any {

@@ -66,34 +66,31 @@ export class PostgresQueries {
     static getBuckets = (source: string) =>
         `SELECT 
             COALESCE(coupled.service_id, deduplicated.duplicate_id) AS id,
-            deduplicated.primary_id AS primary_id,
-            deduplicated.is_primary AS is_primary,
-            (not deduplicated.is_primary) AS is_duplicate,
+            deduplicated.anchor_id AS anchor_id,
+            deduplicated.duplicate_source AS duplicate_source,
             COALESCE(coupled.is_service, false) AS is_service,
             COALESCE(coupled.dataset, deduplicated.dataset) AS dataset
         FROM (
-            SELECT prim.id AS primary_id, duplicate.id AS duplicate_id,
-                prim.identifier AS prim_identifier, duplicate.identifier AS dupl_identifier,
-                duplicate.id = prim.id AS is_primary,
+            SELECT anchor.id AS anchor_id,
+                duplicate.id AS duplicate_id,
+                duplicate.source AS duplicate_source,
                 duplicate.dataset AS dataset
-            FROM public.${PostgresQueries.tableName} AS prim
+            FROM public.${PostgresQueries.tableName} AS anchor
             LEFT JOIN public.${PostgresQueries.tableName} AS duplicate
-            ON prim.dataset->>'alternateTitle' = duplicate.dataset->>'alternateTitle'
-            WHERE prim.source = '${source}'
-                AND (prim.source != duplicate.source OR prim.id = duplicate.id)
+            ON anchor.dataset->>'alternateTitle' = duplicate.dataset->>'alternateTitle'
+            WHERE anchor.source = '${source}'
         ) AS deduplicated
         LEFT JOIN (
-            SELECT ds.id AS dataset_id, service.id AS service_id, ds.identifier AS dataset_identifier,
+            SELECT ds.id AS dataset_id, service.id AS service_id,
                 service.dataset AS dataset,
-                service.dataset->'extras'->'operates_on' AS OPERATES,
                 true AS is_service
-            FROM public.${PostgresQueries.tableName} AS ds
-            LEFT JOIN public.${PostgresQueries.tableName} AS service
+            FROM public.${PostgresQueries.tableName} AS service
+            LEFT JOIN public.${PostgresQueries.tableName} AS ds
             ON ds.identifier = ANY(service.operates_on)
             WHERE ds.source = '${source}'
                 AND service.dataset->'extras'->>'hierarchy_level' = 'service'
         ) AS coupled
-        ON
-            deduplicated.primary_id = coupled.dataset_id
-        ORDER BY deduplicated.primary_id`;
+        ON deduplicated.anchor_id = coupled.dataset_id
+            AND coupled.service_id = deduplicated.duplicate_id
+        ORDER BY anchor_id`;
 }

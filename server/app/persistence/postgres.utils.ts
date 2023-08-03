@@ -24,6 +24,7 @@
 import { BulkResponse, DatabaseUtils } from './database.utils';
 import { Client, Pool, PoolClient, QueryResult } from 'pg';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
+import { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document';
 import { ElasticsearchUtils, EsOperation } from './elastic.utils';
 import { Entity } from '../model/entity';
 import { PostgresQueries } from './postgres.queries';
@@ -39,9 +40,9 @@ const Cursor = require('pg-cursor');
  * Contains a primary dataset, a list of duplicates, and a list of services operating on the primary dataset.
  */
 export interface Bucket {
-    primary: any,
-    duplicates: any[],
-    operatingServices: any[]
+    anchor_id: string | number,
+    duplicates: Map<string | number, DiplanungIndexDocument>,
+    operatingServices: Map<string | number, DiplanungIndexDocument>
 }
 
 export class PostgresUtils extends DatabaseUtils {
@@ -190,31 +191,25 @@ export class PostgresUtils extends DatabaseUtils {
         let rows = await cursor.read(maxRows);
         while (rows.length > 0) {
             for (let row of rows) {
-                if (row.primary_id != currentId) {
+                if (row.anchor_id != currentId) {
                     // process current bucket, then create new
-                    currentId = row.primary_id;
+                    currentId = row.anchor_id;
                     if (currentBucket) {
                         let operationChunks = await processBucket(currentBucket);
-                        elastic.addOperationChunksToBulk(operationChunks);
+                        await elastic.addOperationChunksToBulk(operationChunks);
                     }
                     currentBucket = {
-                        primary: null,
-                        duplicates: [],
-                        operatingServices: []
+                        anchor_id: row.anchor_id,
+                        duplicates: new Map<string | number, DiplanungIndexDocument>(),
+                        operatingServices: new Map<string | number, DiplanungIndexDocument>()
                     };
                 }
                 // add to current bucket
-                if (row.is_primary) {
-                    currentBucket.primary = { id: row.id, ...row.dataset };
-                }
-                else if (row.is_duplicate) {
-                    currentBucket.duplicates.push({ id: row.id, ...row.dataset });
-                }
-                else if (row.is_service) {
-                    currentBucket.operatingServices.push({ id: row.id, ...row.dataset });
+                if (row.is_service) {
+                    currentBucket.operatingServices.set(row.id, row.dataset);
                 }
                 else {
-                    throw new Error('Document should be either primary, duplicate, or operating service; was neither');
+                    currentBucket.duplicates.set(row.id, row.dataset);
                 }
             }
             rows = await cursor.read(maxRows);
