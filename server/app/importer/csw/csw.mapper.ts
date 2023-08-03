@@ -1094,16 +1094,15 @@ export class CswMapper extends BaseMapper {
         if (serviceIdentification) {
             // retrieve via coupled resources
             let coupled = CswMapper.select('./srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', serviceIdentification);
-            // throw away non-UUIDs, i.e. throw away reference-IDs
-            operatesOnIds.push(...coupled.map(elem => elem.textContent).filter(id => !id.startsWith('http')));
+            operatesOnIds.push(...coupled.map((elem: Element) => extractUuidFromUrl(elem.textContent)).filter((id: string) => MiscUtils.isUuid(id)));
             // retrieve via operatesOn
             let operatesOn = CswMapper.select('./srv:operatesOn', serviceIdentification);
             for (let o of operatesOn) {
-                let uuidref = o.getAttribute('uuidref');
+                let uuidref = extractUuidFromUrl(o.getAttribute('uuidref'));
                 if (MiscUtils.isUuid(uuidref)) {
                     operatesOnIds.push(uuidref);
                 }
-                let href = o.getAttribute('xlink:href')?.split('/').slice(-1)?.[0];
+                let href = extractUuidFromUrl(o.getAttribute('xlink:href'));
                 if (MiscUtils.isUuid(href)) {
                     operatesOnIds.push(href);
                 }
@@ -1125,6 +1124,10 @@ export class CswMapper extends BaseMapper {
             throwError('An error occurred in custom code: ' + error.message);
         }
     }
+}
+
+function extractUuidFromUrl(url: string) {
+    return url?.split('/').slice(-1)?.[0]
 }
 
 // Private interface. Do not export
