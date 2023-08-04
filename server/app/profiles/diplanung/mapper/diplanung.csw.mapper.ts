@@ -23,16 +23,17 @@
 
 import { uniqBy } from 'lodash';
 import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model';
-import { ConfigService } from '../../../services/config/ConfigService';
 import { Contact } from '../../../model/agent';
 import { CswMapper } from '../../../importer/csw/csw.mapper';
 import { Distribution } from '../../../model/distribution';
+
+const alternateTitleBlacklist = ['B-Plan', 'F-Plan'];
 
 export class DiplanungCswMapper extends CswMapper {
 
     _getAlternateTitle(): string {
         let alternateTitle = CswMapper.select('./*/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', this.idInfo, true)?.textContent;
-        if (!alternateTitle) {
+        if (!alternateTitle || alternateTitleBlacklist.includes(alternateTitle)) {
             alternateTitle = this.getTitle();
         }
         return alternateTitle;
