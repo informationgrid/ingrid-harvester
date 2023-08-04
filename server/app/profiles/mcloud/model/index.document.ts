@@ -54,9 +54,9 @@ export class mcloudDocument extends IndexDocument<CkanMapper | CswMapper | DcatM
                 metadata: {
                     harvested: mapper.getMetadataHarvested(),
                     harvesting_errors: null, // get errors after all operations been done
-                    issued: mapper.getMetadataIssued(),
+                    issued: null,
                     is_valid: null, // checks validity after all operations been done
-                    modified: mapper.getMetadataModified(),
+                    modified: null,
                     source: mapper.getMetadataSource(),
                 },
                 mfund_fkz: mapper.getMFundFKZ(),

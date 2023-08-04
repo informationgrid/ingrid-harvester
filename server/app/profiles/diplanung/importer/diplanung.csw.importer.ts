@@ -62,8 +62,8 @@ export class DiplanungCswImporter extends CswImporter {
         });
     }
 
-    getMapper(settings, record, harvestTime, storedData, summary, generalInfo): DiplanungCswMapper {
-        return new DiplanungCswMapper(settings, record, harvestTime, storedData, summary, generalInfo);
+    getMapper(settings, record, harvestTime, summary, generalInfo): DiplanungCswMapper {
+        return new DiplanungCswMapper(settings, record, harvestTime, summary, generalInfo);
     }
 
     protected async processBucket(bucket: Bucket): Promise<EsOperation[]> {

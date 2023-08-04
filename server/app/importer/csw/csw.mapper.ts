@@ -63,7 +63,6 @@ export class CswMapper extends BaseMapper {
 
     protected readonly record: any;
     private harvestTime: any;
-    private readonly storedData: any;
 
     protected readonly idInfo; // : SelectedValue;
     protected settings: CswSettings;
@@ -77,12 +76,11 @@ export class CswMapper extends BaseMapper {
         themes: null
     };
 
-    constructor(settings, record, harvestTime, storedData, summary, generalInfo) {
+    constructor(settings, record, harvestTime, summary, generalInfo) {
         super();
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.storedData = storedData;
         this.summary = summary;
         this.fetched = MiscUtils.merge(this.fetched, generalInfo);
 
@@ -472,19 +470,6 @@ export class CswMapper extends BaseMapper {
 
         this.fetched.keywords[mandatoryKws.join()] = keywords;
         return keywords;
-    }
-
-    _getMetadataIssued(): Date {
-        return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : new Date(Date.now());
-    }
-
-    _getMetadataModified(): Date {
-        if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
-            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
-            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
-                return new Date(this.storedData.modified);
-        }
-        return new Date(Date.now());
     }
 
     _getMetadataSource(): any {

@@ -103,7 +103,6 @@ export class ExcelSparseImporter extends Importer {
 
             // get all issued dates from IDs
             observer.next(ImportResult.message('Getting previous issued dates'));
-            let storedData = await this.elastic.getStoredData(ids);
 
             let numIndexDocs = 0;
 
@@ -122,7 +121,6 @@ export class ExcelSparseImporter extends Importer {
                 let mapper = new ExcelSparseMapper(this.settings, {
                     id: unit.id,
                     columnValues: unit.columnValues,
-                    storedData: storedData[idx],
                     workbook: workbook,
                     columnMap: this.columnMap,
                     currentIndexName: this.elastic.indexName,

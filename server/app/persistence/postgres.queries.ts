@@ -69,7 +69,9 @@ export class PostgresQueries {
                 secondary.id AS id,
                 secondary.source AS source,
                 secondary.dataset AS dataset,
-                false AS is_service
+                false AS is_service,
+                secondary.issued AS issued,
+                secondary.modified AS modified
             FROM public.${PostgresQueries.tableName} AS anchor
             LEFT JOIN public.${PostgresQueries.tableName} AS secondary
             ON anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
@@ -82,7 +84,9 @@ export class PostgresQueries {
                 service.id AS id,
                 service.source AS source,
                 service.dataset AS dataset,
-                true AS is_service
+                true AS is_service,
+                service.issued AS issued,
+                service.modified AS modified
             FROM public.${PostgresQueries.tableName} AS service
             LEFT JOIN public.${PostgresQueries.tableName} AS ds
             ON ds.identifier = ANY(service.operates_on)

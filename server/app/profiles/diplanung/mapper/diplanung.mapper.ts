@@ -153,14 +153,6 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
         return this.baseMapper.getMetadataHarvested();
     }
 
-    getMetadataIssued(): Date {
-        return this.baseMapper.getMetadataIssued();
-    }
-
-    getMetadataModified(): Date {
-        return this.baseMapper.getMetadataModified();
-    }
-
     getMetadataSource(): any {
         return this.baseMapper.getMetadataSource();
     }

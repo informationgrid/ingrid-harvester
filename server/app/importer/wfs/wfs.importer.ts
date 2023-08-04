@@ -284,15 +284,6 @@ export abstract class WfsImporter extends Importer {
             ids.push(XPathUtils.firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id'));
         }
 
-        let now = new Date(Date.now());
-        let storedData;
-
-        if (this.settings.dryRun) {
-            storedData = ids.map(() => now);
-        } else {
-            storedData = await this.elastic.getStoredData(ids);
-        }
-
         for (let i = 0; i < features.length; i++) {
             this.summary.numDocs++;
 
@@ -309,7 +300,7 @@ export abstract class WfsImporter extends Importer {
                 logRequest.debug("Record content: ", features[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.generalInfo, geojsonUtils);
+            let mapper = this.getMapper(this.settings, features[i], harvestTime, this.summary, this.generalInfo, geojsonUtils);
 
             let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -335,7 +326,7 @@ export abstract class WfsImporter extends Importer {
             .catch(err => log.error('Error indexing WFS record', err));
     }
 
-    abstract getMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils): WfsMapper;
+    abstract getMapper(settings, feature, harvestTime, summary, generalInfo, geojsonUtils): WfsMapper;
 
     static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
         let requestConfig: RequestOptions = {

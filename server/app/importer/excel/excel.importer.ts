@@ -121,7 +121,6 @@ export class ExcelImporter extends Importer {
 
             // get all issued dates from IDs
             observer.next(ImportResult.message('Getting previous issued dates'));
-            let storedData = await this.elastic.getStoredData(ids);
 
             let numIndexDocs = 0;
 
@@ -140,7 +139,6 @@ export class ExcelImporter extends Importer {
                 let mapper = new ExcelMapper(this.settings, {
                     id: unit.id,
                     columnValues: unit.columnValues,
-                    storedData: storedData[idx],
                     workbook: workbook,
                     columnMap: columnMap,
                     currentIndexName: this.elastic.indexName,

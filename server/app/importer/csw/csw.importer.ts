@@ -272,15 +272,6 @@ export class CswImporter extends Importer {
             ids.push(CswMapper.getCharacterStringContent(records[i], 'fileIdentifier'));
         }
 
-        let now = new Date(Date.now());
-        let storedData;
-
-        if (this.settings.dryRun) {
-            storedData = ids.map(() => now);
-        } else {
-            storedData = await this.elastic.getStoredData(ids);
-        }
-
         let docsToImport = [];
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
@@ -298,7 +289,7 @@ export class CswImporter extends Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary, this.generalInfo);
+            let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary, this.generalInfo);
 
             let doc: any;
             try {
@@ -346,8 +337,8 @@ export class CswImporter extends Importer {
         // For Profile specific Handling
     }
 
-    getMapper(settings, record, harvestTime, storedData, summary, generalInfo): CswMapper {
-        return new CswMapper(settings, record, harvestTime, storedData, summary, generalInfo);
+    getMapper(settings, record, harvestTime, summary, generalInfo): CswMapper {
+        return new CswMapper(settings, record, harvestTime, summary, generalInfo);
     }
 
     static createRequestConfig(settings: CswSettings, request = 'GetRecords'): RequestOptions {

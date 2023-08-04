@@ -42,7 +42,6 @@ let markdown = require('markdown').markdown;
 
 export interface CkanMapperData {
     harvestTime: Date;
-    storedData: any;
     source: any;
     currentIndexName: string;
     summary: Summary;
@@ -166,19 +165,6 @@ export class CkanMapper extends BaseMapper {
 
     _getGeneratedId() {
         return this.source.id;
-    }
-
-    _getMetadataIssued() {
-        return (this.data.storedData && this.data.storedData.issued) ? new Date(this.data.storedData.issued) : new Date(Date.now());
-    }
-
-    _getMetadataModified(): Date {
-        if(this.data.storedData && this.data.storedData.modified && this.data.storedData.dataset_modified){
-            let storedDataset_modified: Date = new Date(this.data.storedData.dataset_modified);
-            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
-                return new Date(this.data.storedData.modified);
-        }
-        return new Date(Date.now());
     }
 
     _getMetadataSource() {

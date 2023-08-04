@@ -204,6 +204,8 @@ export class PostgresUtils extends DatabaseUtils {
                         operatingServices: new Map<string | number, DiplanungIndexDocument>()
                     };
                 }
+                row.dataset.extras.metadata.issued = row.issued;
+                row.dataset.extras.metadata.modified = row.modified;
                 // add to current bucket
                 if (row.is_service) {
                     currentBucket.operatingServices.set(row.id, row.dataset);

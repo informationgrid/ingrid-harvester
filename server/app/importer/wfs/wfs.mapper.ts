@@ -41,7 +41,6 @@ export abstract class WfsMapper extends BaseMapper {
 
     protected readonly feature: Node & Element;
     private harvestTime: any;
-    private readonly storedData: any;
 
     private settings: WfsSettings;
     protected readonly uuid: string;
@@ -56,12 +55,11 @@ export abstract class WfsMapper extends BaseMapper {
 
     protected select: XPathNodeSelect;
 
-    constructor(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils) {
+    constructor(settings, feature, harvestTime, summary, generalInfo, geojsonUtils) {
         super();
         this.settings = settings;
         this.feature = feature;
         this.harvestTime = harvestTime;
-        this.storedData = storedData;
         this.summary = summary;
         this.fetched = {...this.fetched, ...generalInfo, geojsonUtils};
         this.select = (...args: any[]) => {
@@ -125,21 +123,6 @@ export abstract class WfsMapper extends BaseMapper {
         let mandatoryKws = this.settings.eitherKeywords || [];
         let keywords = this.fetched.keywords[mandatoryKws.join()];
         return keywords;
-    }
-
-    // TODO:check
-    _getMetadataIssued(): Date {
-        return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : new Date(Date.now());
-    }
-
-    // TODO:check
-    _getMetadataModified(): Date {
-        if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
-            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
-            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf())
-                return new Date(this.storedData.modified);
-        }
-        return new Date(Date.now());
     }
 
     // TODO:check
