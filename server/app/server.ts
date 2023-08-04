@@ -113,7 +113,7 @@ export class Server extends ServerLoader {
             // addAlias: !settings.disable
         };
         let elastic = ElasticsearchFactory.getElasticUtils(indexConfig, new Summary({ index: '', isIncremental: false, maxConcurrent: 0, type: '' }));
-        elastic.prepareIndex(profile.getIndexMappings(), profile.getIndexSettings());
+        elastic.prepareIndex(profile.getIndexMappings(), profile.getIndexSettings(), true);
         console.log("Server initialized");
     }
 
