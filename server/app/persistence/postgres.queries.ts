@@ -64,24 +64,23 @@ export class PostgresQueries {
      * @returns a database query to return grouped (by `primary_id`) items of rows representing items
      */
     static getBuckets = (source: string) =>
-        `SELECT 
-            COALESCE(coupled.service_id, deduplicated.duplicate_id) AS id,
-            deduplicated.anchor_id AS anchor_id,
-            deduplicated.duplicate_source AS duplicate_source,
-            COALESCE(coupled.is_service, false) AS is_service,
-            COALESCE(coupled.dataset, deduplicated.dataset) AS dataset
-        FROM (
+        `(
             SELECT anchor.id AS anchor_id,
-                duplicate.id AS duplicate_id,
-                duplicate.source AS duplicate_source,
-                duplicate.dataset AS dataset
+                secondary.id AS id,
+                secondary.source AS source,
+                secondary.dataset AS dataset,
+                false AS is_service
             FROM public.${PostgresQueries.tableName} AS anchor
-            LEFT JOIN public.${PostgresQueries.tableName} AS duplicate
-            ON anchor.dataset->>'alternateTitle' = duplicate.dataset->>'alternateTitle'
+            LEFT JOIN public.${PostgresQueries.tableName} AS secondary
+            ON anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
             WHERE anchor.source = '${source}'
-        ) AS deduplicated
-        LEFT JOIN (
-            SELECT ds.id AS dataset_id, service.id AS service_id,
+                AND anchor.dataset->'extras'->>'hierarchy_level' != 'service'
+        )
+        UNION
+        (
+            SELECT ds.id AS anchor_id,
+                service.id AS id,
+                service.source AS source,
                 service.dataset AS dataset,
                 true AS is_service
             FROM public.${PostgresQueries.tableName} AS service
@@ -89,8 +88,6 @@ export class PostgresQueries {
             ON ds.identifier = ANY(service.operates_on)
             WHERE ds.source = '${source}'
                 AND service.dataset->'extras'->>'hierarchy_level' = 'service'
-        ) AS coupled
-        ON deduplicated.anchor_id = coupled.dataset_id
-            AND coupled.service_id = deduplicated.duplicate_id
+        )
         ORDER BY anchor_id`;
 }
