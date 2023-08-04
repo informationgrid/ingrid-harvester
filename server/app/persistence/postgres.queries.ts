@@ -27,8 +27,8 @@ export class PostgresQueries {
 
     static onConflict = ` ON CONFLICT ON CONSTRAINT ${PostgresQueries.tableName}_pkey DO UPDATE SET
         operates_on = EXCLUDED.operates_on,
-        dataset = EXCLUDED.dataset, 
-        raw = EXCLUDED.raw, 
+        dataset = EXCLUDED.dataset,
+        raw = COALESCE(EXCLUDED.raw, ${PostgresQueries.tableName}.raw),
         last_modified = NOW()`;
 
     static bulkUpsert = `INSERT INTO ${PostgresQueries.tableName} (identifier, source, collection_id, operates_on, dataset, raw)

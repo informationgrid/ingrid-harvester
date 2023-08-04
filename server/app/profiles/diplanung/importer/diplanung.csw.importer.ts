@@ -28,6 +28,7 @@ import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungIndexDocument } from '../model/index.document';
 import { Distribution } from '../../../model/distribution';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
+import { Entity } from '../../../model/entity';
 import { EsOperation } from '../../../persistence/elastic.utils';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
@@ -154,14 +155,12 @@ export class DiplanungCswImporter extends CswImporter {
         return document;
     }
 
-    protected async updateRecords(documents: any[]) {
-        log.debug('Updating #records:', documents.length);
+    protected async updateRecords(documents: DiplanungIndexDocument[]) {
+        log.warn('Updating #records:', documents.length);
         let promises: Promise<any>[] = [];
         for (let doc of documents) {
             promises.push(new Promise(async (resolve, reject) => {
-                let updateDoc = {
-                    _id: doc.identifier
-                };
+                let updateDoc = {};
                 let docIsUpdated = false;
 
                 // update WMS distributions with layer names
@@ -194,14 +193,24 @@ export class DiplanungCswImporter extends CswImporter {
                         updateDoc['extras']['metadata']['quality_notes'].push('Swapped lat and lon');
                     }
                     else {
-                        updateDoc['extras']['metadata']['is_valid'] = updateDoc['extras']['metadata']['is_valid'] ?? false;
+                        updateDoc['extras']['metadata']['is_valid'] = false;
                         updateDoc['extras']['metadata']['quality_notes'].push('Bounding box not within Germany');
                     }
                     docIsUpdated = true;
                 }
 
                 if (docIsUpdated) {
-                    resolve(updateDoc);
+                    // TODO find an efficient postgres way to only send the update instead of te full document
+                    // keywords: jsonb_set, json_agg, SQL/JSON Path Language, postgres14+
+                    let mergedDocument = MiscUtils.merge(doc, updateDoc);
+                    let entity: Entity = {
+                        identifier: doc.identifier,
+                        source: doc.extras.metadata.source.source_base,
+                        collection_id: doc.catalog.identifier,
+                        dataset: mergedDocument,
+                        raw: undefined
+                    };
+                    resolve(entity);
                 }
                 else {
                     reject(`Not updating document ${doc.identifier}`);
@@ -209,8 +218,11 @@ export class DiplanungCswImporter extends CswImporter {
             }));
         }
         let results = (await Promise.allSettled(promises)).filter(result => result.status === 'fulfilled');
-        let updateDocs = (results as PromiseFulfilledResult<any>[]).map(result => result.value);
+        let entities = (results as PromiseFulfilledResult<any>[]).map(result => result.value);
         // await this.elastic.addDocsToBulkUpdate(updateDocs);
+        for (let entity of entities) {
+            await this.database.addEntityToBulk(entity);
+        }
     }
 
     /**
@@ -250,12 +262,7 @@ export class DiplanungCswImporter extends CswImporter {
                     this.summary.warnings.push([msg, err.message]);
                 }
                 // surface heuristic for XML
-                if (response == null) {
-                    let msg = `Content-Type for ${accessURL} was not "text/xml", skipping`;
-                    log.debug(msg);
-                    // this.summary.warnings.push([msg]);
-                }
-                else if (response.startsWith('<?xml')) {
+                if (response?.startsWith('<?xml')) {
                     try {
                         let layerNames = this.getMapLayerNames(response);
                         if (layerNames) {
@@ -276,7 +283,7 @@ export class DiplanungCswImporter extends CswImporter {
                 else {
                     let msg = `Response for ${accessURL} is not valid XML`;
                     log.debug(msg);
-                    this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response.replaceAll('\n', ' '), 1024)]);
+                    this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response?.replaceAll('\n', ' '), 1024)]);
                 }
             }
             updatedDistributions.push(distribution);
