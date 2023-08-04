@@ -326,15 +326,12 @@ export class CswImporter extends Importer {
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
-        // TODO the following line raises
-        // MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 abort listeners added to [EventEmitter]. Use emitter.setMaxListeners() to increase limit
-        // may be harmless; investigate if limit increase suffices or if a real leak is occurring
-        let settledPromises: PromiseSettledResult<BulkResponse>[] = await Promise.allSettled(promises).catch(err => log.error('Error indexing CSW record', err));
+        let settledPromises: PromiseSettledResult<BulkResponse>[] = await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));
         // filter for the actually imported documents
-        let insertedIds = settledPromises.filter(result => result.status == 'fulfilled' && !result.value.queued).reduce((ids, result) => {
-            ids.push(...(result as PromiseFulfilledResult<BulkResponse>).value.response.items.filter(item => item.index.result == 'created').map(item => item.index._id));
-            return ids;
-        }, []);
+        // let insertedIds = settledPromises.filter(result => result.status == 'fulfilled' && !result.value.queued).reduce((ids, result) => {
+        //     ids.push(...(result as PromiseFulfilledResult<BulkResponse>).value.response.items.filter(item => item.index.result == 'created').map(item => item.index._id));
+        //     return ids;
+        // }, []);
         // TODO not filtering produces some (inconsequential) ES errors we ignore for now
         // TODO but with filtering (here), we miss some updates -> don't filter atm
         // TODO this has to be handled differently with the database layer anyhow
@@ -342,8 +339,8 @@ export class CswImporter extends Importer {
     }
 
     /**
-     * Is called after a batch of records has been added to the bulk indexing queue.
-     * They may not necessarily have been indexed yet.
+     * Is called after a batch of records has been added to the bulk persisting queue.
+     * They may not necessarily have been persisted yet.
      */
     protected async updateRecords(documents: any[]) {
         // For Profile specific Handling
