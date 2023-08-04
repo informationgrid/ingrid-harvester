@@ -1090,25 +1090,29 @@ export class CswMapper extends BaseMapper {
 
     _getOperatesOn(): string[] {
         let serviceIdentification = CswMapper.select('./gmd:identificationInfo/srv:SV_ServiceIdentification', this.record, true);
-        let operatesOnIds = [];
+        let operatesOnIds = new Set<string>();
         if (serviceIdentification) {
             // retrieve via coupled resources
             let coupled = CswMapper.select('./srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', serviceIdentification);
-            operatesOnIds.push(...coupled.map((elem: Element) => extractUuidFromUrl(elem.textContent)).filter((id: string) => MiscUtils.isUuid(id)));
+            for (let uuid of coupled.map((elem: Element) => extractUuidFromUrl(elem.textContent)).filter((id: string) => MiscUtils.isUuid(id))) {
+                operatesOnIds.add(uuid);
+            }
             // retrieve via operatesOn
             let operatesOn = CswMapper.select('./srv:operatesOn', serviceIdentification);
             for (let o of operatesOn) {
                 let uuidref = extractUuidFromUrl(o.getAttribute('uuidref'));
                 if (MiscUtils.isUuid(uuidref)) {
-                    operatesOnIds.push(uuidref);
+                    operatesOnIds.add(uuidref);
                 }
                 let href = extractUuidFromUrl(o.getAttribute('xlink:href'));
                 if (MiscUtils.isUuid(href)) {
-                    operatesOnIds.push(href);
+                    operatesOnIds.add(href);
                 }
             }
         }
-        return operatesOnIds.length > 0 ? [...new Set(operatesOnIds)] : undefined;
+        operatesOnIds.delete(this.getUuid());
+        
+        return operatesOnIds.size > 0 ? [...operatesOnIds] : undefined;
     }
 
     protected getUuid(): string {
@@ -1126,8 +1130,14 @@ export class CswMapper extends BaseMapper {
     }
 }
 
+/**
+ * Split a string by "/" or "=" and return the last part.
+ * 
+ * @param url 
+ * @returns 
+ */
 function extractUuidFromUrl(url: string) {
-    return url?.split('/').slice(-1)?.[0]
+    return url?.split(/\/|=/).slice(-1)?.[0]
 }
 
 // Private interface. Do not export
