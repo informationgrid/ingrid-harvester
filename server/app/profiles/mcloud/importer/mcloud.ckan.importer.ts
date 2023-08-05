@@ -50,7 +50,7 @@ export class McloudCkanImporter extends CkanImporter {
 
     protected async postHarvestingHandling(promises: any[]){
         if (Object.keys(this.docsByParent).length > 0) {
-            let storedData = await this.elastic.getStoredData(Object.keys(this.docsByParent).map(key => uuidv5(key, UUID_NAMESPACE)));
+            let storedData = await this.database.getStoredData(Object.keys(this.docsByParent).map(key => uuidv5(key, UUID_NAMESPACE)));
             await this.indexGroupedChilds(storedData).then(result => result.forEach(promise => promises.push(promise)));
         }
     }

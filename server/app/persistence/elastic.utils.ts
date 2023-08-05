@@ -157,7 +157,7 @@ export abstract class ElasticsearchUtils {
      * @returns {Promise<Array>}  array of issued dates (for found documents) or
      * nulls (for new documents) in the same order as the given ids
      */
-    abstract getStoredData(ids): Promise<Array<any>>;
+    // abstract getStoredData(ids): Promise<Array<any>>;
 
     abstract deleteIndex(indicesToDelete: string | string[]): Promise<any>;
 

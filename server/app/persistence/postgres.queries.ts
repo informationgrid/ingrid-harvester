@@ -49,6 +49,8 @@ export class PostgresQueries {
 
     static readDatasets = `SELECT dataset FROM public.${PostgresQueries.tableName}`;
 
+    static getStoredData = `SELECT dataset FROM public.${PostgresQueries.tableName}
+        WHERE identifier = ANY ($1)`;
     /**
      * Create a query for retrieving all items for a given source.
      * 

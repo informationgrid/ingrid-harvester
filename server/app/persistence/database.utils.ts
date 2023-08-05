@@ -69,6 +69,8 @@ export abstract class DatabaseUtils {
 
     abstract pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, processBucket: (bucket: Bucket) => Promise<EsOperation[]>): Promise<void>;
 
+    abstract getStoredData(ids: string[]): Promise<any[]>;
+
     static ping(configuration: Partial<DatabaseConfiguration>): Promise<boolean> {
         throw new Error('Method not implemented.');
     }

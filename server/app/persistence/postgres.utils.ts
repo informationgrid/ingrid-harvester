@@ -169,6 +169,20 @@ export class PostgresUtils extends DatabaseUtils {
     //     });
     // }
 
+    async getStoredData(ids: string[]): Promise<any[]> {
+        let result: QueryResult<any> = await PostgresUtils.pool.query(PostgresQueries.getStoredData, [ids]);
+        let dates = [];
+        for (let row of result.rows) {            
+            dates.push({
+                id: row.extras.generated_id,
+                issued: row.extras.metadata.issued,
+                modified: row.extras.metadata.modified,
+                dataset_modified: row.modified
+            });
+        }
+        return dates;
+    }
+
     /**
      * Push datasets from database to elasticsearch, slower but with all bells and whistles.
      * 
