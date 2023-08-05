@@ -21,14 +21,14 @@
  * ==================================================
  */
 
-import { indexMappings } from './elastic/elastic.mappings';
-import { indexSettings } from './elastic/elastic.settings';
+import { indexMappings } from './persistence/elastic.mappings';
+import { indexSettings } from './persistence/elastic.settings';
 import { mcloudDocument } from './model/index.document';
 import { CkanMapper } from '../../importer/ckan/ckan.mapper';
 import { CswMapper } from '../../importer/csw/csw.mapper';
 import { DcatMapper } from '../../importer/dcat/dcat.mapper';
 import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
-import { ElasticQueries } from './elastic/elastic.queries';
+import { ElasticQueries } from './persistence/elastic.queries';
 import { ExcelMapper } from '../../importer/excel/excel.mapper';
 import { ImporterFactory } from '../../importer/importer.factory';
 import { McloudImporterFactory } from './importer/mcloud.importer.factory';
@@ -36,7 +36,7 @@ import { OaiMapper } from '../../importer/oai/oai.mapper';
 import { SparqlMapper } from '../../importer/sparql/sparql.mapper';
 import { IndexSettings } from '../../persistence/elastic.setting';
 import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
-import { PostgresQueries } from './elastic/postgres.queries';
+import { PostgresQueries } from './persistence/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
 
 export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper> {

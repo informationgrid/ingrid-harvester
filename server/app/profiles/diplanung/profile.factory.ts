@@ -21,19 +21,19 @@
  * ==================================================
  */
 
-import { indexMappings } from './elastic/elastic.mappings';
-import { indexSettings } from './elastic/elastic.settings';
+import { indexMappings } from './persistence/elastic.mappings';
+import { indexSettings } from './persistence/elastic.settings';
 import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper';
 import { DiPlanungDocument } from './model/index.document';
 import { DiplanungImporterFactory } from './importer/diplanung.importer.factory';
 import { DiplanungVirtualMapper } from './mapper/diplanung.virtual.mapper';
 import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
-import { ElasticQueries } from './elastic/elastic.queries';
+import { ElasticQueries } from './persistence/elastic.queries';
 import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper';
 import { ImporterFactory } from '../../importer/importer.factory';
 import { IndexSettings } from '../../persistence/elastic.setting';
 import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
-import { PostgresQueries } from './elastic/postgres.queries';
+import { PostgresQueries } from './persistence/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
 import { WfsMapper } from '../../importer/wfs/wfs.mapper';
 
