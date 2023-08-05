@@ -21,36 +21,15 @@
  * ==================================================
  */
 
-export class PostgresQueries {
+export abstract class PostgresQueries {
 
-    static tableName = 'dataset';
+    abstract readonly tableName: string;
+    abstract readonly createTable: string;
+    abstract readonly bulkUpsert: string;
+    abstract readonly onConflict: string;
+    abstract readonly readDatasets: string;
+    abstract readonly getStoredData: string;
 
-    static onConflict = ` ON CONFLICT ON CONSTRAINT ${PostgresQueries.tableName}_pkey DO UPDATE SET
-        operates_on = EXCLUDED.operates_on,
-        dataset = EXCLUDED.dataset,
-        raw = COALESCE(EXCLUDED.raw, ${PostgresQueries.tableName}.raw),
-        last_modified = NOW()`;
-
-    static bulkUpsert = `INSERT INTO ${PostgresQueries.tableName} (identifier, source, collection_id, operates_on, dataset, raw)
-        SELECT identifier, source, collection_id, operates_on, dataset, raw
-        FROM json_populate_recordset(null::${PostgresQueries.tableName}, $1)
-        ${PostgresQueries.onConflict}`;
-
-    static createTable = `CREATE TABLE IF NOT EXISTS public.${PostgresQueries.tableName} (
-        id SERIAL,
-        identifier VARCHAR(255),
-        source VARCHAR(255),
-        collection_id VARCHAR(255),
-        dataset JSONB,
-        raw TEXT,
-        created_on TIMESTAMP(6) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        last_modified TIMESTAMP(6) with time zone NULL,
-        PRIMARY KEY(identifier, source))`;
-
-    static readDatasets = `SELECT dataset FROM public.${PostgresQueries.tableName}`;
-
-    static getStoredData = `SELECT dataset FROM public.${PostgresQueries.tableName}
-        WHERE identifier = ANY ($1)`;
     /**
      * Create a query for retrieving all items for a given source.
      * 
@@ -65,35 +44,5 @@ export class PostgresQueries {
      * @param source the source of the requested items
      * @returns a database query to return grouped (by `primary_id`) items of rows representing items
      */
-    static getBuckets = (source: string) =>
-        `(
-            SELECT anchor.id AS anchor_id,
-                secondary.id AS id,
-                secondary.source AS source,
-                secondary.dataset AS dataset,
-                false AS is_service,
-                secondary.issued AS issued,
-                secondary.modified AS modified
-            FROM public.${PostgresQueries.tableName} AS anchor
-            LEFT JOIN public.${PostgresQueries.tableName} AS secondary
-            ON anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
-            WHERE anchor.source = '${source}'
-                AND anchor.dataset->'extras'->>'hierarchy_level' != 'service'
-        )
-        UNION
-        (
-            SELECT ds.id AS anchor_id,
-                service.id AS id,
-                service.source AS source,
-                service.dataset AS dataset,
-                true AS is_service,
-                service.issued AS issued,
-                service.modified AS modified
-            FROM public.${PostgresQueries.tableName} AS service
-            LEFT JOIN public.${PostgresQueries.tableName} AS ds
-            ON ds.identifier = ANY(service.operates_on)
-            WHERE ds.source = '${source}'
-                AND service.dataset->'extras'->>'hierarchy_level' = 'service'
-        )
-        ORDER BY anchor_id`;
+    abstract getBuckets(source: string): string;
 }

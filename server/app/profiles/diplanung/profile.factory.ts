@@ -27,19 +27,20 @@ import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper';
 import { DiPlanungDocument } from './model/index.document';
 import { DiplanungImporterFactory } from './importer/diplanung.importer.factory';
 import { DiplanungVirtualMapper } from './mapper/diplanung.virtual.mapper';
+import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { ElasticQueries } from './elastic/elastic.queries';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils';
 import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper';
 import { ImporterFactory } from '../../importer/importer.factory';
 import { IndexSettings } from '../../persistence/elastic.setting';
+import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
+import { PostgresQueries } from './elastic/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
-import { Summary } from '../../model/summary';
 import { WfsMapper } from '../../importer/wfs/wfs.mapper';
 
 export class DiplanungFactory extends ProfileFactory<DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
 
-    getProfileName(): string {
-        return 'diplanung';
+    getElasticQueries(): AbstractElasticQueries {
+        return ElasticQueries.getInstance();
     }
 
     getIndexDocument(): DiPlanungDocument {
@@ -50,15 +51,19 @@ export class DiplanungFactory extends ProfileFactory<DiplanungCswMapper | Diplan
         return indexMappings;
     }
 
-    getElasticQueries(): any {
-        return ElasticQueries.getInstance();
-    }
-
     getIndexSettings(): IndexSettings {
         return indexSettings;
     }
 
     getImporterFactory(): ImporterFactory {
         return new DiplanungImporterFactory();
+    }
+
+    getPostgresQueries(): AbstractPostgresQueries {
+        return PostgresQueries.getInstance();
+    }
+
+    getProfileName(): string {
+        return 'diplanung';
     }
 }

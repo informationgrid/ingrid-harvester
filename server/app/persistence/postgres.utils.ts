@@ -27,7 +27,7 @@ import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document';
 import { ElasticsearchUtils, EsOperation } from './elastic.utils';
 import { Entity } from '../model/entity';
-import { PostgresQueries } from './postgres.queries';
+import { ProfileFactoryLoader } from 'profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 
 const log = require('log4js').getLogger(__filename);
@@ -47,8 +47,7 @@ export interface Bucket {
 
 export class PostgresUtils extends DatabaseUtils {
 
-    static pool: Pool;
-
+    private static pool: Pool;
     private transactionClient: PoolClient;
 
     // private transactionStatus: 'open' | 'closed' | 'rolledback';
@@ -72,6 +71,7 @@ export class PostgresUtils extends DatabaseUtils {
         }
 
         this._bulkData = [];
+        this.queries = ProfileFactoryLoader.get().getPostgresQueries();
         this.summary = summary;
         // this.transactionStatus = 'closed';
         this.createTables();
@@ -82,7 +82,7 @@ export class PostgresUtils extends DatabaseUtils {
     // }
 
     async createTables() {
-        await PostgresUtils.pool.query(PostgresQueries.createTable);
+        await PostgresUtils.pool.query(this.queries.createTable);
     }
 
     // /**
@@ -170,7 +170,7 @@ export class PostgresUtils extends DatabaseUtils {
     // }
 
     async getStoredData(ids: string[]): Promise<any[]> {
-        let result: QueryResult<any> = await PostgresUtils.pool.query(PostgresQueries.getStoredData, [ids]);
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getStoredData, [ids]);
         let dates = [];
         for (let row of result.rows) {            
             dates.push({
@@ -194,7 +194,7 @@ export class PostgresUtils extends DatabaseUtils {
         const client: PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
         // TODO we also need to store SOURCE_TYPE in postgres and subsequently fetch it here (B.source_type)
-        let q = PostgresQueries.getBuckets(source);
+        let q = this.queries.getBuckets(source);
         console.log(q);
         // const query = new QueryStream(q);
         // const stream = client.query(query);
@@ -258,7 +258,7 @@ export class PostgresUtils extends DatabaseUtils {
         }
         let result: QueryResult<any>;
         try {
-            result = await this.transactionClient.query(PostgresQueries.bulkUpsert, [JSON.stringify(entities)]);
+            result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities)]);
             log.debug('Bulk finished of data #items: ' + entities.length);
         }
         catch (e) {
