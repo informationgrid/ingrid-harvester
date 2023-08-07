@@ -27,7 +27,7 @@ import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document';
 import { ElasticsearchUtils, EsOperation } from './elastic.utils';
 import { Entity } from '../model/entity';
-import { ProfileFactoryLoader } from 'profiles/profile.factory.loader';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 
 const log = require('log4js').getLogger(__filename);
