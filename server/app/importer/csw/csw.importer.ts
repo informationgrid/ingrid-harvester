@@ -46,7 +46,7 @@ let log = require('log4js').getLogger(__filename),
 export class CswImporter extends Importer {
 
     protected domParser: DomParser;
-    private profile: ProfileFactory<CswMapper>;
+    protected profile: ProfileFactory<CswMapper>;
     protected readonly settings: CswSettings;
     private readonly requestDelegate: RequestDelegate;
 

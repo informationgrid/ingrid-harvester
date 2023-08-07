@@ -73,7 +73,7 @@ export class DiplanungCswImporter extends CswImporter {
         try {
             let response = await this.elastic.search(
                 this.elastic.indexName,
-                ProfileFactoryLoader.get().getElasticQueries().findSameOperatesOn(),
+                this.profile.getElasticQueries().findSameOperatesOn(),
                 50
             );
 
