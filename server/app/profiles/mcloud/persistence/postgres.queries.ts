@@ -92,7 +92,7 @@ export class PostgresQueries extends AbstractPostgresQueries {
                 secondary.modified AS modified
             FROM public.${this.tableName} AS anchor
             LEFT JOIN public.${this.tableName} AS secondary
-            ON anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
+            ON anchor.dataset->>'title' = secondary.dataset->>'title'
             WHERE anchor.source = '${source}'
                 AND anchor.dataset->'extras'->>'hierarchy_level' != 'service'
         )

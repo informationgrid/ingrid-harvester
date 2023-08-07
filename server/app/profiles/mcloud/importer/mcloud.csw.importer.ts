@@ -21,81 +21,100 @@
  * ==================================================
  */
 
+import { Bucket } from '../../../persistence/postgres.utils';
 import { CswImporter } from '../../../importer/csw/csw.importer';
+import { EsOperation } from '../../../persistence/elastic.utils';
 import { MiscUtils } from '../../../utils/misc.utils';
-import { ProfileFactoryLoader } from '../../../profiles/profile.factory.loader';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 
 const log = require('log4js').getLogger(__filename);
 
 export class McloudCswImporter extends CswImporter {
+
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings, requestDelegate)
     }
 
-    protected async postHarvestingHandling(){
-        this.createDataServiceCoupling();
+    protected async processBucket(bucket: Bucket): Promise<EsOperation[]> {
+        let box: EsOperation[] = [];
+        // find primary document
+        let { primary_id, document, duplicates } = this.prioritize(bucket);
+        // data-service-coupling
+        for (let [id, service] of bucket.operatingServices) {
+            document = this.resolveCoupling(document, service);
+            box.push({ operation: 'delete', _id: id });
+        }
+        // deduplication
+        for (let [id, duplicate] of duplicates) {
+            document = this.deduplicate(document, duplicate);
+            box.push({ operation: 'delete', _id: id });
+        }
+        document = this.updateDataset(document);
+        box.push({ operation: 'index', _id: primary_id, document });
+        return box;
     }
 
-    private async createDataServiceCoupling() {
-        try {
-            let response = await this.elastic.search(
-                this.elastic.indexName,
-                ProfileFactoryLoader.get().getElasticQueries().findSameOperatesOn(),
-                50
-            );
-
-            log.debug(`Count of buckets for deduplication aggregates query: ${response.aggregations.operatesOn.buckets.length}`);
-            for (let bucket of response.aggregations.operatesOn.buckets) {
-                try {
-                    let hits = bucket.operatesOn.hits.hits;
-                    let uuid = bucket.key;
-                    let dataset = await this.elastic.get(this.elastic.indexName, uuid);
-
-                    // if we don't have the dataset on which services operatesOn, skip
-                    if (!dataset) {
-                        continue;
-                    }
-
-                    // merge all distributions from the operating services into the dataset
-                    let distributions = {};
-                    for (let dist of dataset._source.distributions) {
-                        distributions[MiscUtils.createDistHash(dist)] = dist;
-                    }
-                    let serviceIds = [];
-                    for (let hit of hits) {
-                        for (let dist of hit._source.distributions) {
-                            distributions[MiscUtils.createDistHash(dist)] = dist;
-                        }
-                        serviceIds.push(hit._id);
-                    }
-                    distributions = Object.values(distributions);
-
-                    let updateDoc = {
-                        _id: uuid,
-                        distributions,
-                    };
-
-                    let servicesMsg = `Services which operate on dataset -> ${serviceIds}`;
-                    let datasetMsg = `Concerned dataset -> ${uuid}'`;
-                    log.info(`Distributions from services are merged into dataset in index ${this.elastic.indexName}.\n        ${servicesMsg}\n        ${datasetMsg}`);
-                    await this.elastic.addDocsToBulkUpdate([updateDoc]);
-                }
-                catch (err) {
-                    log.warn(`Error creating data-service coupling for dataset ${bucket.key}`, err);
-                }
+    private prioritize(bucket: Bucket): { 
+        primary_id: string | number, 
+        document: any, 
+        duplicates: Map<string | number, any>
+    } {
+        let candidates = [];
+        let reserveCandidate: string | number;
+        for (let [id, document] of bucket.duplicates) {
+            if (document.extras.metadata.source.source_base?.endsWith('csw')) {
+                candidates.push(id);
             }
-        } catch (err) {
-            log.error('Error executing the aggregate query for data-service coupling', err);
+            if (id == bucket.anchor_id) {
+                reserveCandidate = id;
+            }
+        }
+        if (candidates.includes(reserveCandidate)) {
+            candidates = [reserveCandidate];
+        }
+        else {
+            candidates.push(reserveCandidate);
         }
 
-        // push remaining updates
-        await this.elastic.sendBulkUpdate(false);
+        let document = bucket.duplicates.get(candidates[0]);
+        let duplicates = bucket.duplicates;
+        duplicates.delete(candidates[0]);
+        return { primary_id: candidates[0], document, duplicates };
+    }
 
-        try {
-            await this.elastic.flush();
-        } catch (e) {
-            log.error('Error occurred during flush', e);
+    /**
+     * Resolve data-service coupling. For a given dataset and a given service, merge the service's distributions into
+     * the dataset's.
+     * 
+     * @param document the dataset whose distributions should be extended
+     * @param service the service whose distributions should be moved to the dataset
+     * @returns the augmented dataset
+     */
+    private resolveCoupling(document: any, service: any): any {
+        let distributions = {};
+        for (let dist of document.distributions) {
+            distributions[MiscUtils.createDistHash(dist)] = dist;
         }
+        for (let dist of service.distributions) {
+            distributions[MiscUtils.createDistHash(dist)] = dist;
+        }
+        return { ...document, distributions: Object.values(distributions) };
+    }
+
+    /**
+     * Deduplicate datasets across the whole database. For a given dataset and a given duplicate, merge specified
+     * properties of the duplicate into the dataset.
+     * 
+     * @param document 
+     * @param duplicate 
+     * @returns the augmented dataset
+     */
+    private deduplicate(document: any, duplicate: any): any {
+        return document;
+    }
+
+    private updateDataset(document: any): any {
+        log.debug(`Updating dataset ${document.identifier} (${document.extras.metadata.source.source_base})`);
+        return document;
     }
 }

@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-import {CkanMapper} from "../../../importer/ckan/ckan.mapper";
-import {ProfileFactory} from "../../profile.factory";
-import {CkanImporter} from "../../../importer/ckan/ckan.importer";
-import {ElasticsearchUtils} from "../../../persistence/elastic.utils";
+import { CkanImporter } from '../../../importer/ckan/ckan.importer';
+import { CkanMapper } from '../../../importer/ckan/ckan.mapper';
+import { DatabaseUtils } from '../../../persistence/database.utils';
+import { Entity } from '../../../model/entity';
 
 let log = require('log4js').getLogger(__filename);
 const uuidv5 = require('uuid/v5');
@@ -138,10 +138,17 @@ export class McloudCkanImporter extends CkanImporter {
                             doc.extras.metadata.modified = new Date(stored.modified);
                     }
                 }
-                return this.elastic.addDocToBulk(doc, doc.extras.generated_id)
+                let entity: Entity = {
+                    identifier: doc.extras.generated_id,
+                    source: this.settings.ckanBaseUrl,
+                    collection_id: 'harvester',
+                    dataset: doc,
+                    raw: doc.extras.harvested_data
+                };
+                return this.database.addEntityToBulk(entity)
                     .then(response => {
                         if (!response.queued) {
-                            this.numIndexDocs += ElasticsearchUtils.maxBulkSize;
+                            this.numIndexDocs += DatabaseUtils.maxBulkSize;
                         }
                     }).then(() => this.elastic.health('yellow'));
             });
