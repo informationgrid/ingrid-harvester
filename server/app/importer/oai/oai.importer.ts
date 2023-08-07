@@ -118,7 +118,7 @@ export class OaiImporter extends Importer {
 
                 let resumptionTokenNode = resultsNode.getElementsByTagName('resumptionToken')[0];
                 if (resumptionTokenNode) {
-                    this.totalRecords = resumptionTokenNode.getAttribute('completeListSize');
+                    this.totalRecords = parseInt(resumptionTokenNode.getAttribute('completeListSize'));
                     resumptionToken = resumptionTokenNode.textContent;
                 }
 

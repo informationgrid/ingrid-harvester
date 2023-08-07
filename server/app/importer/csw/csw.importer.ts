@@ -250,7 +250,7 @@ export class CswImporter extends Importer {
             let resultsNode = responseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
             if (resultsNode) {
                 let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
-                this.totalRecords = resultsNode.getAttribute('numberOfRecordsMatched');
+                this.totalRecords = parseInt(resultsNode.getAttribute('numberOfRecordsMatched'));
                 if (log.isDebugEnabled()) {
                     log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
                 }
