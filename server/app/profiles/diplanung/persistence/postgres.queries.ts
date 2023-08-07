@@ -42,8 +42,9 @@ export class PostgresQueries extends AbstractPostgresQueries {
 
     readonly createTable = `CREATE TABLE IF NOT EXISTS public.${this.tableName} (
         id SERIAL,
-        identifier VARCHAR(255),
-        source VARCHAR(255),
+        identifier VARCHAR(255) NOT NULL,
+        source VARCHAR(255) NOT NULL,
+        operates_on VARCHAR(255)[],
         collection_id VARCHAR(255),
         dataset JSONB,
         raw TEXT,
@@ -51,16 +52,16 @@ export class PostgresQueries extends AbstractPostgresQueries {
         last_modified TIMESTAMP(6) with time zone NULL,
         PRIMARY KEY(identifier, source))`;
 
-    readonly bulkUpsert = `INSERT INTO ${this.tableName} (identifier, source, collection_id, operates_on, dataset, raw)
-        SELECT identifier, source, collection_id, operates_on, dataset, raw
-        FROM json_populate_recordset(null::${this.tableName}, $1)
-        ${this.onConflict}`;
-
-    readonly onConflict = ` ON CONFLICT ON CONSTRAINT ${this.tableName}_pkey DO UPDATE SET
+    readonly onConflict = `ON CONFLICT ON CONSTRAINT ${this.tableName}_pkey DO UPDATE SET
         operates_on = EXCLUDED.operates_on,
         dataset = EXCLUDED.dataset,
         raw = COALESCE(EXCLUDED.raw, ${this.tableName}.raw),
         last_modified = NOW()`;
+
+    readonly bulkUpsert = `INSERT INTO ${this.tableName} (identifier, source, collection_id, operates_on, dataset, raw)
+        SELECT identifier, source, collection_id, operates_on, dataset, raw
+        FROM json_populate_recordset(null::${this.tableName}, $1)
+        ${this.onConflict}`;
 
     readonly readDatasets = `SELECT dataset FROM public.${this.tableName}`;
 
@@ -88,8 +89,8 @@ export class PostgresQueries extends AbstractPostgresQueries {
                 secondary.source AS source,
                 secondary.dataset AS dataset,
                 false AS is_service,
-                secondary.issued AS issued,
-                secondary.modified AS modified
+                secondary.created_on AS issued,
+                secondary.last_modified AS modified
             FROM public.${this.tableName} AS anchor
             LEFT JOIN public.${this.tableName} AS secondary
             ON anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
@@ -103,8 +104,8 @@ export class PostgresQueries extends AbstractPostgresQueries {
                 service.source AS source,
                 service.dataset AS dataset,
                 true AS is_service,
-                service.issued AS issued,
-                service.modified AS modified
+                service.created_on AS issued,
+                service.last_modified AS modified
             FROM public.${this.tableName} AS service
             LEFT JOIN public.${this.tableName} AS ds
             ON ds.identifier = ANY(service.operates_on)

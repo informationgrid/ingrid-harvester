@@ -25,8 +25,8 @@ export abstract class PostgresQueries {
 
     abstract readonly tableName: string;
     abstract readonly createTable: string;
-    abstract readonly bulkUpsert: string;
     abstract readonly onConflict: string;
+    abstract readonly bulkUpsert: string;
     abstract readonly readDatasets: string;
     abstract readonly getStoredData: string;
 
