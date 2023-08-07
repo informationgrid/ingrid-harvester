@@ -86,7 +86,11 @@ export class DiplanungCswImporter extends CswImporter {
         return box;
     }
 
-    private prioritize(bucket: Bucket): { primary_id: string | number, document: DiplanungIndexDocument, duplicates: Map<string | number, DiplanungIndexDocument> } {
+    private prioritize(bucket: Bucket): { 
+        primary_id: string | number, 
+        document: DiplanungIndexDocument, 
+        duplicates: Map<string | number, DiplanungIndexDocument>
+    } {
         let candidates = [];
         let reserveCandidate: string | number;
         for (let [id, document] of bucket.duplicates) {
