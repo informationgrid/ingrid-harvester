@@ -26,31 +26,15 @@ import { DcatApPluDocument } from '../model/dcatApPlu.document';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { Distribution } from '../../../model/distribution';
-import { DOMParser as DomParser } from '@xmldom/xmldom';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { MiscUtils } from '../../../utils/misc.utils';
-import { ProfileFactoryLoader } from '../../profile.factory.loader';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WmsXPath } from './wms.xpath';
 
 const log = require('log4js').getLogger(__filename);
 
 export class DiplanungCswImporter extends CswImporter {
-
-    private domParser: DomParser;
-
-    constructor(settings, requestDelegate?: RequestDelegate) {
-        super(settings, requestDelegate);
-        this.domParser = new DomParser({
-            errorHandler: (level, msg) => {
-                // throw on error, swallow rest
-                if (level == 'error') {
-                    throw new Error(msg);
-                }
-            }
-        });
-    }
 
     getMapper(settings, record, harvestTime, storedData, summary, generalInfo): DiplanungCswMapper {
         return new DiplanungCswMapper(settings, record, harvestTime, storedData, summary, generalInfo);

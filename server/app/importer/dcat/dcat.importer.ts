@@ -25,6 +25,7 @@ import { namespaces } from '../../importer/namespaces';
 import { getLogger } from 'log4js';
 import { DcatMapper } from './dcat.mapper';
 import { DcatSettings, defaultDCATSettings } from './dcat.settings';
+import { DOMParser as DomParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
@@ -36,10 +37,11 @@ import { Summary } from '../../model/summary';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
-    logRequest = getLogger('requests'),
-    DomParser = require('@xmldom/xmldom').DOMParser;
+    logRequest = getLogger('requests');
 
 export class DcatImporter extends Importer {
+
+    protected domParser: DomParser;
     private profile: ProfileFactory<DcatMapper>;
     private readonly settings: DcatSettings;
     private readonly requestDelegate: RequestDelegate;
@@ -62,8 +64,15 @@ export class DcatImporter extends Importer {
             let requestConfig = DcatImporter.createRequestConfig(settings);
             this.requestDelegate = new RequestDelegate(requestConfig, DcatImporter.createPaging(settings));
         }
-
         this.settings = settings;
+        this.domParser = new DomParser({
+            errorHandler: (level, msg) => {
+                // throw on error, swallow rest
+                if (level == 'error') {
+                    throw new Error(msg);
+                }
+            }
+        });
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -102,7 +111,7 @@ export class DcatImporter extends Importer {
             let response = await this.requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
 
-            let responseDom = new DomParser().parseFromString(response);
+            let responseDom = this.domParser.parseFromString(response);
 
             let isLastPage = false;
 
@@ -158,7 +167,7 @@ export class DcatImporter extends Importer {
 
     async extractRecords(getRecordsResponse, harvestTime) {
         let promises = [];
-        let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
+        let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
         let rootNode = xml.getElementsByTagNameNS(namespaces.RDF, 'RDF')[0];
         let records =  DcatMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
 

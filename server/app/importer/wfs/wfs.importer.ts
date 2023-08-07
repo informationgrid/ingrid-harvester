@@ -27,6 +27,7 @@ import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { Contact } from '../../model/agent';
+import { DOMParser as DomParser } from '@xmldom/xmldom';
 import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
@@ -44,10 +45,11 @@ const fs = require('fs');
 const xpath = require('xpath');
 
 const log = getLogger(__filename),
-    logRequest = getLogger('requests'),
-    DomParser = require('@xmldom/xmldom').DOMParser;
+    logRequest = getLogger('requests');
 
 export abstract class WfsImporter extends Importer {
+
+    protected domParser: DomParser;
     private profile: ProfileFactory<WfsMapper>;
     private readonly settings: WfsSettings;
     private readonly requestDelegate: RequestDelegate;
@@ -70,16 +72,21 @@ export abstract class WfsImporter extends Importer {
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultWfsSettings, settings);
 
-        // TODO disallow setting "//" in xpaths in the UI
-
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
         } else {
             let requestConfig = WfsImporter.createRequestConfig(settings);
             this.requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(settings));
         }
-
         this.settings = settings;
+        this.domParser = new DomParser({
+            errorHandler: (level, msg) => {
+                // throw on error, swallow rest
+                if (level == 'error') {
+                    throw new Error(msg);
+                }
+            }
+        });
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -135,7 +142,7 @@ export abstract class WfsImporter extends Importer {
         else {
             responseBody = decode(responseBody, charset);
         }
-        let capabilitiesResponseDom = new DomParser().parseFromString(responseBody);
+        let capabilitiesResponseDom = this.domParser.parseFromString(responseBody);
 
         // extract the namespace map for the capabilities
         this.nsMap = MiscUtils.merge(XPathUtils.getNsMap(capabilitiesResponseDom), XPathUtils.getExtendedNsMap(capabilitiesResponseDom));
@@ -202,7 +209,7 @@ export abstract class WfsImporter extends Importer {
             let response = await this.requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
 
-            let responseDom = new DomParser().parseFromString(response);
+            let responseDom = this.domParser.parseFromString(response);
             let resultsNode = responseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
 
             if (resultsNode) {
@@ -212,7 +219,7 @@ export abstract class WfsImporter extends Importer {
                 let hitsRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resultType: 'hits' });
                 let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
                 let hitsResponse = await hitsRequestDelegate.doRequest();
-                let hitsResponseDom = new DomParser().parseFromString(hitsResponse);
+                let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
                 let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
                 this.totalFeatures = parseInt(hitsResultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
 
@@ -250,7 +257,7 @@ export abstract class WfsImporter extends Importer {
     // ED: TODO
     async extractFeatures(getFeatureResponse, harvestTime) {
         let promises = [];
-        let xml = new DomParser().parseFromString(getFeatureResponse, 'application/xml');
+        let xml = this.domParser.parseFromString(getFeatureResponse, 'application/xml');
 
         // extend nsmap with the namespaces from the FeatureCollection response
         // this.nsMap = { ...XPathUtils.getNsMap(xml), ...XPathUtils.getExtendedNsMap(xml) };
@@ -367,7 +374,7 @@ export abstract class WfsImporter extends Importer {
             }
         } else {
             requestConfig.qs = <WfsParameters>{
-                request: request,
+                REQUEST: request,
                 SERVICE: 'WFS',
                 VERSION: settings.version,
                 resultType: settings.resultType,
