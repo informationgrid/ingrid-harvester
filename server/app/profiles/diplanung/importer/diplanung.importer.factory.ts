@@ -27,6 +27,7 @@ import { FisWfsImporter } from '../../../importer/wfs/fis/fis.wfs.importer';
 import { Harvester } from '@shared/harvester';
 import { Importer } from '../../../importer/importer';
 import { ImporterFactory } from '../../../importer/importer.factory';
+import { XplanSynWfsImporter } from '../../../importer/wfs/xplan/syn/xplan.syn.wfs.importer';
 import { XplanWfsImporter } from '../../../importer/wfs/xplan/xplan.wfs.importer';
 
 export class DiplanungImporterFactory extends ImporterFactory{
@@ -37,6 +38,7 @@ export class DiplanungImporterFactory extends ImporterFactory{
             case 'CSW': return new DiplanungCswImporter(config);
             case 'WFS.FIS': return new FisWfsImporter(config);
             case 'WFS.XPLAN': return new XplanWfsImporter(config);
+            case 'WFS.XPLAN.SYN': return new XplanSynWfsImporter(config);
             default: {
                 console.error('Importer not found: ' + config.type);
             }

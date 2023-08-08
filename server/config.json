@@ -51,7 +51,7 @@
   {
     "index": "wfs_syn_hh_xplanung",
     "priority": 0,
-    "type": "WFS.XPLAN",
+    "type": "WFS.XPLAN.SYN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -88,12 +88,13 @@
         "pattern": "",
         "active": false
       }
-    }
+    },
+    "maxConcurrent": null
   },
   {
     "index": "wfs_syn_hh_xplanung_pre",
     "priority": 0,
-    "type": "WFS.XPLAN",
+    "type": "WFS.XPLAN.SYN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -130,7 +131,8 @@
         "pattern": "",
         "active": false
       }
-    }
+    },
+    "maxConcurrent": null
   },
   {
     "index": "wfs_xplanung_freiburg_de_30",

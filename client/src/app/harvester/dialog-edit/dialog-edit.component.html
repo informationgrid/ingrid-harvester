@@ -42,6 +42,7 @@
             <mat-option value="SPARQL">SPARQL</mat-option>
             <mat-option value="WFS.FIS">WFS (FIS)</mat-option>
             <mat-option value="WFS.XPLAN">WFS (XPLAN)</mat-option>
+            <mat-option value="WFS.XPLAN.SYN">WFS (Syn XPLAN)</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -181,6 +182,12 @@
       </app-wfs-harvester>
 
       <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS.XPLAN'" [form]="harvesterForm"
+                         [model]="harvester"
+                         [rulesTemplate]="rules"
+                         class="flex-column">
+      </app-wfs-harvester>
+
+      <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS.XPLAN.SYN'" [form]="harvesterForm"
                          [model]="harvester"
                          [rulesTemplate]="rules"
                          class="flex-column">
