@@ -26,6 +26,14 @@ import { MiscUtils } from '../../../../utils/misc.utils';
 import { PluDocType } from '../../../../model/dcatApPlu.model';
 import { XplanWfsMapper } from '../xplan.wfs.mapper';
 
+
+const distributionTags = {
+    'externeReferenz': null,
+    'refBegruendung': 'Begründung',
+    'refGruenordnungsplan': 'Grünordnungsplan',
+    'refRechtsplan': 'Rechtsplan'
+};
+
 export class XplanSynWfsMapper extends XplanWfsMapper {
 
     /**
@@ -36,13 +44,7 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
      */
     async _getDistributions(): Promise<Distribution[]> {
         let distributions = [];
-        let tags = {
-            'externeReferenz': null,
-            'refBegruendung': 'Begründung',
-            'refGruenordnungsplan': 'Grünordnungsplan',
-            'refRechtsplan': 'Rechtsplan'
-        };
-        Object.entries(tags).forEach(([tagName, tagDescription]) => {
+        Object.entries(distributionTags).forEach(([tagName, tagDescription]) => {
             distributions.push(...this.getSpecificDistributions(tagName, tagDescription));
         });
         return distributions;
