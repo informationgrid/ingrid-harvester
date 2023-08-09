@@ -194,7 +194,7 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
     }
 
     isValid(doc? : any): boolean {
-        return this.baseMapper.isValid(doc);
+        return this.baseMapper.isValid(doc) && doc.spatial_text != null && (doc.spatial != null || doc.bounding_box != null);
     }
 
     getQualityNotes(doc? : any): string[] {
