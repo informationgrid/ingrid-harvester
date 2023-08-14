@@ -236,7 +236,8 @@ export class DcatappluMapper extends BaseMapper {
                 identifier: DcatappluMapper.select('./dct:identifier', step, true)?.textContent ?? undefined,
                 type: type ?? PluProcessStepType.UNBEKANNT,
                 distributions: this._getRelevantDistibutions(step),
-                period: period?.[0]
+                period: period?.[0],
+                passNumber: DcatappluMapper.select('./plu:passNumber', step, true)?.textContent
             }
             processSteps.push(processStep);
         })

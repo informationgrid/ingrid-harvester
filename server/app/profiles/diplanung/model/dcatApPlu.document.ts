@@ -176,13 +176,14 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         </${relation}>`;
     }
 
-    private static xmlProcessStep({ distributions, identifier, period, type }: ProcessStep): string {
+    private static xmlProcessStep({ distributions, identifier, period, type, passNumber }: ProcessStep): string {
         return `<plu:processStep>
             <plu:ProcessStep>
                 <plu:processStepType rdf:resource="${diplanUriPrefix}/processStepType#${type}"/>
                 ${optional('dct:identifier', esc(identifier))}
                 ${optional(DcatApPluDocument.xmlDistribution, distributions)}
                 ${optional(DcatApPluDocument.xmlPeriodOfTime, period, 'dct:temporal')}
+                ${optional('plu:passNumber', passNumber)}
             </plu:ProcessStep>
         </plu:processStep>`;
     }
