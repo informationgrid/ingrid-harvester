@@ -64,6 +64,10 @@ export class DiplanungVirtualMapper extends BaseMapper {
         return this.fields.maintainers;
     }
 
+    async _getContributors(): Promise<Person[] | Organization[]> {
+        return undefined
+    }
+
     _getModifiedDate(): Date {
         return this.fields.modified;
     }
@@ -218,5 +222,14 @@ export class DiplanungVirtualMapper extends BaseMapper {
     }
     _getUrlCheckRequestConfig(uri: string): RequestOptions {
         throw new Error('Method not implemented.');
+    }
+    _getRelation() {
+        return undefined;
+    }
+    _getAdmsIdentifier(){
+        return undefined;
+    }
+    _getPluNotification(){
+        return undefined;
     }
 }

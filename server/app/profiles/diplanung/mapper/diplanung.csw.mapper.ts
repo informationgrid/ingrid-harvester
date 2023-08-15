@@ -96,6 +96,10 @@ export class DiplanungCswMapper extends CswMapper {
         let maintainers = await super._getMaintainers();
         return uniqBy(maintainers, JSON.stringify);
     }
+    
+    async _getContributors() {
+        return undefined
+    }
 
     _getCatalog(): Catalog {
         return this.fetched.catalog;

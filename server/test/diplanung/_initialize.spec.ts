@@ -21,18 +21,26 @@
  * ==================================================
  */
 
-import { DiplanungMapper } from './diplanung.mapper';
+import {Summary} from '../../app/model/summary';
+import {IndexConfiguration} from '../../app/persistence/elastic.setting';
+import { ElasticsearchFactory } from '../../app/persistence/elastic.factory';
 
-export class DiplanungMapperFactory {
-    static getMapper(mapper): DiplanungMapper<any> {
-        switch (mapper.constructor.name) {
-            case 'DiplanungCswMapper': return new DiplanungMapper(mapper);
-            case 'DiplanungVirtualMapper': return new DiplanungMapper(mapper);
-            case 'ExcelSparseMapper': return new DiplanungMapper(mapper);
-            case 'FisWfsMapper': return new DiplanungMapper(mapper);
-            case 'XplanSynWfsMapper': return new DiplanungMapper(mapper);
-            case 'XplanWfsMapper': return new DiplanungMapper(mapper);
-            case 'DcatappluMapper': return new DiplanungMapper(mapper);
-        }
-    }
-}
+
+describe('Initialize Elasticsearch', function () {
+    this.timeout(10000);
+
+    // @ts-ignore
+    let config: IndexConfiguration = {
+        url: 'http://localhost:9200',
+        version: "6",
+        //deduplicationAlias: 'test-dedup'
+    };
+
+    // @ts-ignore
+    let summary: Summary = {
+        elasticErrors: []
+    };
+
+   let elasticsearchUtils = ElasticsearchFactory.getElasticUtils(config, summary);
+    
+});

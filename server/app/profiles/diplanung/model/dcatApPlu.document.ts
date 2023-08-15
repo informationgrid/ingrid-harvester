@@ -30,7 +30,7 @@ import { Distribution } from '../../../model/distribution';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { ProcessStep, Record } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
-
+import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper'
 const esc = require('xml-escape');
 
 function optional(wrapper: string | Function, variable: any | any[], ...remainder: any) {
@@ -88,7 +88,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         return 'dcat_ap_plu';
     }
 
-    static async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper): Promise<string> {
+    static async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper | DcatappluMapper): Promise<string> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
         let publisher = (await mapper.getPublisher())?.[0];
@@ -188,13 +188,14 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         </${relation}>`;
     }
 
-    private static xmlProcessStep({ distributions, identifier, period, type }: ProcessStep): string {
+    private static xmlProcessStep({ distributions, identifier, period, type, passNumber }: ProcessStep): string {
         return `<plu:processStep>
             <plu:ProcessStep>
                 <plu:processStepType rdf:resource="${diplanUriPrefix}/processStepType#${type}"/>
                 ${optional('dct:identifier', esc(identifier))}
                 ${optional(DcatApPluDocument.xmlDistribution, distributions)}
                 ${optional(DcatApPluDocument.xmlPeriodOfTime, period, 'dct:temporal')}
+                ${optional('plu:passNumber', passNumber)}
             </plu:ProcessStep>
         </plu:processStep>`;
     }

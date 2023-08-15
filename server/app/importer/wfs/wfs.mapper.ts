@@ -94,6 +94,10 @@ export abstract class WfsMapper extends BaseMapper {
         return undefined;
     }
 
+    async _getContributors(): Promise<Person[] | Organization[]> {
+        return undefined
+    }
+
     abstract _getAlternateTitle(): string;
 
     _getAccessRights(): string[] {
@@ -297,5 +301,17 @@ export abstract class WfsMapper extends BaseMapper {
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);
         }
+    }
+
+    _getRelation() {
+        return undefined;
+    }
+
+    _getAdmsIdentifier(){
+        return undefined;
+    }
+    
+    _getPluNotification(){
+        return undefined;
     }
 }
