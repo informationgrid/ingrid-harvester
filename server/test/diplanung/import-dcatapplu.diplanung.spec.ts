@@ -25,20 +25,12 @@ import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import { configure, getLogger } from "log4js";
 import * as sinon from "sinon";
-import { TestUtils } from "./utils/test-utils";
-// import {CswSettings} from '../app/importer/csw/csw.settings';
-// import {CswImporter} from '../app/importer/csw/csw.importer';
-import { DcatappluImporter } from '../app/importer/dcatapplu/dcatapplu.importer'
-import { DcatappluSettings } from '../app/importer/dcatapplu/dcatapplu.settings'
-import { ProfileFactoryLoader } from "../app/profiles/profile.factory.loader";
-import { IndexDocument } from "../app/model/index.document";
-// import {mcloudDocument} from "../app/profiles/mcloud/model/index.document";
-import { DiPlanungDocument } from "../app/profiles/diplanung/model/index.document";
-import { DcatappluMapper } from "importer/dcatapplu/dcatapplu.mapper";
-
-import { DataFactory } from "rdf-data-factory";
+import { TestUtils } from "../utils/test-utils";
 import { RdfXmlParser } from "rdfxml-streaming-parser";
 import { isomorphic } from "rdf-isomorphic";
+import { DcatappluImporter } from '../../app/importer/dcatapplu/dcatapplu.importer'
+import { DcatappluSettings } from '../../app/importer/dcatapplu/dcatapplu.settings'
+import { DiPlanungDocument } from "../../app/profiles/diplanung/model/index.document";
 const fs = require('fs');
 var Readable = require('node:stream').Readable;
 
@@ -48,11 +40,12 @@ configure('./log4js.json');
 chai.use(chaiAsPromised);
 
 describe('Import DCAT AP PLU', function () {
+
     const myParser = new RdfXmlParser();
     const secondParser = new RdfXmlParser();
 
     // load xml file and transform to graph
-    let xmlInputFile = fs.readFileSync('../server/test/data/input-dcatapplu-example.xml', 'utf-8');
+    let xmlInputFile = fs.readFileSync('../server/test/data/input-dcatapplu-transformedData.xml', 'utf-8');
     xmlInputFile = xmlInputFile.replace(/\s+/, " ");
     const xmlStream = Readable.from([xmlInputFile]);
 
@@ -71,7 +64,7 @@ describe('Import DCAT AP PLU', function () {
 
         // @ts-ignore
         const settings: DcatappluSettings = {
-            catalogUrl: "http://localhost:8080/examples/plu-example-extended.xml",
+            catalogUrl: "http://localhost:8040/examples/input-dcatapplu-transformedData.xml",
             filterTags: null,
             filterThemes: null,
             providerPrefix: null,
@@ -99,36 +92,12 @@ describe('Import DCAT AP PLU', function () {
                 log.info('YES, data is isomorph');
             } else {
                 log.info('NO, data is not isomorph. \nLength of Input:', sortedInputGraph.length, '\nLength of Output', sortedOutputGraph.length);
-                sortedInputGraph.map((input, index) => {
-                    // if(input.subject.value == sortedOutputGraph[index]?.subject.value ){
-                    // if(JSON.stringify(input) == JSON.stringify(sortedOutputGraph[index]) ){
-                    // if(JSON.stringify(input).length == JSON.stringify(sortedOutputGraph[index]).length ){
-                        console.log("\n",index,". Element ---- input -------------------")
-                        // console.log("subject:", input.subject?.value)
-                        // console.log("predicate:", input.predicate?.value)
-                        // console.log("object:", input.object?.value)
-                        console.log("subject:", sortedOutputGraph[index]?.subject.value)
-                        console.log("predicate:", sortedOutputGraph[index]?.predicate.value)
-                        console.log("object:", sortedOutputGraph[index]?.object?.value)
-                        
-                    // } else {
-                    //     console.log("\nElement", index, "is NOT equal\n----------------------------")
-                    //     console.log(JSON.stringify(input))
-                    //     console.log("----------------------------")
-                    //     console.log(JSON.stringify(sortedOutputGraph[index]))
-
-                    // }
-
-                })
             }
         }
 
         importer.run.subscribe({
             complete: async () => {
                 chai.expect(indexDocumentCreateSpy.called, 'Create method of index document has not been called').to.be.true;
-                // let extraChecks = (actual, expected) => {
-                    //     // chai.expect(actual.extras.metadata.harvested).not.to.be.null.and.empty;
-                    // };
 
                 try {
                     let transformed_data = await indexDocumentCreateSpy.getCall(0).returnValue.then(value => {

@@ -25,19 +25,19 @@ import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import {configure, getLogger} from 'log4js';
 import * as sinon from 'sinon';
-import {TestUtils} from './utils/test-utils';
-import {CkanSettings, defaultCKANSettings} from '../app/importer/ckan/ckan.settings';
-import {CkanImporter} from '../app/importer/ckan/ckan.importer';
-import {CkanMapper} from '../app/importer/ckan/ckan.mapper';
-import {Organization} from "../app/model/agent";
-import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
+import {TestUtils} from '../utils/test-utils';
+import {CkanSettings, defaultCKANSettings} from '../../app/importer/ckan/ckan.settings';
+import {CkanImporter} from '../../app/importer/ckan/ckan.importer';
+import {CkanMapper} from '../../app/importer/ckan/ckan.mapper';
+import {Organization} from "../../app/model/agent";
+import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader";
 
-const ckanDoc = require('./data/ckan_doc.json');
+const ckanDoc = require('../data/ckan_doc.json');
 
 let log = getLogger();
 configure('./log4js.json');
 
-let resultZugbildungsplan = require('./data/result_ckan_bahn_Zugbildungsplan.json');
+let resultZugbildungsplan = require('../data/result_ckan_bahn_Zugbildungsplan.json');
 
 chai.use(chaiAsPromised);
 

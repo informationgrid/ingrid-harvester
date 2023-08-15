@@ -21,17 +21,17 @@
  * ==================================================
  */
 
-import {Summary} from '../app/model/summary';
+import {Summary} from '../../app/model/summary';
 import {expect} from "chai";
 import {configure} from 'log4js';
-import {doc1, doc3, doc4} from './data/docs.deduplication';
-import {indexMappings} from '../app/profiles/mcloud/elastic/elastic.mappings';
-import {indexSettings} from '../app/profiles/mcloud/elastic/elastic.settings';
-import { ElasticsearchFactory } from '../app/persistence/elastic.factory';
-import { IndexConfiguration } from '../app/persistence/elastic.setting';
-import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
-import {mcloudFactory} from "../app/profiles/mcloud/profile.factory";
-import {DeduplicateUtils} from "../app/profiles/mcloud/elastic/deduplicate.utils";
+import {doc1, doc3, doc4} from '../data/docs.deduplication';
+import {indexMappings} from '../../app/profiles/mcloud/elastic/elastic.mappings';
+import {indexSettings} from '../../app/profiles/mcloud/elastic/elastic.settings';
+import { ElasticsearchFactory } from '../../app/persistence/elastic.factory';
+import { IndexConfiguration } from '../../app/persistence/elastic.setting';
+import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader";
+import {mcloudFactory} from "../../app/profiles/mcloud/profile.factory";
+import {DeduplicateUtils} from "../../app/profiles/mcloud/elastic/deduplicate.utils";
 
 configure('./test/log4js-test.json');
 

@@ -14,8 +14,8 @@
     "postbuild": "copyfiles './*.json' 'app/**/*.json' build/server",
     "install-production": "NODE_ENV=production npm ci",
     "test": "mocha -r ts-node/register test/**/*.ts  --profile=mcloud",
-    "test-jenkins": "mocha -r ts-node/register test/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml  --profile=mcloud",
-    "test-jenkins-diplanung": "mocha -r ts-node/register test/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml  --profile=diplanung"
+    "test-jenkins": "mocha -r ts-node/register test/mcloud/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml  --profile=mcloud",
+    "test-jenkins-diplanung": "mocha -r ts-node/register test/diplanung/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml  --profile=diplanung"
   },
   "author": "andre.wallat@wemove.com",
   "license": "EUPL",
