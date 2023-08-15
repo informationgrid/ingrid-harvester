@@ -33,8 +33,7 @@ import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
 import { MiscUtils } from '../../utils/misc.utils';
 import {ProfileFactory} from "../../profiles/profile.factory";
 import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
-import { Catalog } from 'model/dcatApPlu.model';
-import { DcatApPluDocument } from 'profiles/diplanung/model/dcatApPlu.document';
+import { Catalog } from '../../model/dcatApPlu.model';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
