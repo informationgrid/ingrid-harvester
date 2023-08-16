@@ -573,16 +573,4 @@ export class ExcelSparseMapper extends BaseMapper {
         }
         return null
     }
-    
-    _getRelation() {
-        return undefined;
-    }
-    
-    _getAdmsIdentifier(){
-        return undefined;
-    }
-
-    _getPluNotification(){
-        return undefined;
-    }
 }

@@ -25,13 +25,13 @@ import 'dayjs/locale/de';
 import { getLogger } from 'log4js';
 import { Contact, Organization, Person } from '../../../model/agent';
 import { DateRange } from '../../../model/dateRange';
+import { DcatappluMapper } from "../../../importer/dcatapplu/dcatapplu.mapper";
 import { DiplanungCswMapper } from './diplanung.csw.mapper';
 import { DiplanungVirtualMapper } from './diplanung.virtual.mapper';
 import { Distribution } from "../../../model/distribution";
 import { ExcelSparseMapper } from "../../../importer/excelsparse/excelsparse.mapper";
-import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from 'model/dcatApPlu.model';
+import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from "../../../importer/wfs/wfs.mapper";
-import { DcatappluMapper } from "../../../importer/dcatapplu/dcatapplu.mapper";
 
 const dayjs = require('dayjs');
 dayjs.locale('de');

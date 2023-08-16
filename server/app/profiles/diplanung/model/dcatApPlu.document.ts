@@ -22,6 +22,7 @@
  */
 
 import { Contact, Organization, Person } from '../../../model/agent';
+import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper'
 import { DateRange } from '../../../model/dateRange';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
@@ -30,7 +31,7 @@ import { Distribution } from '../../../model/distribution';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { ProcessStep, Record } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
-import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper'
+
 const esc = require('xml-escape');
 
 function optional(wrapper: string | Function, variable: any | any[], ...remainder: any) {

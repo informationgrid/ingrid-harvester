@@ -24,7 +24,7 @@
 import { defaultCSWSettings, CswSettings } from './csw.settings';
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
-import { BulkResponse } from 'persistence/elastic.utils';
+import { BulkResponse } from '../../persistence/elastic.utils';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { ConfigService } from '../../services/config/ConfigService';
 import { CswMapper } from './csw.mapper';
@@ -340,10 +340,10 @@ export class CswImporter extends Importer {
         // may be harmless; investigate if limit increase suffices or if a real leak is occurring
         let settledPromises: PromiseSettledResult<BulkResponse>[] = await Promise.allSettled(promises).catch(err => log.error('Error indexing CSW record', err));
         // filter for the actually imported documents
-        let insertedIds = settledPromises.filter(result => result.status == 'fulfilled' && !result.value.queued).reduce((ids, result) => {
-            ids.push(...(result as PromiseFulfilledResult<BulkResponse>).value.response.items.filter(item => item.index.result == 'created').map(item => item.index._id));
-            return ids;
-        }, []);
+        // let insertedIds = settledPromises.filter(result => result.status == 'fulfilled' && !result.value.queued).reduce((ids, result) => {
+        //     ids.push(...(result as PromiseFulfilledResult<BulkResponse>).value.response.items.filter(item => item.index.result == 'created').map(item => item.index._id));
+        //     return ids;
+        // }, []);
         // TODO not filtering produces some (inconsequential) ES errors we ignore for now
         // TODO but with filtering (here), we miss some updates -> don't filter atm
         // TODO this has to be handled differently with the database layer anyhow
