@@ -302,16 +302,4 @@ export abstract class WfsMapper extends BaseMapper {
             throwError('An error occurred in custom code: ' + error.message);
         }
     }
-
-    _getRelation() {
-        return undefined;
-    }
-
-    _getAdmsIdentifier(){
-        return undefined;
-    }
-    
-    _getPluNotification(){
-        return undefined;
-    }
 }
