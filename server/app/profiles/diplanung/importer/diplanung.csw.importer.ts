@@ -36,6 +36,10 @@ const log = require('log4js').getLogger(__filename);
 
 export class DiplanungCswImporter extends CswImporter {
 
+    private static readonly MAX_TRIES = 5;
+
+    private tempUrlCache = new Map<string, string[]>();
+
     getMapper(settings, record, harvestTime, storedData, summary, generalInfo): DiplanungCswMapper {
         return new DiplanungCswMapper(settings, record, harvestTime, storedData, summary, generalInfo);
     }
@@ -210,7 +214,12 @@ export class DiplanungCswImporter extends CswImporter {
         for (let distribution of distributions) {
             let accessURL = distribution.accessURL;
             let accessURL_lc = distribution.accessURL.toLowerCase();
+            let baseUrl = getBaseUrl(accessURL_lc);
             // short-circuits
+            if (this.tempUrlCache.get(baseUrl)?.length > DiplanungCswImporter.MAX_TRIES) {
+                this.tempUrlCache.get(baseUrl).push(accessURL_lc);
+                continue;
+            }
             let skippedExtensions = ['.jpg', '.html', '.pdf', '.png', '/'];
             if (skippedExtensions.some(ext => accessURL_lc.endsWith(ext))) {
                 continue;
@@ -243,6 +252,7 @@ export class DiplanungCswImporter extends CswImporter {
                 else if (response.startsWith('<?xml')) {
                     try {
                         let layerNames = this.getMapLayerNames(response);
+                        this.tempUrlCache.set(baseUrl, []);
                         if (layerNames) {
                             distribution.accessURL = accessURL;
                             if (!distribution.format?.includes('WMS')) {
@@ -259,6 +269,12 @@ export class DiplanungCswImporter extends CswImporter {
                     }
                 }
                 else {
+                    // 
+                    if (!this.tempUrlCache.has(baseUrl)) {
+                        this.tempUrlCache.set(baseUrl, []);
+                    }
+                    this.tempUrlCache.get(baseUrl).push(accessURL_lc);
+
                     let msg = `Response for ${accessURL} is not valid XML`;
                     log.debug(msg);
                     this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response.replaceAll('\n', ' '), 1024)]);
@@ -282,4 +298,8 @@ export class DiplanungCswImporter extends CswImporter {
         }
         return layerNames;
     }
+}
+
+function getBaseUrl(url: string) {
+    return /(https?:\/\/[^\/]+)\/?.*/.exec(url)?.[1];
 }
