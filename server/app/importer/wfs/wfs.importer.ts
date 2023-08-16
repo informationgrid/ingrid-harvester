@@ -374,7 +374,7 @@ export abstract class WfsImporter extends Importer {
             }
         } else {
             requestConfig.qs = <WfsParameters>{
-                REQUEST: request,
+                request: request,
                 SERVICE: 'WFS',
                 VERSION: settings.version,
                 resultType: settings.resultType,
