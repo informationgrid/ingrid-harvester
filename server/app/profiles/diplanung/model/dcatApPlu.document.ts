@@ -22,6 +22,7 @@
  */
 
 import { Contact, Organization, Person } from '../../../model/agent';
+import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper'
 import { DateRange } from '../../../model/dateRange';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
@@ -88,7 +89,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         return 'dcat_ap_plu';
     }
 
-    static async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper): Promise<string> {
+    static async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper | DcatappluMapper): Promise<string> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
         let publisher = (await mapper.getPublisher())?.[0];
@@ -109,7 +110,7 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         //         ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
         //     </dcat:Catalog>`;
         let xmlString = `<dcat:Dataset rdf:about="https://portal.diplanung.de/planwerke/${esc(mapper.getGeneratedId())}">
-                ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher.name)}
+                ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher['name'])}
                 <dct:description>${esc(mapper.getDescription())}</dct:description>
                 <dct:identifier>${esc(mapper.getGeneratedId())}</dct:identifier>
                 <dct:title>${esc(mapper.getTitle())}</dct:title>
@@ -188,13 +189,14 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         </${relation}>`;
     }
 
-    private static xmlProcessStep({ distributions, identifier, period, type }: ProcessStep): string {
+    private static xmlProcessStep({ distributions, identifier, period, type, passNumber }: ProcessStep): string {
         return `<plu:processStep>
             <plu:ProcessStep>
                 <plu:processStepType rdf:resource="${diplanUriPrefix}/processStepType#${type}"/>
                 ${optional('dct:identifier', esc(identifier))}
                 ${optional(DcatApPluDocument.xmlDistribution, distributions)}
                 ${optional(DcatApPluDocument.xmlPeriodOfTime, period, 'dct:temporal')}
+                ${optional('plu:passNumber', passNumber)}
             </plu:ProcessStep>
         </plu:processStep>`;
     }

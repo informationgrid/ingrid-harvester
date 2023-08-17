@@ -21,18 +21,20 @@
  * ==================================================
  */
 
-import { DiplanungMapper } from './diplanung.mapper';
+import { Harvester } from '@shared/harvester';
+import { MiscUtils } from '../../../../utils/misc.utils';
+import { RequestDelegate } from '../../../../utils/http-request.utils';
+import { XplanSynWfsMapper } from './xplan.syn.wfs.mapper';
+import { XplanWfsImporter } from '../xplan.wfs.importer';
+import { XplanWfsMapper } from '../xplan.wfs.mapper';
 
-export class DiplanungMapperFactory {
-    static getMapper(mapper): DiplanungMapper<any> {
-        switch (mapper.constructor.name) {
-            case 'DiplanungCswMapper': return new DiplanungMapper(mapper);
-            case 'DiplanungVirtualMapper': return new DiplanungMapper(mapper);
-            case 'ExcelSparseMapper': return new DiplanungMapper(mapper);
-            case 'FisWfsMapper': return new DiplanungMapper(mapper);
-            case 'XplanSynWfsMapper': return new DiplanungMapper(mapper);
-            case 'XplanWfsMapper': return new DiplanungMapper(mapper);
-            case 'DcatappluMapper': return new DiplanungMapper(mapper);
-        }
+export class XplanSynWfsImporter extends XplanWfsImporter {
+
+    constructor(settings: Harvester, requestDelegate?: RequestDelegate) {
+        super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
+    }
+
+    getMapper(settings: Harvester, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils): XplanWfsMapper {
+        return new XplanSynWfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils);
     }
 }

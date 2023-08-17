@@ -46,7 +46,7 @@ export class MiscUtils {
      * @param objs the objects to merge
      * @return the merged object
      */
-    public static merge(...objs) {
+    static merge(...objs) {
         // lodash mutates the first object on which it merges subsequent objects
         return lodashMerge({}, ...objs)
     }
@@ -59,7 +59,7 @@ export class MiscUtils {
      * @param maxLength the maximum length of the resulting string
      * @return the string truncated to `maxLength` characters
      */
-    public static truncateErrorMessage(msg: string, maxLength: number = MAX_MSG_LENGTH): string {
+    static truncateErrorMessage(msg: string, maxLength: number = MAX_MSG_LENGTH): string {
         return msg?.length > maxLength ? msg.substring(0, maxLength - TRUNC_STR.length) + TRUNC_STR : msg;
     }
 
@@ -69,7 +69,7 @@ export class MiscUtils {
      * @param datetime a datetime string in an ISO8601-like format
      * @return the Date object represented by the given datetime string
      */
-    public static normalizeDateTime(datetime: string): Date {
+    static normalizeDateTime(datetime: string): Date {
         if (datetime == null) {
             return undefined;
         }
@@ -86,7 +86,7 @@ export class MiscUtils {
         return null;
     }
 
-    public static isUuid(s: string): boolean {
+    static isUuid(s: string): boolean {
         if (s == null) {
             return false;
         }
@@ -99,7 +99,7 @@ export class MiscUtils {
      * @param distribution the Distribution from which the hash should be created
      * @return a simple hash for the given distribution
      */
-    public static createDistHash(distribution: Distribution) {
+    static createDistHash(distribution: Distribution) {
         let s = [
             distribution.accessURL,
             distribution.format,
@@ -161,6 +161,17 @@ export class MiscUtils {
     }
 
     /**
+     * Naive file extension extraction
+     * 
+     * @param filename 
+     * @returns 
+     */
+    static getFileExtension(filename: string) {
+        let ext = filename.slice(filename.lastIndexOf('.') + 1).toLowerCase();
+        return ext.length < 5 ? ext : undefined;
+    }
+
+    /**
      * Simple heuristic to detect if a URL contains a downloadable resource
      * 
      * @param url the URL to check
@@ -168,7 +179,7 @@ export class MiscUtils {
      */
     // TODO expand/improve
     static isMaybeDownloadUrl(url: string): boolean {
-        let ext = url.slice(url.lastIndexOf('.') + 1).toLowerCase();
+        let ext = MiscUtils.getFileExtension(url);
         return ['jpeg', 'jpg', 'pdf', 'zip'].includes(ext) || url.toLowerCase().indexOf('service=wfs') > -1;
     }
 }

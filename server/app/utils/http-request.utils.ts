@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import fetch, { HeadersInit, RequestInit } from 'node-fetch';
+import fetch, { HeadersInit, RequestInit, Response } from 'node-fetch';
 import { getLogger } from 'log4js';
 import { Agent } from 'https';
 import { HttpsProxyAgent } from 'https-proxy-agent';
@@ -252,9 +252,14 @@ export class RequestDelegate {
         let fullURL = RequestDelegate.getFullURL(config);
         let response = fetch(fullURL, config);
 
-        while (retry > 0) {
+        if (config.resolveWithFullResponse) {
+            return response;
+        }
+
+        let resolvedResponse: Response;
+        do {
             try {
-                await response;
+                resolvedResponse = await response;
                 break;
             }
             catch (e) {
@@ -269,17 +274,9 @@ export class RequestDelegate {
                     throw e;
                 }
             }
-        };
+        } while (retry > 0);
 
-        if (config.resolveWithFullResponse) {
-            return response;
-        }
-
-        let resolvedResponse = await response;
-        if (config.accept && !resolvedResponse.headers.get('content-type').includes(config.accept)) {
-            return null;
-        }
-        else if (config.json) {
+        if (config.json) {
             return resolvedResponse.json();
         }
         else {
@@ -293,4 +290,3 @@ export class RequestDelegate {
         });
     }
 }
-
