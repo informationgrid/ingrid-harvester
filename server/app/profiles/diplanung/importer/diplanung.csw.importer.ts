@@ -37,6 +37,7 @@ const log = require('log4js').getLogger(__filename);
 export class DiplanungCswImporter extends CswImporter {
 
     private static readonly MAX_TRIES = 5;
+    private static readonly SKIPPED_EXTENTSIONS = ['.jpg', '.html', '.pdf', '.png', '/'];
 
     private tempUrlCache = new Map<string, string[]>();
 
@@ -220,8 +221,7 @@ export class DiplanungCswImporter extends CswImporter {
                 this.tempUrlCache.get(baseUrl).push(accessURL_lc);
                 continue;
             }
-            let skippedExtensions = ['.jpg', '.html', '.pdf', '.png', '/'];
-            if (skippedExtensions.some(ext => accessURL_lc.endsWith(ext))) {
+            if (DiplanungCswImporter.SKIPPED_EXTENTSIONS.some(ext => accessURL_lc.endsWith(ext))) {
                 continue;
             }
             if (accessURL_lc.includes('request=') && !accessURL_lc.includes('getcapabilities')) {
