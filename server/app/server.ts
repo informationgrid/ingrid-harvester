@@ -21,9 +21,10 @@
  * ==================================================
  */
 
-import {GlobalAcceptMimesMiddleware, ServerLoader, ServerSettings} from '@tsed/common';
-import {ConfigService} from './services/config/ConfigService';
-import {configure} from 'log4js';
+import { ConfigService } from './services/config/ConfigService';
+import { GlobalAcceptMimesMiddleware, ServerLoader, ServerSettings } from '@tsed/common';
+import { addLayout, configure } from 'log4js';
+import { jsonLayout } from './utils/log4js.json.layout';
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const serverConfig = require('../server-config.json');
@@ -33,6 +34,7 @@ const rootDir = __dirname;
 const session = require('express-session');
 import './middlewares/auth/AuthMiddleware';
 
+addLayout("json", jsonLayout);
 configure('./log4js.json');
 
 @ServerSettings({

@@ -21,18 +21,28 @@
  * ==================================================
  */
 
-import { DiplanungMapper } from './diplanung.mapper';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-export class DiplanungMapperFactory {
-    static getMapper(mapper): DiplanungMapper<any> {
-        switch (mapper.constructor.name) {
-            case 'DiplanungCswMapper': return new DiplanungMapper(mapper);
-            case 'DiplanungVirtualMapper': return new DiplanungMapper(mapper);
-            case 'ExcelSparseMapper': return new DiplanungMapper(mapper);
-            case 'FisWfsMapper': return new DiplanungMapper(mapper);
-            case 'XplanSynWfsMapper': return new DiplanungMapper(mapper);
-            case 'XplanWfsMapper': return new DiplanungMapper(mapper);
-            case 'DcatappluMapper': return new DiplanungMapper(mapper);
-        }
-    }
-}
+import {DcatappluHarvesterComponent} from './dcatapplu-harvester.component';
+
+describe('DcatappluHarvesterComponent', () => {
+  let component: DcatappluHarvesterComponent;
+  let fixture: ComponentFixture<DcatappluHarvesterComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ DcatappluHarvesterComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(DcatappluHarvesterComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

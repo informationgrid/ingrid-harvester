@@ -22,16 +22,18 @@
  */
 
 import { uniqBy } from 'lodash';
+import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model';
 import { Contact } from '../../../model/agent';
 import { CswMapper } from '../../../importer/csw/csw.mapper';
 import { Distribution } from '../../../model/distribution';
-import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model';
+
+const alternateTitleBlacklist = ['B-Plan', 'F-Plan'];
 
 export class DiplanungCswMapper extends CswMapper {
 
     _getAlternateTitle(): string {
         let alternateTitle = CswMapper.select('./*/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', this.idInfo, true)?.textContent;
-        if (!alternateTitle) {
+        if (!alternateTitle || alternateTitleBlacklist.includes(alternateTitle)) {
             alternateTitle = this.getTitle();
         }
         return alternateTitle;
@@ -94,8 +96,12 @@ export class DiplanungCswMapper extends CswMapper {
         let maintainers = await super._getMaintainers();
         return uniqBy(maintainers, JSON.stringify);
     }
+    
+    async _getContributors() {
+        return undefined
+    }
 
-    _getCatalog() {
+    _getCatalog(): Catalog {
         return this.fetched.catalog;
     }
 

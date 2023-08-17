@@ -22,10 +22,9 @@
  */
 
 import { defaultOAISettings, OaiSettings } from './oai.settings';
-import { namespaces } from '../../importer/namespaces';
 import { getLogger } from 'log4js';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-
+import { namespaces } from '../../importer/namespaces';
+import { DOMParser as DomParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
@@ -33,14 +32,16 @@ import { OaiMapper } from './oai.mapper';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
-    logRequest = getLogger('requests'),
-    DomParser = require('@xmldom/xmldom').DOMParser;
+    logRequest = getLogger('requests');
 
 export class OaiImporter extends Importer {
+
+    protected domParser: DomParser;
     private profile: ProfileFactory<OaiMapper>;
     private readonly settings: OaiSettings;
     private requestDelegate: RequestDelegate;
@@ -62,8 +63,15 @@ export class OaiImporter extends Importer {
             let requestConfig = OaiImporter.createRequestConfig(settings);
             this.requestDelegate = new RequestDelegate(requestConfig);
         }
-
         this.settings = settings;
+        this.domParser = new DomParser({
+            errorHandler: (level, msg) => {
+                // throw on error, swallow rest
+                if (level == 'error') {
+                    throw new Error(msg);
+                }
+            }
+        });
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -103,14 +111,14 @@ export class OaiImporter extends Importer {
 
             let resumptionToken;
 
-            let responseDom = new DomParser().parseFromString(response);
+            let responseDom = this.domParser.parseFromString(response);
             let resultsNode = responseDom.getElementsByTagName('ListRecords')[0];
             if (resultsNode) {
                 let numReturned = resultsNode.getElementsByTagName('record').length;
 
                 let resumptionTokenNode = resultsNode.getElementsByTagName('resumptionToken')[0];
                 if (resumptionTokenNode) {
-                    this.totalRecords = resumptionTokenNode.getAttribute('completeListSize');
+                    this.totalRecords = parseInt(resumptionTokenNode.getAttribute('completeListSize'));
                     resumptionToken = resumptionTokenNode.textContent;
                 }
 
@@ -134,7 +142,7 @@ export class OaiImporter extends Importer {
 
     async extractRecords(getRecordsResponse, harvestTime) {
         let promises = [];
-        let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
+        let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
         let records = xml.getElementsByTagNameNS(namespaces.GMD, 'MD_Metadata');
         let ids = [];
         for (let i = 0; i < records.length; i++) {

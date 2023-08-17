@@ -43,6 +43,7 @@ export interface ProcessStep {
     identifier?: string,
     period?: DateRange,
     type: PluProcessStepType;
+    passNumber?: number;
 }
 
 export interface Record {

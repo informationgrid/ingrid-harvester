@@ -36,8 +36,9 @@ import { IndexSettings } from '../../persistence/elastic.setting';
 import { ProfileFactory } from '../profile.factory';
 import { Summary } from '../../model/summary';
 import { WfsMapper } from '../../importer/wfs/wfs.mapper';
+import { DcatappluMapper } from "../../importer/dcatapplu/dcatapplu.mapper";
 
-export class DiplanungFactory extends ProfileFactory<DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
+export class DiplanungFactory extends ProfileFactory<DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper | DcatappluMapper> {
 
     getProfileName(): string {
         return 'diplanung';

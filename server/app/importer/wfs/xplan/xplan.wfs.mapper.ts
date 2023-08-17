@@ -98,23 +98,17 @@ export class XplanWfsMapper extends WfsMapper {
      */
     // TODO check
     _getSpatialText(): string {
-        // find existing Regionalschluessel corresponding to the retrieved/constructed entry
-        const findLegalRs = (rs) => {
-            let r = new RegExp(rs);
-            return this.fetched.regionalschluessel.filter(aRs => r.test(aRs));
-        }
-
         let xpGemeinde = this.select('./*/xplan:gemeinde/xplan:XP_Gemeinde', this.feature, true);
         if (xpGemeinde) {
             let rs = this.getTextContent('./xplan:rs', xpGemeinde);
             if (!rs) {
                 let ags = this.getTextContent('./xplan:ags', xpGemeinde);
-                let gemeinde = this.getTextContent('./xplan:ortsteilName', xpGemeinde);
+                let ortsteil = this.getTextContent('./xplan:ortsteilName', xpGemeinde);
                 if (ags) {
-                    if (gemeinde && gemeinde.match("^\\d{3}$")) {
-                        rs = ags.substring(0, 2) + "\\d{3}0" + gemeinde + gemeinde;
-                        if (findLegalRs(rs).length == 0) {
-                            rs = ags.substring(0, 2) + "\\d{7}" + gemeinde;
+                    if (ortsteil && ortsteil.match("^\\d{3}$")) {
+                        rs = ags.substring(0, 2) + "\\d{3}0" + ortsteil + ortsteil;
+                        if (this.findLegalRs(rs).length == 0) {
+                            rs = ags.substring(0, 2) + "\\d{7}" + ortsteil;
                         }
                     }
                     else {
@@ -122,12 +116,20 @@ export class XplanWfsMapper extends WfsMapper {
                     }
                 }
             }
-            let existingRs = findLegalRs(rs);
+            let existingRs = this.findLegalRs(rs);
             if (existingRs.length == 1) {
                 return existingRs[0];
             }
         }
         return undefined;
+    }
+
+    /**
+     * Find existing Regionalschluessel corresponding by the given regex filter.
+     */ 
+    protected findLegalRs(rsFilter: string): string[] {
+        let r = new RegExp(rsFilter);
+        return this.fetched.regionalschluessel.filter((aRs: string) => r.test(aRs));
     }
 
     // TODO fill in the gaps

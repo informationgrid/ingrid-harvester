@@ -21,13 +21,14 @@
  * ==================================================
  */
 
-import {Summary} from './model/summary';
-import {configure, getLogger} from 'log4js';
-import {concat, Observable} from 'rxjs';
-import {ImportLogMessage} from './model/import.result';
-import {ConfigService} from './services/config/ConfigService';
+import { addLayout, configure, getLogger } from 'log4js';
+import { concat, Observable } from 'rxjs';
+import { jsonLayout } from './utils/log4js.json.layout';
+import { ConfigService } from './services/config/ConfigService';
+import { ImportLogMessage } from './model/import.result';
 import { MiscUtils } from './utils/misc.utils';
-import {ProfileFactoryLoader} from "./profiles/profile.factory.loader";
+import { ProfileFactoryLoader} from './profiles/profile.factory.loader';
+import { Summary } from './model/summary';
 
 let config = ConfigService.get(),
     configGeneral = ConfigService.getGeneralSettings(),
@@ -35,6 +36,7 @@ let config = ConfigService.get(),
     log = getLogger(),
     logSummary = getLogger('summary');
 
+addLayout("json", jsonLayout);
 configure('./log4js.json');
 
 const start = new Date();

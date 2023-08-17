@@ -1,6 +1,6 @@
 {
   "elasticsearch": {
-    "url": "http://localhost:9200",
+    "url": "http://localhost:9201",
     "version": "8",
     "user": "elastic",
     "password": "elastic",
@@ -19,6 +19,7 @@
     "active": false,
     "pattern": "10 04 * * *"
   },
+  "sessionSecret": "mysecretkey",
   "mail": {
     "enabled": false,
     "mailServer": {

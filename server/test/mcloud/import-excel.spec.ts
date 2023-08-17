@@ -25,19 +25,19 @@ import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
 import {configure, getLogger} from "log4js";
-import {TestUtils} from "./utils/test-utils";
-import {ExcelImporter} from '../app/importer/excel/excel.importer';
-import {ExcelSettings} from '../app/importer/excel/excel.settings';
-import {ExcelMapper} from '../app/importer/excel/excel.mapper';
-import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
-import {mcloudDocument} from "../app/profiles/mcloud/model/index.document";
+import {TestUtils} from "../utils/test-utils";
+import {ExcelImporter} from '../../app/importer/excel/excel.importer';
+import {ExcelSettings} from '../../app/importer/excel/excel.settings';
+import {ExcelMapper} from '../../app/importer/excel/excel.mapper';
+import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader";
+import {mcloudDocument} from "../../app/profiles/mcloud/model/index.document";
 
 let log = getLogger();
 configure('./log4js.json');
 
-let resultMauttabelle = require('./data/result_excel_mauttabelle.json');
-let resultBathymetrien = require('./data/result_excel_bathymetrien.json');
-let resultBadegewaesser = require('./data/result_excel_badegewaesser.json');
+let resultMauttabelle = require('../data/result_excel_mauttabelle.json');
+let resultBathymetrien = require('../data/result_excel_bathymetrien.json');
+let resultBadegewaesser = require('../data/result_excel_badegewaesser.json');
 
 chai.use(chaiAsPromised);
 

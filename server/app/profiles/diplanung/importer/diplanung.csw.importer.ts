@@ -26,11 +26,9 @@ import { DcatApPluDocument } from '../model/dcatApPlu.document';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { Distribution } from '../../../model/distribution';
-import { DOMParser as DomParser } from '@xmldom/xmldom';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { MiscUtils } from '../../../utils/misc.utils';
-import { ProfileFactoryLoader } from '../../profile.factory.loader';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WmsXPath } from './wms.xpath';
 
@@ -38,19 +36,10 @@ const log = require('log4js').getLogger(__filename);
 
 export class DiplanungCswImporter extends CswImporter {
 
-    private domParser: DomParser;
+    private static readonly MAX_TRIES = 5;
+    private static readonly SKIPPED_EXTENTSIONS = ['.jpg', '.html', '.pdf', '.png', '/'];
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
-        super(settings, requestDelegate);
-        this.domParser = new DomParser({
-            errorHandler: (level, msg) => {
-                // throw on error, swallow rest
-                if (level == 'error') {
-                    throw new Error(msg);
-                }
-            }
-        });
-    }
+    private tempUrlCache = new Map<string, string[]>();
 
     getMapper(settings, record, harvestTime, storedData, summary, generalInfo): DiplanungCswMapper {
         return new DiplanungCswMapper(settings, record, harvestTime, storedData, summary, generalInfo);
@@ -89,7 +78,7 @@ export class DiplanungCswImporter extends CswImporter {
         try {
             let response = await this.elastic.search(
                 this.elastic.indexName,
-                ProfileFactoryLoader.get().getElasticQueries().findSameOperatesOn(),
+                this.profile.getElasticQueries().findSameOperatesOn(),
                 50
             );
 
@@ -195,7 +184,7 @@ export class DiplanungCswImporter extends CswImporter {
                         updateDoc['extras']['metadata']['quality_notes'].push('Swapped lat and lon');
                     }
                     else {
-                        updateDoc['extras']['metadata']['is_valid'] = updateDoc['extras']['metadata']['is_valid'] ?? false;
+                        updateDoc['extras']['metadata']['is_valid'] = false;
                         updateDoc['extras']['metadata']['quality_notes'].push('Bounding box not within Germany');
                     }
                     docIsUpdated = true;
@@ -226,9 +215,13 @@ export class DiplanungCswImporter extends CswImporter {
         for (let distribution of distributions) {
             let accessURL = distribution.accessURL;
             let accessURL_lc = distribution.accessURL.toLowerCase();
+            let baseUrl = getBaseUrl(accessURL_lc);
             // short-circuits
-            let skippedExtensions = ['.jpg', '.html', '.pdf', '.png', '/'];
-            if (skippedExtensions.some(ext => accessURL_lc.endsWith(ext))) {
+            if (this.tempUrlCache.get(baseUrl)?.length > DiplanungCswImporter.MAX_TRIES) {
+                this.tempUrlCache.get(baseUrl).push(accessURL_lc);
+                continue;
+            }
+            if (DiplanungCswImporter.SKIPPED_EXTENTSIONS.some(ext => accessURL_lc.endsWith(ext))) {
                 continue;
             }
             if (accessURL_lc.includes('request=') && !accessURL_lc.includes('getcapabilities')) {
@@ -259,6 +252,7 @@ export class DiplanungCswImporter extends CswImporter {
                 else if (response.startsWith('<?xml')) {
                     try {
                         let layerNames = this.getMapLayerNames(response);
+                        this.tempUrlCache.set(baseUrl, []);
                         if (layerNames) {
                             distribution.accessURL = accessURL;
                             if (!distribution.format?.includes('WMS')) {
@@ -275,6 +269,12 @@ export class DiplanungCswImporter extends CswImporter {
                     }
                 }
                 else {
+                    // 
+                    if (!this.tempUrlCache.has(baseUrl)) {
+                        this.tempUrlCache.set(baseUrl, []);
+                    }
+                    this.tempUrlCache.get(baseUrl).push(accessURL_lc);
+
                     let msg = `Response for ${accessURL} is not valid XML`;
                     log.debug(msg);
                     this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response.replaceAll('\n', ' '), 1024)]);
@@ -298,4 +298,8 @@ export class DiplanungCswImporter extends CswImporter {
         }
         return layerNames;
     }
+}
+
+function getBaseUrl(url: string) {
+    return /(https?:\/\/[^\/]+)\/?.*/.exec(url)?.[1];
 }
