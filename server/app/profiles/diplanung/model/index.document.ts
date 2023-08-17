@@ -103,8 +103,9 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
 
         result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
         result.extras.metadata.is_valid = mapper.isValid(result);
-        if (!result.extras.metadata.is_valid) {
-            result.extras.metadata['quality_notes'] = mapper.getQualityNotes();
+        let qualityNotes = mapper.getQualityNotes();
+        if (qualityNotes?.length > 0) {
+            result.extras.metadata['quality_notes'] = qualityNotes;
         }
         mapper.executeCustomCode(result);
 
