@@ -184,7 +184,7 @@ export class DiplanungCswImporter extends CswImporter {
                         updateDoc['extras']['metadata']['quality_notes'].push('Swapped lat and lon');
                     }
                     else {
-                        updateDoc['extras']['metadata']['is_valid'] = updateDoc['extras']['metadata']['is_valid'] ?? false;
+                        updateDoc['extras']['metadata']['is_valid'] = false;
                         updateDoc['extras']['metadata']['quality_notes'].push('Bounding box not within Germany');
                     }
                     docIsUpdated = true;
