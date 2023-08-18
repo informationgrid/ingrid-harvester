@@ -1,7 +1,7 @@
 #
 # IMAGE: build server
 #
-FROM node:16.20.1-bookworm-slim AS build-server
+FROM node:16.20.2-bookworm-slim AS build-server
 LABEL stage=build
 
 # install build dependencies
@@ -21,7 +21,7 @@ RUN npm run build
 #
 # IMAGE: build client
 #
-FROM node:16.20.1-bookworm-slim AS build-client
+FROM node:16.20.2-bookworm-slim AS build-client
 LABEL stage=build
 
 # install build dependencies
@@ -41,7 +41,7 @@ RUN npm run prod
 #
 # IMAGE: final
 #
-FROM node:16.20.1-bookworm-slim AS final
+FROM node:16.20.2-bookworm-slim AS final
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
