@@ -29,10 +29,11 @@ import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { IndexDocument } from '../../../model/index.document';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
+import { DcatappluMapper } from "../../../importer/dcatapplu/dcatapplu.mapper";
 
-export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
+export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper | DcatappluMapper> {
 
-    async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper) : Promise<any> {
+    async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper | DcatappluMapper) : Promise<any> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let contactPoint: Contact = await mapper.getContactPoint() ?? { fn: '' };
         let result = {
@@ -58,7 +59,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             // plan and procedure information
             development_freeze_period: mapper.getPluDevelopmentFreezePeriod(),
             plan_state: mapper.getPluPlanState(),
-            plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),
+            plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(), 
             plan_type: mapper.getPluPlanType(),
             plan_type_fine: mapper.getPluPlanTypeFine(),
             procedure_state: mapper.getPluProcedureState(),
@@ -71,7 +72,7 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
             centroid: mapper.getCentroid()?.['coordinates'],
             spatial: mapper.getSpatial(),
             spatial_text: mapper.getSpatialText(),
-            temporal: mapper.getTemporal(),
+            temporal: mapper.getTemporal(), // already checked
             // additional information and metadata
             relation: mapper.getRelation(),
             catalog: await mapper.getCatalog(),
@@ -102,8 +103,9 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
 
         result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
         result.extras.metadata.is_valid = mapper.isValid(result);
-        if (!result.extras.metadata.is_valid) {
-            result.extras.metadata['quality_notes'] = mapper.getQualityNotes();
+        let qualityNotes = mapper.getQualityNotes();
+        if (qualityNotes?.length > 0) {
+            result.extras.metadata['quality_notes'] = qualityNotes;
         }
         mapper.executeCustomCode(result);
 

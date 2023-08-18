@@ -33,7 +33,7 @@
     "description": "geoportal.de",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
-    "recordFilter": "<ogc:Filter>\n    <ogc:And>\n        <ogc:Or>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Bauleitplanung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Bauleitpläne</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Bebauungsplan</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>B-Plan</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Flächennutzungsplan</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>FNP</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumordnung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumordnungsprogramm</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumordnungsverfahren</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Raumverträglichkeit</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Regionalplan</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Regionalplanung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Landesplanung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Landesentwicklung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Landesraumordnungsprogramm</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Milieuschutzgebiete</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Milieugebiet</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungssatzungsgebiete</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungssatzung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungsverordnung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Erhaltungsverordnungsgebiete</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>städtebauliche Satzungen</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>§ 172 BauGB Städtebauliche Förderung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Beteiligung der Öffentlichkeit</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>Öffentlichkeitsbeteiligung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>XPlanung</ogc:Literal></ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo><ogc:PropertyName>Subject</ogc:PropertyName><ogc:Literal>XPlanGML</ogc:Literal></ogc:PropertyIsEqualTo>\n        </ogc:Or>\n        <ogc:Or>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Berlin*</ogc:Literal>\n            </ogc:PropertyIsLike>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Hamburg*</ogc:Literal>\n            </ogc:PropertyIsLike>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Freiburg*</ogc:Literal>\n            </ogc:PropertyIsLike>\n        </ogc:Or>\n    </ogc:And>\n</ogc:Filter>",
+    "recordFilter": "            <ogc:Filter>\n                <ogc:And>\n                    <ogc:Or>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Bauleitplanung</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Bauleitpläne</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Bebauungsplan</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>B-Plan</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Flächennutzungsplan</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>FNP</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Raumordnung</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Raumordnungsprogramm</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Raumordnungsverfahren</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Raumverträglichkeit</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Regionalplan</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Regionalplanung</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Landesplanung</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Landesentwicklung</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Landesraumordnungsprogramm</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Milieuschutzgebiete</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Milieugebiet</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Erhaltungssatzungsgebiete</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Erhaltungssatzung</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Erhaltungsverordnung</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Erhaltungsverordnungsgebiete</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>städtebauliche Satzungen</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>§ 172 BauGB Städtebauliche Förderung</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Beteiligung der Öffentlichkeit</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>Öffentlichkeitsbeteiligung</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>XPlanung</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                        <ogc:PropertyIsEqualTo>\n                            <ogc:PropertyName>Subject</ogc:PropertyName>\n                            <ogc:Literal>XPlanGML</ogc:Literal>\n                        </ogc:PropertyIsEqualTo>\n                    </ogc:Or>\n                        <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                            <ogc:PropertyName>AnyText</ogc:PropertyName>\n                            <ogc:Literal>*Freiburg*</ogc:Literal>\n                        </ogc:PropertyIsLike>\n                </ogc:And>\n            </ogc:Filter>",
     "pluPlanState": "festgesetzt",
     "disable": false,
     "deduplicationAlias": "csw_geoportal_de_dedup",
@@ -49,9 +49,9 @@
     }
   },
   {
-    "index": "wfs_hh_xplanungsplattform_de_51",
+    "index": "wfs_syn_hh_xplanung",
     "priority": 0,
-    "type": "WFS.XPLAN",
+    "type": "WFS.XPLAN.SYN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -69,16 +69,16 @@
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
-    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs51",
+    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplansyn-wfs/services/xplansynwfs",
     "id": 1,
-    "description": "hh.xplanungsplattform.de v51",
+    "description": "hh.xplanungsplattform.de/xplansyn-wfs (festgesetzt)",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
     "disable": false,
-    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_51_dedup",
+    "deduplicationAlias": "wfs_syn_hh_xplanung_dedup",
     "cron": {
       "full": {
         "pattern": "9 2 * * *",
@@ -88,12 +88,13 @@
         "pattern": "",
         "active": false
       }
-    }
+    },
+    "maxConcurrent": null
   },
   {
-    "index": "wfs_hh_xplanungsplattform_de_52",
+    "index": "wfs_syn_hh_xplanung_pre",
     "priority": 0,
-    "type": "WFS.XPLAN",
+    "type": "WFS.XPLAN.SYN",
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
@@ -107,20 +108,20 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "in Aufstellung",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
-    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs52",
+    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplansyn-wfs/services/xplansynwfspre",
     "id": 2,
-    "description": "hh.xplanungsplattform.de v52",
+    "description": "hh.xplanungsplattform.de/xplansyn-wfs (in Aufstellung)",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
     "disable": false,
-    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_52_dedup",
+    "deduplicationAlias": "wfs_syn_hh_xplanung_pre_dedup",
     "cron": {
       "full": {
         "pattern": "12 2 * * *",
@@ -130,259 +131,8 @@
         "pattern": "",
         "active": false
       }
-    }
-  },
-  {
-    "index": "wfs_hh_xplanungsplattform_de_53",
-    "priority": 0,
-    "type": "WFS.XPLAN",
-    "maxRecords": null,
-    "startPosition": null,
-    "customCode": null,
-    "defaultMcloudSubgroup": [],
-    "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": null
     },
-    "catalogId": "hh",
-    "pluPlanState": "festgesetzt",
-    "eitherKeywords": [],
-    "httpMethod": "GET",
-    "resultType": "results",
-    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs53",
-    "id": 3,
-    "description": "hh.xplanungsplattform.de v53",
-    "defaultAttribution": null,
-    "defaultAttributionLink": null,
-    "featuresFilter": null,
-    "version": "2.0.0",
-    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
-    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_53_dedup",
-    "cron": {
-      "full": {
-        "pattern": "15 2 * * *",
-        "active": true
-      },
-      "incr": {
-        "pattern": "",
-        "active": false
-      }
-    }
-  },
-  {
-    "index": "wfs_hh_xplanungsplattform_de_54",
-    "priority": 0,
-    "type": "WFS.XPLAN",
-    "maxRecords": null,
-    "startPosition": null,
-    "customCode": null,
-    "defaultMcloudSubgroup": [],
-    "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": null
-    },
-    "catalogId": "hh",
-    "pluPlanState": "festgesetzt",
-    "eitherKeywords": [],
-    "httpMethod": "GET",
-    "resultType": "results",
-    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs54",
-    "id": 4,
-    "description": "hh.xplanungsplattform.de v54",
-    "defaultAttribution": null,
-    "defaultAttributionLink": null,
-    "featuresFilter": null,
-    "version": "2.0.0",
-    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
-    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_54_dedup",
-    "cron": {
-      "full": {
-        "pattern": "18 2 * * *",
-        "active": true
-      },
-      "incr": {
-        "pattern": "",
-        "active": false
-      }
-    }
-  },
-  {
-    "index": "wfs_hh_xplanungsplattform_de_51pre",
-    "priority": 0,
-    "type": "WFS.XPLAN",
-    "maxRecords": null,
-    "startPosition": null,
-    "customCode": null,
-    "defaultMcloudSubgroup": [],
-    "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": null
-    },
-    "catalogId": "hh",
-    "pluPlanState": "in aufstellung",
-    "eitherKeywords": [],
-    "httpMethod": "GET",
-    "resultType": "results",
-    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs51pre",
-    "id": 5,
-    "description": "hh.xplanungsplattform.de v51pre",
-    "defaultAttribution": null,
-    "defaultAttributionLink": null,
-    "featuresFilter": null,
-    "version": "2.0.0",
-    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
-    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_51pre_dedup",
-    "cron": {
-      "full": {
-        "pattern": "21 2 * * *",
-        "active": true
-      },
-      "incr": {
-        "pattern": "",
-        "active": false
-      }
-    }
-  },
-  {
-    "index": "wfs_hh_xplanungsplattform_de_52pre",
-    "priority": 0,
-    "type": "WFS.XPLAN",
-    "maxRecords": null,
-    "startPosition": null,
-    "customCode": null,
-    "defaultMcloudSubgroup": [],
-    "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": null
-    },
-    "catalogId": "hh",
-    "pluPlanState": "in aufstellung",
-    "eitherKeywords": [],
-    "httpMethod": "GET",
-    "resultType": "results",
-    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs52pre",
-    "id": 6,
-    "description": "hh.xplanungsplattform.de v52pre",
-    "defaultAttribution": null,
-    "defaultAttributionLink": null,
-    "featuresFilter": null,
-    "version": "2.0.0",
-    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
-    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_52pre_dedup",
-    "cron": {
-      "full": {
-        "pattern": "24 2 * * *",
-        "active": true
-      },
-      "incr": {
-        "pattern": "",
-        "active": false
-      }
-    }
-  },
-  {
-    "index": "wfs_hh_xplanungsplattform_de_53pre",
-    "priority": 0,
-    "type": "WFS.XPLAN",
-    "maxRecords": null,
-    "startPosition": null,
-    "customCode": null,
-    "defaultMcloudSubgroup": [],
-    "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": null
-    },
-    "catalogId": "hh",
-    "pluPlanState": "in aufstellung",
-    "eitherKeywords": [],
-    "httpMethod": "GET",
-    "resultType": "results",
-    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs53pre",
-    "id": 7,
-    "description": "hh.xplanungsplattform.de v53pre",
-    "defaultAttribution": null,
-    "defaultAttributionLink": null,
-    "featuresFilter": null,
-    "version": "2.0.0",
-    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
-    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_53pre_dedup",
-    "cron": {
-      "full": {
-        "pattern": "27 2 * * *",
-        "active": true
-      },
-      "incr": {
-        "pattern": "",
-        "active": false
-      }
-    }
-  },
-  {
-    "index": "wfs_hh_xplanungsplattform_de_54pre",
-    "priority": 0,
-    "type": "WFS.XPLAN",
-    "maxRecords": null,
-    "startPosition": null,
-    "customCode": null,
-    "defaultMcloudSubgroup": [],
-    "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": null
-    },
-    "catalogId": "hh",
-    "pluPlanState": "in aufstellung",
-    "eitherKeywords": [],
-    "httpMethod": "GET",
-    "resultType": "results",
-    "getFeaturesUrl": "https://hh.xplanungsplattform.de/xplan-wfs/services/wfs54pre",
-    "id": 8,
-    "description": "hh.xplanungsplattform.de v54pre",
-    "defaultAttribution": null,
-    "defaultAttributionLink": null,
-    "featuresFilter": null,
-    "version": "2.0.0",
-    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
-    "deduplicationAlias": "wfs_hh_xplanungsplattform_de_54pre_dedup",
-    "cron": {
-      "full": {
-        "pattern": "30 2 * * *",
-        "active": true
-      },
-      "incr": {
-        "pattern": "",
-        "active": false
-      }
-    }
+    "maxConcurrent": null
   },
   {
     "index": "wfs_xplanung_freiburg_de_30",
@@ -417,7 +167,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_30_dedup",
     "cron": {
       "full": {
-        "pattern": "33 2 * * *",
+        "pattern": "15 2 * * *",
         "active": true
       },
       "incr": {
@@ -459,7 +209,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_40_dedup",
     "cron": {
       "full": {
-        "pattern": "36 2 * * *",
+        "pattern": "18 2 * * *",
         "active": true
       },
       "incr": {
@@ -501,7 +251,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_41_dedup",
     "cron": {
       "full": {
-        "pattern": "39 2 * * *",
+        "pattern": "21 2 * * *",
         "active": true
       },
       "incr": {
@@ -543,7 +293,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_50_dedup",
     "cron": {
       "full": {
-        "pattern": "42 2 * * *",
+        "pattern": "24 2 * * *",
         "active": true
       },
       "incr": {
@@ -585,7 +335,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_51_dedup",
     "cron": {
       "full": {
-        "pattern": "45 2 * * *",
+        "pattern": "27 2 * * *",
         "active": true
       },
       "incr": {
@@ -627,7 +377,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_52_dedup",
     "cron": {
       "full": {
-        "pattern": "48 2 * * *",
+        "pattern": "30 2 * * *",
         "active": true
       },
       "incr": {
@@ -669,7 +419,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_53_dedup",
     "cron": {
       "full": {
-        "pattern": "51 2 * * *",
+        "pattern": "33 2 * * *",
         "active": true
       },
       "incr": {
@@ -711,7 +461,7 @@
     "deduplicationAlias": "wfs_xplanung_freiburg_de_54_dedup",
     "cron": {
       "full": {
-        "pattern": "54 2 * * *",
+        "pattern": "36 2 * * *",
         "active": true
       },
       "incr": {
@@ -753,7 +503,7 @@
     "deduplicationAlias": "wfs_berliner_umringe_dedup",
     "cron": {
       "full": {
-        "pattern": "57 2 * * *",
+        "pattern": "39 2 * * *",
         "active": true
       },
       "incr": {

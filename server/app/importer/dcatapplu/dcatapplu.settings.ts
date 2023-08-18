@@ -21,18 +21,21 @@
  * ==================================================
  */
 
-import { DiplanungMapper } from './diplanung.mapper';
+import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
 
-export class DiplanungMapperFactory {
-    static getMapper(mapper): DiplanungMapper<any> {
-        switch (mapper.constructor.name) {
-            case 'DiplanungCswMapper': return new DiplanungMapper(mapper);
-            case 'DiplanungVirtualMapper': return new DiplanungMapper(mapper);
-            case 'ExcelSparseMapper': return new DiplanungMapper(mapper);
-            case 'FisWfsMapper': return new DiplanungMapper(mapper);
-            case 'XplanSynWfsMapper': return new DiplanungMapper(mapper);
-            case 'XplanWfsMapper': return new DiplanungMapper(mapper);
-            case 'DcatappluMapper': return new DiplanungMapper(mapper);
-        }
-    }
-}
+export type DCATAPPLUProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';
+
+export const defaultDCATAPPLUSettings: DcatappluSettings = {
+    ...DefaultImporterSettings,
+    catalogUrl: '',
+    filterTags: [],
+    filterThemes: []
+};
+
+export type DcatappluSettings = {
+    catalogUrl: string,
+    filterTags?: string[],
+    filterThemes?: string[],
+    providerPrefix?: string,
+    dcatappluProviderField?: DCATAPPLUProviderField,
+} & ImporterSettings;

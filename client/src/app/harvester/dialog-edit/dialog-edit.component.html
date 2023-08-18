@@ -39,9 +39,11 @@
             </ng-container>
             <mat-option value="OAI">OAI</mat-option>
             <mat-option value="DCAT">DCAT</mat-option>
+            <mat-option value="DCATAPPLU">DCATAPPLU</mat-option>
             <mat-option value="SPARQL">SPARQL</mat-option>
             <mat-option value="WFS.FIS">WFS (FIS)</mat-option>
             <mat-option value="WFS.XPLAN">WFS (XPLAN)</mat-option>
+            <mat-option value="WFS.XPLAN.SYN">WFS (Syn XPLAN)</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -168,6 +170,12 @@
                           class="flex-column">
       </app-dcat-harvester>
 
+      <app-dcatapplu-harvester *ngIf="harvesterForm.get('type').value === 'DCATAPPLU'" [form]="harvesterForm"
+                          [model]="harvester"
+                          [rulesTemplate]="rules"
+                          class="flex-column">
+      </app-dcatapplu-harvester>
+
       <app-sparql-harvester *ngIf="harvesterForm.get('type').value === 'SPARQL'" [form]="harvesterForm"
                           [model]="harvester"
                           [rulesTemplate]="rules"
@@ -181,6 +189,12 @@
       </app-wfs-harvester>
 
       <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS.XPLAN'" [form]="harvesterForm"
+                         [model]="harvester"
+                         [rulesTemplate]="rules"
+                         class="flex-column">
+      </app-wfs-harvester>
+
+      <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS.XPLAN.SYN'" [form]="harvesterForm"
                          [model]="harvester"
                          [rulesTemplate]="rules"
                          class="flex-column">

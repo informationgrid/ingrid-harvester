@@ -39,6 +39,9 @@ task build(type: NpmTask) {
 task test(type: NpmTask) {
     args = ['run', 'test-jenkins']
 }
+task testDiPlanung(type: NpmTask) {
+    args = ['run', 'test-jenkins-diplanung']
+}
 
 task bundle(dependsOn: [build, copyConfigs, copyWebapp]) {
 }

@@ -1,7 +1,11 @@
 {
   "appenders": {
     "console": {
-      "type": "console"
+      "type": "console",
+      "layout": {
+        "type": "json"
+      },
+      "enableCallstack": true
     },
     "appLog": {
       "type": "file",

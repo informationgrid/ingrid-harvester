@@ -1102,13 +1102,13 @@ export class CswMapper extends BaseMapper {
                 if (MiscUtils.isUuid(uuidref)) {
                     operatesOnIds.push(uuidref);
                 }
-                let href = o.getAttribute('xlink:href')?.split('/').slice(-1);
+                let href = o.getAttribute('xlink:href')?.split('/').slice(-1)?.[0];
                 if (MiscUtils.isUuid(href)) {
                     operatesOnIds.push(href);
                 }
             }
         }
-        return operatesOnIds || undefined;
+        return operatesOnIds.length > 0 ? [...new Set(operatesOnIds)] : undefined;
     }
 
     protected getUuid(): string {
