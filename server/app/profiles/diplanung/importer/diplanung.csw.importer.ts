@@ -222,9 +222,11 @@ export class DiplanungCswImporter extends CswImporter {
                 continue;
             }
             if (DiplanungCswImporter.SKIPPED_EXTENTSIONS.some(ext => accessURL_lc.endsWith(ext))) {
+                updatedDistributions.push(distribution);
                 continue;
             }
             if (accessURL_lc.includes('request=') && !accessURL_lc.includes('getcapabilities')) {
+                updatedDistributions.push(distribution);
                 continue;
             }
             if (distribution.format?.includes('WMS') || (accessURL_lc.includes('getcapabilities') && accessURL_lc.includes('wms'))) {
