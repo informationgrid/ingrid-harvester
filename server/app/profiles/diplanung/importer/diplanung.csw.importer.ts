@@ -71,7 +71,8 @@ export class DiplanungCswImporter extends CswImporter {
                 }
 
                 // purposely simplistic heuristic: is bbox inside bbox for Germany?
-                if (!GeoJsonUtils.within(doc.bounding_box, GeoJsonUtils.BBOX_GERMANY)) {
+                // FIXME turns out, this heuristic is too simplistic and throws away too much
+                if (!this.isExceptionallyLegal(doc.identifier) && !GeoJsonUtils.within(doc.bounding_box, GeoJsonUtils.BBOX_GERMANY)) {
                     // copy and/or create relevant metadata structure
                     updateDoc['extras'] = { ...doc['extras'] };
                     if (!updateDoc['extras']['metadata']['quality_notes']) {
@@ -105,6 +106,21 @@ export class DiplanungCswImporter extends CswImporter {
         let results = (await Promise.allSettled(promises)).filter(result => result.status === 'fulfilled');
         let updateDocs = (results as PromiseFulfilledResult<any>[]).map(result => result.value);
         await this.elastic.addDocsToBulkUpdate(updateDocs);
+    }
+
+    // this is only used for 0.0.4.1, to ensure the datasets with these UUIDs will be shown in any case
+    exceptionallyLegalUuids = [
+        "ce398336-d4f6-47be-b0c4-430e0944e1c1",
+        "4966a927-1091-4171-8194-e142fd735621",
+        "100acb2f-512b-4f66-9935-7ab098faeadd",
+        "460ee174-6784-435f-8df7-4a0157b8b1db",
+        "3f9bc10c-d31a-4ba4-983f-9c65f68530f6",
+        "3ba88a63-7769-4d1a-8c94-caea48b233c9",
+        "aee6b48e-060c-428e-8282-9b812cb790e9",
+        "51648b62-e588-46ea-96e6-2ef65032e3ec"
+    ];
+    private isExceptionallyLegal(identifier: string): boolean {
+        return this.exceptionallyLegalUuids.includes(identifier.toLowerCase());
     }
 
     private createDataServiceCoupling() {
