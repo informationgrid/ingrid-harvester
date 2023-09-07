@@ -25,46 +25,49 @@ import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
-import {TestUtils} from "./utils/test-utils";
-import {IndexDocument} from '../app/model/index.document';
-import {OaiSettings} from "../app/importer/oai/oai.settings";
-import {OaiImporter} from "../app/importer/oai/oai.importer";
-import {ProfileFactoryLoader} from "../app/profiles/profile.factory.loader";
-import {mcloudDocument} from "../app/profiles/mcloud/model/index.document";
+import {TestUtils} from "../utils/test-utils";
+import {CswSettings} from '../../app/importer/csw/csw.settings';
+import {CswImporter} from '../../app/importer/csw/csw.importer';
+import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader";
+import {IndexDocument} from "../../app/model/index.document";
+import {mcloudDocument} from "../../app/profiles/mcloud/model/index.document";
 
 let log = getLogger();
 configure('./log4js.json');
 
-let resultWMSDienst = require('./data/result_oai_dwd_WMS-Dienst.json');
+let resultFlussgebietseinheiten = require('../data/result_csw_bfg_Flussgebietseinheiten.json');
 
 chai.use(chaiAsPromised);
 
-describe('Import OAI DWD', function () {
+describe('Import CSW BFG', function () {
 
     let indexDocumentCreateSpy;
 
-    it('correct import of OAI-DWD data', function (done) {
+    it('correct import of CSW-BFG data', function (done) {
 
         log.info('Start test ...');
 
         // @ts-ignore
-        const settings: OaiSettings = {
+        const settings: CswSettings = {
             dryRun: true,
-            index: "oai_dwd",
-            priority: null,
-            type: "OAI",
-            maxRecords: 100,
             startPosition: 1,
-            customCode: null,
-            defaultMcloudSubgroup: ["climate"],
-            defaultDCATCategory: ["ENVI"],
-            providerUrl: "https://oai.dwd.de/oai/provider",
-            set: "mCLOUD",
-            defaultAttribution: "DWD",
-            defaultAttributionLink: "https://oai.dwd.de/oai/provider?verb=ListRecords&metadataPrefix=iso19139&set=mCLOUD"
+            getRecordsUrl: "https://geoportal.bafg.de/csw/api",
+            proxy: null,
+            defaultMcloudSubgroup: ["waters"],
+            defaultDCATCategory: ["TRAN", "TECH"],
+            defaultAttribution: "Bundesanstalt für Gewässerkunde",
+            defaultAttributionLink: "https://www.bafg.de/",
+            httpMethod: "POST",
+            recordFilter: `
+                <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+                    <ogc:PropertyIsEqualTo>
+                        <ogc:PropertyName>identifier</ogc:PropertyName>
+                        <ogc:Literal>82f97ad0-198b-477e-a440-82fa781624eb</ogc:Literal>
+                    </ogc:PropertyIsEqualTo>
+                </ogc:Filter>`
         };
 
-        let importer = new OaiImporter(settings);
+        let importer = new CswImporter(settings);
 
         sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(40, {issued: '2019-01-09T17:51:38.934Z'}));
 
@@ -72,21 +75,20 @@ describe('Import OAI DWD', function () {
 
         importer.run.subscribe({
             complete: async () => {
-                chai.expect(indexDocumentCreateSpy.called).to.be.true;
+                chai.expect(indexDocumentCreateSpy.called, 'Create method of index document has not been called').to.be.true;
                 let extraChecks = (actual, expected) => {
                     // chai.expect(actual.extras.metadata.harvested).not.to.be.null.and.empty;
                 };
 
-                // await chai.expect(indexDocumentCreateSpy.getCall(0).returnValue).to.eventually.deep.include(resultFlussgebietseinheiten);
-
                 try {
-                    await indexDocumentCreateSpy.getCall(0).returnValue.then(value => TestUtils.compareDocuments(value, resultWMSDienst, extraChecks));
+                    await indexDocumentCreateSpy.getCall(0).returnValue.then(value => TestUtils.compareDocuments(value, resultFlussgebietseinheiten, extraChecks));
                     done();
-                } catch (e) {
+                } catch(e) {
                     done(e);
                 }
             }
         });
+
 
     }).timeout(10000);
 

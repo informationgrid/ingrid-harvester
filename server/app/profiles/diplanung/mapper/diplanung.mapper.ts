@@ -25,17 +25,18 @@ import 'dayjs/locale/de';
 import { getLogger } from 'log4js';
 import { Contact, Organization, Person } from '../../../model/agent';
 import { DateRange } from '../../../model/dateRange';
+import { DcatappluMapper } from "../../../importer/dcatapplu/dcatapplu.mapper";
 import { DiplanungCswMapper } from './diplanung.csw.mapper';
 import { DiplanungVirtualMapper } from './diplanung.virtual.mapper';
-import { Distribution } from '../../../model/distribution';
-import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
+import { Distribution } from "../../../model/distribution";
+import { ExcelSparseMapper } from "../../../importer/excelsparse/excelsparse.mapper";
 import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
-import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
+import { WfsMapper } from "../../../importer/wfs/wfs.mapper";
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
 
-export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
+export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapper| ExcelSparseMapper | WfsMapper | DcatappluMapper > {
 
     protected baseMapper: M;
 
@@ -186,7 +187,7 @@ export class DiplanungMapper<M extends DiplanungCswMapper | DiplanungVirtualMapp
     }
 
     isValid(doc? : any): boolean {
-        return this.baseMapper.isValid(doc);
+        return this.baseMapper.isValid(doc) && doc.spatial_text != null && (doc.spatial != null || doc.bounding_box != null);
     }
 
     getQualityNotes(doc? : any): string[] {

@@ -92,6 +92,10 @@ export abstract class WfsMapper extends BaseMapper {
         return undefined;
     }
 
+    async _getContributors(): Promise<Person[] | Organization[]> {
+        return undefined
+    }
+
     abstract _getAlternateTitle(): string;
 
     _getAccessRights(): string[] {

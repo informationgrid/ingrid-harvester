@@ -1,7 +1,7 @@
 #
 # IMAGE: build server
 #
-FROM node:16.20.0-bullseye-slim AS build-server
+FROM node:16.20.2-bookworm-slim AS build-server
 LABEL stage=build
 
 # install build dependencies
@@ -21,7 +21,7 @@ RUN npm run build
 #
 # IMAGE: build client
 #
-FROM node:16.20.0-bullseye-slim AS build-client
+FROM node:16.20.2-bookworm-slim AS build-client
 LABEL stage=build
 
 # install build dependencies
@@ -41,16 +41,17 @@ RUN npm run prod
 #
 # IMAGE: final
 #
-FROM node:16.20.0-bullseye-slim AS final
+FROM node:16.20.2-bookworm-slim AS final
 
-# TODO: remove these dev tools for production
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    curl dumb-init nano telnet wget && \
+    # TODO: remove next line dev tools for production
+    curl nano telnet wget \
+    dumb-init && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# install production dependencies (also: remove large. unused, and not-asked-for-at-all ExcelJS map files)
+# install production dependencies (also: remove large, unused, and not-asked-for-at-all ExcelJS map files)
 WORKDIR /opt/ingrid/harvester/server
 COPY --chown=node:node ./server/package*.json ./
 RUN npm run install-production && rm -rf /opt/ingrid/harvester/server/node_modules/exceljs/dist/*.map

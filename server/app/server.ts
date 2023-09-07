@@ -21,7 +21,8 @@
  * ==================================================
  */
 
-import { configure } from 'log4js';
+import { addLayout, configure } from 'log4js';
+import { jsonLayout } from './utils/log4js.json.layout';
 import { ConfigService } from './services/config/ConfigService';
 import { ElasticsearchFactory } from './persistence/elastic.factory';
 import { GlobalAcceptMimesMiddleware, ServerLoader, ServerSettings } from '@tsed/common';
@@ -37,6 +38,7 @@ const rootDir = __dirname;
 const session = require('express-session');
 import './middlewares/auth/AuthMiddleware';
 
+addLayout("json", jsonLayout);
 configure('./log4js.json');
 
 @ServerSettings({

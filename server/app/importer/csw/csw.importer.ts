@@ -29,6 +29,7 @@ import { Catalog } from '../../model/dcatApPlu.model';
 import { ConfigService } from '../../services/config/ConfigService';
 import { CswMapper } from './csw.mapper';
 import { CswParameters, RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
+import { DOMParser as DomParser } from '@xmldom/xmldom';
 import { Entity } from '../../model/entity';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
@@ -41,11 +42,12 @@ import { SummaryService } from '../../services/config/SummaryService';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
-    logRequest = getLogger('requests'),
-    DomParser = require('@xmldom/xmldom').DOMParser;
+    logRequest = getLogger('requests');
 
 export class CswImporter extends Importer {
-    private profile: ProfileFactory<CswMapper>;
+
+    protected domParser: DomParser;
+    protected profile: ProfileFactory<CswMapper>;
     protected readonly settings: CswSettings;
     private readonly requestDelegate: RequestDelegate;
 
@@ -69,36 +71,40 @@ export class CswImporter extends Importer {
             // only change the record filter (i.e. do an incremental harvest)
             // if there exists a previous run
             if (summary) {
-                settings.recordFilter = CswImporter.addModifiedFilter(settings.recordFilter, new Date(summary.lastExecution));
+                settings.recordFilter = this.addModifiedFilter(settings.recordFilter, new Date(summary.lastExecution));
             }
             else {
                 log.warn(`Changing type of harvest to "full" because no previous harvest was found for harvester with id ${settings.id}`);
                 settings.isIncremental = false;
             }
         }
-
-        // TODO disallow setting "//" in xpaths in the UI
-
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
         } else {
             let requestConfig = CswImporter.createRequestConfig(settings);
             this.requestDelegate = new RequestDelegate(requestConfig, CswImporter.createPaging(settings));
         }
-
         this.settings = settings;
+        this.domParser = new DomParser({
+            errorHandler: (level, msg) => {
+                // throw on error, swallow rest
+                if (level == 'error') {
+                    throw new Error(msg);
+                }
+            }
+        });
     }
 
-    static addModifiedFilter(recordFilter: string, lastRunDate: Date): string {
-        let incrementalFilter = new DomParser().parseFromString(`<ogc:PropertyIsGreaterThanOrEqualTo><ogc:PropertyName>Modified</ogc:PropertyName><ogc:Literal>${lastRunDate.toISOString()}</ogc:Literal></ogc:PropertyIsGreaterThanOrEqualTo>`);
+    private addModifiedFilter(recordFilter: string, lastRunDate: Date): string {
+        let incrementalFilter = this.domParser.parseFromString(`<ogc:PropertyIsGreaterThanOrEqualTo><ogc:PropertyName>Modified</ogc:PropertyName><ogc:Literal>${lastRunDate.toISOString()}</ogc:Literal></ogc:PropertyIsGreaterThanOrEqualTo>`);
         if (recordFilter != '') {
             recordFilter = recordFilter.replace('<ogc:Filter>', '<ogc:And>');
             recordFilter = recordFilter.replace('</ogc:Filter>', '</ogc:And>');
-            let andElem = new DomParser().parseFromString(recordFilter);
+            let andElem = this.domParser.parseFromString(recordFilter);
             andElem.documentElement.appendChild(incrementalFilter);
             incrementalFilter = andElem;
         }
-        let modifiedFilter = new DomParser().parseFromString('<ogc:Filter/>');
+        let modifiedFilter = this.domParser.parseFromString('<ogc:Filter/>');
         modifiedFilter.documentElement.appendChild(incrementalFilter);
         return modifiedFilter.toString().replace(' xmlns:ogc=""', '');
     }
@@ -145,7 +151,7 @@ export class CswImporter extends Importer {
         let capabilitiesRequestConfig = CswImporter.createRequestConfig({ ...this.settings, httpMethod: 'GET' }, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
         let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
-        let capabilitiesResponseDom = new DomParser().parseFromString(capabilitiesResponse);
+        let capabilitiesResponseDom = this.domParser.parseFromString(capabilitiesResponse);
 
         // store catalog info from getCapabilities in generalInfo
         let catalog: Catalog = {
@@ -180,7 +186,7 @@ export class CswImporter extends Importer {
         let response = await delegate.doRequest();
         let harvestTime = new Date(Date.now());
 
-        let responseDom = new DomParser().parseFromString(response);
+        let responseDom = this.domParser.parseFromString(response);
         let resultsNode = responseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
         if (resultsNode) {
             let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
@@ -205,7 +211,7 @@ export class CswImporter extends Importer {
         let hitsRequestConfig = CswImporter.createRequestConfig({ ...this.settings, resultType: 'hits', startPosition: 1, maxRecords: 1 });
         let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
         let hitsResponse = await hitsRequestDelegate.doRequest();
-        let hitsResponseDom = new DomParser().parseFromString(hitsResponse);
+        let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
         let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
         this.totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
         log.info(`Number of records to fetch: ${this.totalRecords}`);
@@ -231,11 +237,11 @@ export class CswImporter extends Importer {
             let response = await this.requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
 
-            let responseDom = new DomParser().parseFromString(response);
+            let responseDom = this.domParser.parseFromString(response);
             let resultsNode = responseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
             if (resultsNode) {
                 let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
-                this.totalRecords = resultsNode.getAttribute('numberOfRecordsMatched');
+                this.totalRecords = parseInt(resultsNode.getAttribute('numberOfRecordsMatched'));
                 if (log.isDebugEnabled()) {
                     log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
                 }
@@ -265,7 +271,7 @@ export class CswImporter extends Importer {
 
     async extractRecords(getRecordsResponse, harvestTime): Promise<string[]> {
         let promises = [];
-        let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
+        let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
         let records = xml.getElementsByTagNameNS(namespaces.GMD, 'MD_Metadata');
         let ids = [];
         for (let i = 0; i < records.length; i++) {

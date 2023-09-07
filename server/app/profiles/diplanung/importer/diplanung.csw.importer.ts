@@ -27,7 +27,6 @@ import { DcatApPluDocumentFactory } from '../model/dcatapplu.document.factory';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungIndexDocument } from '../model/index.document';
 import { Distribution } from '../../../model/distribution';
-import { DOMParser as DomParser } from '@xmldom/xmldom';
 import { Entity } from '../../../model/entity';
 import { EsOperation } from '../../../persistence/elastic.utils';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
@@ -48,19 +47,10 @@ const overwriteFields = [
 
 export class DiplanungCswImporter extends CswImporter {
 
-    private domParser: DomParser;
+    private static readonly MAX_TRIES = 5;
+    private static readonly SKIPPED_EXTENTSIONS = ['.jpg', '.html', '.pdf', '.png', '/'];
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
-        super(settings, requestDelegate);
-        this.domParser = new DomParser({
-            errorHandler: (level, msg) => {
-                // throw on error, swallow rest
-                if (level == 'error') {
-                    throw new Error(msg);
-                }
-            }
-        });
-    }
+    private tempUrlCache = new Map<string, string[]>();
 
     getMapper(settings, record, harvestTime, summary, generalInfo): DiplanungCswMapper {
         return new DiplanungCswMapper(settings, record, harvestTime, summary, generalInfo);
@@ -241,12 +231,24 @@ export class DiplanungCswImporter extends CswImporter {
         for (let distribution of distributions) {
             let accessURL = distribution.accessURL;
             let accessURL_lc = distribution.accessURL.toLowerCase();
+            let baseUrl = getBaseUrl(accessURL_lc);
             // short-circuits
-            let skippedExtensions = ['.jpg', '.html', '.pdf', '.png', '/'];
-            if (skippedExtensions.some(ext => accessURL_lc.endsWith(ext))) {
+            if (this.tempUrlCache.get(baseUrl)?.length > DiplanungCswImporter.MAX_TRIES) {
+                this.tempUrlCache.get(baseUrl).push(accessURL_lc);
+                continue;
+            }
+            // Hamburg Customization -> enrich dataset with WMS Distribution
+            let generatedWMS = this.generateWmsDistribution(distribution);
+            if(generatedWMS){
+                updatedDistributions.push(generatedWMS);
+                updated = true;
+            }
+            if (DiplanungCswImporter.SKIPPED_EXTENTSIONS.some(ext => accessURL_lc.endsWith(ext))) {
+                updatedDistributions.push(distribution);
                 continue;
             }
             if (accessURL_lc.includes('request=') && !accessURL_lc.includes('getcapabilities')) {
+                updatedDistributions.push(distribution);
                 continue;
             }
             if (distribution.format?.includes('WMS') || (accessURL_lc.includes('getcapabilities') && accessURL_lc.includes('wms'))) {
@@ -269,6 +271,7 @@ export class DiplanungCswImporter extends CswImporter {
                 if (response?.startsWith('<?xml')) {
                     try {
                         let layerNames = this.getMapLayerNames(response);
+                        this.tempUrlCache.set(baseUrl, []);
                         if (layerNames) {
                             distribution.accessURL = accessURL;
                             if (!distribution.format?.includes('WMS')) {
@@ -285,6 +288,12 @@ export class DiplanungCswImporter extends CswImporter {
                     }
                 }
                 else {
+                    // 
+                    if (!this.tempUrlCache.has(baseUrl)) {
+                        this.tempUrlCache.set(baseUrl, []);
+                    }
+                    this.tempUrlCache.get(baseUrl).push(accessURL_lc);
+
                     let msg = `Response for ${accessURL} is not valid XML`;
                     log.debug(msg);
                     this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response?.replaceAll('\n', ' '), 1024)]);
@@ -293,6 +302,30 @@ export class DiplanungCswImporter extends CswImporter {
             updatedDistributions.push(distribution);
         }
         return updated ? updatedDistributions : null;
+    }
+
+    private generateWmsDistribution(distribution: Distribution): Distribution {
+        const url:URL = new URL(distribution.accessURL);
+        // check pattern of "geodienste.hamburg.de/HH_WFS_xplan_dls..."
+        if(
+            url.hostname === "geodienste.hamburg.de" &&
+            url.pathname === "/HH_WFS_xplan_dls" &&
+            url.searchParams.get('service') === "WFS" &&
+            url.searchParams.get('request') === "GetFeature" && 
+            url.searchParams.get('version') === "2.0.0" &&
+            url.searchParams.get('resolvedepth') === "*" &&
+            url.searchParams.get('StoredQuery_ID') === "urn:ogc:def:query:OGC-WFS::PlanName"
+        ) {
+            // generate WMS Url with PlanName form 
+            let planName = url.searchParams.get('planName');
+            let generatedAccessUrl = "https://hh.xplanungsplattform.de/xplan-wms/services/planwerkwms/planname/" + planName + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities";
+            return {
+                accessURL: generatedAccessUrl,
+                format: ["WMS"],
+                title: "WMS Bebauungplan"
+            };
+        } 
+        return null
     }
 
     private getMapLayerNames(response: string): string[] {
@@ -308,4 +341,8 @@ export class DiplanungCswImporter extends CswImporter {
         }
         return layerNames;
     }
+}
+
+function getBaseUrl(url: string) {
+    return /(https?:\/\/[^\/]+)\/?.*/.exec(url)?.[1];
 }

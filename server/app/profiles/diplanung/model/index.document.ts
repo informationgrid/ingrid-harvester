@@ -24,6 +24,7 @@
 import { Contact, Organization, Person } from '../../../model/agent';
 import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { DateRange } from '../../../model/dateRange';
+import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
 import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
@@ -32,9 +33,9 @@ import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.map
 import { IndexDocument } from '../../../model/index.document';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
-export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
+export class DiPlanungDocument extends IndexDocument<DcatappluMapper | DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
 
-    async create(_mapper: DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper) : Promise<DiplanungIndexDocument> {
+    async create(_mapper: DcatappluMapper | DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper) : Promise<DiplanungIndexDocument> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let contactPoint: Contact = await mapper.getContactPoint() ?? { fn: '' };
         let result = {
@@ -104,8 +105,9 @@ export class DiPlanungDocument extends IndexDocument<DiplanungCswMapper | Diplan
 
         result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
         result.extras.metadata.is_valid = mapper.isValid(result);
-        if (!result.extras.metadata.is_valid) {
-            result.extras.metadata['quality_notes'] = mapper.getQualityNotes();
+        let qualityNotes = mapper.getQualityNotes();
+        if (qualityNotes?.length > 0) {
+            result.extras.metadata['quality_notes'] = qualityNotes;
         }
         mapper.executeCustomCode(result);
 

@@ -23,6 +23,7 @@
 
 import { indexMappings } from './persistence/elastic.mappings';
 import { indexSettings } from './persistence/elastic.settings';
+import { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper';
 import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper';
 import { DiPlanungDocument } from './model/index.document';
 import { DiplanungImporterFactory } from './importer/diplanung.importer.factory';
@@ -37,7 +38,7 @@ import { PostgresQueries } from './persistence/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
 import { WfsMapper } from '../../importer/wfs/wfs.mapper';
 
-export class DiplanungFactory extends ProfileFactory<DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
+export class DiplanungFactory extends ProfileFactory<DcatappluMapper | DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
 
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();
