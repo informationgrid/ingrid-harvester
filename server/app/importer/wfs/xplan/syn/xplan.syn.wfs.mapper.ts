@@ -135,11 +135,11 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
                     return existingRs[0];
                 }
                 else {
-                    this.log.warn('Could not parse xpgemeinde into existing RS: ', xpgemeinde);
-                    return gemeinde;
+                    return ags;
                 }
             }
             else {
+                this.log.warn('Could not parse xpgemeinde into existing RS: ', xpgemeinde);
                 return gemeinde;
             }
         }
