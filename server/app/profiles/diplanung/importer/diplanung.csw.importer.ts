@@ -224,7 +224,7 @@ export class DiplanungCswImporter extends CswImporter {
             // Hamburg Customization -> enrich dataset with WMS Distribution
             let generatedWMS = this.generateWmsDistribution(distribution);
             if(generatedWMS){
-                updatedDistributions.push(generatedWMS);
+                updatedDistributions.push(...generatedWMS);
                 updated = true;
             }
             if (DiplanungCswImporter.SKIPPED_EXTENTSIONS.some(ext => accessURL_lc.endsWith(ext))) {
@@ -293,28 +293,33 @@ export class DiplanungCswImporter extends CswImporter {
         return updated ? updatedDistributions : null;
     }
 
-    private generateWmsDistribution(distribution: Distribution): Distribution {
-        const url:URL = new URL(distribution.accessURL);
-        // check pattern of "geodienste.hamburg.de/HH_WFS_xplan_dls..."
-        if(
-            url.hostname === "geodienste.hamburg.de" &&
-            url.pathname === "/HH_WFS_xplan_dls" &&
-            url.searchParams.get('service') === "WFS" &&
-            url.searchParams.get('request') === "GetFeature" && 
-            url.searchParams.get('version') === "2.0.0" &&
-            url.searchParams.get('resolvedepth') === "*" &&
-            url.searchParams.get('StoredQuery_ID') === "urn:ogc:def:query:OGC-WFS::PlanName"
+    // TODO change this back to one distribution after DiPlanPortal changes
+    private generateWmsDistribution(distribution: Distribution): Distribution[] {
+        const url: URL = new URL(distribution.accessURL);
+        if (url.pathname.endsWith('_WFS_xplan_dls') &&
+            url.searchParams.get('service') === 'WFS' &&
+            url.searchParams.get('request') === 'GetFeature' && 
+            url.searchParams.get('version') === '2.0.0' &&
+            url.searchParams.get('resolvedepth') === '*' &&
+            url.searchParams.get('StoredQuery_ID') === 'urn:ogc:def:query:OGC-WFS::PlanName'
         ) {
             // generate WMS Url with PlanName form 
+            let stateAbbrev = url.pathname.substring(1, 3).toLowerCase();
             let planName = url.searchParams.get('planName');
-            let generatedAccessUrl = "https://hh.xplanungsplattform.de/xplan-wms/services/planwerkwms/planname/" + planName + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities";
-            return {
-                accessURL: generatedAccessUrl,
-                format: ["WMS"],
-                title: "WMS Bebauungplan"
+            let wmsURL = `https://${stateAbbrev}.xplanungsplattform.de/xplan-wms/services/planwerkwms/planname/${encodeURIComponent(planName)}`;
+            let wmsGetCapabilities: Distribution = {
+                accessURL: wmsURL + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities',
+                format: ['unbekannt'],
+                title: planName + ' WMS GetCapabilities'
+            }
+            let wmsPlanwerk: Distribution = {
+                accessURL: wmsURL,
+                format: ['WMS'],
+                title: planName + ' WMS'
             };
+            return [wmsGetCapabilities, wmsPlanwerk];
         } 
-        return null
+        return null;
     }
 
     private getMapLayerNames(response: string): string[] {
