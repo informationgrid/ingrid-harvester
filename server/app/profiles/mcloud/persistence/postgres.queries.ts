@@ -38,35 +38,53 @@ export class PostgresQueries extends AbstractPostgresQueries {
         return PostgresQueries.instance;
     }
 
-    readonly tableName = 'dataset';
+    readonly collectionTableName = 'collection';
+    readonly datasetTableName = 'record';
 
-    readonly createTable = `CREATE TABLE IF NOT EXISTS public.${this.tableName} (
+    readonly createCollectionTable = `CREATE TABLE IF NOT EXISTS public.${this.collectionTableName} (
+        id SERIAL,
+        identifier VARCHAR(255) NOT NULL,
+        properties JSONB,
+        original_document TEXT,
+        dcat_ap_plu TEXT,
+        json TEXT,
+        created_on TIMESTAMP(6) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        last_modified TIMESTAMP(6) with time zone NULL,
+        CONSTRAINT ${this.collectionTableName}_pkey PRIMARY KEY (id)
+    );`;
+
+    readonly createDatasetTable = `CREATE TABLE IF NOT EXISTS public.${this.datasetTableName} (
         id SERIAL,
         identifier VARCHAR(255) NOT NULL,
         source VARCHAR(255) NOT NULL,
         operates_on VARCHAR(255)[],
-        collection_id VARCHAR(255),
+        collection_id INTEGER,
         dataset JSONB,
         raw TEXT,
         created_on TIMESTAMP(6) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
         last_modified TIMESTAMP(6) with time zone NULL,
-        PRIMARY KEY(identifier, source))`;
+        CONSTRAINT ${this.datasetTableName}_pkey PRIMARY KEY (identifier, source),
+        CONSTRAINT fkivo5l0rletq7kni6xstvejy5a FOREIGN KEY (collection_id) REFERENCES public.${this.collectionTableName}(id)
+    );`;
 
-    readonly onConflict = `ON CONFLICT ON CONSTRAINT ${this.tableName}_pkey DO UPDATE SET
+    readonly onConflict = `ON CONFLICT ON CONSTRAINT ${this.datasetTableName}_pkey DO UPDATE SET
         operates_on = EXCLUDED.operates_on,
         dataset = EXCLUDED.dataset,
-        raw = COALESCE(EXCLUDED.raw, ${this.tableName}.raw),
+        raw = COALESCE(EXCLUDED.raw, ${this.datasetTableName}.raw),
         last_modified = NOW()`;
 
-    readonly bulkUpsert = `INSERT INTO ${this.tableName} (identifier, source, collection_id, operates_on, dataset, raw)
+    readonly bulkUpsert = `INSERT INTO ${this.datasetTableName} (identifier, source, collection_id, operates_on, dataset, raw)
         SELECT identifier, source, collection_id, operates_on, dataset, raw
-        FROM json_populate_recordset(null::${this.tableName}, $1)
+        FROM json_populate_recordset(null::${this.datasetTableName}, $1)
         ${this.onConflict}`;
 
-    readonly readDatasets = `SELECT dataset FROM public.${this.tableName}`;
+    readonly readDatasets = `SELECT dataset FROM public.${this.datasetTableName}`;
 
-    readonly getStoredData = `SELECT dataset FROM public.${this.tableName}
+    readonly getStoredData = `SELECT dataset FROM public.${this.datasetTableName}
         WHERE identifier = ANY ($1)`;
+
+    readonly getCatalog = `SELECT * FROM public.${this.collectionTableName}
+        WHERE identifier = $1`;
 
     /**
      * Create a query for retrieving all items for a given source.
@@ -91,8 +109,8 @@ export class PostgresQueries extends AbstractPostgresQueries {
                 false AS is_service,
                 secondary.created_on AS issued,
                 secondary.last_modified AS modified
-            FROM public.${this.tableName} AS anchor
-            LEFT JOIN public.${this.tableName} AS secondary
+            FROM public.${this.datasetTableName} AS anchor
+            LEFT JOIN public.${this.datasetTableName} AS secondary
             ON anchor.dataset->>'title' = secondary.dataset->>'title'
             WHERE anchor.source = '${source}'
                 AND anchor.dataset->'extras'->>'hierarchy_level' != 'service'
@@ -106,8 +124,8 @@ export class PostgresQueries extends AbstractPostgresQueries {
                 true AS is_service,
                 service.created_on AS issued,
                 service.last_modified AS modified
-            FROM public.${this.tableName} AS service
-            LEFT JOIN public.${this.tableName} AS ds
+            FROM public.${this.datasetTableName} AS service
+            LEFT JOIN public.${this.datasetTableName} AS ds
             ON ds.identifier = ANY(service.operates_on)
             WHERE ds.source = '${source}'
                 AND service.dataset->'extras'->>'hierarchy_level' = 'service'

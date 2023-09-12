@@ -85,7 +85,8 @@ export class PostgresUtils extends DatabaseUtils {
     // }
 
     async createTables() {
-        await PostgresUtils.pool.query(this.queries.createTable);
+        await PostgresUtils.pool.query(this.queries.createCollectionTable);
+        await PostgresUtils.pool.query(this.queries.createDatasetTable);
     }
 
     // /**

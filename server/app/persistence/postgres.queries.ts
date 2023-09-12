@@ -23,12 +23,15 @@
 
 export abstract class PostgresQueries {
 
-    abstract readonly tableName: string;
-    abstract readonly createTable: string;
+    abstract readonly collectionTableName: string;
+    abstract readonly datasetTableName: string;
+    abstract readonly createCollectionTable: string;
+    abstract readonly createDatasetTable: string;
     abstract readonly onConflict: string;
     abstract readonly bulkUpsert: string;
     abstract readonly readDatasets: string;
     abstract readonly getStoredData: string;
+    abstract readonly getCatalog: string;
 
     /**
      * Create a query for retrieving all items for a given source.
