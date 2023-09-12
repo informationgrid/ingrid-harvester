@@ -164,11 +164,6 @@ export class ConfigService {
                 prefix: process.env.ELASTIC_PREFIX,
                 numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS),
                 numberOfReplicas: parseIntOrUndefined(process.env.ELASTIC_NUM_REPLICAS)
-            },
-            ogcRecordsApi: {
-                url: process.env.OGCAPI_URL,
-                user: process.env.OGCAPI_USER,
-                password: process.env.OGCAPI_PASSWORD
             }
         };
         let updatedSettings: GeneralSettings = MiscUtils.merge(generalSettings, ENV);

@@ -49,10 +49,5 @@
     "dir": ""
   },
   "maxDiff": 10,
-  "ogcRecordsApi": {
-    "url": "http://localhost:8080/v1",
-    "user": "admin",
-    "password": "admin"
-  },
   "cronOffset": 0
 }

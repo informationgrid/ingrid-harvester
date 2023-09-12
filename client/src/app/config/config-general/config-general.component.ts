@@ -172,11 +172,6 @@ export class ConfigGeneralComponent implements OnInit {
         numberOfShards: [{ value: settings.elasticsearch.numberOfShards, disabled: true }],
         numberOfReplicas: [{ value: settings.elasticsearch.numberOfReplicas, disabled: true }]
       }),
-      ogcRecordsApi: this.formBuilder.group({
-        url: [settings.ogcRecordsApi?.url],
-        user: [settings.ogcRecordsApi?.user],
-        password: [settings.ogcRecordsApi?.password]
-      }),
       cronOffset: [settings.cronOffset],
       proxy: [settings.proxy],
       portalUrl: [settings.portalUrl],

@@ -207,8 +207,14 @@ export abstract class WfsImporter extends Importer {
         Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
         this.generalInfo['contactPoint'] = contact;
 
-        // store catalog info from OGC Records response
-        let catalog: Catalog = await MiscUtils.fetchCatalogFromOgcRecordsApi(this.settings.catalogId);
+        let catalog: Catalog = {
+            description: this.settings.catalogId,
+            identifier: this.settings.catalogId,
+            publisher: {
+                organization: undefined
+            },
+            title: this.settings.catalogId
+        };
         this.generalInfo['catalog'] = catalog;
 
         while (true) {
