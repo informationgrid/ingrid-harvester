@@ -41,6 +41,8 @@ export abstract class DatabaseUtils {
     
     public _bulkData: Entity[];
 
+    abstract init(): Promise<void>;
+
     abstract write(entity: Entity);
 
     abstract bulk(entities: Entity[], commitTransaction: boolean): Promise<BulkResponse>;

@@ -74,7 +74,10 @@ export class PostgresUtils extends DatabaseUtils {
         this.queries = ProfileFactoryLoader.get().getPostgresQueries();
         this.summary = summary;
         // this.transactionStatus = 'closed';
-        this.createTables();
+    }
+
+    async init(): Promise<void> {
+        await this.createTables();
     }
 
     // preparedQuery(client: PoolClient, name: string, ...values: any[]) {
