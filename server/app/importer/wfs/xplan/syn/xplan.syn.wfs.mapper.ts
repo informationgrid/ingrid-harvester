@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { DiplanungUtils } from '../../../../profiles/diplanung/diplanung.utils';
 import { Distribution} from '../../../../model/distribution';
 import { MiscUtils } from '../../../../utils/misc.utils';
 import { PluDocType } from '../../../../model/dcatApPlu.model';
@@ -48,23 +49,8 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
             distributions.push(...this.getSpecificDistributions(tagName, tagDescription));
         });
         // add xplan-specific WMS distributions
-        // TODO currently, DiPlanPortal expects two different ones
-        // TODO change, when that changes
-        let stateAbbrev = this._getCatalog().identifier;
-        let planName = this._getTitle();
-        let wmsURL = `https://${stateAbbrev}.xplanungsplattform.de/xplan-wms/services/planwerkwms/planname/${encodeURIComponent(planName)}`;
-        let wmsGetCapabilities: Distribution = {
-            accessURL: wmsURL + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities',
-            format: ['unbekannt'],
-            title: planName + ' WMS GetCapabilities'
-        }
-        distributions.push(wmsGetCapabilities);
-        let wmsPlanwerk: Distribution = {
-            accessURL: wmsURL,
-            format: ['WMS'],
-            title: planName + ' WMS'
-        };
-        distributions.push(wmsPlanwerk);
+        let wmsDists = DiplanungUtils.generateXplanWmsDistributions(this._getCatalog().identifier, this._getTitle());
+        distributions.push(...wmsDists);
         return distributions;
     }
 
