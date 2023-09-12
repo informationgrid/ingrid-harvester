@@ -167,7 +167,7 @@
     "deduplicationAlias": "wfs_syn_hb_xplanung_dedup",
     "cron": {
       "full": {
-        "pattern": "9 2 * * *",
+        "pattern": "42 2 * * *",
         "active": true
       },
       "incr": {
