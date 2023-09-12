@@ -24,6 +24,7 @@
 import { CswImporter } from '../../../importer/csw/csw.importer';
 import { DcatApPluDocument } from '../model/dcatApPlu.document';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
+import { DiplanungUtils } from '../diplanung.utils';
 import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { Distribution } from '../../../model/distribution';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
@@ -223,7 +224,7 @@ export class DiplanungCswImporter extends CswImporter {
             }
             // Hamburg Customization -> enrich dataset with WMS Distribution
             let generatedWMS = this.generateWmsDistribution(distribution);
-            if(generatedWMS){
+            if (generatedWMS) {
                 updatedDistributions.push(...generatedWMS);
                 updated = true;
             }
@@ -306,18 +307,7 @@ export class DiplanungCswImporter extends CswImporter {
             // generate WMS Url with PlanName form 
             let stateAbbrev = url.pathname.substring(1, 3).toLowerCase();
             let planName = url.searchParams.get('planName');
-            let wmsURL = `https://${stateAbbrev}.xplanungsplattform.de/xplan-wms/services/planwerkwms/planname/${encodeURIComponent(planName)}`;
-            let wmsGetCapabilities: Distribution = {
-                accessURL: wmsURL + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities',
-                format: ['unbekannt'],
-                title: planName + ' WMS GetCapabilities'
-            }
-            let wmsPlanwerk: Distribution = {
-                accessURL: wmsURL,
-                format: ['WMS'],
-                title: planName + ' WMS'
-            };
-            return [wmsGetCapabilities, wmsPlanwerk];
+            return DiplanungUtils.generateXplanWmsDistributions(stateAbbrev, planName);
         } 
         return null;
     }
