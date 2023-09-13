@@ -63,6 +63,9 @@
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
             <mat-form-field fxFlex="15">
               <input matInput type="text" placeholder="Benutzername" formControlName="user" required>
+              <mat-error *ngIf="configForm.get('database.user').hasError('required')">
+                Dies ist ein Pflichtfeld
+              </mat-error>
             </mat-form-field>
             <mat-form-field fxFlex="15">
               <input matInput type="password" placeholder="Passwort" formControlName="password">

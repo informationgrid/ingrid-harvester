@@ -42,9 +42,9 @@ export interface Catalog {
 export interface ProcessStep {
     distributions?: Distribution[],
     identifier?: string,
+    passNumber?: number,
     period?: DateRange,
     type: PluProcessStepType;
-    passNumber?: number;
 }
 
 export interface Record {

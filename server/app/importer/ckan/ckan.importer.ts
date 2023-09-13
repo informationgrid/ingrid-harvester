@@ -42,8 +42,6 @@ export class CkanImporter extends Importer {
 
     private requestDelegate: RequestDelegate;
 
-
-
     protected numIndexDocs = 0;
     private requestDelegateCount: RequestDelegate;
     private totalCount: number = -1;

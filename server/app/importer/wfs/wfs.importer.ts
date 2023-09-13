@@ -286,11 +286,6 @@ export abstract class WfsImporter extends Importer {
 
         // some documents may use wfs:member, some gml:featureMember, some maybe something else: use settings
         let features = select(`/wfs:FeatureCollection/${this.settings.memberElement}`, xml);
-        let ids = [];
-        for (let i = 0; i < features.length; i++) {
-            ids.push(XPathUtils.firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id'));
-        }
-
         for (let i = 0; i < features.length; i++) {
             this.summary.numDocs++;
 
