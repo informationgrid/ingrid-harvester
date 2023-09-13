@@ -5,7 +5,8 @@
     "port": 5433,
     "database": "metadaten",
     "user": "ogcrecords",
-    "password": "ogcrecords"
+    "password": "ogcrecords",
+    "defaultCatalogIdentifier": "harvester"
   },
   "elasticsearch": {
     "url": "http://localhost:9200",

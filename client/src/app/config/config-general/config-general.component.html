@@ -68,6 +68,11 @@
               <input matInput type="password" placeholder="Passwort" formControlName="password">
             </mat-form-field>
         </div>
+        <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
+            <mat-form-field fxFlex="30">
+              <input matInput type="text" placeholder="Identifier des Standard-Katalogs" formControlName="defaultCatalogIdentifier" required>
+            </mat-form-field>
+        </div>
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left center" class="margin-below">
           <div class="form-buttons">
             <button mat-button color="primary" (click)="checkDbConnection()" [disabled]="dbConnectionCheck == 'working'" data-test="checkDbConnection">

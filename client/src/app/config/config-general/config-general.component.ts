@@ -160,7 +160,8 @@ export class ConfigGeneralComponent implements OnInit {
         port: [settings.database.port],
         database: [settings.database.database, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
         user: [settings.database.user],
-        password: [settings.database.password]
+        password: [settings.database.password],
+        defaultCatalogIdentifier: [settings.database.defaultCatalogIdentifier]
       }),
       elasticsearch: this.formBuilder.group({
         url: [settings.elasticsearch.url, Validators.required, ConfigGeneralComponent.elasticUrlValidator],

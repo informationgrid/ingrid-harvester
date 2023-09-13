@@ -60,7 +60,8 @@ export class ConfigService {
             port: parseInt(process.env.DB_PORT),
             database: process.env.DB_NAME,
             user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD
+            password: process.env.DB_PASSWORD,
+            defaultCatalogIdentifier: process.env.DEFAULT_CATALOG ?? 'harvester'
         },
         elasticsearch: {
             url: process.env.ELASTIC_URL ?? "http://elastic:9200",
