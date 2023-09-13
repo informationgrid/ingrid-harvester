@@ -28,6 +28,7 @@ import { Organization, Person } from './agent';
 export interface Catalog {
     description: string,
     homepage?: string,
+    id?: number,
     identifier?: string,
     issued?: string,
     language?: string,

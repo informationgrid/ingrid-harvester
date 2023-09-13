@@ -31,6 +31,7 @@ export abstract class PostgresQueries {
     abstract readonly bulkUpsert: string;
     abstract readonly readDatasets: string;
     abstract readonly getStoredData: string;
+    abstract readonly createCatalog: string;
     abstract readonly getCatalog: string;
 
     /**

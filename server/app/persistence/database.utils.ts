@@ -22,6 +22,7 @@
  */
 
 import { Bucket } from './postgres.utils';
+import { Catalog } from '../model/dcatApPlu.model';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { ElasticsearchUtils, EsOperation } from './elastic.utils';
 import { Entity } from '../model/entity';
@@ -36,10 +37,12 @@ export interface BulkResponse {
 export abstract class DatabaseUtils {
 
     public static maxBulkSize: number = 50;
+    protected configuration: DatabaseConfiguration;
     protected queries: PostgresQueries;
     protected summary: Summary;
     
     public _bulkData: Entity[];
+    public defaultCatalog: Catalog;
 
     abstract init(): Promise<void>;
 
@@ -74,6 +77,10 @@ export abstract class DatabaseUtils {
     abstract pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, processBucket: (bucket: Bucket) => Promise<EsOperation[]>): Promise<void>;
 
     abstract getStoredData(ids: string[]): Promise<any[]>;
+
+    abstract createCatalog(catalog: Catalog): Promise<Catalog>;
+
+    abstract getCatalog(catalogIdentifier: string): Promise<Catalog>;
 
     static ping(configuration: Partial<DatabaseConfiguration>): Promise<boolean> {
         throw new Error('Method not implemented.');

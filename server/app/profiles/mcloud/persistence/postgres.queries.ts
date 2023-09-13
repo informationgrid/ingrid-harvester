@@ -83,6 +83,10 @@ export class PostgresQueries extends AbstractPostgresQueries {
     readonly getStoredData = `SELECT dataset FROM public.${this.datasetTableName}
         WHERE identifier = ANY ($1)`;
 
+    readonly createCatalog = `INSERT INTO public.${this.collectionTableName} (identifier, properties, original_document, dcat_ap_plu, json)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING id`;
+
     readonly getCatalog = `SELECT * FROM public.${this.collectionTableName}
         WHERE identifier = $1`;
 

@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { Catalog, ProcessStep, Record } from '../../../model/dcatApPlu.model';
 import { Contact, Organization, Person } from '../../../model/agent';
 import { DateRange } from '../../../model/dateRange';
 import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper';
@@ -29,7 +30,6 @@ import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
 import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { Distribution } from '../../../model/distribution';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
-import { ProcessStep, Record } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
 const esc = require('xml-escape');
@@ -89,6 +89,21 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         return 'dcat_ap_plu';
     }
 
+    static async createCatalog(catalog: Catalog): Promise<string> {
+        let xmlString = `<dcat:Catalog>
+                <dct:identifier>${esc(catalog.identifier)}</dct:identifier>
+                <dct:description>${esc(catalog.description)}</dct:description>
+                <dct:title>${esc(catalog.title)}</dct:title>
+                ${DcatApPluDocument.xmlFoafAgent('dct:publisher', catalog.publisher)}
+                ${optional('dcat:themeTaxonomy', esc(catalog.themeTaxonomy))}
+                ${optional('dct:language', esc(catalog.language))}
+                ${optional('foaf:homepage', esc(catalog.homepage))}
+                ${optional('dct:issued', dateAsIsoString(catalog.issued))}
+                ${optional('dct:modified', dateAsIsoString(catalog.modified))}
+            </dcat:Catalog>`;
+        return xmlString.replace(/^\s*\n/gm, '');
+    }
+
     static async create(_mapper: DcatappluMapper | DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper): Promise<string> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let catalog = await mapper.getCatalog();
@@ -97,18 +112,6 @@ export class DcatApPluDocument {// no can do with TS: extends ExportDocument {
         let maintainers = await mapper.getMaintainers();
         // let xmlString = `<?xml version="1.0"?>
         // <rdf:RDF ${Object.entries(DCAT_AP_PLU_NSMAP).map(([ns, uri]) => `xmlns:${ns}="${uri}"`).join(' ')}>
-        //     <dcat:Catalog>
-        //         <dct:identifier>${esc(catalog.identifier)}</dct:identifier>
-        //         <dct:description>${esc(catalog.description)}</dct:description>
-        //         <dct:title>${esc(catalog.title)}</dct:title>
-        //         ${DcatApPluDocument.xmlFoafAgent('dct:publisher', catalog.publisher)}
-        //         ${optional('dcat:themeTaxonomy', esc(catalog.themeTaxonomy))}
-        //         ${optional('dct:issued', esc(catalog.issued))}
-        //         ${optional('dct:language', esc(catalog.language))}
-        //         ${optional('dct:modified', esc(catalog.modified))}
-        //         ${optional('foaf:homepage', esc(catalog.homepage))}
-        //         ${optional(DcatApPluDocument.xmlRecord, catalog.records)}
-        //     </dcat:Catalog>`;
         let xmlString = `<dcat:Dataset rdf:about="https://portal.diplanung.de/planwerke/${esc(mapper.getGeneratedId())}">
                 ${DcatApPluDocument.xmlContact(await mapper.getContactPoint(), catalog.publisher['name'])}
                 <dct:description>${esc(mapper.getDescription())}</dct:description>

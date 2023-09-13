@@ -22,11 +22,14 @@
  */
 
 import { BulkResponse, DatabaseUtils } from './database.utils';
+import { Catalog } from '../model/dcatApPlu.model';
 import { Client, Pool, PoolClient, QueryResult } from 'pg';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
+import { DcatApPluDocument } from '../profiles/diplanung/model/dcatApPlu.document';
 import { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document';
 import { ElasticsearchUtils, EsOperation } from './elastic.utils';
 import { Entity } from '../model/entity';
+import { Organization, Person } from '../model/agent';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 
@@ -54,6 +57,7 @@ export class PostgresUtils extends DatabaseUtils {
 
     constructor(configuration: DatabaseConfiguration, summary: Summary) {
         super();
+        this.configuration = configuration;
         // let databaseConfiguration = ConfigService.getGeneralSettings().database;
 
         // const cn = {
@@ -78,6 +82,18 @@ export class PostgresUtils extends DatabaseUtils {
 
     async init(): Promise<void> {
         await this.createTables();
+        this.defaultCatalog = await this.getCatalog(this.configuration.defaultCatalogIdentifier);
+        if (!this.defaultCatalog) {
+            let catalog: Catalog = {
+                description: 'Globaler Katalog',
+                identifier: this.configuration.defaultCatalogIdentifier,
+                publisher: {
+                    name: ''
+                },
+                title: 'Globaler Katalog'
+            };
+            this.defaultCatalog = await this.createCatalog(catalog);
+        }
     }
 
     // preparedQuery(client: PoolClient, name: string, ...values: any[]) {
@@ -185,6 +201,26 @@ export class PostgresUtils extends DatabaseUtils {
             });
         }
         return dates;
+    }
+
+    async createCatalog(catalog: Catalog): Promise<Catalog> {
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCatalog, [catalog.identifier, catalog, null, DcatApPluDocument.createCatalog(catalog), catalog]);
+        if (result.rowCount != 1) {
+            return null;
+        }
+        catalog.id = result.rows[0].id;
+        return catalog;
+    }
+
+    async getCatalog(identifier: string): Promise<Catalog> {
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getCatalog, [identifier]);
+        if (result.rowCount == 0) {
+            return null;
+        }
+        return { 
+            id: result.rows[0].id,
+            ...result.rows[0].properties
+        };
     }
 
     /**
