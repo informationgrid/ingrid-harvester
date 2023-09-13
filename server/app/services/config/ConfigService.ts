@@ -156,6 +156,15 @@ export class ConfigService {
         log.info('Updating general config from environment variables');
         let generalSettings = ConfigService.getGeneralSettings();
         let ENV = {
+            database: {
+                type: 'postgresql',
+                host: process.env.DB_URL,
+                port: process.env.DB_PORT,
+                database: process.env.DB_NAME,
+                user: process.env.DB_USER,
+                password: process.env.DB_PASSWORD,
+                defaultCatalogIdentifier: process.env.DEFAULT_CATALOG
+            },
             elasticsearch: {
                 url: process.env.ELASTIC_URL,
                 version: process.env.ELASTIC_VERSION,
