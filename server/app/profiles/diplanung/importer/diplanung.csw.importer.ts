@@ -201,7 +201,7 @@ export class DiplanungCswImporter extends CswImporter {
                     let entity: Entity = {
                         identifier: doc.identifier,
                         source: doc.extras.metadata.source.source_base,
-                        collection_id: doc.catalog.identifier,
+                        collection_id: doc.catalog.id,
                         dataset: mergedDocument,
                         raw: undefined
                     };

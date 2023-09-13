@@ -207,14 +207,8 @@ export abstract class WfsImporter extends Importer {
         Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
         this.generalInfo['contactPoint'] = contact;
 
-        let catalog: Catalog = {
-            description: this.settings.catalogId,
-            identifier: this.settings.catalogId,
-            publisher: {
-                organization: undefined
-            },
-            title: this.settings.catalogId
-        };
+        // retrieve catalog info from database
+        let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId) ?? this.database.defaultCatalog;
         this.generalInfo['catalog'] = catalog;
 
         while (true) {
@@ -325,7 +319,7 @@ export abstract class WfsImporter extends Importer {
                 let entity: Entity = {
                     identifier: uuid,
                     source: this.settings.getFeaturesUrl,
-                    collection_id: 'harvester',
+                    collection_id: this.generalInfo['catalog'].id,
                     dataset: doc,
                     raw: mapper.getHarvestedData()
                 };

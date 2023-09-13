@@ -216,7 +216,7 @@ export class DcatImporter extends Importer {
                 let entity: Entity = {
                     identifier: uuid,
                     source: this.settings.catalogUrl,
-                    collection_id: 'harvester',
+                    collection_id: this.database.defaultCatalog.id,
                     dataset: doc,
                     raw: mapper.getHarvestedData()
                 };

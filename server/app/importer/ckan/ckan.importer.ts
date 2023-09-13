@@ -118,7 +118,7 @@ export class CkanImporter extends Importer {
             let entity: Entity = {
                 identifier: sourceID,
                 source: this.settings.ckanBaseUrl,
-                collection_id: 'harvester',
+                collection_id: this.database.defaultCatalog.id,
                 dataset: doc,
                 raw: harvestedData
             };

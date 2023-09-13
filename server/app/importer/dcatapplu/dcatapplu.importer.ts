@@ -260,7 +260,7 @@ export class DcatappluImporter extends Importer {
                 let entity: Entity = {
                     identifier: uuid,
                     source: this.settings.catalogUrl,
-                    collection_id: 'harvester',
+                    collection_id: this.database.defaultCatalog.id,
                     operates_on: mapper.getOperatesOn(),
                     dataset: doc,
                     raw: mapper.getHarvestedData()

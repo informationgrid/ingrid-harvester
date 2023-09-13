@@ -134,7 +134,7 @@ export class ExcelSparseImporter extends Importer {
                     let entity: Entity = {
                         identifier: unit.id,
                         source: this.settings.filePath,
-                        collection_id: 'harvester',
+                        collection_id: this.database.defaultCatalog.id,
                         dataset: doc,
                         raw: mapper.getHarvestedData()
                     };

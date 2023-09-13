@@ -219,7 +219,7 @@ export class SparqlImporter extends Importer {
                 let entity: Entity = {
                     identifier: uuid,
                     source: this.settings.endpointUrl,
-                    collection_id: 'harvester',
+                    collection_id: this.database.defaultCatalog.id,
                     dataset: doc,
                     raw: mapper.getHarvestedData()
                 };

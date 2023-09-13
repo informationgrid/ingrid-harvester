@@ -141,7 +141,7 @@ export class McloudCkanImporter extends CkanImporter {
                 let entity: Entity = {
                     identifier: doc.extras.generated_id,
                     source: this.settings.ckanBaseUrl,
-                    collection_id: 'harvester',
+                    collection_id: this.database.defaultCatalog.id,
                     dataset: doc,
                     raw: doc.extras.harvested_data
                 };

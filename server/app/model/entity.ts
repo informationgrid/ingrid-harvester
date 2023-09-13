@@ -24,7 +24,7 @@
 export interface Entity {
     identifier: string,
     source: string,
-    collection_id: string,
+    collection_id: number,
     operates_on?: string[],
     dataset: any,
     raw: string
