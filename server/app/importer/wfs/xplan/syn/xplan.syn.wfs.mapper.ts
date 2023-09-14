@@ -49,7 +49,7 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
             distributions.push(...this.getSpecificDistributions(tagName, tagDescription));
         });
         // add xplan-specific WMS distributions
-        let wmsDists = DiplanungUtils.generateXplanWmsDistributions(this._getCatalog().identifier, this._getTitle());
+        let wmsDists = DiplanungUtils.generateXplanWmsDistributions(this._getCatalog().identifier, this._getTitle(), this._getPluPlanType());
         distributions.push(...wmsDists);
         return distributions;
     }

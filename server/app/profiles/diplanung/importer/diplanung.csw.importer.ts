@@ -30,6 +30,7 @@ import { Distribution } from '../../../model/distribution';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { MiscUtils } from '../../../utils/misc.utils';
+import { PluPlanType } from '../../../model/dcatApPlu.model';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WmsXPath } from './wms.xpath';
 
@@ -156,7 +157,7 @@ export class DiplanungCswImporter extends CswImporter {
                 let docIsUpdated = false;
 
                 // update WMS distributions with layer names
-                let updatedDistributions = await this.updateDistributions(doc.distributions);
+                let updatedDistributions = await this.updateDistributions(doc.distributions, doc.plan_type as PluPlanType);
                 if (updatedDistributions?.length > 0) {
                     updateDoc['distributions'] = updatedDistributions;
                     updateDoc['extras'] = { ...doc['extras'] };
@@ -210,7 +211,7 @@ export class DiplanungCswImporter extends CswImporter {
      * @param distributions the distributions to potentially retrieve WMS layer names for
      * @returns all distributions, including the modified ones if any; null, if no distribution was modified
      */
-    private async updateDistributions(distributions: Distribution[]): Promise<Distribution[]> {
+    private async updateDistributions(distributions: Distribution[], planType: PluPlanType): Promise<Distribution[]> {
         let updatedDistributions: Distribution[] = [];
         let updated = false;
         for (let distribution of distributions) {
@@ -223,7 +224,7 @@ export class DiplanungCswImporter extends CswImporter {
                 continue;
             }
             // Hamburg Customization -> enrich dataset with WMS Distribution
-            let generatedWMS = this.generateWmsDistribution(distribution);
+            let generatedWMS = this.generateWmsDistribution(distribution, planType);
             if (generatedWMS) {
                 updatedDistributions.push(...generatedWMS);
                 updated = true;
@@ -295,7 +296,7 @@ export class DiplanungCswImporter extends CswImporter {
     }
 
     // TODO change this back to one distribution after DiPlanPortal changes
-    private generateWmsDistribution(distribution: Distribution): Distribution[] {
+    private generateWmsDistribution(distribution: Distribution, planType: PluPlanType): Distribution[] {
         const url: URL = new URL(distribution.accessURL);
         if (url.pathname.endsWith('_WFS_xplan_dls') &&
             url.searchParams.get('service') === 'WFS' &&
@@ -307,7 +308,7 @@ export class DiplanungCswImporter extends CswImporter {
             // generate WMS Url with PlanName form 
             let stateAbbrev = url.pathname.substring(1, 3).toLowerCase();
             let planName = url.searchParams.get('planName');
-            return DiplanungUtils.generateXplanWmsDistributions(stateAbbrev, planName);
+            return DiplanungUtils.generateXplanWmsDistributions(stateAbbrev, planName, planType);
         } 
         return null;
     }
