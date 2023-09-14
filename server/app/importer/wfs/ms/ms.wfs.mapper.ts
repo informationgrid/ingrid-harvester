@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { DiplanungUtils } from '../../../profiles/diplanung/diplanung.utils';
 import { Distribution} from '../../../model/distribution';
 import { DocTypeMapping, PlanTypeMapping, ProcedureTypeMapping } from '../xplan/xplan.codelist.mappings';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
@@ -29,6 +30,10 @@ import { PluDocType, PluPlanType, PluProcedureState, PluProcedureType, ProcessSt
 import { WfsMapper } from '../wfs.mapper';
 
 export class MsWfsMapper extends WfsMapper {
+
+    getStelleId() {
+        return this.getTextContent('./*/ms:stelle_id');
+    }
 
     _getDescription() {
         return this.getTextContent('./*/ms:beschreibung');
@@ -48,6 +53,7 @@ export class MsWfsMapper extends WfsMapper {
                 distributions.push(distribution);
             }
         }
+        distributions.push(...DiplanungUtils.generatePlanDigitalWmsDistributions(this._getTitle(), this.getStelleId()));
         return distributions;
     }
 
