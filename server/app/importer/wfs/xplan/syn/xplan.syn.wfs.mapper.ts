@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { DiplanungUtils } from '../../../../profiles/diplanung/diplanung.utils';
 import { Distribution} from '../../../../model/distribution';
 import { MiscUtils } from '../../../../utils/misc.utils';
 import { PluDocType } from '../../../../model/dcatApPlu.model';
@@ -47,6 +48,9 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
         Object.entries(distributionTags).forEach(([tagName, tagDescription]) => {
             distributions.push(...this.getSpecificDistributions(tagName, tagDescription));
         });
+        // add xplan-specific WMS distributions
+        let wmsDists = DiplanungUtils.generateXplanWmsDistributions(this._getCatalog().identifier, this._getTitle(), this._getPluPlanType());
+        distributions.push(...wmsDists);
         return distributions;
     }
 
@@ -117,11 +121,11 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
                     return existingRs[0];
                 }
                 else {
-                    this.log.warn('Could not parse xpgemeinde into existing RS: ', xpgemeinde);
-                    return gemeinde;
+                    return ags;
                 }
             }
             else {
+                this.log.warn('Could not parse xpgemeinde into existing RS: ', xpgemeinde);
                 return gemeinde;
             }
         }
