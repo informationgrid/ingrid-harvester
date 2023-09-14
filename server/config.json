@@ -56,9 +56,6 @@
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -98,9 +95,6 @@
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -140,9 +134,6 @@
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -221,9 +212,6 @@
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -262,9 +250,6 @@
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -303,9 +288,6 @@
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -344,9 +326,6 @@
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -385,9 +364,6 @@
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -426,9 +402,6 @@
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -467,9 +440,6 @@
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -508,9 +478,6 @@
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -549,9 +516,6 @@
     "customCode": "doc.spatial_text = `Berlin ${doc.spatial_text}`;",
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null

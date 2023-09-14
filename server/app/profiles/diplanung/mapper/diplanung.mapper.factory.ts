@@ -24,8 +24,10 @@
 import { DiplanungMapper } from './diplanung.mapper';
 
 export class DiplanungMapperFactory {
+
     static getMapper(mapper): DiplanungMapper<any> {
         switch (mapper.constructor.name) {
+            case 'DcatappluMapper': return new DiplanungMapper(mapper);
             case 'DiplanungCswMapper': return new DiplanungMapper(mapper);
             case 'DiplanungVirtualMapper': return new DiplanungMapper(mapper);
             case 'ExcelSparseMapper': return new DiplanungMapper(mapper);
@@ -33,7 +35,6 @@ export class DiplanungMapperFactory {
             case 'MsWfsMapper': return new DiplanungMapper(mapper);
             case 'XplanSynWfsMapper': return new DiplanungMapper(mapper);
             case 'XplanWfsMapper': return new DiplanungMapper(mapper);
-            case 'DcatappluMapper': return new DiplanungMapper(mapper);
         }
     }
 }

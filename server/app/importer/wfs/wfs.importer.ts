@@ -58,7 +58,6 @@ export abstract class WfsImporter extends Importer {
     private numIndexDocs = 0;
 
     private generalInfo: object = {};
-    // private select: XPathNodeSelect;
     private nsMap: {};
     private crsList: string[][];
     private defaultCrs: string;
@@ -225,7 +224,7 @@ export abstract class WfsImporter extends Importer {
             if (resultsNode) {
                 await this.extractFeatures(response, harvestTime)
             } else {
-                const message = `Error while fetching WFS Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
+                const message = `Error while fetching WFS Features. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
                 log.error(message);
                 this.summary.appErrors.push(message);
             }
@@ -244,8 +243,6 @@ export abstract class WfsImporter extends Importer {
                 break;
             }
         }
-        // TODO: how to couple WFS?
-        // this.createDataServiceCoupling();
     }
 
     // ED: TODO
@@ -347,13 +344,13 @@ export abstract class WfsImporter extends Importer {
             if (request === 'GetFeature') {
                 requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
                 <GetFeatures xmlns="${namespaces.CSW}"
-                            xmlns:gmd="${namespaces.GMD}"
-                            xmlns:xsi="${namespaces.XSI}"
-                            xmlns:ogc="${namespaces.OGC}"
-                            xsi:schemaLocation="${namespaces.CSW}"
-                            service="WFS"
-                            version="${settings.version}"
-                            resultType="${settings.resultType}"
+                        xmlns:gmd="${namespaces.GMD}"
+                        xmlns:xsi="${namespaces.XSI}"
+                        xmlns:ogc="${namespaces.OGC}"
+                        xsi:schemaLocation="${namespaces.CSW}"
+                        service="WFS"
+                        version="${settings.version}"
+                        resultType="${settings.resultType}"
                     <DistributedSearch/>
                     <Query typename="${settings.typename}">
                         ${settings.featureFilter ? `

@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { DcatappluImporter } from '../../../importer/dcatapplu/dcatapplu.importer';
 import { DiplanungCswImporter } from './diplanung.csw.importer';
 import { ExcelSparseImporter } from '../../../importer/excelsparse/excelsparse.importer';
 import { FisWfsImporter } from '../../../importer/wfs/fis/fis.wfs.importer';
@@ -30,19 +31,18 @@ import { ImporterFactory } from '../../../importer/importer.factory';
 import { MsWfsImporter } from '../../../importer/wfs/ms/ms.wfs.importer';
 import { XplanSynWfsImporter } from '../../../importer/wfs/xplan/syn/xplan.syn.wfs.importer';
 import { XplanWfsImporter } from '../../../importer/wfs/xplan/xplan.wfs.importer';
-import { DcatappluImporter } from '../../../importer/dcatapplu/dcatapplu.importer';
 
 export class DiplanungImporterFactory extends ImporterFactory{
 
     public get(config: Harvester): Importer {
         switch (config.type) {
-            case 'EXCEL_SPARSE': return new ExcelSparseImporter(config);
             case 'CSW': return new DiplanungCswImporter(config);
+            case 'DCATAPPLU': return new DcatappluImporter(config);
+            case 'EXCEL_SPARSE': return new ExcelSparseImporter(config);
             case 'WFS.FIS': return new FisWfsImporter(config);
             case 'WFS.MS': return new MsWfsImporter(config);
             case 'WFS.XPLAN': return new XplanWfsImporter(config);
             case 'WFS.XPLAN.SYN': return new XplanSynWfsImporter(config);
-            case 'DCATAPPLU': return new DcatappluImporter(config);
             default: {
                 console.error('Importer not found: ' + config.type);
             }
