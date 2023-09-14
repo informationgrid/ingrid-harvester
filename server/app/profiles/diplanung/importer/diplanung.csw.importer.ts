@@ -24,11 +24,13 @@
 import { CswImporter } from '../../../importer/csw/csw.importer';
 import { DcatApPluDocument } from '../model/dcatApPlu.document';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
+import { DiplanungUtils } from '../diplanung.utils';
 import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { Distribution } from '../../../model/distribution';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { MiscUtils } from '../../../utils/misc.utils';
+import { PluPlanType } from '../../../model/dcatApPlu.model';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WmsXPath } from './wms.xpath';
 
@@ -155,7 +157,7 @@ export class DiplanungCswImporter extends CswImporter {
                 let docIsUpdated = false;
 
                 // update WMS distributions with layer names
-                let updatedDistributions = await this.updateDistributions(doc.distributions);
+                let updatedDistributions = await this.updateDistributions(doc.distributions, doc.plan_type as PluPlanType);
                 if (updatedDistributions?.length > 0) {
                     updateDoc['distributions'] = updatedDistributions;
                     updateDoc['extras'] = { ...doc['extras'] };
@@ -167,8 +169,8 @@ export class DiplanungCswImporter extends CswImporter {
                     docIsUpdated = true;
                 }
 
-                // purposely simplistic heuristic: is bbox inside bbox for Germany?
-                if (!GeoJsonUtils.within(doc.bounding_box, GeoJsonUtils.BBOX_GERMANY)) {
+                // purposely simplistic heuristic: is centroid inside bbox for Germany?
+                if (!GeoJsonUtils.within(doc.centroid, GeoJsonUtils.BBOX_GERMANY)) {
                     // copy and/or create relevant metadata structure
                     updateDoc['extras'] = { ...doc['extras'] };
                     if (!updateDoc['extras']['metadata']['quality_notes']) {
@@ -185,7 +187,7 @@ export class DiplanungCswImporter extends CswImporter {
                     }
                     else {
                         updateDoc['extras']['metadata']['is_valid'] = false;
-                        updateDoc['extras']['metadata']['quality_notes'].push('Bounding box not within Germany');
+                        updateDoc['extras']['metadata']['quality_notes'].push('Centroid not within Germany');
                     }
                     docIsUpdated = true;
                 }
@@ -209,7 +211,7 @@ export class DiplanungCswImporter extends CswImporter {
      * @param distributions the distributions to potentially retrieve WMS layer names for
      * @returns all distributions, including the modified ones if any; null, if no distribution was modified
      */
-    private async updateDistributions(distributions: Distribution[]): Promise<Distribution[]> {
+    private async updateDistributions(distributions: Distribution[], planType: PluPlanType): Promise<Distribution[]> {
         let updatedDistributions: Distribution[] = [];
         let updated = false;
         for (let distribution of distributions) {
@@ -221,10 +223,18 @@ export class DiplanungCswImporter extends CswImporter {
                 this.tempUrlCache.get(baseUrl).push(accessURL_lc);
                 continue;
             }
+            // Hamburg Customization -> enrich dataset with WMS Distribution
+            let generatedWMS = this.generateWmsDistribution(distribution, planType);
+            if (generatedWMS) {
+                updatedDistributions.push(...generatedWMS);
+                updated = true;
+            }
             if (DiplanungCswImporter.SKIPPED_EXTENTSIONS.some(ext => accessURL_lc.endsWith(ext))) {
+                updatedDistributions.push(distribution);
                 continue;
             }
             if (accessURL_lc.includes('request=') && !accessURL_lc.includes('getcapabilities')) {
+                updatedDistributions.push(distribution);
                 continue;
             }
             if (distribution.format?.includes('WMS') || (accessURL_lc.includes('getcapabilities') && accessURL_lc.includes('wms'))) {
@@ -283,6 +293,24 @@ export class DiplanungCswImporter extends CswImporter {
             updatedDistributions.push(distribution);
         }
         return updated ? updatedDistributions : null;
+    }
+
+    // TODO change this back to one distribution after DiPlanPortal changes
+    private generateWmsDistribution(distribution: Distribution, planType: PluPlanType): Distribution[] {
+        const url: URL = new URL(distribution.accessURL);
+        if (url.pathname.endsWith('_WFS_xplan_dls') &&
+            url.searchParams.get('service') === 'WFS' &&
+            url.searchParams.get('request') === 'GetFeature' && 
+            url.searchParams.get('version') === '2.0.0' &&
+            url.searchParams.get('resolvedepth') === '*' &&
+            url.searchParams.get('StoredQuery_ID') === 'urn:ogc:def:query:OGC-WFS::PlanName'
+        ) {
+            // generate WMS Url with PlanName form 
+            let stateAbbrev = url.pathname.substring(1, 3).toLowerCase();
+            let planName = url.searchParams.get('planName');
+            return DiplanungUtils.generateXplanWmsDistributions(stateAbbrev, planName, planType);
+        } 
+        return null;
     }
 
     private getMapLayerNames(response: string): string[] {
