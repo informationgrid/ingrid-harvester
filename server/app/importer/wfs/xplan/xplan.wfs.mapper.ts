@@ -49,8 +49,8 @@ export class XplanWfsMapper extends WfsMapper {
     }
 
     _getTitle() {
-        let title = this.getTextContent('./*/xplan:name');
-        return title && title.trim() !== '' ? title : undefined;
+        let title = this.getTextContent('./*/xplan:name')?.trim();
+        return title ?? undefined;
     }
 
     _getAlternateTitle() {
