@@ -21,19 +21,22 @@
  * ==================================================
  */
 
-import { DiplanungMapper } from './diplanung.mapper';
+import { Harvester } from '@shared/harvester';
+import { MiscUtils } from '../../../utils/misc.utils';
+import { MsWfsMapper } from './ms.wfs.mapper';
+import { RequestDelegate } from '../../../utils/http-request.utils';
+import { WfsImporter } from '../wfs.importer';
+import { WfsMapper } from '../wfs.mapper';
 
-export class DiplanungMapperFactory {
-    static getMapper(mapper): DiplanungMapper<any> {
-        switch (mapper.constructor.name) {
-            case 'DiplanungCswMapper': return new DiplanungMapper(mapper);
-            case 'DiplanungVirtualMapper': return new DiplanungMapper(mapper);
-            case 'ExcelSparseMapper': return new DiplanungMapper(mapper);
-            case 'FisWfsMapper': return new DiplanungMapper(mapper);
-            case 'MsWfsMapper': return new DiplanungMapper(mapper);
-            case 'XplanSynWfsMapper': return new DiplanungMapper(mapper);
-            case 'XplanWfsMapper': return new DiplanungMapper(mapper);
-            case 'DcatappluMapper': return new DiplanungMapper(mapper);
-        }
+export class MsWfsImporter extends WfsImporter {
+
+    protected supportsPaging: boolean = true;
+
+    constructor(settings: Harvester, requestDelegate?: RequestDelegate) {
+        super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
+    }
+
+    getMapper(settings: Harvester, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils): WfsMapper {
+        return new MsWfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils);
     }
 }

@@ -168,7 +168,8 @@ export abstract class WfsImporter extends Importer {
             }
             let crsNodes = select('./*[local-name()="DefaultCRS" or local-name()="OtherCRS" or local-name()="DefaultSRS" or local-name()="OtherSRS"]', featureType);
             for (let node of crsNodes) {
-                this.crsList.push([node.textContent, proj4Json[node.textContent.replace('EPSG:', '')]]);
+                let crsCode = node.textContent.replace('urn:ogc:def:crs:EPSG::', '').replace('EPSG:', '');
+                this.crsList.push([node.textContent, proj4Json[crsCode]]);
                 if ((<Element>node).localName === 'DefaultCRS' || (<Element>node).localName === 'DefaultSRS') {
                     this.defaultCrs = node.textContent;
                 }
