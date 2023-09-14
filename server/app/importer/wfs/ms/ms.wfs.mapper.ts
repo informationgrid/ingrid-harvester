@@ -168,6 +168,11 @@ export class MsWfsMapper extends WfsMapper {
         return MiscUtils.normalizeDateTime(issued);
     }
 
+    _getModifiedDate(): Date {
+        let modified = this.getTextContent('./*/ms:updated_at');
+        return MiscUtils.normalizeDateTime(modified);
+    }
+
     _getMetadataHarvested(): Date {
         return new Date(Date.now());
     }
