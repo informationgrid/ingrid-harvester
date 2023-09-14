@@ -178,6 +178,45 @@
     "maxConcurrent": null
   },
   {
+    "index": "wfs_ni_plandigital",
+    "priority": 0,
+    "type": "WFS.MS",
+    "maxRecords": 3000,
+    "startPosition": 0,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "ni",
+    "pluPlanState": "festgesetzt",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://testportal-plandigital.de/ows/fplaene",
+    "id": 19,
+    "description": "PlanDigital Niedersachsen FP (festgesetzt)",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "ms:fp_plan",
+    "disable": false,
+    "cron": {
+      "full": {
+        "pattern": "45 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    },
+    "maxConcurrent": null
+  },
+  {
     "index": "wfs_xplanung_freiburg_de_30",
     "priority": 0,
     "type": "WFS.XPLAN",
