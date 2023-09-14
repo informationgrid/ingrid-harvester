@@ -43,7 +43,6 @@ xdescribe('deduplication by exact title', function() {
     let settings: IndexConfiguration = {
         url: 'http://localhost:9200',
         version: "6",
-        deduplicationAlias: 'test-dedup',
         user: 'elastic',
         password: 'elastic'
     };
