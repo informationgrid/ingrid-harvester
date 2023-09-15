@@ -48,8 +48,8 @@ export class FisWfsMapper extends WfsMapper {
     }
 
     _getTitle() {
-        let title = this.getTextContent('./*/fis:PLANNAME');
-        return title && title.trim() !== '' ? title : undefined;
+        let title = this.getTextContent('./*/fis:PLANNAME')?.trim();
+        return title ?? undefined;
     }
 
     _getAlternateTitle() {

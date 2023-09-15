@@ -55,4 +55,23 @@ export class DiplanungUtils {
         };
         return [wmsGetCapabilities, wmsPlanwerk];
     }
+
+    // TODO currently, DiPlanPortal expects two different ones
+    // TODO change, when that changes
+    static generatePlanDigitalWmsDistributions(planName: string, stelleId: string): Distribution[] {
+        let wmsURL = `https://testportal-plandigital.de/ows/${stelleId}/fplan`;
+        let mapLayerNames = ['fp_plan'];
+        let wmsGetCapabilities: Distribution = {
+            accessURL: wmsURL + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities',
+            format: ['Unbekannt'],
+            title: planName + ' WMS GetCapabilities'
+        };
+        let wmsPlanwerk: Distribution = {
+            accessURL: wmsURL + '?',
+            format: ['WMS'],
+            title: planName + ' WMS',
+            mapLayerNames
+        };
+        return [wmsGetCapabilities, wmsPlanwerk];
+    }
 }
