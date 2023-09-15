@@ -38,7 +38,7 @@ import { PluDocType, PluPlanType, PluProcedureType } from '../../../model/dcatAp
  * https://registry.gdi-de.org/codelist/de.xleitstelle.inspire_plu/PlanTypeNameValue
  */
 export const PlanTypeMapping: { [key: string]: { [key: string]: [PluPlanType, string] } } = {
-    BP_Plan: {
+    bp_plan: {
         1000: [PluPlanType.BEBAU_PLAN, '6_Bebauungsplan'],
         10000: [PluPlanType.BEBAU_PLAN, '6_3_EinfacherBPlan'],
         10001: [PluPlanType.BEBAU_PLAN, '6_1_QualifizierterBPlan'],
@@ -54,7 +54,7 @@ export const PlanTypeMapping: { [key: string]: { [key: string]: [PluPlanType, st
         9999: [PluPlanType.PW_BES_STAEDT_BAUR, '9_2_SonstigesPlanwerkStaedtebaurecht'],
         // default: [PluPlanType.UNBEKANNT, undefined]
     },
-    FP_Plan: {
+    fp_plan: {
         1000: [PluPlanType.FLAECHENN_PLAN, '5_2_FPlan'],
         2000: [PluPlanType.FLAECHENN_PLAN, '4_2_GemeinsamerFPlan'],
         3000: [PluPlanType.FLAECHENN_PLAN, '4_1_RegFPlan'],
@@ -63,7 +63,7 @@ export const PlanTypeMapping: { [key: string]: { [key: string]: [PluPlanType, st
         9999: [PluPlanType.PW_BES_STAEDT_BAUR, '9_2_SonstigesPlanwerkStaedtebaurecht'],
         // default: [PluPlanType.UNBEKANNT, undefined]
     },
-    LP_PLAN: {
+    lp_plan: {
         1000: [PluPlanType.RAUM_ORDN_PLAN, '2_4_Landschaftsprogramm'],
         2000: [PluPlanType.PW_LANDSCH_PLAN, '3_4_Landschaftsrahmenplan'],
         3000: [PluPlanType.PW_LANDSCH_PLAN, '5_4_Landschaftsplan'],
@@ -71,7 +71,7 @@ export const PlanTypeMapping: { [key: string]: { [key: string]: [PluPlanType, st
         9999: [PluPlanType.PW_LANDSCH_PLAN, '9_3_SonstigesPlanwerkNaturschutzrecht'],
         // default: [PluPlanType.UNBEKANNT, undefined]
     },
-    RP_Plan: {
+    rp_plan: {
         1000: [PluPlanType.RAUM_ORDN_PLAN, '3_1_Regionalplan'],
         2000: [PluPlanType.RAUM_ORDN_PLAN, '3_3_SachlicherTeilplanRegionalebene'],
         2001: [PluPlanType.RAUM_ORDN_PLAN, '2_2_SachlicherTeilplanLandesebene'],
@@ -83,7 +83,7 @@ export const PlanTypeMapping: { [key: string]: { [key: string]: [PluPlanType, st
         9999: [PluPlanType.RAUM_ORDN_PLAN, '9_1_SonstigerRaumordnungsplan'],
         // default: [PluPlanType.UNBEKANNT, undefined]
     },
-    SO_Plan: {
+    so_plan: {
         '01': [PluPlanType.PW_BES_STAEDT_BAUR, '9_4_ErhaltungssatzungVerordnungStaedtebaulicheGestalt'],
         '02': [PluPlanType.PW_BES_STAEDT_BAUR, '9_5_ErhaltungssatzungVerordnungWohnbevoelkerung'],
         '03': [PluPlanType.PW_BES_STAEDT_BAUR, '9_6_ErhaltungssatzungVerordnungUmstrukturierung'],
@@ -93,19 +93,19 @@ export const PlanTypeMapping: { [key: string]: { [key: string]: [PluPlanType, st
 };
 
 export const ProcedureTypeMapping: { [key: string]: { [key: string]: PluProcedureType } } = {
-    BP_Plan: {
+    bp_plan: {
         1000: PluProcedureType.NORM_VERF,
         2000: PluProcedureType.VEREINF_VERF,
         3000: PluProcedureType.BEBAU_PLAN_INNEN,
         4000: PluProcedureType.EINBEZ_AUSSEN_BESCHLEU,
         // default: PluProcedureType.UNBEKANNT
     },
-    FP_Plan: {
+    fp_plan: {
         1000: PluProcedureType.NORM_VERF,
         2000: PluProcedureType.VEREINF_VERF,
         // default: PluProcedureType.UNBEKANNT
     },
-    RP_Plan: {
+    rp_plan: {
         1000: PluProcedureType.AEND,
         2000: PluProcedureType.TEIL_FORT,
         3000: PluProcedureType.NEU_AUFST,

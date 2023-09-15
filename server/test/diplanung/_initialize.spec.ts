@@ -32,8 +32,7 @@ describe('Initialize Elasticsearch', function () {
     // @ts-ignore
     let config: IndexConfiguration = {
         url: 'http://localhost:9200',
-        version: "6",
-        //deduplicationAlias: 'test-dedup'
+        version: "6"
     };
 
     // @ts-ignore

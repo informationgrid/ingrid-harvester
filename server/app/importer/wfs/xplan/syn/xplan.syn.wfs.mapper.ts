@@ -84,8 +84,8 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
     }
 
     _getAlternateTitle() {
-        let alternateTitle = this.getTextContent('./*/xplan:xpPlanName');
-        return alternateTitle && alternateTitle.trim() !== '' ? alternateTitle : undefined;
+        let alternateTitle = this.getTextContent('./*/xplan:xpPlanName')?.trim();
+        return alternateTitle ?? undefined;
     }
 
     /**

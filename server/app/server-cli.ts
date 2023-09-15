@@ -74,9 +74,6 @@ async function startProcess() {
         // Include relevant CLI args
         importerConfig.dryRun = myArgs.includes('-n') || myArgs.includes('--dry-run') || importerConfig.dryRun === true;
 
-        // Set the same elasticsearch alias for deduplication for all importers
-        //importerConfig.deduplicationAlias = deduplicationAlias;
-
         let configHarvester = MiscUtils.merge(importerConfig, configGeneral);
 
         let profile = ProfileFactoryLoader.get();
@@ -114,11 +111,6 @@ async function startProcess() {
     }
 
 }
-
-// Generate a quasi-random string for a deduplication alias
-let pid = process.pid;
-let dt = getDateString();
-let deduplicationAlias = `dedupe_${dt}_${pid}`;
 
 let myArgs = process.argv.slice(2);
 runAsync = false; //myArgs.includes('--async');

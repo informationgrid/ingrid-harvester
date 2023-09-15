@@ -64,7 +64,7 @@ export interface WfsParameters {
     readonly constraint?: string,
 
     startPosition?: number,
-    maxRecords?: number
+    maxFeatures?: number
 }
 
 /**
