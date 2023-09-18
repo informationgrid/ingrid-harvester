@@ -117,7 +117,7 @@ export class PostgresQueries extends AbstractPostgresQueries {
             LEFT JOIN public.${this.datasetTableName} AS secondary
             ON anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
             WHERE anchor.source = '${source}'
-                AND anchor.dataset->'extras'->>'hierarchy_level' != 'service'
+                AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
         )
         UNION
         (
