@@ -221,7 +221,7 @@ export class SparqlImporter extends Importer {
                     source: this.settings.endpointUrl,
                     collection_id: this.database.defaultCatalog.id,
                     dataset: doc,
-                    raw: mapper.getHarvestedData()
+                    original_document: mapper.getHarvestedData()
                 };
                 promises.push(
                     this.database.addEntityToBulk(entity)

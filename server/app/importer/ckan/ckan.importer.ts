@@ -118,7 +118,7 @@ export class CkanImporter extends Importer {
                 source: this.settings.ckanBaseUrl,
                 collection_id: this.database.defaultCatalog.id,
                 dataset: doc,
-                raw: harvestedData
+                original_document: harvestedData
             };
             return this.database.addEntityToBulk(entity)
                 .then(response => {

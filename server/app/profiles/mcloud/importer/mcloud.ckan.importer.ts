@@ -143,7 +143,7 @@ export class McloudCkanImporter extends CkanImporter {
                     source: this.settings.ckanBaseUrl,
                     collection_id: this.database.defaultCatalog.id,
                     dataset: doc,
-                    raw: doc.extras.harvested_data
+                    original_document: doc.extras.harvested_data
                 };
                 return this.database.addEntityToBulk(entity)
                     .then(response => {

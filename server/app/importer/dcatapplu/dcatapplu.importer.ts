@@ -263,7 +263,7 @@ export class DcatappluImporter extends Importer {
                     collection_id: this.database.defaultCatalog.id,
                     operates_on: mapper.getOperatesOn(),
                     dataset: doc,
-                    raw: mapper.getHarvestedData()
+                    original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.database.addEntityToBulk(entity));
             } else {

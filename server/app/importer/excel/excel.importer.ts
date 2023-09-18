@@ -154,7 +154,7 @@ export class ExcelImporter extends Importer {
                         source: this.settings.filePath,
                         collection_id: this.database.defaultCatalog.id,
                         dataset: doc,
-                        raw: mapper.getHarvestedData()
+                        original_document: mapper.getHarvestedData()
                     };
                     promises.push(
                         this.database.addEntityToBulk(entity).then(response => {

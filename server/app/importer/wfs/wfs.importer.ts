@@ -316,7 +316,7 @@ export abstract class WfsImporter extends Importer {
                     source: this.settings.getFeaturesUrl,
                     collection_id: this.generalInfo['catalog'].id,
                     dataset: doc,
-                    raw: mapper.getHarvestedData()
+                    original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.database.addEntityToBulk(entity));
             } else {

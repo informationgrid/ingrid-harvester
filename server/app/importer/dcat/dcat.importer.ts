@@ -218,7 +218,7 @@ export class DcatImporter extends Importer {
                     source: this.settings.catalogUrl,
                     collection_id: this.database.defaultCatalog.id,
                     dataset: doc,
-                    raw: mapper.getHarvestedData()
+                    original_document: mapper.getHarvestedData()
                 };
                 promises.push(
                     this.database.addEntityToBulk(entity)

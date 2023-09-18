@@ -54,7 +54,7 @@ export class PostgresUtils extends DatabaseUtils {
 
         this._bulkData = [];
         this.summary = summary;
-        this.columns = new this.connection.helpers.ColumnSet(['identifier', 'source', 'collection_id', 'dataset', 'raw'],
+        this.columns = new this.connection.helpers.ColumnSet(['identifier', 'source', 'collection_id', 'dataset', 'original_document'],
                         { table: PostgresQueries.tableName });
         this.createTables();
     }

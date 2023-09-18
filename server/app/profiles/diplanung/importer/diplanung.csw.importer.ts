@@ -203,7 +203,7 @@ export class DiplanungCswImporter extends CswImporter {
                         source: doc.extras.metadata.source.source_base,
                         collection_id: doc.catalog.id,
                         dataset: mergedDocument,
-                        raw: undefined
+                        original_document: undefined
                     };
                     resolve(entity);
                 }

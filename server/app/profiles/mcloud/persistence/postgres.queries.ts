@@ -60,7 +60,7 @@ export class PostgresQueries extends AbstractPostgresQueries {
         operates_on VARCHAR(255)[],
         collection_id INTEGER,
         dataset JSONB,
-        raw TEXT,
+        original_document TEXT,
         created_on TIMESTAMP(6) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
         last_modified TIMESTAMP(6) with time zone NULL,
         CONSTRAINT ${this.datasetTableName}_pkey PRIMARY KEY (identifier, source),
@@ -70,11 +70,11 @@ export class PostgresQueries extends AbstractPostgresQueries {
     readonly onConflict = `ON CONFLICT ON CONSTRAINT ${this.datasetTableName}_pkey DO UPDATE SET
         operates_on = EXCLUDED.operates_on,
         dataset = EXCLUDED.dataset,
-        raw = COALESCE(EXCLUDED.raw, ${this.datasetTableName}.raw),
+        original_document = COALESCE(EXCLUDED.original_document, ${this.datasetTableName}.original_document),
         last_modified = NOW()`;
 
-    readonly bulkUpsert = `INSERT INTO ${this.datasetTableName} (identifier, source, collection_id, operates_on, dataset, raw)
-        SELECT identifier, source, collection_id, operates_on, dataset, raw
+    readonly bulkUpsert = `INSERT INTO ${this.datasetTableName} (identifier, source, collection_id, operates_on, dataset, original_document)
+        SELECT identifier, source, collection_id, operates_on, dataset, original_document
         FROM json_populate_recordset(null::${this.datasetTableName}, $1)
         ${this.onConflict}`;
 
