@@ -43,14 +43,14 @@ export class PostgresQueries extends AbstractPostgresQueries {
 
     readonly createCollectionTable = `CREATE TABLE IF NOT EXISTS public.${this.collectionTableName} (
         id SERIAL,
-        identifier VARCHAR(255) NOT NULL,
+        identifier VARCHAR(255) NOT NULL UNIQUE,
         properties JSONB,
         original_document TEXT,
         dcat_ap_plu TEXT,
         json TEXT,
         created_on TIMESTAMP(6) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
         last_modified TIMESTAMP(6) with time zone NULL,
-        CONSTRAINT ${this.collectionTableName}_pkey PRIMARY KEY (id)
+        CONSTRAINT ${this.collectionTableName}_pkey PRIMARY KEY(id)
     );`;
 
     readonly createDatasetTable = `CREATE TABLE IF NOT EXISTS public.${this.datasetTableName} (
@@ -63,15 +63,17 @@ export class PostgresQueries extends AbstractPostgresQueries {
         original_document TEXT,
         created_on TIMESTAMP(6) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
         last_modified TIMESTAMP(6) with time zone NULL,
-        CONSTRAINT ${this.datasetTableName}_pkey PRIMARY KEY (identifier, source),
-        CONSTRAINT fkivo5l0rletq7kni6xstvejy5a FOREIGN KEY (collection_id) REFERENCES public.${this.collectionTableName}(id)
+        CONSTRAINT ${this.datasetTableName}_pkey PRIMARY KEY(id),
+        CONSTRAINT record_full_identifier UNIQUE(identifier, source),
+        CONSTRAINT fkivo5l0rletq7kni6xstvejy5a FOREIGN KEY(collection_id) REFERENCES public.${this.collectionTableName}(id)
     );`;
 
-    readonly onConflict = `ON CONFLICT ON CONSTRAINT ${this.datasetTableName}_pkey DO UPDATE SET
+    readonly onConflict = `ON CONFLICT ON CONSTRAINT record_full_identifier DO UPDATE SET
         operates_on = EXCLUDED.operates_on,
         dataset = EXCLUDED.dataset,
         original_document = COALESCE(EXCLUDED.original_document, ${this.datasetTableName}.original_document),
-        last_modified = NOW()`;
+        last_modified = NOW()
+        WHERE ${this.datasetTableName}.dataset->'modified' > EXCLUDED.dataset->'modified'`;
 
     readonly bulkUpsert = `INSERT INTO public.${this.datasetTableName} (identifier, source, collection_id, operates_on, dataset, original_document)
         SELECT identifier, source, collection_id, operates_on, dataset, original_document
@@ -81,10 +83,10 @@ export class PostgresQueries extends AbstractPostgresQueries {
     readonly readDatasets = `SELECT dataset FROM public.${this.datasetTableName}`;
 
     readonly getStoredData = `SELECT dataset FROM public.${this.datasetTableName}
-        WHERE identifier = ANY ($1)`;
+        WHERE identifier = ANY($1)`;
 
     readonly createCatalog = `INSERT INTO public.${this.collectionTableName} (identifier, properties, original_document, dcat_ap_plu, json)
-        VALUES ($1, $2, $3, $4, $5)
+        VALUES($1, $2, $3, $4, $5)
         RETURNING id`;
 
     readonly getCatalog = `SELECT * FROM public.${this.collectionTableName}
