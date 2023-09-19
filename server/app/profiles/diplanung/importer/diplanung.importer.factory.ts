@@ -21,15 +21,15 @@
  * ==================================================
  */
 
-import { DcatappluImporter } from '../../../importer/dcatapplu/dcatapplu.importer';
 import { DiplanungCswImporter } from './diplanung.csw.importer';
-import { ExcelSparseImporter } from '../../../importer/excelsparse/excelsparse.importer';
-import { FisWfsImporter } from '../../../importer/wfs/fis/fis.wfs.importer';
+import { DiplanungDcatappluImporter } from './diplanung.dcatapplu.importer';
+import { DiplanungExcelSparseImporter } from './diplanung.excelsparse.importer';
+import { DiplanungFisWfsImporter } from './diplanung.fis.wfs.importer';
+import { DiplanungXplanSynWfsImporter } from './diplanung.xplan.syn.wfs.importer';
+import { DiplanungXplanWfsImporter } from './diplanung.xplan.wfs.importer';
 import { Harvester } from '@shared/harvester';
 import { Importer } from '../../../importer/importer';
 import { ImporterFactory } from '../../../importer/importer.factory';
-import { XplanSynWfsImporter } from '../../../importer/wfs/xplan/syn/xplan.syn.wfs.importer';
-import { XplanWfsImporter } from '../../../importer/wfs/xplan/xplan.wfs.importer';
 
 export class DiplanungImporterFactory extends ImporterFactory {
 
@@ -37,22 +37,22 @@ export class DiplanungImporterFactory extends ImporterFactory {
         let importer: Importer;
         switch (config.type) {
             case 'EXCEL_SPARSE':
-                importer = new ExcelSparseImporter(config);
+                importer = new DiplanungExcelSparseImporter(config);
                 break;
             case 'CSW':
                 importer = new DiplanungCswImporter(config);
                 break;
             case 'WFS.FIS':
-                importer = new FisWfsImporter(config);
+                importer = new DiplanungFisWfsImporter(config);
                 break;
             case 'WFS.XPLAN':
-                importer = new XplanWfsImporter(config);
+                importer = new DiplanungXplanWfsImporter(config);
                 break;
             case 'WFS.XPLAN.SYN':
-                importer = new XplanSynWfsImporter(config);
+                importer = new DiplanungXplanSynWfsImporter(config);
                 break;
             case 'DCATAPPLU':
-                importer = new DcatappluImporter(config);
+                importer = new DiplanungDcatappluImporter(config);
                 break;
             default: {
                 console.error('Importer not found: ' + config.type);
