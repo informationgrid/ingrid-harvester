@@ -50,7 +50,6 @@ export abstract class Importer {
         let elasticsearchConfig: IndexConfiguration = {
             ...generalConfig.elasticsearch,
             includeTimestamp: true,
-            index: "index_name_here",   // TODO
             dryRun: settings.dryRun,
             addAlias: !settings.disable
         };

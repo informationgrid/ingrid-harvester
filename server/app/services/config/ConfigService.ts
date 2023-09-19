@@ -68,6 +68,7 @@ export class ConfigService {
             version: process.env.ELASTIC_VERSION ?? "8",
             user: process.env.ELASTIC_USER ?? "elastic",
             password: process.env.ELASTIC_PASSWORD ?? "elastic",
+            index: process.env.ELASTIC_INDEX ?? "harvester-index",
             alias: process.env.ELASTIC_ALIAS ?? "mcloud",
             prefix: process.env.ELASTIC_PREFIX ?? '',
             numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS) ?? 1,

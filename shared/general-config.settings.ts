@@ -51,6 +51,7 @@ export interface ElasticsearchConfiguration {
     version: string,
     user?: string,
     password?: string
+    index: string,
     alias: string,
     prefix?: string,
     numberOfShards?: number,

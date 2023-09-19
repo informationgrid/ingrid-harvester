@@ -13,6 +13,7 @@
     "version": "8",
     "user": "elastic",
     "password": "elastic",
+    "index": "harvester-index",
     "alias": "harvester",
     "prefix": "",
     "numberOfShards": 1,

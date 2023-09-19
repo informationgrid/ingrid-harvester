@@ -104,18 +104,13 @@ export class Server extends ServerLoader {
         return null;
     }
 
-    $onReady() {
+    async $onReady() {
         // try to initialize the ES index if it does not exist
         let profile = ProfileFactoryLoader.get();
-        let indexConfig: IndexConfiguration = {
-            ...ConfigService.getGeneralSettings().elasticsearch,
-            // includeTimestamp: true,
-            index: "index_name_here",   // TODO
-            // dryRun: settings.dryRun,
-            // addAlias: !settings.disable
-        };
+        let indexConfig: IndexConfiguration = ConfigService.getGeneralSettings().elasticsearch;
         let elastic = ElasticsearchFactory.getElasticUtils(indexConfig, new Summary({ index: '', isIncremental: false, maxConcurrent: 0, type: '' }));
-        elastic.prepareIndex(profile.getIndexMappings(), profile.getIndexSettings(), true);
+        await elastic.prepareIndex(profile.getIndexMappings(), profile.getIndexSettings(), true);
+        await elastic.addAlias(indexConfig.prefix + indexConfig.index, indexConfig.alias);
         console.log("Server initialized");
     }
 
