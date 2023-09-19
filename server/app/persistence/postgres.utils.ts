@@ -53,23 +53,10 @@ export class PostgresUtils extends DatabaseUtils {
     private static pool: Pool;
     private transactionClient: PoolClient;
 
-    // private transactionStatus: 'open' | 'closed' | 'rolledback';
-
     constructor(configuration: DatabaseConfiguration, summary: Summary) {
         super();
         this.configuration = configuration;
-        // let databaseConfiguration = ConfigService.getGeneralSettings().database;
 
-        // const cn = {
-        //     host: 'localhost',
-        //     port: 5433,
-        //     database: 'my-database-name',
-        //     user: 'user-name',
-        //     password: 'user-password',
-        //     max: 30 // use up to 30 connections
-        
-        //     // "types" - in case you want to set custom type parsers on the pool level
-        // };
         if (!PostgresUtils.pool) {
             PostgresUtils.pool = new Pool(configuration);
         }
@@ -77,7 +64,6 @@ export class PostgresUtils extends DatabaseUtils {
         this._bulkData = [];
         this.queries = ProfileFactoryLoader.get().getPostgresQueries();
         this.summary = summary;
-        // this.transactionStatus = 'closed';
     }
 
     async init(): Promise<void> {
@@ -96,98 +82,10 @@ export class PostgresUtils extends DatabaseUtils {
         }
     }
 
-    // preparedQuery(client: PoolClient, name: string, ...values: any[]) {
-    //     client.query()
-    // }
-
     async createTables() {
         await PostgresUtils.pool.query(this.queries.createCollectionTable);
         await PostgresUtils.pool.query(this.queries.createDatasetTable);
     }
-
-    // /**
-    //  * Stream datasets directly from database to elasticsearch, without deduplication
-    //  * 
-    //  * @param elastic ElasticsearchUtils
-    //  * @param source the source of the datasets which should be pushed, typically a URL
-    //  */
-    // async pushToElastic(elastic: ElasticsearchUtils, source: string) {
-
-    //     const bulkExec = (bulkCmds, callback) => {
-    //         // console.log('Before ' + JSON.stringify(bulkCmds));
-    //         bulkCmds = bulkCmds.map(body => body[PostgresQueries.tableName] ?? body);
-    //         // console.log('After ' + JSON.stringify(bulkCmds));
-    //         elastic.bulk(bulkCmds, false);
-    //     };
-
-    //     const toBulk = new TransformToBulk(function getIndexTypeId(doc) { return { '_id': doc.dataset.identifier }; });
-
-    //     const client: PoolClient = await PostgresUtils.pool.connect();
-    //     log.debug('Connection started');
-    //     const queryStream = new QueryStream(PostgresQueries.readDatasets + (source ? ` WHERE source = '${source}'` : ''));
-    //     const stream = client.query(queryStream);
-    //     stream.pipe(toBulk).pipe(new WritableBulk(bulkExec));
-    //     stream.on('end', () => {
-    //         log.debug('Connection released');
-    //         client.release();
-    //     });
-    // }
-
-    // /**
-    //  * Push datasets from database to elasticsearch, slower but with all bells and whistles.
-    //  * 
-    //  * @param elastic 
-    //  * @param source 
-    //  */
-    // async pushToElastic2ElectricBoogaloo(elastic: ElasticsearchUtils, source: string) {
-    //     console.log("MEH");
-    //     const client: PoolClient = await PostgresUtils.pool.connect();
-    //     log.debug('Connection started');
-    //     let q = PostgresQueries.getBuckets(source);
-    //     const query = new QueryStream(q);
-    //     const stream = client.query(query);
-    //     let currentId;
-    //     let currentBucket: Bucket;
-    //     stream.on('data', async (row: any) => {
-    //         if (row.primary_id != currentId) {
-    //             // process current bucket, then create new
-    //             currentId = row.primary_id;
-    //             if (currentBucket) {
-    //                 let operationChunks = await PersistenceUtils.processBucket(currentBucket);
-    //                 elastic.addOperationChunksToBulk(operationChunks);
-    //             }
-    //             currentBucket = {
-    //                 primary: null,
-    //                 duplicates: [],
-    //                 operatingServices: []
-    //             };
-    //         }
-    //         // add to current bucket
-    //         if (row.is_primary) {
-    //             currentBucket.primary = { id: row.id, ...row.dataset };
-    //         }
-    //         else if (row.is_duplicate) {
-    //             currentBucket.duplicates.push({ id: row.id, ...row.dataset });
-    //         }
-    //         else if (row.is_operating_service) {
-    //             currentBucket.operatingServices.push({ id: row.id, ...row.dataset });
-    //         }
-    //         else {
-    //             throw new Error('Document should be either primary, duplicate, or operating service; was neither');
-    //         }
-    //     });
-    //     stream.on('end', async () => {
-    //         // process last bucket
-    //         if (currentBucket) {
-    //             let operationChunks = await PersistenceUtils.processBucket(currentBucket);
-    //             elastic.addOperationChunksToBulk(operationChunks);
-    //         }
-    //         // send remainder of bulk data
-    //         elastic.sendBulkOperations(false);
-    //         log.debug('Connection released');
-    //         client.release();
-    //     });
-    // }
 
     async getStoredData(ids: string[]): Promise<any[]> {
         let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getStoredData, [ids]);

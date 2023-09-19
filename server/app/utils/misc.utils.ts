@@ -24,10 +24,7 @@
 'use strict';
 
 import { merge as lodashMerge } from 'lodash';
-import { Catalog } from '../model/dcatApPlu.model';
-import { ConfigService } from '../services/config/ConfigService';
 import { Distribution } from '../model/distribution';
-import { RequestDelegate, RequestOptions } from './http-request.utils';
 
 const dayjs = require('dayjs');
 const log = require('log4js').getLogger(__filename);
