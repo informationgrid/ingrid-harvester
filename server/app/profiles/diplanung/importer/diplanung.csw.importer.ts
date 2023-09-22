@@ -226,7 +226,7 @@ export class DiplanungCswImporter extends CswImporter {
             // Hamburg Customization -> enrich dataset with WMS Distribution
             let generatedWMS = this.generateWmsDistribution(distribution, planType);
             if (generatedWMS) {
-                updatedDistributions.push(...generatedWMS);
+                updatedDistributions.push(generatedWMS);
                 updated = true;
             }
             if (DiplanungCswImporter.SKIPPED_EXTENTSIONS.some(ext => accessURL_lc.endsWith(ext))) {
@@ -295,8 +295,7 @@ export class DiplanungCswImporter extends CswImporter {
         return updated ? updatedDistributions : null;
     }
 
-    // TODO change this back to one distribution after DiPlanPortal changes
-    private generateWmsDistribution(distribution: Distribution, planType: PluPlanType): Distribution[] {
+    private generateWmsDistribution(distribution: Distribution, planType: PluPlanType): Distribution {
         const url: URL = new URL(distribution.accessURL);
         if (url.pathname.endsWith('_WFS_xplan_dls') &&
             url.searchParams.get('service') === 'WFS' &&
@@ -308,7 +307,7 @@ export class DiplanungCswImporter extends CswImporter {
             // generate WMS Url with PlanName form 
             let stateAbbrev = url.pathname.substring(1, 3).toLowerCase();
             let planName = url.searchParams.get('planName');
-            return DiplanungUtils.generateXplanWmsDistributions(stateAbbrev, planName, planType);
+            return DiplanungUtils.generateXplanWmsDistribution(stateAbbrev, planName, planType);
         } 
         return null;
     }
