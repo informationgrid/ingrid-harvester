@@ -35,6 +35,7 @@ import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WmsXPath } from './wms.xpath';
 
 const log = require('log4js').getLogger(__filename);
+const WMS_PARAMS = ['service', 'request', 'version'];
 
 export class DiplanungCswImporter extends CswImporter {
 
@@ -98,12 +99,26 @@ export class DiplanungCswImporter extends CswImporter {
 
                     // merge all distributions from the operating services into the dataset
                     let distributions = {};
+                    let datasetHasWMS = false;
                     for (let dist of dataset._source.distributions) {
                         distributions[MiscUtils.createDistHash(dist)] = dist;
+                        if (dist.format.includes('WMS')) {
+                            datasetHasWMS = true;
+                        }
                     }
                     let serviceIds = [];
                     for (let hit of hits) {
                         for (let dist of hit._source.distributions) {
+                            if (dist.format.includes('WMS')) {
+                                if (datasetHasWMS) {
+                                    continue;
+                                }
+                                else {
+                                    // only use the first WMS distribution we get from services
+                                    // TODO this is arbitrary, should there be an order? should there be multiple?
+                                    datasetHasWMS = true;
+                                }
+                            }
                             distributions[MiscUtils.createDistHash(dist)] = dist;
                         }
                         serviceIds.push(hit._id);
@@ -213,6 +228,7 @@ export class DiplanungCswImporter extends CswImporter {
      */
     private async updateDistributions(distributions: Distribution[], planType: PluPlanType): Promise<Distribution[]> {
         let updatedDistributions: Distribution[] = [];
+        let generatedIdx = null;
         let updated = false;
         for (let distribution of distributions) {
             let accessURL_lc = distribution.accessURL.toLowerCase();
@@ -226,6 +242,7 @@ export class DiplanungCswImporter extends CswImporter {
             let generatedWMS = this.generateWmsDistribution(distribution, planType);
             if (generatedWMS) {
                 updatedDistributions.push(generatedWMS);
+                generatedIdx = updatedDistributions.length - 1;
                 updated = true;
             }
             if (DiplanungCswImporter.SKIPPED_EXTENTSIONS.some(ext => accessURL_lc.endsWith(ext))) {
@@ -286,6 +303,10 @@ export class DiplanungCswImporter extends CswImporter {
                 }
             }
             updatedDistributions.push(distribution);
+        }
+        // if we have generated a WMS, remove other, now superfluous WMS
+        if (generatedIdx != null) {
+            updatedDistributions = updatedDistributions.filter((dist, idx) => idx == generatedIdx || !dist.format.includes('WMS'));
         }
         return updated ? updatedDistributions : null;
     }
