@@ -215,7 +215,6 @@ export class DiplanungCswImporter extends CswImporter {
         let updatedDistributions: Distribution[] = [];
         let updated = false;
         for (let distribution of distributions) {
-            let accessURL = distribution.accessURL;
             let accessURL_lc = distribution.accessURL.toLowerCase();
             let baseUrl = getBaseUrl(accessURL_lc);
             // short-circuits
@@ -233,29 +232,29 @@ export class DiplanungCswImporter extends CswImporter {
                 updatedDistributions.push(distribution);
                 continue;
             }
-            if (accessURL_lc.includes('request=') && !accessURL_lc.includes('getcapabilities')) {
-                updatedDistributions.push(distribution);
-                continue;
-            }
-            if (distribution.format?.includes('WMS') || (accessURL_lc.includes('getcapabilities') && accessURL_lc.includes('wms'))) {
-                if (!accessURL_lc.includes('service=wms')) {
-                    accessURL += (accessURL.includes('?') ? '&' : '?') + 'service=WMS';
+            if (distribution.format?.includes('WMS') || accessURL_lc.includes('wms')) {
+                let accessURL: URL = new URL(distribution.accessURL);
+                let cleanedURL = cleanWmsUrl(accessURL);
+                if (distribution.accessURL != cleanedURL) {
+                    updated = true;
                 }
-                if (!accessURL_lc.includes('request=getcapabilities')) {
-                    accessURL += (accessURL.includes('?') ? '&' : '?') + 'request=GetCapabilities';
-                }
+                distribution.accessURL = cleanedURL;
+                distribution.format = ['WMS'];
+
+                accessURL.searchParams.append('service', 'WMS');
+                accessURL.searchParams.append('request', 'GetCapabilities');
                 let response;
                 try {
-                    response = await RequestDelegate.doRequest({ uri: accessURL, accept: 'text/xml' });
+                    response = await RequestDelegate.doRequest({ uri: accessURL.toString(), accept: 'text/xml' });
                 }
                 catch (err) {
-                    let msg = `Could not parse response from ${accessURL}`;
+                    let msg = `Could not parse response from ${accessURL.toString()}`;
                     log.warn(msg);
                     this.summary.warnings.push([msg, err.message]);
                 }
                 // surface heuristic for XML
                 if (response == null) {
-                    let msg = `Content-Type for ${accessURL} was not "text/xml", skipping`;
+                    let msg = `Content-Type for ${accessURL.toString()} was not "text/xml", skipping`;
                     log.debug(msg);
                     // this.summary.warnings.push([msg]);
                 }
@@ -264,16 +263,12 @@ export class DiplanungCswImporter extends CswImporter {
                         let layerNames = this.getMapLayerNames(response);
                         this.tempUrlCache.set(baseUrl, []);
                         if (layerNames) {
-                            distribution.accessURL = accessURL;
-                            if (!distribution.format?.includes('WMS')) {
-                                distribution.format = [...distribution.format, 'WMS'];
-                            }
                             distribution.mapLayerNames = layerNames;
                             updated = true;
                         }
                     }
                     catch (err) {
-                        let msg = `Could not parse response from ${accessURL}`;
+                        let msg = `Could not parse response from ${accessURL.toString()}`;
                         log.debug(msg);
                         this.summary.warnings.push([msg, err.message]);
                     }
@@ -329,4 +324,16 @@ export class DiplanungCswImporter extends CswImporter {
 
 function getBaseUrl(url: string) {
     return /(https?:\/\/[^\/]+)\/?.*/.exec(url)?.[1];
+}
+
+function cleanWmsUrl(accessURL: URL): string {
+    // clean standard WMS params from WMS URL
+    let markedForDeletion = [];
+    for (const key of accessURL.searchParams.keys()) {
+        if (WMS_PARAMS.includes(key.toLowerCase())) {
+            markedForDeletion.push(key);
+        }
+    }
+    markedForDeletion.forEach(key => accessURL.searchParams.delete(key));
+    return MiscUtils.strip(accessURL.toString(), '?');
 }
