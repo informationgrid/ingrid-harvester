@@ -64,7 +64,7 @@ export class PostgresQueries extends AbstractPostgresQueries {
         created_on TIMESTAMP(6) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
         last_modified TIMESTAMP(6) with time zone NULL,
         CONSTRAINT ${this.datasetTableName}_pkey PRIMARY KEY(id),
-        CONSTRAINT record_full_identifier UNIQUE(identifier, source),
+        CONSTRAINT record_full_identifier UNIQUE(identifier, collection_id),
         CONSTRAINT fkivo5l0rletq7kni6xstvejy5a FOREIGN KEY(collection_id) REFERENCES public.${this.collectionTableName}(id)
     );`;
 
