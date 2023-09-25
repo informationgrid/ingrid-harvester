@@ -203,11 +203,13 @@ export class CswImporter extends Importer {
             let importedDocuments = await this.extractRecords(response, harvestTime);
             await this.updateRecords(importedDocuments);
             // logging
-            let beforePercentage = Math.floor(100 * (delegate.getStartRecordIndex() - this.settings.maxRecords) / this.totalRecords);
-            let percentage = Math.floor(100 * delegate.getStartRecordIndex() / this.totalRecords);
-            if (percentage % 10 == 0 && percentage != beforePercentage && percentage > 0) {
-                log.info(`Processing watermark: ${percentage}% (${delegate.getStartRecordIndex()} records)`);
-            }
+            // let beforePercentage = Math.floor(100 * (delegate.getStartRecordIndex() - this.settings.maxRecords) / this.totalRecords);
+            // let percentage = Math.floor(100 * delegate.getStartRecordIndex() / this.totalRecords);
+            // if (percentage % 10 == 0 && percentage != beforePercentage && percentage > 0) {
+            //     log.info(`Processing watermark: ${percentage}% (${delegate.getStartRecordIndex()} records)`);
+            // }
+            let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
+            log.info(`Finished processing batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, start: ${harvestTime.toISOString()}, ${processingTime.toString().padStart(3, ' ')}s`);
         } else {
             const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
             log.error(message);
