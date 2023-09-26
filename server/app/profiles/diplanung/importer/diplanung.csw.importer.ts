@@ -33,10 +33,12 @@ import { EsOperation } from '../../../persistence/elastic.utils';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { MiscUtils } from '../../../utils/misc.utils';
+import { PluPlanType } from '../../../model/dcatApPlu.model';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WmsXPath } from './wms.xpath';
 
 const log = require('log4js').getLogger(__filename);
+const WMS_PARAMS = ['service', 'request', 'version'];
 
 const overwriteFields = [
     'catalog',
@@ -115,10 +117,24 @@ export class DiplanungCswImporter extends CswImporter {
      */
     private resolveCoupling(document: DiplanungIndexDocument, service: DiplanungIndexDocument): DiplanungIndexDocument {
         let distributions = {};
+                    let datasetHasWMS = false;
         for (let dist of document.distributions) {
             distributions[MiscUtils.createDistHash(dist)] = dist;
+                        if (dist.format.includes('WMS')) {
+                            datasetHasWMS = true;
+                        }
         }
         for (let dist of service.distributions) {
+                            if (dist.format.includes('WMS')) {
+                                if (datasetHasWMS) {
+                                    continue;
+                                }
+                                else {
+                                    // only use the first WMS distribution we get from services
+                                    // TODO this is arbitrary, should there be an order? should there be multiple?
+                                    datasetHasWMS = true;
+                                }
+                            }
             distributions[MiscUtils.createDistHash(dist)] = dist;
         }
         return { ...document, distributions: Object.values(distributions) };
@@ -159,7 +175,7 @@ export class DiplanungCswImporter extends CswImporter {
                 let docIsUpdated = false;
 
                 // update WMS distributions with layer names
-                let updatedDistributions = await this.updateDistributions(doc.distributions);
+                let updatedDistributions = await this.updateDistributions(doc.distributions, doc.plan_type as PluPlanType);
                 if (updatedDistributions?.length > 0) {
                     updateDoc['distributions'] = updatedDistributions;
                     updateDoc['extras'] = { ...doc['extras'] };
@@ -171,8 +187,8 @@ export class DiplanungCswImporter extends CswImporter {
                     docIsUpdated = true;
                 }
 
-                // purposely simplistic heuristic: is bbox inside bbox for Germany?
-                if (!GeoJsonUtils.within(doc.bounding_box, GeoJsonUtils.BBOX_GERMANY)) {
+                // purposely simplistic heuristic: is centroid inside bbox for Germany?
+                if (!GeoJsonUtils.within(doc.centroid, GeoJsonUtils.BBOX_GERMANY)) {
                     // copy and/or create relevant metadata structure
                     updateDoc['extras'] = { ...doc['extras'] };
                     if (!updateDoc['extras']['metadata']['quality_notes']) {
@@ -189,7 +205,7 @@ export class DiplanungCswImporter extends CswImporter {
                     }
                     else {
                         updateDoc['extras']['metadata']['is_valid'] = false;
-                        updateDoc['extras']['metadata']['quality_notes'].push('Bounding box not within Germany');
+                        updateDoc['extras']['metadata']['quality_notes'].push('Centroid not within Germany');
                     }
                     docIsUpdated = true;
                 }
@@ -226,11 +242,11 @@ export class DiplanungCswImporter extends CswImporter {
      * @param distributions the distributions to potentially retrieve WMS layer names for
      * @returns all distributions, including the modified ones if any; null, if no distribution was modified
      */
-    private async updateDistributions(distributions: Distribution[]): Promise<Distribution[]> {
+    private async updateDistributions(distributions: Distribution[], planType: PluPlanType): Promise<Distribution[]> {
         let updatedDistributions: Distribution[] = [];
+        let generatedIdx = null;
         let updated = false;
         for (let distribution of distributions) {
-            let accessURL = distribution.accessURL;
             let accessURL_lc = distribution.accessURL.toLowerCase();
             let baseUrl = getBaseUrl(accessURL_lc);
             // short-circuits
@@ -239,51 +255,53 @@ export class DiplanungCswImporter extends CswImporter {
                 continue;
             }
             // Hamburg Customization -> enrich dataset with WMS Distribution
-            let generatedWMS = this.generateWmsDistribution(distribution);
+            let generatedWMS = this.generateWmsDistribution(distribution, planType);
             if (generatedWMS) {
-                updatedDistributions.push(...generatedWMS);
+                updatedDistributions.push(generatedWMS);
+                generatedIdx = updatedDistributions.length - 1;
                 updated = true;
             }
             if (DiplanungCswImporter.SKIPPED_EXTENTSIONS.some(ext => accessURL_lc.endsWith(ext))) {
                 updatedDistributions.push(distribution);
                 continue;
             }
-            if (accessURL_lc.includes('request=') && !accessURL_lc.includes('getcapabilities')) {
-                updatedDistributions.push(distribution);
-                continue;
-            }
-            if (distribution.format?.includes('WMS') || (accessURL_lc.includes('getcapabilities') && accessURL_lc.includes('wms'))) {
-                if (!accessURL_lc.includes('service=wms')) {
-                    accessURL += (accessURL.includes('?') ? '&' : '?') + 'service=WMS';
+            if (distribution.format?.includes('WMS') || accessURL_lc.includes('wms')) {
+                let accessURL: URL = new URL(distribution.accessURL);
+                let cleanedURL = cleanWmsUrl(accessURL);
+                if (distribution.accessURL != cleanedURL) {
+                    updated = true;
                 }
-                if (!accessURL_lc.includes('request=getcapabilities')) {
-                    accessURL += (accessURL.includes('?') ? '&' : '?') + 'request=GetCapabilities';
-                }
+                distribution.accessURL = cleanedURL;
+                distribution.format = ['WMS'];
+
+                accessURL.searchParams.append('service', 'WMS');
+                accessURL.searchParams.append('request', 'GetCapabilities');
                 let response;
                 try {
-                    response = await RequestDelegate.doRequest({ uri: accessURL, accept: 'text/xml' });
+                    response = await RequestDelegate.doRequest({ uri: accessURL.toString(), accept: 'text/xml' });
                 }
                 catch (err) {
-                    let msg = `Could not parse response from ${accessURL}`;
+                    let msg = `Could not parse response from ${accessURL.toString()}`;
                     log.warn(msg);
                     this.summary.warnings.push([msg, err.message]);
                 }
                 // surface heuristic for XML
-                if (response?.startsWith('<?xml')) {
+                if (response == null) {
+                    let msg = `Content-Type for ${accessURL.toString()} was not "text/xml", skipping`;
+                    log.debug(msg);
+                    // this.summary.warnings.push([msg]);
+                }
+                else if (response.startsWith('<?xml')) {
                     try {
                         let layerNames = this.getMapLayerNames(response);
                         this.tempUrlCache.set(baseUrl, []);
                         if (layerNames) {
-                            distribution.accessURL = accessURL;
-                            if (!distribution.format?.includes('WMS')) {
-                                distribution.format = [...distribution.format, 'WMS'];
-                            }
                             distribution.mapLayerNames = layerNames;
                             updated = true;
                         }
                     }
                     catch (err) {
-                        let msg = `Could not parse response from ${accessURL}`;
+                        let msg = `Could not parse response from ${accessURL.toString()}`;
                         log.debug(msg);
                         this.summary.warnings.push([msg, err.message]);
                     }
@@ -302,11 +320,14 @@ export class DiplanungCswImporter extends CswImporter {
             }
             updatedDistributions.push(distribution);
         }
+        // if we have generated a WMS, remove other, now superfluous WMS
+        if (generatedIdx != null) {
+            updatedDistributions = updatedDistributions.filter((dist, idx) => idx == generatedIdx || !dist.format.includes('WMS'));
+        }
         return updated ? updatedDistributions : null;
     }
 
-    // TODO change this back to one distribution after DiPlanPortal changes
-    private generateWmsDistribution(distribution: Distribution): Distribution[] {
+    private generateWmsDistribution(distribution: Distribution, planType: PluPlanType): Distribution {
         const url: URL = new URL(distribution.accessURL);
         if (url.pathname.endsWith('_WFS_xplan_dls') &&
             url.searchParams.get('service') === 'WFS' &&
@@ -318,7 +339,7 @@ export class DiplanungCswImporter extends CswImporter {
             // generate WMS Url with PlanName form 
             let stateAbbrev = url.pathname.substring(1, 3).toLowerCase();
             let planName = url.searchParams.get('planName');
-            return DiplanungUtils.generateXplanWmsDistributions(stateAbbrev, planName);
+            return DiplanungUtils.generateXplanWmsDistribution(stateAbbrev, planName, planType);
         } 
         return null;
     }
@@ -340,4 +361,16 @@ export class DiplanungCswImporter extends CswImporter {
 
 function getBaseUrl(url: string) {
     return /(https?:\/\/[^\/]+)\/?.*/.exec(url)?.[1];
+}
+
+function cleanWmsUrl(accessURL: URL): string {
+    // clean standard WMS params from WMS URL
+    let markedForDeletion = [];
+    for (const key of accessURL.searchParams.keys()) {
+        if (WMS_PARAMS.includes(key.toLowerCase())) {
+            markedForDeletion.push(key);
+        }
+    }
+    markedForDeletion.forEach(key => accessURL.searchParams.delete(key));
+    return MiscUtils.strip(accessURL.toString(), '?');
 }

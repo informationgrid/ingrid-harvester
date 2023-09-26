@@ -23,7 +23,9 @@
 
 'use strict';
 
-import { merge as lodashMerge } from 'lodash';
+import { merge as lodashMerge, trim } from 'lodash';
+import { Catalog } from '../model/dcatApPlu.model';
+import { ConfigService } from '../services/config/ConfigService';
 import { Distribution } from '../model/distribution';
 
 const dayjs = require('dayjs');
@@ -49,6 +51,17 @@ export class MiscUtils {
     }
 
     /**
+     * Trim a string with custom characters using lodash.
+     * 
+     * @param str the string to strip
+     * @param delim the characters to strip from the string
+     * @return the input string stripped of the supplied characters
+     */
+    static strip(str: string, delim: string): string {
+        return trim(str, delim);
+    }
+
+    /**
      * For log output overview and ES indexing reasons, messages might want/need to be truncated.
      * We set an arbitrary limit for message length in `MAX_MSG_LENGTH`.
      * 
@@ -67,7 +80,7 @@ export class MiscUtils {
      * @return the Date object represented by the given datetime string
      */
     static normalizeDateTime(datetime: string): Date {
-        if (datetime == null) {
+        if (!datetime) {
             return undefined;
         }
         let parsedDatetime = dayjs(datetime);
@@ -87,7 +100,7 @@ export class MiscUtils {
         if (s == null) {
             return false;
         }
-        return /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(s);
+        return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
     }
 
     /**

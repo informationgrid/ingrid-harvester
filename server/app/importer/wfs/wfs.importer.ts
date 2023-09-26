@@ -59,11 +59,11 @@ export abstract class WfsImporter extends Importer {
     private numIndexDocs = 0;
 
     private generalInfo: object = {};
-    private supportsPaging: boolean = false;
-    // private select: XPathNodeSelect;
     private nsMap: {};
     private crsList: string[][];
     private defaultCrs: string;
+
+    protected supportsPaging: boolean = false;
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings);
@@ -174,7 +174,8 @@ export abstract class WfsImporter extends Importer {
             }
             let crsNodes = select('./*[local-name()="DefaultCRS" or local-name()="OtherCRS" or local-name()="DefaultSRS" or local-name()="OtherSRS"]', featureType);
             for (let node of crsNodes) {
-                this.crsList.push([node.textContent, proj4Json[node.textContent.replace('EPSG:', '')]]);
+                let crsCode = node.textContent.replace('urn:ogc:def:crs:EPSG::', '').replace('EPSG:', '');
+                this.crsList.push([node.textContent, proj4Json[crsCode]]);
                 if ((<Element>node).localName === 'DefaultCRS' || (<Element>node).localName === 'DefaultSRS') {
                     this.defaultCrs = node.textContent;
                 }
@@ -211,6 +212,14 @@ export abstract class WfsImporter extends Importer {
         let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId) ?? this.database.defaultCatalog;
         this.generalInfo['catalog'] = catalog;
 
+        let hitsRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, maxRecords: undefined, resultType: 'hits' });
+        let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
+        let hitsResponse = await hitsRequestDelegate.doRequest();
+        let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
+        let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
+        this.totalFeatures = parseInt(hitsResultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
+        log.debug(`Found ${this.totalFeatures} features at ${this.settings.getFeaturesUrl}`);
+
         while (true) {
             log.debug('Requesting next features');
             let response = await this.requestDelegate.doRequest();
@@ -220,25 +229,9 @@ export abstract class WfsImporter extends Importer {
             let resultsNode = responseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
 
             if (resultsNode) {
-                // TODO for v2.0.0, the request will only return accurate numbers if used with a "resultType=hits" query ("unknown" otherwise)
-                // TODO so, before a "real" GetFeature request we should send one to determine metadataset size
-                // this.totalFeatures = resultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures');
-                let hitsRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resultType: 'hits' });
-                let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
-                let hitsResponse = await hitsRequestDelegate.doRequest();
-                let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
-                let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
-                this.totalFeatures = parseInt(hitsResultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
-
-                // TODO for v2.0.0, the request will return 0 (regardless of resultType)
-                // TODO for v1.1.0, the request will not return a separate "number returned" attribute
-                let numReturned = parseInt(this.settings.version === '2.0.0' ? resultsNode.getAttribute('numberReturned') : '0');
-                numReturned = this.totalFeatures;
-
-                log.debug(`Received ${numReturned} records from ${this.settings.getFeaturesUrl}`);
                 await this.extractFeatures(response, harvestTime)
             } else {
-                const message = `Error while fetching WFS Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
+                const message = `Error while fetching WFS Features. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
                 log.error(message);
                 this.summary.appErrors.push(message);
             }
@@ -348,13 +341,13 @@ export abstract class WfsImporter extends Importer {
             if (request === 'GetFeature') {
                 requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
                 <GetFeatures xmlns="${namespaces.CSW}"
-                            xmlns:gmd="${namespaces.GMD}"
-                            xmlns:xsi="${namespaces.XSI}"
-                            xmlns:ogc="${namespaces.OGC}"
-                            xsi:schemaLocation="${namespaces.CSW}"
-                            service="WFS"
-                            version="${settings.version}"
-                            resultType="${settings.resultType}"
+                        xmlns:gmd="${namespaces.GMD}"
+                        xmlns:xsi="${namespaces.XSI}"
+                        xmlns:ogc="${namespaces.OGC}"
+                        xsi:schemaLocation="${namespaces.CSW}"
+                        service="WFS"
+                        version="${settings.version}"
+                        resultType="${settings.resultType}"
                     <DistributedSearch/>
                     <Query typename="${settings.typename}">
                         ${settings.featureFilter ? `
@@ -380,17 +373,18 @@ export abstract class WfsImporter extends Importer {
             if (settings.featureFilter) {
                 requestConfig.qs.constraint = settings.featureFilter;
             }
+            if (settings.maxRecords) {
+                requestConfig.qs.startIndex = settings.startPosition;
+                requestConfig.qs.maxFeatures = settings.maxRecords;
+            }
         }
 
         return requestConfig;
     }
 
-    // TODO implement paging
-    // low priority, as neither hamburg nor freiburg implement paging on the server side
     static createPaging(settings: WfsSettings) {
         return {
-            // TODO paging in WFS works not by selecting a start index, but by traversing "next" URLs given in the server response
-            startFieldName: 'startPosition',
+            startFieldName: 'startIndex',
             startPosition: settings.startPosition,
             numRecords: settings.maxRecords,
             count: settings.maxRecords

@@ -273,8 +273,9 @@ export abstract class WfsMapper extends BaseMapper {
         return (<Element>this.select(xpathStr, searchNode, true))?.textContent;
     }
 
-    protected getTypename(): string {
-        return (<Element>this.select('./*', this.feature, true))?.localName;
+    protected getTypename(toLowerCase: boolean = true): string {
+        let typename = (<Element>this.select('./*', this.feature, true))?.localName;
+        return toLowerCase ? typename.toLowerCase() : typename;
     }
 
     executeCustomCode(doc: any) {

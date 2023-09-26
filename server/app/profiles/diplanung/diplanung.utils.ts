@@ -22,23 +22,42 @@
  */
 
 import { Distribution } from '../../model/distribution';
+import { PluPlanType } from '../../model/dcatApPlu.model';
 
 export class DiplanungUtils {
 
-    // TODO currently, DiPlanPortal expects two different ones
-    // TODO change, when that changes
-    static generateXplanWmsDistributions(stateAbbrev: string, planName: string): Distribution[] {
+    static generateXplanWmsDistribution(stateAbbrev: string, planName: string, planType: PluPlanType): Distribution {
         let wmsURL = `https://${stateAbbrev}.xplanungsplattform.de/xplan-wms/services/planwerkwms/planname/${encodeURIComponent(planName)}`;
-        let wmsGetCapabilities: Distribution = {
-            accessURL: wmsURL + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities',
-            format: ['Unbekannt'],
-            title: planName + ' WMS GetCapabilities'
+        let mapLayerNames: string[];
+        switch (planType) {
+            case PluPlanType.BEBAU_PLAN:
+                mapLayerNames = ['BP_Planvektor', 'BP_Planraster'];
+                break;
+            case PluPlanType.FLAECHENN_PLAN:
+                mapLayerNames = ['FP_Planvektor', 'FP_Planraster'];
+                break;
+            // case PluPlanType.REGIONAL_PLAN:
+            //     mapLayerNames = ['RP_Planvektor', 'RP_Planraster'];
+            //     break;
         }
         let wmsPlanwerk: Distribution = {
-            accessURL: wmsURL + '?',
+            accessURL: wmsURL,
             format: ['WMS'],
-            title: planName + ' WMS'
+            title: planName + ' WMS',
+            mapLayerNames
         };
-        return [wmsGetCapabilities, wmsPlanwerk];
+        return wmsPlanwerk;
+    }
+
+    static generatePlanDigitalWmsDistribution(planName: string, stelleId: string): Distribution {
+        let wmsURL = `https://testportal-plandigital.de/ows/${stelleId}/fplan`;
+        let mapLayerNames = ['fp_plan'];
+        let wmsPlanwerk: Distribution = {
+            accessURL: wmsURL,
+            format: ['WMS'],
+            title: planName + ' WMS',
+            mapLayerNames
+        };
+        return wmsPlanwerk;
     }
 }

@@ -42,6 +42,7 @@
             <mat-option value="DCATAPPLU">DCATAPPLU</mat-option>
             <mat-option value="SPARQL">SPARQL</mat-option>
             <mat-option value="WFS.FIS">WFS (FIS)</mat-option>
+            <mat-option value="WFS.MS">WFS (MS)</mat-option>
             <mat-option value="WFS.XPLAN">WFS (XPLAN)</mat-option>
             <mat-option value="WFS.XPLAN.SYN">WFS (Syn XPLAN)</mat-option>
           </mat-select>
@@ -122,7 +123,7 @@
         <mat-card-content>
           <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
             <mat-form-field fxFlex>
-              <input matInput type="number" min="1" max="1000" minlength="1" placeholder="Max. Datensätze pro Anfrage"
+              <input matInput type="number" min="1" max="10000" minlength="1" placeholder="Max. Datensätze pro Anfrage"
                      formControlName="maxRecords">
             </mat-form-field>
 
@@ -183,6 +184,12 @@
       </app-sparql-harvester>
 
       <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS.FIS'" [form]="harvesterForm"
+                         [model]="harvester"
+                         [rulesTemplate]="rules"
+                         class="flex-column">
+      </app-wfs-harvester>
+
+      <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS.MS'" [form]="harvesterForm"
                          [model]="harvester"
                          [rulesTemplate]="rules"
                          class="flex-column">
