@@ -173,7 +173,7 @@ export class ExcelImporter extends Importer {
             Promise.all(promises)
                 .then(async () => {
                     await this.database.commitTransaction();
-                    this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.filePath, (bucket) => this.processBucket(bucket))
+                    this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.filePath);
                 })
                 .then(() => observer.next(ImportResult.message('Running post operations')))
                 // .then(() => this.elastic.finishIndex())

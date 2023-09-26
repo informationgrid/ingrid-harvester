@@ -94,7 +94,7 @@ export class SparqlImporter extends Importer {
 
                 if(this.numIndexDocs > 0) {
                     await this.database.commitTransaction();
-                    await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.endpointUrl, (bucket) => this.processBucket(bucket));
+                    await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.endpointUrl);
                     // await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();

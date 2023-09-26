@@ -105,7 +105,7 @@ export abstract class WfsImporter extends Importer {
                 if(this.numIndexDocs > 0) {
                     if (this.summary.databaseErrors.length == 0) {
                         await this.database.commitTransaction();
-                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getFeaturesUrl, (bucket) => this.processBucket(bucket));
+                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getFeaturesUrl);
                     }
                     else {
                         await this.database.rollbackTransaction();

@@ -92,7 +92,7 @@ export class DcatappluImporter extends Importer {
                 if (this.numIndexDocs > 0 || this.summary.isIncremental) {
                     if (this.summary.databaseErrors.length == 0) {
                         await this.database.commitTransaction();
-                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.catalogUrl, (bucket) => this.processBucket(bucket));
+                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.catalogUrl);
                     }
                     else {
                         await this.database.rollbackTransaction();

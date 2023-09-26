@@ -67,20 +67,4 @@ export abstract class Importer {
     getSummary(): Summary {
         return this.summary;
     }
-
-    /**
-     * Process a bucket of similar database rows and send a list of instructions to Elasticsearch,
-     * detailing how to handle the given documents.
-     * 
-     * This method is the right place to handle:
-     * - deduplication
-     * - data-service-coupling (CSW)
-     * - last-minute document updates
-     * 
-     * @param bucket 
-     * @returns a list of operations to send to Elasticsearch
-     */
-    protected async processBucket(bucket: Bucket): Promise<EsOperation[]> {
-        return [{ operation: 'index', _id: bucket.anchor_id, document: bucket.duplicates.get(bucket.anchor_id) }];
-    }
 }

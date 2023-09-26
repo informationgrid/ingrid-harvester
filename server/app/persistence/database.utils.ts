@@ -74,7 +74,7 @@ export abstract class DatabaseUtils {
 
     // abstract pushToElastic2ElectricBoogaloo(elastic: ElasticsearchUtils, source: string): Promise<void>;
 
-    abstract pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, processBucket: (bucket: Bucket) => Promise<EsOperation[]>): Promise<void>;
+    abstract pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string): Promise<void>;
 
     abstract getStoredData(ids: string[]): Promise<any[]>;
 

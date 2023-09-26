@@ -27,9 +27,9 @@ import { Client, Pool, PoolClient, QueryResult } from 'pg';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DcatApPluDocument } from '../profiles/diplanung/model/dcatApPlu.document';
 import { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document';
+import { PostgresUtils as DiplanungPostgresUtils } from '../profiles/diplanung/persistence/postgres.utils';
 import { ElasticsearchUtils, EsOperation } from './elastic.utils';
 import { Entity } from '../model/entity';
-import { Organization, Person } from '../model/agent';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 
@@ -128,7 +128,8 @@ export class PostgresUtils extends DatabaseUtils {
      * @param source 
      * @param processBucket
      */
-    async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, processBucket: (bucket: Bucket) => Promise<EsOperation[]>) {
+    async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string) {
+        let pgUtils = new DiplanungPostgresUtils();
         const client: PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
         // TODO we also need to store SOURCE_TYPE in postgres and subsequently fetch it here (B.source_type)
@@ -147,7 +148,7 @@ export class PostgresUtils extends DatabaseUtils {
                     // process current bucket, then create new
                     currentId = row.anchor_id;
                     if (currentBucket) {
-                        let operationChunks = await processBucket(currentBucket);
+                        let operationChunks = await pgUtils.processBucket(currentBucket);
                         await elastic.addOperationChunksToBulk(operationChunks);
                     }
                     currentBucket = {
@@ -170,7 +171,7 @@ export class PostgresUtils extends DatabaseUtils {
         }
         // process last bucket
         if (currentBucket) {
-            let operationChunks = await processBucket(currentBucket);
+            let operationChunks = await pgUtils.processBucket(currentBucket);
             elastic.addOperationChunksToBulk(operationChunks);
         }
         // send remainder of bulk data

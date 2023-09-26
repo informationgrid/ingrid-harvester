@@ -123,7 +123,7 @@ export class CswImporter extends Importer {
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
                     if (this.summary.databaseErrors.length == 0) {
                         await this.database.commitTransaction();
-                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getRecordsUrl, (bucket) => this.processBucket(bucket));
+                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getRecordsUrl);
                     }
                     else {
                         await this.database.rollbackTransaction();

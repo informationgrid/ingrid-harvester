@@ -88,7 +88,7 @@ export class OaiImporter extends Importer {
                 await this.database.beginTransaction();
                 await this.harvest();
                 await this.database.commitTransaction();
-                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.providerUrl, (bucket) => this.processBucket(bucket));
+                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.providerUrl);
                 // await this.elastic.finishIndex();
                 observer.next(ImportResult.complete(this.summary));
                 observer.complete();

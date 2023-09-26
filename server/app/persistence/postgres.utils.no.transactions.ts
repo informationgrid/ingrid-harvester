@@ -63,7 +63,7 @@ export class PostgresUtils extends DatabaseUtils {
         PostgresUtils.db.none(PostgresQueries.createTable);
     }
 
-    async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, processBucket: (bucket: Bucket) => Promise<EsOperation[]>): Promise<void> {
+    async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
