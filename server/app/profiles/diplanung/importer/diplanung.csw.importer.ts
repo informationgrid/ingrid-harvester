@@ -35,6 +35,7 @@ import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WmsXPath } from './wms.xpath';
 
 const log = require('log4js').getLogger(__filename);
+const WMS_PARAMS = ['service', 'request', 'version'];
 
 export class DiplanungCswImporter extends CswImporter {
 
@@ -98,12 +99,26 @@ export class DiplanungCswImporter extends CswImporter {
 
                     // merge all distributions from the operating services into the dataset
                     let distributions = {};
+                    let datasetHasWMS = false;
                     for (let dist of dataset._source.distributions) {
                         distributions[MiscUtils.createDistHash(dist)] = dist;
+                        if (dist.format.includes('WMS')) {
+                            datasetHasWMS = true;
+                        }
                     }
                     let serviceIds = [];
                     for (let hit of hits) {
                         for (let dist of hit._source.distributions) {
+                            if (dist.format.includes('WMS')) {
+                                if (datasetHasWMS) {
+                                    continue;
+                                }
+                                else {
+                                    // only use the first WMS distribution we get from services
+                                    // TODO this is arbitrary, should there be an order? should there be multiple?
+                                    datasetHasWMS = true;
+                                }
+                            }
                             distributions[MiscUtils.createDistHash(dist)] = dist;
                         }
                         serviceIds.push(hit._id);
@@ -213,9 +228,9 @@ export class DiplanungCswImporter extends CswImporter {
      */
     private async updateDistributions(distributions: Distribution[], planType: PluPlanType): Promise<Distribution[]> {
         let updatedDistributions: Distribution[] = [];
+        let generatedIdx = null;
         let updated = false;
         for (let distribution of distributions) {
-            let accessURL = distribution.accessURL;
             let accessURL_lc = distribution.accessURL.toLowerCase();
             let baseUrl = getBaseUrl(accessURL_lc);
             // short-circuits
@@ -226,36 +241,37 @@ export class DiplanungCswImporter extends CswImporter {
             // Hamburg Customization -> enrich dataset with WMS Distribution
             let generatedWMS = this.generateWmsDistribution(distribution, planType);
             if (generatedWMS) {
-                updatedDistributions.push(...generatedWMS);
+                updatedDistributions.push(generatedWMS);
+                generatedIdx = updatedDistributions.length - 1;
                 updated = true;
             }
             if (DiplanungCswImporter.SKIPPED_EXTENTSIONS.some(ext => accessURL_lc.endsWith(ext))) {
                 updatedDistributions.push(distribution);
                 continue;
             }
-            if (accessURL_lc.includes('request=') && !accessURL_lc.includes('getcapabilities')) {
-                updatedDistributions.push(distribution);
-                continue;
-            }
-            if (distribution.format?.includes('WMS') || (accessURL_lc.includes('getcapabilities') && accessURL_lc.includes('wms'))) {
-                if (!accessURL_lc.includes('service=wms')) {
-                    accessURL += (accessURL.includes('?') ? '&' : '?') + 'service=WMS';
+            if (distribution.format?.includes('WMS') || accessURL_lc.includes('wms')) {
+                let accessURL: URL = new URL(distribution.accessURL);
+                let cleanedURL = cleanWmsUrl(accessURL);
+                if (distribution.accessURL != cleanedURL) {
+                    updated = true;
                 }
-                if (!accessURL_lc.includes('request=getcapabilities')) {
-                    accessURL += (accessURL.includes('?') ? '&' : '?') + 'request=GetCapabilities';
-                }
+                distribution.accessURL = cleanedURL;
+                distribution.format = ['WMS'];
+
+                accessURL.searchParams.append('service', 'WMS');
+                accessURL.searchParams.append('request', 'GetCapabilities');
                 let response;
                 try {
-                    response = await RequestDelegate.doRequest({ uri: accessURL, accept: 'text/xml' });
+                    response = await RequestDelegate.doRequest({ uri: accessURL.toString(), accept: 'text/xml' });
                 }
                 catch (err) {
-                    let msg = `Could not parse response from ${accessURL}`;
+                    let msg = `Could not parse response from ${accessURL.toString()}`;
                     log.warn(msg);
                     this.summary.warnings.push([msg, err.message]);
                 }
                 // surface heuristic for XML
                 if (response == null) {
-                    let msg = `Content-Type for ${accessURL} was not "text/xml", skipping`;
+                    let msg = `Content-Type for ${accessURL.toString()} was not "text/xml", skipping`;
                     log.debug(msg);
                     // this.summary.warnings.push([msg]);
                 }
@@ -264,16 +280,12 @@ export class DiplanungCswImporter extends CswImporter {
                         let layerNames = this.getMapLayerNames(response);
                         this.tempUrlCache.set(baseUrl, []);
                         if (layerNames) {
-                            distribution.accessURL = accessURL;
-                            if (!distribution.format?.includes('WMS')) {
-                                distribution.format = [...distribution.format, 'WMS'];
-                            }
                             distribution.mapLayerNames = layerNames;
                             updated = true;
                         }
                     }
                     catch (err) {
-                        let msg = `Could not parse response from ${accessURL}`;
+                        let msg = `Could not parse response from ${accessURL.toString()}`;
                         log.debug(msg);
                         this.summary.warnings.push([msg, err.message]);
                     }
@@ -292,11 +304,14 @@ export class DiplanungCswImporter extends CswImporter {
             }
             updatedDistributions.push(distribution);
         }
+        // if we have generated a WMS, remove other, now superfluous WMS
+        if (generatedIdx != null) {
+            updatedDistributions = updatedDistributions.filter((dist, idx) => idx == generatedIdx || !dist.format.includes('WMS'));
+        }
         return updated ? updatedDistributions : null;
     }
 
-    // TODO change this back to one distribution after DiPlanPortal changes
-    private generateWmsDistribution(distribution: Distribution, planType: PluPlanType): Distribution[] {
+    private generateWmsDistribution(distribution: Distribution, planType: PluPlanType): Distribution {
         const url: URL = new URL(distribution.accessURL);
         if (url.pathname.endsWith('_WFS_xplan_dls') &&
             url.searchParams.get('service') === 'WFS' &&
@@ -308,7 +323,7 @@ export class DiplanungCswImporter extends CswImporter {
             // generate WMS Url with PlanName form 
             let stateAbbrev = url.pathname.substring(1, 3).toLowerCase();
             let planName = url.searchParams.get('planName');
-            return DiplanungUtils.generateXplanWmsDistributions(stateAbbrev, planName, planType);
+            return DiplanungUtils.generateXplanWmsDistribution(stateAbbrev, planName, planType);
         } 
         return null;
     }
@@ -330,4 +345,16 @@ export class DiplanungCswImporter extends CswImporter {
 
 function getBaseUrl(url: string) {
     return /(https?:\/\/[^\/]+)\/?.*/.exec(url)?.[1];
+}
+
+function cleanWmsUrl(accessURL: URL): string {
+    // clean standard WMS params from WMS URL
+    let markedForDeletion = [];
+    for (const key of accessURL.searchParams.keys()) {
+        if (WMS_PARAMS.includes(key.toLowerCase())) {
+            markedForDeletion.push(key);
+        }
+    }
+    markedForDeletion.forEach(key => accessURL.searchParams.delete(key));
+    return MiscUtils.strip(accessURL.toString(), '?');
 }
