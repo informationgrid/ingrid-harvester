@@ -23,7 +23,7 @@
 
 'use strict';
 
-import { merge as lodashMerge } from 'lodash';
+import { merge as lodashMerge, trim } from 'lodash';
 import { Catalog } from '../model/dcatApPlu.model';
 import { ConfigService } from '../services/config/ConfigService';
 import { Distribution } from '../model/distribution';
@@ -49,6 +49,17 @@ export class MiscUtils {
     static merge(...objs) {
         // lodash mutates the first object on which it merges subsequent objects
         return lodashMerge({}, ...objs)
+    }
+
+    /**
+     * Trim a string with custom characters using lodash.
+     * 
+     * @param str the string to strip
+     * @param delim the characters to strip from the string
+     * @return the input string stripped of the supplied characters
+     */
+    static strip(str: string, delim: string): string {
+        return trim(str, delim);
     }
 
     /**
@@ -90,7 +101,7 @@ export class MiscUtils {
         if (s == null) {
             return false;
         }
-        return /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(s);
+        return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
     }
 
     /**
