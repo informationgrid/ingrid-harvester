@@ -53,7 +53,7 @@ export class MsWfsMapper extends WfsMapper {
                 distributions.push(distribution);
             }
         }
-        distributions.push(...DiplanungUtils.generatePlanDigitalWmsDistributions(this._getTitle(), this.getStelleId()));
+        distributions.push(DiplanungUtils.generatePlanDigitalWmsDistribution(this._getTitle(), this.getStelleId()));
         return distributions;
     }
 

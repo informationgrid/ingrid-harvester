@@ -209,6 +209,9 @@ export const indexMappings = {
                 'identifier': {
                     'type': 'keyword'
                 },
+                'passNumber': {
+                    'type': 'keyword'
+                },
                 'period': {
                     'type': 'date_range'
                 },
