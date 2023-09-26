@@ -471,6 +471,9 @@ export const indexMappings = {
                         },
                         'operates_on': {
                             'type': 'keyword'
+                        },
+                        'merged_from': {
+                            'type': 'keyword'
                         }
                     }
                 },

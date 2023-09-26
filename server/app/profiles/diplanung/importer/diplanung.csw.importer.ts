@@ -21,12 +21,12 @@
  * ==================================================
  */
 
+import { generateXplanWmsDistributions } from '../diplanung.utils';
 import { Bucket } from '../../../persistence/postgres.utils';
 import { CswImporter } from '../../../importer/csw/csw.importer';
 import { DcatApPluDocumentFactory } from '../model/dcatapplu.document.factory';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungIndexDocument } from '../model/index.document';
-import { DiplanungUtils } from '../diplanung.utils';
 import { Distribution } from '../../../model/distribution';
 import { Entity } from '../../../model/entity';
 import { EsOperation } from '../../../persistence/elastic.utils';
@@ -339,7 +339,7 @@ export class DiplanungCswImporter extends CswImporter {
             // generate WMS Url with PlanName form 
             let stateAbbrev = url.pathname.substring(1, 3).toLowerCase();
             let planName = url.searchParams.get('planName');
-            return DiplanungUtils.generateXplanWmsDistribution(stateAbbrev, planName, planType);
+            return generateXplanWmsDistributions(stateAbbrev, planName, planType);
         } 
         return null;
     }

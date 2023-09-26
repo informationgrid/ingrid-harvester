@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { createEsId } from '../diplanung.utils';
 import { Contact, Organization, Person } from '../../../model/agent';
 import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { DateRange } from '../../../model/dateRange';
@@ -94,6 +95,7 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
                     source: mapper.getMetadataSource()
                 },
                 operates_on: mapper.getOperatesOn(),    // only csw
+                merged_from: []
                 // transformed_data: {
                 //     [DcatApPluDocument.getExportFormat()]: await DcatApPluDocument.create(_mapper),
                 // }
@@ -103,6 +105,7 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
             modified: mapper.getModifiedDate(),
         };
 
+        result.extras.merged_from.push(createEsId(result));
         result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
         result.extras.metadata.is_valid = mapper.isValid(result);
         let qualityNotes = mapper.getQualityNotes();
@@ -176,7 +179,8 @@ export type DiplanungIndexDocument = {
                 attribution?: string
             }
         },
-        operates_on: string[]
+        operates_on: string[],
+        merged_from: string[]
     },
     keywords: string[]
 };
