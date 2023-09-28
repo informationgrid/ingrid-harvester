@@ -108,12 +108,13 @@ export class PostgresQueries extends AbstractPostgresQueries {
      * Create a query for retrieving all items for a given source.
      * 
      * With each result row representing an item, this query should expose the following columns:
+     * - anchor_id: the ID of the dataset this item is a duplicate of, or is a service to
      * - id: the ID of the item
-     * - primary_id: the ID of the dataset this item is a duplicate of, or is a service to
-     * - is_primary: true, if this item is the primary dataset
-     * - is_duplicate: true, if this item is a duplicate of the primary dataset
-     * - is_service: true, if this item is a service to the primary dataset
+     * - source: the source of this item
      * - dataset: the dataset document of this item
+     * - is_service: true, if this item is a service to the primary dataset
+     * - issued
+     * - modified
      * 
      * @param source the source of the requested items
      * @returns a database query to return grouped (by `primary_id`) items of rows representing items

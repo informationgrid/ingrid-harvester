@@ -218,10 +218,10 @@ export abstract class WfsImporter extends Importer {
         let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
         let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
         this.totalFeatures = parseInt(hitsResultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
-        log.debug(`Found ${this.totalFeatures} features at ${this.settings.getFeaturesUrl}`);
+        log.info(`Found ${this.totalFeatures} features at ${this.settings.getFeaturesUrl}`);
 
         while (true) {
-            log.debug('Requesting next features');
+            log.info('Requesting next features');
             let response = await this.requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
 
@@ -317,8 +317,7 @@ export abstract class WfsImporter extends Importer {
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalFeatures));
         }
-        await Promise.all(promises)
-            .catch(err => log.error('Error indexing WFS record', err));
+        await Promise.all(promises).catch(err => log.error('Error indexing WFS record', err));
     }
 
     abstract getMapper(settings, feature, harvestTime, summary, generalInfo, geojsonUtils): WfsMapper;

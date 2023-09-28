@@ -134,17 +134,21 @@ export class PostgresUtils extends DatabaseUtils {
         log.debug('Connection started');
         // TODO we also need to store SOURCE_TYPE in postgres and subsequently fetch it here (B.source_type)
         let q = this.queries.getBuckets(source);
-        console.log(q);
-        // const query = new QueryStream(q);
-        // const stream = client.query(query);
+        // console.log(q);
+        let start = Date.now();
+
         const cursor = client.query(new Cursor(q));
         let currentId: string | number;
         let currentBucket: Bucket;
         const maxRows = 100;
         let rows = await cursor.read(maxRows);
+        let numDatasets = 0;
+        let numBuckets = 0;
         while (rows.length > 0) {
             for (let row of rows) {
+                numDatasets += 1;
                 if (row.anchor_id != currentId) {
+                    numBuckets += 1;
                     // process current bucket, then create new
                     currentId = row.anchor_id;
                     if (currentBucket) {
@@ -178,6 +182,9 @@ export class PostgresUtils extends DatabaseUtils {
         elastic.sendBulkOperations(true);
         log.debug('Connection released');
         client.release();
+        let stop = Date.now();
+        log.info('Processed %d datasets and %d buckets', numDatasets, numBuckets);
+        log.info('Time for PG -> ES push: ' + Math.floor((stop - start)/1000) + 's');
     }
 
     write(entity: Entity) {

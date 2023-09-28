@@ -50,7 +50,7 @@ export const indexMappings = {
                 },
                 'raw': {
                     'type': 'keyword',
-                    'store': true,
+                    'store': true
                 }
             }
         },
@@ -73,7 +73,7 @@ export const indexMappings = {
                 },
                 'raw': {
                     'type': 'keyword',
-                    'store': true,
+                    'store': true
                 }
             }
         },
@@ -406,7 +406,7 @@ export const indexMappings = {
             }
         },
         'development_freeze_period': {
-            'type': 'date_range',
+            'type': 'date_range'
         },
         'centroid': {
             'type': 'geo_point'
