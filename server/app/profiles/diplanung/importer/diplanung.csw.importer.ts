@@ -95,7 +95,8 @@ export class DiplanungCswImporter extends CswImporter {
                 if (docIsUpdated) {
                     // TODO find an efficient postgres way to only send the update instead of the full document
                     // keywords: jsonb_set, json_agg, SQL/JSON Path Language, postgres14+
-                    let mergedDocument = MiscUtils.merge(doc, updateDoc);
+                    let mergedDocument: DiplanungIndexDocument = MiscUtils.merge(doc, updateDoc);
+                    mergedDocument.extras.metadata.modified = new Date(Date.now());
                     let entity: Entity = {
                         identifier: doc.identifier,
                         source: doc.extras.metadata.source.source_base,

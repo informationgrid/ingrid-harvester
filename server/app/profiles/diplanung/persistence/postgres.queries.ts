@@ -73,7 +73,19 @@ export class PostgresQueries extends AbstractPostgresQueries {
         dataset = EXCLUDED.dataset,
         original_document = COALESCE(EXCLUDED.original_document, ${this.datasetTableName}.original_document),
         last_modified = NOW()
-        WHERE ${this.datasetTableName}.dataset->'modified' > EXCLUDED.dataset->'modified'`;
+        WHERE (
+            (
+                EXCLUDED.dataset->'modified' IS NOT NULL
+                AND ${this.datasetTableName}.dataset->'modified' IS NULL
+            )
+            OR EXCLUDED.dataset->'modified' > ${this.datasetTableName}.dataset->'modified'
+        ) OR (
+            (
+                EXCLUDED.dataset->'extras'->'metadata'->'modified' IS NOT NULL
+                AND ${this.datasetTableName}.dataset->'extras'->'metadata'->'modified' IS NULL
+            )
+            OR EXCLUDED.dataset->'extras'->'metadata'->'modified' > ${this.datasetTableName}.dataset->'extras'->'metadata'->'modified'
+        )`;
 
     readonly bulkUpsert = `INSERT INTO public.${this.datasetTableName} (identifier, source, collection_id, operates_on, dataset, original_document)
         SELECT identifier, source, collection_id, operates_on, dataset, original_document
