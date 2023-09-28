@@ -36,28 +36,21 @@
               <mat-option value="postgresql">PostgreSQL</mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field fxFlex="20">
-            <input matInput type="url" placeholder="URL" formControlName="host" required>
-            <mat-error *ngIf="configForm.get('database.host').hasError('required')">
-              Dies ist ein Pflichtfeld
-            </mat-error>
+          <mat-form-field fxFlex="24">
+            <input matInput type="url" placeholder="Verbindungsstring" formControlName="connectionString">
           </mat-form-field>
-          <mat-form-field fxFlex="4">
-            <input matInput type="number" placeholder="Port" formControlName="port" required>
-            <mat-error *ngIf="configForm.get('database.port').hasError('required')">
-              Dies ist ein Pflichtfeld
-            </mat-error>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
+          <mat-form-field fxFlex="25">
+            <input matInput type="url" placeholder="URL" formControlName="host">
+          </mat-form-field>
+          <mat-form-field fxFlex="5">
+            <input matInput type="number" placeholder="Port" formControlName="port">
           </mat-form-field>
         </div>
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">
           <mat-form-field fxFlex="30">
-            <input matInput placeholder="Datenbank-Name" formControlName="database" required>
-            <mat-error *ngIf="configForm.get('database.database').hasError('whitespace')">
-              Es dürfen nicht nur Leerzeichen eingegeben sein
-            </mat-error>
-            <mat-error *ngIf="configForm.get('database.database').hasError('required')">
-              Dies ist ein Pflichtfeld
-            </mat-error>
+            <input matInput placeholder="Datenbank-Name" formControlName="database">
           </mat-form-field>
         </div>
         <div fxLayout="row" fxLayoutGap="20px grid" fxLayoutAlign="left" class="margin-below">

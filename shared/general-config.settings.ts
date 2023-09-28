@@ -60,11 +60,12 @@ export interface ElasticsearchConfiguration {
 
 export interface DatabaseConfiguration {
     type: 'postgresql',
-    host: string,
-    port: number,
-    database: string,
-    user: string,
-    password: string,
+    connectionString?: string,
+    host?: string,
+    port?: number,
+    database?: string,
+    user?: string,
+    password?: string,
     defaultCatalogIdentifier: string
 }
 
