@@ -249,8 +249,8 @@ export abstract class WfsImporter extends Importer {
             if (!this.supportsPaging || this.totalFeatures < this.requestDelegate.getStartRecordIndex()) {
                 break;
             }
-            await this.database.sendBulkData();
         }
+        await this.database.sendBulkData();
     }
 
     async extractFeatures(getFeatureResponse, harvestTime) {
