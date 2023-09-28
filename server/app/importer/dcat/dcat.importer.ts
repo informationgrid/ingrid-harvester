@@ -26,6 +26,7 @@ import { getLogger } from 'log4js';
 import { DcatMapper } from './dcat.mapper';
 import { DcatSettings, defaultDCATSettings } from './dcat.settings';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
+import { Entity } from '../../model/entity';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
@@ -84,10 +85,12 @@ export class DcatImporter extends Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+                // await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+                await this.database.beginTransaction();
                 await this.harvest();
-                await this.elastic.sendBulkData(false);
-                await this.elastic.finishIndex();
+                await this.database.commitTransaction();
+                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.catalogUrl);
+                // await this.elastic.finishIndex();
                 observer.next(ImportResult.complete(this.summary));
                 observer.complete();
 
@@ -98,7 +101,7 @@ export class DcatImporter extends Importer {
                 observer.complete();
 
                 // clean up index
-                this.elastic.deleteIndex(this.elastic.indexName);
+                // this.elastic.deleteIndex(this.elastic.indexName);
             }
         }
     }
@@ -162,7 +165,7 @@ export class DcatImporter extends Importer {
 
             if (isLastPage) break;
         }
-
+        await this.database.sendBulkData();
     }
 
     async extractRecords(getRecordsResponse, harvestTime) {
@@ -180,15 +183,6 @@ export class DcatImporter extends Importer {
             }
             ids.push(uuid);
 
-        }
-
-        let now = new Date(Date.now());
-        let storedData;
-
-        if (this.settings.dryRun) {
-            storedData = ids.map(() => now);
-        } else {
-            storedData = await this.elastic.getStoredData(ids);
         }
 
         for (let i = 0; i < records.length; i++) {
@@ -210,7 +204,7 @@ export class DcatImporter extends Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], rootNode, harvestTime, storedData[i], this.summary);
+            let mapper = this.getMapper(this.settings, records[i], rootNode, harvestTime, this.summary);
 
             let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -218,19 +212,23 @@ export class DcatImporter extends Importer {
                 mapper.skipped = true;
             });
 
-            if (!mapper.shouldBeSkipped()) {
-                if (!this.settings.dryRun) {
-                    promises.push(
-                        this.elastic.addDocToBulk(doc, uuid)
-                            .then(response => {
-                                if (!response.queued) {
-                                    // numIndexDocs += ElasticsearchUtils.maxBulkSize;
-                                    // this.observer.next(ImportResult.running(numIndexDocs, records.length));
-                                }
-                            })
-                    );
-                }
-
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+                let entity: Entity = {
+                    identifier: uuid,
+                    source: this.settings.catalogUrl,
+                    collection_id: this.database.defaultCatalog.id,
+                    dataset: doc,
+                    original_document: mapper.getHarvestedData()
+                };
+                promises.push(
+                    this.database.addEntityToBulk(entity)
+                        .then(response => {
+                            if (!response.queued) {
+                                // numIndexDocs += ElasticsearchUtils.maxBulkSize;
+                                // this.observer.next(ImportResult.running(numIndexDocs, records.length));
+                            }
+                        })
+                );
             } else {
                 this.summary.skippedDocs.push(uuid);
             }
@@ -240,8 +238,8 @@ export class DcatImporter extends Importer {
             .catch(err => log.error('Error indexing DCAT record', err));
     }
 
-    getMapper(settings, record, catalogPage, harvestTime, storedData, summary): DcatMapper {
-        return new DcatMapper(settings, record, catalogPage, harvestTime, storedData, summary);
+    getMapper(settings, record, catalogPage, harvestTime, summary): DcatMapper {
+        return new DcatMapper(settings, record, catalogPage, harvestTime, summary);
     }
 
     static createRequestConfig(settings: DcatSettings): RequestOptions {

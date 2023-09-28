@@ -90,6 +90,21 @@ export class ConfigGeneralComponent implements OnInit {
     return this.connectionStatus[value][1];
   }
 
+  checkDbConnection() {
+    this.dbConnectionCheck = 'working';
+    let checkResult = this.configService.checkDbConnection({
+      type: this.configForm.get('database.type').value,
+      host: this.configForm.get('database.host').value,
+      port: this.configForm.get('database.port').value,
+      database: this.configForm.get('database.database').value,
+      user: this.configForm.get('database.user').value,
+      password: this.configForm.get('database.password').value
+    });
+    checkResult.pipe(delay(1000)).subscribe(response => {
+      this.dbConnectionCheck = response ? 'success' : 'fail';
+    });
+  }
+
   checkEsConnection() {
     this.esConnectionCheck = 'working';
     let checkResult = this.configService.checkEsConnection({
@@ -139,6 +154,15 @@ export class ConfigGeneralComponent implements OnInit {
     }
 
     this.configForm = this.formBuilder.group({
+      database: this.formBuilder.group({
+        type: [settings.database.type],
+        host: [settings.database.host, Validators.required],
+        port: [settings.database.port],
+        database: [settings.database.database, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
+        user: [settings.database.user],
+        password: [settings.database.password],
+        defaultCatalogIdentifier: [settings.database.defaultCatalogIdentifier]
+      }),
       elasticsearch: this.formBuilder.group({
         url: [settings.elasticsearch.url, Validators.required, ConfigGeneralComponent.elasticUrlValidator],
         version: [settings.elasticsearch.version],
@@ -146,13 +170,9 @@ export class ConfigGeneralComponent implements OnInit {
         password: [settings.elasticsearch.password],
         alias: [settings.elasticsearch.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
         prefix: [{ value: settings.elasticsearch.prefix, disabled: true }],
+        index: [{ value: settings.elasticsearch.index, disabled: true }],
         numberOfShards: [{ value: settings.elasticsearch.numberOfShards, disabled: true }],
         numberOfReplicas: [{ value: settings.elasticsearch.numberOfReplicas, disabled: true }]
-      }),
-      ogcRecordsApi: this.formBuilder.group({
-        url: [settings.ogcRecordsApi?.url],
-        user: [settings.ogcRecordsApi?.user],
-        password: [settings.ogcRecordsApi?.password]
       }),
       cronOffset: [settings.cronOffset],
       proxy: [settings.proxy],
@@ -195,6 +215,7 @@ export class ConfigGeneralComponent implements OnInit {
     this.indexBackupCronTranslate(settings.indexBackup.cronPattern);
   }
 
+  dbConnectionCheck: string;
   esConnectionCheck: string;
   urlCheckTranslation: string;
   indexCheckTranslation: string;

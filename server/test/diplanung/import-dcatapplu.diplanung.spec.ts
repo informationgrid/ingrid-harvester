@@ -23,14 +23,15 @@
 
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
-import { configure, getLogger } from "log4js";
 import * as sinon from "sinon";
-import { TestUtils } from "../utils/test-utils";
-import { RdfXmlParser } from "rdfxml-streaming-parser";
-import { isomorphic } from "rdf-isomorphic";
-import { DcatappluImporter } from '../../app/importer/dcatapplu/dcatapplu.importer'
-import { DcatappluSettings } from '../../app/importer/dcatapplu/dcatapplu.settings'
+import { configure, getLogger } from "log4js";
+import { isomorphic } from 'rdf-isomorphic';
+import { DcatappluImporter } from '../../app/importer/dcatapplu/dcatapplu.importer';
+import { DcatappluSettings } from '../../app/importer/dcatapplu/dcatapplu.settings';
 import { DiPlanungDocument } from "../../app/profiles/diplanung/model/index.document";
+import { RdfXmlParser } from 'rdfxml-streaming-parser';
+import { TestUtils } from "../utils/test-utils";
+
 const fs = require('fs');
 var Readable = require('node:stream').Readable;
 

@@ -21,14 +21,12 @@
  * ==================================================
  */
 
-import {Importer} from "./importer";
-import { Harvester } from "@shared/harvester";
-import {ProfileFactory} from "../profiles/profile.factory";
-import {BaseMapper} from "./base.mapper";
+import { Harvester } from '@shared/harvester';
+import { Importer } from './importer';
 
 export * from "./importer"
 
 export abstract class ImporterFactory {
 
-    public abstract get(config: Harvester): Importer;
+    public abstract get(config: Harvester): Promise<Importer>;
 }

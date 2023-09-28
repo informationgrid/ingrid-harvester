@@ -45,8 +45,6 @@ FROM node:16.20.2-bookworm-slim AS final
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    # TODO: remove next line dev tools for production
-    curl nano telnet wget \
     dumb-init && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

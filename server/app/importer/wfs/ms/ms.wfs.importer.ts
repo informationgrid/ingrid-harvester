@@ -36,7 +36,7 @@ export class MsWfsImporter extends WfsImporter {
         super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
     }
 
-    getMapper(settings: Harvester, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils): WfsMapper {
-        return new MsWfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils);
+    getMapper(settings: Harvester, feature, harvestTime, summary, generalInfo, geojsonUtils): WfsMapper {
+        return new MsWfsMapper(settings, feature, harvestTime, summary, generalInfo, geojsonUtils);
     }
 }

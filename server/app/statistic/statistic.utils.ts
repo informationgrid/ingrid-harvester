@@ -57,6 +57,7 @@ export class StatisticUtils {
 
         let errors = new Map();
         this.collectErrorsOrWarnings(errors, logMessage.summary.appErrors);
+        this.collectErrorsOrWarnings(errors, logMessage.summary.databaseErrors);
         this.collectErrorsOrWarnings(errors, logMessage.summary.elasticErrors);
 
         let warnings = new Map();
@@ -70,6 +71,7 @@ export class StatisticUtils {
                 numWarnings: logMessage.summary.warnings.length,
                 numRecordErrors: logMessage.summary.numErrors,
                 numAppErrors: logMessage.summary.appErrors.length,
+                numDBErrors: logMessage.summary.databaseErrors.length,
                 numESErrors: logMessage.summary.elasticErrors.length,
                 duration: logMessage.duration,
                 warnings: Array.from(warnings.entries()).map(entry => ({ message: entry[0], count: entry[1] })),

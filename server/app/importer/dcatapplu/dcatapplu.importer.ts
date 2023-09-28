@@ -21,26 +21,29 @@
  * ==================================================
  */
 
-import {DcatappluMapper} from './dcatapplu.mapper';
-import {Summary} from '../../model/summary';
-import {getLogger} from 'log4js';
-
-import {Importer} from '../importer';
-import {Observer} from 'rxjs';
-import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {DcatappluSettings, defaultDCATAPPLUSettings} from './dcatapplu.settings';
-import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
-import { MiscUtils } from '../../utils/misc.utils';
-import {ProfileFactory} from "../../profiles/profile.factory";
-import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
+import { defaultDCATAPPLUSettings, DcatappluSettings } from './dcatapplu.settings';
+import { getLogger } from 'log4js';
+import { namespaces } from '../../importer/namespaces';
 import { Catalog } from '../../model/dcatApPlu.model';
+import { DcatappluMapper } from './dcatapplu.mapper';
+import { DOMParser as DomParser } from '@xmldom/xmldom';
+import { Entity } from '../../model/entity';
+import { Importer} from '../importer';
+import { ImportLogMessage, ImportResult} from '../../model/import.result';
+import { MiscUtils } from '../../utils/misc.utils';
+import { Observer } from 'rxjs';
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
+import { Summary } from '../../model/summary';
 
 let log = require('log4js').getLogger(__filename),
     logSummary = getLogger('summary'),
-    logRequest = getLogger('requests'),
-    DomParser = require('@xmldom/xmldom').DOMParser;
+    logRequest = getLogger('requests');
 
 export class DcatappluImporter extends Importer {
+
+    protected domParser: DomParser;
     private profile: ProfileFactory<DcatappluMapper>;
     private readonly settings: DcatappluSettings;
     private readonly requestDelegate: RequestDelegate;
@@ -65,6 +68,14 @@ export class DcatappluImporter extends Importer {
         }
 
         this.settings = settings;
+        this.domParser = new DomParser({
+            errorHandler: (level, msg) => {
+                // throw on error, swallow rest
+                if (level == 'error') {
+                    throw new Error(msg);
+                }
+            }
+        });
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -76,21 +87,33 @@ export class DcatappluImporter extends Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+                await this.database.beginTransaction();
                 await this.harvest();
-                await this.elastic.sendBulkData(false);
-                await this.elastic.finishIndex();
-                observer.next(ImportResult.complete(this.summary));
-                observer.complete();
+                if (this.numIndexDocs > 0 || this.summary.isIncremental) {
+                    if (this.summary.databaseErrors.length == 0) {
+                        await this.database.commitTransaction();
+                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.catalogUrl);
+                    }
+                    else {
+                        await this.database.rollbackTransaction();
+                    }
+                    observer.next(ImportResult.complete(this.summary));
+                    observer.complete();
+                }
+                else {
+                    if(this.summary.appErrors.length === 0) {
+                        this.summary.appErrors.push('No Results');
+                    }
+                    log.error('No results during DCATAPPLU import');
+                    observer.next(ImportResult.complete(this.summary, 'No Results'));
+                    observer.complete();
+                }
 
             } catch (err) {
                 this.summary.appErrors.push(err.message ? err.message : err);
                 log.error('Error during DCATAPPLU import', err);
                 observer.next(ImportResult.complete(this.summary, 'Error happened'));
                 observer.complete();
-
-                // clean up index
-                this.elastic.deleteIndex(this.elastic.indexName);
             }
         }
     }
@@ -103,15 +126,15 @@ export class DcatappluImporter extends Importer {
             let response = await this.requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
 
-            let responseDom = new DomParser().parseFromString(response);
+            let responseDom = this.domParser.parseFromString(response);
 
             let isLastPage = false;
 
-            let pagedCollection = responseDom.getElementsByTagNameNS(DcatappluMapper.HYDRA, 'PagedCollection')[0];
+            let pagedCollection = responseDom.getElementsByTagNameNS(namespaces.HYDRA, 'PagedCollection')[0];
             if (pagedCollection) {
                 retries = 0;
 
-                let numReturned = responseDom.getElementsByTagNameNS(DcatappluMapper.DCAT, 'Dataset').length;
+                let numReturned = responseDom.getElementsByTagNameNS(namespaces.DCAT, 'Dataset').length;
                 let itemsPerPage = DcatappluMapper.select('./hydra:itemsPerPage', pagedCollection, true).textContent;
                 this.totalRecords = DcatappluMapper.select('./hydra:totalItems', pagedCollection, true).textContent;
 
@@ -136,8 +159,9 @@ export class DcatappluImporter extends Importer {
 
                 log.debug(`Received ${numReturned} records from ${this.settings.catalogUrl} - Page: ${thisPage}`);
                 await this.extractRecords(response, harvestTime)
-            } else {
-                let numReturned = responseDom.getElementsByTagNameNS(DcatappluMapper.DCAT, 'Dataset').length;
+            }
+            else {
+                let numReturned = responseDom.getElementsByTagNameNS(namespaces.DCAT, 'Dataset').length;
                 if(numReturned > 0){
                     await this.extractRecords(response, harvestTime);
                     isLastPage = true;
@@ -159,8 +183,8 @@ export class DcatappluImporter extends Importer {
 
     async extractRecords(getRecordsResponse, harvestTime) {
         let promises = [];
-        let xml = new DomParser().parseFromString(getRecordsResponse, 'application/xml');
-        let rootNode = xml.getElementsByTagNameNS(DcatappluMapper.RDF, 'RDF')[0];
+        let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
+        let rootNode = xml.getElementsByTagNameNS(namespaces.RDF, 'RDF')[0];
         // let records =  DcatappluMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
         let records =  DcatappluMapper.select('./dcat:Dataset', rootNode);
 
@@ -200,16 +224,6 @@ export class DcatappluImporter extends Importer {
                 uuid = DcatappluMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
             }
             ids.push(uuid);
-
-        }
-
-        let now = new Date(Date.now());
-        let storedData;
-
-        if (this.settings.dryRun) {
-            storedData = ids.map(() => now);
-        } else {
-            storedData = await this.elastic.getStoredData(ids);
         }
 
         for (let i = 0; i < records.length; i++) {
@@ -234,7 +248,7 @@ export class DcatappluImporter extends Importer {
             let rdfAboutAttribute = DcatappluMapper.select('./@rdf:about', records[i], true)?.textContent;
             let catalogId = datasetAboutsToCatalogAbouts[rdfAboutAttribute];
             let catalog = catalogAboutsToCatalogs[catalogId];
-            let mapper = this.getMapper(this.settings, records[i], catalog, rootNode, harvestTime, storedData[i], this.summary);
+            let mapper = this.getMapper(this.settings, records[i], catalog, rootNode, harvestTime, this.summary);
 
             let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -242,19 +256,16 @@ export class DcatappluImporter extends Importer {
                 mapper.skipped = true;
             });
 
-            if (!mapper.shouldBeSkipped()) {
-                if (!this.settings.dryRun) {
-                    promises.push(
-                        this.elastic.addDocToBulk(doc, uuid)
-                            .then(response => {
-                                if (!response.queued) {
-                                    // numIndexDocs += ElasticsearchUtils.maxBulkSize;
-                                    // this.observer.next(ImportResult.running(numIndexDocs, records.length));
-                                }
-                            })
-                    );
-                }
-
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+                let entity: Entity = {
+                    identifier: uuid,
+                    source: this.settings.catalogUrl,
+                    collection_id: this.database.defaultCatalog.id,
+                    operates_on: mapper.getOperatesOn(),
+                    dataset: doc,
+                    original_document: mapper.getHarvestedData()
+                };
+                promises.push(this.database.addEntityToBulk(entity));
             } else {
                 this.summary.skippedDocs.push(uuid);
             }
@@ -264,8 +275,8 @@ export class DcatappluImporter extends Importer {
             .catch(err => log.error('Error indexing DCAT record', err));
     }
 
-    getMapper(settings, record, catalog, catalogPage, harvestTime, storedData, summary): DcatappluMapper {
-        return new DcatappluMapper(settings, record, catalog, catalogPage, harvestTime, storedData, summary);
+    getMapper(settings, record, catalog, catalogPage, harvestTime, summary): DcatappluMapper {
+        return new DcatappluMapper(settings, record, catalog, catalogPage, harvestTime, summary);
     }
 
     static createRequestConfig(settings: DcatappluSettings): RequestOptions {

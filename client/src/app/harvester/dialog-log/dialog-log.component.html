@@ -32,6 +32,14 @@
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
+      <span [matBadge]="databaseErrors.length" [matBadgeColor]="databaseErrors.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Datenbank-Fehler</span>
+    </ng-template>
+    <cdk-virtual-scroll-viewport class="logContainer" itemSize="20" minBufferPx="500" maxBufferPx="500">
+      <div *cdkVirtualFor="let error of databaseErrors">{{error}}</div>
+    </cdk-virtual-scroll-viewport>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
       <span [matBadge]="elasticsearchErrors.length" [matBadgeColor]="elasticsearchErrors.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Elasticsearch-Fehler</span>
     </ng-template>
     <cdk-virtual-scroll-viewport class="logContainer" itemSize="20" minBufferPx="500" maxBufferPx="500">

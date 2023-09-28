@@ -27,7 +27,6 @@ import { merge as lodashMerge, trim } from 'lodash';
 import { Catalog } from '../model/dcatApPlu.model';
 import { ConfigService } from '../services/config/ConfigService';
 import { Distribution } from '../model/distribution';
-import { RequestDelegate, RequestOptions } from './http-request.utils';
 
 const dayjs = require('dayjs');
 const log = require('log4js').getLogger(__filename);
@@ -127,48 +126,6 @@ export class MiscUtils {
             hash |= 0; // Convert to 32bit integer
         }
         return hash;
-    }
-
-    /**
-     * Get catalog information from OGC-Records-API
-     * 
-     * @param catalogId identifier of the requested catalog
-     * @return the `Catalog` represented by the given catalogId
-     */
-    static async fetchCatalogFromOgcRecordsApi(catalogId: string): Promise<Catalog> {
-        let generalSettings = ConfigService.getGeneralSettings();
-        let config: RequestOptions = {
-            method: 'GET',
-            json: true,
-            headers: {
-                'User-Agent': 'InGrid Harvester. node-fetch',
-                'Content-Type': 'application/json'
-            },
-            qs: {
-                f: "json",
-                v: "1"
-            },
-            resolveWithFullResponse: true,
-            uri: generalSettings.ogcRecordsApi?.url + '/collections/' + catalogId
-        };
-        if (generalSettings.ogcRecordsApi?.user && generalSettings.ogcRecordsApi?.password) {
-            let authString = generalSettings.ogcRecordsApi.user + ':' + generalSettings.ogcRecordsApi.password;
-            config.headers['Authorization'] = 'Basic ' + Buffer.from(authString, 'utf8').toString('base64');
-        }
-        let requestDelegate = new RequestDelegate(config);
-        let catalog = { identifier: catalogId, description: '', publisher: { name: '', organization: '' }, title: '' };
-        try {
-            let response = await requestDelegate.doRequest();
-            if (response.status != 200) {
-                throw Error(`status code: ${response.status} ${response.statusText}`);
-            }
-            catalog = await response.json();
-            log.info('Successfully fetched catalog info from OGC Records API');
-        }
-        catch (e) {
-            log.error(`Error fetching catalog "${catalogId}" from OGC Records API at [${config.uri}]: ${e}`);
-        }
-        return catalog;
     }
 
     /**

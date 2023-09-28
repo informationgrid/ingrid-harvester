@@ -63,7 +63,6 @@ export class CswMapper extends BaseMapper {
 
     protected readonly record: any;
     private harvestTime: any;
-    private readonly storedData: any;
 
     protected readonly idInfo; // : SelectedValue;
     protected settings: CswSettings;
@@ -77,12 +76,11 @@ export class CswMapper extends BaseMapper {
         themes: null
     };
 
-    constructor(settings, record, harvestTime, storedData, summary, generalInfo) {
+    constructor(settings, record, harvestTime, summary, generalInfo) {
         super();
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.storedData = storedData;
         this.summary = summary;
         this.fetched = MiscUtils.merge(this.fetched, generalInfo);
 
@@ -474,23 +472,11 @@ export class CswMapper extends BaseMapper {
         return keywords;
     }
 
-    _getMetadataIssued(): Date {
-        return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : new Date(Date.now());
-    }
-
-    _getMetadataModified(): Date {
-        if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
-            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
-            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
-                return new Date(this.storedData.modified);
-        }
-        return new Date(Date.now());
-    }
-
     _getMetadataSource(): any {
         let gmdEncoded = encodeURIComponent(namespaces.GMD);
         let cswLink = `${this.settings.getRecordsUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
         return {
+            source_base: this.settings.getRecordsUrl,
             raw_data_source: cswLink,
             portal_link: this.settings.defaultAttributionLink,
             attribution: this.settings.defaultAttribution
@@ -1089,28 +1075,29 @@ export class CswMapper extends BaseMapper {
 
     _getOperatesOn(): string[] {
         let serviceIdentification = CswMapper.select('./gmd:identificationInfo/srv:SV_ServiceIdentification', this.record, true);
-        let operatesOnIds = [];
+        let operatesOnIds = new Set<string>();
         if (serviceIdentification) {
             // retrieve via coupled resources
             let coupled = CswMapper.select('./srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', serviceIdentification);
-            // throw away non-UUIDs, i.e. throw away reference-IDs
-            operatesOnIds.push(...coupled.map(elem => elem.textContent).filter(id => !id.startsWith('http')));
+            for (let uuid of coupled.map((elem: Element) => extractUuidFromUrl(elem.textContent)).filter((id: string) => MiscUtils.isUuid(id))) {
+                operatesOnIds.add(uuid);
+            }
             // retrieve via operatesOn
             let operatesOn = CswMapper.select('./srv:operatesOn', serviceIdentification);
             for (let o of operatesOn) {
-                let uuidref = o.getAttribute('uuidref');
+                let uuidref = extractUuidFromUrl(o.getAttribute('uuidref'));
                 if (MiscUtils.isUuid(uuidref)) {
-                    operatesOnIds.push(uuidref);
+                    operatesOnIds.add(uuidref);
                 }
                 let href = o.getAttribute('xlink:href');
                 let uuid = href?.split('/').slice(-1)?.[0];
                 if (MiscUtils.isUuid(uuid)) {
-                    operatesOnIds.push(uuid);
+                    operatesOnIds.add(uuid);
                 }
                 try {
                     uuid = new URL(href).searchParams.get('id');
                     if (MiscUtils.isUuid(uuid)) {
-                        operatesOnIds.push(uuid);
+                        operatesOnIds.add(uuid);
                     }
                 }
                 catch (e) {
@@ -1118,7 +1105,9 @@ export class CswMapper extends BaseMapper {
                 }
             }
         }
-        return operatesOnIds.length > 0 ? [...new Set(operatesOnIds)] : undefined;
+        operatesOnIds.delete(this.getUuid());
+        
+        return operatesOnIds.size > 0 ? [...operatesOnIds] : undefined;
     }
 
     protected getUuid(): string {
@@ -1134,6 +1123,16 @@ export class CswMapper extends BaseMapper {
             throwError('An error occurred in custom code: ' + error.message);
         }
     }
+}
+
+/**
+ * Split a string by "/" or "=" and return the last part.
+ * 
+ * @param url 
+ * @returns 
+ */
+function extractUuidFromUrl(url: string) {
+    return url?.split(/\/|=/).slice(-1)?.[0]
 }
 
 // Private interface. Do not export

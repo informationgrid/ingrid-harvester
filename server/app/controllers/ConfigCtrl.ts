@@ -23,7 +23,8 @@
 
 import { Authenticated, BodyParams, Controller, Delete, Get, Post, QueryParams } from '@tsed/common';
 import { ConfigService } from '../services/config/ConfigService';
-import { ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
+import { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
+import { DatabaseFactory } from '../persistence/database.factory';
 import { ElasticsearchFactory } from '../persistence/elastic.factory';
 import { ElasticsearchUtils } from '../persistence/elastic.utils';
 import { MappingDistribution, MappingItem } from '@shared/mapping.model';
@@ -38,6 +39,16 @@ export class ConfigCtrl {
 
     constructor(
         private scheduleService: ScheduleService) {
+    }
+
+    @Post('/dbcheck')
+    async checkDbConnection(@BodyParams() body: DatabaseConfiguration): Promise<boolean> {
+        try {
+            return await DatabaseFactory.ping(body);
+        } catch (error) {
+            log.warn(error);
+            return false;
+        }
     }
 
     @Post('/escheck')

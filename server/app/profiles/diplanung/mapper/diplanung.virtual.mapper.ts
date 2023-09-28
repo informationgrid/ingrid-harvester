@@ -178,13 +178,7 @@ export class DiplanungVirtualMapper extends BaseMapper {
     _getDistributions(): Promise<Distribution[]> {
         throw new Error('Method not implemented.');
     }
-    _getMetadataModified(): Date {
-        throw new Error('Method not implemented.');
-    }
     _getMetadataSource() {
-        throw new Error('Method not implemented.');
-    }
-    _getMetadataIssued(): Date {
         throw new Error('Method not implemented.');
     }
     _isRealtime(): boolean {

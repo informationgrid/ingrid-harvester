@@ -34,7 +34,7 @@ export class FisWfsImporter extends WfsImporter {
         super(MiscUtils.merge(settings, { memberElement: 'gml:featureMember'}));
     }
 
-    getMapper(settings: Harvester, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils): WfsMapper {
-        return new FisWfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils);
+    getMapper(settings: Harvester, feature, harvestTime, summary, generalInfo, geojsonUtils): WfsMapper {
+        return new FisWfsMapper(settings, feature, harvestTime, summary, generalInfo, geojsonUtils);
     }
 }

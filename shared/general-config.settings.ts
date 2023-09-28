@@ -23,7 +23,7 @@
 
 export type GeneralSettings = {
     elasticsearch: ElasticsearchConfiguration,
-    ogcRecordsApi?: OgcRecordsApiConfiguration,
+    database: DatabaseConfiguration,
     cronOffset?: number,
     proxy: string,
     portalUrl?: string,
@@ -51,16 +51,21 @@ export interface ElasticsearchConfiguration {
     version: string,
     user?: string,
     password?: string
+    index: string,
     alias: string,
     prefix?: string,
     numberOfShards?: number,
     numberOfReplicas?: number
 }
 
-export interface OgcRecordsApiConfiguration {
-    url: string,
-    user?: string,
-    password?: string, 
+export interface DatabaseConfiguration {
+    type: 'postgresql',
+    host: string,
+    port: number,
+    database: string,
+    user: string,
+    password: string,
+    defaultCatalogIdentifier: string
 }
 
 export interface MailServerConfiguration {

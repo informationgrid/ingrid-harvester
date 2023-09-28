@@ -258,7 +258,7 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.numErrors > 0 || detail.summary.elasticErrors.length > 0 || detail.summary.appErrors.length > 0;
+      return detail.summary.numErrors > 0 || detail.summary.databaseErrors.length > 0 || detail.summary.elasticErrors.length > 0 || detail.summary.appErrors.length > 0;
     } else {
       return false;
     }
@@ -268,7 +268,7 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.warnings.length > 0 && detail.summary.numErrors === 0 && detail.summary.elasticErrors.length === 0;
+      return detail.summary.warnings.length > 0 && detail.summary.numErrors === 0 && detail.summary.databaseErrors.length === 0 && detail.summary.elasticErrors.length === 0;
     }
   }
 
@@ -277,6 +277,7 @@ export class HarvesterComponent implements OnInit, OnDestroy {
 
     if (detail && detail.summary) {
       return detail.summary.numErrors > 0
+        || detail.summary.databaseErrors.length > 0
         || detail.summary.elasticErrors.length > 0
         || detail.summary.warnings.length > 0
         || detail.summary.appErrors.length > 0;

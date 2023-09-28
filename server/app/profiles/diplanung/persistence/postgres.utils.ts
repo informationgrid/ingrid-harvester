@@ -21,43 +21,51 @@
  * ==================================================
  */
 
+import { createEsId } from '../diplanung.utils';
 import { Bucket } from '../../../persistence/postgres.utils';
-import { CswImporter } from '../../../importer/csw/csw.importer';
+import { DcatApPluDocumentFactory } from '../model/dcatapplu.document.factory';
 import { EsOperation } from '../../../persistence/elastic.utils';
 import { MiscUtils } from '../../../utils/misc.utils';
-import { RequestDelegate } from '../../../utils/http-request.utils';
+import { DiplanungIndexDocument } from '../model/index.document';
 
 const log = require('log4js').getLogger(__filename);
 
-export class McloudCswImporter extends CswImporter {
+const overwriteFields = [
+    'catalog',
+    // spatial fields
+    'bounding_box', 'centroid', 'spatial',
+    // PLU fields
+    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_start_date', 'procedure_state', 'procedure_type'
+];
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
-        super(settings, requestDelegate)
-    }
+export class PostgresUtils {
 
-    protected async processBucket(bucket: Bucket): Promise<EsOperation[]> {
+    public async processBucket(bucket: Bucket): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
         // find primary document
         let { primary_id, document, duplicates } = this.prioritize(bucket);
         // data-service-coupling
         for (let [id, service] of bucket.operatingServices) {
             document = this.resolveCoupling(document, service);
-            box.push({ operation: 'delete', _id: id });
+            document.extras.merged_from.push(createEsId(service));
+            box.push({ operation: 'delete', _id: createEsId(service) });
         }
         // deduplication
         for (let [id, duplicate] of duplicates) {
             document = this.deduplicate(document, duplicate);
-            box.push({ operation: 'delete', _id: id });
+            document.extras.merged_from.push(createEsId(duplicate));
+            box.push({ operation: 'delete', _id: createEsId(duplicate) });
         }
         document = this.updateDataset(document);
-        box.push({ operation: 'index', _id: primary_id, document });
+        document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
+        box.push({ operation: 'index', _id: createEsId(document), document });
         return box;
     }
 
     private prioritize(bucket: Bucket): { 
         primary_id: string | number, 
-        document: any, 
-        duplicates: Map<string | number, any>
+        document: DiplanungIndexDocument, 
+        duplicates: Map<string | number, DiplanungIndexDocument>
     } {
         let candidates = [];
         let reserveCandidate: string | number;
@@ -90,7 +98,7 @@ export class McloudCswImporter extends CswImporter {
      * @param service the service whose distributions should be moved to the dataset
      * @returns the augmented dataset
      */
-    private resolveCoupling(document: any, service: any): any {
+    private resolveCoupling(document: DiplanungIndexDocument, service: DiplanungIndexDocument): DiplanungIndexDocument {
         let distributions = {};
         for (let dist of document.distributions) {
             distributions[MiscUtils.createDistHash(dist)] = dist;
@@ -109,11 +117,20 @@ export class McloudCswImporter extends CswImporter {
      * @param duplicate 
      * @returns the augmented dataset
      */
-    private deduplicate(document: any, duplicate: any): any {
-        return document;
+    private deduplicate(document: DiplanungIndexDocument, duplicate: DiplanungIndexDocument): DiplanungIndexDocument {
+        // log.warn(`Merging ${duplicate.identifier} (${duplicate.extras.metadata.source.source_base}) into ${document.identifier} (${document.extras.metadata.source.source_base})`);
+        let updatedFields = {};
+        for (const field of overwriteFields) {
+            updatedFields[field] = duplicate[field];
+        }
+        // use publisher from WFS if not specified in CSW
+        if (!document.publisher?.['name'] && !document.publisher?.['organization']) {
+            updatedFields['publisher'] = duplicate.publisher;
+        }
+        return { ...document, ...updatedFields };
     }
 
-    private updateDataset(document: any): any {
+    private updateDataset(document: DiplanungIndexDocument): any {
         log.debug(`Updating dataset ${document.identifier} (${document.extras.metadata.source.source_base})`);
         return document;
     }
