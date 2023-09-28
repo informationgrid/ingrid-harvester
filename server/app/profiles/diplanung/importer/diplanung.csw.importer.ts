@@ -21,12 +21,12 @@
  * ==================================================
  */
 
+import { generateXplanWmsDistributions } from '../diplanung.utils';
 import { CswImporter } from '../../../importer/csw/csw.importer';
-import { DcatApPluDocument } from '../model/dcatApPlu.document';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
-import { DiplanungUtils } from '../diplanung.utils';
-import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
+import { DiplanungIndexDocument } from '../model/index.document';
 import { Distribution } from '../../../model/distribution';
+import { Entity } from '../../../model/entity';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { MiscUtils } from '../../../utils/misc.utils';
@@ -44,131 +44,16 @@ export class DiplanungCswImporter extends CswImporter {
 
     private tempUrlCache = new Map<string, string[]>();
 
-    getMapper(settings, record, harvestTime, storedData, summary, generalInfo): DiplanungCswMapper {
-        return new DiplanungCswMapper(settings, record, harvestTime, storedData, summary, generalInfo);
+    getMapper(settings, record, harvestTime, summary, generalInfo): DiplanungCswMapper {
+        return new DiplanungCswMapper(settings, record, harvestTime, summary, generalInfo);
     }
 
-    /**
-     * IDEA: After harvesting datasets and services (not even necessarily in that order)
-     *
-     * 1) save operatesOn for all services
-     * 2) save own ID in operatesOn for datasets
-     * 3) aggregate over operatesOn (datasets + services)
-     * 4) merge distributions on dataset (which has _id == operatesOn)
-     *
-     * Current implementation:
-     * 1) save operatesOn for all services
-     * 2) (skip)
-     * 3) aggregate over operatesOn (services)
-     * 4) get dataset which has _id == operatesOn separately
-     * 5) merge on it
-     *
-     * We skip 2 because we have to retrieve the dataset in 4 separately.
-     * We have to retrieve the dataset separately because we cannot retrieve the full documents in the aggregation
-     * (due to memory limitations).
-     * We need to retrieve the whole dataset document because after the merge, we have to recreate the DCAT-AP-PLU
-     * xml fragment.
-     *
-     * A way around the last step - to be more close to the original idea, saving a roundtrip - would be to just
-     * retrieve the dcat-ap-plu document of the dataset and replacing all distributions with the newly merged set.
-     * TODO This is left as an exercise to the reader :)
-     */
-    protected async postHarvestingHandling() {
-        await this.createDataServiceCoupling();
-    }
-
-    private async createDataServiceCoupling() {
-        try {
-            let response = await this.elastic.search(
-                this.elastic.indexName,
-                this.profile.getElasticQueries().findSameOperatesOn(),
-                50
-            );
-
-            log.debug(`Count of buckets for data-service-coupling aggregates query: ${response.aggregations.operatesOn.buckets.length}`);
-            for (let bucket of response.aggregations.operatesOn.buckets) {
-                try {
-                    let hits = bucket.operatesOn.hits.hits;
-                    let uuid = bucket.key;
-                    let dataset = await this.elastic.get(this.elastic.indexName, uuid);
-
-                    // if we don't have the dataset on which services operatesOn, skip
-                    if (!dataset) {
-                        continue;
-                    }
-
-                    // merge all distributions from the operating services into the dataset
-                    let distributions = {};
-                    let datasetHasWMS = false;
-                    for (let dist of dataset._source.distributions) {
-                        distributions[MiscUtils.createDistHash(dist)] = dist;
-                        if (dist.format.includes('WMS')) {
-                            datasetHasWMS = true;
-                        }
-                    }
-                    let serviceIds = [];
-                    for (let hit of hits) {
-                        for (let dist of hit._source.distributions) {
-                            if (dist.format.includes('WMS')) {
-                                if (datasetHasWMS) {
-                                    continue;
-                                }
-                                else {
-                                    // only use the first WMS distribution we get from services
-                                    // TODO this is arbitrary, should there be an order? should there be multiple?
-                                    datasetHasWMS = true;
-                                }
-                            }
-                            distributions[MiscUtils.createDistHash(dist)] = dist;
-                        }
-                        serviceIds.push(hit._id);
-                    }
-                    distributions = Object.values(distributions);
-
-                    // create new dcat-ap-plu xml document from merged index document
-                    let mergedDoc = {
-                        ...dataset._source,
-                        distributions
-                    };
-                    let dcatappluDocument = await DcatApPluDocument.create(new DiplanungVirtualMapper(mergedDoc));
-                    let updateDoc = {
-                        _id: uuid,
-                        distributions,
-                        extras: { ...dataset._source.extras, transformed_data: { dcat_ap_plu: dcatappluDocument } }
-                    };
-
-                    let servicesMsg = `Services which operate on dataset -> ${serviceIds}`;
-                    let datasetMsg = `Concerned dataset -> ${uuid}'`;
-                    log.trace(`Distributions from services are merged into dataset in index ${this.elastic.indexName}.\n        ${servicesMsg}\n        ${datasetMsg}`);
-                    await this.elastic.addDocsToBulkUpdate([updateDoc]);
-                }
-                catch (err) {
-                    log.warn(`Error creating data-service coupling for dataset ${bucket.key}`, err);
-                }
-            }
-            // log.info(`${count} duplicates found using the aggregates query will be deleted`);
-        } catch (err) {
-            log.error('Error executing the aggregate query for data-service coupling', err);
-        }
-
-        // push remaining updates
-        await this.elastic.sendBulkUpdate(false);
-
-        try {
-            await this.elastic.flush();
-        } catch (e) {
-            log.error('Error occurred during flush', e);
-        }
-    }
-
-    protected async updateRecords(documents: any[]) {
-        log.debug('Updating #records:', documents.length);
+    protected async updateRecords(documents: DiplanungIndexDocument[]) {
+        log.warn('Updating #records:', documents.length);
         let promises: Promise<any>[] = [];
         for (let doc of documents) {
             promises.push(new Promise(async (resolve, reject) => {
-                let updateDoc = {
-                    _id: doc.identifier
-                };
+                let updateDoc = {};
                 let docIsUpdated = false;
 
                 // update WMS distributions with layer names
@@ -208,7 +93,18 @@ export class DiplanungCswImporter extends CswImporter {
                 }
 
                 if (docIsUpdated) {
-                    resolve(updateDoc);
+                    // TODO find an efficient postgres way to only send the update instead of the full document
+                    // keywords: jsonb_set, json_agg, SQL/JSON Path Language, postgres14+
+                    let mergedDocument: DiplanungIndexDocument = MiscUtils.merge(doc, updateDoc);
+                    mergedDocument.extras.metadata.modified = new Date(Date.now());
+                    let entity: Entity = {
+                        identifier: doc.identifier,
+                        source: doc.extras.metadata.source.source_base,
+                        collection_id: doc.catalog.id,
+                        dataset: mergedDocument,
+                        original_document: undefined
+                    };
+                    resolve(entity);
                 }
                 else {
                     reject(`Not updating document ${doc.identifier}`);
@@ -216,8 +112,11 @@ export class DiplanungCswImporter extends CswImporter {
             }));
         }
         let results = (await Promise.allSettled(promises)).filter(result => result.status === 'fulfilled');
-        let updateDocs = (results as PromiseFulfilledResult<any>[]).map(result => result.value);
-        await this.elastic.addDocsToBulkUpdate(updateDocs);
+        let entities = (results as PromiseFulfilledResult<any>[]).map(result => result.value);
+        // await this.elastic.addDocsToBulkUpdate(updateDocs);
+        for (let entity of entities) {
+            await this.database.addEntityToBulk(entity);
+        }
     }
 
     /**
@@ -299,7 +198,7 @@ export class DiplanungCswImporter extends CswImporter {
 
                     let msg = `Response for ${accessURL} is not valid XML`;
                     log.debug(msg);
-                    this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response.replaceAll('\n', ' '), 1024)]);
+                    this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response?.replaceAll('\n', ' '), 1024)]);
                 }
             }
             updatedDistributions.push(distribution);
@@ -323,7 +222,7 @@ export class DiplanungCswImporter extends CswImporter {
             // generate WMS Url with PlanName form 
             let stateAbbrev = url.pathname.substring(1, 3).toLowerCase();
             let planName = url.searchParams.get('planName');
-            return DiplanungUtils.generateXplanWmsDistribution(stateAbbrev, planName, planType);
+            return generateXplanWmsDistributions(stateAbbrev, planName, planType);
         } 
         return null;
     }

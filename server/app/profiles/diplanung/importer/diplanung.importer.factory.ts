@@ -32,20 +32,39 @@ import { MsWfsImporter } from '../../../importer/wfs/ms/ms.wfs.importer';
 import { XplanSynWfsImporter } from '../../../importer/wfs/xplan/syn/xplan.syn.wfs.importer';
 import { XplanWfsImporter } from '../../../importer/wfs/xplan/xplan.wfs.importer';
 
-export class DiplanungImporterFactory extends ImporterFactory{
+export class DiplanungImporterFactory extends ImporterFactory {
 
-    public get(config: Harvester): Importer {
+    public async get(config: Harvester): Promise<Importer> {
+        let importer: Importer;
         switch (config.type) {
-            case 'CSW': return new DiplanungCswImporter(config);
-            case 'DCATAPPLU': return new DcatappluImporter(config);
-            case 'EXCEL_SPARSE': return new ExcelSparseImporter(config);
-            case 'WFS.FIS': return new FisWfsImporter(config);
-            case 'WFS.MS': return new MsWfsImporter(config);
-            case 'WFS.XPLAN': return new XplanWfsImporter(config);
-            case 'WFS.XPLAN.SYN': return new XplanSynWfsImporter(config);
+            case 'CSW': 
+                importer = new DiplanungCswImporter(config);
+                break;
+            case 'DCATAPPLU': 
+                importer = new DcatappluImporter(config);
+                break;
+            case 'EXCEL_SPARSE': 
+                importer = new ExcelSparseImporter(config);
+                break;
+            case 'WFS.FIS': 
+                importer = new FisWfsImporter(config);
+                break;
+            case 'WFS.MS': 
+                importer = new MsWfsImporter(config);
+                break;
+            case 'WFS.XPLAN': 
+                importer = new XplanWfsImporter(config);
+                break;
+            case 'WFS.XPLAN.SYN': 
+                importer = new XplanSynWfsImporter(config);
+                break;
             default: {
                 console.error('Importer not found: ' + config.type);
             }
         }
+        if (importer) {
+            await importer.database.init();
+        }
+        return importer;
     }
 }

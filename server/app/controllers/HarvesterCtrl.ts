@@ -58,24 +58,24 @@ export class HarvesterCtrl {
         let mode: 'full' | 'incr' = config.isIncremental ? 'incr' : 'full';
         if (config.disable) {
             this.scheduleService.stopJob(updatedID, mode);
-            this.indexService.removeFromAlias(updatedID)
-                .catch(e => log.error('Error removing alias', e));
+            // this.indexService.removeFromAlias(updatedID)
+            //     .catch(e => log.error('Error removing alias', e));
         } else {
             if (config.cron?.[mode]?.active) {
                 this.scheduleService.startJob(updatedID, mode);
             }
 
-            this.indexService.addToAlias(updatedID)
-                .catch(e => log.error('Error adding alias', e));
+            // this.indexService.addToAlias(updatedID)
+            //     .catch(e => log.error('Error adding alias', e));
         }
     }
 
     @Delete('/:id')
     deleteHarvesterConfig(@PathParams('id') id: number) {
 
-        // remove from search index/alias
-        this.indexService.removeFromAlias(+id);
-        this.indexService.deleteIndexFromHarvester(+id);
+        // // remove from search index/alias
+        // this.indexService.removeFromAlias(+id);
+        // this.indexService.deleteIndexFromHarvester(+id);
 
         // remove jobs from scheduler
         this.scheduleService.stopJob(+id, 'full');

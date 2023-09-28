@@ -56,7 +56,6 @@ export class OaiMapper extends BaseMapper {
 
     private readonly record: any;
     private harvestTime: any;
-    private readonly storedData: any;
 
     protected readonly idInfo; // : SelectedValue;
     private settings: OaiSettings;
@@ -71,12 +70,11 @@ export class OaiMapper extends BaseMapper {
     };
 
 
-    constructor(settings, record, harvestTime, storedData, summary) {
+    constructor(settings, record, harvestTime, summary) {
         super();
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.storedData = storedData;
         this.summary = summary;
 
         this.uuid = OaiMapper.getCharacterStringContent(record, 'fileIdentifier');
@@ -433,22 +431,10 @@ export class OaiMapper extends BaseMapper {
         return keywords;
     }
 
-    _getMetadataIssued(): Date {
-        return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : new Date(Date.now());
-    }
-
-    _getMetadataModified(): Date {
-        if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
-            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
-            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
-                return new Date(this.storedData.modified);
-        }
-        return new Date(Date.now());
-    }
-
     _getMetadataSource(): any {
         let oaiLink = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=iso19139&identifier=${this.uuid}`;
         return {
+            source_base: this.settings.providerUrl,
             raw_data_source: oaiLink,
             portal_link: this.settings.defaultAttributionLink,
             attribution: this.settings.defaultAttribution

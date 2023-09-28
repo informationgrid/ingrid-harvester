@@ -45,7 +45,6 @@ export class SparqlMapper extends BaseMapper {
     private readonly catalogPage: any;
     private readonly linkedDistributions: any;
     private harvestTime: any;
-    private readonly storedData: any;
 
 //    protected readonly idInfo; // : SelectedValue;
     private settings: SparqlSettings;
@@ -60,12 +59,11 @@ export class SparqlMapper extends BaseMapper {
     };
 
 
-    constructor(settings, record, harvestTime, storedData, summary) {
+    constructor(settings, record, harvestTime, summary) {
         super();
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.storedData = storedData;
         this.summary = summary;
 
         this.uuid = record.id.value;
@@ -180,23 +178,11 @@ export class SparqlMapper extends BaseMapper {
         return keywords;
     }
 
-    _getMetadataIssued(): Date {
-        return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : undefined;
-    }
-
-    _getMetadataModified(): Date {
-        if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
-            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
-            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
-                return new Date(this.storedData.modified);
-        }
-        return new Date(Date.now());
-    }
-
     _getMetadataSource(): any {
         let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.source_link.value;
         return {
+            source_base: this.settings.endpointUrl,
             raw_data_source: dcatLink,
             portal_link: portalLink,
             attribution: this.settings.defaultAttribution

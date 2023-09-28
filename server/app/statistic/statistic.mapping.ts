@@ -44,6 +44,9 @@ export const elasticsearchMapping = {
         'numAppErrors': {
             'type': 'long'
         },
+        'numDBErrors': {
+            'type': 'long'
+        },
         'numESErrors': {
             'type': 'long'
         },

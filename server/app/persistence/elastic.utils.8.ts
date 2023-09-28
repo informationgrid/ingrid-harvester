@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { BulkResponse, ElasticsearchUtils } from './elastic.utils';
+import { BulkResponse, ElasticsearchUtils, EsOperation } from './elastic.utils';
 import { Client } from 'elasticsearch8';
 import { Index } from '@shared/index.model';
 import { IndexConfiguration, IndexSettings } from './elastic.setting';
@@ -38,7 +38,6 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
         super(config);
         this.summary = summary;
 
-        // the elasticsearch client for accessing the cluster
         this.client = new Client({
             node: config.url,
             auth: {
@@ -47,12 +46,10 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
             },
             requestTimeout: 30000
         });
-        this._bulkData = [];
-        this._bulkUpdateData = [];
+        this._bulkOperationChunks = [];
         this.indexName = config.prefix + config.index;
 
         let profile = ProfileFactoryLoader.get();
-        this.deduplicationUtils = profile.getDeduplicationUtils(this, this.summary);
         this.elasticQueries = profile.getElasticQueries();
     }
 
@@ -77,9 +74,9 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
     }
 
     async prepareIndex(mappings, settings: IndexSettings, openIfPresent=false) {
-        if (this.config.includeTimestamp) {
-            this.indexName += '_' + this.getTimeStamp(new Date());
-        }
+        // if (this.config.includeTimestamp) {
+        //     this.indexName += '_' + this.getTimeStamp(new Date());
+        // }
         return await this.prepareIndexWithName(this.indexName, mappings, settings, openIfPresent);
     }
 
@@ -133,14 +130,13 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
         }
 
         try {
-            await this.client.cluster.health({wait_for_status: 'yellow'});
-            await this.sendBulkData(false);
+            await this.client.cluster.health({ wait_for_status: 'yellow' });
+            await this.sendBulkOperations(false);
             if (closeIndex) {
-                await this.deleteOldIndices(this.config.index, this.indexName);
-                if (this.config.addAlias) {
-                    await this.addAlias(this.indexName, this.config.alias);
-                }
-                await this.deduplicationUtils.deduplicate();
+                // await this.deleteOldIndices(this.config.index, this.indexName);
+                // if (this.config.addAlias) {
+                //     await this.addAlias(this.indexName, this.config.alias);
+                // }
                 await this.client.close();
             }
             log.info('Successfully added data into index: ' + this.indexName);
@@ -205,12 +201,12 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
             });
     }
 
-    async bulk(data, closeAfterBulk): Promise<BulkResponse> {
+    async bulk(bulkOperations: any[], closeAfterBulk: boolean): Promise<BulkResponse> {
         try {
             let response = await this.client.bulk({
                 index: this.indexName,
                 // type: this.config.indexType || 'base',
-                operations: data
+                operations: bulkOperations
             });
             if (response.errors) {
                 response.items.forEach(item => {
@@ -224,7 +220,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
                 log.debug('Closing client connection to Elasticsearch');
                 this.client.close();
             }
-            log.debug('Bulk finished of data #items: ' + data.length / 2);
+            log.debug('Bulk finished of #operations + #docs: ' + bulkOperations.length);
             return {
                 queued: false,
                 response: response
@@ -234,7 +230,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
             if (closeAfterBulk) {
                 this.client.close();
             }
-            this.handleError('Error during bulk indexing of #items: ' + data.length / 2, e);
+            this.handleError('Error during bulk #operations + #docs: ' + bulkOperations.length, e);
         }
     }
 
@@ -279,21 +275,29 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
         });
     }
 
-    async addDocToBulk(doc, id, maxBulkSize=ElasticsearchUtils.maxBulkSize): Promise<BulkResponse> {
-        this._bulkData.push({
-            index: {
-                _id: id
+    async addOperationChunksToBulk(boxedOperations: EsOperation[]): Promise<BulkResponse> {
+        let operationChunk = [];
+        for (let { operation, _id, document } of boxedOperations) {
+            operationChunk.push({ [operation]: { _id } });
+            switch (operation) {
+                case 'index':
+                    operationChunk.push(document);
+                    break;
+                case 'create':
+                    operationChunk.push(document);
+                    break;
+                case 'update':
+                    operationChunk.push({ doc: document });
+                    break;
+                case 'delete':
+                    // delete expects no document
+                    break;
             }
-        });
-        this._bulkData.push(doc);
+        }
+        this._bulkOperationChunks.push(operationChunk);
 
-        // this.deduplicationUtils._queueForDuplicateSearch(doc, id);
-
-        // send data to elasticsearch if limit is reached
-        // TODO: don't use document size but bytes instead
-        // await this.client.cluster.health({ wait_for_status: 'yellow' });
-        if (this._bulkData.length >= (maxBulkSize * 2)) {
-            return this.sendBulkData();
+        if (this._bulkOperationChunks.length >= ElasticsearchUtils.maxBulkSize) {
+            return this.sendBulkOperations();
         } else {
             return new Promise(resolve => resolve({
                 queued: true
@@ -301,148 +305,21 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
         }
     }
 
-    sendBulkData(closeAfterBulk?): Promise<BulkResponse> {
-        if (this._bulkData.length > 0) {
-            log.debug('Sending BULK message with ' + (this._bulkData.length / 2) + ' items to index ' + this.indexName);
-            let promise = this.bulk(this._bulkData, closeAfterBulk);
-            this._bulkData = [];
+    async addDocToBulk(document, id, maxBulkSize=ElasticsearchUtils.maxBulkSize): Promise<BulkResponse> {
+        return this.addOperationChunksToBulk([{ operation: 'index', _id: id, document }]);
+    }
+
+    sendBulkOperations(closeAfterBulk?: boolean): Promise<BulkResponse> {
+        if (this._bulkOperationChunks.length > 0) {
+            let bulkOperations = this._bulkOperationChunks.flat(1);
+            log.debug('Sending BULK message with ' + this._bulkOperationChunks.length + ' operation chunks to ' + this.indexName);
+            let promise = this.bulk(bulkOperations, closeAfterBulk);
+            this._bulkOperationChunks = [];
             return promise;
         }
         return new Promise(resolve => resolve({
             queued: true
         }));
-    }
-
-    async bulkUpdate(updateDocuments: any[], closeAfterBulk?: boolean): Promise<BulkResponse> {        
-        try {
-            let response = await this.client.bulk({
-                index: this.indexName,
-                // type: this.config.indexType || 'base',
-                operations: updateDocuments
-            });
-            if (response.errors) {
-                response.items.forEach(item => {
-                    let err = item.update.error;
-                    if (err) {
-                        this.handleError(`Error during bulk updating on index '${this.indexName}' for item.id '${item.update._id}': ${JSON.stringify(err)}`, err);
-                    }
-                });
-            }
-            log.debug('Bulk update finished of data #items: ' + updateDocuments.length / 2);
-            return {
-                queued: false,
-                response: response
-            };
-        }
-        catch (e) {
-            this.handleError('Error during bulk updating of #items: ' + updateDocuments.length / 2, e);
-        }
-    }
-
-    async addDocsToBulkUpdate(updateDocuments: any[], maxBulkSize=ElasticsearchUtils.maxBulkSize): Promise<BulkResponse> {
-        for (let updateDocument of updateDocuments) {
-            let { _id, ...doc } = updateDocument;
-            this._bulkUpdateData.push(
-                { update: { _index: this.indexName, _id } },
-                { doc }
-            );
-        }
-
-        if (this._bulkUpdateData.length >= (maxBulkSize * 2)) {
-            return this.sendBulkUpdate();
-        }
-        else {
-            return new Promise(resolve => resolve({
-                queued: true
-            }));
-        }
-    }
-
-    sendBulkUpdate(closeAfterBulk?: boolean): Promise<BulkResponse> {
-        if (this._bulkUpdateData.length > 0) {
-            log.debug('Sending BULK update message with ' + (this._bulkUpdateData.length / 2) + ' items to index ' + this.indexName);
-            let promise = this.bulkUpdate(this._bulkUpdateData, closeAfterBulk);
-            this._bulkUpdateData = [];
-            return promise;
-        }
-        return new Promise(resolve => resolve({
-            queued: true
-        }));
-    }
-
-    async getStoredData(ids) {
-        if (ids.length < 1) return [];
-
-        const aliasExists = await this.client.indices.existsAlias({
-            name: this.config.alias
-        });
-        if (!aliasExists) {
-            return [];
-        }
-
-        let data = [];
-        ids.forEach(id => {
-            data.push({});
-            data.push({
-                query: {
-                    term: {'_id': id}
-                }
-            });
-        });
-
-        // Send data in chunks. Don't send too much at once.
-        let dates = [];
-        let maxSize = 2 * 3; // !!! IMPORTANT: This number has to be even. That is the reason for the funny way to calculate it. That way one cannot forget to set an odd number when changing the value. !!!
-        for (let i = 0; i < data.length; i += maxSize) {
-            let end = Math.min(data.length, i + maxSize);
-
-            let slice = data.slice(i, end);
-
-            try {
-                let result: any = await this.client.msearch({
-                    index: this.config.alias,
-                    searches: slice
-                });
-
-                if (result.responses) {
-                    for (let j = 0; j < result.responses.length; j++) {
-                        let response_id
-                        let response = result.responses[j];
-                        let issued;
-                        let modified;
-                        let dataset_modified;
-
-                        if (response.error) {
-                            this.handleError("Error in one of the search responses:", response.error);
-                            continue;
-                        }
-                        try {
-                            let firstHit = response.hits.hits[0];
-                            response_id = firstHit._source.extras.generated_id
-                            issued = firstHit._source.extras.metadata.issued;
-                            modified = firstHit._source.extras.metadata.modified;
-                            dataset_modified = firstHit._source.modified;
-                        } catch (e) {
-                            log.debug(`Did not find an existing issued date for dataset with id ${ids[i/2+j]}`);
-                        }
-
-                        dates.push({
-                            id: response_id,
-                            issued: issued,
-                            modified: modified,
-                            dataset_modified: dataset_modified
-                        })
-
-                    }
-                } else {
-                    log.debug('No result. Reponse after msearch', result);
-                }
-            } catch (e) {
-                this.handleError('Error during search', e);
-            }
-        }
-
-        return dates;
     }
 
     private handleError(message: string, error: any) {
@@ -631,12 +508,4 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
     async ping() {
         return await this.client.ping();
     }
-
-    // async health(status: 'green' | 'GREEN' | 'yellow' | 'YELLOW' | 'red' | 'RED' = 'yellow'): Promise<ClusterHealthResponse> {
-    //     return this.client.cluster.health({ wait_for_status: status });
-    // }
-
-    // async flush(): Promise<any> {
-    //     await this.client.indices.flush();
-    // };
 }

@@ -30,6 +30,7 @@ import { ConfigService } from '../../services/config/ConfigService';
 import { CswMapper } from './csw.mapper';
 import { CswParameters, RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
+import { Entity } from '../../model/entity';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
@@ -117,22 +118,16 @@ export class CswImporter extends Importer {
             observer.complete();
         } else {
             try {
-                // when running an incremental harvest,
-                // clone the old index instead of preparing a new one
-                if (this.summary.isIncremental) {
-                    await this.elastic.cloneIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
-                }
-                else {
-                    await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
-                }
+                await this.database.beginTransaction();
                 await this.harvest();
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
-                    await this.elastic.sendBulkData(false);
-                    await this.elastic.sendBulkUpdate(false);
-                    // postHarvestingHandling has to be here, after indexing all data but before deduplicating
-                    await this.postHarvestingHandling();
-                    // deduplicatin happens in finishIndex()
-                    await this.elastic.finishIndex();
+                    if (this.summary.databaseErrors.length == 0) {
+                        await this.database.commitTransaction();
+                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getRecordsUrl);
+                    }
+                    else {
+                        await this.database.rollbackTransaction();
+                    }
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
                 } else {
@@ -142,18 +137,12 @@ export class CswImporter extends Importer {
                     log.error('No results during CSW import - Keep old index');
                     observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
                     observer.complete();
-
-                    // clean up index
-                    this.elastic.deleteIndex(this.elastic.indexName);
                 }
             } catch (err) {
                 this.summary.appErrors.push(err.message ? err.message : err);
                 log.error('Error during CSW import', err);
                 observer.next(ImportResult.complete(this.summary, 'Error happened'));
                 observer.complete();
-
-                // clean up index
-                this.elastic.deleteIndex(this.elastic.indexName);
             }
         }
     }
@@ -164,16 +153,18 @@ export class CswImporter extends Importer {
         let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
         let capabilitiesResponseDom = this.domParser.parseFromString(capabilitiesResponse);
 
-        // store catalog info from getCapabilities in generalInfo
-        let catalog: Catalog = {
-            description: CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
-            homepage: this.settings.getRecordsUrl,
-            // TODO we need a unique ID for each catalog - currently using the alias (used as "global" catalog)
-            // TODO or assign a different catalog for each record, depending on a property (address, publisher, etc)? expensive?
-            identifier: ConfigService.getGeneralSettings().elasticsearch.alias,
-            publisher: { name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent },
-            title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
-        };
+        // // store catalog info from getCapabilities in generalInfo
+        // let catalog: Catalog = {
+        //     description: CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
+        //     homepage: this.settings.getRecordsUrl,
+        //     // TODO we need a unique ID for each catalog - currently using the alias (used as "global" catalog)
+        //     // TODO or assign a different catalog for each record, depending on a property (address, publisher, etc)? expensive?
+        //     identifier: ConfigService.getGeneralSettings().elasticsearch.alias,
+        //     publisher: { name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent },
+        //     title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
+        // };
+        // let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId) ?? this.database.defaultCatalog;
+        let catalog: Catalog = this.database.defaultCatalog;
         this.generalInfo['catalog'] = catalog;
 
         if (this.settings.maxConcurrent > 1) {
@@ -184,6 +175,8 @@ export class CswImporter extends Importer {
             // harvestConcurrently() also supports this.settings.maxConcurrent=1
             await this.harvestSequentially();
         }
+        // send leftovers
+        await this.database.sendBulkData();
     }
 
     protected async postHarvestingHandling(){
@@ -289,15 +282,6 @@ export class CswImporter extends Importer {
             ids.push(CswMapper.getCharacterStringContent(records[i], 'fileIdentifier'));
         }
 
-        let now = new Date(Date.now());
-        let storedData;
-
-        if (this.settings.dryRun) {
-            storedData = ids.map(() => now);
-        } else {
-            storedData = await this.elastic.getStoredData(ids);
-        }
-
         let docsToImport = [];
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
@@ -315,7 +299,7 @@ export class CswImporter extends Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary, this.generalInfo);
+            let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary, this.generalInfo);
 
             let doc: any;
             try {
@@ -328,19 +312,22 @@ export class CswImporter extends Importer {
                 mapper.skipped = true;
             }
 
-            if (!mapper.shouldBeSkipped()) {
-                if (!this.settings.dryRun) {
-                    promises.push(this.elastic.addDocToBulk(doc, uuid));
-                }
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+                let entity: Entity = {
+                    identifier: uuid,
+                    source: this.settings.getRecordsUrl,
+                    collection_id: this.database.defaultCatalog.id,
+                    operates_on: mapper.getOperatesOn(),
+                    dataset: doc,
+                    original_document: mapper.getHarvestedData()
+                };
+                promises.push(this.database.addEntityToBulk(entity));
             } else {
                 this.summary.skippedDocs.push(uuid);
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
-        // TODO the following line raises
-        // MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 abort listeners added to [EventEmitter]. Use emitter.setMaxListeners() to increase limit
-        // may be harmless; investigate if limit increase suffices or if a real leak is occurring
-        let settledPromises: PromiseSettledResult<BulkResponse>[] = await Promise.allSettled(promises).catch(err => log.error('Error indexing CSW record', err));
+        let settledPromises: PromiseSettledResult<BulkResponse>[] = await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));
         // filter for the actually imported documents
         // let insertedIds = settledPromises.filter(result => result.status == 'fulfilled' && !result.value.queued).reduce((ids, result) => {
         //     ids.push(...(result as PromiseFulfilledResult<BulkResponse>).value.response.items.filter(item => item.index.result == 'created').map(item => item.index._id));
@@ -353,15 +340,15 @@ export class CswImporter extends Importer {
     }
 
     /**
-     * Is called after a batch of records has been added to the bulk indexing queue.
-     * They may not necessarily have been indexed yet.
+     * Is called after a batch of records has been added to the bulk persisting queue.
+     * They may not necessarily have been persisted yet.
      */
     protected async updateRecords(documents: any[]) {
         // For Profile specific Handling
     }
 
-    getMapper(settings, record, harvestTime, storedData, summary, generalInfo): CswMapper {
-        return new CswMapper(settings, record, harvestTime, storedData, summary, generalInfo);
+    getMapper(settings, record, harvestTime, summary, generalInfo): CswMapper {
+        return new CswMapper(settings, record, harvestTime, summary, generalInfo);
     }
 
     static createRequestConfig(settings: CswSettings, request = 'GetRecords'): RequestOptions {

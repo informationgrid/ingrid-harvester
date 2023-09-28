@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
+import { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MappingItem } from '@shared/mapping.model';
@@ -71,6 +71,10 @@ export class ConfigService {
 
     const options = {params: httpParams};
     return this.http.delete('rest/api/config/mapping/distribution', options);
+  }
+
+  checkDbConnection(data: Partial<DatabaseConfiguration>): Observable<boolean> {
+    return this.http.post<boolean>('rest/api/config/dbcheck', data);
   }
 
   checkEsConnection(data: Partial<ElasticsearchConfiguration>): Observable<boolean> {

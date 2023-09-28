@@ -34,7 +34,7 @@ export class XplanSynWfsImporter extends XplanWfsImporter {
         super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
     }
 
-    getMapper(settings: Harvester, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils): XplanWfsMapper {
-        return new XplanSynWfsMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils);
+    getMapper(settings: Harvester, feature, harvestTime, summary, generalInfo, geojsonUtils): XplanWfsMapper {
+        return new XplanSynWfsMapper(settings, feature, harvestTime, summary, generalInfo, geojsonUtils);
     }
 }

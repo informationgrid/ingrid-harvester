@@ -77,7 +77,7 @@ async function startProcess() {
         let configHarvester = MiscUtils.merge(importerConfig, configGeneral);
 
         let profile = ProfileFactoryLoader.get();
-        let importer = profile.getImporterFactory().get(configHarvester);
+        let importer = await profile.getImporterFactory().get(configHarvester);
         if (!importer) {
             log.error( 'Importer not defined for: ' + configHarvester.type );
             return;

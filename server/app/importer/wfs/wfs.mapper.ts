@@ -41,7 +41,6 @@ export abstract class WfsMapper extends BaseMapper {
 
     protected readonly feature: Node & Element;
     private harvestTime: any;
-    private readonly storedData: any;
 
     private settings: WfsSettings;
     protected readonly uuid: string;
@@ -56,12 +55,11 @@ export abstract class WfsMapper extends BaseMapper {
 
     protected select: XPathNodeSelect;
 
-    constructor(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils) {
+    constructor(settings, feature, harvestTime, summary, generalInfo, geojsonUtils) {
         super();
         this.settings = settings;
         this.feature = feature;
         this.harvestTime = harvestTime;
-        this.storedData = storedData;
         this.summary = summary;
         this.fetched = {...this.fetched, ...generalInfo, geojsonUtils};
         this.select = (...args: any[]) => {
@@ -132,24 +130,10 @@ export abstract class WfsMapper extends BaseMapper {
     }
 
     // TODO:check
-    _getMetadataIssued(): Date {
-        return (this.storedData && this.storedData.issued) ? new Date(this.storedData.issued) : new Date(Date.now());
-    }
-
-    // TODO:check
-    _getMetadataModified(): Date {
-        if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
-            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
-            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf())
-                return new Date(this.storedData.modified);
-        }
-        return new Date(Date.now());
-    }
-
-    // TODO:check
     _getMetadataSource(): any {
         let wfsLink = `${this.settings.getFeaturesUrl}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&outputFormat=application/xml&featureId=${this.uuid}`;
         return {
+            source_base: this.settings.getFeaturesUrl,
             raw_data_source: wfsLink,
             portal_link: this.settings.defaultAttributionLink,
             attribution: this.settings.defaultAttribution

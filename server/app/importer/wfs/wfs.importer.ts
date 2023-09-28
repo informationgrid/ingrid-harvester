@@ -28,6 +28,7 @@ import { namespaces } from '../../importer/namespaces';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { Contact } from '../../model/agent';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
+import { Entity } from '../../model/entity';
 import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
@@ -98,11 +99,18 @@ export abstract class WfsImporter extends Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+                // await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+                await this.database.beginTransaction();
                 await this.harvest();
                 if(this.numIndexDocs > 0) {
-                    await this.elastic.sendBulkData(false);
-                    await this.elastic.finishIndex();
+                    if (this.summary.databaseErrors.length == 0) {
+                        await this.database.commitTransaction();
+                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getFeaturesUrl);
+                    }
+                    else {
+                        await this.database.rollbackTransaction();
+                    }
+                    // await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
                 } else {
@@ -114,7 +122,7 @@ export abstract class WfsImporter extends Importer {
                     observer.complete();
 
                     // clean up index
-                    this.elastic.deleteIndex(this.elastic.indexName);
+                    // this.elastic.deleteIndex(this.elastic.indexName);
                 }
             } catch (err) {
                 this.summary.appErrors.push(err.message ? err.message : err);
@@ -123,13 +131,12 @@ export abstract class WfsImporter extends Importer {
                 observer.complete();
 
                 // clean up index
-                this.elastic.deleteIndex(this.elastic.indexName);
+                // this.elastic.deleteIndex(this.elastic.indexName);
             }
         }
     }
 
     async harvest() {
-
         let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resolveWithFullResponse: true }, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
         let capabilitiesResponse: Response = await capabilitiesRequestDelegate.doRequest();
@@ -187,22 +194,24 @@ export abstract class WfsImporter extends Importer {
         // - retrieve the XML from the CSW link
         // - select the appropriate nodes (gmd:contact or gmd:pointOfContact)
         let contact: Contact = {
-            fn: select('./ows:ServiceContact/ows:IndividualName', serviceProvider, true)?.textContent,
-            hasCountryName: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', serviceProvider, true)?.textContent,
-            hasLocality: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', serviceProvider, true)?.textContent,
-            hasPostalCode: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', serviceProvider, true)?.textContent,
-            hasRegion: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', serviceProvider, true)?.textContent,
-            hasStreetAddress: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', serviceProvider, true)?.textContent,
-            hasEmail: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', serviceProvider, true)?.textContent,
-            hasOrganizationName: this.generalInfo['publisher']?.[0]?.name,
-            hasTelephone: select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', serviceProvider, true)?.textContent,
-            // hasURL: this.select('./ows:ServiceContact/ows:ContactInfo/ows:OnlineResource/@xlink:href', serviceProvider, true)?.textContent
+            // TODO create appropriate contact
+            fn: ''
+        //     fn: select('./ows:ServiceContact/ows:IndividualName', serviceProvider, true)?.textContent,
+        //     hasCountryName: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', serviceProvider, true)?.textContent,
+        //     hasLocality: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', serviceProvider, true)?.textContent,
+        //     hasPostalCode: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', serviceProvider, true)?.textContent,
+        //     hasRegion: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', serviceProvider, true)?.textContent,
+        //     hasStreetAddress: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', serviceProvider, true)?.textContent,
+        //     hasEmail: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', serviceProvider, true)?.textContent,
+        //     hasOrganizationName: this.generalInfo['publisher']?.[0]?.name,
+        //     hasTelephone: select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', serviceProvider, true)?.textContent,
+        //     // hasURL: this.select('./ows:ServiceContact/ows:ContactInfo/ows:OnlineResource/@xlink:href', serviceProvider, true)?.textContent
         };
         Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
         this.generalInfo['contactPoint'] = contact;
 
-        // store catalog info from OGC Records response
-        let catalog: Catalog = await MiscUtils.fetchCatalogFromOgcRecordsApi(this.settings.catalogId);
+        // retrieve catalog info from database
+        let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId) ?? this.database.defaultCatalog;
         this.generalInfo['catalog'] = catalog;
 
         let hitsRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, maxRecords: undefined, resultType: 'hits' });
@@ -211,10 +220,10 @@ export abstract class WfsImporter extends Importer {
         let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
         let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
         this.totalFeatures = parseInt(hitsResultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
-        log.debug(`Found ${this.totalFeatures} features at ${this.settings.getFeaturesUrl}`);
+        log.info(`Found ${this.totalFeatures} features at ${this.settings.getFeaturesUrl}`);
 
         while (true) {
-            log.debug('Requesting next features');
+            log.info('Requesting next features');
             let response = await this.requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
 
@@ -243,9 +252,9 @@ export abstract class WfsImporter extends Importer {
                 break;
             }
         }
+        await this.database.sendBulkData();
     }
 
-    // ED: TODO
     async extractFeatures(getFeatureResponse, harvestTime) {
         let promises = [];
         let xml = this.domParser.parseFromString(getFeatureResponse, 'application/xml');
@@ -272,20 +281,6 @@ export abstract class WfsImporter extends Importer {
 
         // some documents may use wfs:member, some gml:featureMember, some maybe something else: use settings
         let features = select(`/wfs:FeatureCollection/${this.settings.memberElement}`, xml);
-        let ids = [];
-        for (let i = 0; i < features.length; i++) {
-            ids.push(XPathUtils.firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id'));
-        }
-
-        let now = new Date(Date.now());
-        let storedData;
-
-        if (this.settings.dryRun) {
-            storedData = ids.map(() => now);
-        } else {
-            storedData = await this.elastic.getStoredData(ids);
-        }
-
         for (let i = 0; i < features.length; i++) {
             this.summary.numDocs++;
 
@@ -302,7 +297,7 @@ export abstract class WfsImporter extends Importer {
                 logRequest.debug("Record content: ", features[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, features[i], harvestTime, storedData[i], this.summary, this.generalInfo, geojsonUtils);
+            let mapper = this.getMapper(this.settings, features[i], harvestTime, this.summary, this.generalInfo, geojsonUtils);
 
             let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -310,21 +305,24 @@ export abstract class WfsImporter extends Importer {
                 mapper.skipped = true;
             });
 
-            if (!mapper.shouldBeSkipped()) {
-                if (!this.settings.dryRun) {
-                    promises.push(this.elastic.addDocToBulk(doc, uuid));
-                }
-
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+                let entity: Entity = {
+                    identifier: uuid,
+                    source: this.settings.getFeaturesUrl,
+                    collection_id: this.generalInfo['catalog'].id,
+                    dataset: doc,
+                    original_document: mapper.getHarvestedData()
+                };
+                promises.push(this.database.addEntityToBulk(entity));
             } else {
                 this.summary.skippedDocs.push(uuid);
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalFeatures));
         }
-        await Promise.all(promises)
-            .catch(err => log.error('Error indexing WFS record', err));
+        await Promise.all(promises).catch(err => log.error('Error indexing WFS record', err));
     }
 
-    abstract getMapper(settings, feature, harvestTime, storedData, summary, generalInfo, geojsonUtils): WfsMapper;
+    abstract getMapper(settings, feature, harvestTime, summary, generalInfo, geojsonUtils): WfsMapper;
 
     static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
         let requestConfig: RequestOptions = {

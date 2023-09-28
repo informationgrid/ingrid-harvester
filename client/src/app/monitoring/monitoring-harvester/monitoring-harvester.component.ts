@@ -71,7 +71,7 @@ export class MonitoringHarvesterComponent implements OnInit {
               },
               {
                 label: "Fehler",
-                data: data.history.map(entry => entry.numRecordErrors + entry.numAppErrors + entry.numESErrors),
+                data: data.history.map(entry => entry.numRecordErrors + entry.numAppErrors + entry.numDBErrors + entry.numESErrors),
                 borderColor: "red",
                 backgroundColor: "red",
                 fill: false,

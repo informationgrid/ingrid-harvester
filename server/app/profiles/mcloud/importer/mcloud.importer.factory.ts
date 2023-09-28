@@ -24,6 +24,7 @@
 import {DcatImporter} from "../../../importer/dcat/dcat.importer";
 import {SparqlImporter} from "../../../importer/sparql/sparql.importer";
 import { Harvester } from "@shared/harvester";
+import { Importer } from '../../../importer/importer';
 import {BaseMapper} from "../../../importer/base.mapper";
 import {ProfileFactory} from "../../profile.factory";
 import {McloudCswImporter} from "./mcloud.csw.importer";
@@ -34,17 +35,34 @@ import {OaiImporter} from "../../../importer/oai/oai.importer";
 
 export class McloudImporterFactory extends ImporterFactory{
 
-    public get(config: Harvester) {
+    public async get(config: Harvester): Promise<Importer> {
+        let importer: Importer;
         switch (config.type) {
-            case 'CKAN': return new McloudCkanImporter(config);
-            case 'EXCEL': return new ExcelImporter(config);
-            case 'CSW': return new McloudCswImporter(config);
-            case 'OAI': return new OaiImporter(config);
-            case 'DCAT': return new DcatImporter(config);
-            case 'SPARQL': return new SparqlImporter(config);
+            case 'CKAN':
+                importer = new McloudCkanImporter(config);
+                break;
+            case 'EXCEL':
+                importer = new ExcelImporter(config);
+                break;
+            case 'CSW':
+                importer = new McloudCswImporter(config);
+                break;
+            case 'OAI':
+                importer = new OaiImporter(config);
+                break;
+            case 'DCAT':
+                importer = new DcatImporter(config);
+                break;
+            case 'SPARQL':
+                importer = new SparqlImporter(config);
+                break;
             default: {
                 console.error('Importer not found: ' + config.type);
             }
         }
+        if (importer) {
+            await importer.database.init();
+        }
+        return importer;
     }
 }
