@@ -1092,12 +1092,12 @@ export class CswMapper extends BaseMapper {
                 let href = o.getAttribute('xlink:href');
                 let uuid = href?.split('/').slice(-1)?.[0];
                 if (MiscUtils.isUuid(uuid)) {
-                    operatesOnIds.push(uuid);
+                    operatesOnIds.add(uuid);
                 }
                 try {
                     uuid = new URL(href).searchParams.get('id');
                     if (MiscUtils.isUuid(uuid)) {
-                        operatesOnIds.push(uuid);
+                        operatesOnIds.add(uuid);
                     }
                 }
                 catch (e) {
