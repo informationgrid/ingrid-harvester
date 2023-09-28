@@ -55,7 +55,7 @@ export class PostgresUtils extends DatabaseUtils {
 
     constructor(configuration: DatabaseConfiguration, summary: Summary) {
         super();
-        this.configuration = configuration;
+        this.configuration = PostgresUtils.fix(configuration);
 
         if (!PostgresUtils.pool) {
             PostgresUtils.pool = new Pool(configuration);
@@ -253,7 +253,7 @@ export class PostgresUtils extends DatabaseUtils {
     static async ping(configuration: DatabaseConfiguration): Promise<boolean> {
         let client: Client;
         try {
-            client = new Client(configuration);
+            client = new Client(PostgresUtils.fix(configuration));
             await client.connect();
         }
         catch (e) {
@@ -288,5 +288,13 @@ export class PostgresUtils extends DatabaseUtils {
     private handleError(message: string, error: any) {
         this.summary.databaseErrors?.push(message);
         log.error(message, error);
+    }
+
+    private static fix(config: DatabaseConfiguration) {
+        let cs = config.connectionString;
+        if (cs && !cs.includes('@')) {
+            config.connectionString = cs.replace('://', `://${config.user}:${config.password}@`);
+        }
+        return config;
     }
 }

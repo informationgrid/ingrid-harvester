@@ -94,6 +94,7 @@ export class ConfigGeneralComponent implements OnInit {
     this.dbConnectionCheck = 'working';
     let checkResult = this.configService.checkDbConnection({
       type: this.configForm.get('database.type').value,
+      connectionString: this.configForm.get('database.connectionString').value,
       host: this.configForm.get('database.host').value,
       port: this.configForm.get('database.port').value,
       database: this.configForm.get('database.database').value,
@@ -156,15 +157,16 @@ export class ConfigGeneralComponent implements OnInit {
     this.configForm = this.formBuilder.group({
       database: this.formBuilder.group({
         type: [settings.database.type],
-        host: [settings.database.host, Validators.required],
+        connectionString: [settings.database.connectionString],
+        host: [settings.database.host],
         port: [settings.database.port],
-        database: [settings.database.database, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
+        database: [settings.database.database],
         user: [settings.database.user],
         password: [settings.database.password],
         defaultCatalogIdentifier: [settings.database.defaultCatalogIdentifier]
       }),
       elasticsearch: this.formBuilder.group({
-        url: [settings.elasticsearch.url, Validators.required, ConfigGeneralComponent.elasticUrlValidator],
+        url: [settings.elasticsearch.url, Validators.required],
         version: [settings.elasticsearch.version],
         user: [settings.elasticsearch.user],
         password: [settings.elasticsearch.password],

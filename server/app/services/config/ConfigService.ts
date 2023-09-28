@@ -56,6 +56,7 @@ export class ConfigService {
     private static readonly defaultSettings: GeneralSettings = {
         database: {
             type: 'postgresql' as 'postgresql',
+            connectionString: process.env.DB_CONNECTION_STRING,
             host: process.env.DB_URL,
             port: parseInt(process.env.DB_PORT),
             database: process.env.DB_NAME,
@@ -159,6 +160,7 @@ export class ConfigService {
         let ENV = {
             database: {
                 type: 'postgresql',
+                connectionString: process.env.DB_CONNECTION_STRING,
                 host: process.env.DB_URL,
                 port: process.env.DB_PORT,
                 database: process.env.DB_NAME,
