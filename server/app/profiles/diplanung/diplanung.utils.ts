@@ -21,43 +21,46 @@
  * ==================================================
  */
 
+import { DiplanungIndexDocument } from './model/index.document';
 import { Distribution } from '../../model/distribution';
 import { PluPlanType } from '../../model/dcatApPlu.model';
 
-export class DiplanungUtils {
-
-    static generateXplanWmsDistribution(stateAbbrev: string, planName: string, planType: PluPlanType): Distribution {
-        let wmsURL = `https://${stateAbbrev}.xplanungsplattform.de/xplan-wms/services/planwerkwms/planname/${encodeURIComponent(planName)}`;
-        let mapLayerNames: string[];
-        switch (planType) {
-            case PluPlanType.BEBAU_PLAN:
-                mapLayerNames = ['BP_Planvektor', 'BP_Planraster'];
-                break;
-            case PluPlanType.FLAECHENN_PLAN:
-                mapLayerNames = ['FP_Planvektor', 'FP_Planraster'];
-                break;
-            // case PluPlanType.REGIONAL_PLAN:
-            //     mapLayerNames = ['RP_Planvektor', 'RP_Planraster'];
-            //     break;
-        }
-        let wmsPlanwerk: Distribution = {
-            accessURL: wmsURL,
-            format: ['WMS'],
-            title: planName + ' WMS',
-            mapLayerNames
-        };
-        return wmsPlanwerk;
+export function generateXplanWmsDistributions(stateAbbrev: string, planName: string, planType: PluPlanType): Distribution {
+    let wmsURL = `https://${stateAbbrev}.xplanungsplattform.de/xplan-wms/services/planwerkwms/planname/${encodeURIComponent(planName)}`;
+    let mapLayerNames: string[];
+    switch (planType) {
+        case PluPlanType.BEBAU_PLAN:
+            mapLayerNames = ['BP_Planvektor', 'BP_Planraster'];
+            break;
+        case PluPlanType.FLAECHENN_PLAN:
+            mapLayerNames = ['FP_Planvektor', 'FP_Planraster'];
+            break;
+        // case PluPlanType.REGIONAL_PLAN:
+        //     mapLayerNames = ['RP_Planvektor', 'RP_Planraster'];
+        //     break;
     }
+    let wmsPlanwerk: Distribution = {
+        accessURL: wmsURL,
+        format: ['WMS'],
+        title: planName + ' WMS',
+        mapLayerNames
+    };
+    return wmsPlanwerk;
+}
 
-    static generatePlanDigitalWmsDistribution(planName: string, stelleId: string): Distribution {
-        let wmsURL = `https://testportal-plandigital.de/ows/${stelleId}/fplan`;
-        let mapLayerNames = ['fp_plan'];
-        let wmsPlanwerk: Distribution = {
-            accessURL: wmsURL,
-            format: ['WMS'],
-            title: planName + ' WMS',
-            mapLayerNames
-        };
-        return wmsPlanwerk;
-    }
+export function generatePlanDigitalWmsDistribution(planName: string, stelleId: string): Distribution {
+    let wmsURL = `https://testportal-plandigital.de/ows/${stelleId}/fplan`;
+    let mapLayerNames = ['fp_plan'];
+    let wmsPlanwerk: Distribution = {
+        accessURL: wmsURL,
+        format: ['WMS'],
+        title: planName + ' WMS',
+        mapLayerNames
+    };
+    return wmsPlanwerk;
+}
+
+export function createEsId(document: DiplanungIndexDocument): string {
+    // this has to coincide with the OGC API for Records
+    return document.adms_identifier ?? document.catalog.identifier + '/' + document.identifier;
 }

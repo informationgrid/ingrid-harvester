@@ -21,19 +21,20 @@
  * ==================================================
  */
 
-import {SparqlMapper} from './sparql.mapper';
-import {Summary} from '../../model/summary';
-import {getLogger} from 'log4js';
-import {Importer} from '../importer';
-import {Observer} from 'rxjs';
-import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {SparqlSettings} from './sparql.settings';
-import {RequestDelegate} from "../../utils/http-request.utils";
-import {ConfigService} from "../../services/config/ConfigService";
+import { getLogger } from 'log4js';
+import { ConfigService } from '../../services/config/ConfigService';
+import { DefaultImporterSettings } from '../../importer.settings';
+import { Entity } from '../../model/entity';
+import { Importer } from '../importer';
+import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
-import {ProfileFactory} from "../../profiles/profile.factory";
-import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
-import {DefaultImporterSettings} from "../../importer.settings";
+import { Observer } from 'rxjs';
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RequestDelegate } from '../../utils/http-request.utils';
+import { SparqlMapper } from './sparql.mapper';
+import { SparqlSettings } from './sparql.settings';
+import { Summary } from '../../model/summary';
 
 const plain_fetch = require('node-fetch');
 const HttpsProxyAgent = require('https-proxy-agent');
@@ -81,17 +82,20 @@ export class SparqlImporter extends Importer {
             observer.complete();
         } else {
             try {
-                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+                // await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+                await this.database.beginTransaction();
                 await this.harvest().catch(err => {
                     this.summary.appErrors.push(err.message ? err.message : err);
                     log.error('Error during SPARQL import', err);
                     observer.next(ImportResult.complete(this.summary, 'Error happened'));
                     observer.complete();
                 });
+                await this.database.sendBulkData();
 
                 if(this.numIndexDocs > 0) {
-                    await this.elastic.sendBulkData(false);
-                    await this.elastic.finishIndex();
+                    await this.database.commitTransaction();
+                    await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.endpointUrl);
+                    // await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
                 } else {
@@ -103,7 +107,7 @@ export class SparqlImporter extends Importer {
                     observer.complete();
 
                     // clean up index
-                    this.elastic.deleteIndex(this.elastic.indexName);
+                    // this.elastic.deleteIndex(this.elastic.indexName);
                 }
 
             } catch (err) {
@@ -113,68 +117,67 @@ export class SparqlImporter extends Importer {
                 observer.complete();
 
                 // clean up index
-                this.elastic.deleteIndex(this.elastic.indexName);
+                // this.elastic.deleteIndex(this.elastic.indexName);
             }
         }
     }
 
     async harvest() {
-            log.debug('Requesting records');
+        log.debug('Requesting records');
 
-            let response = "";
+        let response = "";
 
-            const endpointUrl = this.settings.endpointUrl;
+        const endpointUrl = this.settings.endpointUrl;
 
-            let fetch = plain_fetch;
+        let fetch = plain_fetch;
 
-            if(this.generalSettings.proxy){
-                let proxyAgent = new HttpsProxyAgent(this.generalSettings.proxy);
-                fetch = function(url, options){
-                    return plain_fetch(url, {...options, agent: proxyAgent})
-                }
-                fetch.Headers = plain_fetch.Headers;
+        if(this.generalSettings.proxy){
+            let proxyAgent = new HttpsProxyAgent(this.generalSettings.proxy);
+            fetch = function(url, options){
+                return plain_fetch(url, {...options, agent: proxyAgent})
             }
+            fetch.Headers = plain_fetch.Headers;
+        }
 
-            const client = new SimpleClient({endpointUrl, fetch});
-            return new Promise<void>((resolve, reject) => client.query.select(this.settings.query).then(result => {
-                let hadError = result.status >= 400;
+        const client = new SimpleClient({endpointUrl, fetch});
+        return new Promise<void>((resolve, reject) => client.query.select(this.settings.query).then(result => {
+            let hadError = result.status >= 400;
 
-                result.body.on('data', data => {
-                    log.debug("Receive Data from "+endpointUrl)
-                    response += data.toString();
-                });
+            result.body.on('data', data => {
+                log.debug("Receive Data from "+endpointUrl)
+                response += data.toString();
+            });
 
-                result.body.on('error', err => {
-                    hadError = true;
-                    this.summary.appErrors.push(err.toString());
-                    log.error(err);
-                })
+            result.body.on('error', err => {
+                hadError = true;
+                this.summary.appErrors.push(err.toString());
+                log.error(err);
+            })
 
-                result.body.on('finish', () => {
-                    log.debug("Finished SPARQL Communication.")
-                    if(!hadError) {
-                        try {
-                            let json = JSON.parse(response);
-                            let harvestTime = new Date(Date.now());
-                            this.extractRecords(json, harvestTime).then(() =>
-                                resolve());
-                        } catch (e) {
-                            this.summary.appErrors.push(e.toString());
-                            log.error(e);
-                            reject(e);
-                        }
+            result.body.on('finish', () => {
+                log.debug("Finished SPARQL Communication.")
+                if(!hadError) {
+                    try {
+                        let json = JSON.parse(response);
+                        let harvestTime = new Date(Date.now());
+                        this.extractRecords(json, harvestTime).then(() =>
+                            resolve());
+                    } catch (e) {
+                        this.summary.appErrors.push(e.toString());
+                        log.error(e);
+                        reject(e);
                     }
-                });
-                result.body.on('end', () => {
-                    if(hadError) {
-                        let message = result.statusText + ' - '+response;
-                        this.summary.appErrors.push(message);
-                        log.error(message);
-                        reject();
-                    }
-                });
-            }));
-
+                }
+            });
+            result.body.on('end', () => {
+                if(hadError) {
+                    let message = result.statusText + ' - '+response;
+                    this.summary.appErrors.push(message);
+                    log.error(message);
+                    reject();
+                }
+            });
+        }));
     }
 
     async extractRecords(getRecordsResponse, harvestTime) {
@@ -186,15 +189,6 @@ export class SparqlImporter extends Importer {
         let ids = [];
         for (let i = 0; i < records.length; i++) {
             ids.push(records[i].id.value);
-        }
-
-        let now = new Date(Date.now());
-        let storedData;
-
-        if (this.settings.dryRun) {
-            storedData = ids.map(() => now);
-        } else {
-            storedData = await this.elastic.getStoredData(ids);
         }
 
         for (let i = 0; i < records.length; i++) {
@@ -213,7 +207,7 @@ export class SparqlImporter extends Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], harvestTime, storedData[i], this.summary);
+            let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary);
 
             let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
@@ -221,19 +215,23 @@ export class SparqlImporter extends Importer {
                 mapper.skipped = true;
             });
 
-            if (!mapper.shouldBeSkipped()) {
-                if (!this.settings.dryRun) {
-                    promises.push(
-                        this.elastic.addDocToBulk(doc, uuid)
-                            .then(response => {
-                                if (!response.queued) {
-                                    // numIndexDocs += ElasticsearchUtils.maxBulkSize;
-                                    // this.observer.next(ImportResult.running(numIndexDocs, records.length));
-                                }
-                            })
-                    );
-                }
-
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+                let entity: Entity = {
+                    identifier: uuid,
+                    source: this.settings.endpointUrl,
+                    collection_id: this.database.defaultCatalog.id,
+                    dataset: doc,
+                    original_document: mapper.getHarvestedData()
+                };
+                promises.push(
+                    this.database.addEntityToBulk(entity)
+                        .then(response => {
+                            if (!response.queued) {
+                                // numIndexDocs += ElasticsearchUtils.maxBulkSize;
+                                // this.observer.next(ImportResult.running(numIndexDocs, records.length));
+                            }
+                        })
+                );
             } else {
                 this.summary.skippedDocs.push(uuid);
             }
@@ -243,8 +241,8 @@ export class SparqlImporter extends Importer {
             .catch(err => log.error('Error indexing DCAT record', err));
     }
 
-    getMapper(settings, record, harvestTime, storedData, summary): SparqlMapper {
-        return new SparqlMapper(settings, record, harvestTime, storedData, summary);
+    getMapper(settings, record, harvestTime, summary): SparqlMapper {
+        return new SparqlMapper(settings, record, harvestTime, summary);
     }
 
 

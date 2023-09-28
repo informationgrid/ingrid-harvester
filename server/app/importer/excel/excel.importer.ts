@@ -21,17 +21,18 @@
  * ==================================================
  */
 
-import {ElasticsearchUtils} from '../../persistence/elastic.utils';
-import {ExcelMapper} from './excel.mapper';
-import {Workbook, Worksheet} from 'exceljs';
-import {Summary} from '../../model/summary';
-import {Importer} from '../importer';
-import {Observer} from 'rxjs';
-import {ImportLogMessage, ImportResult} from '../../model/import.result';
-import {defaultExcelSettings, ExcelSettings} from './excel.settings';
+import { defaultExcelSettings, ExcelSettings } from './excel.settings';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils';
+import { Entity } from '../../model/entity';
+import { ExcelMapper } from './excel.mapper';
+import { Importer } from '../importer';
+import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
-import {ProfileFactory} from "../../profiles/profile.factory";
-import {ProfileFactoryLoader} from "../../profiles/profile.factory.loader";
+import { Observer } from 'rxjs';
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { Summary } from '../../model/summary';
+import { Workbook, Worksheet } from 'exceljs';
 
 let log = require('log4js').getLogger(__filename);
 
@@ -100,11 +101,11 @@ export class ExcelImporter extends Importer {
 
         let promises = [];
         try {
-            if (this.settings.dryRun) {
-                log.debug('Dry run option enabled. Skipping index creation.');
-            } else {
-                await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
-            }
+            // if (this.settings.dryRun) {
+            //     log.debug('Dry run option enabled. Skipping index creation.');
+            // } else {
+            //     await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
+            // }
             await workbook.xlsx.readFile(this.excelFilepath);
 
             log.debug('done loading file');
@@ -120,7 +121,6 @@ export class ExcelImporter extends Importer {
 
             // get all issued dates from IDs
             observer.next(ImportResult.message('Getting previous issued dates'));
-            let storedData = await this.elastic.getStoredData(ids);
 
             let numIndexDocs = 0;
 
@@ -139,19 +139,25 @@ export class ExcelImporter extends Importer {
                 let mapper = new ExcelMapper(this.settings, {
                     id: unit.id,
                     columnValues: unit.columnValues,
-                    storedData: storedData[idx],
                     workbook: workbook,
                     columnMap: columnMap,
                     currentIndexName: this.elastic.indexName,
                     summary: this.summary
                 });
-                let doc = await this.profile.getIndexDocument().create(mapper)
-                    .catch(e => this.handleIndexDocError(e, mapper));
 
                 // add document to buffer and send to elasticsearch if full
                 if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+                    let doc = await this.profile.getIndexDocument().create(mapper)
+                        .catch(e => this.handleIndexDocError(e, mapper));
+                    let entity: Entity = {
+                        identifier: unit.id,
+                        source: this.settings.filePath,
+                        collection_id: this.database.defaultCatalog.id,
+                        dataset: doc,
+                        original_document: mapper.getHarvestedData()
+                    };
                     promises.push(
-                        this.elastic.addDocToBulk(doc, unit.id).then(response => {
+                        this.database.addEntityToBulk(entity).then(response => {
                             if (!response.queued) {
                                 //let currentPos = this.summary.numDocs++;
                                 numIndexDocs += ElasticsearchUtils.maxBulkSize;
@@ -160,13 +166,17 @@ export class ExcelImporter extends Importer {
                         })
                     );
                 }
-
             }
 
             log.debug('Waiting for #promises to finish: ' + promises.length);
+            await this.database.beginTransaction();
             Promise.all(promises)
+                .then(async () => {
+                    await this.database.commitTransaction();
+                    this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.filePath);
+                })
                 .then(() => observer.next(ImportResult.message('Running post operations')))
-                .then(() => this.elastic.finishIndex())
+                // .then(() => this.elastic.finishIndex())
                 .then( () => {
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
@@ -180,7 +190,7 @@ export class ExcelImporter extends Importer {
             observer.complete();
 
             // clean up index
-            await this.elastic.deleteIndex(this.elastic.indexName);
+            // await this.elastic.deleteIndex(this.elastic.indexName);
         }
     }
 

@@ -40,7 +40,6 @@ export class ExcelMapper extends BaseMapper {
 
     data;
     id;
-    storedData;
     columnValues: string[] | Date;
     columnMap;
     workbook;
@@ -53,7 +52,6 @@ export class ExcelMapper extends BaseMapper {
         this.settings = settings;
         this.data = data;
         this.id = data.id;
-        this.storedData = data.storedData;
         this.columnValues = data.columnValues;
         this.columnMap = data.columnMap;
         this.workbook = data.workbook;
@@ -128,21 +126,11 @@ export class ExcelMapper extends BaseMapper {
         return this.data.id;
     }
 
-    _getMetadataIssued() {
-        return (this.storedData && this.storedData.issued) ? this.storedData.issued : new Date(Date.now());
-    }
-
-    _getMetadataModified(): Date {
-        if(this.storedData && this.storedData.modified && this.storedData.dataset_modified){
-            let storedDataset_modified: Date = new Date(this.storedData.dataset_modified);
-            if(storedDataset_modified.valueOf() === this.getModifiedDate().valueOf()  )
-                return new Date(this.storedData.modified);
-        }
-        return new Date(Date.now());
-    }
-
     _getMetadataSource() {
-        return BaseMapper.createSourceAttribution('mcloud-excel');
+        return {
+            source_base: this.settings.filePath,
+            attribution: 'mcloud-excel'
+        };
     }
 
     _isRealtime() {

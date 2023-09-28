@@ -71,7 +71,7 @@ export class DialogHistoryComponent implements OnInit, AfterViewInit {
           },
           {
             label : "Fehler",
-            data: this.data.history.map(entry => entry.numRecordErrors+entry.numAppErrors+entry.numESErrors),
+            data: this.data.history.map(entry => entry.numRecordErrors+entry.numAppErrors+entry.numDBErrors+entry.numESErrors),
             borderColor: "red",
             backgroundColor: "red",
             fill: false,

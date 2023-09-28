@@ -24,58 +24,42 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import { BaseMapper } from "../base.mapper";
-import { License } from '@shared/license.model';
-import { getLogger } from "log4js";
-import { UrlUtils } from "../../utils/url.utils";
-import { MiscUtils } from "../../utils/misc.utils"
-import { RequestDelegate, RequestOptions } from "../../utils/http-request.utils";
+import { getLogger } from 'log4js';
+import { namespaces } from '../../importer/namespaces';
+import { throwError } from 'rxjs';
+import { BaseMapper } from '../base.mapper';
+import { Contact, Person } from '../../model/agent';
+import { DateRange } from '../../model/dateRange';
 import { DcatappluSettings } from './dcatapplu.settings';
-// import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
-import { throwError } from "rxjs";
-import { ImporterSettings } from "../../importer.settings";
-// import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
-import { Summary } from "../../model/summary";
-import { Contact, Person } from "../../model/agent";
-import { Distribution } from "../../model/distribution";
-import { DateRange } from "../../model/dateRange";
-import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep, PluProcessStepType, PluDocType, Catalog } from "../../model/dcatApPlu.model";
+import { Distribution } from '../../model/distribution';
+import { ImporterSettings } from '../../importer.settings';
+import { MiscUtils } from '../../utils/misc.utils';
+import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep, PluProcessStepType } from '../../model/dcatApPlu.model';
+import { RequestOptions } from '../../utils/http-request.utils';
+import { Summary } from '../../model/summary';
 
-let xpath = require('xpath');
+const xpath = require('xpath');
 
 export class DcatappluMapper extends BaseMapper {
 
-    static ADMS = 'http://www.w3.org/ns/adms#';
-    static FOAF = 'http://xmlns.com/foaf/0.1/';
-    static LOCN = 'http://www.w3.org/ns/locn#';
-    static HYDRA = 'http://www.w3.org/ns/hydra/core#';
-    static RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-    static RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
-    static DCAT = 'http://www.w3.org/ns/dcat#';
-    static DCT = 'http://purl.org/dc/terms/';
-    static SKOS = 'http://www.w3.org/2004/02/skos/core#';
-    static SCHEMA = 'http://schema.org/';
-    static VCARD = 'http://www.w3.org/2006/vcard/ns#';
-    static DCATDE = 'http://dcat-ap.de/def/dcatde/';
-    static OGC = 'http://www.opengis.net/rdf#'
-    static PLU = 'https://specs.diplanung.de/plu/'
+    static nsMap = {
+        'adms': namespaces.ADMS,
+        'dcat': namespaces.DCAT,
+        'dcatde': namespaces.DCATDE,
+        'dct': namespaces.DCT,
+        'foaf': namespaces.FOAF,
+        'hydra': namespaces.HYDRA,
+        'locn': namespaces.LOCN,
+        'ogc': namespaces.OGC,
+        'plu': namespaces.PLU,
+        'rdf': namespaces.RDF,
+        'rdfs': namespaces.RDFS,
+        'schema': namespaces.SCHEMA,
+        'skos': namespaces.SKOS,
+        'vcard': namespaces.VCARD
+    }
 
-    static select = xpath.useNamespaces({
-        'adms': DcatappluMapper.ADMS,
-        'foaf': DcatappluMapper.FOAF,
-        'locn': DcatappluMapper.LOCN,
-        'hydra': DcatappluMapper.HYDRA,
-        'rdf': DcatappluMapper.RDF,
-        'rdfs': DcatappluMapper.RDFS,
-        'dcat': DcatappluMapper.DCAT,
-        'dct': DcatappluMapper.DCT,
-        'skos': DcatappluMapper.SKOS,
-        'schema': DcatappluMapper.SCHEMA,
-        'vcard': DcatappluMapper.VCARD,
-        'dcatde': DcatappluMapper.DCATDE,
-        'ogc': DcatappluMapper.OGC,
-        'plu': DcatappluMapper.PLU
-    });
+    static select = xpath.useNamespaces(DcatappluMapper.nsMap);
 
     private log = getLogger();
 
@@ -84,7 +68,6 @@ export class DcatappluMapper extends BaseMapper {
     private readonly linkedDistributions: any[];
     private readonly linkedProcessSteps: any[];
     private harvestTime: any;
-    private readonly storedData: any;
 
     //    protected readonly idInfo; // : SelectedValue;
     private settings: DcatappluSettings;
@@ -101,14 +84,12 @@ export class DcatappluMapper extends BaseMapper {
         themes: null
     };
 
-
-    constructor(settings, record, catalog, catalogPage, harvestTime, storedData, summary) {
+    constructor(settings, record, catalog, catalogPage, harvestTime, summary) {
         super();
         this.settings = settings;
         this.record = record;
         this.fetched.catalog = catalog;
         this.harvestTime = harvestTime;
-        this.storedData = storedData;
         this.summary = summary;
         this.catalogPage = catalogPage;
         this.linkedDistributions = DcatappluMapper.select('./dcat:Distribution', catalogPage);
@@ -373,20 +354,6 @@ export class DcatappluMapper extends BaseMapper {
         return undefined;
     }
 
-
-    _getMetadataIssued(): Date {
-        return (this.storedData && this.storedData.issued) ? MiscUtils.normalizeDateTime(this.storedData.issued) : new Date(Date.now());
-    }
-    
-    _getMetadataModified(): Date {
-        if (this.storedData && this.storedData.modified && this.storedData.dataset_modified) {
-            let storedDataset_modified: Date = MiscUtils.normalizeDateTime(this.storedData.dataset_modified);
-            if (storedDataset_modified.valueOf() === this.getModifiedDate().valueOf())
-            return new Date(this.storedData.modified); 
-        }
-        return new Date(Date.now());
-    }
-    
     _getMetadataSource(): any {
         let dcatLink; //=  DcatappluMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');

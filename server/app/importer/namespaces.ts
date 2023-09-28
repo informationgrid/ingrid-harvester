@@ -41,7 +41,7 @@ export const namespaces = {
     ORG: 'http://www.w3.org/ns/org#',
     OWL: 'http://www.w3.org/2002/07/owl#',
     OWS: 'http://www.opengis.net/ows',
-    PLU: 'https://specs.diplanung.de/plu/',
+    PLU: 'http://specs.diplanung.de/plu/',
     RDF: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     RDFS: 'http://www.w3.org/2000/01/rdf-schema#',
     SCHEMA: 'http://schema.org/',

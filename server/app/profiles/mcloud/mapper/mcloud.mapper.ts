@@ -94,17 +94,8 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
         return this.baseMapper.getGeneratedId()
     }
 
-    getMetadataModified(): Date{
-        return this.baseMapper.getMetadataModified();
-    }
-
-
     getMetadataSource(): any{
         return this.baseMapper.getMetadataSource();
-    }
-
-    getMetadataIssued(): Date{
-        return this.baseMapper.getMetadataIssued();
     }
 
     getHierarchyLevel() {

@@ -54,11 +54,21 @@ export class ConfigService {
     static highestID: number = 0;
 
     private static readonly defaultSettings: GeneralSettings = {
+        database: {
+            type: 'postgresql' as 'postgresql',
+            host: process.env.DB_URL,
+            port: parseInt(process.env.DB_PORT),
+            database: process.env.DB_NAME,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            defaultCatalogIdentifier: process.env.DEFAULT_CATALOG ?? 'harvester'
+        },
         elasticsearch: {
             url: process.env.ELASTIC_URL ?? "http://elastic:9200",
             version: process.env.ELASTIC_VERSION ?? "8",
             user: process.env.ELASTIC_USER ?? "elastic",
             password: process.env.ELASTIC_PASSWORD ?? "elastic",
+            index: process.env.ELASTIC_INDEX ?? "harvester-index",
             alias: process.env.ELASTIC_ALIAS ?? "mcloud",
             prefix: process.env.ELASTIC_PREFIX ?? '',
             numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS) ?? 1,
@@ -147,6 +157,15 @@ export class ConfigService {
         log.info('Updating general config from environment variables');
         let generalSettings = ConfigService.getGeneralSettings();
         let ENV = {
+            database: {
+                type: 'postgresql',
+                host: process.env.DB_URL,
+                port: process.env.DB_PORT,
+                database: process.env.DB_NAME,
+                user: process.env.DB_USER,
+                password: process.env.DB_PASSWORD,
+                defaultCatalogIdentifier: process.env.DEFAULT_CATALOG
+            },
             elasticsearch: {
                 url: process.env.ELASTIC_URL,
                 version: process.env.ELASTIC_VERSION,
@@ -156,11 +175,6 @@ export class ConfigService {
                 prefix: process.env.ELASTIC_PREFIX,
                 numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS),
                 numberOfReplicas: parseIntOrUndefined(process.env.ELASTIC_NUM_REPLICAS)
-            },
-            ogcRecordsApi: {
-                url: process.env.OGCAPI_URL,
-                user: process.env.OGCAPI_USER,
-                password: process.env.OGCAPI_PASSWORD
             }
         };
         let updatedSettings: GeneralSettings = MiscUtils.merge(generalSettings, ENV);

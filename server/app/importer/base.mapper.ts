@@ -185,15 +185,6 @@ export abstract class BaseMapper {
         return this.cache.generatedId;
     }
 
-    abstract _getMetadataModified(): Date;
-
-    getMetadataModified(): Date{
-        if (!this.cache.metadataModified) {
-            this.cache.metadataModified = this._getMetadataModified();
-        }
-        return this.cache.metadataModified;
-    }
-
     abstract _getMetadataSource(): any;
 
     getMetadataSource(): any{
@@ -201,15 +192,6 @@ export abstract class BaseMapper {
             this.cache.metadataSource = this._getMetadataSource();
         }
         return this.cache.metadataSource;
-    }
-
-    abstract _getMetadataIssued(): Date;
-
-    getMetadataIssued(): Date{
-        if (!this.cache.metadataIssued) {
-            this.cache.metadataIssued = this._getMetadataIssued();
-        }
-        return this.cache.metadataIssued;
     }
 
     abstract _isRealtime(): boolean;

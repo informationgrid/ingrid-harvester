@@ -21,31 +21,11 @@
  * ==================================================
  */
 
-import { ElasticQueries } from './elastic.queries';
-import { ElasticsearchUtils } from './elastic.utils';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import { Summary } from '../model/summary';
-
-const log = require('log4js').getLogger(__filename);
-
-export abstract class DeduplicateUtils {
-
-    protected elastic: ElasticsearchUtils;
-    protected queries: ElasticQueries;
-    protected summary: Summary;
-
-    constructor(elasticUtils: ElasticsearchUtils, summary: Summary) {
-        this.elastic = elasticUtils;
-        this.summary = summary;
-        this.queries = ProfileFactoryLoader.get().getElasticQueries();
-    }
-
-    abstract deduplicate(): Promise<void>;
-
-    abstract _deduplicateByTitle(): Promise<void>;
-
-    protected handleError(message: string, error: any): void {
-        this.summary.elasticErrors.push(message);
-        log.error(message, error);
-    }
+export interface Entity {
+    identifier: string,
+    source: string,
+    collection_id: number,
+    operates_on?: string[],
+    dataset: any,
+    original_document: string
 }

@@ -37,6 +37,8 @@ export class Summary {
 
     elasticErrors: string[] = [];
 
+    databaseErrors: string[] = [];
+
     appErrors: string[] = [];
 
     isIncremental: boolean;
@@ -69,6 +71,9 @@ export class Summary {
         logger.info(`App-Errors: ${this.appErrors.length}`);
         this.logArray(logger, this.appErrors);
 
+        logger.info(`Database-Errors: ${this.databaseErrors.length}`);
+        this.logArray(logger, this.databaseErrors);
+
         logger.info(`Elasticsearch-Errors: ${this.elasticErrors.length}`);
         this.logArray(logger, this.elasticErrors);
 
@@ -87,6 +92,8 @@ export class Summary {
         result += `Warnings: ${this.warnings.length}\n`;
 
         result += `App-Errors: ${this.appErrors.length}\n`;
+
+        result += `Database-Errors: ${this.databaseErrors.length}\n`;
 
         result += `Elasticsearch-Errors: ${this.elasticErrors.length}\n`;
 

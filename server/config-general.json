@@ -1,9 +1,19 @@
 {
+  "database": {
+    "type": "postgresql",
+    "host": "localhost",
+    "port": 5433,
+    "database": "metadaten",
+    "user": "ogcrecords",
+    "password": "ogcrecords",
+    "defaultCatalogIdentifier": "harvester"
+  },
   "elasticsearch": {
-    "url": "http://localhost:9201",
+    "url": "http://localhost:9200",
     "version": "8",
     "user": "elastic",
     "password": "elastic",
+    "index": "harvester-index",
     "alias": "harvester",
     "prefix": "",
     "numberOfShards": 1,
@@ -19,7 +29,6 @@
     "active": false,
     "pattern": "10 04 * * *"
   },
-  "sessionSecret": "mysecretkey",
   "mail": {
     "enabled": false,
     "mailServer": {
@@ -42,10 +51,5 @@
     "dir": ""
   },
   "maxDiff": 10,
-  "ogcRecordsApi": {
-    "url": "http://localhost:8080/v1",
-    "user": "admin",
-    "password": "admin"
-  },
   "cronOffset": 0
 }
