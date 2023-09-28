@@ -153,16 +153,18 @@ export class CswImporter extends Importer {
         let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
         let capabilitiesResponseDom = this.domParser.parseFromString(capabilitiesResponse);
 
-        // store catalog info from getCapabilities in generalInfo
-        let catalog: Catalog = {
-            description: CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
-            homepage: this.settings.getRecordsUrl,
-            // TODO we need a unique ID for each catalog - currently using the alias (used as "global" catalog)
-            // TODO or assign a different catalog for each record, depending on a property (address, publisher, etc)? expensive?
-            identifier: ConfigService.getGeneralSettings().elasticsearch.alias,
-            publisher: { name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent },
-            title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
-        };
+        // // store catalog info from getCapabilities in generalInfo
+        // let catalog: Catalog = {
+        //     description: CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
+        //     homepage: this.settings.getRecordsUrl,
+        //     // TODO we need a unique ID for each catalog - currently using the alias (used as "global" catalog)
+        //     // TODO or assign a different catalog for each record, depending on a property (address, publisher, etc)? expensive?
+        //     identifier: ConfigService.getGeneralSettings().elasticsearch.alias,
+        //     publisher: { name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent },
+        //     title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
+        // };
+        // let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId) ?? this.database.defaultCatalog;
+        let catalog: Catalog = this.database.defaultCatalog;
         this.generalInfo['catalog'] = catalog;
 
         if (this.settings.maxConcurrent > 1) {
