@@ -173,6 +173,7 @@ export class ConfigService {
                 version: process.env.ELASTIC_VERSION,
                 user: process.env.ELASTIC_USER,
                 password: process.env.ELASTIC_PASSWORD,
+                index: process.env.ELASTIC_INDEX,
                 alias: process.env.ELASTIC_ALIAS,
                 prefix: process.env.ELASTIC_PREFIX,
                 numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS),
