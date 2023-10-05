@@ -183,7 +183,7 @@ export class PostgresUtils extends DatabaseUtils {
         log.debug('Connection released');
         client.release();
         let stop = Date.now();
-        log.info('Processed %d datasets and %d buckets', numDatasets, numBuckets);
+        log.info(`Processed ${numDatasets} datasets and ${numBuckets} buckets`);
         log.info('Time for PG -> ES push: ' + Math.floor((stop - start)/1000) + 's');
     }
 
@@ -204,6 +204,13 @@ export class PostgresUtils extends DatabaseUtils {
         }
         let result: QueryResult<any>;
         try {
+            // if we have the same entity twice in the same bulk, merge the entity before persisting
+            // this can occur due to the way updates are handled (e.g. in CSW we have to wait for WMS calls to finish)
+            // if we don't merge, we get the following error: 
+            // "Ensure that no rows proposed for insertion within the same command have duplicate constrained values."
+            // TODO ideally, we change handling from `Entity` to `Entity.DbOperation`, to only send updates when needed
+            // TODO (instead of full upserts) and handle JSON updates within Postgres
+            entities = this.mergeEntities(entities);
             result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities)]);
             log.debug('Bulk finished of data #items: ' + entities.length);
         }
@@ -215,6 +222,25 @@ export class PostgresUtils extends DatabaseUtils {
             queued: false,
             response: result?.rowCount
         }));
+    }
+
+    private mergeEntities(entities: Entity[]): Entity[] {
+        let entityMap: Map<string, Entity> = new Map();
+        entities.forEach(entity => {
+            let uid = entity.identifier + '/' + entity.collection_id;
+            if (!entityMap[uid]) {
+                entityMap[uid] = entity;
+            }
+            else {
+                if (entity.dataset.extras.metadata.modified > entityMap[uid].dataset.extras.metadata.modified) {
+                    entityMap[uid].dataset = entity.dataset;
+                }
+                else {
+                    entityMap[uid] = { ...entity, dataset: entityMap[uid].dataset };
+                }
+            }
+        });
+        return Object.values(entityMap);
     }
 
     addEntityToBulk(entity: Entity): Promise<BulkResponse> {
