@@ -29,3 +29,8 @@ export interface Entity {
     dataset: any,
     original_document: string
 }
+
+// export interface DbOperation {
+//     operation: 'insert' | 'update' | 'delete',
+//     entity: Entity
+// }

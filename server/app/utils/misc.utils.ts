@@ -23,9 +23,7 @@
 
 'use strict';
 
-import { merge as lodashMerge, trim } from 'lodash';
-import { Catalog } from '../model/dcatApPlu.model';
-import { ConfigService } from '../services/config/ConfigService';
+import { cloneDeep, merge as lodashMerge, trim } from 'lodash';
 import { Distribution } from '../model/distribution';
 
 const dayjs = require('dayjs');
@@ -38,6 +36,13 @@ const TRUNC_STR = '... (truncated)';
 
 export class MiscUtils {
 
+    static structuredClone(obj: object) {
+        // TODO from nodejs 17 on, we can use the inbuilt function
+        // return structuredClone(obj);
+        // TODO until then, use an lodash equivalent
+        return cloneDeep(obj);
+    }
+
     /**
      * Deep merge objects without mutating the first one.
      * Helper method to prevent accidents.
@@ -45,7 +50,7 @@ export class MiscUtils {
      * @param objs the objects to merge
      * @return the merged object
      */
-    static merge(...objs) {
+    static merge(...objs: object[]): any {
         // lodash mutates the first object on which it merges subsequent objects
         return lodashMerge({}, ...objs)
     }
