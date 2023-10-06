@@ -24,13 +24,6 @@
 import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
 
 export type CswSettings = {
-    xpaths: {
-        capabilities: {
-            abstract: string,
-            serviceProvider: string,
-            title: string
-        },
-    },
     resultType?: "hits" | "results",
     pluPlanState?: string,
     getRecordsUrl: string,
@@ -39,19 +32,8 @@ export type CswSettings = {
     recordFilter?: string
 } & ImporterSettings;
 
-export const DefaultXpathSettings: Partial<CswSettings> = {
-    xpaths: {
-        capabilities: {
-            abstract: '/csw:Capabilities/ows:ServiceIdentification/ows:Abstract',
-            serviceProvider: '/csw:Capabilities/ows:ServiceProvider',
-            title: '/csw:Capabilities/ows:ServiceIdentification/ows:Title'
-        }
-    }
-}
-
 export const defaultCSWSettings: Partial<CswSettings> = {
     ...DefaultImporterSettings,
-    ...DefaultXpathSettings,
     getRecordsUrl: '',
     eitherKeywords: [],
     httpMethod: 'GET',
