@@ -73,7 +73,7 @@ export class DiplanungCswMapper extends CswMapper {
                 'coordinates': [west, north]
             };
         }
-        else if (!forcePolygon && (west === east || north === south)) {
+        else if (west === east || north === south) {
             return {
                 'type': 'LineString',
                 'coordinates': [[west, north], [east, south]]

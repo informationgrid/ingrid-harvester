@@ -484,7 +484,8 @@ export class CswMapper extends BaseMapper {
     }
 
     _getModifiedDate() {
-        return new Date(CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent);
+        let modified = CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true)?.textContent;
+        return modified ? new Date(modified) : undefined;
     }
 
     _getSpatial(): object {
@@ -541,7 +542,6 @@ export class CswMapper extends BaseMapper {
                 'geometries': geometries
             }
         }
-
         return undefined;
     }
 
