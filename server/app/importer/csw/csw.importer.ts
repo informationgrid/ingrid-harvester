@@ -61,6 +61,15 @@ export class CswImporter extends Importer {
 
         this.profile = ProfileFactoryLoader.get();
 
+        this.domParser = new DomParser({
+            errorHandler: (level, msg) => {
+                // throw on error, swallow rest
+                if (level == 'error') {
+                    throw new Error(msg);
+                }
+            }
+        });
+
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultCSWSettings, settings);
 
@@ -85,14 +94,6 @@ export class CswImporter extends Importer {
             this.requestDelegate = new RequestDelegate(requestConfig, CswImporter.createPaging(settings));
         }
         this.settings = settings;
-        this.domParser = new DomParser({
-            errorHandler: (level, msg) => {
-                // throw on error, swallow rest
-                if (level == 'error') {
-                    throw new Error(msg);
-                }
-            }
-        });
     }
 
     private addModifiedFilter(recordFilter: string, lastRunDate: Date): string {

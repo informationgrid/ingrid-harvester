@@ -60,7 +60,7 @@ export class DiplanungCswImporter extends CswImporter {
                 let updatedDistributions = await this.updateDistributions(doc.distributions, doc.plan_type as PluPlanType);
                 if (updatedDistributions?.length > 0) {
                     updateDoc['distributions'] = updatedDistributions;
-                    updateDoc['extras'] = { ...doc['extras'] };
+                    updateDoc['extras'] = MiscUtils.structuredClone(doc['extras']);
                     if (!updateDoc['extras']['metadata']['quality_notes']) {
                         updateDoc['extras']['metadata']['quality_notes'] = [];
                     }
@@ -72,7 +72,7 @@ export class DiplanungCswImporter extends CswImporter {
                 // purposely simplistic heuristic: is centroid inside bbox for Germany?
                 if (!GeoJsonUtils.within(doc.centroid, GeoJsonUtils.BBOX_GERMANY)) {
                     // copy and/or create relevant metadata structure
-                    updateDoc['extras'] = { ...doc['extras'] };
+                    updateDoc['extras'] = MiscUtils.structuredClone(doc['extras']);
                     if (!updateDoc['extras']['metadata']['quality_notes']) {
                         updateDoc['extras']['metadata']['quality_notes'] = [];
                     }

@@ -40,6 +40,7 @@
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import booleanWithin from '@turf/boolean-within';
+import buffer from '@turf/buffer';
 import centroid from '@turf/centroid';
 import flip from '@turf/flip';
 import rewind from '@turf/rewind';
@@ -52,7 +53,10 @@ const proj4 = require('proj4');
 
 export class GeoJsonUtils {
 
-    static BBOX_GERMANY = {
+    /**
+     * Bounding box around Germany (+ 50km buffer zone for leniency)
+     */
+    static BBOX_GERMANY = buffer({
         'type': 'Polygon',
         'coordinates': [[
             [5.98865807458, 54.983104153], 
@@ -60,7 +64,7 @@ export class GeoJsonUtils {
             [15.0169958839, 47.3024876979],
             [15.0169958839, 54.983104153],
             [5.98865807458, 54.983104153]]]
-    };
+    }, 50, {units: 'kilometers'});
 
     private select: Function;
     private transformer: Function;

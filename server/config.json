@@ -18,13 +18,6 @@
     "isIncremental": false,
     "maxConcurrent": 6,
     "skipUrlCheckOnHarvest": false,
-    "xpaths": {
-      "capabilities": {
-        "abstract": "/csw:Capabilities/ows:ServiceIdentification/ows:Abstract",
-        "serviceProvider": "/csw:Capabilities/ows:ServiceProvider",
-        "title": "/csw:Capabilities/ows:ServiceIdentification/ows:Title"
-      }
-    },
     "getRecordsUrl": "https://gdk.gdi-de.org/gdi-de/srv/ger/csw",
     "eitherKeywords": [],
     "httpMethod": "POST",
