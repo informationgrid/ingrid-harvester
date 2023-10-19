@@ -149,11 +149,11 @@ export class CswImporter extends Importer {
     }
 
     async harvest(): Promise<void> {
-        let capabilitiesRequestConfig = CswImporter.createRequestConfig({ ...this.settings, httpMethod: 'GET' }, 'GetCapabilities');
-        let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
-        let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
-        let capabilitiesResponseDom = this.domParser.parseFromString(capabilitiesResponse);
-
+        // let capabilitiesRequestConfig = CswImporter.createRequestConfig({ ...this.settings, httpMethod: 'GET' }, 'GetCapabilities');
+        // let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
+        // let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
+        // let capabilitiesResponseDom = this.domParser.parseFromString(capabilitiesResponse);
+        // 
         // // store catalog info from getCapabilities in generalInfo
         // let catalog: Catalog = {
         //     description: CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
