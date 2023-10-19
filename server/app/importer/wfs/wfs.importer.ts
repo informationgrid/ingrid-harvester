@@ -252,6 +252,7 @@ export abstract class WfsImporter extends Importer {
                 break;
             }
         }
+        log.info(`Finished requests`);
         await this.database.sendBulkData();
     }
 

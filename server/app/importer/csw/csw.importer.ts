@@ -185,7 +185,7 @@ export class CswImporter extends Importer {
     }
 
     async handleHarvest(delegate: RequestDelegate): Promise<void> {
-        log.debug('Requesting next records, starting at', delegate.getStartRecordIndex());
+        log.info('Requesting next records, starting at', delegate.getStartRecordIndex());
         let response = await delegate.doRequest();
         let harvestTime = new Date(Date.now());
 
@@ -234,6 +234,7 @@ export class CswImporter extends Importer {
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
+        log.info(`Finished requests`);
     }
 
     async harvestSequentially(): Promise<void> {
