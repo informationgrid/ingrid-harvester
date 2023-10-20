@@ -23,30 +23,33 @@
 
 export abstract class PostgresQueries {
 
-    abstract readonly collectionTableName: string;
-    abstract readonly datasetTableName: string;
     abstract readonly createCollectionTable: string;
-    abstract readonly createDatasetTable: string;
-    abstract readonly onConflict: string;
+    abstract readonly createRecordTable: string;
+    abstract readonly createCollection: string;
+    abstract readonly getCollection: string;
     abstract readonly bulkUpsert: string;
-    abstract readonly readDatasets: string;
+    abstract readonly getRecords: string;
     abstract readonly getStoredData: string;
-    abstract readonly createCatalog: string;
-    abstract readonly getCatalog: string;
 
     /**
-     * Create a query for retrieving all items for a given source.
+     * Query for retrieving all items for a given source.
+     * "All items" comprise
+     * - datasets of the source
+     * - services operating on these datasets
+     * - duplicates of these datasets
+     * - services operating on the duplicates
      * 
      * With each result row representing an item, this query should expose the following columns:
-     * - id: the ID of the item
-     * - primary_id: the ID of the dataset this item is a duplicate of, or is a service to
-     * - is_primary: true, if this item is the primary dataset
-     * - is_duplicate: true, if this item is a duplicate of the primary dataset
-     * - is_service: true, if this item is a service to the primary dataset
-     * - dataset: the dataset document of this item
+     * - anchor_id: the ID of the dataset this item is a duplicate of, or is a service to (even by proxy)
+     * - id: the actual ID of this item
+     * - source: the source of this item
+     * - dataset: the dataset json document of this item
+     * - is_service: if this item is a service
+     * - issued,
+     * - modified
      * 
      * @param source the source of the requested items
      * @returns a database query to return grouped (by `primary_id`) items of rows representing items
      */
-    abstract getBuckets(source: string): string;
+    abstract readonly getBuckets: string;
 }

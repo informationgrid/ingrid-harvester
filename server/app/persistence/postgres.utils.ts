@@ -28,16 +28,14 @@ import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DcatApPluDocument } from '../profiles/diplanung/model/dcatApPlu.document';
 import { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document';
 import { PostgresUtils as DiplanungPostgresUtils } from '../profiles/diplanung/persistence/postgres.utils';
-import { ElasticsearchUtils, EsOperation } from './elastic.utils';
+import { ElasticsearchUtils } from './elastic.utils';
 import { Entity } from '../model/entity';
+import { PostgresQueries } from './postgres.queries';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 
 const log = require('log4js').getLogger(__filename);
 const Cursor = require('pg-cursor');
-// const QueryStream = require('pg-query-stream');
-// const TransformToBulk = require('elasticsearch-streams').TransformToBulk;
-// const WritableBulk = require('elasticsearch-streams').WritableBulk;
 
 /**
  * Contains a primary dataset, a list of duplicates, and a list of services operating on the primary dataset.
@@ -51,6 +49,7 @@ export interface Bucket {
 export class PostgresUtils extends DatabaseUtils {
 
     private static pool: Pool;
+    private queries: PostgresQueries;
     private transactionClient: PoolClient;
 
     constructor(configuration: DatabaseConfiguration, summary: Summary) {
@@ -84,7 +83,7 @@ export class PostgresUtils extends DatabaseUtils {
 
     async createTables() {
         await PostgresUtils.pool.query(this.queries.createCollectionTable);
-        await PostgresUtils.pool.query(this.queries.createDatasetTable);
+        await PostgresUtils.pool.query(this.queries.createRecordTable);
     }
 
     async getStoredData(ids: string[]): Promise<any[]> {
@@ -102,7 +101,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async createCatalog(catalog: Catalog): Promise<Catalog> {
-        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCatalog, [catalog.identifier, catalog, null, DcatApPluDocument.createCatalog(catalog), catalog]);
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCollection, [catalog.identifier, catalog, null, DcatApPluDocument.createCatalog(catalog), catalog]);
         if (result.rowCount != 1) {
             return null;
         }
@@ -111,7 +110,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async getCatalog(identifier: string): Promise<Catalog> {
-        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getCatalog, [identifier]);
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getCollection, [identifier]);
         if (result.rowCount == 0) {
             return null;
         }
@@ -132,12 +131,11 @@ export class PostgresUtils extends DatabaseUtils {
         let pgUtils = new DiplanungPostgresUtils();
         const client: PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
-        // TODO we also need to store SOURCE_TYPE in postgres and subsequently fetch it here (B.source_type)
-        let q = this.queries.getBuckets(source);
-        // console.log(q);
         let start = Date.now();
+        // TODO we also need to store SOURCE_TYPE in postgres and subsequently fetch it here (B.source_type)
+        // @myself: next time, when you want me to do something in the future, specify WHY that should be done...
 
-        const cursor = client.query(new Cursor(q));
+        const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
         let currentId: string | number;
         let currentBucket: Bucket;
         const maxRows = 100;

@@ -21,20 +21,33 @@
  * ==================================================
  */
 
-import { BaseMapper } from '../importer/base.mapper';
-import { ElasticQueries } from '../persistence/elastic.queries';
-import { ImporterFactory } from '../importer/importer.factory';
-import { IndexDocument } from '../model/index.document';
-import { IndexSettings } from '../persistence/elastic.setting';
-import { PostgresQueries } from '../persistence/postgres.queries';
-
-export abstract class ProfileFactory<M extends BaseMapper> {
-
-    abstract getElasticQueries(): ElasticQueries;
-    abstract getImporterFactory(): ImporterFactory;
-    abstract getIndexDocument(): IndexDocument<M>;
-    abstract getIndexMappings(): any;
-    abstract getIndexSettings(): IndexSettings;
-    abstract getPostgresQueries(): PostgresQueries;
-    abstract getProfileName(): string;
-}
+(
+	SELECT anchor.id AS anchor_id,
+		secondary.id AS id,
+		secondary.source AS source,
+		secondary.dataset AS dataset,
+		false AS is_service,
+		secondary.created_on AS issued,
+		secondary.last_modified AS modified
+	FROM public.${this.datasetTableName} AS anchor
+	LEFT JOIN public.${this.datasetTableName} AS secondary
+	ON anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
+	WHERE anchor.source = $1
+		AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
+)
+UNION
+(
+	SELECT ds.id AS anchor_id,
+		service.id AS id,
+		service.source AS source,
+		service.dataset AS dataset,
+		true AS is_service,
+		service.created_on AS issued,
+		service.last_modified AS modified
+	FROM public.${this.datasetTableName} AS service
+	LEFT JOIN public.${this.datasetTableName} AS ds
+	ON ds.identifier = ANY(service.operates_on)
+	WHERE ds.source = $1
+		AND service.dataset->'extras'->>'hierarchy_level' = 'service'
+)
+ORDER BY anchor_id`;

@@ -21,20 +21,17 @@
  * ==================================================
  */
 
-import { BaseMapper } from '../importer/base.mapper';
-import { ElasticQueries } from '../persistence/elastic.queries';
-import { ImporterFactory } from '../importer/importer.factory';
-import { IndexDocument } from '../model/index.document';
-import { IndexSettings } from '../persistence/elastic.setting';
-import { PostgresQueries } from '../persistence/postgres.queries';
-
-export abstract class ProfileFactory<M extends BaseMapper> {
-
-    abstract getElasticQueries(): ElasticQueries;
-    abstract getImporterFactory(): ImporterFactory;
-    abstract getIndexDocument(): IndexDocument<M>;
-    abstract getIndexMappings(): any;
-    abstract getIndexSettings(): IndexSettings;
-    abstract getPostgresQueries(): PostgresQueries;
-    abstract getProfileName(): string;
-}
+/*
+ * Create the collection table
+ */
+CREATE TABLE IF NOT EXISTS public.collection (
+    id SERIAL,
+    identifier VARCHAR(255) NOT NULL UNIQUE,
+    properties JSONB,
+    original_document TEXT,
+    dcat_ap_plu TEXT,
+    json TEXT,
+    created_on TIMESTAMP(6) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified TIMESTAMP(6) with time zone NULL,
+    CONSTRAINT collection_pkey PRIMARY KEY(id)
+)
