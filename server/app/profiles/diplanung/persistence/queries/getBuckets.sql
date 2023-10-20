@@ -21,33 +21,87 @@
  * ==================================================
  */
 
+/*
+ * This is a quite complex query, but runs reasonably fast. It is a UNION of three queries:
+ * - get datasets and deduplicated datasets
+ * - get services operating on the datasets
+ * - get services operating on the deduplicated datasets
+ * They are all identified by the `anchor_id` which is the id of the "original" dataset
+ */
+
+-- get all datasets of a given source, and all their duplicates from other sources (here determined by alternateTitle)
 (
-	SELECT anchor.id AS anchor_id,
-		secondary.id AS id,
-		secondary.source AS source,
-		secondary.dataset AS dataset,
-		false AS is_service,
-		secondary.created_on AS issued,
-		secondary.last_modified AS modified
-	FROM public.${this.datasetTableName} AS anchor
-	LEFT JOIN public.${this.datasetTableName} AS secondary
-	ON anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
-	WHERE anchor.source = $1
-		AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
+    SELECT
+        anchor.id AS anchor_id,
+        secondary.id AS id,
+        secondary.source AS source,
+        secondary.dataset AS dataset,
+        false AS is_service,
+        secondary.created_on AS issued,
+        secondary.last_modified AS modified
+    FROM public.record AS anchor
+    LEFT JOIN public.record AS secondary
+    ON
+        anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
+        AND (anchor.source != secondary.source OR anchor.id = secondary.id)
+    WHERE
+        anchor.source = $1
+        AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
 )
 UNION
+-- get all services for the datasets of a given source
 (
-	SELECT ds.id AS anchor_id,
-		service.id AS id,
-		service.source AS source,
-		service.dataset AS dataset,
-		true AS is_service,
-		service.created_on AS issued,
-		service.last_modified AS modified
-	FROM public.${this.datasetTableName} AS service
-	LEFT JOIN public.${this.datasetTableName} AS ds
-	ON ds.identifier = ANY(service.operates_on)
-	WHERE ds.source = $1
-		AND service.dataset->'extras'->>'hierarchy_level' = 'service'
+    SELECT
+        ds.id AS anchor_id,
+        service.id AS id,
+        service.source AS source,
+        service.dataset AS dataset,
+        true AS is_service,
+        service.created_on AS issued,
+        service.last_modified AS modified
+    FROM public.record AS service
+    LEFT JOIN public.record AS ds
+    ON
+        ds.identifier = ANY(service.operates_on)
+        AND ds.source = service.source
+    WHERE
+        ds.source = $1
+        AND service.dataset->'extras'->>'hierarchy_level' = 'service'
 )
-ORDER BY anchor_id`;
+/*
+-- TODO below query takes ages - improve it
+UNION
+-- get all services for the deduplicated datasets of datasets of a given source
+(
+    SELECT
+        ds.id AS anchor_id,
+        service.id AS id,
+        service.source AS source,
+        service.dataset AS dataset,
+        true AS is_service,
+        service.created_on AS issued,
+        service.last_modified AS modified
+    FROM public.record AS service
+    LEFT JOIN (
+        SELECT 
+            secondary.id AS id,
+            secondary.identifier AS identifier,
+            secondary.source AS source
+        FROM public.record AS anchor
+        LEFT JOIN public.record AS secondary
+        ON
+            anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
+            AND (anchor.source != secondary.source OR anchor.id = secondary.id)
+        WHERE
+            anchor.source = $1
+            AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
+    ) AS ds
+    ON
+        ds.identifier = ANY(service.operates_on)
+        AND ds.source = service.source
+    WHERE
+        ds.source = $1
+        AND service.dataset->'extras'->>'hierarchy_level' = 'service'
+)
+*/
+ORDER BY anchor_id
