@@ -82,8 +82,10 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async createTables() {
-        await PostgresUtils.pool.query(this.queries.createCollectionTable);
-        await PostgresUtils.pool.query(this.queries.createRecordTable);
+        await this.beginTransaction();
+        await this.transactionClient.query(this.queries.createCollectionTable);
+        await this.transactionClient.query(this.queries.createRecordTable);
+        await this.commitTransaction();
     }
 
     async getStoredData(ids: string[]): Promise<any[]> {
