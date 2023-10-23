@@ -114,6 +114,8 @@ export interface RequestOptions extends RequestInit {
  */
 export class RequestDelegate {
 
+    private static domParser;
+
     private config: RequestOptions;
     private readonly postBodyXml: any;
     private paging: RequestPaging;
@@ -126,8 +128,18 @@ export class RequestDelegate {
      */
     constructor(config: RequestOptions, paging?: RequestPaging) {
         this.config = config;
+        if (!RequestDelegate.domParser) {
+            RequestDelegate.domParser = new DomParser({
+                errorHandler: (level, msg) => {
+                    // throw on error, swallow rest
+                    if (level == 'error') {
+                        throw new Error(msg);
+                    }
+                }
+            });
+        }
         if (config.body) {
-            this.postBodyXml = new DomParser().parseFromString(config.body, 'application/xml');
+            this.postBodyXml = RequestDelegate.domParser.parseFromString(config.body, 'application/xml');
         }
 
         this.paging = paging;

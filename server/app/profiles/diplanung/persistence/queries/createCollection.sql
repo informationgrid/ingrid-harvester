@@ -21,20 +21,9 @@
  * ==================================================
  */
 
-import { BaseMapper } from '../importer/base.mapper';
-import { ElasticQueries } from '../persistence/elastic.queries';
-import { ImporterFactory } from '../importer/importer.factory';
-import { IndexDocument } from '../model/index.document';
-import { IndexSettings } from '../persistence/elastic.setting';
-import { PostgresQueries } from '../persistence/postgres.queries';
-
-export abstract class ProfileFactory<M extends BaseMapper> {
-
-    abstract getElasticQueries(): ElasticQueries;
-    abstract getImporterFactory(): ImporterFactory;
-    abstract getIndexDocument(): IndexDocument<M>;
-    abstract getIndexMappings(): any;
-    abstract getIndexSettings(): IndexSettings;
-    abstract getPostgresQueries(): PostgresQueries;
-    abstract getProfileName(): string;
-}
+/*
+ * Create a collection
+ */
+INSERT INTO public.collection (identifier, properties, original_document, dcat_ap_plu, json)
+VALUES($1, $2, $3, $4, $5)
+RETURNING id
