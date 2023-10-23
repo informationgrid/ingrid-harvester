@@ -22,6 +22,7 @@
  */
 
 import * as fs from 'fs';
+import * as path from 'path';
 import { PostgresQueries as AbstractPostgresQueries } from '../../../persistence/postgres.queries';
 
 export class PostgresQueries extends AbstractPostgresQueries {
@@ -49,6 +50,6 @@ export class PostgresQueries extends AbstractPostgresQueries {
     readonly getBuckets = this.readFile('getBuckets');
 
     private readFile(scriptName: string): string {
-        return fs.readFileSync(`app/profiles/diplanung/persistence/queries/${scriptName}.sql`, { encoding: 'utf8', flag: 'r' });
+        return fs.readFileSync(path.resolve(__dirname, `./queries/${scriptName}.sql`), { encoding: 'utf8', flag: 'r' });
     }
 }
