@@ -52,9 +52,19 @@ export class PostgresUtils {
         }
         // deduplication
         for (let [id, duplicate] of duplicates) {
+            let old_id = createEsId(document);
+            let duplicate_id = createEsId(duplicate);
             document = this.deduplicate(document, duplicate);
-            document.extras.merged_from.push(createEsId(duplicate));
-            box.push({ operation: 'delete', _id: createEsId(duplicate) });
+            let document_id = createEsId(document);
+            document.extras.merged_from.push(duplicate_id);
+            // remove dataset with old_id if it differs from the newly created id
+            if (old_id != document_id) {
+                box.push({ operation: 'delete', _id: old_id });
+            }
+            // remove data with duplicate _id if it differs from the newly created id
+            if (duplicate_id != document_id) {
+                box.push({ operation: 'delete', _id: duplicate_id });
+            }
         }
         document = this.updateDataset(document);
         document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
@@ -128,6 +138,8 @@ export class PostgresUtils {
             updatedFields['publisher'] = duplicate.publisher;
         }
         return { ...document, ...updatedFields };
+        // TODO don't we need a proper merge?
+        // return MiscUtils.merge(document, updatedFields);
     }
 
     private updateDataset(document: DiplanungIndexDocument): any {

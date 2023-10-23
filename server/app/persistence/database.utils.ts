@@ -21,12 +21,10 @@
  * ==================================================
  */
 
-import { Bucket } from './postgres.utils';
 import { Catalog } from '../model/dcatApPlu.model';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { ElasticsearchUtils, EsOperation } from './elastic.utils';
 import { Entity } from '../model/entity';
-import { PostgresQueries } from './postgres.queries';
 import { Summary } from '../model/summary';
 
 export interface BulkResponse {
@@ -38,7 +36,6 @@ export abstract class DatabaseUtils {
 
     public static maxBulkSize: number = 50;
     protected configuration: DatabaseConfiguration;
-    protected queries: PostgresQueries;
     protected summary: Summary;
     
     public _bulkData: Entity[];

@@ -21,20 +21,26 @@
  * ==================================================
  */
 
-import { BaseMapper } from '../importer/base.mapper';
-import { ElasticQueries } from '../persistence/elastic.queries';
-import { ImporterFactory } from '../importer/importer.factory';
-import { IndexDocument } from '../model/index.document';
-import { IndexSettings } from '../persistence/elastic.setting';
-import { PostgresQueries } from '../persistence/postgres.queries';
+/*
+ * Create the record table
+ */
+CREATE TABLE IF NOT EXISTS public.record (
+    id SERIAL,
+    identifier VARCHAR(255) NOT NULL,
+    source VARCHAR(255) NOT NULL,
+    operates_on VARCHAR(255)[],
+    collection_id INTEGER,
+    dataset JSONB,
+    original_document TEXT,
+    created_on TIMESTAMP(6) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified TIMESTAMP(6) with time zone NULL,
+    CONSTRAINT record_pkey PRIMARY KEY(id),
+    CONSTRAINT record_full_identifier UNIQUE(identifier, collection_id),
+    CONSTRAINT fkivo5l0rletq7kni6xstvejy5a FOREIGN KEY(collection_id) REFERENCES public.collection(id)
+);
 
-export abstract class ProfileFactory<M extends BaseMapper> {
+CREATE INDEX IF NOT EXISTS record_identifier_idx
+ON public.record (identifier);
 
-    abstract getElasticQueries(): ElasticQueries;
-    abstract getImporterFactory(): ImporterFactory;
-    abstract getIndexDocument(): IndexDocument<M>;
-    abstract getIndexMappings(): any;
-    abstract getIndexSettings(): IndexSettings;
-    abstract getPostgresQueries(): PostgresQueries;
-    abstract getProfileName(): string;
-}
+CREATE INDEX IF NOT EXISTS record_alternateTitle_idx
+ON public.record ((dataset->>'alternateTitle'));
