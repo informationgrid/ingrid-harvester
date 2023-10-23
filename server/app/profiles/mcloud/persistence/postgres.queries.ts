@@ -53,7 +53,7 @@ export class PostgresQueries extends AbstractPostgresQueries {
         CONSTRAINT ${this.collectionTableName}_pkey PRIMARY KEY(id)
     );`;
 
-    readonly createDatasetTable = `CREATE TABLE IF NOT EXISTS public.${this.datasetTableName} (
+    readonly createRecordTable = `CREATE TABLE IF NOT EXISTS public.${this.datasetTableName} (
         id SERIAL,
         identifier VARCHAR(255) NOT NULL,
         source VARCHAR(255) NOT NULL,
@@ -68,7 +68,17 @@ export class PostgresQueries extends AbstractPostgresQueries {
         CONSTRAINT fkivo5l0rletq7kni6xstvejy5a FOREIGN KEY(collection_id) REFERENCES public.${this.collectionTableName}(id)
     );`;
 
-    readonly onConflict = `ON CONFLICT ON CONSTRAINT record_full_identifier DO UPDATE SET
+    readonly createCollection = `INSERT INTO public.${this.collectionTableName} (identifier, properties, original_document, dcat_ap_plu, json)
+        VALUES($1, $2, $3, $4, $5)
+        RETURNING id`;
+
+    readonly getCollection = `SELECT * FROM public.${this.collectionTableName}
+        WHERE identifier = $1`;
+
+    readonly bulkUpsert = `INSERT INTO public.${this.datasetTableName} (identifier, source, collection_id, operates_on, dataset, original_document)
+        SELECT identifier, source, collection_id, operates_on, dataset, original_document
+        FROM json_populate_recordset(null::public.${this.datasetTableName}, $1)
+        ON CONFLICT ON CONSTRAINT record_full_identifier DO UPDATE SET
         operates_on = EXCLUDED.operates_on,
         dataset = EXCLUDED.dataset,
         original_document = COALESCE(EXCLUDED.original_document, ${this.datasetTableName}.original_document),
@@ -87,22 +97,10 @@ export class PostgresQueries extends AbstractPostgresQueries {
             OR EXCLUDED.dataset->'extras'->'metadata'->'modified' > ${this.datasetTableName}.dataset->'extras'->'metadata'->'modified'
         )`;
 
-    readonly bulkUpsert = `INSERT INTO public.${this.datasetTableName} (identifier, source, collection_id, operates_on, dataset, original_document)
-        SELECT identifier, source, collection_id, operates_on, dataset, original_document
-        FROM json_populate_recordset(null::public.${this.datasetTableName}, $1)
-        ${this.onConflict}`;
-
-    readonly readDatasets = `SELECT dataset FROM public.${this.datasetTableName}`;
+    readonly getRecords = `SELECT dataset FROM public.${this.datasetTableName}`;
 
     readonly getStoredData = `SELECT dataset FROM public.${this.datasetTableName}
         WHERE identifier = ANY($1)`;
-
-    readonly createCatalog = `INSERT INTO public.${this.collectionTableName} (identifier, properties, original_document, dcat_ap_plu, json)
-        VALUES($1, $2, $3, $4, $5)
-        RETURNING id`;
-
-    readonly getCatalog = `SELECT * FROM public.${this.collectionTableName}
-        WHERE identifier = $1`;
 
     /**
      * Create a query for retrieving all items for a given source.
@@ -119,7 +117,7 @@ export class PostgresQueries extends AbstractPostgresQueries {
      * @param source the source of the requested items
      * @returns a database query to return grouped (by `primary_id`) items of rows representing items
      */
-    getBuckets = (source: string) =>
+    readonly getBuckets =
         `(
             SELECT anchor.id AS anchor_id,
                 secondary.id AS id,
@@ -131,7 +129,7 @@ export class PostgresQueries extends AbstractPostgresQueries {
             FROM public.${this.datasetTableName} AS anchor
             LEFT JOIN public.${this.datasetTableName} AS secondary
             ON anchor.dataset->>'title' = secondary.dataset->>'title'
-            WHERE anchor.source = '${source}'
+            WHERE anchor.source = $1
                 AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
         )
         UNION
@@ -146,7 +144,7 @@ export class PostgresQueries extends AbstractPostgresQueries {
             FROM public.${this.datasetTableName} AS service
             LEFT JOIN public.${this.datasetTableName} AS ds
             ON ds.identifier = ANY(service.operates_on)
-            WHERE ds.source = '${source}'
+            WHERE ds.source = $1
                 AND service.dataset->'extras'->>'hierarchy_level' = 'service'
         )
         ORDER BY anchor_id`;

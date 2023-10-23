@@ -538,5 +538,44 @@
       }
     },
     "maxConcurrent": null
+  },
+  {
+    "index": "wfs_syn_sh_xplanung",
+    "priority": 0,
+    "type": "WFS.XPLAN.SYN",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "sh",
+    "pluPlanState": "festgesetzt",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "getFeaturesUrl": "https://sh.xplanungsplattform.de/xplansyn-wfs/services/xplansynwfs",
+    "id": 20,
+    "description": "XPlanung Schleswig-Holstein (festgesetzt)",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": false,
+    "cron": {
+      "full": {
+        "pattern": "48 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    },
+    "maxConcurrent": null
   }
 ]
