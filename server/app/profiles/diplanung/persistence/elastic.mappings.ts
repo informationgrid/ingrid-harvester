@@ -195,7 +195,7 @@ export const indexMappings = {
                         'byteSize': {
                             'type': 'long'
                         },
-                        'period': {
+                        'temporal': {
                             'type': 'date_range'
                         },
                         'pluDocType': {
@@ -212,7 +212,7 @@ export const indexMappings = {
                 'passNumber': {
                     'type': 'keyword'
                 },
-                'period': {
+                'temporal': {
                     'type': 'date_range'
                 },
                 'type': {
@@ -394,7 +394,7 @@ export const indexMappings = {
                 'byteSize': {
                     'type': 'long'
                 },
-                'period': {
+                'temporal': {
                     'type': 'date_range'
                 },
                 'pluDocType': {

@@ -125,7 +125,7 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
                 ${resource('dct:format', esc(distribution.format?.[0]))}
                 ${optional('dct:issued', dateAsIsoString(distribution.issued))}
                 ${optional('dct:modified', dateAsIsoString(distribution.modified))}
-                ${optional(DcatApPluDocumentFactory.xmlPeriodOfTime, distribution.period, 'dct:temporal')}
+                ${optional(DcatApPluDocumentFactory.xmlPeriodOfTime, distribution.temporal, 'dct:temporal')}
                 ${resource('plu:docType', esc(distribution.pluDocType), `${diplanUriPrefix}/docType#`)}
                 ${optional('plu:mapLayerNames', esc(distribution.mapLayerNames?.join(',')))}
                 ${optional('dct:title', esc(distribution.title))}
@@ -152,13 +152,13 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
         </${relation}>`;
     }
 
-    private static xmlProcessStep({ distributions, identifier, period, type }: ProcessStep): string {
+    private static xmlProcessStep({ distributions, identifier, temporal, type }: ProcessStep): string {
         return `<plu:processStep>
             <plu:ProcessStep>
                 <plu:processStepType rdf:resource="${diplanUriPrefix}/processStepType#${type}"/>
                 ${optional('dct:identifier', esc(identifier))}
                 ${optional(DcatApPluDocumentFactory.xmlDistribution, distributions)}
-                ${optional(DcatApPluDocumentFactory.xmlPeriodOfTime, period, 'dct:temporal')}
+                ${optional(DcatApPluDocumentFactory.xmlPeriodOfTime, temporal, 'dct:temporal')}
             </plu:ProcessStep>
         </plu:processStep>`;
     }

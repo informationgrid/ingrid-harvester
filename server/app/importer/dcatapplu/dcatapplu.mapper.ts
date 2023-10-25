@@ -217,7 +217,7 @@ export class DcatappluMapper extends BaseMapper {
                 identifier: DcatappluMapper.select('./dct:identifier', step, true)?.textContent ?? undefined,
                 type: type ?? PluProcessStepType.UNBEKANNT,
                 distributions: this._getRelevantDistibutions(step),
-                period: period?.[0],
+                temporal: period?.[0],
                 passNumber: DcatappluMapper.select('./plu:passNumber', step, true)?.textContent
             }
             processSteps.push(processStep);
@@ -244,7 +244,7 @@ export class DcatappluMapper extends BaseMapper {
                 issued: MiscUtils.normalizeDateTime(DcatappluMapper.select('./dct:issued', dist, true)?.textContent),
                 modified: MiscUtils.normalizeDateTime(DcatappluMapper.select('./dct:modified', dist, true)?.textContent),
                 pluDocType: getUrlHashCode(DcatappluMapper.select('./plu:docType/@rdf:resource', dist, true)?.textContent) ?? PluDocType.UNBEKANNT,
-                period: period?.[0],
+                temporal: period?.[0],
                 mapLayerNames: DcatappluMapper.select('./plu:mapLayerNames', dist, true)?.textContent?.split(",").map((layerName: string) => layerName.trim()),
                 format: [DcatappluMapper.select('./dct:format/@rdf:resource', dist, true)?.textContent ?? undefined],
             }
