@@ -25,7 +25,7 @@ import { BulkResponse, DatabaseUtils } from './database.utils';
 import { Catalog } from '../model/dcatApPlu.model';
 import { Client, Pool, PoolClient, QueryResult } from 'pg';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
-import { DcatApPluDocument } from '../profiles/diplanung/model/dcatApPlu.document';
+import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory';
 import { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document';
 import { PostgresUtils as DiplanungPostgresUtils } from '../profiles/diplanung/persistence/postgres.utils';
 import { ElasticsearchUtils } from './elastic.utils';
@@ -103,7 +103,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async createCatalog(catalog: Catalog): Promise<Catalog> {
-        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCollection, [catalog.identifier, catalog, null, DcatApPluDocument.createCatalog(catalog), catalog]);
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCollection, [catalog.identifier, catalog, null, DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
         if (result.rowCount != 1) {
             return null;
         }

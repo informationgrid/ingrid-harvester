@@ -28,15 +28,14 @@ import { DateRange } from '../../../model/dateRange';
 import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
-import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { Distribution } from '../../../model/distribution';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { IndexDocument } from '../../../model/index.document';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
-export class DiPlanungDocument extends IndexDocument<DcatappluMapper | DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
+export class DiPlanungDocument extends IndexDocument<DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper> {
 
-    async create(_mapper: DcatappluMapper | DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper) : Promise<DiplanungIndexDocument> {
+    async create(_mapper: DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper) : Promise<DiplanungIndexDocument> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let contactPoint: Contact = await mapper.getContactPoint() ?? { fn: '' };
         let result = {
@@ -96,9 +95,6 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
                 },
                 operates_on: mapper.getOperatesOn(),    // only csw
                 merged_from: []
-                // transformed_data: {
-                //     [DcatApPluDocument.getExportFormat()]: await DcatApPluDocument.create(_mapper),
-                // }
             },
             issued: mapper.getIssued(),
             keywords: mapper.getKeywords(),
