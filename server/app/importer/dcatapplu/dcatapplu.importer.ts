@@ -178,7 +178,8 @@ export class DcatappluImporter extends Importer {
 
             if (isLastPage) break;
         }
-
+        // send leftovers
+        await this.database.sendBulkData();
     }
 
     async extractRecords(getRecordsResponse, harvestTime) {
