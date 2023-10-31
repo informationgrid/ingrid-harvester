@@ -236,6 +236,11 @@ export class DcatappluMapper extends BaseMapper {
         relevantDistributions?.map((dist: any) => {
             let nodes: string[] = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', dist, true);
             let period = this._getTemporalInternal(nodes);
+            let format = DcatappluMapper.select('./dct:format', dist, true)?.textContent;
+            // TODO temporary backward compatibility for DCAT-AP.PLU 0.1.0
+            if (!format) {
+                format = DcatappluMapper.select('./dct:format/@rdf:resource', dist, true)?.textContent;
+            }
             let distribution: Distribution = {
                 accessURL: DcatappluMapper.select('./dcat:accessURL/@rdf:resource', dist, true)?.textContent ?? "",
                 downloadURL: DcatappluMapper.select('./dcat:downloadURL/@rdf:resource', dist, true)?.textContent,

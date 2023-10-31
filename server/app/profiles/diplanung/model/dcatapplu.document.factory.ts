@@ -137,7 +137,7 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
                 <dcat:accessURL rdf:resource="${esc(distribution.accessURL)}"/>
                 ${optional('dct:description', esc(distribution.description))}
                 ${resource('dcat:downloadURL', esc(distribution.downloadURL))}
-                ${resource('dct:format', esc(distribution.format?.[0]))}
+                ${optional('dct:format', esc(distribution.format?.[0]))}
                 ${optional('dct:issued', dateAsIsoString(distribution.issued))}
                 ${optional('dct:modified', dateAsIsoString(distribution.modified))}
                 ${optional(DcatApPluDocumentFactory.xmlPeriodOfTime, distribution.temporal, 'dct:temporal')}
