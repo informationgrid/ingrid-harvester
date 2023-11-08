@@ -60,43 +60,22 @@
     </mat-card-header>
     <mat-card-content>
       <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex>
+        <mat-form-field fxFlex="10">
           <input matInput placeholder="Katalog-ID" formControlName="catalogId" required>
+        </mat-form-field>
+        <mat-form-field fxFlex="20">
+          <mat-select placeholder="Plan Status" formControlName="pluPlanState" required>
+            <mat-option value="festgesetzt">festgesetzt</mat-option>
+            <mat-option value="in Aufstellung">in Aufstellung</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field fxFlex="70">
+          <input matInput placeholder="CSW-URL zu Kontakt-Metadaten" formControlName="contactCswUrl">
         </mat-form-field>
       </div>
       <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
         <mat-form-field fxFlex>
-          <input matInput placeholder="Plan Status (üb)" formControlName="pluPlanState">
-        </mat-form-field>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Filter und Regeln</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <ng-container [ngTemplateOutlet]="rulesTemplate"></ng-container>
-
-      <div fxLayout="column">
-        <mat-form-field fxFlex>
-          <textarea matInput rows="6" class="code" placeholder="Features Filter" formControlName="featuresFilter"></textarea>
-        </mat-form-field>
-
-        <mat-form-field fxFlex>
-          <mat-chip-list #chipList>
-            <mat-chip *ngFor="let keyword of model.eitherKeywords" [selectable]="false"
-                      [removable]="true" (removed)="remove(keyword)">
-              {{keyword}}
-              <mat-icon matChipRemove>cancel</mat-icon>
-            </mat-chip>
-            <input placeholder="Either keywords"
-                   [matChipInputFor]="chipList"
-                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                   [matChipInputAddOnBlur]="true"
-                   (matChipInputTokenEnd)="add($event)">
-          </mat-chip-list>
+          <textarea matInput rows="6" placeholder="Kontakt-Metadaten Fallback (JSON-Objekt Contact)" formControlName="contactMetadata"></textarea>
         </mat-form-field>
       </div>
     </mat-card-content>
