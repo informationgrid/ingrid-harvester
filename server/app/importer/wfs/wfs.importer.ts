@@ -187,27 +187,38 @@ export abstract class WfsImporter extends Importer {
         const rs_data = fs.readFileSync('app/importer/regionalschluessel.json', { encoding: 'utf8', flag: 'r' });
         this.generalInfo['regionalschluessel'] = JSON.parse(rs_data);
 
-        let serviceProvider = select('/*[local-name()="WFS_Capabilities"]/ows:ServiceProvider', capabilitiesResponseDom, true);
-        // TODO for FIS, there is additional metadata info in a linked CSW
-        // TODO do we grab this as well? if yes:
-        // - select the CSW link
-        // - retrieve the XML from the CSW link
-        // - select the appropriate nodes (gmd:contact or gmd:pointOfContact)
-        let contact: Contact = {
-            // TODO create appropriate contact
-            fn: ''
-        //     fn: select('./ows:ServiceContact/ows:IndividualName', serviceProvider, true)?.textContent,
-        //     hasCountryName: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', serviceProvider, true)?.textContent,
-        //     hasLocality: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', serviceProvider, true)?.textContent,
-        //     hasPostalCode: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', serviceProvider, true)?.textContent,
-        //     hasRegion: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', serviceProvider, true)?.textContent,
-        //     hasStreetAddress: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', serviceProvider, true)?.textContent,
-        //     hasEmail: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', serviceProvider, true)?.textContent,
-        //     hasOrganizationName: this.generalInfo['publisher']?.[0]?.name,
-        //     hasTelephone: select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', serviceProvider, true)?.textContent,
-        //     // hasURL: this.select('./ows:ServiceContact/ows:ContactInfo/ows:OnlineResource/@xlink:href', serviceProvider, true)?.textContent
-        };
-        Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
+        let contact: Contact;
+        if (this.settings.contactCswUrl) {
+            // TODO fetch contact from CSW
+            // - retrieve the XML from the CSW link
+            // - select the appropriate nodes (gmd:contact or gmd:pointOfContact)
+        // let serviceProvider = select('/*[local-name()="WFS_Capabilities"]/ows:ServiceProvider', capabilitiesResponseDom, true);
+            // let contact: Contact = {
+                // TODO create appropriate contact
+                // fn: ''
+            //     fn: select('./ows:ServiceContact/ows:IndividualName', serviceProvider, true)?.textContent,
+            //     hasCountryName: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:Country', serviceProvider, true)?.textContent,
+            //     hasLocality: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:City', serviceProvider, true)?.textContent,
+            //     hasPostalCode: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:PostalCode', serviceProvider, true)?.textContent,
+            //     hasRegion: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:AdministrativeArea', serviceProvider, true)?.textContent,
+            //     hasStreetAddress: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:DeliveryPoint', serviceProvider, true)?.textContent,
+            //     hasEmail: select('./ows:ServiceContact/ows:ContactInfo/ows:Address/ows:ElectronicMailAddress', serviceProvider, true)?.textContent,
+            //     hasOrganizationName: this.generalInfo['publisher']?.[0]?.name,
+            //     hasTelephone: select('./ows:ServiceContact/ows:ContactInfo/ows:Phone/ows:Voice', serviceProvider, true)?.textContent,
+            //     // hasURL: this.select('./ows:ServiceContact/ows:ContactInfo/ows:OnlineResource/@xlink:href', serviceProvider, true)?.textContent
+            // };
+            // Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
+        }
+        // use fallback if available
+        if (!contact && this.settings.contactMetadata) {
+            contact = this.settings.contactMetadata;
+        }
+        // if fallback was not available or could not be parsed, use dummy
+        if (!contact) {
+            contact = {
+                fn: ''
+            };
+        }
         this.generalInfo['contactPoint'] = contact;
 
         // retrieve catalog info from database
