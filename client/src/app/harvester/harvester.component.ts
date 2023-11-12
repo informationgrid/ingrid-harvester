@@ -172,6 +172,15 @@ export class HarvesterComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result: Harvester) => {
       if (result) {
+        // this is a really ugly hack, someone fix this in wfs-harvester.component.ts instead
+        if ('contactMetadata' in result) {
+          try {
+            result.contactMetadata = JSON.parse(result.contactMetadata as unknown as string);
+          }
+          catch (e) {
+            // swallow errors
+          }
+        }
         this.harvesterService.updateHarvester(result).subscribe(() => {
           // update view by modifying original object
           Object.keys(harvester).forEach(key => harvester[key] = result[key]);
