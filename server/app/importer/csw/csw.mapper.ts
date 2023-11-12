@@ -1008,7 +1008,7 @@ export class CswMapper extends BaseMapper {
                 let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
                 let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                 let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let delPt = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:deliveryPoint', contact);
+                let delPt = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:deliveryPoint/gco:CharacterString', contact);
                 let locality = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:city/gco:CharacterString', contact, true);
                 let region = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:administrativeArea/gco:CharacterString', contact, true);
                 let country = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:country/gco:CharacterString', contact, true);
