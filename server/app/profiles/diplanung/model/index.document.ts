@@ -170,6 +170,7 @@ export type DiplanungIndexDocument = {
             modified: Date,
             source: {
                 source_base: string,
+                source_type?: string,
                 raw_data_source?: string,
                 portal_link?: string,
                 attribution?: string

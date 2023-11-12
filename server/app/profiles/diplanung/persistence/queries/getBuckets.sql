@@ -41,9 +41,17 @@
         secondary.last_modified AS modified
     FROM public.record AS anchor
     LEFT JOIN public.record AS secondary
-    ON
-        anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
-        AND (anchor.source != secondary.source OR anchor.id = secondary.id)
+    ON (
+            anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
+            OR (
+                anchor.identifier = secondary.identifier
+                AND anchor.collection_id = secondary.collection_id
+            )
+        )
+        AND (
+            anchor.source != secondary.source
+            OR anchor.id = secondary.id
+        )
     WHERE
         anchor.source = $1
         AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'

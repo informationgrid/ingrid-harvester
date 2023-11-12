@@ -163,6 +163,7 @@ export class PostgresUtils extends DatabaseUtils {
                 }
                 row.dataset.extras.metadata.issued = row.issued;
                 row.dataset.extras.metadata.modified = row.modified;
+                row.dataset.extras.metadata.source.source_type = this.getSourceType(row.source);
                 // add to current bucket
                 if (row.is_service) {
                     currentBucket.operatingServices.set(row.id, row.dataset);
@@ -185,6 +186,19 @@ export class PostgresUtils extends DatabaseUtils {
         let stop = Date.now();
         log.info(`Processed ${numDatasets} datasets and ${numBuckets} buckets`);
         log.info('Time for PG -> ES push: ' + Math.floor((stop - start)/1000) + 's');
+    }
+
+    private getSourceType(source: string) {
+        if (source.includes('beteiligung')) {
+            return 'beteiligung';
+        }
+        if (source.endsWith('csw')) {
+            return 'csw';
+        }
+        if (source.includes('wfs')) {
+            return 'wfs';
+        }
+        return source;
     }
 
     write(entity: Entity) {
