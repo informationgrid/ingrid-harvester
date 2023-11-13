@@ -8,6 +8,7 @@ services:
     environment:
      - NODE_ENV=production
      - IMPORTER_PROFILE=
+     - ADMIN_PASSWORD=admin
      - ELASTIC_URL=http://elastic:9200
      - ELASTIC_VERSION=8
      - ELASTIC_USER=elastic
