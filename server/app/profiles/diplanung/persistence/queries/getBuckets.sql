@@ -36,6 +36,7 @@
         secondary.id AS id,
         secondary.source AS source,
         secondary.dataset AS dataset,
+        secondary.collection_id AS catalog_id,
         false AS is_service,
         secondary.created_on AS issued,
         secondary.last_modified AS modified
@@ -64,6 +65,7 @@ UNION
         service.id AS id,
         service.source AS source,
         service.dataset AS dataset,
+        service.collection_id AS catalog_id,
         true AS is_service,
         service.created_on AS issued,
         service.last_modified AS modified
