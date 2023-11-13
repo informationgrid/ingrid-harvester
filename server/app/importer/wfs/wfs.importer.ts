@@ -194,7 +194,8 @@ export abstract class WfsImporter extends Importer {
             let responseDom = this.domParser.parseFromString(response);
             let metadata = CswMapper.select('./csw:GetRecordByIdResponse/gmd:MD_Metadata', responseDom, true);
             let xpaths = [
-                './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue="pointOfContact"]',
+                // for now, only use gmd:contact (the sparsely populated entry of the two listed below)
+                // './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue="pointOfContact"]',
                 './gmd:contact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue="pointOfContact"]'
             ];
             for (let xpath of xpaths) {
