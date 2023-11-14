@@ -359,7 +359,8 @@ export class CswImporter extends Importer {
             uri: settings.getRecordsUrl,
             json: false,
             headers: RequestDelegate.cswRequestHeaders(),
-            proxy: settings.proxy || null
+            proxy: settings.proxy || null,
+            timeout: settings.timeout
         };
 
         if (settings.httpMethod === "POST") {

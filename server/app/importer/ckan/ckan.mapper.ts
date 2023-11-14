@@ -571,7 +571,8 @@ export class CkanMapper extends BaseMapper {
                 qs: <CkanParametersListWithResources> {
                     offset: settings.startPosition,
                     limit: settings.maxRecords
-                }
+                },
+                timeout: settings.timeout
             };
         } else {
             let qs = <CkanParameters> {
@@ -603,7 +604,8 @@ export class CkanMapper extends BaseMapper {
                 headers: RequestDelegate.defaultRequestHeaders(),
                 proxy: settings.proxy,
                 rejectUnauthorized: settings.rejectUnauthorizedSSL,
-                qs
+                qs,
+                timeout: settings.timeout
             };
         }
 
@@ -616,7 +618,8 @@ export class CkanMapper extends BaseMapper {
             json: true,
             headers: RequestDelegate.defaultRequestHeaders(),
             proxy: settings.proxy,
-            rejectUnauthorized: settings.rejectUnauthorizedSSL
+            rejectUnauthorized: settings.rejectUnauthorizedSSL,
+            timeout: settings.timeout
         };
     }
 

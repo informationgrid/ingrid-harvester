@@ -50,9 +50,9 @@ export class DiplanungCswImporter extends CswImporter {
 
     protected async updateRecords(documents: DiplanungIndexDocument[]) {
         log.warn('Updating #records:', documents.length);
-        let promises: Promise<any>[] = [];
+        let promises: (() => Promise<Entity>)[] = [];
         for (let doc of documents) {
-            promises.push(new Promise(async (resolve, reject) => {
+            promises.push(() => new Promise(async (resolve, reject) => {
                 let updateDoc = {};
                 let docIsUpdated = false;
 
@@ -111,9 +111,13 @@ export class DiplanungCswImporter extends CswImporter {
                 }
             }));
         }
-        let results = (await Promise.allSettled(promises)).filter(result => result.status === 'fulfilled');
+        // // TODO move import somewhere outside
+        // // TODO possible with dynamic imports?
+        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
+        // TODO 10 seems to hit a sweet spot. 20 is already too much with our default fetch timeout of 20sec
+        const limit = pLimit(10);
+        let results = (await Promise.allSettled(promises.map(pf => limit(pf)))).filter(result => result.status === 'fulfilled');
         let entities = (results as PromiseFulfilledResult<any>[]).map(result => result.value);
-        // await this.elastic.addDocsToBulkUpdate(updateDocs);
         for (let entity of entities) {
             await this.database.addEntityToBulk(entity);
         }
@@ -161,7 +165,7 @@ export class DiplanungCswImporter extends CswImporter {
                 accessURL.searchParams.append('request', 'GetCapabilities');
                 let response;
                 try {
-                    response = await RequestDelegate.doRequest({ uri: accessURL.toString(), accept: 'text/xml' });
+                    response = await RequestDelegate.doRequest({ uri: accessURL.toString(), accept: 'text/xml', timeout: 30000 });
                 }
                 catch (err) {
                     let msg = `Could not parse response from ${accessURL.toString()}`;

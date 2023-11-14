@@ -94,7 +94,6 @@ export interface RequestPaging {
 
     // the number of records to fetch
     numRecords: number;
-
 }
 
 // TODO most of these could be made obsolete
@@ -107,7 +106,13 @@ export interface RequestOptions extends RequestInit {
     resolveWithFullResponse?: boolean,
     uri: string,
     accept?: string
+    // We cannot give the signal directly in the config because it would start the timeout counter right away.
+    // This option will be needed when we switch to native NodeJS (>= 18) fetch, which doesn't bring its own timeout param
+    // timeout?: number
 }
+
+// too generous?
+const DEFAULT_TIMEOUT_MS = 20000;
 
 /**
  * Delegate class for handling HTTP-requests.
@@ -262,6 +267,12 @@ export class RequestDelegate {
             });
         }
         let fullURL = RequestDelegate.getFullURL(config);
+        // set timeout for fetch
+        // this is a workaround - we want to use `signal`, but cannot give it directly as it starts running as soon as
+        // it is declared. `timeout` (which is deprecated) works different (worse). So we just take the timeout value
+        // and create the signal here directly, then remove the timeout
+        config.signal = AbortSignal.timeout(config.timeout ?? DEFAULT_TIMEOUT_MS);
+        config.timeout = null;
         let response = fetch(fullURL, config);
 
         if (config.resolveWithFullResponse) {
