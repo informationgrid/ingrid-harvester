@@ -212,7 +212,8 @@ export class OaiImporter extends Importer {
             uri: settings.providerUrl,
             json: false,
             headers: RequestDelegate.cswRequestHeaders(),
-            proxy: settings.proxy || null
+            proxy: settings.proxy || null,
+            timeout: settings.timeout
         };
 
         if (!resumptionToken) {

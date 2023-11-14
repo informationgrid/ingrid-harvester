@@ -289,7 +289,8 @@ export class DcatappluImporter extends Importer {
             method: "GET",
             uri: settings.catalogUrl,
             json: true,
-            proxy: settings.proxy || null
+            proxy: settings.proxy || null,
+            timeout: settings.timeout
         };
 /*
         requestConfig.qs = {
