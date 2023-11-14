@@ -26,7 +26,7 @@
     "description": "geoportal.de",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
-    "recordFilter": "<ogc:Filter>\n    <ogc:And>\n        <ogc:Or>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bauleitplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bauleitpläne</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bebauungsplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>B-Plan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Flächennutzungsplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>FNP</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnungsprogramm</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnungsverfahren</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumverträglichkeit</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Regionalplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Regionalplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesentwicklung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesraumordnungsprogramm</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Milieuschutzgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Milieugebiet</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungssatzungsgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungssatzung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungsverordnung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungsverordnungsgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>städtebauliche Satzungen</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>§ 172 BauGB Städtebauliche Förderung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Beteiligung der Öffentlichkeit</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Öffentlichkeitsbeteiligung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>XPlanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>XPlanGML</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n        </ogc:Or>\n        <ogc:Or>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Berlin*</ogc:Literal>\n            </ogc:PropertyIsLike>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Freiburg*</ogc:Literal>\n            </ogc:PropertyIsLike>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Hamburg*</ogc:Literal>\n            </ogc:PropertyIsLike>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Bremen*</ogc:Literal>\n            </ogc:PropertyIsLike>\n            <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n                <ogc:PropertyName>AnyText</ogc:PropertyName>\n                <ogc:Literal>*Schleswig-Holstein*</ogc:Literal>\n            </ogc:PropertyIsLike>\n        </ogc:Or>\n    </ogc:And>\n</ogc:Filter>",
+    "recordFilter": "<ogc:Filter>\n    <ogc:And>\n        <ogc:Or>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bauleitplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bauleitpläne</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bebauungsplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>B-Plan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Flächennutzungsplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>FNP</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnungsprogramm</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnungsverfahren</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumverträglichkeit</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Regionalplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Regionalplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesentwicklung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesraumordnungsprogramm</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Milieuschutzgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Milieugebiet</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungssatzungsgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungssatzung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungsverordnung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungsverordnungsgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>städtebauliche Satzungen</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>§ 172 BauGB Städtebauliche Förderung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Beteiligung der Öffentlichkeit</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Öffentlichkeitsbeteiligung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>XPlanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>XPlanGML</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n        </ogc:Or>\n        <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>AnyText</ogc:PropertyName>\n            <ogc:Literal>*Hamburg*</ogc:Literal>\n        </ogc:PropertyIsLike>\n    </ogc:And>\n</ogc:Filter>",
     "pluPlanState": "festgesetzt",
     "disable": false,
     "cron": {
@@ -144,7 +144,7 @@
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "42 2 * * *",
@@ -183,7 +183,7 @@
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "ms:fp_plan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "45 2 * * *",
@@ -222,7 +222,7 @@
     "featuresFilter": null,
     "version": "1.1.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "15 2 * * *",
@@ -260,7 +260,7 @@
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "18 2 * * *",
@@ -298,7 +298,7 @@
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "21 2 * * *",
@@ -336,7 +336,7 @@
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "24 2 * * *",
@@ -374,7 +374,7 @@
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "27 2 * * *",
@@ -412,7 +412,7 @@
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "30 2 * * *",
@@ -450,7 +450,7 @@
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "33 2 * * *",
@@ -488,7 +488,7 @@
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "36 2 * * *",
@@ -526,7 +526,7 @@
     "featuresFilter": null,
     "version": "1.1.0",
     "typename": "fis:sach_bplan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "39 2 * * *",
@@ -565,7 +565,7 @@
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "48 2 * * *",
