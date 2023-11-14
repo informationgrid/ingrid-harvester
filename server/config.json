@@ -77,7 +77,9 @@
         "active": false
       }
     },
-    "maxConcurrent": null
+    "maxConcurrent": null,
+    "contactCswUrl": "https://metaver.de/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&id=EBA4BF12-3ED2-4305-9B67-8E689FE8C445",
+    "contactMetadata": null
   },
   {
     "index": "wfs_syn_hh_xplanung_pre",
@@ -116,7 +118,9 @@
         "active": false
       }
     },
-    "maxConcurrent": null
+    "maxConcurrent": null,
+    "contactCswUrl": "https://metaver.de/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&id=EBA4BF12-3ED2-4305-9B67-8E689FE8C445",
+    "contactMetadata": null
   },
   {
     "index": "wfs_syn_hb_xplanung",

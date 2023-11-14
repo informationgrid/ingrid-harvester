@@ -215,13 +215,16 @@ export abstract class WfsImporter extends Importer {
                     hasURL: CswMapper.getCharacterStringContent(contactInfo, 'onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL')
                 };
                 Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
-                if (contact.fn != '') {
+                if (!contact.fn?.trim()) {
+                    contact.fn = contact.hasOrganizationName;
+                }
+                if (contact.fn?.trim()) {
                     break;
                 }
             }
         }
         // use fallback if available
-        if ((!contact || contact.fn?.trim() == '') && this.settings.contactMetadata) {
+        if ((!contact || !contact.fn?.trim()) && this.settings.contactMetadata) {
             contact = this.settings.contactMetadata;
         }
         // if fallback was not available or could not be parsed, use dummy
