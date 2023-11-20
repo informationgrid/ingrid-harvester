@@ -122,6 +122,15 @@ export class PostgresUtils extends DatabaseUtils {
         };
     }
 
+    async getCatalogs(): Promise<any[]> {
+        let result: QueryResult<any> = await PostgresUtils.pool.query('SELECT * FROM public.collection');
+        if (result.rowCount == 0) {
+            return [];
+        }
+        let catalogs: any[] = result.rows.map(row => ({ id: row.id, ...row.properties }));
+        return catalogs;
+    }
+
     /**
      * Push datasets from database to elasticsearch, slower but with all bells and whistles.
      * 
@@ -136,6 +145,8 @@ export class PostgresUtils extends DatabaseUtils {
         let start = Date.now();
         // TODO we also need to store SOURCE_TYPE in postgres and subsequently fetch it here (B.source_type)
         // @myself: next time, when you want me to do something in the future, specify WHY that should be done...
+
+        let catalogs = (await this.getCatalogs()).reduce((map, catalog: Catalog) => (map[catalog.id] = catalog, map), {});
 
         const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
         let currentId: string | number;
@@ -164,6 +175,7 @@ export class PostgresUtils extends DatabaseUtils {
                 row.dataset.extras.metadata.issued = row.issued;
                 row.dataset.extras.metadata.modified = row.modified;
                 row.dataset.extras.metadata.source.source_type = this.getSourceType(row.source);
+                row.dataset.catalog = catalogs[row.catalog_id];
                 // add to current bucket
                 if (row.is_service) {
                     currentBucket.operatingServices.set(row.id, row.dataset);
@@ -225,6 +237,9 @@ export class PostgresUtils extends DatabaseUtils {
             // TODO ideally, we change handling from `Entity` to `Entity.DbOperation`, to only send updates when needed
             // TODO (instead of full upserts) and handle JSON updates within Postgres
             entities = this.mergeEntities(entities);
+            // we remove catalogs from the entities at this point because we don't want them to persisted into the
+            // dataset in the catalog
+            entities = this.removeCatalogs(entities);
             result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities)]);
             log.debug('Bulk finished of data #items: ' + entities.length);
         }
@@ -255,6 +270,13 @@ export class PostgresUtils extends DatabaseUtils {
             }
         });
         return Object.values(entityMap);
+    }
+
+    private removeCatalogs(entities: Entity[]): Entity[] {
+        for (let entity of entities) {
+            delete entity.dataset.catalog;
+        }
+        return entities;
     }
 
     addEntityToBulk(entity: Entity): Promise<BulkResponse> {
