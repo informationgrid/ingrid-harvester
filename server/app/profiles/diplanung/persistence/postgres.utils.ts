@@ -137,7 +137,15 @@ export class PostgresUtils {
         if (!document.publisher?.['name'] && !document.publisher?.['organization']) {
             updatedFields['publisher'] = duplicate.publisher;
         }
-        return { ...document, ...updatedFields };
+
+        let updatedDocument = { ...document, ...updatedFields };
+        // TODO remove: hack for MVP
+        // set valid field to true for the CSW that have duplicates from WFS
+        // default for CSW has been set to false
+        if (duplicate.extras.metadata.source.source_base.toLowerCase().includes("wfs")) {
+            updatedDocument.extras.metadata.is_valid = duplicate.extras.metadata.is_valid;
+        }
+        return updatedDocument;
         // TODO don't we need a proper merge?
         // return MiscUtils.merge(document, updatedFields);
     }

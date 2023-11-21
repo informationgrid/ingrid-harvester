@@ -171,6 +171,11 @@ export class DiplanungCswMapper extends CswMapper {
         }
     }
 
+    // TODO this is a hack for the DiPlanung MVP to not return any datasets that only have a CSW source
+    public isValid() {
+        return false;
+    }
+
     _getPluPlanTypeFine() {
         return undefined;
     }
