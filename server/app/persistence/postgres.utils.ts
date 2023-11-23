@@ -131,8 +131,14 @@ export class PostgresUtils extends DatabaseUtils {
         return catalogs;
     }
 
+    async nonFetchedRatio(source: string, last_modified: Date): Promise<number> {
+        let result: QueryResult<any> = await this.transactionClient.query(this.queries.nonFetchedRatio, [source, last_modified]);
+        let { total, nonfetched } = result.rows[0];
+        return nonfetched / total;
+    }
+
     async deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void> {
-        await PostgresUtils.pool.query(this.queries.deleteRecords, [source, last_modified]);
+        await this.transactionClient.query(this.queries.deleteRecords, [source, last_modified]);
     }
 
     /**

@@ -71,6 +71,8 @@ export abstract class DatabaseUtils {
 
     // abstract pushToElastic2ElectricBoogaloo(elastic: ElasticsearchUtils, source: string): Promise<void>;
 
+    abstract nonFetchedRatio(source: string, last_modified: Date): Promise<number>;
+
     abstract deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void>;
 
     abstract pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string): Promise<void>;

@@ -99,6 +99,11 @@ export class PostgresQueries extends AbstractPostgresQueries {
 
     readonly getRecords = `SELECT dataset FROM public.${this.datasetTableName}`;
 
+    readonly nonFetchedRatio = `SELECT
+        SUM(CASE WHEN (last_modified IS null OR last_modified > $2::timestamptz) THEN 1 ELSE 0 END) AS nonfetched,
+        COUNT(*) as total
+        FROM record WHERE source = $1`;
+
     readonly deleteRecords = `DELETE FROM public.${this.datasetTableName}
         WHERE source = $1 AND (last_modified IS NULL OR last_modified < $2)`;
 

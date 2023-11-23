@@ -26,13 +26,13 @@ import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { BulkResponse } from '../../persistence/elastic.utils';
 import { Catalog } from '../../model/dcatApPlu.model';
-import { ConfigService } from '../../services/config/ConfigService';
 import { CswMapper } from './csw.mapper';
 import { CswParameters, RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
 import { Entity } from '../../model/entity';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import { MailServer } from 'utils/nodemailer.utils';
 import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
@@ -123,7 +123,21 @@ export class CswImporter extends Importer {
                 await this.harvest();
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
                     if (this.summary.databaseErrors.length == 0) {
-                        // TODO discuss order, i.e. if this should be one single transaction
+                        // calculate difference between non-fetched and existing data
+                        // safeguard > X% otherwise roll back
+                        let nonFetchedRatio: number = await this.database.nonFetchedRatio(this.settings.getRecordsUrl, transactionTimestamp);
+                        let maxNonFetchedPercentage = 10; // TODO get this from configGeneral.maxDiff
+                        if (nonFetchedRatio * 100 > maxNonFetchedPercentage) {
+                            TODO handle clean state when no datasets exist yet (then all last_modified are null, oder?)
+                            // TODO send mail
+                            let subject = 'Unusually low';
+                            let body = '';
+                            MailServer.getInstance().send(subject, body);
+                            await this.database.rollbackTransaction();
+                            log.error('No results during CSW import - Keep old index');
+                            observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
+                            observer.complete();
+                        }
                         await this.database.deleteNonFetchedDatasets(this.settings.getRecordsUrl, transactionTimestamp);
                         await this.database.commitTransaction();
                         await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getRecordsUrl);
@@ -133,7 +147,9 @@ export class CswImporter extends Importer {
                     }
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
-                } else {
+                }
+                else {
+                    await this.database.rollbackTransaction();
                     if(this.summary.appErrors.length === 0) {
                         this.summary.appErrors.push('No Results');
                     }
