@@ -131,6 +131,10 @@ export class PostgresUtils extends DatabaseUtils {
         return catalogs;
     }
 
+    async deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void> {
+        await PostgresUtils.pool.query(this.queries.deleteRecords, [source, last_modified]);
+    }
+
     /**
      * Push datasets from database to elasticsearch, slower but with all bells and whistles.
      * 
@@ -274,7 +278,8 @@ export class PostgresUtils extends DatabaseUtils {
 
     private removeCatalogs(entities: Entity[]): Entity[] {
         for (let entity of entities) {
-            delete entity.dataset.catalog;
+            entity.dataset.catalog = { id: entity.dataset.catalog.id };
+            // delete entity.dataset.catalog;
         }
         return entities;
     }
@@ -327,10 +332,18 @@ export class PostgresUtils extends DatabaseUtils {
         return true;
     }
 
-    async beginTransaction() {
+    async beginTransaction(): Promise<Date> {
         log.debug('Transaction: begin');
         this.transactionClient = await PostgresUtils.pool.connect();
         await this.transactionClient.query('BEGIN');
+        let result: QueryResult<any> = await this.transactionClient.query("SELECT transaction_timestamp()");
+        if (result.rowCount != 1) {
+            throw new Error("WHAAAA");
+        }
+        let timestamp: Date = result.rows[0].transaction_timestamp;
+        console.log(timestamp);
+        console.log(timestamp.toISOString());
+        return timestamp;
     }
 
     async commitTransaction() {

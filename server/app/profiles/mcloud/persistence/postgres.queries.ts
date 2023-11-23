@@ -99,6 +99,9 @@ export class PostgresQueries extends AbstractPostgresQueries {
 
     readonly getRecords = `SELECT dataset FROM public.${this.datasetTableName}`;
 
+    readonly deleteRecords = `UPDATE public.${this.datasetTableName} SET deleted = true
+        WHERE source = $1 AND (last_modified IS NULL OR last_modified < $2)`;
+
     readonly getStoredData = `SELECT dataset FROM public.${this.datasetTableName}
         WHERE identifier = ANY($1)`;
 

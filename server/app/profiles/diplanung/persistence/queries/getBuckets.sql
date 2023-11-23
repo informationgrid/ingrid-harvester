@@ -56,6 +56,8 @@
     WHERE
         anchor.source = $1
         AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
+        AND anchor.deleted = false
+		AND secondary.deleted = false
 )
 UNION
 -- get all services for the datasets of a given source
@@ -77,6 +79,8 @@ UNION
     WHERE
         ds.source = $1
         AND service.dataset->'extras'->>'hierarchy_level' = 'service'
+        AND service.deleted = false
+		AND ds.deleted = false
 )
 /*
 -- TODO below query takes ages - improve it

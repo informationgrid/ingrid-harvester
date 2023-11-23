@@ -61,7 +61,7 @@ export abstract class DatabaseUtils {
      */
     abstract sendBulkData(): Promise<BulkResponse>;
 
-    abstract beginTransaction(): Promise<void>;
+    abstract beginTransaction(): Promise<Date>;
     
     abstract commitTransaction(): Promise<void>;
 
@@ -70,6 +70,8 @@ export abstract class DatabaseUtils {
     // abstract pushToElastic(elastic: ElasticsearchUtils, source: string): Promise<void>;
 
     // abstract pushToElastic2ElectricBoogaloo(elastic: ElasticsearchUtils, source: string): Promise<void>;
+
+    abstract deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void>;
 
     abstract pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string): Promise<void>;
 

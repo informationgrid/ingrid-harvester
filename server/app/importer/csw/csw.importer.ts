@@ -119,10 +119,12 @@ export class CswImporter extends Importer {
             observer.complete();
         } else {
             try {
-                await this.database.beginTransaction();
+                let transactionTimestamp: Date = await this.database.beginTransaction();
                 await this.harvest();
                 if(this.numIndexDocs > 0 || this.summary.isIncremental) {
                     if (this.summary.databaseErrors.length == 0) {
+                        // TODO discuss order, i.e. if this should be one single transaction
+                        await this.database.deleteNonFetchedDatasets(this.settings.getRecordsUrl, transactionTimestamp);
                         await this.database.commitTransaction();
                         await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getRecordsUrl);
                     }

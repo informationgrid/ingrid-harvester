@@ -39,7 +39,8 @@ DO UPDATE SET
     operates_on = COALESCE(EXCLUDED.operates_on, record.operates_on),
     dataset = EXCLUDED.dataset,
     original_document = COALESCE(EXCLUDED.original_document, record.original_document),
-    last_modified = NOW()
+    last_modified = NOW(),
+    deleted = false
 WHERE (
     (
         EXCLUDED.dataset->'modified' IS NOT NULL
