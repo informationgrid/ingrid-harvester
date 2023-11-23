@@ -34,10 +34,18 @@ export class PostgresAggregator implements AbstractPostgresAggregator<LvrIndexDo
         let box: EsOperation[] = [];
         // find primary document
         let { document, duplicates } = this.prioritizeAndFilter(bucket);
-        // merge service information into dataset
-        for (let [id, service] of bucket.operatingServices) {
-            document = this.resolveCoupling(document, service);
+
+        // shortcut - if all documents in the bucket should be deleted, delete the document from ES
+        let deleteDocument = true;
+        bucket.duplicates.forEach(document => deleteDocument &&= document.extras.metadata.deleted != null);
+        if (deleteDocument) {
+            return [{ operation: 'delete', _id: createEsId(document) }];
         }
+
+        // // merge service information into dataset
+        // for (let [id, service] of bucket.operatingServices) {
+        //     document = this.resolveCoupling(document, service);
+        // }
         // deduplication
         for (let [id, duplicate] of duplicates) {
             let old_id = createEsId(document);
@@ -91,17 +99,17 @@ export class PostgresAggregator implements AbstractPostgresAggregator<LvrIndexDo
         return { document: mainDocument, duplicates };
     }
 
-    /**
-     * Resolve data-service coupling. For a given dataset and a given service, merge the service's distributions into
-     * the dataset's. Exception: if the service is a WFS, additionally overwrite the `spatial` field.
-     * 
-     * @param document the dataset whose distributions should be extended
-     * @param service the service distribution that should be merged into the dataset
-     * @returns the augmented dataset
-     */
-    private resolveCoupling(document: LvrIndexDocument, service: Distribution): LvrIndexDocument {
-        return document;
-    }
+    // /**
+    //  * Resolve data-service coupling. For a given dataset and a given service, merge the service's distributions into
+    //  * the dataset's. Exception: if the service is a WFS, additionally overwrite the `spatial` field.
+    //  * 
+    //  * @param document the dataset whose distributions should be extended
+    //  * @param service the service distribution that should be merged into the dataset
+    //  * @returns the augmented dataset
+    //  */
+    // private resolveCoupling(document: LvrIndexDocument, service: Distribution): LvrIndexDocument {
+    //     return document;
+    // }
 
     /**
      * Deduplicate datasets across the whole database. For a given dataset and a given duplicate, merge specified

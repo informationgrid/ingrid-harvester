@@ -37,7 +37,8 @@ ON CONSTRAINT record_full_identifier
 DO UPDATE SET
     dataset = EXCLUDED.dataset,
     original_document = COALESCE(EXCLUDED.original_document, record.original_document),
-    last_modified = NOW()
+    last_modified = NOW(),
+    deleted_on = NULL
 -- WHERE (
 --     record.dataset->'extras'->'metadata'->'modified' IS NULL
 --     OR EXCLUDED.dataset->'extras'->'metadata'->'modified' > record.dataset->'extras'->'metadata'->'modified'

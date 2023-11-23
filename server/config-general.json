@@ -53,6 +53,6 @@
     "cronPattern": "30 05 * * *",
     "dir": ""
   },
-  "maxDiff": 10,
+  "maxDiff": 100,
   "cronOffset": 0
 }

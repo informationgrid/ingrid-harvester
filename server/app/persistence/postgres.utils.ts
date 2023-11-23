@@ -161,6 +161,16 @@ export class PostgresUtils extends DatabaseUtils {
         return catalogs;
     }
 
+    async nonFetchedPercentage(source: string, last_modified: Date): Promise<number> {
+        let result: QueryResult<any> = await this.transactionClient.query(this.queries.nonFetchedRatio, [source, last_modified]);
+        let { total, nonFetched } = result.rows[0];
+        return nonFetched / total * 100;
+    }
+
+    async deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void> {
+        await this.transactionClient.query(this.queries.deleteRecords, [source, last_modified]);
+    }
+
     /**
      * Push datasets from database to elasticsearch, slower but with all bells and whistles.
      * 
@@ -215,6 +225,7 @@ export class PostgresUtils extends DatabaseUtils {
                     // set metadata information
                     row.dataset.extras.metadata.issued = row.issued;
                     row.dataset.extras.metadata.modified = row.modified;
+                    row.dataset.extras.metadata.deleted = row.deleted;
                     row.dataset.extras.metadata.source.source_type = this.getSourceType(row.source);
                     row.dataset.catalog = catalogs[row.catalog_id];
                     currentBucket.duplicates.set(row.id, row.dataset);
@@ -343,7 +354,10 @@ export class PostgresUtils extends DatabaseUtils {
 
     private removeCatalogs(entities: RecordEntity[]): RecordEntity[] {
         for (let entity of entities) {
-            delete entity.dataset.catalog;
+            if ('catalog' in entity.dataset) {
+                entity.dataset.catalog = { id: entity.collection_id };
+            }
+            // delete entity.dataset.catalog;
         }
         return entities;
     }
@@ -441,10 +455,18 @@ export class PostgresUtils extends DatabaseUtils {
         }
     }
 
-    async beginTransaction() {
+    async beginTransaction(): Promise<Date> {
         log.debug('Transaction: begin');
         this.transactionClient = await PostgresUtils.pool.connect();
         await this.transactionClient.query('BEGIN');
+        let result: QueryResult<any> = await this.transactionClient.query("SELECT transaction_timestamp()");
+        if (result.rowCount != 1) {
+            throw new Error("WHAAAA");
+        }
+        let timestamp: Date = result.rows[0].transaction_timestamp;
+        console.log(timestamp);
+        console.log(timestamp.toISOString());
+        return timestamp;
     }
 
     async commitTransaction() {

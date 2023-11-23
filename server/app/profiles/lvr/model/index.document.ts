@@ -36,25 +36,7 @@ export type LvrIndexDocument = IndexDocument & {
     relation: Relation[],
     media: Media[],
     license: License,
-    vector: object,
-    extras: {
-        metadata: {
-    //         harvested: Date,
-    //         harvesting_errors: null, // get errors after all operations been done
-            issued: Date,
-    //         is_changed?: boolean,
-    //         is_valid: boolean, // checks validity after all operations been done
-            modified: Date,
-    //         quality_notes?: string[],
-            source: {
-                source_base: string,
-                source_type?: string,
-                raw_data_source?: string,
-    //             portal_link?: string,
-    //             attribution?: string
-            }
-        }
-    },
+    vector: object
     // keywords: string[]
 };
 

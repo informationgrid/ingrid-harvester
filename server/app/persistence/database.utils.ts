@@ -22,9 +22,9 @@
  */
 
 import { Catalog } from '../model/dcatApPlu.model';
+import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { ElasticsearchUtils } from './elastic.utils';
-import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
 import { Summary } from '../model/summary';
 
 export interface BulkResponse {
@@ -64,8 +64,8 @@ export abstract class DatabaseUtils {
 
     abstract sendBulkCouples(): Promise<BulkResponse>;
 
-    abstract beginTransaction(): Promise<void>;
-    
+    abstract beginTransaction(): Promise<Date>;
+
     abstract commitTransaction(): Promise<void>;
 
     abstract rollbackTransaction(): Promise<void>;
@@ -73,6 +73,10 @@ export abstract class DatabaseUtils {
     // abstract pushToElastic(elastic: ElasticsearchUtils, source: string): Promise<void>;
 
     // abstract pushToElastic2ElectricBoogaloo(elastic: ElasticsearchUtils, source: string): Promise<void>;
+
+    abstract nonFetchedPercentage(source: string, last_modified: Date): Promise<number>;
+
+    abstract deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void>;
 
     abstract pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string): Promise<void>;
 

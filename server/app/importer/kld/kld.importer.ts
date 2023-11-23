@@ -25,18 +25,20 @@ import * as MiscUtils from '../../utils/misc.utils';
 import { defaultKldSettings, KldSettings } from './kld.settings';
 import { getLogger } from 'log4js';
 import { BulkResponse } from '../../persistence/elastic.utils';
-import { RecordEntity } from '../../model/entity';
-import { KldMapper } from './kld.mapper';
+import { ConfigService } from '../../services/config/ConfigService';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import { KldMapper } from './kld.mapper';
+import { MailServer } from '../../utils/nodemailer.utils';
+import { ObjectListRequestParams, ObjectListResponse, ObjectResponse, PAGE_SIZE } from './kld.api';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RecordEntity } from '../../model/entity';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 import { SummaryService } from '../../services/config/SummaryService';
-import { ObjectListRequestParams, ObjectListResponse, ObjectResponse, PAGE_SIZE } from './kld.api';
 
 const log = getLogger(__filename);
 const logRequest = getLogger('requests');
@@ -88,36 +90,45 @@ export class KldImporter extends Importer {
             log.debug('Skipping finalisation of index for dry run.');
             observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
             observer.complete();
-        } else {
+        }
+        else {
             try {
-                await this.database.beginTransaction();
+                let transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
                 await this.harvest();
-                if (this.numIndexDocs > 0) {
-                    if (this.summary.databaseErrors.length == 0) {
-                        await this.database.commitTransaction();
-                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.providerUrl);
-                    }
-                    else {
-                        await this.database.rollbackTransaction();
-                    }
-                    observer.next(ImportResult.complete(this.summary));
-                    observer.complete();
+                // did the harvesting return results at all?
+                if (this.numIndexDocs == 0 && !this.summary.isIncremental) {
+                    throw new Error('No results during KLD import');
                 }
-                else {
-                    if(this.summary.appErrors.length === 0) {
-                        this.summary.appErrors.push('No Results');
-                    }
-                    log.error('No results during import - Keep old index');
-                    observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
-                    observer.complete();
+                // ensure that less than X percent of existing datasets are slated for deletion
+                // TODO introduce settings to:
+                // - send a mail
+                // - fail or continue
+                let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.providerUrl, transactionTimestamp);
+                if (nonFetchedPercentage > ConfigService.getGeneralSettings().maxDiff) {
+                    throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
                 }
-            } catch (e) {
-                this.summary.appErrors.push(e.message ? e.message : e);
-                log.error('Error during import', e);
-                observer.next(ImportResult.complete(this.summary, 'Error happened'));
-                observer.complete();
+                // did fatal errors occur (ie DB or APP errors)?
+                if (this.summary.databaseErrors.length > 0 || this.summary.appErrors.length > 0) {
+                    throw new Error();
+                }
+
+                await this.database.deleteNonFetchedDatasets(this.settings.providerUrl, transactionTimestamp);
+                await this.database.commitTransaction();
+                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.providerUrl);
+                observer.next(ImportResult.complete(this.summary));
             }
+            catch (err) {
+                if (err.message) {
+                    this.summary.appErrors.push(err.message);
+                }
+                await this.database.rollbackTransaction();
+                let msg = this.summary.appErrors.length > 0 ? this.summary.appErrors[0] : this.summary.databaseErrors[0];
+                // MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
+                log.error(msg);
+                observer.next(ImportResult.complete(this.summary, msg));
+            }
+            observer.complete();
         }
     }
 

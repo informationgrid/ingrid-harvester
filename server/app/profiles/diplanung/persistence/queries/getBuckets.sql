@@ -39,7 +39,8 @@
         secondary.collection_id AS catalog_id,
         null AS service_type,
         secondary.created_on AS issued,
-        secondary.last_modified AS modified
+        secondary.last_modified AS modified,
+        secondary.deleted_on AS deleted
     FROM public.record AS anchor
     LEFT JOIN public.record AS secondary
     ON (
@@ -68,7 +69,8 @@ UNION
         ds.collection_id AS catalog_id,
         service.service_type AS service_type,
         ds.created_on AS issued,
-        ds.last_modified AS modified
+        ds.last_modified AS modified,
+        ds.deleted_on AS deleted
     FROM public.coupling AS service
     LEFT JOIN public.record AS ds
     ON

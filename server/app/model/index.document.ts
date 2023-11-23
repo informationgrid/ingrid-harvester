@@ -36,7 +36,8 @@ export type HarvestingMetadata = {
     modified: Date,
     quality_notes?: string[],
     source: MetadataSource,
-    merged_from: string[]
+    merged_from: string[],
+    deleted?: Date
 }
 
 export type MetadataSource = {

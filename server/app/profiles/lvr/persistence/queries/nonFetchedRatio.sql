@@ -22,16 +22,16 @@
  */
 
 /*
- * Create the collection table
+ * Return number of
+ * - total number of records for the source
+ * - number of records for the source that were not fetched by the current harvesting process
  */
-CREATE TABLE IF NOT EXISTS public.collection (
-    id SERIAL,
-    identifier VARCHAR(255) NOT NULL UNIQUE,
-    properties JSONB,
-    original_document TEXT,
-    dcat_ap_plu TEXT,
-    json TEXT,
-    created_on TIMESTAMP(3) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    last_modified TIMESTAMP(3) with time zone NULL,
-    CONSTRAINT collection_pkey PRIMARY KEY(id)
-)
+SELECT
+	SUM(CASE WHEN (($2::timestamptz > created_on)
+				AND (last_modified IS NULL OR $2::timestamptz > last_modified))
+			THEN 1
+			ELSE 0
+		END) AS nonfetched,
+	COUNT(*) AS total
+FROM record
+WHERE source = $1
