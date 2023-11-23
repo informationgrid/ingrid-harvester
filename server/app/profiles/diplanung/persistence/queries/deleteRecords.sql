@@ -22,10 +22,9 @@
  */
 
 /*
- * Delete a record by setting the corresponding flag to `true`
+ * Delete existing records that have not been fetched by the current harvesting process
  */
-UPDATE public.record
-SET deleted = true
+DELETE FROM public.record
 WHERE
     source = $1
     AND (
