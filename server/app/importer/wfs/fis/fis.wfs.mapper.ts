@@ -136,22 +136,23 @@ export class FisWfsMapper extends WfsMapper {
         //         type: null  // TODO
         //     });
         // }
-        let period_frzBuergerBet = this.getPeriod('./*/fis:BBG_ANFANG', './*/fis:BBG_ENDE');
-        if (period_frzBuergerBet) {
-            processSteps.push({
-                temporal: period_frzBuergerBet,
-                type: PluProcessStepType.FRUEHZ_OEFFTL_BETEIL
-            });
-        }
-        let period_oefftlAusleg = this.getPeriod('./*/fis:AUL_ANFANG', './*/fis:AUL_ENDE');
-        if (period_oefftlAusleg) {
-            let link = this.getTextContent('./*/fis:AUSLEG_WWW');
-            processSteps.push({
-                ...link && { distributions: [{ accessURL: link }] },
-                temporal: period_oefftlAusleg,
-                type: PluProcessStepType.OEFFTL_AUSL
-            });
-        }
+        // ignore these for now (meeting 2023-11-22)
+        // let period_frzBuergerBet = this.getPeriod('./*/fis:BBG_ANFANG', './*/fis:BBG_ENDE');
+        // if (period_frzBuergerBet) {
+        //     processSteps.push({
+        //         temporal: period_frzBuergerBet,
+        //         type: PluProcessStepType.FRUEHZ_OEFFTL_BETEIL
+        //     });
+        // }
+        // let period_oefftlAusleg = this.getPeriod('./*/fis:AUL_ANFANG', './*/fis:AUL_ENDE');
+        // if (period_oefftlAusleg) {
+        //     let link = this.getTextContent('./*/fis:AUSLEG_WWW');
+        //     processSteps.push({
+        //         ...link && { distributions: [{ accessURL: link }] },
+        //         temporal: period_oefftlAusleg,
+        //         type: PluProcessStepType.OEFFTL_AUSL
+        //     });
+        // }
         return processSteps;
     }
 
