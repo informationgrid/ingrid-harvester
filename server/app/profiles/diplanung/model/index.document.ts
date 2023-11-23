@@ -57,7 +57,7 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
             identifier: mapper.getGeneratedId(),
             adms_identifier: mapper.getAdmsIdentifier(),
             title: mapper.getTitle(),
-            alternateTitle: mapper.getAlternateTitle(),
+            plan_name: mapper.getAlternateTitle(),
             // plan and procedure information
             development_freeze_period: mapper.getPluDevelopmentFreezePeriod(),
             plan_state: mapper.getPluPlanState(),
@@ -137,6 +137,7 @@ export type DiplanungIndexDocument = {
     publisher: Person | Organization,
     // recommended
     adms_identifier: string,
+    plan_name: string,
     plan_type: PluPlanType,
     plan_type_fine: string,
     procedure_type: PluProcedureType,
@@ -156,7 +157,6 @@ export type DiplanungIndexDocument = {
     centroid: any,
     spatial_text: string,
     // additional information and metadata
-    alternateTitle: string,
     catalog: Catalog,
     plan_or_procedure_start_date: Date,
     // temporal: DateRange[],

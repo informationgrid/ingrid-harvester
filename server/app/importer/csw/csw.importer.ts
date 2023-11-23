@@ -195,7 +195,7 @@ export class CswImporter extends Importer {
             let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
             log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
             let importedDocuments = await this.extractRecords(response, harvestTime);
-            await this.updateRecords(importedDocuments);
+            await this.updateRecords(importedDocuments, this.generalInfo['catalog'].id);
             // logging
             // let beforePercentage = Math.floor(100 * (delegate.getStartRecordIndex() - this.settings.maxRecords) / this.totalRecords);
             // let percentage = Math.floor(100 * delegate.getStartRecordIndex() / this.totalRecords);
@@ -318,7 +318,7 @@ export class CswImporter extends Importer {
                 let entity: Entity = {
                     identifier: uuid,
                     source: this.settings.getRecordsUrl,
-                    collection_id: this.database.defaultCatalog.id,
+                    collection_id: this.generalInfo['catalog'].id,
                     operates_on: mapper.getOperatesOn(),
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
@@ -345,7 +345,7 @@ export class CswImporter extends Importer {
      * Is called after a batch of records has been added to the bulk persisting queue.
      * They may not necessarily have been persisted yet.
      */
-    protected async updateRecords(documents: any[]) {
+    protected async updateRecords(documents: any[], collectionId: number) {
         // For Profile specific Handling
     }
 

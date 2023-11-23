@@ -48,7 +48,7 @@ export class DiplanungCswImporter extends CswImporter {
         return new DiplanungCswMapper(settings, record, harvestTime, summary, generalInfo);
     }
 
-    protected async updateRecords(documents: DiplanungIndexDocument[]) {
+    protected async updateRecords(documents: DiplanungIndexDocument[], collectionId: number) {
         log.warn('Updating #records:', documents.length);
         let promises: (() => Promise<Entity>)[] = [];
         for (let doc of documents) {
@@ -100,7 +100,7 @@ export class DiplanungCswImporter extends CswImporter {
                     let entity: Entity = {
                         identifier: doc.identifier,
                         source: doc.extras.metadata.source.source_base,
-                        collection_id: doc.catalog.id,
+                        collection_id: collectionId,
                         dataset: mergedDocument,
                         original_document: undefined
                     };

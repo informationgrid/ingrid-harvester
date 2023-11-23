@@ -54,7 +54,8 @@ export class XplanWfsMapper extends WfsMapper {
     }
 
     _getAlternateTitle() {
-        return this._getTitle();
+        let planName = this.getTextContent('./*/xplan:planName')?.trim();
+        return planName ?? undefined;
     }
 
     _getBoundingBox(): object {

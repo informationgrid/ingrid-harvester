@@ -54,28 +54,8 @@ export const indexMappings = {
                 }
             }
         },
-        'alternateTitle': {
-            'type': 'text',
-            'store': true,
-            'fields': {
-                'decomp_german': {
-                    'type': 'text',
-                    'analyzer': 'decomp_german',
-                    'search_analyzer': 'german_simple'
-                },
-                'decomp_shingles': {
-                    'type': 'text',
-                    'analyzer': 'decomp_shingles'
-                },
-                'suggest_shingles': {
-                    'type': 'text',
-                    'analyzer': 'suggest_shingles'
-                },
-                'raw': {
-                    'type': 'keyword',
-                    'store': true
-                }
-            }
+        'plan_name': {
+            'type': 'keyword'
         },
         'catalog': {
             'properties': {

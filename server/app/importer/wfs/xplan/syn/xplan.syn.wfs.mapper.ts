@@ -49,7 +49,7 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
             distributions.push(...this.getSpecificDistributions(tagName, tagDescription));
         });
         // add xplan-specific WMS distributions
-        let wmsDist = generateXplanWmsDistributions(this._getCatalog().identifier, this._getTitle(), this._getPluPlanType());
+        let wmsDist = generateXplanWmsDistributions(this._getCatalog().identifier, this._getAlternateTitle(), this._getPluPlanType());
         distributions.push(wmsDist);
         return distributions;
     }
@@ -84,8 +84,8 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
     }
 
     _getAlternateTitle() {
-        let alternateTitle = this.getTextContent('./*/xplan:xpPlanName')?.trim();
-        return alternateTitle ?? undefined;
+        let planName = this.getTextContent('./*/xplan:xpPlanName')?.trim();
+        return planName ?? undefined;
     }
 
     /**

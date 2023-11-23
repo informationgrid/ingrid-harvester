@@ -150,7 +150,8 @@ export class DcatappluMapper extends BaseMapper {
     }
 
     _getAlternateTitle() {
-        return this._getTitle();
+        let planName = DcatappluMapper.select('./plu:planName', this.record, true)?.textContent;
+        return planName ?? "";
     }
 
     _getPluPlanState() {

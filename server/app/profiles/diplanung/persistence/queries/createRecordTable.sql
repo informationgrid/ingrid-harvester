@@ -42,5 +42,5 @@ CREATE TABLE IF NOT EXISTS public.record (
 CREATE INDEX IF NOT EXISTS record_identifier_idx
 ON public.record (identifier);
 
-CREATE INDEX IF NOT EXISTS record_alternateTitle_idx
-ON public.record ((dataset->>'alternateTitle'));
+CREATE INDEX IF NOT EXISTS record_planName_idx
+ON public.record ((dataset->>'plan_name'));
