@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import { indexMappings } from './persistence/elastic.mappings';
 import { indexSettings } from './persistence/elastic.settings';
 import { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper';
 import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper';
@@ -48,7 +47,7 @@ export class DiplanungFactory extends ProfileFactory<DcatappluMapper | Diplanung
     }
 
     getIndexMappings(): any {
-        return indexMappings;
+        return require('./persistence/elastic.mappings.json');
     }
 
     getIndexSettings(): IndexSettings {
