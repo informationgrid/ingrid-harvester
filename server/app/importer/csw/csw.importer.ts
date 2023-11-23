@@ -26,13 +26,14 @@ import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { BulkResponse } from '../../persistence/elastic.utils';
 import { Catalog } from '../../model/dcatApPlu.model';
+import { ConfigService } from '../../services/config/ConfigService';
 import { CswMapper } from './csw.mapper';
 import { CswParameters, RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
 import { Entity } from '../../model/entity';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { MailServer } from 'utils/nodemailer.utils';
+import { MailServer } from '../../utils/nodemailer.utils';
 import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
@@ -113,56 +114,57 @@ export class CswImporter extends Importer {
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
         if (this.settings.dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
+            await this.database.beginTransaction();
             await this.harvest();
+            await this.database.rollbackTransaction();
             log.debug('Skipping finalisation of index for dry run.');
             observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
             observer.complete();
-        } else {
+        }
+        else {
             try {
-                let transactionTimestamp: Date = await this.database.beginTransaction();
+                let transactionTimestamp = await this.database.beginTransaction();
                 await this.harvest();
-                if(this.numIndexDocs > 0 || this.summary.isIncremental) {
-                    if (this.summary.databaseErrors.length == 0) {
-                        // calculate difference between non-fetched and existing data
-                        // safeguard > X% otherwise roll back
-                        let nonFetchedRatio: number = await this.database.nonFetchedRatio(this.settings.getRecordsUrl, transactionTimestamp);
-                        let maxNonFetchedPercentage = 10; // TODO get this from configGeneral.maxDiff
-                        if (nonFetchedRatio * 100 > maxNonFetchedPercentage) {
-                            TODO handle clean state when no datasets exist yet (then all last_modified are null, oder?)
-                            // TODO send mail
-                            let subject = 'Unusually low';
-                            let body = '';
-                            MailServer.getInstance().send(subject, body);
-                            await this.database.rollbackTransaction();
-                            log.error('No results during CSW import - Keep old index');
-                            observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
-                            observer.complete();
-                        }
-                        await this.database.deleteNonFetchedDatasets(this.settings.getRecordsUrl, transactionTimestamp);
-                        await this.database.commitTransaction();
-                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getRecordsUrl);
-                    }
-                    else {
-                        await this.database.rollbackTransaction();
-                    }
-                    observer.next(ImportResult.complete(this.summary));
-                    observer.complete();
+
+                if (this.numIndexDocs == 0 && !this.summary.isIncremental) {
+                    this.summary.appErrors.push('No Results');
+                }
+                // ensure that less than X percent of existing datasets are slated for deletion
+                // TODO handle clean state when no datasets exist yet (then all last_modified are null, oder?)
+                let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.getRecordsUrl, transactionTimestamp);
+                if (nonFetchedPercentage > ConfigService.getGeneralSettings().maxDiff) {
+                    this.summary.appErrors.push('Not enough coverage of previous results');
+
+                }
+
+                if (this.summary.databaseErrors.length > 0 || this.summary.appErrors.length > 0) {
+                    throw new Error();
+                }
+                await this.database.deleteNonFetchedDatasets(this.settings.getRecordsUrl, transactionTimestamp);
+                await this.database.commitTransaction();
+                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getRecordsUrl);
+                observer.next(ImportResult.complete(this.summary));
+            }
+            catch (err) {
+                if (err.message) {
+                    this.summary.appErrors.push(err.message);
+                }
+                await this.database.rollbackTransaction();
+                let msg: string;
+                if (this.summary.appErrors.length > 0) {
+                    msg = this.summary.appErrors[0];
                 }
                 else {
-                    await this.database.rollbackTransaction();
-                    if(this.summary.appErrors.length === 0) {
-                        this.summary.appErrors.push('No Results');
-                    }
-                    log.error('No results during CSW import - Keep old index');
-                    observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
-                    observer.complete();
+                    msg = this.summary.databaseErrors[0];
                 }
-            } catch (err) {
-                this.summary.appErrors.push(err.message ? err.message : err);
-                log.error('Error during CSW import', err);
-                observer.next(ImportResult.complete(this.summary, 'Error happened'));
-                observer.complete();
+                let body = 'An error occurred during harvesting: ' + msg;
+                // MailServer.getInstance().send(msg, body);
+                let ms: MailServer = MailServer.getInstance();
+                ms.send(msg, body);
+                log.error(msg);
+                observer.next(ImportResult.complete(this.summary, msg));
             }
+            observer.complete();
         }
     }
 
@@ -316,7 +318,7 @@ export class CswImporter extends Importer {
                 log.debug(`Import document ${i + 1} from ${records.length}`);
             }
             if (logRequest.isDebugEnabled()) {
-                logRequest.debug("Record content: ", records[i].toString());
+                logRequest.debug('Record content: ', records[i].toString());
             }
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary, this.generalInfo);
@@ -373,7 +375,7 @@ export class CswImporter extends Importer {
 
     static createRequestConfig(settings: CswSettings, request = 'GetRecords'): RequestOptions {
         let requestConfig: RequestOptions = {
-            method: settings.httpMethod || "GET",
+            method: settings.httpMethod || 'GET',
             uri: settings.getRecordsUrl,
             json: false,
             headers: RequestDelegate.cswRequestHeaders(),
@@ -381,7 +383,7 @@ export class CswImporter extends Importer {
             timeout: settings.timeout
         };
 
-        if (settings.httpMethod === "POST") {
+        if (settings.httpMethod === 'POST') {
             if (request === 'GetRecords') {
                 requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
                 <GetRecords xmlns="${namespaces.CSW}"
