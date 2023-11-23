@@ -99,19 +99,19 @@ export class PostgresUtils {
                 break;
             }
         }
-        // prio 2: handle cockpit - only keep beteiligung source as duplicate
+        // prio 2: handle cockpit - only keep beteiligungsdb source as duplicate
         else if (records.has("cockpit")) {
             for (let [id, document] of records.get("cockpit")) {
                 mainDocument = document;
                 break;
             }
-            if (records.get("beteiligung")) {
-                duplicates = records.get("beteiligung");
+            if (records.has("beteiligungsdb")) {
+                duplicates = records.get("beteiligungsdb");
             }
         }
-        // prio 3: handle beteiligung - all other sources are discarded
-        else if (records.has("beteiligung")) {
-            for (let [id, document] of records.get("beteiligung")) {
+        // prio 3: handle beteiligungsdb - all other sources are discarded
+        else if (records.has("beteiligungsdb")) {
+            for (let [id, document] of records.get("beteiligungsdb")) {
                 mainDocument = document;
                 break;
             }
@@ -185,13 +185,13 @@ export class PostgresUtils {
             case 'cockpitpro':
                 return document;
             case 'cockpit':
-                if (duplicate.extras.metadata.source.source_type == 'beteiligung') {
+                if (duplicate.extras.metadata.source.source_type == 'beteiligungsdb') {
                     return { ...document, process_steps: duplicate.process_steps };
                 }
                 else {
                     return document;
                 }
-            case 'beteiligung':
+            case 'beteiligungsdb':
                 return document;
             case 'csw':
                 let updatedFields = {};

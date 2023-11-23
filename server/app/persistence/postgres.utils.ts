@@ -202,7 +202,7 @@ export class PostgresUtils extends DatabaseUtils {
 
     private getSourceType(source: string) {
         if (source.includes('beteiligung')) {
-            return 'beteiligung';
+            return 'beteiligungsdb';
         }
         if (source.endsWith('csw')) {
             return 'csw';
