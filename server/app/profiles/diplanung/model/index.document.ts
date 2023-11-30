@@ -166,8 +166,10 @@ export type DiplanungIndexDocument = {
             harvested: Date,
             harvesting_errors: null, // get errors after all operations been done
             issued: Date,
-            is_valid: null, // checks validity after all operations been done
+            is_changed?: boolean,
+            is_valid: boolean, // checks validity after all operations been done
             modified: Date,
+            quality_notes?: string[],
             source: {
                 source_base: string,
                 source_type?: string,

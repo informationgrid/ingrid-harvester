@@ -53,41 +53,32 @@ export class DiplanungCswImporter extends CswImporter {
         let promises: (() => Promise<Entity>)[] = [];
         for (let doc of documents) {
             promises.push(() => new Promise(async (resolve, reject) => {
-                let updateDoc = {};
+                let updateDoc: Partial<DiplanungIndexDocument> = {};
                 let docIsUpdated = false;
 
                 // update WMS distributions with layer names
                 let updatedDistributions = await this.updateDistributions(doc.distributions, doc.plan_type as PluPlanType);
                 if (updatedDistributions?.length > 0) {
-                    updateDoc['distributions'] = updatedDistributions;
-                    updateDoc['extras'] = MiscUtils.structuredClone(doc['extras']);
-                    if (!updateDoc['extras']['metadata']['quality_notes']) {
-                        updateDoc['extras']['metadata']['quality_notes'] = [];
-                    }
-                    updateDoc['extras']['metadata']['is_changed'] = true;
-                    updateDoc['extras']['metadata']['quality_notes'].push('WMS layer names have been added to a distribution');
+                    updateDoc.distributions = updatedDistributions;
+                    updateDoc.extras = MiscUtils.merge(MiscUtils.structuredClone(doc.extras), updateDoc.extras);
+                    updateQuality(updateDoc, 'WMS layer names have been added to a distribution', null, true);
                     docIsUpdated = true;
                 }
 
                 // purposely simplistic heuristic: is centroid inside bbox for Germany?
                 if (!GeoJsonUtils.within(doc.centroid, GeoJsonUtils.BBOX_GERMANY)) {
                     // copy and/or create relevant metadata structure
-                    updateDoc['extras'] = MiscUtils.structuredClone(doc['extras']);
-                    if (!updateDoc['extras']['metadata']['quality_notes']) {
-                        updateDoc['extras']['metadata']['quality_notes'] = [];
-                    }
+                    updateDoc.extras = MiscUtils.merge(MiscUtils.structuredClone(doc.extras), updateDoc.extras);
                     // if not, try to swap lat and lon
                     let flippedBbox = GeoJsonUtils.flip<Geometry | GeometryCollection>(doc.bounding_box);
                     if (GeoJsonUtils.within(flippedBbox, GeoJsonUtils.BBOX_GERMANY)) {
-                        updateDoc['spatial'] = GeoJsonUtils.flip<Geometry | GeometryCollection>(doc.spatial);
-                        updateDoc['bounding_box'] = flippedBbox;
-                        updateDoc['centroid'] = GeoJsonUtils.flip<Point>(doc.centroid);
-                        updateDoc['extras']['metadata']['is_changed'] = true;
-                        updateDoc['extras']['metadata']['quality_notes'].push('Swapped lat and lon');
+                        updateDoc.spatial = GeoJsonUtils.flip<Geometry | GeometryCollection>(doc.spatial);
+                        updateDoc.bounding_box = flippedBbox;
+                        updateDoc.centroid = GeoJsonUtils.flip<Point>(doc.centroid);
+                        updateQuality(updateDoc, 'Swapped lat and lon', null, true);
                     }
                     else {
-                        updateDoc['extras']['metadata']['is_valid'] = false;
-                        updateDoc['extras']['metadata']['quality_notes'].push('Centroid not within Germany');
+                        updateQuality(updateDoc, 'Centroid not within Germany', false, null);
                     }
                     docIsUpdated = true;
                 }
@@ -142,7 +133,7 @@ export class DiplanungCswImporter extends CswImporter {
                 continue;
             }
             // Hamburg Customization -> enrich dataset with WMS Distribution
-            let generatedWMS = this.generateWmsDistribution(distribution, planType);
+            let generatedWMS = generateWmsDistribution(distribution, planType);
             if (generatedWMS) {
                 updatedDistributions.push(generatedWMS);
                 generatedIdx = updatedDistributions.length - 1;
@@ -214,23 +205,6 @@ export class DiplanungCswImporter extends CswImporter {
         return updated ? updatedDistributions : null;
     }
 
-    private generateWmsDistribution(distribution: Distribution, planType: PluPlanType): Distribution {
-        const url: URL = new URL(distribution.accessURL);
-        if (url.pathname.endsWith('_WFS_xplan_dls') &&
-            url.searchParams.get('service') === 'WFS' &&
-            url.searchParams.get('request') === 'GetFeature' && 
-            url.searchParams.get('version') === '2.0.0' &&
-            url.searchParams.get('resolvedepth') === '*' &&
-            url.searchParams.get('StoredQuery_ID') === 'urn:ogc:def:query:OGC-WFS::PlanName'
-        ) {
-            // generate WMS Url with PlanName form 
-            let stateAbbrev = url.pathname.substring(1, 3).toLowerCase();
-            let planName = url.searchParams.get('planName');
-            return generateXplanWmsDistributions(stateAbbrev, planName, planType);
-        } 
-        return null;
-    }
-
     private getMapLayerNames(response: string): string[] {
         let serviceResponseDom = this.domParser.parseFromString(response, 'application/xml');
         // layer * 2
@@ -260,4 +234,39 @@ function cleanWmsUrl(accessURL: URL): string {
     }
     markedForDeletion.forEach(key => accessURL.searchParams.delete(key));
     return MiscUtils.strip(accessURL.toString(), '?');
+}
+
+function generateWmsDistribution(distribution: Distribution, planType: PluPlanType): Distribution {
+    const url: URL = new URL(distribution.accessURL);
+    if (url.pathname.endsWith('_WFS_xplan_dls') &&
+        url.searchParams.get('service') === 'WFS' &&
+        url.searchParams.get('request') === 'GetFeature' && 
+        url.searchParams.get('version') === '2.0.0' &&
+        url.searchParams.get('resolvedepth') === '*' &&
+        url.searchParams.get('StoredQuery_ID') === 'urn:ogc:def:query:OGC-WFS::PlanName'
+    ) {
+        // generate WMS Url with PlanName form 
+        let stateAbbrev = url.pathname.substring(1, 3).toLowerCase();
+        let planName = url.searchParams.get('planName');
+        return generateXplanWmsDistributions(stateAbbrev, planName, planType);
+    } 
+    return null;
+}
+
+function updateQuality(document: Partial<DiplanungIndexDocument>, qNote: string, isValid: boolean, isChanged: boolean) {
+    // add quality notes if given
+    if (qNote) {
+        if (!document.extras.metadata.quality_notes) {
+            document.extras.metadata.quality_notes = [];
+        }
+        document.extras.metadata.quality_notes.push(qNote);
+    }
+    // set isValid flag if given
+    if (isValid != null) {
+        document.extras.metadata.is_valid = isValid;
+    }
+    // set isChanged flag if given
+    if (isChanged != null) {
+        document.extras.metadata.is_changed = isChanged;
+    }
 }

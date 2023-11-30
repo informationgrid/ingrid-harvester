@@ -223,27 +223,31 @@ export class GeoJsonUtils {
         let projectedFeatureCollection = MiscUtils.structuredClone(featureCollection);
         projectedFeatureCollection.features = featureCollection.features.map(feature => projectFeature(feature));
         return projectedFeatureCollection;
-        // const fromProjection = getProjByCode(codeSridFrom)['proj4'];
-        // const toProjection = getProjByCode(codeSridTo)['proj4'];
-        // if (!fromProjection || !fromProjection){
-        //     return;
-        // }
-
-        let featureCollection = spatial;
-        // let features = featureCollection.features;
-        // for (let i = 0; i < features.length; i++){
-        //     const newFeat =  projectFeature(features[i]);
-        //         features[i] = newFeat;
-            
-        // }
-        featureCollection.features = spatial.features.map(feature => projectFeature(feature));
-        return featureCollection;
-
-        // const transformCoords = this.transformer(crs);
-        // let [west, south] = transformCoords(...lowerCorner.trim().split(' ').map(parseFloat));
     };
 
-    parseCoords = (s, opts: { crs?: string, stride?: number } = { crs: null, stride: 2 }, ctx = { srsDimension: null }) => {
+    parse = (_: Node, opts: { crs?: any, stride?: number } = { crs: null, stride: 2 }, ctx = {}) => {
+        const childCtx = this.createChildContext(_, opts, ctx);
+
+        if (_.nodeName === 'gml:Polygon' || _.nodeName === 'gml:Rectangle') {
+            return rewind({
+                type: 'Polygon',
+                coordinates: this.parsePolygonOrRectangle(_, opts, childCtx)
+            });
+        } else if (_.nodeName === 'gml:Surface') {
+            return rewind({
+                type: 'MultiPolygon',
+                coordinates: this.parseSurface(_, opts, childCtx)
+            });
+        } else if (_.nodeName === 'gml:MultiSurface') {
+            return rewind({
+                type: 'MultiPolygon',
+                coordinates: this.parseMultiSurface(_, opts, childCtx)
+            });
+        }
+        return null;
+    };
+
+    private parseCoords = (s, opts: { crs?: string, stride?: number } = { crs: null, stride: 2 }, ctx = { srsDimension: null }) => {
         const stride = ctx.srsDimension || opts.stride || 2
         const transformCoords = this.transformer(opts.crs)
 
@@ -261,11 +265,11 @@ export class GeoJsonUtils {
         return points;
     };
 
-    findIn = (root: Node, ...tags) => {
+    private findIn = (root: Node, ...tags) => {
         return this.select(`.//${tags.join('/')}`, root, true);
     };
 
-    createChildContext = (_, opts, ctx) => {
+    private createChildContext = (_, opts, ctx) => {
         const srsDimensionAttribute = _.getAttribute('srsDimension');
 
         if (srsDimensionAttribute) {
@@ -282,7 +286,7 @@ export class GeoJsonUtils {
         return ctx;
     };
 
-    parsePosList = (_, opts, ctx = {}) => {
+    private parsePosList = (_, opts, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
 
         const coords = _.textContent;
@@ -293,7 +297,7 @@ export class GeoJsonUtils {
         return this.parseCoords(coords, opts, childCtx);
     };
 
-    parsePos = (_, opts, ctx = {}) => {
+    private parsePos = (_, opts, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
 
         const coords = _.textContent;
@@ -308,7 +312,7 @@ export class GeoJsonUtils {
         return points[0];
     };
 
-    parsePoint = (_, opts, ctx = {}) => {
+    private parsePoint = (_, opts, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
 
         // TODO AV: Parse other gml:Point options
@@ -319,7 +323,7 @@ export class GeoJsonUtils {
         return this.parsePos(pos, opts, childCtx);
     };
 
-    parseLinearRingOrLineString = (_, opts, ctx = {}) => { // or a LineStringSegment
+    private parseLinearRingOrLineString = (_, opts, ctx = {}) => { // or a LineStringSegment
         const childCtx = this.createChildContext(_, opts, ctx);
 
         let points = [];
@@ -343,7 +347,7 @@ export class GeoJsonUtils {
         return points;
     };
 
-    parseCurveSegments = (_, opts, ctx = {}) => {
+    private parseCurveSegments = (_, opts, ctx = {}) => {
         let points = [];
 
         Object.values(this.select('.//gml:LineStringSegment|.//gml:LineString|.//gml:Arc', _, false)).forEach(c => {
@@ -364,7 +368,7 @@ export class GeoJsonUtils {
         return points;
     };
 
-    parseRing = (_, opts, ctx = {}) => {
+    private parseRing = (_, opts, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
 
         const points = [];
@@ -398,7 +402,7 @@ export class GeoJsonUtils {
         return points;
     };
 
-    parseExteriorOrInterior = (_, opts, ctx = {}) => {
+    private parseExteriorOrInterior = (_, opts, ctx = {}) => {
         const linearRing = this.findIn(_, 'gml:LinearRing');
         if (linearRing) {
             return this.parseLinearRingOrLineString(linearRing, opts, ctx);
@@ -411,7 +415,7 @@ export class GeoJsonUtils {
         throw new Error('invalid ' + _.nodeName + ' element');
     };
 
-    parsePolygonOrRectangle = (_, opts, ctx = {}) => { // or PolygonPatch
+    private parsePolygonOrRectangle = (_, opts, ctx = {}) => { // or PolygonPatch
         const childCtx = this.createChildContext(_, opts, ctx);
 
         const exterior = this.findIn(_, 'gml:exterior');
@@ -429,7 +433,7 @@ export class GeoJsonUtils {
         return pointLists;
     };
 
-    parseSurface = (_, opts, ctx = {}) => {
+    private parseSurface = (_, opts, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
 
         const patches = this.findIn(_, 'gml:patches');
@@ -447,7 +451,7 @@ export class GeoJsonUtils {
         return polygons;
     };
 
-    parseCompositeSurface = (_, opts, ctx = {}) => {
+    private parseCompositeSurface = (_, opts, ctx = {}) => {
         const childCtx = this.createChildContext(_, opts, ctx);
 
         const polygons = [];
@@ -466,7 +470,7 @@ export class GeoJsonUtils {
         return polygons;
     };
 
-    parseMultiSurface = (_, opts, ctx = {}) => {
+    private parseMultiSurface = (_, opts, ctx = {}) => {
         let el = _;
 
         const surfaceMembers = this.findIn(_, 'gml:LinearRing');
@@ -496,27 +500,5 @@ export class GeoJsonUtils {
             throw new Error(_.nodeName + ' must have > 0 polygons');
         }
         return polygons;
-    };
-
-    parse = (_: Node, opts: { crs?: any, stride?: number } = { crs: null, stride: 2 }, ctx = {}) => {
-        const childCtx = this.createChildContext(_, opts, ctx);
-
-        if (_.nodeName === 'gml:Polygon' || _.nodeName === 'gml:Rectangle') {
-            return rewind({
-                type: 'Polygon',
-                coordinates: this.parsePolygonOrRectangle(_, opts, childCtx)
-            });
-        } else if (_.nodeName === 'gml:Surface') {
-            return rewind({
-                type: 'MultiPolygon',
-                coordinates: this.parseSurface(_, opts, childCtx)
-            });
-        } else if (_.nodeName === 'gml:MultiSurface') {
-            return rewind({
-                type: 'MultiPolygon',
-                coordinates: this.parseMultiSurface(_, opts, childCtx)
-            });
-        }
-        return null;
     };
 }
