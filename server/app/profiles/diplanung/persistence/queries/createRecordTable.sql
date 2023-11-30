@@ -35,12 +35,12 @@ CREATE TABLE IF NOT EXISTS public.record (
     created_on TIMESTAMP(6) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_modified TIMESTAMP(6) with time zone NULL,
     CONSTRAINT record_pkey PRIMARY KEY(id),
-    CONSTRAINT record_full_identifier UNIQUE(identifier, collection_id),
+    CONSTRAINT record_full_identifier UNIQUE(identifier, collection_id, source),
     CONSTRAINT fkivo5l0rletq7kni6xstvejy5a FOREIGN KEY(collection_id) REFERENCES public.collection(id)
 );
 
 CREATE INDEX IF NOT EXISTS record_identifier_idx
 ON public.record (identifier);
 
-CREATE INDEX IF NOT EXISTS record_alternateTitle_idx
-ON public.record ((dataset->>'alternateTitle'));
+CREATE INDEX IF NOT EXISTS record_planName_idx
+ON public.record ((dataset->>'plan_name'));

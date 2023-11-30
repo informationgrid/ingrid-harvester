@@ -33,7 +33,7 @@ export interface Distribution {
     issued?: Date;
     modified?: Date;
     byteSize?: number;
-    period?: DateRange;
+    temporal?: DateRange;
     pluDocType?: string;
     mapLayerNames?: string[];
 }

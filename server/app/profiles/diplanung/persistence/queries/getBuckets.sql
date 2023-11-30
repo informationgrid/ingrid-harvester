@@ -29,21 +29,30 @@
  * They are all identified by the `anchor_id` which is the id of the "original" dataset
  */
 
--- get all datasets of a given source, and all their duplicates from other sources (here determined by alternateTitle)
+-- get all datasets of a given source, and all their duplicates from other sources (determined by dataset->>'plan_name')
 (
     SELECT
         anchor.id AS anchor_id,
         secondary.id AS id,
         secondary.source AS source,
         secondary.dataset AS dataset,
+        secondary.collection_id AS catalog_id,
         false AS is_service,
         secondary.created_on AS issued,
         secondary.last_modified AS modified
     FROM public.record AS anchor
     LEFT JOIN public.record AS secondary
-    ON
-        anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
-        AND (anchor.source != secondary.source OR anchor.id = secondary.id)
+    ON (
+            anchor.dataset->>'plan_name' = secondary.dataset->>'plan_name'
+            OR (
+                anchor.identifier = secondary.identifier
+                AND anchor.collection_id = secondary.collection_id
+            )
+        )
+        AND (
+            anchor.source != secondary.source
+            OR anchor.id = secondary.id
+        )
     WHERE
         anchor.source = $1
         AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
@@ -56,6 +65,7 @@ UNION
         service.id AS id,
         service.source AS source,
         service.dataset AS dataset,
+        service.collection_id AS catalog_id,
         true AS is_service,
         service.created_on AS issued,
         service.last_modified AS modified
@@ -90,7 +100,7 @@ UNION
         FROM public.record AS anchor
         LEFT JOIN public.record AS secondary
         ON
-            anchor.dataset->>'alternateTitle' = secondary.dataset->>'alternateTitle'
+            anchor.dataset->>'plan_name' = secondary.dataset->>'plan_name'
             AND (anchor.source != secondary.source OR anchor.id = secondary.id)
         WHERE
             anchor.source = $1

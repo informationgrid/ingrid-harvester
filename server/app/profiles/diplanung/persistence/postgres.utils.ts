@@ -43,12 +43,14 @@ export class PostgresUtils {
     public async processBucket(bucket: Bucket): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
         // find primary document
-        let { primary_id, document, duplicates } = this.prioritize(bucket);
-        // data-service-coupling
-        for (let [id, service] of bucket.operatingServices) {
-            document = this.resolveCoupling(document, service);
-            document.extras.merged_from.push(createEsId(service));
-            box.push({ operation: 'delete', _id: createEsId(service) });
+        let { document, duplicates } = this.prioritizeAndFilter(bucket);
+        // data-service-coupling for CSW
+        if (document.extras.metadata.source.source_type == 'csw') {
+            for (let [id, service] of bucket.operatingServices) {
+                document = this.resolveCoupling(document, service);
+                document.extras.merged_from.push(createEsId(service));
+                box.push({ operation: 'delete', _id: createEsId(service) });
+            }
         }
         // deduplication
         for (let [id, duplicate] of duplicates) {
@@ -72,32 +74,82 @@ export class PostgresUtils {
         return box;
     }
 
-    private prioritize(bucket: Bucket): { 
-        primary_id: string | number, 
+    private prioritizeAndFilter(bucket: Bucket): { 
         document: DiplanungIndexDocument, 
         duplicates: Map<string | number, DiplanungIndexDocument>
     } {
-        let candidates = [];
-        let reserveCandidate: string | number;
+        // initialize records map
+        let records: Map<string, Map<string | number, DiplanungIndexDocument>> = new Map<string, Map<string | number, DiplanungIndexDocument>>();
         for (let [id, document] of bucket.duplicates) {
-            if (document.extras.metadata.source.source_base?.endsWith('csw')) {
-                candidates.push(id);
+            let sourceType = document.extras.metadata.source.source_type;
+            let sourceMap = records.get(sourceType);
+            if (sourceMap == null) {
+                sourceMap = new Map<string | number, DiplanungIndexDocument>();
+                records.set(sourceType, sourceMap);
             }
-            if (id == bucket.anchor_id) {
-                reserveCandidate = id;
-            }
-        }
-        if (candidates.includes(reserveCandidate)) {
-            candidates = [reserveCandidate];
-        }
-        else {
-            candidates.push(reserveCandidate);
+            sourceMap.set(id, document);
         }
 
-        let document = bucket.duplicates.get(candidates[0]);
-        let duplicates = bucket.duplicates;
-        duplicates.delete(candidates[0]);
-        return { primary_id: candidates[0], document, duplicates };
+        let mainDocument: DiplanungIndexDocument;
+        let duplicates: Map<string | number, DiplanungIndexDocument> = new Map<string | number, DiplanungIndexDocument>();
+        // prio 1: handle cockpitpro - all other sources are discarded
+        if (records.has("cockpitpro")) {
+            for (let [id, document] of records.get("cockpitpro")) {
+                mainDocument = document;
+                break;
+            }
+        }
+        // prio 2: handle cockpit - only keep beteiligungsdb source as duplicate
+        else if (records.has("cockpit")) {
+            for (let [id, document] of records.get("cockpit")) {
+                mainDocument = document;
+                break;
+            }
+            if (records.has("beteiligungsdb")) {
+                duplicates = records.get("beteiligungsdb");
+            }
+        }
+        // prio 3: handle beteiligungsdb - all other sources are discarded
+        else if (records.has("beteiligungsdb")) {
+            for (let [id, document] of records.get("beteiligungsdb")) {
+                mainDocument = document;
+                break;
+            }
+        }
+        // prio 4: handle csw - only keep wfs sources as duplicates
+        else if (records.has("csw")) {
+            for (let [id, document] of records.get("csw")) {
+                mainDocument = document;
+                break;
+            }
+            if (records.get("wfs")) {
+                duplicates = records.get("wfs");
+            }
+        }
+        // prio 5: handle wfs - only keep other wfs sources as duplicates
+        else if (records.has("wfs")) {
+            for (let [id, document] of records.get("wfs")) {
+                if (mainDocument == null) {
+                    mainDocument = document;
+                }
+                else {
+                    duplicates.set(id, document);
+                }
+            }
+        }
+        // prio 6: handle all other cases - 
+        else {
+            for (let [id, document] of bucket.duplicates) {
+                if (mainDocument == null) {
+                    mainDocument = document;
+                }
+                else {
+                    duplicates.set(id, document);
+                }
+            }
+        }
+
+        return { document: mainDocument, duplicates };
     }
 
     /**
@@ -129,15 +181,31 @@ export class PostgresUtils {
      */
     private deduplicate(document: DiplanungIndexDocument, duplicate: DiplanungIndexDocument): DiplanungIndexDocument {
         // log.warn(`Merging ${duplicate.identifier} (${duplicate.extras.metadata.source.source_base}) into ${document.identifier} (${document.extras.metadata.source.source_base})`);
-        let updatedFields = {};
-        for (const field of overwriteFields) {
-            updatedFields[field] = duplicate[field];
+        switch (document.extras.metadata.source.source_type) {
+            case 'cockpitpro':
+                return document;
+            case 'cockpit':
+                if (duplicate.extras.metadata.source.source_type == 'beteiligungsdb') {
+                    return { ...document, process_steps: duplicate.process_steps };
+                }
+                else {
+                    return document;
+                }
+            case 'beteiligungsdb':
+                return document;
+            case 'csw':
+                let updatedFields = {};
+                for (const field of overwriteFields) {
+                    updatedFields[field] = duplicate[field];
+                }
+                // use publisher from WFS if not specified in CSW
+                if (!document.publisher?.['name'] && !document.publisher?.['organization']) {
+                    updatedFields['publisher'] = duplicate.publisher;
+                }
+                return { ...document, ...updatedFields };
+            default:
+                return document;
         }
-        // use publisher from WFS if not specified in CSW
-        if (!document.publisher?.['name'] && !document.publisher?.['organization']) {
-            updatedFields['publisher'] = duplicate.publisher;
-        }
-        return { ...document, ...updatedFields };
         // TODO don't we need a proper merge?
         // return MiscUtils.merge(document, updatedFields);
     }

@@ -28,15 +28,14 @@ import { DateRange } from '../../../model/dateRange';
 import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
-import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { Distribution } from '../../../model/distribution';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { IndexDocument } from '../../../model/index.document';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
-export class DiPlanungDocument extends IndexDocument<DcatappluMapper | DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
+export class DiPlanungDocument extends IndexDocument<DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper> {
 
-    async create(_mapper: DcatappluMapper | DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper) : Promise<DiplanungIndexDocument> {
+    async create(_mapper: DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper) : Promise<DiplanungIndexDocument> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let contactPoint: Contact = await mapper.getContactPoint() ?? { fn: '' };
         let result = {
@@ -58,7 +57,7 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
             identifier: mapper.getGeneratedId(),
             adms_identifier: mapper.getAdmsIdentifier(),
             title: mapper.getTitle(),
-            alternateTitle: mapper.getAlternateTitle(),
+            plan_name: mapper.getAlternateTitle(),
             // plan and procedure information
             development_freeze_period: mapper.getPluDevelopmentFreezePeriod(),
             plan_state: mapper.getPluPlanState(),
@@ -96,9 +95,6 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
                 },
                 operates_on: mapper.getOperatesOn(),    // only csw
                 merged_from: []
-                // transformed_data: {
-                //     [DcatApPluDocument.getExportFormat()]: await DcatApPluDocument.create(_mapper),
-                // }
             },
             issued: mapper.getIssued(),
             keywords: mapper.getKeywords(),
@@ -141,6 +137,7 @@ export type DiplanungIndexDocument = {
     publisher: Person | Organization,
     // recommended
     adms_identifier: string,
+    plan_name: string,
     plan_type: PluPlanType,
     plan_type_fine: string,
     procedure_type: PluProcedureType,
@@ -160,7 +157,6 @@ export type DiplanungIndexDocument = {
     centroid: any,
     spatial_text: string,
     // additional information and metadata
-    alternateTitle: string,
     catalog: Catalog,
     plan_or_procedure_start_date: Date,
     // temporal: DateRange[],
@@ -174,6 +170,7 @@ export type DiplanungIndexDocument = {
             modified: Date,
             source: {
                 source_base: string,
+                source_type?: string,
                 raw_data_source?: string,
                 portal_link?: string,
                 attribution?: string

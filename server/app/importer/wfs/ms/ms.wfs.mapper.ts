@@ -53,7 +53,7 @@ export class MsWfsMapper extends WfsMapper {
                 distributions.push(distribution);
             }
         }
-        distributions.push(generatePlanDigitalWmsDistribution(this._getTitle(), this.getStelleId()));
+        distributions.push(generatePlanDigitalWmsDistribution(this._getAlternateTitle(), this.getStelleId()));
         return distributions;
     }
 
@@ -63,8 +63,8 @@ export class MsWfsMapper extends WfsMapper {
     }
 
     _getAlternateTitle() {
-        let alternateTitle = this.getTextContent('./*/ms:plan_name')?.trim();
-        return alternateTitle ?? undefined;
+        let planName = this.getTextContent('./*/ms:plan_name')?.trim();
+        return planName ?? undefined;
     }
 
     _getBoundingBox(): object {

@@ -121,8 +121,8 @@ export class MiscUtils {
             distribution.issued,
             distribution.modified,
             distribution.title,
-            distribution.period?.gte,
-            distribution.period?.lte
+            distribution.temporal?.gte,
+            distribution.temporal?.lte
         ].join('#');
         let hash = 0;
         for (let i = 0, len = s.length; i < len; i++) {

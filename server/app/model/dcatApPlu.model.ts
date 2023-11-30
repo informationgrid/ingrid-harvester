@@ -43,7 +43,7 @@ export interface ProcessStep {
     distributions?: Distribution[],
     identifier?: string,
     passNumber?: number,
-    period?: DateRange,
+    temporal?: DateRange,
     type: PluProcessStepType
 }
 

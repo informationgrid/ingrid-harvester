@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { Contact } from '../../model/agent';
 import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
 
 export type WfsSettings = {
@@ -28,6 +29,8 @@ export type WfsSettings = {
     memberElement: string,
     catalogId: string,
     pluPlanState: string,
+    contactCswUrl?: string,
+    contactMetadata?: Contact,
     count: number,
     resultType?: "hits" | "results",
     typename: string,

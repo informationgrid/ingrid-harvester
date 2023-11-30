@@ -36,7 +36,7 @@ FROM json_populate_recordset(null::public.record, $1)
 ON CONFLICT
 ON CONSTRAINT record_full_identifier
 DO UPDATE SET
-    operates_on = EXCLUDED.operates_on,
+    operates_on = COALESCE(EXCLUDED.operates_on, record.operates_on),
     dataset = EXCLUDED.dataset,
     original_document = COALESCE(EXCLUDED.original_document, record.original_document),
     last_modified = NOW()
