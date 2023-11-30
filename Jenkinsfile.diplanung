@@ -2,10 +2,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven3'
-    }
-
     environment {
         registry = "docker-registry.wemove.com/diplanung-harvester"
     }
@@ -21,6 +17,7 @@ pipeline {
                 script {
                     version = snapshotVersionFromGit()
                     dockerImage = docker.build registry + ":" + version
+                    dockerImageLatest = docker.build registry + ":latest"
                 }
             }
         }
@@ -28,6 +25,7 @@ pipeline {
             steps {
                 script {
                     dockerImage.push()
+                    dockerImageLatest.push()
                 }
             }
         }
