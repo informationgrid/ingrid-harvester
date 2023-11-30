@@ -45,7 +45,7 @@ import centroid from '@turf/centroid';
 import flip from '@turf/flip';
 import rewind from '@turf/rewind';
 import * as xpath from 'xpath';
-import { AllGeoJSON, Geometry, GeometryCollection, Point } from "@turf/helpers";
+import { AllGeoJSON, FeatureCollection, Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { XPathUtils } from './xpath.utils';
 
 const deepEqual = require('deep-equal');
@@ -166,6 +166,81 @@ export class GeoJsonUtils {
             (<GeometryCollection>modifiedSpatial).geometries.filter((geometry: AllGeoJSON) => geometry.type == 'Envelope').forEach((geometry: AllGeoJSON) => geometry.type = 'LineString');
         }
         return centroid(modifiedSpatial);
+    };
+
+    /**
+     * Forked from https://github.com/DoFabien/proj-geojson
+     * under MIT license
+     * 
+     * @param spatial 
+     * @param targetSystem 
+     */
+    projectFeatureCollection = (spatial: FeatureCollection, sourceCrs) => {
+        const projectPoint = this.transformer(sourceCrs);
+        // const getProjByCode = function(code){
+        //     for (let i = 0; i < PROJS.length; i++){
+        //         if(PROJS[i]['code'] == code){
+        //             return PROJS[i];
+        //         }
+        //     }
+        //     console.log(code + ' doesn\'t exist in projs.json');
+        //     return undefined;
+        // }
+
+        // const projectPoint = (point, fromProj4, toProj4, digits = null) => {
+        //      return transformCoords(point.map(parseFloat))
+        // };
+
+        // Linestring, MultiPoint?
+        const projectRing = (points) => points.map(point => projectPoint(point));
+        
+        // MultiLinestring, Polygon
+        const projectRings = (rings) => rings.map(ring => projectRing(ring));
+
+        // MultiPolygon
+        const projectMultiRings = (multiRings) => multiRings.map(multiRing => projectRings(multiRing));
+
+        const projectFeature = (feature) => {
+            switch (feature?.geometry?.type) {
+                case 'Point':
+                    feature.geometry.coordinates = projectPoint(feature.geometry.coordinates);
+                    break;
+                case 'MultiPoint':
+                case 'LineString':
+                    feature.geometry.coordinates = projectRing(feature.geometry.coordinates);
+                    break;
+                case 'MultiLineString':
+                case 'Polygon':
+                    feature.geometry.coordinates = projectRings(feature.geometry.coordinates);
+                    break;
+                case 'MultiPolygon':
+                    feature.geometry.coordinates = projectMultiRings(feature.geometry.coordinates);
+                    break;
+
+                default:
+                    return null;
+            }
+            return feature;
+        };
+
+        // const fromProjection = getProjByCode(codeSridFrom)['proj4'];
+        // const toProjection = getProjByCode(codeSridTo)['proj4'];
+        // if (!fromProjection || !fromProjection){
+        //     return;
+        // }
+
+        let featureCollection = spatial;
+        // let features = featureCollection.features;
+        // for (let i = 0; i < features.length; i++){
+        //     const newFeat =  projectFeature(features[i]);
+        //         features[i] = newFeat;
+            
+        // }
+        featureCollection.features = spatial.features.map(feature => projectFeature(feature));
+        return featureCollection;
+
+        // const transformCoords = this.transformer(crs);
+        // let [west, south] = transformCoords(...lowerCorner.trim().split(' ').map(parseFloat));
     };
 
     parseCoords = (s, opts: { crs?: string, stride?: number } = { crs: null, stride: 2 }, ctx = { srsDimension: null }) => {
