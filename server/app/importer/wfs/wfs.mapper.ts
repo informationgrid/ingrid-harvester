@@ -55,13 +55,13 @@ export abstract class WfsMapper extends BaseMapper {
 
     protected select: XPathNodeSelect;
 
-    constructor(settings, feature, harvestTime, summary, generalInfo, geojsonUtils) {
+    constructor(settings, feature, harvestTime, summary, generalInfo) {
         super();
         this.settings = settings;
         this.feature = feature;
         this.harvestTime = harvestTime;
         this.summary = summary;
-        this.fetched = {...this.fetched, ...generalInfo, geojsonUtils};
+        this.fetched = {...this.fetched, ...generalInfo};
         this.select = (...args: any[]) => {
             try {
                 return generalInfo['select'](...args);

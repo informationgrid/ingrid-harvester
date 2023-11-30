@@ -74,7 +74,7 @@ export class FisWfsMapper extends WfsMapper {
             this.log.debug(`${this.uuid}: no geometry found, using bounding box instead`);
             return this.fetched.boundingBox;
         }
-        let geojson = this.fetched.geojsonUtils.parse(spatialContainer, { crs: 'EPSG:25833' });
+        let geojson = GeoJsonUtils.parse(spatialContainer, { crs: '25833' }, this.fetched.nsMap);
         return geojson;
     }
 
