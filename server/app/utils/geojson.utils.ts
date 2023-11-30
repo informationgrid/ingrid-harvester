@@ -46,6 +46,7 @@ import flip from '@turf/flip';
 import rewind from '@turf/rewind';
 import * as xpath from 'xpath';
 import { AllGeoJSON, FeatureCollection, Geometry, GeometryCollection, Point } from '@turf/helpers';
+import { MiscUtils } from './misc.utils';
 import { XPathUtils } from './xpath.utils';
 
 const deepEqual = require('deep-equal');
@@ -168,6 +169,14 @@ export class GeoJsonUtils {
         return centroid(modifiedSpatial);
     };
 
+    static transformCollection = (featureCollection: FeatureCollection) => {
+        let geometryCollection = {
+            type: 'GeometryCollection' as 'GeometryCollection',
+            geometries: featureCollection.features.map(feature => feature.geometry)
+        };
+        return geometryCollection;
+    };
+
     /**
      * Forked from https://github.com/DoFabien/proj-geojson
      * under MIT license
@@ -175,24 +184,12 @@ export class GeoJsonUtils {
      * @param spatial 
      * @param targetSystem 
      */
-    projectFeatureCollection = (spatial: FeatureCollection, sourceCrs) => {
+    projectFeatureCollection = (featureCollection: FeatureCollection, sourceCrs: string) => {
+        // Point
         const projectPoint = this.transformer(sourceCrs);
-        // const getProjByCode = function(code){
-        //     for (let i = 0; i < PROJS.length; i++){
-        //         if(PROJS[i]['code'] == code){
-        //             return PROJS[i];
-        //         }
-        //     }
-        //     console.log(code + ' doesn\'t exist in projs.json');
-        //     return undefined;
-        // }
-
-        // const projectPoint = (point, fromProj4, toProj4, digits = null) => {
-        //      return transformCoords(point.map(parseFloat))
-        // };
 
         // Linestring, MultiPoint?
-        const projectRing = (points) => points.map(point => projectPoint(point));
+        const projectRing = (points: any[]) => points.map(point => projectPoint(...point));
         
         // MultiLinestring, Polygon
         const projectRings = (rings) => rings.map(ring => projectRing(ring));
@@ -203,7 +200,7 @@ export class GeoJsonUtils {
         const projectFeature = (feature) => {
             switch (feature?.geometry?.type) {
                 case 'Point':
-                    feature.geometry.coordinates = projectPoint(feature.geometry.coordinates);
+                    feature.geometry.coordinates = projectPoint(...feature.geometry.coordinates);
                     break;
                 case 'MultiPoint':
                 case 'LineString':
@@ -223,6 +220,9 @@ export class GeoJsonUtils {
             return feature;
         };
 
+        let projectedFeatureCollection = MiscUtils.structuredClone(featureCollection);
+        projectedFeatureCollection.features = featureCollection.features.map(feature => projectFeature(feature));
+        return projectedFeatureCollection;
         // const fromProjection = getProjByCode(codeSridFrom)['proj4'];
         // const toProjection = getProjByCode(codeSridTo)['proj4'];
         // if (!fromProjection || !fromProjection){
