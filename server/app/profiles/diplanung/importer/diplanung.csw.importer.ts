@@ -26,11 +26,11 @@ import { CswImporter } from '../../../importer/csw/csw.importer';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungIndexDocument } from '../model/index.document';
 import { Distribution } from '../../../model/distribution';
-import { Entity } from '../../../model/entity';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { MiscUtils } from '../../../utils/misc.utils';
 import { PluPlanType } from '../../../model/dcatApPlu.model';
+import { RecordEntity } from '../../../model/entity';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WmsXPath } from './wms.xpath';
 
@@ -50,7 +50,7 @@ export class DiplanungCswImporter extends CswImporter {
 
     protected async updateRecords(documents: DiplanungIndexDocument[], collectionId: number) {
         log.warn('Updating #records:', documents.length);
-        let promises: (() => Promise<Entity>)[] = [];
+        let promises: (() => Promise<RecordEntity>)[] = [];
         for (let doc of documents) {
             promises.push(() => new Promise(async (resolve, reject) => {
                 let updateDoc: Partial<DiplanungIndexDocument> = {};
@@ -88,7 +88,7 @@ export class DiplanungCswImporter extends CswImporter {
                     // keywords: jsonb_set, json_agg, SQL/JSON Path Language, postgres14+
                     let mergedDocument: DiplanungIndexDocument = MiscUtils.merge(doc, updateDoc);
                     mergedDocument.extras.metadata.modified = new Date(Date.now());
-                    let entity: Entity = {
+                    let entity: RecordEntity = {
                         identifier: doc.identifier,
                         source: doc.extras.metadata.source.source_base,
                         collection_id: collectionId,

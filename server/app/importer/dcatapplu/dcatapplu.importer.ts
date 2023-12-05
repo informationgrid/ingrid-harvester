@@ -27,13 +27,13 @@ import { namespaces } from '../../importer/namespaces';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { DcatappluMapper } from './dcatapplu.mapper';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
-import { Entity } from '../../model/entity';
 import { Importer} from '../importer';
 import { ImportLogMessage, ImportResult} from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RecordEntity } from '../../model/entity';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 
@@ -262,11 +262,10 @@ export class DcatappluImporter extends Importer {
                 });
 
                 if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                    let entity: Entity = {
+                    let entity: RecordEntity = {
                         identifier: uuid,
                         source: this.settings.catalogUrl,
                         collection_id: this.database.defaultCatalog.id,
-                        operates_on: mapper.getOperatesOn(),
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };

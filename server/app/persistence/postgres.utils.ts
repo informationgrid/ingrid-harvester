@@ -29,7 +29,7 @@ import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.
 import { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document';
 import { PostgresUtils as DiplanungPostgresUtils } from '../profiles/diplanung/persistence/postgres.utils';
 import { ElasticsearchUtils } from './elastic.utils';
-import { Entity } from '../model/entity';
+import { Entity, RecordEntity } from '../model/entity';
 import { PostgresQueries } from './postgres.queries';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
@@ -213,7 +213,7 @@ export class PostgresUtils extends DatabaseUtils {
         return source;
     }
 
-    write(entity: Entity) {
+    write(entity: RecordEntity) {
         throw new Error('Method not implemented.');
     }
 
@@ -230,17 +230,22 @@ export class PostgresUtils extends DatabaseUtils {
         }
         let result: QueryResult<any>;
         try {
-            // if we have the same entity twice in the same bulk, merge the entity before persisting
-            // this can occur due to the way updates are handled (e.g. in CSW we have to wait for WMS calls to finish)
-            // if we don't merge, we get the following error: 
-            // "Ensure that no rows proposed for insertion within the same command have duplicate constrained values."
-            // TODO ideally, we change handling from `Entity` to `Entity.DbOperation`, to only send updates when needed
-            // TODO (instead of full upserts) and handle JSON updates within Postgres
-            entities = this.mergeEntities(entities);
-            // we remove catalogs from the entities at this point because we don't want them to persisted into the
-            // dataset in the catalog
-            entities = this.removeCatalogs(entities);
-            result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities)]);
+            if ((entities[0] as RecordEntity).collection_id) {
+                // if we have the same entity twice in the same bulk, merge the entity before persisting
+                // this can occur due to the way updates are handled (e.g. in CSW we have to wait for WMS calls to finish)
+                // if we don't merge, we get the following error: 
+                // "Ensure that no rows proposed for insertion within the same command have duplicate constrained values."
+                // TODO ideally, we change handling from `Entity` to `Entity.DbOperation`, to only send updates when needed
+                // TODO (instead of full upserts) and handle JSON updates within Postgres
+                entities = this.mergeEntities(entities as RecordEntity[]);
+                // we remove catalogs from the entities at this point because we don't want them to persisted into the
+                // dataset in the catalog
+                entities = this.removeCatalogs(entities as RecordEntity[]);
+                result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities)]);
+            }
+            else {
+                throw new Error('Unrecognised Entity type');
+            }
             log.debug('Bulk finished of data #items: ' + entities.length);
         }
         catch (e) {
@@ -253,8 +258,8 @@ export class PostgresUtils extends DatabaseUtils {
         }));
     }
 
-    private mergeEntities(entities: Entity[]): Entity[] {
-        let entityMap: Map<string, Entity> = new Map();
+    private mergeEntities(entities: RecordEntity[]): RecordEntity[] {
+        let entityMap: Map<string, RecordEntity> = new Map();
         entities.forEach(entity => {
             let uid = entity.identifier + '/' + entity.collection_id;
             if (!entityMap[uid]) {
@@ -272,7 +277,7 @@ export class PostgresUtils extends DatabaseUtils {
         return Object.values(entityMap);
     }
 
-    private removeCatalogs(entities: Entity[]): Entity[] {
+    private removeCatalogs(entities: RecordEntity[]): RecordEntity[] {
         for (let entity of entities) {
             delete entity.dataset.catalog;
         }
@@ -280,18 +285,20 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     addEntityToBulk(entity: Entity): Promise<BulkResponse> {
-        this._bulkData.push(entity);
-
-        // this.deduplicationUtils._queueForDuplicateSearch(doc, id);
-
-        // send data to elasticsearch if limit is reached
-        if (this._bulkData.length >= DatabaseUtils.maxBulkSize) {
-            return this.sendBulkData();
+        if ((entity as RecordEntity).collection_id) {
+            this._bulkData.push(entity as RecordEntity);
+            // send data to database if limit is reached
+            if (this._bulkData.length >= DatabaseUtils.maxBulkSize) {
+                return this.sendBulkData();
+            }
+            else {
+                return new Promise(resolve => resolve({
+                    queued: true
+                }));
+            }
         }
         else {
-            return new Promise(resolve => resolve({
-                queued: true
-            }));
+            throw new Error('Unrecognized Entity type');
         }
     }
 

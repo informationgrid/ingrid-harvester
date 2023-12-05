@@ -22,6 +22,10 @@
  */
 
 export interface Entity {
+    id?: string
+}
+
+export interface RecordEntity extends Entity {
     identifier: string,
     source: string,
     collection_id: number,

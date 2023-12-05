@@ -23,7 +23,6 @@
 
 import { defaultExcelSettings, ExcelSettings } from './excel.settings';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils';
-import { Entity } from '../../model/entity';
 import { ExcelMapper } from './excel.mapper';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
@@ -31,6 +30,7 @@ import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RecordEntity } from '../../model/entity';
 import { Summary } from '../../model/summary';
 import { Workbook, Worksheet } from 'exceljs';
 
@@ -149,7 +149,7 @@ export class ExcelImporter extends Importer {
                 if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                     let doc = await this.profile.getIndexDocument().create(mapper)
                         .catch(e => this.handleIndexDocError(e, mapper));
-                    let entity: Entity = {
+                    let entity: RecordEntity = {
                         identifier: unit.id,
                         source: this.settings.filePath,
                         collection_id: this.database.defaultCatalog.id,

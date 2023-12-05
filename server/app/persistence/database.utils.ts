@@ -24,7 +24,7 @@
 import { Catalog } from '../model/dcatApPlu.model';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { ElasticsearchUtils, EsOperation } from './elastic.utils';
-import { Entity } from '../model/entity';
+import { Entity, RecordEntity } from '../model/entity';
 import { Summary } from '../model/summary';
 
 export interface BulkResponse {
@@ -38,14 +38,14 @@ export abstract class DatabaseUtils {
     protected configuration: DatabaseConfiguration;
     protected summary: Summary;
     
-    public _bulkData: Entity[];
+    public _bulkData: RecordEntity[];
     public defaultCatalog: Catalog;
 
     abstract init(): Promise<void>;
 
-    abstract write(entity: Entity);
+    abstract write(entity: RecordEntity);
 
-    abstract bulk(entities: Entity[], commitTransaction: boolean): Promise<BulkResponse>;
+    abstract bulk(entities: RecordEntity[], commitTransaction: boolean): Promise<BulkResponse>;
 
     /**
      * Add an entity to the bulk array which will be sent to the database

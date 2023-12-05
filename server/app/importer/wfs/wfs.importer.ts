@@ -29,7 +29,6 @@ import { Catalog } from '../../model/dcatApPlu.model';
 import { Contact } from '../../model/agent';
 import { CswMapper } from '../../importer/csw/csw.mapper';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
-import { Entity } from '../../model/entity';
 import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
@@ -37,6 +36,7 @@ import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RecordEntity } from '../../model/entity';
 import { RequestOptions } from '../../utils/http-request.utils';
 import { Response } from 'node-fetch';
 import { WfsMapper } from './wfs.mapper';
@@ -318,7 +318,7 @@ export abstract class WfsImporter extends Importer {
             });
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                let entity: Entity = {
+                let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.settings.getFeaturesUrl,
                     collection_id: this.generalInfo['catalog'].id,

@@ -25,7 +25,6 @@ import { defaultOAISettings, OaiSettings } from './oai.settings';
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { DOMParser as DomParser } from '@xmldom/xmldom';
-import { Entity } from '../../model/entity';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
@@ -33,6 +32,7 @@ import { OaiMapper } from './oai.mapper';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RecordEntity } from '../../model/entity';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 
@@ -177,7 +177,7 @@ export class OaiImporter extends Importer {
             });
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                let entity: Entity = {
+                let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.settings.providerUrl,
                     collection_id: this.database.defaultCatalog.id,

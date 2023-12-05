@@ -24,13 +24,13 @@
 import { getLogger } from 'log4js';
 import { ConfigService } from '../../services/config/ConfigService';
 import { DefaultImporterSettings } from '../../importer.settings';
-import { Entity } from '../../model/entity';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RecordEntity } from '../../model/entity';
 import { RequestDelegate } from '../../utils/http-request.utils';
 import { SparqlMapper } from './sparql.mapper';
 import { SparqlSettings } from './sparql.settings';
@@ -216,7 +216,7 @@ export class SparqlImporter extends Importer {
             });
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                let entity: Entity = {
+                let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.settings.endpointUrl,
                     collection_id: this.database.defaultCatalog.id,

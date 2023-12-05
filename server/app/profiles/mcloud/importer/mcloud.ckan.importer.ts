@@ -24,7 +24,7 @@
 import { CkanImporter } from '../../../importer/ckan/ckan.importer';
 import { CkanMapper } from '../../../importer/ckan/ckan.mapper';
 import { DatabaseUtils } from '../../../persistence/database.utils';
-import { Entity } from '../../../model/entity';
+import { RecordEntity } from '../../../model/entity';
 
 let log = require('log4js').getLogger(__filename);
 const uuidv5 = require('uuid/v5');
@@ -138,7 +138,7 @@ export class McloudCkanImporter extends CkanImporter {
                             doc.extras.metadata.modified = new Date(stored.modified);
                     }
                 }
-                let entity: Entity = {
+                let entity: RecordEntity = {
                     identifier: doc.extras.generated_id,
                     source: this.settings.ckanBaseUrl,
                     collection_id: this.database.defaultCatalog.id,
