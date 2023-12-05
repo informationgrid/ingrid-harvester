@@ -24,7 +24,7 @@
 import { Catalog } from '../model/dcatApPlu.model';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { ElasticsearchUtils, EsOperation } from './elastic.utils';
-import { Entity, RecordEntity } from '../model/entity';
+import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
 import { Summary } from '../model/summary';
 
 export interface BulkResponse {
@@ -39,6 +39,7 @@ export abstract class DatabaseUtils {
     protected summary: Summary;
     
     public _bulkData: RecordEntity[];
+    public _bulkCouples: CouplingEntity[];
     public defaultCatalog: Catalog;
 
     abstract init(): Promise<void>;
@@ -60,6 +61,8 @@ export abstract class DatabaseUtils {
      * Send all collected bulk data if any.
      */
     abstract sendBulkData(): Promise<BulkResponse>;
+
+    abstract sendBulkCouples(): Promise<BulkResponse>;
 
     abstract beginTransaction(): Promise<void>;
     

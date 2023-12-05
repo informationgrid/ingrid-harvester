@@ -68,6 +68,20 @@ export class PostgresQueries extends AbstractPostgresQueries {
         CONSTRAINT fkivo5l0rletq7kni6xstvejy5a FOREIGN KEY(collection_id) REFERENCES public.${this.collectionTableName}(id)
     );`;
 
+    readonly createCouplingTable = `CREATE TABLE IF NOT EXISTS public.coupling (
+            id SERIAL,
+            dataset_identifier VARCHAR(255) NOT NULL,
+            service_id VARCHAR(255) NOT NULL,
+            service_type VARCHAR(255) NOT NULL,
+            distribution JSONB,
+            CONSTRAINT coupling_pkey PRIMARY KEY(id),
+            CONSTRAINT coupling_full_identifier UNIQUE(dataset_identifier, service_id, service_type)
+        );
+        CREATE INDEX IF NOT EXISTS dataset_identifier_idx
+            ON public.coupling (dataset_identifier);
+        CREATE INDEX IF NOT EXISTS service_id_idx
+            ON public.coupling (service_id);`;
+
     readonly createCollection = `INSERT INTO public.${this.collectionTableName} (identifier, properties, original_document, dcat_ap_plu, json)
         VALUES($1, $2, $3, $4, $5)
         RETURNING id`;
@@ -97,7 +111,17 @@ export class PostgresQueries extends AbstractPostgresQueries {
             OR EXCLUDED.dataset->'extras'->'metadata'->'modified' > ${this.datasetTableName}.dataset->'extras'->'metadata'->'modified'
         )`;
 
-    readonly getRecords = `SELECT dataset FROM public.${this.datasetTableName}`;
+    readonly bulkUpsertCoupling = `INSERT INTO public.coupling (dataset_identifier, service_id, service_type, distribution)
+        SELECT
+            dataset_identifier,
+            service_id,
+            service_type,
+            distribution
+        FROM json_populate_recordset(null::public.coupling, $1)
+            ON CONFLICT
+            ON CONSTRAINT coupling_full_identifier
+        DO UPDATE SET
+            distribution = EXCLUDED.distribution`;
 
     readonly getStoredData = `SELECT dataset FROM public.${this.datasetTableName}
         WHERE identifier = ANY($1)`;

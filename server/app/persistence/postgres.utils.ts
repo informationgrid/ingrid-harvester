@@ -29,7 +29,7 @@ import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.
 import { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document';
 import { PostgresUtils as DiplanungPostgresUtils } from '../profiles/diplanung/persistence/postgres.utils';
 import { ElasticsearchUtils } from './elastic.utils';
-import { Entity, RecordEntity } from '../model/entity';
+import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
 import { PostgresQueries } from './postgres.queries';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
@@ -61,6 +61,7 @@ export class PostgresUtils extends DatabaseUtils {
         }
 
         this._bulkData = [];
+        this._bulkCouples = [];
         this.queries = ProfileFactoryLoader.get().getPostgresQueries();
         this.summary = summary;
     }
@@ -85,6 +86,7 @@ export class PostgresUtils extends DatabaseUtils {
         await this.beginTransaction();
         await this.transactionClient.query(this.queries.createCollectionTable);
         await this.transactionClient.query(this.queries.createRecordTable);
+        await this.transactionClient.query(this.queries.createCouplingTable);
         await this.commitTransaction();
     }
 
@@ -243,6 +245,9 @@ export class PostgresUtils extends DatabaseUtils {
                 entities = this.removeCatalogs(entities as RecordEntity[]);
                 result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities)]);
             }
+            else if ((entities[0] as CouplingEntity).service_id) {
+                result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities)]);
+            }
             else {
                 throw new Error('Unrecognised Entity type');
             }
@@ -297,6 +302,18 @@ export class PostgresUtils extends DatabaseUtils {
                 }));
             }
         }
+        else if ((entity as CouplingEntity).service_id) {
+            this._bulkCouples.push(entity as CouplingEntity);
+            // send data to database if limit is reached
+            if (this._bulkCouples.length >= DatabaseUtils.maxBulkSize) {
+                return this.sendBulkCouples();
+            }
+            else {
+                return new Promise(resolve => resolve({
+                    queued: true
+                }));
+            }
+        }
         else {
             throw new Error('Unrecognized Entity type');
         }
@@ -307,6 +324,18 @@ export class PostgresUtils extends DatabaseUtils {
             log.debug('Sending BULK message with ' + this._bulkData.length + ' items to persist');
             let promise = this.bulk(this._bulkData, commitTransaction);
             this._bulkData = [];
+            return promise;
+        }
+        return new Promise(resolve => resolve({
+            queued: true
+        }));
+    }
+
+    sendBulkCouples(commitTransaction: boolean = false): Promise<BulkResponse> {
+        if (this._bulkCouples.length > 0) {
+            log.debug('Sending BULK message with ' + this._bulkCouples.length + ' items to persist');
+            let promise = this.bulk(this._bulkCouples, commitTransaction);
+            this._bulkCouples = [];
             return promise;
         }
         return new Promise(resolve => resolve({

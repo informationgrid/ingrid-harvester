@@ -25,10 +25,11 @@ export abstract class PostgresQueries {
 
     abstract readonly createCollectionTable: string;
     abstract readonly createRecordTable: string;
+    abstract readonly createCouplingTable: string;
     abstract readonly createCollection: string;
     abstract readonly getCollection: string;
     abstract readonly bulkUpsert: string;
-    abstract readonly getRecords: string;
+    abstract readonly bulkUpsertCoupling: string;
     abstract readonly getStoredData: string;
 
     /**
