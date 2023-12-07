@@ -31,6 +31,8 @@ export abstract class PostgresQueries {
     abstract readonly bulkUpsert: string;
     abstract readonly bulkUpsertCoupling: string;
     abstract readonly getStoredData: string;
+    abstract readonly getDatasets: string;
+    abstract readonly getServices: string;
 
     /**
      * Query for retrieving all items for a given source.

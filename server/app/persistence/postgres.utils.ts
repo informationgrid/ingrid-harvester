@@ -104,6 +104,22 @@ export class PostgresUtils extends DatabaseUtils {
         return dates;
     }
 
+    async getDatasets(source: string): Promise<RecordEntity[]> {
+        let result: QueryResult<any> = await this.transactionClient.query(this.queries.getDatasets, [source]);
+        if (result.rowCount == 0) {
+            return null;
+        }
+        return result.rows;
+    }
+
+    async getServices(source: string): Promise<RecordEntity[]> {
+        let result: QueryResult<any> = await this.transactionClient.query(this.queries.getServices, [source]);
+        if (result.rowCount == 0) {
+            return null;
+        }
+        return result.rows;
+    }
+
     async createCatalog(catalog: Catalog): Promise<Catalog> {
         let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCollection, [catalog.identifier, catalog, null, DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
         if (result.rowCount != 1) {

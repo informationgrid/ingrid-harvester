@@ -47,8 +47,9 @@ export class PostgresQueries extends AbstractPostgresQueries {
     readonly getCollection = this.readFile('getCollection');
     readonly bulkUpsert = this.readFile('bulkUpsert');
     readonly bulkUpsertCoupling = this.readFile('bulkUpsertCoupling');
-    readonly getRecords = this.readFile('getRecords');
     readonly getStoredData = this.readFile('getStoredData');
+    readonly getDatasets = this.readFile('getDatasets');
+    readonly getServices = this.readFile('getServices');
     readonly getBuckets = this.readFile('getBuckets');
 
     private readFile(scriptName: string): string {

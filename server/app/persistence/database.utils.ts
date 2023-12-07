@@ -78,6 +78,10 @@ export abstract class DatabaseUtils {
 
     abstract getStoredData(ids: string[]): Promise<any[]>;
 
+    abstract getDatasets(source: string): Promise<RecordEntity[]>;
+
+    abstract getServices(source: string): Promise<RecordEntity[]>;
+
     abstract createCatalog(catalog: Catalog): Promise<Catalog>;
 
     abstract getCatalog(catalogIdentifier: string): Promise<Catalog>;

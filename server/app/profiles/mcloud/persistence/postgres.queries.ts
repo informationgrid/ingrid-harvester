@@ -126,6 +126,16 @@ export class PostgresQueries extends AbstractPostgresQueries {
     readonly getStoredData = `SELECT dataset FROM public.${this.datasetTableName}
         WHERE identifier = ANY($1)`;
 
+    readonly getDatasets = `SELECT id, dataset
+        FROM public.record
+        WHERE source = $1
+            AND dataset->'extras'->>'hierarchy_level' != 'service'`;
+
+    readonly getServices = `SELECT id, dataset
+        FROM public.record
+        WHERE source = $1
+            AND dataset->'extras'->>'hierarchy_level' = 'service'`;
+
     /**
      * Create a query for retrieving all items for a given source.
      * 
