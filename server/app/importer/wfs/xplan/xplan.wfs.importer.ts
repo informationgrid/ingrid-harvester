@@ -21,8 +21,8 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../../utils/misc.utils';
 import { Harvester } from '@shared/harvester';
-import { MiscUtils } from '../../../utils/misc.utils';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WfsImporter } from '../wfs.importer';
 import { WfsMapper } from '../wfs.mapper';

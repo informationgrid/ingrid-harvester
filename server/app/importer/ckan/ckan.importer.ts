@@ -21,12 +21,12 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../utils/misc.utils';
 import { CkanMapper, CkanMapperData } from './ckan.mapper';
 import { CkanSettings, defaultCKANSettings } from './ckan.settings';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from "../../profiles/profile.factory";
 import { ProfileFactoryLoader } from "../../profiles/profile.factory.loader";
@@ -34,7 +34,7 @@ import { RecordEntity } from '../../model/entity';
 import { RequestDelegate } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 
-let log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
 export class CkanImporter extends Importer {
     private profile: ProfileFactory<CkanMapper>;

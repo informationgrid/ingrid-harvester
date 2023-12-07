@@ -21,12 +21,12 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../utils/misc.utils';
 import { getLogger } from 'log4js';
 import { ConfigService } from '../../services/config/ConfigService';
 import { DefaultImporterSettings } from '../../importer.settings';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -39,8 +39,7 @@ import { Summary } from '../../model/summary';
 const plain_fetch = require('node-fetch');
 const HttpsProxyAgent = require('https-proxy-agent');
 
-let log = require('log4js').getLogger(__filename),
-    logSummary = getLogger('summary'),
+const log = require('log4js').getLogger(__filename),
     logRequest = getLogger('requests'),
     SimpleClient = require('sparql-http-client/SimpleClient');
 

@@ -24,6 +24,8 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
+import * as xpath from 'xpath';
+import * as MiscUtils from '../../utils/misc.utils';
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { throwError } from 'rxjs';
@@ -33,16 +35,14 @@ import { DateRange } from '../../model/dateRange';
 import { DcatappluSettings } from './dcatapplu.settings';
 import { Distribution } from '../../model/distribution';
 import { ImporterSettings } from '../../importer.settings';
-import { MiscUtils } from '../../utils/misc.utils';
 import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep, PluProcessStepType } from '../../model/dcatApPlu.model';
 import { RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
-
-const xpath = require('xpath');
+import { XPathElementSelect } from '../../utils/xpath.utils';
 
 export class DcatappluMapper extends BaseMapper {
 
-    static nsMap = {
+    static select = <XPathElementSelect>xpath.useNamespaces({
         'adms': namespaces.ADMS,
         'dcat': namespaces.DCAT,
         'dcatde': namespaces.DCATDE,
@@ -57,9 +57,7 @@ export class DcatappluMapper extends BaseMapper {
         'schema': namespaces.SCHEMA,
         'skos': namespaces.SKOS,
         'vcard': namespaces.VCARD
-    }
-
-    static select = xpath.useNamespaces(DcatappluMapper.nsMap);
+    });
 
     private log = getLogger();
 
@@ -211,15 +209,15 @@ export class DcatappluMapper extends BaseMapper {
         const local = DcatappluMapper.select('./plu:processStep/plu:ProcessStep', this.record);
         let pluProcessSteps: any[] = [...linked, ...local];
         pluProcessSteps.map((step: any) => {
-            let nodes: string[] = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', step, true);
-            let type =  getUrlHashCode(DcatappluMapper.select('./plu:ProcessStepType/@rdf:resource', step, true)?.textContent);
-            let period = this._getTemporalInternal(nodes);
+            let node = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', step, true);
+            let type = getUrlHashCode(DcatappluMapper.select('./plu:ProcessStepType/@rdf:resource', step, true)?.textContent);
+            let period = this._getTemporalInternal(node);
             let processStep: ProcessStep = {
                 identifier: DcatappluMapper.select('./dct:identifier', step, true)?.textContent ?? undefined,
                 type: type ?? PluProcessStepType.UNBEKANNT,
                 distributions: this._getRelevantDistibutions(step),
                 temporal: period?.[0],
-                passNumber: DcatappluMapper.select('./plu:passNumber', step, true)?.textContent
+                passNumber: parseInt(DcatappluMapper.select('./plu:passNumber', step, true)?.textContent)
             }
             processSteps.push(processStep);
         });
@@ -235,8 +233,8 @@ export class DcatappluMapper extends BaseMapper {
         const local = DcatappluMapper.select('./dcat:distribution/dcat:Distribution', node);
         const relevantDistributions = [...linked, ...local];
         relevantDistributions?.map((dist: any) => {
-            let nodes: string[] = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', dist, true);
-            let period = this._getTemporalInternal(nodes);
+            let node = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', dist, true);
+            let period = this._getTemporalInternal(node);
             let format = DcatappluMapper.select('./dct:format', dist, true)?.textContent;
             // TODO temporary backward compatibility for DCAT-AP.PLU 0.1.0
             if (!format) {
@@ -264,11 +262,11 @@ export class DcatappluMapper extends BaseMapper {
         return distributions;
     }
 
-    _getTemporalInternal(nodes: string[]): DateRange[] {
+    private _getTemporalInternal(node: Node): DateRange[] {
         let result: DateRange[] = [];
-        if (nodes) {
-            let begin = this.getTimeValue(nodes, 'startDate');
-            let end = this.getTimeValue(nodes, 'endDate');
+        if (node) {
+            let begin = this.getTimeValue(node, 'startDate');
+            let end = this.getTimeValue(node, 'endDate');
             if (begin || end) {
                 result.push({
                     gte: begin,
@@ -280,8 +278,8 @@ export class DcatappluMapper extends BaseMapper {
     }
 
     _getTemporal(): DateRange[] {
-        let nodes: string[] = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', this.record, true);
-        return this._getTemporalInternal(nodes);
+        let node = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', this.record, true);
+        return this._getTemporalInternal(node);
     }
 
     getTimeValue(node, beginOrEnd: 'startDate' | 'endDate'): Date {

@@ -21,12 +21,12 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../utils/misc.utils';
 import { defaultExcelSparseSettings, ExcelSparseSettings } from './excelsparse.settings';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils';
 import { ExcelSparseMapper } from './excelsparse.mapper';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -34,7 +34,7 @@ import { RecordEntity } from '../../model/entity';
 import { Summary } from '../../model/summary';
 import { Workbook, Worksheet } from 'exceljs';
 
-let log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
 export class ExcelSparseImporter extends Importer {
     private profile: ProfileFactory<ExcelSparseMapper>;

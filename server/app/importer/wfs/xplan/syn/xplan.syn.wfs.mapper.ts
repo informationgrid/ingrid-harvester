@@ -21,9 +21,9 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../../../utils/misc.utils';
 import { generateXplanWmsDistributions } from '../../../../profiles/diplanung/diplanung.utils';
 import { Distribution} from '../../../../model/distribution';
-import { MiscUtils } from '../../../../utils/misc.utils';
 import { PluDocType } from '../../../../model/dcatApPlu.model';
 import { XplanWfsMapper } from '../xplan.wfs.mapper';
 

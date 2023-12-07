@@ -20,19 +20,21 @@
  * limitations under the Licence.
  * ==================================================
  */
-
+import * as fs from 'fs';
+import * as xpath from 'xpath';
+import * as MiscUtils from '../../utils/misc.utils';
 import { decode } from 'iconv-lite';
 import { defaultWfsSettings, WfsSettings } from './wfs.settings';
+import { firstElementChild, getExtendedNsMap, getNsMap, XPathNodeSelect } from '../../utils/xpath.utils';
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { Contact } from '../../model/agent';
 import { CswMapper } from '../../importer/csw/csw.mapper';
-import { DOMParser as DomParser } from '@xmldom/xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -41,17 +43,13 @@ import { RequestOptions } from '../../utils/http-request.utils';
 import { Response } from 'node-fetch';
 import { WfsMapper } from './wfs.mapper';
 import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils';
-import { XPathNodeSelect, XPathUtils } from '../../utils/xpath.utils';
-
-const fs = require('fs');
-const xpath = require('xpath');
 
 const log = getLogger(__filename),
     logRequest = getLogger('requests');
 
 export abstract class WfsImporter extends Importer {
 
-    protected domParser: DomParser;
+    protected domParser: DOMParser;
     private profile: ProfileFactory<WfsMapper>;
     private readonly settings: WfsSettings;
     private readonly requestDelegate: RequestDelegate;
@@ -79,7 +77,7 @@ export abstract class WfsImporter extends Importer {
             this.requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(settings));
         }
         this.settings = settings;
-        this.domParser = new DomParser({
+        this.domParser = new DOMParser({
             errorHandler: (level, msg) => {
                 // throw on error, swallow rest
                 if (level == 'error') {
@@ -151,8 +149,8 @@ export abstract class WfsImporter extends Importer {
         let capabilitiesResponseDom = this.domParser.parseFromString(responseBody);
 
         // extract the namespace map for the capabilities
-        this.nsMap = MiscUtils.merge(XPathUtils.getNsMap(capabilitiesResponseDom), XPathUtils.getExtendedNsMap(capabilitiesResponseDom));
-        let select: XPathNodeSelect = xpath.useNamespaces(this.nsMap);
+        this.nsMap = MiscUtils.merge(getNsMap(capabilitiesResponseDom), getExtendedNsMap(capabilitiesResponseDom));
+        let select = <XPathNodeSelect>xpath.useNamespaces(this.nsMap);
 
         // fail early
         if (!select('/*[local-name()="WFS_Capabilities"]', capabilitiesResponseDom, true)) {
@@ -275,8 +273,8 @@ export abstract class WfsImporter extends Importer {
         // extend nsmap with the namespaces from the FeatureCollection response
         // this.nsMap = { ...XPathUtils.getNsMap(xml), ...XPathUtils.getExtendedNsMap(xml) };
         // TODO: the above does not work, because it doesn't contain the NS for the FeatureType;
-        let nsMap = MiscUtils.merge(this.nsMap, XPathUtils.getNsMap(xml));
-        let select: XPathNodeSelect = xpath.useNamespaces(nsMap);
+        let nsMap = MiscUtils.merge(this.nsMap, getNsMap(xml));
+        let select = <XPathNodeSelect>xpath.useNamespaces(nsMap);
 
         // store xpath handling stuff in general info
         this.generalInfo['nsMap'] = nsMap;
@@ -296,7 +294,7 @@ export abstract class WfsImporter extends Importer {
         for (let i = 0; i < features.length; i++) {
             this.summary.numDocs++;
 
-            const uuid = XPathUtils.firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id');
+            const uuid = firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id');
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;

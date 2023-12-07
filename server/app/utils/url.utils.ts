@@ -23,11 +23,11 @@
 
 'use strict';
 
-import * as fs from "fs";
-import { MiscUtils } from "./misc.utils";
+import * as fs from 'fs';
+import * as MiscUtils from './misc.utils';
 import { RequestDelegate, RequestOptions } from "./http-request.utils";
 
-let log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
 export class UrlUtils {
 

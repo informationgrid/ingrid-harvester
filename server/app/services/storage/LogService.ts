@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-const fs = require('fs');
+import * as fs from 'fs';
 import {Service} from '@tsed/di';
 
 @Service()

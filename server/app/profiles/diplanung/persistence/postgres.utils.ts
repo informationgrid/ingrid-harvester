@@ -21,12 +21,12 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../../utils/misc.utils';
 import { createEsId } from '../diplanung.utils';
 import { Bucket } from '../../../persistence/postgres.utils';
 import { DcatApPluDocumentFactory } from '../model/dcatapplu.document.factory';
 import { DiplanungIndexDocument } from '../model/index.document';
 import { EsOperation } from '../../../persistence/elastic.utils';
-import { MiscUtils } from '../../../utils/misc.utils';
 
 const log = require('log4js').getLogger(__filename);
 

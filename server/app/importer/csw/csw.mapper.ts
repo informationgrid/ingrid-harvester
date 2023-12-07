@@ -24,6 +24,8 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
+import * as xpath from 'xpath';
+import * as MiscUtils from '../../utils/misc.utils';
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { throwError } from 'rxjs';
@@ -37,16 +39,14 @@ import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
 import { Distribution } from '../../model/distribution';
 import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { License } from '@shared/license.model';
-import { MiscUtils } from '../../utils/misc.utils';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 import { UrlUtils } from '../../utils/url.utils';
-
-const xpath = require('xpath');
+import { XPathElementSelect } from '../../utils/xpath.utils';
 
 export class CswMapper extends BaseMapper {
 
-    static nsMap = {
+    static select = <XPathElementSelect>xpath.useNamespaces({
         'csw': namespaces.CSW,
         'gmd': namespaces.GMD,
         'gco': namespaces.GCO,
@@ -55,9 +55,7 @@ export class CswMapper extends BaseMapper {
         'ows': namespaces.OWS,
         'plu': namespaces.PLU,
         'srv': namespaces.SRV
-    };
-
-    static select = xpath.useNamespaces(CswMapper.nsMap);
+    });
 
     protected log = getLogger();
 
@@ -1079,14 +1077,14 @@ export class CswMapper extends BaseMapper {
         if (serviceIdentification) {
             // retrieve via coupled resources
             let coupled = CswMapper.select('./srv:coupledResource/srv:SV_CoupledResource/srv:identifier/gco:CharacterString', serviceIdentification);
-            for (let uuid of coupled.map((elem: Element) => extractUuidFromUrl(elem.textContent)).filter((id: string) => MiscUtils.isUuid(id))) {
+            for (let uuid of coupled.map((elem: Element) => MiscUtils.extractDatasetUuid(elem.textContent)).filter(Boolean)) {
                 operatesOnIds.add(uuid);
             }
             // retrieve via operatesOn
             let operatesOn = CswMapper.select('./srv:operatesOn', serviceIdentification);
             for (let o of operatesOn) {
-                let uuidref = extractUuidFromUrl(o.getAttribute('uuidref'));
-                if (MiscUtils.isUuid(uuidref)) {
+                let uuidref = MiscUtils.extractDatasetUuid(o.getAttribute('uuidref'));
+                if (uuidref) {
                     operatesOnIds.add(uuidref);
                 }
                 let href = o.getAttribute('xlink:href');

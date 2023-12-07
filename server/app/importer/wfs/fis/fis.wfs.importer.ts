@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-import { MiscUtils } from '../../../utils/misc.utils';
-import { RequestDelegate } from '../../../utils/http-request.utils';
+import * as MiscUtils from '../../../utils/misc.utils';
 import { FisWfsMapper } from './fis.wfs.mapper';
 import { Harvester } from '@shared/harvester';
+import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WfsImporter } from '../wfs.importer';
 import { WfsMapper } from '../wfs.mapper';
 

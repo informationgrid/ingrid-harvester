@@ -37,6 +37,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import * as xpath from 'xpath';
+import * as MiscUtils from './misc.utils';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import booleanWithin from '@turf/boolean-within';
@@ -44,10 +46,8 @@ import buffer from '@turf/buffer';
 import centroid from '@turf/centroid';
 import flip from '@turf/flip';
 import rewind from '@turf/rewind';
-import * as xpath from 'xpath';
+import { firstElementChild } from './xpath.utils';
 import { AllGeoJSON, FeatureCollection, Geometry, GeometryCollection, Point } from '@turf/helpers';
-import { MiscUtils } from './misc.utils';
-import { XPathUtils } from './xpath.utils';
 
 const deepEqual = require('deep-equal');
 const proj4 = require('proj4');
@@ -84,7 +84,7 @@ export class GeoJsonUtils {
     };
 
     static within = (spatial: number[] | Point | Geometry | GeometryCollection, bbox: Geometry): boolean => {
-        if (spatial == null) {
+        if (!spatial) {
             return undefined;
         }
         if ('type' in spatial) {
@@ -105,7 +105,7 @@ export class GeoJsonUtils {
     };
 
     static flip = <T>(spatial: number[] | Point | Geometry | GeometryCollection): T => {
-        if (spatial == null) {
+        if (!spatial) {
             return undefined;
         }
         if ('type' in spatial) {
@@ -434,7 +434,7 @@ export class GeoJsonUtils {
     
             const polygons = [];
             Object.values(select('.//gml:surfaceMember', _)).forEach((c: Element) => {
-                const c2 = XPathUtils.firstElementChild(c);
+                const c2 = firstElementChild(c);
                 if (c2.nodeName === 'gml:Surface') {
                     polygons.push(...parseSurface(c2, opts, childCtx));
                 }
@@ -464,7 +464,7 @@ export class GeoJsonUtils {
                     polygons.push(...polygons2);
                 }
                 else if (c.nodeName === 'gml:surfaceMember') {
-                    const c2 = XPathUtils.firstElementChild(c);
+                    const c2 = firstElementChild(c);
                     if (c2.nodeName === 'gml:CompositeSurface') {
                         polygons.push(...parseCompositeSurface(c2, opts, ctx));
                     }

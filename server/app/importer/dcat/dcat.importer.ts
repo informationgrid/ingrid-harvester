@@ -21,14 +21,14 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../utils/misc.utils';
 import { namespaces } from '../../importer/namespaces';
 import { getLogger } from 'log4js';
 import { DcatMapper } from './dcat.mapper';
 import { DcatSettings, defaultDCATSettings } from './dcat.settings';
-import { DOMParser as DomParser } from '@xmldom/xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -36,13 +36,12 @@ import { RecordEntity } from '../../model/entity';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 
-let log = require('log4js').getLogger(__filename),
-    logSummary = getLogger('summary'),
-    logRequest = getLogger('requests');
+const log = getLogger(__filename);
+const logRequest = getLogger('requests');
 
 export class DcatImporter extends Importer {
 
-    protected domParser: DomParser;
+    protected domParser: DOMParser;
     private profile: ProfileFactory<DcatMapper>;
     private readonly settings: DcatSettings;
     private readonly requestDelegate: RequestDelegate;
@@ -66,7 +65,7 @@ export class DcatImporter extends Importer {
             this.requestDelegate = new RequestDelegate(requestConfig, DcatImporter.createPaging(settings));
         }
         this.settings = settings;
-        this.domParser = new DomParser({
+        this.domParser = new DOMParser({
             errorHandler: (level, msg) => {
                 // throw on error, swallow rest
                 if (level == 'error') {
@@ -123,8 +122,8 @@ export class DcatImporter extends Importer {
                 retries = 0;
 
                 let numReturned = responseDom.getElementsByTagNameNS(namespaces.DCAT, 'Dataset').length;
-                let itemsPerPage = DcatMapper.select('./hydra:itemsPerPage', pagedCollection, true).textContent;
-                this.totalRecords = DcatMapper.select('./hydra:totalItems', pagedCollection, true).textContent;
+                let itemsPerPage = parseInt(DcatMapper.select('./hydra:itemsPerPage', pagedCollection, true).textContent);
+                this.totalRecords = parseInt(DcatMapper.select('./hydra:totalItems', pagedCollection, true).textContent);
 
                 let thisPageUrl = pagedCollection.getAttribute('rdf:about');
 

@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../utils/misc.utils';
 import { defaultCSWSettings, CswSettings } from './csw.settings';
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
@@ -29,10 +30,9 @@ import { Catalog } from '../../model/dcatApPlu.model';
 import { ConfigService } from '../../services/config/ConfigService';
 import { CswMapper } from './csw.mapper';
 import { CswParameters, RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { DOMParser as DomParser } from '@xmldom/xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -40,13 +40,12 @@ import { RecordEntity } from '../../model/entity';
 import { Summary } from '../../model/summary';
 import { SummaryService } from '../../services/config/SummaryService';
 
-let log = require('log4js').getLogger(__filename),
-    logSummary = getLogger('summary'),
-    logRequest = getLogger('requests');
+const log = getLogger(__filename);
+const logRequest = getLogger('requests');
 
 export class CswImporter extends Importer {
 
-    protected domParser: DomParser;
+    protected domParser: DOMParser;
     protected profile: ProfileFactory<CswMapper>;
     protected readonly settings: CswSettings;
     private readonly requestDelegate: RequestDelegate;
@@ -61,7 +60,7 @@ export class CswImporter extends Importer {
 
         this.profile = ProfileFactoryLoader.get();
 
-        this.domParser = new DomParser({
+        this.domParser = new DOMParser({
             errorHandler: (level, msg) => {
                 // throw on error, swallow rest
                 if (level == 'error') {
