@@ -22,9 +22,9 @@
  */
 
 import * as MiscUtils from '../../../utils/misc.utils';
-import { AllGeoJSON } from '@turf/helpers';
 import { DateRange } from '../../../model/dateRange';
 import { Distribution } from '../../../model/distribution';
+import { Geometry, GeometryCollection } from '@turf/helpers';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../wfs.mapper';
@@ -80,7 +80,7 @@ export class FisWfsMapper extends WfsMapper {
 
     _getCentroid(): object {
         let spatial = this._getSpatial() ?? this._getBoundingBox();
-        return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
+        return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
     }
 
     _getSpatialText(): string {

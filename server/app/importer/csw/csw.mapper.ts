@@ -30,7 +30,7 @@ import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { throwError } from 'rxjs';
 import { Agent, Contact, Organization, Person } from '../../model/agent';
-import { AllGeoJSON } from '@turf/helpers';
+import { Geometry, GeometryCollection } from '@turf/helpers';
 import { BaseMapper } from '../base.mapper';
 import { CswSettings } from './csw.settings';
 import { DateRange } from '../../model/dateRange';
@@ -584,7 +584,7 @@ export class CswMapper extends BaseMapper {
 
     _getCentroid(): object {
         let spatial = this.getSpatial();
-        return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
+        return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
     }
 
     _getTemporal(): DateRange[] {

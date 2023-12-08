@@ -24,10 +24,10 @@
 import { getLogger } from 'log4js';
 import { Catalog, PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../model/dcatApPlu.model';
 import { throwError } from 'rxjs';
-import { AllGeoJSON } from '@turf/helpers';
 import { BaseMapper } from '../base.mapper';
 import { Contact, Organization, Person } from '../../model/agent';
 import { DateRange } from '../../model/dateRange';
+import { Geometry, GeometryCollection } from '@turf/helpers';
 import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { ImporterSettings } from '../../importer.settings';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
@@ -150,7 +150,7 @@ export abstract class WfsMapper extends BaseMapper {
 
     _getCentroid(): object {
         let spatial = this._getSpatial() ?? this._getBoundingBox();
-        return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
+        return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
     }
 
     _getTemporal(): DateRange[] {

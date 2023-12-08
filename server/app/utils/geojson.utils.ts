@@ -125,7 +125,7 @@ export class GeoJsonUtils {
         }
     };
 
-    static getCentroid = (spatial: AllGeoJSON) => {
+    static getCentroid = (spatial: Geometry | GeometryCollection) => {
         if (!spatial) {
             return undefined;
         }
@@ -137,7 +137,7 @@ export class GeoJsonUtils {
         if (modifiedSpatial.type == 'GeometryCollection') {
             (<GeometryCollection>modifiedSpatial).geometries.filter((geometry: AllGeoJSON) => geometry.type == 'Envelope').forEach((geometry: AllGeoJSON) => geometry.type = 'LineString');
         }
-        return centroid(modifiedSpatial);
+        return centroid(modifiedSpatial)?.geometry;
     };
 
     static transformCollection = (featureCollection: FeatureCollection) => {
