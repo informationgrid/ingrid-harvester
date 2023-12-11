@@ -26,6 +26,7 @@
  */
 import * as xpath from 'xpath';
 import * as MiscUtils from '../../utils/misc.utils';
+import * as ServiceUtils from '../../utils/service.utils';
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { throwError } from 'rxjs';
@@ -97,28 +98,52 @@ export class CswMapper extends BaseMapper {
         return this.summary;
     }
 
+    _getResourceIdentifier() {
+        return CswMapper.select('./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', this.idInfo, true)?.textContent;
+    }
+
     _getDescription() {
         return CswMapper.select('./*/gmd:abstract/gco:CharacterString', this.idInfo, true)?.textContent;
     }
 
     async _getDistributions(): Promise<Distribution[]> {
-        let dists = [];
-        let urlsFound = [];
+        let distributions: Distribution[] = [];
 
+        function longer(...strings: string[]): string {
+            return strings.reduce((retVal, currVal) => retVal?.length > currVal?.length ? retVal : currVal, '');
+        }
+
+        function addCleanedDistribution(distribution: Distribution) {
+            let cleanedDistribution = ServiceUtils.cleanDistribution(distribution);
+            if (!cleanedDistribution) {
+                return;
+            }
+            let newHash = MiscUtils.minimalDistHash(cleanedDistribution);
+            let found = false;
+            for (let i = 0; i < distributions.length; i++) {
+                if (MiscUtils.minimalDistHash(distributions[i]) == newHash) {
+                    distributions[i].title = longer(distributions[i].title, cleanedDistribution.title);
+                    distributions[i].description = longer(distributions[i].description, cleanedDistribution.description);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                distributions.push(distribution);
+            }
+        }
+
+        let urlsFound = []; // TODO no longer used
         let srvIdent = CswMapper.select('./srv:SV_ServiceIdentification', this.idInfo, true);
         if (srvIdent) {
-            dists = await this.handleDistributionforService(srvIdent, urlsFound);
+            for (let distribution of await this.handleDistributionforService(srvIdent, urlsFound)) {
+                addCleanedDistribution(distribution);
+            }
         }
 
         let distNodes = CswMapper.select('./gmd:distributionInfo/gmd:MD_Distribution', this.record);
-        for (let i = 0; i < distNodes.length; i++) {
-            let distNode = distNodes[i];
-            let id = distNode.getAttribute('id');
-            if (!id) id = distNode.getAttribute('uuid');
-
+        for (let distNode of distNodes) {
             let formats = [];
-            let urls: Distribution[] = [];
-
             CswMapper.select('./gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString', distNode).forEach(format => {
                 format.textContent.split(',').forEach(formatItem => {
                     if (!formats.includes(formatItem)) {
@@ -126,49 +151,43 @@ export class CswMapper extends BaseMapper {
                     }
                 });
             });
-
-            // Combine formats in a single slash-separated string
-            if (formats.length === 0) formats.push('Unbekannt');
+            if (formats.length === 0) {
+                formats.push('Unbekannt');
+            }
 
             let onlineResources = CswMapper.select('./gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource', distNode);
-            for (let j = 0; j < onlineResources.length; j++) {
-                let onlineResource = onlineResources[j];
-
-                let urlNode = CswMapper.select('gmd:linkage/gmd:URL', onlineResource);
+            let tempDistributions = [];
+            for (let onlineResource of onlineResources) {
+                let url = CswMapper.select('gmd:linkage/gmd:URL', onlineResource, true)?.textContent;
                 let title = CswMapper.select('gmd:name/gco:CharacterString', onlineResource, true)?.textContent;
-                let protocolNode = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource);
-
-                let url = null;
-                if (urlNode.length > 0) {
-                    let requestConfig = this.getUrlCheckRequestConfig(urlNode[0].textContent);
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
-                }
-                if (url && !urls.some(alreadyUrl => alreadyUrl.accessURL == url)) {
-                    const formatArray = protocolNode.length > 0 && protocolNode[0].textContent
-                        ? [protocolNode[0].textContent]
-                        : formats;
-
+                let protocol = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true)?.textContent;
+                if (url) {
+                    if (!this.settings.skipUrlCheckOnHarvest) {
+                        let requestConfig = this.getUrlCheckRequestConfig(url);
+                        url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                    }
+                    const formatArray = protocol ? [protocol] : formats;
                     let dist: Distribution = {
                         accessURL: url,
                         title: title,
-                        format: UrlUtils.mapFormat(formatArray, this.summary.warnings)
+                        // format: UrlUtils.mapFormat(formatArray, this.summary.warnings)
+                        format: formatArray
                     };
-
-                    urls.push(dist);
+                    tempDistributions.push(dist);
                 }
             }
-
-            // Filter out URLs that have already been found
-            urls = urls.filter(item => !urlsFound.includes(item.accessURL));
-
             // Set id only if there is a single resource
-            if (urls.length === 1 && id) urls[0].id = id;
-
-            // add distributions to all
-            dists.push(...urls);
+            let id = distNode.getAttribute('id') ?? distNode.getAttribute('uuid');
+            if (tempDistributions.length === 1 && id) {
+                tempDistributions[0].id = id;
+            }
+            tempDistributions.forEach(addCleanedDistribution);
         }
-
-        return dists;
+        // let createdOgcDistribution = await ServiceUtils.createMissingOgcDistribution(distributions);
+        // if (createdOgcDistribution) {
+        //     distributions.push(createdOgcDistribution);
+        // }
+        return distributions;
     }
 
     async handleDistributionforService(srvIdent, urlsFound): Promise<Distribution[]> {
@@ -200,8 +219,7 @@ export class CswMapper extends BaseMapper {
             }
         }
 
-        let operations = CswMapper
-            .select('./srv:containsOperations/srv:SV_OperationMetadata', srvIdent);
+        let operations = CswMapper.select('./srv:containsOperations/srv:SV_OperationMetadata', srvIdent);
 
         let title = this.getTitle();
         for (let i = 0; i < operations.length; i++) {
@@ -219,7 +237,8 @@ export class CswMapper extends BaseMapper {
                     serviceLinks.push({
                         accessURL: url,
                         format: [protocol ?? serviceFormat],
-                        title: currentTitle
+                        title: currentTitle,
+                        operates_on: this._getOperatesOn()
                     });
                     urlsFound.push(url);
                 }
@@ -1003,17 +1022,18 @@ export class CswMapper extends BaseMapper {
             let contacts = CswMapper.select(queries[i], this.record);
             for (let j = 0; j < contacts.length; j++) {
                 let contact = contacts[j];
+                let contactInfoNode = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact', contact, true);
                 let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode/@codeListValue', contact, true).textContent;
                 let name = CswMapper.select('./gmd:individualName/gco:CharacterString', contact, true);
                 let org = CswMapper.select('./gmd:organisationName/gco:CharacterString', contact, true);
-                let delPt = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:deliveryPoint/gco:CharacterString', contact);
-                let locality = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:city/gco:CharacterString', contact, true);
-                let region = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:administrativeArea/gco:CharacterString', contact, true);
-                let country = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:country/gco:CharacterString', contact, true);
-                let postCode = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:postalCode/gco:CharacterString', contact, true);
-                let email = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString', contact, true);
-                let phone = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString', contact, true);
-                let urlNode = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', contact, true);
+                let delPt = CswMapper.select('./gmd:address/gmd:CI_Address/gmd:deliveryPoint/gco:CharacterString', contactInfoNode);
+                let locality = CswMapper.select('./gmd:address/gmd:CI_Address/gmd:city/gco:CharacterString', contactInfoNode, true);
+                let region = CswMapper.select('./gmd:address/gmd:CI_Address/gmd:administrativeArea/gco:CharacterString', contactInfoNode, true);
+                let country = CswMapper.select('./gmd:address/gmd:CI_Address/gmd:country/gco:CharacterString', contactInfoNode, true);
+                let postCode = CswMapper.select('./gmd:address/gmd:CI_Address/gmd:postalCode/gco:CharacterString', contactInfoNode, true);
+                let email = CswMapper.select('./gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString', contactInfoNode, true);
+                let phone = CswMapper.select('./gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString', contactInfoNode, true);
+                let urlNode = CswMapper.select('./gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', contactInfoNode, true);
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
@@ -1031,8 +1051,7 @@ export class CswMapper extends BaseMapper {
                 if (!infos.fn) infos.fn = org?.textContent;
                 if (org) infos['organization-name'] = org.textContent;                    
 
-                let line1 = delPt.map(n => CswMapper.getCharacterStringContent(n));
-                line1 = line1.join(', ');
+                let line1 = delPt.map(n => CswMapper.getCharacterStringContent(n))?.join(', ');
                 if (line1) infos.hasStreetAddress = line1;
                 if (locality?.textContent) infos.hasLocality = locality.textContent;
                 if (region?.textContent) infos.hasRegion = region.textContent;
@@ -1121,16 +1140,6 @@ export class CswMapper extends BaseMapper {
             throwError('An error occurred in custom code: ' + error.message);
         }
     }
-}
-
-/**
- * Split a string by "/" or "=" and return the last part.
- * 
- * @param url 
- * @returns 
- */
-function extractUuidFromUrl(url: string) {
-    return url?.split(/\/|=/).slice(-1)?.[0]
 }
 
 // Private interface. Do not export

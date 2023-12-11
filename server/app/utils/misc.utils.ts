@@ -54,6 +54,22 @@ export function merge(...objs: object[]): any {
 }
 
 /**
+ * Search a string in various haystacks (case-insensitive).
+ * 
+ * @param searchStr 
+ * @param haystacks 
+ * @returns 
+ */
+export function isIncludedI(searchStr: string, haystacks: (string | string[])[]): boolean {
+    return haystacks.some((haystack: string | string[]) => {
+        if (Array.isArray(haystack)) {
+            return isIncludedI(searchStr, haystack);
+        }
+        return haystack?.toLowerCase().includes(searchStr.toLowerCase())
+    });
+}
+
+/**
  * Trim a string with custom characters using lodash.
  * 
  * @param str the string to strip
@@ -106,6 +122,11 @@ export function isUuid(s: string): boolean {
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
 }
 
+export function extractDatasetUuid(url: string): string {
+    let matches = url?.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/);
+    return matches?.at(1);
+}
+
 /**
  * Create a hash for a given distribution
  * 
@@ -129,6 +150,17 @@ export function createDistHash(distribution: Distribution) {
         hash |= 0; // Convert to 32bit integer
     }
     return hash;
+}
+
+/**
+ * Create a minimal pseudo hash for a given distribution.
+ * Incorporates `accessURL` and `format`.
+ * 
+ * @param distribution the Distribution from which the hash should be created
+ * @returns a simple hash for the given distribution
+ */
+export function minimalDistHash(distribution: Distribution) {
+    return distribution.accessURL + '#' + distribution.format.join('#');
 }
 
 /**

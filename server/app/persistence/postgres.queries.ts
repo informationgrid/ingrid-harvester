@@ -36,7 +36,7 @@ export abstract class PostgresQueries {
 
     /**
      * Query for retrieving all items for a given source.
-     * "All items" comprise
+     * "all items" comprise
      * - datasets of the source
      * - services operating on these datasets
      * - duplicates of these datasets
@@ -47,7 +47,7 @@ export abstract class PostgresQueries {
      * - id: the actual ID of this item
      * - source: the source of this item
      * - dataset: the dataset json document of this item
-     * - is_service: if this item is a service
+     * - service_type: the type of the service, or `null` if it is a dataset
      * - issued,
      * - modified
      * 

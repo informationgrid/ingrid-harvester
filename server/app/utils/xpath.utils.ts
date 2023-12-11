@@ -38,8 +38,8 @@ export function firstElementChild(node: Node): Node & Element {
  * @param responseXml 
  * @returns an object with a mapping (namespace -> URI)
  */
-export function getNsMap(responseXml: Document): any {
-    return _extractNamespaces(firstElementChild(responseXml).attributes);
+export function getNsMap(responseXml: Document, defaultPrefix: string = undefined): any {
+    return _extractNamespaces(firstElementChild(responseXml).attributes, defaultPrefix);
 }
 
 /**
@@ -64,13 +64,18 @@ export function getExtendedNsMap(responseXml: Document) {
     return nsMap;
 }
 
-function _extractNamespaces(attributes: NamedNodeMap): object {
+function _extractNamespaces(attributes: NamedNodeMap, defaultPrefix: string = undefined): object {
     let nsMap = {};
     for (let i = 0; i < attributes.length; i++) {
         let a = attributes.item(i);
         let [xmlns, ns] = a.name.split(':', 2);
-        if (xmlns === 'xmlns' && ns) {
-            nsMap[ns] = a.value;
+        if (xmlns === 'xmlns') {
+            if (ns) {
+                nsMap[ns] = a.value;
+            }
+            else if (defaultPrefix) {
+                nsMap[defaultPrefix] = a.value;
+            }
         }
     }
     return nsMap;

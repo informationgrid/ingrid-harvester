@@ -31,8 +31,8 @@ import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { PluPlanType } from '../../../model/dcatApPlu.model';
 import { RecordEntity } from '../../../model/entity';
-import { RequestDelegate } from '../../../utils/http-request.utils';
-import { WmsXPath } from './wms.xpath';
+// import { RequestDelegate } from '../../../utils/http-request.utils';
+// import { WmsXPath } from './wms.xpath';
 
 const log = require('log4js').getLogger(__filename);
 const WMS_PARAMS = ['service', 'request', 'version'];
@@ -65,23 +65,23 @@ export class DiplanungCswImporter extends CswImporter {
                     docIsUpdated = true;
                 }
 
-                // purposely simplistic heuristic: is centroid inside bbox for Germany?
-                if (!GeoJsonUtils.within(doc.centroid, GeoJsonUtils.BBOX_GERMANY)) {
-                    // copy and/or create relevant metadata structure
-                    updateDoc.extras = MiscUtils.merge(MiscUtils.structuredClone(doc.extras), updateDoc.extras);
-                    // if not, try to swap lat and lon
-                    let flippedBbox = GeoJsonUtils.flip<Geometry | GeometryCollection>(doc.bounding_box);
-                    if (GeoJsonUtils.within(flippedBbox, GeoJsonUtils.BBOX_GERMANY)) {
-                        updateDoc.spatial = GeoJsonUtils.flip<Geometry | GeometryCollection>(doc.spatial);
-                        updateDoc.bounding_box = flippedBbox;
-                        updateDoc.centroid = GeoJsonUtils.flip<Point>(doc.centroid);
-                        updateQuality(updateDoc, 'Swapped lat and lon', null, true);
-                    }
-                    else {
-                        updateQuality(updateDoc, 'Centroid not within Germany', false, null);
-                    }
-                    docIsUpdated = true;
-                }
+                // // purposely simplistic heuristic: is centroid inside bbox for Germany?
+                // if (!GeoJsonUtils.within(doc.centroid, GeoJsonUtils.BBOX_GERMANY)) {
+                //     // copy and/or create relevant metadata structure
+                //     updateDoc.extras = MiscUtils.merge(MiscUtils.structuredClone(doc.extras), updateDoc.extras);
+                //     // if not, try to swap lat and lon
+                //     let flippedBbox = GeoJsonUtils.flip<Geometry | GeometryCollection>(doc.bounding_box);
+                //     if (GeoJsonUtils.within(flippedBbox, GeoJsonUtils.BBOX_GERMANY)) {
+                //         updateDoc.spatial = GeoJsonUtils.flip<Geometry | GeometryCollection>(doc.spatial);
+                //         updateDoc.bounding_box = flippedBbox;
+                //         updateDoc.centroid = GeoJsonUtils.flip<Point>(doc.centroid);
+                //         updateQuality(updateDoc, 'Swapped lat and lon', null, true);
+                //     }
+                //     else {
+                //         updateQuality(updateDoc, 'Centroid not within Germany', false, null);
+                //     }
+                //     docIsUpdated = true;
+                // }
 
                 if (docIsUpdated) {
                     // TODO find an efficient postgres way to only send the update instead of the full document
@@ -143,59 +143,59 @@ export class DiplanungCswImporter extends CswImporter {
                 updatedDistributions.push(distribution);
                 continue;
             }
-            if (distribution.format?.includes('WMS') || accessURL_lc.includes('wms')) {
-                let accessURL: URL = new URL(distribution.accessURL);
-                let cleanedURL = cleanWmsUrl(accessURL);
-                if (distribution.accessURL != cleanedURL) {
-                    updated = true;
-                }
-                distribution.accessURL = cleanedURL;
-                distribution.format = ['WMS'];
+            // if (distribution.format?.includes('WMS') || accessURL_lc.includes('wms')) {
+            //     let accessURL: URL = new URL(distribution.accessURL);
+            //     let cleanedURL = cleanWmsUrl(accessURL);
+            //     if (distribution.accessURL != cleanedURL) {
+            //         updated = true;
+            //     }
+            //     distribution.accessURL = cleanedURL;
+            //     distribution.format = ['WMS'];
 
-                accessURL.searchParams.append('service', 'WMS');
-                accessURL.searchParams.append('request', 'GetCapabilities');
-                let response;
-                try {
-                    response = await RequestDelegate.doRequest({ uri: accessURL.toString(), accept: 'text/xml', timeout: 30000 });
-                }
-                catch (err) {
-                    let msg = `Could not parse response from ${accessURL.toString()}`;
-                    log.warn(msg);
-                    this.summary.warnings.push([msg, err.message]);
-                }
-                // surface heuristic for XML
-                if (response == null) {
-                    let msg = `Content-Type for ${accessURL.toString()} was not "text/xml", skipping`;
-                    log.debug(msg);
-                    // this.summary.warnings.push([msg]);
-                }
-                else if (response.startsWith('<?xml')) {
-                    try {
-                        let layerNames = this.getMapLayerNames(response);
-                        this.tempUrlCache.set(baseUrl, []);
-                        if (layerNames) {
-                            distribution.mapLayerNames = layerNames;
-                            updated = true;
-                        }
-                    }
-                    catch (err) {
-                        let msg = `Could not parse response from ${accessURL.toString()}`;
-                        log.debug(msg);
-                        this.summary.warnings.push([msg, err.message]);
-                    }
-                }
-                else {
-                    // 
-                    if (!this.tempUrlCache.has(baseUrl)) {
-                        this.tempUrlCache.set(baseUrl, []);
-                    }
-                    this.tempUrlCache.get(baseUrl).push(accessURL_lc);
+            //     accessURL.searchParams.append('service', 'WMS');
+            //     accessURL.searchParams.append('request', 'GetCapabilities');
+            //     let response;
+            //     try {
+            //         response = await RequestDelegate.doRequest({ uri: accessURL.toString(), accept: 'text/xml', timeout: 30000 });
+            //     }
+            //     catch (err) {
+            //         let msg = `Could not parse response from ${accessURL.toString()}`;
+            //         log.warn(msg);
+            //         this.summary.warnings.push([msg, err.message]);
+            //     }
+            //     // surface heuristic for XML
+            //     if (response == null) {
+            //         let msg = `Content-Type for ${accessURL.toString()} was not "text/xml", skipping`;
+            //         log.debug(msg);
+            //         // this.summary.warnings.push([msg]);
+            //     }
+            //     else if (response.startsWith('<?xml')) {
+            //         try {
+            //             let layerNames = this.getMapLayerNames(response);
+            //             this.tempUrlCache.set(baseUrl, []);
+            //             if (layerNames) {
+            //                 distribution.mapLayerNames = layerNames;
+            //                 updated = true;
+            //             }
+            //         }
+            //         catch (err) {
+            //             let msg = `Could not parse response from ${accessURL.toString()}`;
+            //             log.debug(msg);
+            //             this.summary.warnings.push([msg, err.message]);
+            //         }
+            //     }
+            //     else {
+            //         // 
+            //         if (!this.tempUrlCache.has(baseUrl)) {
+            //             this.tempUrlCache.set(baseUrl, []);
+            //         }
+            //         this.tempUrlCache.get(baseUrl).push(accessURL_lc);
 
-                    let msg = `Response for ${accessURL} is not valid XML`;
-                    log.debug(msg);
-                    this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response?.replaceAll('\n', ' '), 1024)]);
-                }
-            }
+            //         let msg = `Response for ${accessURL} is not valid XML`;
+            //         log.debug(msg);
+            //         this.summary.warnings.push([msg, MiscUtils.truncateErrorMessage(response?.replaceAll('\n', ' '), 1024)]);
+            //     }
+            // }
             updatedDistributions.push(distribution);
         }
         // if we have generated a WMS, remove other, now superfluous WMS
@@ -205,36 +205,36 @@ export class DiplanungCswImporter extends CswImporter {
         return updated ? updatedDistributions : null;
     }
 
-    private getMapLayerNames(response: string): string[] {
-        let serviceResponseDom = this.domParser.parseFromString(response, 'application/xml');
-        // layer * 2
-        let layers = WmsXPath.select('./wms:WMS_Capabilities/wms:Capability/wms:Layer/wms:Layer', serviceResponseDom);
-        let layerNames = [];
-        for (let layer of layers) {
-            let layerName = WmsXPath.select('./wms:Name', layer, true)?.textContent;
-            if (layerName) {
-                layerNames.push(layerName);
-            }
-        }
-        return layerNames;
-    }
+    // private getMapLayerNames(response: string): string[] {
+    //     let serviceResponseDom = this.domParser.parseFromString(response, 'application/xml');
+    //     // layer * 2
+    //     let layers = WmsXPath.select('./wms:WMS_Capabilities/wms:Capability/wms:Layer/wms:Layer', serviceResponseDom);
+    //     let layerNames = [];
+    //     for (let layer of layers) {
+    //         let layerName = WmsXPath.select('./wms:Name', layer, true)?.textContent;
+    //         if (layerName) {
+    //             layerNames.push(layerName);
+    //         }
+    //     }
+    //     return layerNames;
+    // }
 }
 
 function getBaseUrl(url: string) {
     return /(https?:\/\/[^\/]+)\/?.*/.exec(url)?.[1];
 }
 
-function cleanWmsUrl(accessURL: URL): string {
-    // clean standard WMS params from WMS URL
-    let markedForDeletion = [];
-    for (const key of accessURL.searchParams.keys()) {
-        if (WMS_PARAMS.includes(key.toLowerCase())) {
-            markedForDeletion.push(key);
-        }
-    }
-    markedForDeletion.forEach(key => accessURL.searchParams.delete(key));
-    return MiscUtils.strip(accessURL.toString(), '?');
-}
+// function cleanWmsUrl(accessURL: URL): string {
+//     // clean standard WMS params from WMS URL
+//     let markedForDeletion = [];
+//     for (const key of accessURL.searchParams.keys()) {
+//         if (WMS_PARAMS.includes(key.toLowerCase())) {
+//             markedForDeletion.push(key);
+//         }
+//     }
+//     markedForDeletion.forEach(key => accessURL.searchParams.delete(key));
+//     return MiscUtils.strip(accessURL.toString(), '?');
+// }
 
 function generateWmsDistribution(distribution: Distribution, planType: PluPlanType): Distribution {
     const url: URL = new URL(distribution.accessURL);

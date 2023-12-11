@@ -37,7 +37,7 @@
         secondary.source AS source,
         secondary.dataset AS dataset,
         secondary.collection_id AS catalog_id,
-        false AS is_service,
+        null AS service_type,
         secondary.created_on AS issued,
         secondary.last_modified AS modified
     FROM public.record AS anchor
@@ -63,20 +63,18 @@ UNION
     SELECT
         ds.id AS anchor_id,
         service.id AS id,
-        service.source AS source,
-        service.dataset AS dataset,
-        service.collection_id AS catalog_id,
-        true AS is_service,
-        service.created_on AS issued,
-        service.last_modified AS modified
-    FROM public.record AS service
+        ds.source AS source,
+        service.distribution AS dataset,
+        ds.collection_id AS catalog_id,
+        service.service_type AS service_type,
+        ds.created_on AS issued,
+        ds.last_modified AS modified
+    FROM public.coupling AS service
     LEFT JOIN public.record AS ds
     ON
-        ds.identifier = ANY(service.operates_on)
-        AND ds.source = service.source
+        ds.identifier = service.dataset_identifier
     WHERE
         ds.source = $1
-        AND service.dataset->'extras'->>'hierarchy_level' = 'service'
 )
 /*
 -- TODO below query takes ages - improve it

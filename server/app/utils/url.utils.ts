@@ -25,6 +25,7 @@
 
 import * as fs from 'fs';
 import * as MiscUtils from './misc.utils';
+import fetch from 'node-fetch';
 import { RequestDelegate, RequestOptions } from "./http-request.utils";
 
 const log = require('log4js').getLogger(__filename);
@@ -36,6 +37,14 @@ export class UrlUtils {
     static cache: { [url: string]: boolean } = {};
 
     private static formatMapping = UrlUtils.getFormatMapping();
+
+    static async status(url: string | URL): Promise<number> {
+        if (url instanceof URL) {
+            url = url.hostname + url.pathname;
+        }
+        let response = await fetch(url, { method: 'HEAD' });
+        return response.status;
+    }
 
     /**
      * Rudimentary checks for URL validity. This method extracts the request

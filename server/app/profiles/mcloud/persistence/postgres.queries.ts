@@ -144,7 +144,7 @@ export class PostgresQueries extends AbstractPostgresQueries {
      * - id: the ID of the item
      * - source: the source of this item
      * - dataset: the dataset document of this item
-     * - is_service: true, if this item is a service to the primary dataset
+     * - service_type: the type of the service, or `null` if it is a dataset
      * - issued
      * - modified
      * 
@@ -153,33 +153,48 @@ export class PostgresQueries extends AbstractPostgresQueries {
      */
     readonly getBuckets =
         `(
-            SELECT anchor.id AS anchor_id,
+            SELECT
+                anchor.id AS anchor_id,
                 secondary.id AS id,
                 secondary.source AS source,
                 secondary.dataset AS dataset,
-                false AS is_service,
+                secondary.collection_id AS catalog_id,
+                null AS service_type,
                 secondary.created_on AS issued,
                 secondary.last_modified AS modified
-            FROM public.${this.datasetTableName} AS anchor
-            LEFT JOIN public.${this.datasetTableName} AS secondary
-            ON anchor.dataset->>'title' = secondary.dataset->>'title'
-            WHERE anchor.source = $1
+            FROM public.record AS anchor
+            LEFT JOIN public.record AS secondary
+            ON (
+                    anchor.dataset->>'plan_name' = secondary.dataset->>'plan_name'
+                    OR (
+                        anchor.identifier = secondary.identifier
+                        AND anchor.collection_id = secondary.collection_id
+                    )
+                )
+                AND (
+                    anchor.source != secondary.source
+                    OR anchor.id = secondary.id
+                )
+            WHERE
+                anchor.source = $1
                 AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
         )
         UNION
         (
-            SELECT ds.id AS anchor_id,
+            SELECT
+                ds.id AS anchor_id,
                 service.id AS id,
-                service.source AS source,
-                service.dataset AS dataset,
-                true AS is_service,
-                service.created_on AS issued,
-                service.last_modified AS modified
-            FROM public.${this.datasetTableName} AS service
-            LEFT JOIN public.${this.datasetTableName} AS ds
-            ON ds.identifier = ANY(service.operates_on)
-            WHERE ds.source = $1
-                AND service.dataset->'extras'->>'hierarchy_level' = 'service'
-        )
-        ORDER BY anchor_id`;
+                ds.source AS source,
+                service.distribution AS dataset,
+                ds.collection_id AS catalog_id,
+                service.service_type AS service_type,
+                ds.created_on AS issued,
+                ds.last_modified AS modified
+            FROM public.coupling AS service
+            LEFT JOIN public.record AS ds
+            ON
+                ds.identifier = service.dataset_identifier
+            WHERE
+                ds.source = $1
+        )`;
 }

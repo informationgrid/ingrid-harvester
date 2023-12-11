@@ -56,6 +56,7 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
             description: mapper.getDescription(),
             identifier: mapper.getGeneratedId(),
             adms_identifier: mapper.getAdmsIdentifier(),
+            resource_identifier: mapper.getResourceIdentifier(),
             title: mapper.getTitle(),
             plan_name: mapper.getAlternateTitle(),
             // plan and procedure information
@@ -89,7 +90,7 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
                     harvested: mapper.getMetadataHarvested(),
                     harvesting_errors: null, // get errors after all operations been done
                     issued: null,
-                    is_valid: null, // checks validity after all operations been done
+                    is_valid: null, // check validity before persisting to ES
                     modified: null,
                     source: mapper.getMetadataSource()
                 },
@@ -103,11 +104,11 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
 
         result.extras.merged_from.push(createEsId(result));
         result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
-        result.extras.metadata.is_valid = mapper.isValid(result);
-        let qualityNotes = mapper.getQualityNotes();
-        if (qualityNotes?.length > 0) {
-            result.extras.metadata['quality_notes'] = qualityNotes;
-        }
+        // result.extras.metadata.is_valid = mapper.isValid(result);
+        // let qualityNotes = mapper.getQualityNotes();
+        // if (qualityNotes?.length > 0) {
+        //     result.extras.metadata['quality_notes'] = qualityNotes;
+        // }
         mapper.executeCustomCode(result);
 
         return result;

@@ -27,6 +27,7 @@ import { Client, Pool, PoolClient, QueryResult } from 'pg';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory';
 import { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document';
+import { Distribution } from '../model/distribution';
 import { PostgresUtils as DiplanungPostgresUtils } from '../profiles/diplanung/persistence/postgres.utils';
 import { ElasticsearchUtils } from './elastic.utils';
 import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
@@ -43,7 +44,7 @@ const Cursor = require('pg-cursor');
 export interface Bucket {
     anchor_id: string | number,
     duplicates: Map<string | number, DiplanungIndexDocument>,
-    operatingServices: Map<string | number, DiplanungIndexDocument>
+    operatingServices: Map<string | number, Distribution>
 }
 
 export class PostgresUtils extends DatabaseUtils {
@@ -102,6 +103,18 @@ export class PostgresUtils extends DatabaseUtils {
             });
         }
         return dates;
+    }
+
+    async getDatasetIdentifiers(source: string): Promise<string[]> {
+        // TODO 
+        // let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiers, [source]);
+        console.log(source);
+        // let result: QueryResult<any> = await this.transactionClient.query("SELECT * from public.record WHERE source = $1", [source]);
+        let result: QueryResult<any> = await this.transactionClient.query("SELECT identifier from public.record WHERE source = $1 and dataset->'extras'->>'hierarchy_level'!='service'", [source]);
+        if (result.rowCount == 0) {
+            return null;
+        }
+        return result.rows.map(row => row.identifier);
     }
 
     async getDatasets(source: string): Promise<RecordEntity[]> {
@@ -187,18 +200,19 @@ export class PostgresUtils extends DatabaseUtils {
                     currentBucket = {
                         anchor_id: row.anchor_id,
                         duplicates: new Map<string | number, DiplanungIndexDocument>(),
-                        operatingServices: new Map<string | number, DiplanungIndexDocument>()
+                        operatingServices: new Map<string | number, Distribution>()
                     };
                 }
-                row.dataset.extras.metadata.issued = row.issued;
-                row.dataset.extras.metadata.modified = row.modified;
-                row.dataset.extras.metadata.source.source_type = this.getSourceType(row.source);
-                row.dataset.catalog = catalogs[row.catalog_id];
-                // add to current bucket
-                if (row.is_service) {
+                // add service distribution to current bucket
+                if (row.service_type != null) {
                     currentBucket.operatingServices.set(row.id, row.dataset);
                 }
+                // add index document to current bucket
                 else {
+                    row.dataset.extras.metadata.issued = row.issued;
+                    row.dataset.extras.metadata.modified = row.modified;
+                    row.dataset.extras.metadata.source.source_type = this.getSourceType(row.source);
+                    row.dataset.catalog = catalogs[row.catalog_id];
                     currentBucket.duplicates.set(row.id, row.dataset);
                 }
             }
@@ -218,11 +232,24 @@ export class PostgresUtils extends DatabaseUtils {
         log.info('Time for PG -> ES push: ' + Math.floor((stop - start)/1000) + 's');
     }
 
+    /**
+     * Infer source type from source URL.
+     * 
+     * @param source 
+     * @returns 
+     */
     private getSourceType(source: string) {
+        source = source.toLowerCase()
+        if (source.includes('cockpitpro')) {
+            return 'cockpitpro';
+        }
+        if (source.includes('cockpit')) {
+            return 'cockpit';
+        }
         if (source.includes('beteiligung')) {
             return 'beteiligungsdb';
         }
-        if (source.endsWith('csw')) {
+        if (source.includes('csw')) {
             return 'csw';
         }
         if (source.includes('wfs')) {
@@ -262,6 +289,14 @@ export class PostgresUtils extends DatabaseUtils {
                 result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities)]);
             }
             else if ((entities[0] as CouplingEntity).service_id) {
+                let ids = entities.map(entity => {
+                    let e = entity as CouplingEntity;
+                    return e.dataset_identifier + '#' + e.service_id + '#' + e.service_type;
+                });
+                let duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
+                if (duplicates?.length) {
+                    let i = 0;
+                }
                 result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities)]);
             }
             else {

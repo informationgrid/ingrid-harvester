@@ -23,7 +23,7 @@
 
 import { Catalog } from '../model/dcatApPlu.model';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
-import { ElasticsearchUtils, EsOperation } from './elastic.utils';
+import { ElasticsearchUtils } from './elastic.utils';
 import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
 import { Summary } from '../model/summary';
 
@@ -77,6 +77,8 @@ export abstract class DatabaseUtils {
     abstract pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string): Promise<void>;
 
     abstract getStoredData(ids: string[]): Promise<any[]>;
+
+    abstract getDatasetIdentifiers(source: string): Promise<string[]>;
 
     abstract getDatasets(source: string): Promise<RecordEntity[]>;
 

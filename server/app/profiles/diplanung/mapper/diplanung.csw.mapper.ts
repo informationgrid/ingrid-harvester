@@ -63,7 +63,9 @@ export class DiplanungCswMapper extends CswMapper {
     }
 
     _getSpatial(): object {
-        return this.getGeometry(false);
+        // TODO
+        // let polygon = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_BoundingPolygon', this.idInfo);
+        return undefined;
     }
 
     protected getGeoJson(west: number, east: number, north: number, south: number, forcePolygon: boolean): any {
@@ -134,6 +136,13 @@ export class DiplanungCswMapper extends CswMapper {
         searchFields.push(this.getDescription());
         searchFields.push(...this.getKeywords());
         let haystack = searchFields.join('#').toLowerCase();
+
+
+        // TODO hack for MROK presentation, remove again and improve/refine the if-cascade below
+        if (this.settings.getRecordsUrl == 'https://numis.niedersachsen.de/202/csw') {
+            return PluPlanType.RAUM_ORDN_PLAN;
+        }
+
 
         // TODO especially in keywords - if set - there can be ambiguities, e.g. keywords contain multiple determination words
         if (['bebauungsplan'].some(needle => haystack.includes(needle))) {

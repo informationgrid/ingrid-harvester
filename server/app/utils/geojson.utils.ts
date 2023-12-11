@@ -140,6 +140,29 @@ export class GeoJsonUtils {
         return centroid(modifiedSpatial)?.geometry;
     };
 
+    /**
+     * Check if the centroid of the given geometry is within Germany. If not, flip the geometry and check again.
+     * 
+     * @param spatial 
+     * @returns spatial if centroid within Germany; flipped spatial if flipped centroid within Germany; null else
+     */
+    static sanitize(spatial: Geometry | GeometryCollection): Geometry | GeometryCollection {
+        if (!spatial) {
+            return undefined;
+        }
+        // check centroid
+        let centroid = GeoJsonUtils.getCentroid(spatial);
+        if (!GeoJsonUtils.within(centroid, GeoJsonUtils.BBOX_GERMANY)) {
+            // if not, try to swap lat and lon
+            let flippedCentroid = GeoJsonUtils.flip<Geometry | GeometryCollection>(centroid);
+            if (GeoJsonUtils.within(flippedCentroid, GeoJsonUtils.BBOX_GERMANY)) {
+                return GeoJsonUtils.flip<Geometry | GeometryCollection>(spatial);
+            }
+            return null;
+        }
+        return spatial;
+    }
+
     static transformCollection = (featureCollection: FeatureCollection) => {
         let geometryCollection = {
             type: 'GeometryCollection' as 'GeometryCollection',
@@ -530,6 +553,10 @@ export class GeoJsonUtils {
                 type: 'MultiPolygon',
                 coordinates: parseMultiSurface(_, opts, childCtx)
             });
+        }
+        else if (_.nodeName === 'gml:MultiGeometry') {
+            // TODO similar to gml:MultiSurface ??
+            // example: https://metropolplaner.de/osterholz/wfs?typeNames=plu:LU.SupplementaryRegulation&request=GetFeature
         }
         return null;
     };
