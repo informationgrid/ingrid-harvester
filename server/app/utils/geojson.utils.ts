@@ -495,7 +495,25 @@ export class GeoJsonUtils {
             opts.crs = (<Element>_).getAttribute('srsName')?.replace(/^.*?(\d+)$/, '$1');
         }
 
-        if (_.nodeName === 'gml:Polygon' || _.nodeName === 'gml:Rectangle') {
+        if (_.nodeName === 'gml:Point') {
+            return {
+                type: 'Point',
+                coordinates: parsePoint(_, opts, childCtx)
+            };
+        }
+        else if (_.nodeName === 'gml:LineString') {
+            return rewind({
+                type: 'LineString',
+                coordinates: parseLinearRingOrLineString(_, opts, childCtx)
+            });
+        }
+        else if (_.nodeName === 'gml:MultiCurve') {
+            return {
+                type: 'MultiLineString',
+                coordinates: [parseRing(_, opts, childCtx)]
+            };
+        }
+        else if (_.nodeName === 'gml:Polygon' || _.nodeName === 'gml:Rectangle') {
             return rewind({
                 type: 'Polygon',
                 coordinates: parsePolygonOrRectangle(_, opts, childCtx)
