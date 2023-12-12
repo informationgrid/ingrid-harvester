@@ -244,7 +244,7 @@ export class GeoJsonUtils {
         }
     };
 
-    static parse = (_: Node, opts: { crs?: any, stride?: number } = { crs: null, stride: 2 }, nsMap: { [ name: string ]: string; }) => {
+    static parse = (_: Node, opts: { crs?: any, stride?: number } = { crs: null, stride: 2 }, nsMap: { [ name: string ]: string; }): Geometry => {
         const select = xpath.useNamespaces(nsMap);
 
         const parseCoords = (s, opts: { crs?: string, stride?: number } = { crs: null, stride: 2 }, ctx = { srsDimension: null }) => {

@@ -26,7 +26,7 @@ import * as MiscUtils from './misc.utils';
 import { getNsMap, XPathNodeSelect } from './xpath.utils';
 import { Distribution } from '../model/distribution';
 import { DOMParser } from '@xmldom/xmldom';
-import { GeometryCollection } from '@turf/helpers';
+import { Geometry, GeometryCollection } from '@turf/helpers';
 import { GeoJsonUtils } from './geojson.utils';
 import { RequestDelegate } from './http-request.utils';
 import { UrlUtils } from './url.utils';
@@ -45,7 +45,7 @@ const domParser: DOMParser = new DOMParser({
     }
 });
 
-export async function parseWfsFeatureCollection(url: string, typeNames: string): Promise<GeometryCollection> {
+export async function parseWfsFeatureCollection(url: string, typeNames: string): Promise<Geometry | GeometryCollection> {
     let xmlResponse: string = await RequestDelegate.doRequest({
         uri: url,
         qs: {
@@ -62,14 +62,20 @@ export async function parseWfsFeatureCollection(url: string, typeNames: string):
     let select = <XPathNodeSelect>xpath.useNamespaces(nsMap);
     let localGeometryNames = ['extent', 'raeumlicherGeltungsbereich', 'the_geom', 'geometry'].map(ln => `local-name()='${ln}'`).join(' or ');
     let geometryNodes = select(`./wfs:FeatureCollection/wfs:member/*/*[${localGeometryNames}]/*`, dom);
-    let geometryCollection = { type: 'GeometryCollection' as 'GeometryCollection', geometries: [] };
+    let geometries = [];
     for (let geometryNode of geometryNodes) {
         let geom = GeoJsonUtils.parse(geometryNode, { }, nsMap);
         if (geom) {
-            geometryCollection.geometries.push(geom);
+            geometries.push(geom);
         }
     }
-    return geometryCollection.geometries.length ? geometryCollection : null;
+    if (geometries.length == 1) {
+        return geometries[0];
+    }
+    if (geometries.length) {
+        return { type: 'GeometryCollection' as 'GeometryCollection', geometries };
+    }
+    return null;
 }
 
 export async function getWfsFeatureTypeMap(url: string): Promise<{ [key: string]: string[] }> {
