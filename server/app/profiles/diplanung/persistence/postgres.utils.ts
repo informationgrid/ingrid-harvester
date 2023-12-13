@@ -250,6 +250,15 @@ export class PostgresUtils {
             document.extras.metadata.quality_notes.push('No valid geometry');
             return document;
         }
+        // TODO temporary, remove after demo 20.12.2023
+        else if (sanitizedSpatial.type == 'GeometryCollection') {
+            document.extras.metadata.is_valid = false;
+            document.extras.metadata.quality_notes ??= [];
+            document.distributions.forEach(distribution => 
+                document.extras.metadata.quality_notes.push(...(distribution.errors ?? [])));
+            document.extras.metadata.quality_notes.push('GeometryCollections are temporarily marked as invalid');
+            return document;
+        }
         else if (document.spatial != sanitizedSpatial) {
             document.spatial = sanitizedSpatial;
             document.extras.metadata.quality_notes ??= [];
