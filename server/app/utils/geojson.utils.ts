@@ -44,10 +44,12 @@ import bboxPolygon from '@turf/bbox-polygon';
 import booleanWithin from '@turf/boolean-within';
 import buffer from '@turf/buffer';
 import centroid from '@turf/centroid';
+import combine from '@turf/combine';
+import flatten from '@turf/flatten';
 import flip from '@turf/flip';
 import rewind from '@turf/rewind';
 import { firstElementChild } from './xpath.utils';
-import { AllGeoJSON, FeatureCollection, Geometry, GeometryCollection, Point } from '@turf/helpers';
+import { AllGeoJSON, Feature, FeatureCollection, Geometries, Geometry, GeometryCollection, MultiPoint, MultiLineString, MultiPolygon, Point } from '@turf/helpers';
 
 const deepEqual = require('deep-equal');
 const proj4 = require('proj4');
@@ -139,6 +141,15 @@ export class GeoJsonUtils {
         }
         return centroid(modifiedSpatial)?.geometry;
     };
+
+    static flatten = (geometryCollection: GeometryCollection): MultiLineString | MultiPoint | MultiPolygon | GeometryCollection => {
+        let flattened = flatten(geometryCollection);
+        let combined = combine(flattened);
+        if (combined.features.length == 1) {
+            return (<Feature<MultiLineString | MultiPoint | MultiPolygon>>combined.features[0]).geometry;
+        }
+        return geometryCollection;
+    }
 
     /**
      * Check if the centroid of the given geometry is within Germany. If not, flip the geometry and check again.
@@ -244,7 +255,7 @@ export class GeoJsonUtils {
         }
     };
 
-    static parse = (_: Node, opts: { crs?: any, stride?: number } = { crs: null, stride: 2 }, nsMap: { [ name: string ]: string; }): Geometry => {
+    static parse = (_: Node, opts: { crs?: any, stride?: number } = { crs: null, stride: 2 }, nsMap: { [ name: string ]: string; }): Geometries => {
         const select = xpath.useNamespaces(nsMap);
 
         const parseCoords = (s, opts: { crs?: string, stride?: number } = { crs: null, stride: 2 }, ctx = { srsDimension: null }) => {
@@ -561,3 +572,4 @@ export class GeoJsonUtils {
         return null;
     };
 }
+

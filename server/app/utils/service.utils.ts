@@ -26,7 +26,7 @@ import * as MiscUtils from './misc.utils';
 import { getNsMap, XPathNodeSelect } from './xpath.utils';
 import { Distribution } from '../model/distribution';
 import { DOMParser } from '@xmldom/xmldom';
-import { Geometry, GeometryCollection } from '@turf/helpers';
+import { Geometries, Geometry, GeometryCollection } from '@turf/helpers';
 import { GeoJsonUtils } from './geojson.utils';
 import { RequestDelegate } from './http-request.utils';
 import { UrlUtils } from './url.utils';
@@ -62,7 +62,7 @@ export async function parseWfsFeatureCollection(url: string, typeNames: string):
     let select = <XPathNodeSelect>xpath.useNamespaces(nsMap);
     let localGeometryNames = ['extent', 'raeumlicherGeltungsbereich', 'the_geom', 'geometry'].map(ln => `local-name()='${ln}'`).join(' or ');
     let geometryNodes = select(`./wfs:FeatureCollection/wfs:member/*/*[${localGeometryNames}]/*`, dom);
-    let geometries = [];
+    let geometries: Geometries[] = [];
     for (let geometryNode of geometryNodes) {
         let geom = GeoJsonUtils.parse(geometryNode, { }, nsMap);
         if (geom) {
@@ -72,8 +72,11 @@ export async function parseWfsFeatureCollection(url: string, typeNames: string):
     if (geometries.length == 1) {
         return geometries[0];
     }
-    if (geometries.length) {
-        return { type: 'GeometryCollection' as 'GeometryCollection', geometries };
+    if (geometries.length > 1) {
+        // return { type: 'GeometryCollection' as 'GeometryCollection', geometries };
+        // TODO remove again (and use version from the line above, without converting)? temporarily convert GeometryCollections where possible
+        let geometryCollection = { type: 'GeometryCollection' as 'GeometryCollection', geometries };
+        return GeoJsonUtils.flatten(geometryCollection);
     }
     return null;
 }
