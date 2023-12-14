@@ -45,7 +45,7 @@ const domParser: DOMParser = new DOMParser({
     }
 });
 
-export async function parseWfsFeatureCollection(url: string, typeNames: string): Promise<Geometry | GeometryCollection> {
+export async function parseWfsFeatureCollection(url: string, typeNames: string, tolerance: number): Promise<Geometry | GeometryCollection> {
     let xmlResponse: string = await RequestDelegate.doRequest({
         uri: url,
         qs: {
@@ -76,7 +76,7 @@ export async function parseWfsFeatureCollection(url: string, typeNames: string):
         // return { type: 'GeometryCollection' as 'GeometryCollection', geometries };
         // TODO remove again (and use version from the line above, without converting)? temporarily convert GeometryCollections where possible
         let geometryCollection = { type: 'GeometryCollection' as 'GeometryCollection', geometries };
-        return GeoJsonUtils.flatten(geometryCollection);
+        return GeoJsonUtils.flatten(geometryCollection, tolerance);
     }
     return null;
 }

@@ -320,7 +320,7 @@ export class CswImporter extends Importer {
                             try {
                                 // // resolve GetFeatures, typeNames=<Name>
                                 // // parse, get Polygon
-                                spatial = await ServiceUtils.parseWfsFeatureCollection(service.accessURL, typeName);
+                                spatial = await ServiceUtils.parseWfsFeatureCollection(service.accessURL, typeName, this.settings.simplifyTolerance);
                                 // spatial = GeoJsonUtils.sanitize(spatial);
                                 // // save in dataset
                                 // await this.updateDataset(serviceEntity.operates_on_uuid, geometryCollection);

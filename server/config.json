@@ -23,6 +23,7 @@
     "eitherKeywords": [],
     "httpMethod": "POST",
     "resultType": "results",
+    "simplifyTolerance": 0.0001,
     "id": 18,
     "description": "numis.niedersachsen.de Raumordnungsprogramms",
     "defaultAttribution": null,

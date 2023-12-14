@@ -48,6 +48,7 @@ import combine from '@turf/combine';
 import flatten from '@turf/flatten';
 import flip from '@turf/flip';
 import rewind from '@turf/rewind';
+import simplify from '@turf/simplify';
 import { firstElementChild } from './xpath.utils';
 import { AllGeoJSON, Feature, FeatureCollection, Geometries, Geometry, GeometryCollection, MultiPoint, MultiLineString, MultiPolygon, Point } from '@turf/helpers';
 
@@ -142,11 +143,16 @@ export class GeoJsonUtils {
         return centroid(modifiedSpatial)?.geometry;
     };
 
-    static flatten = (geometryCollection: GeometryCollection): MultiLineString | MultiPoint | MultiPolygon | GeometryCollection => {
+    static flatten = (geometryCollection: GeometryCollection, tolerance: number): MultiLineString | MultiPoint | MultiPolygon | GeometryCollection => {
         let flattened = flatten(geometryCollection);
         let combined = combine(flattened);
         if (combined.features.length == 1) {
-            return (<Feature<MultiLineString | MultiPoint | MultiPolygon>>combined.features[0]).geometry;
+            let geometry = (<Feature<MultiLineString | MultiPoint | MultiPolygon>>combined.features[0]).geometry;
+            if (tolerance > 0) {
+                let simplified = simplify(geometry, { tolerance, highQuality: true, mutate: false });
+                return simplified;
+            }
+            return geometry;
         }
         return geometryCollection;
     }

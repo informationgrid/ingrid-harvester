@@ -29,7 +29,8 @@ export type CswSettings = {
     getRecordsUrl: string,
     eitherKeywords: string[],
     httpMethod: "GET" | "POST",
-    recordFilter?: string
+    recordFilter?: string,
+    simplifyTolerance: number
 } & ImporterSettings;
 
 export const defaultCSWSettings: Partial<CswSettings> = {
@@ -37,5 +38,6 @@ export const defaultCSWSettings: Partial<CswSettings> = {
     getRecordsUrl: '',
     eitherKeywords: [],
     httpMethod: 'GET',
-    resultType: 'results'
+    resultType: 'results',
+    simplifyTolerance: 0
 };
