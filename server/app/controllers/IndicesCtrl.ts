@@ -21,12 +21,13 @@
  * ==================================================
  */
 
-import {Authenticated, BodyParams, Controller, Delete, Get, PathParams, Post} from '@tsed/common';
-import {IndexService} from '../services/IndexService';
-import {Index} from '@shared/index.model';
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
+import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
+import { Index } from '@shared/index.model';
+import { IndexService } from '../services/IndexService';
 
 @Controller('/api/indices')
-@Authenticated()
+@UseAuth(AuthMiddleware)
 export class IndicesCtrl {
 
     constructor(private indexService: IndexService) {

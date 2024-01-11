@@ -21,12 +21,19 @@
  * ==================================================
  */
 
-import {Server} from './server'
+import { PlatformExpress } from '@tsed/platform-express';
+import { Server } from './server'
 
-new Server().start()
-    .then(() => {
+async function bootstrap() {
+    try {
+        const platform = await PlatformExpress.bootstrap(Server, {
+            // extra settings
+        });
+        await platform.listen();
         console.log('Server started...');
-    })
-    .catch((err) => {
+    } catch (err) {
         console.error(err);
-    });
+    }
+}
+
+bootstrap();

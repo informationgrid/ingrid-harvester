@@ -21,11 +21,12 @@
  * ==================================================
  */
 
-import {Authenticated, Controller, Get, PathParams} from '@tsed/common';
-import {IndexService} from '../services/IndexService';
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
+import { Controller, Get, PathParams, UseAuth } from '@tsed/common';
+import { IndexService } from '../services/IndexService';
 
 @Controller("/api/search")
-@Authenticated()
+@UseAuth(AuthMiddleware)
 export class SearchCtrl {
 
     constructor(private indexService: IndexService) {
