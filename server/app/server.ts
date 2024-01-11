@@ -23,7 +23,7 @@
 
 import { addLayout, configure } from 'log4js';
 import { jsonLayout } from './utils/log4js.json.layout';
-import { Configuration, PlatformAcceptMimesMiddleware, PlatformApplication } from '@tsed/common';
+import { Configuration, PlatformAcceptMimesMiddleware, PlatformApplication, PlatformLogMiddleware } from '@tsed/common';
 import { ConfigService } from './services/config/ConfigService';
 import { ElasticsearchFactory } from './persistence/elastic.factory';
 import { IndexConfiguration } from './persistence/elastic.setting';
@@ -54,9 +54,6 @@ configure('./log4js.json');
         '/': `${rootDir}/webapp`,
         '/*': `${rootDir}/webapp/index.html`
     },
-    logger: {
-        logRequest: false
-    },
     mount: {
         '/rest': [`${rootDir}/controllers/**/*.ts`]
     },
@@ -64,7 +61,8 @@ configure('./log4js.json');
         `${rootDir}/middlewares/**/*.ts`,
         `${rootDir}/services/**/*.ts`,
         `${rootDir}/converters/**/*.ts`
-    ]
+    ],
+    middlewares: [{ use: PlatformLogMiddleware, options: { logRequest: false } }]
 })
 export class Server {
 
