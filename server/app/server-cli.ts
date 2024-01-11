@@ -24,9 +24,9 @@
 import { addLayout, configure, getLogger } from 'log4js';
 import { concat, Observable } from 'rxjs';
 import { jsonLayout } from './utils/log4js.json.layout';
+import { merge } from './utils/misc.utils';
 import { ConfigService } from './services/config/ConfigService';
 import { ImportLogMessage } from './model/import.result';
-import { MiscUtils } from './utils/misc.utils';
 import { ProfileFactoryLoader} from './profiles/profile.factory.loader';
 import { Summary } from './model/summary';
 
@@ -74,7 +74,7 @@ async function startProcess() {
         // Include relevant CLI args
         importerConfig.dryRun = myArgs.includes('-n') || myArgs.includes('--dry-run') || importerConfig.dryRun === true;
 
-        let configHarvester = MiscUtils.merge(importerConfig, configGeneral);
+        let configHarvester = merge(importerConfig, configGeneral);
 
         let profile = ProfileFactoryLoader.get();
         let importer = await profile.getImporterFactory().get(configHarvester);

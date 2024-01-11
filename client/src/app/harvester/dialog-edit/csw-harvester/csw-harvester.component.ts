@@ -26,7 +26,7 @@ import {CswSettings} from '../../../../../../server/app/importer/csw/csw.setting
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatLegacyChipInputEvent as MatChipInputEvent} from '@angular/material/legacy-chips';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-// import {CswSettings} from '@server/importer/csw/csw.importer';
+import { ConfigService } from '../../../config/config.service';
 
 @Component({
   selector: 'app-csw-harvester',
@@ -41,17 +41,24 @@ export class CswHarvesterComponent implements OnInit, OnDestroy {
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  constructor() { }
+  profile: string;
+
+  constructor(private configService: ConfigService) { }
 
   ngOnInit() {
     this.form.addControl('httpMethod', new UntypedFormControl(this.model.httpMethod));
     this.form.addControl('getRecordsUrl', new UntypedFormControl(this.model.getRecordsUrl));
     this.form.addControl('recordFilter', new UntypedFormControl(this.model.recordFilter));
+    this.form.addControl('simplifyTolerance', new UntypedFormControl(this.model.simplifyTolerance));
     this.form.addControl('pluPlanState', new UntypedFormControl(this.model.pluPlanState));
 
     if (!this.model.eitherKeywords) {
       this.model.eitherKeywords = [];
     }
+
+    this.configService.getProfileName().subscribe(data => {
+      this.profile = data;
+    });
   }
 
   ngOnDestroy(): void {

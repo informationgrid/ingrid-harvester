@@ -24,7 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-
+import * as xpath from 'xpath';
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { throwError } from 'rxjs';
@@ -39,12 +39,11 @@ import { OaiSettings } from './oai.settings';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 import { UrlUtils } from '../../utils/url.utils';
-
-let xpath = require('xpath');
+import { XPathElementSelect } from '../../utils/xpath.utils';
 
 export class OaiMapper extends BaseMapper {
 
-    static select = xpath.useNamespaces({
+    static select = <XPathElementSelect>xpath.useNamespaces({
         'gmd': namespaces.GMD,
         'gco': namespaces.GCO,
         'gml': namespaces.GML,
@@ -181,13 +180,9 @@ export class OaiMapper extends BaseMapper {
             srvIdent,
             true);
         let getCapablitiesUrl = getCapabilitiesElement ? getCapabilitiesElement.textContent : null;
-        let serviceFormat = OaiMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true);
+        let serviceFormat = OaiMapper.select('.//srv:serviceType/gco:LocalName', srvIdent, true)?.textContent;
         let serviceTypeVersion = OaiMapper.select('.//srv:serviceTypeVersion/gco:CharacterString', srvIdent);
         let serviceLinks: Distribution[] = [];
-
-        if(serviceFormat){
-            serviceFormat = serviceFormat.textContent;
-        }
 
         if (getCapablitiesUrl) {
             let lowercase = getCapablitiesUrl.toLowerCase();
@@ -809,8 +804,7 @@ export class OaiMapper extends BaseMapper {
                     if (name) infos.fn = name.textContent;
                     if (org) infos.hasOrganizationName = org.textContent;
 
-                    let line1 = delPt.map(n => OaiMapper.getCharacterStringContent(n));
-                    line1 = line1.join(', ');
+                    let line1 = delPt.map(n => OaiMapper.getCharacterStringContent(n))?.join(', ');
                     if (line1) infos.hasStreetAddress = line1;
                     if (region) infos.hasRegion = region.textContent;
                     if (country) infos.hasCountryName = country.textContent;

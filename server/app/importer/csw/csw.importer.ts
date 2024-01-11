@@ -21,35 +21,40 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../utils/misc.utils';
+import * as ServiceUtils from '../../utils/service.utils';
 import { defaultCSWSettings, CswSettings } from './csw.settings';
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { BulkResponse } from '../../persistence/elastic.utils';
 import { Catalog } from '../../model/dcatApPlu.model';
-import { ConfigService } from '../../services/config/ConfigService';
+import { CouplingEntity, RecordEntity } from '../../model/entity';
 import { CswMapper } from './csw.mapper';
 import { CswParameters, RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { DOMParser as DomParser } from '@xmldom/xmldom';
-import { Entity } from '../../model/entity';
+import { Distribution } from '../../model/distribution';
+import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { Summary } from '../../model/summary';
 import { SummaryService } from '../../services/config/SummaryService';
 
-let log = require('log4js').getLogger(__filename),
-    logSummary = getLogger('summary'),
-    logRequest = getLogger('requests');
+const log = getLogger(__filename);
+const logRequest = getLogger('requests');
 
 export class CswImporter extends Importer {
 
-    protected domParser: DomParser;
+    protected domParser: DOMParser;
     protected profile: ProfileFactory<CswMapper>;
     protected readonly settings: CswSettings;
     private readonly requestDelegate: RequestDelegate;
+
+    // ServiceType#GetCapabilitiesURL -> { DatasetUUID -> typenames[] }
+    private wfsFeatureTypeMap = new Map<string, { [key: string]: string[] }>();
+    // ServiceType#GetCapabilitiesURL -> { DatasetUUID -> layernames[] }
+    private wmsLayerNameMap = new Map<string, { [key: string]: string[] }>();
 
     private totalRecords = 0;
     private numIndexDocs = 0;
@@ -61,7 +66,7 @@ export class CswImporter extends Importer {
 
         this.profile = ProfileFactoryLoader.get();
 
-        this.domParser = new DomParser({
+        this.domParser = new DOMParser({
             errorHandler: (level, msg) => {
                 // throw on error, swallow rest
                 if (level == 'error') {
@@ -110,6 +115,21 @@ export class CswImporter extends Importer {
         return modifiedFilter.toString().replace(' xmlns:ogc=""', '');
     }
 
+    private addDatasetFilter(recordFilter: string) {
+        let datasetFilter = '<ogc:PropertyIsEqualTo><ogc:PropertyName>Type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsEqualTo>';
+        let filter = '<ogc:Filter>';
+        if (recordFilter != '') {
+            filter += recordFilter.replace('<ogc:Filter>', '<ogc:And>').replace('</ogc:Filter>', '');
+            filter += datasetFilter;
+            filter += '</ogc:And>';
+        }
+        else {
+            filter += datasetFilter;
+        }
+        filter += '</ogc:Filter>';
+        return filter;
+    }
+
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
         if (this.settings.dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
@@ -120,8 +140,17 @@ export class CswImporter extends Importer {
         } else {
             try {
                 await this.database.beginTransaction();
+                // get datasets
                 await this.harvest();
-                if(this.numIndexDocs > 0 || this.summary.isIncremental) {
+                if (this.numIndexDocs > 0 || this.summary.isIncremental) {
+                    // self-coupling, i.e. resolving WFS and WMS distributions
+                    // TODO maybe needs an off-switch
+                    await this.coupleSelf();
+                    // get services
+                    await this.harvestServices();
+                    // data-service-coupling
+                    await this.coupleDatasetsServices();
+
                     if (this.summary.databaseErrors.length == 0) {
                         await this.database.commitTransaction();
                         await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getRecordsUrl);
@@ -131,7 +160,8 @@ export class CswImporter extends Importer {
                     }
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
-                } else {
+                }
+                else {
                     if(this.summary.appErrors.length === 0) {
                         this.summary.appErrors.push('No Results');
                     }
@@ -149,35 +179,207 @@ export class CswImporter extends Importer {
     }
 
     async harvest(): Promise<void> {
-        // let capabilitiesRequestConfig = CswImporter.createRequestConfig({ ...this.settings, httpMethod: 'GET' }, 'GetCapabilities');
-        // let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
-        // let capabilitiesResponse = await capabilitiesRequestDelegate.doRequest();
-        // let capabilitiesResponseDom = this.domParser.parseFromString(capabilitiesResponse);
-        // 
-        // // store catalog info from getCapabilities in generalInfo
-        // let catalog: Catalog = {
-        //     description: CswMapper.select(this.settings.xpaths.capabilities.abstract, capabilitiesResponseDom, true)?.textContent,
-        //     homepage: this.settings.getRecordsUrl,
-        //     // TODO we need a unique ID for each catalog - currently using the alias (used as "global" catalog)
-        //     // TODO or assign a different catalog for each record, depending on a property (address, publisher, etc)? expensive?
-        //     identifier: ConfigService.getGeneralSettings().elasticsearch.alias,
-        //     publisher: { name: CswMapper.select(this.settings.xpaths.capabilities.serviceProvider + '/ows:ProviderName', capabilitiesResponseDom, true)?.textContent },
-        //     title: CswMapper.select(this.settings.xpaths.capabilities.title, capabilitiesResponseDom, true)?.textContent
-        // };
-        // let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId) ?? this.database.defaultCatalog;
         let catalog: Catalog = this.database.defaultCatalog;
         this.generalInfo['catalog'] = catalog;
 
-        if (this.settings.maxConcurrent > 1) {
-            await this.harvestConcurrently();
+        // collect number of totalRecords up front, so we can harvest concurrently
+        let hitsRequestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter: this.addDatasetFilter(this.settings.recordFilter), resultType: 'hits', startPosition: 1, maxRecords: 1 });
+        let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
+        let hitsResponse = await hitsRequestDelegate.doRequest();
+        let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
+        let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
+        this.totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
+        log.info(`Number of records to fetch: ${this.totalRecords}`);
+
+        // 1) create paged request delegates
+        let delegates = [];
+        for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
+            let requestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter: this.addDatasetFilter(this.settings.recordFilter), startPosition });
+            delegates.push(new RequestDelegate(requestConfig, CswImporter.createPaging({
+                startPosition: startPosition,
+                maxRecords: this.settings.maxRecords
+            })));
         }
-        else {
-            // this is only here for sentimental reasons;
-            // harvestConcurrently() also supports this.settings.maxConcurrent=1
-            await this.harvestSequentially();
-        }
-        // send leftovers
+        // 2) run in parallel
+        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
+        const limit = pLimit(this.settings.maxConcurrent);
+        await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
+        log.info(`Finished requests`);
+        // 3) persist leftovers
         await this.database.sendBulkData();
+    }
+
+    async harvestServices(): Promise<void> {
+        let catalog: Catalog = this.database.defaultCatalog;
+        this.generalInfo['catalog'] = catalog;
+
+        let delegates = [];
+        let datasetIds = await this.database.getDatasetIdentifiers(this.settings.getRecordsUrl);
+        let chunkSize = 30;
+
+        for (let i = 0; i < datasetIds.length; i+= chunkSize) {
+            // add ID filter
+            const chunk = datasetIds.slice(i, i + chunkSize);
+            let recordFilter = '<ogc:Filter><ogc:Or>';
+            for (let identifier of chunk) {
+                // TODO OperatesOnIdentifier?
+                recordFilter += `<ogc:PropertyIsEqualTo><ogc:PropertyName>OperatesOn</ogc:PropertyName><ogc:Literal>${identifier}</ogc:Literal></ogc:PropertyIsEqualTo>\n`;
+            }
+            recordFilter += '</ogc:Or></ogc:Filter>';
+
+            // collect number of totalRecords up front, so we can harvest concurrently
+            let hitsRequestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter, resultType: 'hits', startPosition: 1, maxRecords: 1 });
+            let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
+            let hitsResponse = await hitsRequestDelegate.doRequest();
+            let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
+            let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
+            this.totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
+            log.info(`Number of records to fetch: ${this.totalRecords}`);
+
+            // 1) create paged request delegates
+            for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
+                let requestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter, startPosition });
+                delegates.push(new RequestDelegate(requestConfig, CswImporter.createPaging({
+                    startPosition: startPosition,
+                    maxRecords: this.settings.maxRecords
+                })));
+            }
+        }
+        // 2) run in parallel
+        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
+        const limit = pLimit(this.settings.maxConcurrent);
+        await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
+        log.info(`Finished requests`);
+        // 3) persist leftovers
+        await this.database.sendBulkData();
+    }
+
+    async coupleSelf() {
+        // get all datasets
+        let recordEntities: RecordEntity[] = await this.database.getDatasets(this.settings.getRecordsUrl) ?? [];
+        // for all services, get WFS, WMS info and merge into dataset
+        // 2) run in parallel
+        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
+        const limit = pLimit(this.settings.maxConcurrent);
+        await Promise.allSettled(recordEntities.map(recordEntity => limit(() => this.coupleService(recordEntity, true))));
+        // 3) persist leftovers
+        await this.database.sendBulkCouples();
+    }
+
+    async coupleDatasetsServices() {
+        // get all services
+        let serviceEntities: RecordEntity[] = await this.database.getServices(this.settings.getRecordsUrl) ?? [];
+        // for all services, get WFS, WMS info and merge into dataset
+        // 2) run in parallel
+        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
+        const limit = pLimit(this.settings.maxConcurrent);
+        await Promise.allSettled(serviceEntities.map(serviceEntity => limit(() => this.coupleService(serviceEntity, false))));
+        // 3) persist leftovers
+        await this.database.sendBulkCouples();
+    }
+
+    async coupleService(serviceEntity: RecordEntity, coupleSelf = false) {
+        for (let service of serviceEntity.dataset.distributions) {
+            if (coupleSelf) {
+                service.operates_on = [serviceEntity.identifier];
+                // let rsidentifier = MiscUtils.extractDatasetUuid(serviceEntity.dataset.resource_identifier);
+                // if (rsidentifier) {
+                //     service.operates_on.push(rsidentifier);
+                // }
+                // let identifierOfServiceUrl = MiscUtils.extractDatasetUuid(service.accessURL);
+                // if (identifierOfServiceUrl) {
+                //     service.operates_on.push(identifierOfServiceUrl);
+                // }
+            }
+            let serviceType = service.format?.[0].toUpperCase();
+            switch (serviceType) {
+                case 'WFS':
+                    for (let identifier of service.operates_on) {
+                        if (!this.wfsFeatureTypeMap.has(service.accessURL)) {
+                            this.wfsFeatureTypeMap.set(service.accessURL, await ServiceUtils.getWfsFeatureTypeMap(service.accessURL));
+                        }
+                        let getCapabilities = this.wfsFeatureTypeMap.get(service.accessURL);
+                        // let datasetUuid = MiscUtils.extractDatasetUuid(service.accessURL);
+                        let typeNames = getCapabilities[identifier];// ?? [];// ?? getCapabilities[service.operates_on_xlink] ?? [];
+                        // fallback XPLAN - RP_Plan
+                        // TODO how can we abstract that?
+                        if (!typeNames) {
+							for (let typeName of ServiceUtils.RO_DEFAULT_TYPENAMES) {
+								if (Object.values(getCapabilities).some(featureTypeMap => featureTypeMap.includes(typeName))) {
+									typeNames = [typeName];
+									break;
+								}
+							}
+                        }
+                        let spatial;
+                        let errors = [];
+                        for (let typeName of typeNames ?? []) {
+                            // if (typeName == 'plu:SupplementaryRegulation') {
+                            //     continue;
+                            // }
+                            try {
+                                // // resolve GetFeatures, typeNames=<Name>
+                                // // parse, get Polygon
+                                spatial = await ServiceUtils.parseWfsFeatureCollection(service.accessURL, typeName, this.settings.simplifyTolerance);
+                                // spatial = GeoJsonUtils.sanitize(spatial);
+                                // // save in dataset
+                                // await this.updateDataset(serviceEntity.operates_on_uuid, geometryCollection);
+                                // break;
+                            }
+                            catch (e) {
+                                errors.push(e?.message);
+                            }
+                        }
+                        // if (spatial) {
+						let distribution: Distribution = { ...service, resolvedGeometry: spatial };
+						let coupling: CouplingEntity = {
+							dataset_identifier: identifier,
+							service_id: serviceEntity.id,
+							service_type: serviceType,
+							distribution
+						};
+						if (errors.length) {
+							coupling.distribution.errors ??= [];
+							coupling.distribution.errors.push(...errors);
+						}
+						await this.database.addEntityToBulk(coupling);
+                        // }
+                        // else {
+                        //     log.warn(`Did not fetch WFS from ${serviceEntity.identifier}: ${errors.join(', ')}`);
+                        // }
+                    }
+                    break;
+                case 'WMS':
+                    for (let identifier of service.operates_on) {
+                        if (!this.wmsLayerNameMap.has(service.accessURL)) {
+                            this.wmsLayerNameMap.set(service.accessURL, await ServiceUtils.getWmsLayerNameMap(service.accessURL));
+                        }
+                        let getCapabilities = this.wmsLayerNameMap.get(service.accessURL);
+                        let layerNames = getCapabilities[identifier];
+                        // fallback XPLAN - RP_Plan
+                        // TODO how can we abstract that?
+                        if (!layerNames) {
+							for (let layerName of ServiceUtils.RO_DEFAULT_LAYERNAMES) {
+								if (Object.values(getCapabilities).some(featureTypeMap => featureTypeMap.includes(layerName))) {
+									layerNames = [layerName];
+									break;
+								}
+							}
+                        }
+                        let distribution: Distribution = { ...service, mapLayerNames: layerNames };
+                        let coupling: CouplingEntity = {
+                            dataset_identifier: identifier,
+                            service_id: serviceEntity.id,
+                            service_type: serviceType,
+                            distribution
+                        };
+                        await this.database.addEntityToBulk(coupling);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     protected async postHarvestingHandling(){
@@ -204,79 +406,16 @@ export class CswImporter extends Importer {
             // }
             let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
             log.info(`Finished processing batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, start: ${harvestTime.toISOString()}, ${processingTime.toString().padStart(3, ' ')}s`);
-        } else {
+        }
+        else {
             const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
             log.error(message);
             this.summary.appErrors.push(message);
         }
     }
 
-    async harvestConcurrently(): Promise<void> {
-        // collect number of totalRecords up front, so we can harvest concurrently
-        let hitsRequestConfig = CswImporter.createRequestConfig({ ...this.settings, resultType: 'hits', startPosition: 1, maxRecords: 1 });
-        let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
-        let hitsResponse = await hitsRequestDelegate.doRequest();
-        let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
-        let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
-        this.totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
-        log.info(`Number of records to fetch: ${this.totalRecords}`);
-
-        // 1) create paged request delegates
-        let delegates = [];
-        for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
-            let requestConfig = CswImporter.createRequestConfig({ ...this.settings, startPosition });
-            delegates.push(new RequestDelegate(requestConfig, CswImporter.createPaging({
-                startPosition: startPosition,
-                maxRecords: this.settings.maxRecords
-            })));
-        }
-        // 2) run in parallel
-        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
-        const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
-        log.info(`Finished requests`);
-    }
-
-    async harvestSequentially(): Promise<void> {
-        while (true) {
-            log.debug('Requesting next records');
-            let response = await this.requestDelegate.doRequest();
-            let harvestTime = new Date(Date.now());
-
-            let responseDom = this.domParser.parseFromString(response);
-            let resultsNode = responseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
-            if (resultsNode) {
-                let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
-                this.totalRecords = parseInt(resultsNode.getAttribute('numberOfRecordsMatched'));
-                if (log.isDebugEnabled()) {
-                    log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
-                }
-                await this.extractRecords(response, harvestTime)
-            }
-            else {
-                const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
-                log.error(message);
-                this.summary.appErrors.push(message);
-            }
-            this.requestDelegate.incrementStartRecordIndex();
-            /*
-              * startRecord was already incremented in the last step, so we can
-              * directly use it to check if we need to continue.
-              *
-              * If there is a problem with the first request, then numMatched is
-              * still 0. This will result in no records being harvested. If this
-              * behaviour is not desired then the following check should be
-              * updated. The easiest solution would be to set numMatched to
-              * maxRecords * numRetries
-              */
-            if (this.totalRecords < this.requestDelegate.getStartRecordIndex()) {
-                break;
-            }
-        }
-    }
-
     async extractRecords(getRecordsResponse, harvestTime): Promise<string[]> {
-        let promises = [];
+        let promises: Promise<BulkResponse>[] = [];
         let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
         let records = xml.getElementsByTagNameNS(namespaces.GMD, 'MD_Metadata');
         let ids = [];
@@ -315,11 +454,10 @@ export class CswImporter extends Importer {
             }
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                let entity: Entity = {
+                let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.settings.getRecordsUrl,
                     collection_id: this.generalInfo['catalog'].id,
-                    operates_on: mapper.getOperatesOn(),
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
@@ -329,7 +467,8 @@ export class CswImporter extends Importer {
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
-        let settledPromises: PromiseSettledResult<BulkResponse>[] = await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));
+        await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));
+        // let settledPromises: void | PromiseSettledResult<BulkResponse>[] = await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));
         // filter for the actually imported documents
         // let insertedIds = settledPromises.filter(result => result.status == 'fulfilled' && !result.value.queued).reduce((ids, result) => {
         //     ids.push(...(result as PromiseFulfilledResult<BulkResponse>).value.response.items.filter(item => item.index.result == 'created').map(item => item.index._id));
@@ -425,5 +564,4 @@ export class CswImporter extends Importer {
     getSummary(): Summary {
         return this.summary;
     }
-
 }

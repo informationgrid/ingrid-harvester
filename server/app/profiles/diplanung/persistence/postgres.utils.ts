@@ -21,12 +21,14 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../../utils/misc.utils';
 import { createEsId } from '../diplanung.utils';
 import { Bucket } from '../../../persistence/postgres.utils';
 import { DcatApPluDocumentFactory } from '../model/dcatapplu.document.factory';
-import { EsOperation } from '../../../persistence/elastic.utils';
-import { MiscUtils } from '../../../utils/misc.utils';
 import { DiplanungIndexDocument } from '../model/index.document';
+import { Distribution } from '../../../model/distribution';
+import { EsOperation } from '../../../persistence/elastic.utils';
+import { GeoJsonUtils } from '../../../utils/geojson.utils';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -44,13 +46,9 @@ export class PostgresUtils {
         let box: EsOperation[] = [];
         // find primary document
         let { document, duplicates } = this.prioritizeAndFilter(bucket);
-        // data-service-coupling for CSW
-        if (document.extras.metadata.source.source_type == 'csw') {
-            for (let [id, service] of bucket.operatingServices) {
-                document = this.resolveCoupling(document, service);
-                document.extras.merged_from.push(createEsId(service));
-                box.push({ operation: 'delete', _id: createEsId(service) });
-            }
+        // merge service information into dataset
+        for (let [id, service] of bucket.operatingServices) {
+            document = this.resolveCoupling(document, service);
         }
         // deduplication
         for (let [id, duplicate] of duplicates) {
@@ -68,7 +66,7 @@ export class PostgresUtils {
                 box.push({ operation: 'delete', _id: duplicate_id });
             }
         }
-        document = this.updateDataset(document);
+        document = this.sanitize(document);
         document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
         box.push({ operation: 'index', _id: createEsId(document), document });
         return box;
@@ -154,21 +152,52 @@ export class PostgresUtils {
 
     /**
      * Resolve data-service coupling. For a given dataset and a given service, merge the service's distributions into
-     * the dataset's.
+     * the dataset's. Exception: if the service is a WFS, additionally overwrite the `spatial` field.
      * 
      * @param document the dataset whose distributions should be extended
-     * @param service the service whose distributions should be moved to the dataset
+     * @param service the service distribution that should be merged into the dataset
      * @returns the augmented dataset
      */
-    private resolveCoupling(document: DiplanungIndexDocument, service: DiplanungIndexDocument): DiplanungIndexDocument {
-        let distributions = {};
-        for (let dist of document.distributions) {
-            distributions[MiscUtils.createDistHash(dist)] = dist;
+    private resolveCoupling(document: DiplanungIndexDocument, service: Distribution): DiplanungIndexDocument {
+        let distributionMap: { [key: string]: Distribution[] } = {};
+        // add document distributions to distribution map
+        for (let distribution of document.distributions) {
+            distributionMap[MiscUtils.minimalDistHash(distribution)] ??= [];
+            distributionMap[MiscUtils.minimalDistHash(distribution)].push(distribution);
         }
-        for (let dist of service.distributions) {
-            distributions[MiscUtils.createDistHash(dist)] = dist;
+        // remove resolvedGeometry from service distribution if available (add to document later)
+        let resolvedGeometry = service.resolvedGeometry;
+        if (service.format.includes('WFS') && resolvedGeometry) {
+            delete service.resolvedGeometry;
         }
-        return { ...document, distributions: Object.values(distributions) };
+        // add current service distributions to distribution map
+        distributionMap[MiscUtils.minimalDistHash(service)] ??= [];
+        distributionMap[MiscUtils.minimalDistHash(service)].push(service);
+        // merge distributions: choose appropriate (=longer) titles if available, merge mapLayerNames
+        let distributions: Distribution[] = Object.values(distributionMap).map(distributions => {
+            let mergedDistribution: Distribution;
+            let mapLayerNames = [];
+            let errors = [];
+            distributions.forEach(distribution => {
+                if (!mergedDistribution || distribution.title?.length > mergedDistribution.title?.length) {
+                    mergedDistribution = distribution;
+                }
+                if (distribution.mapLayerNames) {
+                    mapLayerNames.push(...distribution.mapLayerNames.filter(name => !mapLayerNames.includes(name)));
+                }
+                if (distribution.errors) {
+                    errors.push(...distribution.errors.filter(error => !errors.includes(error)));
+                }
+            });
+            mergedDistribution.mapLayerNames = mapLayerNames;
+            mergedDistribution.errors = errors;
+            return mergedDistribution;
+        });
+        let mergedDocument = { ...document, distributions };
+        if (service.format.includes('WFS') && resolvedGeometry) {
+            mergedDocument.spatial = resolvedGeometry;
+        }
+        return mergedDocument;
     }
 
     /**
@@ -210,8 +239,36 @@ export class PostgresUtils {
         // return MiscUtils.merge(document, updatedFields);
     }
 
-    private updateDataset(document: DiplanungIndexDocument): any {
-        log.debug(`Updating dataset ${document.identifier} (${document.extras.metadata.source.source_base})`);
+    private sanitize(document: DiplanungIndexDocument): DiplanungIndexDocument {
+        // check spatial
+        let sanitizedSpatial = GeoJsonUtils.sanitize(document.spatial);
+        if (!sanitizedSpatial) {
+            document.extras.metadata.is_valid = false;
+            document.extras.metadata.quality_notes ??= [];
+            document.distributions.forEach(distribution => 
+                document.extras.metadata.quality_notes.push(...(distribution.errors ?? [])));
+            document.extras.metadata.quality_notes.push('No valid geometry');
+            return document;
+        }
+        // TODO temporary, remove after demo 20.12.2023
+        else if (sanitizedSpatial.type == 'GeometryCollection') {
+            document.extras.metadata.is_valid = false;
+            document.extras.metadata.quality_notes ??= [];
+            document.distributions.forEach(distribution => 
+                document.extras.metadata.quality_notes.push(...(distribution.errors ?? [])));
+            document.extras.metadata.quality_notes.push('GeometryCollections are temporarily marked as invalid');
+            return document;
+        }
+        else if (document.spatial != sanitizedSpatial) {
+            document.spatial = sanitizedSpatial;
+            document.extras.metadata.quality_notes ??= [];
+            document.extras.metadata.quality_notes.push('Geometry has been flipped');
+        }
+        if (!document.centroid) {
+            document.centroid = GeoJsonUtils.getCentroid(sanitizedSpatial);
+            document.extras.metadata.quality_notes ??= [];
+            document.extras.metadata.quality_notes.push('Centroid has been created');
+        }
         return document;
     }
 }

@@ -37,8 +37,8 @@ import {Organization, Person} from "../../model/agent";
 import {Distribution} from "../../model/distribution";
 import {DateRange} from "../../model/dateRange";
 
-let mapping = require('../../../mappings.json');
-let markdown = require('markdown').markdown;
+const mapping = require('../../../mappings.json');
+const markdown = require('markdown').markdown;
 
 export interface CkanMapperData {
     harvestTime: Date;

@@ -21,20 +21,10 @@
  * ==================================================
  */
 
-import { namespaces } from '../../../importer/namespaces';
-
-const xpath = require('xpath');
-
-export class WmsXPath {
-
-    static nsMap = {
-        'wms': namespaces.WMS,
-        'gmd': namespaces.GMD,
-        'inspire_common': namespaces.INSPIRE_COMMON,
-        'inspire_vs': namespaces.INSPIRE_VS,
-        'xlink': namespaces.XLINK,
-        'xsi': namespaces.XSI
-    };
-
-    static select = xpath.useNamespaces(WmsXPath.nsMap);
-}
+/*
+ * Retrieve services belonging to a particular source
+ */
+SELECT id, dataset
+FROM public.record
+WHERE source = $1
+    AND dataset->'extras'->>'hierarchy_level' = 'service'

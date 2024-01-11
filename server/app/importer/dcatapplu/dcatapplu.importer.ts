@@ -21,29 +21,28 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../utils/misc.utils';
 import { defaultDCATAPPLUSettings, DcatappluSettings } from './dcatapplu.settings';
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { DcatappluMapper } from './dcatapplu.mapper';
-import { DOMParser as DomParser } from '@xmldom/xmldom';
-import { Entity } from '../../model/entity';
+import { DOMParser } from '@xmldom/xmldom';
 import { Importer} from '../importer';
 import { ImportLogMessage, ImportResult} from '../../model/import.result';
-import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RecordEntity } from '../../model/entity';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 
-let log = require('log4js').getLogger(__filename),
-    logSummary = getLogger('summary'),
-    logRequest = getLogger('requests');
+const log = getLogger(__filename);
+const logRequest = getLogger('requests');
 
 export class DcatappluImporter extends Importer {
 
-    protected domParser: DomParser;
+    protected domParser: DOMParser;
     private profile: ProfileFactory<DcatappluMapper>;
     private readonly settings: DcatappluSettings;
     private readonly requestDelegate: RequestDelegate;
@@ -68,7 +67,7 @@ export class DcatappluImporter extends Importer {
         }
 
         this.settings = settings;
-        this.domParser = new DomParser({
+        this.domParser = new DOMParser({
             errorHandler: (level, msg) => {
                 // throw on error, swallow rest
                 if (level == 'error') {
@@ -262,11 +261,10 @@ export class DcatappluImporter extends Importer {
                 });
 
                 if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                    let entity: Entity = {
+                    let entity: RecordEntity = {
                         identifier: uuid,
                         source: this.settings.catalogUrl,
                         collection_id: this.database.defaultCatalog.id,
-                        operates_on: mapper.getOperatesOn(),
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };

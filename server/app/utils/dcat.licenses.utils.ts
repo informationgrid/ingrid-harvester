@@ -21,9 +21,12 @@
  * ==================================================
  */
 
+import * as fs from 'fs';
+import * as xpath from 'xpath';
 import { getLogger } from 'log4js';
 import { namespaces } from '../importer/namespaces';
 import { License } from '@shared/license.model';
+import { XPathElementSelect } from './xpath.utils';
 
 export class DcatLicensesUtils {
 
@@ -31,9 +34,7 @@ export class DcatLicensesUtils {
 
     private static licenses: License[];
 
-    private static xpath = require('xpath');
-
-    static select = DcatLicensesUtils.xpath.useNamespaces({
+    static select = <XPathElementSelect>xpath.useNamespaces({
         'dc': namespaces.DC,
         'dcat': namespaces.DCAT,
         'dct': namespaces.DCT,
@@ -64,7 +65,6 @@ export class DcatLicensesUtils {
     }
 
     static import() {
-        let fs = require('fs');
         try {
             const data = fs.readFileSync('def_licenses.rdf');
 

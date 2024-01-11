@@ -28,7 +28,7 @@ import {ScheduleService} from '../services/ScheduleService';
 import {HistoryService} from '../services/statistic/HistoryService';
 import {Harvester} from '@shared/harvester';
 
-let log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
 @Controller('/api/harvester')
 @Authenticated()

@@ -21,20 +21,21 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { Harvester } from '@shared/harvester';
-import { RequestDelegate } from '../../../utils/http-request.utils';
-import { WfsImporter } from '../wfs.importer';
-import { WfsMapper } from '../wfs.mapper';
-import { XplanWfsMapper } from './xplan.wfs.mapper';
+/*
+ * Create the record table
+ */
+CREATE TABLE IF NOT EXISTS public.coupling (
+    id SERIAL,
+    dataset_identifier VARCHAR(255) NOT NULL,
+    service_id VARCHAR(255) NOT NULL,
+    service_type VARCHAR(255) NOT NULL,
+    distribution JSONB,
+    CONSTRAINT coupling_pkey PRIMARY KEY(id),
+    CONSTRAINT coupling_full_identifier UNIQUE(dataset_identifier, service_id, service_type)
+);
 
-export class XplanWfsImporter extends WfsImporter {
+CREATE INDEX IF NOT EXISTS dataset_identifier_idx
+ON public.coupling (dataset_identifier);
 
-    constructor(settings: Harvester, requestDelegate?: RequestDelegate) {
-        super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
-    }
-
-    getMapper(settings: Harvester, feature, harvestTime, summary, generalInfo): WfsMapper {
-        return new XplanWfsMapper(settings, feature, harvestTime, summary, generalInfo);
-    }
-}
+CREATE INDEX IF NOT EXISTS service_id_idx
+ON public.coupling (service_id);

@@ -21,13 +21,13 @@
  * ==================================================
  */
 
+import * as fs from 'fs';
+import * as MiscUtils from '../../utils/misc.utils';
 import {Harvester} from '@shared/harvester';
 import {GeneralSettings} from '@shared/general-config.settings';
-import * as fs from 'fs';
 import {getLogger} from "log4js";
 import {MappingDistribution, MappingItem} from '@shared/mapping.model';
 import {UrlUtils} from "../../utils/url.utils";
-import { MiscUtils } from '../../utils/misc.utils';
 import {defaultCKANSettings} from "../../importer/ckan/ckan.settings";
 import {defaultExcelSettings} from "../../importer/excel/excel.settings";
 import {defaultCSWSettings} from "../../importer/csw/csw.settings";

@@ -28,7 +28,7 @@ import { IndexConfiguration, IndexSettings } from './elastic.setting';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 
-let log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
 export class ElasticsearchUtils7 extends ElasticsearchUtils {
 

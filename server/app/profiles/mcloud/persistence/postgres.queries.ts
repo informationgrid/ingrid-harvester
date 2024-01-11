@@ -68,6 +68,20 @@ export class PostgresQueries extends AbstractPostgresQueries {
         CONSTRAINT fkivo5l0rletq7kni6xstvejy5a FOREIGN KEY(collection_id) REFERENCES public.${this.collectionTableName}(id)
     );`;
 
+    readonly createCouplingTable = `CREATE TABLE IF NOT EXISTS public.coupling (
+            id SERIAL,
+            dataset_identifier VARCHAR(255) NOT NULL,
+            service_id VARCHAR(255) NOT NULL,
+            service_type VARCHAR(255) NOT NULL,
+            distribution JSONB,
+            CONSTRAINT coupling_pkey PRIMARY KEY(id),
+            CONSTRAINT coupling_full_identifier UNIQUE(dataset_identifier, service_id, service_type)
+        );
+        CREATE INDEX IF NOT EXISTS dataset_identifier_idx
+            ON public.coupling (dataset_identifier);
+        CREATE INDEX IF NOT EXISTS service_id_idx
+            ON public.coupling (service_id);`;
+
     readonly createCollection = `INSERT INTO public.${this.collectionTableName} (identifier, properties, original_document, dcat_ap_plu, json)
         VALUES($1, $2, $3, $4, $5)
         RETURNING id`;
@@ -97,10 +111,30 @@ export class PostgresQueries extends AbstractPostgresQueries {
             OR EXCLUDED.dataset->'extras'->'metadata'->'modified' > ${this.datasetTableName}.dataset->'extras'->'metadata'->'modified'
         )`;
 
-    readonly getRecords = `SELECT dataset FROM public.${this.datasetTableName}`;
+    readonly bulkUpsertCoupling = `INSERT INTO public.coupling (dataset_identifier, service_id, service_type, distribution)
+        SELECT
+            dataset_identifier,
+            service_id,
+            service_type,
+            distribution
+        FROM json_populate_recordset(null::public.coupling, $1)
+            ON CONFLICT
+            ON CONSTRAINT coupling_full_identifier
+        DO UPDATE SET
+            distribution = EXCLUDED.distribution`;
 
     readonly getStoredData = `SELECT dataset FROM public.${this.datasetTableName}
         WHERE identifier = ANY($1)`;
+
+    readonly getDatasets = `SELECT id, dataset
+        FROM public.record
+        WHERE source = $1
+            AND dataset->'extras'->>'hierarchy_level' != 'service'`;
+
+    readonly getServices = `SELECT id, dataset
+        FROM public.record
+        WHERE source = $1
+            AND dataset->'extras'->>'hierarchy_level' = 'service'`;
 
     /**
      * Create a query for retrieving all items for a given source.
@@ -110,7 +144,7 @@ export class PostgresQueries extends AbstractPostgresQueries {
      * - id: the ID of the item
      * - source: the source of this item
      * - dataset: the dataset document of this item
-     * - is_service: true, if this item is a service to the primary dataset
+     * - service_type: the type of the service, or `null` if it is a dataset
      * - issued
      * - modified
      * 
@@ -119,33 +153,48 @@ export class PostgresQueries extends AbstractPostgresQueries {
      */
     readonly getBuckets =
         `(
-            SELECT anchor.id AS anchor_id,
+            SELECT
+                anchor.id AS anchor_id,
                 secondary.id AS id,
                 secondary.source AS source,
                 secondary.dataset AS dataset,
-                false AS is_service,
+                secondary.collection_id AS catalog_id,
+                null AS service_type,
                 secondary.created_on AS issued,
                 secondary.last_modified AS modified
-            FROM public.${this.datasetTableName} AS anchor
-            LEFT JOIN public.${this.datasetTableName} AS secondary
-            ON anchor.dataset->>'title' = secondary.dataset->>'title'
-            WHERE anchor.source = $1
+            FROM public.record AS anchor
+            LEFT JOIN public.record AS secondary
+            ON (
+                    anchor.dataset->>'plan_name' = secondary.dataset->>'plan_name'
+                    OR (
+                        anchor.identifier = secondary.identifier
+                        AND anchor.collection_id = secondary.collection_id
+                    )
+                )
+                AND (
+                    anchor.source != secondary.source
+                    OR anchor.id = secondary.id
+                )
+            WHERE
+                anchor.source = $1
                 AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
         )
         UNION
         (
-            SELECT ds.id AS anchor_id,
+            SELECT
+                ds.id AS anchor_id,
                 service.id AS id,
-                service.source AS source,
-                service.dataset AS dataset,
-                true AS is_service,
-                service.created_on AS issued,
-                service.last_modified AS modified
-            FROM public.${this.datasetTableName} AS service
-            LEFT JOIN public.${this.datasetTableName} AS ds
-            ON ds.identifier = ANY(service.operates_on)
-            WHERE ds.source = $1
-                AND service.dataset->'extras'->>'hierarchy_level' = 'service'
-        )
-        ORDER BY anchor_id`;
+                ds.source AS source,
+                service.distribution AS dataset,
+                ds.collection_id AS catalog_id,
+                service.service_type AS service_type,
+                ds.created_on AS issued,
+                ds.last_modified AS modified
+            FROM public.coupling AS service
+            LEFT JOIN public.record AS ds
+            ON
+                ds.identifier = service.dataset_identifier
+            WHERE
+                ds.source = $1
+        )`;
 }

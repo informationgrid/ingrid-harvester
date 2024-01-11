@@ -24,7 +24,7 @@
 import {mcloudMapper} from "./mcloud.mapper";
 import {CswMapper} from "../../../importer/csw/csw.mapper";
 
-let log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
 export class mcloudCswMapper extends mcloudMapper<CswMapper> {
     _getDescription() {

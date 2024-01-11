@@ -21,10 +21,10 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../../utils/misc.utils';
 import { Bucket } from '../../../persistence/postgres.utils';
 import { CswImporter } from '../../../importer/csw/csw.importer';
 import { EsOperation } from '../../../persistence/elastic.utils';
-import { MiscUtils } from '../../../utils/misc.utils';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 
 const log = require('log4js').getLogger(__filename);

@@ -21,20 +21,10 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { Harvester } from '@shared/harvester';
-import { RequestDelegate } from '../../../utils/http-request.utils';
-import { WfsImporter } from '../wfs.importer';
-import { WfsMapper } from '../wfs.mapper';
-import { XplanWfsMapper } from './xplan.wfs.mapper';
-
-export class XplanWfsImporter extends WfsImporter {
-
-    constructor(settings: Harvester, requestDelegate?: RequestDelegate) {
-        super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
-    }
-
-    getMapper(settings: Harvester, feature, harvestTime, summary, generalInfo): WfsMapper {
-        return new XplanWfsMapper(settings, feature, harvestTime, summary, generalInfo);
-    }
-}
+/*
+ * Retrieve non-service records belonging to a particular source
+ */
+SELECT id, identifier, dataset
+FROM public.record
+WHERE source = $1
+    AND dataset->'extras'->>'hierarchy_level' != 'service'

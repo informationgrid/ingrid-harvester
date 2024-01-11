@@ -32,7 +32,7 @@ import {CronData} from '../importer.settings';
 import {UrlCheckService} from "../services/statistic/UrlCheckService";
 import {IndexCheckService} from "../services/statistic/IndexCheckService";
 
-let log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
 @Controller('/api')
 @Authenticated()

@@ -29,8 +29,8 @@ import { Index} from '@shared/index.model';
 import { Service} from '@tsed/di';
 import { Summary} from '../model/summary';
 
-let log = require('log4js').getLogger(__filename);
-var path = require('path');
+const log = require('log4js').getLogger(__filename);
+const path = require('path');
 const zlib = require('zlib');
 const Readable = require('stream').Readable
 
