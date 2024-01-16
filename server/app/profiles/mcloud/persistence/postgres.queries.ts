@@ -57,7 +57,6 @@ export class PostgresQueries extends AbstractPostgresQueries {
         id SERIAL,
         identifier VARCHAR(255) NOT NULL,
         source VARCHAR(255) NOT NULL,
-        operates_on VARCHAR(255)[],
         collection_id INTEGER,
         dataset JSONB,
         original_document TEXT,
@@ -89,11 +88,10 @@ export class PostgresQueries extends AbstractPostgresQueries {
     readonly getCollection = `SELECT * FROM public.${this.collectionTableName}
         WHERE identifier = $1`;
 
-    readonly bulkUpsert = `INSERT INTO public.${this.datasetTableName} (identifier, source, collection_id, operates_on, dataset, original_document)
-        SELECT identifier, source, collection_id, operates_on, dataset, original_document
+    readonly bulkUpsert = `INSERT INTO public.${this.datasetTableName} (identifier, source, collection_id, dataset, original_document)
+        SELECT identifier, source, collection_id, dataset, original_document
         FROM json_populate_recordset(null::public.${this.datasetTableName}, $1)
         ON CONFLICT ON CONSTRAINT record_full_identifier DO UPDATE SET
-        operates_on = EXCLUDED.operates_on,
         dataset = EXCLUDED.dataset,
         original_document = COALESCE(EXCLUDED.original_document, ${this.datasetTableName}.original_document),
         last_modified = NOW()

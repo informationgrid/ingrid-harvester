@@ -22,7 +22,7 @@
  */
 
 /*
- * Create the record table
+ * Create the coupling table
  */
 CREATE TABLE IF NOT EXISTS public.coupling (
     id SERIAL,

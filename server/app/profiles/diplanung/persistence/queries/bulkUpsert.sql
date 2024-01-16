@@ -24,19 +24,17 @@
 /*
  * Bulk insert of new records, update on conflict
  */
-INSERT INTO public.record (identifier, source, collection_id, operates_on, dataset, original_document)
+INSERT INTO public.record (identifier, source, collection_id, dataset, original_document)
 SELECT
     identifier,
     source,
     collection_id,
-    operates_on,
     dataset,
     original_document
 FROM json_populate_recordset(null::public.record, $1)
 ON CONFLICT
 ON CONSTRAINT record_full_identifier
 DO UPDATE SET
-    operates_on = COALESCE(EXCLUDED.operates_on, record.operates_on),
     dataset = EXCLUDED.dataset,
     original_document = COALESCE(EXCLUDED.original_document, record.original_document),
     last_modified = NOW()

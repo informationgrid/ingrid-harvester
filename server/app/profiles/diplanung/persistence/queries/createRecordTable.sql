@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS public.record (
     id SERIAL,
     identifier VARCHAR(255) NOT NULL,
     source VARCHAR(255) NOT NULL,
-    operates_on VARCHAR(255)[],
     collection_id INTEGER,
     dataset JSONB,
     original_document TEXT,
