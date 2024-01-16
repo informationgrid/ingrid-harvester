@@ -98,9 +98,9 @@ export class CswMapper extends BaseMapper {
         return this.summary;
     }
 
-    _getResourceIdentifier() {
-        return CswMapper.select('./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', this.idInfo, true)?.textContent;
-    }
+    // _getResourceIdentifier() {
+    //     return CswMapper.select('./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', this.idInfo, true)?.textContent;
+    // }
 
     _getDescription() {
         return CswMapper.select('./*/gmd:abstract/gco:CharacterString', this.idInfo, true)?.textContent;

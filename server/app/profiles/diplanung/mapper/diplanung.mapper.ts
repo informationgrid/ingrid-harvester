@@ -37,9 +37,9 @@ dayjs.locale('de');
 
 export class DiplanungMapper<M extends DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper> {
 
-    getResourceIdentifier() {
-        return (this.baseMapper as unknown as DiplanungCswMapper)._getResourceIdentifier();
-    }
+    // getResourceIdentifier() {
+    //     return (this.baseMapper as unknown as DiplanungCswMapper)._getResourceIdentifier();
+    // }
 
     protected baseMapper: M;
 

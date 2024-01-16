@@ -282,21 +282,14 @@ export class PostgresUtils extends DatabaseUtils {
                 // "Ensure that no rows proposed for insertion within the same command have duplicate constrained values."
                 // TODO ideally, we change handling from `Entity` to `Entity.DbOperation`, to only send updates when needed
                 // TODO (instead of full upserts) and handle JSON updates within Postgres
-                entities = this.mergeEntities(entities as RecordEntity[]);
+                entities = this.mergeRecordEntities(entities as RecordEntity[]);
                 // we remove catalogs from the entities at this point because we don't want them to persisted into the
                 // dataset in the catalog
                 entities = this.removeCatalogs(entities as RecordEntity[]);
                 result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities)]);
             }
             else if ((entities[0] as CouplingEntity).service_id) {
-                let ids = entities.map(entity => {
-                    let e = entity as CouplingEntity;
-                    return e.dataset_identifier + '#' + e.service_id + '#' + e.service_type;
-                });
-                let duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
-                if (duplicates?.length) {
-                    let i = 0;
-                }
+                entities = this.mergeCouplingEntities(entities as CouplingEntity[]);
                 result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities)]);
             }
             else {
@@ -314,7 +307,7 @@ export class PostgresUtils extends DatabaseUtils {
         }));
     }
 
-    private mergeEntities(entities: RecordEntity[]): RecordEntity[] {
+    private mergeRecordEntities(entities: RecordEntity[]): RecordEntity[] {
         let entityMap: Map<string, RecordEntity> = new Map();
         entities.forEach(entity => {
             let uid = entity.identifier + '/' + entity.collection_id;
@@ -328,6 +321,17 @@ export class PostgresUtils extends DatabaseUtils {
                 else {
                     entityMap[uid] = { ...entity, dataset: entityMap[uid].dataset };
                 }
+            }
+        });
+        return Object.values(entityMap);
+    }
+
+    private mergeCouplingEntities(entities: CouplingEntity[]): CouplingEntity[] {
+        let entityMap: Map<string, CouplingEntity> = new Map();
+        entities.forEach(entity => {
+            let uid = entity.dataset_identifier + '/' + entity.service_id + '/' + entity.service_type;
+            if (!entityMap[uid] || entity.distribution.title?.length > entityMap[uid].distribution.title?.length) {
+                entityMap[uid] = entity;
             }
         });
         return Object.values(entityMap);

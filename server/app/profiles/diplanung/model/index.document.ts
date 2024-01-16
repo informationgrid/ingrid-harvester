@@ -56,7 +56,7 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
             description: mapper.getDescription(),
             identifier: mapper.getGeneratedId(),
             adms_identifier: mapper.getAdmsIdentifier(),
-            resource_identifier: mapper.getResourceIdentifier(),
+            // resource_identifier: mapper.getResourceIdentifier(),
             title: mapper.getTitle(),
             plan_name: mapper.getAlternateTitle(),
             // plan and procedure information
