@@ -24,11 +24,13 @@
 import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
 
 export type CswSettings = {
-    resultType?: "hits" | "results",
+    resultType?: 'hits' | 'results',
     pluPlanState?: string,
     getRecordsUrl: string,
+    resolveOgcDistributions: boolean,
+    harvestingMode: 'standard' | 'extended',
     eitherKeywords: string[],
-    httpMethod: "GET" | "POST",
+    httpMethod: 'GET' | 'POST',
     recordFilter?: string,
     simplifyTolerance: number
 } & ImporterSettings;
@@ -36,6 +38,8 @@ export type CswSettings = {
 export const defaultCSWSettings: Partial<CswSettings> = {
     ...DefaultImporterSettings,
     getRecordsUrl: '',
+    resolveOgcDistributions: false,
+    harvestingMode: 'standard',
     eitherKeywords: [],
     httpMethod: 'GET',
     resultType: 'results',

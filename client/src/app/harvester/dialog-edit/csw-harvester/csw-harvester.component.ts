@@ -47,6 +47,8 @@ export class CswHarvesterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.form.addControl('httpMethod', new UntypedFormControl(this.model.httpMethod));
+    this.form.addControl('resolveOgcDistributions', new UntypedFormControl(this.model.resolveOgcDistributions));
+    this.form.addControl('harvestingMode', new UntypedFormControl(this.model.harvestingMode));
     this.form.addControl('getRecordsUrl', new UntypedFormControl(this.model.getRecordsUrl));
     this.form.addControl('recordFilter', new UntypedFormControl(this.model.recordFilter));
     this.form.addControl('simplifyTolerance', new UntypedFormControl(this.model.simplifyTolerance));

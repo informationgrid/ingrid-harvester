@@ -143,11 +143,14 @@ export class CswImporter extends Importer {
                 // get datasets
                 await this.harvest();
                 if (this.numIndexDocs > 0 || this.summary.isIncremental) {
-                    // self-coupling, i.e. resolving WFS and WMS distributions
-                    // TODO maybe needs an off-switch
-                    await this.coupleSelf();
-                    // get services
-                    await this.harvestServices();
+                    // self-coupling, i.e. resolving WFS and WMS distributions (time-intensive)
+                    if (this.settings.resolveOgcDistributions) {
+                        await this.coupleSelf();
+                    }
+                    // get services separately (time-intensive)
+                    if (this.settings.harvestingMode == 'extended') {
+                        await this.harvestServices();
+                    }
                     // data-service-coupling
                     await this.coupleDatasetsServices();
 
@@ -183,7 +186,10 @@ export class CswImporter extends Importer {
         this.generalInfo['catalog'] = catalog;
 
         // collect number of totalRecords up front, so we can harvest concurrently
-        let hitsRequestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter: this.addDatasetFilter(this.settings.recordFilter), resultType: 'hits', startPosition: 1, maxRecords: 1 });
+        let recordFilter = this.settings.harvestingMode == 'extended'
+            ? this.addDatasetFilter(this.settings.recordFilter)
+            : this.settings.recordFilter;
+        let hitsRequestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter, resultType: 'hits', startPosition: 1, maxRecords: 1 });
         let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
         let hitsResponse = await hitsRequestDelegate.doRequest();
         let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
@@ -194,7 +200,7 @@ export class CswImporter extends Importer {
         // 1) create paged request delegates
         let delegates = [];
         for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
-            let requestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter: this.addDatasetFilter(this.settings.recordFilter), startPosition });
+            let requestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter, startPosition });
             delegates.push(new RequestDelegate(requestConfig, CswImporter.createPaging({
                 startPosition: startPosition,
                 maxRecords: this.settings.maxRecords
