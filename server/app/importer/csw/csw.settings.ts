@@ -21,11 +21,12 @@
  * ==================================================
  */
 
-import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
+import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
+import { PluPlanState } from '../../model/dcatApPlu.model';
 
 export type CswSettings = {
     resultType?: 'hits' | 'results',
-    pluPlanState?: string,
+    pluPlanState?: PluPlanState,
     getRecordsUrl: string,
     resolveOgcDistributions: boolean,
     harvestingMode: 'standard' | 'extended',

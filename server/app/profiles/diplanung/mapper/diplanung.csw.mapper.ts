@@ -117,12 +117,7 @@ export class DiplanungCswMapper extends CswMapper {
     }
 
     _getPluPlanState(): PluPlanState {
-        let planState = this.settings.pluPlanState;
-        switch (planState?.toLowerCase()) {
-            case 'festgesetzt': return PluPlanState.FESTGES;
-            case 'in aufstellung': return PluPlanState.IN_AUFST;
-            default: return PluPlanState.UNBEKANNT;
-        }
+        return this.settings.pluPlanState;
     }
 
     /**

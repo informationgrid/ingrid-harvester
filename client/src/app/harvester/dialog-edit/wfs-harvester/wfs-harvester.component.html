@@ -64,9 +64,10 @@
           <input matInput placeholder="Katalog-ID" formControlName="catalogId" required>
         </mat-form-field>
         <mat-form-field fxFlex="20">
-          <mat-select placeholder="Plan Status" formControlName="pluPlanState" required>
-            <mat-option value="festgesetzt">festgesetzt</mat-option>
-            <mat-option value="in Aufstellung">in Aufstellung</mat-option>
+          <mat-select placeholder="Planstatus" formControlName="pluPlanState" required>
+            <mat-option value="unknown">unbekannt</mat-option>
+            <mat-option value="fixed">festgestellt</mat-option>
+            <mat-option value="inPreparation">in Aufstellung</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field fxFlex="70">

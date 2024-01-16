@@ -184,12 +184,8 @@ export abstract class WfsMapper extends BaseMapper {
     abstract _getPluDocType(code: string): PluDocType;
 
     _getPluPlanState(): PluPlanState {
-        let planState = this.settings.pluPlanState;
-        switch (planState?.toLowerCase()) {
-            case 'festgesetzt': return PluPlanState.FESTGES;
-            case 'in aufstellung': return PluPlanState.IN_AUFST;
-            default: return PluPlanState.UNBEKANNT;
-        }
+        
+        return this.settings.pluPlanState;
     }
 
     abstract _getPluPlanType(): PluPlanType;

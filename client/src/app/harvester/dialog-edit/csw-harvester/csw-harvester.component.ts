@@ -21,12 +21,12 @@
  * ==================================================
  */
 
-import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
-import {CswSettings} from '../../../../../../server/app/importer/csw/csw.settings';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatLegacyChipInputEvent as MatChipInputEvent} from '@angular/material/legacy-chips';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { ConfigService } from '../../../config/config.service';
+import { CswSettings } from '../../../../../../server/app/importer/csw/csw.settings';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { FormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 
 @Component({
   selector: 'app-csw-harvester',
@@ -46,13 +46,14 @@ export class CswHarvesterComponent implements OnInit, OnDestroy {
   constructor(private configService: ConfigService) { }
 
   ngOnInit() {
-    this.form.addControl('httpMethod', new UntypedFormControl(this.model.httpMethod));
-    this.form.addControl('resolveOgcDistributions', new UntypedFormControl(this.model.resolveOgcDistributions));
-    this.form.addControl('harvestingMode', new UntypedFormControl(this.model.harvestingMode));
-    this.form.addControl('getRecordsUrl', new UntypedFormControl(this.model.getRecordsUrl));
-    this.form.addControl('recordFilter', new UntypedFormControl(this.model.recordFilter));
-    this.form.addControl('simplifyTolerance', new UntypedFormControl(this.model.simplifyTolerance));
-    this.form.addControl('pluPlanState', new UntypedFormControl(this.model.pluPlanState));
+    this.form.addControl('httpMethod', new FormControl(this.model.httpMethod));
+    this.form.addControl('getRecordsUrl', new FormControl(this.model.getRecordsUrl));
+    this.form.addControl('resolveOgcDistributions', new FormControl(this.model.resolveOgcDistributions));
+    this.form.addControl('harvestingMode', new FormControl(this.model.harvestingMode));
+    this.form.addControl('maxConcurrent', new FormControl(this.model.maxConcurrent, Validators.min(1))),
+    this.form.addControl('simplifyTolerance', new FormControl(this.model.simplifyTolerance));
+    this.form.addControl('pluPlanState', new FormControl(this.model.pluPlanState));
+    this.form.addControl('recordFilter', new FormControl(this.model.recordFilter));
 
     if (!this.model.eitherKeywords) {
       this.model.eitherKeywords = [];
