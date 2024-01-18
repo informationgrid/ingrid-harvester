@@ -1,0 +1,70 @@
+{
+    "index": {
+        "analysis": {
+            "filter": {
+                "decomp": {
+                    "type": "ngram",
+                    "min_gram": 3,
+                    "max_gram": 8,
+                    "preserve_original": true
+                },
+                "decomp_shingle": {
+                    "type": "shingle",
+                    "max_shingle_size": "8",
+                    "output_unigrams": false
+                },
+                "suggest_shingle": {
+                    "type": "shingle",
+                    "max_shingle_size": "5",
+                    "output_unigrams": true
+                }
+            },
+            "analyzer": {
+                "decomp": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "filter": [
+                        "decomp",
+                        "german_normalization",
+                        "lowercase"
+                    ]
+                },
+                "german_simple": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "filter": [
+                        "lowercase",
+                        "german_normalization"
+                    ]
+                },
+                "decomp_german": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "filter": [
+                        "lowercase",
+                        "decomp",
+                        "german_normalization"
+                    ]
+                },
+                "decomp_shingles": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "filter": [
+                        "lowercase",
+                        "decomp",
+                        "german_normalization",
+                        "decomp_shingle"
+                    ]
+                },
+                "suggest_shingles": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "filter": [
+                        "lowercase",
+                        "suggest_shingle"
+                    ]
+                }
+            }
+        }
+    }
+}
