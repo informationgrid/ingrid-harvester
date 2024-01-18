@@ -85,10 +85,13 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
     async prepareIndexWithName(indexName: string, mappings, settings: IndexSettings, openIfPresent=false) {
         indexName = this.addPrefixIfNotExists(indexName) as string;
         let isPresent = await this.isIndexPresent(indexName);
-        settings = {
-            ...settings,
-            number_of_shards: this.config.numberOfShards,
-            number_of_replicas: this.config.numberOfReplicas
+        // remove both of these variables and the connected environment variables once we have streamlined
+        // the DiPlanung deployment using ConfigMaps
+        if (this.config.numberOfShards) {
+            settings.number_of_shards = this.config.numberOfShards;
+        }
+        if (this.config.numberOfReplicas) {
+            settings.number_of_replicas = this.config.numberOfReplicas;
         }
         if (!openIfPresent || !isPresent) {
             try {

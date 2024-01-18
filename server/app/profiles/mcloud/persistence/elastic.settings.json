@@ -71,5 +71,7 @@
         }
     },
     "max_shingle_diff": 6,
-    "max_ngram_diff": 7
+    "max_ngram_diff": 7,
+    "number_of_shards": 1,
+    "number_of_replicas": 0
 }
