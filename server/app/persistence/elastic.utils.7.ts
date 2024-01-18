@@ -88,9 +88,7 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
         settings = {
             ...settings,
             number_of_shards: this.config.numberOfShards,
-            number_of_replicas: this.config.numberOfReplicas,
-            max_shingle_diff: 6,
-            max_ngram_diff: 7
+            number_of_replicas: this.config.numberOfReplicas
         }
         if (!openIfPresent || !isPresent) {
             try {

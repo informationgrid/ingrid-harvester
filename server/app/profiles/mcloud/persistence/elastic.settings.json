@@ -69,5 +69,7 @@
                 }
             }
         }
-    }
+    },
+    "max_shingle_diff": 6,
+    "max_ngram_diff": 7
 }
