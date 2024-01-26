@@ -21,32 +21,42 @@
  * ==================================================
  */
 
-import { importProviders } from '@tsed/components-scan';
-import { HealthCtrl } from './controllers/HealthCtrl';
-import { PlatformExpress } from '@tsed/platform-express';
-import { Server } from './server';
+import { ConfigService } from '../services/config/ConfigService';
+import { ContentType } from '@tsed/schema';
+import { Controller, Get } from '@tsed/common';
 
-async function bootstrap() {
-    try {
-        const scannedProviders = await importProviders({
-            mount: {
-                '/rest': [`${__dirname}/controllers/**/*.ts`],
-                '/': [ HealthCtrl ]
-            },
-            componentsScan: [
-                `${__dirname}/middlewares/**/*.ts`,
-                `${__dirname}/services/**/*.ts`,
-                `${__dirname}/converters/**/*.ts`
-            ]        
-        });
-        const platform = await PlatformExpress.bootstrap(Server, {
-            ...scannedProviders
-        });
-        await platform.listen();
-        console.log('Server started...');
-    } catch (err) {
-        console.error(err);
+@Controller('/health')
+export class HealthCtrl {
+
+    @Get('/')
+    @ContentType('application/json')
+    async getHealth(): Promise<Status> {
+        let liveness = (await this.getLiveness()).status;
+        let readiness = (await this.getReadiness()).status;
+        return {
+            status: liveness == 'UP' && readiness == 'UP' ? 'UP' : 'DOWN',
+            groups: ['liveness', 'readiness']
+        };
+    }
+
+    @Get('/liveness')
+    @ContentType('application/json')
+    async getLiveness(): Promise<Status> {
+        return {
+            status: 'UP'
+        };
+    }
+
+    @Get('/readiness')
+    @ContentType('application/json')
+    async getReadiness(): Promise<Status> {
+        return {
+            status: 'UP'
+        };
     }
 }
 
-bootstrap();
+type Status = {
+    status: 'UP' | 'DOWN',
+    groups?: string[]
+}
