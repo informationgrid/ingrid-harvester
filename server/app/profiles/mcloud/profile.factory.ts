@@ -21,8 +21,6 @@
  * ==================================================
  */
 
-import { indexMappings } from './persistence/elastic.mappings';
-import { indexSettings } from './persistence/elastic.settings';
 import { mcloudDocument } from './model/index.document';
 import { CkanMapper } from '../../importer/ckan/ckan.mapper';
 import { CswMapper } from '../../importer/csw/csw.mapper';
@@ -50,11 +48,11 @@ export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatM
     }
 
     getIndexMappings(): any {
-        return indexMappings;
+        return require('./persistence/elastic.mappings.json');
     }
 
     getIndexSettings(): IndexSettings {
-        return indexSettings;
+        return require('./persistence/elastic.settings.json');;
     }
 
     getImporterFactory(): ImporterFactory {
