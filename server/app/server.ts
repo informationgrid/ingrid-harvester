@@ -54,14 +54,6 @@ configure('./log4js.json');
         '/': `${rootDir}/webapp`,
         '/*': `${rootDir}/webapp/index.html`
     },
-    mount: {
-        '/rest': [`${rootDir}/controllers/**/*.ts`]
-    },
-    componentsScan: [
-        `${rootDir}/middlewares/**/*.ts`,
-        `${rootDir}/services/**/*.ts`,
-        `${rootDir}/converters/**/*.ts`
-    ],
     middlewares: [{ use: PlatformLogMiddleware, options: { logRequest: false } }]
 })
 export class Server {

@@ -21,13 +21,24 @@
  * ==================================================
  */
 
+import { importProviders } from '@tsed/components-scan';
 import { PlatformExpress } from '@tsed/platform-express';
-import { Server } from './server'
+import { Server } from './server';
 
 async function bootstrap() {
     try {
+        const scannedProviders = await importProviders({
+            mount: {
+                '/rest': [`${__dirname}/controllers/**/*.ts`]
+            },
+            componentsScan: [
+                `${__dirname}/middlewares/**/*.ts`,
+                `${__dirname}/services/**/*.ts`,
+                `${__dirname}/converters/**/*.ts`
+            ]        
+        });
         const platform = await PlatformExpress.bootstrap(Server, {
-            // extra settings
+            ...scannedProviders
         });
         await platform.listen();
         console.log('Server started...');

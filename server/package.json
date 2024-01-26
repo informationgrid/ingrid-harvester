@@ -22,6 +22,7 @@
   "license": "EUPL",
   "dependencies": {
     "@tsed/common": "^7.55.0",
+    "@tsed/components-scan": "7.55.0",
     "@tsed/core": "^7.55.0",
     "@tsed/di": "^7.55.0",
     "@tsed/platform-express": "^7.55.0",
