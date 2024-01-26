@@ -21,17 +21,18 @@
  * ==================================================
  */
 
-import {Authenticated, BodyParams, Controller, Delete, Get, PathParams, Post} from '@tsed/common';
-import {ConfigService} from '../services/config/ConfigService';
-import {IndexService} from '../services/IndexService';
-import {ScheduleService} from '../services/ScheduleService';
-import {HistoryService} from '../services/statistic/HistoryService';
-import {Harvester} from '@shared/harvester';
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
+import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
+import { ConfigService } from '../services/config/ConfigService';
+import { Harvester } from '@shared/harvester';
+import { HistoryService } from '../services/statistic/HistoryService';
+import { IndexService } from '../services/IndexService';
+import { ScheduleService } from '../services/ScheduleService';
 
 const log = require('log4js').getLogger(__filename);
 
 @Controller('/api/harvester')
-@Authenticated()
+@UseAuth(AuthMiddleware)
 export class HarvesterCtrl {
 
     constructor(
