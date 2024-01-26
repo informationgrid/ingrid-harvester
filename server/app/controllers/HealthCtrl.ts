@@ -24,9 +24,23 @@
 import { ConfigService } from '../services/config/ConfigService';
 import { ContentType } from '@tsed/schema';
 import { Controller, Get } from '@tsed/common';
+// import { DatabaseFactory } from '../persistence/database.factory';
+// import { DatabaseUtils } from '../persistence/database.utils';
+import { ElasticsearchFactory } from '../persistence/elastic.factory';
+import { ElasticsearchUtils } from '../persistence/elastic.utils';
+import { PostgresUtils } from '../persistence/postgres.utils';
 
 @Controller('/health')
 export class HealthCtrl {
+
+    // private database: DatabaseUtils;
+    private elasticsearch: ElasticsearchUtils;
+
+    constructor() {
+        let generalConfig = ConfigService.getGeneralSettings();
+        // this.database = DatabaseFactory.getDatabaseUtils(generalConfig.database, null);
+        this.elasticsearch = ElasticsearchFactory.getElasticUtils(generalConfig.elasticsearch, null);
+    }
 
     @Get('/')
     @ContentType('application/json')
@@ -51,7 +65,7 @@ export class HealthCtrl {
     @ContentType('application/json')
     async getReadiness(): Promise<Status> {
         return {
-            status: 'UP'
+            status: await PostgresUtils.ping() && await this.elasticsearch.ping() ? 'UP' : 'DOWN'
         };
     }
 }
