@@ -83,6 +83,8 @@ export class HealthCtrl {
     @ContentType('application/json')
     async getEsReadiness(): Promise<Status> {
         let status: 'UP' | 'DOWN';
+        log.warn('Is this even being called? DonaldDuck');
+        log.warn(this.elasticsearch);
         try {
             status = await this.elasticsearch.ping() ? 'UP' : 'DOWN';
         }
