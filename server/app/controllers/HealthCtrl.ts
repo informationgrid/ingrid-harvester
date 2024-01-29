@@ -30,6 +30,8 @@ import { ElasticsearchFactory } from '../persistence/elastic.factory';
 import { ElasticsearchUtils } from '../persistence/elastic.utils';
 import { PostgresUtils } from '../persistence/postgres.utils';
 
+const log = require('log4js').getLogger(__filename);
+
 @Controller('/health')
 export class HealthCtrl {
 
@@ -79,9 +81,14 @@ export class HealthCtrl {
     }
 
     @Get('/readiness/elastic')
-    // @ContentType('text')
-    async getEsReadiness(): Promise<string> {
-        return (await this.elasticsearch.ping()) + '###' + this.elasticsearch.config;
+    @ContentType('application/json')
+    async getEsReadiness(): Promise<Status> {
+        log.warn("CONFIG: " + this.elasticsearch.config);
+        let ping = (await this.elasticsearch.ping());
+        log.warn("PING: " + ping);
+        return {
+            status: 'UP'
+        };
     }
 }
 
