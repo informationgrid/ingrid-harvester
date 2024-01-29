@@ -34,13 +34,23 @@ const log = require('log4js').getLogger(__filename);
 @Controller('/health')
 export class HealthCtrl {
 
-    private database: DatabaseUtils;
-    private elasticsearch: ElasticsearchUtils;
+    private static database: DatabaseUtils;
+    private static elasticsearch: ElasticsearchUtils;
 
-    constructor() {
-        let generalConfig = ConfigService.getGeneralSettings();
-        this.database = DatabaseFactory.getDatabaseUtils(generalConfig.database, null);
-        this.elasticsearch = ElasticsearchFactory.getElasticUtils(generalConfig.elasticsearch, null);
+    static getDatabase() {
+        if (!HealthCtrl.database) {
+            let generalConfig = ConfigService.getGeneralSettings();
+            HealthCtrl.database = DatabaseFactory.getDatabaseUtils(generalConfig.database, null);
+        }
+        return HealthCtrl.database;
+    }
+
+    static getElasticsearch() {
+        if (!HealthCtrl.elasticsearch) {
+            let generalConfig = ConfigService.getGeneralSettings();
+            HealthCtrl.elasticsearch = ElasticsearchFactory.getElasticUtils(generalConfig.elasticsearch, null);
+        }
+        return HealthCtrl.elasticsearch;
     }
 
     @Get('/')
@@ -66,33 +76,30 @@ export class HealthCtrl {
     @ContentType('application/json')
     async getReadiness(): Promise<Status> {
         return {
-            status: await this.database.ping() && await this.elasticsearch.ping() ? 'UP' : 'DOWN'
+            status: await HealthCtrl.getDatabase().ping() && await HealthCtrl.getElasticsearch().ping() ? 'UP' : 'DOWN'
         };
     }
 
     @Get('/readiness/postgres')
     @ContentType('application/json')
     async getPgReadiness(): Promise<Status> {
-        return {
-            status: await this.database.ping() ? 'UP' : 'DOWN',
-            info: ConfigService.getGeneralSettings()
-        };
+        try {
+            return { status: await HealthCtrl.getDatabase().ping() ? 'UP' : 'DOWN' };
+        }
+        catch (e) {
+            return { status: 'DOWN' };
+        }
     }
 
     @Get('/readiness/elastic')
     @ContentType('application/json')
     async getEsReadiness(): Promise<Status> {
-        let status: 'UP' | 'DOWN';
-        log.warn('Is this even being called? DonaldDuck');
-        log.warn(this.elasticsearch);
         try {
-            status = await this.elasticsearch.ping() ? 'UP' : 'DOWN';
+            return { status: await HealthCtrl.getElasticsearch().ping() ? 'UP' : 'DOWN' };
         }
         catch (e) {
-            status = 'DOWN';
-            log.warn(e);
+            return { status: 'DOWN' };
         }
-        return { status };
     }
 }
 
