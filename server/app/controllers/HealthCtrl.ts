@@ -24,23 +24,22 @@
 import { ConfigService } from '../services/config/ConfigService';
 import { ContentType } from '@tsed/schema';
 import { Controller, Get } from '@tsed/common';
-// import { DatabaseFactory } from '../persistence/database.factory';
-// import { DatabaseUtils } from '../persistence/database.utils';
+import { DatabaseFactory } from '../persistence/database.factory';
+import { DatabaseUtils } from '../persistence/database.utils';
 import { ElasticsearchFactory } from '../persistence/elastic.factory';
 import { ElasticsearchUtils } from '../persistence/elastic.utils';
-import { PostgresUtils } from '../persistence/postgres.utils';
 
 const log = require('log4js').getLogger(__filename);
 
 @Controller('/health')
 export class HealthCtrl {
 
-    // private database: DatabaseUtils;
+    private database: DatabaseUtils;
     private elasticsearch: ElasticsearchUtils;
 
     constructor() {
         let generalConfig = ConfigService.getGeneralSettings();
-        // this.database = DatabaseFactory.getDatabaseUtils(generalConfig.database, null);
+        this.database = DatabaseFactory.getDatabaseUtils(generalConfig.database, null);
         this.elasticsearch = ElasticsearchFactory.getElasticUtils(generalConfig.elasticsearch, null);
     }
 
@@ -67,7 +66,7 @@ export class HealthCtrl {
     @ContentType('application/json')
     async getReadiness(): Promise<Status> {
         return {
-            status: await PostgresUtils.ping() && await this.elasticsearch.ping() ? 'UP' : 'DOWN'
+            status: await this.database.ping() && await this.elasticsearch.ping() ? 'UP' : 'DOWN'
         };
     }
 
@@ -75,7 +74,7 @@ export class HealthCtrl {
     @ContentType('application/json')
     async getPgReadiness(): Promise<Status> {
         return {
-            status: await PostgresUtils.ping() ? 'UP' : 'DOWN',
+            status: await this.database.ping() ? 'UP' : 'DOWN',
             info: ConfigService.getGeneralSettings()
         };
     }
@@ -83,12 +82,15 @@ export class HealthCtrl {
     @Get('/readiness/elastic')
     @ContentType('application/json')
     async getEsReadiness(): Promise<Status> {
-        log.warn("CONFIG: " + this.elasticsearch.config);
-        let ping = (await this.elasticsearch.ping());
-        log.warn("PING: " + ping);
-        return {
-            status: 'UP'
-        };
+        let status: 'UP' | 'DOWN';
+        try {
+            status = await this.elasticsearch.ping() ? 'UP' : 'DOWN';
+        }
+        catch (e) {
+            status = 'DOWN';
+            log.warn(e);
+        }
+        return { status };
     }
 }
 
