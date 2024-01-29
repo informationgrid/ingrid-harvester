@@ -79,12 +79,9 @@ export class HealthCtrl {
     }
 
     @Get('/readiness/elastic')
-    @ContentType('text')
-    async getEsReadiness(): Promise<Status> {
-        return {
-            status: await this.elasticsearch.ping() ? 'UP' : 'DOWN',
-            info: this.elasticsearch.config
-        };
+    // @ContentType('text')
+    async getEsReadiness(): Promise<string> {
+        return (await this.elasticsearch.ping()) + '###' + this.elasticsearch.config;
     }
 }
 
