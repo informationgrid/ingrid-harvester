@@ -403,6 +403,16 @@ export class PostgresUtils extends DatabaseUtils {
         return null;
     }
 
+    async ping() {
+        try {
+            const result = await PostgresUtils.pool.query('SELECT * FROM record LIMIT 1');
+            return !!result;
+        }
+        catch (e) {
+            return false;
+        }
+    }
+
     static async ping(configuration?: DatabaseConfiguration): Promise<boolean> {
         if (configuration) {
             let client: Client;

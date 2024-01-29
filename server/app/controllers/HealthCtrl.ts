@@ -24,22 +24,31 @@
 import { ConfigService } from '../services/config/ConfigService';
 import { ContentType } from '@tsed/schema';
 import { Controller, Get } from '@tsed/common';
-// import { DatabaseFactory } from '../persistence/database.factory';
-// import { DatabaseUtils } from '../persistence/database.utils';
+import { DatabaseFactory } from '../persistence/database.factory';
+import { DatabaseUtils } from '../persistence/database.utils';
 import { ElasticsearchFactory } from '../persistence/elastic.factory';
 import { ElasticsearchUtils } from '../persistence/elastic.utils';
-import { PostgresUtils } from '../persistence/postgres.utils';
 
 @Controller('/health')
 export class HealthCtrl {
 
-    // private database: DatabaseUtils;
-    private elasticsearch: ElasticsearchUtils;
+    private static database: DatabaseUtils;
+    private static elasticsearch: ElasticsearchUtils;
 
-    constructor() {
-        let generalConfig = ConfigService.getGeneralSettings();
-        // this.database = DatabaseFactory.getDatabaseUtils(generalConfig.database, null);
-        this.elasticsearch = ElasticsearchFactory.getElasticUtils(generalConfig.elasticsearch, null);
+    static getDatabase() {
+        if (!HealthCtrl.database) {
+            let generalConfig = ConfigService.getGeneralSettings();
+            HealthCtrl.database = DatabaseFactory.getDatabaseUtils(generalConfig.database, null);
+        }
+        return HealthCtrl.database;
+    }
+
+    static getElasticsearch() {
+        if (!HealthCtrl.elasticsearch) {
+            let generalConfig = ConfigService.getGeneralSettings();
+            HealthCtrl.elasticsearch = ElasticsearchFactory.getElasticUtils(generalConfig.elasticsearch, null);
+        }
+        return HealthCtrl.elasticsearch;
     }
 
     @Get('/')
@@ -65,7 +74,7 @@ export class HealthCtrl {
     @ContentType('application/json')
     async getReadiness(): Promise<Status> {
         return {
-            status: await PostgresUtils.ping() && await this.elasticsearch.ping() ? 'UP' : 'DOWN'
+            status: await HealthCtrl.getDatabase().ping() && await HealthCtrl.getElasticsearch().ping() ? 'UP' : 'DOWN'
         };
     }
 }
