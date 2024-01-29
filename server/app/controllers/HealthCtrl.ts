@@ -68,9 +68,28 @@ export class HealthCtrl {
             status: await PostgresUtils.ping() && await this.elasticsearch.ping() ? 'UP' : 'DOWN'
         };
     }
+
+    @Get('/readiness/postgres')
+    @ContentType('application/json')
+    async getPgReadiness(): Promise<Status> {
+        return {
+            status: await PostgresUtils.ping() ? 'UP' : 'DOWN',
+            info: ConfigService.getGeneralSettings()
+        };
+    }
+
+    @Get('/readiness/elastic')
+    @ContentType('application/json')
+    async getEsReadiness(): Promise<Status> {
+        return {
+            status: await this.elasticsearch.ping() ? 'UP' : 'DOWN',
+            info: this.elasticsearch.config
+        };
+    }
 }
 
 type Status = {
     status: 'UP' | 'DOWN',
-    groups?: string[]
+    groups?: string[],
+    info?: any
 }
