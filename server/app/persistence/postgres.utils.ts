@@ -221,7 +221,7 @@ export class PostgresUtils extends DatabaseUtils {
         // process last bucket
         if (currentBucket) {
             let operationChunks = await pgUtils.processBucket(currentBucket);
-            elastic.addOperationChunksToBulk(operationChunks);
+            await elastic.addOperationChunksToBulk(operationChunks);
         }
         // send remainder of bulk data
         elastic.sendBulkOperations(true);
