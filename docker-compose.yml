@@ -7,7 +7,7 @@ services:
     image: ingrid-harvester
     environment:
      - NODE_ENV=production
-     - IMPORTER_PROFILE=
+     - IMPORTER_PROFILE=diplanung
      - ADMIN_PASSWORD=admin
      - ELASTIC_URL=http://elastic:9200
      - ELASTIC_VERSION=8
@@ -15,6 +15,12 @@ services:
      - ELASTIC_PASSWORD=
      - ELASTIC_ALIAS=harvester
      - ELASTIC_PREFIX=
+     - DB_URL=localhost
+     - DB_PORT=5432
+     - DB_NAME=metadaten
+     - DB_USER=ogcrecords
+     - DB_PASSWORD=ogcrecords
+     - DB_CONNECTION_STRING
     ports:
       - 8090:8090
     working_dir: /opt/ingrid/harvester/server
