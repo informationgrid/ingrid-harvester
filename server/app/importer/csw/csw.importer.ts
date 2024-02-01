@@ -144,15 +144,13 @@ export class CswImporter extends Importer {
                 await this.harvest();
                 if (this.numIndexDocs > 0 || this.summary.isIncremental) {
                     // self-coupling, i.e. resolving WFS and WMS distributions (time-intensive)
-                    if (this.settings.resolveOgcDistributions) {
-                        await this.coupleSelf();
-                    }
+                    await this.coupleSelf(this.settings.resolveOgcDistributions);
                     // get services separately (time-intensive)
                     if (this.settings.harvestingMode == 'extended') {
                         await this.harvestServices();
                     }
                     // data-service-coupling
-                    await this.coupleDatasetsServices();
+                    await this.coupleDatasetsServices(this.settings.resolveOgcDistributions);
 
                     if (this.summary.databaseErrors.length == 0) {
                         await this.database.commitTransaction();
@@ -263,7 +261,7 @@ export class CswImporter extends Importer {
         await this.database.sendBulkData();
     }
 
-    async coupleSelf() {
+    async coupleSelf(resolveOgcDistributions: boolean) {
         log.info(`Started self-coupling`);
         // get all datasets
         let recordEntities: RecordEntity[] = await this.database.getDatasets(this.settings.getRecordsUrl) ?? [];
@@ -271,13 +269,13 @@ export class CswImporter extends Importer {
         // 2) run in parallel
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(recordEntities.map(recordEntity => limit(() => this.coupleService(recordEntity, true))));
+        await Promise.allSettled(recordEntities.map(recordEntity => limit(() => this.coupleService(recordEntity, resolveOgcDistributions, true))));
         log.info(`Finished self-coupling`);
         // 3) persist leftovers
         await this.database.sendBulkCouples();
     }
 
-    async coupleDatasetsServices() {
+    async coupleDatasetsServices(resolveOgcDistributions: boolean) {
         log.info(`Started dataset-service coupling`);
         // get all services
         let serviceEntities: RecordEntity[] = await this.database.getServices(this.settings.getRecordsUrl) ?? [];
@@ -285,13 +283,13 @@ export class CswImporter extends Importer {
         // 2) run in parallel
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(serviceEntities.map(serviceEntity => limit(() => this.coupleService(serviceEntity, false))));
+        await Promise.allSettled(serviceEntities.map(serviceEntity => limit(() => this.coupleService(serviceEntity, resolveOgcDistributions, false))));
         log.info(`Finished dataset-service coupling`);
         // 3) persist leftovers
         await this.database.sendBulkCouples();
     }
 
-    async coupleService(serviceEntity: RecordEntity, coupleSelf = false) {
+    async coupleService(serviceEntity: RecordEntity, resolveOgcDistributions: boolean, coupleSelf = false) {
         for (let service of serviceEntity.dataset.distributions) {
             if (coupleSelf) {
                 service.operates_on = [serviceEntity.identifier];
@@ -308,54 +306,57 @@ export class CswImporter extends Importer {
             switch (serviceType) {
                 case 'WFS':
                     for (let identifier of service.operates_on) {
-                        if (!this.wfsFeatureTypeMap.has(service.accessURL)) {
-                            this.wfsFeatureTypeMap.set(service.accessURL, await ServiceUtils.getWfsFeatureTypeMap(service.accessURL));
-                        }
-                        let getCapabilities = this.wfsFeatureTypeMap.get(service.accessURL);
-                        // let datasetUuid = MiscUtils.extractDatasetUuid(service.accessURL);
-                        let typeNames = getCapabilities[identifier];// ?? [];// ?? getCapabilities[service.operates_on_xlink] ?? [];
-                        // fallback XPLAN - RP_Plan
-                        // TODO how can we abstract that?
-                        if (!typeNames) {
-							for (let typeName of ServiceUtils.RO_DEFAULT_TYPENAMES) {
-								if (Object.values(getCapabilities).some(featureTypeMap => featureTypeMap.includes(typeName))) {
-									typeNames = [typeName];
-									break;
-								}
-							}
-                        }
-                        let spatial;
-                        let errors = [];
-                        for (let typeName of typeNames ?? []) {
-                            // if (typeName == 'plu:SupplementaryRegulation') {
-                            //     continue;
-                            // }
-                            try {
-                                // // resolve GetFeatures, typeNames=<Name>
-                                // // parse, get Polygon
-                                spatial = await ServiceUtils.parseWfsFeatureCollection(service.accessURL, typeName, this.settings.simplifyTolerance);
-                                // spatial = GeoJsonUtils.sanitize(spatial);
-                                // // save in dataset
-                                // await this.updateDataset(serviceEntity.operates_on_uuid, geometryCollection);
-                                // break;
+                        let distribution: Distribution = MiscUtils.structuredClone(service);
+                        if (resolveOgcDistributions) {
+                            if (!this.wfsFeatureTypeMap.has(service.accessURL)) {
+                                this.wfsFeatureTypeMap.set(service.accessURL, await ServiceUtils.getWfsFeatureTypeMap(service.accessURL));
                             }
-                            catch (e) {
-                                errors.push(e?.message);
+                            let getCapabilities = this.wfsFeatureTypeMap.get(service.accessURL);
+                            // let datasetUuid = MiscUtils.extractDatasetUuid(service.accessURL);
+                            let typeNames = getCapabilities[identifier];// ?? [];// ?? getCapabilities[service.operates_on_xlink] ?? [];
+                            // fallback XPLAN - RP_Plan
+                            // TODO how can we abstract that?
+                            if (!typeNames) {
+                                for (let typeName of ServiceUtils.RO_DEFAULT_TYPENAMES) {
+                                    if (Object.values(getCapabilities).some(featureTypeMap => featureTypeMap.includes(typeName))) {
+                                        typeNames = [typeName];
+                                        break;
+                                    }
+                                }
+                            }
+                            let spatial;
+                            let errors = [];
+                            for (let typeName of typeNames ?? []) {
+                                // if (typeName == 'plu:SupplementaryRegulation') {
+                                //     continue;
+                                // }
+                                try {
+                                    // // resolve GetFeatures, typeNames=<Name>
+                                    // // parse, get Polygon
+                                    spatial = await ServiceUtils.parseWfsFeatureCollection(service.accessURL, typeName, this.settings.simplifyTolerance);
+                                    // spatial = GeoJsonUtils.sanitize(spatial);
+                                    // // save in dataset
+                                    // await this.updateDataset(serviceEntity.operates_on_uuid, geometryCollection);
+                                    // break;
+                                }
+                                catch (e) {
+                                    errors.push(e?.message);
+                                }
+                            }
+                            distribution.resolvedGeometry = spatial;
+                            if (errors.length) {
+                                distribution.errors ??= [];
+                                distribution.errors.push(...errors);
                             }
                         }
                         // if (spatial) {
-						let distribution: Distribution = { ...service, resolvedGeometry: spatial };
-						let coupling: CouplingEntity = {
-							dataset_identifier: identifier,
-							service_id: serviceEntity.id,
-							service_type: serviceType,
-							distribution
-						};
-						if (errors.length) {
-							coupling.distribution.errors ??= [];
-							coupling.distribution.errors.push(...errors);
-						}
-						await this.database.addEntityToBulk(coupling);
+                        let coupling: CouplingEntity = {
+                            dataset_identifier: identifier,
+                            service_id: serviceEntity.id,
+                            service_type: serviceType,
+                            distribution
+                        };
+                        await this.database.addEntityToBulk(coupling);
                         // }
                         // else {
                         //     log.warn(`Did not fetch WFS from ${serviceEntity.identifier}: ${errors.join(', ')}`);
@@ -364,22 +365,25 @@ export class CswImporter extends Importer {
                     break;
                 case 'WMS':
                     for (let identifier of service.operates_on) {
-                        if (!this.wmsLayerNameMap.has(service.accessURL)) {
-                            this.wmsLayerNameMap.set(service.accessURL, await ServiceUtils.getWmsLayerNameMap(service.accessURL));
+                        let distribution: Distribution = MiscUtils.structuredClone(service);
+                        if (resolveOgcDistributions) {
+                            if (!this.wmsLayerNameMap.has(service.accessURL)) {
+                                this.wmsLayerNameMap.set(service.accessURL, await ServiceUtils.getWmsLayerNameMap(service.accessURL));
+                            }
+                            let getCapabilities = this.wmsLayerNameMap.get(service.accessURL);
+                            let layerNames = getCapabilities[identifier];
+                            // fallback XPLAN - RP_Plan
+                            // TODO how can we abstract that?
+                            if (!layerNames) {
+                                for (let layerName of ServiceUtils.RO_DEFAULT_LAYERNAMES) {
+                                    if (Object.values(getCapabilities).some(featureTypeMap => featureTypeMap.includes(layerName))) {
+                                        layerNames = [layerName];
+                                        break;
+                                    }
+                                }
+                            }
+                            distribution.mapLayerNames = layerNames;
                         }
-                        let getCapabilities = this.wmsLayerNameMap.get(service.accessURL);
-                        let layerNames = getCapabilities[identifier];
-                        // fallback XPLAN - RP_Plan
-                        // TODO how can we abstract that?
-                        if (!layerNames) {
-							for (let layerName of ServiceUtils.RO_DEFAULT_LAYERNAMES) {
-								if (Object.values(getCapabilities).some(featureTypeMap => featureTypeMap.includes(layerName))) {
-									layerNames = [layerName];
-									break;
-								}
-							}
-                        }
-                        let distribution: Distribution = { ...service, mapLayerNames: layerNames };
                         let coupling: CouplingEntity = {
                             dataset_identifier: identifier,
                             service_id: serviceEntity.id,
