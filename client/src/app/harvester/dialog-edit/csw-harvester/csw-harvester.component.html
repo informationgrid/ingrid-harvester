@@ -46,8 +46,8 @@
         </mat-form-field>
         <mat-form-field fxFlex="25">
           <mat-select placeholder="WFS/WMS auflösen" formControlName="resolveOgcDistributions" required>
-            <mat-option value="false">Nein</mat-option>
-            <mat-option value="true">Ja (langsam)</mat-option>
+            <mat-option [value]="false">Nein</mat-option>
+            <mat-option [value]="true">Ja (langsam)</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field fxFlex="25">
