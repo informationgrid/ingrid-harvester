@@ -37,7 +37,8 @@ let config = ConfigService.get(),
     logSummary = getLogger('summary');
 
 addLayout("json", jsonLayout);
-configure('./log4js.json');
+const isDev = process.env.NODE_ENV != 'production';
+configure(`./log4js${isDev ? '-dev' : ''}.json`);
 
 const start = new Date();
 let runAsync = false;

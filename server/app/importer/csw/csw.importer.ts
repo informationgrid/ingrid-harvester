@@ -182,6 +182,7 @@ export class CswImporter extends Importer {
     }
 
     async harvest(): Promise<void> {
+        log.info(`Started requesting records`);
         let catalog: Catalog = this.database.defaultCatalog;
         this.generalInfo['catalog'] = catalog;
 
@@ -210,12 +211,13 @@ export class CswImporter extends Importer {
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
-        log.info(`Finished requests`);
+        log.info(`Finished requesting records`);
         // 3) persist leftovers
         await this.database.sendBulkData();
     }
 
     async harvestServices(): Promise<void> {
+        log.info(`Started requesting services`);
         let catalog: Catalog = this.database.defaultCatalog;
         this.generalInfo['catalog'] = catalog;
 
@@ -223,6 +225,7 @@ export class CswImporter extends Importer {
         let datasetIds = await this.database.getDatasetIdentifiers(this.settings.getRecordsUrl);
         let chunkSize = 30;
 
+        log.info(`Requesting services for ${datasetIds.length} datasets in ${datasetIds.length / chunkSize} slices`);
         for (let i = 0; i < datasetIds.length; i+= chunkSize) {
             // add ID filter
             const chunk = datasetIds.slice(i, i + chunkSize);
@@ -239,11 +242,11 @@ export class CswImporter extends Importer {
             let hitsResponse = await hitsRequestDelegate.doRequest();
             let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
             let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
-            this.totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
-            log.info(`Number of records to fetch: ${this.totalRecords}`);
+            let totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
+            log.info(`Number of services to fetch for slice: ${totalRecords}`);
 
             // 1) create paged request delegates
-            for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
+            for (let startPosition = this.settings.startPosition; startPosition < totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
                 let requestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter, startPosition });
                 delegates.push(new RequestDelegate(requestConfig, CswImporter.createPaging({
                     startPosition: startPosition,
@@ -255,12 +258,13 @@ export class CswImporter extends Importer {
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
-        log.info(`Finished requests`);
+        log.info(`Finished requesting services`);
         // 3) persist leftovers
         await this.database.sendBulkData();
     }
 
     async coupleSelf() {
+        log.info(`Started self-coupling`);
         // get all datasets
         let recordEntities: RecordEntity[] = await this.database.getDatasets(this.settings.getRecordsUrl) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
@@ -268,11 +272,13 @@ export class CswImporter extends Importer {
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(recordEntities.map(recordEntity => limit(() => this.coupleService(recordEntity, true))));
+        log.info(`Finished self-coupling`);
         // 3) persist leftovers
         await this.database.sendBulkCouples();
     }
 
     async coupleDatasetsServices() {
+        log.info(`Started dataset-service coupling`);
         // get all services
         let serviceEntities: RecordEntity[] = await this.database.getServices(this.settings.getRecordsUrl) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
@@ -280,6 +286,7 @@ export class CswImporter extends Importer {
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(serviceEntities.map(serviceEntity => limit(() => this.coupleService(serviceEntity, false))));
+        log.info(`Finished dataset-service coupling`);
         // 3) persist leftovers
         await this.database.sendBulkCouples();
     }

@@ -40,7 +40,8 @@ const rootDir = __dirname;
 const session = require('express-session');
 
 addLayout("json", jsonLayout);
-configure('./log4js.json');
+const isDev = process.env.NODE_ENV != 'production';
+configure(`./log4js${isDev ? '-dev' : ''}.json`);
 
 @Configuration({
     rootDir,
@@ -53,6 +54,10 @@ configure('./log4js.json');
     statics: {
         '/': `${rootDir}/webapp`,
         '/*': `${rootDir}/webapp/index.html`
+    },
+    logger: {
+        ignoreUrlPatterns: ['/rest/*']
+        // level: "warn"
     },
     middlewares: [{ use: PlatformLogMiddleware, options: { logRequest: false } }]
 })

@@ -1,0 +1,33 @@
+{
+  "appenders": {
+    "console": {
+      "type": "console"
+    },
+    "appLog": {
+      "type": "file",
+      "filename": "logs/app.log",
+      "maxLogSize": 10485760,
+      "backups": 5
+    },
+    "summaryFile": {
+      "type": "file",
+      "filename": "logs/summary.log",
+      "maxLogSize": 10485760,
+      "backups": 3
+    }
+  },
+  "categories": {
+    "default": {
+      "appenders": [ "console", "appLog" ],
+      "level": "INFO"
+    },
+    "summary": {
+      "appenders": [ "console", "summaryFile", "appLog" ],
+      "level": "INFO"
+    },
+    "requests": {
+      "appenders": [ "console", "appLog" ],
+      "level": "INFO"
+    }
+  }
+}
