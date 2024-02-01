@@ -175,6 +175,12 @@ export class DiplanungCswMapper extends CswMapper {
         }
     }
 
+    // TODO this is a hack for the DiPlanung MVP to not return any datasets that only have a CSW source
+    // now handled solely in `server/app/profiles/diplanung/persistence/postgres.utils.ts`
+    // public isValid() {
+    //     return false;
+    // }
+
     _getPluPlanTypeFine() {
         return undefined;
     }

@@ -40,6 +40,13 @@ const overwriteFields = [
     'plan_state', 'plan_type', 'plan_type_fine', 'procedure_start_date', 'procedure_state', 'procedure_type'
 ];
 
+
+// TODO ooh this is ugly. Will we a) need this regularly, or b) is this a one-time thing?
+// a) move var into ENV var
+// b) remove this var and the code it depends on after it's not needed anymore
+const HACK_ON = true;
+
+
 export class PostgresUtils {
 
     public async processBucket(bucket: Bucket): Promise<EsOperation[]> {
@@ -118,6 +125,10 @@ export class PostgresUtils {
         else if (records.has("csw")) {
             for (let [id, document] of records.get("csw")) {
                 mainDocument = document;
+                // TODO remove or perpetuate : hack for stage/prod
+                if (HACK_ON) {
+                    mainDocument.extras.metadata.is_valid = false;
+                }
                 break;
             }
             if (records.get("wfs")) {
@@ -231,7 +242,16 @@ export class PostgresUtils {
                 if (!document.publisher?.['name'] && !document.publisher?.['organization']) {
                     updatedFields['publisher'] = duplicate.publisher;
                 }
-                return { ...document, ...updatedFields };
+                let updatedDocument = { ...document, ...updatedFields };
+                // TODO remove or perpetuate : hack for stage/prod
+                // only set the CSW document to valid, if it has a WFS duplicate that is also valid
+                // default for CSW has been set to false in `diplanung.csw.mapper`
+                if (HACK_ON) {
+                    if (duplicate.extras.metadata.source.source_base.toLowerCase().includes("wfs")) {
+                        updatedDocument.extras.metadata.is_valid = duplicate.extras.metadata.is_valid;
+                    }
+                }
+                return updatedDocument;
             default:
                 return document;
         }
