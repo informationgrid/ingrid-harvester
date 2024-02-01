@@ -146,7 +146,7 @@ export class CswImporter extends Importer {
                     // self-coupling, i.e. resolving WFS and WMS distributions (time-intensive)
                     await this.coupleSelf(this.settings.resolveOgcDistributions);
                     // get services separately (time-intensive)
-                    if (this.settings.harvestingMode == 'extended') {
+                    if (this.settings.harvestingMode == 'separate') {
                         await this.harvestServices();
                     }
                     // data-service-coupling
@@ -185,7 +185,7 @@ export class CswImporter extends Importer {
         this.generalInfo['catalog'] = catalog;
 
         // collect number of totalRecords up front, so we can harvest concurrently
-        let recordFilter = this.settings.harvestingMode == 'extended'
+        let recordFilter = this.settings.harvestingMode == 'separate'
             ? this.addDatasetFilter(this.settings.recordFilter)
             : this.settings.recordFilter;
         let hitsRequestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter, resultType: 'hits', startPosition: 1, maxRecords: 1 });

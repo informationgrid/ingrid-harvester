@@ -29,7 +29,7 @@ export type CswSettings = {
     pluPlanState?: PluPlanState,
     getRecordsUrl: string,
     resolveOgcDistributions: boolean,
-    harvestingMode: 'standard' | 'extended',
+    harvestingMode: 'standard' | 'separate',
     eitherKeywords: string[],
     httpMethod: 'GET' | 'POST',
     recordFilter?: string,
