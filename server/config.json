@@ -28,7 +28,7 @@
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n    <ogc:And>\n        <ogc:Or>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bauleitplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bauleitpläne</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bebauungsplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>B-Plan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Flächennutzungsplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>FNP</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnungsprogramm</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnungsverfahren</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumverträglichkeit</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Regionalplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Regionalplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesentwicklung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesraumordnungsprogramm</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Milieuschutzgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Milieugebiet</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungssatzungsgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungssatzung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungsverordnung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungsverordnungsgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>städtebauliche Satzungen</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>§ 172 BauGB Städtebauliche Förderung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Beteiligung der Öffentlichkeit</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Öffentlichkeitsbeteiligung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>XPlanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>XPlanGML</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n        </ogc:Or>\n        <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>AnyText</ogc:PropertyName>\n            <ogc:Literal>*Hamburg*</ogc:Literal>\n        </ogc:PropertyIsLike>\n    </ogc:And>\n</ogc:Filter>",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "fixed",
     "disable": false,
     "cron": {
       "full": {
@@ -55,7 +55,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -96,7 +96,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hh",
-    "pluPlanState": "in Aufstellung",
+    "pluPlanState": "inPreparation",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -137,7 +137,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "hb",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -176,7 +176,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "ni",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -215,7 +215,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -253,7 +253,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -291,7 +291,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -329,7 +329,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -367,7 +367,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -405,7 +405,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -443,7 +443,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -481,7 +481,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "bw",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
@@ -558,7 +558,7 @@
       "containsDocumentsWithData": null
     },
     "catalogId": "sh",
-    "pluPlanState": "festgesetzt",
+    "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
     "resultType": "results",
