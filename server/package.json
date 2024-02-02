@@ -75,7 +75,7 @@
     "rxjs": "^6.5.2",
     "socket.io": "^4.7.3",
     "sparql-http-client": "^2.2.2",
-    "uuid": "^3.3.2",
+    "uuid": "^9.0.1",
     "xml-escape": "^1.1.0",
     "xpath": "^0.0.32"
   },
