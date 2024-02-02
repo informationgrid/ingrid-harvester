@@ -143,13 +143,13 @@ export class CswImporter extends Importer {
                 // get datasets
                 await this.harvest();
                 if (this.numIndexDocs > 0 || this.summary.isIncremental) {
-                    // self-coupling, i.e. resolving WFS and WMS distributions (time-intensive)
+                    // self-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
                     await this.coupleSelf(this.settings.resolveOgcDistributions);
                     // get services separately (time-intensive)
                     if (this.settings.harvestingMode == 'separate') {
                         await this.harvestServices();
                     }
-                    // data-service-coupling
+                    // data-service-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
                     await this.coupleDatasetsServices(this.settings.resolveOgcDistributions);
 
                     if (this.summary.databaseErrors.length == 0) {
@@ -397,14 +397,8 @@ export class CswImporter extends Importer {
             log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
             let importedDocuments = await this.extractRecords(response, harvestTime);
             await this.updateRecords(importedDocuments, this.generalInfo['catalog'].id);
-            // logging
-            // let beforePercentage = Math.floor(100 * (delegate.getStartRecordIndex() - this.settings.maxRecords) / this.totalRecords);
-            // let percentage = Math.floor(100 * delegate.getStartRecordIndex() / this.totalRecords);
-            // if (percentage % 10 == 0 && percentage != beforePercentage && percentage > 0) {
-            //     log.info(`Processing watermark: ${percentage}% (${delegate.getStartRecordIndex()} records)`);
-            // }
             let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
-            log.info(`Finished processing batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, start: ${harvestTime.toISOString()}, ${processingTime.toString().padStart(3, ' ')}s`);
+            log.info(`Finished processing batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, ${processingTime.toString().padStart(3, ' ')}s`);
         }
         else {
             const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
