@@ -28,6 +28,7 @@ export type CswSettings = {
     resultType?: 'hits' | 'results',
     pluPlanState?: PluPlanState,
     getRecordsUrl: string,
+    maxServices: number,
     resolveOgcDistributions: boolean,
     harvestingMode: 'standard' | 'separate',
     eitherKeywords: string[],
@@ -39,6 +40,7 @@ export type CswSettings = {
 export const defaultCSWSettings: Partial<CswSettings> = {
     ...DefaultImporterSettings,
     getRecordsUrl: '',
+    maxServices: 30,
     resolveOgcDistributions: false,
     harvestingMode: 'standard',
     eitherKeywords: [],
