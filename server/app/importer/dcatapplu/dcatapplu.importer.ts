@@ -55,6 +55,7 @@ export class DcatappluImporter extends Importer {
         super(settings);
 
         this.profile = ProfileFactoryLoader.get();
+        this.domParser = MiscUtils.getDomParser();
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultDCATAPPLUSettings, settings);
@@ -67,14 +68,6 @@ export class DcatappluImporter extends Importer {
         }
 
         this.settings = settings;
-        this.domParser = new DOMParser({
-            errorHandler: (level, msg) => {
-                // throw on error, swallow rest
-                if (level == 'error') {
-                    throw new Error(msg);
-                }
-            }
-        });
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {

@@ -36,14 +36,7 @@ const OGC_QUERY_PARAMS = ['request', 'service', 'version'];
 export const RO_DEFAULT_LAYERNAMES = ['RP_Plan', 'LU.SpatialPlan'];
 export const RO_DEFAULT_TYPENAMES = ['xplan:RP_Plan', 'plu:SpatialPlan', 'plu:SupplementaryRegulation', 'plu:LU.SpatialPlan', 'plu:LU.SupplementaryRegulation'];
 
-const domParser: DOMParser = new DOMParser({
-    errorHandler: (level, msg) => {
-        // throw on error, swallow rest
-        if (level == 'error') {
-            throw new Error(msg);
-        }
-    }
-});
+const domParser: DOMParser = MiscUtils.getDomParser();
 
 export async function parseWfsFeatureCollection(url: string, typeNames: string, tolerance: number): Promise<Geometry | GeometryCollection> {
     let xmlResponse: string = await RequestDelegate.doRequest({

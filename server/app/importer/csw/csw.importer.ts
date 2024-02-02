@@ -65,15 +65,7 @@ export class CswImporter extends Importer {
         super(settings);
 
         this.profile = ProfileFactoryLoader.get();
-
-        this.domParser = new DOMParser({
-            errorHandler: (level, msg) => {
-                // throw on error, swallow rest
-                if (level == 'error') {
-                    throw new Error(msg);
-                }
-            }
-        });
+        this.domParser = MiscUtils.getDomParser();
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultCSWSettings, settings);

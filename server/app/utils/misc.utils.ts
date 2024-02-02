@@ -25,6 +25,7 @@
 
 import { cloneDeep, merge as lodashMerge, trim } from 'lodash';
 import { Distribution } from '../model/distribution';
+import { DOMParser } from '@xmldom/xmldom';
 
 const dayjs = require('dayjs');
 const log = require('log4js').getLogger(__filename);
@@ -78,6 +79,22 @@ export function isIncludedI(searchStr: string, haystacks: (string | string[])[])
  */
 export function strip(str: string, delim: string): string {
     return trim(str, delim);
+}
+
+/**
+ * Creates a DOMParser which swallows any log output below `error` level
+ * 
+ * @returns a new DOMParser
+ */
+export function getDomParser(): DOMParser {
+    return new DOMParser({
+        errorHandler: (level, msg) => {
+            // throw on error, swallow rest
+            if (level == 'error') {
+                throw new Error(msg);
+            }
+        }
+    });
 }
 
 /**

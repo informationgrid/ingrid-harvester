@@ -66,6 +66,7 @@ export abstract class WfsImporter extends Importer {
         super(settings);
 
         this.profile = ProfileFactoryLoader.get();
+        this.domParser = MiscUtils.getDomParser();
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultWfsSettings, settings);
@@ -77,14 +78,6 @@ export abstract class WfsImporter extends Importer {
             this.requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(settings));
         }
         this.settings = settings;
-        this.domParser = new DOMParser({
-            errorHandler: (level, msg) => {
-                // throw on error, swallow rest
-                if (level == 'error') {
-                    throw new Error(msg);
-                }
-            }
-        });
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {

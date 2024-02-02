@@ -134,14 +134,7 @@ export class RequestDelegate {
     constructor(config: RequestOptions, paging?: RequestPaging) {
         this.config = config;
         if (!RequestDelegate.domParser) {
-            RequestDelegate.domParser = new DOMParser({
-                errorHandler: (level, msg) => {
-                    // throw on error, swallow rest
-                    if (level == 'error') {
-                        throw new Error(msg);
-                    }
-                }
-            });
+            RequestDelegate.domParser = MiscUtils.getDomParser();
         }
         if (config.body) {
             this.postBodyXml = RequestDelegate.domParser.parseFromString(config.body, 'application/xml');

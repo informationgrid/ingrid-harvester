@@ -22,8 +22,8 @@
  */
 
 import * as MiscUtils from '../../utils/misc.utils';
-import { namespaces } from '../../importer/namespaces';
 import { getLogger } from 'log4js';
+import { namespaces } from '../../importer/namespaces';
 import { DcatMapper } from './dcat.mapper';
 import { DcatSettings, defaultDCATSettings } from './dcat.settings';
 import { DOMParser } from '@xmldom/xmldom';
@@ -54,6 +54,7 @@ export class DcatImporter extends Importer {
         super(settings);
 
         this.profile = ProfileFactoryLoader.get();
+        this.domParser = MiscUtils.getDomParser();
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultDCATSettings, settings);
@@ -65,14 +66,6 @@ export class DcatImporter extends Importer {
             this.requestDelegate = new RequestDelegate(requestConfig, DcatImporter.createPaging(settings));
         }
         this.settings = settings;
-        this.domParser = new DOMParser({
-            errorHandler: (level, msg) => {
-                // throw on error, swallow rest
-                if (level == 'error') {
-                    throw new Error(msg);
-                }
-            }
-        });
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
