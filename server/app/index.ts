@@ -22,6 +22,7 @@
  */
 
 import { importProviders } from '@tsed/components-scan';
+import { HealthCtrl } from './controllers/HealthCtrl';
 import { PlatformExpress } from '@tsed/platform-express';
 import { Server } from './server';
 
@@ -29,7 +30,8 @@ async function bootstrap() {
     try {
         const scannedProviders = await importProviders({
             mount: {
-                '/rest': [`${__dirname}/controllers/**/*.ts`]
+                '/rest': [`${__dirname}/controllers/**/*.ts`],
+                '/': [ HealthCtrl ]
             },
             componentsScan: [
                 `${__dirname}/middlewares/**/*.ts`,

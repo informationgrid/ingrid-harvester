@@ -88,7 +88,9 @@ export abstract class DatabaseUtils {
 
     abstract getCatalog(catalogIdentifier: string): Promise<Catalog>;
 
-    static ping(configuration: Partial<DatabaseConfiguration>): Promise<boolean> {
+    abstract ping(): Promise<boolean>;
+
+    static ping(configuration?: Partial<DatabaseConfiguration>): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 }
