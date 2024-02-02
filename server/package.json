@@ -25,6 +25,7 @@
     "@tsed/components-scan": "7.55.0",
     "@tsed/core": "^7.55.0",
     "@tsed/di": "^7.55.0",
+    "@tsed/exceptions": "^7.55.0",
     "@tsed/platform-express": "^7.55.0",
     "@tsed/schema": "^7.55.0",
     "@tsed/socketio": "^7.55.0",
@@ -74,7 +75,6 @@
     "rxjs": "^6.5.2",
     "socket.io": "^4.7.3",
     "sparql-http-client": "^2.2.2",
-    "ts-httpexceptions": "^4.1.0",
     "uuid": "^3.3.2",
     "xml-escape": "^1.1.0",
     "xpath": "^0.0.32"
