@@ -50,21 +50,32 @@ export class CswHarvesterComponent implements OnInit, OnDestroy {
     this.form.addControl('getRecordsUrl', new FormControl(this.model.getRecordsUrl));
     this.form.addControl('resolveOgcDistributions', new FormControl(this.model.resolveOgcDistributions));
     this.form.addControl('harvestingMode', new FormControl(this.model.harvestingMode));
+    this.form.addControl('maxServices', new FormControl({ value: this.model.maxServices, disabled: this.model.harvestingMode != 'separate' }));
     this.form.addControl('maxConcurrent', new FormControl(this.model.maxConcurrent, Validators.min(1))),
     this.form.addControl('simplifyTolerance', new FormControl(this.model.simplifyTolerance));
     this.form.addControl('pluPlanState', new FormControl(this.model.pluPlanState));
     this.form.addControl('recordFilter', new FormControl(this.model.recordFilter));
 
-    if (!this.model.eitherKeywords) {
-      this.model.eitherKeywords = [];
-    }
+    this.model.eitherKeywords ??= [];
 
     this.configService.getProfileName().subscribe(data => {
       this.profile = data;
     });
+
+    this.harvestingMode.valueChanges.subscribe(harvestingMode => {
+      harvestingMode == 'separate' ? this.maxServices.enable() : this.maxServices.disable()
+    });
   }
 
   ngOnDestroy(): void {
+  }
+
+  get harvestingMode(): FormControl {
+    return this.form.get('harvestingMode') as FormControl;
+  }
+
+  get maxServices(): FormControl {
+    return this.form.get('maxServices') as FormControl;
   }
 
   add(event: MatChipInputEvent): void {

@@ -143,13 +143,13 @@ export class CswImporter extends Importer {
                 // get datasets
                 await this.harvest();
                 if (this.numIndexDocs > 0 || this.summary.isIncremental) {
-                    // self-coupling, i.e. resolving WFS and WMS distributions (time-intensive)
+                    // self-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
                     await this.coupleSelf(this.settings.resolveOgcDistributions);
                     // get services separately (time-intensive)
                     if (this.settings.harvestingMode == 'separate') {
                         await this.harvestServices();
                     }
-                    // data-service-coupling
+                    // data-service-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
                     await this.coupleDatasetsServices(this.settings.resolveOgcDistributions);
 
                     if (this.summary.databaseErrors.length == 0) {
@@ -215,50 +215,32 @@ export class CswImporter extends Importer {
     }
 
     async harvestServices(): Promise<void> {
-        log.info(`Started requesting services`);
-        let catalog: Catalog = this.database.defaultCatalog;
-        this.generalInfo['catalog'] = catalog;
-
-        let delegates = [];
+        this.generalInfo['catalog'] = this.database.defaultCatalog;
         let datasetIds = await this.database.getDatasetIdentifiers(this.settings.getRecordsUrl);
-        let chunkSize = 30;
-
-        log.info(`Requesting services for ${datasetIds.length} datasets in ${datasetIds.length / chunkSize} slices`);
-        for (let i = 0; i < datasetIds.length; i+= chunkSize) {
+        let numChunks = Math.ceil(datasetIds.length / this.settings.maxServices);
+        log.info(`Requesting services for ${datasetIds.length} datasets in ${numChunks} chunks`);
+        // 1) create paged request delegates
+        let delegates = [];
+        for (let i = 0; i < datasetIds.length; i+= this.settings.maxServices) {
             // add ID filter
-            const chunk = datasetIds.slice(i, i + chunkSize);
+            const chunk = datasetIds.slice(i, i + this.settings.maxServices);
             let recordFilter = '<ogc:Filter><ogc:Or>';
             for (let identifier of chunk) {
-                // TODO OperatesOnIdentifier?
                 recordFilter += `<ogc:PropertyIsEqualTo><ogc:PropertyName>OperatesOn</ogc:PropertyName><ogc:Literal>${identifier}</ogc:Literal></ogc:PropertyIsEqualTo>\n`;
             }
             recordFilter += '</ogc:Or></ogc:Filter>';
-
-            // collect number of totalRecords up front, so we can harvest concurrently
-            let hitsRequestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter, resultType: 'hits', startPosition: 1, maxRecords: 1 });
-            let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
-            let hitsResponse = await hitsRequestDelegate.doRequest();
-            let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
-            let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
-            let totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
-            log.info(`Number of services to fetch for slice: ${totalRecords}`);
-
-            // 1) create paged request delegates
-            for (let startPosition = this.settings.startPosition; startPosition < totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
-                let requestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter, startPosition });
-                delegates.push(new RequestDelegate(requestConfig, CswImporter.createPaging({
-                    startPosition: startPosition,
-                    maxRecords: this.settings.maxRecords
-                })));
-            }
+            delegates.push(new RequestDelegate(
+                CswImporter.createRequestConfig({ ...this.settings, recordFilter }),
+                CswImporter.createPaging({ startPosition: this.settings.startPosition })
+            ));
         }
         // 2) run in parallel
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
-        log.info(`Finished requesting services`);
         // 3) persist leftovers
         await this.database.sendBulkData();
+        log.info(`Finished requesting services`);
     }
 
     async coupleSelf(resolveOgcDistributions: boolean) {
@@ -415,14 +397,8 @@ export class CswImporter extends Importer {
             log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
             let importedDocuments = await this.extractRecords(response, harvestTime);
             await this.updateRecords(importedDocuments, this.generalInfo['catalog'].id);
-            // logging
-            // let beforePercentage = Math.floor(100 * (delegate.getStartRecordIndex() - this.settings.maxRecords) / this.totalRecords);
-            // let percentage = Math.floor(100 * delegate.getStartRecordIndex() / this.totalRecords);
-            // if (percentage % 10 == 0 && percentage != beforePercentage && percentage > 0) {
-            //     log.info(`Processing watermark: ${percentage}% (${delegate.getStartRecordIndex()} records)`);
-            // }
             let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
-            log.info(`Finished processing batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, start: ${harvestTime.toISOString()}, ${processingTime.toString().padStart(3, ' ')}s`);
+            log.info(`Finished processing batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, ${processingTime.toString().padStart(3, ' ')}s`);
         }
         else {
             const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
