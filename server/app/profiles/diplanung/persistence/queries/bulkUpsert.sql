@@ -38,16 +38,20 @@ DO UPDATE SET
     dataset = EXCLUDED.dataset,
     original_document = COALESCE(EXCLUDED.original_document, record.original_document),
     last_modified = NOW()
-WHERE (
-    (
-        EXCLUDED.dataset->'modified' IS NOT NULL
-        AND record.dataset->'modified' IS NULL
-    )
-    OR EXCLUDED.dataset->'modified' > record.dataset->'modified'
-) OR (
-    (
-        EXCLUDED.dataset->'extras'->'metadata'->'modified' IS NOT NULL
-        AND record.dataset->'extras'->'metadata'->'modified' IS NULL
-    )
-    OR EXCLUDED.dataset->'extras'->'metadata'->'modified' > record.dataset->'extras'->'metadata'->'modified'
-)
+-- WHERE (
+--     record.dataset->'extras'->'metadata'->'modified' IS NULL
+--     OR EXCLUDED.dataset->'extras'->'metadata'->'modified' > record.dataset->'extras'->'metadata'->'modified'
+-- )
+-- WHERE
+--     (
+--         EXCLUDED.dataset->'modified' IS NOT NULL
+--         AND record.dataset->'modified' IS NULL
+--     )
+--     OR EXCLUDED.dataset->'modified' > record.dataset->'modified'
+-- ) OR (
+--     (
+--         EXCLUDED.dataset->'extras'->'metadata'->'modified' IS NOT NULL
+--         AND record.dataset->'extras'->'metadata'->'modified' IS NULL
+--     )
+--     OR EXCLUDED.dataset->'extras'->'metadata'->'modified' > record.dataset->'extras'->'metadata'->'modified'
+-- )
