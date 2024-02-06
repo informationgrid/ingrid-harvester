@@ -25,7 +25,7 @@ import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {OaiSettings} from '../../../../../../server/app/importer/oai/oai.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatLegacyChipInputEvent as MatChipInputEvent} from '@angular/material/legacy-chips';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {FormControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-oai-harvester',
@@ -43,8 +43,11 @@ export class OaiHarvesterComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    this.form.addControl('providerUrl', new UntypedFormControl(this.model.providerUrl));
-    this.form.addControl('set', new UntypedFormControl(this.model.set));
+    this.form.addControl('providerUrl', new FormControl<string>(this.model.providerUrl));
+    this.form.addControl('metadataPrefix', new FormControl<string>(this.model.metadataPrefix));
+    this.form.addControl('set', new FormControl<string>(this.model.set));
+    this.form.addControl('from', new FormControl<Date>(this.model.from));
+    this.form.addControl('until', new FormControl<Date>(this.model.until));
 
     if (!this.model.eitherKeywords) {
       this.model.eitherKeywords = [];

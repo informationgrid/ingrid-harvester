@@ -29,12 +29,22 @@
     </mat-card-header>
     <mat-card-content>
       <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex>
+        <mat-form-field fxFlex="75">
           <input matInput placeholder="Provider URL" formControlName="providerUrl" required>
         </mat-form-field>
-
-        <mat-form-field fxFlex>
-          <input matInput placeholder="Set" formControlName="set" required>
+        <mat-form-field fxFlex="25">
+          <input matInput placeholder="metadataPrefix" formControlName="metadataPrefix">
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex="50">
+          <input matInput placeholder="Set" formControlName="set">
+        </mat-form-field>
+        <mat-form-field fxFlex="25">
+          <input matInput placeholder="Von (ISO)" formControlName="from">
+        </mat-form-field>
+        <mat-form-field fxFlex="25">
+          <input matInput placeholder="Bis (ISO)" formControlName="until">
         </mat-form-field>
       </div>
 

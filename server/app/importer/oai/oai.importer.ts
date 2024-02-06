@@ -211,9 +211,15 @@ export class OaiImporter extends Importer {
         if (!resumptionToken) {
             requestConfig.qs = {
                 verb: 'ListRecords',
-                metadataPrefix: 'iso19139',
-                set: settings.set,
+                metadataPrefix: settings.metadataPrefix,
+                set: settings.set
             };
+            if (settings.from) {
+                requestConfig.qs.from = settings.from;
+            }
+            if (settings.until) {
+                requestConfig.qs.until = settings.until;
+            }
         } else {
             requestConfig.qs = {
                 verb: 'ListRecords',
