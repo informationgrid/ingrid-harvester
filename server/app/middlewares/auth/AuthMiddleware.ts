@@ -21,18 +21,16 @@
  * ==================================================
  */
 
-import {AuthenticatedMiddleware, EndpointInfo, EndpointMetadata, IMiddleware, OverrideProvider, Req} from "@tsed/common";
-import {Unauthorized} from 'ts-httpexceptions';
+import { Context, Middleware, MiddlewareMethods, Req} from '@tsed/common';
+import { Unauthorized } from 'ts-httpexceptions';
 
-@OverrideProvider(AuthenticatedMiddleware)
-export class AuthMiddleware implements IMiddleware {
-    constructor() {
-    }
+@Middleware()
+export class AuthMiddleware implements MiddlewareMethods {
 
-    use(@Req() request: Express.Request, @EndpointInfo() endpoint: EndpointMetadata) {
+    use(@Req() request: Express.Request, @Context() ctx: Context) {
 
         //retrieve Options passed to the Authenticated() decorators.
-        const options = endpoint.store.get(AuthenticatedMiddleware) || {};
+        const options = ctx.endpoint.store.get(AuthMiddleware) || {};
         //$log.debug("AuthMiddleware =>", options);
         //$log.debug("AuthMiddleware isAuthenticated ? =>", request.isAuthenticated());
 

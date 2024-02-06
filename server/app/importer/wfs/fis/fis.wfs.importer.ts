@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-import { MiscUtils } from '../../../utils/misc.utils';
-import { RequestDelegate } from '../../../utils/http-request.utils';
+import * as MiscUtils from '../../../utils/misc.utils';
 import { FisWfsMapper } from './fis.wfs.mapper';
 import { Harvester } from '@shared/harvester';
+import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WfsImporter } from '../wfs.importer';
 import { WfsMapper } from '../wfs.mapper';
 
@@ -34,7 +34,7 @@ export class FisWfsImporter extends WfsImporter {
         super(MiscUtils.merge(settings, { memberElement: 'gml:featureMember'}));
     }
 
-    getMapper(settings: Harvester, feature, harvestTime, summary, generalInfo, geojsonUtils): WfsMapper {
-        return new FisWfsMapper(settings, feature, harvestTime, summary, generalInfo, geojsonUtils);
+    getMapper(settings: Harvester, feature, harvestTime, summary, generalInfo): WfsMapper {
+        return new FisWfsMapper(settings, feature, harvestTime, summary, generalInfo);
     }
 }

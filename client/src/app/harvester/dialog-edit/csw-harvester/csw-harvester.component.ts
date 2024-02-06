@@ -21,12 +21,12 @@
  * ==================================================
  */
 
-import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
-import {CswSettings} from '../../../../../../server/app/importer/csw/csw.settings';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatLegacyChipInputEvent as MatChipInputEvent} from '@angular/material/legacy-chips';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-// import {CswSettings} from '@server/importer/csw/csw.importer';
+import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { ConfigService } from '../../../config/config.service';
+import { CswSettings } from '../../../../../../server/app/importer/csw/csw.settings';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { FormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 
 @Component({
   selector: 'app-csw-harvester',
@@ -41,20 +41,41 @@ export class CswHarvesterComponent implements OnInit, OnDestroy {
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  constructor() { }
+  profile: string;
+
+  constructor(private configService: ConfigService) { }
 
   ngOnInit() {
-    this.form.addControl('httpMethod', new UntypedFormControl(this.model.httpMethod));
-    this.form.addControl('getRecordsUrl', new UntypedFormControl(this.model.getRecordsUrl));
-    this.form.addControl('recordFilter', new UntypedFormControl(this.model.recordFilter));
-    this.form.addControl('pluPlanState', new UntypedFormControl(this.model.pluPlanState));
+    this.form.addControl('httpMethod', new FormControl(this.model.httpMethod));
+    this.form.addControl('getRecordsUrl', new FormControl(this.model.getRecordsUrl));
+    this.form.addControl('resolveOgcDistributions', new FormControl(this.model.resolveOgcDistributions));
+    this.form.addControl('harvestingMode', new FormControl(this.model.harvestingMode));
+    this.form.addControl('maxServices', new FormControl({ value: this.model.maxServices, disabled: this.model.harvestingMode != 'separate' }));
+    this.form.addControl('maxConcurrent', new FormControl(this.model.maxConcurrent, Validators.min(1))),
+    this.form.addControl('simplifyTolerance', new FormControl(this.model.simplifyTolerance));
+    this.form.addControl('pluPlanState', new FormControl(this.model.pluPlanState));
+    this.form.addControl('recordFilter', new FormControl(this.model.recordFilter));
 
-    if (!this.model.eitherKeywords) {
-      this.model.eitherKeywords = [];
-    }
+    this.model.eitherKeywords ??= [];
+
+    this.configService.getProfileName().subscribe(data => {
+      this.profile = data;
+    });
+
+    this.harvestingMode.valueChanges.subscribe(harvestingMode => {
+      harvestingMode == 'separate' ? this.maxServices.enable() : this.maxServices.disable()
+    });
   }
 
   ngOnDestroy(): void {
+  }
+
+  get harvestingMode(): FormControl {
+    return this.form.get('harvestingMode') as FormControl;
+  }
+
+  get maxServices(): FormControl {
+    return this.form.get('maxServices') as FormControl;
   }
 
   add(event: MatChipInputEvent): void {

@@ -37,12 +37,12 @@ export class DatabaseFactory {
         }
     }
 
-    public static async ping(configuration: DatabaseConfiguration): Promise<boolean> {
-        switch (configuration.type) {
+    public static async ping(configuration?: DatabaseConfiguration): Promise<boolean> {
+        switch (configuration?.type) {
             case 'postgresql':
                 return PostgresUtils.ping(configuration);
             default: 
-                throw new Error('Only PostgreSQL ist supported; [' + configuration.type + '] was specified');
+                throw new Error('Only PostgreSQL ist supported; [' + configuration?.type + '] was specified');
         }
     }
 }

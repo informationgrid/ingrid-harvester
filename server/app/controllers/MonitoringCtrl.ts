@@ -21,13 +21,14 @@
  * ==================================================
  */
 
-import { Authenticated, BodyParams, Controller, Get } from '@tsed/common';
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
+import { BodyParams, Controller, Get, UseAuth } from '@tsed/common';
 import { HistoryService } from "../services/statistic/HistoryService";
 import { IndexCheckService } from "../services/statistic/IndexCheckService";
 import { UrlCheckService } from "../services/statistic/UrlCheckService";
 
 @Controller('/api/monitoring')
-@Authenticated()
+@UseAuth(AuthMiddleware)
 export class MonitoringCtrl {
 
     constructor(private urlCheckService: UrlCheckService,

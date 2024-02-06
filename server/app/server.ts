@@ -23,12 +23,14 @@
 
 import { addLayout, configure } from 'log4js';
 import { jsonLayout } from './utils/log4js.json.layout';
+import { Configuration, PlatformAcceptMimesMiddleware, PlatformApplication, PlatformLogMiddleware } from '@tsed/common';
 import { ConfigService } from './services/config/ConfigService';
 import { ElasticsearchFactory } from './persistence/elastic.factory';
-import { GlobalAcceptMimesMiddleware, ServerLoader, ServerSettings } from '@tsed/common';
 import { IndexConfiguration } from './persistence/elastic.setting';
+import { Inject } from '@tsed/di';
 import { ProfileFactoryLoader } from './profiles/profile.factory.loader';
 import { Summary } from './model/summary';
+
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const serverConfig = require('../server-config.json');
@@ -36,15 +38,17 @@ const methodOverride = require('method-override');
 const compress = require("compression");
 const rootDir = __dirname;
 const session = require('express-session');
-import './middlewares/auth/AuthMiddleware';
 
 addLayout("json", jsonLayout);
-configure('./log4js.json');
+const isDev = process.env.NODE_ENV != 'production';
+configure(`./log4js${isDev ? '-dev' : ''}.json`);
 
-@ServerSettings({
+@Configuration({
     rootDir,
     httpPort: serverConfig.httpPort,
-    socketIO: { },
+    socketIO: {
+        cors: { origin: true }
+    },
     acceptMimes: ['application/json'],
     passport: {},
     statics: {
@@ -52,18 +56,18 @@ configure('./log4js.json');
         '/*': `${rootDir}/webapp/index.html`
     },
     logger: {
-        logRequest: false
+        ignoreUrlPatterns: ['/rest/*']
+        // level: "warn"
     },
-    mount: {
-        '/rest': `${rootDir}/controllers/**/*.ts`
-    },
-    componentsScan: [
-        `${rootDir}/middlewares/**/*.ts`,
-        `${rootDir}/services/**/*.ts`,
-        `${rootDir}/converters/**/*.ts`
-    ],
+    middlewares: [{ use: PlatformLogMiddleware, options: { logRequest: false } }]
 })
-export class Server extends ServerLoader {
+export class Server {
+
+    @Inject()
+    app: PlatformApplication;
+
+    @Configuration()
+    settings: Configuration;
 
     public $beforeInit(): void | Promise<any> {
         // on startup make sure ENV variables - if set - replace existing configuration vars
@@ -79,8 +83,8 @@ export class Server extends ServerLoader {
         // on startup make sure the configuration has IDs for each harvester
         ConfigService.fixIDs();
 
-        this
-            .use(GlobalAcceptMimesMiddleware)
+        this.app
+            .use(PlatformAcceptMimesMiddleware)
             .use(cookieParser())
             .use(compress({}))
             .use(methodOverride())

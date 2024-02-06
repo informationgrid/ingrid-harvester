@@ -1,7 +1,7 @@
 #
 # IMAGE: build server
 #
-FROM node:16.20.2-bookworm-slim AS build-server
+FROM node:20.10.0-alpine3.19 AS build-server
 LABEL stage=build
 
 # install build dependencies
@@ -21,7 +21,7 @@ RUN npm run build
 #
 # IMAGE: build client
 #
-FROM node:16.20.2-bookworm-slim AS build-client
+FROM node:20.10.0-alpine3.19 AS build-client
 LABEL stage=build
 
 # install build dependencies
@@ -39,15 +39,18 @@ RUN npm run prod
 
 
 #
+# IMAGE: init
+#
+FROM building5/dumb-init:1.2.1 as init
+
+
+#
 # IMAGE: final
 #
-FROM node:16.20.2-bookworm-slim AS final
+FROM node:20.10.0-alpine3.19 AS final
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    dumb-init && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# copy init
+COPY --from=init /dumb-init /usr/local/bin/
 
 # install production dependencies (also: remove large, unused, and not-asked-for-at-all ExcelJS map files)
 WORKDIR /opt/ingrid/harvester/server
@@ -63,4 +66,6 @@ EXPOSE 8090
 
 USER node
 
-CMD ["dumb-init"]
+WORKDIR /opt/ingrid/harvester/server
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["node", "app/index.js"]

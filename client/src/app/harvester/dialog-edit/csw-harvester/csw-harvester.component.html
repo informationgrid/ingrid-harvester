@@ -25,23 +25,51 @@
 
   <mat-card>
     <mat-card-header>
-      <mat-card-title>Allgemeine CSW Einstellungen</mat-card-title>
+      <mat-card-title>CSW Einstellungen</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex="20">
-          <mat-select placeholder="HTTP Method" formControlName="httpMethod" required>
+        <mat-form-field fxFlex="15">
+          <mat-select placeholder="HTTP Methode" formControlName="httpMethod" required>
             <mat-option value="GET">GET</mat-option>
             <mat-option value="POST">POST</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field fxFlex>
-          <input matInput placeholder="getRecords URL" formControlName="getRecordsUrl" required>
+          <input matInput placeholder="GetRecords URL" formControlName="getRecordsUrl" required>
         </mat-form-field>
       </div>
       <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex>
-          <input matInput placeholder="Plan Status (XPath oder default Wert)" formControlName="pluPlanState">
+        <mat-form-field fxFlex="33">
+          <input matInput type="number" min="1" placeholder="Anzahl paralleler Abfragen"
+                 formControlName="maxConcurrent">
+        </mat-form-field>
+        <mat-form-field fxFlex="33">
+          <mat-select placeholder="Harvesting Modus" formControlName="harvestingMode" required>
+            <mat-option value="standard">Standard</mat-option>
+            <mat-option value="separate">Separat (langsam)</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field fxFlex="33">
+          <input matInput placeholder="Max. Dienste pro Anfrage" formControlName="maxServices" type="number" [disabled]="profile == 'diplanung'">
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex="33">
+          <mat-select placeholder="WFS/WMS auflösen" formControlName="resolveOgcDistributions" required>
+            <mat-option [value]="false">Nein</mat-option>
+            <mat-option [value]="true">Ja (langsam)</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field fxFlex="33">
+          <input matInput placeholder="Toleranz: Polygone vereinfachen" formControlName="simplifyTolerance" type="number">
+        </mat-form-field>
+        <mat-form-field fxFlex="33" *ngIf="profile == 'diplanung'">
+          <mat-select placeholder="Planstatus" formControlName="pluPlanState" required>
+            <mat-option value="unknown">unbekannt</mat-option>
+            <mat-option value="fixed">festgestellt</mat-option>
+            <mat-option value="inPreparation">in Aufstellung</mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
     </mat-card-content>

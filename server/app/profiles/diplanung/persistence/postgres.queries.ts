@@ -42,11 +42,14 @@ export class PostgresQueries extends AbstractPostgresQueries {
 
     readonly createCollectionTable = this.readFile('createCollectionTable');
     readonly createRecordTable = this.readFile('createRecordTable');
+    readonly createCouplingTable = this.readFile('createCouplingTable');
     readonly createCollection = this.readFile('createCollection');
     readonly getCollection = this.readFile('getCollection');
     readonly bulkUpsert = this.readFile('bulkUpsert');
-    readonly getRecords = this.readFile('getRecords');
+    readonly bulkUpsertCoupling = this.readFile('bulkUpsertCoupling');
     readonly getStoredData = this.readFile('getStoredData');
+    readonly getDatasets = this.readFile('getDatasets');
+    readonly getServices = this.readFile('getServices');
     readonly getBuckets = this.readFile('getBuckets');
 
     private readFile(scriptName: string): string {

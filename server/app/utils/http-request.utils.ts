@@ -21,14 +21,14 @@
  * ==================================================
  */
 
+import * as MiscUtils from './misc.utils';
 import fetch, { HeadersInit, RequestInit, Response } from 'node-fetch';
 import { getLogger } from 'log4js';
 import { Agent } from 'https';
+import { DOMParser } from '@xmldom/xmldom';
 import { HttpsProxyAgent } from 'https-proxy-agent';
-import { MiscUtils } from './misc.utils';
 
-let DomParser = require('@xmldom/xmldom').DOMParser;
-let logRequest = getLogger('requests');
+const log = getLogger('requests');
 
 /**
  * HTTP parameters configuration for CSW harvesters.
@@ -94,7 +94,6 @@ export interface RequestPaging {
 
     // the number of records to fetch
     numRecords: number;
-
 }
 
 // TODO most of these could be made obsolete
@@ -107,7 +106,13 @@ export interface RequestOptions extends RequestInit {
     resolveWithFullResponse?: boolean,
     uri: string,
     accept?: string
+    // We cannot give the signal directly in the config because it would start the timeout counter right away.
+    // This option will be needed when we switch to native NodeJS (>= 18) fetch, which doesn't bring its own timeout param
+    // timeout?: number
 }
+
+// too generous?
+const DEFAULT_TIMEOUT_MS = 20000;
 
 /**
  * Delegate class for handling HTTP-requests.
@@ -129,14 +134,7 @@ export class RequestDelegate {
     constructor(config: RequestOptions, paging?: RequestPaging) {
         this.config = config;
         if (!RequestDelegate.domParser) {
-            RequestDelegate.domParser = new DomParser({
-                errorHandler: (level, msg) => {
-                    // throw on error, swallow rest
-                    if (level == 'error') {
-                        throw new Error(msg);
-                    }
-                }
-            });
+            RequestDelegate.domParser = MiscUtils.getDomParser();
         }
         if (config.body) {
             this.postBodyXml = RequestDelegate.domParser.parseFromString(config.body, 'application/xml');
@@ -246,7 +244,7 @@ export class RequestDelegate {
      * @param waitMilliSeconds wait time between retries in milliseconds (default: 0)
      */
     static async doRequest(config: RequestOptions, retry: number = 0, waitMilliSeconds: number = 0): Promise<any> {
-        logRequest.debug('Requesting: ' + config.uri);
+        log.debug('Requesting: ' + config.uri);
         if (config.proxy) {
             let url = new URL(config.proxy);
             config.agent = new HttpsProxyAgent({
@@ -262,6 +260,12 @@ export class RequestDelegate {
             });
         }
         let fullURL = RequestDelegate.getFullURL(config);
+        // set timeout for fetch
+        // this is a workaround - we want to use `signal`, but cannot give it directly as it starts running as soon as
+        // it is declared. `timeout` (which is deprecated) works different (worse). So we just take the timeout value
+        // and create the signal here directly, then remove the timeout
+        config.signal = AbortSignal.timeout(config.timeout ?? DEFAULT_TIMEOUT_MS);
+        config.timeout = null;
         let response = fetch(fullURL, config);
 
         if (config.resolveWithFullResponse) {
@@ -278,7 +282,7 @@ export class RequestDelegate {
                 // if a connection error occurs, retry
                 if (retry > 0) {
                     retry -= 1;
-                    logRequest.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
+                    log.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
                     RequestDelegate.sleep(waitMilliSeconds);
                     response = fetch(fullURL, config);
                 }

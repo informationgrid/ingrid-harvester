@@ -21,16 +21,23 @@
  * ==================================================
  */
 
+import { Distribution } from "./distribution";
+
 export interface Entity {
+    id?: string
+}
+
+export interface RecordEntity extends Entity {
     identifier: string,
     source: string,
     collection_id: number,
-    operates_on?: string[],
     dataset: any,
     original_document: string
 }
 
-// export interface DbOperation {
-//     operation: 'insert' | 'update' | 'delete',
-//     entity: Entity
-// }
+export interface CouplingEntity extends Entity {
+    dataset_identifier: string,
+    service_id: string,
+    service_type: string,
+    distribution: Distribution
+}

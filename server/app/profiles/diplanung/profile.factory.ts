@@ -21,13 +21,10 @@
  * ==================================================
  */
 
-import { indexMappings } from './persistence/elastic.mappings';
-import { indexSettings } from './persistence/elastic.settings';
 import { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper';
 import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper';
 import { DiPlanungDocument } from './model/index.document';
 import { DiplanungImporterFactory } from './importer/diplanung.importer.factory';
-import { DiplanungVirtualMapper } from './mapper/diplanung.virtual.mapper';
 import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { ElasticQueries } from './persistence/elastic.queries';
 import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper';
@@ -38,7 +35,7 @@ import { PostgresQueries } from './persistence/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
 import { WfsMapper } from '../../importer/wfs/wfs.mapper';
 
-export class DiplanungFactory extends ProfileFactory<DcatappluMapper | DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
+export class DiplanungFactory extends ProfileFactory<DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper> {
 
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();
@@ -49,11 +46,11 @@ export class DiplanungFactory extends ProfileFactory<DcatappluMapper | Diplanung
     }
 
     getIndexMappings(): any {
-        return indexMappings;
+        return require('./persistence/elastic.mappings.json');
     }
 
     getIndexSettings(): IndexSettings {
-        return indexSettings;
+        return require('./persistence/elastic.settings.json');;
     }
 
     getImporterFactory(): ImporterFactory {

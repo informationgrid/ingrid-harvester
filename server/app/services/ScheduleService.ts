@@ -30,7 +30,7 @@ import {UrlCheckService} from "./statistic/UrlCheckService";
 import {IndexCheckService} from "./statistic/IndexCheckService";
 import {IndexService} from "./IndexService";
 
-let log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
 @Service()
 export class ScheduleService {

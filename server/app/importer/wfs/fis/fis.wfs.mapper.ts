@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import { AllGeoJSON } from '@turf/helpers';
+import * as MiscUtils from '../../../utils/misc.utils';
 import { DateRange } from '../../../model/dateRange';
 import { Distribution } from '../../../model/distribution';
+import { Geometry, GeometryCollection } from '@turf/helpers';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
-import { MiscUtils } from '../../../utils/misc.utils';
 import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../wfs.mapper';
 
@@ -74,13 +74,13 @@ export class FisWfsMapper extends WfsMapper {
             this.log.debug(`${this.uuid}: no geometry found, using bounding box instead`);
             return this.fetched.boundingBox;
         }
-        let geojson = this.fetched.geojsonUtils.parse(spatialContainer, { crs: 'EPSG:25833' });
+        let geojson = GeoJsonUtils.parse(spatialContainer, { crs: '25833' }, this.fetched.nsMap);
         return geojson;
     }
 
     _getCentroid(): object {
         let spatial = this._getSpatial() ?? this._getBoundingBox();
-        return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
+        return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
     }
 
     _getSpatialText(): string {
@@ -128,30 +128,31 @@ export class FisWfsMapper extends WfsMapper {
     }
 
     _getPluProcessSteps(): ProcessStep[] {
-        let processSteps = [];
+        let processSteps: ProcessStep[] = [];
         // let period_aufstBeschl = getPeriod('./*/fis:AFS_BESCHL', './*/fis:AFS_L_AEND');
         // if (period_aufstBeschl) {
         //     processSteps.push({
-        //         period: period_aufstBeschl,
+        //         temporal: period_aufstBeschl,
         //         type: null  // TODO
         //     });
         // }
-        let period_frzBuergerBet = this.getPeriod('./*/fis:BBG_ANFANG', './*/fis:BBG_ENDE');
-        if (period_frzBuergerBet) {
-            processSteps.push({
-                period: period_frzBuergerBet,
-                type: PluProcessStepType.FRUEHZ_OEFFTL_BETEIL
-            });
-        }
-        let period_oefftlAusleg = this.getPeriod('./*/fis:AUL_ANFANG', './*/fis:AUL_ENDE');
-        if (period_oefftlAusleg) {
-            let link = this.getTextContent('./*/fis:AUSLEG_WWW');
-            processSteps.push({
-                ...link && { distributions: [{ accessURL: link }] },
-                period: period_oefftlAusleg,
-                type: PluProcessStepType.OEFFTL_AUSL
-            });
-        }
+        // ignore these for now (meeting 2023-11-22)
+        // let period_frzBuergerBet = this.getPeriod('./*/fis:BBG_ANFANG', './*/fis:BBG_ENDE');
+        // if (period_frzBuergerBet) {
+        //     processSteps.push({
+        //         temporal: period_frzBuergerBet,
+        //         type: PluProcessStepType.FRUEHZ_OEFFTL_BETEIL
+        //     });
+        // }
+        // let period_oefftlAusleg = this.getPeriod('./*/fis:AUL_ANFANG', './*/fis:AUL_ENDE');
+        // if (period_oefftlAusleg) {
+        //     let link = this.getTextContent('./*/fis:AUSLEG_WWW');
+        //     processSteps.push({
+        //         ...link && { distributions: [{ accessURL: link }] },
+        //         temporal: period_oefftlAusleg,
+        //         type: PluProcessStepType.OEFFTL_AUSL
+        //     });
+        // }
         return processSteps;
     }
 
@@ -173,11 +174,11 @@ export class FisWfsMapper extends WfsMapper {
         let end = this.getTextContent(endXpath);
         if (end) {
             if (!start) {
-                this.log.warn(`Skipping ProcessStep.period: An end date (${endXpath}) was specified but a start date (${startXpath}) is missing:`, this.uuid);
+                this.log.warn(`Skipping ProcessStep.temporal: An end date (${endXpath}) was specified but a start date (${startXpath}) is missing:`, this.uuid);
                 return null;
             }
             else if (start > end) {
-                this.log.warn(`Skipping ProcessStep.period: The start date (${start}) is later than the end date (${end}):`, this.uuid);
+                this.log.warn(`Skipping ProcessStep.temporal: The start date (${start}) is later than the end date (${end}):`, this.uuid);
                 return null;
             }
             period.lte = MiscUtils.normalizeDateTime(end);

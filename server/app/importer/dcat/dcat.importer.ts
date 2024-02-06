@@ -21,28 +21,27 @@
  * ==================================================
  */
 
-import { namespaces } from '../../importer/namespaces';
+import * as MiscUtils from '../../utils/misc.utils';
 import { getLogger } from 'log4js';
+import { namespaces } from '../../importer/namespaces';
 import { DcatMapper } from './dcat.mapper';
 import { DcatSettings, defaultDCATSettings } from './dcat.settings';
-import { DOMParser as DomParser } from '@xmldom/xmldom';
-import { Entity } from '../../model/entity';
+import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { MiscUtils } from '../../utils/misc.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RecordEntity } from '../../model/entity';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 
-let log = require('log4js').getLogger(__filename),
-    logSummary = getLogger('summary'),
-    logRequest = getLogger('requests');
+const log = getLogger(__filename);
+const logRequest = getLogger('requests');
 
 export class DcatImporter extends Importer {
 
-    protected domParser: DomParser;
+    protected domParser: DOMParser;
     private profile: ProfileFactory<DcatMapper>;
     private readonly settings: DcatSettings;
     private readonly requestDelegate: RequestDelegate;
@@ -55,6 +54,7 @@ export class DcatImporter extends Importer {
         super(settings);
 
         this.profile = ProfileFactoryLoader.get();
+        this.domParser = MiscUtils.getDomParser();
 
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultDCATSettings, settings);
@@ -66,14 +66,6 @@ export class DcatImporter extends Importer {
             this.requestDelegate = new RequestDelegate(requestConfig, DcatImporter.createPaging(settings));
         }
         this.settings = settings;
-        this.domParser = new DomParser({
-            errorHandler: (level, msg) => {
-                // throw on error, swallow rest
-                if (level == 'error') {
-                    throw new Error(msg);
-                }
-            }
-        });
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -123,8 +115,8 @@ export class DcatImporter extends Importer {
                 retries = 0;
 
                 let numReturned = responseDom.getElementsByTagNameNS(namespaces.DCAT, 'Dataset').length;
-                let itemsPerPage = DcatMapper.select('./hydra:itemsPerPage', pagedCollection, true).textContent;
-                this.totalRecords = DcatMapper.select('./hydra:totalItems', pagedCollection, true).textContent;
+                let itemsPerPage = parseInt(DcatMapper.select('./hydra:itemsPerPage', pagedCollection, true).textContent);
+                this.totalRecords = parseInt(DcatMapper.select('./hydra:totalItems', pagedCollection, true).textContent);
 
                 let thisPageUrl = pagedCollection.getAttribute('rdf:about');
 
@@ -213,7 +205,7 @@ export class DcatImporter extends Importer {
             });
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                let entity: Entity = {
+                let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.settings.catalogUrl,
                     collection_id: this.database.defaultCatalog.id,
@@ -247,7 +239,8 @@ export class DcatImporter extends Importer {
             method: "GET",
             uri: settings.catalogUrl,
             json: false,
-            proxy: settings.proxy || null
+            proxy: settings.proxy || null,
+            timeout: settings.timeout
         };
 /*
         requestConfig.qs = {

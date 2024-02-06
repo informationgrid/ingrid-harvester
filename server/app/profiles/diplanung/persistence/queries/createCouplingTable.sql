@@ -21,20 +21,21 @@
  * ==================================================
  */
 
-import { namespaces } from '../../../importer/namespaces';
+/*
+ * Create the coupling table
+ */
+CREATE TABLE IF NOT EXISTS public.coupling (
+    id SERIAL,
+    dataset_identifier VARCHAR(255) NOT NULL,
+    service_id VARCHAR(255) NOT NULL,
+    service_type VARCHAR(255) NOT NULL,
+    distribution JSONB,
+    CONSTRAINT coupling_pkey PRIMARY KEY(id),
+    CONSTRAINT coupling_full_identifier UNIQUE(dataset_identifier, service_id, service_type)
+);
 
-const xpath = require('xpath');
+CREATE INDEX IF NOT EXISTS dataset_identifier_idx
+ON public.coupling (dataset_identifier);
 
-export class WmsXPath {
-
-    static nsMap = {
-        'wms': namespaces.WMS,
-        'gmd': namespaces.GMD,
-        'inspire_common': namespaces.INSPIRE_COMMON,
-        'inspire_vs': namespaces.INSPIRE_VS,
-        'xlink': namespaces.XLINK,
-        'xsi': namespaces.XSI
-    };
-
-    static select = xpath.useNamespaces(WmsXPath.nsMap);
-}
+CREATE INDEX IF NOT EXISTS service_id_idx
+ON public.coupling (service_id);

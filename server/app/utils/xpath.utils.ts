@@ -23,61 +23,59 @@
 
 'use strict';
 
-import { MiscUtils } from './misc.utils';
+import * as MiscUtils from './misc.utils';
 
-export class XPathUtils {
-
-    private XPathUtils() {
-        // no instantiation
-    }
-
-    /**
-     *  This is an adhoc replacement for node.firstElementChild because xmldom does not support it.
-     */
-     static firstElementChild(node: Node): Node & Element {
-        return Object.values(node.childNodes).find(child => child.nodeType === 1) as Element;//Node.ELEMENT_NODE);
-    }
-
-    /**
-     * Retrieve the namespace map of the given XML DOM document, based on the root element.
-     * 
-     * @param responseXml 
-     * @returns an object with a mapping (namespace -> URI)
-     */
-    static getNsMap(responseXml: Document): object {
-        return _extractNamespaces(XPathUtils.firstElementChild(responseXml).attributes);
-    }
-
-    /**
-     * Retrieve a namespace map of the given XML DOM document, based on various, sometimes not available, low-level elements.
-     *
-     * TODO this is very brittle and should probably be generalized if possible, while keeping
-     * 
-     * @param responseXml 
-     * @returns an object with a mapping (namespace -> URI)
-     */
-     static getExtendedNsMap(responseXml: Document) {
-        let nsMap = {};
-        // let attrs = responseXml.getElementsByTagName('Name')[0].attributes;
-        let extCaps = responseXml.getElementsByTagNameNS('*', 'ExtendedCapabilities');
-        if (extCaps && extCaps.length > 0) {
-            nsMap = _extractNamespaces(extCaps[0].attributes);
-        }
-        let featureTypeNames = responseXml.getElementsByTagNameNS('*', 'Name');
-        if (featureTypeNames && featureTypeNames.length > 0) {
-            nsMap = MiscUtils.merge(nsMap, _extractNamespaces(featureTypeNames[0].attributes));
-        }
-        return nsMap;
-    }
+/**
+ *  This is an adhoc replacement for node.firstElementChild because xmldom does not support it.
+ */
+export function firstElementChild(node: Node): Node & Element {
+    return Object.values(node.childNodes).find(child => child.nodeType === 1) as Element;//Node.ELEMENT_NODE);
 }
 
-function _extractNamespaces(attributes: NamedNodeMap): object {
+/**
+ * Retrieve the namespace map of the given XML DOM document, based on the root element.
+ * 
+ * @param responseXml 
+ * @returns an object with a mapping (namespace -> URI)
+ */
+export function getNsMap(responseXml: Document, defaultPrefix: string = undefined): any {
+    return _extractNamespaces(firstElementChild(responseXml).attributes, defaultPrefix);
+}
+
+/**
+ * Retrieve a namespace map of the given XML DOM document, based on various, sometimes not available, low-level elements.
+ *
+ * TODO this is very brittle and should probably be generalized if possible, while keeping
+ * 
+ * @param responseXml 
+ * @returns an object with a mapping (namespace -> URI)
+ */
+export function getExtendedNsMap(responseXml: Document) {
+    let nsMap = {};
+    // let attrs = responseXml.getElementsByTagName('Name')[0].attributes;
+    let extCaps = responseXml.getElementsByTagNameNS('*', 'ExtendedCapabilities');
+    if (extCaps && extCaps.length > 0) {
+        nsMap = _extractNamespaces(extCaps[0].attributes);
+    }
+    let featureTypeNames = responseXml.getElementsByTagNameNS('*', 'Name');
+    if (featureTypeNames && featureTypeNames.length > 0) {
+        nsMap = MiscUtils.merge(nsMap, _extractNamespaces(featureTypeNames[0].attributes));
+    }
+    return nsMap;
+}
+
+function _extractNamespaces(attributes: NamedNodeMap, defaultPrefix: string = undefined): object {
     let nsMap = {};
     for (let i = 0; i < attributes.length; i++) {
         let a = attributes.item(i);
         let [xmlns, ns] = a.name.split(':', 2);
-        if (xmlns === 'xmlns' && ns) {
-            nsMap[ns] = a.value;
+        if (xmlns === 'xmlns') {
+            if (ns) {
+                nsMap[ns] = a.value;
+            }
+            else if (defaultPrefix) {
+                nsMap[defaultPrefix] = a.value;
+            }
         }
     }
     return nsMap;
@@ -86,4 +84,9 @@ function _extractNamespaces(attributes: NamedNodeMap): object {
 export interface XPathNodeSelect {
     (expression: string, node?: Node): Array<Node>;
     (expression: string, node: Node, single: true): Node;
+}
+
+export interface XPathElementSelect {
+    (expression: string, node?: Node): Array<Element>;
+    (expression: string, node: Node, single: true): Element;
 }

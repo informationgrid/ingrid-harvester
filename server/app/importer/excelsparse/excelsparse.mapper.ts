@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../utils/misc.utils';
 import { BaseMapper } from '../base.mapper';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { Columns } from './excelsparse.importer';
@@ -28,7 +29,6 @@ import { DateRange } from '../../model/dateRange';
 import { Distribution } from '../../model/distribution';
 import { ExcelSparseSettings } from './excelsparse.settings';
 import { ImporterSettings } from '../../importer.settings';
-import { MiscUtils } from '../../utils/misc.utils';
 import { Organization, Person } from '../../model/agent';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';

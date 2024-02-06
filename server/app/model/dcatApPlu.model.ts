@@ -43,7 +43,7 @@ export interface ProcessStep {
     distributions?: Distribution[],
     identifier?: string,
     passNumber?: number,
-    period?: DateRange,
+    temporal?: DateRange,
     type: PluProcessStepType
 }
 
@@ -86,7 +86,7 @@ export enum PluProcedureState {
  */
 export enum PluPlanState {
     IN_AUFST = 'inPreparation', // in Aufstellung
-    FESTGES = 'fixed',          // festgesetzt
+    FESTGES = 'fixed',          // festgestellt
     UNBEKANNT = 'unknown'
 }
 

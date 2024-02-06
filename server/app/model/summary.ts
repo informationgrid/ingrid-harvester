@@ -47,7 +47,7 @@ export class Summary {
 
     private readonly headerTitle: string;
 
-    constructor(settings: ImporterSettings) {
+    constructor(settings: Partial<ImporterSettings>) {
         this.headerTitle = `${settings.description} (${settings.type})`;
         if (settings.showCompleteSummaryInfo) {
             this.MAX_ITEMS_TO_SHOW = 1000000;
