@@ -21,10 +21,8 @@
  * ==================================================
  */
 
-import { OaiMapper } from '../../../importer/oai/oai.mapper';
+import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
 import { Contact, Organization, Person } from '../../../model/agent';
-import { DateRange } from '../../../model/dateRange';
-import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { Distribution } from '../../../model/distribution';
 import { IndexDocument } from '../../../model/index.document';
 import { createEsId } from '../lvr.utils';

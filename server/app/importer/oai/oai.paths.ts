@@ -21,26 +21,38 @@
  * ==================================================
  */
 
-import { Harvester } from '@shared/harvester';
-import { Importer } from '../../../importer/importer';
-import { ImporterFactory } from '../../../importer/importer.factory';
-import { OaiImporter } from '../../../importer/oai/lido/oai.importer';
+import { namespaces } from '../../importer/namespaces';
 
-export class LvrImporterFactory extends ImporterFactory {
+const iso19139: OaiXPaths = {
+    prefixMap: {
+        'gmd': namespaces.GMD,
+        'gco': namespaces.GCO,
+        'gml': namespaces.GML,
+        'gml32': namespaces.GML_3_2,
+        'srv': namespaces.SRV
+    },
+    nsPrefix: namespaces.GMD,
+    mdRoot: 'MD_Metadata',
+    idElem: 'fileIdentifier/gco:CharacterString'
+};
 
-    public async get(config: Harvester): Promise<Importer> {
-        let importer: Importer;
-        switch (config.type) {
-            case 'OAI': 
-                importer = new OaiImporter(config);
-                break;
-            default: {
-                console.error('Importer not found: ' + config.type);
-            }
-        }
-        if (importer) {
-            await importer.database.init();
-        }
-        return importer;
-    }
-}
+const lido: OaiXPaths = {
+    prefixMap: {
+        'lido': namespaces.LIDO
+    },
+    nsPrefix: namespaces.LIDO,
+    mdRoot: 'lido',
+    idElem: './lido:lidoRecID'
+};
+
+export const oaiXPaths: { [key: string]: OaiXPaths } = {
+    iso19139,
+    lido
+};
+
+export type OaiXPaths = {
+    prefixMap: any,
+    nsPrefix: string,
+    mdRoot: string,
+    idElem: string
+};

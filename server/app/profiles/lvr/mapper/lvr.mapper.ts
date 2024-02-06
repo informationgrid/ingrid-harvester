@@ -23,7 +23,7 @@
 
 import 'dayjs/locale/de';
 import { getLogger } from 'log4js';
-import { OaiMapper } from '../../../importer/oai/oai.mapper';
+import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
 import { Contact, Organization, Person } from '../../../model/agent';
 import { DateRange } from '../../../model/dateRange';
 import { Distribution } from "../../../model/distribution";

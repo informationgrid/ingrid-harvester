@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import { OaiMapper } from 'importer/oai/oai.mapper';
 import { ImporterFactory } from '../../importer/importer.factory';
+import { OaiMapper } from '../../importer/oai/lido/oai.mapper';
 import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { IndexSettings } from '../../persistence/elastic.setting';
 import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
