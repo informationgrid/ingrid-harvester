@@ -28,7 +28,7 @@ import { IndexConfiguration, IndexSettings } from './elastic.setting';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
 
-let log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
 export class ElasticsearchUtils7 extends ElasticsearchUtils {
 
@@ -85,12 +85,13 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
     async prepareIndexWithName(indexName: string, mappings, settings: IndexSettings, openIfPresent=false) {
         indexName = this.addPrefixIfNotExists(indexName) as string;
         let isPresent = await this.isIndexPresent(indexName);
-        settings = {
-            ...settings,
-            number_of_shards: this.config.numberOfShards,
-            number_of_replicas: this.config.numberOfReplicas,
-            max_shingle_diff: 6,
-            max_ngram_diff: 7
+        // remove both of these variables and the connected environment variables once we have streamlined
+        // the DiPlanung deployment using ConfigMaps
+        if (this.config.numberOfShards) {
+            settings.number_of_shards = this.config.numberOfShards;
+        }
+        if (this.config.numberOfReplicas) {
+            settings.number_of_replicas = this.config.numberOfReplicas;
         }
         if (!openIfPresent || !isPresent) {
             try {

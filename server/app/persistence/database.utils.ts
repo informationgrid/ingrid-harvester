@@ -23,8 +23,8 @@
 
 import { Catalog } from '../model/dcatApPlu.model';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
-import { ElasticsearchUtils, EsOperation } from './elastic.utils';
-import { Entity } from '../model/entity';
+import { ElasticsearchUtils } from './elastic.utils';
+import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
 import { Summary } from '../model/summary';
 
 export interface BulkResponse {
@@ -38,14 +38,15 @@ export abstract class DatabaseUtils {
     protected configuration: DatabaseConfiguration;
     protected summary: Summary;
     
-    public _bulkData: Entity[];
+    public _bulkData: RecordEntity[];
+    public _bulkCouples: CouplingEntity[];
     public defaultCatalog: Catalog;
 
     abstract init(): Promise<void>;
 
-    abstract write(entity: Entity);
+    abstract write(entity: RecordEntity);
 
-    abstract bulk(entities: Entity[], commitTransaction: boolean): Promise<BulkResponse>;
+    abstract bulk(entities: RecordEntity[], commitTransaction: boolean): Promise<BulkResponse>;
 
     /**
      * Add an entity to the bulk array which will be sent to the database
@@ -61,6 +62,8 @@ export abstract class DatabaseUtils {
      */
     abstract sendBulkData(): Promise<BulkResponse>;
 
+    abstract sendBulkCouples(): Promise<BulkResponse>;
+
     abstract beginTransaction(): Promise<void>;
     
     abstract commitTransaction(): Promise<void>;
@@ -75,11 +78,19 @@ export abstract class DatabaseUtils {
 
     abstract getStoredData(ids: string[]): Promise<any[]>;
 
+    abstract getDatasetIdentifiers(source: string): Promise<string[]>;
+
+    abstract getDatasets(source: string): Promise<RecordEntity[]>;
+
+    abstract getServices(source: string): Promise<RecordEntity[]>;
+
     abstract createCatalog(catalog: Catalog): Promise<Catalog>;
 
     abstract getCatalog(catalogIdentifier: string): Promise<Catalog>;
 
-    static ping(configuration: Partial<DatabaseConfiguration>): Promise<boolean> {
+    abstract ping(): Promise<boolean>;
+
+    static ping(configuration?: Partial<DatabaseConfiguration>): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 }

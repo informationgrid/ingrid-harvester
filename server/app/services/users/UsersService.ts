@@ -34,7 +34,13 @@ export class UsersService {
 
     constructor(private memoryStorage: MemoryStorage) {
         const users = fs.readFileSync(this.getUserConfig());
-        this.memoryStorage.set("users", JSON.parse(users.toString()));
+        const userList = JSON.parse(users.toString());
+        // overwrite password for "admin" user if set in ENV variables
+        if (process.env.ADMIN_PASSWORD) {
+            let admin = userList.find(user => user['username'] == 'admin');
+            admin['password'] = sha512(process.env.ADMIN_PASSWORD);
+        }
+        this.memoryStorage.set("users", userList);
     }
 
     /**

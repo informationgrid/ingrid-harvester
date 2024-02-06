@@ -21,7 +21,8 @@
  * ==================================================
  */
 
-import { Authenticated, BodyParams, Controller, Delete, Get, Post, QueryParams } from '@tsed/common';
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
+import { BodyParams, Controller, Delete, Get, Post, QueryParams, UseAuth } from '@tsed/common';
 import { ConfigService } from '../services/config/ConfigService';
 import { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
 import { DatabaseFactory } from '../persistence/database.factory';
@@ -34,7 +35,7 @@ import { ScheduleService } from '../services/ScheduleService';
 const log = require('log4js').getLogger(__filename);
 
 @Controller("/api/config")
-@Authenticated()
+@UseAuth(AuthMiddleware)
 export class ConfigCtrl {
 
     constructor(

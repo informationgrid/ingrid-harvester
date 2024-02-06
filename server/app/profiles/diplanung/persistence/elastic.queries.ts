@@ -63,7 +63,7 @@ export class ElasticQueries implements IElasticQueries {
             aggregations: {
                 duplicates: {
                     terms: {
-                        field: 'alternateTitle.raw',
+                        field: 'plan_name',
                         min_doc_count: 2,
                         size: maxAggregates
                     },

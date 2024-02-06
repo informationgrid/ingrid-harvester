@@ -28,15 +28,14 @@ import { DateRange } from '../../../model/dateRange';
 import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper';
 import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
-import { DiplanungVirtualMapper } from '../mapper/diplanung.virtual.mapper';
 import { Distribution } from '../../../model/distribution';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { IndexDocument } from '../../../model/index.document';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
-export class DiPlanungDocument extends IndexDocument<DcatappluMapper | DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper> {
+export class DiPlanungDocument extends IndexDocument<DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper> {
 
-    async create(_mapper: DcatappluMapper | DiplanungCswMapper | DiplanungVirtualMapper | ExcelSparseMapper | WfsMapper) : Promise<DiplanungIndexDocument> {
+    async create(_mapper: DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper) : Promise<DiplanungIndexDocument> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
         let contactPoint: Contact = await mapper.getContactPoint() ?? { fn: '' };
         let result = {
@@ -57,8 +56,9 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
             description: mapper.getDescription(),
             identifier: mapper.getGeneratedId(),
             adms_identifier: mapper.getAdmsIdentifier(),
+            // resource_identifier: mapper.getResourceIdentifier(),
             title: mapper.getTitle(),
-            alternateTitle: mapper.getAlternateTitle(),
+            plan_name: mapper.getAlternateTitle(),
             // plan and procedure information
             development_freeze_period: mapper.getPluDevelopmentFreezePeriod(),
             plan_state: mapper.getPluPlanState(),
@@ -90,15 +90,12 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
                     harvested: mapper.getMetadataHarvested(),
                     harvesting_errors: null, // get errors after all operations been done
                     issued: null,
-                    is_valid: null, // checks validity after all operations been done
+                    is_valid: null, // check validity before persisting to ES
                     modified: null,
                     source: mapper.getMetadataSource()
                 },
                 operates_on: mapper.getOperatesOn(),    // only csw
                 merged_from: []
-                // transformed_data: {
-                //     [DcatApPluDocument.getExportFormat()]: await DcatApPluDocument.create(_mapper),
-                // }
             },
             issued: mapper.getIssued(),
             keywords: mapper.getKeywords(),
@@ -107,11 +104,11 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
 
         result.extras.merged_from.push(createEsId(result));
         result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
-        result.extras.metadata.is_valid = mapper.isValid(result);
-        let qualityNotes = mapper.getQualityNotes();
-        if (qualityNotes?.length > 0) {
-            result.extras.metadata['quality_notes'] = qualityNotes;
-        }
+        // result.extras.metadata.is_valid = mapper.isValid(result);
+        // let qualityNotes = mapper.getQualityNotes();
+        // if (qualityNotes?.length > 0) {
+        //     result.extras.metadata['quality_notes'] = qualityNotes;
+        // }
         mapper.executeCustomCode(result);
 
         return result;
@@ -141,6 +138,7 @@ export type DiplanungIndexDocument = {
     publisher: Person | Organization,
     // recommended
     adms_identifier: string,
+    plan_name: string,
     plan_type: PluPlanType,
     plan_type_fine: string,
     procedure_type: PluProcedureType,
@@ -160,7 +158,6 @@ export type DiplanungIndexDocument = {
     centroid: any,
     spatial_text: string,
     // additional information and metadata
-    alternateTitle: string,
     catalog: Catalog,
     plan_or_procedure_start_date: Date,
     // temporal: DateRange[],
@@ -170,10 +167,13 @@ export type DiplanungIndexDocument = {
             harvested: Date,
             harvesting_errors: null, // get errors after all operations been done
             issued: Date,
-            is_valid: null, // checks validity after all operations been done
+            is_changed?: boolean,
+            is_valid: boolean, // checks validity after all operations been done
             modified: Date,
+            quality_notes?: string[],
             source: {
                 source_base: string,
+                source_type?: string,
                 raw_data_source?: string,
                 portal_link?: string,
                 attribution?: string

@@ -33,9 +33,13 @@ export interface Distribution {
     issued?: Date;
     modified?: Date;
     byteSize?: number;
-    period?: DateRange;
+    temporal?: DateRange;
     pluDocType?: string;
     mapLayerNames?: string[];
+    resolvedGeometry?: string;
+    operates_on?: string[];
+    isSynthetic?: boolean;
+    errors?: string[];
 }
 
 

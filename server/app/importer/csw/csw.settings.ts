@@ -21,21 +21,30 @@
  * ==================================================
  */
 
-import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
+import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
+import { PluPlanState } from '../../model/dcatApPlu.model';
 
 export type CswSettings = {
-    resultType?: "hits" | "results",
-    pluPlanState?: string,
+    resultType?: 'hits' | 'results',
+    pluPlanState?: PluPlanState,
     getRecordsUrl: string,
+    maxServices: number,
+    resolveOgcDistributions: boolean,
+    harvestingMode: 'standard' | 'separate',
     eitherKeywords: string[],
-    httpMethod: "GET" | "POST",
-    recordFilter?: string
+    httpMethod: 'GET' | 'POST',
+    recordFilter?: string,
+    simplifyTolerance: number
 } & ImporterSettings;
 
 export const defaultCSWSettings: Partial<CswSettings> = {
     ...DefaultImporterSettings,
     getRecordsUrl: '',
+    maxServices: 30,
+    resolveOgcDistributions: false,
+    harvestingMode: 'standard',
     eitherKeywords: [],
     httpMethod: 'GET',
-    resultType: 'results'
+    resultType: 'results',
+    simplifyTolerance: 0
 };

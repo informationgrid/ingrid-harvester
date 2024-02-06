@@ -2,7 +2,7 @@
   "database": {
     "type": "postgresql",
     "host": "localhost",
-    "port": 5433,
+    "port": 5432,
     "database": "metadaten",
     "user": "ogcrecords",
     "password": "ogcrecords",

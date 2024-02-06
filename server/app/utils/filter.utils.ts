@@ -23,7 +23,7 @@
 
 import {ImporterSettings} from "../importer.settings";
 
-let log = require('log4js').getLogger( __filename );
+const log = require('log4js').getLogger( __filename );
 
 export class FilterUtils {
 
