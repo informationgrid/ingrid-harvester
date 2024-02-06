@@ -24,10 +24,10 @@
 import { getLogger } from 'log4js';
 import { Catalog, PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../model/dcatApPlu.model';
 import { throwError } from 'rxjs';
-import { AllGeoJSON } from '@turf/helpers';
 import { BaseMapper } from '../base.mapper';
 import { Contact, Organization, Person } from '../../model/agent';
 import { DateRange } from '../../model/dateRange';
+import { Geometry, GeometryCollection } from '@turf/helpers';
 import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { ImporterSettings } from '../../importer.settings';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
@@ -55,13 +55,13 @@ export abstract class WfsMapper extends BaseMapper {
 
     protected select: XPathNodeSelect;
 
-    constructor(settings, feature, harvestTime, summary, generalInfo, geojsonUtils) {
+    constructor(settings, feature, harvestTime, summary, generalInfo) {
         super();
         this.settings = settings;
         this.feature = feature;
         this.harvestTime = harvestTime;
         this.summary = summary;
-        this.fetched = {...this.fetched, ...generalInfo, geojsonUtils};
+        this.fetched = {...this.fetched, ...generalInfo};
         this.select = (...args: any[]) => {
             try {
                 return generalInfo['select'](...args);
@@ -150,7 +150,7 @@ export abstract class WfsMapper extends BaseMapper {
 
     _getCentroid(): object {
         let spatial = this._getSpatial() ?? this._getBoundingBox();
-        return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
+        return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
     }
 
     _getTemporal(): DateRange[] {
@@ -184,12 +184,8 @@ export abstract class WfsMapper extends BaseMapper {
     abstract _getPluDocType(code: string): PluDocType;
 
     _getPluPlanState(): PluPlanState {
-        let planState = this.settings.pluPlanState;
-        switch (planState?.toLowerCase()) {
-            case 'festgesetzt': return PluPlanState.FESTGES;
-            case 'in aufstellung': return PluPlanState.IN_AUFST;
-            default: return PluPlanState.UNBEKANNT;
-        }
+        
+        return this.settings.pluPlanState;
     }
 
     abstract _getPluPlanType(): PluPlanType;

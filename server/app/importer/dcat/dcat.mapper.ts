@@ -24,6 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
+import * as xpath from 'xpath';
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { throwError } from 'rxjs';
@@ -39,12 +40,11 @@ import { License } from '@shared/license.model';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 import { UrlUtils } from '../../utils/url.utils';
-
-let xpath = require('xpath');
+import { XPathElementSelect } from '../../utils/xpath.utils';
 
 export class DcatMapper extends BaseMapper {
 
-    static select = xpath.useNamespaces({
+    static select = <XPathElementSelect>xpath.useNamespaces({
         'foaf': namespaces.FOAF,
         'locn': namespaces.LOCN,
         'hydra': namespaces.HYDRA,
@@ -481,7 +481,7 @@ export class DcatMapper extends BaseMapper {
     _getTemporal(): DateRange[] {
         let result: DateRange[] = [];
 
-        let nodes : string[] = DcatMapper.select('./dct:temporal/dct:PeriodOfTime', this.record)
+        let nodes = DcatMapper.select('./dct:temporal/dct:PeriodOfTime', this.record);
         for (let i = 0; i < nodes.length; i++) {
             let begin = this.getTimeValue(nodes[i], 'startDate');
             let end = this.getTimeValue(nodes[i], 'endDate');
@@ -564,7 +564,7 @@ export class DcatMapper extends BaseMapper {
         if(accessRights){
             for(let i=0; i < accessRights.length; i++){
                 try {
-                    let json = JSON.parse(accessRights[i]);
+                    let json = JSON.parse(accessRights[i]?.textContent);
 
                     if (!json.id || !json.url) continue;
 

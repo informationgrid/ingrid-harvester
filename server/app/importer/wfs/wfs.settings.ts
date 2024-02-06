@@ -23,12 +23,13 @@
 
 import { Contact } from '../../model/agent';
 import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
+import { PluPlanState } from '../../model/dcatApPlu.model';
 
 export type WfsSettings = {
     version: "2.0.0" | "1.1.0",
     memberElement: string,
     catalogId: string,
-    pluPlanState: string,
+    pluPlanState: PluPlanState,
     contactCswUrl?: string,
     contactMetadata?: Contact,
     count: number,

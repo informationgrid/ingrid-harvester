@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import { AllGeoJSON } from '@turf/helpers';
+import * as MiscUtils from '../../../utils/misc.utils';
 import { DateRange } from '../../../model/dateRange';
 import { Distribution } from '../../../model/distribution';
+import { Geometry, GeometryCollection } from '@turf/helpers';
 import { GeoJsonUtils } from '../../../utils/geojson.utils';
-import { MiscUtils } from '../../../utils/misc.utils';
 import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../wfs.mapper';
 
@@ -74,13 +74,13 @@ export class FisWfsMapper extends WfsMapper {
             this.log.debug(`${this.uuid}: no geometry found, using bounding box instead`);
             return this.fetched.boundingBox;
         }
-        let geojson = this.fetched.geojsonUtils.parse(spatialContainer, { crs: 'EPSG:25833' });
+        let geojson = GeoJsonUtils.parse(spatialContainer, { crs: '25833' }, this.fetched.nsMap);
         return geojson;
     }
 
     _getCentroid(): object {
         let spatial = this._getSpatial() ?? this._getBoundingBox();
-        return GeoJsonUtils.getCentroid(<AllGeoJSON>spatial)?.geometry;
+        return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
     }
 
     _getSpatialText(): string {

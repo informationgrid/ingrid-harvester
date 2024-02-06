@@ -36,6 +36,10 @@ export interface Distribution {
     temporal?: DateRange;
     pluDocType?: string;
     mapLayerNames?: string[];
+    resolvedGeometry?: string;
+    operates_on?: string[];
+    isSynthetic?: boolean;
+    errors?: string[];
 }
 
 

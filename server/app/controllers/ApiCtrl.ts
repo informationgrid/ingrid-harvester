@@ -21,21 +21,22 @@
  * ==================================================
  */
 
-import {Authenticated, BodyParams, Controller, Get, PathParams, Post, QueryParams} from '@tsed/common';
-import {ConfigService} from '../services/config/ConfigService';
-import {ImportSocketService} from '../sockets/import.socket.service';
-import {SummaryService} from '../services/config/SummaryService';
-import {ImportLogMessage} from '../model/import.result';
-import {LogService} from '../services/storage/LogService';
-import {ScheduleService} from '../services/ScheduleService';
-import {CronData} from '../importer.settings';
-import {UrlCheckService} from "../services/statistic/UrlCheckService";
-import {IndexCheckService} from "../services/statistic/IndexCheckService";
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
+import { BodyParams, Controller, Get, PathParams, Post, QueryParams, UseAuth} from '@tsed/common';
+import { ConfigService } from '../services/config/ConfigService';
+import { CronData } from '../importer.settings';
+import { ImportLogMessage } from '../model/import.result';
+import { ImportSocketService } from '../sockets/import.socket.service';
+import { IndexCheckService } from '../services/statistic/IndexCheckService';
+import { LogService } from '../services/storage/LogService';
+import { ScheduleService } from '../services/ScheduleService';
+import { SummaryService } from '../services/config/SummaryService';
+import { UrlCheckService } from '../services/statistic/UrlCheckService';
 
-let log = require('log4js').getLogger(__filename);
+const log = require('log4js').getLogger(__filename);
 
 @Controller('/api')
-@Authenticated()
+@UseAuth(AuthMiddleware)
 export class ApiCtrl {
     private importAllProcessIsRunning = false;
 
@@ -92,8 +93,6 @@ export class ApiCtrl {
     async checkURLs() {
         this.urlCheckService.start();
     }
-
-
 
     @Post('/index_check')
     async checkIndices() {

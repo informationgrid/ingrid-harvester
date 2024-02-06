@@ -21,13 +21,13 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../utils/misc.utils';
 import { elasticsearchMapping} from './statistic.mapping';
 import { ElasticsearchFactory } from '../persistence/elastic.factory';
 import { ElasticsearchUtils } from '../persistence/elastic.utils';
 import { GeneralSettings } from '@shared/general-config.settings';
 import { ImportLogMessage} from '../model/import.result';
 import { IndexSettings } from '../persistence/elastic.setting';
-import { MiscUtils } from '../utils/misc.utils';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary} from '../model/summary';
 

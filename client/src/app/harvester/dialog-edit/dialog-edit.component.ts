@@ -68,7 +68,6 @@ export class DialogEditComponent implements OnInit {
       defaultAttributionLink: [harvester.defaultAttributionLink],
       maxRecords: [harvester.maxRecords, Validators.min(1)],
       startPosition: [harvester.startPosition, Validators.min(0)],
-      maxConcurrent: [harvester.maxConcurrent, Validators.min(1)],
       customCode: [harvester.customCode],
       rules: this.formBuilder.group({
         containsDocumentsWithData: [harvester.rules.containsDocumentsWithData],

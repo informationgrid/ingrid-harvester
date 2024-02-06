@@ -21,12 +21,13 @@
  * ==================================================
  */
 
-import {BodyParams, Controller, Get, Post, Req, Required, Res} from "@tsed/common";
-import * as Express from "express";
-import * as Passport from "passport";
-import {IUser} from "../../model/User";
+import * as Express from 'express';
+import * as Passport from 'passport';
+import { BodyParams, Controller, Get, Post, Req, Res } from '@tsed/common';
+import { IUser } from '../../model/User';
+import { Required } from '@tsed/schema';
 
-@Controller("/passport")
+@Controller('/passport')
 export class PassportCtrl {
     /**
      * Authenticate user with local info (in Database).
@@ -35,15 +36,15 @@ export class PassportCtrl {
      * @param request
      * @param response
      */
-    @Post("/login")
-    async login(@Required() @BodyParams("username") username: string,
-                @Required() @BodyParams("password") password: string,
+    @Post('/login')
+    async login(@Required() @BodyParams('username',) username: string,
+                @Required() @BodyParams('password') password: string,
                 @Req() request: Express.Request,
                 @Res() response: Express.Response) {
 
         return new Promise<IUser>((resolve, reject) => {
             Passport
-                .authenticate("login", (err, user: IUser) => {
+                .authenticate('login', (err, user: IUser) => {
                     if (err) {
                         reject(err);
                         return;
@@ -68,10 +69,10 @@ export class PassportCtrl {
      * Disconnect user
      * @param request
      */
-    @Get("/logout")
+    @Get('/logout')
     public logout(@Req() request: Express.Request): string {
         request.logout(()  => {});
-        return "Disconnected";
+        return 'Disconnected';
     }
 
 }

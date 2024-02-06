@@ -21,30 +21,10 @@
  * ==================================================
  */
 
-import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
-import { PluPlanState } from '../../model/dcatApPlu.model';
-
-export type CswSettings = {
-    resultType?: 'hits' | 'results',
-    pluPlanState?: PluPlanState,
-    getRecordsUrl: string,
-    maxServices: number,
-    resolveOgcDistributions: boolean,
-    harvestingMode: 'standard' | 'separate',
-    eitherKeywords: string[],
-    httpMethod: 'GET' | 'POST',
-    recordFilter?: string,
-    simplifyTolerance: number
-} & ImporterSettings;
-
-export const defaultCSWSettings: Partial<CswSettings> = {
-    ...DefaultImporterSettings,
-    getRecordsUrl: '',
-    maxServices: 30,
-    resolveOgcDistributions: false,
-    harvestingMode: 'standard',
-    eitherKeywords: [],
-    httpMethod: 'GET',
-    resultType: 'results',
-    simplifyTolerance: 0
-};
+/*
+ * Retrieve services belonging to a particular source
+ */
+SELECT id, dataset
+FROM public.record
+WHERE source = $1
+    AND dataset->'extras'->>'hierarchy_level' = 'service'

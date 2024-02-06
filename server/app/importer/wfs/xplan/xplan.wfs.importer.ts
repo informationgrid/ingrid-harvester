@@ -21,8 +21,8 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../../utils/misc.utils';
 import { Harvester } from '@shared/harvester';
-import { MiscUtils } from '../../../utils/misc.utils';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 import { WfsImporter } from '../wfs.importer';
 import { WfsMapper } from '../wfs.mapper';
@@ -34,7 +34,7 @@ export class XplanWfsImporter extends WfsImporter {
         super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
     }
 
-    getMapper(settings: Harvester, feature, harvestTime, summary, generalInfo, geojsonUtils): WfsMapper {
-        return new XplanWfsMapper(settings, feature, harvestTime, summary, generalInfo, geojsonUtils);
+    getMapper(settings: Harvester, feature, harvestTime, summary, generalInfo): WfsMapper {
+        return new XplanWfsMapper(settings, feature, harvestTime, summary, generalInfo);
     }
 }

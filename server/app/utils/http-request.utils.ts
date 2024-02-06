@@ -21,14 +21,14 @@
  * ==================================================
  */
 
+import * as MiscUtils from './misc.utils';
 import fetch, { HeadersInit, RequestInit, Response } from 'node-fetch';
 import { getLogger } from 'log4js';
 import { Agent } from 'https';
+import { DOMParser } from '@xmldom/xmldom';
 import { HttpsProxyAgent } from 'https-proxy-agent';
-import { MiscUtils } from './misc.utils';
 
-let DomParser = require('@xmldom/xmldom').DOMParser;
-let logRequest = getLogger('requests');
+const log = getLogger('requests');
 
 /**
  * HTTP parameters configuration for CSW harvesters.
@@ -134,14 +134,7 @@ export class RequestDelegate {
     constructor(config: RequestOptions, paging?: RequestPaging) {
         this.config = config;
         if (!RequestDelegate.domParser) {
-            RequestDelegate.domParser = new DomParser({
-                errorHandler: (level, msg) => {
-                    // throw on error, swallow rest
-                    if (level == 'error') {
-                        throw new Error(msg);
-                    }
-                }
-            });
+            RequestDelegate.domParser = MiscUtils.getDomParser();
         }
         if (config.body) {
             this.postBodyXml = RequestDelegate.domParser.parseFromString(config.body, 'application/xml');
@@ -251,7 +244,7 @@ export class RequestDelegate {
      * @param waitMilliSeconds wait time between retries in milliseconds (default: 0)
      */
     static async doRequest(config: RequestOptions, retry: number = 0, waitMilliSeconds: number = 0): Promise<any> {
-        logRequest.debug('Requesting: ' + config.uri);
+        log.debug('Requesting: ' + config.uri);
         if (config.proxy) {
             let url = new URL(config.proxy);
             config.agent = new HttpsProxyAgent({
@@ -289,7 +282,7 @@ export class RequestDelegate {
                 // if a connection error occurs, retry
                 if (retry > 0) {
                     retry -= 1;
-                    logRequest.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
+                    log.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
                     RequestDelegate.sleep(waitMilliSeconds);
                     response = fetch(fullURL, config);
                 }
