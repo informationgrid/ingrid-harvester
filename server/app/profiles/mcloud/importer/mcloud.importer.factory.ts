@@ -31,7 +31,7 @@ import {McloudCswImporter} from "./mcloud.csw.importer";
 import {McloudCkanImporter} from "./mcloud.ckan.importer";
 import {ImporterFactory} from "../../../importer/importer.factory";
 import {ExcelImporter} from "../../../importer/excel/excel.importer";
-import {OaiImporter} from "../../../importer/oai/oai.importer";
+import {OaiImporter} from "../../../importer/oai/iso19139/oai.importer";
 
 export class McloudImporterFactory extends ImporterFactory{
 

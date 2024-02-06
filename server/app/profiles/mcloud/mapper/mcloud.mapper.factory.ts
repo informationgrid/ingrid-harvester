@@ -26,7 +26,7 @@ import {CkanMapper} from "../../../importer/ckan/ckan.mapper";
 import {CswMapper} from "../../../importer/csw/csw.mapper";
 import {DcatMapper} from "../../../importer/dcat/dcat.mapper";
 import {ExcelMapper} from "../../../importer/excel/excel.mapper";
-import {OaiMapper} from "../../../importer/oai/oai.mapper";
+import {OaiMapper} from "../../../importer/oai/iso19139/oai.mapper";
 import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
 import {mcloudCkanMapper} from "./mcloud.ckan.mapper";
 import {mcloudCswMapper} from "./mcloud.csw.mapper";

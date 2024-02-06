@@ -30,7 +30,7 @@ import { ElasticQueries } from './persistence/elastic.queries';
 import { ExcelMapper } from '../../importer/excel/excel.mapper';
 import { ImporterFactory } from '../../importer/importer.factory';
 import { McloudImporterFactory } from './importer/mcloud.importer.factory';
-import { OaiMapper } from '../../importer/oai/oai.mapper';
+import { OaiMapper } from '../../importer/oai/iso19139/oai.mapper';
 import { SparqlMapper } from '../../importer/sparql/sparql.mapper';
 import { IndexSettings } from '../../persistence/elastic.setting';
 import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';

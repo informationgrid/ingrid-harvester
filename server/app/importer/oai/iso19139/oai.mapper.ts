@@ -26,20 +26,20 @@
  */
 import * as xpath from 'xpath';
 import { getLogger } from 'log4js';
-import { namespaces } from '../../importer/namespaces';
+import { namespaces } from '../../namespaces';
 import { throwError } from 'rxjs';
-import { Agent, Contact, Organization, Person } from '../../model/agent';
-import { BaseMapper } from '../base.mapper';
-import { DateRange } from '../../model/dateRange';
-import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
-import { Distribution } from '../../model/distribution';
-import { ImporterSettings } from '../../importer.settings';
+import { Agent, Contact, Organization, Person } from '../../../model/agent';
+import { BaseMapper } from '../../base.mapper';
+import { DateRange } from '../../../model/dateRange';
+import { DcatPeriodicityUtils } from '../../../utils/dcat.periodicity.utils';
+import { Distribution } from '../../../model/distribution';
+import { ImporterSettings } from '../../../importer.settings';
 import { License } from '@shared/license.model';
-import { OaiSettings } from './oai.settings';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
-import { UrlUtils } from '../../utils/url.utils';
-import { XPathElementSelect } from '../../utils/xpath.utils';
+import { OaiSettings } from '../oai.settings';
+import { RequestDelegate, RequestOptions } from '../../../utils/http-request.utils';
+import { Summary } from '../../../model/summary';
+import { UrlUtils } from '../../../utils/url.utils';
+import { XPathElementSelect } from '../../../utils/xpath.utils';
 
 export class OaiMapper extends BaseMapper {
 

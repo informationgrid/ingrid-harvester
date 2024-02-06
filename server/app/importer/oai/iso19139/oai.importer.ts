@@ -21,20 +21,20 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils';
-import { defaultOAISettings, OaiSettings } from './oai.settings';
+import * as MiscUtils from '../../../utils/misc.utils';
+import { defaultOAISettings, OaiSettings } from '../oai.settings';
 import { getLogger } from 'log4js';
-import { namespaces } from '../../importer/namespaces';
+import { namespaces } from '../../namespaces';
 import { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import { Importer } from '../../importer';
+import { ImportLogMessage, ImportResult } from '../../../model/import.result';
 import { OaiMapper } from './oai.mapper';
 import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
+import { ProfileFactory } from '../../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../../profiles/profile.factory.loader';
+import { RecordEntity } from '../../../model/entity';
+import { RequestDelegate, RequestOptions } from '../../../utils/http-request.utils';
+import { Summary } from '../../../model/summary';
 
 const log = require('log4js').getLogger(__filename),
     logRequest = getLogger('requests');
