@@ -22,6 +22,7 @@ You can use the same setup as outlined in the section `Test setup` below, but wi
 
 Prerequisites:
 * node.js v16
+* Postgresql >= v14
 * Elasticsearch, supports v6 and v8
 
 You may wish to run the server and the client outside of the docker container, for debugging and faster deployment/development purposes. Currently you have to change some files to achieve this, outlined below:
@@ -36,13 +37,12 @@ You may wish to run the server and the client outside of the docker container, f
   ```
   ```bash
   cd server
-  npm run start-dev-16
+  npm run start-{profile}
   ```
+  where `{profile}` is one of `mcloud`, `diplanung`, `lvr`
 * Now you can access the harvester
     * via GUI: http://localhost:4200
     * via Elasticsearch API: http://localhost:9200
-        * user: `read_user`
-        * password: *the one you set in `elasticsearch/create-users.json`*
 
 ## Test setup
 
