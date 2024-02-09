@@ -21,7 +21,7 @@
     ==================================================
 -->
 
-<mat-form-field fxFlex>
+<mat-form-field class="flex-1">
   <mat-chip-list #chipListTags>
     <mat-chip *ngFor="let item of list" [selectable]="false"
               [removable]="true" (removed)="remove(item)">

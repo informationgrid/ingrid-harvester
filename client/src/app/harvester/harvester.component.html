@@ -22,8 +22,8 @@
 -->
 
 <div *ngIf="harvesterLoaded" class="example-headers-align">
-    <div fxLayout="row">
-      <div fxFlex></div>
+    <div class="flex-row" >
+      <div class="flex-1"></div>
       <button mat-flat-button [disabled]="numberOfHarvesters === 0" (click)="importAll()" data-test="import-all">Alle importieren</button>
     </div>
 

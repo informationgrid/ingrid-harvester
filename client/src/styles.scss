@@ -92,7 +92,7 @@ $material-icons-font-path: '~material-icons/iconfont/';
 // <div fxLayout="row"> → <div class="flex-row">
 // Flex row/col + grid.
 .flex-row { display: flex; flex-direction: row; }
-.flex-col { display: flex; flex-direction: column; flex-wrap: wrap;  }
+.flex-col { display: flex; flex-direction: column; }
 .grid { display: grid; }
 // Flex-wrap utils.
 .flex-wrap { flex-wrap: wrap; }  // Mostly used with flex-row, when wrapping is desired.
@@ -145,10 +145,16 @@ $material-icons-font-path: '~material-icons/iconfont/';
 .items-center { align-items: center; }  // Used very often with flex-row.
 
 
+.right {
+  float: right;
+}
 
 // ------------------------
 // Material customizations
 // ------------------------
 .mat-form-field-infix {
   width: auto !important;
+}
+.mat-card-header-text {
+  margin: 0 0 !important;
 }

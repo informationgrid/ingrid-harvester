@@ -21,10 +21,10 @@
     ==================================================
 -->
 
-<div fxLayout="row" class="full">
-  <mat-list fxFlex="50" class="list-hover scroll">
-    <div fxLayout="row">
-      <div fxFlex></div>
+<div class="flex-row full">
+  <mat-list class="flex-50 list-hover scroll">
+    <div class="flex-row">
+      <div class="flex-1"></div>
     <input type="file" #indexUpload id="indexUpload" name="harvesterUpload" (change)="importIndex(this.indexUpload.files)" accept="json/*.json" style="display:none;" />
     <button id="importIndex" mat-flat-button (click)="this.indexUpload.click()" data-test="importIndex">Import</button>
     </div>
@@ -39,7 +39,7 @@
     </mat-list-item>
   </mat-list>
 
-  <mat-card fxFlex="50">
+  <mat-card class="flex-50">
     <mat-card-header>
       <mat-card-title>Inhalt</mat-card-title>
     </mat-card-header>

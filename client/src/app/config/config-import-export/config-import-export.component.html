@@ -22,19 +22,19 @@
 -->
 
 <div class="form-wrapper">
-  <div fxLayout="row" fxLayoutAlign="space-between" style="vertical-align: center;width: 250px">
+  <div class="flex-row space-between" style="vertical-align: center;width: 250px">
       <div style="vertical-align: center; padding-top: 7.5px; width:120px">Konfiguration:</div>
       <input type="file" #configUpload id="configUpload" name="configUpload" (change)="importGeneralConfig(this.configUpload.files)" accept="json/*.json" style="display:none;" />
       <button mat-button (click)="this.configUpload.click()" data-test="importConfigGeneral">Import</button>
       <button mat-button (click)="exportGeneralConfig()" data-test="exportConfigGeneral">Export</button>
   </div>
-  <div fxLayout="row" fxLayoutAlign="space-between" style="vertical-align: center;width: 250px">
+  <div class="flex-row space-between"  style="vertical-align: center;width: 250px">
       <div style="vertical-align: center; padding-top: 7.5px; width:120px">Mapping:</div>
       <input type="file" #mappingUpload id="mappingUpload" name="mappingUpload" (change)="importMappings(this.mappingUpload.files)" accept="json/*.json" style="display:none;" />
       <button mat-button (click)="this.mappingUpload.click()" data-test="importMapping">Import</button>
       <button mat-button (click)="exportMappingConfig()" data-test="exportMapping">Export</button>
   </div>
-  <div fxLayout="row" fxLayoutAlign="space-between" style="vertical-align: center;width: 250px">
+  <div class="flex-row space-between"  style="vertical-align: center;width: 250px">
     <div style="vertical-align: center; padding-top: 7.5px; width:120px">Harvester:</div>
     <input type="file" #harvesterUpload id="harvesterUpload" name="harvesterUpload" (change)="importHarvester(this.harvesterUpload.files)" accept="json/*.json" style="display:none;" />
     <button mat-button (click)="this.harvesterUpload.click()" data-test="importHarvester">Import</button>
