@@ -26,8 +26,8 @@
 <mat-dialog-content>
   <div class="form-wrapper">
     <form class="example-container" [formGroup]="harvesterForm">
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex="20">
+      <div class="flex-row gap-20 space-between">
+        <mat-form-field class="flex-20">
           <mat-label>Typ</mat-label>
           <mat-select formControlName="type" required>
             <mat-option value="EXCEL">EXCEL</mat-option>
@@ -48,16 +48,16 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field fxFlex="20">
+        <mat-form-field class="flex-20">
           <input matInput placeholder="Indexname" formControlName="index" required>
         </mat-form-field>
 
-        <mat-form-field fxFlex="50">
+        <mat-form-field class="flex-50">
           <input matInput placeholder="Beschreibung" formControlName="description" required>
         </mat-form-field>
 
 
-        <mat-form-field fxFlex="10">
+        <mat-form-field class="flex-10">
           <input matInput  type="number" placeholder="Priorität" formControlName="priority">
         </mat-form-field>
       </div>
@@ -67,8 +67,8 @@
           <mat-card-title>mCloud Einstellungen</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-            <mat-form-field fxFlex="50">
+          <div class="flex-row gap-20 space-between">
+            <mat-form-field class="flex-50">
               <mat-select placeholder="Standard DCAT-Kategorien" multiple
                           formControlName="defaultDCATCategory">
                 <mat-option value="SOCI">Bevölkerung und Gesellschaft</mat-option>
@@ -88,7 +88,7 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field fxFlex>
+            <mat-form-field class="flex-1">
               <mat-select placeholder="Standard mCLOUD-Kategorien" multiple
                           formControlName="defaultMcloudSubgroup">
                 <mat-option value="railway">Bahn</mat-option>
@@ -102,13 +102,13 @@
 
           </div>
 
-          <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-            <mat-form-field fxFlex="50">
+          <div class="flex-row gap-20 space-between">
+            <mat-form-field class="flex-50">
               <input matInput placeholder="Attribution-Name"
                      formControlName="defaultAttribution">
             </mat-form-field>
 
-            <mat-form-field fxFlex>
+            <mat-form-field class="flex-1">
               <input matInput placeholder="Attribution-Link"
                      formControlName="defaultAttributionLink">
             </mat-form-field>
@@ -121,12 +121,12 @@
           <mat-card-title>Allgemeine Einstellungen</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-            <mat-form-field fxFlex>
+          <div class="flex-row gap-20 space-between">
+            <mat-form-field class="flex-1">
               <input matInput type="number" min="1" max="10000" minlength="1" placeholder="Max. Datensätze pro Anfrage"
                      formControlName="maxRecords">
             </mat-form-field>
-            <mat-form-field fxFlex>
+            <mat-form-field class="flex-1">
               <input matInput type="number" min="0" placeholder="Start Datensatz"
                      formControlName="startPosition">
             </mat-form-field>
@@ -202,7 +202,7 @@
       </app-wfs-harvester>
 
       <ng-template #rules>
-        <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+        <div class="flex-row gap-20 space-between">
           <app-chip-list [list]="harvester.blacklistedIds"
                          placeholder="Ausgeschlossene IDs"
                          (update)="harvester.blacklistedIds = $event"></app-chip-list>
@@ -211,9 +211,9 @@
                          (update)="harvester.whitelistedIds = $event"></app-chip-list>
         </div>
 
-        <div formGroupName="rules" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between baseline">
+        <div formGroupName="rules" class="flex-row gap-20 space-between baseline" >
           <mat-checkbox formControlName="containsDocumentsWithData" (change)="toggleDisableRule($event.checked)">Muss Daten-Download enthalten</mat-checkbox>
-          <mat-form-field fxFlex>
+          <mat-form-field class="flex-1">
             <mat-label>Datenformat ausschließen</mat-label>
             <input matInput placeholder="rss,doc,..." formControlName="containsDocumentsWithDataBlacklist"
                    autocomplete="off" (ngModelChange)="toLowerCase($event)" required>

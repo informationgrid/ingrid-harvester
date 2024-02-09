@@ -143,7 +143,7 @@ $material-icons-font-path: '~material-icons/iconfont/';
 .justify-center { justify-content: center; }  // Used to center something via flexbox.
 // Align items. (Naming inspiration: https://tailwindcss.com/docs/align-items.)
 .items-center { align-items: center; }  // Used very often with flex-row.
-
+.baseline { align-items: baseline; }
 
 .right {
   float: right;
