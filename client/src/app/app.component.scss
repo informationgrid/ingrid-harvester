@@ -32,6 +32,9 @@
     min-width: 200px;
 
     .version {
+      bottom: 0;
+      position: absolute;
+      width: 100%;
       text-align: center;
       color: #303030;
       font-size: 12px;

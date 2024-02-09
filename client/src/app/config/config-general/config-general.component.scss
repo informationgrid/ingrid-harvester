@@ -22,7 +22,7 @@
  */
 
 .margin-below {
-  margin-bottom: 20px;
+  margin-bottom: 32px;
 }
 
 
@@ -43,4 +43,39 @@
 
 mat-icon {
   cursor: pointer;
+}
+
+
+
+.config-card {
+  margin: auto;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  max-width: 500px;
+  width: 100%;
+  @media screen and (min-width: 1200px) { 
+    width: 50%;
+  }
+}
+
+.config-info-field {
+  padding: 6px;
+  border-radius: 6px;
+  background-color: rgba(255,255,255,.04);
+}
+
+.center-right {
+  inset: 0;
+  margin: auto;
+  margin-right: 0;
+}
+
+.right {
+  float: right;
+}
+
+.save-button{
+  position: fixed;
+  bottom: 20px;
+  right: 40px;
 }

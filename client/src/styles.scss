@@ -81,3 +81,74 @@ $roboto-font-path: "~roboto-fontface/fonts" !default;
 // for npm material-icons package (to load local files)
 $material-icons-font-path: '~material-icons/iconfont/';
 @import 'material-icons/iconfont/material-icons.scss';
+
+
+
+
+// -----------------------------------------------------------
+// Migration form @angular/flex-layout to native css solution
+// -----------------------------------------------------------
+// -----------> fxLayout="row", fxLayout="col"
+// <div fxLayout="row"> → <div class="flex-row">
+// Flex row/col + grid.
+.flex-row { display: flex; flex-direction: row; }
+.flex-col { display: flex; flex-direction: column; flex-wrap: wrap;  }
+.grid { display: grid; }
+// Flex-wrap utils.
+.flex-wrap { flex-wrap: wrap; }  // Mostly used with flex-row, when wrapping is desired.
+.flex-col-xs { @media screen and (max-width: 599px) { flex-direction: column; } }  // Switch from flex-row to flex-col on mobile.
+
+
+// -----------> fxFlex
+// <div fxFlex> → <div class="flex-1">
+// Flex/grow/shrink properties https://developer.mozilla.org/en-US/docs/Web/CSS/flex.
+.flex-1 { flex: 1 }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-5 { flex: 1 1 100%; max-width: 5%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-10 { flex: 1 1 100%; max-width: 10%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-15 { flex: 1 1 100%; max-width: 15%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-20 { flex: 1 1 100%; max-width: 20%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-25 { flex: 1 1 100%; max-width: 25%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-30 { flex: 1 1 100%; max-width: 30%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-35 { flex: 1 1 100%; max-width: 35%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-40 { flex: 1 1 100%; max-width: 40%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-45 { flex: 1 1 100%; max-width: 45%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-50 { flex: 1 1 100%; max-width: 50%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-55 { flex: 1 1 100%; max-width: 55%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-60 { flex: 1 1 100%; max-width: 60%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-65 { flex: 1 1 100%; max-width: 65%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-70 { flex: 1 1 100%; max-width: 70%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-75 { flex: 1 1 100%; max-width: 75%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-80 { flex: 1 1 100%; max-width: 80%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-85 { flex: 1 1 100%; max-width: 85%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-90 { flex: 1 1 100%; max-width: 90%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-95 { flex: 1 1 100%; max-width: 95%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-100 { flex: 1 1 100%; max-width: 100%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-grow { flex-grow: 1; }  // Same as flex: 1 1 auto (grow, shrink, basis auto). For spacer, etc. 
+.flex-wrap { flex-wrap: wrap; }  // Same as flex: 1 1 auto (grow, shrink, basis auto). For spacer, etc. 
+
+// -----------> fxLayoutGap
+// <div fxLayoutGap="8px"> → <div class="gap-8">
+// Gap.
+.gap-4 { gap: 4px; }
+.gap-8 { gap: 8px; }
+.gap-10 { gap: 10px; }
+.gap-12 { gap: 12px; }
+.gap-16 { gap: 16px; }
+.gap-20 { gap: 20px; }
+
+// -----------> fxLayoutAlign
+// <div fxLayoutAlign="justify-between center"> → <div class="space-between items-center">
+// Justify content.
+.space-between { justify-content: space-between; }  // Used very often with flex-row.
+.justify-center { justify-content: center; }  // Used to center something via flexbox.
+// Align items. (Naming inspiration: https://tailwindcss.com/docs/align-items.)
+.items-center { align-items: center; }  // Used very often with flex-row.
+
+
+
+// ------------------------
+// Material customizations
+// ------------------------
+.mat-form-field-infix {
+  width: auto !important;
+}
