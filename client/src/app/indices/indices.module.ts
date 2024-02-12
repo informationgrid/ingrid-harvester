@@ -29,7 +29,6 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
 import {MatLegacyCardModule as MatCardModule} from '@angular/material/legacy-card';
 import {SharedModule} from '../shared/shared.module';
-import {FlexLayoutModule} from "@angular/flex-layout";
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 const routes: Routes = [
@@ -44,7 +43,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    FlexLayoutModule,
     MatListModule,
     MatIconModule,
     MatCardModule,

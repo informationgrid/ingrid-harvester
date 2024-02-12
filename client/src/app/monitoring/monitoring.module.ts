@@ -35,7 +35,6 @@ import { MonitoringIndexCheckComponent } from './monitoring-indexcheck/monitorin
 import {MatLegacyListModule as MatListModule} from "@angular/material/legacy-list";
 import {MatIconModule} from "@angular/material/icon";
 import {MatLegacyAutocompleteModule as MatAutocompleteModule} from "@angular/material/legacy-autocomplete";
-import {FlexModule} from "@angular/flex-layout";
 import {MatLegacySlideToggleModule as MatSlideToggleModule} from "@angular/material/legacy-slide-toggle";
 import {MatLegacyCardModule as MatCardModule} from "@angular/material/legacy-card";
 import {MatLegacyCheckboxModule as MatCheckboxModule} from "@angular/material/legacy-checkbox";
@@ -63,7 +62,6 @@ const configRoutes: Routes = [
         MatListModule,
         MatIconModule,
         MatAutocompleteModule,
-        FlexModule,
         MatSlideToggleModule,
         MatCardModule,
         MatCheckboxModule,

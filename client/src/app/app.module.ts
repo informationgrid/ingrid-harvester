@@ -33,7 +33,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {registerLocaleData} from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {FlexLayoutModule} from '@angular/flex-layout';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ConfigService} from './config.service';
 import {environment} from '../environments/environment';
@@ -75,7 +74,6 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes),
     ReactiveFormsModule,
-    FlexLayoutModule,
     HttpClientModule,
     MatToolbarModule,
     MatSidenavModule,

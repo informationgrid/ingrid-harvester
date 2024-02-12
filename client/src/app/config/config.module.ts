@@ -36,7 +36,6 @@ import {MatLegacyListModule as MatListModule} from "@angular/material/legacy-lis
 import {MatIconModule} from "@angular/material/icon";
 import { AddMappingItemComponent } from './config-mapping/add-mapping-item/add-mapping-item.component';
 import {MatLegacyAutocompleteModule as MatAutocompleteModule} from "@angular/material/legacy-autocomplete";
-import {FlexModule} from "@angular/flex-layout";
 import {MatLegacySlideToggleModule as MatSlideToggleModule} from "@angular/material/legacy-slide-toggle";
 import {MatLegacyCardModule as MatCardModule} from "@angular/material/legacy-card";
 import {MatLegacyCheckboxModule as MatCheckboxModule} from "@angular/material/legacy-checkbox";
@@ -60,7 +59,6 @@ const configRoutes: Routes = [
         MatListModule,
         MatIconModule,
         MatAutocompleteModule,
-        FlexModule,
         MatSlideToggleModule,
         MatCardModule,
         MatCheckboxModule

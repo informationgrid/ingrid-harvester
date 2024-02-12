@@ -43,7 +43,6 @@ import {SparqlHarvesterComponent} from './dialog-edit/sparql-harvester/sparql-ha
 import {WfsHarvesterComponent} from './dialog-edit/wfs-harvester/wfs-harvester.component';
 import {DialogHistoryComponent} from './dialog-history/dialog-history.component';
 import {ImporterDetailComponent} from './importer-detail/importer-detail.component';
-import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatLegacyChipsModule as MatChipsModule} from '@angular/material/legacy-chips';
 import {MatLegacyCardModule as MatCardModule} from '@angular/material/legacy-card';
 import {MatLegacyCheckboxModule as MatCheckboxModule} from '@angular/material/legacy-checkbox';
@@ -88,7 +87,6 @@ const harvesterRoutes: Routes = [
     imports: [
         CommonModule,
         RouterModule.forChild(harvesterRoutes),
-        FlexLayoutModule,
         SharedModule,
         MatDialogModule,
         MatButtonModule,
