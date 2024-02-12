@@ -90,41 +90,51 @@ $material-icons-font-path: '~material-icons/iconfont/';
 // -----------------------------------------------------------
 // -----------> fxLayout="row", fxLayout="col"
 // <div fxLayout="row"> → <div class="flex-row">
-// Flex row/col + grid.
+// Flex row/col
 .flex-row { display: flex; flex-direction: row; }
 .flex-col { display: flex; flex-direction: column; }
-.grid { display: grid; }
+
 // Flex-wrap utils.
 .flex-wrap { flex-wrap: wrap; }  // Mostly used with flex-row, when wrapping is desired.
-.flex-col-xs { @media screen and (max-width: 599px) { flex-direction: column; } }  // Switch from flex-row to flex-col on mobile.
+.rows-2 { @media screen and (max-width: 599px) { flex: 1 1 50%; } }  // Switch from flex-row to flex-col on mobile.
+.flex-col-mobile { @media screen and (max-width: 599px) { flex-direction: column; } }  // Switch from flex-row to flex-col on mobile.
+.flex-row-mobile { @media screen and (max-width: 599px) { flex-direction: column; } }  // Switch from flex-row to flex-col on mobile.
+.flex-100-mobile { @media only screen and (max-width: 599px) { min-width: 100% } }  // Switch from flex-row to flex-col on mobile.
+.flex-10-mobile { @media only screen and (max-width: 599px) { min-width: 10% } }  // Switch from flex-row to flex-col on mobile.
+.flex-20-mobile { @media only screen and (max-width: 599px) { min-width: 20% } }  // Switch from flex-row to flex-col on mobile.
+.flex-50-mobile { @media only screen and (max-width: 599px) { min-width: 50% } }  // Switch from flex-row to flex-col on mobile.
+.flex-80-mobile { @media only screen and (max-width: 599px) { min-width: 80% } }  // Switch from flex-row to flex-col on mobile.
+.flex-90-mobile { @media only screen and (max-width: 599px) { min-width: 90% } }  // Switch from flex-row to flex-col on mobile.
+.flex-grow-mobile { @media only screen and (max-width: 599px) { flex-grow: 1; } }  // Switch from flex-row to flex-col on mobile.
+.flex-wrap-mobile { @media only screen and (max-width: 599px) { flex-wrap: wrap; } }  // Switch from flex-row to flex-col on mobile.
 
 
 // -----------> fxFlex
 // <div fxFlex> → <div class="flex-1">
 // Flex/grow/shrink properties https://developer.mozilla.org/en-US/docs/Web/CSS/flex.
 .flex-1 { flex: 1 }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-5 { flex: 1 1 100%; max-width: 5%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-10 { flex: 1 1 100%; max-width: 10%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-15 { flex: 1 1 100%; max-width: 15%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-20 { flex: 1 1 100%; max-width: 20%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-25 { flex: 1 1 100%; max-width: 25%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-30 { flex: 1 1 100%; max-width: 30%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-35 { flex: 1 1 100%; max-width: 35%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-40 { flex: 1 1 100%; max-width: 40%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-45 { flex: 1 1 100%; max-width: 45%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-50 { flex: 1 1 100%; max-width: 50%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-55 { flex: 1 1 100%; max-width: 55%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-60 { flex: 1 1 100%; max-width: 60%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-65 { flex: 1 1 100%; max-width: 65%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-70 { flex: 1 1 100%; max-width: 70%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-75 { flex: 1 1 100%; max-width: 75%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-80 { flex: 1 1 100%; max-width: 80%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-85 { flex: 1 1 100%; max-width: 85%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-90 { flex: 1 1 100%; max-width: 90%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-95 { flex: 1 1 100%; max-width: 95%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-100 { flex: 1 1 100%; max-width: 100%; }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-grow { flex-grow: 1; }  // Same as flex: 1 1 auto (grow, shrink, basis auto). For spacer, etc. 
-.flex-wrap { flex-wrap: wrap; }  // Same as flex: 1 1 auto (grow, shrink, basis auto). For spacer, etc. 
+.flex-5 { flex: 1 1 100%; max-width: 5%; }  
+.flex-10 { flex: 1 1 100%; max-width: 10%; }  
+.flex-15 { flex: 1 1 100%; max-width: 15%; }  
+.flex-20 { flex: 1 1 100%; max-width: 20%; }  
+.flex-25 { flex: 1 1 100%; max-width: 25%; }  
+.flex-30 { flex: 1 1 100%; max-width: 30%; }  
+.flex-35 { flex: 1 1 100%; max-width: 35%; }  
+.flex-40 { flex: 1 1 100%; max-width: 40%; }  
+.flex-45 { flex: 1 1 100%; max-width: 45%; }  
+.flex-50 { flex: 1 1 100%; max-width: 50%; }  
+.flex-55 { flex: 1 1 100%; max-width: 55%; }  
+.flex-60 { flex: 1 1 100%; max-width: 60%; }  
+.flex-65 { flex: 1 1 100%; max-width: 65%; }  
+.flex-70 { flex: 1 1 100%; max-width: 70%; }  
+.flex-75 { flex: 1 1 100%; max-width: 75%; }  
+.flex-80 { flex: 1 1 100%; max-width: 80%; }  
+.flex-85 { flex: 1 1 100%; max-width: 85%; }  
+.flex-90 { flex: 1 1 100%; max-width: 90%; }  
+.flex-95 { flex: 1 1 100%; max-width: 95%; }  
+.flex-100 { flex: 1 1 100%; max-width: 100%; }  
+.flex-grow { flex-grow: 1; }
+.flex-wrap { flex-wrap: wrap; } 
 
 // -----------> fxLayoutGap
 // <div fxLayoutGap="8px"> → <div class="gap-8">
@@ -141,14 +151,53 @@ $material-icons-font-path: '~material-icons/iconfont/';
 // Justify content.
 .space-between { justify-content: space-between; }  // Used very often with flex-row.
 .justify-center { justify-content: center; }  // Used to center something via flexbox.
+.space-around {justify-content: space-around}
+.justify-end {justify-content: flex-end;}
+.justify-items-end {justify-items: end;}
 // Align items. (Naming inspiration: https://tailwindcss.com/docs/align-items.)
 .items-center { align-items: center; }  // Used very often with flex-row.
 .baseline { align-items: baseline; }
 
-.right {
-  float: right;
-}
+.right { float: right; }
 
+// -----------> Grid
+
+.grid { display: grid; }
+.grid-cols-4 {grid-template-columns: repeat(4, 1fr) }
+.grid-cols-7 {grid-template-columns: repeat(7, 1fr) }
+.grid-cols-8 {grid-template-columns: repeat(8, 1fr) }
+.grid-cols-12 {grid-template-columns: repeat(12, 1fr) }
+.grid-cols-6-mobile { @media screen and (max-width: 799px) { grid-template-columns: repeat(6, 1fr) } }
+
+.col-auto {grid-column: auto;}
+.col-span-1 {grid-column: span 1 / span 1;}
+.col-span-2 {grid-column: span 2 / span 2;}
+.col-span-3 {grid-column: span 3 / span 3;}
+.col-span-4 {grid-column: span 4 / span 4;}
+.col-span-5 {grid-column: span 5 / span 5;}
+.col-span-6 {grid-column: span 6 / span 6;}
+.col-span-7 {grid-column: span 7 / span 7;}
+.col-span-8 {grid-column: span 8 / span 8;}
+.col-span-9 {grid-column: span 9 / span 9;}
+.col-span-10 {grid-column: span 10 / span 10;}
+.col-span-11 {grid-column: span 11 / span 11;}
+.col-span-12 {grid-column: span 12 / span 12;}
+
+.col-span-1-mobile { @media screen and (max-width: 799px) { grid-column: span 1 / span 1; } }
+.col-span-2-mobile { @media screen and (max-width: 799px) { grid-column: span 2 / span 2; } }
+.col-span-3-mobile { @media screen and (max-width: 799px) { grid-column: span 3 / span 3; } }
+.col-span-4-mobile { @media screen and (max-width: 799px) { grid-column: span 4 / span 4; } }
+.col-span-5-mobile { @media screen and (max-width: 799px) { grid-column: span 5 / span 5; } }
+.col-span-6-mobile { @media screen and (max-width: 799px) { grid-column: span 6 / span 6; } }
+.col-span-7-mobile { @media screen and (max-width: 799px) { grid-column: span 7 / span 7; } }
+.col-span-8-mobile { @media screen and (max-width: 799px) { grid-column: span 8 / span 8; } }
+.col-span-9-mobile { @media screen and (max-width: 799px) { grid-column: span 9 / span 9; } }
+.col-span-10-mobile { @media screen and (max-width: 799px) { grid-column: span 10 / span 10; } }
+.col-span-11-mobile { @media screen and (max-width: 799px) { grid-column: span 11 / span 11; } }
+.col-span-12-mobile { @media screen and (max-width: 799px) { grid-column: span 12 / span 12; } }
+
+
+.grid-flow-row {grid-auto-flow: row;}
 // ------------------------
 // Material customizations
 // ------------------------

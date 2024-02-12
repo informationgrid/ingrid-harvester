@@ -58,46 +58,48 @@
                                  (showLog)="showLog(harvester.id)"
                                  [cronActive]="!harvester.disable && (harvester.cron?.full?.active || harvester.cron?.incr?.active)"></app-importer-detail>
 
-            <mat-action-row>
-                <button mat-button (click)="showLog(harvester.id)" [disabled]="!hasAnyProblems(harvester.id)" data-test="log">
+            <div class="harvester-config-buttons grid grid-cols-8 gap-20 justify-items-end baseline harvester-button-custom-grid-cols-mobile">
+
+                <button class="col-span-1" mat-button (click)="showLog(harvester.id)" [disabled]="!hasAnyProblems(harvester.id)" data-test="log">
                     <mat-icon class="inline-valigned">description</mat-icon>
                     Error-Log
                 </button>
-                <button mat-button (click)="startImport(harvester.id)"
-                        data-test="import"
-                        [disabled]="importDetail[harvester.id]?.complete === false">
-                    <mat-icon class="inline-valigned">import_export</mat-icon>
-                    Import starten
+                <div class="col-span-2 harvester-button-col-span-1-mobile">
+                    <button mat-button (click)="startImport(harvester.id)"
+                            data-test="import"
+                            [disabled]="importDetail[harvester.id]?.complete === false">
+                        <mat-icon class="inline-valigned">import_export</mat-icon>
+                        Import starten
+                    </button>
+                    <button mat-button (click)="startImport(harvester.id, true)"
+                            data-test="import"
+                            [disabled]="importDetail[harvester.id]?.complete === false"
+                            *ngIf="item.key === 'CSW'">
+                        <mat-icon class="inline-valigned">import_export</mat-icon>
+                        Import starten (inkrementell)
+                    </button>
+                </div>
+                <button  mat-button (click)="showHistory(harvester)" data-test="history">
+                    <mat-icon class="inline-valigned">history</mat-icon>
+                    Historie
                 </button>
-                <button mat-button (click)="startImport(harvester.id, true)"
-                        data-test="import"
-                        [disabled]="importDetail[harvester.id]?.complete === false"
-                        *ngIf="item.key === 'CSW'">
-                    <mat-icon class="inline-valigned">import_export</mat-icon>
-                    Import starten (inkrementell)
-                </button>
-              <button mat-button (click)="showHistory(harvester)" data-test="history">
-                <mat-icon class="inline-valigned">history</mat-icon>
-                Historie
-              </button>
-                <button mat-button (click)="schedule(harvester)" data-test="schedule">
+                <button  mat-button (click)="schedule(harvester)" data-test="schedule">
                     <mat-icon class="inline-valigned">schedule</mat-icon>
                     Planen
                 </button>
-                <button mat-button color="warn" (click)="deleteHarvester(harvester)" data-test="delete">
+                <button  mat-button color="warn" (click)="deleteHarvester(harvester)" data-test="delete">
                     <mat-icon class="inline-valigned">delete</mat-icon>
                     Entfernen
                 </button>
-                <div class="flex-space"></div>
                 <button mat-button (click)="copy(harvester)" data-test="copy">
                     <mat-icon class="inline-valigned">file_copy</mat-icon>
                     Kopieren
                 </button>
-                <button mat-button color="primary" (click)="edit(harvester)" data-test="edit">
+                <button  mat-button color="primary" (click)="edit(harvester)" data-test="edit">
                     <mat-icon class="inline-valigned">edit</mat-icon>
                     Bearbeiten
                 </button>
-            </mat-action-row>
+            </div>
 
         </mat-expansion-panel>
     </ng-container>

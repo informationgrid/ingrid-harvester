@@ -119,3 +119,6 @@ mat-spinner {
   padding-top: 10px;
   margin-bottom: 10px;
 }
+
+.harvester-button-col-span-1-mobile { @media screen and (max-width: 1199px) { grid-column: span 1 / span 1; } }
+.harvester-button-custom-grid-cols-mobile { @media screen and (max-width: 1199px) { grid-template-columns: 1fr } }

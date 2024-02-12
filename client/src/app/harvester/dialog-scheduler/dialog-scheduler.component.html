@@ -25,13 +25,13 @@
 
 <mat-dialog-content>
 
-  <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center" class="padding-below">
+  <div class="flex-row gap-20 space-between items-center padding-below">
     <mat-slide-toggle color="primary"
                       [(ngModel)]="cron.full.active"
                       (change)="translate(cron.full.pattern, 'full')"
                       title="Planung an- / ausschalten"></mat-slide-toggle>
 
-    <mat-form-field fxFlex>
+    <mat-form-field class="flex-1">
       <mat-label>Cron Expression</mat-label>
       <input matInput placeholder="* * * * *" [(ngModel)]="cron.full.pattern" (keyup)="translate(cron.full.pattern, 'full')" data-test="cron-input">
       <button mat-button *ngIf="cron.full.pattern" matSuffix mat-icon-button aria-label="Clear" (click)="clearInput('full')" data-test="cron-reset">
@@ -46,13 +46,13 @@
 
   <mat-divider class="padding-below"></mat-divider>
 
-  <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center" class="padding-below">
+  <div class="flex-row gap-20 space-between items-center padding-below">
     <mat-slide-toggle color="primary"
                       [(ngModel)]="cron.incr.active"
                       (change)="translate(cron.incr.pattern, 'incr')"
                       title="Planung an- / ausschalten"></mat-slide-toggle>
                     
-    <mat-form-field fxFlex>
+    <mat-form-field class="flex-1">
       <mat-label>Cron Expression</mat-label>
       <input matInput placeholder="* * * * *" [(ngModel)]="cron.incr.pattern" (keyup)="translate(cron.incr.pattern, 'incr')" data-test="cron-input">
       <button mat-button *ngIf="cron.incr.pattern" matSuffix mat-icon-button aria-label="Clear" (click)="clearInput('incr')" data-test="cron-reset">
