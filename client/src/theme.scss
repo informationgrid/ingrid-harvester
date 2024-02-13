@@ -41,14 +41,69 @@
 @include mat.all-component-typographies();
 @include mat.core();
 
+$ingrid-blue: (
+50: #e8e9f1,
+100: #c5c8de,
+200: #a0a5c8,
+300: #7c82b2,
+400: #6267a2,
+500: #4a4d93,
+600: #44458a,
+700: #3c3c7e,
+800: #343272,
+900: #28225b,
+contrast: (
+  50: #e8f5e8,
+  100: #c9e5c6,
+  200: #a6d5a2,
+  300: #82c57d,
+  400: #68b961,
+  500: #4ead45,
+  600: #459e3d,
+  700: #398c32,
+  800: #2f7b28,
+  900: #1a5c16,
+)
+);
+
+$ingrid-green: (
+  50: #e8f5e8,
+  100: #c9e5c6,
+  200: #a6d5a2,
+  300: #82c57d,
+  400: #68b961,
+  500: #4ead45,
+  600: #459e3d,
+  700: #398c32,
+  800: #2f7b28,
+  900: #1a5c16,
+  contrast: (
+    50: #e8e9f1,
+    100: #c5c8de,
+    200: #a0a5c8,
+    300: #7c82b2,
+    400: #6267a2,
+    500: #4a4d93,
+    600: #44458a,
+    700: #3c3c7e,
+    800: #343272,
+    900: #28225b,
+  )
+);
+
+
+$ingrid-primary: mat.define-palette($ingrid-green);
+$ingrid-accent: mat.define-palette($ingrid-blue);
+
+
+
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$candy-app-primary: mat.define-palette(mat.$pink-palette);
-$candy-app-accent:  mat.define-palette(mat.$blue-grey-palette, A200, A100, A400);
-
+$candy-app-primary: mat.define-palette($ingrid-primary, 700);
+$candy-app-accent: mat.define-palette($ingrid-accent, 700);
 // The warn palette is optional (defaults to red).
-$candy-app-warn:    mat.define-palette(mat.$red-palette);
+$candy-app-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $candy-app-theme: mat.define-dark-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
@@ -75,4 +130,5 @@ input.custom-autofill {
     border-left: 3px solid mat.get-color-from-palette($primary);
   }
 }
+
 @include importer-components-theme($candy-app-theme);
