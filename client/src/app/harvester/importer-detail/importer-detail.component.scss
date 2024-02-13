@@ -22,7 +22,8 @@
  */
 
 // Import _variables.css to the component's sass file where you want to use it.
-@import "src/variables";
+// @import "src/variables";
+@import "../../../_variables.scss";
 
 .align-center {
   text-align: center;
