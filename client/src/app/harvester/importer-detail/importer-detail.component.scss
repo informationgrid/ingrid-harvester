@@ -58,6 +58,9 @@
   color: white;
 }
 
+/*
+ TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.
+ */
 .info-cards ::ng-deep .mat-card-header-text {
   padding-top: 22px;
 }

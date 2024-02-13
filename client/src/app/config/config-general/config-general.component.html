@@ -25,7 +25,7 @@
 
   <form [formGroup]="configForm">
 
-    <mat-card class="config-card" [formGroup]="configForm.get('database')">
+    <mat-card appearance="outlined" class="config-card" [formGroup]="configForm.get('database')">
       <mat-card-header>
         <mat-card-title>Datenbank</mat-card-title>
       </mat-card-header>
@@ -86,7 +86,7 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="config-card" [formGroup]="configForm.get('elasticsearch')">
+    <mat-card appearance="outlined" class="config-card" [formGroup]="configForm.get('elasticsearch')">
       <mat-card-header>
         <mat-card-title>Elasticsearch</mat-card-title>
       </mat-card-header>
@@ -174,7 +174,7 @@
       <input matInput placeholder="Portal URL" formControlName="portalUrl">
     </mat-form-field>
 
-    <mat-card class="config-card">
+    <mat-card appearance="outlined" class="config-card">
       <mat-card-header>
         <mat-card-title>Checks</mat-card-title>
       </mat-card-header>
@@ -233,7 +233,7 @@
           </div>
         </div>
 
-        <mat-card *ngIf="showInfo" class="info config-info-field margin-below">
+        <mat-card appearance="outlined" *ngIf="showInfo" class="info config-info-field margin-below">
           <div><span>*/5 * * * *</span> Alle 5 Minuten</div>
           <div><span>45 8 * * *</span> Täglich um 8:45 Uhr</div>
           <div><span>0 6-18/2 * * *</span> Täglich zwischen 6 und 18 Uhr, alle 2h</div>
@@ -243,7 +243,7 @@
     </mat-card>
 
 
-    <mat-card class="config-card" [formGroup]="configForm.get('indexBackup')">
+    <mat-card appearance="outlined" class="config-card" [formGroup]="configForm.get('indexBackup')">
       <mat-card-header class="flex-row gap-20">
         <mat-card-title >Index-Backup</mat-card-title>
         <div class="center-right">
@@ -276,7 +276,7 @@
           </mat-form-field>
         </div>
 
-        <mat-card class="info" *ngIf="showBackupCronInfo" class="config-info-field margin-below">
+        <mat-card appearance="outlined" class="info" *ngIf="showBackupCronInfo" class="config-info-field margin-below">
           <div><span>*/5 * * * *</span> Alle 5 Minuten</div>
           <div><span>45 8 * * *</span> Täglich um 8:45 Uhr</div>
           <div><span>0 6-18/2 * * *</span> Täglich zwischen 6 und 18 Uhr, alle 2h</div>
@@ -298,7 +298,7 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="config-card">
+    <mat-card appearance="outlined" class="config-card">
       <mat-card-header class="flex-row gap-20" [formGroup]="configForm.get('mail')">
         <mat-card-title>Email-Benachrichtigungen</mat-card-title>
         <div class="center-right">

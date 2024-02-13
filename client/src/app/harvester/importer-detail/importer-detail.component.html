@@ -37,7 +37,7 @@
     <ng-container *ngIf="data.complete">
 
         <div class="flex-row space-around info-cards">
-            <mat-card>
+            <mat-card appearance="outlined">
                 <mat-card-header>
                     <div mat-card-avatar class="numberCircle" data-test="num-docs">{{data.summary?.numDocs - data.summary?.skippedDocs.length}}</div>
                     <mat-card-title>Dokumente</mat-card-title>
@@ -45,7 +45,7 @@
                 </mat-card-header>
             </mat-card>
 
-            <mat-card (click)="showLog.next()" class="clickable">
+            <mat-card appearance="outlined" (click)="showLog.next()" class="clickable">
                 <mat-card-header>
                     <div mat-card-avatar class="numberCircle" data-test="num-errors"
                          [class.error]="data.summary?.numErrors > 0 || data.summary?.databaseErrors.length > 0 || data.summary?.elasticErrors.length > 0 || data.summary?.appErrors.length > 0">
@@ -55,7 +55,7 @@
                 </mat-card-header>
             </mat-card>
 
-            <mat-card (click)="showLog.next()" class="clickable">
+            <mat-card appearance="outlined" (click)="showLog.next()" class="clickable">
                 <mat-card-header>
                     <div mat-card-avatar class="numberCircle" data-test="num-warnings"
                          [class.warning]="data.summary?.warnings?.length > 0">

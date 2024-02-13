@@ -23,7 +23,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {MonitoringService} from "../monitoring.service";
-import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {Chart} from 'chart.js';
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";

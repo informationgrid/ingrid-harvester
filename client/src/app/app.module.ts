@@ -27,7 +27,7 @@ import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {MatIconModule} from '@angular/material/icon';
-import {MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
+import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {registerLocaleData} from '@angular/common';
@@ -39,11 +39,11 @@ import {environment} from '../environments/environment';
 import {UnauthorizedInterceptor} from './security/unauthorized.interceptor';
 import {LoginComponent} from './security/login.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {MatLegacyCardModule as MatCardModule} from '@angular/material/legacy-card';
-import {MatLegacyFormFieldModule as MatFormFieldModule} from '@angular/material/legacy-form-field';
-import {MatLegacyInputModule as MatInputModule} from '@angular/material/legacy-input';
-import {MatLegacyButtonModule as MatButtonModule} from '@angular/material/legacy-button';
-import {MatLegacySnackBarModule as MatSnackBarModule} from '@angular/material/legacy-snack-bar';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {AuthenticationService} from './security/authentication.service';
 
 registerLocaleData(localeDe);

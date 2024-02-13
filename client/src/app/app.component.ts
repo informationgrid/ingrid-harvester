@@ -24,7 +24,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from './security/authentication.service';
 import {Router} from '@angular/router';
-import {MatLegacySnackBar as MatSnackBar} from '@angular/material/legacy-snack-bar';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {ConfigService} from "./config.service";
 
 @Component({

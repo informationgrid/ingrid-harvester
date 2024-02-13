@@ -23,7 +23,7 @@
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {MatLegacyChipInputEvent as MatChipInputEvent} from '@angular/material/legacy-chips';
+import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 @Component({

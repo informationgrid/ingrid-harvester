@@ -22,17 +22,17 @@
 -->
 
 <mat-form-field class="flex-1">
-  <mat-chip-list #chipListTags>
-    <mat-chip *ngFor="let item of list" [selectable]="false"
+  <mat-chip-grid #chipListTags>
+    <mat-chip-row *ngFor="let item of list" [selectable]="false"
               [removable]="true" (removed)="remove(item)">
       {{item}}
       <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
+    </mat-chip-row>
     <input [placeholder]="placeholder"
            [matChipInputFor]="chipListTags"
            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
            [matChipInputAddOnBlur]="true"
            autocomplete="off"
            (matChipInputTokenEnd)="add($event)">
-  </mat-chip-list>
+  </mat-chip-grid>
 </mat-form-field>

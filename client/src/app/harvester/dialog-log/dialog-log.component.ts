@@ -22,7 +22,7 @@
  */
 
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA} from "@angular/material/legacy-dialog";
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {ImportLogMessage} from "../../../../../server/app/model/import.result";
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 

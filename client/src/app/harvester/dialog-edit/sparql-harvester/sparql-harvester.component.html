@@ -23,7 +23,7 @@
 
 <form [formGroup]="form">
 
-  <mat-card>
+  <mat-card appearance="outlined">
     <mat-card-header>
       <mat-card-title>Allgemeine SPARQL Einstellungen</mat-card-title>
     </mat-card-header>
@@ -37,7 +37,7 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card>
+  <mat-card appearance="outlined">
     <mat-card-header>
       <mat-card-title>Filter und Regeln</mat-card-title>
     </mat-card-header>
@@ -50,18 +50,18 @@
         </mat-form-field>
 
         <mat-form-field class="flex-1">
-          <mat-chip-list #chipList>
-            <mat-chip *ngFor="let keyword of model.eitherKeywords" [selectable]="false"
+          <mat-chip-grid #chipList>
+            <mat-chip-row *ngFor="let keyword of model.eitherKeywords" [selectable]="false"
                       [removable]="true" (removed)="remove(keyword)">
               {{keyword}}
               <mat-icon matChipRemove>cancel</mat-icon>
-            </mat-chip>
+            </mat-chip-row>
             <input placeholder="Either keywords"
                    [matChipInputFor]="chipList"
                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                    [matChipInputAddOnBlur]="true"
                    (matChipInputTokenEnd)="add($event)">
-          </mat-chip-list>
+          </mat-chip-grid>
         </mat-form-field>
       </div>
     </mat-card-content>

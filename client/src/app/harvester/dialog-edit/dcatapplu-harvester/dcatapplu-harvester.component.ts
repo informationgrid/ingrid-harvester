@@ -24,7 +24,7 @@
 import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {DcatSettings} from '../../../../../../server/app/importer/dcat/dcat.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatLegacyChipInputEvent as MatChipInputEvent} from '@angular/material/legacy-chips';
+import {MatChipInputEvent} from '@angular/material/chips';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({
