@@ -22,7 +22,7 @@
 -->
 
 <ng-container [formGroup]="form">
-  <mat-card appearance="outlined">
+  <mat-card>
     <mat-card-header>
       <mat-card-title>Allgemeine Excel (Sparse) Einstellungen</mat-card-title>
     </mat-card-header>
@@ -30,27 +30,31 @@
       <div formGroupName="catalog">
         <div class="flex-row gap-20 space-between">
           <mat-form-field class="flex-1">
-            <input matInput placeholder="Katalog-Title" formControlName="title" required>
+            <mat-label>Katalog-Title</mat-label>
+            <input matInput formControlName="title" required>
           </mat-form-field>
           <mat-form-field class="flex-20">
-            <input matInput placeholder="Katalog-Sprache" formControlName="language" required>
+            <mat-label>Katalog-Sprache</mat-label>
+            <input matInput formControlName="language" required>
           </mat-form-field>
         </div>
         <div class="flex-row gap-20 space-between">
           <mat-form-field class="flex-1">
-            <input matInput placeholder="Katalog-Beschreibung" formControlName="description" required>
+            <mat-label>Katalog-Beschreibung</mat-label>
+            <input matInput formControlName="description" required>
           </mat-form-field>
         </div>
       </div>
       <div class="flex-row gap-20 space-between">
         <mat-form-field class="flex-1">
-          <input matInput placeholder="Dateipfad" formControlName="filePath" required>
+          <mat-label>Dateipfad</mat-label>
+          <input matInput formControlName="filePath" required>
         </mat-form-field>
       </div>
     </mat-card-content>
   </mat-card>
 
-  <mat-card appearance="outlined">
+  <mat-card>
     <mat-card-header>
       <mat-card-title>Filter und Regeln</mat-card-title>
     </mat-card-header>

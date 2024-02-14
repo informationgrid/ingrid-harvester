@@ -23,60 +23,69 @@
 
 <form [formGroup]="form">
 
-  <mat-card appearance="outlined">
+  <mat-card>
     <mat-card-header>
       <mat-card-title>Allgemeine WFS Einstellungen</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="flex-row gap-20 space-between">
         <mat-form-field class="flex-20">
-          <mat-select placeholder="HTTP Methode" formControlName="httpMethod" required>
+          <mat-label>HTTP Methode</mat-label>
+          <mat-select formControlName="httpMethod" required>
             <mat-option value="GET">GET</mat-option>
             <mat-option value="POST">POST</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field class="flex-1">
-          <input matInput placeholder="Service URL" formControlName="getFeaturesUrl" required>
+          <mat-label>Service URL</mat-label>
+          <input matInput formControlName="getFeaturesUrl" required>
         </mat-form-field>
       </div>
       <div class="flex-row gap-20 space-between">
         <mat-form-field class="flex-20">
           <!-- <input matInput placeholder="WFS Version" formControlName="version" required> -->
-          <mat-select placeholder="WFS Version" formControlName="version" required>
+          <mat-label>WFS Version</mat-label>
+          <mat-select formControlName="version" required>
             <mat-option value="2.0.0">2.0.0</mat-option>
             <mat-option value="1.1.0">1.1.0</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field class="flex-1">
-          <input matInput placeholder="Typnamen (Komma-getrennt, inklusive Namespace)" formControlName="typename" required>
+          <mat-label>Typnamen</mat-label>
+          <mat-hint>Komma-getrennt, inklusive Namespace</mat-hint>
+          <input matInput formControlName="typename" required>
         </mat-form-field>
       </div>
     </mat-card-content>
   </mat-card>
 
-  <mat-card appearance="outlined">
+  <mat-card>
     <mat-card-header>
       <mat-card-title>Weitere WFS Einstellungen</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="flex-row gap-20 space-between">
-        <mat-form-field class="flex-10">
-          <input matInput placeholder="Katalog-ID" formControlName="catalogId" required>
+        <mat-form-field class="flex-20">
+          <mat-label>Katalog-ID</mat-label>
+          <input matInput formControlName="catalogId" required>
         </mat-form-field>
         <mat-form-field class="flex-20">
-          <mat-select placeholder="Planstatus" formControlName="pluPlanState" required>
+          <mat-label>Planstatus</mat-label>
+          <mat-select formControlName="pluPlanState" required>
             <mat-option value="unknown">unbekannt</mat-option>
             <mat-option value="fixed">festgestellt</mat-option>
             <mat-option value="inPreparation">in Aufstellung</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field class="flex-70">
-          <input matInput placeholder="CSW-URL zu Kontakt-Metadaten" formControlName="contactCswUrl">
+        <mat-form-field class="flex-60">
+          <mat-label>CSW-URL zu Kontakt-Metadaten</mat-label>
+          <input matInput formControlName="contactCswUrl">
         </mat-form-field>
       </div>
       <div class="flex-row gap-20 space-between">
         <mat-form-field class="flex-1">
-          <textarea matInput rows="6" placeholder="Kontakt-Metadaten Fallback (JSON-Objekt Contact)" formControlName="contactMetadata"></textarea>
+          <mat-label>Kontakt-Metadaten Fallback (JSON-Objekt Contact)</mat-label>
+          <textarea matInput rows="6" formControlName="contactMetadata"></textarea>
         </mat-form-field>
       </div>
     </mat-card-content>

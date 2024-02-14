@@ -23,14 +23,15 @@
 
 <form [formGroup]="form">
 
-  <mat-card appearance="outlined">
+  <mat-card>
     <mat-card-header>
       <mat-card-title>Allgemeine CKAN Einstellungen</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="flex-row gap-20 space-between">
         <mat-form-field class="flex-1">
-          <input matInput placeholder="CKAN Basis URL" formControlName="ckanBaseUrl" required>
+          <mat-label>CKAN Basis URL</mat-label>
+          <input matInput formControlName="ckanBaseUrl" required>
         </mat-form-field>
       </div>
 
@@ -44,20 +45,22 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field class="flex-1">
-          <input matInput placeholder="Zusätzlicher Filter Search-API" formControlName="additionalSearchFilter" autocomplete="off">
+          <mat-label>Zusätzlicher Filter Search-API</mat-label>
+          <input matInput formControlName="additionalSearchFilter" autocomplete="off">
         </mat-form-field>
       </div>
-
+      
       <div class="flex-row gap-20 space-between baseline">
         <mat-checkbox formControlName="markdownAsDescription"> Beschreibung als Markdown</mat-checkbox>
-
+        
         <mat-checkbox formControlName="groupChilds" class="flex-1"> Datensatzreihen zusammenfassen</mat-checkbox>
       </div>
-
+      
       <h4>Bereitgestellt durch</h4>
       <div class="flex-row gap-20 space-between">
         <mat-form-field class="flex-1">
-          <input matInput placeholder="Präfix" formControlName="providerPrefix" autocomplete="off">
+          <mat-label>Präfix</mat-label>
+          <input matInput formControlName="providerPrefix" autocomplete="off">
         </mat-form-field>
         <mat-form-field class="flex-1">
           <mat-label>CKAN-Feld</mat-label>
@@ -68,27 +71,30 @@
           </mat-select>
         </mat-form-field>
       </div>
-
+      
       <app-chip-list [list]="model.dateSourceFormats"
                      placeholder="Datumsformate"
                      (update)="model.dateSourceFormats = $event"></app-chip-list>
-
+      
       <h4>Default-Lizenz</h4>
       <div class="flex-row gap-20 space-between" formGroupName="defaultLicense">
         <mat-form-field class="flex-10">
-          <input matInput placeholder="ID" formControlName="id">
+          <mat-label>ID</mat-label>
+          <input matInput formControlName="id">
         </mat-form-field>
         <mat-form-field class="flex-45">
-          <input matInput placeholder="Titel" formControlName="title">
+          <mat-label>Titel</mat-label>
+          <input matInput formControlName="title">
         </mat-form-field>
         <mat-form-field class="flex-45">
-          <input matInput placeholder="URL" formControlName="url">
+          <mat-label>URL</mat-label>
+          <input matInput formControlName="url">
         </mat-form-field>
       </div>
     </mat-card-content>
   </mat-card>
 
-  <mat-card appearance="outlined">
+  <mat-card>
     <mat-card-header>
       <mat-card-title>Filter und Regeln</mat-card-title>
     </mat-card-header>

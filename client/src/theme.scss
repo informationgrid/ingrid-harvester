@@ -129,6 +129,14 @@ input.custom-autofill {
   .active-link {
     border-left: 3px solid mat.get-color-from-palette($primary);
   }
+  .mat-mdc-card {
+    margin-bottom: 20px;
+    background-color: #464646 !important;
+  }
+  .mat-mdc-card-content {
+    padding: 16px !important;
+  }
+
 }
 
 @include importer-components-theme($candy-app-theme);

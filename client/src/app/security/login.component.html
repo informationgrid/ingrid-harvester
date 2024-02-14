@@ -21,19 +21,21 @@
     ==================================================
 -->
 
-<mat-card appearance="outlined">
+<mat-card>
   <mat-card-title>Login</mat-card-title>
   <mat-card-content>
     <form [formGroup]="form" (ngSubmit)="submit()">
       <p>
         <mat-form-field>
-          <input type="text" matInput autocomplete="username" placeholder="Benutzername" formControlName="username">
+          <mat-label>Benutzername</mat-label>
+          <input type="text" matInput autocomplete="username" formControlName="username">
         </mat-form-field>
       </p>
-
+      
       <p>
         <mat-form-field>
-          <input type="password" matInput autocomplete="current-password" placeholder="Passwort" formControlName="password">
+          <mat-label>Passwort</mat-label>
+          <input type="password" matInput autocomplete="current-password" formControlName="password">
         </mat-form-field>
       </p>
 

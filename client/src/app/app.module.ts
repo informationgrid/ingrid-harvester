@@ -40,7 +40,8 @@ import {UnauthorizedInterceptor} from './security/unauthorized.interceptor';
 import {LoginComponent} from './security/login.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '@angular/material/form-field';
+import { MAT_CARD_CONFIG } from '@angular/material/card'; 
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -100,7 +101,9 @@ const appRoutes: Routes = [
       useClass: UnauthorizedInterceptor,
       deps: [Router, AuthenticationService],
       multi: true
-    }
+    },
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline', floatLabel: 'auto'}},
+    {provide: MAT_CARD_CONFIG, useValue: {appearance: 'raised'}},
   ],
   bootstrap: [AppComponent]
 })

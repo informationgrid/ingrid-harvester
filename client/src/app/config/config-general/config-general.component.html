@@ -21,59 +21,68 @@
     ==================================================
 -->
 
-<div *ngIf="configForm" class="form-wrapper">
+<div *ngIf="configForm" class="form-wrapper margin-top">
 
   <form [formGroup]="configForm">
 
-    <mat-card appearance="outlined" class="config-card" [formGroup]="configForm.get('database')">
+    <mat-card class="config-card" [formGroup]="configForm.get('database')">
       <mat-card-header>
         <mat-card-title>Datenbank</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div class="flex-row gap-20">
           <mat-form-field class="flex-30">
-            <mat-select placeholder="Datenbank" formControlName="type" required>
+            <mat-label>Datenbank</mat-label>
+            <mat-select formControlName="type" required>
               <mat-option value="postgresql">PostgreSQL</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field class="flex-70">
-            <input matInput type="url" placeholder="Verbindungsstring" formControlName="connectionString">
+            <mat-label>Verbindungsstring</mat-label>
+            <input matInput type="url" formControlName="connectionString">
           </mat-form-field>
         </div>
-        
+
         <div class="flex-row gap-20">
           <mat-form-field class="flex-80">
-            <input matInput type="url" placeholder="URL" formControlName="host">
+            <mat-label>URL</mat-label>
+            <input matInput type="url" formControlName="host">
           </mat-form-field>
           <mat-form-field class="flex-20">
-            <input matInput type="number" placeholder="Port" formControlName="port">
+            <mat-label>Port</mat-label>
+            <input matInput type="number" formControlName="port">
           </mat-form-field>
         </div>
 
         <div class="flex-row gap-20">
           <mat-form-field class="flex-100">
-            <input matInput placeholder="Datenbank-Name" formControlName="database">
+            <mat-label>Datenbank-Name</mat-label>
+            <input matInput formControlName="database">
           </mat-form-field>
         </div>
         <div class="flex-row gap-20">
-            <mat-form-field class="flex-50">
-              <input matInput type="text" placeholder="Benutzername" formControlName="user" required>
-              <mat-error *ngIf="configForm.get('database.user').hasError('required')">
-                Dies ist ein Pflichtfeld
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field class="flex-50">
-              <input matInput type="password" placeholder="Passwort" formControlName="password">
-            </mat-form-field>
+          <mat-form-field class="flex-50">
+            <mat-label>Benutzername</mat-label>
+            <input matInput type="text" formControlName="user" required>
+            <mat-error *ngIf="configForm.get('database.user').hasError('required')">
+              Dies ist ein Pflichtfeld
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="flex-50">
+            <mat-label>Passwort</mat-label>
+            <input matInput type="password" formControlName="password">
+          </mat-form-field>
         </div>
         <div class="flex-row gap-20">
-            <mat-form-field class="flex-100">
-              <input matInput type="text" placeholder="Identifier des Standard-Katalogs" formControlName="defaultCatalogIdentifier" required>
-            </mat-form-field>
+          <mat-form-field class="flex-100">
+            <mat-label>Identifier des Standard-Katalogs</mat-label>
+            <input matInput type="text" formControlName="defaultCatalogIdentifier" required>
+          </mat-form-field>
         </div>
         <div class="margin-below flex-row gap-20">
           <div class="form-buttons flex-50">
-            <button mat-button color="primary" (click)="checkDbConnection()" [disabled]="dbConnectionCheck == 'working'" data-test="checkDbConnection">
+            <button mat-button color="primary" (click)="checkDbConnection()" [disabled]="dbConnectionCheck == 'working'"
+              data-test="checkDbConnection">
               <mat-icon class="inline-valigned">cloud</mat-icon>
               Verbindung testen
             </button>
@@ -86,21 +95,23 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card appearance="outlined" class="config-card" [formGroup]="configForm.get('elasticsearch')">
+    <mat-card class="config-card" [formGroup]="configForm.get('elasticsearch')">
       <mat-card-header>
         <mat-card-title>Elasticsearch</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div class="flex-row gap-20">
           <mat-form-field class="flex-30">
-            <mat-select placeholder="Version" formControlName="version" required>
+            <mat-label>Version</mat-label>
+            <mat-select formControlName="version" required>
               <mat-option value="6">6</mat-option>
               <mat-option value="7">7</mat-option>
               <mat-option value="8">8</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field class="flex-70">
-            <input matInput type="url" placeholder="Host-URL" formControlName="url" required>
+            <mat-label>Host-URL</mat-label>
+            <input matInput type="url" formControlName="url" required>
             <mat-error *ngIf="configForm.get('elasticsearch.url').hasError('required')">
               Dies ist ein Pflichtfeld
             </mat-error>
@@ -110,16 +121,19 @@
           </mat-form-field>
         </div>
         <div class="flex-row gap-20 ">
-            <mat-form-field class="flex-50">
-              <input matInput type="text" placeholder="Benutzername" formControlName="user" required>
-            </mat-form-field>
-            <mat-form-field class="flex-50">
-              <input matInput type="password" placeholder="Passwort" formControlName="password">
-            </mat-form-field>
+          <mat-form-field class="flex-50">
+            <mat-label>Benutzername</mat-label>
+            <input matInput type="text" formControlName="user" required>
+          </mat-form-field>
+          <mat-form-field class="flex-50">
+            <mat-label>Passwort</mat-label>
+            <input matInput type="password" formControlName="password">
+          </mat-form-field>
         </div>
         <div class="flex-row gap-20">
           <mat-form-field class="flex-100">
-            <input matInput type="text" placeholder="Alias-Name" formControlName="alias" required>
+            <mat-label>Alias-Name</mat-label>
+            <input matInput type="text" formControlName="alias" required>
             <mat-error *ngIf="configForm.get('elasticsearch.alias').hasError('whitespace')">
               Es dürfen nicht nur Leerzeichen eingegeben sein
             </mat-error>
@@ -129,32 +143,37 @@
           </mat-form-field>
         </div>
         <h4>Index-Settings (readonly)</h4>
-        <p class="config-info-field">
+        <p>
           Index-Settings werden beim Start durch Umgebungsvariablen gesetzt.
         </p>
         <div class="flex-row gap-20">
           <mat-form-field class="flex-35" floatLabel="always">
-            <input matInput type="text" placeholder="Index-Präfix" formControlName="prefix">
+            <mat-label>Index-Präfix</mat-label>
+            <input matInput type="text" formControlName="prefix">
           </mat-form-field>
           <mat-form-field class="flex-35">
-            <input matInput type="text" placeholder="Index-Name" formControlName="index">
+            <mat-label>Index-Name</mat-label>
+            <input matInput type="text" formControlName="index">
           </mat-form-field>
           <mat-form-field class="flex-15">
-            <input matInput type="text" placeholder="Shards" formControlName="numberOfShards">
+            <mat-label>Shards</mat-label>
+            <input matInput type="text" formControlName="numberOfShards">
           </mat-form-field>
           <mat-form-field class="flex-15">
-            <input matInput type="text" placeholder="Replicas" formControlName="numberOfReplicas">
+            <mat-label>Replicas</mat-label>
+            <input matInput type="text" formControlName="numberOfReplicas">
           </mat-form-field>
         </div>
 
         <div class="margin-below flex-row gap-20">
           <div class="form-buttons flex-50">
-            <button mat-button color="primary" (click)="checkEsConnection()" [disabled]="esConnectionCheck == 'working'" data-test="checkEsConnection">
+            <button mat-button color="primary" (click)="checkEsConnection()" [disabled]="esConnectionCheck == 'working'"
+              data-test="checkEsConnection">
               <mat-icon class="inline-valigned">cloud</mat-icon>
               Verbindung testen
             </button>
           </div>
-          <div *ngIf="esConnectionCheck != null" >
+          <div *ngIf="esConnectionCheck != null">
             <mat-icon class="inline-valigned">{{statusIcon(esConnectionCheck)}}</mat-icon>&nbsp;
             <b>{{statusMsg(esConnectionCheck)}}</b>
           </div>
@@ -162,19 +181,30 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-form-field class="config-card">
-      <input matInput type="number" placeholder="Offset Cron-Jobs in Minuten" formControlName="cronOffset">
-    </mat-form-field>
+    <mat-card class="config-card">
+      <mat-card-header>
+        <mat-card-title>Additional Settings</mat-card-title>
+      </mat-card-header>
 
-    <mat-form-field class="config-card">
-      <input matInput placeholder="Proxy" formControlName="proxy">
-    </mat-form-field>
+      <mat-card-content>
+        <mat-form-field class="config-card">
+          <mat-label>Offset Cron-Jobs in Minuten</mat-label>
+          <input matInput type="number" formControlName="cronOffset">
+        </mat-form-field>
+        
+        <mat-form-field class="config-card">
+          <mat-label>Proxy</mat-label>
+          <input matInput formControlName="proxy">
+        </mat-form-field>
+        
+        <mat-form-field *ngIf="profile == 'mcloud'">
+          <mat-label>Portal URL</mat-label>
+          <input matInput formControlName="portalUrl">
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
 
-    <mat-form-field *ngIf="profile == 'mcloud'">
-      <input matInput placeholder="Portal URL" formControlName="portalUrl">
-    </mat-form-field>
-
-    <mat-card appearance="outlined" class="config-card">
+    <mat-card class="config-card">
       <mat-card-header>
         <mat-card-title>Checks</mat-card-title>
       </mat-card-header>
@@ -184,23 +214,22 @@
           <div class="flex-row gap-20">
             <h4 class="flex-80">URL Check: <span class="config-info-field">{{urlCheckTranslation}}</span></h4>
             <div class="center-right">
-              <mat-slide-toggle color="primary"
-                                [checked]="configForm.get('urlCheck.active').value"
-                                (change)="urlCheckTranslate(configForm.get('urlCheck.pattern').value)"
-                                formControlName="active"
-                                title="Planung an- / ausschalten"></mat-slide-toggle>
+              <mat-slide-toggle color="primary" [checked]="configForm.get('urlCheck.active').value"
+                (change)="urlCheckTranslate(configForm.get('urlCheck.pattern').value)" formControlName="active"
+                title="Planung an- / ausschalten"></mat-slide-toggle>
             </div>
           </div>
           <div class="flex-row gap-20 margin-below">
             <mat-form-field class="flex-100">
-              <mat-label>UrlCheck Cron <mat-icon class="flex-10" matSuffix (click)="showInfo = !showInfo" data-test="urlCheck-info">info_outline</mat-icon></mat-label>
+              <mat-label>UrlCheck Cron</mat-label>
               <input matInput placeholder="* * * * *" formControlName="pattern"
-                    (keyup)="urlCheckTranslate(configForm.get('urlCheck.pattern').value)" data-test="urlCheck-input">
+                (keyup)="urlCheckTranslate(configForm.get('urlCheck.pattern').value)" data-test="urlCheck-input">
               <button mat-button *ngIf="configForm.get('urlCheck.pattern')" matSuffix mat-icon-button aria-label="Clear"
-                      (click)="clearUrlCheckInput()" data-test="urlCheck-reset">
+                (click)="clearUrlCheckInput()" data-test="urlCheck-reset">
                 <mat-icon>close</mat-icon>
               </button>
-              <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon" data-test="urlCheck-info">info_outline</mat-icon>
+              <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon"
+                data-test="urlCheck-info">info_outline</mat-icon>
               <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
             </mat-form-field>
           </div>
@@ -211,29 +240,28 @@
           <div class="flex-row gap-20">
             <h4 class="flex-80">Index Check: <span class="config-info-field">{{indexCheckTranslation}}</span></h4>
             <div class="center-right">
-              <mat-slide-toggle color="primary"
-                                [checked]="configForm.get('indexCheck.active').value"
-                                (change)="indexCheckTranslate(configForm.get('indexCheck.pattern').value)"
-                                formControlName="active"
-                                title="Planung an- / ausschalten"></mat-slide-toggle>
+              <mat-slide-toggle color="primary" [checked]="configForm.get('indexCheck.active').value"
+                (change)="indexCheckTranslate(configForm.get('indexCheck.pattern').value)" formControlName="active"
+                title="Planung an- / ausschalten"></mat-slide-toggle>
             </div>
           </div>
           <div class="flex-row gap-20 margin-below">
             <mat-form-field class="flex-100">
               <mat-label>IndexCheck Cron</mat-label>
               <input matInput placeholder="* * * * *" formControlName="pattern"
-                    (keyup)="indexCheckTranslate(configForm.get('indexCheck.pattern').value)" data-test="indexCheck-input">
-              <button mat-button *ngIf="configForm.get('indexCheck.pattern')" matSuffix mat-icon-button aria-label="Clear"
-                      (click)="clearIndexCheckInput()" data-test="indexCheck-reset">
+                (keyup)="indexCheckTranslate(configForm.get('indexCheck.pattern').value)" data-test="indexCheck-input">
+              <button mat-button *ngIf="configForm.get('indexCheck.pattern')" matSuffix mat-icon-button
+                aria-label="Clear" (click)="clearIndexCheckInput()" data-test="indexCheck-reset">
                 <mat-icon>close</mat-icon>
               </button>
-              <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon" data-test="urlCheck-info">info_outline</mat-icon>
+              <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon"
+                data-test="urlCheck-info">info_outline</mat-icon>
               <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
             </mat-form-field>
           </div>
         </div>
 
-        <mat-card appearance="outlined" *ngIf="showInfo" class="info config-info-field margin-below">
+        <mat-card *ngIf="showInfo" class="info config-info-field margin-below">
           <div><span>*/5 * * * *</span> Alle 5 Minuten</div>
           <div><span>45 8 * * *</span> Täglich um 8:45 Uhr</div>
           <div><span>0 6-18/2 * * *</span> Täglich zwischen 6 und 18 Uhr, alle 2h</div>
@@ -243,40 +271,39 @@
     </mat-card>
 
 
-    <mat-card appearance="outlined" class="config-card" [formGroup]="configForm.get('indexBackup')">
+    <mat-card class="config-card" [formGroup]="configForm.get('indexBackup')">
       <mat-card-header class="flex-row gap-20">
-        <mat-card-title >Index-Backup</mat-card-title>
+        <mat-card-title>Index-Backup</mat-card-title>
         <div class="center-right">
-          <mat-slide-toggle color="primary"
-                            [checked]="configForm.get('indexBackup.active').value"
-                            (change)="indexBackupCronTranslate(configForm.get('indexBackup.cronPattern').value)"
-                            formControlName="active"
-                            title="Index-Backup an- / ausschalten">
+          <mat-slide-toggle color="primary" [checked]="configForm.get('indexBackup.active').value"
+            (change)="indexBackupCronTranslate(configForm.get('indexBackup.cronPattern').value)"
+            formControlName="active" title="Index-Backup an- / ausschalten">
           </mat-slide-toggle>
         </div>
       </mat-card-header>
 
-      <h4><span class="config-info-field">{{indexBackupCronTranslation}}</span></h4>
-
+      
       <mat-card-content>
+        <h4>Ausführung: <span class="config-info-field">{{indexBackupCronTranslation}}</span></h4>
         <div class="flex-row gap-20 margin-below">
           <mat-form-field class="flex-100">
             <mat-label>Cron</mat-label>
             <input matInput placeholder="* * * * *" formControlName="cronPattern"
-                   (keyup)="indexBackupCronTranslate(configForm.get('indexBackup.cronPattern').value)"
-                   data-test="indexBackupCron-input">
-            <button mat-button *ngIf="configForm.get('indexBackup.cronPattern')" matSuffix mat-icon-button aria-label="Clear"
-                    (click)="clearIndexBackupCronInput()" data-test="indexBackupCron-reset">
+              (keyup)="indexBackupCronTranslate(configForm.get('indexBackup.cronPattern').value)"
+              data-test="indexBackupCron-input">
+            <button mat-button *ngIf="configForm.get('indexBackup.cronPattern')" matSuffix mat-icon-button
+              aria-label="Clear" (click)="clearIndexBackupCronInput()" data-test="indexBackupCron-reset">
               <mat-icon>close</mat-icon>
             </button>
-            <mat-icon matSuffix (click)="showBackupCronInfo = !showBackupCronInfo" class="info-icon" data-test="indexBackupCron-info">
+            <mat-icon matSuffix (click)="showBackupCronInfo = !showBackupCronInfo" class="info-icon"
+              data-test="indexBackupCron-info">
               info_outline
             </mat-icon>
             <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
           </mat-form-field>
         </div>
 
-        <mat-card appearance="outlined" class="info" *ngIf="showBackupCronInfo" class="config-info-field margin-below">
+        <mat-card class="info" *ngIf="showBackupCronInfo" class="config-info-field margin-below">
           <div><span>*/5 * * * *</span> Alle 5 Minuten</div>
           <div><span>45 8 * * *</span> Täglich um 8:45 Uhr</div>
           <div><span>0 6-18/2 * * *</span> Täglich zwischen 6 und 18 Uhr, alle 2h</div>
@@ -285,77 +312,86 @@
 
         <div class="flex-row gap-20">
           <mat-form-field class="flex-100">
-            <input matInput placeholder="Index (RegExp)" formControlName="indexPattern">
+            <mat-label>Index (RegExp)</mat-label>
+            <input matInput formControlName="indexPattern">
           </mat-form-field>
         </div>
-
+        
         <div class="flex-row gap-20">
           <mat-form-field class="flex-100">
-            <input matInput placeholder="Verzeichnis" formControlName="dir" [required]="configForm.get('indexBackup.active').value">
+            <mat-label>Verzeichnis</mat-label>
+            <input matInput formControlName="dir"
+              [required]="configForm.get('indexBackup.active').value">
           </mat-form-field>
         </div>
 
       </mat-card-content>
     </mat-card>
 
-    <mat-card appearance="outlined" class="config-card">
+    <mat-card class="config-card">
       <mat-card-header class="flex-row gap-20" [formGroup]="configForm.get('mail')">
         <mat-card-title>Email-Benachrichtigungen</mat-card-title>
         <div class="center-right">
           <mat-slide-toggle color="primary" [checked]="configForm.get('mail.enabled')"
-                            title="Email-Benachrichtigungen an- / ausschalten" formControlName="enabled"
-                            (click)="$event.stopImmediatePropagation()"
-          >
+            title="Email-Benachrichtigungen an- / ausschalten" formControlName="enabled"
+            (click)="$event.stopImmediatePropagation()">
           </mat-slide-toggle>
         </div>
       </mat-card-header>
 
-      <mat-card-content >
+      <mat-card-content>
 
         <div class="flex-row gap-20">
           <mat-form-field class="flex-80" [formGroup]="configForm.get('mail.mailServer')">
-            <input matInput placeholder="Mail-Server" formControlName="host" required>
+            <mat-label>Mail-ServerMail-Server</mat-label>
+            <input matInput formControlName="host" required>
           </mat-form-field>
           <mat-form-field class="flex-20" [formGroup]="configForm.get('mail.mailServer')">
-            <input matInput type="number" placeholder="Port" formControlName="port" required>
+            <mat-label>Port</mat-label>
+            <input matInput type="number" formControlName="port" required>
           </mat-form-field>
         </div>
 
         <div [formGroup]="configForm.get('mail.mailServer')">
-          <mat-checkbox color="primary"
-                        formControlName="secure">
+          <mat-checkbox color="primary" formControlName="secure">
             Secured Connection
           </mat-checkbox>
         </div>
-        
+
         <div class="flex-row gap-20">
           <mat-form-field class="flex-50" [formGroup]="configForm.get('mail.mailServer.auth')">
-            <input matInput placeholder="User" formControlName="user">
+            <mat-label>User</mat-label>
+            <input matInput formControlName="user">
           </mat-form-field>
           <mat-form-field class="flex-50" [formGroup]="configForm.get('mail.mailServer.auth')">
-            <input type="password" matInput placeholder="Passwort" formControlName="pass">
+            <mat-label>Passwort</mat-label>
+            <input type="password" matInput formControlName="pass">
+          </mat-form-field>
+        </div>
+        
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-50" [formGroup]="configForm.get('mail')">
+            <mat-label>Absender</mat-label>
+            <input matInput formControlName="from" required>
+          </mat-form-field>
+          <mat-form-field class="flex-50" [formGroup]="configForm.get('mail')">
+            <mat-label>Empfänger</mat-label>
+            <input matInput formControlName="to" required>
           </mat-form-field>
         </div>
 
         <div class="flex-row gap-20">
           <mat-form-field class="flex-50" [formGroup]="configForm.get('mail')">
-            <input matInput placeholder="Absender" formControlName="from" required>
-          </mat-form-field>
-          <mat-form-field class="flex-50" [formGroup]="configForm.get('mail')">
-            <input matInput placeholder="Empfänger" formControlName="to" required>
+            <mat-label>Betreff-Tag</mat-label>
+            <input matInput formControlName="subjectTag">
           </mat-form-field>
         </div>
-        
-        <div class="flex-row gap-20">
-          <mat-form-field class="flex-50" [formGroup]="configForm.get('mail')">
-            <input matInput placeholder="Betreff-Tag" formControlName="subjectTag">
-          </mat-form-field>
-        </div>
-        
+
         <div class="flex-row gap-20">
           <mat-form-field style="width: 250px">
             <mat-label matPrefix>Benachrichtigungs-Schwelle:</mat-label>
-            <input matInput type="number" min="1" max="100" style="text-align: right; width: 50px" formControlName="maxDiff">
+            <input matInput type="number" min="1" max="100" style="text-align: right; width: 50px"
+              formControlName="maxDiff">
             <mat-icon [inline]="true" style="padding-left: 1px" matSuffix>%</mat-icon>
           </mat-form-field>
         </div>
@@ -367,7 +403,8 @@
 
   <div class="config-card">
     <button mat-button (click)="reset()" data-test="reset">Zurücksetzen</button>
-    <button mat-raised-button class="save-button" color="primary" (click)="save()" [disabled]="!configForm.valid" data-test="save">Speichern
+    <button mat-raised-button class="save-button" color="primary" (click)="save()" [disabled]="!configForm.valid"
+      data-test="save">Speichern
     </button>
   </div>
 </div>

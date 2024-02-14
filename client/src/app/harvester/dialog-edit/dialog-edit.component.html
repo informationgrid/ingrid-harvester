@@ -49,27 +49,30 @@
         </mat-form-field>
 
         <mat-form-field class="col-span-3 col-span-6-mobile">
-          <input matInput placeholder="Indexname" formControlName="index" required>
+          <mat-label>Indexname</mat-label>
+          <input matInput formControlName="index" required>
         </mat-form-field>
   
         <mat-form-field class="col-span-4 col-span-9-mobile">
-          <input matInput placeholder="Beschreibung" formControlName="description" required>
+          <mat-label>Beschreibung</mat-label>
+          <input matInput formControlName="description" required>
         </mat-form-field>
 
         <mat-form-field class="col-span-2 col-span-3-mobile">
-          <input matInput  type="number" placeholder="Priorität" formControlName="priority">
+          <mat-label>Priorität</mat-label>
+          <input matInput type="number" formControlName="priority">
         </mat-form-field>
       </div>
 
-      <mat-card appearance="outlined" *ngIf="profile == 'mcloud'">
+      <mat-card *ngIf="profile == 'mcloud'">
         <mat-card-header>
           <mat-card-title>mCloud Einstellungen</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <div class="flex-row gap-20 space-between">
             <mat-form-field class="flex-1 flex-100-mobile">
-              <mat-select placeholder="Standard DCAT-Kategorien" multiple
-                          formControlName="defaultDCATCategory">
+              <mat-label>Standard DCAT-Kategorien</mat-label>
+              <mat-select multiple formControlName="defaultDCATCategory">
                 <mat-option value="SOCI">Bevölkerung und Gesellschaft</mat-option>
                 <mat-option value="EDUC">Bildung, Kultur und Sport</mat-option>
                 <mat-option value="ENER">Energie</mat-option>
@@ -88,8 +91,8 @@
             </mat-form-field>
 
             <mat-form-field class="flex-1 flex-100-mobile">
-              <mat-select placeholder="Standard mCLOUD-Kategorien" multiple
-                          formControlName="defaultMcloudSubgroup">
+              <mat-label>Standard mCLOUD-Kategorien</mat-label>
+              <mat-select multiple formControlName="defaultMcloudSubgroup">
                 <mat-option value="railway">Bahn</mat-option>
                 <mat-option value="infrastructure">Infrastruktur</mat-option>
                 <mat-option value="climate">Klima und Wetter</mat-option>
@@ -100,31 +103,32 @@
             </mat-form-field>
 
             <mat-form-field class="flex-1">
-              <input matInput placeholder="Attribution-Name"
-                     formControlName="defaultAttribution">
+              <mat-label>Attribution-Name</mat-label>
+              <input matInput formControlName="defaultAttribution">
             </mat-form-field>
 
             <mat-form-field class="flex-1">
-              <input matInput placeholder="Attribution-Link"
-                     formControlName="defaultAttributionLink">
+              <mat-label>Attribution-Link</mat-label>
+              <input matInput formControlName="defaultAttributionLink">
             </mat-form-field>
           </div>
         </mat-card-content>
       </mat-card>
 
-      <mat-card appearance="outlined">
+      <mat-card>
         <mat-card-header>
           <mat-card-title>Allgemeine Einstellungen</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <div class="flex-row flex-col-mobile gap-20 space-between">
             <mat-form-field class="flex-1">
-              <input matInput type="number" min="1" max="10000" minlength="1" placeholder="Max. Datensätze pro Anfrage"
+              <mat-label>Max. Datensätze pro Anfrage</mat-label>
+              <input matInput type="number" min="1" max="10000" minlength="1" 
                      formControlName="maxRecords">
             </mat-form-field>
             <mat-form-field class="flex-1">
-              <input matInput type="number" min="0" placeholder="Start Datensatz"
-                     formControlName="startPosition">
+              <mat-label>Start Datensatz</mat-label>
+              <input matInput type="number" min="0" formControlName="startPosition">
             </mat-form-field>
           </div>
         </mat-card-content>
@@ -198,14 +202,12 @@
       </app-wfs-harvester>
 
       <ng-template #rules>
-        <div class="flex-row flex-col-mobile gap-20 space-between">
           <app-chip-list [list]="harvester.blacklistedIds"
                          placeholder="Ausgeschlossene IDs"
-                         (update)="harvester.blacklistedIds = $event"></app-chip-list>
+                         (update)="harvester.blacklistedIds = $event"></app-chip-list>              
           <app-chip-list [list]="harvester.whitelistedIds"
                          placeholder="Nicht auszuschließende IDs"
                          (update)="harvester.whitelistedIds = $event"></app-chip-list>
-        </div>
 
         <div formGroupName="rules" class="flex-row flex-col-mobile gap-20 space-between baseline" >
           <mat-checkbox formControlName="containsDocumentsWithData" (change)="toggleDisableRule($event.checked)">Muss Daten-Download enthalten</mat-checkbox>
@@ -218,7 +220,8 @@
       </ng-template>
 
       <mat-form-field>
-        <textarea matInput placeholder="Zusätzlicher Mapping-Code" formControlName="customCode"></textarea>
+        <mat-label>Zusätzlicher Mapping-Code</mat-label>
+        <textarea matInput formControlName="customCode"></textarea>
       </mat-form-field>
 
       <!--      <span class="mat-small">{{harvesterForm.value | json}}</span>-->

@@ -23,49 +23,56 @@
 
 <form [formGroup]="form">
 
-  <mat-card appearance="outlined">
+  <mat-card>
     <mat-card-header>
       <mat-card-title>CSW Einstellungen</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="flex-row flex-col-mobile gap-20 space-between">
-        <mat-form-field class="flex-15 flex-100-mobile">
-          <mat-select placeholder="HTTP Methode" formControlName="httpMethod" required>
+        <mat-form-field class="flex-20 flex-100-mobile">
+          <mat-label>HTTP Methode</mat-label>
+          <mat-select formControlName="httpMethod" required>
             <mat-option value="GET">GET</mat-option>
             <mat-option value="POST">POST</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field class="flex-1">
-          <input matInput placeholder="GetRecords URL" formControlName="getRecordsUrl" required>
+          <mat-label>GetRecords URL</mat-label>
+          <input matInput formControlName="getRecordsUrl" required>
         </mat-form-field>
       </div>
       <div class="flex-row flex-col-mobile gap-20 space-between">
         <mat-form-field class="flex-1 ">
-          <input matInput type="number" min="1" placeholder="Anzahl paralleler Abfragen"
-                 formControlName="maxConcurrent">
+          <mat-label>Anzahl paralleler Abfragen</mat-label>
+          <input matInput type="number" min="1" formControlName="maxConcurrent">
         </mat-form-field>
         <mat-form-field class="flex-1">
-          <mat-select placeholder="Harvesting Modus" formControlName="harvestingMode" required>
+          <mat-label>Harvesting Modus</mat-label>
+          <mat-select formControlName="harvestingMode" required>
             <mat-option value="standard">Standard</mat-option>
             <mat-option value="separate">Separat (langsam)</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field class="flex-1">
-          <input matInput placeholder="Max. Dienste pro Anfrage" formControlName="maxServices" type="number" [disabled]="profile == 'diplanung'">
+          <mat-label>Max. Dienste pro Anfrage</mat-label>
+          <input matInput formControlName="maxServices" type="number" [disabled]="profile == 'diplanung'">
         </mat-form-field>
       </div>
       <div class="flex-row flex-col-mobile gap-20 space-between">
         <mat-form-field class="flex-1">
-          <mat-select placeholder="WFS/WMS auflösen" formControlName="resolveOgcDistributions" required>
+          <mat-label>WFS/WMS auflösen</mat-label>
+          <mat-select formControlName="resolveOgcDistributions" required>
             <mat-option [value]="false">Nein</mat-option>
             <mat-option [value]="true">Ja (langsam)</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field class="flex-1">
-          <input matInput placeholder="Toleranz: Polygone vereinfachen" formControlName="simplifyTolerance" type="number">
+          <mat-label>Toleranz: Polygone vereinfachen</mat-label>
+          <input matInput formControlName="simplifyTolerance" type="number">
         </mat-form-field>
         <mat-form-field class="flex-1" *ngIf="profile == 'diplanung'">
-          <mat-select placeholder="Planstatus" formControlName="pluPlanState" required>
+          <mat-label>Planstatus</mat-label>
+          <mat-select formControlName="pluPlanState" required>
             <mat-option value="unknown">unbekannt</mat-option>
             <mat-option value="fixed">festgestellt</mat-option>
             <mat-option value="inPreparation">in Aufstellung</mat-option>
@@ -74,33 +81,25 @@
       </div>
     </mat-card-content>
   </mat-card>
-
-  <mat-card appearance="outlined">
+  
+  <mat-card>
     <mat-card-header>
       <mat-card-title>Filter und Regeln</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <ng-container class="flex-col" [ngTemplateOutlet]="rulesTemplate"></ng-container>
-
+      
       <div class="flex-col">
         <mat-form-field>
-          <textarea matInput rows="6" class="code" placeholder="Record Filter" formControlName="recordFilter"></textarea>
+          <mat-label>Record Filter</mat-label>
+          <textarea matInput rows="6" class="code" formControlName="recordFilter"></textarea>
         </mat-form-field>
-
-        <mat-form-field>
-          <mat-chip-grid #chipList>
-            <mat-chip-row *ngFor="let keyword of model.eitherKeywords" [selectable]="false"
-                      [removable]="true" (removed)="remove(keyword)">
-              {{keyword}}
-              <mat-icon matChipRemove>cancel</mat-icon>
-            </mat-chip-row>
-            <input placeholder="Either keywords"
-                   [matChipInputFor]="chipList"
-                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                   [matChipInputAddOnBlur]="true"
-                   (matChipInputTokenEnd)="add($event)">
-          </mat-chip-grid>
-        </mat-form-field>
+        
+        <app-chip-list 
+        [list]="model.eitherKeywords"
+        placeholder="Either keywords"
+        (update)="model.eitherKeywords = $event"></app-chip-list>  
+        
       </div>
     </mat-card-content>
   </mat-card>
