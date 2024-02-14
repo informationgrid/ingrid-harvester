@@ -23,10 +23,10 @@
 
 <div class="flex-row full">
   <mat-list class="flex-50 list-hover scroll">
-    <div class="flex-row">
+    <div class="flex-row fixed-top-right">
       <div class="flex-1"></div>
     <input type="file" #indexUpload id="indexUpload" name="harvesterUpload" (change)="importIndex(this.indexUpload.files)" accept="json/*.json" style="display:none;" />
-    <button id="importIndex" mat-flat-button (click)="this.indexUpload.click()" data-test="importIndex">Import</button>
+    <button mat-raised-button id="importIndex" (click)="this.indexUpload.click()" data-test="importIndex">Import</button>
     </div>
     <h3 mat-subheader>Existierende Indizes</h3>
     <mat-list-item *ngFor="let index of indices | async" (click)="sendSearchRequest(index.name)">

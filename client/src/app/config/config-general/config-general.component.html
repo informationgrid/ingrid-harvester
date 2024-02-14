@@ -142,10 +142,7 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <h4>Index-Settings (readonly)</h4>
-        <p>
-          Index-Settings werden beim Start durch Umgebungsvariablen gesetzt.
-        </p>
+        <h4>Index-Settings (readonly) werden beim Start durch Umgebungsvariablen gesetzt.</h4>
         <div class="flex-row gap-20">
           <mat-form-field class="flex-35" floatLabel="always">
             <mat-label>Index-Präfix</mat-label>
@@ -385,15 +382,17 @@
             <mat-label>Betreff-Tag</mat-label>
             <input matInput formControlName="subjectTag">
           </mat-form-field>
+          <div class="flex-50"></div>
         </div>
 
         <div class="flex-row gap-20">
-          <mat-form-field style="width: 250px">
-            <mat-label matPrefix>Benachrichtigungs-Schwelle:</mat-label>
-            <input matInput type="number" min="1" max="100" style="text-align: right; width: 50px"
+          <mat-form-field class="flex-50">
+            <mat-label>Benachrichtigungs-Schwelle:</mat-label>
+            <input matInput type="number" min="1" max="100" style="text-align: right; "
               formControlName="maxDiff">
             <mat-icon [inline]="true" style="padding-left: 1px" matSuffix>%</mat-icon>
           </mat-form-field>
+          <div class="flex-50"></div>
         </div>
 
       </mat-card-content>

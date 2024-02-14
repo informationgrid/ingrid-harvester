@@ -131,13 +131,16 @@ input.custom-autofill {
   }
   .mat-mdc-card {
     margin-bottom: 20px;
-    background-color: #464646 !important;
+    background-color: var(--mat-expansion-container-background-color) !important;
   }
   .mat-mdc-card-content {
     padding: 16px !important;
   }
   mat-dialog-content{
     padding-top: 32px !important;
+  }
+  .mdc-card {
+    background-color: #4b4b4b !important;
   }
   
 .fixed-top-right {
@@ -153,7 +156,6 @@ input.custom-autofill {
 }
 
 hr {
-  //border: gray;
   opacity: 0.5;
 }
 

@@ -24,7 +24,7 @@
 <div *ngIf="harvesterLoaded" class="example-headers-align">
     <div class="flex-row fixed-top-right" >
       <div class="flex-1"></div>
-      <button mat-flat-button [disabled]="numberOfHarvesters === 0" (click)="importAll()" data-test="import-all">Alle importieren</button>
+      <button mat-raised-button [disabled]="numberOfHarvesters === 0" (click)="importAll()" data-test="import-all">Alle importieren</button>
     </div>
 
     <div *ngFor="let item of harvesters | keyvalue" class="harvester-list">

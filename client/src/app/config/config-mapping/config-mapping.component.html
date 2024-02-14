@@ -21,22 +21,24 @@
     ==================================================
 -->
 
-<mat-list dense class="list-hover" *ngFor="let type of types | async">
-    <h3 matSubheader>{{type.name}}</h3>
-    @for (item of type.items; track item) {
-      <mat-list-item>
-        <h4 matListItemTitle >{{item}}</h4>
-        <mat-icon-button matListItemIcon title="Mapping löschen" (click)="deleteItem(type.name, item)" class="clickable">
-          <mat-icon>delete</mat-icon>
-        </mat-icon-button>
-      </mat-list-item>
-    }
-</mat-list>
+<div class="margin-below">
+  <mat-list dense class="list-hover mapping-card" *ngFor="let type of types | async">
+      <h3 matSubheader>{{type.name}}</h3>
+      @for (item of type.items; track item) {
+        <mat-list-item class="mapping-item">
+          <h4 matListItemTitle >{{item}}</h4>
+          <mat-icon-button matListItemIcon title="Mapping löschen" (click)="deleteItem(type.name, item)" class="clickable">
+            <mat-icon color="warn" >delete</mat-icon>
+          </mat-icon-button>
+        </mat-list-item>
+      }
+  </mat-list>
+</div>
 
 <button mat-fab
         color="primary"
         (click)="addItem()"
-        class="mat-fab-bottom-right"
+        class="fixed-bottom-right"
         id="btnAddMapping">
   <mat-icon aria-label="Add Mapping">add</mat-icon>
 </button>
