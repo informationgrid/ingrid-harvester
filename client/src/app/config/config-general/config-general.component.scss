@@ -48,7 +48,7 @@ mat-icon {
   margin: auto;
   margin-bottom: 20px;
   box-sizing: border-box;
-  max-width: 900px;
+  max-width: var(--max-width-panel);
   width: 100%;
 }
 
@@ -63,12 +63,4 @@ mat-icon {
   inset: 0;
   margin: auto;
   margin-right: 0;
-}
-
-
-
-.save-button{
-  position: fixed;
-  bottom: 20px;
-  right: 40px;
 }

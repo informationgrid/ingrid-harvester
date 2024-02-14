@@ -139,7 +139,28 @@ input.custom-autofill {
   mat-dialog-content{
     padding-top: 32px !important;
   }
+  
+.fixed-top-right {
+  position: sticky !important;
+  top: 20px;
+  right: 40px;
+  z-index: 100;
+}
+.fixed-bottom-right {
+  position: fixed !important;
+  bottom: 20px;
+  right: 40px;
+}
 
+hr {
+  //border: gray;
+  opacity: 0.5;
+}
+
+}
+
+:root {
+  --max-width-panel: 900px;
 }
 
 @include importer-components-theme($candy-app-theme);

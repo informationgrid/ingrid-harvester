@@ -22,27 +22,29 @@
 -->
 
 <div *ngIf="harvesterLoaded" class="example-headers-align">
-    <div class="flex-row" >
+    <div class="flex-row fixed-top-right" >
       <div class="flex-1"></div>
       <button mat-flat-button [disabled]="numberOfHarvesters === 0" (click)="importAll()" data-test="import-all">Alle importieren</button>
     </div>
 
-    <ng-container *ngFor="let item of harvesters | keyvalue">
+    <div *ngFor="let item of harvesters | keyvalue" class="harvester-list">
 
         <h3>{{item.key}}</h3>
 
         <mat-expansion-panel *ngFor="let harvester of item.value" hideToggle [id]="'harvester-' + harvester.id">
             <mat-expansion-panel-header>
 
-                <mat-panel-title>
+                <mat-panel-title class="">
                     <mat-slide-toggle color="primary" [checked]="!harvester.disable"
+                    class=""
                                       title="Für Suche und Planung an- / ausschalten"
                                       (change)="handleActivation($event, harvester)"
                                       (click)="$event.stopImmediatePropagation()"></mat-slide-toggle>
-                    <mat-icon *ngIf="harvester.cron?.full?.pattern || harvester.cron?.incr?.pattern" inline class="scheduled">
-                      {{harvester.disable || !harvester.cron.full?.active ? 'alarm_off' : 'alarm_on'}}
-                    </mat-icon>
-                    <p class="no-wrap">{{harvester.description || harvester.defaultAttribution}}</p>
+                    <p class="no-wrap">
+                        <mat-icon *ngIf="harvester.cron?.full?.pattern || harvester.cron?.incr?.pattern" inline class="scheduled">
+                            {{harvester.disable || !harvester.cron.full?.active ? 'alarm_off' : 'alarm_on'}}
+                        </mat-icon>
+                        {{harvester.description || harvester.defaultAttribution}}</p>
                     <mat-spinner *ngIf="importDetail[harvester.id]?.complete === false" diameter="20"></mat-spinner>
                 </mat-panel-title>
 
@@ -58,27 +60,34 @@
                                  (showLog)="showLog(harvester.id)"
                                  [cronActive]="!harvester.disable && (harvester.cron?.full?.active || harvester.cron?.incr?.active)"></app-importer-detail>
 
-            <div class="harvester-config-buttons grid grid-cols-8 gap-20 justify-items-end baseline harvester-button-custom-grid-cols-mobile">
+            
+
+            <!-- <div class="col-span-2 harvester-button-col-span-1-mobile"> -->
+            <div class="harvester-config-buttons grid grid-cols-1 gap-20 justify-items-end baseline harvester-button-custom-grid-cols-mobile margin-below">
+                <button mat-button (click)="startImport(harvester.id)"
+                        data-test="import"
+                        [disabled]="importDetail[harvester.id]?.complete === false">
+                    <mat-icon class="inline-valigned">import_export</mat-icon>
+                    Import starten
+                </button>
+                <button mat-button (click)="startImport(harvester.id, true)"
+                        data-test="import"
+                        [disabled]="importDetail[harvester.id]?.complete === false"
+                        *ngIf="item.key === 'CSW'">
+                    <mat-icon class="inline-valigned">import_export</mat-icon>
+                    Import starten (inkrementell)
+                </button>
+            </div>
+
+            <hr>
+
+            <div class="harvester-config-buttons grid grid-cols-6 gap-20 justify-items-end baseline harvester-button-custom-grid-cols-mobile">
 
                 <button class="col-span-1" mat-button (click)="showLog(harvester.id)" [disabled]="!hasAnyProblems(harvester.id)" data-test="log">
                     <mat-icon class="inline-valigned">description</mat-icon>
                     Error-Log
                 </button>
-                <div class="col-span-2 harvester-button-col-span-1-mobile">
-                    <button mat-button (click)="startImport(harvester.id)"
-                            data-test="import"
-                            [disabled]="importDetail[harvester.id]?.complete === false">
-                        <mat-icon class="inline-valigned">import_export</mat-icon>
-                        Import starten
-                    </button>
-                    <button mat-button (click)="startImport(harvester.id, true)"
-                            data-test="import"
-                            [disabled]="importDetail[harvester.id]?.complete === false"
-                            *ngIf="item.key === 'CSW'">
-                        <mat-icon class="inline-valigned">import_export</mat-icon>
-                        Import starten (inkrementell)
-                    </button>
-                </div>
+
                 <button  mat-button (click)="showHistory(harvester)" data-test="history">
                     <mat-icon class="inline-valigned">history</mat-icon>
                     Historie
@@ -102,12 +111,12 @@
             </div>
 
         </mat-expansion-panel>
-    </ng-container>
+    </div>
 
     <button mat-fab
             color="primary"
             (click)="addHarvester()"
-            class="mat-fab-bottom-right"
+            class="fixed-bottom-right"
             id="btnAddHarvester">
         <mat-icon aria-label="Add Harvester">add</mat-icon>
     </button>
