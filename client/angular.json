@@ -34,20 +34,6 @@
             "aot": true
           },
           "configurations": {
-            "hmr": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.hmr.ts"
-                }
-              ]
-            },
             "production": {
               "fileReplacements": [
                 {
@@ -85,11 +71,6 @@
             "buildTarget": "client:build"
           },
           "configurations": {
-            "hmr": {
-              "hmr": true,
-              "hmrWarning": false,
-              "buildTarget": "client:build:hmr"
-            },
             "production": {
               "buildTarget": "client:build:production"
             }
