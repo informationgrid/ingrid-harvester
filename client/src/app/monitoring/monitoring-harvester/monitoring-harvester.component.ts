@@ -206,9 +206,9 @@ export class MonitoringHarvesterComponent implements OnInit {
           tooltipPinned: false,
           tooltipIsDragging: false
         };
-        this.chart = new Chart('chart_harvester', chartOptions);
+        // this.chart = new Chart('chart_harvester', chartOptions);
 
-        this.dragElement( document.getElementById('chartjs-tooltip'));
+        // this.dragElement( document.getElementById('chartjs-tooltip'));
       });
     } else {
     }
@@ -312,47 +312,47 @@ export class MonitoringHarvesterComponent implements OnInit {
     tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
   };
 
-  dragElement(elmnt) {
-    var chart = this.chart;
-    var hasMoved = false;
-    elmnt.onmousedown = dragMouseDown;
+  // dragElement(elmnt) {
+  //   var chart = this.chart;
+  //   var hasMoved = false;
+  //   elmnt.onmousedown = dragMouseDown;
 
-    function dragMouseDown(e) {
-      e = e || window.event;
-      e.preventDefault();
+  //   function dragMouseDown(e) {
+  //     e = e || window.event;
+  //     e.preventDefault();
 
-      chart.options.tooltipIsDragging = true;
-      hasMoved = false;
+  //     chart.options.tooltipIsDragging = true;
+  //     hasMoved = false;
 
-      document.onmouseup = closeDragElement;
-      document.onmousemove = elementDrag;
-    }
+  //     document.onmouseup = closeDragElement;
+  //     document.onmousemove = elementDrag;
+  //   }
 
-    function elementDrag(e) {
-      e = e || window.event;
-      e.preventDefault();
+  //   function elementDrag(e) {
+  //     e = e || window.event;
+  //     e.preventDefault();
 
-      hasMoved = true;
-      chart.options.tooltipPinned = true;
+  //     hasMoved = true;
+  //     chart.options.tooltipPinned = true;
 
-      elmnt.style.top = (parseFloat(elmnt.style.top) + e.movementY)+'px';
-      elmnt.style.left = (parseFloat(elmnt.style.left) + e.movementX)+'px';
-    }
+  //     elmnt.style.top = (parseFloat(elmnt.style.top) + e.movementY)+'px';
+  //     elmnt.style.left = (parseFloat(elmnt.style.left) + e.movementX)+'px';
+  //   }
 
-    function closeDragElement() {
-      chart.options.tooltipIsDragging = false;
-      document.onmouseup = null;
-      document.onmousemove = null;
+  //   function closeDragElement() {
+  //     chart.options.tooltipIsDragging = false;
+  //     document.onmouseup = null;
+  //     document.onmousemove = null;
 
-      if(!hasMoved ||  !chart.options.tooltipPinned) {
-        chart.options.tooltipPinned = !chart.options.tooltipPinned;
-        var tooltipEl = document.getElementById('chartjs-tooltip');
-        if (chart.options.tooltipPinned) {
-          tooltipEl.style.border = '3px solid black';
-        } else {
-          tooltipEl.style.border = '0px solid black';
-        }
-      }
-    }
-  }
+  //     if(!hasMoved ||  !chart.options.tooltipPinned) {
+  //       chart.options.tooltipPinned = !chart.options.tooltipPinned;
+  //       var tooltipEl = document.getElementById('chartjs-tooltip');
+  //       if (chart.options.tooltipPinned) {
+  //         tooltipEl.style.border = '3px solid black';
+  //       } else {
+  //         tooltipEl.style.border = '0px solid black';
+  //       }
+  //     }
+  //   }
+  // }
 }

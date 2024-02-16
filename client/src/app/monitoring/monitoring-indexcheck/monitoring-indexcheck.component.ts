@@ -211,7 +211,7 @@ export class MonitoringIndexCheckComponent implements OnInit {
             }
           }
         };
-        this.chart = new Chart('chart_indexcheck', chartOptions);
+        // this.chart = new Chart('chart_indexcheck', chartOptions);
       });
     } else {
     }

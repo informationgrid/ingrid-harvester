@@ -222,7 +222,7 @@ export class MonitoringUrlCheckComponent implements OnInit {
             }
           }
         };
-        this.chart = new Chart('chart_urlcheck', chartOptions);
+        // this.chart = new Chart('chart_urlcheck', chartOptions);
       });
     } else {
     }
