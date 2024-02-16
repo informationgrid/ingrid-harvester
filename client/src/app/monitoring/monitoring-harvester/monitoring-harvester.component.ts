@@ -24,11 +24,12 @@
 import {Component, OnInit} from '@angular/core';
 import {MonitoringService} from "../monitoring.service";
 import {MatDialog} from "@angular/material/dialog";
-import {Chart} from 'chart.js';
+import {Chart, registerables} from 'chart.js';
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {MonitoringComponent} from "../monitoring.component";
 import {MonitoringUrlcheckDetailComponent} from "../monitoring-urlcheck/monitoring-urlcheck-detail/monitoring-urlcheck-detail.component";
+import { historyChart } from 'src/app/charts/reuseableChart';
 
 @Component({
   selector: 'app-monitoring-harvester',
@@ -37,11 +38,13 @@ import {MonitoringUrlcheckDetailComponent} from "../monitoring-urlcheck/monitori
 })
 export class MonitoringHarvesterComponent implements OnInit {
 
-  private chart : Chart;
+  private chartHarvester : Chart;
 
   private tooltipPinned : boolean = false;
 
   constructor(private configService: MonitoringService, private dialog: MatDialog, private http: HttpClient) {
+    // Chart.register(...registerables);
+    Chart.defaults.color = 'white'; // Global text color
   }
 
   ngOnInit() {
@@ -53,160 +56,164 @@ export class MonitoringHarvesterComponent implements OnInit {
   }
 
   public async draw_chart() {
-    if (!this.chart) {
+    if (!this.chartHarvester) {
       this.getHarvesterHistory().toPromise().then((data) => {
-        let chartOptions = {
-          type: 'line',
-          data: {
-            labels: data.history.map(entry => new Date(entry.timestamp)),
-            datasets: [
-              {
-                label: "Datensätze",
-                data: data.history.map(entry => entry.numRecords - entry.numSkipped),
-                borderColor: "blue",
-                backgroundColor: "blue",
-                fill: false,
-                cubicInterpolationMode: 'monotone',
-                yAxisID: 'left-y-axis'
-              },
-              {
-                label: "Fehler",
-                data: data.history.map(entry => entry.numRecordErrors + entry.numAppErrors + entry.numDBErrors + entry.numESErrors),
-                borderColor: "red",
-                backgroundColor: "red",
-                fill: false,
-                cubicInterpolationMode: 'monotone',
-                yAxisID: 'left-y-axis'
-              },
-              {
-                label: "Warnungen",
-                data: data.history.map(entry => entry.numWarnings),
-                borderColor: "orange",
-                backgroundColor: "orange",
-                fill: false,
-                cubicInterpolationMode: 'monotone',
-                yAxisID: 'left-y-axis'
-              },
-              {
-                label: "Dauer (s)",
-                data: data.history.map(entry => entry.duration),
-                borderColor: "yellow",
-                backgroundColor: "yellow",
-                fill: false,
-                cubicInterpolationMode: 'monotone',
-                yAxisID: 'right-y-axis',
-                hidden: true
-              },
-            ],
-            raw: data.history
-          },
-          options: {
-            responsive: true,
-            title: {
-              //text: data.harvester,
-              display: false
-            },
-            legend: {
-              position: 'bottom',
-            },
-            tooltips: {
-              mode: 'index',
-              intersect: false,
-              enabled: false,
-              custom: this.customTooltips
-              /*
-              callbacks: {
-                // Use the footer callback to display the sum of the items showing in the tooltip
-                footer: function (tooltipItems, data) {
-                  let entry = data.raw[tooltipItems[0].index];
-                  let result = "\nAbgerufen: " + entry.numRecords + "\n";
-                  result += "Übersprungen: " + entry.numSkipped + "\n";
-                  if (entry.harvester && entry.harvester.length > 0) {
-                    result += "\nHarvester:\n";
-                    entry.harvester.sort((h1, h2) => h2.count - h1.count).forEach(harvester => result += "* " + harvester.base_index + "(" + harvester.count + ")\n");
-                  }
-                  return result;
-                },
-              },
-              footerFontStyle: 'normal'*/
-            },
-            'onHover' : function (evt) {
-              //console.log(this);
-              if(this.chart.options.tooltipPinned){
-                return;
-              }
-              //console.log(evt)
-              if((evt.relatedTarget && evt.relatedTarget.id === 'chartjs-tooltip') || (evt.layerX >= (this.chart.chartArea.left + this.chart.canvas.offsetLeft)
-                && evt.layerX <= (this.chart.chartArea.right + this.chart.canvas.offsetLeft)
-                && evt.layerY >= (this.chart.chartArea.top + this.chart.canvas.offsetTop)
-                && evt.layerY <= (this.chart.chartArea.bottom + this.chart.canvas.offsetTop))) {
-                document.getElementById('chartjs-tooltip').hidden = false;
-              } else {
-                document.getElementById('chartjs-tooltip').hidden = true;
-              }
-            },
-            hover: {
-              mode: 'nearest',
-              intersect: true
-            },
-            scales: {
-              xAxes: [{
-                type: 'time',
-                distribution: 'series',
-                time: {
-                  tooltipFormat: 'DD.MM.YYYY HH:mm:ss',
-                  unit: 'day',
-                  unitStepSize: 1,
-                  displayFormats: {
-                    'day': 'DD.MM.'
-                  }
-                },
-                display: true,
-                scaleLabel: {
-                  display: true,
-                },
-                gridLines: {
-                  color: 'rgba(255, 255, 255, 0.1)'
-                }
-              }],
-              yAxes: [{
-                id: 'left-y-axis',
-                position: 'left',
-                display: 'auto',
-                scaleLabel: {
-                  labelString: 'Anzahl',
-                  display: true,
-                },
-                gridLines: {
-                  color: 'rgba(255, 255, 255, 0.2)'
-                },
-                ticks: {
-                  beginAtZero: true,
-                  padding: 10
-                }
-              },
-                {
-                  id: 'right-y-axis',
-                  position: 'right',
-                  display: 'auto',
-                  scaleLabel: {
-                    labelString: 'Dauer (s)',
-                    display: true,
-                  },
-                  ticks: {
-                    beginAtZero: true,
-                    padding: 10
-                  },
-                  gridLines: {
-                    drawOnChartArea: false, // only want the grid lines for one axis to show up
-                  }
-                }]
-            }
-          },
-          tooltipPinned: false,
-          tooltipIsDragging: false
-        };
+        this.chartHarvester = historyChart('chart_harvester', data.history)
+
+        // let chartOptions = {
+        //   type: 'line',
+        //   data: {
+        //     labels: data.history.map(entry => new Date(entry.timestamp)),
+        //     datasets: [
+        //       {
+        //         label: "Datensätze",
+        //         data: data.history.map(entry => entry.numRecords - entry.numSkipped),
+        //         borderColor: "blue",
+        //         backgroundColor: "blue",
+        //         fill: false,
+        //         cubicInterpolationMode: 'monotone',
+        //         yAxisID: 'left-y-axis'
+        //       },
+        //       {
+        //         label: "Fehler",
+        //         data: data.history.map(entry => entry.numRecordErrors + entry.numAppErrors + entry.numDBErrors + entry.numESErrors),
+        //         borderColor: "red",
+        //         backgroundColor: "red",
+        //         fill: false,
+        //         cubicInterpolationMode: 'monotone',
+        //         yAxisID: 'left-y-axis'
+        //       },
+        //       {
+        //         label: "Warnungen",
+        //         data: data.history.map(entry => entry.numWarnings),
+        //         borderColor: "orange",
+        //         backgroundColor: "orange",
+        //         fill: false,
+        //         cubicInterpolationMode: 'monotone',
+        //         yAxisID: 'left-y-axis'
+        //       },
+        //       {
+        //         label: "Dauer (s)",
+        //         data: data.history.map(entry => entry.duration),
+        //         borderColor: "yellow",
+        //         backgroundColor: "yellow",
+        //         fill: false,
+        //         cubicInterpolationMode: 'monotone',
+        //         yAxisID: 'right-y-axis',
+        //         hidden: true
+        //       },
+        //     ],
+        //     raw: data.history
+        //   },
+        //   options: {
+        //     responsive: true,
+        //     title: {
+        //       //text: data.harvester,
+        //       display: false
+        //     },
+        //     legend: {
+        //       position: 'bottom',
+        //     },
+        //     tooltips: {
+        //       mode: 'index',
+        //       intersect: false,
+        //       enabled: false,
+        //       custom: this.customTooltips
+        //       /*
+        //       callbacks: {
+        //         // Use the footer callback to display the sum of the items showing in the tooltip
+        //         footer: function (tooltipItems, data) {
+        //           let entry = data.raw[tooltipItems[0].index];
+        //           let result = "\nAbgerufen: " + entry.numRecords + "\n";
+        //           result += "Übersprungen: " + entry.numSkipped + "\n";
+        //           if (entry.harvester && entry.harvester.length > 0) {
+        //             result += "\nHarvester:\n";
+        //             entry.harvester.sort((h1, h2) => h2.count - h1.count).forEach(harvester => result += "* " + harvester.base_index + "(" + harvester.count + ")\n");
+        //           }
+        //           return result;
+        //         },
+        //       },
+        //       footerFontStyle: 'normal'*/
+        //     },
+        //     'onHover' : function (evt) {
+        //       //console.log(this);
+        //       if(this.chart.options.tooltipPinned){
+        //         return;
+        //       }
+        //       //console.log(evt)
+        //       if((evt.relatedTarget && evt.relatedTarget.id === 'chartjs-tooltip') || (evt.layerX >= (this.chart.chartArea.left + this.chart.canvas.offsetLeft)
+        //         && evt.layerX <= (this.chart.chartArea.right + this.chart.canvas.offsetLeft)
+        //         && evt.layerY >= (this.chart.chartArea.top + this.chart.canvas.offsetTop)
+        //         && evt.layerY <= (this.chart.chartArea.bottom + this.chart.canvas.offsetTop))) {
+        //         document.getElementById('chartjs-tooltip').hidden = false;
+        //       } else {
+        //         document.getElementById('chartjs-tooltip').hidden = true;
+        //       }
+        //     },
+        //     hover: {
+        //       mode: 'nearest',
+        //       intersect: true
+        //     },
+        //     scales: {
+        //       xAxes: [{
+        //         type: 'time',
+        //         distribution: 'series',
+        //         time: {
+        //           tooltipFormat: 'DD.MM.YYYY HH:mm:ss',
+        //           unit: 'day',
+        //           unitStepSize: 1,
+        //           displayFormats: {
+        //             'day': 'DD.MM.'
+        //           }
+        //         },
+        //         display: true,
+        //         scaleLabel: {
+        //           display: true,
+        //         },
+        //         gridLines: {
+        //           color: 'rgba(255, 255, 255, 0.1)'
+        //         }
+        //       }],
+        //       yAxes: [{
+        //         id: 'left-y-axis',
+        //         position: 'left',
+        //         display: 'auto',
+        //         scaleLabel: {
+        //           labelString: 'Anzahl',
+        //           display: true,
+        //         },
+        //         gridLines: {
+        //           color: 'rgba(255, 255, 255, 0.2)'
+        //         },
+        //         ticks: {
+        //           beginAtZero: true,
+        //           padding: 10
+        //         }
+        //       },
+        //         {
+        //           id: 'right-y-axis',
+        //           position: 'right',
+        //           display: 'auto',
+        //           scaleLabel: {
+        //             labelString: 'Dauer (s)',
+        //             display: true,
+        //           },
+        //           ticks: {
+        //             beginAtZero: true,
+        //             padding: 10
+        //           },
+        //           gridLines: {
+        //             drawOnChartArea: false, // only want the grid lines for one axis to show up
+        //           }
+        //         }]
+        //     }
+        //   },
+        //   tooltipPinned: false,
+        //   tooltipIsDragging: false
+        // };
+
         // this.chart = new Chart('chart_harvester', chartOptions);
+        // this.chart = historyChart('chart_harvester', data);
 
         // this.dragElement( document.getElementById('chartjs-tooltip'));
       });

@@ -20,13 +20,22 @@
     limitations under the Licence.
     ==================================================
 -->
+<div class="chart-container">
+  
+  <div class="flex-row fixed-top-right" >
+    <h2 mat-dialog-title class="flex-1">{{dialogTitle}}</h2>
+    <button mat-button  mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 
-<h2 mat-dialog-title>{{dialogTitle}}</h2>
-
-<mat-dialog-content>
-  <canvas id="chart"></canvas>
-</mat-dialog-content>
-
-<mat-dialog-actions>
-  <button mat-button mat-dialog-close>Schließen</button>
-</mat-dialog-actions>
+  
+  
+  <mat-dialog-content>
+    <canvas id="chart"></canvas>
+  </mat-dialog-content>
+  
+  <!-- <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Schließen</button>
+  </mat-dialog-actions> -->
+</div>

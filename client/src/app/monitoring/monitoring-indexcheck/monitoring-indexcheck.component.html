@@ -21,12 +21,15 @@
     ==================================================
 -->
 
-<div class="form-wrapper">
-  <div class="flex-row fixed-top-right">
-    <div class="flex-1"></div>
-    <button mat-raised-button (click)="indexCheck()" data-test="indexCheck">Index Check manuell starten</button>
-  </div>
+<mat-card class="chart-container">
+  <mat-card-header class="chart-container flex-row fixed-top-right">
+    <h2 class="flex-1"></h2>
+    <button mat-raised-button (click)="indexCheck()" data-test="indexCheck">
+      Index Check manuell starten
+    </button>
+  </mat-card-header>
 
-  <br>
-  <canvas id="chart_indexcheck"></canvas>
-</div>
+  <mat-card-content class="chart-container">
+    <canvas id="chart_indexcheck"></canvas>
+  </mat-card-content>
+</mat-card>

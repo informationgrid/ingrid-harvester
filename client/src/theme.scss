@@ -119,6 +119,10 @@ input.custom-autofill {
   @include cdk-text-field-autofill-color(transparent, red);
 }*/
 
+:root {
+  --max-width-panel: 900px;
+  --chart-background: #191919;
+}
 
 @mixin importer-components-theme($theme) {
   // Extract the palettes you need from the theme definition.
@@ -153,16 +157,22 @@ input.custom-autofill {
   position: fixed !important;
   bottom: 20px;
   right: 40px;
+  z-index: 100;
 }
 
 hr {
   opacity: 0.5;
 }
 
+.chart-container {
+  background-color: var(--chart-background);
+  // padding: 16px;
+  width: auto;
+  height: auto
 }
 
-:root {
-  --max-width-panel: 900px;
 }
+
+
 
 @include importer-components-theme($candy-app-theme);

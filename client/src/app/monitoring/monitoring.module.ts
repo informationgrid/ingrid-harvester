@@ -42,6 +42,7 @@ import {MonitoringUrlcheckDetailComponent} from "./monitoring-urlcheck/monitorin
 import {MonitoringIndexCheckDetailComponent} from "./monitoring-indexcheck/monitoring-indexcheck-detail/monitoring-indexcheck-detail.component";
 import {MatExpansionModule} from "@angular/material/expansion";
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 
 const configRoutes: Routes = [
   {
@@ -66,7 +67,9 @@ const configRoutes: Routes = [
         MatCardModule,
         MatCheckboxModule,
         MatExpansionModule,
-        ScrollingModule
+        ScrollingModule,
+        MatGridList,
+        MatGridTile,
     ],
     exports: [
         MonitoringComponent
