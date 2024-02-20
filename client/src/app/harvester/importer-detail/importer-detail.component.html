@@ -29,7 +29,11 @@
                 [value]="getProgressValue()">
         </mat-progress-bar>
         <div class="progress-description align-center">
-            <span *ngIf="data.progress">{{data.progress.current}} / {{data.progress.total}} ({{data.duration | number:'1.0-0'}}s)</span>
+            @if (data.progress) {
+              <span>
+                {{data.progress.current}} / {{data.progress.total}} ({{data.duration | number:'1.0-0'}}s)
+              </span>
+            }
             <div>{{data.message}}</div>
         </div>
     </ng-container>
@@ -80,8 +84,12 @@
             <mat-list-item >
                 <mat-icon mat-list-icon>snooze</mat-icon>
                 <h4 mat-line>Nächste Ausführung</h4>
-                <p mat-line data-test="next-execution" *ngIf="!cronActive" [title]="'Wenn aktiviert, dann: ' + (data.nextExecution | date:'short')"> deaktiviert </p>
-                <p mat-line data-test="next-execution" *ngIf="cronActive"> {{data.nextExecution | date:'short'}} </p>
+                @if (!cronActive) {
+                  <p mat-line data-test="next-execution" [title]="'Wenn aktiviert, dann: ' + (data.nextExecution | date:'short')"> deaktiviert </p>
+                }
+                @if (cronActive) {
+                  <p mat-line data-test="next-execution"> {{data.nextExecution | date:'short'}} </p>
+                }
             </mat-list-item>
         </mat-list>
 
@@ -89,6 +97,6 @@
 
 </ng-container>
 
-<ng-container *ngIf="!data">
-    There's no Info right now.
-</ng-container>
+@if (!data) {
+  There's no Info right now.
+}
