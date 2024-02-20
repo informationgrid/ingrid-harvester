@@ -24,11 +24,13 @@
 <mat-form-field title={{placeholder}} class="flex-1" style="width: 100%;">
   <mat-label>{{placeholder}}</mat-label>
   <mat-chip-grid #chipListTags>
-    <mat-chip-row *ngFor="let item of list" [selectable]="false"
-              [removable]="true" (removed)="remove(item)">        
-      {{item}}
-      <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip-row>    
+    @for (item of list; track item) {
+      <!-- [selectable]="false" -->
+      <mat-chip-row [removable]="true" (removed)="remove(item)">        
+        {{item}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip-row>    
+    }
     <input [matChipInputFor]="chipListTags"
            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
            [matChipInputAddOnBlur]="true"

@@ -54,11 +54,13 @@
         <mat-form-field class="flex-1">
           <mat-label>Either keywords</mat-label>
           <mat-chip-grid #chipList>
-            <mat-chip-row *ngFor="let keyword of model.eitherKeywords" [selectable]="false"
-                      [removable]="true" (removed)="remove(keyword)">
-              {{keyword}}
-              <mat-icon matChipRemove>cancel</mat-icon>
-            </mat-chip-row>
+            @for (keyword of model.eitherKeywords; track keyword) {
+              <!-- [selectable]="false" -->
+              <mat-chip-row [removable]="true" (removed)="remove(keyword)">
+                {{keyword}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip-row>
+            }
             <input [matChipInputFor]="chipList"
                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                    [matChipInputAddOnBlur]="true"
