@@ -22,6 +22,10 @@
 -->
 
 <div class="margin-below">
+  <mat-card class="config-headline">
+    <h1>Mapping (Datenformate)</h1>
+  </mat-card>
+
   <mat-list dense class="list-hover mapping-card" *ngFor="let type of types | async">
       <h3 matSubheader>{{type.name}}</h3>
       @for (item of type.items; track item) {

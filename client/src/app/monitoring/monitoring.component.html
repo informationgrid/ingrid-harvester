@@ -21,7 +21,7 @@
     ==================================================
 -->
 
-<mat-tab-group animationDuration="0ms" (selectedTabChange)="onTabChange($event)">
+<!-- <mat-tab-group animationDuration="0ms" (selectedTabChange)="onTabChange($event)">
   <mat-tab label="UrlCheck">
     <app-monitoring-urlcheck></app-monitoring-urlcheck>
   </mat-tab>
@@ -31,16 +31,16 @@
   <mat-tab label="Harvester Historie">
     <app-monitoring-harvester></app-monitoring-harvester>
   </mat-tab>
-</mat-tab-group>
+</mat-tab-group> -->
 
-<!-- <mat-grid-list cols="2" rowHeight="2:1" [gutterSize]="'10px'" style="margin: 10px">
+<mat-grid-list [cols]="breakpoint" rowHeight="1:1" [gutterSize]="'32px'" style="margin: 32px" (window:resize)="onResize($event)">
+  <mat-grid-tile [colspan]="breakpointCols">
+    <app-monitoring-harvester style="width: 100%; height: 100%;"></app-monitoring-harvester>
+  </mat-grid-tile>
   <mat-grid-tile>
     <app-monitoring-urlcheck style="width: 100%; height: 100%;"></app-monitoring-urlcheck>
   </mat-grid-tile>
   <mat-grid-tile>
     <app-monitoring-indexcheck style="width: 100%; height: 100%;"></app-monitoring-indexcheck>
   </mat-grid-tile>
-  <mat-grid-tile>
-    <app-monitoring-harvester style="width: 100%; height: 100%;"></app-monitoring-harvester>
-  </mat-grid-tile>
-</mat-grid-list> -->
+</mat-grid-list>

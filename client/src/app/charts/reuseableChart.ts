@@ -1,6 +1,41 @@
 import { Chart } from "chart.js";
 import { formatDateAndTime, formatDay } from "../utils/dateUtils";
 
+
+const customTitle = (tooltipItems, data) => { 
+  let nr: number;
+  tooltipItems.forEach(tooltipItem => { nr = tooltipItem.dataIndex });
+  return formatDateAndTime(data[nr].timestamp)
+}
+const customFooter = (tooltipItems, data) => {
+  let nr: number;
+  tooltipItems.forEach(tooltipItem => { nr = tooltipItem.dataIndex });
+  let entry = data[nr];
+  let result = ""
+  if (entry.numRecords) result = "\nAbgerufen: "+entry.numRecords+"\n";
+  if (entry.numSkipped) result += "Übersprungen: "+entry.numSkipped+"\n";
+  if (entry.errors) result += "errors: "+entry.errors.length+"\n";
+  if (entry.harvester && entry.harvester.length > 0) {
+    result += "\nHarvester:";
+    entry.harvester.sort((h1, h2) => h2.count - h1.count).forEach(harvester => {
+      result += "\n· " + harvester.base_index + " (" + harvester.count +")";
+    });
+  }
+  if(entry.errors && entry.errors.length>0){
+    result += "\nFehler:\n";
+    entry.errors.sort((a, b) => b.count - a.count).slice(0, 5).forEach(error => result += "· "+error.message+(error.count>1?" ("+error.count+")":"")+"\n");
+  }
+  if(entry.warnings && entry.warnings.length>0){
+    result += "\nWarnungen:\n";
+    entry.warnings.sort((a, b) => b.count - a.count).slice(0, 5).forEach(warning => result += "· "+warning.message+(warning.count>1?" ("+warning.count+")":"")+"\n");
+  } 
+  if (entry.status && entry.status.filter(status => isNaN(status.code) && status.code !== 'ftp').length > 0) {
+    result += "\nFehler:\n";
+    entry.status.filter(status => isNaN(status.code) && status.code !== 'ftp').forEach(status => result += "* " + status.code + "\n");
+  }
+  return result;
+}
+
 export function historyChart(chartName, data){
     return new Chart(chartName, {
         type: 'line',
@@ -63,7 +98,7 @@ export function historyChart(chartName, data){
               labels: {
                 usePointStyle: true,
                 pointStyle: 'circle',
-                padding: 60,
+                padding: 40,
               },
             },
             tooltip: {
@@ -71,28 +106,8 @@ export function historyChart(chartName, data){
               intersect: false,
               footerFont: {weight: 'normal'},
               callbacks: {
-                title: (tooltipItems) => { 
-                  let nr: number;
-                  tooltipItems.forEach(tooltipItem => { nr = tooltipItem.dataIndex });
-                  return formatDateAndTime(data[nr].timestamp)
-                },
-                // Use the footer callback to display the sum of the items showing in the tooltip
-                footer: (tooltipItems) => {
-                  let nr: number;
-                  tooltipItems.forEach(tooltipItem => { nr = tooltipItem.dataIndex });
-                  let entry = data[nr];
-                  let result = "\nAbgerufen: "+entry.numRecords+"\n";
-                  result += "Übersprungen: "+entry.numSkipped+"\n";
-                  if(entry.errors && entry.errors.length>0){
-                    result += "\nFehler:\n";
-                    entry.errors.sort((a, b) => b.count - a.count).slice(0, 5).forEach(error => result += "* "+error.message+(error.count>1?" ("+error.count+")":"")+"\n");
-                  }
-                  if(entry.warnings && entry.warnings.length>0){
-                    result += "\nWarnungen:\n";
-                    entry.warnings.sort((a, b) => b.count - a.count).slice(0, 5).forEach(warning => result += "* "+warning.message+(warning.count>1?" ("+warning.count+")":"")+"\n");
-                  }
-                  return result;
-                },
+                title: tooltipItems => customTitle(tooltipItems, data),
+                footer: tooltipItems => customFooter(tooltipItems, data),
               },
             },
           },
@@ -146,7 +161,6 @@ export function historyChart(chartName, data){
 
 
 export function urlCheckChart(chartName, data){
-    console.log(data)
     return new Chart(chartName, {
         type: 'line',
         data: {
@@ -216,50 +230,23 @@ export function urlCheckChart(chartName, data){
                 labels: {
                   usePointStyle: true,
                   pointStyle: 'circle',
-                  padding: 60,
+                  padding: 40,
                 },
               },
               tooltip: {
                 mode: 'index',
                 intersect: false,
                 footerFont: {weight: 'normal'},
-                // callbacks: {
-                //   // Use the footer callback to display the sum of the items showing in the tooltip
-                //   footer: function (tooltipItems, data) {
-                //     let entry = data.raw[tooltipItems[0].index];
-                //     let result = "";
-                //     if (entry.status && entry.status.filter(status => isNaN(status.code) && status.code !== 'ftp').length > 0) {
-                //       result += "\nFehler:\n";
-                //       entry.status.filter(status => isNaN(status.code) && status.code !== 'ftp').forEach(status => result += "* " + status.code + "\n");
-                //     }
-                //     return result;
-                //   },
-                // },
+                callbacks: {
+                  title: tooltipItems => customTitle(tooltipItems, data),
+                  footer: tooltipItems => customFooter(tooltipItems, data),
+                },
               },
             },
-            // onClick : function (evt) {
-            //   if(evt.layerX >= (this.chart.chartArea.left + this.chart.canvas.offsetLeft)
-            //   && evt.layerX <= (this.chart.chartArea.right + this.chart.canvas.offsetLeft)
-            //   && evt.layerY >= (this.chart.chartArea.top + this.chart.canvas.offsetTop)
-            //   && evt.layerY <= (this.chart.chartArea.bottom + this.chart.canvas.offsetTop)) {
-            //   var activePoints = this.chart.getElementsAtEventForMode(evt, 'index', { intersect: false }, true);
-            //   if(activePoints && activePoints.length > 0){
-            //     let data = this.chart.data.raw[activePoints[0]._index];
-            //     dialog.open(MonitoringUrlcheckDetailComponent, {
-            //       data: data,
-            //       width: '950px',
-            //       disableClose: true
-            //     });
-            //   }}
-            // },
             hover: {
                 mode: 'nearest',
                 intersect: true
             },
-            // click: {
-            //   mode: 'nearest',
-            //   intersect: true
-            // },
             scales: {
                 x: {
                     title: {
@@ -357,7 +344,7 @@ export function indexCheckChart(chartName, data){
         plugins: {
           title: {
             text: data.harvester,
-            display: true,
+            display: false,
             font: {
               size: 24,
             }
@@ -367,7 +354,7 @@ export function indexCheckChart(chartName, data){
             labels: {
               usePointStyle: true,
               pointStyle: 'circle',
-              padding: 60,
+              padding: 40,
             },
           },
           tooltip: {
@@ -375,58 +362,11 @@ export function indexCheckChart(chartName, data){
             intersect: false,
             footerFont: {weight: 'normal'},
             callbacks: {
-              title: (tooltipItems) => { 
-                let nr: number;
-                tooltipItems.forEach(tooltipItem => { nr = tooltipItem.dataIndex });
-                return formatDateAndTime(data[nr].timestamp)
-              },
-              footer: function (tooltipItems) {
-                let nr: number;
-                tooltipItems.forEach(tooltipItem => { nr = tooltipItem.dataIndex });
-                let entry = data[nr];
-                // let entry = data.raw[tooltipItems[0].index];
-                let result = "";
-                if (entry.status && entry.status.filter(status => isNaN(status.code) && status.code !== 'ftp').length > 0) {
-                  result += "\nFehler:\n";
-                  entry.status.filter(status => isNaN(status.code) && status.code !== 'ftp').forEach(status => result += "* " + status.code + "\n");
-                }
-                return result;
-              },
-              // Use the footer callback to display the sum of the items showing in the tooltip
-              // footer: (tooltipItems) => {
-              //   let nr: number;
-              //   tooltipItems.forEach(tooltipItem => { nr = tooltipItem.dataIndex });
-              //   let entry = data[nr];
-              //   let result = "\nAbgerufen: "+entry.numRecords+"\n";
-              //   result += "Übersprungen: "+entry.numSkipped+"\n";
-              //   if(entry.errors && entry.errors.length>0){
-              //     result += "\nFehler:\n";
-              //     entry.errors.sort((a, b) => b.count - a.count).slice(0, 5).forEach(error => result += "* "+error.message+(error.count>1?" ("+error.count+")":"")+"\n");
-              //   }
-              //   if(entry.warnings && entry.warnings.length>0){
-              //     result += "\nWarnungen:\n";
-              //     entry.warnings.sort((a, b) => b.count - a.count).slice(0, 5).forEach(warning => result += "* "+warning.message+(warning.count>1?" ("+warning.count+")":"")+"\n");
-              //   }
-              //   return result;
-              // },
+              title: tooltipItems => customTitle(tooltipItems, data),
+              footer: tooltipItems => customFooter(tooltipItems, data),
             },
           },
         },
-        // onClick : function (evt) {/*
-        //   if(evt.layerX >= (this.chart.chartArea.left + this.chart.canvas.offsetLeft)
-        //     && evt.layerX <= (this.chart.chartArea.right + this.chart.canvas.offsetLeft)
-        //     && evt.layerY >= (this.chart.chartArea.top + this.chart.canvas.offsetTop)
-        //     && evt.layerY <= (this.chart.chartArea.bottom + this.chart.canvas.offsetTop)) {
-        //   var activePoints = this.chart.getElementsAtEventForMode(evt, 'index', { intersect: false }, true);
-        //   if(activePoints && activePoints.length > 0){
-        //     let data = this.chart.data.raw[activePoints[0]._index];
-        //     dialog.open(MonitoringIndexCheckDetailComponent, {
-        //       data: data,
-        //       width: '950px',
-        //       disableClose: true
-        //     });
-        //   }}*/
-        // },
         hover: {
           mode: 'nearest',
           intersect: true
@@ -470,7 +410,8 @@ export function indexCheckChart(chartName, data){
               drawOnChartArea: false, // only want the grid lines for one axis to show up
             }
           }
-        }
+        },
       }
     });
 }
+

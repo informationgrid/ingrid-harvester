@@ -24,6 +24,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MonitoringHarvesterComponent} from "./monitoring-harvester/monitoring-harvester.component";
 import {MonitoringIndexCheckComponent} from "./monitoring-indexcheck/monitoring-indexcheck.component";
+import { Chart, registerables } from 'chart.js';
 
 @Component({
   selector: 'app-monitoring',
@@ -32,10 +33,22 @@ import {MonitoringIndexCheckComponent} from "./monitoring-indexcheck/monitoring-
 })
 export class MonitoringComponent implements OnInit {
 
+  breakpoint;
+  breakpointCols;
   constructor() {
+    Chart.register(...registerables);
+    Chart.defaults.color = 'white'; // Global text color
+  }
+  
+  ngOnInit() {
+    this.breakpoint = (window.innerWidth <= 1400) ? 1 : 2;
+    this.breakpointCols = (window.innerWidth <= 1400) ? 1 : 2;
   }
 
-  ngOnInit() {
+
+  onResize(event) {
+    this.breakpoint = (event.target.innerWidth <= 1400) ? 1 : 2;
+    this.breakpointCols = (event.target.innerWidth <= 1400) ? 1 : 2;
   }
 
   private static monitoringHarvesterComponent: MonitoringHarvesterComponent;

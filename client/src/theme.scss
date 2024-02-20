@@ -121,7 +121,7 @@ input.custom-autofill {
 
 :root {
   --max-width-panel: 900px;
-  --chart-background: #191919;
+  --dark-black: #424242; //#191919;
 }
 
 @mixin importer-components-theme($theme) {
@@ -165,10 +165,21 @@ hr {
 }
 
 .chart-container {
-  background-color: var(--chart-background);
+  background-color: var(--dark-black) !important;
   // padding: 16px;
   width: auto;
-  height: auto
+  height: 100%;
+}
+
+.config-headline {
+  background-color: var(--mat-sidenav-content-background-color) !important;
+  box-shadow: none !important;
+  margin: auto;
+  margin-bottom: 20px;
+  margin-top: 200px;
+  box-sizing: border-box;
+  max-width: var(--max-width-panel);
+  width: 100%;
 }
 
 }

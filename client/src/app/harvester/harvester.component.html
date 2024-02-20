@@ -27,6 +27,8 @@
       <button mat-raised-button [disabled]="numberOfHarvesters === 0" (click)="importAll()" data-test="import-all">Alle importieren</button>
     </div>
 
+    <h1 class="config-headline">Harvester</h1>
+
     <div *ngFor="let item of harvesters | keyvalue" class="harvester-list">
 
         <h3>{{item.key}}</h3>

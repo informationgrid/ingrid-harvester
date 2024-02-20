@@ -21,9 +21,12 @@
     ==================================================
 -->
 
-<div *ngIf="configForm" class="form-wrapper margin-top">
-
+<div *ngIf="configForm" class="form-wrapper">
+  
   <form [formGroup]="configForm">
+    <mat-card class="config-headline">
+      <h1>Konfiguration</h1>
+    </mat-card>
 
     <mat-card class="config-card" [formGroup]="configForm.get('database')">
       <mat-card-header>
