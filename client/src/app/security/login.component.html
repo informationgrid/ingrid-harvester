@@ -39,9 +39,11 @@
         </mat-form-field>
       </p>
 
-      <p *ngIf="showErrorMessage" class="error">
+      @if (showErrorMessage) {
+<p class="error">
         Benutzername oder Passwort falsch
       </p>
+}
 
       <div class="button">
         <button id="btnSubmit" type="submit" mat-button data-test="login">Login</button>

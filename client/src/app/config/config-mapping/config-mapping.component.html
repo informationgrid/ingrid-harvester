@@ -26,7 +26,8 @@
     <h1>Mapping (Datenformate)</h1>
   </mat-card>
 
-  <mat-list dense class="list-hover mapping-card" *ngFor="let type of types | async">
+  @for (type of types | async; track type) {
+<mat-list dense class="list-hover mapping-card">
       <h3 matSubheader>{{type.name}}</h3>
       @for (item of type.items; track item) {
         <mat-list-item class="mapping-item">
@@ -37,6 +38,7 @@
         </mat-list-item>
       }
   </mat-list>
+}
 </div>
 
 <button mat-fab

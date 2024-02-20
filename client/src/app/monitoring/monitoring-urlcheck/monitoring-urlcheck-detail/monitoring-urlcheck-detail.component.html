@@ -23,7 +23,8 @@
 
 <h2 mat-dialog-title>{{dialogTitle}}</h2>
 <mat-dialog-content>
-  <mat-expansion-panel *ngFor="let status of data.status" hideToggle [id]="'status-' + status.code">
+  @for (status of data.status; track status) {
+<mat-expansion-panel hideToggle [id]="'status-' + status.code">
     <mat-expansion-panel-header>
 
       <mat-panel-title>
@@ -42,6 +43,7 @@
       </ng-container>
     </cdk-virtual-scroll-viewport>
   </mat-expansion-panel>
+}
   <br>
 </mat-dialog-content>
 

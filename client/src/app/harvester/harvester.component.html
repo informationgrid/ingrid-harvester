@@ -21,7 +21,8 @@
     ==================================================
 -->
 
-<div *ngIf="harvesterLoaded" class="example-headers-align">
+@if (harvesterLoaded) {
+<div class="example-headers-align">
     <div class="flex-row fixed-top-right" >
       <div class="flex-1"></div>
       <button mat-raised-button [disabled]="numberOfHarvesters === 0" (click)="importAll()" data-test="import-all">Alle importieren</button>
@@ -29,11 +30,13 @@
 
     <h1 class="config-headline">Harvester</h1>
 
-    <div *ngFor="let item of harvesters | keyvalue" class="harvester-list">
+    @for (item of harvesters | keyvalue; track item) {
+<div class="harvester-list">
 
         <h3>{{item.key}}</h3>
 
-        <mat-expansion-panel *ngFor="let harvester of item.value" hideToggle [id]="'harvester-' + harvester.id">
+        @for (harvester of item.value; track harvester) {
+<mat-expansion-panel hideToggle [id]="'harvester-' + harvester.id">
             <mat-expansion-panel-header>
 
                 <mat-panel-title class="">
@@ -43,18 +46,30 @@
                                       (change)="handleActivation($event, harvester)"
                                       (click)="$event.stopImmediatePropagation()"></mat-slide-toggle>
                     <p class="no-wrap">
-                        <mat-icon *ngIf="harvester.cron?.full?.pattern || harvester.cron?.incr?.pattern" inline class="scheduled">
+                        @if (harvester.cron?.full?.pattern || harvester.cron?.incr?.pattern) {
+<mat-icon inline class="scheduled">
                             {{harvester.disable || !harvester.cron.full?.active ? 'alarm_off' : 'alarm_on'}}
                         </mat-icon>
+}
                         {{harvester.description || harvester.defaultAttribution}}</p>
-                    <mat-spinner *ngIf="importDetail[harvester.id]?.complete === false" diameter="20"></mat-spinner>
+                    @if (importDetail[harvester.id]?.complete === false) {
+<mat-spinner diameter="20"></mat-spinner>
+}
                 </mat-panel-title>
 
-                <mat-panel-description *ngIf="importDetail[harvester.id]?.summary">
-                    <mat-icon *ngIf="hasAnyErrors(harvester.id)" color="warn">error_outline</mat-icon>
-                    <mat-icon *ngIf="!hasAnyProblems(harvester.id)" class="success">check_circle_outline</mat-icon>
-                    <mat-icon *ngIf="hasOnlyWarnings(harvester.id)" class="warning">error_outline</mat-icon>
+                @if (importDetail[harvester.id]?.summary) {
+<mat-panel-description>
+                    @if (hasAnyErrors(harvester.id)) {
+<mat-icon color="warn">error_outline</mat-icon>
+}
+                    @if (!hasAnyProblems(harvester.id)) {
+<mat-icon class="success">check_circle_outline</mat-icon>
+}
+                    @if (hasOnlyWarnings(harvester.id)) {
+<mat-icon class="warning">error_outline</mat-icon>
+}
                 </mat-panel-description>
+}
 
             </mat-expansion-panel-header>
 
@@ -72,13 +87,15 @@
                     <mat-icon class="inline-valigned">import_export</mat-icon>
                     Import starten
                 </button>
-                <button mat-button (click)="startImport(harvester.id, true)"
+                @if (item.key === 'CSW') {
+<button mat-button (click)="startImport(harvester.id, true)"
                         data-test="import"
                         [disabled]="importDetail[harvester.id]?.complete === false"
-                        *ngIf="item.key === 'CSW'">
+                       >
                     <mat-icon class="inline-valigned">import_export</mat-icon>
                     Import starten (inkrementell)
                 </button>
+}
             </div>
 
             <hr>
@@ -113,7 +130,9 @@
             </div>
 
         </mat-expansion-panel>
+}
     </div>
+}
 
     <button mat-fab
             color="primary"
@@ -123,7 +142,10 @@
         <mat-icon aria-label="Add Harvester">add</mat-icon>
     </button>
 </div>
+}
 
-<div *ngIf="!harvesterLoaded" class="no-harvester">
+@if (!harvesterLoaded) {
+<div class="no-harvester">
   <mat-spinner diameter="100"></mat-spinner>
 </div>
+}

@@ -36,7 +36,8 @@
 </mat-toolbar>
 
 <mat-sidenav-container class="navigation">
-  <mat-sidenav mode="side" disableClose opened *ngIf="isLoggedIn">
+  @if (isLoggedIn) {
+<mat-sidenav mode="side" disableClose opened>
     <div class="flex-col flex-grow">
       <mat-action-list>
         <button mat-list-item  color="accent" routerLink="/config" routerLinkActive="active-link" data-test="menu-config">
@@ -59,6 +60,7 @@
       <div class="version">Version: {{(version | async)?.version}}</div>
     </div>
   </mat-sidenav>
+}
 
   <mat-sidenav-content>
     <router-outlet></router-outlet>

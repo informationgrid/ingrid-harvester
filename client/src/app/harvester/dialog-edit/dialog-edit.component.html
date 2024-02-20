@@ -34,9 +34,11 @@
             <mat-option value="EXCEL_SPARSE">EXCEL (SPARSE)</mat-option>
             <mat-option value="CKAN">CKAN</mat-option>
             <mat-option value="CSW">CSW</mat-option>
-            <ng-container *ngIf="harvester.id != -1">
+            @if (harvester.id != -1) {
+
               <mat-option value="CODEDE-CSW">CSW (CODEDE)</mat-option>
-            </ng-container>
+            
+}
             <mat-option value="OAI">OAI</mat-option>
             <mat-option value="DCAT">DCAT</mat-option>
             <mat-option value="DCATAPPLU">DCATAPPLU</mat-option>
@@ -64,7 +66,8 @@
         </mat-form-field>
       </div>
 
-      <mat-card *ngIf="profile == 'mcloud'">
+      @if (profile == 'mcloud') {
+<mat-card>
         <mat-card-header>
           <mat-card-title>mCloud Einstellungen</mat-card-title>
         </mat-card-header>
@@ -114,6 +117,7 @@
           </div>
         </mat-card-content>
       </mat-card>
+}
 
       <mat-card>
         <mat-card-header>
@@ -134,72 +138,96 @@
         </mat-card-content>
       </mat-card>
 
-      <app-excel-harvester *ngIf="harvesterForm.get('type').value === 'EXCEL'" [form]="harvesterForm"
+      @if (harvesterForm.get('type').value === 'EXCEL') {
+<app-excel-harvester [form]="harvesterForm"
                            [model]="harvester"
                            [rulesTemplate]="rules"
                            class="flex-column"></app-excel-harvester>
+}
 
-      <app-excel-sparse-harvester *ngIf="harvesterForm.get('type').value === 'EXCEL_SPARSE'" [form]="harvesterForm"
+      @if (harvesterForm.get('type').value === 'EXCEL_SPARSE') {
+<app-excel-sparse-harvester [form]="harvesterForm"
                           [model]="harvester"
                           [rulesTemplate]="rules"
                           class="flex-column"></app-excel-sparse-harvester>
+}
 
-      <app-ckan-harvester *ngIf="harvesterForm.get('type').value === 'CKAN'" [form]="harvesterForm" [model]="harvester"
+      @if (harvesterForm.get('type').value === 'CKAN') {
+<app-ckan-harvester [form]="harvesterForm" [model]="harvester"
                           [rulesTemplate]="rules"
                           class="flex-column">
       </app-ckan-harvester>
+}
 
-      <app-csw-harvester *ngIf="harvesterForm.get('type').value?.endsWith('CSW')" [form]="harvesterForm"
+      @if (harvesterForm.get('type').value?.endsWith('CSW')) {
+<app-csw-harvester [form]="harvesterForm"
                          [model]="harvester"
                          [rulesTemplate]="rules"
                          class="flex-column"></app-csw-harvester>
+}
 
-      <app-oai-harvester *ngIf="harvesterForm.get('type').value?.endsWith('OAI')" [form]="harvesterForm"
+      @if (harvesterForm.get('type').value?.endsWith('OAI')) {
+<app-oai-harvester [form]="harvesterForm"
                          [model]="harvester"
                          [rulesTemplate]="rules"
                          class="flex-column"></app-oai-harvester>
+}
 
-      <app-dcat-harvester *ngIf="harvesterForm.get('type').value === 'DCAT'" [form]="harvesterForm"
+      @if (harvesterForm.get('type').value === 'DCAT') {
+<app-dcat-harvester [form]="harvesterForm"
                           [model]="harvester"
                           [rulesTemplate]="rules"
                           class="flex-column">
       </app-dcat-harvester>
+}
 
-      <app-dcatapplu-harvester *ngIf="harvesterForm.get('type').value === 'DCATAPPLU'" [form]="harvesterForm"
+      @if (harvesterForm.get('type').value === 'DCATAPPLU') {
+<app-dcatapplu-harvester [form]="harvesterForm"
                           [model]="harvester"
                           [rulesTemplate]="rules"
                           class="flex-column">
       </app-dcatapplu-harvester>
+}
 
-      <app-sparql-harvester *ngIf="harvesterForm.get('type').value === 'SPARQL'" [form]="harvesterForm"
+      @if (harvesterForm.get('type').value === 'SPARQL') {
+<app-sparql-harvester [form]="harvesterForm"
                           [model]="harvester"
                           [rulesTemplate]="rules"
                           class="flex-column">
       </app-sparql-harvester>
+}
 
-      <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS.FIS'" [form]="harvesterForm"
+      @if (harvesterForm.get('type').value === 'WFS.FIS') {
+<app-wfs-harvester [form]="harvesterForm"
                          [model]="harvester"
                          [rulesTemplate]="rules"
                          class="flex-column">
       </app-wfs-harvester>
+}
 
-      <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS.MS'" [form]="harvesterForm"
+      @if (harvesterForm.get('type').value === 'WFS.MS') {
+<app-wfs-harvester [form]="harvesterForm"
                          [model]="harvester"
                          [rulesTemplate]="rules"
                          class="flex-column">
       </app-wfs-harvester>
+}
 
-      <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS.XPLAN'" [form]="harvesterForm"
+      @if (harvesterForm.get('type').value === 'WFS.XPLAN') {
+<app-wfs-harvester [form]="harvesterForm"
                          [model]="harvester"
                          [rulesTemplate]="rules"
                          class="flex-column">
       </app-wfs-harvester>
+}
 
-      <app-wfs-harvester *ngIf="harvesterForm.get('type').value === 'WFS.XPLAN.SYN'" [form]="harvesterForm"
+      @if (harvesterForm.get('type').value === 'WFS.XPLAN.SYN') {
+<app-wfs-harvester [form]="harvesterForm"
                          [model]="harvester"
                          [rulesTemplate]="rules"
                          class="flex-column">
       </app-wfs-harvester>
+}
 
       <ng-template #rules>
           <app-chip-list [list]="harvester.blacklistedIds"

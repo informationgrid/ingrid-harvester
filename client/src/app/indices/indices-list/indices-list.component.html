@@ -29,7 +29,8 @@
     <button mat-raised-button id="importIndex" (click)="this.indexUpload.click()" data-test="importIndex">Import</button>
     </div>
     <h3 mat-subheader>Existierende Indizes</h3>
-    <mat-list-item *ngFor="let index of indices | async" (click)="sendSearchRequest(index.name)">
+    @for (index of indices | async; track index) {
+<mat-list-item (click)="sendSearchRequest(index.name)">
       <h4 mat-line>{{index.name}}</h4>
       <p mat-line>Dokumente: {{index.numDocs}}</p>
       <button mat-button (click)="exportIndex(index.name)" data-test="exportIndex">Export</button>
@@ -37,6 +38,7 @@
         <mat-icon mat-list-icon>delete</mat-icon>
       </button>
     </mat-list-item>
+}
   </mat-list>
 
   <mat-card class="flex-50">

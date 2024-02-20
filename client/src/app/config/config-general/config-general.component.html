@@ -21,7 +21,8 @@
     ==================================================
 -->
 
-<div *ngIf="configForm" class="form-wrapper">
+@if (configForm) {
+<div class="form-wrapper">
   
   <form [formGroup]="configForm">
     <mat-card class="config-headline">
@@ -67,9 +68,11 @@
           <mat-form-field class="flex-50">
             <mat-label>Benutzername</mat-label>
             <input matInput type="text" formControlName="user" required>
-            <mat-error *ngIf="configForm.get('database.user').hasError('required')">
+            @if (configForm.get('database.user').hasError('required')) {
+<mat-error>
               Dies ist ein Pflichtfeld
             </mat-error>
+}
           </mat-form-field>
           <mat-form-field class="flex-50">
             <mat-label>Passwort</mat-label>
@@ -90,10 +93,12 @@
               Verbindung testen
             </button>
           </div>
-          <div *ngIf="dbConnectionCheck != null" class="flex-50">
+          @if (dbConnectionCheck != null) {
+<div class="flex-50">
             <mat-icon class="inline-valigned">{{statusIcon(dbConnectionCheck)}}</mat-icon>&nbsp;
             <b>{{statusMsg(dbConnectionCheck)}}</b>
           </div>
+}
         </div>
       </mat-card-content>
     </mat-card>
@@ -115,12 +120,16 @@
           <mat-form-field class="flex-70">
             <mat-label>Host-URL</mat-label>
             <input matInput type="url" formControlName="url" required>
-            <mat-error *ngIf="configForm.get('elasticsearch.url').hasError('required')">
+            @if (configForm.get('elasticsearch.url').hasError('required')) {
+<mat-error>
               Dies ist ein Pflichtfeld
             </mat-error>
-            <mat-error *ngIf="configForm.get('elasticsearch.url').hasError('elasticUrl')">
+}
+            @if (configForm.get('elasticsearch.url').hasError('elasticUrl')) {
+<mat-error>
               Dies ist keine gültige Elasticsearch-URL (Bsp: http://localhost:9200)
             </mat-error>
+}
           </mat-form-field>
         </div>
         <div class="flex-row gap-20 ">
@@ -137,12 +146,16 @@
           <mat-form-field class="flex-100">
             <mat-label>Alias-Name</mat-label>
             <input matInput type="text" formControlName="alias" required>
-            <mat-error *ngIf="configForm.get('elasticsearch.alias').hasError('whitespace')">
+            @if (configForm.get('elasticsearch.alias').hasError('whitespace')) {
+<mat-error>
               Es dürfen nicht nur Leerzeichen eingegeben sein
             </mat-error>
-            <mat-error *ngIf="configForm.get('elasticsearch.alias').hasError('required')">
+}
+            @if (configForm.get('elasticsearch.alias').hasError('required')) {
+<mat-error>
               Dies ist ein Pflichtfeld
             </mat-error>
+}
           </mat-form-field>
         </div>
         <h4>Index-Settings (readonly) werden beim Start durch Umgebungsvariablen gesetzt.</h4>
@@ -173,10 +186,12 @@
               Verbindung testen
             </button>
           </div>
-          <div *ngIf="esConnectionCheck != null">
+          @if (esConnectionCheck != null) {
+<div>
             <mat-icon class="inline-valigned">{{statusIcon(esConnectionCheck)}}</mat-icon>&nbsp;
             <b>{{statusMsg(esConnectionCheck)}}</b>
           </div>
+}
         </div>
       </mat-card-content>
     </mat-card>
@@ -197,10 +212,12 @@
           <input matInput formControlName="proxy">
         </mat-form-field>
         
-        <mat-form-field *ngIf="profile == 'mcloud'">
+        @if (profile == 'mcloud') {
+<mat-form-field>
           <mat-label>Portal URL</mat-label>
           <input matInput formControlName="portalUrl">
         </mat-form-field>
+}
       </mat-card-content>
     </mat-card>
 
@@ -224,10 +241,12 @@
               <mat-label>UrlCheck Cron</mat-label>
               <input matInput placeholder="* * * * *" formControlName="pattern"
                 (keyup)="urlCheckTranslate(configForm.get('urlCheck.pattern').value)" data-test="urlCheck-input">
-              <button mat-button *ngIf="configForm.get('urlCheck.pattern')" matSuffix mat-icon-button aria-label="Clear"
+              @if (configForm.get('urlCheck.pattern')) {
+<button mat-button matSuffix mat-icon-button aria-label="Clear"
                 (click)="clearUrlCheckInput()" data-test="urlCheck-reset">
                 <mat-icon>close</mat-icon>
               </button>
+}
               <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon"
                 data-test="urlCheck-info">info_outline</mat-icon>
               <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
@@ -250,10 +269,12 @@
               <mat-label>IndexCheck Cron</mat-label>
               <input matInput placeholder="* * * * *" formControlName="pattern"
                 (keyup)="indexCheckTranslate(configForm.get('indexCheck.pattern').value)" data-test="indexCheck-input">
-              <button mat-button *ngIf="configForm.get('indexCheck.pattern')" matSuffix mat-icon-button
+              @if (configForm.get('indexCheck.pattern')) {
+<button mat-button matSuffix mat-icon-button
                 aria-label="Clear" (click)="clearIndexCheckInput()" data-test="indexCheck-reset">
                 <mat-icon>close</mat-icon>
               </button>
+}
               <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon"
                 data-test="urlCheck-info">info_outline</mat-icon>
               <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
@@ -261,12 +282,14 @@
           </div>
         </div>
 
-        <mat-card *ngIf="showInfo" class="info config-info-field margin-below">
+        @if (showInfo) {
+<mat-card class="info config-info-field margin-below">
           <div><span>*/5 * * * *</span> Alle 5 Minuten</div>
           <div><span>45 8 * * *</span> Täglich um 8:45 Uhr</div>
           <div><span>0 6-18/2 * * *</span> Täglich zwischen 6 und 18 Uhr, alle 2h</div>
           <div><span>30 4 1 * 0,6</span> Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So</div>
         </mat-card>
+}
       </mat-card-content>
     </mat-card>
 
@@ -291,10 +314,12 @@
             <input matInput placeholder="* * * * *" formControlName="cronPattern"
               (keyup)="indexBackupCronTranslate(configForm.get('indexBackup.cronPattern').value)"
               data-test="indexBackupCron-input">
-            <button mat-button *ngIf="configForm.get('indexBackup.cronPattern')" matSuffix mat-icon-button
+            @if (configForm.get('indexBackup.cronPattern')) {
+<button mat-button matSuffix mat-icon-button
               aria-label="Clear" (click)="clearIndexBackupCronInput()" data-test="indexBackupCron-reset">
               <mat-icon>close</mat-icon>
             </button>
+}
             <mat-icon matSuffix (click)="showBackupCronInfo = !showBackupCronInfo" class="info-icon"
               data-test="indexBackupCron-info">
               info_outline
@@ -303,12 +328,14 @@
           </mat-form-field>
         </div>
 
-        <mat-card class="info" *ngIf="showBackupCronInfo" class="config-info-field margin-below">
+        @if (showBackupCronInfo) {
+<mat-card class="info" class="config-info-field margin-below">
           <div><span>*/5 * * * *</span> Alle 5 Minuten</div>
           <div><span>45 8 * * *</span> Täglich um 8:45 Uhr</div>
           <div><span>0 6-18/2 * * *</span> Täglich zwischen 6 und 18 Uhr, alle 2h</div>
           <div><span>30 4 1 * 0,6</span> Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So</div>
         </mat-card>
+}
 
         <div class="flex-row gap-20">
           <mat-form-field class="flex-100">
@@ -410,3 +437,4 @@
     </button>
   </div>
 </div>
+}

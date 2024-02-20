@@ -34,9 +34,11 @@
     <mat-form-field class="flex-1">
       <mat-label>Cron Expression</mat-label>
       <input matInput placeholder="* * * * *" [(ngModel)]="cron.full.pattern" (keyup)="translate(cron.full.pattern, 'full')" data-test="cron-input">
-      <button mat-button *ngIf="cron.full.pattern" matSuffix mat-icon-button aria-label="Clear" (click)="clearInput('full')" data-test="cron-reset">
+      @if (cron.full.pattern) {
+<button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="clearInput('full')" data-test="cron-reset">
         <mat-icon>close</mat-icon>
       </button>
+}
       <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon" data-test="cron-info">info_outline</mat-icon>
       <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
     </mat-form-field>
@@ -55,9 +57,11 @@
     <mat-form-field class="flex-1">
       <mat-label>Cron Expression</mat-label>
       <input matInput placeholder="* * * * *" [(ngModel)]="cron.incr.pattern" (keyup)="translate(cron.incr.pattern, 'incr')" data-test="cron-input">
-      <button mat-button *ngIf="cron.incr.pattern" matSuffix mat-icon-button aria-label="Clear" (click)="clearInput('incr')" data-test="cron-reset">
+      @if (cron.incr.pattern) {
+<button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="clearInput('incr')" data-test="cron-reset">
         <mat-icon>close</mat-icon>
       </button>
+}
       <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon" data-test="cron-info">info_outline</mat-icon>
       <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
     </mat-form-field>
@@ -67,12 +71,14 @@
 
   <mat-divider></mat-divider>
 
-  <mat-card class="info" *ngIf="showInfo">
+  @if (showInfo) {
+<mat-card class="info">
     <div><span>*/5 * * * *</span>Alle 5 Minuten</div>
     <div><span>45 8 * * *</span>Täglich um 8:45 Uhr</div>
     <div><span>0 6-18/2 * * *</span>Täglich zwischen 6 und 18 Uhr, alle 2h</div>
     <div><span>30 4 1 * 0,6</span>Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So</div>
   </mat-card>
+}
 
 </mat-dialog-content>
 

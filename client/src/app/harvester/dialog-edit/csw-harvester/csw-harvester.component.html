@@ -70,7 +70,8 @@
           <mat-label>Toleranz: Polygone vereinfachen</mat-label>
           <input matInput formControlName="simplifyTolerance" type="number">
         </mat-form-field>
-        <mat-form-field class="flex-1" *ngIf="profile == 'diplanung'">
+        @if (profile == 'diplanung') {
+<mat-form-field class="flex-1">
           <mat-label>Planstatus</mat-label>
           <mat-select formControlName="pluPlanState" required>
             <mat-option value="unknown">unbekannt</mat-option>
@@ -78,6 +79,7 @@
             <mat-option value="inPreparation">in Aufstellung</mat-option>
           </mat-select>
         </mat-form-field>
+}
       </div>
     </mat-card-content>
   </mat-card>
