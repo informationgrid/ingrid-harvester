@@ -21,9 +21,11 @@
     ==================================================
 -->
 
-<ng-container *ngIf="data">
+@if (data) {
 
-    <ng-container *ngIf="!data.complete">
+
+    @if (!data.complete) {
+
         Import läuft
         <mat-progress-bar
                 [value]="getProgressValue()">
@@ -36,9 +38,11 @@
             }
             <div>{{data.message}}</div>
         </div>
-    </ng-container>
+    
+}
 
-    <ng-container *ngIf="data.complete">
+      <ng-container *ngIf="data.complete">
+
 
         <div class="flex-row space-around info-cards">
             <mat-card>
@@ -93,9 +97,11 @@
             </mat-list-item>
         </mat-list>
 
-    </ng-container>
+    
+      </ng-container>
 
-</ng-container>
+
+}
 
 @if (!data) {
   There's no Info right now.
