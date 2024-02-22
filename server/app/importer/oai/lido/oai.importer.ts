@@ -174,12 +174,11 @@ export class OaiImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary);
 
-            // let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
-            //     log.error('Error creating index document', e);
-            //     this.summary.appErrors.push(e.toString());
-            //     mapper.skipped = true;
-            // });
-            let doc = null;
+            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
+                log.error('Error creating index document', e);
+                this.summary.appErrors.push(e.toString());
+                mapper.skipped = true;
+            });
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
