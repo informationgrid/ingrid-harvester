@@ -22,6 +22,7 @@
  */
 import * as fs from 'fs';
 import * as xpath from 'xpath';
+import * as GeoJsonUtils from '../../utils/geojson.utils';
 import * as MiscUtils from '../../utils/misc.utils';
 import { decode } from 'iconv-lite';
 import { defaultWfsSettings, WfsSettings } from './wfs.settings';
@@ -32,7 +33,6 @@ import { Catalog } from '../../model/dcatApPlu.model';
 import { Contact } from '../../model/agent';
 import { CswMapper } from '../../importer/csw/csw.mapper';
 import { DOMParser } from '@xmldom/xmldom';
-import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { Observer } from 'rxjs';

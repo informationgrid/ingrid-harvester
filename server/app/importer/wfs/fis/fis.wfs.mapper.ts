@@ -21,11 +21,11 @@
  * ==================================================
  */
 
+import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import * as MiscUtils from '../../../utils/misc.utils';
 import { DateRange } from '../../../model/dateRange';
 import { Distribution } from '../../../model/distribution';
 import { Geometry, GeometryCollection } from '@turf/helpers';
-import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../wfs.mapper';
 
