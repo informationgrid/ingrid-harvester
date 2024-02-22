@@ -21,11 +21,12 @@
  * ==================================================
  */
 
+import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
 import { LvrMapper } from './lvr.mapper';
 
 export class LvrMapperFactory {
 
-    static getMapper(mapper): LvrMapper<any> {
+    static getMapper(mapper): LvrMapper<OaiMapper> {
         switch (mapper.constructor.name) {
             case 'OaiMapper': return new LvrMapper(mapper);
         }
