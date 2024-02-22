@@ -38,7 +38,8 @@ const iso19139: OaiXPaths = {
 
 const lido: OaiXPaths = {
     prefixMap: {
-        'lido': namespaces.LIDO
+        'lido': namespaces.LIDO,
+        'gml': namespaces.GML
     },
     nsPrefix: namespaces.LIDO,
     mdRoot: 'lido',
