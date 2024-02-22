@@ -209,6 +209,11 @@ export class PostgresUtils extends DatabaseUtils {
                 }
                 // add index document to current bucket
                 else {
+                    // ensure `extras` structure exists in dataset
+                    row.dataset.extras ??= {};
+                    row.dataset.extras.metadata ??= {};
+                    row.dataset.extras.metadata.source ??= {};
+                    // set metadata information
                     row.dataset.extras.metadata.issued = row.issued;
                     row.dataset.extras.metadata.modified = row.modified;
                     row.dataset.extras.metadata.source.source_type = this.getSourceType(row.source);

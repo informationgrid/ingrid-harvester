@@ -265,7 +265,7 @@ export class PostgresUtils {
         if (!sanitizedSpatial) {
             document.extras.metadata.is_valid = false;
             document.extras.metadata.quality_notes ??= [];
-            document.distributions.forEach(distribution => 
+            document.distributions?.forEach(distribution => 
                 document.extras.metadata.quality_notes.push(...(distribution.errors ?? [])));
             document.extras.metadata.quality_notes.push('No valid geometry');
             return document;

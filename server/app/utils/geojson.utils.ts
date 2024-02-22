@@ -262,6 +262,10 @@ export class GeoJsonUtils {
     };
 
     static parse = (_: Node, opts: { crs?: any, stride?: number } = { crs: null, stride: 2 }, nsMap: { [ name: string ]: string; }): Geometries => {
+        if (_ == null) {
+            return null;
+        }
+
         const select = xpath.useNamespaces(nsMap);
 
         const parseCoords = (s, opts: { crs?: string, stride?: number } = { crs: null, stride: 2 }, ctx = { srsDimension: null }) => {
@@ -525,9 +529,7 @@ export class GeoJsonUtils {
 
         const childCtx = createChildContext(_, opts, {});
 
-        if (!opts) {
-            opts = {};
-        }
+        opts ??= {};
         if (!opts.crs) {
             // observed Patterns for CRS are
             // - urn:ogc:def:crs:EPSG::4326
