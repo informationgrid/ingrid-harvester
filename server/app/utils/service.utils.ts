@@ -22,12 +22,12 @@
  */
 
 import * as xpath from 'xpath';
+import * as GeoJsonUtils from '../utils/geojson.utils';
 import * as MiscUtils from './misc.utils';
 import { getNsMap, XPathNodeSelect } from './xpath.utils';
 import { Distribution } from '../model/distribution';
 import { DOMParser } from '@xmldom/xmldom';
 import { Geometries, Geometry, GeometryCollection } from '@turf/helpers';
-import { GeoJsonUtils } from './geojson.utils';
 import { RequestDelegate } from './http-request.utils';
 import { UrlUtils } from './url.utils';
 

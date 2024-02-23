@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import * as MiscUtils from '../../../utils/misc.utils';
 import { createEsId } from '../diplanung.utils';
 import { Bucket } from '../../../persistence/postgres.utils';
@@ -28,7 +29,6 @@ import { DcatApPluDocumentFactory } from '../model/dcatapplu.document.factory';
 import { DiplanungIndexDocument } from '../model/index.document';
 import { Distribution } from '../../../model/distribution';
 import { EsOperation } from '../../../persistence/elastic.utils';
-import { GeoJsonUtils } from '../../../utils/geojson.utils';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -265,7 +265,7 @@ export class PostgresUtils {
         if (!sanitizedSpatial) {
             document.extras.metadata.is_valid = false;
             document.extras.metadata.quality_notes ??= [];
-            document.distributions.forEach(distribution => 
+            document.distributions?.forEach(distribution => 
                 document.extras.metadata.quality_notes.push(...(distribution.errors ?? [])));
             document.extras.metadata.quality_notes.push('No valid geometry');
             return document;
