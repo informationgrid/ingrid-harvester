@@ -30,6 +30,7 @@ import {GeneralSettings} from '@shared/general-config.settings';
 import cronstrue from 'cronstrue/i18n';
 import { isValidCron } from 'cron-validator';
 import { delay } from 'rxjs/operators';
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-config-general',
@@ -42,8 +43,16 @@ export class ConfigGeneralComponent implements OnInit {
 
   profile: string;
 
-  constructor(private formBuilder: UntypedFormBuilder, private configService: ConfigService, private harvesterService: HarvesterService) {
+  form;
+
+  constructor(
+    private formBuilder: UntypedFormBuilder, 
+    private configService: ConfigService, 
+    private harvesterService: HarvesterService,
+    private route: ActivatedRoute,
+  ) {
   }
+
 
   ngOnInit() {
     this.reset();

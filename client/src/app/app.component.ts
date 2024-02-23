@@ -23,9 +23,13 @@
 
 import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from './security/authentication.service';
-import {Router} from '@angular/router';
+import {Router, NavigationEnd} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ConfigService} from "./config.service";
+import { TranslocoService } from "@ngneat/transloco";
+import { combineLatest } from 'rxjs';
+import { DomSanitizer, Title } from "@angular/platform-browser";
+import { MatIconRegistry } from "@angular/material/icon";
 
 @Component({
   selector: 'app-root',
@@ -34,17 +38,86 @@ import {ConfigService} from "./config.service";
 })
 export class AppComponent implements OnInit {
   isLoggedIn = false;
+  isLoggingout = false;
   version = this.configService.config$;
+  favIcon: HTMLLinkElement = document.querySelector("#appIcon");
 
-  constructor(private router: Router, private authService: AuthenticationService, private snack: MatSnackBar,
-              private configService: ConfigService) {
+  constructor(
+    private router: Router, 
+    private authService: AuthenticationService, 
+    private snack: MatSnackBar,
+    private configService: ConfigService,
+    private transloco: TranslocoService,
+    private domSanitizer: DomSanitizer,
+    private titleService: Title,
+    private registry: MatIconRegistry,
+    ) {
+      this.loadIcons();
+      
+      const profile = "ingrid"
+      if (profile == "ingrid") {
+        this.favIcon.href = "/assets/icons/favicon.ico";
+        titleService.setTitle("InGrid Harvester");
+      }
+  }
 
+  private loadIcons() {
+    // useful tool for merging SVG files: merge-svg-files via npm
+    this.registry.addSvgIconSet(
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        "assets/icons/icon-navigation.svg",
+      ),
+    );
+    this.registry.addSvgIconSet(
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        "assets/icons/icon-doc-types.svg",
+      ),
+    );
+    this.registry.addSvgIconSet(
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        "assets/icons/icon-toolbar.svg",
+      ),
+    );
+    this.registry.addSvgIconSet(
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        "assets/icons/icon-general.svg",
+      ),
+    );
+    this.registry.addSvgIconSet(
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        "assets/icons/icon-button.svg",
+      ),
+    );
+    this.registry.addSvgIconSet(
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        "assets/images/banner.svg",
+      ),
+    );
   }
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe(user => {
       this.isLoggedIn = user !== null;
     });
+
+    combineLatest([
+      this.transloco.selectTranslation(),
+      this.router.events,
+    ]).subscribe(([_, event]) => {
+      if (event instanceof NavigationEnd) {
+        const mainTitle = this.transloco.translate("pageTitle.default");
+        const splittedByParams = this.router.url.split(";");
+        const mappedPath = splittedByParams[0].split("/").slice(2).join(".");
+        const key = `pageTitle.${mappedPath}`;
+        const pageTitle = this.transloco.translate(key);
+        let newTitle = mainTitle;
+        if (key !== pageTitle) {
+          newTitle = pageTitle + " | " + mainTitle;
+        }
+        this.titleService.setTitle(newTitle);
+      }
+    });
+    
   }
 
   logout() {

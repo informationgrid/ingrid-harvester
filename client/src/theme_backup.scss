@@ -1,0 +1,189 @@
+/*
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
+ * ==================================================
+ */
+
+@use '@angular/material' as mat;
+
+// @import '@angular/material/theming';
+//@import '@angular/cdk/text-field';
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+// TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
+//  The following line adds:
+//    1. Default typography styles for all components
+//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
+//  If you specify typography styles for the components you use elsewhere, you should delete this line.
+//  If you don't need the default component typographies but still want the hierarchy styles,
+//  you can delete this line and instead use:
+//    `@include mat.legacy-typography-hierarchy(mat.define-typography-config());`
+@include mat.all-component-typographies();
+@include mat.core();
+
+$ingrid-blue: (
+50: #e8e9f1,
+100: #c5c8de,
+200: #a0a5c8,
+300: #7c82b2,
+400: #6267a2,
+500: #4a4d93,
+600: #44458a,
+700: #3c3c7e,
+800: #343272,
+900: #28225b,
+contrast: (
+  50: #e8f5e8,
+  100: #c9e5c6,
+  200: #a6d5a2,
+  300: #82c57d,
+  400: #68b961,
+  500: #4ead45,
+  600: #459e3d,
+  700: #398c32,
+  800: #2f7b28,
+  900: #1a5c16,
+)
+);
+
+$ingrid-green: (
+  50: #e8f5e8,
+  100: #c9e5c6,
+  200: #a6d5a2,
+  300: #82c57d,
+  400: #68b961,
+  500: #4ead45,
+  600: #459e3d,
+  700: #398c32,
+  800: #2f7b28,
+  900: #1a5c16,
+  contrast: (
+    50: #e8e9f1,
+    100: #c5c8de,
+    200: #a0a5c8,
+    300: #7c82b2,
+    400: #6267a2,
+    500: #4a4d93,
+    600: #44458a,
+    700: #3c3c7e,
+    800: #343272,
+    900: #28225b,
+  )
+);
+
+
+$ingrid-primary: mat.define-palette($ingrid-green);
+$ingrid-accent: mat.define-palette($ingrid-blue);
+
+
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$candy-app-primary: mat.define-palette($ingrid-primary, 700);
+$candy-app-accent: mat.define-palette($ingrid-accent, 700);
+// The warn palette is optional (defaults to red).
+$candy-app-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$candy-app-theme: mat.define-dark-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($candy-app-theme);
+/*@include cdk-text-field();
+
+// Set custom-autofill inputs to have no background and red text.
+input.custom-autofill {
+  @include cdk-text-field-autofill-color(transparent, red);
+}*/
+
+:root {
+  --max-width-panel: 900px;
+  --dark-black: #424242; //#191919;
+}
+
+@mixin importer-components-theme($theme) {
+  // Extract the palettes you need from the theme definition.
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+
+  // Define any styles affected by the theme.
+  .active-link {
+    border-left: 3px solid mat.get-color-from-palette($primary);
+  }
+  .mat-mdc-card {
+    margin-bottom: 20px;
+    background-color: var(--mat-expansion-container-background-color) !important;
+  }
+  .mat-mdc-card-content {
+    padding: 16px !important;
+  }
+  mat-dialog-content{
+    padding-top: 32px !important;
+  }
+  .mdc-card {
+    background-color: #4b4b4b !important;
+  }
+  
+.fixed-top-right {
+  position: sticky !important;
+  top: 20px;
+  right: 40px;
+  z-index: 100;
+}
+.fixed-bottom-right {
+  position: fixed !important;
+  bottom: 20px;
+  right: 40px;
+  z-index: 100;
+}
+
+hr {
+  opacity: 0.5;
+}
+
+.chart-container {
+  background-color: var(--dark-black) !important;
+  // padding: 16px;
+  width: auto;
+  height: 100%;
+}
+
+.config-headline {
+  background-color: var(--mat-sidenav-content-background-color) !important;
+  box-shadow: none !important;
+  margin: auto;
+  margin-bottom: 20px;
+  margin-top: 200px;
+  box-sizing: border-box;
+  max-width: var(--max-width-panel);
+  width: 100%;
+}
+
+}
+
+
+
+@include importer-components-theme($candy-app-theme);

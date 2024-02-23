@@ -43,6 +43,7 @@ import {MonitoringIndexCheckDetailComponent} from "./monitoring-indexcheck/monit
 import {MatExpansionModule} from "@angular/material/expansion";
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import { TranslocoModule } from "@ngneat/transloco";
 
 const configRoutes: Routes = [
   {
@@ -70,6 +71,7 @@ const configRoutes: Routes = [
         ScrollingModule,
         MatGridList,
         MatGridTile,
+        TranslocoModule,
     ],
     exports: [
         MonitoringComponent

@@ -20,30 +20,39 @@
     limitations under the Licence.
     ==================================================
 -->
-
-<div class="flex-row full">
-  <mat-list class="flex-50 list-hover scroll">
-    <div class="flex-row fixed-top-right">
-      <div class="flex-1"></div>
-    <input type="file" #indexUpload id="indexUpload" name="harvesterUpload" (change)="importIndex(this.indexUpload.files)" accept="json/*.json" style="display:none;" />
-    <button mat-raised-button id="importIndex" (click)="this.indexUpload.click()" data-test="importIndex">Import</button>
+<div class="flex flex-row h-full" >
+    <div class=" list-hover flex-30 margin  " >
+      <div class="flex  flex-row padding">
+        <h2 matHeader class="flex-1">Existierende Indizes</h2>
+        <input type="file" #indexUpload id="indexUpload" name="harvesterUpload" (change)="importIndex(this.indexUpload.files)" accept="json/*.json" style="display:none;" />
+        <button  mat-flat-button id="importIndex" color="primary" (click)="this.indexUpload.click()" data-test="importIndex">Import</button>
+      </div>
+      <mat-list class="items-left scroll padding" >
+      @for (index of indices | async; track index) {
+        <mat-list-item  class="index-list-item">
+          <h3 matListItemTitle>
+            Index: {{ index.name }}
+          </h3>
+          <div matListItemLine>
+            <button mat-icon-button color="warn" (click)="deleteIndex(index.name)">
+              <mat-icon svgIcon="Delete"/>
+            </button>
+            <span>
+              Dokumente: {{index.numDocs}}
+            </span>
+            <div class="right flex gap-20">
+              <button mat-stroked-button color="primary" class="margin" (click)="exportIndex(index.name)" data-test="exportIndex">Export</button>
+              <button mat-flat-button color="primary" class="margin" (click)="sendSearchRequest(index.name)" >Vorschau</button>
+            </div>
+          </div>
+        </mat-list-item>
+      }
+    </mat-list>
     </div>
-    <h3 mat-subheader>Existierende Indizes</h3>
-    @for (index of indices | async; track index) {
-<mat-list-item (click)="sendSearchRequest(index.name)">
-      <h4 mat-line>{{index.name}}</h4>
-      <p mat-line>Dokumente: {{index.numDocs}}</p>
-      <button mat-button (click)="exportIndex(index.name)" data-test="exportIndex">Export</button>
-      <button mat-icon-button (click)="deleteIndex(index.name)">
-        <mat-icon mat-list-icon>delete</mat-icon>
-      </button>
-    </mat-list-item>
-}
-  </mat-list>
 
-  <mat-card class="flex-50">
+  <mat-card class="flex-70 margin">
     <mat-card-header>
-      <mat-card-title>Inhalt</mat-card-title>
+      <mat-card-title>Vorschau</mat-card-title>
     </mat-card-header>
     <mat-card-content class="items">
       <cdk-virtual-scroll-viewport [itemSize]="20" [minBufferPx]="500" [maxBufferPx]="500" class="viewport">

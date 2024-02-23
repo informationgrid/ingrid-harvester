@@ -49,8 +49,6 @@ export class MonitoringUrlCheckComponent implements OnInit {
 
 
   constructor(private http: HttpClient, private _dialog: MatDialog) {
-    // Chart.register(...registerables);
-    // Chart.defaults.color = 'white'; // Global text color
     this.dialog = _dialog;
   }
 

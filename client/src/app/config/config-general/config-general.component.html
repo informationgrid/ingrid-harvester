@@ -21,13 +21,14 @@
     ==================================================
 -->
 
+<page-template label="Konfiguration">
 @if (configForm) {
-<div class="form-wrapper">
+<div main-content class="form-wrapper">
   
   <form [formGroup]="configForm">
+    <!-- <h1>Konfiguration</h1>
     <mat-card class="config-headline">
-      <h1>Konfiguration</h1>
-    </mat-card>
+    </mat-card> -->
 
     <mat-card class="config-card" [formGroup]="configForm.get('database')">
       <mat-card-header>
@@ -231,7 +232,7 @@
           <div class="flex-row gap-20">
             <h4 class="flex-80">URL Check: <span class="config-info-field">{{urlCheckTranslation}}</span></h4>
             <div class="center-right">
-              <mat-slide-toggle color="primary" [checked]="configForm.get('urlCheck.active').value"
+              <mat-slide-toggle color="accent" [checked]="configForm.get('urlCheck.active').value"
                 (change)="urlCheckTranslate(configForm.get('urlCheck.pattern').value)" formControlName="active"
                 title="Planung an- / ausschalten"></mat-slide-toggle>
             </div>
@@ -259,7 +260,7 @@
           <div class="flex-row gap-20">
             <h4 class="flex-80">Index Check: <span class="config-info-field">{{indexCheckTranslation}}</span></h4>
             <div class="center-right">
-              <mat-slide-toggle color="primary" [checked]="configForm.get('indexCheck.active').value"
+              <mat-slide-toggle color="accent" [checked]="configForm.get('indexCheck.active').value"
                 (change)="indexCheckTranslate(configForm.get('indexCheck.pattern').value)" formControlName="active"
                 title="Planung an- / ausschalten"></mat-slide-toggle>
             </div>
@@ -298,7 +299,7 @@
       <mat-card-header class="flex-row gap-20">
         <mat-card-title>Index-Backup</mat-card-title>
         <div class="center-right">
-          <mat-slide-toggle color="primary" [checked]="configForm.get('indexBackup.active').value"
+          <mat-slide-toggle color="accent" [checked]="configForm.get('indexBackup.active').value"
             (change)="indexBackupCronTranslate(configForm.get('indexBackup.cronPattern').value)"
             formControlName="active" title="Index-Backup an- / ausschalten">
           </mat-slide-toggle>
@@ -359,7 +360,7 @@
       <mat-card-header class="flex-row gap-20" [formGroup]="configForm.get('mail')">
         <mat-card-title>Email-Benachrichtigungen</mat-card-title>
         <div class="center-right">
-          <mat-slide-toggle color="primary" [checked]="configForm.get('mail.enabled')"
+          <mat-slide-toggle color="accent" [checked]="configForm.get('mail.enabled')"
             title="Email-Benachrichtigungen an- / ausschalten" formControlName="enabled"
             (click)="$event.stopImmediatePropagation()">
           </mat-slide-toggle>
@@ -438,3 +439,5 @@
   </div>
 </div>
 }
+
+</page-template>

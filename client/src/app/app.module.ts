@@ -46,29 +46,30 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {AuthenticationService} from './security/authentication.service';
+import { SideMenuComponent } from './side-menu/side-menu.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslocoService } from "@ngneat/transloco";
+import { TranslocoRootModule } from "./transloco-root.module";
+import { MainHeaderComponent } from "./main-header/main-header.component";
+import { routes } from "./app.router";
 
 registerLocaleData(localeDe);
 
-export function ConfigLoader(configService: ConfigService) {
+export function ConfigLoader(
+  configService: ConfigService,
+  translocoService: TranslocoService,
+) {
   return () => {
     return configService.load('assets/' + environment.configFile)
       .subscribe();
   };
 }
 
-const appRoutes: Routes = [
-  {path: 'config', loadChildren: () => import('./config/config.module').then(mod => mod.ConfigModule)},
-  {path: 'harvester', loadChildren: () => import('./harvester/harvester.module').then(mod => mod.HarvesterModule)},
-  {path: 'monitoring', loadChildren: () => import('./monitoring/monitoring.module').then(mod => mod.MonitoringModule)},
-  {path: 'indices', loadChildren: () => import('./indices/indices.module').then(mod => mod.IndicesModule)},
-  {path: 'log', loadChildren: () => import('./log/log.module').then(mod => mod.LogModule)},
-  {path: 'login', component: LoginComponent},
-  {path: '', redirectTo: '/harvester', pathMatch: 'full'}
-];
+const appRoutes: Routes = routes
 
 @NgModule({
   declarations: [
-    AppComponent, LoginComponent
+    AppComponent, LoginComponent, SideMenuComponent, MainHeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -84,7 +85,9 @@ const appRoutes: Routes = [
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTooltipModule,
+    TranslocoRootModule
   ],
   providers: [
     {
@@ -93,13 +96,19 @@ const appRoutes: Routes = [
     }, {
       provide: APP_INITIALIZER,
       useFactory: ConfigLoader,
-      deps: [ConfigService],
+      deps: [
+        ConfigService,
+        TranslocoService,
+      ],
       multi: true
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: UnauthorizedInterceptor,
-      deps: [Router, AuthenticationService],
+      deps: [
+        Router, 
+        AuthenticationService,
+      ],
       multi: true
     },
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline', floatLabel: 'auto'}},

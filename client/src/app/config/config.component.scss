@@ -24,17 +24,47 @@
 /*
  TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.
  */
-::ng-deep .mat-mdc-tab-group .mat-tab-body-wrapper {
-  padding-top: 20px;
+// ::ng-deep .mat-mdc-tab-group .mat-tab-body-wrapper {
+//   padding-top: 20px;
+// }
+
+// /*
+//  TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.
+//  */
+// mat-tab-group {
+//   position: absolute;
+//   top: 0;
+//   bottom: 0;
+//   left: 0;
+//   right: 0;
+// }
+
+
+@import "../../../src/_variables";
+
+:host {
+  display: flex;
+  overflow: hidden;
+  flex: 1; // IE 11
+  flex-direction: column;
 }
 
-/*
- TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.
- */
-mat-tab-group {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+
+.icon .mat-icon {
+  width: 120px;
+  height: 120px;
+  font-size: 120px;
+  color: $error-background;
+  margin: 48px 0 24px;
+}
+
+.message {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.error-container {
+  text-align: center;
+  background-color: #ffffff;
+  padding-bottom: 50px;
 }

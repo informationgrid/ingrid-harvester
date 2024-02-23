@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import {NgModule} from '@angular/core';
+import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ConfigComponent} from './config.component';
 import {MatButtonModule} from "@angular/material/button";
-import {RouterModule, Routes} from '@angular/router';
+import {Router, RouterModule, Routes} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatTabsModule} from "@angular/material/tabs";
@@ -39,19 +39,33 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatCardModule} from "@angular/material/card";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { routing } from "./config.routing";
+import { TranslocoModule, TranslocoService } from "@ngneat/transloco";
+import { ConfigLoader } from '../app.module';
+import { ConfigService } from '../config.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { UnauthorizedInterceptor } from '../security/unauthorized.interceptor';
+import { AuthenticationService } from '../security/authentication.service';
+import { PageTemplateModule } from "../shared/page-template/page-template.module"
 
-const configRoutes: Routes = [
-  {
-    path: '',
-    component: ConfigComponent
-  }
-];
+
+// const configRoutes: Routes = [
+//   {
+//     path: '',
+//     component: ConfigComponent
+//   }
+// ];
 
 @NgModule({
-    declarations: [ConfigComponent, ConfigMappingComponent, ConfigGeneralComponent, ConfigImportExportComponent, AddMappingItemComponent],
+    declarations: [
+        ConfigComponent, 
+        ConfigMappingComponent, 
+        ConfigGeneralComponent, 
+        ConfigImportExportComponent, 
+        AddMappingItemComponent
+    ],
     imports: [
         CommonModule,
-        RouterModule.forChild(configRoutes),
         SharedModule,
         MatButtonModule,
         ReactiveFormsModule,
@@ -61,10 +75,15 @@ const configRoutes: Routes = [
         MatAutocompleteModule,
         MatSlideToggleModule,
         MatCardModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        routing,
+        TranslocoModule,
+        PageTemplateModule
     ],
     exports: [
         ConfigComponent
+    ],
+    providers: [
     ]
 })
 export class ConfigModule { }

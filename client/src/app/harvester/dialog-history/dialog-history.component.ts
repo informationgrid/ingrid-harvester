@@ -46,9 +46,6 @@ export class DialogHistoryComponent implements OnInit, AfterViewInit {
   constructor(@Inject(MAT_DIALOG_DATA) public history: any,
               public dialogRef: MatDialogRef<DialogHistoryComponent>,
               private formBuilder: UntypedFormBuilder) {
-    Chart.register(...registerables);
-    Chart.defaults.color = 'white'; // Global text color
-
     this.data = history;
   }
 

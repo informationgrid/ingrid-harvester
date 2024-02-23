@@ -22,8 +22,16 @@
  */
 
 :host {
-  display: block;
-  padding: 20px;
+  display: flex;
+  overflow: hidden;
+  flex: 1; // IE 11
+}
+.allPageScroll {
+  overflow-y: auto;
+}
+.harvester-content {
+  padding-top: 30px;
+  flex: 1;
 }
 
 mat-expansion-panel {
@@ -67,6 +75,9 @@ mat-expansion-panel-header {
   color: #5dc57b;
 }
 
+.warn {
+  color: #ff0000;
+}
 .warning {
   color: #ff9e00;
 }

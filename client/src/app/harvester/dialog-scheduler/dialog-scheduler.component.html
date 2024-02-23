@@ -26,7 +26,7 @@
 <mat-dialog-content>
 
   <div class="flex-row gap-20 space-between items-center padding-below">
-    <mat-slide-toggle color="primary"
+    <mat-slide-toggle color="accent"
                       [(ngModel)]="cron.full.active"
                       (change)="translate(cron.full.pattern, 'full')"
                       title="Planung an- / ausschalten"></mat-slide-toggle>
@@ -49,7 +49,7 @@
   <mat-divider class="padding-below"></mat-divider>
 
   <div class="flex-row gap-20 space-between items-center padding-below">
-    <mat-slide-toggle color="primary"
+    <mat-slide-toggle color="accent"
                       [(ngModel)]="cron.incr.active"
                       (change)="translate(cron.incr.pattern, 'incr')"
                       title="Planung an- / ausschalten"></mat-slide-toggle>

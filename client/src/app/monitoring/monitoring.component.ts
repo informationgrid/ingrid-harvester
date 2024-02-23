@@ -37,7 +37,7 @@ export class MonitoringComponent implements OnInit {
   breakpointCols;
   constructor() {
     Chart.register(...registerables);
-    Chart.defaults.color = 'white'; // Global text color
+    Chart.defaults.color = 'black'; // Global text color
   }
   
   ngOnInit() {

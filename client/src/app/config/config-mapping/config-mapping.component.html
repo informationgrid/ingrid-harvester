@@ -21,30 +21,31 @@
     ==================================================
 -->
 
-<div class="margin-below">
-  <mat-card class="config-headline">
-    <h1>Mapping (Datenformate)</h1>
-  </mat-card>
-
-  @for (type of types | async; track type) {
-<mat-list dense class="list-hover mapping-card">
-      <h3 matSubheader>{{type.name}}</h3>
-      @for (item of type.items; track item) {
-        <mat-list-item class="mapping-item">
-          <h4 matListItemTitle >{{item}}</h4>
-          <mat-icon-button matListItemIcon title="Mapping löschen" (click)="deleteItem(type.name, item)" class="clickable">
-            <mat-icon color="warn" >delete</mat-icon>
-          </mat-icon-button>
-        </mat-list-item>
+<page-template label="Mapping (Datenformate)">
+  <div main-content class="margin-below">
+    @for (type of types | async; track type) {
+      <mat-list dense class="list-hover mapping-card">
+            <h3 matSubheader>{{type.name}}</h3>
+            @for (item of type.items; track item) {
+              <mat-list-item>
+                <button mat-icon-button color="warn" (click)="deleteItem(type.name, item)">
+                  <mat-icon svgIcon="Delete"/>
+                </button>
+                {{item}}
+              </mat-list-item>
+            }
+        </mat-list>
       }
-  </mat-list>
-}
-</div>
+    <div class="big-button-container">
 
-<button mat-fab
-        color="primary"
-        (click)="addItem()"
-        class="fixed-bottom-right"
-        id="btnAddMapping">
-  <mat-icon aria-label="Add Mapping">add</mat-icon>
-</button>
+      <button mat-flat-button
+              color="primary"
+              (click)="addItem()"
+              class="fixed-bottom-right"
+              id="btnAddMapping">
+        <mat-icon  svgIcon="Add" aria-label="Add Mapping" ></mat-icon>
+        Hinzufügen
+      </button>
+    </div>
+  </div>
+</page-template>

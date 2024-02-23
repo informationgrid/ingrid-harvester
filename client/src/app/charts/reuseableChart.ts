@@ -132,7 +132,7 @@ export function historyChart(chartName, data){
                 display: true,
               },
               grid: {
-                color: 'rgba(255, 255, 255, 0.2)'
+                color: 'rgba(0, 0, 0, 0.2)'
               },
               beginAtZero: true,
               ticks: {
@@ -264,7 +264,7 @@ export function urlCheckChart(chartName, data){
                         display: true,
                     },
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.2)'
+                        color: 'rgba(0, 0, 0, 0.2)'
                     },
                     beginAtZero: true,
                     ticks: {
@@ -388,7 +388,7 @@ export function indexCheckChart(chartName, data){
               display: true,
             },
             grid: {
-              color: 'rgba(255, 255, 255, 0.2)'
+              color: 'rgba(0, 0, 0, 0.2)'
             },
             beginAtZero: true,
             ticks: {

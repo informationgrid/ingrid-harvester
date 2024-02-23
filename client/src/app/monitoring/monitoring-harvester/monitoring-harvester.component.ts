@@ -42,8 +42,6 @@ export class MonitoringHarvesterComponent implements OnInit {
   private chart : Chart;
 
   constructor(private configService: MonitoringService, private dialog: MatDialog, private http: HttpClient) {
-    // Chart.register(...registerables);
-    Chart.defaults.color = 'white'; // Global text color
   }
 
   ngOnInit() {
