@@ -22,27 +22,24 @@
  */
 
 /**
- * A mapper for ISO-XML documents harvested over CSW.
+ * A mapper for LIDO XML documents harvested over OAI.
  */
-import { License } from '@shared/license.model';
-import { getLogger } from 'log4js';
-import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
-import { ImporterSettings } from '../../../importer.settings';
+import * as GeoJsonUtils from '../../../utils/geojson.utils';
+import { getLogger } from 'log4js';
+import { oaiXPaths } from '../oai.paths';
 import { Agent, Contact, Organization, Person } from '../../../model/agent';
+import { BaseMapper } from '../../base.mapper';
 import { DateRange } from '../../../model/dateRange';
 import { Distribution } from '../../../model/distribution';
-import { Summary } from '../../../model/summary';
-import { DcatPeriodicityUtils } from '../../../utils/dcat.periodicity.utils';
-import { RequestDelegate, RequestOptions } from '../../../utils/http-request.utils';
-import { UrlUtils } from '../../../utils/url.utils';
-import { XPathElementSelect } from '../../../utils/xpath.utils';
-import { BaseMapper } from '../../base.mapper';
-import { oaiXPaths } from '../oai.paths';
+import { Event, Record, Relation, Repository, Resource, Subject } from './lido.model';
+import { ImporterSettings } from '../../../importer.settings';
+import { License } from '@shared/license.model';
 import { OaiSettings } from '../oai.settings';
-import { Event, Link, Record, Relation, Repository, Resource, Subject } from './lido.model';
-import * as MiscUtils from '../../../utils/misc.utils';
-import { GeoJsonUtils } from '../../../utils/geojson.utils';
+import { RequestOptions } from '../../../utils/http-request.utils';
+import { Summary } from '../../../model/summary';
+import { XPathElementSelect } from '../../../utils/xpath.utils';
+
 
 export class OaiMapper extends BaseMapper {
     public getSettings(): ImporterSettings {

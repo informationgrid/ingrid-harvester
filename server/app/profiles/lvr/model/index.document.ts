@@ -79,20 +79,23 @@ export class LvrDocument extends IndexDocument<OaiMapper> {
             // maintainers: await mapper.getMaintainers(),
             // contributors: await mapper.getContributors(),
             // distributions: await mapper.getDistributions(),
-            // extras: {
+            extras: {
             //     // harvested_data: mapper.getHarvestedData(),
             //     hierarchy_level: mapper.getHierarchyLevel(),    // only csw
-            //     metadata: {
+                metadata: {
             //         harvested: mapper.getMetadataHarvested(),
             //         harvesting_errors: null, // get errors after all operations been done
-            //         issued: null,
+                    issued: null,
             //         is_valid: null, // check validity before persisting to ES
-            //         modified: null,
-            //         source: mapper.getMetadataSource()
-            //     },
+                    modified: null,
+                    // source: mapper.getMetadataSource()
+                    source: {
+                        source_base: null
+                    }
+                },
             //     operates_on: mapper.getOperatesOn(),    // only csw
-            //     merged_from: []
-            // },
+                merged_from: []
+            },
             // issued: mapper.getIssued(),
             // keywords: mapper.getKeywords(),
             // modified: mapper.getModifiedDate(),
@@ -123,7 +126,7 @@ export type LvrIndexDocument = {
     relations: Relation[],
     repositories: Repository[],
     resources: Resource[],
-    subjects: Subject[]
+    subjects: Subject[],
     // // mandatory
     // contact_point: {
     //     fn: string,
@@ -169,26 +172,26 @@ export type LvrIndexDocument = {
     // // catalog: Catalog,
     // // plan_or_procedure_start_date: Date,
     // // temporal: DateRange[],
-    // extras: {
+    extras: {
     //     hierarchy_level: string,
-    //     metadata: {
+        metadata: {
     //         harvested: Date,
     //         harvesting_errors: null, // get errors after all operations been done
-    //         issued: Date,
+            issued: Date,
     //         is_changed?: boolean,
     //         is_valid: boolean, // checks validity after all operations been done
-    //         modified: Date,
+            modified: Date,
     //         quality_notes?: string[],
-    //         source: {
-    //             source_base: string,
-    //             source_type?: string,
+            source: {
+                source_base: string,
+                source_type?: string,
     //             raw_data_source?: string,
     //             portal_link?: string,
     //             attribution?: string
-    //         }
-    //     },
+            }
+        },
     //     operates_on: string[],
-    //     merged_from: string[]
-    // },
+        merged_from: string[]
+    },
     // keywords: string[]
 };

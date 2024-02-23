@@ -49,7 +49,7 @@ const HACK_ON = true;
 
 export class PostgresUtils {
 
-    public async processBucket(bucket: Bucket): Promise<EsOperation[]> {
+    public async processBucket(bucket: Bucket<DiplanungIndexDocument>): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
         // find primary document
         let { document, duplicates } = this.prioritizeAndFilter(bucket);
@@ -79,7 +79,7 @@ export class PostgresUtils {
         return box;
     }
 
-    private prioritizeAndFilter(bucket: Bucket): { 
+    private prioritizeAndFilter(bucket: Bucket<DiplanungIndexDocument>): { 
         document: DiplanungIndexDocument, 
         duplicates: Map<string | number, DiplanungIndexDocument>
     } {

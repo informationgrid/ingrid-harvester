@@ -41,9 +41,9 @@ const Cursor = require('pg-cursor');
 /**
  * Contains a primary dataset, a list of duplicates, and a list of services operating on the primary dataset.
  */
-export interface Bucket {
+export interface Bucket<T> {
     anchor_id: string | number,
-    duplicates: Map<string | number, DiplanungIndexDocument>,
+    duplicates: Map<string | number, T>,
     operatingServices: Map<string | number, Distribution>
 }
 
@@ -181,7 +181,7 @@ export class PostgresUtils extends DatabaseUtils {
 
         const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
         let currentId: string | number;
-        let currentBucket: Bucket;
+        let currentBucket: Bucket<any>;
         const maxRows = 100;
         let rows = await cursor.read(maxRows);
         let numDatasets = 0;
