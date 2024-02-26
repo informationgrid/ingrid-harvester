@@ -25,14 +25,19 @@ import { Harvester } from '@shared/harvester';
 import { Importer } from '../../../importer/importer';
 import { ImporterFactory } from '../../../importer/importer.factory';
 import { OaiImporter } from '../../../importer/oai/lido/oai.importer';
+import { KldImporter } from '../../../importer/kld/kld.importer';
+import { KldSettings } from '../../../importer/kld/kld.settings';
 
 export class LvrImporterFactory extends ImporterFactory {
 
     public async get(config: Harvester): Promise<Importer> {
         let importer: Importer;
         switch (config.type) {
-            case 'OAI': 
+            case 'OAI':
                 importer = new OaiImporter(config);
+                break;
+            case 'KuLaDig':
+                importer = new KldImporter(config as KldSettings);
                 break;
             default: {
                 console.error('Importer not found: ' + config.type);

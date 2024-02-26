@@ -617,5 +617,22 @@
     "defaultAttributionLink": null,
     "from": "2024-01-01T00:00:00",
     "until": "2024-02-01T00:00:00"
+  },
+  {
+    "index": "kuladig",
+    "priority": null,
+    "type": "KuLaDig",
+    "maxRecords": null,
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rules": {
+    },
+    "maxConcurrent": 1,
+    "maxConcurrentTimespan": 100,
+    "isIncremental": true,
+    "timeout": 60000,
+    "providerUrl": "https://www.kuladig.de/api/public/",
+    "id": 22,
+    "description": "KuLaDig (Kultur. Landschaft. Digital.)"
   }
 ]

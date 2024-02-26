@@ -21,14 +21,18 @@
  * ==================================================
  */
 
-import { LvrMapper } from './lvr.mapper';
+import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
 
-export class LvrMapperFactory {
+export type KldSettings = {
+  // base url of KuLaDig API
+  providerUrl: string,
+  // time in milliseconds to wait for the next set of concurrent API requests defined in the maxConcurrent setting
+  // NOTE a higher number will result in higher throttling of the request rate
+  maxConcurrentTimespan: number,
+} & ImporterSettings;
 
-    static getMapper(mapper): LvrMapper<any> {
-        switch (mapper.constructor.name) {
-            case 'OaiMapper': return new LvrMapper(mapper);
-            case 'KldMapper': return new LvrMapper(mapper);
-        }
-    }
-}
+export const defaultKldSettings: Partial<KldSettings> = {
+    ...DefaultImporterSettings,
+    providerUrl: '',
+    maxConcurrentTimespan: 100,
+  };
