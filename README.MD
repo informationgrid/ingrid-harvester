@@ -27,9 +27,9 @@ Prerequisites:
 
 You may wish to run the server and the client outside of the docker container, for debugging and faster deployment/development purposes. Currently you have to change some files to achieve this, outlined below:
 
-* `server/config-general.json`: 
-  * change the value of `elasticSearchUrl` to `http://localhost:9200` 
-  * change the value of `elasticSearchPassword`
+* `server/config-general.json`:
+  * change the value of `elasticsearch.url` to `http://localhost:9200`
+  * change the value of `elasticsearch.password`
 * Now, first start an Elasticsearch instance (either from the docker container or directly on your machine), then run the client and server separately:
   ```bash
   cd client
@@ -46,7 +46,7 @@ You may wish to run the server and the client outside of the docker container, f
 
 ## Test setup
 
-* `server/config-general.json`: change the value of `elasticSearchPassword`
+* `server/config-general.json`: change the value of `elasticsearch.password`
 * Build, run, and detach the containers:
     ```bash
     sudo docker-compose -f docker-compose.yml up --build -d
@@ -54,7 +54,7 @@ You may wish to run the server and the client outside of the docker container, f
 * If you are setting the harvester up for the first time (i.e., after initializing the Elasticsearch volume), you need to create the appropriate user credentials for Elasticsearch:
     * `elasticsearch/set-pw-es`: customize all passwords
         * make sure to use the same password twice, for user and Reenter
-        * make sure to put the same password for the `elastic` user that you chose for `elasticSearchPassword`
+        * make sure to put the same password for the `elastic` user that you chose for `elasticsearch.password`
     * `elasticsearch/create-users.json`: set a password for the readonly `read_user`
     * `elasticsearch/setup-access.sh`:
         * replace `$TOKEN` with a base64 encoded string of the elastic user and its password:
@@ -90,7 +90,7 @@ If nodejs is not yet installed on the system then run:
 
 > sudo yum install nodejs
 
-or for ubuntu 
+or for ubuntu
 
 > sudo apt-get install nodejs
 
@@ -191,7 +191,7 @@ Acess http://localhost:5601/
 # Configuration
 
 Edit the file config.js to define the location of the excel file to be imported ('filePath'). You can also
-configure the address of the Elasticsearch URL where the data shall be indexed to ('elasticSearchUrl').
+configure the address of the Elasticsearch URL where the data shall be indexed to ('elasticsearch.url').
 
 To disable authentication during development, comment the following line in "AuthMiddleware.ts"
 >// throw new Unauthorized("Unauthorized");
@@ -216,7 +216,7 @@ For the client:
 
 > npm run test
 
-oder 
+oder
 
 > mocha -r ts-node/register test/*.spec.ts
 
@@ -229,7 +229,7 @@ The main document is "server/model/index-document.ts", which represents the Elas
 * Update changelog-file
 * Commit and merge **develop** as a new commit to **master** branch
 * create annotated tag with message "Release"
-  * `git tag -m "Release" X.Y.Z` 
+  * `git tag -m "Release" X.Y.Z`
 
 * Push master (Jenkins baut RPM)
   * Master und develop sollten nicht gleichzeitig gepusht werden (createrepo-Befehl macht Probleme)
