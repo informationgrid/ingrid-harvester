@@ -31,6 +31,7 @@ import {MatCardModule} from '@angular/material/card';
 import {SharedModule} from '../shared/shared.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { PageTemplateModule } from '../shared/page-template/page-template.module';
+import { MatMenuModule } from '@angular/material/menu';
 
 const routes: Routes = [
   {
@@ -49,7 +50,8 @@ const routes: Routes = [
     MatCardModule,
     SharedModule,
     ScrollingModule,
-    PageTemplateModule
+    PageTemplateModule,
+    MatMenuModule
   ]
 })
 export class IndicesModule {

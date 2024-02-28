@@ -27,13 +27,14 @@
 // -----------------------------------------------------------
 // Migration form @angular/flex-layout to native css solution
 // -----------------------------------------------------------
-// -----------> fxLayout="row", fxLayout="col"
-// <div fxLayout="row"> → <div class="flex-row">
-// Flex row/col
+
+.inline-flex {
+  display: inline-flex !important;
+}
+
 .flex-row { display: flex; flex-direction: row; }
 .flex-col { display: flex; flex-direction: column; }
 
-// Flex-wrap utils.
 .flex-wrap { flex-wrap: wrap; }  // Mostly used with flex-row, when wrapping is desired.
 .rows-2 { @media screen and (max-width: 599px) { flex: 1 1 50%; } }  // Switch from flex-row to flex-col on mobile.
 .flex-col-mobile { @media screen and (max-width: 599px) { flex-direction: column; } }  // Switch from flex-row to flex-col on mobile.
@@ -47,10 +48,6 @@
 .flex-grow-mobile { @media only screen and (max-width: 599px) { flex-grow: 1; } }  // Switch from flex-row to flex-col on mobile.
 .flex-wrap-mobile { @media only screen and (max-width: 599px) { flex-wrap: wrap; } }  // Switch from flex-row to flex-col on mobile.
 
-
-// -----------> fxFlex
-// <div fxFlex> → <div class="flex-1">
-// Flex/grow/shrink properties https://developer.mozilla.org/en-US/docs/Web/CSS/flex.
 .flex-1 { flex: 1 }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
 .flex-5 { flex: 1 1 100%; max-width: 5%; }  
 .flex-10 { flex: 1 1 100%; max-width: 10%; }  
@@ -74,7 +71,9 @@
 .flex-100 { flex: 1 1 100%; max-width: 100%; }  
 .flex-grow { flex-grow: 1; }
 .flex-wrap { flex-wrap: wrap; } 
-
+.flex-space {
+  flex: 1 1 auto;
+}
 // -----------> fxLayoutGap
 // <div fxLayoutGap="8px"> → <div class="gap-8">
 // Gap.
@@ -148,6 +147,17 @@
 .h-full {
   height: 100%;
 }
+.w-full {
+  width: 100%;
+}
+
+mat-card-header {
+  margin-bottom: 24px;
+}
+
+.form-wrapper .mat-mdc-card {
+  box-shadow: none !important;
+}
 // ------------------------
 // Material customizations
 // ------------------------
@@ -211,7 +221,7 @@
   margin: 16px;
 }
 .padding {  
-  padding: 16px;
+  padding: 16px !important;
 }
 .padding-small {
   padding: 6px !important;
@@ -227,7 +237,7 @@
 .big-button-container {
   display: flex;
   justify-content: center;
-  // width: 120px;
+  width: 120px;
 }
 
 // ------------------------------ Styles from IGE

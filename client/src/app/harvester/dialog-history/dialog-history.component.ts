@@ -37,7 +37,7 @@ import { historyChart } from 'src/app/charts/reuseableChart';
 })
 export class DialogHistoryComponent implements OnInit, AfterViewInit {
 
-  dialogTitle = 'Harvester Historie';
+  dialogTitle = 'Harvester Historie: ';
 
   data;
 
@@ -47,6 +47,8 @@ export class DialogHistoryComponent implements OnInit, AfterViewInit {
               public dialogRef: MatDialogRef<DialogHistoryComponent>,
               private formBuilder: UntypedFormBuilder) {
     this.data = history;
+    this.dialogTitle += this.data.harvester
+    Chart.register(...registerables);
   }
 
   ngOnInit() {

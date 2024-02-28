@@ -26,24 +26,27 @@
 // }
 
 
-.info-icon {
-  vertical-align: middle;
-}
+// .info-icon {
+//   vertical-align: middle;
+//   cursor: pointer;
+// }
 
-.info {
-  padding-bottom: 20px;
-  font-size: small;
+// .info {
+//   padding-bottom: 20px;
+//   font-size: small;
 
-  & div span {
-    display: inline-block;
-    width: 100px;
-    white-space: pre;
-  }
-}
+//   & div span {
+//     display: inline-block;
+//     width: 100px;
+//     white-space: pre;
+//   }
+// }
 
-mat-icon {
-  cursor: pointer;
-}
+// .config-info-field {
+//   padding: 6px;
+//   border-radius: 6px;
+//   background-color: rgba(255,255,255,.04);
+// }
 
 
 
@@ -56,14 +59,10 @@ mat-icon {
 }
 
 
-.config-info-field {
-  padding: 6px;
-  border-radius: 6px;
-  background-color: rgba(255,255,255,.04);
-}
 
 .center-right {
   inset: 0;
   margin: auto;
   margin-right: 0;
 }
+

@@ -21,75 +21,24 @@
     ==================================================
 -->
 
-<!-- <mat-toolbar color="accent">
-  <span>Harvester Admin GUI</span>
-
-  <span class="toolbar"></span>
-
-  <span *ngIf="isLoggedIn">
-    <button mat-flat-button color="accent" title="Logout" (click)="logout()" data-test="logout">
-      <mat-icon aria-hidden="false" aria-label="logout">lock</mat-icon>
-      {{authService.currentUserValue.firstName}} {{authService.currentUserValue.lastName}}
-    </button>
-  </span>
-</mat-toolbar>
-
-<mat-sidenav-container class="navigation">
-  <app-side-menu></app-side-menu>
-  @if (isLoggedIn) {
-  <mat-sidenav mode="side" disableClose opened>
-    <div class="flex-col flex-grow">
-      <mat-action-list>
-        <button mat-list-item  color="accent" routerLink="/config" routerLinkActive="active-link" data-test="menu-config">
-          Konfiguration
-        </button>
-        <button mat-list-item routerLink="/harvester" routerLinkActive="active-link" data-test="menu-harvester">
-          Harvester
-        </button>
-        <button mat-list-item routerLink="/monitoring" routerLinkActive="active-link" data-test="menu-monitoring">
-          Monitoring
-        </button>
-        <button mat-list-item routerLink="/indices" routerLinkActive="active-link" data-test="menu-indices">
-          Indizes
-        </button>
-        <button mat-list-item routerLink="/log" routerLinkActive="active-link" data-test="menu-log">
-          Log
-        </button>
-      </mat-action-list>
-
-      <div class="version">Version: {{(version | async)?.version}}</div>
-    </div>
-  </mat-sidenav>
-}
-
-  <mat-sidenav-content>
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
-
-</mat-sidenav-container> -->
-
-
-
-<button mat-flat-button *ngIf="isLoggedIn" class="fixed-upper-right" color="primary" title="Logout" (click)="logout()" data-test="logout">
+<button mat-stroked-button *ngIf="isLoggedIn" class="fixed-upper-right" color="primary" title="Logout" (click)="logout()" data-test="logout">
   <mat-icon svgIcon="Lock" aria-hidden="false" aria-label="logout"/>
   {{authService.currentUserValue.firstName}} {{authService.currentUserValue.lastName}}
 </button>
 
 <div class="wrapper" [class.hide]="isLoggingout">
-  
-
-
   <mat-drawer-container class="flex-1" [autosize]="true">
     <!-- Left drawer -->
     @if (isLoggedIn) {
       <mat-drawer mode="side" [opened]="true" disableClose>
-          <ige-side-menu/>
+        <ige-side-menu/>
       </mat-drawer>
     }
-  
     <!-- Right content -->
     <mat-drawer-content>
+      @if (isLoggedIn) {
         <ige-main-header (onLogout)="isLoggingout = true"/>
+      }
         <router-outlet></router-outlet>
     </mat-drawer-content>
   </mat-drawer-container>

@@ -39,7 +39,7 @@ mat-expansion-panel {
 }
 
 mat-expansion-panel-header {
-  padding-left: 0;
+  padding: 0 !important;
 }
 
 .mat-mdc-slide-toggle {
@@ -86,9 +86,9 @@ mat-expansion-panel-header {
   flex: 1 1 auto;
 }
 
-mat-action-row {
-  padding-left: 8px;
-}
+// mat-action-row {
+//   padding-left: 8px;
+// }
 
 .lastExecution, .nextExecution {
   color: #d2d2d2;
@@ -134,3 +134,7 @@ mat-spinner {
   max-width: var(--max-width-panel);
 }
 
+.panel-header-icon {
+  width: 24px;
+  height: 24px;
+}

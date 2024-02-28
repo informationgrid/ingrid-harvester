@@ -57,6 +57,7 @@ import {MatBadgeModule} from "@angular/material/badge";
 import {DcatHarvesterComponent} from "./dialog-edit/dcat-harvester/dcat-harvester.component";
 import {DcatappluHarvesterComponent} from "./dialog-edit/dcatapplu-harvester/dcatapplu-harvester.component";
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import { CronjobFormFieldComponent } from "../shared/cronjob-form-field/cronjob-form-field.component";
 
 const harvesterRoutes: Routes = [
   {
@@ -103,7 +104,8 @@ const harvesterRoutes: Routes = [
         ReactiveFormsModule,
         MatCheckboxModule,
         MatBadgeModule,
-        ScrollingModule
+        ScrollingModule,
+        CronjobFormFieldComponent
     ],
     exports: [
         HarvesterComponent

@@ -37,6 +37,7 @@ import {MatSlideToggleChange} from '@angular/material/slide-toggle';
 import {SocketService} from './socket.service';
 import {ConfirmDialogComponent} from '../shared/confirm-dialog/confirm-dialog.component';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+import { UntypedFormBuilder } from '@angular/forms';
 
 @UntilDestroy()
 @Component({
@@ -58,7 +59,9 @@ export class HarvesterComponent implements OnInit, OnDestroy {
   constructor(public dialog: MatDialog,
               private snackBar: MatSnackBar,
               private harvesterService: HarvesterService,
-              private socketService: SocketService) {
+              private socketService: SocketService,
+              private formBuilder: UntypedFormBuilder, 
+              ) {
   }
 
   ngOnInit() {
@@ -98,13 +101,14 @@ export class HarvesterComponent implements OnInit, OnDestroy {
   schedule(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogSchedulerComponent, {
       width: '500px',
-      data: {...harvester.cron}
+      data: {...harvester.cron}, // {...harvester.cron}
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log("after scheduler:", result)
       if (result) {
         // update immediately component cronpattern
-        harvester.cron = result;
+        harvester.cron = result.value;
 
         // update schedule and set next execution time
         this.harvesterService.schedule(harvester.id, harvester.cron)

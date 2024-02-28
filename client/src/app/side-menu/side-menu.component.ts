@@ -21,7 +21,7 @@ import { MainMenuService } from "../menu/main-menu.service";
     ]),
   ],
 })
-export class SideMenuComponent implements OnInit {
+export class SideMenuComponent {
 
   showDrawer: Observable<boolean>;
 

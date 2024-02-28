@@ -29,10 +29,12 @@ import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {FormsModule} from '@angular/forms';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
-    imports: [FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatDialogModule, MatButtonModule],
-    exports: [FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatDialogModule, MatButtonModule],
+    imports: [FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatDialogModule, MatButtonModule, MatSlideToggleModule, MatFormFieldModule, MatIconModule],
+    exports: [FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatDialogModule, MatButtonModule, MatSlideToggleModule, MatFormFieldModule, MatIconModule],
     declarations: [ConfirmDialogComponent]
 })
 export class SharedModule {

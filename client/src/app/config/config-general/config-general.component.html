@@ -87,19 +87,19 @@
           </mat-form-field>
         </div>
         <div class="margin-below flex-row gap-20">
-          <div class="form-buttons flex-50">
+          <div class="form-buttons">
             <button mat-button color="primary" (click)="checkDbConnection()" [disabled]="dbConnectionCheck == 'working'"
               data-test="checkDbConnection">
-              <mat-icon class="inline-valigned">cloud</mat-icon>
+              <mat-icon svgIcon="cloud" class="inline-valigned" />
               Verbindung testen
             </button>
           </div>
           @if (dbConnectionCheck != null) {
-<div class="flex-50">
-            <mat-icon class="inline-valigned">{{statusIcon(dbConnectionCheck)}}</mat-icon>&nbsp;
-            <b>{{statusMsg(dbConnectionCheck)}}</b>
-          </div>
-}
+            <div class="inline-flex align-items-center gap-4" >
+              <mat-icon svgIcon={{statusIcon(dbConnectionCheck)}} />
+              <b >{{statusMsg(dbConnectionCheck)}}</b>
+            </div>
+          }
         </div>
       </mat-card-content>
     </mat-card>
@@ -122,15 +122,15 @@
             <mat-label>Host-URL</mat-label>
             <input matInput type="url" formControlName="url" required>
             @if (configForm.get('elasticsearch.url').hasError('required')) {
-<mat-error>
-              Dies ist ein Pflichtfeld
-            </mat-error>
-}
+              <mat-error>
+                Dies ist ein Pflichtfeld
+              </mat-error>
+            }
             @if (configForm.get('elasticsearch.url').hasError('elasticUrl')) {
-<mat-error>
-              Dies ist keine gültige Elasticsearch-URL (Bsp: http://localhost:9200)
-            </mat-error>
-}
+              <mat-error>
+                Dies ist keine gültige Elasticsearch-URL (Bsp: http://localhost:9200)
+              </mat-error>
+            }
           </mat-form-field>
         </div>
         <div class="flex-row gap-20 ">
@@ -148,15 +148,15 @@
             <mat-label>Alias-Name</mat-label>
             <input matInput type="text" formControlName="alias" required>
             @if (configForm.get('elasticsearch.alias').hasError('whitespace')) {
-<mat-error>
-              Es dürfen nicht nur Leerzeichen eingegeben sein
-            </mat-error>
-}
+              <mat-error>
+                Es dürfen nicht nur Leerzeichen eingegeben sein
+              </mat-error>
+            }
             @if (configForm.get('elasticsearch.alias').hasError('required')) {
-<mat-error>
-              Dies ist ein Pflichtfeld
-            </mat-error>
-}
+            <mat-error>
+                Dies ist ein Pflichtfeld
+              </mat-error>
+            }
           </mat-form-field>
         </div>
         <h4>Index-Settings (readonly) werden beim Start durch Umgebungsvariablen gesetzt.</h4>
@@ -180,19 +180,19 @@
         </div>
 
         <div class="margin-below flex-row gap-20">
-          <div class="form-buttons flex-50">
+          <div class="form-buttons">
             <button mat-button color="primary" (click)="checkEsConnection()" [disabled]="esConnectionCheck == 'working'"
               data-test="checkEsConnection">
-              <mat-icon class="inline-valigned">cloud</mat-icon>
+              <mat-icon svgIcon="cloud" class="inline-valigned" />
               Verbindung testen
             </button>
           </div>
           @if (esConnectionCheck != null) {
-<div>
-            <mat-icon class="inline-valigned">{{statusIcon(esConnectionCheck)}}</mat-icon>&nbsp;
-            <b>{{statusMsg(esConnectionCheck)}}</b>
-          </div>
-}
+            <div class="inline-flex align-items-center gap-4">
+              <mat-icon svgIcon={{statusIcon(esConnectionCheck)}} color={{statusColor(esConnectionCheck)}} class="inline-valigned" />
+              <b>{{statusMsg(esConnectionCheck)}}</b>
+            </div>
+          }
         </div>
       </mat-card-content>
     </mat-card>
@@ -214,11 +214,11 @@
         </mat-form-field>
         
         @if (profile == 'mcloud') {
-<mat-form-field>
-          <mat-label>Portal URL</mat-label>
-          <input matInput formControlName="portalUrl">
-        </mat-form-field>
-}
+          <mat-form-field>
+            <mat-label>Portal URL</mat-label>
+            <input matInput formControlName="portalUrl">
+          </mat-form-field>
+        }
       </mat-card-content>
     </mat-card>
 
@@ -228,69 +228,18 @@
       </mat-card-header>
 
       <mat-card-content>
-        <div [formGroup]="configForm.get('urlCheck')">
-          <div class="flex-row gap-20">
-            <h4 class="flex-80">URL Check: <span class="config-info-field">{{urlCheckTranslation}}</span></h4>
-            <div class="center-right">
-              <mat-slide-toggle color="accent" [checked]="configForm.get('urlCheck.active').value"
-                (change)="urlCheckTranslate(configForm.get('urlCheck.pattern').value)" formControlName="active"
-                title="Planung an- / ausschalten"></mat-slide-toggle>
-            </div>
-          </div>
-          <div class="flex-row gap-20 margin-below">
-            <mat-form-field class="flex-100">
-              <mat-label>UrlCheck Cron</mat-label>
-              <input matInput placeholder="* * * * *" formControlName="pattern"
-                (keyup)="urlCheckTranslate(configForm.get('urlCheck.pattern').value)" data-test="urlCheck-input">
-              @if (configForm.get('urlCheck.pattern')) {
-<button mat-button matSuffix mat-icon-button aria-label="Clear"
-                (click)="clearUrlCheckInput()" data-test="urlCheck-reset">
-                <mat-icon>close</mat-icon>
-              </button>
-}
-              <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon"
-                data-test="urlCheck-info">info_outline</mat-icon>
-              <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
-            </mat-form-field>
-          </div>
-        </div>
-
-
-        <div [formGroup]="configForm.get('indexCheck')">
-          <div class="flex-row gap-20">
-            <h4 class="flex-80">Index Check: <span class="config-info-field">{{indexCheckTranslation}}</span></h4>
-            <div class="center-right">
-              <mat-slide-toggle color="accent" [checked]="configForm.get('indexCheck.active').value"
-                (change)="indexCheckTranslate(configForm.get('indexCheck.pattern').value)" formControlName="active"
-                title="Planung an- / ausschalten"></mat-slide-toggle>
-            </div>
-          </div>
-          <div class="flex-row gap-20 margin-below">
-            <mat-form-field class="flex-100">
-              <mat-label>IndexCheck Cron</mat-label>
-              <input matInput placeholder="* * * * *" formControlName="pattern"
-                (keyup)="indexCheckTranslate(configForm.get('indexCheck.pattern').value)" data-test="indexCheck-input">
-              @if (configForm.get('indexCheck.pattern')) {
-<button mat-button matSuffix mat-icon-button
-                aria-label="Clear" (click)="clearIndexCheckInput()" data-test="indexCheck-reset">
-                <mat-icon>close</mat-icon>
-              </button>
-}
-              <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon"
-                data-test="urlCheck-info">info_outline</mat-icon>
-              <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
-            </mat-form-field>
-          </div>
-        </div>
-
-        @if (showInfo) {
-<mat-card class="info config-info-field margin-below">
-          <div><span>*/5 * * * *</span> Alle 5 Minuten</div>
-          <div><span>45 8 * * *</span> Täglich um 8:45 Uhr</div>
-          <div><span>0 6-18/2 * * *</span> Täglich zwischen 6 und 18 Uhr, alle 2h</div>
-          <div><span>30 4 1 * 0,6</span> Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So</div>
-        </mat-card>
-}
+        <harvester-cronjob-form-field 
+          title="Url Check" 
+          [form]="configForm" 
+          formKey="urlCheck" 
+          activeKeyName="active" 
+          cronKeyName="pattern" />
+        <harvester-cronjob-form-field 
+          title="Index Check" 
+          [form]="configForm" 
+          formKey="indexCheck" 
+          activeKeyName="active" 
+          cronKeyName="pattern" />
       </mat-card-content>
     </mat-card>
 
@@ -298,45 +247,15 @@
     <mat-card class="config-card" [formGroup]="configForm.get('indexBackup')">
       <mat-card-header class="flex-row gap-20">
         <mat-card-title>Index-Backup</mat-card-title>
-        <div class="center-right">
-          <mat-slide-toggle color="accent" [checked]="configForm.get('indexBackup.active').value"
-            (change)="indexBackupCronTranslate(configForm.get('indexBackup.cronPattern').value)"
-            formControlName="active" title="Index-Backup an- / ausschalten">
-          </mat-slide-toggle>
-        </div>
       </mat-card-header>
 
-      
       <mat-card-content>
-        <h4>Ausführung: <span class="config-info-field">{{indexBackupCronTranslation}}</span></h4>
-        <div class="flex-row gap-20 margin-below">
-          <mat-form-field class="flex-100">
-            <mat-label>Cron</mat-label>
-            <input matInput placeholder="* * * * *" formControlName="cronPattern"
-              (keyup)="indexBackupCronTranslate(configForm.get('indexBackup.cronPattern').value)"
-              data-test="indexBackupCron-input">
-            @if (configForm.get('indexBackup.cronPattern')) {
-<button mat-button matSuffix mat-icon-button
-              aria-label="Clear" (click)="clearIndexBackupCronInput()" data-test="indexBackupCron-reset">
-              <mat-icon>close</mat-icon>
-            </button>
-}
-            <mat-icon matSuffix (click)="showBackupCronInfo = !showBackupCronInfo" class="info-icon"
-              data-test="indexBackupCron-info">
-              info_outline
-            </mat-icon>
-            <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
-          </mat-form-field>
-        </div>
-
-        @if (showBackupCronInfo) {
-<mat-card class="info" class="config-info-field margin-below">
-          <div><span>*/5 * * * *</span> Alle 5 Minuten</div>
-          <div><span>45 8 * * *</span> Täglich um 8:45 Uhr</div>
-          <div><span>0 6-18/2 * * *</span> Täglich zwischen 6 und 18 Uhr, alle 2h</div>
-          <div><span>30 4 1 * 0,6</span> Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So</div>
-        </mat-card>
-}
+        <harvester-cronjob-form-field 
+          title="Index-Backup" 
+          [form]="configForm" 
+          formKey="indexBackup" 
+          activeKeyName="active" 
+          cronKeyName="cronPattern"/>
 
         <div class="flex-row gap-20">
           <mat-form-field class="flex-100">

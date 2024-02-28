@@ -28,7 +28,7 @@
       <!-- [selectable]="false" -->
       <mat-chip-row [removable]="true" (removed)="remove(item)">        
         {{item}}
-        <mat-icon matChipRemove>cancel</mat-icon>
+        <mat-icon svgIcon="close" matChipRemove/>
       </mat-chip-row>    
     }
     <input [matChipInputFor]="chipListTags"

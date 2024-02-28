@@ -47,14 +47,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UnauthorizedInterceptor } from '../security/unauthorized.interceptor';
 import { AuthenticationService } from '../security/authentication.service';
 import { PageTemplateModule } from "../shared/page-template/page-template.module"
-
-
-// const configRoutes: Routes = [
-//   {
-//     path: '',
-//     component: ConfigComponent
-//   }
-// ];
+import { CronjobFormFieldComponent } from '../shared/cronjob-form-field/cronjob-form-field.component'
 
 @NgModule({
     declarations: [
@@ -78,7 +71,8 @@ import { PageTemplateModule } from "../shared/page-template/page-template.module
         MatCheckboxModule,
         routing,
         TranslocoModule,
-        PageTemplateModule
+        PageTemplateModule,
+        CronjobFormFieldComponent
     ],
     exports: [
         ConfigComponent

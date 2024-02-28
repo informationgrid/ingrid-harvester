@@ -25,7 +25,10 @@
     <div class="flex-row fixed-top-right">
         <div class="flex-1"></div>
         <button mat-raised-button color="primary" [disabled]="numberOfHarvesters === 0" (click)="importAll()"
-            data-test="import-all">Alle importieren</button>
+            data-test="import-all">
+            <mat-icon svgIcon="Harvester" class="inline-valigned"/>
+            Alle importieren
+        </button>
     </div>
 
     <h1 class="harvester-list config-headline">Harvester</h1>
@@ -40,13 +43,23 @@
             <mat-expansion-panel-header>
 
                 <mat-panel-title class="">
-                    <mat-slide-toggle color="accent" [checked]="!harvester.disable" class=""
-                        title="Für Suche und Planung an- / ausschalten" (change)="handleActivation($event, harvester)"
-                        (click)="$event.stopImmediatePropagation()"></mat-slide-toggle>
-                    <p class="no-wrap">
-                        @if (harvester.cron?.full?.pattern || harvester.cron?.incr?.pattern) {
-                            <mat-icon inline class="scheduled" style="width: 20px; height: 20px;"  [svgIcon]="harvester.disable || !harvester.cron.full?.active ? 'alarm_off' : 'alarm_on' "/>
+                    <div class="padding panel-header-icon">
+                        @if (importDetail[harvester.id]?.summary) {
+                        <!-- <mat-panel-description> -->
+                            @if (hasAnyErrors(harvester.id)) {
+                            <mat-icon svgIcon="Error" class="warn"/>
+                            }
+                            @if (!hasAnyProblems(harvester.id)) {
+                            <mat-icon svgIcon="Success" class="success"/>
+                            }
+                            @if (hasOnlyWarnings(harvester.id)) {
+                            <mat-icon svgIcon="Error" class="warning"/>
+                            }
+                            <!-- </mat-panel-description> -->
                         }
+                    </div>
+
+                    <p class="no-wrap">
                         {{harvester.description || harvester.defaultAttribution}}
                     </p>
                     @if (importDetail[harvester.id]?.complete === false) {
@@ -54,38 +67,30 @@
                     }
                 </mat-panel-title>
 
-                @if (importDetail[harvester.id]?.summary) {
-                <mat-panel-description>
-                    @if (hasAnyErrors(harvester.id)) {
-                    <mat-icon svgIcon="Error" class="warn"/>
-                    }
-                    @if (!hasAnyProblems(harvester.id)) {
-                    <mat-icon svgIcon="Success" class="success"/>
-                    }
-                    @if (hasOnlyWarnings(harvester.id)) {
-                    <mat-icon svgIcon="Error" class="warning"/>
-                    }
-                </mat-panel-description>
+                @if (harvester.cron?.full?.pattern || harvester.cron?.incr?.pattern) {
+                    <mat-icon inline class="scheduled" style="width: 20px; height: 20px;"  [svgIcon]="harvester.disable || !harvester.cron.full?.active ? 'alarm_off' : 'alarm_on' "/>
                 }
+                <mat-slide-toggle color="accent" [checked]="!harvester.disable" class="padding"
+                title="Für Suche und Planung an- / ausschalten" (change)="handleActivation($event, harvester)"
+                (click)="$event.stopImmediatePropagation()"></mat-slide-toggle>
 
             </mat-expansion-panel-header>
 
             <app-importer-detail [data]="importDetail[harvester.id]" (showLog)="showLog(harvester.id)"
                 [cronActive]="!harvester.disable && (harvester.cron?.full?.active || harvester.cron?.incr?.active)"></app-importer-detail>
 
-            <div
-                class="harvester-config-buttons grid grid-cols-1 gap-20 justify-items-end baseline harvester-button-custom-grid-cols-mobile margin-below">
+            <div class="harvester-config-buttons grid grid-cols-1 gap-20 justify-items-end baseline harvester-button-custom-grid-cols-mobile margin-below">
                 <button mat-button (click)="startImport(harvester.id)" data-test="import"
                     [disabled]="importDetail[harvester.id]?.complete === false">
-                    <mat-icon class="inline-valigned">import_export</mat-icon>
+                    <mat-icon svgIcon="Harvester" class="inline-valigned"/>
                     Import starten
                 </button>
                 @if (item.key === 'CSW') {
-                <button mat-button (click)="startImport(harvester.id, true)" data-test="import"
-                    [disabled]="importDetail[harvester.id]?.complete === false">
-                    <mat-icon class="inline-valigned">import_export</mat-icon>
-                    Import starten (inkrementell)
-                </button>
+                    <button mat-button (click)="startImport(harvester.id, true)" data-test="import"
+                        [disabled]="importDetail[harvester.id]?.complete === false">
+                        <mat-icon svgIcon="Harvester" class="inline-valigned"/>
+                        Import starten (inkrementell)
+                    </button>
                 }
             </div>
 
@@ -96,28 +101,28 @@
 
                 <button class="col-span-1" mat-button (click)="showLog(harvester.id)"
                     [disabled]="!hasAnyProblems(harvester.id)" data-test="log">
-                    <mat-icon class="inline-valigned">description</mat-icon>
+                    <mat-icon svgIcon="Logging" class="inline-valigned"/>
                     Error-Log
                 </button>
 
                 <button mat-button (click)="showHistory(harvester)" data-test="history">
-                    <mat-icon class="inline-valigned">history</mat-icon>
+                    <mat-icon svgIcon="Timeline" class="inline-valigned"/>
                     Historie
                 </button>
                 <button mat-button (click)="schedule(harvester)" data-test="schedule">
-                    <mat-icon class="inline-valigned">schedule</mat-icon>
+                    <mat-icon svgIcon="Schedule" class="inline-valigned"/>
                     Planen
                 </button>
                 <button mat-button color="warn" (click)="deleteHarvester(harvester)" data-test="delete">
-                    <mat-icon class="inline-valigned">delete</mat-icon>
+                    <mat-icon svgIcon="Delete" class="inline-valigned"/>
                     Entfernen
                 </button>
                 <button mat-button (click)="copy(harvester)" data-test="copy">
-                    <mat-icon class="inline-valigned">file_copy</mat-icon>
+                    <mat-icon svgIcon="Copy" class="inline-valigned"/>
                     Kopieren
                 </button>
                 <button mat-button color="primary" (click)="edit(harvester)" data-test="edit">
-                    <mat-icon class="inline-valigned">edit</mat-icon>
+                    <mat-icon svgIcon="cursor-edit" class="inline-valigned"/>
                     Bearbeiten
                 </button>
             </div>

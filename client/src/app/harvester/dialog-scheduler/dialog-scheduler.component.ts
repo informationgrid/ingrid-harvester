@@ -26,6 +26,7 @@ import cronstrue from 'cronstrue/i18n';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {CronData} from '../../../../../server/app/importer.settings';
 import { isValidCron } from 'cron-validator';
+import { FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-dialog-scheduler',
@@ -33,50 +34,44 @@ import { isValidCron } from 'cron-validator';
   styleUrls: ['./dialog-scheduler.component.scss']
 })
 export class DialogSchedulerComponent implements OnInit {
+
   full = {
-    cronTranslation: '',
     validExpression: true,
   };
   incr = {
-    cronTranslation: '',
     validExpression: true,
   }
-  showInfo = false;
 
-  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public cron: { full: CronData, incr: CronData }) {
+  schedulerForm: UntypedFormGroup
+
+  constructor(
+    private formBuilder: UntypedFormBuilder, 
+    @Optional() @Inject(MAT_DIALOG_DATA) public cron: { full: CronData, incr: CronData }
+  ) {
     if (!cron.full) {
       cron.full = { pattern: '', active: false };
     }
     if (!cron.incr) {
       cron.incr = { pattern: '', active: false };
     }
+
+    this.schedulerForm = this.formBuilder.group({
+      full: this.formBuilder.group({
+        pattern: [cron.full.pattern],
+        active: [cron.full.active]
+      }),
+      incr: this.formBuilder.group({
+        pattern: [cron.incr.pattern],
+        active: [cron.incr.active]
+      }),
+    })
+
   }
 
-  ngOnInit(): void {
-    this.translate(this.cron.full.pattern, 'full');
-    this.translate(this.cron.incr.pattern, 'incr');
+  ngOnInit(): void {}
+  
+  validationCheck(expression: string){
+    return !isValidCron(expression)
   }
 
-  translate(cronExpression: string, mode: string) {
-    try {
-      if (!isValidCron(cronExpression)) {
-        throw new Error('Kein gültiger Ausdruck');
-      }
-      this[mode].cronTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
-      this[mode].validExpression = true;
-    } catch (e) {
-      this[mode].cronTranslation = 'Kein gültiger Ausdruck';
-      this[mode].validExpression = false;
-    }
-
-    if (!this.cron[mode].active) {
-      this[mode].cronTranslation = 'Planung ausgeschaltet';
-      return;
-    }
-  }
-
-  clearInput(mode: string) {
-    this.cron[mode].pattern = '';
-    this.translate('', mode);
-  }
 }

@@ -87,7 +87,7 @@ const appRoutes: Routes = routes
     MatInputModule,
     MatButtonModule,
     MatTooltipModule,
-    TranslocoRootModule
+    TranslocoRootModule,
   ],
   providers: [
     {

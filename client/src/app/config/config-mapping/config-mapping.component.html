@@ -28,10 +28,14 @@
             <h3 matSubheader>{{type.name}}</h3>
             @for (item of type.items; track item) {
               <mat-list-item>
-                <button mat-icon-button color="warn" (click)="deleteItem(type.name, item)">
+                <button mat-icon-button matListItemIcon color="warn" (click)="deleteItem(type.name, item)" class="mapping-delete-button" >
                   <mat-icon svgIcon="Delete"/>
                 </button>
-                {{item}}
+                <!-- <mat-icon matListItemIcon svgIcon="Delete" (click)="deleteItem(type.name, item)" /> -->
+                <!-- <button mat-icon-button color="warn" (click)="deleteItem(type.name, item)" >
+                  <mat-icon matListItemIcon svgIcon="Delete"/>
+                </button> -->
+                <span matListItemTitle>{{item}}</span>
               </mat-list-item>
             }
         </mat-list>

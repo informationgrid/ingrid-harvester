@@ -88,4 +88,6 @@ export class IndicesListComponent implements OnInit {
       this.searchResultLines = formattedJsonString.split('\n');
     }, (error => console.error('Error getting index:', error)));
   }
+
+  // searchForStringInPreview
 }
