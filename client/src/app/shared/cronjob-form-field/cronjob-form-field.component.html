@@ -3,7 +3,7 @@
         <h4 class="flex-space">{{title}}:
             <span class="config-info-field">{{cronTranslation}}</span>
         </h4>
-        <mat-slide-toggle color="accent" [checked]="form.get(this.formKey).get(activeKeyName).value"
+        <mat-slide-toggle color="accent" [checked]="toggleControl.value"
             (change)="handleToggleSwitch()"
             [formControlName]="activeKeyName"
             title="Planung an- / ausschalten"></mat-slide-toggle>
@@ -13,8 +13,8 @@
             <mat-label>Cron Expression</mat-label>
             <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
             <input matInput placeholder="* * * * *" [formControlName]="cronKeyName" 
-            (keyup)="translateCronExpression(form.get(formKey).get(cronKeyName).value)">
-            @if (form.get(formKey).get(cronKeyName).value) {
+            (keyup)="translateCronExpression(cronControl.value)">
+            @if (cronControl.value) {
             <button mat-icon-button matSuffix aria-label="Clear" (click)="clearInput()">
                 <mat-icon svgIcon="close" />
             </button>

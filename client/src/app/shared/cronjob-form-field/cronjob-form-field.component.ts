@@ -37,47 +37,58 @@ export class CronjobFormFieldComponent {
   cronTranslation: string;
   showInfo = false;
 
+  cronControl
+  toggleControl
+
   constructor() {}
   
   ngOnInit(): void {
-    this.translateCronExpression(this.form.get(this.formKey).get(this.cronKeyName).value)
+    this.cronControl = this.form.get(this.formKey).get(this.cronKeyName);
+    this.toggleControl = this.form.get(this.formKey).get(this.activeKeyName);
+    this.translateCronExpression(this.cronControl.value)
     this.handleToggleSwitch();
+
   }
 
   handleToggleSwitch(): void {
-    const cronControl = this.form.get(this.formKey).get(this.cronKeyName);
-    const toggleControl = this.form.get(this.formKey).get(this.activeKeyName);
-
-    toggleControl.valueChanges.subscribe((checked) => {
-      cronControl.setValidators([Validators.required, this.customValidation]);        
-      cronControl.updateValueAndValidity();
+    this.toggleControl.valueChanges.subscribe((checked) => {
+      this.cronControl.setValidators([this.customValidation]);
+      // Next lines disabled because form field will be deleted if disabled
+      // if (checked) {
+      //   this.cronControl.ensable()
+      // } else {
+      //   this.cronControl.disable()
+      // }
+      this.cronControl.updateValueAndValidity();
     });
   }
+
   customValidation(control: AbstractControl) {
-    const isValid = isValidCron(control.value);
+    const isValid = control.value == "" ? true : isValidCron(control.value);
     return isValid ? null : { customError: 'Kein gültiger Ausdruck.' };
   }
 
 
   translateCronExpression(cronExpression: string) {
-    const cronControl = this.form.get(this.formKey).get(this.cronKeyName);
-    cronControl.setValidators([Validators.required, this.customValidation]);    
+
+    this.cronControl.setValidators([this.customValidation]);    
     try {
       if (!isValidCron(cronExpression)) {
         throw new Error('Kein gültiger Ausdruck');
       }
       this.cronTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
     } catch (e) {
+      if( cronExpression == "" ) this.toggleControl.setValue(false);
       this.cronTranslation = 'Kein gültiger Ausdruck';
     }
-    if (!this.form.get(this.formKey).get(this.activeKeyName).value) {
+    if (!this.toggleControl.value) {
       this.cronTranslation = 'Planung ausgeschaltet';
       return;
     }
   }
 
   clearInput() {
-    this.form.get(this.formKey).get('pattern').setValue('');
+    this.cronControl.setValue('');
     this.translateCronExpression("");
   }
 }

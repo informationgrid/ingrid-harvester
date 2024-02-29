@@ -26,39 +26,11 @@
 <mat-dialog-content>
 
   <harvester-cronjob-form-field 
-          title="Komplettes Harvesting" 
-          [form]="schedulerForm" 
-          formKey="full" 
-          activeKeyName="active" 
-          cronKeyName="pattern"/>
-
-  <!-- <div class="">
-    <div class="flex-row gap-20">
-      <h4 class="flex-80">Komplettes Harvesting:<br><span>{{full.cronTranslation}}</span></h4>
-      <div class="center-right">
-        <mat-slide-toggle color="accent"
-          [(ngModel)]="cron.full.active"
-          (change)="translate(cron.full.pattern, 'full')"
-          title="Planung an- / ausschalten"></mat-slide-toggle>
-      </div>
-    </div>
-
-    <div class="flex-row gap-20 margin-below">
-      <mat-form-field class="flex-100">
-        <mat-label>Cron Expression</mat-label>
-        <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
-        <input matInput placeholder="* * * * *" [(ngModel)]="cron.full.pattern" (keyup)="translate(cron.full.pattern, 'full')" data-test="cron-input">
-        @if (cron.full.pattern) {
-          <button mat-icon-button matSuffix aria-label="Clear" (click)="clearInput('full')" data-test="cron-reset">
-            <mat-icon svgIcon="close"/>
-          </button>
-        }
-        <mat-icon matSuffix svgIcon="info" (click)="showInfo = !showInfo" class="info-icon" data-test="cron-info"/>
-
-      </mat-form-field>
-    </div>
-  </div> -->
-
+    title="Komplettes Harvesting" 
+    [form]="schedulerForm" 
+    formKey="full" 
+    activeKeyName="active" 
+    cronKeyName="pattern"/>
 
   <mat-divider class="padding-below"></mat-divider>
 
@@ -68,38 +40,6 @@
     formKey="incr" 
     activeKeyName="active" 
     cronKeyName="pattern"/>
-
-  <!-- <div class="flex-row gap-20 space-between items-center padding-below">
-    <mat-slide-toggle color="accent"
-                      [(ngModel)]="cron.incr.active"
-                      (change)="translate(cron.incr.pattern, 'incr')"
-                      title="Planung an- / ausschalten"></mat-slide-toggle>
-                    
-    <mat-form-field class="flex-1">
-      <mat-label>Cron Expression</mat-label>
-      <input matInput placeholder="* * * * *" [(ngModel)]="cron.incr.pattern" (keyup)="translate(cron.incr.pattern, 'incr')" data-test="cron-input">
-      @if (cron.incr.pattern) {
-<button mat-button matSuffix mat-icon-button aria-label="Clear" (click)="clearInput('incr')" data-test="cron-reset">
-        <mat-icon>close</mat-icon>
-      </button>
-}
-      <mat-icon matSuffix (click)="showInfo = !showInfo" class="info-icon" data-test="cron-info">info_outline</mat-icon>
-      <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
-    </mat-form-field>
-  </div>
-
-  <h4>Inkrementelles Harvesting: {{incr.cronTranslation}}</h4>
-
-  <mat-divider></mat-divider>
-
-  @if (showInfo) {
-<mat-card class="info">
-    <div><span>*/5 * * * *</span>Alle 5 Minuten</div>
-    <div><span>45 8 * * *</span>Täglich um 8:45 Uhr</div>
-    <div><span>0 6-18/2 * * *</span>Täglich zwischen 6 und 18 Uhr, alle 2h</div>
-    <div><span>30 4 1 * 0,6</span>Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So</div>
-  </mat-card>
-} -->
 
 </mat-dialog-content>
 
@@ -111,10 +51,5 @@
     [mat-dialog-close]="schedulerForm || null"
     [disabled]="!schedulerForm.valid"
     data-test="dlg-schedule">Aktualisieren</button>
-    <!-- [disabled]="(
-      validationCheck(
-        schedulerForm.get('incr').get('pattern').value, 
-        schedulerForm.get('incr').get('active').value
-      )
-    )" -->
+
 </mat-dialog-actions>

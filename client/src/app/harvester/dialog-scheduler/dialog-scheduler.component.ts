@@ -35,25 +35,12 @@ import { FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@an
 })
 export class DialogSchedulerComponent implements OnInit {
 
-  full = {
-    validExpression: true,
-  };
-  incr = {
-    validExpression: true,
-  }
-
   schedulerForm: UntypedFormGroup
 
   constructor(
     private formBuilder: UntypedFormBuilder, 
     @Optional() @Inject(MAT_DIALOG_DATA) public cron: { full: CronData, incr: CronData }
   ) {
-    if (!cron.full) {
-      cron.full = { pattern: '', active: false };
-    }
-    if (!cron.incr) {
-      cron.incr = { pattern: '', active: false };
-    }
 
     this.schedulerForm = this.formBuilder.group({
       full: this.formBuilder.group({
