@@ -182,6 +182,7 @@ export class OaiMapper extends BaseMapper {
             },
             place: {
                 displayPlace: OaiMapper.text('./eventPlace/displayPlace', eventNode),
+                geometry: GeoJsonUtils.parse(OaiMapper.select('./lido:eventPlace/lido:place/lido:gml/gml:Point', eventNode, true), null, oaiXPaths.lido.prefixMap),
                 id: OaiMapper.text('./eventPlace/place/placeID', eventNode),
                 name: OaiMapper.text('./eventPlace/place/namePlaceSet/appellationValue', eventNode)
             },
@@ -196,8 +197,8 @@ export class OaiMapper extends BaseMapper {
     getRelations(): Relation[] {
         let relationNodes = OaiMapper.select('./lido:lido/lido:descriptiveMetadata/lido:objectRelationWrap/lido:relatedWorksWrap/lido:relatedWorkSet', this.record);
         let relations: Relation[] = relationNodes.map(relationNode => ({
-            description: OaiMapper.text('./relatedWork/object/objectID', relationNode),
-            id: OaiMapper.text('./relatedWork/object/objectNote', relationNode),
+            description: OaiMapper.text('./relatedWork/object/objectNote', relationNode),
+            id: OaiMapper.text('./relatedWork/object/objectID', relationNode),
             relationType: {
                 id: OaiMapper.text('./relatedWorkRelType/conceptID', relationNode),
                 term: OaiMapper.text('./relatedWorkRelType/term', relationNode)
@@ -270,9 +271,14 @@ export class OaiMapper extends BaseMapper {
     getRepositories(): Repository[] {
         let repositoryNodes = OaiMapper.select('./lido:descriptiveMetadata/lido:objectIdentificationWrap/lido:repositoryWrap/lido:repositorySet', this.record);
         let repositories: Repository[] = repositoryNodes.map(repositoryNode => ({
-            geometry: GeoJsonUtils.parse(OaiMapper.select('./lido:repositoryLocation/lido:gml/gml:Point', repositoryNode, true), null, oaiXPaths.lido.prefixMap),
             id: OaiMapper.text('./repositoryName/legalBodyID', repositoryNode),
             name: OaiMapper.text('./repositoryName/legalBodyName/appellationValue', repositoryNode),
+            place: {
+                displayPlace: OaiMapper.text('./repositoryLocation/displayPlace', repositoryNode),
+                geometry: GeoJsonUtils.parse(OaiMapper.select('./lido:repositoryLocation/lido:gml/gml:Point', repositoryNode, true), null, oaiXPaths.lido.prefixMap),
+                id: OaiMapper.text('./repositoryLocation/placeID', repositoryNode),
+                name: OaiMapper.text('./repositoryLocation/namePlaceSet/appellationValue', repositoryNode)
+            },
             workId: OaiMapper.text('./workID', repositoryNode)
         }));
         return repositories;

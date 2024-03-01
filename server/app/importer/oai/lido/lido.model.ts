@@ -63,6 +63,7 @@ export interface Link {
 
 export interface Place {
     displayPlace: string,
+    geometry: object,
     id: string,
     name: string
 }
@@ -88,9 +89,9 @@ export interface Relation {
 }
 
 export interface Repository {
-    geometry: object,
     id: string,
     name: string,
+    place: Place,
     workId: string
 }
 
