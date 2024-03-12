@@ -302,7 +302,7 @@ export abstract class WfsImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, features[i], harvestTime, this.summary, this.generalInfo);
 
-            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
+            let doc: any = await this.profile.getIndexDocumentFactory().create(mapper).catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;

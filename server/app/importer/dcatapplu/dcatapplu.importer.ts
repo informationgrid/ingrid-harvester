@@ -247,7 +247,7 @@ export class DcatappluImporter extends Importer {
                 let catalog = catalogAboutsToCatalogs[catalogId] ?? this.database.defaultCatalog;
                 let mapper = this.getMapper(this.settings, records[i], catalog, rootNode, harvestTime, this.summary);
 
-                let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
+                let doc: any = await this.profile.getIndexDocumentFactory().create(mapper).catch(e => {
                     log.error('Error creating index document', e);
                     this.summary.appErrors.push(e.toString());
                     mapper.skipped = true;

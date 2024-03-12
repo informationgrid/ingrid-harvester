@@ -30,7 +30,7 @@ import {OaiMapper} from "../../../importer/oai/oai.mapper";
 import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
 import {mcloudMapperFactory} from "../mapper/mcloud.mapper.factory";
 
-export class mcloudDocument extends IndexDocument<CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper>{
+export class mcloudIndexDocumentFactory extends IndexDocumentFactory<CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper>{
 
     async create(_mapper: CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper) : Promise<any> {
         let mapper = mcloudMapperFactory.getMapper(_mapper);

@@ -429,7 +429,7 @@ export class CswImporter extends Importer {
 
             let doc: any;
             try {
-                doc = await this.profile.getIndexDocument().create(mapper);
+                doc = await this.profile.getIndexDocumentFactory().create(mapper);
                 docsToImport.push(doc);
             }
             catch (e) {

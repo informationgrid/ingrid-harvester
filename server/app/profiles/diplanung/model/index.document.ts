@@ -31,9 +31,10 @@ import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
 import { Distribution } from '../../../model/distribution';
 import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { IndexDocument } from '../../../model/index.document';
+import { IndexDocumentFactory } from '../../../model/index.document.factory';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
-export class DiPlanungDocument extends IndexDocument<DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper> {
+export class DiPlanungIndexDocumentFactory extends IndexDocumentFactory<DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper> {
 
     async create(_mapper: DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper) : Promise<DiplanungIndexDocument> {
         let mapper = DiplanungMapperFactory.getMapper(_mapper);
@@ -115,7 +116,7 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
     }
 }
 
-export type DiplanungIndexDocument = {
+export type DiplanungIndexDocument = IndexDocument & {
     // mandatory
     contact_point: {
         fn: string,

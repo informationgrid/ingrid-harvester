@@ -21,25 +21,10 @@
  * ==================================================
  */
 
-export type IndexDocument = {
-    extras: {
-        metadata: {
-            harvested?: Date,
-            harvesting_errors?: string[],   // get errors after all operations been done
-            issued: Date,
-            is_changed?: boolean,   // has been changed from its original version by the hravesting process
-            is_valid?: boolean,     // checks validity after all operations been done
-            modified: Date,
-            quality_notes?: string[],
-            source: {
-                source_base: string,
-                source_type?: string,
-                raw_data_source?: string,
-                portal_link?: string,
-                attribution?: string
-            }
-        },
-        // operates_on: string[],
-        merged_from: string[]
-    }
+import { BaseMapper } from '../importer/base.mapper';
+import { IndexDocument } from './index.document';
+
+export abstract class IndexDocumentFactory<M extends BaseMapper> {
+
+    abstract create(mapper: M): Promise<IndexDocument>;
 }

@@ -24,7 +24,7 @@
 import { BaseMapper } from '../importer/base.mapper';
 import { ElasticQueries } from '../persistence/elastic.queries';
 import { ImporterFactory } from '../importer/importer.factory';
-import { IndexDocument } from '../model/index.document';
+import { IndexDocumentFactory } from '../model/index.document.factory';
 import { IndexSettings } from '../persistence/elastic.setting';
 import { PostgresQueries } from '../persistence/postgres.queries';
 
@@ -32,7 +32,7 @@ export abstract class ProfileFactory<M extends BaseMapper> {
 
     abstract getElasticQueries(): ElasticQueries;
     abstract getImporterFactory(): ImporterFactory;
-    abstract getIndexDocument(): IndexDocument<M>;
+    abstract getIndexDocumentFactory(): IndexDocumentFactory<M>;
     abstract getIndexMappings(): any;
     abstract getIndexSettings(): IndexSettings;
     abstract getPostgresQueries(): PostgresQueries;

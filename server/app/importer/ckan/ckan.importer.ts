@@ -86,7 +86,7 @@ export class CkanImporter extends Importer {
             // Execute the mappers
             let mapper = new CkanMapper(this.settings, data);
 
-            let doc: any = await this.profile.getIndexDocument().create(mapper)
+            let doc: any = await this.profile.getIndexDocumentFactory().create(mapper)
                 .catch(e => {
                     log.error('Error creating index document', e);
                     this.summary.appErrors.push(e.toString());

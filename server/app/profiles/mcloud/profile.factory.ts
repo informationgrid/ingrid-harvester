@@ -43,8 +43,8 @@ export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatM
         return ElasticQueries.getInstance();
     }
 
-    getIndexDocument(): mcloudDocument{
-        return new mcloudDocument;
+    getIndexDocumentFactory(): mcloudIndexDocumentFactory{
+        return new mcloudIndexDocumentFactory;
     }
 
     getIndexMappings(): any {

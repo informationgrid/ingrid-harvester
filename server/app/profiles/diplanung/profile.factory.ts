@@ -23,7 +23,7 @@
 
 import { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper';
 import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper';
-import { DiPlanungDocument } from './model/index.document';
+import { DiPlanungIndexDocumentFactory } from './model/index.document';
 import { DiplanungImporterFactory } from './importer/diplanung.importer.factory';
 import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { ElasticQueries } from './persistence/elastic.queries';
@@ -41,8 +41,8 @@ export class DiplanungFactory extends ProfileFactory<DcatappluMapper | Diplanung
         return ElasticQueries.getInstance();
     }
 
-    getIndexDocument(): DiPlanungDocument {
-        return new DiPlanungDocument();
+    getIndexDocumentFactory(): DiPlanungIndexDocumentFactory {
+        return new DiPlanungIndexDocumentFactory();
     }
 
     getIndexMappings(): any {
