@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS public.record (
     collection_id INTEGER,
     dataset JSONB,
     original_document TEXT,
-    created_on TIMESTAMP(6) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    last_modified TIMESTAMP(6) with time zone NULL,
+    created_on TIMESTAMP(3) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified TIMESTAMP(3) with time zone NULL,
     CONSTRAINT record_pkey PRIMARY KEY(id),
     CONSTRAINT record_full_identifier UNIQUE(identifier, collection_id, source),
     CONSTRAINT fkivo5l0rletq7kni6xstvejy5a FOREIGN KEY(collection_id) REFERENCES public.collection(id)
