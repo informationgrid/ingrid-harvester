@@ -223,7 +223,7 @@ export class ExcelImporter extends Importer {
         worksheet.eachRow((row, rowNumber) => {
             if (rowNumber > 1) {
                 let columnValues = [];
-                for (let i = 0; i < row.values.length; i++) {
+                for (let i = 0; i < parseInt(row.values.length.toString()); i++) {
                     let cur = row.values[i];
                     if (!cur) {
                         columnValues.push('');
