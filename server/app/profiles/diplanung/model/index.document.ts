@@ -21,100 +21,11 @@
  * ==================================================
  */
 
-import { createEsId } from '../diplanung.utils';
-import { Contact, Organization, Person } from '../../../model/agent';
 import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { DateRange } from '../../../model/dateRange';
-import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper';
-import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
-import { DiplanungMapperFactory } from '../mapper/diplanung.mapper.factory';
 import { Distribution } from '../../../model/distribution';
-import { ExcelSparseMapper } from '../../../importer/excelsparse/excelsparse.mapper';
 import { IndexDocument } from '../../../model/index.document';
-import { IndexDocumentFactory } from '../../../model/index.document.factory';
-import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
-
-export class DiPlanungIndexDocumentFactory extends IndexDocumentFactory<DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper> {
-
-    async create(_mapper: DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper) : Promise<DiplanungIndexDocument> {
-        let mapper = DiplanungMapperFactory.getMapper(_mapper);
-        let contactPoint: Contact = await mapper.getContactPoint() ?? { fn: '' };
-        let result = {
-            // basic information
-            contact_point: {
-                fn: contactPoint.fn,
-                has_country_name: contactPoint.hasCountryName,
-                has_locality: contactPoint.hasLocality,
-                has_postal_code: contactPoint.hasPostalCode,
-                has_region: contactPoint.hasRegion,
-                has_street_address: contactPoint.hasStreetAddress,
-                has_email: contactPoint.hasEmail,
-                has_telephone: contactPoint.hasTelephone,
-                has_uid: contactPoint.hasUID,
-                has_url: contactPoint.hasURL,
-                has_organization_name: contactPoint.hasOrganizationName
-            },
-            description: mapper.getDescription(),
-            identifier: mapper.getGeneratedId(),
-            adms_identifier: mapper.getAdmsIdentifier(),
-            // resource_identifier: mapper.getResourceIdentifier(),
-            title: mapper.getTitle(),
-            plan_name: mapper.getAlternateTitle(),
-            // plan and procedure information
-            development_freeze_period: mapper.getPluDevelopmentFreezePeriod(),
-            plan_state: mapper.getPluPlanState(),
-            plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),
-            plan_type: mapper.getPluPlanType(),
-            plan_type_fine: mapper.getPluPlanTypeFine(),
-            procedure_state: mapper.getPluProcedureState(),
-            procedure_start_date: mapper.getPluProcedureStartDate(),
-            procedure_type: mapper.getPluProcedureType(),
-            process_steps: mapper.getPluProcessSteps(),
-            notification: mapper.getPluNotification(),
-            // spatial and temporal features
-            bounding_box: mapper.getBoundingBox(),
-            centroid: mapper.getCentroid()?.['coordinates'],
-            spatial: mapper.getSpatial(),
-            spatial_text: mapper.getSpatialText(),
-            // temporal: mapper.getTemporal(),
-            // additional information and metadata
-            relation: mapper.getRelation(),
-            catalog: await mapper.getCatalog(),
-            publisher: (await mapper.getPublisher())?.[0],
-            maintainers: await mapper.getMaintainers(),
-            contributors: await mapper.getContributors(),
-            distributions: await mapper.getDistributions(),
-            extras: {
-                // harvested_data: mapper.getHarvestedData(),
-                hierarchy_level: mapper.getHierarchyLevel(),    // only csw
-                metadata: {
-                    harvested: mapper.getMetadataHarvested(),
-                    harvesting_errors: null, // get errors after all operations been done
-                    issued: null,
-                    is_valid: null, // check validity before persisting to ES
-                    modified: null,
-                    source: mapper.getMetadataSource()
-                },
-                operates_on: mapper.getOperatesOn(),    // only csw
-                merged_from: []
-            },
-            issued: mapper.getIssued(),
-            keywords: mapper.getKeywords(),
-            modified: mapper.getModifiedDate(),
-        };
-
-        result.extras.merged_from.push(createEsId(result));
-        result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
-        // result.extras.metadata.is_valid = mapper.isValid(result);
-        // let qualityNotes = mapper.getQualityNotes();
-        // if (qualityNotes?.length > 0) {
-        //     result.extras.metadata['quality_notes'] = qualityNotes;
-        // }
-        mapper.executeCustomCode(result);
-
-        return result;
-    }
-}
+import { Organization, Person } from '../../../model/agent';
 
 export type DiplanungIndexDocument = IndexDocument & {
     // mandatory
@@ -161,27 +72,9 @@ export type DiplanungIndexDocument = IndexDocument & {
     // additional information and metadata
     catalog: Catalog,
     plan_or_procedure_start_date: Date,
-    // temporal: DateRange[],
     extras: {
         hierarchy_level: string,
-        metadata: {
-            harvested: Date,
-            harvesting_errors: null, // get errors after all operations been done
-            issued: Date,
-            is_changed?: boolean,
-            is_valid: boolean, // checks validity after all operations been done
-            modified: Date,
-            quality_notes?: string[],
-            source: {
-                source_base: string,
-                source_type?: string,
-                raw_data_source?: string,
-                portal_link?: string,
-                attribution?: string
-            }
-        },
-        operates_on: string[],
-        merged_from: string[]
+        operates_on: string[]
     },
     keywords: string[]
 };
