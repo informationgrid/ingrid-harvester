@@ -31,10 +31,12 @@ import { throwError } from 'rxjs';
 import { Agent, Contact, Organization, Person } from '../../model/agent';
 import { BaseMapper } from '../base.mapper';
 import { DateRange } from '../../model/dateRange';
+import { DcatMapper } from '../../importer/dcat/dcat.mapper';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
 import { Distribution } from '../../model/distribution';
 import { ImporterSettings } from '../../importer.settings';
 import { License } from '@shared/license.model';
+import { MetadataSource } from '../../model/index.document';
 import { OaiSettings } from './oai.settings';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
@@ -51,7 +53,7 @@ export class OaiMapper extends BaseMapper {
         'srv': namespaces.SRV
     });
 
-    private log = getLogger();
+    log = getLogger();
 
     private readonly record: any;
     private harvestTime: any;
@@ -91,7 +93,7 @@ export class OaiMapper extends BaseMapper {
         return this.summary;
     }
 
-    _getDescription() {
+    getDescription() {
         let abstract = OaiMapper.getCharacterStringContent(this.idInfo, 'abstract');
         if (!abstract) {
             let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.providerUrl}\'`;
@@ -104,7 +106,7 @@ export class OaiMapper extends BaseMapper {
     }
 
 
-    async _getDistributions(): Promise<Distribution[]> {
+    async getDistributions(): Promise<Distribution[]> {
         let dists = [];
         let urlsFound = [];
 
@@ -237,7 +239,7 @@ export class OaiMapper extends BaseMapper {
 
     }
 
-    async _getPublisher(): Promise<any[]> {
+    async getPublisher(): Promise<any[]> {
         let publishers = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
@@ -280,7 +282,7 @@ export class OaiMapper extends BaseMapper {
         }
     }
 
-    _getTitle() {
+    getTitle() {
         let title = OaiMapper.getCharacterStringContent(this.idInfo, 'title');
         return title && title.trim() !== '' ? title : undefined;
     }
@@ -304,7 +306,7 @@ export class OaiMapper extends BaseMapper {
      *    + all otherConstraints texts for useConstraints/otherConstraints
      *      combinations that are not JSON-snippets.
      */
-    _getAccessRights(): string[] {
+    getAccessRights(): string[] {
         // Extract all useLimitation texts
         let limitations = OaiMapper.select('./*/gmd:resourceConstraints/*/gmd:useLimitation', this.idInfo)
             .map(node => OaiMapper.getCharacterStringContent(node)) // Extract the text
@@ -326,11 +328,11 @@ export class OaiMapper extends BaseMapper {
         return undefined;
     }
 
-    _getCitation(): string {
+    getCitation(): string {
         return undefined;
     }
 
-    async _getDisplayContacts() {
+    async getDisplayContacts() {
 
         let contactPoint = await this.getContactPoint();
         let displayContact: Person;
@@ -349,7 +351,7 @@ export class OaiMapper extends BaseMapper {
                 homepage: contactPoint.hasURL
             };
         } else {
-            let publisher = await this._getPublisher();
+            let publisher = await this.getPublisher();
 
             if (publisher) {
                 let displayName;
@@ -376,7 +378,7 @@ export class OaiMapper extends BaseMapper {
         return [displayContact];
     }
 
-    _getGeneratedId(): string {
+    getGeneratedId(): string {
         return this.uuid;
     }
 
@@ -388,7 +390,7 @@ export class OaiMapper extends BaseMapper {
      * contains just one entry 'opendata' i.e. if the ISO-XML document doesn't
      * have this keyword defined, then it will be skipped from the index.
      */
-    _getKeywords(): string[] {
+    getKeywords(): string[] {
         let mandatoryKws = this.settings.eitherKeywords || [];
         let keywords = this.fetched.keywords[mandatoryKws.join()];
         if (keywords) {
@@ -426,7 +428,7 @@ export class OaiMapper extends BaseMapper {
         return keywords;
     }
 
-    _getMetadataSource(): any {
+    getMetadataSource(): MetadataSource {
         let oaiLink = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=iso19139&identifier=${this.uuid}`;
         return {
             source_base: this.settings.providerUrl,
@@ -436,11 +438,11 @@ export class OaiMapper extends BaseMapper {
         };
     }
 
-    _getModifiedDate() {
+    getModifiedDate() {
         return new Date(OaiMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true).textContent);
     }
 
-    _getSpatial(): any {
+    getSpatial(): any {
         let geographicBoundingBoxes = OaiMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];
         for(let i=0; i < geographicBoundingBoxes.length; i++){
@@ -480,7 +482,7 @@ export class OaiMapper extends BaseMapper {
         return undefined;
     }
 
-    _getSpatialText(): string {
+    getSpatialText(): string {
         let geoGraphicDescriptions = OaiMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription', this.idInfo);
         let result = [];
         for(let i=0; i < geoGraphicDescriptions.length; i++)
@@ -498,7 +500,7 @@ export class OaiMapper extends BaseMapper {
         return undefined;
     }
 
-    _getTemporal(): DateRange[] {
+    getTemporal(): DateRange[] {
         let suffix = this.getErrorSuffix(this.uuid, this.getTitle());
 
         let result: DateRange[] = [];
@@ -552,27 +554,27 @@ export class OaiMapper extends BaseMapper {
         }
     }
 
-    _getThemes() {
+    getThemes() {
         // Return cached value, if present
         if (this.fetched.themes) return this.fetched.themes;
 
         // Evaluate the themes
         let xpath = './/gmd:descriptiveKeywords/gmd:MD_Keywords[./gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()="Data theme (EU MDR)"]/gmd:keyword/gco:CharacterString';
         let themes = OaiMapper.select(xpath, this.record)
-            .map(node => OaiMapper.dcatThemeUriFromKeyword(node.textContent))
+            .map(node => DcatMapper.dcatThemeUriFromKeyword(node.textContent))
             .filter(theme => theme); // Filter out falsy values
 
         if (!themes || themes.length === 0) {
             // Fall back to default value
             themes = this.settings.defaultDCATCategory
-                .map( category => BaseMapper.DCAT_CATEGORY_URL + category);
+                .map( category => DcatMapper.DCAT_CATEGORY_URL + category);
         }
 
         this.fetched.themes = themes;
         return themes;
     }
 
-    _isRealtime(): boolean {
+    isRealtime(): boolean {
         return undefined;
     }
 
@@ -588,7 +590,7 @@ export class OaiMapper extends BaseMapper {
         }
     }
 
-    _getAccrualPeriodicity(): string {
+    getAccrualPeriodicity(): string {
         // Multiple resourceMaintenance elements are allowed. If present, use the first one
         let freq = OaiMapper.select('./*/gmd:resourceMaintenance/*/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode', this.idInfo);
         if (freq.length > 0) {
@@ -601,7 +603,7 @@ export class OaiMapper extends BaseMapper {
         return undefined;
     }
 
-    async _getLicense() {
+    async getLicense() {
         let license: License;
         let constraints = OaiMapper.select('./*/gmd:resourceConstraints/*[./gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue="license"]', this.idInfo);
 
@@ -648,11 +650,11 @@ export class OaiMapper extends BaseMapper {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.providerUrl}'.`;
     }
 
-    _getHarvestedData(): string {
+    getHarvestedData(): string {
         return this.record.toString();
     }
 
-    _getCreator(): Person[] {
+    getCreator(): Person[] {
         let creators = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
@@ -694,26 +696,24 @@ export class OaiMapper extends BaseMapper {
     }
 
 
-    _getGroups(): string[] {
+    getGroups(): string[] {
         return undefined;
     }
 
-    _getIssued(): Date {
+    getIssued(): Date {
         return undefined;
     }
 
-    _getMetadataHarvested(): Date {
+    getHarvestingDate(): Date {
         return new Date(Date.now());
     }
 
-    _getSubSections(): any[] {
+    getSubSections(): any[] {
         return undefined;
     }
 
-    _getOriginator(): Person[] {
-
+    getOriginator(): Person[] {
         let originators: any[] = [];
-
         let queries = [
             './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
             './gmd:contact/gmd:CI_ResponsibleParty'
@@ -758,7 +758,7 @@ export class OaiMapper extends BaseMapper {
         return originators.length > 0 ? originators : undefined;
     }
 
-    async _getContactPoint(): Promise<Contact> {
+    async getContactPoint(): Promise<Contact> {
 
         let contactPoint = this.fetched.contactPoint;
         if (contactPoint) {
@@ -824,7 +824,7 @@ export class OaiMapper extends BaseMapper {
         return contactPoint; // TODO index all contacts
     }
 
-    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+    private getUrlCheckRequestConfig(uri: string): RequestOptions {
         let config: RequestOptions = {
             method: 'HEAD',
             json: false,

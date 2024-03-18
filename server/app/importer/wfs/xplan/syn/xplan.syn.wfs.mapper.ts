@@ -43,13 +43,13 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
      *
      * @returns 
      */
-    async _getDistributions(): Promise<Distribution[]> {
+    async getDistributions(): Promise<Distribution[]> {
         let distributions = [];
         Object.entries(distributionTags).forEach(([tagName, tagDescription]) => {
             distributions.push(...this.getSpecificDistributions(tagName, tagDescription));
         });
         // add xplan-specific WMS distributions
-        let wmsDist = generateXplanWmsDistributions(this._getCatalog().identifier, this._getAlternateTitle(), this._getPluPlanType());
+        let wmsDist = generateXplanWmsDistributions(this.getCatalog().identifier, this.getAlternateTitle(), this.getPluPlanType());
         distributions.push(wmsDist);
         return distributions;
     }
@@ -83,7 +83,7 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
         }
     }
 
-    _getAlternateTitle() {
+    getAlternateTitle() {
         let planName = this.getTextContent('./*/xplan:xpPlanName')?.trim();
         return planName ?? undefined;
     }
@@ -94,7 +94,7 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
      * 
      * @returns
      */
-    _getSpatialText(): string {
+    getSpatialText(): string {
         let xpgemeinde = this.select('./*/xplan:gemeinde', this.feature, true)?.textContent;
         if (xpgemeinde) {
             let { ags, gemeinde, ortsteil } = xpgemeinde.match(/^\[Gemeindeschlüssel: (?<ags>.*?)\s?(?:\|\s?Gemeinde: (?<gemeinde>.*?))?\s?(?:\|\s?Ortsteil: (?<ortsteil>.*?))?\]$/)?.groups ?? {};

@@ -24,18 +24,21 @@
 /**
  * A mapper for CKAN documents.
  */
-import {getLogger} from 'log4js';
-import {CkanSettings, ProviderField} from './ckan.settings';
-import {BaseMapper} from '../base.mapper';
-import {CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestOptions, RequestPaging} from '../../utils/http-request.utils';
-import {UrlUtils} from '../../utils/url.utils';
-import {Summary} from '../../model/summary';
-import {throwError} from 'rxjs';
-import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
-import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
-import {Organization, Person} from "../../model/agent";
-import {Distribution} from "../../model/distribution";
-import {DateRange} from "../../model/dateRange";
+import { getLogger } from 'log4js';
+import { throwError } from 'rxjs';
+import { BaseMapper } from '../base.mapper';
+import { CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestOptions, RequestPaging } from '../../utils/http-request.utils';
+import { CkanSettings } from './ckan.settings';
+import { DateRange } from '../../model/dateRange';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils';
+import { DcatMapper } from '../../importer/dcat/dcat.mapper';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
+import { Distribution } from '../../model/distribution';
+import { License } from '@shared/license.model';
+import { MetadataSource } from '../../model/index.document';
+import { Organization, Person } from '../../model/agent';
+import { Summary } from '../../model/summary';
+import { UrlUtils } from '../../utils/url.utils';
 
 const mapping = require('../../../mappings.json');
 const markdown = require('markdown').markdown;
@@ -63,7 +66,7 @@ export class CkanMapper extends BaseMapper {
         gb: 10000000000,
     };
 
-    private log = getLogger();
+    log = getLogger();
 
     private readonly source: any;
     private readonly data: CkanMapperData;
@@ -89,15 +92,15 @@ export class CkanMapper extends BaseMapper {
         return this.summary;
     }
 
-    _getAccessRights() {
+    getAccessRights() {
         return undefined;
     }
 
-    _getCitation() {
+    getCitation() {
         return undefined;
     }
 
-    _getDescription() {
+    getDescription() {
         if (this.source.notes) {
             return this.settings.markdownAsDescription ? markdown.toHTML(this.source.notes) : this.source.notes;
         } else {
@@ -105,11 +108,11 @@ export class CkanMapper extends BaseMapper {
         }
     }
 
-    async _getDisplayContacts() {
+    async getDisplayContacts() {
         return undefined;
     }
 
-    async _getDistributions(): Promise<Distribution[]> {
+    async getDistributions(): Promise<Distribution[]> {
         let urlErrors = [];
         let distributions: Distribution[] = [];
         let resources = this.source.resources;
@@ -163,11 +166,11 @@ export class CkanMapper extends BaseMapper {
         return url;
     }
 
-    _getGeneratedId() {
+    getGeneratedId() {
         return this.source.id;
     }
 
-    _getMetadataSource() {
+    getMetadataSource(): MetadataSource {
         // Metadata
         // The harvest source
         let rawSource = this.settings.ckanBaseUrl + '/api/3/action/package_show?id=' + this.source.name;
@@ -181,11 +184,11 @@ export class CkanMapper extends BaseMapper {
         };
     }
 
-    _getModifiedDate() {
+    getModifiedDate() {
         return this.handleDate(this.source.metadata_modified);
     }
 
-    async _getPublisher(): Promise<Organization[]> {
+    async getPublisher(): Promise<Organization[]> {
         let publisher: Organization;
         if (this.source.organization && this.source.organization.title) {
             let homepage = this.source.organization.description;
@@ -223,7 +226,7 @@ export class CkanMapper extends BaseMapper {
         return author ? [author] : [];
     }
 
-    _getTemporal(): DateRange[] {
+    getTemporal(): DateRange[] {
         let from = this.getTemporalFrom();
         let to = this.getTemporalTo()
 
@@ -271,7 +274,7 @@ export class CkanMapper extends BaseMapper {
         return undefined;
     }
 
-    _getThemes(): string[] {
+    getThemes(): string[] {
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
         // map ckan category to DCAT
         let mappedThemes = [];
@@ -286,18 +289,18 @@ export class CkanMapper extends BaseMapper {
             mappedThemes = this.settings.defaultDCATCategory;
         }
         return mappedThemes
-            .map(category => BaseMapper.DCAT_CATEGORY_URL + category);
+            .map(category => DcatMapper.DCAT_CATEGORY_URL + category);
     }
 
-    _getTitle() {
+    getTitle() {
         return this.source.title;
     }
 
-    _isRealtime() {
+    isRealtime() {
         return undefined;
     }
 
-    _getAccrualPeriodicity(): string {
+    getAccrualPeriodicity(): string {
         let raw = undefined;
 
         if(this.source.update_cycle){
@@ -337,7 +340,7 @@ export class CkanMapper extends BaseMapper {
         return result;
     }
 
-    _getKeywords(): string[] {
+    getKeywords(): string[] {
         let keywords = [];
         if (this.source.tags) {
             this.source.tags.forEach(tag => {
@@ -351,7 +354,7 @@ export class CkanMapper extends BaseMapper {
         return keywords;
     }
 
-    _getHarvestedData(): string {
+    getHarvestedData(): string {
         return JSON.stringify(this.source);
     }
 
@@ -393,14 +396,14 @@ export class CkanMapper extends BaseMapper {
         return dates;
     }
 
-    _getCreator(): Person {
+    getCreator(): Person {
         return {
             name: this.source.author,
             mbox: this.source.author_email
         };
     }
 
-    _getGroups(): string[] {
+    getGroups(): string[] {
         let groups = [];
 
         // Groups
@@ -414,15 +417,15 @@ export class CkanMapper extends BaseMapper {
         return groups;
     }
 
-    _getIssued(): Date {
+    getIssued(): Date {
         return this.handleDate(this.source.metadata_created);
     }
 
-    _getMetadataHarvested(): Date {
+    getHarvestingDate(): Date {
         return this.data.harvestTime;
     }
 
-    _getSubSections(): any[] {
+    getSubSections(): any[] {
         let subsections = [];
 
         // Extra information
@@ -449,15 +452,15 @@ export class CkanMapper extends BaseMapper {
         return subsections;
     }
 
-    _getContactPoint(): any {
+    getContactPoint(): any {
         return undefined;
     }
 
-    _getOriginator(): Person[] {
+    getOriginator(): Person[] {
         return undefined;
     }
 
-    async _getLicense() {
+    async getLicense(): Promise<License> {
         const hasNoLicense = !this.source.license_id && !this.source.license_title && !this.source.license_url;
 
         if (this.settings.defaultLicense && hasNoLicense) {
@@ -484,7 +487,7 @@ export class CkanMapper extends BaseMapper {
         }
     }
 
-    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+    private getUrlCheckRequestConfig(uri: string): RequestOptions {
         let config: RequestOptions = {
             method: 'HEAD',
             json: false,
@@ -500,7 +503,7 @@ export class CkanMapper extends BaseMapper {
         return config;
     }
 
-    _getSpatial(): any {
+    getSpatial(): any {
         let extras = this.source.extras;
         if (extras) {
             for (let i = 0; i < extras.length; i++) {
@@ -517,7 +520,7 @@ export class CkanMapper extends BaseMapper {
     }
 
 
-    _getSpatialText(): string {
+    getSpatialText(): string {
         let extras = this.source.extras;
         if (extras) {
             for (let i = 0; i < extras.length; i++) {
@@ -530,7 +533,7 @@ export class CkanMapper extends BaseMapper {
         return undefined;
     }
 
-    _getParent(): string {
+    getParent(): string {
         let extras = this.source.extras;
         if(this.source.relationships_as_subject && this.source.relationships_as_subject.length > 0 && this.source.relationships_as_subject[0].type == "child_of"){
             if(this.source.relationships_as_subject[0].__extras.object_package_id)
@@ -542,7 +545,7 @@ export class CkanMapper extends BaseMapper {
                 return versionOf;
             }
         }
-        return super._getParent();
+        return null;
     }
 
     private getExtra(key){

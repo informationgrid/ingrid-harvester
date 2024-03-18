@@ -35,8 +35,8 @@ import { DateRange } from '../../model/dateRange';
 import { DcatappluSettings } from './dcatapplu.settings';
 import { Distribution } from '../../model/distribution';
 import { ImporterSettings } from '../../importer.settings';
+import { MetadataSource } from '../../model/index.document';
 import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep, PluProcessStepType } from '../../model/dcatApPlu.model';
-import { RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 import { XPathElementSelect } from '../../utils/xpath.utils';
 
@@ -59,7 +59,7 @@ export class DcatappluMapper extends BaseMapper {
         'vcard': namespaces.VCARD
     });
 
-    private log = getLogger();
+    log = getLogger();
 
     private readonly record: any;
     private readonly catalogPage: any;
@@ -102,7 +102,7 @@ export class DcatappluMapper extends BaseMapper {
         super.init();
     }
 
-    async _getContactPoint(): Promise<any> {
+    async getContactPoint(): Promise<Contact> {
         let contactPoint = this.fetched.contactPoint;
         if (contactPoint) {
             return contactPoint;
@@ -128,79 +128,79 @@ export class DcatappluMapper extends BaseMapper {
         return infos;
     }
 
-    _getDescription() {
+    getDescription() {
         let description = DcatappluMapper.select('./dct:description', this.record, true)?.textContent;
         return description ?? "";
     }
 
-    _getGeneratedId(): string {
+    getGeneratedId(): string {
         return this.uuid;
     }
 
-    _getAdmsIdentifier(){
+    getAdmsIdentifier(){
         let admsIdentifier = DcatappluMapper.select('./adms:identifier/adms:Identifier/skos:notation', this.record, true)?.textContent;
         return getUrlHashCode(admsIdentifier);
     }
 
-    _getTitle() {
+    getTitle() {
         let title = DcatappluMapper.select('./dct:title', this.record, true)?.textContent;
         return title ?? "";
     }
 
-    _getAlternateTitle() {
+    getAlternateTitle() {
         let planName = DcatappluMapper.select('./plu:planName', this.record, true)?.textContent;
         return planName ?? "";
     }
 
-    _getPluPlanState() {
+    getPluPlanState() {
         let planState = DcatappluMapper.select('./plu:planState/@rdf:resource', this.record, true)?.textContent;
         return getUrlHashCode(planState) ?? PluPlanState.UNBEKANNT;
     }
 
-    _getPluPlanType() {
+    getPluPlanType() {
         let planType = DcatappluMapper.select('./plu:planType/@rdf:resource', this.record, true)?.textContent;
         return getUrlHashCode(planType) ?? PluPlanType.UNBEKANNT;
     }
 
-    _getPluPlanTypeFine() {
+    getPluPlanTypeFine() {
         let planTypeFine = DcatappluMapper.select('./plu:planTypeFine/@rdf:resource', this.record, true)?.textContent;
         return planTypeFine;
     }
 
-    _getPluProcedureState() {
+    getPluProcedureState() {
         let procedureState = DcatappluMapper.select('./plu:procedureState/@rdf:resource', this.record, true)?.textContent;
         return getUrlHashCode(procedureState) ?? PluProcedureState.UNBEKANNT;
     }
 
-    _getPluProcedureType() {
+    getPluProcedureType() {
         let procedureType = DcatappluMapper.select('./plu:procedureType/@rdf:resource', this.record, true)?.textContent;
         return getUrlHashCode(procedureType) ?? PluProcedureType.UNBEKANNT;
     }
 
-    _getRelation() {
+    getRelation() {
         let relation = DcatappluMapper.select('./dct:relation/@rdf:resource', this.record, true)?.textContent;
         return relation;
     }
 
-    _getPluProcedureStartDate() {
+    getPluProcedureStartDate() {
         let procedureStartDate = DcatappluMapper.select('./plu:procedureStartDate', this.record, true)?.textContent;
         let startDate = MiscUtils.normalizeDateTime(procedureStartDate);
         return startDate;
     }
 
-    _getPluDevelopmentFreezePeriod():DateRange {
+    getPluDevelopmentFreezePeriod(): DateRange {
         let periodOfTime: DateRange;
         let periodObject = DcatappluMapper.select('./plu:developmentFreezePeriod/dct:PeriodOfTime', this.record, true);
-        if (periodObject) periodOfTime = this._getTemporalInternal(periodObject)?.[0];
+        if (periodObject) periodOfTime = this.getTemporalInternal(periodObject)?.[0];
         return periodOfTime;
     }
 
-    _getPluNotification(){
+    getPluNotification() {
         let notification = DcatappluMapper.select('./plu:notification', this.record, true)?.textContent;
         return notification;
     }
 
-    _getPluProcessSteps() {
+    getPluProcessSteps() {
         let processSteps: any[] = [];
         let processStepIDs = DcatappluMapper.select('./plu:processStep', this.record)
             .map(node => node.getAttribute('rdf:resource'))
@@ -211,11 +211,11 @@ export class DcatappluMapper extends BaseMapper {
         pluProcessSteps.map((step: any) => {
             let node = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', step, true);
             let type = getUrlHashCode(DcatappluMapper.select('./plu:ProcessStepType/@rdf:resource', step, true)?.textContent);
-            let period = this._getTemporalInternal(node);
+            let period = this.getTemporalInternal(node);
             let processStep: ProcessStep = {
                 identifier: DcatappluMapper.select('./dct:identifier', step, true)?.textContent ?? undefined,
                 type: type ?? PluProcessStepType.UNBEKANNT,
-                distributions: this._getRelevantDistibutions(step),
+                distributions: this.getRelevantDistibutions(step),
                 temporal: period?.[0],
                 passNumber: parseInt(DcatappluMapper.select('./plu:passNumber', step, true)?.textContent)
             }
@@ -224,7 +224,7 @@ export class DcatappluMapper extends BaseMapper {
         return processSteps;
     }
 
-    _getRelevantDistibutions(node){
+    private getRelevantDistibutions(node){
         let distributions = [];
         let distributionIDs = DcatappluMapper.select('./dcat:distribution', node)
             .map(node => node.getAttribute('rdf:resource'))
@@ -234,7 +234,7 @@ export class DcatappluMapper extends BaseMapper {
         const relevantDistributions = [...linked, ...local];
         relevantDistributions?.map((dist: any) => {
             let node = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', dist, true);
-            let period = this._getTemporalInternal(node);
+            let period = this.getTemporalInternal(node);
             let format = DcatappluMapper.select('./dct:format', dist, true)?.textContent;
             // TODO temporary backward compatibility for DCAT-AP.PLU 0.1.0
             if (!format) {
@@ -257,12 +257,12 @@ export class DcatappluMapper extends BaseMapper {
         return distributions;
     }
 
-    async _getDistributions(): Promise<Distribution[]> {
-        let distributions = this._getRelevantDistibutions(this.record);
+    async getDistributions(): Promise<Distribution[]> {
+        let distributions = this.getRelevantDistibutions(this.record);
         return distributions;
     }
 
-    private _getTemporalInternal(node: Node): DateRange[] {
+    private getTemporalInternal(node: Node): DateRange[] {
         let result: DateRange[] = [];
         if (node) {
             let begin = this.getTimeValue(node, 'startDate');
@@ -277,9 +277,9 @@ export class DcatappluMapper extends BaseMapper {
         return result.length ? result : undefined;
     }
 
-    _getTemporal(): DateRange[] {
+    getTemporal(): DateRange[] {
         let node = DcatappluMapper.select('./dct:temporal/dct:PeriodOfTime', this.record, true);
-        return this._getTemporalInternal(node);
+        return this.getTemporalInternal(node);
     }
 
     getTimeValue(node, beginOrEnd: 'startDate' | 'endDate'): Date {
@@ -310,7 +310,7 @@ export class DcatappluMapper extends BaseMapper {
         return agents.length ? agents : undefined;
     }
 
-    async _getPublisher(): Promise<any[]> {
+    async getPublisher(): Promise<any[]> {
         if (this.fetched.publishers != null) {
             return this.fetched.publishers;
         }
@@ -325,54 +325,51 @@ export class DcatappluMapper extends BaseMapper {
         }
     }
 
-    async _getMaintainers(): Promise<any[]> {
+    async getMaintainers(): Promise<any[]> {
         let nodes = DcatappluMapper.select('./dcatde:maintainer', this.record);
         let maintainers: any[] = this.getAgent(nodes);
         return maintainers;
     }
-    async _getContributors(): Promise<any[]> {
+    async getContributors(): Promise<any[]> {
         let nodes = DcatappluMapper.select('./dct:contributor', this.record);
         let contributors: any[] = this.getAgent(nodes);
         return contributors;
     }
 
-    _getHarvestedData(): string {
+    getHarvestedData(): string {
         return this.record.toString();
     }
 
-    _getMetadataHarvested(): Date {
+    getHarvestingDate(): Date {
         return new Date(Date.now());
     }
 
-    _getIssued(): Date {
+    getIssued(): Date {
         let issued = DcatappluMapper.select('./dct:issued', this.record, true);
         return issued ? MiscUtils.normalizeDateTime(issued.textContent) : undefined;
     }
 
-    _getModifiedDate() {
+    getModifiedDate() {
         let modified = DcatappluMapper.select('./dct:modified', this.record, true);
         return modified ? MiscUtils.normalizeDateTime(modified.textContent) : undefined;
     }
 
-    _getKeywords(): string[] {
-        return undefined;
-    }
-
-    _getMetadataSource(): any {
+    getMetadataSource(): MetadataSource {
         let dcatLink; //=  DcatappluMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');
         return {
+            source_base: this.settings.catalogUrl,
             raw_data_source: dcatLink,
             portal_link: portalLink,
             attribution: this.settings.defaultAttribution
         };
     }
 
-    _getCatalog() {
+    getCatalog() {
         return this.fetched.catalog;
     }
 
-    _getSpatialText(): string {
+    getSpatialText(): string {
         let geographicName = DcatappluMapper.select('./dct:spatial/dct:Location/locn:geographicName', this.record, true)?.textContent;
         return geographicName;
     }
@@ -395,32 +392,7 @@ export class DcatappluMapper extends BaseMapper {
         }
     }
 
-
-    // -------------------------------------------------------------
-    // -------------------- ↓ return undefined ↓ -------------------
-    // -------------------------------------------------------------
-
-    _getAccessRights(): string[] { return undefined; }
-    _getAccrualPeriodicity(): string { return undefined ;}
-    _getCitation(): string { return undefined ;}
-    _getGroups(): string[] { return undefined ;}
-    _getSubSections(): any[] { return undefined ;}
-    _isRealtime(): boolean { return undefined ;}
-
-    _getCreator(): Person[] { return undefined ;}
-    _getLicense() { return undefined ;}
-    _getOriginator(): Person[]  { return undefined ;}
-    _getThemes() { return undefined ;}
-    _getUrlCheckRequestConfig(uri: string): RequestOptions { return undefined ;}
-
-    // ---------------------- ↑ already checked ↑ ----------------------
-    // -----------------------------------------------------------------
-    // -----------------------------------------------------------------
-    // -----------------------------------------------------------------
-    // ---------------------- ↓ not yet checked ↓ ----------------------
-
-
-    _getBoundingBox() {
+    getBoundingBox() {
         let bboxObject = DcatappluMapper.select('./dct:spatial/dct:Location/dcat:bbox[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
         if (bboxObject) {
             return JSON.parse(bboxObject.textContent);
@@ -428,7 +400,7 @@ export class DcatappluMapper extends BaseMapper {
         return undefined;
     }
 
-    _getCentroid(): object {
+    getCentroid(): object {
         let centroid = DcatappluMapper.select('./dct:spatial/dct:Location/dcat:centroid[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
         if (centroid) {
             return JSON.parse(centroid.textContent);
@@ -436,7 +408,7 @@ export class DcatappluMapper extends BaseMapper {
         return undefined;
     }
 
-    _getSpatial(): any {
+    getSpatial(): any {
         let geometry = DcatappluMapper.select('./dct:spatial/dct:Location/locn:geometry[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
         if (geometry) {
             return JSON.parse(geometry.textContent);

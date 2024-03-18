@@ -25,40 +25,41 @@ import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import * as MiscUtils from '../../../utils/misc.utils';
 import { Distribution} from '../../../model/distribution';
 import { DocTypeMapping, PlanTypeMapping, ProcedureTypeMapping } from './xplan.codelist.mappings';
+import { Geometries, Geometry } from '@turf/helpers';
 import { PluDocType, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../wfs.mapper';
 
 export class XplanWfsMapper extends WfsMapper {
 
-    _getDescription() {
+    getDescription() {
         return this.getTextContent('./*/xplan:beschreibung');
     }
 
-    async _getDistributions(): Promise<Distribution[]> {
+    async getDistributions(): Promise<Distribution[]> {
         let distributions = [];
         for (let elem of this.select('./*/xplan:externeReferenz/xplan:XP_SpezExterneReferenz', this.feature)) {
             let distribution: Distribution = {
                 accessURL: this.getTextContent('./xplan:referenzURL', elem),
                 description: this.getTextContent('./xplan:art', elem),
                 format: [this.getTextContent('./xplan:referenzMimeType', elem)],
-                pluDocType: this._getPluDocType(this.getTextContent('./xplan:typ', elem))
+                pluDocType: this.getPluDocType(this.getTextContent('./xplan:typ', elem))
             };
             distributions.push(distribution);
         }
         return distributions;
     }
 
-    _getTitle() {
+    getTitle() {
         let title = this.getTextContent('./*/xplan:name')?.trim();
         return title ?? undefined;
     }
 
-    _getAlternateTitle() {
+    getAlternateTitle() {
         let planName = this.getTextContent('./*/xplan:planName')?.trim();
         return planName ?? undefined;
     }
 
-    _getBoundingBox(): object {
+    getBoundingBox(): Geometry {
         let envelope = this.select('./*/gml:boundedBy/gml:Envelope', this.feature, true);
         if (envelope) {
             let lowerCorner = this.getTextContent('./gml:lowerCorner', envelope);
@@ -75,11 +76,11 @@ export class XplanWfsMapper extends WfsMapper {
         return undefined;
     }
 
-    _getSpatial(): object {
+    getSpatial(): Geometry | Geometries {
         let spatialContainer = this.select('./*/xplan:raeumlicherGeltungsbereich/*', this.feature, true);
         if (!spatialContainer) {
             // use bounding box as fallback
-            return this._getBoundingBox();
+            return this.getBoundingBox();
         }
         let crs = (<Element>spatialContainer).getAttribute('srsName') ?? this.fetched.defaultCrs;
         crs = crs.replace('urn:ogc:def:crs:EPSG::', '').replace('EPSG:', '');
@@ -93,7 +94,7 @@ export class XplanWfsMapper extends WfsMapper {
      * @returns 
      */
     // TODO check
-    _getSpatialText(): string {
+    getSpatialText(): string {
         let xpGemeinde = this.select('./*/xplan:gemeinde/xplan:XP_Gemeinde', this.feature, true);
         if (xpGemeinde) {
             let rs = this.getTextContent('./xplan:rs', xpGemeinde);
@@ -129,11 +130,11 @@ export class XplanWfsMapper extends WfsMapper {
     }
 
     // TODO fill in the gaps
-    _getPluDocType(code: string): PluDocType {
+    getPluDocType(code: string): PluDocType {
         return DocTypeMapping[code] ?? PluDocType.UNBEKANNT;
     }
 
-    _getPluPlanType(): PluPlanType {
+    getPluPlanType(): PluPlanType {
         let typename = this.getTypename();
         let planart = this.getTextContent('./*/xplan:planArt');
         if (typename in PlanTypeMapping) {
@@ -143,7 +144,7 @@ export class XplanWfsMapper extends WfsMapper {
         return PluPlanType.UNBEKANNT;
     }
 
-    _getPluPlanTypeFine(): string {
+    getPluPlanTypeFine(): string {
         let typename = this.getTypename();
         let planart = this.getTextContent('./*/xplan:planArt');
         if (typename in PlanTypeMapping) {
@@ -153,11 +154,11 @@ export class XplanWfsMapper extends WfsMapper {
         return undefined;
     }
 
-    _getPluProcedureState(): PluProcedureState {
-        return super._getPluProcedureState();
+    getPluProcedureState(): PluProcedureState {
+        return super.getPluProcedureState();
     }
 
-    _getPluProcedureType(): PluProcedureType {
+    getPluProcedureType(): PluProcedureType {
         let typename = this.getTypename();
         let procedureType = this.getTextContent('./*/xplan:verfahren');
         if (typename in ProcedureTypeMapping) {
@@ -168,21 +169,21 @@ export class XplanWfsMapper extends WfsMapper {
     }
 
     // TODO
-    _getPluProcessSteps(): ProcessStep[] {
+    getPluProcessSteps(): ProcessStep[] {
         return undefined;
     }
 
-    _getPluProcedureStartDate(): Date {
+    getPluProcedureStartDate(): Date {
         let procedureStartDate = this.getTextContent('./*/xplan:aufstellungsbeschlussDatum');
         return MiscUtils.normalizeDateTime(procedureStartDate);
     }
 
-    _getIssued(): Date {
+    getIssued(): Date {
         let issued = this.getTextContent('./*/xplan:technHerstellDatum');
         return MiscUtils.normalizeDateTime(issued);
     }
 
-    _getMetadataHarvested(): Date {
+    getHarvestingDate(): Date {
         return new Date(Date.now());
     }
 }
