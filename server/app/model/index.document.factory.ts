@@ -21,10 +21,9 @@
  * ==================================================
  */
 
-import { BaseMapper } from '../importer/base.mapper';
 import { IndexDocument } from './index.document';
 
-export abstract class IndexDocumentFactory<M extends BaseMapper> {
+export abstract class IndexDocumentFactory<T extends IndexDocument> {
 
-    abstract create(mapper: M): Promise<IndexDocument>;
+    abstract create(): Promise<T>;
 }

@@ -21,7 +21,13 @@
  * ==================================================
  */
 
-import { mcloudDocument } from './model/index.document';
+import { mcloudCkanMapper } from './mapper/mcloud.ckan.mapper';
+import { mcloudCswMapper } from './mapper/mcloud.csw.mapper';
+import { mcloudDcatMapper } from './mapper/mcloud.dcat.mapper';
+import { mcloudExcelMapper } from './mapper/mcloud.excel.mapper';
+import { mcloudIndexDocument } from './model/index.document';
+import { mcloudOaiMapper } from './mapper/mcloud.oai.mapper';
+import { mcloudSparqlMapper } from './mapper/mcloud.sparql.mapper';
 import { CkanMapper } from '../../importer/ckan/ckan.mapper';
 import { CswMapper } from '../../importer/csw/csw.mapper';
 import { DcatMapper } from '../../importer/dcat/dcat.mapper';
@@ -29,13 +35,14 @@ import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elas
 import { ElasticQueries } from './persistence/elastic.queries';
 import { ExcelMapper } from '../../importer/excel/excel.mapper';
 import { ImporterFactory } from '../../importer/importer.factory';
+import { IndexDocumentFactory } from '../../model/index.document.factory';
+import { IndexSettings } from '../../persistence/elastic.setting';
 import { McloudImporterFactory } from './importer/mcloud.importer.factory';
 import { OaiMapper } from '../../importer/oai/oai.mapper';
-import { SparqlMapper } from '../../importer/sparql/sparql.mapper';
-import { IndexSettings } from '../../persistence/elastic.setting';
 import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
 import { PostgresQueries } from './persistence/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
+import { SparqlMapper } from '../../importer/sparql/sparql.mapper';
 
 export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper> {
 
@@ -43,8 +50,15 @@ export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatM
         return ElasticQueries.getInstance();
     }
 
-    getIndexDocumentFactory(): mcloudIndexDocumentFactory{
-        return new mcloudIndexDocumentFactory;
+    getIndexDocumentFactory(mapper: CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper): IndexDocumentFactory<mcloudIndexDocument> {
+        switch (mapper.constructor.name) {
+            case 'CkanMapper': return new mcloudCkanMapper(<CkanMapper>mapper);
+            case 'CswMapper': return new mcloudCswMapper(<CswMapper>mapper);
+            case 'DcatMapper': return new mcloudDcatMapper(<DcatMapper>mapper);
+            case 'ExcelMapper': return new mcloudExcelMapper(<ExcelMapper>mapper);
+            case 'OaiMapper': return new mcloudOaiMapper(<OaiMapper>mapper);
+            case 'SparqlMapper': return new mcloudSparqlMapper(<SparqlMapper>mapper);
+        }
     }
 
     getIndexMappings(): any {

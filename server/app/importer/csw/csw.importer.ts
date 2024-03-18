@@ -35,6 +35,7 @@ import { Distribution } from '../../model/distribution';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import { IndexDocument } from '../../model/index.document';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -427,9 +428,9 @@ export class CswImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary, this.generalInfo);
 
-            let doc: any;
+            let doc: IndexDocument;
             try {
-                doc = await this.profile.getIndexDocumentFactory().create(mapper);
+                doc = await this.profile.getIndexDocumentFactory(mapper).create();
                 docsToImport.push(doc);
             }
             catch (e) {

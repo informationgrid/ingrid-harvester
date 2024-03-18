@@ -27,6 +27,7 @@ import { ConfigService } from '../../services/config/ConfigService';
 import { DefaultImporterSettings } from '../../importer.settings';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import { IndexDocument } from '../../model/index.document';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -208,11 +209,15 @@ export class SparqlImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary);
 
-            let doc: any = await this.profile.getIndexDocumentFactory().create(mapper).catch(e => {
+            let doc: IndexDocument;
+            try{
+                doc = await this.profile.getIndexDocumentFactory(mapper).create();
+            }
+            catch (e) {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
-            });
+            }
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {

@@ -21,28 +21,44 @@
  * ==================================================
  */
 
+import { CswMapper } from '../../importer/csw/csw.mapper';
 import { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper';
 import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper';
-import { DiPlanungIndexDocumentFactory } from './model/index.document';
+import { DiplanungDcatappluMapper } from './mapper/diplanung.dcatapplu.mapper';
 import { DiplanungImporterFactory } from './importer/diplanung.importer.factory';
+import { DiplanungIndexDocument } from './model/index.document';
+import { DiplanungWfsMapper } from './mapper/diplanung.wfs.mapper';
 import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { ElasticQueries } from './persistence/elastic.queries';
 import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper';
+import { FisWfsMapper } from '../../importer/wfs/fis/fis.wfs.mapper';
 import { ImporterFactory } from '../../importer/importer.factory';
+import { IndexDocumentFactory } from '../../model/index.document.factory';
 import { IndexSettings } from '../../persistence/elastic.setting';
+import { MsWfsMapper } from '../../importer/wfs/ms/ms.wfs.mapper';
 import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
 import { PostgresQueries } from './persistence/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
 import { WfsMapper } from '../../importer/wfs/wfs.mapper';
+import { XplanSynWfsMapper } from '../../importer/wfs/xplan/syn/xplan.syn.wfs.mapper';
+import { XplanWfsMapper } from '../../importer/wfs/xplan/xplan.wfs.mapper';
 
-export class DiplanungFactory extends ProfileFactory<DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper> {
+export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper | ExcelSparseMapper | WfsMapper> {
 
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();
     }
 
-    getIndexDocumentFactory(): DiPlanungIndexDocumentFactory {
-        return new DiPlanungIndexDocumentFactory();
+    getIndexDocumentFactory(mapper: CswMapper | DcatappluMapper | ExcelSparseMapper | WfsMapper): IndexDocumentFactory<DiplanungIndexDocument> {
+        switch (mapper.constructor.name) {
+            case 'CswMapper': return new DiplanungCswMapper(<CswMapper>mapper);
+            case 'DcatappluMapper': return new DiplanungDcatappluMapper(<DcatappluMapper>mapper);
+            // case 'ExcelSparseMapper': return new DiplanungExcelSparseMapper(mapper);
+            case 'FisWfsMapper': return new DiplanungWfsMapper(<FisWfsMapper>mapper);
+            case 'MsWfsMapper': return new DiplanungWfsMapper(<MsWfsMapper>mapper);
+            case 'XplanSynWfsMapper': return new DiplanungWfsMapper(<XplanSynWfsMapper>mapper);
+            case 'XplanWfsMapper': return new DiplanungWfsMapper(<XplanWfsMapper>mapper);
+        }
     }
 
     getIndexMappings(): any {

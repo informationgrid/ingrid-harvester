@@ -129,8 +129,7 @@ export class ExcelSparseImporter extends Importer {
 
                 // add document to buffer and send to elasticsearch if full
                 if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                    let doc = await this.profile.getIndexDocumentFactory().create(mapper)
-                        .catch(e => this.handleIndexDocError(e, mapper));
+                    let doc = await this.profile.getIndexDocumentFactory(mapper).create().catch(e => this.handleIndexDocError(e, mapper));
                     let entity: RecordEntity = {
                         identifier: unit.id,
                         source: this.settings.filePath,

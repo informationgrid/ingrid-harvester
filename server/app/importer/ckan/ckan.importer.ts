@@ -27,9 +27,10 @@ import { CkanSettings, defaultCKANSettings } from './ckan.settings';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import { IndexDocument } from '../../model/index.document';
 import { Observer } from 'rxjs';
-import { ProfileFactory } from "../../profiles/profile.factory";
-import { ProfileFactoryLoader } from "../../profiles/profile.factory.loader";
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { RecordEntity } from '../../model/entity';
 import { RequestDelegate } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
@@ -86,14 +87,16 @@ export class CkanImporter extends Importer {
             // Execute the mappers
             let mapper = new CkanMapper(this.settings, data);
 
-            let doc: any = await this.profile.getIndexDocumentFactory().create(mapper)
-                .catch(e => {
-                    log.error('Error creating index document', e);
-                    this.summary.appErrors.push(e.toString());
-                    mapper.skipped = true;
-                });
-
-            this.posthandlingDocument(mapper, doc);
+            let doc: IndexDocument;
+            try {
+                doc = await this.profile.getIndexDocumentFactory(mapper).create();
+                this.posthandlingDocument(mapper, doc);
+            }
+            catch (e) {
+                log.error('Error creating index document', e);
+                this.summary.appErrors.push(e.toString());
+                mapper.skipped = true;
+            }
 
             if (mapper.shouldBeSkipped()) {
                 this.summary.skippedDocs.push(data.source.id);
