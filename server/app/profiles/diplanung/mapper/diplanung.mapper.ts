@@ -21,183 +21,321 @@
  * ==================================================
  */
 
-import 'dayjs/locale/de';
-import { getLogger } from 'log4js';
+import { createEsId } from '../diplanung.utils';
+import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { Contact, Organization, Person } from '../../../model/agent';
+import { CswMapper } from '../../../importer/csw/csw.mapper';
 import { DateRange } from '../../../model/dateRange';
-import { DcatappluMapper } from "../../../importer/dcatapplu/dcatapplu.mapper";
-import { DiplanungCswMapper } from './diplanung.csw.mapper';
-import { Distribution } from "../../../model/distribution";
-import { ExcelSparseMapper } from "../../../importer/excelsparse/excelsparse.mapper";
-import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
-import { WfsMapper } from "../../../importer/wfs/wfs.mapper";
+import { DiplanungIndexDocument } from '../model/index.document';
+import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper';
+import { Distribution } from '../../../model/distribution';
+import { IndexDocumentFactory } from '../../../model/index.document.factory';
+import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
-const dayjs = require('dayjs');
-dayjs.locale('de');
-
-export class DiplanungMapper<M extends DcatappluMapper | DiplanungCswMapper | ExcelSparseMapper | WfsMapper> {
-
-    // getResourceIdentifier() {
-    //     return (this.baseMapper as unknown as DiplanungCswMapper)._getResourceIdentifier();
-    // }
+export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | WfsMapper> implements IndexDocumentFactory<DiplanungIndexDocument> {
 
     protected baseMapper: M;
-
-    private _log = getLogger();
 
     constructor(baseMapper: M) {
         this.baseMapper = baseMapper;
     }
 
-    async getContactPoint(): Promise<Contact> {
-        return await this.baseMapper.getContactPoint();
+    async create(): Promise<DiplanungIndexDocument> {
+        let contactPoint: Contact = await this.getContactPoint() ?? { fn: '' };
+        let result = {
+            // basic information
+            contact_point: {
+                fn: contactPoint.fn,
+                has_country_name: contactPoint.hasCountryName,
+                has_locality: contactPoint.hasLocality,
+                has_postal_code: contactPoint.hasPostalCode,
+                has_region: contactPoint.hasRegion,
+                has_street_address: contactPoint.hasStreetAddress,
+                has_email: contactPoint.hasEmail,
+                has_telephone: contactPoint.hasTelephone,
+                has_uid: contactPoint.hasUID,
+                has_url: contactPoint.hasURL,
+                has_organization_name: contactPoint.hasOrganizationName
+            },
+            description: this.getDescription(),
+            identifier: this.getUuid(),
+            adms_identifier: this.getAdmsIdentifier(),
+            // resource_identifier: mapper.getResourceIdentifier(),
+            title: this.getTitle(),
+            // plan and procedure information
+            development_freeze_period: this.getPluDevelopmentFreezePeriod(),
+            plan_name: this.getPluPlanName(),
+            plan_or_procedure_start_date: this.getPlanOrProcedureStartDate(),
+            plan_state: this.getPluPlanState(),
+            plan_type: this.getPluPlanType(),
+            plan_type_fine: this.getPluPlanTypeFine(),
+            procedure_state: this.getPluProcedureState(),
+            procedure_start_date: this.getPluProcedureStartDate(),
+            procedure_type: this.getPluProcedureType(),
+            process_steps: this.getPluProcessSteps(),
+            notification: this.getPluNotification(),
+            // spatial features
+            bounding_box: this.getBoundingBox(),
+            centroid: this.getCentroid()?.['coordinates'],
+            spatial: this.getSpatial(),
+            spatial_text: this.getSpatialText(),
+            // temporal: mapper.getTemporal(),
+            // additional information and metadata
+            relation: this.getRelation(),
+            catalog: await this.getCatalog(),
+            publisher: (await this.getPublisher())?.[0],
+            maintainers: await this.getMaintainers(),
+            contributors: await this.getContributors(),
+            distributions: await this.getDistributions(),
+            extras: {
+                // harvested_data: mapper.getHarvestedData(),
+                hierarchy_level: this.getHierarchyLevel(),    // only csw
+                metadata: {
+                    harvested: this.baseMapper.getHarvestingDate(),
+                    harvesting_errors: null, // get errors after all operations been done
+                    issued: null,
+                    is_valid: null, // check validity before persisting to ES
+                    modified: null,
+                    source: this.baseMapper.getMetadataSource()
+                },
+                operates_on: this.getOperatesOn(),    // only csw
+                merged_from: []
+            },
+            issued: this.getIssued(),
+            keywords: this.getKeywords(),
+            modified: this.getModifiedDate(),
+        };
+
+        result.extras.merged_from.push(createEsId(result));
+        result.extras.metadata.harvesting_errors = this.baseMapper.getHarvestingErrors();
+        // result.extras.metadata.is_valid = mapper.isValid(result);
+        // let qualityNotes = mapper.getQualityNotes();
+        // if (qualityNotes?.length > 0) {
+        //     result.extras.metadata['quality_notes'] = qualityNotes;
+        // }
+        this.baseMapper.executeCustomCode(result);
+
+        return result;
     }
 
-    getDescription(): string {
-        return this.baseMapper.getDescription();
-    }
+    abstract getContactPoint(): Promise<Contact>;
 
-    getGeneratedId(): string {
-        return this.baseMapper.getGeneratedId();
-    }
+    abstract getDescription(): string;
 
-    getAdmsIdentifier(): string {
-        return this.baseMapper._getAdmsIdentifier();
-    }
+    abstract getUuid(): string;
 
-    getTitle(): string {
-        return this.baseMapper.getTitle();
-    }
+    abstract getAdmsIdentifier(): string;
 
-    getAlternateTitle(): string {
-        return this.baseMapper._getAlternateTitle();
-    }
+    abstract getTitle(): string;
 
-    getPluPlanState(): PluPlanState {
-        return this.baseMapper._getPluPlanState();
-    }
+    abstract getPluDevelopmentFreezePeriod(): DateRange;
 
-    getTemporal(): DateRange[] {
-        return this.baseMapper.getTemporal();
-    }
+    abstract getPluPlanName(): string;
 
-    getPluDevelopmentFreezePeriod(): DateRange {
-        return this.baseMapper._getPluDevelopmentFreezePeriod();
-    }
+    abstract getPlanOrProcedureStartDate(): Date;
+    // this.getTemporal()?.[0]?.gte ?? this.getPluProcedureStartDate(),
 
-    getPluProcedureStartDate(): Date {
-        return this.baseMapper._getPluProcedureStartDate();
-    }
+    abstract getPluPlanState(): PluPlanState;
 
-    getPluPlanType(): PluPlanType {
-        return this.baseMapper._getPluPlanType();
-    }
+    abstract getPluPlanType(): PluPlanType;
 
-    getPluPlanTypeFine(): string {
-        return this.baseMapper._getPluPlanTypeFine();
-    }
+    abstract getPluPlanTypeFine(): string;
 
-    getPluProcedureState(): PluProcedureState {
-        return this.baseMapper._getPluProcedureState();
-    }
+    abstract getPluProcedureState(): PluProcedureState;
 
-    getPluProcedureType(): PluProcedureType {
-        return this.baseMapper._getPluProcedureType();
-    }
+    abstract getPluProcedureStartDate(): Date;
 
-    getPluProcessSteps(): ProcessStep[] {
-        return this.baseMapper._getPluProcessSteps();
-    }
+    abstract getPluProcedureType(): PluProcedureType;
 
-    getPluNotification(): string {
-        return this.baseMapper._getPluNotification();
-    }
+    abstract getPluProcessSteps(): ProcessStep[];
 
-    getBoundingBox(): object {
-        return this.baseMapper._getBoundingBox();
-    }
+    abstract getPluNotification(): string;
 
-    getCentroid(): object {
-        return this.baseMapper._getCentroid();
-    }
+    // spatial features
+    abstract getBoundingBox(): any;
 
-    getSpatial(): object {
-        return this.baseMapper.getSpatial();
-    }
+    abstract getCentroid(): any;
 
-    getSpatialText(): string {
-        return this.baseMapper.getSpatialText();
-    }
+    abstract getSpatial(): any;
 
-    getPublisher(): Promise<Person[] | Organization[]> {
-        return this.baseMapper.getPublisher();
-    }
+    abstract getSpatialText(): string;
 
-    getMaintainers(): Promise<Person[] | Organization[]> {
-        return this.baseMapper.getMaintainers();
-    }
+    // additional information and metadata
+    abstract getRelation(): string;
 
-    getContributors(): Promise<Person[] | Organization[]> {
-        return this.baseMapper.getContributors();
-    }
+    abstract getCatalog(): Promise<Catalog>;
 
-    getDistributions(): Promise<Distribution[]> {
-        return this.baseMapper.getDistributions();
-    }
+    abstract getPublisher(): Promise<Person[] | Organization[]>;
 
-    getRelation(): string {
-        return this.baseMapper._getRelation();
-    }
+    abstract getMaintainers(): Promise<Person[] | Organization[]>;
 
-    getHarvestedData(): string {
-        return this.baseMapper.getHarvestedData();
-    }
+    abstract getContributors(): Promise<Person[] | Organization[]>;
 
-    getMetadataHarvested(): Date {
-        return this.baseMapper.getMetadataHarvested();
-    }
+    abstract getDistributions(): Promise<Distribution[]>;
 
-    getMetadataSource(): any {
-        return this.baseMapper.getMetadataSource();
-    }
+    abstract getIssued(): Date;
+
+    abstract getKeywords(): string[];
+
+    abstract getModifiedDate(): Date;
 
     getHierarchyLevel() {
-        return this.baseMapper.getHierarchyLevel();
+        return undefined;
     }
 
     getOperatesOn() {
-        return this.baseMapper.getOperatesOn();
+        return undefined;
     }
 
-    getIssued(): Date {
-        return this.baseMapper.getIssued();
-    }
+    // async getContactPoint(): Promise<Contact> {
+    //     return await this.baseMapper.getContactPoint();
+    // }
 
-    getKeywords(): string[] {
-        return this.baseMapper.getKeywords();
-    }
+    // getDescription(): string {
+    //     return this.baseMapper.getDescription();
+    // }
 
-    getModifiedDate(): Date {
-        return this.baseMapper.getModifiedDate();
-    }
+    // getGeneratedId(): string {
+    //     return this.baseMapper.getGeneratedId();
+    // }
 
-    getCatalog() {
-        return this.baseMapper._getCatalog();
-    }
+    // getAdmsIdentifier(): string {
+    //     return this.baseMapper._getAdmsIdentifier();
+    // }
 
-    getHarvestErrors(): string[] {
-        return this.baseMapper.getHarvestErrors();
-    }
+    // getTitle(): string {
+    //     return this.baseMapper.getTitle();
+    // }
 
-    isValid(doc? : any): boolean {
-        return this.baseMapper.isValid(doc) && doc.spatial_text != null && (doc.spatial != null || doc.bounding_box != null);
-    }
+    // getAlternateTitle(): string {
+    //     return this.baseMapper._getAlternateTitle();
+    // }
 
-    getQualityNotes(doc? : any): string[] {
-        return this.baseMapper.getQualityNotes();
-    }
+    // getPluPlanState(): PluPlanState {
+    //     return this.baseMapper._getPluPlanState();
+    // }
 
-    executeCustomCode(doc: any) {
-        this.baseMapper.executeCustomCode(doc);
-    }
+    // getTemporal(): DateRange[] {
+    //     return this.baseMapper.getTemporal();
+    // }
+
+    // getPluDevelopmentFreezePeriod(): DateRange {
+    //     return this.baseMapper._getPluDevelopmentFreezePeriod();
+    // }
+
+    // getPluProcedureStartDate(): Date {
+    //     return this.baseMapper._getPluProcedureStartDate();
+    // }
+
+    // getPluPlanType(): PluPlanType {
+    //     return this.baseMapper._getPluPlanType();
+    // }
+
+    // getPluPlanTypeFine(): string {
+    //     return this.baseMapper._getPluPlanTypeFine();
+    // }
+
+    // getPluProcedureState(): PluProcedureState {
+    //     return this.baseMapper._getPluProcedureState();
+    // }
+
+    // getPluProcedureType(): PluProcedureType {
+    //     return this.baseMapper._getPluProcedureType();
+    // }
+
+    // getPluProcessSteps(): ProcessStep[] {
+    //     return this.baseMapper._getPluProcessSteps();
+    // }
+
+    // getPluNotification(): string {
+    //     return this.baseMapper._getPluNotification();
+    // }
+
+    // getBoundingBox(): object {
+    //     return this.baseMapper._getBoundingBox();
+    // }
+
+    // getCentroid(): object {
+    //     return this.baseMapper._getCentroid();
+    // }
+
+    // getSpatial(): object {
+    //     return this.baseMapper.getSpatial();
+    // }
+
+    // getSpatialText(): string {
+    //     return this.baseMapper.getSpatialText();
+    // }
+
+    // getPublisher(): Promise<Person[] | Organization[]> {
+    //     return this.baseMapper.getPublisher();
+    // }
+
+    // getMaintainers(): Promise<Person[] | Organization[]> {
+    //     return this.baseMapper.getMaintainers();
+    // }
+
+    // getContributors(): Promise<Person[] | Organization[]> {
+    //     return this.baseMapper.getContributors();
+    // }
+
+    // getDistributions(): Promise<Distribution[]> {
+    //     return this.baseMapper.getDistributions();
+    // }
+
+    // getRelation(): string {
+    //     return this.baseMapper._getRelation();
+    // }
+
+    // getHarvestedData(): string {
+    //     return this.baseMapper.getHarvestedData();
+    // }
+
+    // getMetadataHarvested(): Date {
+    //     return this.baseMapper.getMetadataHarvested();
+    // }
+
+    // getMetadataSource(): any {
+    //     return this.baseMapper.getMetadataSource();
+    // }
+
+    // getHierarchyLevel() {
+    //     return this.baseMapper.getHierarchyLevel();
+    // }
+
+    // getOperatesOn() {
+    //     return this.baseMapper.getOperatesOn();
+    // }
+
+    // getIssued(): Date {
+    //     return this.baseMapper.getIssued();
+    // }
+
+    // getKeywords(): string[] {
+    //     return this.baseMapper.getKeywords();
+    // }
+
+    // getModifiedDate(): Date {
+    //     return this.baseMapper.getModifiedDate();
+    // }
+
+    // getCatalog() {
+    //     return this.baseMapper._getCatalog();
+    // }
+
+    // getHarvestErrors(): string[] {
+    //     return this.baseMapper.getHarvestErrors();
+    // }
+
+    // isValid(doc? : any): boolean {
+    //     return this.baseMapper.isValid(doc) && doc.spatial_text != null && (doc.spatial != null || doc.bounding_box != null);
+    // }
+
+    // getQualityNotes(doc? : any): string[] {
+    //     return this.baseMapper.getQualityNotes();
+    // }
+
+    // executeCustomCode(doc: any) {
+    //     this.baseMapper.executeCustomCode(doc);
+    // }
 }
