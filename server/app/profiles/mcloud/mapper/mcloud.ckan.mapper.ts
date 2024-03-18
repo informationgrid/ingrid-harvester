@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-import {mcloudMapper} from "./mcloud.mapper";
-import {CkanMapper} from "../../../importer/ckan/ckan.mapper";
-import {ProviderField} from "../../../importer/ckan/ckan.settings";
-import {Person} from "../../../model/agent";
+import { mcloudMapper } from './mcloud.mapper';
+import { CkanMapper } from '../../../importer/ckan/ckan.mapper';
+import { Person } from '../../../model/agent';
+import { ProviderField } from '../../../importer/ckan/ckan.settings';
 
 export class mcloudCkanMapper extends mcloudMapper<CkanMapper> {
     getCategories() {
@@ -46,7 +46,7 @@ export class mcloudCkanMapper extends mcloudMapper<CkanMapper> {
     }
 
     getParent(): string{
-        return this.baseMapper._getParent();
+        return this.baseMapper.getParent();
     }
 
     async getDisplayContacts() {
@@ -64,7 +64,7 @@ export class mcloudCkanMapper extends mcloudMapper<CkanMapper> {
     private async getDisplayContactByField(providerField: ProviderField): Promise<Person[]> {
         switch (providerField) {
             case 'organization':
-                const publisher = await this.baseMapper._getPublisher();
+                const publisher = await this.baseMapper.getPublisher();
                 if (publisher.length > 0) {
                     return [{
                         name: this.baseMapper.getSettings().providerPrefix + (publisher[0].organization ? publisher[0].organization.trim() : this.baseMapper.getSettings().description.trim()),
@@ -80,5 +80,3 @@ export class mcloudCkanMapper extends mcloudMapper<CkanMapper> {
         }
     }
 }
-
-

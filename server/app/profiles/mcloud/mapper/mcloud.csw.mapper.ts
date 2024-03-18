@@ -21,22 +21,29 @@
  * ==================================================
  */
 
-import {mcloudMapper} from "./mcloud.mapper";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
-
-const log = require('log4js').getLogger(__filename);
+import { mcloudMapper } from './mcloud.mapper';
+import { CswMapper } from '../../../importer/csw/csw.mapper';
 
 export class mcloudCswMapper extends mcloudMapper<CswMapper> {
-    _getDescription() {
-        let description = this.baseMapper._getDescription();
+
+    getDescription() {
+        let description = this.baseMapper.getDescription();
         if (!description) {
             let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.getGeneratedId()}\', title: \'${this.getTitle()}\', source: \'${this.baseMapper.getSettings().getRecordsUrl}\'`;
-            log.warn(msg);
+            this.baseMapper.log.warn(msg);
             this.baseMapper.getSummary().warnings.push(['No description', msg]);
-            this.baseMapper.valid = false;
+            this.baseMapper.setValid(false);
         }
 
         return description;
+    }
+
+    getHierarchyLevel() {
+        return this.baseMapper.getHierarchyLevel();
+    }
+
+    getOperatesOn() {
+        return this.baseMapper.getOperatesOn();
     }
 
     getCategories(): string[] {
@@ -57,5 +64,3 @@ export class mcloudCswMapper extends mcloudMapper<CswMapper> {
         return subgroups;
     }
 }
-
-
