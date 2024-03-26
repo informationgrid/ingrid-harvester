@@ -176,7 +176,15 @@ export class HarvesterComponent implements OnInit, OnDestroy {
         // this is a really ugly hack, someone fix this in wfs-harvester.component.ts instead
         if ('contactMetadata' in result) {
           try {
-            result.contactMetadata = JSON.parse(result.contactMetadata as unknown as string);
+            result.contactMetadata = result.contactMetadata as unknown != "" ? JSON.parse(result.contactMetadata as unknown as string) : null;
+          }
+          catch (e) {
+            // swallow errors
+          }
+        }
+        if ('maintainer' in result) {
+          try {
+            result.maintainer = result.maintainer as unknown != "" ? JSON.parse(result.maintainer as unknown as string) : null;
           }
           catch (e) {
             // swallow errors
