@@ -88,8 +88,8 @@ export abstract class WfsMapper extends BaseMapper {
         return [this.fetched.catalog.publisher];
     }
 
-    _getMaintainers() {
-        return undefined;
+    async _getMaintainers(): Promise<Person[] | Organization[]> {
+        return [this.fetched.maintainer];
     }
 
     async _getContributors(): Promise<Person[] | Organization[]> {

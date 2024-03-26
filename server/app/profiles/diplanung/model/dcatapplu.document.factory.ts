@@ -105,8 +105,8 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
                     </dct:Location>
                 </dct:spatial>
                 ${DcatApPluDocumentFactory.xmlFoafAgent('dct:publisher', document.publisher)}
-                ${optional((m: Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dcatde:maintainer', m), document.maintainers)}
-                ${optional((c: Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dct:contributor', c), document.contributors)}
+                ${optional((m: Person | Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dcatde:maintainer', m), document.maintainers)}
+                ${optional((c: Person | Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dct:contributor', c), document.contributors)}
                 ${optional(DcatApPluDocumentFactory.xmlDistribution, document.distributions)}
                 ${optional(DcatApPluDocumentFactory.xmlAdmsIdentifier, esc(document.adms_identifier))}
                 ${optional('dct:issued', dateAsIsoString(document.issued))}
