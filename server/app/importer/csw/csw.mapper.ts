@@ -331,7 +331,7 @@ export class CswMapper extends BaseMapper {
                 if (url) infos.homepage = url;
                 if (org) infos.organization = org.textContent;
 
-                if (role === 'custodian' || role === 'pointOfContact') {
+                if (role === 'custodian') {
                     maintainers.push(infos);
                 }
                 else {

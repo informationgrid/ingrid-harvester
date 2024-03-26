@@ -75,8 +75,11 @@
         </mat-form-field>
       </div>
       <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex>
+        <mat-form-field fxFlex="50">
           <textarea matInput rows="6" placeholder="Kontakt-Metadaten Fallback (JSON-Objekt Contact)" formControlName="contactMetadata"></textarea>
+        </mat-form-field>
+        <mat-form-field fxFlex="50">
+          <textarea matInput rows="6" placeholder="Maintainer-Metadaten (JSON-Objekt Person|Organization)" formControlName="maintainer"></textarea>
         </mat-form-field>
       </div>
     </mat-card-content>
