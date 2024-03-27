@@ -29,7 +29,6 @@
     "active": false,
     "pattern": "10 04 * * *"
   },
-  "sessionSecret": "mysecretkey",
   "mail": {
     "enabled": false,
     "mailServer": {
