@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import * as MiscUtils from '../../../utils/misc.utils';
 import { createEsId } from '../diplanung.utils';
 import { Bucket } from '../../../persistence/postgres.utils';
@@ -28,7 +29,6 @@ import { DcatApPluDocumentFactory } from '../model/dcatapplu.document.factory';
 import { DiplanungIndexDocument } from '../model/index.document';
 import { Distribution } from '../../../model/distribution';
 import { EsOperation } from '../../../persistence/elastic.utils';
-import { GeoJsonUtils } from '../../../utils/geojson.utils';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -234,13 +234,17 @@ export class PostgresUtils {
             case 'beteiligungsdb':
                 return document;
             case 'csw':
-                let updatedFields = {};
+                let updatedFields: Partial<DiplanungIndexDocument> = {};
                 for (const field of overwriteFields) {
                     updatedFields[field] = duplicate[field];
                 }
                 // use publisher from WFS if not specified in CSW
                 if (!document.publisher?.['name'] && !document.publisher?.['organization']) {
-                    updatedFields['publisher'] = duplicate.publisher;
+                    updatedFields.publisher = duplicate.publisher;
+                }
+                // use maintainer from WFS if not specified in CSW
+                if (!document.maintainers?.[0]?.['name'] && !document.maintainers?.[0]?.['organization']) {
+                    updatedFields.maintainers = duplicate.maintainers;
                 }
                 let updatedDocument = { ...document, ...updatedFields };
                 // TODO remove or perpetuate : hack for stage/prod
@@ -265,7 +269,7 @@ export class PostgresUtils {
         if (!sanitizedSpatial) {
             document.extras.metadata.is_valid = false;
             document.extras.metadata.quality_notes ??= [];
-            document.distributions.forEach(distribution => 
+            document.distributions?.forEach(distribution => 
                 document.extras.metadata.quality_notes.push(...(distribution.errors ?? [])));
             document.extras.metadata.quality_notes.push('No valid geometry');
             return document;

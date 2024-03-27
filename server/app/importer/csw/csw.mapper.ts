@@ -25,6 +25,7 @@
  * A mapper for ISO-XML documents harvested over CSW.
  */
 import * as xpath from 'xpath';
+import * as GeoJsonUtils from '../../utils/geojson.utils';
 import * as MiscUtils from '../../utils/misc.utils';
 import * as ServiceUtils from '../../utils/service.utils';
 import { getLogger } from 'log4js';
@@ -38,7 +39,6 @@ import { DateRange } from '../../model/dateRange';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
 import { Distribution } from '../../model/distribution';
-import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { License } from '@shared/license.model';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
@@ -331,7 +331,7 @@ export class CswMapper extends BaseMapper {
                 if (url) infos.homepage = url;
                 if (org) infos.organization = org.textContent;
 
-                if (role === 'custodian' || role === 'pointOfContact') {
+                if (role === 'custodian') {
                     maintainers.push(infos);
                 }
                 else {

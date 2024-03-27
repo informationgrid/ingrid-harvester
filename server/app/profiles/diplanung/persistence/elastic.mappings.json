@@ -56,6 +56,9 @@
                 }
               }
             },
+            "type": {
+              "type": "keyword"
+            },
             "organization": {
               "type": "text",
               "fields": {
@@ -71,6 +74,9 @@
           "analyzer": "decomp"
         }
       }
+    },
+    "id": {
+      "type": "keyword"
     },
     "identifier": {
       "type": "keyword"
@@ -206,6 +212,9 @@
             }
           }
         },
+        "type": {
+          "type": "keyword"
+        },
         "homepage": {
           "type": "keyword"
         },
@@ -229,6 +238,9 @@
             }
           }
         },
+        "type": {
+          "type": "keyword"
+        },
         "homepage": {
           "type": "keyword"
         },
@@ -251,6 +263,9 @@
               "type": "keyword"
             }
           }
+        },
+        "type": {
+          "type": "keyword"
         },
         "homepage": {
           "type": "keyword"
@@ -465,6 +480,10 @@
         "transformed_data": {
           "properties": {
             "dcat_ap_plu": {
+              "type": "text",
+              "index": false
+            },
+            "json": {
               "type": "text",
               "index": false
             }

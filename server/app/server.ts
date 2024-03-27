@@ -21,9 +21,9 @@
  * ==================================================
  */
 
+import { $log, Configuration, PlatformAcceptMimesMiddleware, PlatformApplication, PlatformLogMiddleware } from '@tsed/common';
 import { addLayout, configure } from 'log4js';
 import { jsonLayout } from './utils/log4js.json.layout';
-import { Configuration, PlatformAcceptMimesMiddleware, PlatformApplication, PlatformLogMiddleware } from '@tsed/common';
 import { ConfigService } from './services/config/ConfigService';
 import { ElasticsearchFactory } from './persistence/elastic.factory';
 import { IndexConfiguration } from './persistence/elastic.setting';
@@ -39,9 +39,28 @@ const compress = require("compression");
 const rootDir = __dirname;
 const session = require('express-session');
 
+const isProduction = process.env.NODE_ENV == 'production';
 addLayout("json", jsonLayout);
-const isDev = process.env.NODE_ENV != 'production';
-configure(`./log4js${isDev ? '-dev' : ''}.json`);
+if (isProduction) {
+    configure('./log4js.json');
+    $log.appenders.set("stdout", {
+        type: "stdout",
+        levels: ["info", "debug"],
+        layout: {
+            type: "json"
+        }
+    });
+    $log.appenders.set("stderr", {
+        levels: ["trace", "fatal", "error", "warn"],
+        type: "stderr",
+        layout: {
+            type: "json"
+        }
+    });
+}
+else {
+    configure('./log4js-dev.json');
+}
 
 @Configuration({
     rootDir,
@@ -56,7 +75,8 @@ configure(`./log4js${isDev ? '-dev' : ''}.json`);
         '/*': `${rootDir}/webapp/index.html`
     },
     logger: {
-        ignoreUrlPatterns: ['/rest/*']
+        ignoreUrlPatterns: ['/rest/*'],
+        disableRoutesSummary: isProduction,
         // level: "warn"
     },
     middlewares: [{ use: PlatformLogMiddleware, options: { logRequest: false } }]

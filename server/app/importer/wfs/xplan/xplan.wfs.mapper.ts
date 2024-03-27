@@ -21,10 +21,10 @@
  * ==================================================
  */
 
+import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import * as MiscUtils from '../../../utils/misc.utils';
 import { Distribution} from '../../../model/distribution';
 import { DocTypeMapping, PlanTypeMapping, ProcedureTypeMapping } from './xplan.codelist.mappings';
-import { GeoJsonUtils } from '../../../utils/geojson.utils';
 import { PluDocType, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../wfs.mapper';
 
