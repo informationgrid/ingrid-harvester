@@ -21,18 +21,20 @@
     ==================================================
 -->
 
-<mat-form-field fxFlex>
-  <mat-chip-list #chipListTags>
-    <mat-chip *ngFor="let item of list" [selectable]="false"
-              [removable]="true" (removed)="remove(item)">
-      {{item}}
-      <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
-    <input [placeholder]="placeholder"
-           [matChipInputFor]="chipListTags"
+<mat-form-field title={{placeholder}} class="flex-1" style="width: 100%;">
+  <mat-label>{{placeholder}}</mat-label>
+  <mat-chip-grid #chipListTags>
+    @for (item of list; track item) {
+      <!-- [selectable]="false" -->
+      <mat-chip-row [removable]="true" (removed)="remove(item)">        
+        {{item}}
+        <mat-icon svgIcon="close" matChipRemove/>
+      </mat-chip-row>    
+    }
+    <input [matChipInputFor]="chipListTags"
            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
            [matChipInputAddOnBlur]="true"
            autocomplete="off"
            (matChipInputTokenEnd)="add($event)">
-  </mat-chip-list>
+  </mat-chip-grid>
 </mat-form-field>

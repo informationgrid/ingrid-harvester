@@ -22,22 +22,26 @@
 -->
 
 <h1 mat-dialog-title>Mapping hinzufügen</h1>
-<div mat-dialog-content>
-  <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+<mat-dialog-content>
+  <div class="flex-row space-between gap-20" >
     <mat-form-field>
-      <input matInput placeholder="Quelle" [(ngModel)]="data.source" required>
+      <mat-label>Quelle</mat-label>
+      <input matInput [(ngModel)]="data.source" required>
     </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="Ziel" [(ngModel)]="data.target" [matAutocomplete]="auto"
+      <mat-label>Ziel</mat-label>
+      <input matInput [(ngModel)]="data.target" [matAutocomplete]="auto"
              (ngModelChange)="filterOptions($event)" required>
       <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let option of filteredOptions" [value]="option">
+        @for (option of filteredOptions; track option) {
+<mat-option [value]="option">
           {{option}}
         </mat-option>
+}
       </mat-autocomplete>
     </mat-form-field>
   </div>
-</div>
+</mat-dialog-content>
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>Abbrechen</button>
   <div class="flex-space"></div>

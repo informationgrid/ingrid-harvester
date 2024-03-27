@@ -24,25 +24,26 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MonitoringComponent} from './monitoring.component';
-import {MatLegacyButtonModule as MatButtonModule} from "@angular/material/legacy-button";
+import {MatButtonModule} from "@angular/material/button";
 import {RouterModule, Routes} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
 import {ReactiveFormsModule} from '@angular/forms';
-import {MatLegacyTabsModule as MatTabsModule} from "@angular/material/legacy-tabs";
+import {MatTabsModule} from "@angular/material/tabs";
 import { MonitoringHarvesterComponent } from './monitoring-harvester/monitoring-harvester.component';
 import { MonitoringUrlCheckComponent } from './monitoring-urlcheck/monitoring-urlcheck.component';
 import { MonitoringIndexCheckComponent } from './monitoring-indexcheck/monitoring-indexcheck.component';
-import {MatLegacyListModule as MatListModule} from "@angular/material/legacy-list";
+import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
-import {MatLegacyAutocompleteModule as MatAutocompleteModule} from "@angular/material/legacy-autocomplete";
-import {FlexModule} from "@angular/flex-layout";
-import {MatLegacySlideToggleModule as MatSlideToggleModule} from "@angular/material/legacy-slide-toggle";
-import {MatLegacyCardModule as MatCardModule} from "@angular/material/legacy-card";
-import {MatLegacyCheckboxModule as MatCheckboxModule} from "@angular/material/legacy-checkbox";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatCardModule} from "@angular/material/card";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MonitoringUrlcheckDetailComponent} from "./monitoring-urlcheck/monitoring-urlcheck-detail/monitoring-urlcheck-detail.component";
 import {MonitoringIndexCheckDetailComponent} from "./monitoring-indexcheck/monitoring-indexcheck-detail/monitoring-indexcheck-detail.component";
 import {MatExpansionModule} from "@angular/material/expansion";
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import { TranslocoModule } from "@ngneat/transloco";
 
 const configRoutes: Routes = [
   {
@@ -63,12 +64,14 @@ const configRoutes: Routes = [
         MatListModule,
         MatIconModule,
         MatAutocompleteModule,
-        FlexModule,
         MatSlideToggleModule,
         MatCardModule,
         MatCheckboxModule,
         MatExpansionModule,
-        ScrollingModule
+        ScrollingModule,
+        MatGridList,
+        MatGridTile,
+        TranslocoModule,
     ],
     exports: [
         MonitoringComponent

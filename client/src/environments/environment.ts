@@ -27,7 +27,6 @@
 
 export const environment = {
   production: false,
-  hmr: false,
   configFile: 'config_dev.json'
 };
 

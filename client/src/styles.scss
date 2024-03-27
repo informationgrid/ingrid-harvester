@@ -23,61 +23,1601 @@
 
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-.no-wrap {
-  white-space: nowrap;
+// -----------------------------------------------------------
+// Migration form @angular/flex-layout to native css solution
+// -----------------------------------------------------------
+
+.inline-flex {
+  display: inline-flex !important;
 }
 
-.form-wrapper {
-  //padding-top: 40px;
-  margin: 0 20px;
-  //max-width: 700px;
+.flex-row { display: flex; flex-direction: row; }
+.flex-col { display: flex; flex-direction: column; }
 
-  form, .flex-column {
-    display: flex;
-    flex-direction: column;
-  }
+.flex-wrap { flex-wrap: wrap; }  // Mostly used with flex-row, when wrapping is desired.
+.rows-2 { @media screen and (max-width: 599px) { flex: 1 1 50%; } }  // Switch from flex-row to flex-col on mobile.
+.flex-col-mobile { @media screen and (max-width: 599px) { flex-direction: column; } }  // Switch from flex-row to flex-col on mobile.
+.flex-row-mobile { @media screen and (max-width: 599px) { flex-direction: column; } }  // Switch from flex-row to flex-col on mobile.
+.flex-100-mobile { @media only screen and (max-width: 599px) { min-width: 100% } }  // Switch from flex-row to flex-col on mobile.
+.flex-10-mobile { @media only screen and (max-width: 599px) { min-width: 10% } }  // Switch from flex-row to flex-col on mobile.
+.flex-20-mobile { @media only screen and (max-width: 599px) { min-width: 20% } }  // Switch from flex-row to flex-col on mobile.
+.flex-50-mobile { @media only screen and (max-width: 599px) { min-width: 50% } }  // Switch from flex-row to flex-col on mobile.
+.flex-80-mobile { @media only screen and (max-width: 599px) { min-width: 80% } }  // Switch from flex-row to flex-col on mobile.
+.flex-90-mobile { @media only screen and (max-width: 599px) { min-width: 90% } }  // Switch from flex-row to flex-col on mobile.
+.flex-grow-mobile { @media only screen and (max-width: 599px) { flex-grow: 1; } }  // Switch from flex-row to flex-col on mobile.
+.flex-wrap-mobile { @media only screen and (max-width: 599px) { flex-wrap: wrap; } }  // Switch from flex-row to flex-col on mobile.
 
-  .form-buttons {
-    display: flex;
-    flex-direction: row;
-  }
-
-  & > * {
-    width: 100%;
-  }
-}
-
+.flex-1 { flex: 1 }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-5 { flex: 1 1 100%; max-width: 5%; }  
+.flex-10 { flex: 1 1 100%; max-width: 10%; }  
+.flex-15 { flex: 1 1 100%; max-width: 15%; }  
+.flex-20 { flex: 1 1 100%; max-width: 20%; }  
+.flex-25 { flex: 1 1 100%; max-width: 25%; }  
+.flex-30 { flex: 1 1 100%; max-width: 30%; }  
+.flex-35 { flex: 1 1 100%; max-width: 35%; }  
+.flex-40 { flex: 1 1 100%; max-width: 40%; }  
+.flex-45 { flex: 1 1 100%; max-width: 45%; }  
+.flex-50 { flex: 1 1 100%; max-width: 50%; }  
+.flex-55 { flex: 1 1 100%; max-width: 55%; }  
+.flex-60 { flex: 1 1 100%; max-width: 60%; }  
+.flex-65 { flex: 1 1 100%; max-width: 65%; }  
+.flex-70 { flex: 1 1 100%; max-width: 70%; }  
+.flex-75 { flex: 1 1 100%; max-width: 75%; }  
+.flex-80 { flex: 1 1 100%; max-width: 80%; }  
+.flex-85 { flex: 1 1 100%; max-width: 85%; }  
+.flex-90 { flex: 1 1 100%; max-width: 90%; }  
+.flex-95 { flex: 1 1 100%; max-width: 95%; }  
+.flex-100 { flex: 1 1 100%; max-width: 100%; }  
+.flex-grow { flex-grow: 1; }
+.flex-wrap { flex-wrap: wrap; } 
 .flex-space {
   flex: 1 1 auto;
 }
+// -----------> fxLayoutGap
+// <div fxLayoutGap="8px"> → <div class="gap-8">
+// Gap.
+.gap-4 { gap: 4px; }
+.gap-8 { gap: 8px; }
+.gap-10 { gap: 10px; }
+.gap-12 { gap: 12px; }
+.gap-16 { gap: 16px; }
+.gap-20 { gap: 20px; }
 
-.half {
+// -----------> fxLayoutAlign
+// <div fxLayoutAlign="justify-between center"> → <div class="space-between items-center">
+// Justify content.
+.space-between { justify-content: space-between; }  // Used very often with flex-row.
+.justify-center { justify-content: center; }  // Used to center something via flexbox.
+.space-around {justify-content: space-around}
+.justify-end {justify-content: flex-end;}
+.justify-items-end {justify-items: end;}
+// Align items. (Naming inspiration: https://tailwindcss.com/docs/align-items.)
+.items-center { align-items: center; }  // Used very often with flex-row.
+.baseline { align-items: baseline; }
+
+.right { float: right; }
+
+// -----------> Grid
+
+.grid { display: grid; }
+.grid-cols-1 {grid-template-columns: repeat(1, 1fr) }
+.grid-cols-2 {grid-template-columns: repeat(2, 1fr) }
+.grid-cols-3 {grid-template-columns: repeat(3, 1fr) }
+.grid-cols-4 {grid-template-columns: repeat(4, 1fr) }
+.grid-cols-5 {grid-template-columns: repeat(5, 1fr) }
+.grid-cols-6 {grid-template-columns: repeat(6, 1fr) }
+.grid-cols-7 {grid-template-columns: repeat(7, 1fr) }
+.grid-cols-8 {grid-template-columns: repeat(8, 1fr) }
+.grid-cols-9 {grid-template-columns: repeat(9, 1fr) }
+.grid-cols-10 {grid-template-columns: repeat(10, 1fr) }
+.grid-cols-11 {grid-template-columns: repeat(11, 1fr) }
+.grid-cols-12 {grid-template-columns: repeat(12, 1fr) }
+.grid-cols-6-mobile { @media screen and (max-width: 799px) { grid-template-columns: repeat(6, 1fr) } }
+
+.col-auto {grid-column: auto;}
+.col-span-1 {grid-column: span 1 / span 1;}
+.col-span-2 {grid-column: span 2 / span 2;}
+.col-span-3 {grid-column: span 3 / span 3;}
+.col-span-4 {grid-column: span 4 / span 4;}
+.col-span-5 {grid-column: span 5 / span 5;}
+.col-span-6 {grid-column: span 6 / span 6;}
+.col-span-7 {grid-column: span 7 / span 7;}
+.col-span-8 {grid-column: span 8 / span 8;}
+.col-span-9 {grid-column: span 9 / span 9;}
+.col-span-10 {grid-column: span 10 / span 10;}
+.col-span-11 {grid-column: span 11 / span 11;}
+.col-span-12 {grid-column: span 12 / span 12;}
+
+.col-span-1-mobile { @media screen and (max-width: 799px) { grid-column: span 1 / span 1; } }
+.col-span-2-mobile { @media screen and (max-width: 799px) { grid-column: span 2 / span 2; } }
+.col-span-3-mobile { @media screen and (max-width: 799px) { grid-column: span 3 / span 3; } }
+.col-span-4-mobile { @media screen and (max-width: 799px) { grid-column: span 4 / span 4; } }
+.col-span-5-mobile { @media screen and (max-width: 799px) { grid-column: span 5 / span 5; } }
+.col-span-6-mobile { @media screen and (max-width: 799px) { grid-column: span 6 / span 6; } }
+.col-span-7-mobile { @media screen and (max-width: 799px) { grid-column: span 7 / span 7; } }
+.col-span-8-mobile { @media screen and (max-width: 799px) { grid-column: span 8 / span 8; } }
+.col-span-9-mobile { @media screen and (max-width: 799px) { grid-column: span 9 / span 9; } }
+.col-span-10-mobile { @media screen and (max-width: 799px) { grid-column: span 10 / span 10; } }
+.col-span-11-mobile { @media screen and (max-width: 799px) { grid-column: span 11 / span 11; } }
+.col-span-12-mobile { @media screen and (max-width: 799px) { grid-column: span 12 / span 12; } }
+
+.grid-flow-row {grid-auto-flow: row;}
+
+.h-full {
+  height: 100%;
+}
+.w-full {
+  width: 100%;
+}
+
+mat-card-header {
+  margin-bottom: 24px;
+}
+
+.form-wrapper .mat-mdc-card {
+  box-shadow: none !important;
+}
+// ------------------------
+// Material customizations
+// ------------------------
+/*
+ TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.
+ */
+.mat-form-field-infix {
+  width: auto !important;
+}
+/*
+ TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.
+ */
+.mat-card-header-text {
+  margin: 0 0 !important;
+}
+
+.margin-below {
+  margin-bottom: 32px;
+}
+.margin-top {
+  margin-top: 32px;
+}
+
+.chart-container {
+  // background-color: var(--dark-black) !important;
+  // padding: 16px;
+  width: auto;
+  height: 100%;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.fixed-top-right {
+  position: sticky !important;
+  top: 20px;
+  right: 40px;
+  z-index: 100;
+}
+.fixed-bottom-right {
+  position: fixed !important;
+  bottom: 20px;
+  right: 40px;
+  z-index: 100;
+}
+
+.text-middle{
+  vertical-align: middle !important;
+}
+.text-bottom{
+  vertical-align: bottom !important;
+}
+.no-margin{
+  margin: 0 !important;
+}
+.no-padding{
+  padding: 0 !important;
+}
+.margin {  
+  margin: 16px;
+}
+.padding {  
+  padding: 16px !important;
+}
+.padding-small {
+  padding: 6px !important;
+}
+.margin-small {
+  margin: 6px !important;
+}
+.h-auto {
+  height: auto !important;
+}
+
+
+.big-button-container {
+  display: flex;
+  justify-content: center;
+  width: 120px;
+}
+
+// ------------------------------ Styles from IGE
+
+
+@import "../src/_variables";
+@import "../src/material.override";
+@import "../src/styles-print";
+@import "../src/styles-outline";
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family:
+    Roboto,
+    Helvetica Neue Light,
+    Helvetica Neue,
+    Helvetica,
+    Arial,
+    Lucida Grande,
+    sans-serif;
+  letter-spacing: 0.4px;
+}
+
+a {
+  font-size: 14px;
+  font-weight: 500;
+  color: $ige-secondary;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  &.no-text-transform {
+    text-transform: unset;
+  }
+
+  &:hover {
+    text-decoration: none;
+    color: lighten($ige-secondary, 20%);
+  }
+}
+
+.user-popup mat-icon path {
+  fill: $ige-primary;
+}
+
+.mat-mdc-menu-panel.user-popup-menu {
+  margin: 12px 0 0;
+
+  span.mdc-list-item {
+    font-size: 14px;
+  }
+}
+
+button.button-with-text {
+  padding: 0 4px 0;
+  min-width: 36px;
+
+  .mdc-button__label {
+    display: flex;
+    align-items: center;
+    color: $ige-secondary;
+  }
+
+  &.primary .mdc-button__label {
+    color: #ffffff;
+  }
+}
+
+.error {
+  font-size: 12px;
+  padding-left: 16px;
+  letter-spacing: 0.4px;
+  overflow: visible;
+  -webkit-font-smoothing: antialiased;
+}
+
+// prevent hint and error wrappers from overlapping other fields
+.mat-mdc-form-field-bottom-align {
+  min-height: 22px;
+
+  &:before {
+    display: none !important;
+  }
+
+  .mat-mdc-form-field-error-wrapper,
+  .mat-mdc-form-field-hint-wrapper {
+    position: relative;
+  }
+}
+// prevent form field errors overlapping with labels of lower field by reducing padding
+ige-form-dialog {
+  .mat-mdc-form-field-error,
+  .mat-mdc-form-field-hint {
+    padding-top: 3px;
+  }
+}
+
+form-toolbar .mdc-button > .mat-icon {
+  height: 24px;
+  width: 24px;
+  font-size: 24px;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.right-sharp-corner .mat-mdc-text-field-wrapper,
+.right-sharp-corner .mdc-notched-outline__trailing {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.left-sharp-corner .mat-mdc-text-field-wrapper,
+.left-sharp-corner .mdc-notched-outline__leading {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+mat-checkbox.small-checkbox-spacing {
+  margin-bottom: -10px !important;
+
+  .mdc-form-field {
+    font-size: 16px;
+  }
+}
+
+button.button-next-to-input {
+  height: 44px !important;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+
+  &:hover {
+    background-color: lighten($ige-secondary, 8%);
+  }
+}
+
+.quicksearch-auto {
+  max-height: unset !important;
+  width: 563px !important;
+  padding: 24px 24px 12px !important;
+}
+
+.dense mat-option {
+  min-height: 40px !important;
+}
+
+.ultra-dense mat-option {
+  min-height: 36px !important;
+}
+
+.no-input-border {
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled)
+    .mdc-notched-outline__leading,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled)
+    .mdc-notched-outline__notch,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled)
+    .mdc-notched-outline__trailing {
+    border-color: white !important;
+  }
+}
+
+.leaflet-control-attribution a {
+  font-size: 11px;
+}
+
+h1 {
+  font-size: 48px;
+  color: $ige-primary;
+  font-weight: normal;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.highlight {
+  background-color: $ige-mark-color;
+}
+
+.mat-mdc-card {
+  &.hover-elevate {
+    &.mat-mdc-card {
+      box-shadow: none;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+    }
+
+    &:hover {
+      box-shadow:
+        0 3px 3px -2px rgba(0, 0, 0, 0.2),
+        0px 3px 4px 0px rgba(0, 0, 0, 0.14),
+        0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+    }
+  }
+
+  &.no-box-shadow {
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+  }
+}
+
+.mat-mdc-list.hover-list {
+  .mat-mdc-list-item:hover {
+    background-color: darken(white, 4%);
+  }
+}
+
+.medium-spacing {
+  letter-spacing: 0.4px;
+}
+
+.extra-large-spacing {
+  letter-spacing: 1.25px;
+}
+
+/*.text-card-title.mat-mdc-card-title {
+  color: $ige-primary;
+  text-align: center;
+  letter-spacing: 0.74px;
+  padding: 2px 0 6px;
+  line-height: 30px;
+  font-weight: 400;
+}*/
+
+.upper-case {
+  text-transform: uppercase;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.pull-right {
+  float: right;
+}
+
+.clickable:hover {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.04) !important;
+
+  &.dark {
+    background-color: darken($ige-background-bar, 5%) !important;
+  }
+}
+
+.link-text {
+  cursor: pointer;
+
+  a:hover {
+    color: $ige-primary;
+  }
+}
+
+.clickable-text {
+  cursor: pointer;
+  color: $ige-secondary;
+  //font-weight: 500;
+
+  &:hover {
+    color: lighten($ige-secondary, 20%);
+  }
+}
+
+.hide {
+  display: none !important;
+}
+
+.width-50 {
   width: 50%;
 }
 
-snack-bar-container.error {
-  background-color: #b24747 !important;
-  color: white;
+.width-100 {
+  width: 100%;
 }
 
-.list-hover .mat-list-item:hover, .clickable:hover {
-  background: rgba(255, 255, 255, 0.04);
+.width-date-small {
+  width: 150px;
 }
 
-.clickable {
+.width-date-medium {
+  width: 200px;
+}
+
+.single-field {
+  &.width-50 ige-one-column-wrapper > div > ige-form-label + * {
+    flex: 0.5;
+    padding-right: 10px; // simulate gap used by multiple fields in one row
+    min-width: 130px;
+  }
+
+  &.width-25 ige-one-column-wrapper > div > ige-form-label + * {
+    flex: 0.25;
+    padding-right: 10px; // simulate gap used by multiple fields in one row
+    min-width: 130px;
+  }
+
+  &.with-side-button ige-one-column-wrapper > div > ige-form-label + * {
+    flex: 0.8;
+    padding-right: 10px; // simulate gap used by multiple fields in one row
+    min-width: 200px;
+  }
+}
+
+.section-title {
+  font-weight: 500;
+  font-size: 16px;
+
+  &.space {
+    padding-top: 24px;
+  }
+}
+
+ige-section-wrapper > h2 {
+  color: $ige-primary;
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-weight: normal;
+  font-size: 24px;
+  cursor: default;
+}
+
+.mat-mdc-button.link-button {
+  font-weight: normal;
+  letter-spacing: 0.4px;
+
+  color: $ige-secondary !important;
+  padding: 0 10px;
+  text-transform: none;
+}
+
+ige-tree-header ige-search-input .mat-mdc-form-field-subscript-wrapper {
+  height: 6px;
+}
+
+.shortcut {
+  padding-bottom: 24px;
+  color: $ige-secondary;
+  /*TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
+  /*.mat-button-wrapper {
+    letter-spacing: 1.25px;
+    text-transform: uppercase;
+
+    !*.mat-icon {
+      vertical-align: text-bottom;
+    }*!
+  }*/
+}
+
+.btn-title {
+  padding: 0 4px 0 8px;
+  font-size: 14px;
+  font-weight: 500;
+  vertical-align: middle;
+  //color: $ige-secondary;
+}
+
+main-menu .mat-toolbar-row {
+  height: 50px;
+}
+
+main-menu .mat-toolbar-multiple-rows {
+  min-height: 44px;
+}
+
+.mat-expansion-panel {
+  background-color: #c9e4ff;
+}
+
+mat-list-option.selected {
+  background-color: $ige-mark-color !important;
+
+  &:hover {
+    background-color: darken($ige-mark-color, 5%) !important;
+  }
+}
+
+.invalid-feedback {
+  position: absolute;
+  font-size: 75%;
+  margin-top: 0;
+  bottom: -20px;
+  white-space: nowrap;
+}
+
+.ng-invalid .invalid-feedback {
+  /*display: block;*/
+}
+
+div.has-error {
+  position: relative;
+}
+
+.border-dashed {
+  border: dotted 3px lightgray;
+}
+
+/*form-toolbar {
+  position: fixed;
+  top: 56px;
+  width: 100%;
+  background-color: #ececec;
+  z-index: 10;
+}*/
+
+form-toolbar + div {
+  /*padding-top: 30px;*/
+}
+
+.btnHelp {
   cursor: pointer;
 }
 
+.btn.btn-xs {
+  /*// line-height: ensure proper height of button next to extra small input*/
+  /*@include button-size($padding-y, $padding-x, $font-size, $line-height, $border-radius);*/
+  font-size: 0.5rem;
+  padding: 8px;
+}
 
-/* Embedded material icons and Roboto font */
+.help-block {
+  /*position: absolute;*/
+  /*font-size: 80%;*/
+  /*margin-top: 1px !important;*/
+  /*animation: slideIn 0.3s linear forwards;*/
+}
 
-// for npm roboto-fontface package (to load local files)
-$roboto-font-path: "~roboto-fontface/fonts" !default;
-@import "roboto-fontface/css/roboto/sass/roboto-fontface";
+.error-box {
+  padding: 12px 24px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: $error-color;
+  letter-spacing: 0.4px;
+  font-weight: 400;
+  background-color: $error-background;
+}
 
-// for npm material-icons package (to load local files)
-$material-icons-font-path: '~material-icons/iconfont/';
-@import 'material-icons/iconfont/material-icons.scss';
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+
+.hide-tab-header .mat-mdc-tab-header {
+  display: none !important;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:focus,
+.nav-tabs > li.active > a:hover {
+  background-color: #c9eeff !important;
+}
+
+.navbar-default .navbar-nav > li > a:focus,
+nav a.active,
+nav a:focus.active {
+  background-color: #ececec;
+}
+
+.has-navbar {
+  padding-top: 10px;
+}
+
+.padding {
+  padding: 10px;
+}
+
+.padding-sm {
+  padding: 5px;
+}
+
+.padding-vertical {
+  padding: 10px 0;
+}
+
+.field-padding {
+  padding: 0 10px 0 0;
+}
+
+dyn-field {
+  padding-bottom: 10px;
+  display: block;
+}
+
+.hasChildren dyn-field {
+  display: inline-block;
+}
+
+/*dynamic-form input[type="text"],
+dynamic-form input[type="date"],
+dynamic-form input[type="number"],
+dynamic-form select,
+dynamic-form textarea {
+  width: 100%;
+}*/
+formly-field ige-one-column-wrapper mat-form-field,
+formly-wrapper-mat-form-field > mat-form-field {
+  //width: 100%;
+}
+
+ige-form-wrapper formly-field.ige-date-picker mat-form-field {
+  //width: inherit;
+}
+
+.fieldContainer {
+  display: inline-block;
+  vertical-align: top;
+}
+
+sidebar .list-group-item {
+  cursor: pointer;
+}
+
+sidebar .list-group-item:hover {
+  background-color: #ececec;
+}
+
+.list-group-item.active {
+  background-color: #5999d0;
+  border-color: #5999d0;
+}
+
+.cell select {
+  height: 25px;
+}
+
+.nav-tabs li {
+  cursor: pointer;
+}
+
+ige-one-column-wrapper formly-group {
+  //display: flex;
+  gap: 10px;
+
+  /* & > * {
+    flex: 1;
+  }*/
+}
+
+// migration css from [flex-layout]
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+}
+
+.flex-fill {
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.align-items-baseline {
+  align-items: baseline;
+}
+
+// default cross axis
+.align-items-stretch {
+  align-items: stretch;
+  align-content: stretch;
+}
+
+.align-items-start {
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+.align-items-end {
+  align-items: flex-end;
+  align-content: flex-end;
+}
+
+.align-self-end {
+  align-self: flex-end;
+}
+
+.justify-content-space-between {
+  justify-content: space-between;
+}
+
+.justify-content-start {
+  justify-content: start;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-end {
+  justify-content: flex-end;
+}
+
+.gap-6 {
+  gap: 6px;
+}
+
+.gap-12 {
+  gap: 12px;
+}
+
+.gap-24 {
+  gap: 24px;
+}
+
+.gap-36 {
+  gap: 36px;
+}
+
+.row-gap-12 {
+  row-gap: 12px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.flex-2 {
+  flex: 2;
+}
+
+.flex-3 {
+  flex: 3;
+}
+
+.flex-grow {
+  flex: 1 1 100%;
+}
+
+.right-align input {
+  text-align: right;
+  -moz-appearance: textfield;
+}
+
+.right-align input::-webkit-outer-spin-button,
+.right-align input::-webkit-inner-spin-button {
+  display: none;
+}
+
+.mat-mdc-form-field-text-suffix {
+  padding-left: 5px;
+}
+
+.hide-optionals .optional {
+  display: none;
+}
+
+.top-align-suffix .mat-mdc-form-field-icon-suffix {
+  margin-top: 10px;
+  align-self: start;
+}
+
+formly-field {
+  min-width: 130px;
+}
+
+formly-field:empty {
+  display: none;
+}
+
+/*formly-field {
+  &[class*="flex-"] {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  &[class*="flex-"]:first-child {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  &[class*="flex-"]:not(:first-child) {
+    padding-right: 0;
+
+    &.pad-right {
+      padding-right: 10px;
+    }
+  }
+
+  &.contact ige-repeat {
+    padding-bottom: 12px;
+  }
+}
+
+formly-form:last-of-type(formly-field) > formly-field:last-of-type {
+  border-top-color: #fff !important;
+  height: 0;
+}*/
+
+/* Split gutter style */
+.as-split-gutter-icon {
+  background-image: url("./assets/more_vert-24px.svg") !important;
+  opacity: 0.5;
+}
+
+/* Disabled material icon SVG */
+/*.mat-mdc-button[disabled] .mat-icon[data-mat-icon-type="svg"],
+.mat-mdc-icon-button[disabled] .mat-icon {
+  opacity: 0.26;
+}*/
+
+ige-root .mat-drawer-container {
+  background-color: $ige-background;
+}
+
+.mat-icon.animated {
+  transition: all 0.2s linear;
+}
+
+.mat-icon.flipIt {
+  transform: scale(1, -1);
+}
+
+.mat-icon {
+  &.passive {
+    color: #000;
+    opacity: 0.6;
+  }
+
+  &.document-icon {
+    display: block;
+
+    svg {
+      height: 24px;
+      width: 24px;
+    }
+
+    svg .coloring {
+      fill: $ige-icon-color;
+    }
+
+    &.working svg .coloring {
+      fill: $state-working-color;
+    }
+
+    &.workingWithPublished svg .coloring {
+      fill: url("#myGradient");
+    }
+  }
+
+  + .document-icon-tag {
+    border-radius: 50%;
+    border: 1px solid $ige-background;
+
+    &.intranet {
+      background-color: $ige-primary;
+    }
+
+    &.amtsintern {
+      background-color: $error-color;
+    }
+  }
+}
+
+.mat-icon.light svg .coloring {
+  fill: $ige-mark-color;
+}
+
+.dragged .mat-icon.light svg .coloring {
+  fill: #ffffff;
+}
+
+svg {
+  .coloring {
+    fill: $ige-icon-color;
+  }
+
+  .coloring-stroke {
+    stroke: $ige-icon-color;
+  }
+}
+
+.icon-in-table {
+  display: flex;
+  padding-right: 10px;
+  flex: 1;
+  align-items: flex-start;
+
+  img {
+    padding-right: 10px;
+    padding-top: 1px;
+  }
+
+  word-break: break-all;
+  line-height: 20px;
+}
+
+.gray {
+  &:hover .coloring {
+    fill: darken($ige-comment-color, 5%);
+  }
+
+  .coloring {
+    fill: $ige-comment-color;
+  }
+}
+
+.green {
+  .coloring {
+    fill: $ige-check-color;
+  }
+}
+
+.no-selection-text {
+  color: $ige-hint-color;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+}
+
+ige-side-menu {
+  svg .coloring {
+    fill: #ffffff;
+  }
+
+  .coloring-stroke {
+    stroke: #ffffff;
+  }
+}
+
+ige-form-label + * {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: 8px;
+}
+
+// color for accessibility
+[mat-dialog-close].cdk-keyboard-focused {
+  --mat-mdc-button-persistent-ripple-color: #ffffff;
+}
+
+// Context Buttons
+.mat-mdc-icon-button {
+  &.table-options {
+    background-color: #ffffff;
+    line-height: 32px;
+    height: 32px;
+    width: 32px;
+  }
+
+  &.menu-button {
+    width: 26px !important;
+    height: 26px !important;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+  }
+
+  &.menu-button:enabled {
+    &:hover {
+      background-color: $ige-background-bar;
+    }
+
+    &.dark {
+      background-color: $ige-background-bar;
+
+      &:hover {
+        background-color: darken($ige-background-bar, 5%) !important;
+      }
+    }
+  }
+}
+
+ige-context-help .mat-mdc-dialog-content {
+  h1,
+  h2 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  h2 {
+    color: #000000de;
+    margin-bottom: 0;
+
+    & + p {
+      margin-top: 0;
+    }
+  }
+
+  table,
+  th,
+  td {
+    border: 1px solid;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    padding: 7px;
+  }
+}
+
+// Icons
+/*.infoIcon {
+  .mat-icon svg rect {
+    fill: $ige-secondary;
+  }
+}*/
+
+mat-icon.mark-color .coloring {
+  fill: $ige-check-color;
+}
+
+.mat-icon.big-icon {
+  width: 128px;
+  height: 128px;
+  font-size: 128px;
+  margin: 24px;
+}
+
+.success-color {
+  color: $ige-check-color;
+}
+
+.error-color.error-color {
+  color: $error-color;
+}
+
+.dlg-field-label {
+  padding-bottom: 4px;
+  color: #000000;
+
+  &.required {
+    font-weight: 500;
+  }
+}
+
+.dlg-field-hero-label {
+  color: $ige-primary;
+  font-size: 24px;
+  line-height: 30px;
+  padding: 24px 0;
+}
+
+/* Material Tabs */
+.page-tabs-routing {
+  &.mat-mdc-tab-nav-bar {
+    border-bottom: none;
+  }
+
+  .mat-mdc-tab-links {
+    background-color: $ige-secondary-dark;
+  }
+
+  .mat-mdc-tab-link {
+    border-bottom: none;
+    height: 56px !important;
+
+    &:hover {
+      background: lighten($ige-secondary, 8%);
+    }
+
+    .mdc-tab__text-label {
+      color: #ffffff !important;
+      letter-spacing: 1.25px;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+
+    &.active-link .mdc-tab__text-label {
+      opacity: 1;
+      color: #4ba7d0 !important;
+    }
+  }
+
+  .mdc-tab-indicator__content {
+    border-color: $ige-background !important;
+    background-color: $ige-background !important;
+    height: 6px;
+  }
+}
+
+.page-tabs {
+  height: 100%;
+
+  & > .mat-mdc-tab-header {
+    background-color: $ige-secondary-dark;
+    border-bottom: none;
+    height: 56px;
+    /*TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
+    /*TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
+    /*TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
+    .mat-tab-label {
+      color: #ffffff;
+      letter-spacing: 1.25px;
+      text-transform: uppercase;
+      opacity: 0.75;
+      height: 56px;
+      /*TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
+      /*TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
+      &.mat-tab-label-active {
+        opacity: 1;
+        /*TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
+        .mat-tab-label-content {
+          color: #4ba7d0;
+        }
+      }
+    }
+
+    .mat-ink-bar {
+      background-color: $ige-background !important;
+      height: 6px;
+    }
+  }
+
+  /*TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
+  & > .mat-tab-body-wrapper {
+    flex: 1;
+  }
+}
+
+.page-tabs,
+.page-tabs-routing ~ * {
+  .status {
+    padding: 30px;
+    margin-bottom: 24px;
+    background-color: rgb(223, 223, 223);
+
+    .log {
+      overflow: auto;
+      max-height: 300px;
+    }
+  }
+}
+
+/* LEAFLET */
+
+.leaflet-control-attribution a {
+  font-size: 11px;
+}
+
+.leaflet-control a {
+  text-transform: none;
+}
+
+.passive .leaflet-control-zoom {
+  visibility: hidden;
+}
+
+.leaflet-areaselect-shade {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.leaflet-areaselect-handle {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #666;
+  -moz-box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  width: 14px;
+  height: 14px;
+  cursor: move;
+}
+
+.doc-item {
+  .mat-icon {
+    //margin-top: -2px !important;
+  }
+
+  .mat-line {
+    line-height: 22px !important;
+  }
+}
+
+.show-all-link + .spacing,
+.mat-mdc-option + .spacing {
+  padding-bottom: 35px;
+}
+
+//}
+
+/* DRAG N DROP ANIMIATION */
+/* Animate items as they're being sorted. */
+.cdk-drop-list-dragging .cdk-drag {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Animate an item that has been dropped. */
+.cdk-drag-animating {
+  transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow:
+    0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-handle {
+  cursor: move;
+  color: $ige-hint-color;
+
+  &:hover {
+    color: $ige-secondary;
+  }
+}
+
+.legend {
+  color: $ige-placeholder-color;
+  font-size: 14px;
+
+  mat-icon {
+    padding-left: 10px;
+  }
+
+  span {
+    vertical-align: super;
+    padding-right: 4px;
+  }
+
+  svg path {
+    fill: $ige-placeholder-color;
+  }
+}
+
+mat-icon.wide-icon-26px {
+  width: 26px;
+}
+
+.expanded .mat-icon.rotating {
+  transform: rotate(180deg);
+}
+
+/* TABLE */
+.mat-mdc-table .mat-mdc-row:hover {
+  background-color: darken(#ffffff, 5%) !important;
+
+  &.selected {
+    background-color: darken($ige-mark-color, 5%) !important;
+  }
+
+  .menu-button {
+    background-color: #ffffff;
+  }
+}
+
+.mat-mdc-table.dark .mat-mdc-row:hover {
+  background-color: darken($ige-background, 5%);
+}
+
+/* RADIO */
+.mat-mdc-radio-group {
+  display: flex;
+  gap: 12px;
+}
+
+.radio-vertical {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+  /*TODO(mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version.*/
+  /*mat-radio-button {
+    margin: 5px 0;
+  }*/
+}
+
+.comment {
+  font-size: 14px;
+  line-height: 22px;
+  color: $ige-hint-color;
+}
+
+.comment-field {
+  color: $ige-hint-color;
+}
+
+.no-fields-selected-notice {
+  display: flex;
+  align-items: center;
+  background-color: $ige-mark-color;
+  color: $ige-primary;
+  padding: 0 15px;
+  margin-bottom: 5px;
+  min-height: 40px;
+
+  &.warn {
+    background-color: $error-background;
+    color: $error-color;
+  }
+
+  span {
+    padding: 10px 0;
+  }
+
+  .infoIcon {
+    background-color: white;
+    margin-right: 15px;
+    height: 24px;
+    border-radius: 50%;
+  }
+}
+
+/* Stepper */
+/*.full-height {
+  mat-horizontal-stepper {
+    height: 100%;
+    display: flex !important;
+    flex-direction: column;
+    flex: 1;
+
+    .mat-horizontal-content-container {
+      flex: 1;
+    }
+    .mat-horizontal-stepper-content {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      //height: 100%;
+
+      & > div:first-child {
+        flex: 1;
+      }
+    }
+  }
+}*/
+
+/* Slide toggle (stretched) */
+/*.mat-mdc-slide-toggle.stretch {
+  display: block;
+  !*TODO(mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version.*!
+  .mat-slide-toggle-label {
+    justify-content: space-between;
+  }
+}*/
+
+.info-menu {
+  &.mat-mdc-menu-panel {
+    max-width: 350px !important;
+  }
+
+  /*.mat-mdc-card-title {
+    font-size: 24px;
+    margin: 0;
+  }
+
+  .mat-mdc-menu-item {
+    font-size: 16px;
+    color: $ige-text-color;
+    height: 44px;
+  }
+
+  a.mat-mdc-menu-item {
+    text-transform: unset;
+  }*/
+
+  .category-item {
+    //color: $ige-hint-color;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+
+  /*  .category-item ~ .category-item {
+    padding-top: 16px;
+  }*/
+
+  .versioninfo {
+    color: $ige-hint-color;
+    font-size: 14px;
+    line-height: 18px;
+    padding: 16px;
+  }
+}
+
+.test-instance {
+  position: fixed;
+  top: auto;
+  bottom: 50px;
+  left: -80px;
+  z-index: 40;
+  width: 300px;
+  background: red;
+  color: #fff;
+  text-align: center;
+  line-height: 50px;
+  letter-spacing: 1px;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+
+  &:hover {
+    display: none;
+  }
+}
+
+table.big-font {
+  .mat-mdc-cell,
+  a {
+    font-size: 16px;
+  }
+}
+
+.mat-mdc-row.readonly {
+  cursor: default;
+}
+
+.published .mark-different {
+  ige-print-type,
+  ige-date-range-type,
+  ige-spatial-list,
+  formly-field-mat-datepicker,
+  .mat-mdc-radio-group {
+    background: $error-background !important;
+  }
+}
+
+.working .mark-different {
+  ige-print-type,
+  ige-date-range-type,
+  ige-spatial-list,
+  formly-field-mat-datepicker,
+  .mat-mdc-radio-group {
+    background: $ige-check-background-color !important;
+  }
+}
+
+.space-bottom {
+  padding-bottom: 12px;
+}
+
+.space-bottom-field {
+  display: block;
+  padding-bottom: 22px;
+}
+
+.negative-space-top-field {
+  display: block;
+  margin-top: -22px;
+}
+
+.mat-mdc-menu-panel.mat-menu-panel,
+.mat-select-panel.mat-select-panel {
+  max-width: 400px;
+}
+
+.dialog-title-wrapper mat-button-toggle-group {
+  height: 30px;
+
+  .mat-button-toggle-label-content {
+    line-height: 30px;
+  }
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
