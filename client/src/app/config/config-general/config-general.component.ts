@@ -183,10 +183,10 @@ export class ConfigGeneralComponent implements OnInit {
         user: [settings.elasticsearch.user],
         password: [settings.elasticsearch.password],
         alias: [settings.elasticsearch.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
-        prefix: [{ value: settings.elasticsearch.prefix, disabled: true }],
-        index: [{ value: settings.elasticsearch.index, disabled: true }],
-        numberOfShards: [{ value: settings.elasticsearch.numberOfShards, disabled: true }],
-        numberOfReplicas: [{ value: settings.elasticsearch.numberOfReplicas, disabled: true }]
+        prefix: [settings.elasticsearch.prefix],
+        index: [settings.elasticsearch.index],
+        numberOfShards: [settings.elasticsearch.numberOfShards],
+        numberOfReplicas: [settings.elasticsearch.numberOfReplicas]
       }),
       cronOffset: [settings.cronOffset],
       proxy: [settings.proxy],

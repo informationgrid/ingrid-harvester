@@ -58,11 +58,13 @@
   width: 100%;
 }
 
-
-
 .center-right {
   inset: 0;
   margin: auto;
   margin-right: 0;
 }
 
+input[readonly] {
+  cursor: default;
+  color: #0009 !important;
+}
