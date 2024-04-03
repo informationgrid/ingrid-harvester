@@ -6,7 +6,7 @@ export function formatDay(timestamp: Date) {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
     const seconds = date.getSeconds().toString().padStart(2, '0');
-    return `${day}.${month}`;
+    return `${day}.${month}.`;
   }
   
 export function formatDateAndTime(timestamp : Date){

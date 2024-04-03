@@ -78,7 +78,7 @@ export function historyChart(chartName, data){
               fill: false,
               cubicInterpolationMode: 'monotone',
               yAxisID: 'right-y-axis',
-              hidden: true,
+              // hidden: true,
             }
           ],
         },
