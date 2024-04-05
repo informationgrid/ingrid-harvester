@@ -24,6 +24,7 @@
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import * as MiscUtils from '../../../utils/misc.utils';
 import { generatePlanDigitalWmsDistribution } from '../../../profiles/diplanung/diplanung.utils';
+import { DateRange } from '../../../model/dateRange';
 import { Distribution} from '../../../model/distribution';
 import { DocTypeMapping, PlanTypeMapping, ProcedureTypeMapping } from '../xplan/xplan.codelist.mappings';
 import { PluDocType, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
@@ -153,9 +154,9 @@ export class MsWfsMapper extends WfsMapper {
         return undefined;
     }
 
-    _getPluProcedureStartDate(): Date {
+    _getPluProcedurePeriod(): DateRange {
         let procedureStartDate = this.getTextContent('./*/ms:aufstellungsbeschlussdatum');
-        return MiscUtils.normalizeDateTime(procedureStartDate);
+        return { gte: MiscUtils.normalizeDateTime(procedureStartDate) };
     }
 
     _getIssued(): Date {

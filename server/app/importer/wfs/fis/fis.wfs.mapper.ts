@@ -156,9 +156,9 @@ export class FisWfsMapper extends WfsMapper {
         return processSteps;
     }
 
-    _getPluProcedureStartDate(): Date {
+    _getPluProcedurePeriod(): DateRange {
         let procedureStartDate = this.getTextContent('fis:AFS_BESCHL');
-        return MiscUtils.normalizeDateTime(procedureStartDate);
+        return { gte: MiscUtils.normalizeDateTime(procedureStartDate) };
     }
 
     _getIssued(): Date {

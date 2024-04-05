@@ -113,6 +113,7 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
                 ${optional('dct:modified', dateAsIsoString(document.modified))}
                 ${resource('dct:relation', document.relation)}
                 ${optional(DcatApPluDocumentFactory.xmlPeriodOfTime, document.development_freeze_period, 'plu:developmentFreezePeriod')}
+                ${optional(DcatApPluDocumentFactory.xmlPeriodOfTime, document.procedure_period, 'plu:procedurePeriod')}
                 ${optional('plu:planName', esc(document.plan_name))}
                 ${resource('plu:planType', document.plan_type, `${diplanUriPrefix}/planType#`)}
                 ${resource('plu:planTypeFine', document.plan_type_fine)}

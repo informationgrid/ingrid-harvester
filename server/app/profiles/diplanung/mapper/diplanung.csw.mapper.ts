@@ -185,7 +185,7 @@ export class DiplanungCswMapper extends CswMapper {
         return undefined;
     }
 
-    _getPluProcedureStartDate() {
+    _getPluProcedurePeriod() {
         return undefined;
     }
 

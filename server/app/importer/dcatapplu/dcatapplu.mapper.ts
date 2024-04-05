@@ -182,13 +182,19 @@ export class DcatappluMapper extends BaseMapper {
         return relation;
     }
 
-    _getPluProcedureStartDate() {
-        let procedureStartDate = DcatappluMapper.select('./plu:procedureStartDate', this.record, true)?.textContent;
-        let startDate = MiscUtils.normalizeDateTime(procedureStartDate);
-        return startDate;
+    _getPluProcedurePeriod(): DateRange {
+        let periodObject = DcatappluMapper.select('./plu:procedurePeriod/dct:PeriodOfTime', this.record, true);
+        if (periodObject) {
+            return this._getTemporalInternal(periodObject)?.[0];
+        }
+        else {
+            let procedureStartDate = DcatappluMapper.select('./plu:procedureStartDate', this.record, true)?.textContent;
+            let startDate = MiscUtils.normalizeDateTime(procedureStartDate);
+            return { gte: startDate };
+        }
     }
 
-    _getPluDevelopmentFreezePeriod():DateRange {
+    _getPluDevelopmentFreezePeriod(): DateRange {
         let periodOfTime: DateRange;
         let periodObject = DcatappluMapper.select('./plu:developmentFreezePeriod/dct:PeriodOfTime', this.record, true);
         if (periodObject) periodOfTime = this._getTemporalInternal(periodObject)?.[0];

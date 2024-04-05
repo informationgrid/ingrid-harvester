@@ -62,11 +62,12 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
             // plan and procedure information
             development_freeze_period: mapper.getPluDevelopmentFreezePeriod(),
             plan_state: mapper.getPluPlanState(),
-            plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),
+            plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedurePeriod()?.gte,
             plan_type: mapper.getPluPlanType(),
             plan_type_fine: mapper.getPluPlanTypeFine(),
             procedure_state: mapper.getPluProcedureState(),
-            procedure_start_date: mapper.getPluProcedureStartDate(),
+            procedure_start_date: mapper.getPluProcedurePeriod()?.gte,
+            procedure_period: mapper.getPluProcedurePeriod(),
             procedure_type: mapper.getPluProcedureType(),
             process_steps: mapper.getPluProcessSteps(),
             notification: mapper.getPluNotification(),
@@ -141,6 +142,7 @@ export type DiplanungIndexDocument = {
     plan_name: string,
     plan_type: PluPlanType,
     plan_type_fine: string,
+    procedure_period: DateRange,
     procedure_type: PluProcedureType,
     distributions: Distribution[],
     process_steps: ProcessStep[],
@@ -151,7 +153,7 @@ export type DiplanungIndexDocument = {
     modified: Date,
     relation: string,
     notification: string,
-    procedure_start_date: Date,
+    procedure_start_date: Date, // deprecated
     development_freeze_period: DateRange,
     maintainers: Person[] | Organization[],
     contributors: Person[] | Organization[],
@@ -160,7 +162,6 @@ export type DiplanungIndexDocument = {
     // additional information and metadata
     catalog: Catalog,
     plan_or_procedure_start_date: Date,
-    // temporal: DateRange[],
     extras: {
         hierarchy_level: string,
         metadata: {

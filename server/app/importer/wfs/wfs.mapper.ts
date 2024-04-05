@@ -204,7 +204,7 @@ export abstract class WfsMapper extends BaseMapper {
 
     abstract _getPluProcessSteps(): ProcessStep[];
 
-    abstract _getPluProcedureStartDate(): Date;
+    abstract _getPluProcedurePeriod(): DateRange;
 
     _getPluNotification() {
         return undefined;
