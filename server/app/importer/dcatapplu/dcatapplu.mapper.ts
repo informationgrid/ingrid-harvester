@@ -59,7 +59,7 @@ export class DcatappluMapper extends BaseMapper {
         'vcard': namespaces.VCARD
     });
 
-    log = getLogger();
+    private log = getLogger();
 
     private readonly record: any;
     private readonly catalogPage: any;
@@ -182,10 +182,16 @@ export class DcatappluMapper extends BaseMapper {
         return relation;
     }
 
-    getPluProcedureStartDate() {
-        let procedureStartDate = DcatappluMapper.select('./plu:procedureStartDate', this.record, true)?.textContent;
-        let startDate = MiscUtils.normalizeDateTime(procedureStartDate);
-        return startDate;
+    getPluProcedurePeriod(): DateRange {
+        let periodObject = DcatappluMapper.select('./plu:procedurePeriod/dct:PeriodOfTime', this.record, true);
+        if (periodObject) {
+            return this.getTemporalInternal(periodObject)?.[0];
+        }
+        else {
+            let procedureStartDate = DcatappluMapper.select('./plu:procedureStartDate', this.record, true)?.textContent;
+            let startDate = MiscUtils.normalizeDateTime(procedureStartDate);
+            return { gte: startDate };
+        }
     }
 
     getPluDevelopmentFreezePeriod(): DateRange {

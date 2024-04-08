@@ -122,6 +122,9 @@
     "procedure_type": {
       "type": "keyword"
     },
+    "procedure_period": {
+      "type": "date_range"
+    },
     "procedure_start_date": {
       "type": "date"
     },

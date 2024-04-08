@@ -1,0 +1,23 @@
+.info-icon {
+    vertical-align: middle;
+    cursor: pointer;
+  }
+
+.info {
+    padding-bottom: 20px;
+    font-size: small;
+  
+    & div span {
+      display: inline-block;
+      width: 100px;
+      white-space: pre;
+    }
+  }
+  
+
+  
+  .config-info-field {
+    padding: 6px;
+    border-radius: 6px;
+    background-color: rgba(255,255,255,.04);
+  }

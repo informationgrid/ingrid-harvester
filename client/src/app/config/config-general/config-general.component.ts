@@ -27,9 +27,9 @@ import {HarvesterService} from '../../harvester/harvester.service';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {of} from 'rxjs';
 import {GeneralSettings} from '@shared/general-config.settings';
-import cronstrue from 'cronstrue/i18n';
-import { isValidCron } from 'cron-validator';
+
 import { delay } from 'rxjs/operators';
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: 'app-config-general',
@@ -42,8 +42,16 @@ export class ConfigGeneralComponent implements OnInit {
 
   profile: string;
 
-  constructor(private formBuilder: UntypedFormBuilder, private configService: ConfigService, private harvesterService: HarvesterService) {
+  form;
+
+  constructor(
+    private formBuilder: UntypedFormBuilder, 
+    private configService: ConfigService, 
+    private harvesterService: HarvesterService,
+    private route: ActivatedRoute,
+  ) {
   }
+
 
   ngOnInit() {
     this.reset();
@@ -77,9 +85,9 @@ export class ConfigGeneralComponent implements OnInit {
   }
 
   connectionStatus = {
-    success: ['check', 'Test erfolgreich'],
-    fail: ['report_problem', 'Test fehlgeschlagen'],
-    working: ['sync', '... wird getestet']
+    success: ['Success', 'Test erfolgreich', 'accent'],
+    fail: ['Error', 'Test fehlgeschlagen', 'warn'],
+    working: ['cloud_sync', '... wird getestet', 'primary']
   };
 
   statusIcon(value: string) {
@@ -88,6 +96,10 @@ export class ConfigGeneralComponent implements OnInit {
 
   statusMsg(value: string) {
     return this.connectionStatus[value][1];
+  }
+
+  statusColor(value: string) {
+    return this.connectionStatus[value][2];
   }
 
   checkDbConnection() {
@@ -171,10 +183,10 @@ export class ConfigGeneralComponent implements OnInit {
         user: [settings.elasticsearch.user],
         password: [settings.elasticsearch.password],
         alias: [settings.elasticsearch.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
-        prefix: [{ value: settings.elasticsearch.prefix, disabled: true }],
-        index: [{ value: settings.elasticsearch.index, disabled: true }],
-        numberOfShards: [{ value: settings.elasticsearch.numberOfShards, disabled: true }],
-        numberOfReplicas: [{ value: settings.elasticsearch.numberOfReplicas, disabled: true }]
+        prefix: [settings.elasticsearch.prefix],
+        index: [settings.elasticsearch.index],
+        numberOfShards: [settings.elasticsearch.numberOfShards],
+        numberOfReplicas: [settings.elasticsearch.numberOfReplicas]
       }),
       cronOffset: [settings.cronOffset],
       proxy: [settings.proxy],
@@ -210,82 +222,9 @@ export class ConfigGeneralComponent implements OnInit {
       }),
       maxDiff: [settings.maxDiff]
     })
-
-
-    this.urlCheckTranslate(settings.urlCheck.pattern);
-    this.indexCheckTranslate(settings.indexCheck.pattern);
-    this.indexBackupCronTranslate(settings.indexBackup.cronPattern);
   }
 
   dbConnectionCheck: string;
   esConnectionCheck: string;
-  urlCheckTranslation: string;
-  indexCheckTranslation: string;
-  indexBackupCronTranslation: string;
-  showInfo = false;
-  showBackupCronInfo = false;
-
-  urlCheckTranslate(cronExpression: string) {
-    try {
-      if (!isValidCron(cronExpression)) {
-        throw new Error('Kein gültiger Ausdruck');
-      }
-      this.urlCheckTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
-    } catch (e) {
-      this.urlCheckTranslation = 'Kein gültiger Ausdruck';
-    }
-
-    if (!this.configForm.get('urlCheck.active').value) {
-      this.urlCheckTranslation = 'Planung ausgeschaltet';
-      return;
-    }
-  }
-
-  clearUrlCheckInput() {
-    this.configForm.get('urlCheck.pattern').setValue('');
-    this.urlCheckTranslate('');
-  }
-
-  indexCheckTranslate(cronExpression: string) {
-    try {
-      if (!isValidCron(cronExpression)) {
-        throw new Error('Kein gültiger Ausdruck');
-      }
-      this.indexCheckTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
-    } catch (e) {
-      this.indexCheckTranslation = 'Kein gültiger Ausdruck';
-    }
-
-    if (!this.configForm.get('indexCheck.active').value) {
-      this.indexCheckTranslation = 'Planung ausgeschaltet';
-      return;
-    }
-  }
-
-  clearIndexCheckInput() {
-    this.configForm.get('indexCheck.pattern').setValue('');
-    this.indexCheckTranslate('');
-  }
-
-
-  indexBackupCronTranslate(cronExpression: string) {
-    try {
-      if (!isValidCron(cronExpression)) {
-        throw new Error('Kein gültiger Ausdruck');
-      }
-      this.indexBackupCronTranslation = cronstrue.toString(cronExpression, {locale: 'de'});
-    } catch (e) {
-      this.indexBackupCronTranslation = 'Kein gültiger Ausdruck';
-    }
-
-    if (!this.configForm.get('indexBackup.active').value) {
-      this.indexBackupCronTranslation = 'Planung ausgeschaltet';
-      return;
-    }
-  }
-
-  clearIndexBackupCronInput() {
-    this.configForm.get('indexBackup.cronPattern').setValue('');
-    this.indexBackupCronTranslate('');
-  }
+  
 }

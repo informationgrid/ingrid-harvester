@@ -53,6 +53,7 @@ export type DiplanungIndexDocument = IndexDocument & {
     plan_name: string,
     plan_type: PluPlanType,
     plan_type_fine: string,
+    procedure_period: DateRange,
     procedure_type: PluProcedureType,
     distributions: Distribution[],
     process_steps: ProcessStep[],
@@ -63,7 +64,7 @@ export type DiplanungIndexDocument = IndexDocument & {
     modified: Date,
     relation: string,
     notification: string,
-    procedure_start_date: Date,
+    procedure_start_date: Date, // deprecated
     development_freeze_period: DateRange,
     maintainers: Person[] | Organization[],
     contributors: Person[] | Organization[],

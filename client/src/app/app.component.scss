@@ -21,25 +21,48 @@
  * ==================================================
  */
 
-.navigation {
-  position: absolute;
-  top: 60px;
-  bottom: 0;
-  right: 0;
-  left: 0;
-
-  .mat-sidenav {
-    min-width: 200px;
-
-    .version {
-      text-align: center;
-      color: #303030;
-      font-size: 12px;
-      padding-bottom: 10px;
-    }
-  }
+:host {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
-.toolbar {
-  flex: 1 1 auto;
+.user-popup {
+  padding-right: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+}
+
+// Accessibility
+mat-drawer-container {
+  overflow: auto;
+}
+
+:host ::ng-deep mat-drawer-content.mat-drawer-content {
+  display: flex;
+  flex-direction: column;
+
+  // Accessibility
+  min-width: 1024px;
+}
+
+.mat-drawer {
+  border: 0;
+}
+
+.fixed-upper-right {
+  position: fixed;
+  top: 10px;
+  right: 16px;
+  z-index: 200;
 }

@@ -28,18 +28,20 @@
       <mat-card-title>Allgemeine DCATAPPLU Einstellungen</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div fxLayout="row">
-        <mat-form-field fxFlex>
-          <input matInput placeholder="Catalog URL" formControlName="catalogUrl" required>
+      <div class="flex-row">
+        <mat-form-field class="flex-1">
+          <mat-label>Catalog URL</mat-label>
+          <input matInput formControlName="catalogUrl" required>
         </mat-form-field>
-        </div>
-
+      </div>
+      
       <h4>Bereitgestellt durch</h4>
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex>
-          <input matInput placeholder="Präfix" formControlName="providerPrefix" autocomplete="off">
+      <div class="flex-row gap-20 space-between">
+        <mat-form-field class="flex-1">
+          <mat-label>Präfix</mat-label>
+          <input matInput formControlName="providerPrefix" autocomplete="off">
         </mat-form-field>
-        <mat-form-field fxFlex>
+        <mat-form-field class="flex-1">
           <mat-label>DCATAPPLU-Feld</mat-label>
           <mat-select formControlName="dcatappluProviderField">
             <mat-option value="contactPoint">contactPoint</mat-option>
@@ -61,7 +63,7 @@
     <mat-card-content>
       <ng-container [ngTemplateOutlet]="rulesTemplate"></ng-container>
 
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+      <div class="flex-row gap-20 flex-col-mobile space-between">
         <app-chip-list [list]="model.filterTags"
                        placeholder="Filter Tags"
                        (update)="model.filterTags = $event"></app-chip-list>

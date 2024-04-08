@@ -21,24 +21,80 @@
  * ==================================================
  */
 
-:host ::ng-deep .mat-tab-group .mat-tab-body-wrapper {
-  padding-top: 20px;
-  overflow: hidden !important;
-  height: 100%;
+/*
+ TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.
+ */
+
+
+
+@import "../../../src/_variables";
+
+:host {
+  display: flex;
+  overflow: hidden;
+  flex: 1; // IE 11
 }
 
-:host ::ng-deep .mat-tab-body-active{
-  overflow: hidden !important;
+.welcome {
+  background-color: #ffffff;
+  box-shadow: 0 2px 2px -2px #808080;
+  margin-bottom: 1px;
+  color: $ige-primary;
+  letter-spacing: 0.74px;
+  z-index: 1000;
+
+  .greetings {
+    font-size: 24px;
+    padding: 14px 0;
+  }
+
+  .message {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      flex: 1 1 auto;
+      background-color: $ige-mark-color;
+      color: $ige-primary;
+      padding: 16px 0;
+    }
+  }
 }
 
-
-mat-tab-group {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  overflow: hidden !important;
+ige-quick-search,
+.welcome {
+  text-align: center;
 }
 
+.shortcut {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.allPageScroll {
+  overflow-y: auto;
+}
+.dashboard-content {
+  padding-top: 30px;
+  flex: 1;
+}
+
+.info-cards {
+  padding: 0 36px 36px;
+  max-width: 1024px;
+  margin: 0 auto;
+
+  ige-card-box {
+    flex: 1 1 0% !important;
+  }
+}
+
+// if we have more than 5 datasets to show then we can introduce a scrollbar
+/*mat-list {
+  flex-grow: 1;
+  overflow: auto;
+  max-height: 300px;
+}*/

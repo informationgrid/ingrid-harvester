@@ -26,11 +26,12 @@ import {CommonModule} from '@angular/common';
 import {IndicesListComponent} from './indices-list/indices-list.component';
 import {RouterModule, Routes} from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
-import {MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
-import {MatLegacyCardModule as MatCardModule} from '@angular/material/legacy-card';
+import {MatListModule} from '@angular/material/list';
+import {MatCardModule} from '@angular/material/card';
 import {SharedModule} from '../shared/shared.module';
-import {FlexLayoutModule} from "@angular/flex-layout";
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { PageTemplateModule } from '../shared/page-template/page-template.module';
+import { MatMenuModule } from '@angular/material/menu';
 
 const routes: Routes = [
   {
@@ -44,12 +45,13 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    FlexLayoutModule,
     MatListModule,
     MatIconModule,
     MatCardModule,
     SharedModule,
-    ScrollingModule
+    ScrollingModule,
+    PageTemplateModule,
+    MatMenuModule
   ]
 })
 export class IndicesModule {

@@ -22,15 +22,16 @@
  */
 
 :host {
-  display: block;
-  padding: 20px;
+  display: flex;
+  overflow: hidden;
+  flex: 1; // IE 11
 }
-
-.mat-fab-bottom-right {
-  position: fixed;
-  right: 35px;
-  bottom: 16px;
-  z-index: 100;
+.allPageScroll {
+  overflow-y: auto;
+}
+.harvester-content {
+  padding-top: 30px;
+  flex: 1;
 }
 
 mat-expansion-panel {
@@ -38,15 +39,15 @@ mat-expansion-panel {
 }
 
 mat-expansion-panel-header {
-  padding-left: 0;
+  padding: 0 !important;
 }
 
-.mat-slide-toggle {
-  height: 48px;
+.mat-mdc-slide-toggle {
+  // height: 48px;
   padding: 0 20px;
 }
 
-::ng-deep mat-slide-toggle .mat-slide-toggle-thumb-container {
+::ng-deep mat-slide-toggle .mat-mdc-slide-toggle-thumb-container {
   cursor: pointer;
 }
 
@@ -74,6 +75,9 @@ mat-expansion-panel-header {
   color: #5dc57b;
 }
 
+.warn {
+  color: #ff0000;
+}
 .warning {
   color: #ff9e00;
 }
@@ -82,9 +86,9 @@ mat-expansion-panel-header {
   flex: 1 1 auto;
 }
 
-mat-action-row {
-  padding-left: 8px;
-}
+// mat-action-row {
+//   padding-left: 8px;
+// }
 
 .lastExecution, .nextExecution {
   color: #d2d2d2;
@@ -118,4 +122,19 @@ mat-spinner {
 ::ng-deep h4 {
   padding-top: 10px;
   margin-bottom: 10px;
+}
+
+.harvester-button-col-span-1-mobile { @media screen and (max-width: 1199px) { grid-column: span 1 / span 1; } }
+.harvester-button-custom-grid-cols-mobile { @media screen and (max-width: 1199px) { grid-template-columns: 1fr } }
+
+.harvester-list {
+  margin: auto;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  max-width: var(--max-width-panel);
+}
+
+.panel-header-icon {
+  width: 24px;
+  height: 24px;
 }

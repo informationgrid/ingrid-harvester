@@ -89,8 +89,8 @@ export abstract class WfsMapper extends BaseMapper {
         return [this.fetched.catalog.publisher];
     }
 
-    getMaintainers() {
-        return undefined;
+    async getMaintainers(): Promise<Person[] | Organization[]> {
+        return [this.fetched.maintainer];
     }
 
     async getContributors(): Promise<Person[] | Organization[]> {
@@ -206,7 +206,7 @@ export abstract class WfsMapper extends BaseMapper {
 
     abstract getPluProcessSteps(): ProcessStep[];
 
-    abstract getPluProcedureStartDate(): Date;
+    abstract getPluProcedurePeriod(): DateRange;
 
     getPluNotification() {
         return undefined;

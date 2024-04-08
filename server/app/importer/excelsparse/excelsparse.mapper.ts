@@ -36,8 +36,6 @@ import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils'
 import { Summary } from '../../model/summary';
 import { UrlUtils } from '../../utils/url.utils';
 
-const log = require('log4js').getLogger(__filename);
-
 export class ExcelSparseMapper extends BaseMapper {
 
     log = getLogger();
@@ -496,7 +494,7 @@ export class ExcelSparseMapper extends BaseMapper {
         return undefined;
     }
 
-    getPluProcedureStartDate() {
+    getPluProcedurePeriod() {
         return undefined;
     }
 

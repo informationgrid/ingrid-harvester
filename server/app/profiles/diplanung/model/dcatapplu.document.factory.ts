@@ -105,14 +105,15 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
                     </dct:Location>
                 </dct:spatial>
                 ${DcatApPluDocumentFactory.xmlFoafAgent('dct:publisher', document.publisher)}
-                ${optional((m: Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dcatde:maintainer', m), document.maintainers)}
-                ${optional((c: Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dct:contributor', c), document.contributors)}
+                ${optional((m: Person | Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dcatde:maintainer', m), document.maintainers)}
+                ${optional((c: Person | Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dct:contributor', c), document.contributors)}
                 ${optional(DcatApPluDocumentFactory.xmlDistribution, document.distributions)}
                 ${optional(DcatApPluDocumentFactory.xmlAdmsIdentifier, esc(document.adms_identifier))}
                 ${optional('dct:issued', dateAsIsoString(document.issued))}
                 ${optional('dct:modified', dateAsIsoString(document.modified))}
                 ${resource('dct:relation', document.relation)}
                 ${optional(DcatApPluDocumentFactory.xmlPeriodOfTime, document.development_freeze_period, 'plu:developmentFreezePeriod')}
+                ${optional(DcatApPluDocumentFactory.xmlPeriodOfTime, document.procedure_period, 'plu:procedurePeriod')}
                 ${optional('plu:planName', esc(document.plan_name))}
                 ${resource('plu:planType', document.plan_type, `${diplanUriPrefix}/planType#`)}
                 ${resource('plu:planTypeFine', document.plan_type_fine)}

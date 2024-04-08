@@ -23,6 +23,7 @@
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import * as MiscUtils from '../../../utils/misc.utils';
+import { DateRange } from '../../../model/dateRange';
 import { Distribution} from '../../../model/distribution';
 import { DocTypeMapping, PlanTypeMapping, ProcedureTypeMapping } from './xplan.codelist.mappings';
 import { Geometries, Geometry } from '@turf/helpers';
@@ -173,9 +174,9 @@ export class XplanWfsMapper extends WfsMapper {
         return undefined;
     }
 
-    getPluProcedureStartDate(): Date {
+    getPluProcedurePeriod(): DateRange {
         let procedureStartDate = this.getTextContent('./*/xplan:aufstellungsbeschlussDatum');
-        return MiscUtils.normalizeDateTime(procedureStartDate);
+        return { gte: MiscUtils.normalizeDateTime(procedureStartDate) };
     }
 
     getIssued(): Date {

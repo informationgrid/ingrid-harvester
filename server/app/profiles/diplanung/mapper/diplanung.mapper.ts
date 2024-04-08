@@ -132,6 +132,8 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
 
     abstract getPluPlanName(): string;
 
+    abstract getPluProcedurePeriod(): DateRange;
+
     abstract getPlanOrProcedureStartDate(): Date;
     // this.getTemporal()?.[0]?.gte ?? this.getPluProcedureStartDate(),
 
