@@ -22,6 +22,7 @@
  */
 
 import { Catalog, ProcessStep, Record } from '../../../model/dcatApPlu.model';
+import { ConfigService } from '../../../services/config/ConfigService';
 import { Contact, Organization, Person } from '../../../model/agent';
 import { DateRange } from '../../../model/dateRange';
 import { DiplanungIndexDocument } from './index.document';
@@ -88,7 +89,8 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
     }
 
     static create(document: DiplanungIndexDocument): string {
-        let xmlString = `<dcat:Dataset rdf:about="https://portal.diplanung.de/planwerke/${document.identifier}">
+        let portalUrl = ConfigService.getGeneralSettings().portalUrl;
+        let xmlString = `<dcat:Dataset rdf:about="${portalUrl}/planwerke/${document.identifier}">
                 ${DcatApPluDocumentFactory.xmlContact(document.contact_point, document.catalog.publisher['name'])}
                 <dct:description>${esc(document.description)}</dct:description>
                 <dct:identifier>${esc(document.identifier)}</dct:identifier>

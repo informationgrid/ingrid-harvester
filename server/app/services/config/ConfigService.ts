@@ -76,7 +76,7 @@ export class ConfigService {
             numberOfReplicas: parseIntOrUndefined(process.env.ELASTIC_NUM_REPLICAS) ?? 0
         },
         proxy: "",
-        portalUrl: "https://mcloud.de/",
+        portalUrl: process.env.PORTAL_URL ?? "https://mcloud.de/",
         urlCheck:{
             active: false,
             pattern: ''
@@ -178,7 +178,8 @@ export class ConfigService {
                 prefix: process.env.ELASTIC_PREFIX,
                 numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS),
                 numberOfReplicas: parseIntOrUndefined(process.env.ELASTIC_NUM_REPLICAS)
-            }
+            },
+            portalUrl: process.env.PORTAL_URL
         };
         let updatedSettings: GeneralSettings = MiscUtils.merge(generalSettings, ENV);
         ConfigService.setGeneralConfig(updatedSettings);

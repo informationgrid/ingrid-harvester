@@ -34,6 +34,7 @@ Several general settings can be configured via environment variables. These enco
 | ELASTIC_PREFIX         |                                                                   |
 | ELASTIC_NUM_SHARDS     |                                                                   |
 | ELASTIC_NUM_REPLICAS   |                                                                   |
+| PORTAL_URL   |         | Base URL for displaying portal website (no trailing slash)        |
 | PROXY_URL              | URL needs to contain credentials and port, if applicable          |
 | ALLOW_ALL_UNAUTHORIZED | If all connections should be allowed, regardless of SSL state     |
 | IMPORTER_PROFILE       | Profile to use for the application: diplanung, mcloud             |
