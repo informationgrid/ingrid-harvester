@@ -33,11 +33,11 @@ import { WfsMapper } from '../wfs.mapper';
 
 export class MsWfsMapper extends WfsMapper {
 
-    getStelleId() {
+    getStelleId(): string {
         return this.getTextContent('./*/ms:stelle_id');
     }
 
-    getDescription() {
+    getDescription(): string {
         return this.getTextContent('./*/ms:beschreibung');
     }
 
@@ -55,16 +55,16 @@ export class MsWfsMapper extends WfsMapper {
                 distributions.push(distribution);
             }
         }
-        distributions.push(generatePlanDigitalWmsDistribution(this.getAlternateTitle(), this.getStelleId()));
+        distributions.push(generatePlanDigitalWmsDistribution(this.getPlanName(), this.getStelleId()));
         return distributions;
     }
 
-    getTitle() {
+    getTitle(): string {
         let title = this.getTextContent('./*/ms:name')?.trim();
         return title ?? undefined;
     }
 
-    getAlternateTitle() {
+    getPlanName(): string {
         let planName = this.getTextContent('./*/ms:plan_name')?.trim();
         return planName ?? undefined;
     }

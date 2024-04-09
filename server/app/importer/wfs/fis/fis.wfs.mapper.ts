@@ -31,7 +31,7 @@ import { WfsMapper } from '../wfs.mapper';
 
 export class FisWfsMapper extends WfsMapper {
 
-    getDescription() {
+    getDescription(): string {
         return this.getTextContent('./*/fis:BEREICH');
     }
 
@@ -47,12 +47,12 @@ export class FisWfsMapper extends WfsMapper {
         return distributions;
     }
 
-    getTitle() {
+    getTitle(): string {
         let title = this.getTextContent('./*/fis:PLANNAME')?.trim();
         return title ?? undefined;
     }
 
-    getAlternateTitle() {
+    getPlanName(): string {
         return this.getTitle();
     }
 

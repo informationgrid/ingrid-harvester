@@ -24,7 +24,6 @@
 import * as MiscUtils from '../../../utils/misc.utils';
 import { generateXplanWmsDistributions } from '../diplanung.utils';
 import { CswImporter } from '../../../importer/csw/csw.importer';
-import { DiplanungCswMapper } from '../mapper/diplanung.csw.mapper';
 import { DiplanungIndexDocument } from '../model/index.document';
 import { Distribution } from '../../../model/distribution';
 import { PluPlanType } from '../../../model/dcatApPlu.model';
@@ -41,10 +40,6 @@ export class DiplanungCswImporter extends CswImporter {
     private static readonly SKIPPED_EXTENTSIONS = ['.jpg', '.html', '.pdf', '.png', '/'];
 
     private tempUrlCache = new Map<string, string[]>();
-
-    getMapper(settings, record, harvestTime, summary, generalInfo): DiplanungCswMapper {
-        return new DiplanungCswMapper(settings, record, harvestTime, summary, generalInfo);
-    }
 
     protected async updateRecords(documents: DiplanungIndexDocument[], collectionId: number) {
         log.warn('Updating #records:', documents.length);

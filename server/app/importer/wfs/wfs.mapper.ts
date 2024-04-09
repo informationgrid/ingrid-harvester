@@ -28,6 +28,7 @@ import { throwError } from 'rxjs';
 import { BaseMapper } from '../base.mapper';
 import { Contact, Organization, Person } from '../../model/agent';
 import { DateRange } from '../../model/dateRange';
+import { Distribution } from '../../model/distribution';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { ImporterSettings } from '../../importer.settings';
 import { MetadataSource } from '../../model/index.document';
@@ -97,37 +98,16 @@ export abstract class WfsMapper extends BaseMapper {
         return undefined
     }
 
-    abstract getAlternateTitle(): string;
+    abstract getTitle(): string;
 
-    getAccessRights(): string[] {
-        return undefined;
-    }
+    abstract getDescription(): string;
 
-    getCategories(): string[] {
-        return undefined;
-    }
+    abstract getDistributions(): Promise<Distribution[]>;
 
-    getCitation(): string {
-        return undefined;
-    }
+    abstract getPlanName(): string;
 
     getGeneratedId(): string {
         return this.uuid;
-    }
-
-    /**
-     * Extracts and returns an array of keywords defined in the ISO-XML document.
-     * This method also checks if these keywords contain at least one of the
-     * given mandatory keywords. If this is not the case, then the mapped
-     * document is flagged to be skipped from the index. By default this array
-     * contains just one entry 'opendata' i.e. if the ISO-XML document doesn't
-     * have this keyword defined, then it will be skipped from the index.
-     */
-    // TODO:check
-    getKeywords(): string[] {
-        let mandatoryKws = this.settings.eitherKeywords || [];
-        let keywords = this.fetched.keywords[mandatoryKws.join()];
-        return keywords;
     }
 
     // TODO:check
@@ -141,8 +121,10 @@ export abstract class WfsMapper extends BaseMapper {
         };
     }
 
+    abstract getIssued(): Date;
+
     // TODO
-    getModifiedDate() {
+    getModifiedDate(): Date {
         return undefined;
         // return new Date(this.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.feature, true).textContent);
     }
@@ -151,28 +133,14 @@ export abstract class WfsMapper extends BaseMapper {
 
     abstract getSpatial(): Geometry | GeometryCollection;
 
+    abstract getSpatialText(): string;
+
     getCentroid(): Point {
         let spatial = this.getSpatial() ?? this.getBoundingBox();
         return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
     }
 
-    getTemporal(): DateRange[] {
-        return undefined;
-    }
-
-    getThemes() {
-        return [];
-    }
-
     isRealtime(): boolean {
-        return undefined;
-    }
-
-    getAccrualPeriodicity(): string {
-        return undefined;
-    }
-
-    getLicense() {
         return undefined;
     }
 
@@ -208,15 +176,7 @@ export abstract class WfsMapper extends BaseMapper {
 
     abstract getPluProcedurePeriod(): DateRange;
 
-    getPluNotification() {
-        return undefined;
-    }
-
-    getAdmsIdentifier() {
-        return undefined;
-    }
-
-    getRelation() {
+    getAdmsIdentifier(): string {
         return undefined;
     }
 
@@ -224,24 +184,8 @@ export abstract class WfsMapper extends BaseMapper {
         return this.feature.toString();
     }
 
-    getCreator(): Person[] {
-        return undefined;
-    }
-
-    getGroups(): string[] {
-        return undefined;
-    }
-
     getHarvestingDate(): Date {
         return new Date(Date.now());
-    }
-
-    getSubSections(): any[] {
-        return undefined;
-    }
-
-    getOriginator(): Person[] {
-        return undefined;
     }
 
     // ED: the features themselves contain no contact information

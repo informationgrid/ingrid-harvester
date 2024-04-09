@@ -32,7 +32,7 @@ import { WfsMapper } from '../wfs.mapper';
 
 export class XplanWfsMapper extends WfsMapper {
 
-    getDescription() {
+    getDescription(): string {
         return this.getTextContent('./*/xplan:beschreibung');
     }
 
@@ -50,12 +50,12 @@ export class XplanWfsMapper extends WfsMapper {
         return distributions;
     }
 
-    getTitle() {
+    getTitle(): string {
         let title = this.getTextContent('./*/xplan:name')?.trim();
         return title ?? undefined;
     }
 
-    getAlternateTitle() {
+    getPlanName(): string {
         let planName = this.getTextContent('./*/xplan:planName')?.trim();
         return planName ?? undefined;
     }

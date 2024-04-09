@@ -39,7 +39,7 @@ import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils';
 import { DcatMapper } from '../../importer/dcat/dcat.mapper';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
 import { Distribution } from '../../model/distribution';
-import { Geometry, GeometryCollection } from '@turf/helpers';
+import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { License } from '@shared/license.model';
 import { MetadataSource } from '../../model/index.document';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
@@ -65,13 +65,14 @@ export class CswMapper extends BaseMapper {
     protected readonly record: any;
     private harvestTime: any;
 
-    protected readonly idInfo; // : SelectedValue;
-    protected settings: CswSettings;
+    readonly idInfo; // : SelectedValue;
+    readonly settings: CswSettings;
     private readonly uuid: string;
     protected summary: Summary;
 
     private keywordsAlreadyFetched = false;
     fetched = {
+        catalog: null,
         contactPoint: null,
         keywords: {},
         themes: null
@@ -507,11 +508,11 @@ export class CswMapper extends BaseMapper {
         return modified ? new Date(modified) : undefined;
     }
 
-    getSpatial(): object {
+    getSpatial(): Geometry | GeometryCollection {
         return this.getGeometry(false);
     }
 
-    protected getGeometry(forcePolygon: boolean) {
+    getGeometry(forcePolygon: boolean): Geometry | GeometryCollection {
         let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];
         for (let i=0; i < geographicBoundingBoxes.length; i++){
@@ -603,7 +604,7 @@ export class CswMapper extends BaseMapper {
         return undefined;
     }
 
-    getCentroid(): object {
+    getCentroid(): Point {
         let spatial = this.getSpatial();
         return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
     }

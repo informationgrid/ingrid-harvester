@@ -76,6 +76,5 @@ export type DiplanungIndexDocument = IndexDocument & {
     extras: {
         hierarchy_level: string,
         operates_on: string[]
-    },
-    keywords: string[]
+    }
 };

@@ -29,6 +29,7 @@ import { DateRange } from '../../../model/dateRange';
 import { DiplanungIndexDocument } from '../model/index.document';
 import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper';
 import { Distribution } from '../../../model/distribution';
+import { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { IndexDocumentFactory } from '../../../model/index.document.factory';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
@@ -65,12 +66,13 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
             // plan and procedure information
             development_freeze_period: this.getPluDevelopmentFreezePeriod(),
             plan_name: this.getPluPlanName(),
-            plan_or_procedure_start_date: this.getPlanOrProcedureStartDate(),
+            plan_or_procedure_start_date: this.getPluProcedurePeriod()?.gte,
             plan_state: this.getPluPlanState(),
             plan_type: this.getPluPlanType(),
             plan_type_fine: this.getPluPlanTypeFine(),
             procedure_state: this.getPluProcedureState(),
-            procedure_start_date: this.getPluProcedureStartDate(),
+            procedure_start_date: this.getPluProcedurePeriod()?.gte,
+            procedure_period: this.getPluProcedurePeriod(),
             procedure_type: this.getPluProcedureType(),
             process_steps: this.getPluProcessSteps(),
             notification: this.getPluNotification(),
@@ -79,7 +81,6 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
             centroid: this.getCentroid()?.['coordinates'],
             spatial: this.getSpatial(),
             spatial_text: this.getSpatialText(),
-            // temporal: mapper.getTemporal(),
             // additional information and metadata
             relation: this.getRelation(),
             catalog: await this.getCatalog(),
@@ -102,7 +103,6 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
                 merged_from: []
             },
             issued: this.getIssued(),
-            keywords: this.getKeywords(),
             modified: this.getModifiedDate(),
         };
 
@@ -132,20 +132,15 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
 
     abstract getPluPlanName(): string;
 
-    abstract getPluProcedurePeriod(): DateRange;
-
-    abstract getPlanOrProcedureStartDate(): Date;
-    // this.getTemporal()?.[0]?.gte ?? this.getPluProcedureStartDate(),
-
     abstract getPluPlanState(): PluPlanState;
 
     abstract getPluPlanType(): PluPlanType;
 
     abstract getPluPlanTypeFine(): string;
 
-    abstract getPluProcedureState(): PluProcedureState;
+    abstract getPluProcedurePeriod(): DateRange;
 
-    abstract getPluProcedureStartDate(): Date;
+    abstract getPluProcedureState(): PluProcedureState;
 
     abstract getPluProcedureType(): PluProcedureType;
 
@@ -154,11 +149,11 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
     abstract getPluNotification(): string;
 
     // spatial features
-    abstract getBoundingBox(): any;
+    abstract getBoundingBox(): Geometry | GeometryCollection;
 
-    abstract getCentroid(): any;
+    abstract getCentroid(): Point;
 
-    abstract getSpatial(): any;
+    abstract getSpatial(): Geometries | Geometry | GeometryCollection;
 
     abstract getSpatialText(): string;
 
@@ -177,8 +172,6 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
 
     abstract getIssued(): Date;
 
-    abstract getKeywords(): string[];
-
     abstract getModifiedDate(): Date;
 
     getHierarchyLevel() {
@@ -188,6 +181,10 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
     getOperatesOn() {
         return undefined;
     }
+
+
+    // -----------------------------
+
 
     // async getContactPoint(): Promise<Contact> {
     //     return await this.baseMapper.getContactPoint();
@@ -202,7 +199,7 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
     // }
 
     // getAdmsIdentifier(): string {
-    //     return this.baseMapper._getAdmsIdentifier();
+    //     return this.baseMapper.getAdmsIdentifier();
     // }
 
     // getTitle(): string {
@@ -210,55 +207,15 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
     // }
 
     // getAlternateTitle(): string {
-    //     return this.baseMapper._getAlternateTitle();
-    // }
-
-    // getPluPlanState(): PluPlanState {
-    //     return this.baseMapper._getPluPlanState();
-    // }
-
-    // getTemporal(): DateRange[] {
-    //     return this.baseMapper.getTemporal();
-    // }
-
-    // getPluDevelopmentFreezePeriod(): DateRange {
-    //     return this.baseMapper._getPluDevelopmentFreezePeriod();
-    // }
-
-    // getPluProcedureStartDate(): Date {
-    //     return this.baseMapper._getPluProcedureStartDate();
-    // }
-
-    // getPluPlanType(): PluPlanType {
-    //     return this.baseMapper._getPluPlanType();
-    // }
-
-    // getPluPlanTypeFine(): string {
-    //     return this.baseMapper._getPluPlanTypeFine();
-    // }
-
-    // getPluProcedureState(): PluProcedureState {
-    //     return this.baseMapper._getPluProcedureState();
-    // }
-
-    // getPluProcedureType(): PluProcedureType {
-    //     return this.baseMapper._getPluProcedureType();
-    // }
-
-    // getPluProcessSteps(): ProcessStep[] {
-    //     return this.baseMapper._getPluProcessSteps();
-    // }
-
-    // getPluNotification(): string {
-    //     return this.baseMapper._getPluNotification();
+    //     return this.baseMapper.getAlternateTitle();
     // }
 
     // getBoundingBox(): object {
-    //     return this.baseMapper._getBoundingBox();
+    //     return this.baseMapper.getBoundingBox();
     // }
 
     // getCentroid(): object {
-    //     return this.baseMapper._getCentroid();
+    //     return this.baseMapper.getCentroid();
     // }
 
     // getSpatial(): object {
@@ -286,7 +243,7 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
     // }
 
     // getRelation(): string {
-    //     return this.baseMapper._getRelation();
+    //     return this.baseMapper.getRelation();
     // }
 
     // getHarvestedData(): string {
@@ -322,7 +279,7 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
     // }
 
     // getCatalog() {
-    //     return this.baseMapper._getCatalog();
+    //     return this.baseMapper.getCatalog();
     // }
 
     // getHarvestErrors(): string[] {
@@ -337,7 +294,7 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
     //     return this.baseMapper.getQualityNotes();
     // }
 
-    // executeCustomCode(doc: any) {
-    //     this.baseMapper.executeCustomCode(doc);
-    // }
+    executeCustomCode(doc: any) {
+        this.baseMapper.executeCustomCode(doc);
+    }
 }

@@ -293,7 +293,7 @@ export class ExcelSparseMapper extends BaseMapper {
             }
             if (!found) {
                 let message = 'Could not find abbreviation of "Datenhaltende Stelle": ' + abbr;
-                log.warn(message);
+                this.log.warn(message);
                 this.summary.warnings.push(['No Publisher found', message]);
             }
         });
@@ -326,7 +326,7 @@ export class ExcelSparseMapper extends BaseMapper {
                 });
             } else {
                 let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.currentIndexName}'.`;
-                log.warn(msg);
+                this.log.warn(msg);
                 this.summary.warnings.push(['Invalid URL', msg]);
                 //this.errors.push(msg);
                 //this.summary.numErrors++;
