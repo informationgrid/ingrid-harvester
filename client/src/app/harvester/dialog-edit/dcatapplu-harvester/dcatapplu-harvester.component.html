@@ -34,45 +34,6 @@
           <input matInput formControlName="catalogUrl" required>
         </mat-form-field>
       </div>
-      
-      <h4>Bereitgestellt durch</h4>
-      <div class="flex-row gap-20 space-between">
-        <mat-form-field class="flex-1">
-          <mat-label>Präfix</mat-label>
-          <input matInput formControlName="providerPrefix" autocomplete="off">
-        </mat-form-field>
-        <mat-form-field class="flex-1">
-          <mat-label>DCATAPPLU-Feld</mat-label>
-          <mat-select formControlName="dcatappluProviderField">
-            <mat-option value="contactPoint">contactPoint</mat-option>
-            <mat-option value="creator">creator</mat-option>
-            <mat-option value="originator">originator</mat-option>
-            <mat-option value="maintainer">maintainer</mat-option>
-            <mat-option value="publisher">publisher</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-    </mat-card-content>
-  </mat-card>
-
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Filter und Regeln</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <ng-container [ngTemplateOutlet]="rulesTemplate"></ng-container>
-
-      <div class="flex-row gap-20 flex-col-mobile space-between">
-        <app-chip-list [list]="model.filterTags"
-                       placeholder="Filter Tags"
-                       (update)="model.filterTags = $event"></app-chip-list>
-
-
-        <app-chip-list [list]="model.filterThemes"
-                       placeholder="Filter Themes"
-                       (update)="model.filterThemes = $event"></app-chip-list>
-      </div>
     </mat-card-content>
   </mat-card>
 </form>
