@@ -190,6 +190,7 @@ export class ConfigGeneralComponent implements OnInit {
       }),
       cronOffset: [settings.cronOffset],
       proxy: [settings.proxy],
+      allowAllUnauthorizedSSL: [settings.allowAllUnauthorizedSSL],
       portalUrl: [settings.portalUrl],
       urlCheck: this.formBuilder.group({
         active: [settings.urlCheck.active],
