@@ -365,6 +365,7 @@ export abstract class WfsImporter extends Importer {
             json: false,
             headers: RequestDelegate.wfsRequestHeaders(),
             proxy: settings.proxy || null,
+            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             resolveWithFullResponse: settings.resolveWithFullResponse ?? false,
             timeout: settings.timeout
         };

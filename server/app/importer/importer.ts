@@ -55,6 +55,11 @@ export abstract class Importer {
         };
         this.database = DatabaseFactory.getDatabaseUtils(generalConfig.database, this.summary);
         this.elastic = ElasticsearchFactory.getElasticUtils(elasticsearchConfig, this.summary);
+
+        // override harvester-specific setting if the general config param is set
+        if (generalConfig.allowAllUnauthorizedSSL) {
+            settings.rejectUnauthorizedSSL = false;
+        }
     }
 
     run: Observable<ImportLogMessage> = new Observable<ImportLogMessage>(observer => {
