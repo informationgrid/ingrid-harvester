@@ -133,7 +133,7 @@
             }
           </mat-form-field>
         </div>
-        <div class="flex-row gap-20 ">
+        <div class="flex-row gap-20">
           <mat-form-field class="flex-50">
             <mat-label>Benutzername</mat-label>
             <input matInput type="text" formControlName="user" required>
@@ -203,20 +203,29 @@
       </mat-card-header>
 
       <mat-card-content>
-        <mat-form-field class="config-card">
-          <mat-label>Offset Cron-Jobs in Minuten</mat-label>
-          <input matInput type="number" formControlName="cronOffset">
-        </mat-form-field>
-        
-        <mat-form-field class="config-card">
-          <mat-label>Proxy</mat-label>
-          <input matInput formControlName="proxy">
-        </mat-form-field>
-        
+        <div class="flex-row gap-20">
+          <mat-form-field class="config-card">
+            <mat-label>Offset Cron-Jobs in Minuten</mat-label>
+            <input matInput type="number" formControlName="cronOffset">
+          </mat-form-field>
+        </div>
+          
+        <div class="flex-row gap-20">
+          <mat-form-field class="config-card">
+            <mat-label>Proxy</mat-label>
+            <input matInput formControlName="proxy">
+          </mat-form-field>
+          <mat-checkbox color="primary" formControlName="allowAllUnauthorizedSSL">
+            <mat-label>Allow all unauthorized SSL connections over proxy</mat-label>
+          </mat-checkbox>
+        </div>
+          
+        <div class="flex-row gap-20">
         <mat-form-field>
           <mat-label>Portal URL</mat-label>
           <input matInput formControlName="portalUrl">
         </mat-form-field>
+        </div>
       </mat-card-content>
     </mat-card>
 
@@ -336,7 +345,7 @@
         <div class="flex-row gap-20">
           <mat-form-field class="flex-50">
             <mat-label>Benachrichtigungs-Schwelle:</mat-label>
-            <input matInput type="number" min="1" max="100" style="text-align: right; "
+            <input matInput type="number" min="1" max="100" style="text-align: right"
               formControlName="maxDiff">
             <mat-icon [inline]="true" style="padding-left: 1px" matSuffix>%</mat-icon>
           </mat-form-field>

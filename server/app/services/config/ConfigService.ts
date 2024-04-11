@@ -41,6 +41,10 @@ function parseIntOrUndefined(n: string): number {
     return isNaN(parsedN) ? undefined : parsedN;
 }
 
+function parseBooleanOrUndefined(b: string): boolean {
+    return (b === "true") || (b === "false") ? JSON.parse(b) : undefined;
+}
+
 export class ConfigService {
 
     private static GENERAL_CONFIG_FILE = "config-general.json";
@@ -75,7 +79,8 @@ export class ConfigService {
             numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS) ?? 1,
             numberOfReplicas: parseIntOrUndefined(process.env.ELASTIC_NUM_REPLICAS) ?? 0
         },
-        proxy: "",
+        proxy: process.env.PROXY_URL ?? null,
+        allowAllUnauthorizedSSL: parseBooleanOrUndefined(process.env.ALLOW_ALL_UNAUTHORIZED) ?? false,
         portalUrl: process.env.PORTAL_URL ?? "https://mcloud.de/",
         urlCheck:{
             active: false,
@@ -179,6 +184,8 @@ export class ConfigService {
                 numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS),
                 numberOfReplicas: parseIntOrUndefined(process.env.ELASTIC_NUM_REPLICAS)
             },
+            proxy: process.env.PROXY_URL,
+            allowAllUnauthorizedSSL: parseBooleanOrUndefined(process.env.ALLOW_ALL_UNAUTHORIZED),
             portalUrl: process.env.PORTAL_URL
         };
         let updatedSettings: GeneralSettings = MiscUtils.merge(generalSettings, ENV);
