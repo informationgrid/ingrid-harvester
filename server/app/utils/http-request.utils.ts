@@ -25,7 +25,6 @@ import * as MiscUtils from './misc.utils';
 import fetch, { HeadersInit, RequestInit, Response } from 'node-fetch';
 import { getLogger } from 'log4js';
 import { Agent } from 'https';
-import { DOMParser } from '@xmldom/xmldom';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 const log = getLogger('requests');
@@ -246,12 +245,12 @@ export class RequestDelegate {
     static async doRequest(config: RequestOptions, retry: number = 0, waitMilliSeconds: number = 0): Promise<any> {
         log.debug('Requesting: ' + config.uri);
         if (config.proxy) {
-            let url = new URL(config.proxy);
-            config.agent = new HttpsProxyAgent({
-                rejectUnauthorized: config.rejectUnauthorized ?? true,
-                host: url.hostname,
-                port: url.port
-            });
+            let proxyAgent = new HttpsProxyAgent(config.proxy);
+            // `=== false` is important here since rejectUnauthorized could be falsy (e.g. undefined)
+            if (config.rejectUnauthorized === false) {
+                proxyAgent.options.rejectUnauthorized = false;
+            }
+            config.agent = proxyAgent;
         }
         // `=== false` is important here since rejectUnauthorized could be falsy (e.g. undefined)
         else if (config.rejectUnauthorized === false) {
