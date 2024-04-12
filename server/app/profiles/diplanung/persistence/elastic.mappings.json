@@ -170,6 +170,9 @@
             },
             "mapLayerNames": {
               "type": "keyword"
+            },
+            "operates_on": {
+              "type": "keyword"
             }
           }
         },
@@ -378,6 +381,9 @@
         },
         "mapLayerNames": {
           "type": "keyword"
+        },
+        "operates_on": {
+          "type": "keyword"
         }
       }
     },
@@ -443,9 +449,6 @@
               "type": "text"
             },
             "hierarchy_level": {
-              "type": "keyword"
-            },
-            "operates_on": {
               "type": "keyword"
             },
             "merged_from": {

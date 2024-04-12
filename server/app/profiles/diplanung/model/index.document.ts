@@ -95,7 +95,6 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
                     modified: null,
                     source: mapper.getMetadataSource()
                 },
-                operates_on: mapper.getOperatesOn(),    // only csw
                 merged_from: []
             },
             issued: mapper.getIssued(),
@@ -180,7 +179,6 @@ export type DiplanungIndexDocument = {
                 attribution?: string
             }
         },
-        operates_on: string[],
         merged_from: string[]
     },
     keywords: string[]
