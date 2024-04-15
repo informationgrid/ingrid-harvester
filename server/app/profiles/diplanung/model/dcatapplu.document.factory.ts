@@ -171,11 +171,12 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
         </${relation}>`;
     }
 
-    private static xmlProcessStep({ distributions, identifier, temporal, type, passNumber }: ProcessStep): string {
+    private static xmlProcessStep({ distributions, identifier, passNumber, temporal, title, type }: ProcessStep): string {
         return `<plu:processStep>
             <plu:ProcessStep>
                 <plu:processStepType rdf:resource="${diplanUriPrefix}/processStepType#${type}"/>
                 ${optional('dct:identifier', esc(identifier))}
+                ${optional('dct:title', esc(title))}
                 ${optional(DcatApPluDocumentFactory.xmlDistribution, distributions)}
                 ${optional(DcatApPluDocumentFactory.xmlPeriodOfTime, temporal, 'dct:temporal')}
                 ${optional('plu:passNumber', passNumber)}

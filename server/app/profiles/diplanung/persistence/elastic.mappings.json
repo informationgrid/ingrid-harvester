@@ -185,6 +185,10 @@
         "temporal": {
           "type": "date_range"
         },
+        "title": {
+          "type": "text",
+          "analyzer": "decomp"
+        },
         "type": {
           "type": "keyword"
         }
