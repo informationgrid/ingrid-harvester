@@ -123,7 +123,7 @@ export function flip<T>(spatial: number[] | Point | Geometry | GeometryCollectio
     }
 }
 
-export function getCentroid(spatial: Geometry | GeometryCollection) {
+export function getCentroid(spatial: Geometry | GeometryCollection): Point {
     if (!spatial) {
         return undefined;
     }

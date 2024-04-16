@@ -23,7 +23,7 @@
 
 import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {Harvester} from '@shared/harvester';
-import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef} from '@angular/material/legacy-dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Chart } from 'chart.js';
 import {STATUS_CODES} from 'http';

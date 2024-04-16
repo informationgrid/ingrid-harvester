@@ -25,8 +25,10 @@ import * as MiscUtils from '../../utils/misc.utils';
 import { getLogger } from 'log4js';
 import { ConfigService } from '../../services/config/ConfigService';
 import { DefaultImporterSettings } from '../../importer.settings';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import { IndexDocument } from '../../model/index.document';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -37,7 +39,6 @@ import { SparqlSettings } from './sparql.settings';
 import { Summary } from '../../model/summary';
 
 const plain_fetch = require('node-fetch');
-const HttpsProxyAgent = require('https-proxy-agent');
 
 const log = require('log4js').getLogger(__filename),
     logRequest = getLogger('requests'),
@@ -132,6 +133,7 @@ export class SparqlImporter extends Importer {
 
         if(this.generalSettings.proxy){
             let proxyAgent = new HttpsProxyAgent(this.generalSettings.proxy);
+            proxyAgent.options.rejectUnauthorized = !this.generalSettings.allowAllUnauthorizedSSL;
             fetch = function(url, options){
                 return plain_fetch(url, {...options, agent: proxyAgent})
             }
@@ -208,11 +210,15 @@ export class SparqlImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary);
 
-            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
+            let doc: IndexDocument;
+            try{
+                doc = await this.profile.getIndexDocumentFactory(mapper).create();
+            }
+            catch (e) {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
-            });
+            }
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {

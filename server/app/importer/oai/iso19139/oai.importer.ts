@@ -28,6 +28,7 @@ import { namespaces } from '../../namespaces';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../../importer';
 import { ImportLogMessage, ImportResult } from '../../../model/import.result';
+import { IndexDocument } from '../../../model/index.document';
 import { OaiMapper } from './oai.mapper';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../../profiles/profile.factory';
@@ -162,11 +163,15 @@ export class OaiImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary);
 
-            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
+            let doc: IndexDocument;
+            try {
+                doc = await this.profile.getIndexDocumentFactory(mapper).create();
+            }
+            catch (e) {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
-            });
+            }
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
@@ -205,6 +210,7 @@ export class OaiImporter extends Importer {
             json: false,
             headers: RequestDelegate.cswRequestHeaders(),
             proxy: settings.proxy || null,
+            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             timeout: settings.timeout
         };
 

@@ -21,33 +21,83 @@
  * ==================================================
  */
 
-import 'dayjs/locale/de';
-import {License} from '@shared/license.model';
-import {getLogger} from "log4js";
-import {Distribution} from "../../../model/distribution";
-import {Agent, Contact, Organization, Person} from "../../../model/agent";
-import {DateRange} from "../../../model/dateRange";
-import {CkanMapper} from "../../../importer/ckan/ckan.mapper";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
-import {DcatMapper} from "../../../importer/dcat/dcat.mapper";
-import {ExcelMapper} from "../../../importer/excel/excel.mapper";
-import {OaiMapper} from "../../../importer/oai/iso19139/oai.mapper";
-import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
-import { RequestOptions } from '../../../utils/http-request.utils';
+import { mcloudIndexDocument } from '../model/index.document';
+import { Agent, Contact, Organization, Person } from '../../../model/agent';
+import { CkanMapper } from '../../../importer/ckan/ckan.mapper';
+import { CswMapper } from '../../../importer/csw/csw.mapper';
+import { DateRange } from '../../../model/dateRange';
+import { DcatMapper } from '../../../importer/dcat/dcat.mapper';
+import { Distribution } from '../../../model/distribution';
+import { ExcelMapper } from '../../../importer/excel/excel.mapper';
+import { IndexDocumentFactory } from '../../../model/index.document.factory';
+import { License } from '@shared/license.model';
+import { MetadataSource } from '../../../model/index.document';
+import { OaiMapper } from '../../../importer/oai/iso19139/oai.mapper';
+import { SparqlMapper } from '../../../importer/sparql/sparql.mapper';
 
-const dayjs = require('dayjs');
-dayjs.locale('de');
-
-export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper>{
+export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper> implements IndexDocumentFactory<mcloudIndexDocument> {
 
     protected baseMapper: M;
 
-    private _log = getLogger();
-
-    private blacklistedFormats: string[] = [];
+    // protected log;
 
     constructor(baseMapper: M) {
         this.baseMapper = baseMapper;
+    }
+
+    async create(): Promise<mcloudIndexDocument> {
+        let result = await {
+            priority: this.getPriority(),
+            completion: this.getAutoCompletion(),
+            access_rights: this.getAccessRights(),
+            accrual_periodicity: this.getAccrualPeriodicity(),
+            contact_point: await this.getContactPoint(),
+            creator: this.getCreator(),
+            description: this.getDescription(),
+            distribution: await this.getDistributions(),
+            extras: {
+                all: this.getExtrasAllData(),
+                citation: this.getCitation(),
+                display_contact: await this.getDisplayContacts(),
+                generated_id: this.getGeneratedId(),
+                groups: this.getGroups(),
+                harvested_data: this.getHarvestedData(),
+                license: await this.getLicense(),
+                metadata: {
+                    harvested: this.getHarvestingDate(),
+                    harvesting_errors: null, // get errors after all operations been done
+                    issued: null,
+                    is_valid: null, // checks validity after all operations been done
+                    modified: null,
+                    source: this.getMetadataSource(),
+                },
+                mfund_fkz: this.getMFundFKZ(),
+                mfund_project_title: this.getMFundProjectTitle(),
+                realtime: this.isRealtime(),
+                subgroups: this.getCategories(),
+                subsection: this.getSubSections(),
+                spatial: this.getSpatial(),
+                spatial_text: this.getSpatialText(),
+                temporal: this.getTemporal(),
+                parent: this.getParent(),
+                hierarchy_level: this.getHierarchyLevel(),    // csw only
+                operates_on: this.getOperatesOn(),            // csw only
+                merged_from: [this.getGeneratedId()]
+            },
+            issued: this.getIssued(),
+            keywords: this.getKeywords(),
+            modified: this.getModifiedDate(),
+            publisher: await this.getPublisher(),
+            originator: this.getOriginator(),
+            theme: this.getThemes(),
+            title: this.getTitle()
+        };
+
+        result.extras.metadata.harvesting_errors = this.getHarvestErrors();
+        result.extras.metadata.is_valid = this.isValid();
+        this.executeCustomCode(result);
+
+        return result;
     }
 
     getTitle(): string{
@@ -70,22 +120,21 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
         return this.baseMapper.getModifiedDate()
     }
 
-    getAccessRights(): string[]{
+    getAccessRights(): string[] {
         return this.baseMapper.getAccessRights();
     }
 
     async getDistributions(): Promise<Distribution[]>{
         let distributions = await this.baseMapper.getDistributions();
         if (distributions.length === 0) {
-            this.baseMapper.valid = false;
             let msg = `Dataset has no links for download/access. It will not be displayed in the portal. Title: '${this.getTitle()}', Id: '${this.getGeneratedId()}'.`;
 
             this.baseMapper.getSummary().missingLinks++;
 
-            this.baseMapper.valid = false;
+            this.baseMapper.setValid(false);
             this.baseMapper.getSummary().warnings.push(['No links', msg]);
 
-            this._log.warn(msg);
+            this.baseMapper.log.warn(msg);
         }
         return distributions;
     }
@@ -94,16 +143,16 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
         return this.baseMapper.getGeneratedId()
     }
 
-    getMetadataSource(): any{
+    getMetadataSource(): MetadataSource {
         return this.baseMapper.getMetadataSource();
     }
 
     getHierarchyLevel() {
-        return this.baseMapper.getHierarchyLevel();
+        return undefined;
     }
 
     getOperatesOn() {
-        return this.baseMapper.getOperatesOn();
+        return undefined;
     }
 
     isRealtime(): boolean{
@@ -162,12 +211,8 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
         return this.baseMapper.getTemporal();
     }
 
-    _getParent(): string{
-        return null;
-    }
-
     getParent(): string{
-        return this._getParent();
+        return null;
     }
 
     getCitation(): string{
@@ -177,7 +222,7 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
     abstract getCategories(): any;
 
 
-    _getMFundFKZ(): string {
+    getMFundFKZ(): string {
         // Detect mFund properties
         let keywords = this.getKeywords();
         if (keywords) {
@@ -196,11 +241,7 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
         return undefined;
     }
 
-    getMFundFKZ(): string {
-        return this._getMFundFKZ();
-    }
-
-    _getMFundProjectTitle(): string{
+    getMFundProjectTitle(): string{
         // Detect mFund properties
         let keywords = this.getKeywords();
         if (keywords) {
@@ -219,15 +260,11 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
         return undefined;
     }
 
-    getMFundProjectTitle(): string{
-        return this._getMFundProjectTitle();
-    }
-
     async getDisplayContacts(): Promise<Organization[] | Person[]>{
-        return await this.baseMapper._getDisplayContacts();
+        return await this.baseMapper.getDisplayContacts();
     }
 
-    getKeywords(): string[]{
+    getKeywords(): string[] {
         let keywords = this.baseMapper.getKeywords()
         if(keywords != undefined)
             return keywords.map(keyword => keyword.trim());
@@ -279,18 +316,18 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
     }
 
     getHarvestErrors() {
-        return this.baseMapper.getHarvestErrors();
+        return this.baseMapper.getHarvestingErrors();
     }
 
     getIssued(): Date{
         return this.baseMapper.getIssued();
     }
 
-    getMetadataHarvested(): Date{
-        return this.baseMapper.getMetadataHarvested();
+    getHarvestingDate(): Date {
+        return this.baseMapper.getHarvestingDate();
     }
 
-    getSubSections(): any[]{
+    getSubSections(): any[] {
         return this.baseMapper.getSubSections();
     }
 
@@ -314,8 +351,8 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
         return all;
     }
 
-    isValid(doc?: any) {
-        return this.baseMapper.isValid(doc);
+    isValid() {
+        return this.baseMapper.isValid();
     }
 
     shouldBeSkipped() {
@@ -330,11 +367,6 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
         return await this.baseMapper.getLicense();
     }
 
-    getUrlCheckRequestConfig(uri: string): RequestOptions{
-        return this.baseMapper.getUrlCheckRequestConfig(uri);
-    }
-
-
     getPriority(){
         if(this.baseMapper.getSettings().priority){
             return this.baseMapper.getSettings().priority;
@@ -343,80 +375,6 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
     }
 
     executeCustomCode(doc: any) {
-        this.baseMapper.executeCustomCode(doc)
-    }
-
-
-    // HELPER METHODS
-
-    static DCAT_THEMES = ['AGRI', 'ECON', 'EDUC','ENER','ENVI','GOVE','HEAL','INTR','JUST','REGI','SOCI','TECH','TRAN'];
-
-    // TODO: refactor into a mapping file
-    static dcatThemeUriFromKeyword(keyword: string): string {
-        // Check falsy values first
-        if (!keyword) return null;
-
-        let code: string = null;
-        keyword = keyword.trim();
-
-        switch(keyword) {
-            case 'Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel':
-                code = 'AGRI';
-                break;
-
-            case 'Wirtschaft und Finanzen':
-                code = 'ECON';
-                break;
-
-            case 'Bildung, Kultur und Sport':
-                code = 'EDUC';
-                break;
-
-            case 'Energie':
-                code = 'ENER';
-                break;
-
-            case 'Umwelt':
-                code = 'ENVI';
-                break;
-
-            case 'Regierung und öffentlicher Sektor':
-                code = 'GOVE';
-                break;
-
-            case 'Gesundheit':
-                code = 'HEAL';
-                break;
-
-            case 'Internationale Themen':
-                code = 'INTR';
-                break;
-
-            case 'Justiz, Rechtssystem und öffentliche Sicherheit':
-                code = 'JUST';
-                break;
-
-            case 'Regionen und Städte':
-                code = 'REGI';
-                break;
-
-            case 'Bevölkerung und Gesellschaft':
-                code = 'SOCI';
-                break;
-
-            case 'Wissenschaft und Technologie':
-                code = 'TECH';
-                break;
-
-            case 'Verkehr':
-                code = 'TRAN';
-                break;
-
-            default:
-                return null;
-        }
-        return code;// ? GenericMapper.DCAT_CATEGORY_URL + code : null;
+        this.baseMapper.executeCustomCode(doc);
     }
 }
-
-

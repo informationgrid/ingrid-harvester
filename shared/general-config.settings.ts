@@ -26,6 +26,7 @@ export type GeneralSettings = {
     database: DatabaseConfiguration,
     cronOffset?: number,
     proxy: string,
+    allowAllUnauthorizedSSL: boolean,
     portalUrl?: string,
     urlCheck?: CronData,
     indexCheck?: CronData,

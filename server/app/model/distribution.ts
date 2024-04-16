@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {DateRange} from "./dateRange";
+import { DateRange } from './dateRange';
 
 export interface Distribution {
     format?: string[];
@@ -41,6 +41,3 @@ export interface Distribution {
     isSynthetic?: boolean;
     errors?: string[];
 }
-
-
-

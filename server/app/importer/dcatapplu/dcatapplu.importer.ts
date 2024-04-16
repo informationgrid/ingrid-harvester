@@ -30,6 +30,7 @@ import { DcatappluMapper } from './dcatapplu.mapper';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer} from '../importer';
 import { ImportLogMessage, ImportResult} from '../../model/import.result';
+import { IndexDocument } from '../../model/index.document';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -247,11 +248,15 @@ export class DcatappluImporter extends Importer {
                 let catalog = catalogAboutsToCatalogs[catalogId] ?? this.database.defaultCatalog;
                 let mapper = this.getMapper(this.settings, records[i], catalog, rootNode, harvestTime, this.summary);
 
-                let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
+                let doc: IndexDocument;
+                try {
+                    doc = await this.profile.getIndexDocumentFactory(mapper).create();
+                }
+                catch (e) {
                     log.error('Error creating index document', e);
                     this.summary.appErrors.push(e.toString());
                     mapper.skipped = true;
-                });
+                }
 
                 if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                     let entity: RecordEntity = {
@@ -281,6 +286,7 @@ export class DcatappluImporter extends Importer {
             uri: settings.catalogUrl,
             json: true,
             proxy: settings.proxy || null,
+            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             timeout: settings.timeout
         };
 /*

@@ -21,9 +21,29 @@
  * ==================================================
  */
 
-import {BaseMapper} from "../importer/base.mapper";
+export type IndexDocument = {
+    extras: {
+        metadata: HarvestingMetadata,
+        // operates_on: string[],
+        merged_from: string[]
+    }
+}
 
-export abstract class IndexDocument<M extends BaseMapper> {
+export type HarvestingMetadata = {
+    harvested?: Date,
+    harvesting_errors?: string[],   // get errors after all operations been done
+    issued: Date,
+    is_changed?: boolean,   // has been changed from its original version by the hravesting process
+    is_valid?: boolean,     // checks validity after all operations been done
+    modified: Date,
+    quality_notes?: string[],
+    source: MetadataSource
+}
 
-    abstract create(mapper: M) : Promise<any>;
+export type MetadataSource = {
+    source_base: string,
+    source_type?: string,
+    raw_data_source?: string,
+    portal_link?: string,
+    attribution?: string
 }

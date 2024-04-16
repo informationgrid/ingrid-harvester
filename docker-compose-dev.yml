@@ -91,6 +91,23 @@ services:
     networks:
       - ingrid-harvester-network
 
+  db:
+    image: "postgres"
+    restart: unless-stopped
+    container_name: db
+    tmpfs:
+      - /run
+      - /var/cache
+      - /pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    environment:
+      POSTGRES_USER: ogcrecords
+      POSTGRES_PASSWORD: ogcrecords
+      PGDATA: /pgdata
+
 volumes:
   esdata6:
   esdata8:

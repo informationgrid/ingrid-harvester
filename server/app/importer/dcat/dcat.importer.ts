@@ -29,6 +29,7 @@ import { DcatSettings, defaultDCATSettings } from './dcat.settings';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import { IndexDocument } from '../../model/index.document';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -129,7 +130,6 @@ export class DcatImporter extends Importer {
                     lastPage = Number(DcatImporter.getPageFromUrl(lastPageUrl));
                 }
 
-
                 isLastPage = thisPage >= lastPage;
                 if(!isLastPage){
                     let nextPageUrl = DcatMapper.select('./hydra:nextPage', pagedCollection, true).textContent;
@@ -139,7 +139,8 @@ export class DcatImporter extends Importer {
 
                 log.debug(`Received ${numReturned} records from ${this.settings.catalogUrl} - Page: ${thisPage}`);
                 await this.extractRecords(response, harvestTime)
-            } else {
+            }
+            else {
                 let numReturned = responseDom.getElementsByTagNameNS(namespaces.DCAT, 'Dataset').length;
                 if(numReturned > 0){
                     await this.extractRecords(response, harvestTime);
@@ -166,7 +167,6 @@ export class DcatImporter extends Importer {
         let rootNode = xml.getElementsByTagNameNS(namespaces.RDF, 'RDF')[0];
         let records =  DcatMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
 
-
         let ids = [];
         for (let i = 0; i < records.length; i++) {
             let uuid = DcatMapper.select('./dct:identifier', records[i], true).textContent;
@@ -174,7 +174,6 @@ export class DcatImporter extends Importer {
                 uuid = DcatMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
             }
             ids.push(uuid);
-
         }
 
         for (let i = 0; i < records.length; i++) {
@@ -198,11 +197,15 @@ export class DcatImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, records[i], rootNode, harvestTime, this.summary);
 
-            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
+            let doc: IndexDocument;
+            try {
+                doc = await this.profile.getIndexDocumentFactory(mapper).create();
+            }
+            catch (e) {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
-            });
+            }
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
@@ -240,6 +243,7 @@ export class DcatImporter extends Importer {
             uri: settings.catalogUrl,
             json: false,
             proxy: settings.proxy || null,
+            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             timeout: settings.timeout
         };
 /*

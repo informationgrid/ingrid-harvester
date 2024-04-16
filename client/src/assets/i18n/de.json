@@ -1,0 +1,55 @@
+{
+    "pageTitle": {
+      "default": "InGrid Harvester",
+      "dashboard": "Übersicht",
+      "config": {
+        "general": "Allgemeine Einstellungen",
+        "mapping": "Mapping (Datenformate)",
+        "import-export": "Import/Export"
+      },
+      "harvester": "Harvester",
+      "indices": "Indizes",
+      "log": "Log",
+      "login": "Login"
+    },
+    "menu": {
+      "application": "INGRID",
+      "application-suffix": " ",
+      "logo": "assets/icons/logo.svg",
+      "logo-text": "Logo InGrid Framework",
+      "default": "InGrid Harvester",
+      "dashboard": "Übersicht",
+      "config": "Konfiguration",
+      "harvester": "Harvester",
+      "indices": "Indizes",
+      "log": "Log",
+      "login": "Login"
+    },
+    "dashboard": {
+      "welcome": "Guten Tag! Willkommen zurück.",
+      "application": "INGRID",
+      "newDocument": "Neuer Datensatz",
+      "importDocument": "Datensatz importieren",
+      "mostRecent": "Zuletzt bearbeitet im Katalog",
+      "mostRecentPublished": "Zuletzt veröffentlicht im Katalog",
+      "oldestExpired": "Älteste abgelaufene Metadaten",
+      "form": "Daten",
+      "formSingular": "Datensatz"
+    },
+    "form": {
+      "validationMessages": {
+        "required": "Dieses Feld muss ausgefüllt sein",
+        "createOneEntry": "Bitte erstellen Sie mindestens einen Eintrag",
+        "email": "Dieses Feld muss eine gültige E-Mail Adresse sein",
+        "emailInRepeat": "Dieses Feld muss eine gültige E-Mail Adresse sein",
+        "lowercase": "Dieses Feld darf keine Großbuchstaben enthalten",
+        "url": "Verwenden Sie bitte eine gültige URL",
+        "matDatepickerMin": "Das Datum liegt weiter zurück als erlaubt",
+        "matDatepickerMax": "Das Datum ist größer als erlaubt",
+        "min": "Der Wert darf nicht kleiner sein als {{value}}",
+        "max": "Der Wert darf nicht größer sein als {{value}}",
+        "commitWithEnter": "Der Inhalt muss noch mit der Eingabetaste bestätigt werden",
+        "JSON_SCHEMA": "Es trat ein Fehler bei der JSON-Schema Validierung auf"
+      }
+    }
+  }

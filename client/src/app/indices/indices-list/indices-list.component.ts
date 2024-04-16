@@ -27,7 +27,7 @@ import {forkJoin, Observable} from 'rxjs';
 import {Index} from '@shared/index.model';
 import {tap} from 'rxjs/operators';
 import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
-import {MatLegacyDialog as MatDialog} from '@angular/material/legacy-dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {ConfigService} from "../../config/config.service";
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
@@ -88,4 +88,6 @@ export class IndicesListComponent implements OnInit {
       this.searchResultLines = formattedJsonString.split('\n');
     }, (error => console.error('Error getting index:', error)));
   }
+
+  // searchForStringInPreview
 }

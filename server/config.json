@@ -588,6 +588,24 @@
     "maxConcurrent": null
   },
   {
+    "id": 21,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "type": "DCATAPPLU",
+    "description": "BeteiligungsDB",
+    "priority": null,
+    "index": "beteiligungsdb",
+    "defaultDCATCategory": null,
+    "defaultMcloudSubgroup": null,
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "catalogUrl": "https://beteiligungsdb.develop.diplanung.de/collections/1/items"
+  },
+  {
     "index": "oai",
     "priority": null,
     "type": "OAI",
@@ -611,7 +629,7 @@
     "eitherKeywords": [],
     "metadataPrefix": "lido",
     "set": "",
-    "id": 21,
+    "id": 22,
     "description": "digicult",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
@@ -632,7 +650,7 @@
     "isIncremental": true,
     "timeout": 60000,
     "providerUrl": "https://www.kuladig.de/api/public/",
-    "id": 22,
+    "id": 23,
     "description": "KuLaDig (Kultur. Landschaft. Digital.)"
   }
 ]

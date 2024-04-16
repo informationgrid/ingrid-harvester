@@ -1,4 +1,5 @@
 {
+  "dynamic": false,
   "properties": {
     "priority": {
       "type": "short"
@@ -56,6 +57,9 @@
                 }
               }
             },
+            "type": {
+              "type": "keyword"
+            },
             "organization": {
               "type": "text",
               "fields": {
@@ -71,6 +75,9 @@
           "analyzer": "decomp"
         }
       }
+    },
+    "id": {
+      "type": "keyword"
     },
     "identifier": {
       "type": "keyword"
@@ -116,6 +123,9 @@
     "procedure_type": {
       "type": "keyword"
     },
+    "procedure_period": {
+      "type": "date_range"
+    },
     "procedure_start_date": {
       "type": "date"
     },
@@ -160,6 +170,9 @@
             },
             "mapLayerNames": {
               "type": "keyword"
+            },
+            "operates_on": {
+              "type": "keyword"
             }
           }
         },
@@ -171,6 +184,10 @@
         },
         "temporal": {
           "type": "date_range"
+        },
+        "title": {
+          "type": "text",
+          "analyzer": "decomp"
         },
         "type": {
           "type": "keyword"
@@ -206,6 +223,9 @@
             }
           }
         },
+        "type": {
+          "type": "keyword"
+        },
         "homepage": {
           "type": "keyword"
         },
@@ -229,6 +249,9 @@
             }
           }
         },
+        "type": {
+          "type": "keyword"
+        },
         "homepage": {
           "type": "keyword"
         },
@@ -251,6 +274,9 @@
               "type": "keyword"
             }
           }
+        },
+        "type": {
+          "type": "keyword"
         },
         "homepage": {
           "type": "keyword"
@@ -359,6 +385,9 @@
         },
         "mapLayerNames": {
           "type": "keyword"
+        },
+        "operates_on": {
+          "type": "keyword"
         }
       }
     },
@@ -426,9 +455,6 @@
             "hierarchy_level": {
               "type": "keyword"
             },
-            "operates_on": {
-              "type": "keyword"
-            },
             "merged_from": {
               "type": "keyword"
             }
@@ -465,6 +491,10 @@
         "transformed_data": {
           "properties": {
             "dcat_ap_plu": {
+              "type": "text",
+              "index": false
+            },
+            "json": {
               "type": "text",
               "index": false
             }

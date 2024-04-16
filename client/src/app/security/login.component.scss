@@ -27,15 +27,45 @@
   margin: 100px 0px;
 }
 
-.mat-form-field {
+.login-container {
+  width: 600px;
+  padding: 56px 90px 24px;
+}
+
+.login-title {
+  font-size: 48px;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #28225B;
+  align-items: center;
+  letter-spacing: 0.5px;
+  word-break: break-word;
+}
+.login-subtitle {
+  font-size: 28px;
+  display: inline-flex;
+}
+
+.mat-mdc-form-field {
   width: 100%;
   min-width: 300px;
 }
 
+/*
+ TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.
+ */
 mat-card-title,
 mat-card-content {
-  display: flex;
-  justify-content: center;
+  // display: flex;
+  // width: 100% !important;
+  // justify-content: center;
+  padding: 0;
+}
+
+
+mat-form-field {
+  height: 56px;
+  overflow: visible;
 }
 
 .error {
@@ -46,10 +76,21 @@ mat-card-content {
 }
 
 .button {
-  display: flex;
-  justify-content: flex-end;
+  // display: flex;
+  // width: 100%;
+  height: 48px;
+  // justify-content: flex-end;
 }
 
 input:-internal-autofill-selected {
   background-color: #5dc57b !important;
+}
+
+.forgetPassword {
+  text-align: center;
+  padding: 56px 0 4px;
+}
+
+.card-title {
+  padding-top: 32px
 }

@@ -22,6 +22,7 @@
  */
 
 import { Catalog, ProcessStep, Record } from '../../../model/dcatApPlu.model';
+import { ConfigService } from '../../../services/config/ConfigService';
 import { Contact, Organization, Person } from '../../../model/agent';
 import { DateRange } from '../../../model/dateRange';
 import { DiplanungIndexDocument } from './index.document';
@@ -88,7 +89,8 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
     }
 
     static create(document: DiplanungIndexDocument): string {
-        let xmlString = `<dcat:Dataset rdf:about="https://portal.diplanung.de/planwerke/${document.identifier}">
+        let portalUrl = ConfigService.getGeneralSettings().portalUrl;
+        let xmlString = `<dcat:Dataset rdf:about="${portalUrl}/planwerke/${document.identifier}">
                 ${DcatApPluDocumentFactory.xmlContact(document.contact_point, document.catalog.publisher['name'])}
                 <dct:description>${esc(document.description)}</dct:description>
                 <dct:identifier>${esc(document.identifier)}</dct:identifier>
@@ -105,14 +107,15 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
                     </dct:Location>
                 </dct:spatial>
                 ${DcatApPluDocumentFactory.xmlFoafAgent('dct:publisher', document.publisher)}
-                ${optional((m: Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dcatde:maintainer', m), document.maintainers)}
-                ${optional((c: Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dct:contributor', c), document.contributors)}
+                ${optional((m: Person | Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dcatde:maintainer', m), document.maintainers)}
+                ${optional((c: Person | Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dct:contributor', c), document.contributors)}
                 ${optional(DcatApPluDocumentFactory.xmlDistribution, document.distributions)}
                 ${optional(DcatApPluDocumentFactory.xmlAdmsIdentifier, esc(document.adms_identifier))}
                 ${optional('dct:issued', dateAsIsoString(document.issued))}
                 ${optional('dct:modified', dateAsIsoString(document.modified))}
                 ${resource('dct:relation', document.relation)}
                 ${optional(DcatApPluDocumentFactory.xmlPeriodOfTime, document.development_freeze_period, 'plu:developmentFreezePeriod')}
+                ${optional(DcatApPluDocumentFactory.xmlPeriodOfTime, document.procedure_period, 'plu:procedurePeriod')}
                 ${optional('plu:planName', esc(document.plan_name))}
                 ${resource('plu:planType', document.plan_type, `${diplanUriPrefix}/planType#`)}
                 ${resource('plu:planTypeFine', document.plan_type_fine)}
@@ -168,11 +171,12 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
         </${relation}>`;
     }
 
-    private static xmlProcessStep({ distributions, identifier, temporal, type, passNumber }: ProcessStep): string {
+    private static xmlProcessStep({ distributions, identifier, passNumber, temporal, title, type }: ProcessStep): string {
         return `<plu:processStep>
             <plu:ProcessStep>
                 <plu:processStepType rdf:resource="${diplanUriPrefix}/processStepType#${type}"/>
                 ${optional('dct:identifier', esc(identifier))}
+                ${optional('dct:title', esc(title))}
                 ${optional(DcatApPluDocumentFactory.xmlDistribution, distributions)}
                 ${optional(DcatApPluDocumentFactory.xmlPeriodOfTime, temporal, 'dct:temporal')}
                 ${optional('plu:passNumber', passNumber)}

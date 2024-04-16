@@ -44,6 +44,7 @@ export interface ProcessStep {
     identifier?: string,
     passNumber?: number,
     temporal?: DateRange,
+    title?: string,
     type: PluProcessStepType
 }
 

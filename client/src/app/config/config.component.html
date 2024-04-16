@@ -21,7 +21,7 @@
     ==================================================
 -->
 
-<mat-tab-group animationDuration="0ms">
+<!-- <mat-tab-group animationDuration="0ms" color="primary" >
   <mat-tab label="Konfiguration">
     <app-config-general></app-config-general>
   </mat-tab>
@@ -31,5 +31,30 @@
   <mat-tab label="Import/Export">
     <app-config-import-export></app-config-import-export>
   </mat-tab>
-</mat-tab-group>
+</mat-tab-group> -->
 
+
+<nav
+    mat-tab-nav-bar
+    mat-stretch-tabs="false"
+    class="page-tabs-routing"
+    [tabPanel]="tabPanel"
+>
+    @for (tab of tabs; track tab; let i = $index) {
+        <a
+            [attr.data-cy]="'tab-' + tab.path"
+            mat-tab-link
+            #rla="routerLinkActive"
+            routerLinkActive="active-link"
+            [routerLink]="tab.path"
+            (click)="updateTab(i)"
+            [active]="rla.isActive"
+        >
+            {{ tab.label }}
+        </a>
+    }
+</nav>
+
+<mat-tab-nav-panel #tabPanel>
+  <router-outlet></router-outlet>
+</mat-tab-nav-panel>

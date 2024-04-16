@@ -24,8 +24,8 @@
 import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {OaiSettings} from '../../../../../../server/app/importer/oai/oai.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatLegacyChipInputEvent as MatChipInputEvent} from '@angular/material/legacy-chips';
-import {FormControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {FormControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-oai-harvester',

@@ -234,13 +234,17 @@ export class PostgresUtils {
             case 'beteiligungsdb':
                 return document;
             case 'csw':
-                let updatedFields = {};
+                let updatedFields: Partial<DiplanungIndexDocument> = {};
                 for (const field of overwriteFields) {
                     updatedFields[field] = duplicate[field];
                 }
                 // use publisher from WFS if not specified in CSW
                 if (!document.publisher?.['name'] && !document.publisher?.['organization']) {
-                    updatedFields['publisher'] = duplicate.publisher;
+                    updatedFields.publisher = duplicate.publisher;
+                }
+                // use maintainer from WFS if not specified in CSW
+                if (!document.maintainers?.[0]?.['name'] && !document.maintainers?.[0]?.['organization']) {
+                    updatedFields.maintainers = duplicate.maintainers;
                 }
                 let updatedDocument = { ...document, ...updatedFields };
                 // TODO remove or perpetuate : hack for stage/prod

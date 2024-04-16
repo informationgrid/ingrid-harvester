@@ -21,11 +21,10 @@
  * ==================================================
  */
 
-import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
-import {DcatSettings} from '../../../../../../server/app/importer/dcat/dcat.settings';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatLegacyChipInputEvent as MatChipInputEvent} from '@angular/material/legacy-chips';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { DcatappluSettings } from '../../../../../../server/app/importer/dcatapplu/dcatapplu.settings';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-dcatapplu-harvester',
@@ -35,19 +34,13 @@ import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 export class DcatappluHarvesterComponent implements OnInit, OnDestroy {
 
   @Input() form: UntypedFormGroup;
-  @Input() model: DcatSettings;
+  @Input() model: DcatappluSettings;
   @Input() rulesTemplate: TemplateRef<any>;
-
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   constructor() { }
 
   ngOnInit() {
     this.form.addControl('catalogUrl', new UntypedFormControl(this.getModelField('catalogUrl', '')));
-
-    this.form.addControl('providerPrefix', new UntypedFormControl(this.getModelField('providerPrefix', '')));
-    this.form.addControl('dcatappluProviderField', new UntypedFormControl(this.getModelField('dcatappluProviderField', 'creator')));
-
   }
 
   private getModelField(field: string, defaultValue: any) {
@@ -63,15 +56,5 @@ export class DcatappluHarvesterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-  }
-
-  add(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
   }
 }

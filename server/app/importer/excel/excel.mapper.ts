@@ -21,22 +21,24 @@
  * ==================================================
  */
 
-import {UrlUtils} from '../../utils/url.utils';
-import {BaseMapper} from '../base.mapper';
-import {Distribution} from "../../model/distribution";
-import {DateRange} from "../../model/dateRange";
-import {License} from '@shared/license.model';
-import {Summary} from '../../model/summary';
-import {ExcelSettings} from './excel.settings';
-import {RequestDelegate, RequestOptions} from '../../utils/http-request.utils';
-
-import {ImporterSettings} from "../../importer.settings";
-import {DcatPeriodicityUtils} from "../../utils/dcat.periodicity.utils";
-import {Organization, Person} from "../../model/agent";
-
-const log = require('log4js').getLogger(__filename);
+import { getLogger } from 'log4js';
+import { BaseMapper } from '../base.mapper';
+import { DateRange } from '../../model/dateRange';
+import { DcatMapper } from '../../importer/dcat/dcat.mapper';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
+import { Distribution } from '../../model/distribution';
+import { ExcelSettings } from './excel.settings';
+import { ImporterSettings } from '../../importer.settings';
+import { License } from '@shared/license.model';
+import { MetadataSource } from '../../model/index.document';
+import { Organization, Person } from '../../model/agent';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
+import { Summary } from '../../model/summary';
+import { UrlUtils } from '../../utils/url.utils';
 
 export class ExcelMapper extends BaseMapper {
+
+    log = getLogger();
 
     data;
     id;
@@ -69,40 +71,45 @@ export class ExcelMapper extends BaseMapper {
         return this.summary;
     }
 
-    _getTitle() {
+    getTitle() {
         return this.columnValues[this.columnMap.Daten];
     }
 
-    _getDescription() {
+    getDescription() {
         return this.columnValues[this.columnMap.Kurzbeschreibung];
     }
 
-    async _getPublisher() {
+    async getPublisher() {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
-        const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
+        const publishers = this.getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
-        return publishers.map(p => BaseMapper.createPublisher(p.name, p.url));
+        return publishers.map(p => (
+            {
+                organization: p.name,
+                homepage: p.url
+            })
+        );
     }
 
-    _getThemes(): string[] {
+    getThemes(): string[] {
 
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
         const dcatCategoriesString: string = this.columnValues[this.columnMap.DCATKategorie];
         if (dcatCategoriesString) {
-            return dcatCategoriesString.split(',').map(cat => BaseMapper.DCAT_CATEGORY_URL + cat);
+            return dcatCategoriesString.split(',').map(cat => DcatMapper.DCAT_CATEGORY_URL + cat);
         } else {
             return this.settings.defaultDCATCategory
-                .map( category => BaseMapper.DCAT_CATEGORY_URL + category);
+                .map( category => DcatMapper.DCAT_CATEGORY_URL + category);
         }
 
     }
 
-    _getAccessRights() {
+    getAccessRights() {
         let rights = this.columnValues[this.columnMap.Nutzungshinweise];
         return rights && rights.trim() !== '' ? [rights] : undefined;
     }
 
-    async _getDistributions() {
+    async getDistributions() {
         const types = ['Dateidownload', 'WMS', 'FTP', 'AtomFeed', 'Portal', 'SOS', 'WFS', 'WCS', 'WMTS', 'API'];
 
         const distributions: Distribution[] = [];
@@ -116,36 +123,36 @@ export class ExcelMapper extends BaseMapper {
         return distributions;
     }
 
-    _getModifiedDate() {
+    getModifiedDate() {
         const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
         const dateMetaUpdate = this.columnValues[this.columnMap.Aktualisierungsdatum];
         return dateMetaUpdate instanceof Date ? dateMetaUpdate : new Date(dateMetaUpdate.replace(datePattern, '$3-$2-$1'));
     }
 
-    _getGeneratedId() {
+    getGeneratedId() {
         return this.data.id;
     }
 
-    _getMetadataSource() {
+    getMetadataSource(): MetadataSource {
         return {
             source_base: this.settings.filePath,
             attribution: 'mcloud-excel'
         };
     }
 
-    _isRealtime() {
+    isRealtime() {
         return this.columnMap.Echtzeitdaten === 1;
     }
 
-    _getSpatial(): any {
+    getSpatial(): any {
         return undefined;
     }
 
-    _getSpatialText(): string {
+    getSpatialText(): string {
         return undefined;
     }
 
-    _getTemporal(): DateRange[] {
+    getTemporal(): DateRange[] {
         let range: string = this.columnValues[this.columnMap.Zeitraum];
         if (range) {
             try {
@@ -175,24 +182,24 @@ export class ExcelMapper extends BaseMapper {
         }
     }
 
-    _getCategories() {
+    getCategories() {
         let categories = this.mapCategories(this.columnValues[this.columnMap.Kategorie].split(','));
         if (!categories || categories.length === 0) categories = this.settings.defaultMcloudSubgroup;
         return categories;
     }
 
-    _getCitation() {
+    getCitation() {
         return this.columnValues[this.columnMap.Quellenvermerk];
     }
 
-    async _getDisplayContacts() {
+    async getDisplayContacts() {
         const publisherAbbreviations = this.columnValues[this.columnMap.DatenhaltendeStelle].split(',');
-        const publishers = this._getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
+        const publishers = this.getPublishers(this.workbook.getWorksheet(2), publisherAbbreviations);
 
         return publishers.map(p => <Person>{name: p.name.trim(), homepage: p.url});
     }
 
-    _getMFundFKZ() {
+    getMFundFKZ() {
         let mfundFkz = this.columnValues[this.columnMap.mFundFoerderkennzeichen];
         if (mfundFkz && (mfundFkz.formula || mfundFkz.sharedFormula)) {
             mfundFkz = mfundFkz.result;
@@ -200,7 +207,7 @@ export class ExcelMapper extends BaseMapper {
         return mfundFkz && mfundFkz.length > 0 ? mfundFkz : undefined;
     }
 
-    _getMFundProjectTitle() {
+    getMFundProjectTitle() {
         let mfundProject = this.columnValues[this.columnMap.mFundProjekt];
         if (mfundProject && (mfundProject.formula || mfundProject.sharedFormula)) {
             mfundProject = mfundProject.result;
@@ -220,7 +227,7 @@ export class ExcelMapper extends BaseMapper {
      * @returns {Array}
      * @private
      */
-    _getPublishers(authorsSheet, /*string[]*/abbreviations) {
+    getPublishers(authorsSheet, /*string[]*/abbreviations) {
         let publishers = [];
         const numAuthors = authorsSheet.rowCount;
         abbreviations.forEach(abbr => {
@@ -238,7 +245,7 @@ export class ExcelMapper extends BaseMapper {
             }
             if (!found) {
                 let message = 'Could not find abbreviation of "Datenhaltende Stelle": ' + abbr;
-                log.warn(message);
+                this.log.warn(message);
                 this.summary.warnings.push(['No Publisher found', message]);
             }
         });
@@ -271,7 +278,7 @@ export class ExcelMapper extends BaseMapper {
                 });
             } else {
                 let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.currentIndexName}'.`;
-                log.warn(msg);
+                this.log.warn(msg);
                 this.summary.warnings.push(['Invalid URL', msg]);
                 //this.errors.push(msg);
                 //this.summary.numErrors++;
@@ -307,7 +314,7 @@ export class ExcelMapper extends BaseMapper {
         });
     }
 
-    async _getLicense() {
+    async getLicense(): Promise<License> {
         const licenseSheet = this.workbook.getWorksheet(3);
         const licenseId = this.columnValues[this.columnMap.Lizenz].toLowerCase();
         const numLicenses = licenseSheet.rowCount;
@@ -327,14 +334,14 @@ export class ExcelMapper extends BaseMapper {
 
         if (!license) {
             let message = 'Could not find abbreviation of "License": ' + licenseId;
-            log.warn(message);
+            this.log.warn(message);
             this.summary.warnings.push(['Invalid License', message]);
         }
 
         return license;
     }
 
-    _getAccrualPeriodicity(): string {
+    getAccrualPeriodicity(): string {
         let value: string = this.columnValues[this.columnMap.Periodizitaet].toString();
         if(value){
             let periodicity = DcatPeriodicityUtils.getPeriodicity(value);
@@ -346,39 +353,39 @@ export class ExcelMapper extends BaseMapper {
         return undefined;
     }
 
-    _getKeywords(): string[] {
+    getKeywords(): string[] {
         return undefined;
     }
 
-    _getCreator() {
+    getCreator() {
         return undefined;
     }
 
-    _getHarvestedData(): string {
+    getHarvestedData(): string {
         return JSON.stringify(this.columnValues);
     }
 
-    _getGroups(): string[] {
+    getGroups(): string[] {
         return undefined;
     }
 
-    _getIssued(): Date {
+    getIssued(): Date {
         return undefined;
     }
 
-    _getMetadataHarvested(): Date {
+    getHarvestingDate(): Date {
         return undefined;
     }
 
-    _getSubSections(): any[] {
+    getSubSections(): any[] {
         return undefined;
     }
 
-    _getContactPoint(): Promise<any> {
+    getContactPoint(): Promise<any> {
         return undefined; //of(null).pipe(delay(1000)).toPromise();
     }
 
-    _getOriginator(): Organization[] {
+    getOriginator(): Organization[] {
         let originator = {
             organization: this.columnValues[this.columnMap.Quellenvermerk]
         };
@@ -391,7 +398,7 @@ export class ExcelMapper extends BaseMapper {
 
     }
 
-    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+    private getUrlCheckRequestConfig(uri: string): RequestOptions {
         let config: RequestOptions = {
             method: 'HEAD',
             json: false,

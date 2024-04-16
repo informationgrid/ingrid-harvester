@@ -1,6 +1,7 @@
 {
   "database": {
     "type": "postgresql",
+    "connectionString": "",
     "host": "localhost",
     "port": 5432,
     "database": "metadaten",
@@ -20,6 +21,7 @@
     "numberOfReplicas": 0
   },
   "proxy": "",
+  "allowAllUnauthorizedSSL": false,
   "portalUrl": "",
   "urlCheck": {
     "active": false,
@@ -29,6 +31,7 @@
     "active": false,
     "pattern": "10 04 * * *"
   },
+  "sessionSecret": "mysecretkey",
   "mail": {
     "enabled": false,
     "mailServer": {
