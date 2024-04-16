@@ -75,6 +75,6 @@ export type DiplanungIndexDocument = IndexDocument & {
     plan_or_procedure_start_date: Date,
     extras: {
         hierarchy_level: string,
-        operates_on: string[]
+        merged_from: string[]
     }
 };

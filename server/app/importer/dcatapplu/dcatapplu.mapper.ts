@@ -220,7 +220,8 @@ export class DcatappluMapper extends BaseMapper {
             let type = getUrlHashCode(DcatappluMapper.select('./plu:ProcessStepType/@rdf:resource', step, true)?.textContent);
             let period = this.getTemporalInternal(node);
             let processStep: ProcessStep = {
-                identifier: DcatappluMapper.select('./dct:identifier', step, true)?.textContent ?? undefined,
+                identifier: DcatappluMapper.select('./dct:identifier', step, true)?.textContent,
+                title: DcatappluMapper.select('./dct:title', step, true)?.textContent,
                 type: type ?? PluProcessStepType.UNBEKANNT,
                 distributions: this.getRelevantDistibutions(step),
                 temporal: period?.[0],

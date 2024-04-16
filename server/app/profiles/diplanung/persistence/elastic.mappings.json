@@ -1,4 +1,5 @@
 {
+  "dynamic": false,
   "properties": {
     "priority": {
       "type": "short"
@@ -169,6 +170,9 @@
             },
             "mapLayerNames": {
               "type": "keyword"
+            },
+            "operates_on": {
+              "type": "keyword"
             }
           }
         },
@@ -180,6 +184,10 @@
         },
         "temporal": {
           "type": "date_range"
+        },
+        "title": {
+          "type": "text",
+          "analyzer": "decomp"
         },
         "type": {
           "type": "keyword"
@@ -377,6 +385,9 @@
         },
         "mapLayerNames": {
           "type": "keyword"
+        },
+        "operates_on": {
+          "type": "keyword"
         }
       }
     },
@@ -442,9 +453,6 @@
               "type": "text"
             },
             "hierarchy_level": {
-              "type": "keyword"
-            },
-            "operates_on": {
               "type": "keyword"
             },
             "merged_from": {

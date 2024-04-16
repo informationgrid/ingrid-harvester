@@ -243,6 +243,7 @@ export class DcatImporter extends Importer {
             uri: settings.catalogUrl,
             json: false,
             proxy: settings.proxy || null,
+            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             timeout: settings.timeout
         };
 /*
