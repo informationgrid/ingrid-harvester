@@ -37,15 +37,24 @@
     },
     "catalog": {
       "properties": {
-        "identifier": {
-          "type": "keyword"
-        },
         "description": {
           "type": "text",
           "analyzer": "decomp"
         },
         "homepage": {
           "type": "keyword"
+        },
+        "identifier": {
+          "type": "keyword"
+        },
+        "issued": {
+          "type": "date"
+        },
+        "language": {
+          "type": "keyword"
+        },
+        "modified": {
+          "type": "date"
         },
         "publisher": {
           "properties": {
@@ -69,6 +78,9 @@
               }
             }
           }
+        },
+        "themeTaxonomy": {
+          "type": "keyword"
         },
         "title": {
           "type": "text",
@@ -198,21 +210,6 @@
       "type": "text",
       "analyzer": "decomp"
     },
-    "creator": {
-      "properties": {
-        "name": {
-          "type": "text",
-          "fields": {
-            "raw": {
-              "type": "keyword"
-            }
-          }
-        },
-        "mbox": {
-          "type": "keyword"
-        }
-      }
-    },
     "publisher": {
       "properties": {
         "name": {
@@ -335,9 +332,6 @@
       "type": "keyword"
     },
     "keywords": {
-      "type": "keyword"
-    },
-    "theme": {
       "type": "keyword"
     },
     "issued": {
@@ -478,12 +472,6 @@
             }
           }
         },
-        "groups": {
-          "type": "keyword"
-        },
-        "subgroups": {
-          "type": "keyword"
-        },
         "harvested_data": {
           "type": "text",
           "index": false
@@ -497,18 +485,6 @@
             "json": {
               "type": "text",
               "index": false
-            }
-          }
-        },
-        "subsection": {
-          "properties": {
-            "title": {
-              "type": "text",
-              "analyzer": "decomp"
-            },
-            "description": {
-              "type": "text",
-              "analyzer": "decomp"
             }
           }
         },
