@@ -172,9 +172,11 @@ export class PostgresUtils {
     private resolveCoupling(document: DiplanungIndexDocument, service: Distribution): DiplanungIndexDocument {
         let distributionMap: { [key: string]: Distribution[] } = {};
         // add document distributions to distribution map
-        for (let distribution of document.distributions) {
-            distributionMap[MiscUtils.minimalDistHash(distribution)] ??= [];
-            distributionMap[MiscUtils.minimalDistHash(distribution)].push(distribution);
+        if (document.distributions) {
+            for (let distribution of document.distributions) {
+                distributionMap[MiscUtils.minimalDistHash(distribution)] ??= [];
+                distributionMap[MiscUtils.minimalDistHash(distribution)].push(distribution);
+            }
         }
         // remove resolvedGeometry from service distribution if available (add to document later)
         let resolvedGeometry = service.resolvedGeometry;

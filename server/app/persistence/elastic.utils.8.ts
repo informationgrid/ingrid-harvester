@@ -211,7 +211,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
             });
             if (response.errors) {
                 response.items.forEach(item => {
-                    let err = item.index.error;
+                    let err = item.index?.error;
                     if (err) {
                         this.handleError(`Error during indexing on index '${this.indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
                     }
@@ -247,7 +247,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
                 .then(response => {
                     if (response.errors) {
                         response.items.forEach(item => {
-                            let err = item.index.error;
+                            let err = item.index?.error;
                             if (err) {
                                 this.handleError(`Error during indexing on index '${index}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
                             }
