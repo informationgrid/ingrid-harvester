@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-.import-export-panel {
-    max-width: 420px;
+.import-export-card {
     margin: auto;
-    background: var(--mat-expansion-container-background-color);
-    padding: 16px;
-    margin-top: 100px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    max-width: var(--max-width-panel);
+    width: 100%;
 }
