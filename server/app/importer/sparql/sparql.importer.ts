@@ -25,6 +25,7 @@ import * as MiscUtils from '../../utils/misc.utils';
 import { getLogger } from 'log4js';
 import { ConfigService } from '../../services/config/ConfigService';
 import { DefaultImporterSettings } from '../../importer.settings';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { Observer } from 'rxjs';
@@ -37,7 +38,6 @@ import { SparqlSettings } from './sparql.settings';
 import { Summary } from '../../model/summary';
 
 const plain_fetch = require('node-fetch');
-const HttpsProxyAgent = require('https-proxy-agent');
 
 const log = require('log4js').getLogger(__filename),
     logRequest = getLogger('requests'),
@@ -132,6 +132,7 @@ export class SparqlImporter extends Importer {
 
         if(this.generalSettings.proxy){
             let proxyAgent = new HttpsProxyAgent(this.generalSettings.proxy);
+            proxyAgent.options.rejectUnauthorized = !this.generalSettings.allowAllUnauthorizedSSL;
             fetch = function(url, options){
                 return plain_fetch(url, {...options, agent: proxyAgent})
             }

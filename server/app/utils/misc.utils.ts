@@ -23,7 +23,7 @@
 
 'use strict';
 
-import { cloneDeep, merge as lodashMerge, trim } from 'lodash';
+import { cloneDeep, merge as lodashMerge, pickBy, trim } from 'lodash';
 import { Distribution } from '../model/distribution';
 import { DOMParser } from '@xmldom/xmldom';
 
@@ -34,6 +34,29 @@ dayjs.extend(require('dayjs/plugin/customParseFormat'));
 const CUSTOM_DATE_TIME_FORMATS = ["YYYY-MM-DDZ"];
 const MAX_MSG_LENGTH = 4096;
 const TRUNC_STR = '... (truncated)';
+
+/**
+ * Remove all `undefined` properties from an object.
+ * 
+ * @param obj the object to remove undefined properties from
+ * @return the cleaned object
+ */
+export function cleanObject(obj: object) {
+    let stack = [obj];
+    while (stack.length) {
+        let item = stack.pop();
+        Object.entries(item).forEach(([key, val]) => {
+            if (val === undefined) {
+                delete item[key];
+            }
+            if (val instanceof Object) {
+                stack.push(val);
+            }
+        });
+    }
+    return obj;
+    // return pickBy(obj, v => v !== undefined);
+}
 
 export function structuredClone(obj: object) {
     // TODO from nodejs 17 on, we can use the inbuilt function

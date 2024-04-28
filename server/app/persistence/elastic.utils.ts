@@ -46,7 +46,6 @@ export interface EsOperation {
 export abstract class ElasticsearchUtils {
 
     protected client: Client6 | Client7 | Client8;
-    protected static readonly LENGTH_OF_TIMESTAMP = 18;
     protected summary: Summary;
 
     public static maxBulkSize: number = 50;

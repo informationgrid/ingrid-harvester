@@ -281,6 +281,7 @@ export class DcatappluImporter extends Importer {
             uri: settings.catalogUrl,
             json: true,
             proxy: settings.proxy || null,
+            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             timeout: settings.timeout
         };
 /*

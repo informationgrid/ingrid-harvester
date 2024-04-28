@@ -20,27 +20,51 @@
  * limitations under the Licence.
  * ==================================================
  */
+ 
+//  :host {
+//   overflow: auto;
+// }
 
-.margin-below {
+
+// .info-icon {
+//   vertical-align: middle;
+//   cursor: pointer;
+// }
+
+// .info {
+//   padding-bottom: 20px;
+//   font-size: small;
+
+//   & div span {
+//     display: inline-block;
+//     width: 100px;
+//     white-space: pre;
+//   }
+// }
+
+// .config-info-field {
+//   padding: 6px;
+//   border-radius: 6px;
+//   background-color: rgba(255,255,255,.04);
+// }
+
+
+
+.config-card {
+  margin: auto;
   margin-bottom: 20px;
+  box-sizing: border-box;
+  max-width: var(--max-width-panel);
+  width: 100%;
 }
 
-
-.info-icon {
-  vertical-align: middle;
+.center-right {
+  inset: 0;
+  margin: auto;
+  margin-right: 0;
 }
 
-.info {
-  padding-bottom: 20px;
-  font-size: small;
-
-  & div span {
-    display: inline-block;
-    width: 100px;
-    white-space: pre;
-  }
-}
-
-mat-icon {
-  cursor: pointer;
+input[readonly] {
+  cursor: default;
+  color: #0009 !important;
 }

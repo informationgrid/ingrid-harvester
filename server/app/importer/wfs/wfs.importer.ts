@@ -22,6 +22,7 @@
  */
 import * as fs from 'fs';
 import * as xpath from 'xpath';
+import * as GeoJsonUtils from '../../utils/geojson.utils';
 import * as MiscUtils from '../../utils/misc.utils';
 import { decode } from 'iconv-lite';
 import { defaultWfsSettings, WfsSettings } from './wfs.settings';
@@ -29,10 +30,9 @@ import { firstElementChild, getExtendedNsMap, getNsMap, XPathNodeSelect } from '
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
 import { Catalog } from '../../model/dcatApPlu.model';
-import { Contact } from '../../model/agent';
+import { Contact, Organization, Person } from '../../model/agent';
 import { CswMapper } from '../../importer/csw/csw.mapper';
 import { DOMParser } from '@xmldom/xmldom';
-import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { Observer } from 'rxjs';
@@ -166,21 +166,25 @@ export abstract class WfsImporter extends Importer {
         const rs_data = fs.readFileSync('app/importer/regionalschluessel.json', { encoding: 'utf8', flag: 'r' });
         this.generalInfo['regionalschluessel'] = JSON.parse(rs_data);
 
-        let contact: Contact;
+        // general metadata contacts
+        // role -> contact
+        let contacts: Map<string, Contact> = new Map();
         if (this.settings.contactCswUrl) {
             let response = await RequestDelegate.doRequest({ uri: this.settings.contactCswUrl, accept: 'text/xml' });
             let responseDom = this.domParser.parseFromString(response);
             let metadata = CswMapper.select('./csw:GetRecordByIdResponse/gmd:MD_Metadata', responseDom, true);
             let xpaths = [
-                // for now, only use gmd:contact (the sparsely populated entry of the two listed below)
+                // for now, only use gmd:contact as pointOfContact (the sparsely populated entry of the two listed below)
+                './gmd:contact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue="pointOfContact"]',
                 // './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue="pointOfContact"]',
-                './gmd:contact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue="pointOfContact"]'
+                './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue="custodian"]'
             ];
             for (let xpath of xpaths) {
                 let pointOfContact = CswMapper.select(xpath, metadata, true);
+                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode', pointOfContact, true).getAttribute('codeListValue');
                 let contactInfo = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact', pointOfContact, true);
                 let address = CswMapper.select('./gmd:address/gmd:CI_Address', contactInfo, true);
-                contact = {
+                let contact = {
                     fn: CswMapper.getCharacterStringContent(pointOfContact, 'individualName'),
                     hasCountryName: CswMapper.getCharacterStringContent(address, 'country'),
                     hasLocality: CswMapper.getCharacterStringContent(address, 'city'),
@@ -196,22 +200,49 @@ export abstract class WfsImporter extends Importer {
                 if (!contact.fn?.trim()) {
                     contact.fn = contact.hasOrganizationName;
                 }
-                if (contact.fn?.trim()) {
-                    break;
-                }
+                contacts.set(role, contact);
             }
         }
-        // use fallback if available
-        if ((!contact || !contact.fn?.trim()) && this.settings.contactMetadata) {
-            contact = this.settings.contactMetadata;
+
+        // general contact
+        let pointOfContact: Contact = contacts.get('pointOfContact');
+        // fallbacks
+        if (!pointOfContact?.fn?.trim()) {
+            if (this.settings.contactMetadata) {
+                pointOfContact = this.settings.contactMetadata;
+            }
+            else {
+                pointOfContact = {
+                    fn: ''
+                };
+            }
         }
-        // if fallback was not available or could not be parsed, use dummy
-        if (!contact) {
-            contact = {
-                fn: ''
-            };
+        this.generalInfo['contactPoint'] = pointOfContact;
+
+        // general maintainer
+        let maintainer: Person | Organization = { organization: contacts.get('custodian')?.hasOrganizationName };
+        // fallbacks
+        if (!maintainer.organization?.trim()) {
+            if (contacts.get('custodian')?.fn?.trim()) {
+                maintainer = { name: contacts.get('custodian')?.fn };
+            }
+            else if (pointOfContact.hasOrganizationName?.trim()) {
+                maintainer = { organization: pointOfContact.hasOrganizationName };
+            }
+            else if (pointOfContact.fn?.trim()) {
+                maintainer = { name: pointOfContact.fn };
+            }
+            else if (this.settings.maintainer?.['name'] || this.settings.maintainer?.['organization']) {
+                maintainer = this.settings.maintainer;
+            }
+            else {
+                maintainer = {
+                    name: '',
+                    type: ''
+                };
+            }
         }
-        this.generalInfo['contactPoint'] = contact;
+        this.generalInfo['maintainer'] = maintainer;
 
         // retrieve catalog info from database
         let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId) ?? this.database.defaultCatalog;
@@ -278,7 +309,7 @@ export abstract class WfsImporter extends Importer {
         if (envelope) {
             let lowerCorner = select('./gml:lowerCorner', envelope, true)?.textContent;
             let upperCorner = select('./gml:upperCorner', envelope, true)?.textContent;
-            let crs = (<Element>envelope).getAttribute('srsName');            
+            let crs = (<Element>envelope).getAttribute('srsName') || this.generalInfo['defaultCrs'];            
             this.generalInfo['boundingBox'] = GeoJsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
         }
 
@@ -334,6 +365,7 @@ export abstract class WfsImporter extends Importer {
             json: false,
             headers: RequestDelegate.wfsRequestHeaders(),
             proxy: settings.proxy || null,
+            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             resolveWithFullResponse: settings.resolveWithFullResponse ?? false,
             timeout: settings.timeout
         };

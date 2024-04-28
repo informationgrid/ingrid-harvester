@@ -85,8 +85,8 @@ export class DiplanungMapper<M extends DcatappluMapper | DiplanungCswMapper | Ex
         return this.baseMapper._getPluDevelopmentFreezePeriod();
     }
 
-    getPluProcedureStartDate(): Date {
-        return this.baseMapper._getPluProcedureStartDate();
+    getPluProcedurePeriod(): DateRange {
+        return this.baseMapper._getPluProcedurePeriod();
     }
 
     getPluPlanType(): PluPlanType {

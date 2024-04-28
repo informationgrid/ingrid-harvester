@@ -21,7 +21,10 @@
  * ==================================================
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, Injectable, OnInit} from '@angular/core';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router } from "@angular/router";
+import { routing } from './config.routing';
+import { SessionService, Tab } from "../services/session.service";
 
 @Component({
   selector: 'app-config',
@@ -29,12 +32,33 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./config.component.scss']
 })
 export class ConfigComponent implements OnInit {
+  tabs: Tab[];
 
-  constructor() {
+  constructor(
+    private router: Router,
+    private activeRoute: ActivatedRoute,
+    private sessionService: SessionService,
+    ) {
+      this.tabs = sessionService.getTabsFromRoute(activeRoute.snapshot);
+      // only update tab from route if it was set explicitly in URL
+      // otherwise the remembered state from store is used
+      const currentPath = this.router.parseUrl(this.router.url).root.children
+        .primary.segments[1].path;
+      const activeTabIndex = this.tabs.findIndex(
+        (tab) => tab.path === currentPath,
+      );
+      if (activeTabIndex !== 0) {
+        this.updateTab(activeTabIndex);
+      }
   }
 
   ngOnInit() {
   }
 
 
+
+  updateTab(index: number) {
+    // const tabPaths = this.sessionService.getTabPaths(this.activeRoute.snapshot);
+    // this.sessionService.updateCurrentTab("research", tabPaths[index]);
+  }
 }

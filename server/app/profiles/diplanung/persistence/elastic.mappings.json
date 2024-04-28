@@ -1,4 +1,5 @@
 {
+  "dynamic": false,
   "properties": {
     "priority": {
       "type": "short"
@@ -36,15 +37,24 @@
     },
     "catalog": {
       "properties": {
-        "identifier": {
-          "type": "keyword"
-        },
         "description": {
           "type": "text",
           "analyzer": "decomp"
         },
         "homepage": {
           "type": "keyword"
+        },
+        "identifier": {
+          "type": "keyword"
+        },
+        "issued": {
+          "type": "date"
+        },
+        "language": {
+          "type": "keyword"
+        },
+        "modified": {
+          "type": "date"
         },
         "publisher": {
           "properties": {
@@ -56,6 +66,9 @@
                 }
               }
             },
+            "type": {
+              "type": "keyword"
+            },
             "organization": {
               "type": "text",
               "fields": {
@@ -66,11 +79,17 @@
             }
           }
         },
+        "themeTaxonomy": {
+          "type": "keyword"
+        },
         "title": {
           "type": "text",
           "analyzer": "decomp"
         }
       }
+    },
+    "id": {
+      "type": "keyword"
     },
     "identifier": {
       "type": "keyword"
@@ -116,6 +135,9 @@
     "procedure_type": {
       "type": "keyword"
     },
+    "procedure_period": {
+      "type": "date_range"
+    },
     "procedure_start_date": {
       "type": "date"
     },
@@ -160,6 +182,9 @@
             },
             "mapLayerNames": {
               "type": "keyword"
+            },
+            "operates_on": {
+              "type": "keyword"
             }
           }
         },
@@ -172,6 +197,10 @@
         "temporal": {
           "type": "date_range"
         },
+        "title": {
+          "type": "text",
+          "analyzer": "decomp"
+        },
         "type": {
           "type": "keyword"
         }
@@ -180,21 +209,6 @@
     "notification": {
       "type": "text",
       "analyzer": "decomp"
-    },
-    "creator": {
-      "properties": {
-        "name": {
-          "type": "text",
-          "fields": {
-            "raw": {
-              "type": "keyword"
-            }
-          }
-        },
-        "mbox": {
-          "type": "keyword"
-        }
-      }
     },
     "publisher": {
       "properties": {
@@ -205,6 +219,9 @@
               "type": "keyword"
             }
           }
+        },
+        "type": {
+          "type": "keyword"
         },
         "homepage": {
           "type": "keyword"
@@ -229,6 +246,9 @@
             }
           }
         },
+        "type": {
+          "type": "keyword"
+        },
         "homepage": {
           "type": "keyword"
         },
@@ -251,6 +271,9 @@
               "type": "keyword"
             }
           }
+        },
+        "type": {
+          "type": "keyword"
         },
         "homepage": {
           "type": "keyword"
@@ -311,9 +334,6 @@
     "keywords": {
       "type": "keyword"
     },
-    "theme": {
-      "type": "keyword"
-    },
     "issued": {
       "type": "date"
     },
@@ -358,6 +378,9 @@
           "type": "keyword"
         },
         "mapLayerNames": {
+          "type": "keyword"
+        },
+        "operates_on": {
           "type": "keyword"
         }
       }
@@ -426,9 +449,6 @@
             "hierarchy_level": {
               "type": "keyword"
             },
-            "operates_on": {
-              "type": "keyword"
-            },
             "merged_from": {
               "type": "keyword"
             }
@@ -452,12 +472,6 @@
             }
           }
         },
-        "groups": {
-          "type": "keyword"
-        },
-        "subgroups": {
-          "type": "keyword"
-        },
         "harvested_data": {
           "type": "text",
           "index": false
@@ -467,18 +481,10 @@
             "dcat_ap_plu": {
               "type": "text",
               "index": false
-            }
-          }
-        },
-        "subsection": {
-          "properties": {
-            "title": {
-              "type": "text",
-              "analyzer": "decomp"
             },
-            "description": {
+            "json": {
               "type": "text",
-              "analyzer": "decomp"
+              "index": false
             }
           }
         },

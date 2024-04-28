@@ -26,7 +26,7 @@ import { ConfigService } from '../../../config/config.service';
 import { CswSettings } from '../../../../../../server/app/importer/csw/csw.settings';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'app-csw-harvester',

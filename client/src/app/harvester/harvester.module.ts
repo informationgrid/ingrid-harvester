@@ -23,13 +23,13 @@
 
 import {NgModule} from "@angular/core";
 import {HarvesterComponent} from "./harvester.component";
-import {MatLegacyButtonModule as MatButtonModule} from "@angular/material/legacy-button";
-import {MatLegacyDialogModule as MatDialogModule} from "@angular/material/legacy-dialog";
+import {MatButtonModule} from "@angular/material/button";
+import {MatDialogModule} from "@angular/material/dialog";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatIconModule} from "@angular/material/icon";
-import {MatLegacyProgressBarModule as MatProgressBarModule} from "@angular/material/legacy-progress-bar";
-import {MatLegacyProgressSpinnerModule as MatProgressSpinnerModule} from "@angular/material/legacy-progress-spinner";
-import {MatLegacySlideToggleModule as MatSlideToggleModule} from "@angular/material/legacy-slide-toggle";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {CommonModule} from "@angular/common";
 import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.component';
 import {DialogLogComponent} from './dialog-log/dialog-log.component';
@@ -43,21 +43,21 @@ import {SparqlHarvesterComponent} from './dialog-edit/sparql-harvester/sparql-ha
 import {WfsHarvesterComponent} from './dialog-edit/wfs-harvester/wfs-harvester.component';
 import {DialogHistoryComponent} from './dialog-history/dialog-history.component';
 import {ImporterDetailComponent} from './importer-detail/importer-detail.component';
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {MatLegacyChipsModule as MatChipsModule} from '@angular/material/legacy-chips';
-import {MatLegacyCardModule as MatCardModule} from '@angular/material/legacy-card';
-import {MatLegacyCheckboxModule as MatCheckboxModule} from '@angular/material/legacy-checkbox';
-import {MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
-import {MatLegacyTabsModule as MatTabsModule} from '@angular/material/legacy-tabs';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatListModule} from '@angular/material/list';
+import {MatTabsModule} from '@angular/material/tabs';
 import {RouterModule, Routes} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
-import {MatLegacySnackBarModule as MatSnackBarModule} from '@angular/material/legacy-snack-bar';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ChipListComponent} from './dialog-edit/chip-list/chip-list.component';
 import {MatBadgeModule} from "@angular/material/badge";
 import {DcatHarvesterComponent} from "./dialog-edit/dcat-harvester/dcat-harvester.component";
 import {DcatappluHarvesterComponent} from "./dialog-edit/dcatapplu-harvester/dcatapplu-harvester.component";
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import { CronjobFormFieldComponent } from "../shared/cronjob-form-field/cronjob-form-field.component";
 
 const harvesterRoutes: Routes = [
   {
@@ -88,7 +88,6 @@ const harvesterRoutes: Routes = [
     imports: [
         CommonModule,
         RouterModule.forChild(harvesterRoutes),
-        FlexLayoutModule,
         SharedModule,
         MatDialogModule,
         MatButtonModule,
@@ -105,7 +104,8 @@ const harvesterRoutes: Routes = [
         ReactiveFormsModule,
         MatCheckboxModule,
         MatBadgeModule,
-        ScrollingModule
+        ScrollingModule,
+        CronjobFormFieldComponent
     ],
     exports: [
         HarvesterComponent
