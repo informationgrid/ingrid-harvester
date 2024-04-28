@@ -51,12 +51,8 @@ export class UrlCheckService {
     constructor() {
         this.initialize();
         if (this.generalSettings.proxy) {
-            let url = new URL(this.generalSettings.proxy);
-            this.httpsAgent = new HttpsProxyAgent({
-                host: url.hostname,
-                port: url.port,
-                rejectUnauthorized: false
-            });
+            this.httpsAgent = new HttpsProxyAgent(this.generalSettings.proxy);
+            this.httpsAgent.options.rejectUnauthorized = false;
         }
         else {
             this.httpsAgent = new Agent({

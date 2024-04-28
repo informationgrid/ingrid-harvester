@@ -26,6 +26,7 @@ import { BulkResponse, ElasticsearchUtils} from '../persistence/elastic.utils';
 import { ConfigService} from './config/ConfigService';
 import { ElasticsearchFactory } from '../persistence/elastic.factory';
 import { Index} from '@shared/index.model';
+import { IndexConfiguration } from '../persistence/elastic.setting';
 import { Service} from '@tsed/di';
 import { Summary} from '../model/summary';
 
@@ -38,6 +39,7 @@ const Readable = require('stream').Readable
 export class IndexService {
 
     private alias: string;
+    private config: IndexConfiguration;
     private elasticUtils: ElasticsearchUtils;
 
     constructor() {
@@ -49,7 +51,7 @@ export class IndexService {
      */
     initialize() {
         let elasticsearchConfiguration = ConfigService.getGeneralSettings().elasticsearch;
-        let config = {
+        this.config = {
             ...elasticsearchConfiguration,
             includeTimestamp: true,
             index: ''
@@ -57,7 +59,7 @@ export class IndexService {
         this.alias = elasticsearchConfiguration.alias;
         // @ts-ignore
         const summary: Summary = {elasticErrors: []};
-        this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, summary);
+        this.elasticUtils = ElasticsearchFactory.getElasticUtils(this.config, summary);
     }
 
     async addToAlias(id: number) {
@@ -90,7 +92,7 @@ export class IndexService {
     }
 
     async getIndices(): Promise<Index[]> {
-        return await this.elasticUtils.getIndicesFromBasename('')
+        return await this.elasticUtils.getIndicesFromBasename('');
     }
 
     deleteIndex(name: string) {

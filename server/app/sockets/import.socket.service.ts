@@ -46,14 +46,14 @@ export class ImportSocketService {
      * Triggered when a new client connects to the Namespace.
      */
     $onConnection(@Socket socket: Socket, @SocketSession session: SocketSession) {
-        console.log('SOCKETIO: A client is connected');
+        this.log.info('SOCKETIO: A client is connected');
     }
 
     /**
      * Triggered when a client disconnects from the Namespace.
      */
     $onDisconnect(@Socket socket: SocketIO.Socket) {
-        console.log('SOCKETIO: A client disconnected');
+        this.log.info('SOCKETIO: A client disconnected');
     }
 
     @Input('runImport')

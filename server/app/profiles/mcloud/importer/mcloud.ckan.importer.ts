@@ -21,13 +21,13 @@
  * ==================================================
  */
 
+import { v5 as uuidv5 } from 'uuid';
 import { CkanImporter } from '../../../importer/ckan/ckan.importer';
 import { CkanMapper } from '../../../importer/ckan/ckan.mapper';
 import { DatabaseUtils } from '../../../persistence/database.utils';
 import { RecordEntity } from '../../../model/entity';
 
 const log = require('log4js').getLogger(__filename);
-const uuidv5 = require('uuid/v5');
 const UUID_NAMESPACE = '6891a617-ab3b-4060-847f-61e31d6ccf6f';
 
 export class McloudCkanImporter extends CkanImporter {

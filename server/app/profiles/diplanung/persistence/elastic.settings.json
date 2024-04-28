@@ -1,5 +1,7 @@
 {
     "index": {
+		"max_ngram_diff": 5,
+		"max_shingle_diff": 6,
         "analysis": {
             "filter": {
                 "decomp": {
@@ -66,9 +68,5 @@
                 }
             }
         }
-    },
-    "max_shingle_diff": 6,
-    "max_ngram_diff": 7,
-    "number_of_shards": 1,
-    "number_of_replicas": 0
+    }
 }

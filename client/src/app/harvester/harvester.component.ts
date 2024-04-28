@@ -25,19 +25,21 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HarvesterService} from './harvester.service';
 import {of, Subscription, zip} from 'rxjs';
 import {Harvester} from '@shared/harvester';
-import {MatLegacyDialog as MatDialog} from '@angular/material/legacy-dialog';
-import {MatLegacySnackBar as MatSnackBar} from '@angular/material/legacy-snack-bar';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.component';
 import {DialogLogComponent} from './dialog-log/dialog-log.component';
 import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
 import {DialogHistoryComponent} from './dialog-history/dialog-history.component';
 import {ImportLogMessage} from '../../../../server/app/model/import.result';
 import {flatMap, groupBy, mergeMap, tap, toArray} from 'rxjs/operators';
-import {MatLegacySlideToggleChange as MatSlideToggleChange} from '@angular/material/legacy-slide-toggle';
+import {MatSlideToggleChange} from '@angular/material/slide-toggle';
 import {SocketService} from './socket.service';
 import {ConfirmDialogComponent} from '../shared/confirm-dialog/confirm-dialog.component';
-import {untilDestroyed} from 'ngx-take-until-destroy';
+import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+import { UntypedFormBuilder } from '@angular/forms';
 
+@UntilDestroy()
 @Component({
   selector: 'app-harvester',
   templateUrl: './harvester.component.html',
@@ -57,7 +59,9 @@ export class HarvesterComponent implements OnInit, OnDestroy {
   constructor(public dialog: MatDialog,
               private snackBar: MatSnackBar,
               private harvesterService: HarvesterService,
-              private socketService: SocketService) {
+              private socketService: SocketService,
+              private formBuilder: UntypedFormBuilder, 
+              ) {
   }
 
   ngOnInit() {
@@ -97,13 +101,14 @@ export class HarvesterComponent implements OnInit, OnDestroy {
   schedule(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogSchedulerComponent, {
       width: '500px',
-      data: {...harvester.cron}
+      data: {...harvester.cron}, // {...harvester.cron}
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log("after scheduler:", result)
       if (result) {
         // update immediately component cronpattern
-        harvester.cron = result;
+        harvester.cron = result.value;
 
         // update schedule and set next execution time
         this.harvesterService.schedule(harvester.id, harvester.cron)
@@ -175,7 +180,15 @@ export class HarvesterComponent implements OnInit, OnDestroy {
         // this is a really ugly hack, someone fix this in wfs-harvester.component.ts instead
         if ('contactMetadata' in result) {
           try {
-            result.contactMetadata = JSON.parse(result.contactMetadata as unknown as string);
+            result.contactMetadata = result.contactMetadata as unknown != "" ? JSON.parse(result.contactMetadata as unknown as string) : null;
+          }
+          catch (e) {
+            // swallow errors
+          }
+        }
+        if ('maintainer' in result) {
+          try {
+            result.maintainer = result.maintainer as unknown != "" ? JSON.parse(result.maintainer as unknown as string) : null;
           }
           catch (e) {
             // swallow errors

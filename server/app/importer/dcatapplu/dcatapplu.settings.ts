@@ -23,19 +23,11 @@
 
 import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
 
-export type DCATAPPLUProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';
-
 export const defaultDCATAPPLUSettings: DcatappluSettings = {
     ...DefaultImporterSettings,
-    catalogUrl: '',
-    filterTags: [],
-    filterThemes: []
+    catalogUrl: ''
 };
 
 export type DcatappluSettings = {
-    catalogUrl: string,
-    filterTags?: string[],
-    filterThemes?: string[],
-    providerPrefix?: string,
-    dcatappluProviderField?: DCATAPPLUProviderField,
+    catalogUrl: string
 } & ImporterSettings;

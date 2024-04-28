@@ -23,6 +23,8 @@
 
 export function jsonLayout(config) {
     return function (logEvent) {
+        // use the actual levelStr as the level, instead of a complete object
+        logEvent.level = logEvent.level.levelStr;
         return JSON.stringify(logEvent);
     }
 }

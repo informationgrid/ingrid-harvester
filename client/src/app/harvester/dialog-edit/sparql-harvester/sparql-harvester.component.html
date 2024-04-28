@@ -28,40 +28,44 @@
       <mat-card-title>Allgemeine SPARQL Einstellungen</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex>
-          <input matInput placeholder="Endpoint URL" formControlName="endpointUrl" required>
+      <div class="flex-row gap-20 space-between">
+        <mat-form-field class="flex-1">
+          <mat-label>Endpoint URL</mat-label>
+          <input matInput formControlName="endpointUrl" required>
         </mat-form-field>
       </div>
-
+      
     </mat-card-content>
   </mat-card>
-
+  
   <mat-card>
     <mat-card-header>
       <mat-card-title>Filter und Regeln</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <ng-container [ngTemplateOutlet]="rulesTemplate"></ng-container>
-
-      <div fxLayout="column">
-        <mat-form-field fxFlex>
-          <textarea matInput rows="6" class="code" placeholder="Query" formControlName="query"></textarea>
+      
+      <div class="flex-col">
+        <mat-form-field class="flex-1">
+          <mat-label>Query</mat-label>
+          <textarea matInput rows="6" class="code" formControlName="query"></textarea>
         </mat-form-field>
-
-        <mat-form-field fxFlex>
-          <mat-chip-list #chipList>
-            <mat-chip *ngFor="let keyword of model.eitherKeywords" [selectable]="false"
-                      [removable]="true" (removed)="remove(keyword)">
-              {{keyword}}
-              <mat-icon matChipRemove>cancel</mat-icon>
-            </mat-chip>
-            <input placeholder="Either keywords"
-                   [matChipInputFor]="chipList"
+        
+        <mat-form-field class="flex-1">
+          <mat-label>Either keywords</mat-label>
+          <mat-chip-grid #chipList>
+            @for (keyword of model.eitherKeywords; track keyword) {
+              <!-- [selectable]="false" -->
+              <mat-chip-row [removable]="true" (removed)="remove(keyword)">
+                {{keyword}}
+                <mat-icon matChipRemove svgIcon="close"/>
+              </mat-chip-row>
+            }
+            <input [matChipInputFor]="chipList"
                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                    [matChipInputAddOnBlur]="true"
                    (matChipInputTokenEnd)="add($event)">
-          </mat-chip-list>
+          </mat-chip-grid>
         </mat-form-field>
       </div>
     </mat-card-content>

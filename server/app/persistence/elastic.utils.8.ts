@@ -190,7 +190,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
                 // the index name must consist of the base name + the date string which is
                 // 18 characters long
                 // in case we want to get all indices just request with an empty baseName
-                return baseName === this.config.prefix || (json.index.startsWith(baseName) && json.index.length === baseName.length + ElasticsearchUtils.LENGTH_OF_TIMESTAMP);
+                return json.index.startsWith(baseName);
             })
             .map(item => {
                 return {
@@ -211,7 +211,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
             });
             if (response.errors) {
                 response.items.forEach(item => {
-                    let err = item.index.error;
+                    let err = item.index?.error;
                     if (err) {
                         this.handleError(`Error during indexing on index '${this.indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
                     }
@@ -247,7 +247,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
                 .then(response => {
                     if (response.errors) {
                         response.items.forEach(item => {
-                            let err = item.index.error;
+                            let err = item.index?.error;
                             if (err) {
                                 this.handleError(`Error during indexing on index '${index}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
                             }

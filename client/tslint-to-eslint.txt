@@ -1,0 +1,31 @@
+dodinh@Laptop-ED:~/git/diplanung/ingrid-harvester/client$ ng g @angular-eslint/schematics:convert-tslint-to-eslint client
+? Would you like to remove TSLint and its related config if there are no TSLint projects remaining after this conversion? Yes
+? Would you like to ignore the existing TSLint config? Recommended if the TSLint config has not been altered much as it makes the new ESLint config cleaner. No
+    
+    INFO: We are now installing the "tslint-to-eslint-config" package into a tmp directory to aid with the conversion
+    
+    This may take a minute or two...
+    
+    
+    WARNING: Within "tslint.json", the following 4 rule(s) did not have known converters in https://github.com/typescript-eslint/tslint-to-eslint-config
+    
+      - use-host-property-decorator
+      - use-input-property-decorator
+      - use-life-cycle-interface
+      - use-output-property-decorator
+    
+    You will need to decide on how to handle the above manually, but everything else has been handled for you automatically.
+    
+    
+    INFO: To most closely match your tslint.json, the `latest` version of the following eslint plugin(s) have been installed:
+    
+      - eslint-plugin-import
+      - eslint-plugin-jsdoc
+      - eslint-plugin-prefer-arrow
+    
+    Please note, you may wish to pin these to a specific version number in your package.json, rather than leaving it open to `latest`.
+    
+CREATE .eslintrc.json (949 bytes)
+UPDATE angular.json (4797 bytes)
+UPDATE package.json (2697 bytes)
+✔ Packages installed successfully.

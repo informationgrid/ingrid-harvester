@@ -20,12 +20,20 @@
  * limitations under the Licence.
  * ==================================================
  */
+ :host {
+  display: flex;
+  overflow: hidden;
+  flex: 1; // IE 11
+  flex-direction: column;
+}
 
 .code {
   white-space: pre;
   padding-left: 20px;
   overflow: auto;
   height: 100%;
+  color: invert($color: #000000);
+  background-color: #2e2e2e;
 }
 
 .viewport {

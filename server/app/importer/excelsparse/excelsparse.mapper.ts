@@ -492,7 +492,7 @@ export class ExcelSparseMapper extends BaseMapper {
         return undefined;
     }
 
-    _getPluProcedureStartDate() {
+    _getPluProcedurePeriod() {
         return undefined;
     }
 

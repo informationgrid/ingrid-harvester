@@ -586,5 +586,23 @@
       }
     },
     "maxConcurrent": null
+  },
+  {
+    "id": 21,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "type": "DCATAPPLU",
+    "description": "BeteiligungsDB",
+    "priority": null,
+    "index": "beteiligungsdb",
+    "defaultDCATCategory": null,
+    "defaultMcloudSubgroup": null,
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "catalogUrl": "https://beteiligungsdb.develop.diplanung.de/collections/1/items"
   }
 ]

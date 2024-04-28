@@ -28,13 +28,15 @@
       <mat-card-title>Allgemeine OAI Einstellungen</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex>
-          <input matInput placeholder="Provider URL" formControlName="providerUrl" required>
+      <div class="flex-row gap-20 space-between">
+        <mat-form-field class="flex-1">
+          <mat-label>Provider URL</mat-label>
+          <input matInput formControlName="providerUrl" required>
         </mat-form-field>
 
-        <mat-form-field fxFlex>
-          <input matInput placeholder="Set" formControlName="set" required>
+        <mat-form-field class="flex-1">
+          <mat-label>Set</mat-label>
+          <input matInput formControlName="set" required>
         </mat-form-field>
       </div>
 
@@ -48,21 +50,23 @@
     <mat-card-content>
       <ng-container [ngTemplateOutlet]="rulesTemplate"></ng-container>
 
-      <div fxLayout="column">
+      <div class="flex-col">
 
-        <mat-form-field fxFlex>
-          <mat-chip-list #chipList>
-            <mat-chip *ngFor="let keyword of model.eitherKeywords" [selectable]="false"
-                      [removable]="true" (removed)="remove(keyword)">
-              {{keyword}}
-              <mat-icon matChipRemove>cancel</mat-icon>
-            </mat-chip>
-            <input placeholder="Either keywords"
-                   [matChipInputFor]="chipList"
+        <mat-form-field class="flex-1">
+          <mat-label>Either keywords</mat-label>
+          <mat-chip-grid #chipList>
+            @for (keyword of model.eitherKeywords; track keyword) {
+              <!-- [selectable]="false" -->
+              <mat-chip-row [removable]="true" (removed)="remove(keyword)">
+                {{keyword}}
+                <mat-icon svgIcon="close" matChipRemove/>
+              </mat-chip-row>
+            }
+            <input [matChipInputFor]="chipList"
                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                    [matChipInputAddOnBlur]="true"
                    (matChipInputTokenEnd)="add($event)">
-          </mat-chip-list>
+          </mat-chip-grid>
         </mat-form-field>
       </div>
     </mat-card-content>

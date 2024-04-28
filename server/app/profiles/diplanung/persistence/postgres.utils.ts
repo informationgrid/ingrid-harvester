@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import * as MiscUtils from '../../../utils/misc.utils';
 import { createEsId } from '../diplanung.utils';
 import { Bucket } from '../../../persistence/postgres.utils';
@@ -28,7 +29,6 @@ import { DcatApPluDocumentFactory } from '../model/dcatapplu.document.factory';
 import { DiplanungIndexDocument } from '../model/index.document';
 import { Distribution } from '../../../model/distribution';
 import { EsOperation } from '../../../persistence/elastic.utils';
-import { GeoJsonUtils } from '../../../utils/geojson.utils';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -37,7 +37,11 @@ const overwriteFields = [
     // spatial fields
     'bounding_box', 'centroid', 'spatial',
     // PLU fields
-    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_start_date', 'procedure_state', 'procedure_type'
+    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_period', 'procedure_state', 'procedure_type',
+    // TODO remove
+    'procedure_start_date',
+    // "special" fields
+    'maintainers'
 ];
 
 
@@ -172,9 +176,11 @@ export class PostgresUtils {
     private resolveCoupling(document: DiplanungIndexDocument, service: Distribution): DiplanungIndexDocument {
         let distributionMap: { [key: string]: Distribution[] } = {};
         // add document distributions to distribution map
-        for (let distribution of document.distributions) {
-            distributionMap[MiscUtils.minimalDistHash(distribution)] ??= [];
-            distributionMap[MiscUtils.minimalDistHash(distribution)].push(distribution);
+        if (document.distributions) {
+            for (let distribution of document.distributions) {
+                distributionMap[MiscUtils.minimalDistHash(distribution)] ??= [];
+                distributionMap[MiscUtils.minimalDistHash(distribution)].push(distribution);
+            }
         }
         // remove resolvedGeometry from service distribution if available (add to document later)
         let resolvedGeometry = service.resolvedGeometry;
@@ -234,13 +240,17 @@ export class PostgresUtils {
             case 'beteiligungsdb':
                 return document;
             case 'csw':
-                let updatedFields = {};
+                let updatedFields: Partial<DiplanungIndexDocument> = {};
                 for (const field of overwriteFields) {
                     updatedFields[field] = duplicate[field];
                 }
                 // use publisher from WFS if not specified in CSW
                 if (!document.publisher?.['name'] && !document.publisher?.['organization']) {
-                    updatedFields['publisher'] = duplicate.publisher;
+                    updatedFields.publisher = duplicate.publisher;
+                }
+                // use maintainer from WFS if not specified in CSW
+                if (!document.maintainers?.[0]?.['name'] && !document.maintainers?.[0]?.['organization']) {
+                    updatedFields.maintainers = duplicate.maintainers;
                 }
                 let updatedDocument = { ...document, ...updatedFields };
                 // TODO remove or perpetuate : hack for stage/prod
@@ -265,7 +275,7 @@ export class PostgresUtils {
         if (!sanitizedSpatial) {
             document.extras.metadata.is_valid = false;
             document.extras.metadata.quality_notes ??= [];
-            document.distributions.forEach(distribution => 
+            document.distributions?.forEach(distribution => 
                 document.extras.metadata.quality_notes.push(...(distribution.errors ?? [])));
             document.extras.metadata.quality_notes.push('No valid geometry');
             return document;
