@@ -21,28 +21,48 @@
     ==================================================
 -->
 
-<mat-card>
-  <mat-card-title>Login</mat-card-title>
+          
+
+
+<mat-card *transloco="let t; read: 'menu'" class="login-container">
+
+  <div class="flex flex-row gap-20 login-header">
+    <div class="login-logo">
+      <img src="{{ t('logo') }}" alt="{{ t('logo-text') }}" />
+    </div>
+    <div class="flex-space login-title">
+      {{ t("application") }} <div class="login-subtitle">HARVESTER</div>
+    </div>
+  </div>
+
+
+  <mat-card-title class="card-title">Melden Sie sich mit Ihren Zugangsdaten an:</mat-card-title>
   <mat-card-content>
     <form [formGroup]="form" (ngSubmit)="submit()">
       <p>
         <mat-form-field>
-          <input type="text" matInput autocomplete="username" placeholder="Benutzername" formControlName="username">
+          <mat-label>Benutzername</mat-label>
+          <input type="text" matInput autocomplete="username" formControlName="username">
         </mat-form-field>
       </p>
-
+      
       <p>
         <mat-form-field>
-          <input type="password" matInput autocomplete="current-password" placeholder="Passwort" formControlName="password">
+          <mat-label>Passwort</mat-label>
+          <input type="password" matInput autocomplete="current-password" formControlName="password">
         </mat-form-field>
       </p>
 
-      <p *ngIf="showErrorMessage" class="error">
+      @if (showErrorMessage) {
+<p class="error">
         Benutzername oder Passwort falsch
       </p>
+}
 
-      <div class="button">
-        <button id="btnSubmit" type="submit" mat-button data-test="login">Login</button>
+      <button mat-flat-button color="primary" id="btnSubmit" type="submit" data-test="login" class="w-full button">Login</button>
+      
+      <div class="forgetPassword">
+        <p></p>
       </div>
 
     </form>

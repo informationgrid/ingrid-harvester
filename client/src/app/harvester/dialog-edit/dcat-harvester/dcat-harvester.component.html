@@ -28,18 +28,20 @@
       <mat-card-title>Allgemeine DCAT Einstellungen</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div fxLayout="row">
-        <mat-form-field fxFlex>
-          <input matInput placeholder="Catalog URL" formControlName="catalogUrl" required>
+      <div  class="flex-row">
+        <mat-form-field class="flex-1">
+          <mat-label>Catalog URL</mat-label>
+          <input matInput formControlName="catalogUrl" required>
         </mat-form-field>
-        </div>
-
+      </div>
+      
       <h4>Bereitgestellt durch</h4>
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex>
-          <input matInput placeholder="Präfix" formControlName="providerPrefix" autocomplete="off">
+      <div class="flex-row gap-20 space-between">
+        <mat-form-field class="flex-1">
+          <mat-label>Präfix</mat-label>
+          <input matInput formControlName="providerPrefix" autocomplete="off">
         </mat-form-field>
-        <mat-form-field fxFlex>
+        <mat-form-field class="flex-1">
           <mat-label>DCAT-Feld</mat-label>
           <mat-select formControlName="dcatProviderField">
             <mat-option value="contactPoint">contactPoint</mat-option>
@@ -50,18 +52,18 @@
           </mat-select>
         </mat-form-field>
       </div>
-
+      
     </mat-card-content>
   </mat-card>
-
+  
   <mat-card>
     <mat-card-header>
       <mat-card-title>Filter und Regeln</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <ng-container [ngTemplateOutlet]="rulesTemplate"></ng-container>
-
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+      <ng-container  class="flex-col" [ngTemplateOutlet]="rulesTemplate"></ng-container>
+      
+      <div class="flex-row gap-20 flex-col-mobile space-between">
         <app-chip-list [list]="model.filterTags"
                        placeholder="Filter Tags"
                        (update)="model.filterTags = $event"></app-chip-list>

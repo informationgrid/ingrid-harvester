@@ -1,0 +1,211 @@
+@import "../src/variables";
+
+// TODO: temporary fix.
+// Issue caused by upgrading to angular/material 17, that this variable becomes undefined.
+.mat-mdc-fab,
+.mat-mdc-mini-fab {
+  --mdc-fab-container-shape: 50%;
+}
+
+::placeholder {
+  color: $ige-placeholder-color !important;
+}
+
+button.mdc-button {
+  text-transform: uppercase;
+}
+
+mat-form-field:hover .mdc-notched-outline__leading,
+mat-form-field:hover .mdc-notched-outline__trailing {
+  //border-color: #979797;
+  //border-width: 2px !important;
+}
+
+ige-side-menu .mat-mdc-list-item {
+  &:hover::before,
+  &:focus::before {
+    opacity: 0;
+  }
+
+  &:hover {
+    background: lighten($ige-secondary, 8%) !important;
+  }
+
+  &.active:hover {
+    background: lighten($ige-primary, 8%) !important;
+  }
+}
+
+.mat-mdc-dialog-container {
+  .dialog-title-wrapper {
+    padding: 16px 26px 16px 16px;
+    background-color: $ige-secondary;
+
+    &.error {
+      background-color: #cd0909;
+    }
+
+    h1 {
+      color: #fff;
+      margin: unset;
+      padding: unset;
+      font-size: 24px;
+      font-weight: 400;
+
+      &:before {
+        display: none;
+      }
+    }
+
+    mat-icon {
+      color: white;
+    }
+  }
+
+  mat-dialog-actions {
+    border-top: 1px solid $ige-background-bar;
+  }
+}
+
+mat-icon svg .coloring {
+  fill: $ige-secondary;
+}
+
+form-toolbar mat-icon svg .coloring {
+  fill: #000000;
+}
+
+mat-checkbox .mdc-label {
+  font-size: 16px;
+}
+
+.mat-mdc-header-row {
+  min-height: 40px;
+}
+
+.mat-mdc-row {
+  min-height: 32px;
+}
+
+mat-table mat-header-cell.mat-mdc-header-cell {
+  color: #616161;
+  font-size: 14px;
+}
+
+mat-hint {
+  color: #0009;
+}
+
+.mat-mdc-icon-button[disabled] .mat-icon {
+  opacity: 0.26;
+}
+
+mat-dialog-container.mat-mdc-dialog-container {
+  .mat-mdc-dialog-surface {
+    display: flex;
+  }
+
+  .mat-mdc-tab-body-content {
+    overflow: auto !important;
+  }
+}
+
+.cdk-overlay-container .mat-mdc-dialog-container .mdc-dialog__content {
+  color: $ige-text-color;
+}
+
+mat-tab-nav-panel {
+  overflow: auto;
+}
+
+.mat-mdc-tab-links > a {
+  min-width: 160px;
+}
+
+.mdc-floating-label--float-above {
+  color: $ige-text-color !important;
+}
+
+.mat-focused .mdc-floating-label--float-above {
+  color: $ige-secondary-dark !important;
+}
+
+.timespan .mdc-text-field:not(.mdc-text-field--disabled) {
+  background-color: #f3f3f3;
+
+  &.mdc-text-field--focused {
+    background-color: white;
+  }
+
+  .mat-mdc-form-field-focus-overlay {
+    background-color: unset;
+  }
+}
+
+.mat-mdc-form-field-error,
+.mat-mdc-form-field-hint {
+  padding-top: 6px;
+  line-height: 16px;
+
+  &.mat-mdc-form-field-bottom-align {
+    min-height: 16px;
+  }
+}
+
+// related issue: https://github.com/angular/components/issues/14311
+.mat-mdc-form-field-icon-suffix {
+  gap: 3px;
+  display: flex;
+  align-items: center;
+}
+
+mat-icon.dark-blue {
+  svg path {
+    fill: $ige-secondary;
+  }
+}
+
+.mat-button-toggle-group-appearance-standard {
+  overflow: unset !important;
+
+  mat-button-toggle:first-of-type {
+    border-radius: 6px 0 0 6px;
+  }
+
+  mat-button-toggle:last-of-type {
+    border-radius: 0 6px 6px 0;
+  }
+
+  mat-button-toggle {
+    color: $ige-secondary;
+  }
+
+  mat-button-toggle.mat-button-toggle-checked {
+    z-index: 1;
+    color: white;
+    font-weight: 500;
+    background-color: $ige-primary;
+  }
+}
+
+.mat-mdc-snack-bar-container.green {
+  .mdc-snackbar__label {
+    color: black;
+  }
+
+  .mdc-snackbar__surface {
+    background-color: $ige-info-background;
+  }
+}
+
+// Accessibility requirement.
+input,
+textarea {
+  &[disabled] {
+    color: $ige-hint-color !important;
+  }
+}
+
+.mat-mdc-standard-chip.mdc-evolution-chip--disabled {
+  opacity: 0.7 !important;
+}

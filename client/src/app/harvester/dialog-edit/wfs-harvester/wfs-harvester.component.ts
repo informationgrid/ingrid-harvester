@@ -23,7 +23,6 @@
 
 import { AbstractControl, UntypedFormControl, UntypedFormGroup, ValidationErrors } from '@angular/forms';
 import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { Contact } from '../../../../../../server/app/model/agent';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 // import { Subscription } from 'rxjs';
 import { WfsSettings } from '../../../../../../server/app/importer/wfs/wfs.settings';
@@ -44,11 +43,24 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
       return null;
     }
     try {
-      const contact = JSON.parse(control.value) as Contact;
+      const contact = JSON.parse(control.value);
       return contact.fn != null ? null : { 'contact': 'Not a valid contact ("fn" is mandatory)' };
     }
     catch (e) {
       return { 'contact': 'Not a valid JSON object' };
+    }
+  }
+
+  private static MaintainerValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value?.trim()) {
+      return null;
+    }
+    try {
+      const agent = JSON.parse(control.value);
+      return agent.name != null || agent.organization != null ? null : { 'maintainer': 'Not a valid maintainer (either "name" or "organization" is mandatory)' };
+    }
+    catch (e) {
+      return { 'maintainer': 'Not a valid JSON object' };
     }
   }
 
@@ -66,7 +78,8 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
     this.form.addControl('catalogId', new UntypedFormControl(this.model.catalogId));
     this.form.addControl('pluPlanState', new UntypedFormControl(this.model.pluPlanState));
     this.form.addControl('contactCswUrl', new UntypedFormControl(this.model.contactCswUrl));
-    this.form.addControl('contactMetadata', new UntypedFormControl(JSON.stringify(this.model.contactMetadata, null, 4), WfsHarvesterComponent.ContactValidator));
+    this.form.addControl('contactMetadata', new UntypedFormControl(this.model.contactMetadata && JSON.stringify(this.model.contactMetadata, null, 4), WfsHarvesterComponent.ContactValidator));
+    this.form.addControl('maintainer', new UntypedFormControl(this.model.maintainer && JSON.stringify(this.model.maintainer, null, 4), WfsHarvesterComponent.MaintainerValidator));
 
     // this is intended to set the model.contactMetadata to a JS object,
     // but the change gets overwritten somewhere on the way to harvester.component.ts

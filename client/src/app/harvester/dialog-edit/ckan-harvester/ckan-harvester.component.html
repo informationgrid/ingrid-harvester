@@ -28,38 +28,41 @@
       <mat-card-title>Allgemeine CKAN Einstellungen</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex>
-          <input matInput placeholder="CKAN Basis URL" formControlName="ckanBaseUrl" required>
+      <div class="flex-row gap-20 space-between">
+        <mat-form-field class="flex-1">
+          <mat-label>CKAN Basis URL</mat-label>
+          <input matInput formControlName="ckanBaseUrl" required>
         </mat-form-field>
       </div>
 
       <h4>API</h4>
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex>
+      <div class="flex-row gap-20 space-between">
+        <mat-form-field class="flex-1">
           <mat-label>API Funktion</mat-label>
           <mat-select formControlName="requestType">
             <mat-option value="ListWithResources">ListWithResources</mat-option>
             <mat-option value="Search">Search</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field fxFlex>
-          <input matInput placeholder="Zusätzlicher Filter Search-API" formControlName="additionalSearchFilter" autocomplete="off">
+        <mat-form-field class="flex-1">
+          <mat-label>Zusätzlicher Filter Search-API</mat-label>
+          <input matInput formControlName="additionalSearchFilter" autocomplete="off">
         </mat-form-field>
       </div>
-
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between baseline">
+      
+      <div class="flex-row gap-20 space-between baseline">
         <mat-checkbox formControlName="markdownAsDescription"> Beschreibung als Markdown</mat-checkbox>
-
-        <mat-checkbox formControlName="groupChilds" fxFlex> Datensatzreihen zusammenfassen</mat-checkbox>
+        
+        <mat-checkbox formControlName="groupChilds" class="flex-1"> Datensatzreihen zusammenfassen</mat-checkbox>
       </div>
-
+      
       <h4>Bereitgestellt durch</h4>
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
-        <mat-form-field fxFlex>
-          <input matInput placeholder="Präfix" formControlName="providerPrefix" autocomplete="off">
+      <div class="flex-row gap-20 space-between">
+        <mat-form-field class="flex-1">
+          <mat-label>Präfix</mat-label>
+          <input matInput formControlName="providerPrefix" autocomplete="off">
         </mat-form-field>
-        <mat-form-field fxFlex>
+        <mat-form-field class="flex-1">
           <mat-label>CKAN-Feld</mat-label>
           <mat-select formControlName="providerField">
             <mat-option value="maintainer">maintainer</mat-option>
@@ -68,21 +71,24 @@
           </mat-select>
         </mat-form-field>
       </div>
-
+      
       <app-chip-list [list]="model.dateSourceFormats"
                      placeholder="Datumsformate"
                      (update)="model.dateSourceFormats = $event"></app-chip-list>
-
+      
       <h4>Default-Lizenz</h4>
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between" formGroupName="defaultLicense">
-        <mat-form-field fxFlex="10">
-          <input matInput placeholder="ID" formControlName="id">
+      <div class="flex-row gap-20 space-between" formGroupName="defaultLicense">
+        <mat-form-field class="flex-10">
+          <mat-label>ID</mat-label>
+          <input matInput formControlName="id">
         </mat-form-field>
-        <mat-form-field fxFlex="45">
-          <input matInput placeholder="Titel" formControlName="title">
+        <mat-form-field class="flex-45">
+          <mat-label>Titel</mat-label>
+          <input matInput formControlName="title">
         </mat-form-field>
-        <mat-form-field fxFlex="45">
-          <input matInput placeholder="URL" formControlName="url">
+        <mat-form-field class="flex-45">
+          <mat-label>URL</mat-label>
+          <input matInput formControlName="url">
         </mat-form-field>
       </div>
     </mat-card-content>
@@ -95,7 +101,7 @@
     <mat-card-content>
       <ng-container [ngTemplateOutlet]="rulesTemplate"></ng-container>
 
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between">
+      <div class="flex-row gap-20 space-between">
         <app-chip-list [list]="model.filterTags"
                        placeholder="Filter Tags"
                        (update)="model.filterTags = $event"></app-chip-list>

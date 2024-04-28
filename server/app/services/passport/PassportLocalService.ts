@@ -24,7 +24,7 @@
 import * as Passport from 'passport';
 import { AfterRoutesInit, BeforeRoutesInit, Inject, PlatformApplication, PlatformConfiguration, Service } from '@tsed/common';
 import { IUser } from '../../model/User';
-import { NotFound } from 'ts-httpexceptions';
+import { NotFound } from '@tsed/exceptions';
 import { Strategy } from 'passport-local';
 import { UsersService } from '../users/UsersService';
 

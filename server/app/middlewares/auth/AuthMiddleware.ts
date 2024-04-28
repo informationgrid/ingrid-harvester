@@ -22,7 +22,7 @@
  */
 
 import { Context, Middleware, MiddlewareMethods, Req} from '@tsed/common';
-import { Unauthorized } from 'ts-httpexceptions';
+import { Unauthorized } from '@tsed/exceptions';
 
 @Middleware()
 export class AuthMiddleware implements MiddlewareMethods {

@@ -20,28 +20,51 @@
     limitations under the Licence.
     ==================================================
 -->
-
-<div fxLayout="row" class="full">
-  <mat-list fxFlex="50" class="list-hover scroll">
-    <div fxLayout="row">
-      <div fxFlex></div>
-    <input type="file" #indexUpload id="indexUpload" name="harvesterUpload" (change)="importIndex(this.indexUpload.files)" accept="json/*.json" style="display:none;" />
-    <button id="importIndex" mat-flat-button (click)="this.indexUpload.click()" data-test="importIndex">Import</button>
+<div class="flex flex-row h-full" >
+    <div class=" list-hover flex-30 margin  " >
+      <div class="flex  flex-row padding">
+        <h2 matHeader class="flex-1">Existierende Indizes</h2>
+        <input type="file" #indexUpload id="indexUpload" name="harvesterUpload" (change)="importIndex(this.indexUpload.files)" accept="json/*.json" style="display:none;" />
+        <button mat-flat-button id="importIndex" color="primary" (click)="this.indexUpload.click()" data-test="importIndex">Importieren</button>
+      </div>
+      <mat-list class="items-left scroll padding" >
+      @for (index of indices | async; track index) {
+        <mat-list-item  class="index-list-item">
+          <div matListItemTitle class="flex flex-col">
+            <span class="flex-1">
+              Index: <b>{{ index.name }}</b>
+            </span>
+            <button class="right indices-options-button" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Mehr Optionen für diesen Index">
+              <mat-icon svgIcon="Options"/>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="exportIndex(index.name)">
+                <mat-icon svgIcon="Download"/>
+                <span>Exportieren</span>
+              </button>
+              <button mat-menu-item (click)="deleteIndex(index.name)">
+                <mat-icon svgIcon="Delete"/>
+                <span>Löschen</span>
+              </button>
+            </mat-menu>
+          </div>
+          <div matListItemLine>
+            <span>
+              Dokumente: {{index.numDocs}}
+            </span>
+            <div class="right flex gap-20">
+              <!-- <button mat-stroked-button color="primary" class="margin" (click)="exportIndex(index.name)" data-test="exportIndex">Export</button> -->
+              <button mat-stroked-button color="primary" class="margin" (click)="sendSearchRequest(index.name)" >Vorschau</button>
+            </div>
+          </div>
+        </mat-list-item>
+      }
+    </mat-list>
     </div>
-    <h3 mat-subheader>Existierende Indizes</h3>
-    <mat-list-item *ngFor="let index of indices | async" (click)="sendSearchRequest(index.name)">
-      <h4 mat-line>{{index.name}}</h4>
-      <p mat-line>Dokumente: {{index.numDocs}}</p>
-      <button mat-button (click)="exportIndex(index.name)" data-test="exportIndex">Export</button>
-      <button mat-icon-button (click)="deleteIndex(index.name)">
-        <mat-icon mat-list-icon>delete</mat-icon>
-      </button>
-    </mat-list-item>
-  </mat-list>
 
-  <mat-card fxFlex="50">
+  <mat-card class="flex-70 margin">
     <mat-card-header>
-      <mat-card-title>Inhalt</mat-card-title>
+      <mat-card-title>Vorschau</mat-card-title>
     </mat-card-header>
     <mat-card-content class="items">
       <cdk-virtual-scroll-viewport [itemSize]="20" [minBufferPx]="500" [maxBufferPx]="500" class="viewport">

@@ -21,22 +21,35 @@
     ==================================================
 -->
 
-<mat-list dense class="list-hover">
-  <ng-container *ngFor="let type of types | async">
-  <h3 matSubheader>{{type.name}}</h3>
-  <mat-list-item *ngFor="let item of type.items">
-    <h4 matLine>{{item}}</h4>
-    <button mat-icon-button (click)="deleteItem(type.name, item)">
-      <mat-icon mat-list-icon>delete</mat-icon>
-    </button>
-  </mat-list-item>
-  </ng-container>
-</mat-list>
+<page-template label="Mapping (Datenformate)">
+  <div main-content class="margin-below">
+    @for (type of types | async; track type) {
+      <mat-list dense class="list-hover mapping-card">
+            <h3 matSubheader>{{type.name}}</h3>
+            @for (item of type.items; track item) {
+              <mat-list-item>
+                <button mat-icon-button matListItemIcon color="warn" (click)="deleteItem(type.name, item)" class="mapping-delete-button" >
+                  <mat-icon svgIcon="Delete"/>
+                </button>
+                <!-- <mat-icon matListItemIcon svgIcon="Delete" (click)="deleteItem(type.name, item)" /> -->
+                <!-- <button mat-icon-button color="warn" (click)="deleteItem(type.name, item)" >
+                  <mat-icon matListItemIcon svgIcon="Delete"/>
+                </button> -->
+                <span matListItemTitle>{{item}}</span>
+              </mat-list-item>
+            }
+        </mat-list>
+      }
+    <div class="big-button-container">
 
-<button mat-fab
-        color="primary"
-        (click)="addItem()"
-        class="mat-fab-bottom-right"
-        id="btnAddMapping">
-  <mat-icon aria-label="Add Mapping">add</mat-icon>
-</button>
+      <button mat-flat-button
+              color="primary"
+              (click)="addItem()"
+              class="fixed-bottom-right"
+              id="btnAddMapping">
+        <mat-icon  svgIcon="Add" aria-label="Add Mapping" ></mat-icon>
+        Hinzufügen
+      </button>
+    </div>
+  </div>
+</page-template>

@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import * as GeoJsonUtils from '../../utils/geojson.utils';
 import { getLogger } from 'log4js';
 import { Catalog, PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../model/dcatApPlu.model';
 import { throwError } from 'rxjs';
@@ -28,7 +29,6 @@ import { BaseMapper } from '../base.mapper';
 import { Contact, Organization, Person } from '../../model/agent';
 import { DateRange } from '../../model/dateRange';
 import { Geometry, GeometryCollection } from '@turf/helpers';
-import { GeoJsonUtils } from '../../utils/geojson.utils';
 import { ImporterSettings } from '../../importer.settings';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
@@ -88,8 +88,8 @@ export abstract class WfsMapper extends BaseMapper {
         return [this.fetched.catalog.publisher];
     }
 
-    _getMaintainers() {
-        return undefined;
+    async _getMaintainers(): Promise<Person[] | Organization[]> {
+        return [this.fetched.maintainer];
     }
 
     async _getContributors(): Promise<Person[] | Organization[]> {
@@ -204,7 +204,7 @@ export abstract class WfsMapper extends BaseMapper {
 
     abstract _getPluProcessSteps(): ProcessStep[];
 
-    abstract _getPluProcedureStartDate(): Date;
+    abstract _getPluProcedurePeriod(): DateRange;
 
     _getPluNotification() {
         return undefined;

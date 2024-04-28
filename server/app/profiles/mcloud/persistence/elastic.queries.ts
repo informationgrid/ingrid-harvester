@@ -183,7 +183,7 @@ export class ElasticQueries implements IElasticQueries {
                 term: {'base_index': baseIndex}
             },
             sort: {
-                'timestamp': {"order": "desc"}
+                'timestamp': {"order": "asc"}
             }
         };
     }
@@ -202,7 +202,7 @@ export class ElasticQueries implements IElasticQueries {
         }
             },
             sort: {
-                'timestamp': {"order": "desc"}
+                'timestamp': {"order": "asc"}
             }
         };
     }

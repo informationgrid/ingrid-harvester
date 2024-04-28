@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Contact } from '../../model/agent';
+import { Contact, Organization, Person } from '../../model/agent';
 import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
 import { PluPlanState } from '../../model/dcatApPlu.model';
 
@@ -32,6 +32,7 @@ export type WfsSettings = {
     pluPlanState: PluPlanState,
     contactCswUrl?: string,
     contactMetadata?: Contact,
+    maintainer?: Person | Organization;
     count: number,
     resultType?: "hits" | "results",
     typename: string,
