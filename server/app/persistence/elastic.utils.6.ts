@@ -194,7 +194,7 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
                 // the index name must consist of the base name + the date string which is
                 // 18 characters long
                 // in case we want to get all indices just request with an empty baseName
-                return baseName === this.config.prefix || (json.index.startsWith(baseName) && json.index.length === baseName.length + ElasticsearchUtils.LENGTH_OF_TIMESTAMP);
+                return json.index.startsWith(baseName);
             })
             .map(item => {
                 return {

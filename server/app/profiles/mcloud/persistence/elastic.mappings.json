@@ -223,13 +223,13 @@
                         "quality_notes": {
                             "type": "text"
                         },
-                        "hierarchy_level": {
-                            "type": "keyword"
-                        },
                         "operates_on": {
                             "type": "keyword"
                         }
                     }
+                },
+                "hierarchy_level": {
+                    "type": "keyword"
                 },
                 "generated_id": {
                     "type": "keyword"

@@ -37,7 +37,11 @@ const overwriteFields = [
     // spatial fields
     'bounding_box', 'centroid', 'spatial',
     // PLU fields
-    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_start_date', 'procedure_state', 'procedure_type'
+    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_period', 'procedure_state', 'procedure_type',
+    // TODO remove
+    'procedure_start_date',
+    // "special" fields
+    'maintainers'
 ];
 
 
@@ -63,7 +67,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<DiplanungI
             let duplicate_id = createEsId(duplicate);
             document = this.deduplicate(document, duplicate);
             let document_id = createEsId(document);
-            document.extras.merged_from.push(duplicate_id);
+            document.extras.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
                 box.push({ operation: 'delete', _id: old_id });
@@ -172,9 +176,11 @@ export class PostgresAggregator implements AbstractPostgresAggregator<DiplanungI
     private resolveCoupling(document: DiplanungIndexDocument, service: Distribution): DiplanungIndexDocument {
         let distributionMap: { [key: string]: Distribution[] } = {};
         // add document distributions to distribution map
-        for (let distribution of document.distributions) {
-            distributionMap[MiscUtils.minimalDistHash(distribution)] ??= [];
-            distributionMap[MiscUtils.minimalDistHash(distribution)].push(distribution);
+        if (document.distributions) {
+            for (let distribution of document.distributions) {
+                distributionMap[MiscUtils.minimalDistHash(distribution)] ??= [];
+                distributionMap[MiscUtils.minimalDistHash(distribution)].push(distribution);
+            }
         }
         // remove resolvedGeometry from service distribution if available (add to document later)
         let resolvedGeometry = service.resolvedGeometry;

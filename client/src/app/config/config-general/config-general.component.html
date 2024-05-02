@@ -88,7 +88,7 @@
         </div>
         <div class="margin-below flex-row gap-20">
           <div class="form-buttons">
-            <button mat-button color="primary" (click)="checkDbConnection()" [disabled]="dbConnectionCheck == 'working'"
+            <button mat-flat-button color="primary" (click)="checkDbConnection()" [disabled]="dbConnectionCheck == 'working'"
               data-test="checkDbConnection">
               <mat-icon svgIcon="cloud" class="inline-valigned" />
               Verbindung testen
@@ -181,7 +181,7 @@
 
         <div class="margin-below flex-row gap-20">
           <div class="form-buttons">
-            <button mat-button color="primary" (click)="checkEsConnection()" [disabled]="esConnectionCheck == 'working'"
+            <button mat-flat-button color="primary" (click)="checkEsConnection()" [disabled]="esConnectionCheck == 'working'"
               data-test="checkEsConnection">
               <mat-icon svgIcon="cloud" class="inline-valigned" />
               Verbindung testen

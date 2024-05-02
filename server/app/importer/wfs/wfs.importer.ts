@@ -309,7 +309,7 @@ export abstract class WfsImporter extends Importer {
         if (envelope) {
             let lowerCorner = select('./gml:lowerCorner', envelope, true)?.textContent;
             let upperCorner = select('./gml:upperCorner', envelope, true)?.textContent;
-            let crs = (<Element>envelope).getAttribute('srsName');            
+            let crs = (<Element>envelope).getAttribute('srsName') || this.generalInfo['defaultCrs'];            
             this.generalInfo['boundingBox'] = GeoJsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
         }
 

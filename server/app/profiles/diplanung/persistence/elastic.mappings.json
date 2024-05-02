@@ -37,15 +37,24 @@
     },
     "catalog": {
       "properties": {
-        "identifier": {
-          "type": "keyword"
-        },
         "description": {
           "type": "text",
           "analyzer": "decomp"
         },
         "homepage": {
           "type": "keyword"
+        },
+        "identifier": {
+          "type": "keyword"
+        },
+        "issued": {
+          "type": "date"
+        },
+        "language": {
+          "type": "keyword"
+        },
+        "modified": {
+          "type": "date"
         },
         "publisher": {
           "properties": {
@@ -69,6 +78,9 @@
               }
             }
           }
+        },
+        "themeTaxonomy": {
+          "type": "keyword"
         },
         "title": {
           "type": "text",
@@ -198,21 +210,6 @@
       "type": "text",
       "analyzer": "decomp"
     },
-    "creator": {
-      "properties": {
-        "name": {
-          "type": "text",
-          "fields": {
-            "raw": {
-              "type": "keyword"
-            }
-          }
-        },
-        "mbox": {
-          "type": "keyword"
-        }
-      }
-    },
     "publisher": {
       "properties": {
         "name": {
@@ -337,9 +334,6 @@
     "keywords": {
       "type": "keyword"
     },
-    "theme": {
-      "type": "keyword"
-    },
     "issued": {
       "type": "date"
     },
@@ -452,36 +446,12 @@
             "quality_notes": {
               "type": "text"
             },
-            "hierarchy_level": {
-              "type": "keyword"
-            },
             "merged_from": {
               "type": "keyword"
             }
           }
         },
-        "generated_id": {
-          "type": "keyword"
-        },
-        "display_contact": {
-          "properties": {
-            "name": {
-              "type": "text",
-              "fields": {
-                "raw": {
-                  "type": "keyword"
-                }
-              }
-            },
-            "url": {
-              "type": "text"
-            }
-          }
-        },
-        "groups": {
-          "type": "keyword"
-        },
-        "subgroups": {
+        "hierarchy_level": {
           "type": "keyword"
         },
         "harvested_data": {
@@ -499,22 +469,6 @@
               "index": false
             }
           }
-        },
-        "subsection": {
-          "properties": {
-            "title": {
-              "type": "text",
-              "analyzer": "decomp"
-            },
-            "description": {
-              "type": "text",
-              "analyzer": "decomp"
-            }
-          }
-        },
-        "all": {
-          "type": "text",
-          "analyzer": "decomp"
         }
       }
     }
