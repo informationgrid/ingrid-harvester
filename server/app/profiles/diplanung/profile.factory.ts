@@ -28,16 +28,18 @@ import { DiplanungDcatappluMapper } from './mapper/diplanung.dcatapplu.mapper';
 import { DiplanungImporterFactory } from './importer/diplanung.importer.factory';
 import { DiplanungIndexDocument } from './model/index.document';
 import { DiplanungWfsMapper } from './mapper/diplanung.wfs.mapper';
-import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { ElasticQueries } from './persistence/elastic.queries';
+import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper';
 import { FisWfsMapper } from '../../importer/wfs/fis/fis.wfs.mapper';
 import { ImporterFactory } from '../../importer/importer.factory';
 import { IndexDocumentFactory } from '../../model/index.document.factory';
 import { IndexSettings } from '../../persistence/elastic.setting';
 import { MsWfsMapper } from '../../importer/wfs/ms/ms.wfs.mapper';
-import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
+import { PostgresAggregator } from './persistence/postgres.aggregator';
+import { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator';
 import { PostgresQueries } from './persistence/postgres.queries';
+import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
 import { WfsMapper } from '../../importer/wfs/wfs.mapper';
 import { XplanSynWfsMapper } from '../../importer/wfs/xplan/syn/xplan.syn.wfs.mapper';
@@ -71,6 +73,10 @@ export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper
 
     getImporterFactory(): ImporterFactory {
         return new DiplanungImporterFactory();
+    }
+
+    getPostgresAggregator(): AbstractPostgresAggregator<DiplanungIndexDocument> {
+        return new PostgresAggregator();
     }
 
     getPostgresQueries(): AbstractPostgresQueries {

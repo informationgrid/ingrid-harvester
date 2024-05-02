@@ -24,13 +24,12 @@
 import { BulkResponse, DatabaseUtils } from './database.utils';
 import { Catalog } from '../model/dcatApPlu.model';
 import { Client, Pool, PoolClient, QueryResult } from 'pg';
+import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory';
-import { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document';
 import { Distribution } from '../model/distribution';
-import { PostgresUtils as DiplanungPostgresUtils } from '../profiles/diplanung/persistence/postgres.utils';
 import { ElasticsearchUtils } from './elastic.utils';
-import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
+import { IndexDocument } from '../model/index.document';
 import { PostgresQueries } from './postgres.queries';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
@@ -170,7 +169,7 @@ export class PostgresUtils extends DatabaseUtils {
      * @param processBucket
      */
     async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string) {
-        let pgUtils = new DiplanungPostgresUtils();
+        let pgAggregator = ProfileFactoryLoader.get().getPostgresAggregator();
         const client: PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
         let start = Date.now();
@@ -194,12 +193,12 @@ export class PostgresUtils extends DatabaseUtils {
                     // process current bucket, then create new
                     currentId = row.anchor_id;
                     if (currentBucket) {
-                        let operationChunks = await pgUtils.processBucket(currentBucket);
+                        let operationChunks = await pgAggregator.processBucket(currentBucket);
                         await elastic.addOperationChunksToBulk(operationChunks);
                     }
                     currentBucket = {
                         anchor_id: row.anchor_id,
-                        duplicates: new Map<string | number, DiplanungIndexDocument>(),
+                        duplicates: new Map<string | number, IndexDocument>(),
                         operatingServices: new Map<string | number, Distribution>()
                     };
                 }
@@ -225,7 +224,7 @@ export class PostgresUtils extends DatabaseUtils {
         }
         // process last bucket
         if (currentBucket) {
-            let operationChunks = await pgUtils.processBucket(currentBucket);
+            let operationChunks = await pgAggregator.processBucket(currentBucket);
             await elastic.addOperationChunksToBulk(operationChunks);
         }
         // send remainder of bulk data

@@ -32,6 +32,8 @@ import { LvrIndexDocument } from './model/index.document';
 import { LvrKldMapper } from './mapper/lvr.kld.mapper';
 import { LvrOaiMapper } from './mapper/lvr.oai.mapper';
 import { OaiMapper } from '../../importer/oai/lido/oai.mapper';
+import { PostgresAggregator } from './persistence/postgres.aggregator';
+import { PostgresAggregator as AbstractPostgresAggregator} from '../../persistence/postgres.aggregator';
 import { PostgresQueries } from './persistence/postgres.queries';
 import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
@@ -59,6 +61,10 @@ export class LvrFactory extends ProfileFactory<KldMapper | OaiMapper> {
 
     getImporterFactory(): ImporterFactory {
         return new LvrImporterFactory();
+    }
+
+    getPostgresAggregator(): AbstractPostgresAggregator<LvrIndexDocument> {
+        return new PostgresAggregator();
     }
 
     getPostgresQueries(): AbstractPostgresQueries {

@@ -21,17 +21,16 @@
  * ==================================================
  */
 
-import { createEsId } from '../lvr.utils';
+import { createEsId } from '../mcloud.utils';
+import { mcloudIndexDocument } from '../model/index.document';
 import { Bucket } from '../../../persistence/postgres.utils';
-import { LvrIndexDocument } from '../model/index.document';
 import { Distribution } from '../../../model/distribution';
 import { EsOperation } from '../../../persistence/elastic.utils';
+import { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator';
 
-const log = require('log4js').getLogger(__filename);
+export class PostgresAggregator implements AbstractPostgresAggregator<mcloudIndexDocument> {
 
-export class PostgresUtils {
-
-    public async processBucket(bucket: Bucket<LvrIndexDocument>): Promise<EsOperation[]> {
+    public async processBucket(bucket: Bucket<mcloudIndexDocument>): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
         // find primary document
         let { document, duplicates } = this.prioritizeAndFilter(bucket);
@@ -61,24 +60,24 @@ export class PostgresUtils {
         return box;
     }
 
-    private prioritizeAndFilter(bucket: Bucket<LvrIndexDocument>): { 
-        document: LvrIndexDocument, 
-        duplicates: Map<string | number, LvrIndexDocument>
+    private prioritizeAndFilter(bucket: Bucket<mcloudIndexDocument>): { 
+        document: mcloudIndexDocument, 
+        duplicates: Map<string | number, mcloudIndexDocument>
     } {
         // initialize records map
-        let records: Map<string, Map<string | number, LvrIndexDocument>> = new Map<string, Map<string | number, LvrIndexDocument>>();
+        let records: Map<string, Map<string | number, mcloudIndexDocument>> = new Map<string, Map<string | number, mcloudIndexDocument>>();
         for (let [id, document] of bucket.duplicates) {
             let sourceType = document.extras.metadata.source.source_type;
             let sourceMap = records.get(sourceType);
             if (sourceMap == null) {
-                sourceMap = new Map<string | number, LvrIndexDocument>();
+                sourceMap = new Map<string | number, mcloudIndexDocument>();
                 records.set(sourceType, sourceMap);
             }
             sourceMap.set(id, document);
         }
 
-        let mainDocument: LvrIndexDocument;
-        let duplicates: Map<string | number, LvrIndexDocument> = new Map<string | number, LvrIndexDocument>();
+        let mainDocument: mcloudIndexDocument;
+        let duplicates: Map<string | number, mcloudIndexDocument> = new Map<string | number, mcloudIndexDocument>();
 
         for (let [id, document] of bucket.duplicates) {
             if (mainDocument == null) {
@@ -100,7 +99,7 @@ export class PostgresUtils {
      * @param service the service distribution that should be merged into the dataset
      * @returns the augmented dataset
      */
-    private resolveCoupling(document: LvrIndexDocument, service: Distribution): LvrIndexDocument {
+    private resolveCoupling(document: mcloudIndexDocument, service: Distribution): mcloudIndexDocument {
         return document;
     }
 
@@ -112,7 +111,7 @@ export class PostgresUtils {
      * @param duplicate 
      * @returns the augmented dataset
      */
-    private deduplicate(document: LvrIndexDocument, duplicate: LvrIndexDocument): LvrIndexDocument {
+    private deduplicate(document: mcloudIndexDocument, duplicate: mcloudIndexDocument): mcloudIndexDocument {
         // log.warn(`Merging ${duplicate.identifier} (${duplicate.extras.metadata.source.source_base}) into ${document.identifier} (${document.extras.metadata.source.source_base})`);
         // switch (document.extras.metadata.source.source_type) {
         //     case 'cockpitpro':
@@ -152,7 +151,7 @@ export class PostgresUtils {
         // return MiscUtils.merge(document, updatedFields);
     }
 
-    private sanitize(document: LvrIndexDocument): LvrIndexDocument {
+    private sanitize(document: mcloudIndexDocument): mcloudIndexDocument {
         return document;
     }
 }

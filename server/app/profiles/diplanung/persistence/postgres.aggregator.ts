@@ -29,8 +29,8 @@ import { DcatApPluDocumentFactory } from '../model/dcatapplu.document.factory';
 import { DiplanungIndexDocument } from '../model/index.document';
 import { Distribution } from '../../../model/distribution';
 import { EsOperation } from '../../../persistence/elastic.utils';
+import { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator';
 
-const log = require('log4js').getLogger(__filename);
 
 const overwriteFields = [
     'catalog',
@@ -47,7 +47,7 @@ const overwriteFields = [
 const HACK_ON = true;
 
 
-export class PostgresUtils {
+export class PostgresAggregator implements AbstractPostgresAggregator<DiplanungIndexDocument> {
 
     public async processBucket(bucket: Bucket<DiplanungIndexDocument>): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
