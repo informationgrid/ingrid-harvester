@@ -184,7 +184,6 @@ export class KldMapper extends BaseMapper {
     // }
     getLicense(): License {
         return {
-            id: this.record.Lizenz.Id,
             title: this.record.Lizenz.Lizenz,
             url: this.record.Lizenz.Url,
         };
