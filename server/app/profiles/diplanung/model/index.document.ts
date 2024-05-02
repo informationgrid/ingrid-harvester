@@ -93,16 +93,16 @@ export class DiPlanungDocument extends IndexDocument<DcatappluMapper | Diplanung
                     issued: null,
                     is_valid: null, // check validity before persisting to ES
                     modified: null,
-                    source: mapper.getMetadataSource()
-                },
-                merged_from: []
+                    source: mapper.getMetadataSource(),
+                    merged_from: []
+                }
             },
             issued: mapper.getIssued(),
             keywords: mapper.getKeywords(),
             modified: mapper.getModifiedDate(),
         };
 
-        result.extras.merged_from.push(createEsId(result));
+        result.extras.metadata.merged_from.push(createEsId(result));
         result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
         // result.extras.metadata.is_valid = mapper.isValid(result);
         // let qualityNotes = mapper.getQualityNotes();
@@ -165,7 +165,7 @@ export type DiplanungIndexDocument = {
         hierarchy_level: string,
         metadata: {
             harvested: Date,
-            harvesting_errors: null, // get errors after all operations been done
+            harvesting_errors: string[], // get errors after all operations been done
             issued: Date,
             is_changed?: boolean,
             is_valid: boolean, // checks validity after all operations been done
@@ -177,9 +177,9 @@ export type DiplanungIndexDocument = {
                 raw_data_source?: string,
                 portal_link?: string,
                 attribution?: string
-            }
-        },
-        merged_from: string[]
+            },
+            merged_from: string[]
+        }
     },
     keywords: string[]
 };

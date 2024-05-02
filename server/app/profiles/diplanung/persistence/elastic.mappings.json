@@ -446,31 +446,13 @@
             "quality_notes": {
               "type": "text"
             },
-            "hierarchy_level": {
-              "type": "keyword"
-            },
             "merged_from": {
               "type": "keyword"
             }
           }
         },
-        "generated_id": {
+        "hierarchy_level": {
           "type": "keyword"
-        },
-        "display_contact": {
-          "properties": {
-            "name": {
-              "type": "text",
-              "fields": {
-                "raw": {
-                  "type": "keyword"
-                }
-              }
-            },
-            "url": {
-              "type": "text"
-            }
-          }
         },
         "harvested_data": {
           "type": "text",
@@ -487,10 +469,6 @@
               "index": false
             }
           }
-        },
-        "all": {
-          "type": "text",
-          "analyzer": "decomp"
         }
       }
     }
