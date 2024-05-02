@@ -36,7 +36,7 @@ export class LvrImporterFactory extends ImporterFactory {
             case 'OAI':
                 importer = new OaiImporter(config);
                 break;
-            case 'KuLaDig':
+            case 'KLD':
                 importer = new KldImporter(config as KldSettings);
                 break;
             default: {

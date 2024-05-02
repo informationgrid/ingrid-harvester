@@ -639,7 +639,7 @@
   {
     "index": "kuladig",
     "priority": null,
-    "type": "KuLaDig",
+    "type": "KLD",
     "maxRecords": null,
     "blacklistedIds": [],
     "whitelistedIds": [],
