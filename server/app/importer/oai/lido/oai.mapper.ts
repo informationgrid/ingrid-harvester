@@ -35,6 +35,7 @@ import { Distribution } from '../../../model/distribution';
 import { Event, Record, Relation, Repository, Resource, Subject } from './lido.model';
 import { ImporterSettings } from '../../../importer.settings';
 import { License } from '@shared/license.model';
+import { MetadataSource } from '../../../model/index.document';
 import { OaiSettings } from '../oai.settings';
 import { RequestOptions } from '../../../utils/http-request.utils';
 import { Summary } from '../../../model/summary';
@@ -48,82 +49,82 @@ export class OaiMapper extends BaseMapper {
     public getSummary(): Summary {
         return this.summary;
     }
-    _getTitle(): string {
+    getTitle(): string {
         throw new Error('Method not implemented.');
     }
-    _getDescription(): string {
+    getDescription(): string {
         throw new Error('Method not implemented.');
     }
-    _getPublisher(): Promise<Person[] | Organization[]> {
+    getPublisher(): Promise<Person[] | Organization[]> {
         throw new Error('Method not implemented.');
     }
-    _getThemes(): string[] {
+    getThemes(): string[] {
         throw new Error('Method not implemented.');
     }
-    _getModifiedDate(): Date {
+    getModifiedDate(): Date {
         throw new Error('Method not implemented.');
     }
-    _getAccessRights(): string[] {
+    getAccessRights(): string[] {
         throw new Error('Method not implemented.');
     }
-    _getDistributions(): Promise<Distribution[]> {
+    getDistributions(): Promise<Distribution[]> {
         throw new Error('Method not implemented.');
     }
-    _getGeneratedId(): string {
+    getGeneratedId(): string {
         throw new Error('Method not implemented.');
     }
-    _getMetadataSource() {
+    getMetadataSource(): MetadataSource {
         throw new Error('Method not implemented.');
     }
-    _isRealtime(): boolean {
+    isRealtime(): boolean {
         throw new Error('Method not implemented.');
     }
-    _getSpatial() {
+    getSpatial() {
         throw new Error('Method not implemented.');
     }
-    _getSpatialText(): string {
+    getSpatialText(): string {
         throw new Error('Method not implemented.');
     }
-    _getTemporal(): DateRange[] {
+    getTemporal(): DateRange[] {
         throw new Error('Method not implemented.');
     }
-    _getCitation(): string {
+    getCitation(): string {
         throw new Error('Method not implemented.');
     }
-    _getKeywords(): string[] {
+    getKeywords(): string[] {
         throw new Error('Method not implemented.');
     }
-    _getAccrualPeriodicity(): string {
+    getAccrualPeriodicity(): string {
         throw new Error('Method not implemented.');
     }
-    _getContactPoint(): Promise<Contact> {
+    getContactPoint(): Promise<Contact> {
         throw new Error('Method not implemented.');
     }
-    _getCreator(): Person | Person[] {
+    getCreator(): Person | Person[] {
         throw new Error('Method not implemented.');
     }
-    _getHarvestedData(): string {
+    getHarvestedData(): string {
         return this.record.toString();
     }
-    _getIssued(): Date {
+    getIssued(): Date {
         throw new Error('Method not implemented.');
     }
-    _getMetadataHarvested(): Date {
+    getHarvestingDate(): Date {
         throw new Error('Method not implemented.');
     }
-    _getSubSections(): any[] {
+    getSubSections(): any[] {
         throw new Error('Method not implemented.');
     }
-    _getGroups(): string[] {
+    getGroups(): string[] {
         throw new Error('Method not implemented.');
     }
-    _getOriginator(): Agent[] {
+    getOriginator(): Agent[] {
         throw new Error('Method not implemented.');
     }
-    _getLicense(): Promise<License> {
+    getLicense(): Promise<License> {
         throw new Error('Method not implemented.');
     }
-    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+    getUrlCheckRequestConfig(uri: string): RequestOptions {
         throw new Error('Method not implemented.');
     }
 
@@ -137,7 +138,7 @@ export class OaiMapper extends BaseMapper {
         return this.select(path.replace(/\/(?!@)/g, '/lido:'), parent, true)?.textContent;
     }
 
-    private log = getLogger();
+    log = getLogger();
 
     private readonly record: any;
     private harvestTime: any;

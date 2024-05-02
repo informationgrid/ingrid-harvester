@@ -21,20 +21,7 @@
  * ==================================================
  */
 
-import { Distribution } from '../../model/distribution';
 import { LvrIndexDocument } from './model/index.document';
-
-export function generatePlanDigitalWmsDistribution(planName: string, stelleId: string): Distribution {
-    let wmsURL = `https://testportal-plandigital.de/ows/${stelleId}/fplan`;
-    let mapLayerNames = ['fp_plan'];
-    let wmsPlanwerk: Distribution = {
-        accessURL: wmsURL,
-        format: ['WMS'],
-        title: planName + ' WMS',
-        mapLayerNames
-    };
-    return wmsPlanwerk;
-}
 
 export function createEsId(document: LvrIndexDocument): string {
     return document.identifier;

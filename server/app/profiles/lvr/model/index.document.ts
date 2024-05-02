@@ -21,159 +21,23 @@
  * ==================================================
  */
 
-import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
-import { Contact, Organization, Person } from '../../../model/agent';
-import { Distribution } from '../../../model/distribution';
+import { DateRange } from '../../../model/dateRange';
+import { Geometries, GeometryCollection, Point } from '@turf/helpers';
 import { IndexDocument } from '../../../model/index.document';
-import { createEsId } from '../lvr.utils';
-import { LvrMapperFactory } from '../mapper/lvr.mapper.factory';
-import { Event, Record, Relation, Repository, Resource, Subject } from '../../../importer/oai/lido/lido.model';
+import { License } from '@shared/license.model';
 
-export class LvrDocument extends IndexDocument<OaiMapper> {
-
-    async create(_mapper: OaiMapper) : Promise<LvrIndexDocument> {
-        let mapper = LvrMapperFactory.getMapper(_mapper);
-        // let contactPoint: Contact = await mapper.getContactPoint() ?? { fn: '' };
-        let result = {
-            // // basic information
-            // contact_point: {
-            //     fn: contactPoint.fn,
-            //     has_country_name: contactPoint.hasCountryName,
-            //     has_locality: contactPoint.hasLocality,
-            //     has_postal_code: contactPoint.hasPostalCode,
-            //     has_region: contactPoint.hasRegion,
-            //     has_street_address: contactPoint.hasStreetAddress,
-            //     has_email: contactPoint.hasEmail,
-            //     has_telephone: contactPoint.hasTelephone,
-            //     has_uid: contactPoint.hasUID,
-            //     has_url: contactPoint.hasURL,
-            //     has_organization_name: contactPoint.hasOrganizationName
-            // },
-            // description: mapper.getDescription(),
-            // identifier: mapper.getGeneratedId(),
-            // // adms_identifier: mapper.getAdmsIdentifier(),
-            // // resource_identifier: mapper.getResourceIdentifier(),
-            // title: mapper.getTitle(),
-            // // plan_name: mapper.getAlternateTitle(),
-            // // plan and procedure information
-            // // development_freeze_period: mapper.getPluDevelopmentFreezePeriod(),
-            // // plan_state: mapper.getPluPlanState(),
-            // // plan_or_procedure_start_date: mapper.getTemporal()?.[0]?.gte ?? mapper.getPluProcedureStartDate(),
-            // // plan_type: mapper.getPluPlanType(),
-            // // plan_type_fine: mapper.getPluPlanTypeFine(),
-            // // procedure_state: mapper.getPluProcedureState(),
-            // // procedure_start_date: mapper.getPluProcedureStartDate(),
-            // // procedure_type: mapper.getPluProcedureType(),
-            // // process_steps: mapper.getPluProcessSteps(),
-            // // notification: mapper.getPluNotification(),
-            // // spatial and temporal features
-            // // bounding_box: mapper.getBoundingBox(),
-            // // centroid: mapper.getCentroid()?.['coordinates'],
-            // spatial: mapper.getSpatial(),
-            // spatial_text: mapper.getSpatialText(),
-            // // temporal: mapper.getTemporal(),
-            // // additional information and metadata
-            // // relation: mapper.getRelation(),
-            // // catalog: await mapper.getCatalog(),
-            // publisher: (await mapper.getPublisher())?.[0],
-            // maintainers: await mapper.getMaintainers(),
-            // contributors: await mapper.getContributors(),
-            // distributions: await mapper.getDistributions(),
-            extras: {
-            //     // harvested_data: mapper.getHarvestedData(),
-            //     hierarchy_level: mapper.getHierarchyLevel(),    // only csw
-                metadata: {
-            //         harvested: mapper.getMetadataHarvested(),
-            //         harvesting_errors: null, // get errors after all operations been done
-                    issued: null,
-            //         is_valid: null, // check validity before persisting to ES
-                    modified: null,
-                    // source: mapper.getMetadataSource()
-                    source: {
-                        source_base: null
-                    }
-                },
-            //     operates_on: mapper.getOperatesOn(),    // only csw
-                merged_from: []
-            },
-            // issued: mapper.getIssued(),
-            // keywords: mapper.getKeywords(),
-            // modified: mapper.getModifiedDate(),
-            events: mapper.getEvents(),
-            records: mapper.getRecord(),
-            relations: mapper.getRelations(),
-            repositories: mapper.getRepositories(),
-            resources: mapper.getResources(),
-            subjects: mapper.getSubjects()
-        };
-
-        // result.extras.merged_from.push(createEsId(result));
-        // result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
-        // // result.extras.metadata.is_valid = mapper.isValid(result);
-        // // let qualityNotes = mapper.getQualityNotes();
-        // // if (qualityNotes?.length > 0) {
-        // //     result.extras.metadata['quality_notes'] = qualityNotes;
-        // // }
-        // mapper.executeCustomCode(result);
-
-        return result;
-    }
-}
-
-export type LvrIndexDocument = {
-    events: Event[],
-    records: Record,
-    relations: Relation[],
-    repositories: Repository[],
-    resources: Resource[],
-    subjects: Subject[],
-    // // mandatory
-    // contact_point: {
-    //     fn: string,
-    //     has_country_name?: string,
-    //     has_locality?: string,
-    //     has_postal_code?: string,
-    //     has_region?: string,
-    //     has_street_address?: string,
-    //     has_email?: string,
-    //     has_telephone?: string,
-    //     has_uid?: string,
-    //     has_url?: string,
-    //     has_organization_name?: string
-    // },
-    // description: string,
-    // identifier: string,
-    // title: string,
-    // // plan_state: PluPlanState,
-    // // procedure_state: PluProcedureState,
-    // publisher: Person | Organization,
-    // // recommended
-    // // adms_identifier: string,
-    // // plan_name: string,
-    // // plan_type: PluPlanType,
-    // // plan_type_fine: string,
-    // // procedure_type: PluProcedureType,
-    // distributions: Distribution[],
-    // // process_steps: ProcessStep[],
-    // // bounding_box: any,
-    // spatial: any,
-    // // optional
-    // issued: Date,
-    // modified: Date,
-    // // relation: string,
-    // // notification: string,
-    // // procedure_start_date: Date,
-    // // development_freeze_period: DateRange,
-    // maintainers: Person[] | Organization[],
-    // contributors: Person[] | Organization[],
-    // // centroid: any,
-    // spatial_text: string,
-    // // additional information and metadata
-    // // catalog: Catalog,
-    // // plan_or_procedure_start_date: Date,
-    // // temporal: DateRange[],
+export type LvrIndexDocument = IndexDocument & {
+    identifier: string,
+    title: string,
+    description: string,
+    spatial: GeometryInformation[],
+    temporal: DateRange,
+    keywords: Keyword[],
+    relation: Relation[],
+    media: Media[],
+    license: License,
+    vector: object,
     extras: {
-    //     hierarchy_level: string,
         metadata: {
     //         harvested: Date,
     //         harvesting_errors: null, // get errors after all operations been done
@@ -195,3 +59,29 @@ export type LvrIndexDocument = {
     },
     // keywords: string[]
 };
+
+export type GeometryInformation = {
+    geometry: Geometries | GeometryCollection,
+    centroid: Point,
+    type: string,
+    description: string,
+    address: string
+};
+
+export type Keyword = {
+    id: string,
+    term: string,
+    thesaurus: string
+}
+
+export type Media = {
+    type: string,
+    url: string,
+    description: string
+}
+
+export type Relation = {
+    id: string,
+    type: string,
+    score: number
+}

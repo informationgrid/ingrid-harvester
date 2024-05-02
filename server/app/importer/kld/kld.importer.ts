@@ -284,7 +284,7 @@ export class KldImporter extends Importer {
 
             let doc: any;
             try {
-                doc = await this.profile.getIndexDocument().create(mapper);
+                doc = await this.profile.getIndexDocumentFactory(mapper).create();
                 docToImport = doc;
             }
             catch (e) {

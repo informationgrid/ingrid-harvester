@@ -21,25 +21,32 @@
  * ==================================================
  */
 
-import { ImporterFactory } from '../../importer/importer.factory';
-import { OaiMapper } from '../../importer/oai/lido/oai.mapper';
+import { ElasticQueries } from './persistence/elastic.queries';
 import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
+import { ImporterFactory } from '../../importer/importer.factory';
+import { IndexDocumentFactory } from 'model/index.document.factory';
 import { IndexSettings } from '../../persistence/elastic.setting';
+import { KldMapper } from 'importer/kld/kld.mapper';
+import { LvrImporterFactory } from './importer/lvr.importer.factory';
+import { LvrIndexDocument } from './model/index.document';
+import { LvrKldMapper } from './mapper/lvr.kld.mapper';
+import { LvrOaiMapper } from './mapper/lvr.oai.mapper';
+import { OaiMapper } from '../../importer/oai/lido/oai.mapper';
+import { PostgresQueries } from './persistence/postgres.queries';
 import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
-import { LvrImporterFactory } from './importer/lvr.importer.factory';
-import { LvrDocument } from './model/index.document';
-import { ElasticQueries } from './persistence/elastic.queries';
-import { PostgresQueries } from './persistence/postgres.queries';
 
-export class LvrFactory extends ProfileFactory<OaiMapper> {
+export class LvrFactory extends ProfileFactory<KldMapper | OaiMapper> {
 
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();
     }
 
-    getIndexDocument(): LvrDocument {
-        return new LvrDocument();
+    getIndexDocumentFactory(mapper: KldMapper | OaiMapper): IndexDocumentFactory<LvrIndexDocument> {
+        switch (mapper.constructor.name) {
+            case 'KldMapper': return new LvrKldMapper(<KldMapper>mapper);
+            case 'OaiMapper': return new LvrOaiMapper(<OaiMapper>mapper);
+        }
     }
 
     getIndexMappings(): any {

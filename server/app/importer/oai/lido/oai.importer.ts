@@ -24,7 +24,7 @@
 import * as MiscUtils from '../../../utils/misc.utils';
 import { defaultOAISettings, OaiSettings } from '../oai.settings';
 import { getLogger } from 'log4js';
-import { namespaces } from '../../../importer/namespaces';
+import { oaiXPaths, OaiXPaths } from '../oai.paths';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../../importer';
 import { ImportLogMessage, ImportResult } from '../../../model/import.result';
@@ -35,8 +35,6 @@ import { ProfileFactoryLoader } from '../../../profiles/profile.factory.loader';
 import { RecordEntity } from '../../../model/entity';
 import { RequestDelegate, RequestOptions } from '../../../utils/http-request.utils';
 import { Summary } from '../../../model/summary';
-import { oaiXPaths, OaiXPaths } from '../oai.paths';
-import { XPathElementSelect } from '../../../utils/xpath.utils';
 
 const log = require('log4js').getLogger(__filename),
     logRequest = getLogger('requests');
@@ -174,7 +172,7 @@ export class OaiImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary);
 
-            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
+            let doc: any = await this.profile.getIndexDocumentFactory(mapper).create().catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;

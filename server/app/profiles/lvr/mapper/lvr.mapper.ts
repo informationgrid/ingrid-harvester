@@ -22,55 +22,89 @@
  */
 
 import 'dayjs/locale/de';
-import { getLogger } from 'log4js';
-import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
-import { Contact, Organization, Person } from '../../../model/agent';
+import { createEsId } from '../lvr.utils';
 import { DateRange } from '../../../model/dateRange';
-import { Distribution } from "../../../model/distribution";
-import { Event, Record, Relation, Repository, Resource, Subject } from '../../../importer/oai/lido/lido.model';
+import { GeometryInformation, Keyword, LvrIndexDocument, Media, Relation } from '../model/index.document';
+import { IndexDocumentFactory } from '../../../model/index.document.factory';
+import { KldMapper } from 'importer/kld/kld.mapper';
+import { License } from '@shared/license.model';
+import { MetadataSource } from '../../../model/index.document';
+import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
 
-export class LvrMapper<M extends OaiMapper> {
+export abstract class LvrMapper<M extends OaiMapper | KldMapper> implements IndexDocumentFactory<LvrIndexDocument> {
 
     protected baseMapper: M;
-
-    private _log = getLogger();
 
     constructor(baseMapper: M) {
         this.baseMapper = baseMapper;
     }
 
-    getEvents(): Event[] {
-        return this.baseMapper.getEvents();
+    async create(): Promise<LvrIndexDocument> {
+        let result: LvrIndexDocument = {
+            identifier: this.getIdentifier(),
+            title: this.getTitle(),
+            description: this.getDescription(),
+            spatial: this.getSpatial(),
+            temporal: this.getTemporal(),
+            keywords: this.getKeywords(),
+            relation: this.getRelations(),
+            media: this.getMedia(),
+            license: this.getLicense(),
+            vector: this.getVector(),
+            extras: {
+                merged_from: [this.getIdentifier()],
+                metadata: {
+                    issued: this.getIssued(),
+                    modified: this.getModified(),
+                    source: this.getSource()
+                }
+            }
+        };
+
+        result.extras.merged_from.push(createEsId(result));
+        result.extras.metadata.harvesting_errors = this.baseMapper.getHarvestingErrors();
+        // result.extras.metadata.is_valid = mapper.isValid(result);
+        // let qualityNotes = mapper.getQualityNotes();
+        // if (qualityNotes?.length > 0) {
+        //     result.extras.metadata['quality_notes'] = qualityNotes;
+        // }
+        this.baseMapper.executeCustomCode(result);
+
+        return result;
     }
 
-    getRelations(): Relation[] {
-        return this.baseMapper.getRelations();
+    abstract getIdentifier(): string;
+
+    abstract getTitle(): string;
+
+    abstract getDescription(): string;
+
+    abstract getSpatial(): GeometryInformation[];
+
+    abstract getTemporal(): DateRange;
+
+    abstract getKeywords(): Keyword[];
+
+    abstract getRelations(): Relation[];
+
+    abstract getMedia(): Media[];
+
+    abstract getLicense(): License;
+
+    abstract getVector(): object;
+
+    getIssued(): Date {
+        return this.baseMapper.getIssued();
     }
 
-    getSubjects(): Subject[] {
-        return this.baseMapper.getSubjects();
+    getModified(): Date {
+        return this.baseMapper.getModifiedDate();
     }
 
-    // getClassifications(): Classification[] {
-
-    // }
-
-    // getConcept(): Concept {
-
-    // }
-
-    getRecord(): Record {
-        return this.baseMapper.getRecord();
-    }
-
-    getRepositories(): Repository[] {
-        return this.baseMapper.getRepositories();
-    }
-
-    getResources(): Resource[] {
-        return this.baseMapper.getResources();
+    getSource(): MetadataSource {
+        return this.baseMapper.getMetadataSource();
     }
 }
