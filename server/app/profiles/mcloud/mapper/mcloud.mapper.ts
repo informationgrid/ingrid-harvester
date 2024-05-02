@@ -70,6 +70,7 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
                     is_valid: null, // checks validity after all operations been done
                     modified: null,
                     source: this.getMetadataSource(),
+                    merged_from: [this.getGeneratedId()]
                 },
                 mfund_fkz: this.getMFundFKZ(),
                 mfund_project_title: this.getMFundProjectTitle(),
@@ -81,8 +82,7 @@ export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper
                 temporal: this.getTemporal(),
                 parent: this.getParent(),
                 hierarchy_level: this.getHierarchyLevel(),    // csw only
-                operates_on: this.getOperatesOn(),            // csw only
-                merged_from: [this.getGeneratedId()]
+                operates_on: this.getOperatesOn()             // csw only
             },
             issued: this.getIssued(),
             keywords: this.getKeywords(),

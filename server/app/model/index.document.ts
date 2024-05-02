@@ -23,9 +23,7 @@
 
 export type IndexDocument = {
     extras: {
-        metadata: HarvestingMetadata,
-        // operates_on: string[],
-        merged_from: string[]
+        metadata: HarvestingMetadata
     }
 }
 
@@ -37,7 +35,8 @@ export type HarvestingMetadata = {
     is_valid?: boolean,     // checks validity after all operations been done
     modified: Date,
     quality_notes?: string[],
-    source: MetadataSource
+    source: MetadataSource,
+    merged_from: string[]
 }
 
 export type MetadataSource = {

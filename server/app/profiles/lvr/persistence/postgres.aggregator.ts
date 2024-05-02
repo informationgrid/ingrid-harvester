@@ -44,7 +44,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<LvrIndexDo
             let duplicate_id = createEsId(duplicate);
             document = this.deduplicate(document, duplicate);
             let document_id = createEsId(document);
-            document.extras.merged_from.push(duplicate_id);
+            document.extras.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
                 box.push({ operation: 'delete', _id: old_id });

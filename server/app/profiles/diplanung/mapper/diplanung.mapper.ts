@@ -97,16 +97,16 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
                     issued: null,
                     is_valid: null, // check validity before persisting to ES
                     modified: null,
-                    source: this.baseMapper.getMetadataSource()
+                    source: this.baseMapper.getMetadataSource(),
+                    merged_from: []
                 },
-                operates_on: this.getOperatesOn(),    // only csw
-                merged_from: []
+                operates_on: this.getOperatesOn()     // only csw
             },
             issued: this.getIssued(),
             modified: this.getModifiedDate(),
         };
 
-        result.extras.merged_from.push(createEsId(result));
+        result.extras.metadata.merged_from.push(createEsId(result));
         result.extras.metadata.harvesting_errors = this.baseMapper.getHarvestingErrors();
         // result.extras.metadata.is_valid = mapper.isValid(result);
         // let qualityNotes = mapper.getQualityNotes();

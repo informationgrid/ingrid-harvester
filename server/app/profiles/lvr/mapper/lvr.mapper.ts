@@ -55,16 +55,16 @@ export abstract class LvrMapper<M extends OaiMapper | KldMapper> implements Inde
             license: this.getLicense(),
             vector: this.getVector(),
             extras: {
-                merged_from: [this.getIdentifier()],
                 metadata: {
                     issued: this.getIssued(),
                     modified: this.getModified(),
-                    source: this.getSource()
+                    source: this.getSource(),
+                    merged_from: []
                 }
             }
         };
 
-        result.extras.merged_from.push(createEsId(result));
+        result.extras.metadata.merged_from.push(createEsId(result));
         result.extras.metadata.harvesting_errors = this.baseMapper.getHarvestingErrors();
         // result.extras.metadata.is_valid = mapper.isValid(result);
         // let qualityNotes = mapper.getQualityNotes();

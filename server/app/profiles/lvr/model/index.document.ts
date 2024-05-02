@@ -49,13 +49,11 @@ export type LvrIndexDocument = IndexDocument & {
             source: {
                 source_base: string,
                 source_type?: string,
-    //             raw_data_source?: string,
+                raw_data_source?: string,
     //             portal_link?: string,
     //             attribution?: string
             }
-        },
-    //     operates_on: string[],
-        merged_from: string[]
+        }
     },
     // keywords: string[]
 };
