@@ -46,9 +46,9 @@ export class IndicesListComponent implements OnInit {
   searchResultLines: string[] = [];
 
   searchHits = [];
-  searchHitsCount = 0
-  searchString = ""
-  marked = false
+  searchHitsCount = 0;
+  searchString = "";
+  marked = false;
 
   constructor(private dialog: MatDialog, private indicesService: IndicesService) {
   }
@@ -96,12 +96,17 @@ export class IndicesListComponent implements OnInit {
   }
 
   searchForStringInPreview(value: string) {
+    if (value == "" || value == null || value == undefined ) {
+      this.resetKeywordSearch();
+      return
+    }
     if (value == this.searchString) {
       this.scrollToSearchHit("next");
       return
     } else {
-      this.searchString = value
+      this.searchString = value;
     }
+
 
     this.searchHitsCount = 0;
     this.searchHits = [];
@@ -125,7 +130,7 @@ export class IndicesListComponent implements OnInit {
     if (direction == "next") {
       this.searchHitsCount++; 
       if (this.searchHitsCount >= this.searchHits.length + 1) { 
-        this.searchHitsCount = 1 
+        this.searchHitsCount = 1;
       }
     } 
     if (direction == "previous") { 
@@ -134,15 +139,15 @@ export class IndicesListComponent implements OnInit {
         this.searchHitsCount = this.searchHits.length;
       }
     }
-    let searchOffset = 2
-    let currentIndex = this.searchHits[this.searchHitsCount-1].index
+    let searchOffset = 2;
+    let currentIndex = this.searchHits[this.searchHitsCount-1].index;
     this.viewPort.scrollToIndex(currentIndex - searchOffset);
   }
 
   resetKeywordSearch() {
     this.searchHits = [];
-    this.searchHitsCount = 0
-    this.searchString = ""
+    this.searchHitsCount = 0;
+    this.searchString = "";
   }
 
 }
