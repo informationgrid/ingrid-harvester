@@ -45,6 +45,11 @@ export class IndicesListComponent implements OnInit {
   searchResult = this.indicesService.searchResponse$;
   searchResultLines: string[] = [];
 
+  searchHits = [];
+  searchHitsCount = 0
+  searchString = ""
+  marked = false
+
   constructor(private dialog: MatDialog, private indicesService: IndicesService) {
   }
 
@@ -82,6 +87,7 @@ export class IndicesListComponent implements OnInit {
   }
 
   async sendSearchRequest(indexName: string) {
+    this.resetKeywordSearch();
     this.indicesService.search(indexName);
     this.searchResult.subscribe(data => {
       let formattedJsonString = JSON.stringify(data, null, 4);
@@ -89,5 +95,54 @@ export class IndicesListComponent implements OnInit {
     }, (error => console.error('Error getting index:', error)));
   }
 
-  // searchForStringInPreview
+  searchForStringInPreview(value: string) {
+    if (value == this.searchString) {
+      this.scrollToSearchHit("next");
+      return
+    } else {
+      this.searchString = value
+    }
+
+    this.searchHitsCount = 0;
+    this.searchHits = [];
+
+    this.searchResultLines.map((line, i) => {
+      if(line.includes(value))
+
+        this.searchHits.push({
+          index: i,
+          line: line
+        })
+    });
+
+    if(this.searchHits.length > 0) {
+      this.scrollToSearchHit("next");
+    }
+    
+  }
+
+  scrollToSearchHit(direction: String) {
+    if (direction == "next") {
+      this.searchHitsCount++; 
+      if (this.searchHitsCount >= this.searchHits.length + 1) { 
+        this.searchHitsCount = 1 
+      }
+    } 
+    if (direction == "previous") { 
+      this.searchHitsCount--; 
+      if (this.searchHitsCount <= 0) { 
+        this.searchHitsCount = this.searchHits.length;
+      }
+    }
+    let searchOffset = 2
+    let currentIndex = this.searchHits[this.searchHitsCount-1].index
+    this.viewPort.scrollToIndex(currentIndex - searchOffset);
+  }
+
+  resetKeywordSearch() {
+    this.searchHits = [];
+    this.searchHitsCount = 0
+    this.searchString = ""
+  }
+
 }

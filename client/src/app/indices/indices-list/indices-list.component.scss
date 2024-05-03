@@ -21,7 +21,6 @@
  * ==================================================
  */
  :host {
-
   // height: 100%;
   display: flex;
   overflow: hidden;
@@ -73,4 +72,12 @@ mat-list-item {
   height: 100%;
   width: 50%;
   // padding-top:100px
+}
+
+.search-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  box-sizing: border-box;
+  padding-left: 12px;
 }
