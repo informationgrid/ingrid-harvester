@@ -75,6 +75,30 @@ export class LvrOaiMapper extends LvrMapper<OaiMapper> {
     }
 
     getVector(): object {
-        throw new Error('Method not implemented.');
+        return null;
+    }
+
+    getIssued(): Date {
+        let issued = null;
+        for (let info of this.baseMapper.getRecord().info) {
+            // TODO which to use? "lido record" or "source record"
+            if (info.type == 'lido record') {
+                issued = info.created;
+                break;
+            }
+        }
+        return issued;
+    }
+
+    getModified(): Date {
+        let modified = null;
+        for (let info of this.baseMapper.getRecord().info) {
+            // TODO which to use? "lido record" or "source record"
+            if (info.type == 'lido record') {
+                modified = info.modified;
+                break;
+            }
+        }
+        return modified;
     }
 }

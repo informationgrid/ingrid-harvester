@@ -58,7 +58,7 @@ export abstract class LvrMapper<M extends OaiMapper | KldMapper> implements Inde
                 metadata: {
                     issued: this.getIssued(),
                     modified: this.getModified(),
-                    source: this.getSource(),
+                    source: this.baseMapper.getMetadataSource(),
                     merged_from: []
                 }
             }
@@ -96,15 +96,7 @@ export abstract class LvrMapper<M extends OaiMapper | KldMapper> implements Inde
 
     abstract getVector(): object;
 
-    getIssued(): Date {
-        return this.baseMapper.getIssued();
-    }
+    abstract getIssued(): Date;
 
-    getModified(): Date {
-        return this.baseMapper.getModifiedDate();
-    }
-
-    getSource(): MetadataSource {
-        return this.baseMapper.getMetadataSource();
-    }
+    abstract getModified(): Date;
 }

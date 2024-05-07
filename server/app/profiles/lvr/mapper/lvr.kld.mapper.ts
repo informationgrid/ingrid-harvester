@@ -64,7 +64,7 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
 
     getTemporal(): DateRange {
         let temporals = this.baseMapper.getTemporal();
-        let temporal = { gte: null, lte: null };
+        let temporal: { gte: Date, lte: Date } = { gte: null, lte: null };
         for (let t of temporals) {
             if (t.gte < temporal.gte) {
                 temporal.gte = t.gte;
@@ -101,5 +101,13 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
     // TODO
     getVector(): object {
         return null;
+    }
+
+    getIssued(): Date {
+        return this.baseMapper.getIssued();
+    }
+
+    getModified(): Date {
+        return this.baseMapper.getModifiedDate();
     }
 }
