@@ -27,14 +27,13 @@
 import { getLogger } from 'log4js';
 import { BaseMapper } from '../../importer/base.mapper';
 import { Contact, Organization, Person } from '../../model/agent';
-import { DateRange } from '../../model/dateRange';
 import { Geometries } from '@turf/helpers';
 import { ImporterSettings } from '../../importer.settings';
 import { KldSettings } from './kld.settings';
 import { License } from '@shared/license.model';
 import { ObjectResponse, RelatedObject, Document, getDocumentUrl, RelationType, MediaType } from './kld.api';
 import { Summary } from '../../model/summary';
-import { Media, Relation } from 'profiles/lvr/model/index.document';
+import { DateRange, Media, Relation } from 'profiles/lvr/model/index.document';
 
 export class KldMapper extends BaseMapper {
 
@@ -94,13 +93,16 @@ export class KldMapper extends BaseMapper {
 
     getTemporal(): DateRange[] {
         // extract maximum range from AnfangVon, AnfangBis to EndeVon, EndeBis
-        let [startStart, startEnd] = this.parseDateRange([this.record.AnfangVon, this.record.AnfangBis]);
-        let [endStart, endEnd] = this.parseDateRange([this.record.EndeVon, this.record.EndeBis]);
-        if (startStart && endEnd && startStart > endEnd) {
-            const message = `Inconsistent dates found in object ${this.record.Id}: Startdate ${startStart} > enddate ${endEnd}.`;
+        const [startStart, startEnd] = this.parseDateRange([this.record.AnfangVon, this.record.AnfangBis]);
+        const [endStart, endEnd] = this.parseDateRange([this.record.EndeVon, this.record.EndeBis]);
+        const start = startStart ?? endStart
+        const end = endEnd ?? (endStart ?? startEnd)
+        if (start && end && start > end) {
+            const message = `Inconsistent dates found in object ${this.record.Id}: \
+                Start (${new Date(start).toJSON()}) is greater than end (${new Date(end).toJSON()}).`;
             this.summary.appErrors.push(message);
         }
-        const range = { gte: startStart, lte: endEnd };
+        const range = { gte: start, lte: end };
         return [range];
     }
 
@@ -178,7 +180,7 @@ export class KldMapper extends BaseMapper {
         return new Promise((resolve) => resolve([publisher]));
     }
 
-    private parseDate(date: string|null): Date|null {
+    private parseDate(date: string|null): number|null {
         if (!date) {
             return null;
         }
@@ -186,17 +188,17 @@ export class KldMapper extends BaseMapper {
         const dateAsNumber = Number(date);
         if (!isNaN(dateAsNumber)) {
             // Data.parse does not parse BC years correctly
-            let resultDate = new Date(1970, 0, 1, 0, 0, 0, 0);
+            let resultDate = new Date(Date.UTC(1970, 0, 1, 0, 0, 0, 0));
             millis = resultDate.setFullYear(dateAsNumber);
         }
         else {
             millis = Date.parse(date);
         }
-        return new Date(millis);
+        return millis;
     }
 
-    private parseDateRange(dates: string[]): [Date|null, Date|null] {
-        const values = dates.map(this.parseDate).filter((date: Date|null) => date != null).sort((a: Date, b: Date) => a.getTime() - b.getTime());
+    private parseDateRange(dates: string[]): [number|null, number|null] {
+        const values = dates.map(this.parseDate).filter((date: number|null) => date != null).sort((a: number, b: number) => a - b);
         const start = values.length > 0 ? values[0] : null;
         const end = values.length > 0 ? values[values.length-1] : null;
         return [start, end];

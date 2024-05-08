@@ -23,8 +23,7 @@
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
-import { DateRange } from '../../../model/dateRange';
-import { GeometryInformation, Keyword, Media, Relation } from '../model/index.document';
+import { GeometryInformation, DateRange, Keyword, Media, Relation } from '../model/index.document';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
@@ -64,7 +63,7 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
 
     getTemporal(): DateRange {
         let temporals = this.baseMapper.getTemporal();
-        let temporal: { gte: Date, lte: Date } = { gte: null, lte: null };
+        let temporal: { gte: number, lte: number } = { gte: null, lte: null };
         for (let t of temporals) {
             if (t.gte && (!temporal.gte || t.gte < temporal.gte)) {
                 temporal.gte = t.gte;

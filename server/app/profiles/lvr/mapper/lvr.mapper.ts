@@ -23,8 +23,7 @@
 
 import 'dayjs/locale/de';
 import { createEsId } from '../lvr.utils';
-import { DateRange } from '../../../model/dateRange';
-import { GeometryInformation, Keyword, LvrIndexDocument, Media, Relation } from '../model/index.document';
+import { GeometryInformation, DateRange, Keyword, LvrIndexDocument, Media, Relation } from '../model/index.document';
 import { IndexDocumentFactory } from '../../../model/index.document.factory';
 import { KldMapper } from 'importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
