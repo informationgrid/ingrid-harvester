@@ -66,4 +66,42 @@ export interface ObjectResponse {
     Schlagwoerter: Record<string, string>;
     Polygon: Geometries;
     ZuletztGeaendert: string;
+    UebergeordnetesObjekt: RelatedObject;
+    UntergeordneteObjekte: RelatedObject[];
+    VerwandteObjekte: RelatedObject[];
+    Dokumente: Document[];
+}
+
+export interface RelatedObject {
+    Id: string;
+    Name: string;
+}
+
+export enum RelationType {
+    Parent = 'UebergeordnetesObjekt',
+    Child = 'UntergeordneteObjekte',
+    Related = 'VerwandteObjekte'
+}
+
+export interface Document {
+    Medientyp: MediaType;
+    Dateierweiterung: string;
+    Ueberschrift: string;
+    Beschreibung: string;
+    AlternativeBeschreibung: string;
+    Thumbnail1Token: string;
+    Thumbnail2Token: string;
+    Thumbnail3Token: string;
+    DownloadToken: string;
+}
+
+export enum MediaType {
+    Image = 'Bild',
+    Video = 'Video',
+    Audio = 'Audio',
+    Document = 'Dokument'
+}
+
+export const getDocumentUrl = (token: string): string => {
+    return `https://www.kuladig.de/api/public/Dokument?token=${token}`;
 }

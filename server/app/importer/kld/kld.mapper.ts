@@ -28,13 +28,13 @@ import { getLogger } from 'log4js';
 import { BaseMapper } from '../../importer/base.mapper';
 import { Contact, Organization, Person } from '../../model/agent';
 import { DateRange } from '../../model/dateRange';
-import { Distribution } from '../../model/distribution';
 import { Geometries } from '@turf/helpers';
 import { ImporterSettings } from '../../importer.settings';
 import { KldSettings } from './kld.settings';
 import { License } from '@shared/license.model';
-import { ObjectResponse } from './kld.api';
+import { ObjectResponse, RelatedObject, Document, getDocumentUrl, RelationType, MediaType } from './kld.api';
 import { Summary } from '../../model/summary';
+import { Media, Relation } from 'profiles/lvr/model/index.document';
 
 export class KldMapper extends BaseMapper {
 
@@ -44,14 +44,12 @@ export class KldMapper extends BaseMapper {
     private readonly id: string;
 
     private settings: KldSettings;
-    private harvestTime: Date;
     private summary: Summary;
 
     constructor(settings: KldSettings, record: ObjectResponse, harvestTime: Date, summary: Summary) {
         super();
         this.settings = settings;
         this.record = record;
-        this.harvestTime = harvestTime;
         this.summary = summary;
         this.id = record.Id;
 
@@ -66,6 +64,10 @@ export class KldMapper extends BaseMapper {
         return this.summary;
     }
 
+    getGeneratedId(): string {
+        return this.id;
+    }
+
     getTitle(): string {
         const title = this.record.Name;
         return title && title.trim() !== '' ? title : undefined;
@@ -74,24 +76,12 @@ export class KldMapper extends BaseMapper {
     getDescription(): string {
         const abstract = this.record.Beschreibung;
         if (!abstract) {
-          let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.id}\', title: \'${this.getTitle()}\', source: \'${this.settings.providerUrl}\'`;
-          this.log.warn(msg);
-          this.summary.warnings.push(['No description', msg]);
-          this.valid = false;
-      }
-      return abstract;
-    }
-
-    async getContactPoint(): Promise<Contact> {
-        const contact: Contact = {
-            fn: this.record.Datenherkunft?.Name,
-            hasURL: this.record.Datenherkunft?.Url,
-        };
-        return new Promise((resolve) => resolve(contact));
-    }
-
-    getGeneratedId(): string {
-        return this.id;
+            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.id}\', title: \'${this.getTitle()}\', source: \'${this.settings.providerUrl}\'`;
+            this.log.warn(msg);
+            this.summary.warnings.push(['No description', msg]);
+            this.valid = false;
+        }
+        return abstract;
     }
 
     getSpatial(): Geometries {
@@ -102,23 +92,49 @@ export class KldMapper extends BaseMapper {
         return this.record.Adresse;
     }
 
-    async getPublisher(): Promise<Person[] | Organization[]> {
-        const publisher: Person = {
-            name: this.record.Datenherkunft?.Name,
+    getTemporal(): DateRange[] {
+        // extract maximum range from AnfangVon, AnfangBis to EndeVon, EndeBis
+        let [startStart, startEnd] = this.parseDateRange([this.record.AnfangVon, this.record.AnfangBis]);
+        let [endStart, endEnd] = this.parseDateRange([this.record.EndeVon, this.record.EndeBis]);
+        if (startStart && endEnd && startStart > endEnd) {
+            const message = `Inconsistent dates found in object ${this.record.Id}: Startdate ${startStart} > enddate ${endEnd}.`;
+            this.summary.appErrors.push(message);
+        }
+        const range = { gte: startStart, lte: endEnd };
+        return [range];
+    }
+
+    getKeywords(): Record<string,string> {
+        return this.record.Schlagwoerter;
+    }
+
+    getRelations(): Relation[] {
+        let relations: Relation[] = [];
+
+        if (this.record.UebergeordnetesObjekt) {
+            relations.push(this.mapRelatedObject(this.record.UebergeordnetesObjekt, RelationType.Parent));
+        }
+        relations = relations.concat(this.record.UntergeordneteObjekte.map((r: RelatedObject) => this.mapRelatedObject(r, RelationType.Child)));
+        relations = relations.concat(this.record.VerwandteObjekte.map((r: RelatedObject) => this.mapRelatedObject(r, RelationType.Related)));
+        return relations;
+    }
+
+    getMedia(): Media[] {
+        let media: Media[] = [];
+
+        media = media.concat(this.record.Dokumente.map((d: Document) => this.mapDocument(d)));
+        return media;
+    }
+
+    getLicense(): License {
+        return {
+            title: this.record.Lizenz.Lizenz,
+            url: this.record.Lizenz.Url,
         };
-        return new Promise((resolve) => resolve([publisher]));
-    }
-
-    async getDistributions(): Promise<Distribution[]> {
-      return new Promise((resolve) => resolve([]));
-    }
-
-    getHarvestingDate(): Date {
-        return new Date(Date.now());
     }
 
     getMetadataSource() {
-        let link = `${this.settings.providerUrl}/Objekt/${this.id}`;
+        let link = `${this.settings.providerUrl}Objekt/${this.id}`;
         return {
             source_base: this.settings.providerUrl,
             raw_data_source: link,
@@ -128,11 +144,8 @@ export class KldMapper extends BaseMapper {
     }
 
     getIssued(): Date {
+        // NOTE creation date does not exist in data
         return undefined;
-    }
-
-    getKeywords(): Record<string,string> {
-        return this.record.Schlagwoerter;
     }
 
     getModifiedDate(): Date {
@@ -143,52 +156,76 @@ export class KldMapper extends BaseMapper {
         return JSON.stringify(this.record);
     }
 
-    // TODO implement if needed
+    getHarvestingDate(): Date {
+        // TODO not used?
+        return new Date(Date.now());
+    }
 
-    // getThemes(): string[] {
-    //     throw new Error('Method not implemented.');
-    // }
-    // getAccessRights(): string[] {
-    //     throw new Error('Method not implemented.');
-    // }
-    // isRealtime(): boolean {
-    //     throw new Error('Method not implemented.');
-    // }
-    getTemporal(): DateRange[] {
-        let ranges = [];
-        if (this.record.AnfangVon || this.record.AnfangBis) {
-            ranges.push({ gte: this.record.AnfangVon, lte: this.record.AnfangBis })
-        }
-        if (this.record.EndeVon || this.record.EndeBis) {
-            ranges.push({ gte: this.record.EndeVon, lte: this.record.EndeBis })
-        }
-        return ranges;
-    }
-    // getCitation(): string {
-    //     throw new Error('Method not implemented.');
-    // }
-    // getAccrualPeriodicity(): string {
-    //     throw new Error('Method not implemented.');
-    // }
-    // getCreator(): Person | Person[] {
-    //     throw new Error('Method not implemented.');
-    // }
-    // getSubSections(): any[] {
-    //     throw new Error('Method not implemented.');
-    // }
-    // getGroups(): string[] {
-    //     throw new Error('Method not implemented.');
-    // }
-    // getOriginator(): Agent[] {
-    //     throw new Error('Method not implemented.');
-    // }
-    getLicense(): License {
-        return {
-            title: this.record.Lizenz.Lizenz,
-            url: this.record.Lizenz.Url,
+    async getContactPoint(): Promise<Contact> {
+        // TODO not used?
+        const contact: Contact = {
+            fn: this.record.Datenherkunft?.Name,
+            hasURL: this.record.Datenherkunft?.Url,
         };
+        return new Promise((resolve) => resolve(contact));
     }
-    // getUrlCheckRequestConfig(uri: string): RequestOptions {
-    //     throw new Error('Method not implemented.');
-    // }
+
+    async getPublisher(): Promise<Person[] | Organization[]> {
+        // TODO not used?
+        const publisher: Person = {
+            name: this.record.Datenherkunft?.Name,
+        };
+        return new Promise((resolve) => resolve([publisher]));
+    }
+
+    private parseDate(date: string|null): Date|null {
+        if (!date) {
+            return null;
+        }
+        let millis = 0;
+        const dateAsNumber = Number(date);
+        if (!isNaN(dateAsNumber)) {
+            // Data.parse does not parse BC years correctly
+            let resultDate = new Date(1970, 0, 1, 0, 0, 0, 0);
+            millis = resultDate.setFullYear(dateAsNumber);
+        }
+        else {
+            millis = Date.parse(date);
+        }
+        return new Date(millis);
+    }
+
+    private parseDateRange(dates: string[]): [Date|null, Date|null] {
+        const values = dates.map(this.parseDate).filter((date: Date|null) => date != null).sort((a: Date, b: Date) => a.getTime() - b.getTime());
+        const start = values.length > 0 ? values[0] : null;
+        const end = values.length > 0 ? values[values.length-1] : null;
+        return [start, end];
+    }
+
+    private mapRelatedObject(related: RelatedObject, type: RelationType): Relation {
+        // TODO calculate score
+        return {
+            id: related.Id,
+            type: this.getEnumKey(RelationType, type).toLowerCase(),
+            score: -1
+        }
+    }
+
+    private mapDocument(document: Document): Media {
+        return {
+            type: this.getEnumKey(MediaType, document.Medientyp).toLowerCase(),
+            url: getDocumentUrl(this.takeFirstNonEmpty(document, ['DownloadToken', 'Thumbnail3Token', 'Thumbnail2Token', 'Thumbnail1Token'])),
+            description: this.takeFirstNonEmpty(document, ['Ueberschrift', 'Beschreibung', 'AlternativeBeschreibung'])
+        }
+    }
+
+    private takeFirstNonEmpty(object: object, attributes: string[]): string {
+        const nonEmpty = attributes.map((attr: string) => object[attr] ?? '').filter((value: string) => value.length > 0);
+        return nonEmpty.length > 0 ? nonEmpty[0] : '';
+    }
+
+    private getEnumKey(e: object, value: string, valueIfMissing: string=''): string {
+        const key = Object.keys(e).find(k => e[k] == value);
+        return key ?? valueIfMissing;
+    }
 }

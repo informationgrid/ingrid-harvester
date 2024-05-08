@@ -66,10 +66,10 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         let temporals = this.baseMapper.getTemporal();
         let temporal: { gte: Date, lte: Date } = { gte: null, lte: null };
         for (let t of temporals) {
-            if (t.gte < temporal.gte) {
+            if (t.gte && (!temporal.gte || t.gte < temporal.gte)) {
                 temporal.gte = t.gte;
             }
-            if (t.lte > temporal.lte) {
+            if (t.lte && (!temporal.lte || t.lte > temporal.lte)) {
                 temporal.lte = t.lte;
             }
         }
@@ -84,14 +84,12 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         }));
     }
 
-    // TODO
     getRelations(): Relation[] {
-        return null;
+        return this.baseMapper.getRelations();
     }
 
-    // TODO
     getMedia(): Media[] {
-        return null;
+        return this.baseMapper.getMedia();
     }
 
     getLicense(): License {
