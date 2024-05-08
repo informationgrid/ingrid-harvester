@@ -21,13 +21,15 @@
  * ==================================================
  */
 
-import { DateRange } from "../../../model/dateRange";
+import { DateRange } from '../../../model/dateRange';
+import { Geometries } from '@turf/helpers';
 
 export interface Actor {
     displayName?: string,
     id: string,
     name: string,
-    role?: Concept
+    role?: Concept,
+    type?: string
 }
 
 export interface Concept {
@@ -63,7 +65,7 @@ export interface Link {
 
 export interface Place {
     displayPlace: string,
-    geometry: object,
+    geometry: Geometries,
     id: string,
     name: string
 }
@@ -85,6 +87,10 @@ export interface RecordId {
 export interface Relation {
     description: string,
     id: string,
+    relationType: {
+        id: string,
+        term: string
+    },
     type: string
 }
 
@@ -105,8 +111,9 @@ export interface Resource {
 }
 
 export interface Right {
-    holder: string
-    // TODO
+    holder: string,
+    licenseName: string,
+    licenseURL: string
 }
 
 export interface Source {
@@ -118,5 +125,6 @@ export interface Source {
 export interface Subject {
     actor: Actor,
     displayDate: string,
-    period: DateRange
+    period: DateRange,
+    place: Place
 }

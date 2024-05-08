@@ -43,90 +43,6 @@ import { XPathElementSelect } from '../../../utils/xpath.utils';
 
 
 export class OaiMapper extends BaseMapper {
-    public getSettings(): ImporterSettings {
-        return this.settings;
-    }
-    public getSummary(): Summary {
-        return this.summary;
-    }
-    getTitle(): string {
-        throw new Error('Method not implemented.');
-    }
-    getDescription(): string {
-        throw new Error('Method not implemented.');
-    }
-    getPublisher(): Promise<Person[] | Organization[]> {
-        throw new Error('Method not implemented.');
-    }
-    getThemes(): string[] {
-        throw new Error('Method not implemented.');
-    }
-    getModifiedDate(): Date {
-        throw new Error('Method not implemented.');
-    }
-    getAccessRights(): string[] {
-        throw new Error('Method not implemented.');
-    }
-    getDistributions(): Promise<Distribution[]> {
-        throw new Error('Method not implemented.');
-    }
-    getGeneratedId(): string {
-        throw new Error('Method not implemented.');
-    }
-    getMetadataSource(): MetadataSource {
-        throw new Error('Method not implemented.');
-    }
-    isRealtime(): boolean {
-        throw new Error('Method not implemented.');
-    }
-    getSpatial() {
-        throw new Error('Method not implemented.');
-    }
-    getSpatialText(): string {
-        throw new Error('Method not implemented.');
-    }
-    getTemporal(): DateRange[] {
-        throw new Error('Method not implemented.');
-    }
-    getCitation(): string {
-        throw new Error('Method not implemented.');
-    }
-    getKeywords(): string[] {
-        throw new Error('Method not implemented.');
-    }
-    getAccrualPeriodicity(): string {
-        throw new Error('Method not implemented.');
-    }
-    getContactPoint(): Promise<Contact> {
-        throw new Error('Method not implemented.');
-    }
-    getCreator(): Person | Person[] {
-        throw new Error('Method not implemented.');
-    }
-    getHarvestedData(): string {
-        return this.record.toString();
-    }
-    getIssued(): Date {
-        throw new Error('Method not implemented.');
-    }
-    getHarvestingDate(): Date {
-        throw new Error('Method not implemented.');
-    }
-    getSubSections(): any[] {
-        throw new Error('Method not implemented.');
-    }
-    getGroups(): string[] {
-        throw new Error('Method not implemented.');
-    }
-    getOriginator(): Agent[] {
-        throw new Error('Method not implemented.');
-    }
-    getLicense(): Promise<License> {
-        throw new Error('Method not implemented.');
-    }
-    getUrlCheckRequestConfig(uri: string): RequestOptions {
-        throw new Error('Method not implemented.');
-    }
 
     static select = <XPathElementSelect>xpath.useNamespaces(oaiXPaths.lido.prefixMap);
 
@@ -155,9 +71,11 @@ export class OaiMapper extends BaseMapper {
         this.harvestTime = harvestTime;
         this.summary = summary;
 
-        this.uuid = OaiMapper.select('./lido:lidoRecID', record, true).textContent;
-
         super.init();
+    }
+
+    getId(): string {
+        return OaiMapper.text('./lidoRecID', this.record);
     }
 
     getEvents(): Event[] {
@@ -195,8 +113,18 @@ export class OaiMapper extends BaseMapper {
         return events;
     }
 
+    getTitles(): string[] {
+        let titleNodes = OaiMapper.select('./lido:descriptiveMetadata/lido:objectIdentificationWrap/lido:titleWrap/lido:titleSet', this.record);
+        return titleNodes.map(titleNode => OaiMapper.text('./appellationValue', titleNode));
+    }
+
+    getDescriptions(): string[] {
+        let descriptionNodes = OaiMapper.select('./lido:descriptiveMetadata/lido:objectIdentificationWrap/lido:objectDescriptionWrap/lido:objectDescriptionSet', this.record);
+        return descriptionNodes.map(descriptionNode => OaiMapper.text('./descriptiveNoteValue', descriptionNode));
+    }
+
     getRelations(): Relation[] {
-        let relationNodes = OaiMapper.select('./lido:lido/lido:descriptiveMetadata/lido:objectRelationWrap/lido:relatedWorksWrap/lido:relatedWorkSet', this.record);
+        let relationNodes = OaiMapper.select('./lido:descriptiveMetadata/lido:objectRelationWrap/lido:relatedWorksWrap/lido:relatedWorkSet', this.record);
         let relations: Relation[] = relationNodes.map(relationNode => ({
             description: OaiMapper.text('./relatedWork/object/objectNote', relationNode),
             id: OaiMapper.text('./relatedWork/object/objectID', relationNode),
@@ -220,7 +148,7 @@ export class OaiMapper extends BaseMapper {
      * @returns 
      */
     getSubjects(): Subject[] {
-        let subjectNodes = OaiMapper.select('./lido:lido/lido:descriptiveMetadata/lido:objectRelationWrap/lido:subjectWrap/lido:subjectSet/lido:subject', this.record);
+        let subjectNodes = OaiMapper.select('./lido:descriptiveMetadata/lido:objectRelationWrap/lido:subjectWrap/lido:subjectSet/lido:subject', this.record);
         let subjects: Subject[] = subjectNodes.map(subjectNode => ({
             actor: {
                 id: OaiMapper.text('./subjectActor/actor/actorID', subjectNode),
@@ -231,6 +159,12 @@ export class OaiMapper extends BaseMapper {
             period: {
                 gte: new Date(OaiMapper.text('./subjectDate/date/earliestDate', subjectNode)),
                 lte: new Date(OaiMapper.text('./subjectDate/date/latestDate', subjectNode))
+            },
+            place: {
+                displayPlace: OaiMapper.text('./subjectPlace/displayPlace', subjectNode),
+                geometry: GeoJsonUtils.parse(OaiMapper.select('./lido:subjectPlace/lido:place/lido:gml/gml:Point', subjectNode, true), null, oaiXPaths.lido.prefixMap),
+                id: OaiMapper.text('./subjectPlace/place/placeID', subjectNode),
+                name: OaiMapper.text('./subjectPlace/place/namePlaceSet/appellationValue', subjectNode)
             }
         }));
         return subjects;
@@ -258,8 +192,10 @@ export class OaiMapper extends BaseMapper {
                 modified: new Date(OaiMapper.text('./recordMetadataDate[lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/modified"]', infoNode)),
                 type: OaiMapper.text('./@type', infoNode)
             })),
-            rights: OaiMapper.select('./lido:recordSource', this.record).map(rightsNode => ({
-                holder: OaiMapper.text('./rightsHolder/legalBodyName/appellationValue', rightsNode)
+            rights: OaiMapper.select('./lido:recordSource/rightsHolder', this.record).map(rightsNode => ({
+                holder: OaiMapper.text('./legalBodyName/appellationValue', rightsNode),
+                licenseName: OaiMapper.text('./legalBodyName/', rightsNode),
+                licenseURL: OaiMapper.text('./legalBodyWeblink', rightsNode)
             })),
             sources: OaiMapper.select('./lido:recordSource', this.record).map(sourceNode => ({
                 name: OaiMapper.text('./legalBodyName/appellationValue', sourceNode),
@@ -295,9 +231,9 @@ export class OaiMapper extends BaseMapper {
                 url: OaiMapper.text('./linkResource', representationNode)
             })),
             rights: OaiMapper.select('./rightsResource', resourceNode).map(rightsNode => ({
-                holder: OaiMapper.text('./rightsHolder/legalBodyName/appellationValue', resourceNode),
-                licenseURL: OaiMapper.text('./rightsType/conceptID', resourceNode),
-                licenseName: OaiMapper.text('./rightsType/term', resourceNode)
+                holder: OaiMapper.text('./rightsHolder/legalBodyName/appellationValue', rightsNode),
+                licenseURL: OaiMapper.text('./rightsType/conceptID', rightsNode),
+                licenseName: OaiMapper.text('./rightsType/term', rightsNode)
             })),
             source: {
                 name: OaiMapper.text('./resourceSource/legalBodyName/appellationValue', resourceNode),
@@ -306,5 +242,29 @@ export class OaiMapper extends BaseMapper {
             type: OaiMapper.text('./resourceType/term', resourceNode)
         }));
         return resources;
+    }
+
+    getSettings(): ImporterSettings {
+        return this.settings;
+    }
+
+    getSummary(): Summary {
+        return this.summary;
+    }
+
+    getHarvestedData(): string {
+        return this.record.toString();
+    }
+
+    getHarvestingDate(): Date {
+        return new Date(Date.now());
+    }
+
+    getMetadataSource() {
+        let link = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=lido&identifier=${this.getId()}`;
+        return {
+            source_base: this.settings.providerUrl,
+            raw_data_source: link
+        };
     }
 }
