@@ -77,9 +77,9 @@ export abstract class LvrMapper<M extends OaiMapper | KldMapper> implements Inde
 
     abstract getIdentifier(): string;
 
-    abstract getTitle(): string;
+    abstract getTitle(): string[];
 
-    abstract getDescription(): string;
+    abstract getDescription(): string[];
 
     abstract getSpatial(): GeometryInformation[];
 

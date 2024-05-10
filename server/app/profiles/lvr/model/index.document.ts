@@ -27,8 +27,8 @@ import { License } from '@shared/license.model';
 
 export type LvrIndexDocument = IndexDocument & {
     identifier: string,
-    title: string,
-    description: string,
+    title: string[],
+    description: string[],
     spatial: GeometryInformation[],
     temporal: DateRange,
     keywords: Keyword[],

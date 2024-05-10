@@ -41,12 +41,12 @@ export class LvrOaiMapper extends LvrMapper<OaiMapper> {
         return this.baseMapper.getId();
     }
 
-    getTitle(): string {
-        return this.baseMapper.getTitles().join('; ');
+    getTitle(): string[] {
+        return this.baseMapper.getTitles();
     }
 
-    getDescription(): string {
-        return this.baseMapper.getDescriptions()?.[0];
+    getDescription(): string[] {
+        return this.baseMapper.getDescriptions();
     }
 
     getSpatial(): GeometryInformation[] {

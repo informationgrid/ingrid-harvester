@@ -41,12 +41,12 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         return this.baseMapper.getGeneratedId();
     }
 
-    getTitle(): string {
-        return this.baseMapper.getTitle();
+    getTitle(): string[] {
+        return [this.baseMapper.getTitle()];
     }
 
-    getDescription(): string {
-        return this.baseMapper.getDescription();
+    getDescription(): string[] {
+        return [this.baseMapper.getDescription()];
     }
 
     getSpatial(): GeometryInformation[] {
