@@ -79,7 +79,7 @@ export class LvrOaiMapper extends LvrMapper<OaiMapper> {
             type: 'repositoryPlace'
         })));
 
-        return geometryInformations;
+        return geometryInformations.filter(geometryInformation => geometryInformation.geometry);
     }
 
     getTemporal(): DateRange {
@@ -92,11 +92,15 @@ export class LvrOaiMapper extends LvrMapper<OaiMapper> {
     }
 
     getKeywords(): Keyword[] {
-        return this.baseMapper.getRelations().map(relation => ({
-            id: relation.id,
-            term: relation.relationType.term,
-            thesaurus: 'TODO'
-        }));
+        let keywords = [];
+        this.baseMapper.getSubjects().forEach(subject => {
+            keywords.push({
+                id: subject.keyword.conceptIds.map(conceptId => conceptId.id),
+                term: subject.keyword.terms,
+                thesaurus: subject.keyword.conceptIds.map(conceptId => conceptId.source)
+            });
+        });
+        return keywords;
     }
 
     getRelations(): Relation[] {

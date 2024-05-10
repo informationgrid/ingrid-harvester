@@ -71,14 +71,14 @@ export interface Place {
 }
 
 export interface Record {
-    ids: RecordId[],
+    ids: LidoId[],
     info: Info[],
     rights: Right[],
     sources: Source[],
     type: string
 }
 
-export interface RecordId {
+export interface LidoId {
     id: string,
     source: string,
     type: string
@@ -126,5 +126,11 @@ export interface Subject {
     actor: Actor,
     displayDate: string,
     period: DateRange,
-    place: Place
+    place: Place,
+    keyword: Keyword
+}
+
+export interface Keyword {
+    conceptIds: LidoId[],
+    terms: string[]
 }

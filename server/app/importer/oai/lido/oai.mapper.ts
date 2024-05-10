@@ -165,6 +165,14 @@ export class OaiMapper extends BaseMapper {
                 geometry: GeoJsonUtils.parse(OaiMapper.select('./lido:subjectPlace/lido:place/lido:gml/gml:Point', subjectNode, true), null, oaiXPaths.lido.prefixMap),
                 id: OaiMapper.text('./subjectPlace/place/placeID', subjectNode),
                 name: OaiMapper.text('./subjectPlace/place/namePlaceSet/appellationValue', subjectNode)
+            },
+            keyword: {
+                conceptIds: OaiMapper.select('./lido:subjectConcept/lido:conceptID', subjectNode).map(conceptIdNode => ({
+                    id: conceptIdNode.textContent,
+                    source: conceptIdNode.getAttribute('lido:source'),
+                    type: conceptIdNode.getAttribute('lido:type')
+                })),
+                terms: OaiMapper.select('./lido:subjectConcept/lido:term', subjectNode).map(termNode => termNode.textContent)
             }
         }));
         return subjects;
