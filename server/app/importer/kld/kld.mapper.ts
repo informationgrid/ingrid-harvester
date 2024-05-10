@@ -33,7 +33,7 @@ import { KldSettings } from './kld.settings';
 import { License } from '@shared/license.model';
 import { ObjectResponse, RelatedObject, Document, getDocumentUrl, RelationType, MediaType } from './kld.api';
 import { Summary } from '../../model/summary';
-import { DateRange, Media, Relation } from 'profiles/lvr/model/index.document';
+import { DateRange, Media, Relation } from '../../profiles/lvr/model/index.document';
 
 export class KldMapper extends BaseMapper {
 
