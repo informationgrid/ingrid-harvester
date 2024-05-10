@@ -264,7 +264,8 @@ export class OaiMapper extends BaseMapper {
         let link = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=lido&identifier=${this.getId()}`;
         return {
             source_base: this.settings.providerUrl,
-            raw_data_source: link
+            raw_data_source: link,
+            source_type: 'lido'
         };
     }
 }

@@ -498,6 +498,7 @@ export class CswMapper extends BaseMapper {
         return {
             source_base: this.settings.getRecordsUrl,
             raw_data_source: cswLink,
+            source_type: 'csw',
             portal_link: this.settings.defaultAttributionLink,
             attribution: this.settings.defaultAttribution
         };

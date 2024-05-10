@@ -433,6 +433,7 @@ export class OaiMapper extends BaseMapper {
         return {
             source_base: this.settings.providerUrl,
             raw_data_source: oaiLink,
+            source_type: 'oai_iso19139',
             portal_link: this.settings.defaultAttributionLink,
             attribution: this.settings.defaultAttribution
         };

@@ -140,6 +140,7 @@ export class KldMapper extends BaseMapper {
         return {
             source_base: this.settings.providerUrl,
             raw_data_source: link,
+            source_type: 'kld',
             portal_link: this.settings.defaultAttributionLink,
             attribution: this.settings.defaultAttribution
         };

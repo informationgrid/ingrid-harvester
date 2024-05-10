@@ -226,7 +226,7 @@ export class PostgresUtils extends DatabaseUtils {
                     row.dataset.extras.metadata.issued = row.issued;
                     row.dataset.extras.metadata.modified = row.modified;
                     row.dataset.extras.metadata.deleted = row.deleted;
-                    row.dataset.extras.metadata.source.source_type = this.getSourceType(row.source);
+                    row.dataset.extras.metadata.source.source_type = this.getSourceType(row.dataset, row.source);
                     row.dataset.catalog = catalogs[row.catalog_id];
                     currentBucket.duplicates.set(row.id, row.dataset);
                 }
@@ -253,7 +253,7 @@ export class PostgresUtils extends DatabaseUtils {
      * @param source 
      * @returns 
      */
-    private getSourceType(source: string) {
+    private getSourceType(dataset: IndexDocument, source: string) {
         source = source.toLowerCase()
         if (source.includes('cockpitpro')) {
             return 'cockpitpro';
@@ -270,7 +270,7 @@ export class PostgresUtils extends DatabaseUtils {
         if (source.includes('wfs')) {
             return 'wfs';
         }
-        return source;
+        return dataset.extras?.metadata?.source?.source_type ?? source;
     }
 
     write(entity: RecordEntity) {

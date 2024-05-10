@@ -481,6 +481,7 @@ export class DcatMapper extends BaseMapper {
         return {
             source_base: this.settings.catalogUrl,
             raw_data_source: dcatLink,
+            source_type: 'dcat',
             portal_link: portalLink,
             attribution: this.settings.defaultAttribution
         };

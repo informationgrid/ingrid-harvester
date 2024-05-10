@@ -179,6 +179,7 @@ export class CkanMapper extends BaseMapper {
         return {
             source_base: this.settings.ckanBaseUrl,
             raw_data_source: rawSource,
+            source_type: 'ckan',
             portal_link: portalSource,
             attribution: this.settings.defaultAttribution
         };

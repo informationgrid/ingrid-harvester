@@ -136,6 +136,7 @@ export class ExcelMapper extends BaseMapper {
     getMetadataSource(): MetadataSource {
         return {
             source_base: this.settings.filePath,
+            source_type: 'excel',
             attribution: 'mcloud-excel'
         };
     }

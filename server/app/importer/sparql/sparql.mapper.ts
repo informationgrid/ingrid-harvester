@@ -185,6 +185,7 @@ export class SparqlMapper extends BaseMapper {
         return {
             source_base: this.settings.endpointUrl,
             raw_data_source: dcatLink,
+            source_type: 'sparql',
             portal_link: portalLink,
             attribution: this.settings.defaultAttribution
         };

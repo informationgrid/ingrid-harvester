@@ -116,6 +116,7 @@ export abstract class WfsMapper extends BaseMapper {
         return {
             source_base: this.settings.getFeaturesUrl,
             raw_data_source: wfsLink,
+            source_type: 'wfs',
             portal_link: this.settings.defaultAttributionLink,
             attribution: this.settings.defaultAttribution
         };

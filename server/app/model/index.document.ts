@@ -42,7 +42,7 @@ export type HarvestingMetadata = {
 
 export type MetadataSource = {
     source_base: string,
-    source_type?: string,
+    source_type: string,
     raw_data_source?: string,
     portal_link?: string,
     attribution?: string
