@@ -477,10 +477,12 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async rollbackTransaction() {
-        log.error('Transaction: rollback');
-        await this.transactionClient.query('ROLLBACK');
-        this.transactionClient.release();
-        this.transactionClient = null;
+        if (this.transactionClient) {
+            log.error('Transaction: rollback');
+            await this.transactionClient.query('ROLLBACK');
+            this.transactionClient.release();
+            this.transactionClient = null;
+        }
     }
 
     private handleError(message: string, error: any) {
