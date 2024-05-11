@@ -107,7 +107,6 @@ export class PostgresUtils extends DatabaseUtils {
     async getDatasetIdentifiers(source: string): Promise<string[]> {
         // TODO 
         // let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiers, [source]);
-        console.log(source);
         // let result: QueryResult<any> = await this.transactionClient.query("SELECT * from public.record WHERE source = $1", [source]);
         let result: QueryResult<any> = await this.transactionClient.query("SELECT identifier from public.record WHERE source = $1 and dataset->'extras'->>'hierarchy_level'!='service'", [source]);
         if (result.rowCount == 0) {
@@ -461,11 +460,9 @@ export class PostgresUtils extends DatabaseUtils {
         await this.transactionClient.query('BEGIN');
         let result: QueryResult<any> = await this.transactionClient.query("SELECT transaction_timestamp()");
         if (result.rowCount != 1) {
-            throw new Error("WHAAAA");
+            throw new Error('Could not obtain transaction_timestamp from PostgreSQL');
         }
         let timestamp: Date = result.rows[0].transaction_timestamp;
-        console.log(timestamp);
-        console.log(timestamp.toISOString());
         return timestamp;
     }
 

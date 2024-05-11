@@ -26,6 +26,8 @@ import { HealthCtrl } from './controllers/HealthCtrl';
 import { PlatformExpress } from '@tsed/platform-express';
 import { Server } from './server';
 
+const log = require('log4js').getLogger(__filename);
+
 async function bootstrap() {
     try {
         const scannedProviders = await importProviders({
@@ -43,9 +45,10 @@ async function bootstrap() {
             ...scannedProviders
         });
         await platform.listen();
-        console.log('Server started...');
-    } catch (err) {
-        console.error(err);
+        log.info('Server started...');
+    }
+    catch (err) {
+        log.error(err);
     }
 }
 

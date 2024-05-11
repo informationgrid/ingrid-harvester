@@ -24,9 +24,11 @@
 import { Harvester } from '@shared/harvester';
 import { Importer } from '../../../importer/importer';
 import { ImporterFactory } from '../../../importer/importer.factory';
-import { OaiImporter } from '../../../importer/oai/lido/oai.importer';
 import { KldImporter } from '../../../importer/kld/kld.importer';
 import { KldSettings } from '../../../importer/kld/kld.settings';
+import { OaiImporter } from '../../../importer/oai/lido/oai.importer';
+
+const log = require('log4js').getLogger(__filename);
 
 export class LvrImporterFactory extends ImporterFactory {
 
@@ -40,7 +42,7 @@ export class LvrImporterFactory extends ImporterFactory {
                 importer = new KldImporter(config as KldSettings);
                 break;
             default: {
-                console.error('Importer not found: ' + config.type);
+                log.error('Importer not found: ' + config.type);
             }
         }
         if (importer) {

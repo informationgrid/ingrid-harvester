@@ -39,6 +39,8 @@ const compress = require("compression");
 const rootDir = __dirname;
 const session = require('express-session');
 
+const log = require('log4js').getLogger(__filename);
+
 const isProduction = process.env.NODE_ENV == 'production';
 addLayout("json", jsonLayout);
 if (isProduction) {
@@ -135,10 +137,10 @@ export class Server {
         let elastic = ElasticsearchFactory.getElasticUtils(indexConfig, new Summary({ index: '', isIncremental: false, maxConcurrent: 0, type: '' }));
         await elastic.prepareIndex(profile.getIndexMappings(), profile.getIndexSettings(), true);
         await elastic.addAlias(indexConfig.prefix + indexConfig.index, indexConfig.alias);
-        console.log("Server initialized");
+        log.info('Server initialized');
     }
 
     $onServerInitError(error): any {
-        console.error("Server encounter an error =>", error);
+        log.error('Server encounter an error: ', error);
     }
 }

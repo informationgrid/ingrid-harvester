@@ -121,46 +121,40 @@ export class OaiImporter extends Importer {
     }
 
     async harvest() {
-
         while (true) {
-            log.debug('Requesting next records');
-            let response = await this.requestDelegate.doRequest();
-            let harvestTime = new Date(Date.now());
-
-            let resumptionToken;
-
-            let responseDom;
             try {
-                responseDom = this.domParser.parseFromString(response);
-            }
-            catch (e) {
-                console.log(e);
-            }
-            let resultsNode = responseDom.getElementsByTagName('ListRecords')[0];
-            if (resultsNode) {
+                log.debug('Requesting next records');
+                let response = await this.requestDelegate.doRequest();
+                let harvestTime = new Date(Date.now());
+
+                let responseDom = this.domParser.parseFromString(response);
+                let resultsNode = responseDom.getElementsByTagName('ListRecords')[0];
+                if (!resultsNode) {
+                    throw new Error('Could not find ListRecords node in response DOM: ' + responseDom?.toString());
+                }
+
                 let numReturned = resultsNode.getElementsByTagName('record').length;
+                log.debug(`Received ${numReturned} records from ${this.settings.providerUrl}`);
+                await this.extractRecords(response, harvestTime);
 
                 let resumptionTokenNode = resultsNode.getElementsByTagName('resumptionToken')[0];
+                let resumptionToken;
                 if (resumptionTokenNode) {
                     this.totalRecords = parseInt(resumptionTokenNode.getAttribute('completeListSize'));
                     let cursor = resumptionTokenNode.getAttribute('cursor');
                     resumptionToken = resumptionTokenNode.textContent;
                     log.info(`Next cursor: ${cursor}/${this.totalRecords}`);
                 }
-
-                log.debug(`Received ${numReturned} records from ${this.settings.providerUrl}`);
-                await this.extractRecords(response, harvestTime);
-            } else {
-                const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
-                log.error(message);
-                this.summary.appErrors.push(message);
-            }
-
-            if (resumptionToken) {
+                if (!resumptionToken) {
+                    break;
+                }
                 let requestConfig = OaiImporter.createRequestConfig(this.settings, resumptionToken);
                 this.requestDelegate = new RequestDelegate(requestConfig);
-            } else {
-                break;
+            }
+            catch (e) {
+                const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(e.message)}.`;
+                log.error(message);
+                this.summary.appErrors.push(message);
             }
         }
         this.database.sendBulkData();
