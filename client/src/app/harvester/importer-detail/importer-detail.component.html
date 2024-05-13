@@ -76,23 +76,24 @@
 
         <mat-list>
             <mat-list-item>
-                <mat-icon mat-list-icon>access_time</mat-icon>
-                <h4 mat-line>Letzte Ausführung</h4>
-                <p mat-line data-test="last-execution"> {{data.lastExecution | date:'short'}} {{ data.summary?.isIncremental ? '(inkrementell)' : '' }}</p>
-            </mat-list-item>
-            <mat-list-item>
-                <mat-icon mat-list-icon>timer</mat-icon>
-                <h4 mat-line>Dauer der Ausführung</h4>
-                <p mat-line data-test="duration"> {{data.duration * 1000 | date:'HH:mm:ss':'UTC'}}</p>
-            </mat-list-item>
-            <mat-list-item >
-                <mat-icon mat-list-icon>snooze</mat-icon>
-                <h4 mat-line>Nächste Ausführung</h4>
+                <mat-icon matListItemIcon svgIcon="available"/>
+                <span matListItemTitle>Letzte Ausführung</span>
+                <span matListItemLine data-test="last-execution"> {{data.lastExecution | date:'short'}} {{ data.summary?.isIncremental ? '(inkrementell)' : '' }}</span>
+              </mat-list-item>
+              <mat-list-item>
+                <mat-icon matListItemIcon svgIcon="timer"/>
+                <span matListItemTitle>Dauer der Ausführung</span>
+                <span matListItemLine data-test="duration"> {{data.duration * 1000 | date:'HH:mm:ss':'UTC'}}</span>
+              </mat-list-item>
+              <mat-list-item >
+                <mat-icon matListItemIcon svgIcon="upcoming"/>
+                <!-- <mat-icon mat-list-icon>snooze</mat-icon> -->
+                <span matListItemTitle>Nächste Ausführung</span>
                 @if (!cronActive) {
-                  <p mat-line data-test="next-execution" [title]="'Wenn aktiviert, dann: ' + (data.nextExecution | date:'short')"> deaktiviert </p>
+                  <span matListItemLine data-test="next-execution" [title]="'Wenn aktiviert, dann: ' + (data.nextExecution | date:'short')"> deaktiviert </span>
                 }
                 @if (cronActive) {
-                  <p mat-line data-test="next-execution"> {{data.nextExecution | date:'short'}} </p>
+                  <span matListItemLine data-test="next-execution"> {{data.nextExecution | date:'short'}} </span>
                 }
             </mat-list-item>
         </mat-list>

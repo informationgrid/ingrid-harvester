@@ -62,15 +62,30 @@
     </mat-list>
     </div>
 
-  <mat-card class="flex-70 margin">
-    <mat-card-header>
-      <mat-card-title>Vorschau</mat-card-title>
-    </mat-card-header>
-    <mat-card-content class="items">
-      <cdk-virtual-scroll-viewport [itemSize]="20" [minBufferPx]="500" [maxBufferPx]="500" class="viewport">
-        <!-- <pre>{{searchResult | async | json}}</pre> -->
-        <div *cdkVirtualFor="let line of searchResultLines">{{line}}</div>
-      </cdk-virtual-scroll-viewport>
-    </mat-card-content>
-  </mat-card>
+    <mat-card class="flex-70 margin">
+      <mat-card-header>
+        <mat-card-title>Vorschau</mat-card-title>
+          <div class="search-box">
+            <input type="text" matInput placeholder="Suche" (keydown.enter)="searchForStringInPreview($event.target.value)">
+            @if (searchHits.length > 0) {
+              <mat-icon svgIcon="expand_less" (click)="scrollToSearchHit('previous')" class="link-text"/>
+              <mat-icon svgIcon="expand_more" (click)="scrollToSearchHit('next')" class="link-text"/>
+              <span>{{searchHitsCount}} / {{searchHits.length}}</span>
+            }
+            @else if (searchHits.length == 0 && searchString != "") {
+              <div>0 Treffer</div>
+            }
+            @else {
+              <div></div>
+            }
+          </div>
+      </mat-card-header>
+      <mat-card-content class="items">
+        <cdk-virtual-scroll-viewport [itemSize]="20" [minBufferPx]="500" [maxBufferPx]="500" class="viewport">
+          <!-- <pre>{{searchResult | async | json}}</pre> -->
+          <div *cdkVirtualFor="let line of searchResultLines">{{line}}</div>
+        </cdk-virtual-scroll-viewport>
+      </mat-card-content>
+    </mat-card>
+
 </div>
