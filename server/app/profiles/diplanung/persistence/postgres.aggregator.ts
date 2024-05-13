@@ -67,6 +67,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<DiplanungI
             let duplicate_id = createEsId(duplicate);
             document = this.deduplicate(document, duplicate);
             let document_id = createEsId(document);
+            document.extras.metadata.merged_from ??= [];
             document.extras.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
