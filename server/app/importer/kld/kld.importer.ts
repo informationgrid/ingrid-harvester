@@ -32,6 +32,7 @@ import { ConfigService } from '../../services/config/ConfigService';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import { IndexDocument } from '../../model/index.document';
 import { KldMapper } from './kld.mapper';
 import { MailServer } from '../../utils/nodemailer.utils';
 import { ObjectListRequestParams, ObjectListResponse, ObjectResponse, PAGE_SIZE } from './kld.api';
@@ -336,7 +337,7 @@ export class KldImporter extends Importer {
 
             const mapper = this.getMapper(this.settings, record, harvestTime, this.summary);
 
-            let doc: any;
+            let doc: IndexDocument;
             try {
                 doc = await this.profile.getIndexDocumentFactory(mapper).create();
             }
@@ -355,7 +356,8 @@ export class KldImporter extends Importer {
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.database.addEntityToBulk(entity));
-            } else {
+            }
+            else {
                 this.summary.skippedDocs.push(id);
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));

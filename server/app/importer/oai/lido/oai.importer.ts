@@ -29,6 +29,7 @@ import { ConfigService } from '../../../services/config/ConfigService';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../../importer';
 import { ImportLogMessage, ImportResult } from '../../../model/import.result';
+import { IndexDocument } from '../../../model/index.document';
 import { MailServer } from '../../../utils/nodemailer.utils';
 import { OaiMapper } from './oai.mapper';
 import { Observer } from 'rxjs';
@@ -187,11 +188,15 @@ export class OaiImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary);
 
-            let doc: any = await this.profile.getIndexDocumentFactory(mapper).create().catch(e => {
+            let doc: IndexDocument;
+            try {
+                doc = await this.profile.getIndexDocumentFactory(mapper).create();
+            }
+            catch (e) {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
-            });
+            }
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
@@ -202,7 +207,8 @@ export class OaiImporter extends Importer {
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.database.addEntityToBulk(entity));
-            } else {
+            }
+            else {
                 this.summary.skippedDocs.push(uuid);
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));

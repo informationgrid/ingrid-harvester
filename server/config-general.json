@@ -14,6 +14,7 @@
     "version": "8",
     "user": "elastic",
     "password": "elastic",
+    "rejectUnauthorized": true,
     "index": "harvester-index",
     "alias": "harvester",
     "prefix": "",
