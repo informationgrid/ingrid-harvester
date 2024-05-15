@@ -21,19 +21,20 @@
  * ==================================================
  */
 
+import { ensureLeadingSlash, Server } from './server';
 import { importProviders } from '@tsed/components-scan';
 import { HealthCtrl } from './controllers/HealthCtrl';
 import { PlatformExpress } from '@tsed/platform-express';
-import { Server } from './server';
 
 const log = require('log4js').getLogger(__filename);
 
 async function bootstrap() {
+    let publishDir = ensureLeadingSlash(process.env.PUBLISH_PATH) ?? '';
     try {
         const scannedProviders = await importProviders({
             mount: {
-                '/rest': [`${__dirname}/controllers/**/*.ts`],
-                '/': [ HealthCtrl ]
+                [`${publishDir}/rest`]: [`${__dirname}/controllers/**/*.ts`],
+                [`${publishDir}/`]: [ HealthCtrl ]
             },
             componentsScan: [
                 `${__dirname}/middlewares/**/*.ts`,

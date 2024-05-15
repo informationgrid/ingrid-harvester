@@ -64,6 +64,8 @@ else {
     configure('./log4js-dev.json');
 }
 
+const publishDir = ensureLeadingSlash(process.env.PUBLISH_PATH) ?? '';
+
 @Configuration({
     rootDir,
     httpPort: serverConfig.httpPort,
@@ -73,8 +75,8 @@ else {
     acceptMimes: ['application/json'],
     passport: {},
     statics: {
-        '/': `${rootDir}/webapp`,
-        '/*': `${rootDir}/webapp/index.html`
+        [publishDir + '/']: `${rootDir}/webapp`,
+        [publishDir + '/*']: `${rootDir}/webapp/index.html`
     },
     logger: {
         ignoreUrlPatterns: ['/rest/*'],
@@ -143,4 +145,11 @@ export class Server {
     $onServerInitError(error): any {
         log.error('Server encounter an error: ', error);
     }
+}
+
+export function ensureLeadingSlash(path: string) {
+    if (path == null) {
+        return null;
+    }
+    return path.startsWith('/') ? path : '/' + path;
 }
