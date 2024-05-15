@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import * as path from 'path';
 import { $log, Configuration, PlatformAcceptMimesMiddleware, PlatformApplication, PlatformLogMiddleware } from '@tsed/common';
 import { addLayout, configure } from 'log4js';
 import { jsonLayout } from './utils/log4js.json.layout';
@@ -64,7 +65,7 @@ else {
     configure('./log4js-dev.json');
 }
 
-const publishDir = ensureLeadingSlash(process.env.PUBLISH_PATH) ?? '';
+const baseURL = process.env.BASE_URL ?? '/';
 
 @Configuration({
     rootDir,
@@ -75,8 +76,8 @@ const publishDir = ensureLeadingSlash(process.env.PUBLISH_PATH) ?? '';
     acceptMimes: ['application/json'],
     passport: {},
     statics: {
-        [publishDir + '/']: `${rootDir}/webapp`,
-        [publishDir + '/*']: `${rootDir}/webapp/index.html`
+        [createRelativePath(baseURL)]: `${rootDir}/webapp`,
+        [createRelativePath(baseURL, '*')]: `${rootDir}/webapp/index.html`
     },
     logger: {
         ignoreUrlPatterns: ['/rest/*'],
@@ -147,9 +148,11 @@ export class Server {
     }
 }
 
-export function ensureLeadingSlash(path: string) {
-    if (path == null) {
+export function createRelativePath(...pathSegments: string[]) {
+    if (pathSegments == null || pathSegments.length == 0) {
         return null;
     }
-    return path.startsWith('/') ? path : '/' + path;
+    let url = new URL('http://localhost');
+    url.pathname = path.join(...pathSegments);
+    return url.pathname;
 }

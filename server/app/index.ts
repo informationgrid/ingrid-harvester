@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { ensureLeadingSlash, Server } from './server';
+import { createRelativePath, Server } from './server';
 import { importProviders } from '@tsed/components-scan';
 import { HealthCtrl } from './controllers/HealthCtrl';
 import { PlatformExpress } from '@tsed/platform-express';
@@ -29,12 +29,12 @@ import { PlatformExpress } from '@tsed/platform-express';
 const log = require('log4js').getLogger(__filename);
 
 async function bootstrap() {
-    let publishDir = ensureLeadingSlash(process.env.PUBLISH_PATH) ?? '';
+    let baseURL = process.env.BASE_URL ?? '/';
     try {
         const scannedProviders = await importProviders({
             mount: {
-                [`${publishDir}/rest`]: [`${__dirname}/controllers/**/*.ts`],
-                [`${publishDir}/`]: [ HealthCtrl ]
+                [createRelativePath(baseURL, 'rest')]: [`${__dirname}/controllers/**/*.ts`],
+                [createRelativePath(baseURL)]: [ HealthCtrl ]
             },
             componentsScan: [
                 `${__dirname}/middlewares/**/*.ts`,

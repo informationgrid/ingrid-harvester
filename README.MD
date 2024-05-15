@@ -39,7 +39,7 @@ Several general settings can be configured via environment variables. These enco
 | PROXY_URL                   | URL needs to contain credentials and port, if applicable          |
 | ALLOW_ALL_UNAUTHORIZED      | If all connections should be allowed, regardless of SSL state     |
 | IMPORTER_PROFILE            | Profile to use for the application: diplanung, mcloud             |
-| PUBLISH_PATH                | Subpath where the Harvester is being served at, if not on `/`     |
+| BASE_URL                    | Subpath where the Harvester is being served at, if not on `/`     |
 
 ## Local development setup
 
