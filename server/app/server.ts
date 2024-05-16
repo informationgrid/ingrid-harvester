@@ -38,6 +38,7 @@ const methodOverride = require('method-override');
 const compress = require("compression");
 const rootDir = __dirname;
 const session = require('express-session');
+const MemoryStore = require('memorystore')(session);
 
 const isProduction = process.env.NODE_ENV == 'production';
 addLayout("json", jsonLayout);
@@ -122,7 +123,10 @@ export class Server {
                     httpOnly: true,
                     secure: false,
                     maxAge: null
-                }
+                },
+                store: new MemoryStore({
+                    checkPeriod: 86400000 // prune expired entries every 24h
+                })
             }));
 
         return null;
