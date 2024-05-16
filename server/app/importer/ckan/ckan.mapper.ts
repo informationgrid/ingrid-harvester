@@ -602,7 +602,7 @@ export class CkanMapper extends BaseMapper {
                 uri: settings.ckanBaseUrl + '/api/action/package_search', // See http://docs.ckan.org/en/ckan-2.7.3/api/
                 json: true,
                 headers: RequestDelegate.defaultRequestHeaders(),
-                proxy: settings.proxy,
+                proxy: settings.proxy || null,
                 rejectUnauthorized: settings.rejectUnauthorizedSSL,
                 qs,
                 timeout: settings.timeout
@@ -617,7 +617,7 @@ export class CkanMapper extends BaseMapper {
             uri: settings.ckanBaseUrl + '/api/3/action/package_list', // See http://docs.ckan.org/en/ckan-2.7.3/api/
             json: true,
             headers: RequestDelegate.defaultRequestHeaders(),
-            proxy: settings.proxy,
+            proxy: settings.proxy || null,
             rejectUnauthorized: settings.rejectUnauthorizedSSL,
             timeout: settings.timeout
         };
