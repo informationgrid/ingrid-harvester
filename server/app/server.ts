@@ -71,6 +71,7 @@ const baseURL = process.env.BASE_URL ?? '/';
     rootDir,
     httpPort: serverConfig.httpPort,
     socketIO: {
+        path: createRelativePath(baseURL, 'socket.io'),
         cors: { origin: true }
     },
     acceptMimes: ['application/json'],
