@@ -35,8 +35,10 @@ export type LvrIndexDocument = IndexDocument & {
     relation: Relation[],
     media: Media[],
     license: License,
-    vector: object
-    // keywords: string[]
+    vector: object,
+    extras: {
+        original_id: string;
+    }
 };
 
 export type GeometryInformation = {

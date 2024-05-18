@@ -25,9 +25,8 @@ import 'dayjs/locale/de';
 import { createEsId } from '../lvr.utils';
 import { GeometryInformation, DateRange, Keyword, LvrIndexDocument, Media, Relation } from '../model/index.document';
 import { IndexDocumentFactory } from '../../../model/index.document.factory';
-import { KldMapper } from 'importer/kld/kld.mapper';
+import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
-import { MetadataSource } from '../../../model/index.document';
 import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
 
 const dayjs = require('dayjs');
@@ -43,7 +42,7 @@ export abstract class LvrMapper<M extends OaiMapper | KldMapper> implements Inde
 
     async create(): Promise<LvrIndexDocument> {
         let result: LvrIndexDocument = {
-            identifier: this.getIdentifier(),
+            identifier: this.getUrlSafeIdentifier(),
             title: this.getTitle(),
             description: this.getDescription(),
             spatial: this.getSpatial(),
@@ -59,7 +58,8 @@ export abstract class LvrMapper<M extends OaiMapper | KldMapper> implements Inde
                     modified: this.getModified(),
                     source: this.baseMapper.getMetadataSource(),
                     merged_from: []
-                }
+                },
+                original_id: this.getIdentifier()
             }
         };
 
@@ -73,6 +73,10 @@ export abstract class LvrMapper<M extends OaiMapper | KldMapper> implements Inde
         this.baseMapper.executeCustomCode(result);
 
         return result;
+    }
+
+    getUrlSafeIdentifier(): string {
+        return this.getIdentifier().replace(/\//g, '-');
     }
 
     abstract getIdentifier(): string;
