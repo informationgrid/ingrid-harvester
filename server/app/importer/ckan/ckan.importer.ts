@@ -103,7 +103,7 @@ export class CkanImporter extends Importer {
                 return;
             }
 
-            return this.indexDocument(doc, mapper.getHarvestedData(), data.source.id);
+            return await this.indexDocument(doc, mapper.getHarvestedData(), data.source.id);
 
         } catch (e) {
             log.error('Error: ' + e);
@@ -114,12 +114,12 @@ export class CkanImporter extends Importer {
         // For Profile specific Handling
     }
 
-    private indexDocument(doc, harvestedData, sourceID) {
+    private async indexDocument(doc, harvestedData, sourceID) {
         if (!this.settings.dryRun) {
             let entity: RecordEntity = {
                 identifier: sourceID,
                 source: this.settings.ckanBaseUrl,
-                collection_id: this.database.defaultCatalog.id,
+                collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                 dataset: doc,
                 original_document: harvestedData
             };

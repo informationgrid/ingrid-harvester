@@ -58,7 +58,7 @@ export class McloudCkanImporter extends CkanImporter {
     private async indexGroupedChilds(storedData){
         if (!this.settings.dryRun) {
             log.info(`Received ${Object.keys(this.docsByParent).length} groups of records by parent`);
-            return Object.keys(this.docsByParent).map(key => {
+            return Object.keys(this.docsByParent).map(async key => {
                 let docs = this.docsByParent[key];
                 let doc = docs[0];
                 if (docs.length > 1) {
@@ -141,7 +141,7 @@ export class McloudCkanImporter extends CkanImporter {
                 let entity: RecordEntity = {
                     identifier: doc.extras.generated_id,
                     source: this.settings.ckanBaseUrl,
-                    collection_id: this.database.defaultCatalog.id,
+                    collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: doc.extras.harvested_data
                 };

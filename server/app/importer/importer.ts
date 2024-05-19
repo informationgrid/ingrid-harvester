@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import { Bucket } from '../persistence/postgres.utils';
 import { ConfigService } from '../services/config/ConfigService';
 import { DatabaseFactory } from '../persistence/database.factory';
 import { DatabaseUtils } from '../persistence/database.utils';

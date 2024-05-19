@@ -262,7 +262,7 @@ export class DcatappluImporter extends Importer {
                     let entity: RecordEntity = {
                         identifier: uuid,
                         source: this.settings.catalogUrl,
-                        collection_id: this.database.defaultCatalog.id,
+                        collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };

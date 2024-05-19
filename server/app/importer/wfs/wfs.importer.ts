@@ -245,7 +245,7 @@ export abstract class WfsImporter extends Importer {
         this.generalInfo['maintainer'] = maintainer;
 
         // retrieve catalog info from database
-        let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId) ?? this.database.defaultCatalog;
+        let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId);
         this.generalInfo['catalog'] = catalog;
 
         let hitsRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, maxRecords: undefined, resultType: 'hits' });
@@ -343,7 +343,7 @@ export abstract class WfsImporter extends Importer {
                 let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.settings.getFeaturesUrl,
-                    collection_id: this.generalInfo['catalog'].id,
+                    collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };

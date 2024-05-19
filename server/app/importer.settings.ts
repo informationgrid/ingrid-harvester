@@ -21,6 +21,8 @@
  * ==================================================
  */
 
+import { ConfigService } from './services/config/ConfigService';
+
 export interface CronData {
     pattern: string;
     active: boolean;
@@ -32,6 +34,7 @@ export const DefaultImporterSettings: ImporterSettings = {
     type: '',
     maxRecords: 100,
     startPosition: 0,
+    catalogId: ConfigService.getGeneralSettings().database.defaultCatalogIdentifier,
     customCode: '',
     defaultMcloudSubgroup: [],
     defaultDCATCategory: [],
@@ -52,6 +55,7 @@ export type ImporterSettings = {
     index: string,
     priority?: number,
     blacklistedIds?: string[],
+    catalogId: string,
     cron?: {
         full: CronData,
         incr: CronData

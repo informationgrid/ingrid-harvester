@@ -151,7 +151,7 @@ export class ExcelImporter extends Importer {
                     let entity: RecordEntity = {
                         identifier: unit.id,
                         source: this.settings.filePath,
-                        collection_id: this.database.defaultCatalog.id,
+                        collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };

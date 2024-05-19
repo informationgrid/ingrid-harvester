@@ -128,14 +128,17 @@
         </mat-card-header>
         <mat-card-content>
           <div class="flex-row flex-col-mobile gap-20 space-between">
-            <mat-form-field class="flex-1">
+            <mat-form-field class="flex-40">
               <mat-label>Max. Datensätze pro Anfrage</mat-label>
-              <input matInput type="number" min="1" max="10000" minlength="1" 
-                     formControlName="maxRecords">
+              <input matInput type="number" min="1" max="10000" minlength="1" formControlName="maxRecords">
             </mat-form-field>
-            <mat-form-field class="flex-1">
+            <mat-form-field class="flex-20">
               <mat-label>Start Datensatz</mat-label>
               <input matInput type="number" min="0" formControlName="startPosition">
+            </mat-form-field>
+            <mat-form-field class="flex-40">
+              <mat-label>Katalog-Identifier</mat-label>
+              <input matInput formControlName="catalogId" required>
             </mat-form-field>
           </div>
         </mat-card-content>
