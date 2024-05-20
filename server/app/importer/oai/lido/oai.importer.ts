@@ -242,7 +242,8 @@ export class OaiImporter extends Importer {
             if (settings.until) {
                 requestConfig.qs.until = settings.until;
             }
-        } else {
+        }
+        else {
             requestConfig.qs = {
                 verb: 'ListRecords',
                 resumptionToken: resumptionToken

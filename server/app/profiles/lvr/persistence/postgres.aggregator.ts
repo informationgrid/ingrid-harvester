@@ -23,7 +23,6 @@
 
 import { createEsId } from '../lvr.utils';
 import { Bucket } from '../../../persistence/postgres.utils';
-import { Distribution } from '../../../model/distribution';
 import { EsOperation } from '../../../persistence/elastic.utils';
 import { LvrIndexDocument } from '../model/index.document';
 import { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator';

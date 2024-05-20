@@ -23,7 +23,7 @@
 
 'use strict';
 
-import { cloneDeep, merge as lodashMerge, pickBy, trim } from 'lodash';
+import { cloneDeep, merge as lodashMerge, trim } from 'lodash';
 import { Distribution } from '../model/distribution';
 import { DOMParser } from '@xmldom/xmldom';
 

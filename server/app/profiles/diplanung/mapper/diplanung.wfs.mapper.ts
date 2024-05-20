@@ -26,7 +26,7 @@ import { Contact, Organization, Person } from '../../../model/agent';
 import { DateRange } from '../../../model/dateRange';
 import { DiplanungMapper } from './diplanung.mapper';
 import { Distribution } from '../../../model/distribution';
-import { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
+import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
 const alternateTitleBlacklist = ['B-Plan', 'F-Plan'];

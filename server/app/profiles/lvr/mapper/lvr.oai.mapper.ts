@@ -92,7 +92,7 @@ export class LvrOaiMapper extends LvrMapper<OaiMapper> {
     }
 
     getKeywords(): Keyword[] {
-        let keywords = [];
+        let keywords: Keyword[] = [];
         this.baseMapper.getSubjects().forEach(subject => {
             keywords.push({
                 id: subject.keyword.conceptIds.map(conceptId => conceptId.id),

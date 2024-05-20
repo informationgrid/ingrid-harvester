@@ -28,16 +28,11 @@ import * as xpath from 'xpath';
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import { getLogger } from 'log4js';
 import { oaiXPaths } from '../oai.paths';
-import { Agent, Contact, Organization, Person } from '../../../model/agent';
 import { BaseMapper } from '../../base.mapper';
-import { DateRange } from '../../../model/dateRange';
-import { Distribution } from '../../../model/distribution';
 import { Event, Record, Relation, Repository, Resource, Subject } from './lido.model';
 import { ImporterSettings } from '../../../importer.settings';
-import { License } from '@shared/license.model';
 import { MetadataSource } from '../../../model/index.document';
 import { OaiSettings } from '../oai.settings';
-import { RequestOptions } from '../../../utils/http-request.utils';
 import { Summary } from '../../../model/summary';
 import { XPathElementSelect } from '../../../utils/xpath.utils';
 
@@ -268,7 +263,7 @@ export class OaiMapper extends BaseMapper {
         return new Date(Date.now());
     }
 
-    getMetadataSource() {
+    getMetadataSource(): MetadataSource {
         let link = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=lido&identifier=${this.getId()}`;
         return {
             source_base: this.settings.providerUrl,

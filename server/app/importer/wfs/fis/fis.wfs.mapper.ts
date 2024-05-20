@@ -26,7 +26,7 @@ import * as MiscUtils from '../../../utils/misc.utils';
 import { DateRange } from '../../../model/dateRange';
 import { Distribution } from '../../../model/distribution';
 import { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
-import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType, ProcessStep } from '../../../model/dcatApPlu.model';
+import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../wfs.mapper';
 
 export class FisWfsMapper extends WfsMapper {

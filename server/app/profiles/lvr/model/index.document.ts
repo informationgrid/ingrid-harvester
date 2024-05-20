@@ -50,9 +50,9 @@ export type GeometryInformation = {
 };
 
 export type Keyword = {
-    id: string,
-    term: string,
-    thesaurus: string
+    id: string | string[],
+    term: string | string[],
+    thesaurus: string | string[]
 }
 
 export type Media = {
