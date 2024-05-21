@@ -21,8 +21,6 @@
  * ==================================================
  */
 
-import { ConfigService } from './services/config/ConfigService';
-
 export interface CronData {
     pattern: string;
     active: boolean;
@@ -34,7 +32,7 @@ export const DefaultImporterSettings: ImporterSettings = {
     type: '',
     maxRecords: 100,
     startPosition: 0,
-    catalogId: ConfigService.getGeneralSettings().database.defaultCatalogIdentifier,
+    catalogId: 'harvester',
     customCode: '',
     defaultMcloudSubgroup: [],
     defaultDCATCategory: [],
