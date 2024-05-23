@@ -47,7 +47,6 @@ export class DiplanungCswImporter extends CswImporter {
     }
 
     protected async updateRecords(documents: DiplanungIndexDocument[], collectionId: number) {
-        log.warn('Updating #records:', documents.length);
         let promises: (() => Promise<RecordEntity>)[] = [];
         for (let doc of documents) {
             promises.push(() => new Promise(async (resolve, reject) => {
