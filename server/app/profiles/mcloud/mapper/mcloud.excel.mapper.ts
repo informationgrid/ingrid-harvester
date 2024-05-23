@@ -21,13 +21,11 @@
  * ==================================================
  */
 
-import {mcloudMapper} from "./mcloud.mapper";
-import {ExcelMapper} from "../../../importer/excel/excel.mapper";
+import { mcloudMapper } from './mcloud.mapper';
+import { ExcelMapper } from '../../../importer/excel/excel.mapper';
 
 export class mcloudExcelMapper extends mcloudMapper<ExcelMapper> {
     getCategories(): any {
-        return this.baseMapper._getCategories();
+        return this.baseMapper.getCategories();
     }
 }
-
-

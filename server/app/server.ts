@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import * as path from 'path';
 import { $log, Configuration, PlatformAcceptMimesMiddleware, PlatformApplication, PlatformLogMiddleware } from '@tsed/common';
 import { addLayout, configure } from 'log4js';
 import { jsonLayout } from './utils/log4js.json.layout';
@@ -39,6 +40,8 @@ const compress = require("compression");
 const rootDir = __dirname;
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
+
+const log = require('log4js').getLogger(__filename);
 
 const isProduction = process.env.NODE_ENV == 'production';
 addLayout("json", jsonLayout);
@@ -63,17 +66,20 @@ else {
     configure('./log4js-dev.json');
 }
 
+const baseURL = process.env.BASE_URL ?? '/';
+
 @Configuration({
     rootDir,
     httpPort: serverConfig.httpPort,
     socketIO: {
+        path: createRelativePath(baseURL, 'socket.io'),
         cors: { origin: true }
     },
     acceptMimes: ['application/json'],
     passport: {},
     statics: {
-        '/': `${rootDir}/webapp`,
-        '/*': `${rootDir}/webapp/index.html`
+        [createRelativePath(baseURL)]: `${rootDir}/webapp`,
+        [createRelativePath(baseURL, '*')]: `${rootDir}/webapp/index.html`
     },
     logger: {
         ignoreUrlPatterns: ['/rest/*'],
@@ -139,10 +145,19 @@ export class Server {
         let elastic = ElasticsearchFactory.getElasticUtils(indexConfig, new Summary({ index: '', isIncremental: false, maxConcurrent: 0, type: '' }));
         await elastic.prepareIndex(profile.getIndexMappings(), profile.getIndexSettings(), true);
         await elastic.addAlias(indexConfig.prefix + indexConfig.index, indexConfig.alias);
-        console.log("Server initialized");
+        log.info('Server initialized');
     }
 
     $onServerInitError(error): any {
-        console.error("Server encounter an error =>", error);
+        log.error('Server encounter an error: ', error);
     }
+}
+
+export function createRelativePath(...pathSegments: string[]) {
+    if (pathSegments == null || pathSegments.length == 0) {
+        return null;
+    }
+    let url = new URL('http://localhost');
+    url.pathname = path.join(...pathSegments);
+    return url.pathname;
 }

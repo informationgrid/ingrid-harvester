@@ -121,6 +121,14 @@ export class PostgresQueries extends AbstractPostgresQueries {
         DO UPDATE SET
             distribution = EXCLUDED.distribution`;
 
+    readonly nonFetchedRatio = `SELECT
+        SUM(CASE WHEN (last_modified IS NULL OR $2::timestamptz > last_modified) THEN 1 ELSE 0 END) AS nonfetched,
+        COUNT(*) AS total
+        FROM record WHERE source = $1`;
+
+    readonly deleteRecords = `DELETE FROM public.${this.datasetTableName}
+        WHERE source = $1 AND (last_modified IS NULL OR last_modified < $2)`;
+
     readonly getStoredData = `SELECT dataset FROM public.${this.datasetTableName}
         WHERE identifier = ANY($1)`;
 

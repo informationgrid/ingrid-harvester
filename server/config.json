@@ -33,7 +33,7 @@
     "defaultAttributionLink": null,
     "recordFilter": "<ogc:Filter>\n    <ogc:And>\n        <ogc:Or>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bauleitplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bauleitpläne</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bebauungsplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>B-Plan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Flächennutzungsplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>FNP</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnungsprogramm</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnungsverfahren</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumverträglichkeit</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Regionalplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Regionalplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesentwicklung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesraumordnungsprogramm</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Milieuschutzgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Milieugebiet</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungssatzungsgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungssatzung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungsverordnung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungsverordnungsgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>städtebauliche Satzungen</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>§ 172 BauGB Städtebauliche Förderung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Beteiligung der Öffentlichkeit</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Öffentlichkeitsbeteiligung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>XPlanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>XPlanGML</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n        </ogc:Or>\n        <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>AnyText</ogc:PropertyName>\n            <ogc:Literal>*Hamburg*</ogc:Literal>\n        </ogc:PropertyIsLike>\n    </ogc:And>\n</ogc:Filter>",
     "pluPlanState": "fixed",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "0 2 * * 1-6",
@@ -71,7 +71,7 @@
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "9 2 * * *",
@@ -112,7 +112,7 @@
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": false,
+    "disable": true,
     "cron": {
       "full": {
         "pattern": "12 2 * * *",
@@ -604,5 +604,53 @@
     "startPosition": null,
     "customCode": null,
     "catalogUrl": "https://beteiligungsdb.develop.diplanung.de/collections/1/items"
+  },
+  {
+    "index": "oai",
+    "priority": null,
+    "type": "OAI",
+    "maxRecords": 200,
+    "startPosition": 1,
+    "customCode": null,
+    "defaultMcloudSubgroup": null,
+    "defaultDCATCategory": null,
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "isIncremental": false,
+    "maxConcurrent": 1,
+    "skipUrlCheckOnHarvest": false,
+    "timeout": 60000,
+    "providerUrl": "https://oamh-lvr.digicult-verbund.de/cv/hH0a0jrojzOgtF5j7u",
+    "eitherKeywords": [],
+    "metadataPrefix": "lido",
+    "set": "",
+    "id": 22,
+    "description": "digicult",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "from": "2024-01-01T00:00:00",
+    "until": "2024-02-01T00:00:00"
+  },
+  {
+    "index": "kuladig",
+    "priority": null,
+    "type": "KLD",
+    "maxRecords": null,
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rules": {
+    },
+    "maxConcurrent": 1,
+    "maxConcurrentTimespan": 100,
+    "isIncremental": true,
+    "timeout": 60000,
+    "providerUrl": "https://www.kuladig.de/api/public/",
+    "id": 23,
+    "description": "KuLaDig (Kultur. Landschaft. Digital.)"
   }
 ]

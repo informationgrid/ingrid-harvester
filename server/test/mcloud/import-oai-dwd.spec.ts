@@ -28,7 +28,7 @@ import * as sinon from "sinon";
 import {TestUtils} from "../utils/test-utils";
 import {IndexDocument} from '../../app/model/index.document';
 import {OaiSettings} from "../../app/importer/oai/oai.settings";
-import {OaiImporter} from "../../app/importer/oai/oai.importer";
+import {OaiImporter} from "../../app/importer/oai/iso19139/oai.importer";
 import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader";
 import {mcloudDocument} from "../../app/profiles/mcloud/model/index.document";
 

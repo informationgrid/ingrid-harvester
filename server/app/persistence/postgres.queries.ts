@@ -30,6 +30,8 @@ export abstract class PostgresQueries {
     abstract readonly getCollection: string;
     abstract readonly bulkUpsert: string;
     abstract readonly bulkUpsertCoupling: string;
+    abstract readonly nonFetchedRatio: string;
+    abstract readonly deleteRecords: string;
     abstract readonly getStoredData: string;
     abstract readonly getDatasets: string;
     abstract readonly getServices: string;

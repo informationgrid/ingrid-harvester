@@ -27,9 +27,10 @@ import { CkanSettings, defaultCKANSettings } from './ckan.settings';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import { IndexDocument } from '../../model/index.document';
 import { Observer } from 'rxjs';
-import { ProfileFactory } from "../../profiles/profile.factory";
-import { ProfileFactoryLoader } from "../../profiles/profile.factory.loader";
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { RecordEntity } from '../../model/entity';
 import { RequestDelegate } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
@@ -86,21 +87,23 @@ export class CkanImporter extends Importer {
             // Execute the mappers
             let mapper = new CkanMapper(this.settings, data);
 
-            let doc: any = await this.profile.getIndexDocument().create(mapper)
-                .catch(e => {
-                    log.error('Error creating index document', e);
-                    this.summary.appErrors.push(e.toString());
-                    mapper.skipped = true;
-                });
-
-            this.posthandlingDocument(mapper, doc);
+            let doc: IndexDocument;
+            try {
+                doc = await this.profile.getIndexDocumentFactory(mapper).create();
+                this.posthandlingDocument(mapper, doc);
+            }
+            catch (e) {
+                log.error('Error creating index document', e);
+                this.summary.appErrors.push(e.toString());
+                mapper.skipped = true;
+            }
 
             if (mapper.shouldBeSkipped()) {
                 this.summary.skippedDocs.push(data.source.id);
                 return;
             }
 
-            return this.indexDocument(doc, mapper.getHarvestedData(), data.source.id);
+            return await this.indexDocument(doc, mapper.getHarvestedData(), data.source.id);
 
         } catch (e) {
             log.error('Error: ' + e);
@@ -111,12 +114,12 @@ export class CkanImporter extends Importer {
         // For Profile specific Handling
     }
 
-    private indexDocument(doc, harvestedData, sourceID) {
+    private async indexDocument(doc, harvestedData, sourceID) {
         if (!this.settings.dryRun) {
             let entity: RecordEntity = {
                 identifier: sourceID,
                 source: this.settings.ckanBaseUrl,
-                collection_id: this.database.defaultCatalog.id,
+                collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                 dataset: doc,
                 original_document: harvestedData
             };

@@ -92,18 +92,18 @@ async function startProcess() {
                 //summaries.push(await importer.run.subscribe());
             }
         } catch (e) {
-            console.error(`Importer ${configHarvester.type} failed: `, e);
+            log.error(`Importer ${configHarvester.type} failed: `, e);
         }
     }
 
     if (runAsync) {
         Promise.all(
-            processes.map(p => p.catch(e => console.error('Error for harvester occurred: ', e)))
+            processes.map(p => p.catch(e => log.error('Error for harvester occurred: ', e)))
         ).then( showSummaries );
     } else {
         let summaries: Summary[] = [];
         concat(...importers).subscribe( result => {
-            result.complete ? summaries.push(result.summary) : console.log(result.progress);
+            result.complete ? summaries.push(result.summary) : log.info(result.progress);
             // showSummaries(summaries);
         }).add( () => {
             summaries.forEach( summary => summary.print(logSummary))

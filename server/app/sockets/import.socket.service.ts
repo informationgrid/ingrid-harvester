@@ -113,12 +113,12 @@ export class ImportSocketService {
                     }
                 }
             }, error => {
-                console.error('There was an error:', error);
-
+                this.log.error('There was an error: ', error);
                 MailServer.getInstance().send(`Importer [${configHarvester.type}] ${configData.description} failed`, error.toString());
             });
-        } catch (e) {
-            console.error('An error: ', e);
+        }
+        catch (e) {
+            this.log.error(`An error occured while harvesting (id=${id}): `, e);
         }
     }
 }

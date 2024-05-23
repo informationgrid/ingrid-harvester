@@ -29,14 +29,27 @@
     </mat-card-header>
     <mat-card-content>
       <div class="flex-row gap-20 space-between">
-        <mat-form-field class="flex-1">
+        <mat-form-field class="flex-75">
           <mat-label>Provider URL</mat-label>
           <input matInput formControlName="providerUrl" required>
         </mat-form-field>
-
-        <mat-form-field class="flex-1">
+        <mat-form-field class="flex-25">
+          <mat-label>Metadaten-Präfix</mat-label>
+          <input matInput formControlName="metadataPrefix">
+        </mat-form-field>
+      </div>
+      <div class="flex-row gap-20 space-between">
+        <mat-form-field class="flex-50">
           <mat-label>Set</mat-label>
-          <input matInput formControlName="set" required>
+          <input matInput formControlName="set">
+        </mat-form-field>
+        <mat-form-field class="flex-25">
+          <mat-label>Von (ISO-Datum)</mat-label>
+          <input matInput formControlName="from">
+        </mat-form-field>
+        <mat-form-field class="flex-25">
+          <mat-label>Bis (ISO-Datum)</mat-label>
+          <input matInput formControlName="until">
         </mat-form-field>
       </div>
 

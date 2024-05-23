@@ -21,12 +21,11 @@
  * ==================================================
  */
 
-import { Bucket } from '../persistence/postgres.utils';
 import { ConfigService } from '../services/config/ConfigService';
 import { DatabaseFactory } from '../persistence/database.factory';
 import { DatabaseUtils } from '../persistence/database.utils';
 import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { ElasticsearchUtils, EsOperation } from '../persistence/elastic.utils';
+import { ElasticsearchUtils } from '../persistence/elastic.utils';
 import { FilterUtils } from '../utils/filter.utils';
 import { ImporterSettings } from '../importer.settings';
 import { ImportLogMessage } from '../model/import.result';

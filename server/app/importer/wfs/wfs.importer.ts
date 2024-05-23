@@ -250,7 +250,7 @@ export abstract class WfsImporter extends Importer {
         this.generalInfo['maintainer'] = maintainer;
 
         // retrieve catalog info from database
-        let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId) ?? this.database.defaultCatalog;
+        let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId);
         this.generalInfo['catalog'] = catalog;
 
         let hitsRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, maxRecords: undefined, resultType: 'hits' });
@@ -338,7 +338,7 @@ export abstract class WfsImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, features[i], harvestTime, this.summary, this.generalInfo);
 
-            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
+            let doc: any = await this.profile.getIndexDocumentFactory(mapper).create().catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
@@ -348,7 +348,7 @@ export abstract class WfsImporter extends Importer {
                 let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.settings.getFeaturesUrl,
-                    collection_id: this.generalInfo['catalog'].id,
+                    collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };

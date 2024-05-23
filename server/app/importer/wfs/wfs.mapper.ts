@@ -28,8 +28,10 @@ import { throwError } from 'rxjs';
 import { BaseMapper } from '../base.mapper';
 import { Contact, Organization, Person } from '../../model/agent';
 import { DateRange } from '../../model/dateRange';
-import { Geometry, GeometryCollection } from '@turf/helpers';
+import { Distribution } from '../../model/distribution';
+import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { ImporterSettings } from '../../importer.settings';
+import { MetadataSource } from '../../model/index.document';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 import { WfsSettings } from './wfs.settings';
@@ -37,7 +39,7 @@ import { XPathNodeSelect } from '../../utils/xpath.utils';
 
 export abstract class WfsMapper extends BaseMapper {
 
-    protected log = getLogger();
+    log = getLogger();
 
     protected readonly feature: Node & Element;
     private harvestTime: any;
@@ -84,172 +86,117 @@ export abstract class WfsMapper extends BaseMapper {
         return this.summary;
     }
 
-    async _getPublisher(): Promise<Person[] | Organization[]> {
+    async getPublisher(): Promise<Person[] | Organization[]> {
         return [this.fetched.catalog.publisher];
     }
 
-    async _getMaintainers(): Promise<Person[] | Organization[]> {
+    async getMaintainers(): Promise<Person[] | Organization[]> {
         return [this.fetched.maintainer];
     }
 
-    async _getContributors(): Promise<Person[] | Organization[]> {
+    async getContributors(): Promise<Person[] | Organization[]> {
         return undefined
     }
 
-    abstract _getAlternateTitle(): string;
+    abstract getTitle(): string;
 
-    _getAccessRights(): string[] {
-        return undefined;
-    }
+    abstract getDescription(): string;
 
-    _getCategories(): string[] {
-        return undefined;
-    }
+    abstract getDistributions(): Promise<Distribution[]>;
 
-    _getCitation(): string {
-        return undefined;
-    }
+    abstract getPlanName(): string;
 
-    _getGeneratedId(): string {
+    getGeneratedId(): string {
         return this.uuid;
     }
 
-    /**
-     * Extracts and returns an array of keywords defined in the ISO-XML document.
-     * This method also checks if these keywords contain at least one of the
-     * given mandatory keywords. If this is not the case, then the mapped
-     * document is flagged to be skipped from the index. By default this array
-     * contains just one entry 'opendata' i.e. if the ISO-XML document doesn't
-     * have this keyword defined, then it will be skipped from the index.
-     */
     // TODO:check
-    _getKeywords(): string[] {
-        let mandatoryKws = this.settings.eitherKeywords || [];
-        let keywords = this.fetched.keywords[mandatoryKws.join()];
-        return keywords;
-    }
-
-    // TODO:check
-    _getMetadataSource(): any {
+    getMetadataSource(): MetadataSource {
         let wfsLink = `${this.settings.getFeaturesUrl}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&outputFormat=application/xml&featureId=${this.uuid}`;
         return {
             source_base: this.settings.getFeaturesUrl,
             raw_data_source: wfsLink,
+            source_type: 'wfs',
             portal_link: this.settings.defaultAttributionLink,
             attribution: this.settings.defaultAttribution
         };
     }
 
+    abstract getIssued(): Date;
+
     // TODO
-    _getModifiedDate() {
+    getModifiedDate(): Date {
         return undefined;
         // return new Date(this.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.feature, true).textContent);
     }
 
-    abstract _getBoundingBox(): object;
+    abstract getBoundingBox(): Geometry;
 
-    _getCentroid(): object {
-        let spatial = this._getSpatial() ?? this._getBoundingBox();
+    abstract getSpatial(): Geometry | GeometryCollection;
+
+    abstract getSpatialText(): string;
+
+    getCentroid(): Point {
+        let spatial = this.getSpatial() ?? this.getBoundingBox();
         return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
     }
 
-    _getTemporal(): DateRange[] {
+    isRealtime(): boolean {
         return undefined;
     }
 
-    _getThemes() {
-        return [];
-    }
-
-    _isRealtime(): boolean {
-        return undefined;
-    }
-
-    _getAccrualPeriodicity(): string {
-        return undefined;
-    }
-
-    _getLicense() {
-        return undefined;
-    }
-
-    _getCatalog(): Catalog {
+    getCatalog(): Catalog {
         return this.fetched.catalog;
     }
 
-    _getPluDevelopmentFreezePeriod(): DateRange {
+    getPluDevelopmentFreezePeriod(): DateRange {
         return undefined;
     }
 
-    abstract _getPluDocType(code: string): PluDocType;
+    abstract getPluDocType(code: string): PluDocType;
 
-    _getPluPlanState(): PluPlanState {
-        
+    getPluPlanState(): PluPlanState {
         return this.settings.pluPlanState;
     }
 
-    abstract _getPluPlanType(): PluPlanType;
+    abstract getPluPlanType(): PluPlanType;
 
-    abstract _getPluPlanTypeFine(): string;
+    abstract getPluPlanTypeFine(): string;
 
-    _getPluProcedureState(): PluProcedureState {
-        switch (this._getPluPlanState()) {
+    getPluProcedureState(): PluProcedureState {
+        switch (this.getPluPlanState()) {
             case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
             case PluPlanState.IN_AUFST: return PluProcedureState.LAUFEND;
             default: return PluProcedureState.UNBEKANNT;
         }
     }
 
-    abstract _getPluProcedureType(): PluProcedureType;
+    abstract getPluProcedureType(): PluProcedureType;
 
-    abstract _getPluProcessSteps(): ProcessStep[];
+    abstract getPluProcessSteps(): ProcessStep[];
 
-    abstract _getPluProcedurePeriod(): DateRange;
+    abstract getPluProcedurePeriod(): DateRange;
 
-    _getPluNotification() {
+    getAdmsIdentifier(): string {
         return undefined;
     }
 
-    _getAdmsIdentifier() {
-        return undefined;
-    }
-
-    _getRelation() {
-        return undefined;
-    }
-
-    _getHarvestedData(): string {
+    getHarvestedData(): string {
         return this.feature.toString();
     }
 
-    _getCreator(): Person[] {
-        return undefined;
-    }
-
-    _getGroups(): string[] {
-        return undefined;
-    }
-
-    _getMetadataHarvested(): Date {
+    getHarvestingDate(): Date {
         return new Date(Date.now());
-    }
-
-    _getSubSections(): any[] {
-        return undefined;
-    }
-
-    _getOriginator(): Person[] {
-        return undefined;
     }
 
     // ED: the features themselves contain no contact information
     // we can scrape a little bit from GetCapabilities...
-    async _getContactPoint(): Promise<Contact> {
+    async getContactPoint(): Promise<Contact> {
         return this.fetched.contactPoint;
     }
 
     // TODO
-    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+    protected getUrlCheckRequestConfig(uri: string): RequestOptions {
         let config: RequestOptions = {
             method: 'HEAD',
             json: false,
