@@ -125,7 +125,7 @@ export class Server {
                 saveUninitialized: true,
                 maxAge: 36000,
                 cookie: {
-                    path: '/',
+                    path: createRelativePath(baseURL),
                     httpOnly: true,
                     secure: false,
                     maxAge: null
