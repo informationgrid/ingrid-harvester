@@ -401,9 +401,6 @@
     "spatial_text": {
       "type": "text"
     },
-    "temporal": {
-      "type": "date_range"
-    },
     "extras": {
       "properties": {
         "metadata": {
@@ -422,6 +419,12 @@
                 "raw_data_source": {
                   "type": "text",
                   "index": false
+                },
+                "source_base": {
+                  "type": "keyword"
+                },
+                "source_type": {
+                  "type": "keyword"
                 },
                 "portal_link": {
                   "type": "text",

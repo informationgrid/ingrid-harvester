@@ -198,16 +198,16 @@
             },
             "source": {
               "properties": {
+                "raw_data_source": {
+                    "type": "text",
+                    "index": false
+                },
                 "source_base": {
                   "type": "keyword"
                 },
                 "source_type": {
                   "type": "keyword"
-                },
-                "raw_data_source": {
-                  "type": "text",
-                  "index": false
-                }            
+                }
               }
             },
             "merged_from": {
