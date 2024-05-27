@@ -86,7 +86,7 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
     }
 
     getPluProcedurePeriod(): DateRange {
-        let ranges: DateRange[] = this.baseMapper.getTemporal();
+        let ranges: DateRange[] = this.baseMapper.getTemporal() ?? [];
         let gte: Date;
         let lte: Date;
         // extract the earliest and latest date
@@ -224,7 +224,7 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
     }
 
     getKeywords(): string[] {
-        return undefined;
+        return this.baseMapper.getKeywords();
     }
 
     getModifiedDate(): Date {
