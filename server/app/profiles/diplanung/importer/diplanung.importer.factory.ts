@@ -32,6 +32,8 @@ import { MsWfsImporter } from '../../../importer/wfs/ms/ms.wfs.importer';
 import { XplanSynWfsImporter } from '../../../importer/wfs/xplan/syn/xplan.syn.wfs.importer';
 import { XplanWfsImporter } from '../../../importer/wfs/xplan/xplan.wfs.importer';
 
+const log = require('log4js').getLogger(__filename);
+
 export class DiplanungImporterFactory extends ImporterFactory {
 
     public async get(config: Harvester): Promise<Importer> {
@@ -59,7 +61,7 @@ export class DiplanungImporterFactory extends ImporterFactory {
                 importer = new XplanSynWfsImporter(config);
                 break;
             default: {
-                console.error('Importer not found: ' + config.type);
+                log.error('Importer not found: ' + config.type);
             }
         }
         if (importer) {

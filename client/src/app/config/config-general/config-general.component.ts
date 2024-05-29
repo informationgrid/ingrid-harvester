@@ -124,7 +124,8 @@ export class ConfigGeneralComponent implements OnInit {
       url: this.configForm.get('elasticsearch.url').value,
       version: this.configForm.get('elasticsearch.version').value,
       user: this.configForm.get('elasticsearch.user').value,
-      password: this.configForm.get('elasticsearch.password').value
+      password: this.configForm.get('elasticsearch.password').value,
+      rejectUnauthorized: this.configForm.get('elasticsearch.rejectUnauthorized').value
     });
     checkResult.pipe(delay(1000)).subscribe(response => {
       this.esConnectionCheck = response ? 'success' : 'fail';
@@ -182,6 +183,7 @@ export class ConfigGeneralComponent implements OnInit {
         version: [settings.elasticsearch.version],
         user: [settings.elasticsearch.user],
         password: [settings.elasticsearch.password],
+        rejectUnauthorized: [settings.elasticsearch.rejectUnauthorized],
         alias: [settings.elasticsearch.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
         prefix: [settings.elasticsearch.prefix],
         index: [settings.elasticsearch.index],

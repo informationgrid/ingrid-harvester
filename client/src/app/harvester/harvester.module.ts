@@ -21,43 +21,44 @@
  * ==================================================
  */
 
-import {NgModule} from "@angular/core";
-import {HarvesterComponent} from "./harvester.component";
-import {MatButtonModule} from "@angular/material/button";
-import {MatDialogModule} from "@angular/material/dialog";
-import {MatExpansionModule} from "@angular/material/expansion";
-import {MatIconModule} from "@angular/material/icon";
-import {MatProgressBarModule} from "@angular/material/progress-bar";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {MatSlideToggleModule} from "@angular/material/slide-toggle";
-import {CommonModule} from "@angular/common";
-import {DialogSchedulerComponent} from './dialog-scheduler/dialog-scheduler.component';
-import {DialogLogComponent} from './dialog-log/dialog-log.component';
-import {DialogEditComponent} from './dialog-edit/dialog-edit.component';
-import {ExcelHarvesterComponent} from './dialog-edit/excel-harvester/excel-harvester.component';
-import {ExcelSparseHarvesterComponent} from './dialog-edit/excel-sparse-harvester/excel-sparse-harvester.component';
-import {CkanHarvesterComponent} from './dialog-edit/ckan-harvester/ckan-harvester.component';
-import {CswHarvesterComponent} from './dialog-edit/csw-harvester/csw-harvester.component';
-import {OaiHarvesterComponent} from './dialog-edit/oai-harvester/oai-harvester.component';
-import {SparqlHarvesterComponent} from './dialog-edit/sparql-harvester/sparql-harvester.component';
-import {WfsHarvesterComponent} from './dialog-edit/wfs-harvester/wfs-harvester.component';
-import {DialogHistoryComponent} from './dialog-history/dialog-history.component';
-import {ImporterDetailComponent} from './importer-detail/importer-detail.component';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatCardModule} from '@angular/material/card';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatListModule} from '@angular/material/list';
-import {MatTabsModule} from '@angular/material/tabs';
-import {RouterModule, Routes} from '@angular/router';
-import {SharedModule} from '../shared/shared.module';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {ReactiveFormsModule} from '@angular/forms';
-import {ChipListComponent} from './dialog-edit/chip-list/chip-list.component';
-import {MatBadgeModule} from "@angular/material/badge";
-import {DcatHarvesterComponent} from "./dialog-edit/dcat-harvester/dcat-harvester.component";
-import {DcatappluHarvesterComponent} from "./dialog-edit/dcatapplu-harvester/dcatapplu-harvester.component";
-import {ScrollingModule} from '@angular/cdk/scrolling';
-import { CronjobFormFieldComponent } from "../shared/cronjob-form-field/cronjob-form-field.component";
+import { ChipListComponent } from './dialog-edit/chip-list/chip-list.component';
+import { CkanHarvesterComponent } from './dialog-edit/ckan-harvester/ckan-harvester.component';
+import { CommonModule } from '@angular/common';
+import { CronjobFormFieldComponent } from '../shared/cronjob-form-field/cronjob-form-field.component';
+import { CswHarvesterComponent } from './dialog-edit/csw-harvester/csw-harvester.component';
+import { DcatHarvesterComponent } from './dialog-edit/dcat-harvester/dcat-harvester.component';
+import { DcatappluHarvesterComponent } from './dialog-edit/dcatapplu-harvester/dcatapplu-harvester.component';
+import { DialogEditComponent } from './dialog-edit/dialog-edit.component';
+import { DialogHistoryComponent } from './dialog-history/dialog-history.component';
+import { DialogLogComponent } from './dialog-log/dialog-log.component';
+import { DialogSchedulerComponent } from './dialog-scheduler/dialog-scheduler.component';
+import { ExcelHarvesterComponent } from './dialog-edit/excel-harvester/excel-harvester.component';
+import { ExcelSparseHarvesterComponent } from './dialog-edit/excel-sparse-harvester/excel-sparse-harvester.component';
+import { HarvesterComponent } from './harvester.component';
+import { ImporterDetailComponent } from './importer-detail/importer-detail.component';
+import { KldHarvesterComponent } from './dialog-edit/kld-harvester/kld-harvester.component';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
+import { NgModule } from '@angular/core';
+import { OaiHarvesterComponent } from './dialog-edit/oai-harvester/oai-harvester.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { SharedModule } from '../shared/shared.module';
+import { SparqlHarvesterComponent } from './dialog-edit/sparql-harvester/sparql-harvester.component';
+import { WfsHarvesterComponent } from './dialog-edit/wfs-harvester/wfs-harvester.component';
 
 const harvesterRoutes: Routes = [
   {
@@ -77,6 +78,7 @@ const harvesterRoutes: Routes = [
         ExcelSparseHarvesterComponent,
         CkanHarvesterComponent,
         CswHarvesterComponent,
+        KldHarvesterComponent,
         OaiHarvesterComponent,
         DcatHarvesterComponent,
         DcatappluHarvesterComponent,

@@ -35,6 +35,7 @@ import { Distribution } from '../../model/distribution';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import { IndexDocument } from '../../model/index.document';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -173,7 +174,7 @@ export class CswImporter extends Importer {
 
     async harvest(): Promise<void> {
         log.info(`Started requesting records`);
-        let catalog: Catalog = this.database.defaultCatalog;
+        let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId);
         this.generalInfo['catalog'] = catalog;
 
         // collect number of totalRecords up front, so we can harvest concurrently
@@ -207,7 +208,6 @@ export class CswImporter extends Importer {
     }
 
     async harvestServices(): Promise<void> {
-        this.generalInfo['catalog'] = this.database.defaultCatalog;
         let datasetIds = await this.database.getDatasetIdentifiers(this.settings.getRecordsUrl);
         let numChunks = Math.ceil(datasetIds.length / this.settings.maxServices);
         log.info(`Requesting services for ${datasetIds.length} datasets in ${numChunks} chunks`);
@@ -427,9 +427,9 @@ export class CswImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary, this.generalInfo);
 
-            let doc: any;
+            let doc: IndexDocument;
             try {
-                doc = await this.profile.getIndexDocument().create(mapper);
+                doc = await this.profile.getIndexDocumentFactory(mapper).create();
                 docsToImport.push(doc);
             }
             catch (e) {
@@ -442,7 +442,7 @@ export class CswImporter extends Importer {
                 let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.settings.getRecordsUrl,
-                    collection_id: this.generalInfo['catalog'].id,
+                    collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };

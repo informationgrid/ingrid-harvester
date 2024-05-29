@@ -28,6 +28,7 @@ import { decode } from 'iconv-lite';
 import { defaultWfsSettings, WfsSettings } from './wfs.settings';
 import { firstElementChild, getExtendedNsMap, getNsMap, XPathNodeSelect } from '../../utils/xpath.utils';
 import { getLogger } from 'log4js';
+import { getProxyConfig } from '../../utils/service.utils';
 import { namespaces } from '../../importer/namespaces';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { Contact, Organization, Person } from '../../model/agent';
@@ -170,7 +171,11 @@ export abstract class WfsImporter extends Importer {
         // role -> contact
         let contacts: Map<string, Contact> = new Map();
         if (this.settings.contactCswUrl) {
-            let response = await RequestDelegate.doRequest({ uri: this.settings.contactCswUrl, accept: 'text/xml' });
+            let response = await RequestDelegate.doRequest({ 
+                uri: this.settings.contactCswUrl,
+                accept: 'text/xml',
+                ...getProxyConfig()
+            });
             let responseDom = this.domParser.parseFromString(response);
             let metadata = CswMapper.select('./csw:GetRecordByIdResponse/gmd:MD_Metadata', responseDom, true);
             let xpaths = [
@@ -245,7 +250,7 @@ export abstract class WfsImporter extends Importer {
         this.generalInfo['maintainer'] = maintainer;
 
         // retrieve catalog info from database
-        let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId) ?? this.database.defaultCatalog;
+        let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId);
         this.generalInfo['catalog'] = catalog;
 
         let hitsRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, maxRecords: undefined, resultType: 'hits' });
@@ -333,7 +338,7 @@ export abstract class WfsImporter extends Importer {
 
             let mapper = this.getMapper(this.settings, features[i], harvestTime, this.summary, this.generalInfo);
 
-            let doc: any = await this.profile.getIndexDocument().create(mapper).catch(e => {
+            let doc: any = await this.profile.getIndexDocumentFactory(mapper).create().catch(e => {
                 log.error('Error creating index document', e);
                 this.summary.appErrors.push(e.toString());
                 mapper.skipped = true;
@@ -343,7 +348,7 @@ export abstract class WfsImporter extends Importer {
                 let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.settings.getFeaturesUrl,
-                    collection_id: this.generalInfo['catalog'].id,
+                    collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };

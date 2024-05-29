@@ -282,7 +282,7 @@ export class RequestDelegate {
                 if (retry > 0) {
                     retry -= 1;
                     log.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
-                    RequestDelegate.sleep(waitMilliSeconds);
+                    await RequestDelegate.sleep(waitMilliSeconds);
                     response = fetch(fullURL, config);
                 }
                 else {

@@ -26,12 +26,15 @@ export interface Agent {
     mbox?: string;
     type?: string;
 }
+
 export interface Person extends Agent {
     name: string;
 }
+
 export interface Organization extends Agent {
     organization: string;
 }
+
 export interface Contact {
     fn: string,
     hasCountryName?: string,
@@ -45,5 +48,3 @@ export interface Contact {
     hasURL?: string,
     hasOrganizationName?: string
 }
-
-

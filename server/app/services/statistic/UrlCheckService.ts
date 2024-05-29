@@ -50,15 +50,6 @@ export class UrlCheckService {
 
     constructor() {
         this.initialize();
-        if (this.generalSettings.proxy) {
-            this.httpsAgent = new HttpsProxyAgent(this.generalSettings.proxy);
-            this.httpsAgent.options.rejectUnauthorized = false;
-        }
-        else {
-            this.httpsAgent = new Agent({
-                rejectUnauthorized: false
-            });
-        }
     }
 
     initialize() {
@@ -74,6 +65,15 @@ export class UrlCheckService {
         this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, summary);
         this.indexSettings = profile.getIndexSettings();
         this.elasticQueries = profile.getElasticQueries();
+        if (this.generalSettings.proxy) {
+            this.httpsAgent = new HttpsProxyAgent(this.generalSettings.proxy);
+            this.httpsAgent.options.rejectUnauthorized = false;
+        }
+        else {
+            this.httpsAgent = new Agent({
+                rejectUnauthorized: false
+            });
+        }
     }
 
     async getHistory() {

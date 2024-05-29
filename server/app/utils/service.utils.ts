@@ -25,10 +25,11 @@ import * as xpath from 'xpath';
 import * as GeoJsonUtils from '../utils/geojson.utils';
 import * as MiscUtils from './misc.utils';
 import { getNsMap, XPathNodeSelect } from './xpath.utils';
+import { ConfigService } from '../services/config/ConfigService';
 import { Distribution } from '../model/distribution';
 import { DOMParser } from '@xmldom/xmldom';
 import { Geometries, Geometry, GeometryCollection } from '@turf/helpers';
-import { RequestDelegate } from './http-request.utils';
+import { RequestDelegate, RequestOptions } from './http-request.utils';
 import { UrlUtils } from './url.utils';
 
 const OGC_QUERY_PARAMS = ['request', 'service', 'version'];
@@ -48,7 +49,8 @@ export async function parseWfsFeatureCollection(url: string, typeNames: string, 
             typeNames
         },
         size: 8*1024*1024,   // 8 MB max
-        timeout: 60000
+        timeout: 60000,
+        ...getProxyConfig()
     });
     let dom = domParser.parseFromString(xmlResponse);
     let nsMap = getNsMap(dom);
@@ -77,7 +79,9 @@ export async function parseWfsFeatureCollection(url: string, typeNames: string, 
 export async function getWfsFeatureTypeMap(url: string): Promise<{ [key: string]: string[] }> {
     let featureTypeMap = {};
     let response = await RequestDelegate.doRequest({
-        uri: url, qs: { service: 'WFS', request: 'GetCapabilities' }
+        uri: url,
+        qs: { service: 'WFS', request: 'GetCapabilities' },
+        ...getProxyConfig()
     });
     let dom = domParser.parseFromString(response);
     const select = <XPathNodeSelect>xpath.useNamespaces(getNsMap(dom));
@@ -111,7 +115,9 @@ export async function getWfsFeatureTypeMap(url: string): Promise<{ [key: string]
 export async function getWmsLayerNameMap(url: string): Promise<{ [key: string]: string[] }> {
     let layerNameMap = {};
     let response = await RequestDelegate.doRequest({
-        uri: url, qs: { service: 'WMS', request: 'GetCapabilities' }
+        uri: url,
+        qs: { service: 'WMS', request: 'GetCapabilities' },
+        ...getProxyConfig()
     });
     let dom = domParser.parseFromString(response);
 
@@ -250,4 +256,12 @@ function transmutateDistribution(distribution: Distribution, source: string, tar
     }, {});
     createdDistribution.isSynthetic = true;
     return createdDistribution;
+}
+
+export function getProxyConfig(): Partial<RequestOptions> {
+    let config = ConfigService.getGeneralSettings();
+    return {
+        proxy: config.proxy || null,
+        rejectUnauthorized: !config.allowAllUnauthorizedSSL
+    }
 }

@@ -23,16 +23,17 @@
 
 import * as fs from 'fs';
 import * as MiscUtils from '../../utils/misc.utils';
-import {Harvester} from '@shared/harvester';
-import {GeneralSettings} from '@shared/general-config.settings';
-import {getLogger} from "log4js";
-import {MappingDistribution, MappingItem} from '@shared/mapping.model';
-import {UrlUtils} from "../../utils/url.utils";
-import {defaultCKANSettings} from "../../importer/ckan/ckan.settings";
-import {defaultExcelSettings} from "../../importer/excel/excel.settings";
-import {defaultCSWSettings} from "../../importer/csw/csw.settings";
-import {defaultOAISettings} from "../../importer/oai/oai.settings";
-import {defaultDCATSettings} from "../../importer/dcat/dcat.settings";
+import { defaultCKANSettings } from '../../importer/ckan/ckan.settings';
+import { defaultCSWSettings } from '../../importer/csw/csw.settings';
+import { defaultDCATSettings } from '../../importer/dcat/dcat.settings';
+import { defaultExcelSettings } from '../../importer/excel/excel.settings';
+import { defaultKldSettings } from '../../importer/kld/kld.settings';
+import { defaultOAISettings } from '../../importer/oai/oai.settings';
+import { getLogger } from 'log4js';
+import { GeneralSettings } from '@shared/general-config.settings';
+import { Harvester } from '@shared/harvester';
+import { MappingDistribution, MappingItem } from '@shared/mapping.model';
+import { UrlUtils } from '../../utils/url.utils';
 
 const log = getLogger();
 
@@ -73,13 +74,14 @@ export class ConfigService {
             version: process.env.ELASTIC_VERSION ?? "8",
             user: process.env.ELASTIC_USER ?? "elastic",
             password: process.env.ELASTIC_PASSWORD ?? "elastic",
+            rejectUnauthorized: parseBooleanOrUndefined(process.env.ELASTIC_REJECT_UNAUTHORIZED) ?? true,
             index: process.env.ELASTIC_INDEX ?? "harvester-index",
             alias: process.env.ELASTIC_ALIAS ?? "mcloud",
             prefix: process.env.ELASTIC_PREFIX ?? '',
             numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS) ?? 1,
             numberOfReplicas: parseIntOrUndefined(process.env.ELASTIC_NUM_REPLICAS) ?? 0
         },
-        proxy: process.env.PROXY_URL ?? null,
+        proxy: process.env.PROXY_URL || null,
         allowAllUnauthorizedSSL: parseBooleanOrUndefined(process.env.ALLOW_ALL_UNAUTHORIZED) ?? false,
         portalUrl: process.env.PORTAL_URL ?? "https://mcloud.de/",
         urlCheck:{
@@ -178,13 +180,14 @@ export class ConfigService {
                 version: process.env.ELASTIC_VERSION,
                 user: process.env.ELASTIC_USER,
                 password: process.env.ELASTIC_PASSWORD,
+                rejectUnauthorized: parseBooleanOrUndefined(process.env.ELASTIC_REJECT_UNAUTHORIZED),
                 index: process.env.ELASTIC_INDEX,
                 alias: process.env.ELASTIC_ALIAS,
                 prefix: process.env.ELASTIC_PREFIX,
                 numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS),
                 numberOfReplicas: parseIntOrUndefined(process.env.ELASTIC_NUM_REPLICAS)
             },
-            proxy: process.env.PROXY_URL,
+            proxy: process.env.PROXY_URL || null,
             allowAllUnauthorizedSSL: parseBooleanOrUndefined(process.env.ALLOW_ALL_UNAUTHORIZED),
             portalUrl: process.env.PORTAL_URL
         };
@@ -216,6 +219,7 @@ export class ConfigService {
                         case 'DCAT': defaultSettings = defaultDCATSettings; break;
                         case 'EXCEL': defaultSettings = defaultExcelSettings; break;
                         //case 'EXCEL_SPARSE': defaultSettings = ExcelSparseImporter.defaultSettings; break;
+                        case 'KLD': defaultSettings = defaultKldSettings; break;
                         case 'OAI': defaultSettings = defaultOAISettings; break;
                         //case 'SPARQL': defaultSettings = SparqlImporter.defaultSettings; break;
                         //case 'WFS': defaultSettings = WfsImporter.defaultSettings; break;

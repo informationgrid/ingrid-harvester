@@ -43,8 +43,8 @@ export class AppComponent implements OnInit {
   favIcon: HTMLLinkElement = document.querySelector("#appIcon");
 
   constructor(
-    private router: Router, 
-    private authService: AuthenticationService, 
+    private router: Router,
+    private authService: AuthenticationService,
     private snack: MatSnackBar,
     private configService: ConfigService,
     private transloco: TranslocoService,
@@ -53,10 +53,10 @@ export class AppComponent implements OnInit {
     private registry: MatIconRegistry,
     ) {
       this.loadIcons();
-      
+
       const profile = "ingrid"
       if (profile == "ingrid") {
-        this.favIcon.href = "/assets/icons/favicon.ico";
+        this.favIcon.href = "./assets/icons/favicon.ico";
         titleService.setTitle("InGrid Harvester");
       }
   }
@@ -117,7 +117,7 @@ export class AppComponent implements OnInit {
         this.titleService.setTitle(newTitle);
       }
     });
-    
+
   }
 
   logout() {

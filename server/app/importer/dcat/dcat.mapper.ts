@@ -37,12 +37,71 @@ import { DcatSettings } from './dcat.settings';
 import { Distribution } from '../../model/distribution';
 import { ImporterSettings } from '../../importer.settings';
 import { License } from '@shared/license.model';
+import { MetadataSource } from '../../model/index.document';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
 import { Summary } from '../../model/summary';
 import { UrlUtils } from '../../utils/url.utils';
 import { XPathElementSelect } from '../../utils/xpath.utils';
 
 export class DcatMapper extends BaseMapper {
+
+    static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
+
+    static DCAT_THEMES = ['AGRI', 'ECON', 'EDUC','ENER','ENVI','GOVE','HEAL','INTR','JUST','REGI','SOCI','TECH','TRAN'];
+
+    // TODO: refactor into a mapping file
+    static dcatThemeUriFromKeyword(keyword: string): string {
+        // Check falsy values first
+        if (!keyword) return null;
+
+        let code: string = null;
+        keyword = keyword.trim();
+
+        switch (keyword) {
+            case 'Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel':
+                code = 'AGRI';
+                break;
+            case 'Wirtschaft und Finanzen':
+                code = 'ECON';
+                break;
+            case 'Bildung, Kultur und Sport':
+                code = 'EDUC';
+                break;
+            case 'Energie':
+                code = 'ENER';
+                break;
+            case 'Umwelt':
+                code = 'ENVI';
+                break;
+            case 'Regierung und öffentlicher Sektor':
+                code = 'GOVE';
+                break;
+            case 'Gesundheit':
+                code = 'HEAL';
+                break;
+            case 'Internationale Themen':
+                code = 'INTR';
+                break;
+            case 'Justiz, Rechtssystem und öffentliche Sicherheit':
+                code = 'JUST';
+                break;
+            case 'Regionen und Städte':
+                code = 'REGI';
+                break;
+            case 'Bevölkerung und Gesellschaft':
+                code = 'SOCI';
+                break;
+            case 'Wissenschaft und Technologie':
+                code = 'TECH';
+                break;
+            case 'Verkehr':
+                code = 'TRAN';
+                break;
+            default:
+                return null;
+        }
+        return code;// ? GenericMapper.DCAT_CATEGORY_URL + code : null;
+    }
 
     static select = <XPathElementSelect>xpath.useNamespaces({
         'foaf': namespaces.FOAF,
@@ -58,8 +117,6 @@ export class DcatMapper extends BaseMapper {
         'dcatde': namespaces.DCATDE,
         'ogc': namespaces.OGC
     });
-
-    private log = getLogger();
 
     private readonly record: any;
     private readonly catalogPage: any;
@@ -79,6 +136,7 @@ export class DcatMapper extends BaseMapper {
         themes: null
     };
 
+    log = getLogger();
 
     constructor(settings, record, catalogPage, harvestTime, summary) {
         super();
@@ -112,7 +170,7 @@ export class DcatMapper extends BaseMapper {
         return this.summary;
     }
 
-    _getDescription() {
+    getDescription() {
         let description = DcatMapper.select('./dct:description', this.record, true);
         if (!description) {
             description = DcatMapper.select('./dct:abstract', this.record, true);
@@ -130,7 +188,7 @@ export class DcatMapper extends BaseMapper {
     }
 
 
-    async _getDistributions(): Promise<Distribution[]> {
+    async getDistributions(): Promise<Distribution[]> {
         let dists = [];
 
         if (this.linkedDistributions) {
@@ -195,7 +253,7 @@ export class DcatMapper extends BaseMapper {
     }
 
 
-    async _getPublisher(): Promise<any[]> {
+    async getPublisher(): Promise<any[]> {
         if(this.fetched.publishers != null){
             return this.fetched.publishers
         }
@@ -219,7 +277,6 @@ export class DcatMapper extends BaseMapper {
                 }
             }
         }
-
 
         if (publishers.length === 0) {
             let creators = DcatMapper.select('./dct:creator', this.record);
@@ -247,7 +304,7 @@ export class DcatMapper extends BaseMapper {
         }
     }
 
-    _getTitle() {
+    getTitle() {
         let title = DcatMapper.select('./dct:title', this.record, true).textContent;
         return title && title.trim() !== '' ? title : undefined;
     }
@@ -271,17 +328,15 @@ export class DcatMapper extends BaseMapper {
      *    + all otherConstraints texts for useConstraints/otherConstraints
      *      combinations that are not JSON-snippets.
      */
-    _getAccessRights(): string[] {
+    getAccessRights(): string[] {
         return undefined;
     }
 
-    _getCitation(): string {
+    getCitation(): string {
         return undefined;
     }
 
-    async _getDisplayContacts() {
-
-
+    async getDisplayContacts() {
         let displayName;
         let displayHomepage;
 
@@ -315,14 +370,14 @@ export class DcatMapper extends BaseMapper {
                     }
                     break;
                 case "originator":
-                    let originator = this._getOriginator();
+                    let originator = this.getOriginator();
                     if (originator) {
                         displayName = originator[0].name;
                         displayHomepage = originator[0].homepage
                     }
                     break;
                 case "publisher":
-                    let publisher = await this._getPublisher();
+                    let publisher = await this.getPublisher();
                     if (publisher.length > 0) {
                         displayName = publisher[0].organization;
                         displayHomepage = null;
@@ -369,7 +424,7 @@ export class DcatMapper extends BaseMapper {
         }
 
         if(!displayName) {
-            let originator = this._getOriginator();
+            let originator = this.getOriginator();
             if (originator) {
                 displayName = originator[0].name;
                 displayHomepage = originator[0].homepage
@@ -392,7 +447,7 @@ export class DcatMapper extends BaseMapper {
         return [displayContact];
     }
 
-    _getGeneratedId(): string {
+    getGeneratedId(): string {
         return this.uuid;
     }
 
@@ -404,7 +459,7 @@ export class DcatMapper extends BaseMapper {
      * contains just one entry 'opendata' i.e. if the ISO-XML document doesn't
      * have this keyword defined, then it will be skipped from the index.
      */
-    _getKeywords(): string[] {
+    getKeywords(): string[] {
         let keywords = [];
         let keywordNodes = DcatMapper.select('./dcat:keyword', this.record);
         if (keywordNodes) {
@@ -420,23 +475,24 @@ export class DcatMapper extends BaseMapper {
         return keywords;
     }
 
-    _getMetadataSource(): any {
+    getMetadataSource(): MetadataSource {
         let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');
         return {
             source_base: this.settings.catalogUrl,
             raw_data_source: dcatLink,
+            source_type: 'dcat',
             portal_link: portalLink,
             attribution: this.settings.defaultAttribution
         };
     }
 
-    _getModifiedDate() {
+    getModifiedDate() {
         let modified = DcatMapper.select('./dct:modified', this.record, true);
         return modified?new Date(modified.textContent):undefined;
     }
 
-    _getSpatial(): any {
+    getSpatial(): any {
         let geometry = DcatMapper.select('./dct:spatial/dct:Location/locn:geometry[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
         if(geometry){
             return JSON.parse(geometry.textContent);
@@ -470,7 +526,7 @@ export class DcatMapper extends BaseMapper {
         }
     }
 
-    _getSpatialText(): string {
+    getSpatialText(): string {
         let prefLabel = DcatMapper.select('./dct:spatial/dct:Location/skos:prefLabel', this.record, true);
         if(prefLabel){
             return prefLabel.textContent;
@@ -478,7 +534,7 @@ export class DcatMapper extends BaseMapper {
         return undefined;
     }
 
-    _getTemporal(): DateRange[] {
+    getTemporal(): DateRange[] {
         let result: DateRange[] = [];
 
         let nodes = DcatMapper.select('./dct:temporal/dct:PeriodOfTime', this.record);
@@ -514,7 +570,7 @@ export class DcatMapper extends BaseMapper {
     }
 
 
-    _getThemes() {
+    getThemes() {
         // Return cached value, if present
         if (this.fetched.themes) return this.fetched.themes;
 
@@ -531,11 +587,11 @@ export class DcatMapper extends BaseMapper {
         return themes;
     }
 
-    _isRealtime(): boolean {
+    isRealtime(): boolean {
         return undefined;
     }
 
-    _getAccrualPeriodicity(): string {
+    getAccrualPeriodicity(): string {
         let accrualPeriodicity = DcatMapper.select('./dct:accrualPeriodicity', this.record, true);
         if (accrualPeriodicity) {
             let res = accrualPeriodicity.getAttribute('rdf:resource');
@@ -557,7 +613,7 @@ export class DcatMapper extends BaseMapper {
         return undefined;
     }
 
-    async _getLicense() {
+    async getLicense(): Promise<License> {
         let license: License;
 
         let accessRights = DcatMapper.select('./dct:accessRights', this.record);
@@ -609,11 +665,11 @@ export class DcatMapper extends BaseMapper {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.catalogUrl}'.`;
     }
 
-    _getHarvestedData(): string {
+    getHarvestedData(): string {
         return this.record.toString();
     }
 
-    _getCreator(): Person[] {
+    getCreator(): Person[] {
         let creators = [];
 
         let creatorNodes = DcatMapper.select('./dct:creator', this.record);
@@ -659,27 +715,25 @@ export class DcatMapper extends BaseMapper {
         return maintainers.length === 0 ? undefined : maintainers;
     }
 
-    _getGroups(): string[] {
+    getGroups(): string[] {
         return undefined;
     }
 
-    _getIssued(): Date {
+    getIssued(): Date {
         let modified = DcatMapper.select('./dct:modified', this.record, true);
         return modified?new Date(modified.textContent):undefined;
     }
 
-    _getMetadataHarvested(): Date {
+    getHarvestingDate(): Date {
         return new Date(Date.now());
     }
 
-    _getSubSections(): any[] {
+    getSubSections(): any[] {
         return undefined;
     }
 
-    _getOriginator(): Person[] {
-
+    getOriginator(): Person[] {
         let originators = [];
-
         let originatorNode = DcatMapper.select('./dcatde:originator', this.record);
         for (let i = 0; i < originatorNode.length; i++) {
             let organization = DcatMapper.select('./foaf:Organization', originatorNode[i], true);
@@ -698,7 +752,7 @@ export class DcatMapper extends BaseMapper {
         return originators.length === 0 ? undefined : originators;
     }
 
-    async _getContactPoint(): Promise<any> {
+    async getContactPoint(): Promise<any> {
         let contactPoint = this.fetched.contactPoint;
         if (contactPoint) {
             return contactPoint;
@@ -750,7 +804,7 @@ export class DcatMapper extends BaseMapper {
         return infos;
     }
 
-    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+    private getUrlCheckRequestConfig(uri: string): RequestOptions {
         let config: RequestOptions = {
             method: 'HEAD',
             json: false,

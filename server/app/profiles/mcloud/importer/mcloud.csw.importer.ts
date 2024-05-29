@@ -35,7 +35,7 @@ export class McloudCswImporter extends CswImporter {
         super(settings, requestDelegate)
     }
 
-    protected async processBucket(bucket: Bucket): Promise<EsOperation[]> {
+    protected async processBucket(bucket: Bucket<any>): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
         // find primary document
         let { primary_id, document, duplicates } = this.prioritize(bucket);
@@ -54,7 +54,7 @@ export class McloudCswImporter extends CswImporter {
         return box;
     }
 
-    private prioritize(bucket: Bucket): { 
+    private prioritize(bucket: Bucket<any>): { 
         primary_id: string | number, 
         document: any, 
         duplicates: Map<string | number, any>

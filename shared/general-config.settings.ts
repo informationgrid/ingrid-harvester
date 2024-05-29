@@ -51,7 +51,8 @@ export interface ElasticsearchConfiguration {
     url: string,
     version: string,
     user?: string,
-    password?: string
+    password?: string,
+    rejectUnauthorized: boolean,
     index: string,
     alias: string,
     prefix?: string,

@@ -107,7 +107,10 @@ mat-spinner {
 }
 
 .no-harvester {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 
   mat-spinner {
     display: inline-block;
@@ -129,6 +132,7 @@ mat-spinner {
 
 .harvester-list {
   margin: auto;
+  margin-top: 20px;
   margin-bottom: 20px;
   box-sizing: border-box;
   max-width: var(--max-width-panel);
