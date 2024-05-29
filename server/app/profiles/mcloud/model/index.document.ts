@@ -21,69 +21,54 @@
  * ==================================================
  */
 
-import {IndexDocument} from "../../../model/index.document";
-import {CkanMapper} from "../../../importer/ckan/ckan.mapper";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
-import {DcatMapper} from "../../../importer/dcat/dcat.mapper";
-import {ExcelMapper} from "../../../importer/excel/excel.mapper";
-import {OaiMapper} from "../../../importer/oai/oai.mapper";
-import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
-import {mcloudMapperFactory} from "../mapper/mcloud.mapper.factory";
+import { Agent, Contact, Organization, Person } from '../../../model/agent';
+import { DateRange } from '../../../model/dateRange';
+import { Distribution } from '../../../model/distribution';
+import { IndexDocument, MetadataSource } from '../../../model/index.document';
+import { License } from '@shared/license.model';
 
-export class mcloudDocument extends IndexDocument<CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper>{
-
-    async create(_mapper: CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper) : Promise<any> {
-        let mapper = mcloudMapperFactory.getMapper(_mapper);
-        let result = await {
-            priority: mapper.getPriority(),
-            completion: mapper.getAutoCompletion(),
-            access_rights: mapper.getAccessRights(),
-            accrual_periodicity: mapper.getAccrualPeriodicity(),
-            contact_point: await mapper.getContactPoint(),
-            creator: mapper.getCreator(),
-            description: mapper.getDescription(),
-            distribution: await mapper.getDistributions(),
-            extras: {
-                all: mapper.getExtrasAllData(),
-                citation: mapper.getCitation(),
-                display_contact: await mapper.getDisplayContacts(),
-                generated_id: mapper.getGeneratedId(),
-                groups: mapper.getGroups(),
-                harvested_data: mapper.getHarvestedData(),
-                license: await mapper.getLicense(),
-                metadata: {
-                    harvested: mapper.getMetadataHarvested(),
-                    harvesting_errors: null, // get errors after all operations been done
-                    issued: null,
-                    is_valid: null, // checks validity after all operations been done
-                    modified: null,
-                    source: mapper.getMetadataSource(),
-                },
-                mfund_fkz: mapper.getMFundFKZ(),
-                mfund_project_title: mapper.getMFundProjectTitle(),
-                realtime: mapper.isRealtime(),
-                subgroups: mapper.getCategories(),
-                subsection: mapper.getSubSections(),
-                spatial: mapper.getSpatial(),
-                spatial_text: mapper.getSpatialText(),
-                temporal: mapper.getTemporal(),
-                parent: mapper.getParent(),
-                hierarchy_level: mapper.getHierarchyLevel(),    // csw only
-                operates_on: mapper.getOperatesOn()             // csw only
-            },
-            issued: mapper.getIssued(),
-            keywords: mapper.getKeywords(),
-            modified: mapper.getModifiedDate(),
-            publisher: await mapper.getPublisher(),
-            originator: mapper.getOriginator(),
-            theme: mapper.getThemes(),
-            title: mapper.getTitle()
-        };
-
-        result.extras.metadata.harvesting_errors = mapper.getHarvestErrors();
-        result.extras.metadata.is_valid = mapper.isValid(result);
-        mapper.executeCustomCode(result);
-
-        return result;
-    }
+export type mcloudIndexDocument = IndexDocument & {
+    priority: number,
+    completion: string[],
+    access_rights: string[],
+    accrual_periodicity: string,
+    contact_point: Contact,
+    creator: Agent | Agent[],
+    description: string,
+    distribution: Distribution[],
+    extras: {
+        all: any[],
+        citation: string,
+        display_contact: Organization[] | Person[],
+        generated_id: string,
+        groups: string[],
+        harvested_data: string,
+        license: License,
+        metadata: {
+            harvested: Date,
+            harvesting_errors: null, // get errors after all operations been done
+            issued: null,
+            is_valid: null, // checks validity after all operations been done
+            modified: null,
+            source: MetadataSource
+        },
+        mfund_fkz: string,
+        mfund_project_title: string,
+        realtime: boolean,
+        subgroups: any,
+        subsection: any[],
+        spatial: any,
+        spatial_text: string,
+        temporal: DateRange[],
+        parent: string,
+        hierarchy_level: any,    // csw only
+        operates_on: any         // csw only
+    },
+    issued: Date,
+    keywords: string[],
+    modified: Date,
+    publisher: Organization[] | Person[],
+    originator: Agent[],
+    theme: string[],
+    title: string
 }

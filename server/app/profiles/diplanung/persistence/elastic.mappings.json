@@ -401,9 +401,6 @@
     "spatial_text": {
       "type": "text"
     },
-    "temporal": {
-      "type": "date_range"
-    },
     "extras": {
       "properties": {
         "metadata": {
@@ -422,6 +419,12 @@
                 "raw_data_source": {
                   "type": "text",
                   "index": false
+                },
+                "source_base": {
+                  "type": "keyword"
+                },
+                "source_type": {
+                  "type": "keyword"
                 },
                 "portal_link": {
                   "type": "text",
@@ -446,31 +449,13 @@
             "quality_notes": {
               "type": "text"
             },
-            "hierarchy_level": {
-              "type": "keyword"
-            },
             "merged_from": {
               "type": "keyword"
             }
           }
         },
-        "generated_id": {
+        "hierarchy_level": {
           "type": "keyword"
-        },
-        "display_contact": {
-          "properties": {
-            "name": {
-              "type": "text",
-              "fields": {
-                "raw": {
-                  "type": "keyword"
-                }
-              }
-            },
-            "url": {
-              "type": "text"
-            }
-          }
         },
         "harvested_data": {
           "type": "text",
@@ -487,10 +472,6 @@
               "index": false
             }
           }
-        },
-        "all": {
-          "type": "text",
-          "analyzer": "decomp"
         }
       }
     }

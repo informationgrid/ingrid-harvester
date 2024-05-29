@@ -24,22 +24,23 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import {BaseMapper} from '../base.mapper';
-import {Distribution} from "../../model/distribution";
-import {DateRange} from "../../model/dateRange";
-import {License} from '@shared/license.model';
-import {getLogger} from "log4js";
-import {RequestDelegate, RequestOptions} from "../../utils/http-request.utils";
-import {SparqlSettings} from './sparql.settings';
-import {DcatLicensesUtils} from "../../utils/dcat.licenses.utils";
-import {throwError} from "rxjs";
-import {ImporterSettings} from "../../importer.settings";
-import {Summary} from "../../model/summary";
-import {Person} from "../../model/agent";
+import { getLogger } from 'log4js';
+import { throwError } from 'rxjs';
+import { BaseMapper } from '../base.mapper';
+import { DateRange } from '../../model/dateRange';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils';
+import { Distribution } from '../../model/distribution';
+import { ImporterSettings } from '../../importer.settings';
+import { License } from '@shared/license.model';
+import { MetadataSource } from '../../model/index.document';
+import { Person } from '../../model/agent';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
+import { SparqlSettings } from './sparql.settings';
+import { Summary } from '../../model/summary';
 
 export class SparqlMapper extends BaseMapper {
 
-    private log = getLogger();
+    log = getLogger();
 
     private readonly record: any;
     private readonly catalogPage: any;
@@ -79,14 +80,14 @@ export class SparqlMapper extends BaseMapper {
         return this.summary;
     }
 
-    _getDescription() {
+    getDescription() {
         if(this.record.description)
             return this.record.description.value;
         return undefined;
     }
 
 
-    async _getDistributions(): Promise<Distribution[]> {
+    async getDistributions(): Promise<Distribution[]> {
         let dists = [];
 
         if(this.record.distribution_url){
@@ -104,7 +105,7 @@ export class SparqlMapper extends BaseMapper {
     }
 
 
-    async _getPublisher(): Promise<any[]> {
+    async getPublisher(): Promise<any[]> {
         let publishers = [];
 
         if (publishers.length === 0) {
@@ -115,16 +116,16 @@ export class SparqlMapper extends BaseMapper {
         }
     }
 
-    _getTitle() {
+    getTitle() {
         let title = this.record.title.value;
         return title && title.trim() !== '' ? title : undefined;
     }
 
-    _getAccessRights(): string[] {
+    getAccessRights(): string[] {
         return undefined;
     }
 
-    _getCategories(): string[] {
+    getCategories(): string[] {
         let subgroups = [];
         let keywords = this.getKeywords();
         if (keywords) {
@@ -144,15 +145,15 @@ export class SparqlMapper extends BaseMapper {
         return subgroups;
     }
 
-    _getCitation(): string {
+    getCitation(): string {
         return undefined;
     }
 
-    async _getDisplayContacts() {
+    async getDisplayContacts() {
         return [];
     }
 
-    _getGeneratedId(): string {
+    getGeneratedId(): string {
         return this.uuid;
     }
 
@@ -164,7 +165,7 @@ export class SparqlMapper extends BaseMapper {
      * contains just one entry 'opendata' i.e. if the ISO-XML document doesn't
      * have this keyword defined, then it will be skipped from the index.
      */
-    _getKeywords(): string[] {
+    getKeywords(): string[] {
         let keywords = [];
 
         if(this.record.keywords){
@@ -178,34 +179,35 @@ export class SparqlMapper extends BaseMapper {
         return keywords;
     }
 
-    _getMetadataSource(): any {
+    getMetadataSource(): MetadataSource {
         let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.source_link.value;
         return {
             source_base: this.settings.endpointUrl,
             raw_data_source: dcatLink,
+            source_type: 'sparql',
             portal_link: portalLink,
             attribution: this.settings.defaultAttribution
         };
     }
 
-    _getModifiedDate() {
+    getModifiedDate() {
         return this.record.modified ? new Date(this.record.modified.value) : undefined;
     }
 
-    _getSpatial(): any {
+    getSpatial(): any {
         return undefined;
     }
 
-    _getSpatialText(): string {
+    getSpatialText(): string {
         return undefined;
     }
 
-    _getTemporal(): DateRange[] {
+    getTemporal(): DateRange[] {
         return undefined;
     }
 
-    _getThemes() {
+    getThemes() {
         // Return cached value, if present
         if (this.fetched.themes) return this.fetched.themes;
 
@@ -219,15 +221,15 @@ export class SparqlMapper extends BaseMapper {
         return themes;
     }
 
-    _isRealtime(): boolean {
+    isRealtime(): boolean {
         return undefined;
     }
 
-    _getAccrualPeriodicity(): string {
+    getAccrualPeriodicity(): string {
         return undefined;
     }
 
-    async _getLicense() {
+    async getLicense() {
         let license: License;
 
         if(this.record.license) {
@@ -254,44 +256,39 @@ export class SparqlMapper extends BaseMapper {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.endpointUrl}'.`;
     }
 
-    _getHarvestedData(): string {
+    getHarvestedData(): string {
         return JSON.stringify(this.record);
     }
 
-    _getCreator(): Person[] {
-        let creators = [];
-        return creators.length === 0 ? undefined : creators;
-    }
-
-    _getMaintainer(): Person[] {
-        let maintainers = [];
-        return maintainers.length === 0 ? undefined : maintainers;
-    }
-
-    _getGroups(): string[] {
+    getCreator(): Person[] {
         return undefined;
     }
 
-    _getIssued(): Date {
+    getMaintainer(): Person[] {
+        return undefined;
+    }
+
+    getGroups(): string[] {
+        return undefined;
+    }
+
+    getIssued(): Date {
         return this.record.issued ? new Date(this.record.issued.value) : undefined;
     }
 
-    _getMetadataHarvested(): Date {
+    getHarvestingDate(): Date {
         return new Date(Date.now());
     }
 
-    _getSubSections(): any[] {
+    getSubSections(): any[] {
         return undefined;
     }
 
-    _getOriginator(): Person[] {
-
-        let originators = [];
-
-        return originators.length === 0 ? undefined : originators;
+    getOriginator(): Person[] {
+        return undefined;
     }
 
-    async _getContactPoint(): Promise<any> {
+    async getContactPoint(): Promise<any> {
         let contactPoint = this.fetched.contactPoint;
         if (contactPoint) {
             return contactPoint;
@@ -301,7 +298,7 @@ export class SparqlMapper extends BaseMapper {
         return infos;
     }
 
-    _getUrlCheckRequestConfig(uri: string): RequestOptions {
+    getUrlCheckRequestConfig(uri: string): RequestOptions {
         let config: RequestOptions = {
             method: 'HEAD',
             json: false,

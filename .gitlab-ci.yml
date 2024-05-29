@@ -4,36 +4,26 @@ image:
 
 stages:
   - push-to-remote
-  - integrate-ado-changes
 
-push-to-remote-job:
+push-to-remote-develop-job:
   stage: push-to-remote
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "feature/ingrid-harmonisierung"
   script:
-    - git checkout main
-    - git pull # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4587
-    - echo -e "* On branch" `git branch --show-current`
-    - echo -e "\n* List checked out contents of github repo"
-    - ls -la
-    - echo -e "\n* Push main branch to remote repo"
-    - "git -c http.extraheader=\"Authorization: Basic $REMOTE_PAT\" push --force $REMOTE_URL main"
+    - git checkout $CI_COMMIT_BRANCH
+    - git reset --hard FETCH_HEAD
+    - "git -c http.extraheader=\"Authorization: Basic $REMOTE_PAT\" push --force $REMOTE_REPO_URL $CI_COMMIT_BRANCH"
 
-integrate-ado-changes-job:
-  stage: integrate-ado-changes
+push-to-remote-release-job:
+  stage: push-to-remote
   rules:
-    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_COMMIT_TAG != null
   script:
-    - git pull # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4587
-    # pull ado branch from azure, update it to main, push it to origin and back to azure again
-    - git checkout ado
-    - git config pull.rebase false
-    - "git -c http.extraheader=\"Authorization: Basic $REMOTE_PAT\" pull $REMOTE_URL ado"
-    - git merge main
-    - git push origin ado
-    - "git -c http.extraheader=\"Authorization: Basic $REMOTE_PAT\" push --force $REMOTE_URL ado"
-    # merge ado changes into main and push main to origin and to azure 
     - git checkout main
-    - git merge ado
-    - git push origin main
-    - "git -c http.extraheader=\"Authorization: Basic $REMOTE_PAT\" push --force $REMOTE_URL main"
+    - git reset --hard FETCH_HEAD
+    - "git -c http.extraheader=\"Authorization: Basic $REMOTE_PAT\" push --force $REMOTE_REPO_URL main:release"
+    - >-
+      wget --header='Content-Type: application/json'
+      -qO- --header="Authorization: Basic $REMOTE_PAT"
+      --post-data="{ \"sourceRefName\": \"refs/heads/release\", \"targetRefName\": \"refs/heads/main\", \"title\": \"$CI_COMMIT_TAG\" }"
+      $REMOTE_PULLREQUEST_URL

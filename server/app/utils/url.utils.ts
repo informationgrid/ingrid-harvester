@@ -26,7 +26,8 @@
 import * as fs from 'fs';
 import * as MiscUtils from './misc.utils';
 import fetch from 'node-fetch';
-import { RequestDelegate, RequestOptions } from "./http-request.utils";
+import { ConfigService } from '../services/config/ConfigService';
+import { RequestDelegate, RequestOptions } from './http-request.utils';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -100,6 +101,11 @@ export class UrlUtils {
         if (urlResult !== undefined) {
             return urlResult;
         }
+        let generalConfig = ConfigService.getGeneralSettings();
+        requestConfig.proxy = generalConfig.proxy;
+        if (generalConfig.allowAllUnauthorizedSSL) {
+            requestConfig.rejectUnauthorized = false;
+        }
 
         let found = false;
         try {
@@ -108,11 +114,11 @@ export class UrlUtils {
             found = response?.status === 200;
             UrlUtils.cache[<string>requestConfig.uri] = found;
             return found;
-        } catch (err) {
+        }
+        catch (err) {
             let message = err.message;
             // Ignore errors caused by 404 status code and invalid certificates
-            if (!message.includes('ERR_TLS_CERT_ALTNAME_INVALID')
-                && !message.includes('ENOTFOUND')) {
+            if (!message.includes('ERR_TLS_CERT_ALTNAME_INVALID') && !message.includes('ENOTFOUND')) {
                 log.warn(`Error occured while testing URL '${requestConfig.uri}'. Original error message was: ${message}`);
             }
             UrlUtils.cache[<string>requestConfig.uri] = false;
@@ -132,9 +138,7 @@ export class UrlUtils {
             if (!value) {
                 if (Object.values(UrlUtils.formatMapping).indexOf(format) === -1) {
                     log.warn('Distribution format unknown: ' + format);
-                    if (warnings) {
-                        warnings.push(['Distribution format unknown', format]);
-                    }
+                    warnings?.push(['Distribution format unknown', format]);
                 }
                 return format;
             }

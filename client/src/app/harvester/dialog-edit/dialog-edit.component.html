@@ -24,29 +24,25 @@
 <h2 mat-dialog-title>{{dialogTitle}}</h2>
 
 <mat-dialog-content>
-
-
-
-
   <div class="form-wrapper">
     <form class="example-container" [formGroup]="harvesterForm">
-
       <mat-card>
         <mat-card-content>
           <div class="grid grid-cols-12 gap-20">
             <mat-form-field class="col-span-3 col-span-6-mobile">
               <mat-label>Typ</mat-label>
               <mat-select formControlName="type" required>
-                <mat-option value="EXCEL">EXCEL</mat-option>
-                <mat-option value="EXCEL_SPARSE">EXCEL (SPARSE)</mat-option>
                 <mat-option value="CKAN">CKAN</mat-option>
                 <mat-option value="CSW">CSW</mat-option>
                 @if (harvester.id != -1) {
                   <mat-option value="CODEDE-CSW">CSW (CODEDE)</mat-option>
                 }
-                <mat-option value="OAI">OAI</mat-option>
                 <mat-option value="DCAT">DCAT</mat-option>
                 <mat-option value="DCATAPPLU">DCATAPPLU</mat-option>
+                <mat-option value="EXCEL">EXCEL</mat-option>
+                <mat-option value="EXCEL_SPARSE">EXCEL (SPARSE)</mat-option>
+                <mat-option value="KLD">KLD</mat-option>
+                <mat-option value="OAI">OAI</mat-option>
                 <mat-option value="SPARQL">SPARQL</mat-option>
                 <mat-option value="WFS.FIS">WFS (FIS)</mat-option>
                 <mat-option value="WFS.MS">WFS (MS)</mat-option>
@@ -132,36 +128,21 @@
         </mat-card-header>
         <mat-card-content>
           <div class="flex-row flex-col-mobile gap-20 space-between">
-            <mat-form-field class="flex-1">
+            <mat-form-field class="flex-40">
               <mat-label>Max. Datensätze pro Anfrage</mat-label>
-              <input matInput type="number" min="1" max="10000" minlength="1" 
-                     formControlName="maxRecords">
+              <input matInput type="number" min="1" max="10000" minlength="1" formControlName="maxRecords">
             </mat-form-field>
-            <mat-form-field class="flex-1">
+            <mat-form-field class="flex-20">
               <mat-label>Start Datensatz</mat-label>
               <input matInput type="number" min="0" formControlName="startPosition">
+            </mat-form-field>
+            <mat-form-field class="flex-40">
+              <mat-label>Katalog-Identifier</mat-label>
+              <input matInput formControlName="catalogId" required>
             </mat-form-field>
           </div>
         </mat-card-content>
       </mat-card>
-
-      @if (harvesterForm.get('type').value === 'EXCEL') {
-        <app-excel-harvester 
-          [form]="harvesterForm"
-          [model]="harvester"
-          [rulesTemplate]="rules"
-          class="flex-column">
-        </app-excel-harvester>
-      }
-
-      @if (harvesterForm.get('type').value === 'EXCEL_SPARSE') {
-        <app-excel-sparse-harvester 
-          [form]="harvesterForm"
-          [model]="harvester"
-          [rulesTemplate]="rules"
-          class="flex-column">
-        </app-excel-sparse-harvester>
-      }
 
       @if (harvesterForm.get('type').value === 'CKAN') {
         <app-ckan-harvester 
@@ -181,15 +162,6 @@
         </app-csw-harvester>
       }
 
-      @if (harvesterForm.get('type').value?.endsWith('OAI')) {
-        <app-oai-harvester 
-          [form]="harvesterForm"
-          [model]="harvester"
-          [rulesTemplate]="rules"
-          class="flex-column">
-        </app-oai-harvester>
-      }
-
       @if (harvesterForm.get('type').value === 'DCAT') {
         <app-dcat-harvester 
           [form]="harvesterForm"
@@ -206,6 +178,42 @@
           [rulesTemplate]="rules"
           class="flex-column">
         </app-dcatapplu-harvester>
+      }
+
+      @if (harvesterForm.get('type').value === 'EXCEL') {
+        <app-excel-harvester 
+          [form]="harvesterForm"
+          [model]="harvester"
+          [rulesTemplate]="rules"
+          class="flex-column">
+        </app-excel-harvester>
+      }
+
+      @if (harvesterForm.get('type').value === 'EXCEL_SPARSE') {
+        <app-excel-sparse-harvester 
+          [form]="harvesterForm"
+          [model]="harvester"
+          [rulesTemplate]="rules"
+          class="flex-column">
+        </app-excel-sparse-harvester>
+      }
+
+      @if (harvesterForm.get('type').value?.endsWith('KLD')) {
+        <app-kld-harvester 
+          [form]="harvesterForm"
+          [model]="harvester"
+          [rulesTemplate]="rules"
+          class="flex-column">
+        </app-kld-harvester>
+      }
+
+      @if (harvesterForm.get('type').value?.endsWith('OAI')) {
+        <app-oai-harvester 
+          [form]="harvesterForm"
+          [model]="harvester"
+          [rulesTemplate]="rules"
+          class="flex-column">
+        </app-oai-harvester>
       }
 
       @if (harvesterForm.get('type').value === 'SPARQL') {

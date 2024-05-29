@@ -24,6 +24,7 @@
 import { mcloudFactory } from './mcloud/profile.factory';
 import { BaseMapper } from '../importer/base.mapper';
 import { DiplanungFactory } from './diplanung/profile.factory';
+import { LvrFactory } from './lvr/profile.factory';
 import { ProfileFactory } from './profile.factory';
 
 const log = require('log4js').getLogger(__filename);
@@ -53,6 +54,9 @@ export class ProfileFactoryLoader {
                 break;
             case 'diplanung':
                 this.instance = new DiplanungFactory();
+                break;
+            case 'lvr':
+                this.instance = new LvrFactory();
                 break;
             default:
                 let errorMsg = `Could not find profile: ${profile}`;
