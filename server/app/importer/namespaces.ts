@@ -36,6 +36,7 @@ export const namespaces = {
     HYDRA: 'http://www.w3.org/ns/hydra/core#',
     INSPIRE_COMMON: 'http://inspire.ec.europa.eu/schemas/common/1.0',
     INSPIRE_VS: 'http://inspire.ec.europa.eu/schemas/inspire_vs/1.0',
+    LIDO: 'http://www.lido-schema.org',
     LOCN: 'http://www.w3.org/ns/locn#',
     OGC: 'http://www.opengis.net/ogc',
     ORG: 'http://www.w3.org/ns/org#',

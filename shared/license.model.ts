@@ -22,7 +22,7 @@
  */
 
 export interface License {
-    id: string;
+    id?: string;
     title: string;
     url: string;
 }

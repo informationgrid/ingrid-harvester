@@ -44,7 +44,10 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
                 username: config.user,
                 password: config.password
             },
-            requestTimeout: 30000
+            requestTimeout: 30000,
+            tls: {
+                rejectUnauthorized: config.rejectUnauthorized
+            }
         });
         this._bulkOperationChunks = [];
         this.indexName = config.prefix + config.index;

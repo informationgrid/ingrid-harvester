@@ -24,13 +24,12 @@
 import { BulkResponse, DatabaseUtils } from './database.utils';
 import { Catalog } from '../model/dcatApPlu.model';
 import { Client, Pool, PoolClient, QueryResult } from 'pg';
+import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory';
-import { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document';
 import { Distribution } from '../model/distribution';
-import { PostgresUtils as DiplanungPostgresUtils } from '../profiles/diplanung/persistence/postgres.utils';
 import { ElasticsearchUtils } from './elastic.utils';
-import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
+import { IndexDocument } from '../model/index.document';
 import { PostgresQueries } from './postgres.queries';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import { Summary } from '../model/summary';
@@ -41,9 +40,9 @@ const Cursor = require('pg-cursor');
 /**
  * Contains a primary dataset, a list of duplicates, and a list of services operating on the primary dataset.
  */
-export interface Bucket {
+export interface Bucket<T> {
     anchor_id: string | number,
-    duplicates: Map<string | number, DiplanungIndexDocument>,
+    duplicates: Map<string | number, T>,
     operatingServices: Map<string | number, Distribution>
 }
 
@@ -108,7 +107,6 @@ export class PostgresUtils extends DatabaseUtils {
     async getDatasetIdentifiers(source: string): Promise<string[]> {
         // TODO 
         // let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiers, [source]);
-        console.log(source);
         // let result: QueryResult<any> = await this.transactionClient.query("SELECT * from public.record WHERE source = $1", [source]);
         let result: QueryResult<any> = await this.transactionClient.query("SELECT identifier from public.record WHERE source = $1 and dataset->'extras'->>'hierarchy_level'!='service'", [source]);
         if (result.rowCount == 0) {
@@ -162,6 +160,16 @@ export class PostgresUtils extends DatabaseUtils {
         return catalogs;
     }
 
+    async nonFetchedPercentage(source: string, last_modified: Date): Promise<number> {
+        let result: QueryResult<any> = await this.transactionClient.query(this.queries.nonFetchedRatio, [source, last_modified]);
+        let { total, nonFetched } = result.rows[0];
+        return nonFetched / total * 100;
+    }
+
+    async deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void> {
+        await this.transactionClient.query(this.queries.deleteRecords, [source, last_modified]);
+    }
+
     /**
      * Push datasets from database to elasticsearch, slower but with all bells and whistles.
      * 
@@ -170,7 +178,7 @@ export class PostgresUtils extends DatabaseUtils {
      * @param processBucket
      */
     async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string) {
-        let pgUtils = new DiplanungPostgresUtils();
+        let pgAggregator = ProfileFactoryLoader.get().getPostgresAggregator();
         const client: PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
         let start = Date.now();
@@ -181,7 +189,7 @@ export class PostgresUtils extends DatabaseUtils {
 
         const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
         let currentId: string | number;
-        let currentBucket: Bucket;
+        let currentBucket: Bucket<any>;
         const maxRows = 100;
         let rows = await cursor.read(maxRows);
         let numDatasets = 0;
@@ -194,12 +202,12 @@ export class PostgresUtils extends DatabaseUtils {
                     // process current bucket, then create new
                     currentId = row.anchor_id;
                     if (currentBucket) {
-                        let operationChunks = await pgUtils.processBucket(currentBucket);
+                        let operationChunks = await pgAggregator.processBucket(currentBucket);
                         await elastic.addOperationChunksToBulk(operationChunks);
                     }
                     currentBucket = {
                         anchor_id: row.anchor_id,
-                        duplicates: new Map<string | number, DiplanungIndexDocument>(),
+                        duplicates: new Map<string | number, IndexDocument>(),
                         operatingServices: new Map<string | number, Distribution>()
                     };
                 }
@@ -216,7 +224,8 @@ export class PostgresUtils extends DatabaseUtils {
                     // set metadata information
                     row.dataset.extras.metadata.issued = row.issued;
                     row.dataset.extras.metadata.modified = row.modified;
-                    row.dataset.extras.metadata.source.source_type = this.getSourceType(row.source);
+                    row.dataset.extras.metadata.deleted = row.deleted;
+                    row.dataset.extras.metadata.source.source_type = this.getSourceType(row.dataset, row.source);
                     row.dataset.catalog = catalogs[row.catalog_id];
                     currentBucket.duplicates.set(row.id, row.dataset);
                 }
@@ -225,7 +234,7 @@ export class PostgresUtils extends DatabaseUtils {
         }
         // process last bucket
         if (currentBucket) {
-            let operationChunks = await pgUtils.processBucket(currentBucket);
+            let operationChunks = await pgAggregator.processBucket(currentBucket);
             await elastic.addOperationChunksToBulk(operationChunks);
         }
         // send remainder of bulk data
@@ -243,7 +252,7 @@ export class PostgresUtils extends DatabaseUtils {
      * @param source 
      * @returns 
      */
-    private getSourceType(source: string) {
+    private getSourceType(dataset: IndexDocument, source: string) {
         source = source.toLowerCase()
         if (source.includes('cockpitpro')) {
             return 'cockpitpro';
@@ -260,7 +269,7 @@ export class PostgresUtils extends DatabaseUtils {
         if (source.includes('wfs')) {
             return 'wfs';
         }
-        return source;
+        return dataset.extras?.metadata?.source?.source_type ?? source;
     }
 
     write(entity: RecordEntity) {
@@ -344,7 +353,10 @@ export class PostgresUtils extends DatabaseUtils {
 
     private removeCatalogs(entities: RecordEntity[]): RecordEntity[] {
         for (let entity of entities) {
-            delete entity.dataset.catalog;
+            if ('catalog' in entity.dataset) {
+                entity.dataset.catalog = { id: entity.collection_id };
+            }
+            // delete entity.dataset.catalog;
         }
         return entities;
     }
@@ -442,10 +454,16 @@ export class PostgresUtils extends DatabaseUtils {
         }
     }
 
-    async beginTransaction() {
+    async beginTransaction(): Promise<Date> {
         log.debug('Transaction: begin');
         this.transactionClient = await PostgresUtils.pool.connect();
         await this.transactionClient.query('BEGIN');
+        let result: QueryResult<any> = await this.transactionClient.query("SELECT transaction_timestamp()");
+        if (result.rowCount != 1) {
+            throw new Error('Could not obtain transaction_timestamp from PostgreSQL');
+        }
+        let timestamp: Date = result.rows[0].transaction_timestamp;
+        return timestamp;
     }
 
     async commitTransaction() {
@@ -456,10 +474,12 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async rollbackTransaction() {
-        log.error('Transaction: rollback');
-        await this.transactionClient.query('ROLLBACK');
-        this.transactionClient.release();
-        this.transactionClient = null;
+        if (this.transactionClient) {
+            log.error('Transaction: rollback');
+            await this.transactionClient.query('ROLLBACK');
+            this.transactionClient.release();
+            this.transactionClient = null;
+        }
     }
 
     private handleError(message: string, error: any) {

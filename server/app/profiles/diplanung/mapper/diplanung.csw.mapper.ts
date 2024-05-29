@@ -22,29 +22,28 @@
  */
 
 import { uniqBy } from 'lodash';
-import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model';
-import { Contact } from '../../../model/agent';
+import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
+import { Contact, Organization, Person } from '../../../model/agent';
 import { CswMapper } from '../../../importer/csw/csw.mapper';
+import { DateRange } from '../../../model/dateRange';
+import { DiplanungMapper } from './diplanung.mapper';
 import { Distribution } from '../../../model/distribution';
+import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 
 const alternateTitleBlacklist = ['B-Plan', 'F-Plan'];
 
-export class DiplanungCswMapper extends CswMapper {
+export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
 
-    _getAlternateTitle(): string {
-        let alternateTitle = CswMapper.select('./*/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', this.idInfo, true)?.textContent;
-        if (!alternateTitle || alternateTitleBlacklist.includes(alternateTitle)) {
-            alternateTitle = this.getTitle();
-        }
-        return alternateTitle;
+    constructor(baseMapper: CswMapper) {
+        super(baseMapper);
     }
 
-    async _getContactPoint(): Promise<Contact> {
-        let contactPoint = this.fetched.contactPoint;
+    async getContactPoint(): Promise<Contact> {
+        let contactPoint = this.baseMapper.fetched.contactPoint;
         if (contactPoint) {
             return contactPoint;
         }
-        let contacts = await this._getContactPoints();
+        let contacts = await this.baseMapper.getContactPoints();
         if (contacts.length > 0) {
             // use pointOfContact if available
             contactPoint = contacts.find(extContact => extContact.role === 'pointOfContact');
@@ -54,77 +53,62 @@ export class DiplanungCswMapper extends CswMapper {
             }
             delete contactPoint['role'];
         }
-        this.fetched.contactPoint = contactPoint;
-        return contactPoint; // TODO index all contacts
+        this.baseMapper.fetched.contactPoint = contactPoint;
+        return contactPoint;
     }
 
-    _getBoundingBox() {
-        return this.getGeometry(true);
+    getDescription(): string {
+        return this.baseMapper.getDescription();
     }
 
-    _getSpatial(): object {
-        // TODO
-        // let polygon = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_BoundingPolygon', this.idInfo);
+    getUuid(): string {
+        return this.baseMapper.getGeneratedId();
+    }
+
+    getAdmsIdentifier(): string {
         return undefined;
     }
 
-    protected getGeoJson(west: number, east: number, north: number, south: number, forcePolygon: boolean): any {
-        if (!forcePolygon && (west === east && north === south)) {
-            return {
-                'type': 'Point',
-                'coordinates': [west, north]
-            };
-        }
-        else if (west === east || north === south) {
-            return {
-                'type': 'LineString',
-                'coordinates': [[west, north], [east, south]]
-            };
-        }
-        else {
-            return {
-                'type': 'Polygon',
-                'coordinates': [[[west, north], [west, south], [east, south], [east, north], [west, north]]]
-            };
-        }
+    getTitle(): string {
+        return this.baseMapper.getTitle();
     }
 
-    _getSpatialText(): string {
-        let spatialText = super._getSpatialText();
-        return spatialText?.match(/(\d{12}).+/)?.[1] ?? spatialText;
-    }
-
-    async _getMaintainers() {
-        let maintainers = await super._getMaintainers();
-        return uniqBy(maintainers, JSON.stringify);
-    }
-    
-    async _getContributors() {
-        return undefined
-    }
-
-    _getCatalog(): Catalog {
-        return this.fetched.catalog;
-    }
-
-    async _getDistributions(): Promise<Distribution[]> {
-        let distributions = await super._getDistributions()
-        return distributions?.filter(distribution => distribution.accessURL);
-    }
-
-    _getPluDevelopmentFreezePeriod() {
+    getPluDevelopmentFreezePeriod(): DateRange {
         return undefined;
     }
 
-    _getPluPlanState(): PluPlanState {
-        return this.settings.pluPlanState;
+    getPluPlanName(): string {
+        let alternateTitle = CswMapper.select('./*/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', this.baseMapper.idInfo, true)?.textContent;
+        if (!alternateTitle || alternateTitleBlacklist.includes(alternateTitle)) {
+            alternateTitle = this.getTitle();
+        }
+        return alternateTitle;
+    }
+
+    getPluProcedurePeriod(): DateRange {
+        let ranges: DateRange[] = this.baseMapper.getTemporal() ?? [];
+        let gte: Date;
+        let lte: Date;
+        // extract the earliest and latest date
+        for (let range of ranges) {
+            if (!gte || gte < range.gte) {
+                gte = range.gte;
+            }
+            if (!lte || lte > range.lte) {
+                lte = range.lte;
+            }
+        }
+        return { gte, lte };
+    }
+
+    getPluPlanState(): PluPlanState {
+        return this.baseMapper.settings.pluPlanState;
     }
 
     /**
      * Heuristic based on metadata harvested from gdi-de.
      */
-    // TODO extend
-    _getPluPlanType(): string {
+    getPluPlanType(): PluPlanType {
         // consider title, description, and keywords
         let searchFields = [];
         searchFields.push(this.getTitle());
@@ -134,7 +118,7 @@ export class DiplanungCswMapper extends CswMapper {
 
 
         // TODO hack for MROK presentation, remove again and improve/refine the if-cascade below
-        if (this.settings.getRecordsUrl == 'https://numis.niedersachsen.de/202/csw') {
+        if (this.baseMapper.settings.getRecordsUrl == 'https://numis.niedersachsen.de/202/csw') {
             return PluPlanType.RAUM_ORDN_PLAN;
         }
 
@@ -167,11 +151,110 @@ export class DiplanungCswMapper extends CswMapper {
         return PluPlanType.UNBEKANNT;
     }
 
-    _getPluProcedureState(): string {
-        switch (this._getPluPlanState()) {
+    getPluPlanTypeFine(): string {
+        return undefined;
+    }
+
+    getPluProcedureState(): PluProcedureState {
+        switch (this.getPluPlanState()) {
             case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
             case PluPlanState.IN_AUFST: return PluProcedureState.LAUFEND;
             default: return PluProcedureState.UNBEKANNT;
+        }
+    }
+
+    getPluProcedureType(): PluProcedureType {
+        return PluProcedureType.UNBEKANNT;
+    }
+
+    getPluProcessSteps(): ProcessStep[] {
+        return undefined;
+    }
+
+    getPluNotification(): string {
+        return undefined;
+    }
+
+    getBoundingBox(): Geometry | GeometryCollection {
+        return this.baseMapper.getGeometry(true);
+    }
+
+    getCentroid(): Point {
+        return this.baseMapper.getCentroid();
+    }
+
+    getSpatial(): Geometry | GeometryCollection {
+        return this.baseMapper.getSpatial();
+    }
+
+    getSpatialText(): string {
+        let spatialText = this.baseMapper.getSpatialText();
+        return spatialText?.match(/(\d{12}).+/)?.[1] ?? spatialText;
+    }
+
+    getRelation(): string {
+        return undefined;
+    }
+
+    async getCatalog(): Promise<Catalog> {
+        return this.baseMapper.fetched.catalog;
+    }
+
+    async getPublisher(): Promise<Person[] | Organization[]> {
+        return this.baseMapper.getPublisher();
+    }
+
+    async getMaintainers(): Promise<Person[] | Organization[]> {
+        let maintainers = await this.baseMapper.getMaintainers();
+        return uniqBy(maintainers, JSON.stringify);
+    }
+
+    async getContributors(): Promise<Person[] | Organization[]> {
+        return undefined;
+    }
+
+    async getDistributions(): Promise<Distribution[]> {
+        let distributions = await this.baseMapper.getDistributions();
+        return distributions?.filter(distribution => distribution.accessURL);
+
+    }
+
+    getIssued(): Date {
+        return undefined;
+    }
+
+    getKeywords(): string[] {
+        return this.baseMapper.getKeywords();
+    }
+
+    getModifiedDate(): Date {
+        return undefined;
+    }
+
+    // _getSpatial(): object {
+    //     // TODO
+    //     // let polygon = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_BoundingPolygon', this.idInfo);
+    //     return undefined;
+    // }
+
+    protected getGeoJson(west: number, east: number, north: number, south: number, forcePolygon: boolean): any {
+        if (!forcePolygon && (west === east && north === south)) {
+            return {
+                'type': 'Point',
+                'coordinates': [west, north]
+            };
+        }
+        else if (west === east || north === south) {
+            return {
+                'type': 'LineString',
+                'coordinates': [[west, north], [east, south]]
+            };
+        }
+        else {
+            return {
+                'type': 'Polygon',
+                'coordinates': [[[west, north], [west, south], [east, south], [east, north], [west, north]]]
+            };
         }
     }
 
@@ -180,32 +263,4 @@ export class DiplanungCswMapper extends CswMapper {
     // public isValid() {
     //     return false;
     // }
-
-    _getPluPlanTypeFine() {
-        return undefined;
-    }
-
-    _getPluProcedurePeriod() {
-        return undefined;
-    }
-
-    _getPluProcedureType() {
-        return PluProcedureType.UNBEKANNT;
-    }
-
-    _getPluProcessSteps() {
-        return undefined;
-    }
-
-    _getPluNotification() {
-        return undefined;
-    }
-
-    _getAdmsIdentifier() {
-        return undefined;
-    }
-
-    _getRelation() {
-        return undefined;
-    }
 }

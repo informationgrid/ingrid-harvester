@@ -129,12 +129,11 @@ export class ExcelSparseImporter extends Importer {
 
                 // add document to buffer and send to elasticsearch if full
                 if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                    let doc = await this.profile.getIndexDocument().create(mapper)
-                        .catch(e => this.handleIndexDocError(e, mapper));
+                    let doc = await this.profile.getIndexDocumentFactory(mapper).create().catch(e => this.handleIndexDocError(e, mapper));
                     let entity: RecordEntity = {
                         identifier: unit.id,
                         source: this.settings.filePath,
-                        collection_id: this.database.defaultCatalog.id,
+                        collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };
@@ -205,13 +204,13 @@ export class ExcelSparseImporter extends Importer {
 
         worksheet.eachRow((row, rowNumber) => {
             if (rowNumber == 1) {
-                for (let i = 0; i < row.values.length; i++) {
+                for (let i = 0; i < parseInt(row.values.length.toString()); i++) {
                     this.columnMap[row.values[i]] = i;
                 }
             }
             else {
                 let columnValues = [];
-                for (let i = 0; i < row.values.length; i++) {
+                for (let i = 0; i < parseInt(row.values.length.toString()); i++) {
                     let cur = row.values[i];
                     if (!cur) {
                         columnValues.push('');

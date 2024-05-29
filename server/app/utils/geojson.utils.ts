@@ -123,7 +123,7 @@ export function flip<T>(spatial: number[] | Point | Geometry | GeometryCollectio
     }
 }
 
-export function getCentroid(spatial: Geometry | GeometryCollection) {
+export function getCentroid(spatial: Geometry | GeometryCollection): Point {
     if (!spatial) {
         return undefined;
     }
@@ -524,52 +524,58 @@ export function parse(_: Node, opts: { crs?: any, stride?: number } = { crs: nul
 
     const childCtx = createChildContext(_, opts, {});
 
-        opts ??= {};
-        if (!opts.crs) {
-            // observed Patterns for CRS are
-            // - urn:ogc:def:crs:EPSG::4326
-            // - http://www.opengis.net/def/crs/EPSG/0/4326
-            opts.crs = (<Element>_).getAttribute('srsName')?.replace(/^.*?(\d+)$/, '$1');
-        }
+    opts ??= {};
+    if (!opts.crs) {
+        // observed Patterns for CRS are
+        // - urn:ogc:def:crs:EPSG::4326
+        // - http://www.opengis.net/def/crs/EPSG/0/4326
+        opts.crs = (<Element>_).getAttribute('srsName')?.replace(/^.*?(\d+)$/, '$1');
+    }
 
-    switch (_.nodeName) {
-        case 'gml:Point':
-            return {
-                type: 'Point',
-                coordinates: parsePoint(_, opts, childCtx)
-            };
-        case 'gml:LineString':
-            return rewind({
-                type: 'LineString',
-                coordinates: parseLinearRingOrLineString(_, opts, childCtx)
-            });
-        case 'gml:MultiCurve':
-            return {
-                type: 'MultiLineString',
-                coordinates: [parseRing(_, opts, childCtx)]
-            };
-        case 'gml:Rectangle':
-            // same as polygon
-        case 'gml:Polygon':
-            return rewind({
-                type: 'Polygon',
-                coordinates: parsePolygonOrRectangle(_, opts, childCtx)
-            });
-        case 'gml:Surface':
-            return rewind({
-                type: 'MultiPolygon',
-                coordinates: parseSurface(_, opts, childCtx)
-            });
-        case 'gml:MultiSurface':
-            return rewind({
-                type: 'MultiPolygon',
-                coordinates: parseMultiSurface(_, opts, childCtx)
-            });
-        case 'gml:MultiGeometry':
-            // TODO similar to gml:MultiSurface ??
-            // example: https://metropolplaner.de/osterholz/wfs?typeNames=plu:LU.SupplementaryRegulation&request=GetFeature
-            break;
-        default:
-            return null;
+    try {
+        switch (_.nodeName) {
+            case 'gml:Point':
+                return {
+                    type: 'Point',
+                    coordinates: parsePoint(_, opts, childCtx)
+                };
+            case 'gml:LineString':
+                return rewind({
+                    type: 'LineString',
+                    coordinates: parseLinearRingOrLineString(_, opts, childCtx)
+                });
+            case 'gml:MultiCurve':
+                return {
+                    type: 'MultiLineString',
+                    coordinates: [parseRing(_, opts, childCtx)]
+                };
+            case 'gml:Rectangle':
+                // same as polygon
+            case 'gml:Polygon':
+                return rewind({
+                    type: 'Polygon',
+                    coordinates: parsePolygonOrRectangle(_, opts, childCtx)
+                });
+            case 'gml:Surface':
+                return rewind({
+                    type: 'MultiPolygon',
+                    coordinates: parseSurface(_, opts, childCtx)
+                });
+            case 'gml:MultiSurface':
+                return rewind({
+                    type: 'MultiPolygon',
+                    coordinates: parseMultiSurface(_, opts, childCtx)
+                });
+            case 'gml:MultiGeometry':
+                // TODO similar to gml:MultiSurface ??
+                // example: https://metropolplaner.de/osterholz/wfs?typeNames=plu:LU.SupplementaryRegulation&request=GetFeature
+                break;
+            default:
+                return null;
+        }
+    }
+    catch (e) {
+        // TODO log error
+        return null;
     }
 }

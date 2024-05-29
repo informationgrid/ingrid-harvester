@@ -21,17 +21,20 @@
  * ==================================================
  */
 
+import { createRelativePath, Server } from './server';
 import { importProviders } from '@tsed/components-scan';
 import { HealthCtrl } from './controllers/HealthCtrl';
 import { PlatformExpress } from '@tsed/platform-express';
-import { Server } from './server';
+
+const log = require('log4js').getLogger(__filename);
 
 async function bootstrap() {
+    let baseURL = process.env.BASE_URL ?? '/';
     try {
         const scannedProviders = await importProviders({
             mount: {
-                '/rest': [`${__dirname}/controllers/**/*.ts`],
-                '/': [ HealthCtrl ]
+                [createRelativePath(baseURL, 'rest')]: [`${__dirname}/controllers/**/*.ts`],
+                [createRelativePath(baseURL)]: [ HealthCtrl ]
             },
             componentsScan: [
                 `${__dirname}/middlewares/**/*.ts`,
@@ -43,9 +46,10 @@ async function bootstrap() {
             ...scannedProviders
         });
         await platform.listen();
-        console.log('Server started...');
-    } catch (err) {
-        console.error(err);
+        log.info('Server started...');
+    }
+    catch (err) {
+        log.error(err);
     }
 }
 

@@ -22,10 +22,9 @@
  */
 
 import * as nodemailer from 'nodemailer';
-import {ConfigService} from "../services/config/ConfigService";
+import { ConfigService } from '../services/config/ConfigService';
 
-
-
+const log = require('log4js').getLogger(__filename);
 
 export interface Mail {
     from: string,
@@ -62,7 +61,7 @@ export class MailServer {
                 subject: tag + subject,
                 text: text
             }
-            this.sendMail(mail).catch(console.error);
+            this.sendMail(mail).catch(log.error);
         }
     }
 

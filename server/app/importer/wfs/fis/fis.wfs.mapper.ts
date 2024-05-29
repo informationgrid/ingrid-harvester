@@ -25,17 +25,17 @@ import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import * as MiscUtils from '../../../utils/misc.utils';
 import { DateRange } from '../../../model/dateRange';
 import { Distribution } from '../../../model/distribution';
-import { Geometry, GeometryCollection } from '@turf/helpers';
-import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType, ProcessStep } from '../../../model/dcatApPlu.model';
+import { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
+import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
 import { WfsMapper } from '../wfs.mapper';
 
 export class FisWfsMapper extends WfsMapper {
 
-    _getDescription() {
+    getDescription(): string {
         return this.getTextContent('./*/fis:BEREICH');
     }
 
-    async _getDistributions(): Promise<Distribution[]> {
+    async getDistributions(): Promise<Distribution[]> {
         let distributions = [];
         for (let elem of this.select('./*/fis:*[local-name()="SCAN_WWW" or local-name()="GRUND_WWW"]', this.feature)) {
             let distribution: Distribution = { accessURL: elem.textContent };
@@ -47,16 +47,16 @@ export class FisWfsMapper extends WfsMapper {
         return distributions;
     }
 
-    _getTitle() {
+    getTitle(): string {
         let title = this.getTextContent('./*/fis:PLANNAME')?.trim();
         return title ?? undefined;
     }
 
-    _getAlternateTitle() {
-        return this._getTitle();
+    getPlanName(): string {
+        return this.getTitle();
     }
 
-    _getBoundingBox(): object {
+    getBoundingBox(): Geometry {
         // if spatial exists, create bbox from it
         if (this.select('./*/fis:SHAPE_25833', this.feature, true)) {
             return GeoJsonUtils.getBbox(this.getSpatial());
@@ -67,7 +67,7 @@ export class FisWfsMapper extends WfsMapper {
         }
     }
 
-    _getSpatial(): object {
+    getSpatial(): Geometry | Geometries {
         let spatialContainer = this.select('./*/fis:SHAPE_25833/*', this.feature, true);
         if (!spatialContainer) {
             // use bounding box as fallback
@@ -78,22 +78,22 @@ export class FisWfsMapper extends WfsMapper {
         return geojson;
     }
 
-    _getCentroid(): object {
-        let spatial = this._getSpatial() ?? this._getBoundingBox();
+    getCentroid(): Point {
+        let spatial = this.getSpatial() ?? this.getBoundingBox();
         return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
     }
 
-    _getSpatialText(): string {
+    getSpatialText(): string {
         return this.getTextContent('./*/fis:BEZIRK');
     }
 
-    _getPluDocType(code: string): PluDocType {
+    getPluDocType(code: string): PluDocType {
         switch (code) {
             default: return undefined;
         }
     }
 
-    _getPluPlanState(): PluPlanState {
+    getPluPlanState(): PluPlanState {
         let planState = this.getTextContent('./*/fis:FESTSG');
         switch (planState?.toLowerCase()) {
             case 'ja': return PluPlanState.FESTGES;
@@ -103,7 +103,7 @@ export class FisWfsMapper extends WfsMapper {
     }
 
     // TODO make use of fis:PLANARTNAME
-    _getPluPlanType(): PluPlanType {
+    getPluPlanType(): PluPlanType {
         let typename = this.getTypename();
         switch (typename) {
             case 'sach_bplan': return PluPlanType.BEBAU_PLAN;   // TODO check
@@ -111,23 +111,23 @@ export class FisWfsMapper extends WfsMapper {
         }
     }
 
-    _getPluPlanTypeFine(): string {
+    getPluPlanTypeFine(): string {
         return undefined;
     }
 
-    _getPluProcedureState(): PluProcedureState {
-        switch (this._getPluPlanState()) {
+    getPluProcedureState(): PluProcedureState {
+        switch (this.getPluPlanState()) {
             case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
             case PluPlanState.IN_AUFST: return PluProcedureState.LAUFEND;
             default: return PluProcedureState.UNBEKANNT;
         }
     }
 
-    _getPluProcedureType(): PluProcedureType {
+    getPluProcedureType(): PluProcedureType {
         return PluProcedureType.UNBEKANNT;
     }
 
-    _getPluProcessSteps(): ProcessStep[] {
+    getPluProcessSteps(): ProcessStep[] {
         let processSteps: ProcessStep[] = [];
         // let period_aufstBeschl = getPeriod('./*/fis:AFS_BESCHL', './*/fis:AFS_L_AEND');
         // if (period_aufstBeschl) {
@@ -156,12 +156,12 @@ export class FisWfsMapper extends WfsMapper {
         return processSteps;
     }
 
-    _getPluProcedurePeriod(): DateRange {
+    getPluProcedurePeriod(): DateRange {
         let procedureStartDate = this.getTextContent('fis:AFS_BESCHL');
         return { gte: MiscUtils.normalizeDateTime(procedureStartDate) };
     }
 
-    _getIssued(): Date {
+    getIssued(): Date {
         return undefined;
     }
 
