@@ -21,6 +21,8 @@
  * ==================================================
  */
 
+import { ConnectionOptions } from 'tls';
+
 export type GeneralSettings = {
     elasticsearch: ElasticsearchConfiguration,
     database: DatabaseConfiguration,
@@ -63,6 +65,7 @@ export interface ElasticsearchConfiguration {
 export interface DatabaseConfiguration {
     type: 'postgresql',
     connectionString?: string,
+    ssl?: boolean | ConnectionOptions | undefined,
     host?: string,
     port?: number,
     database?: string,
