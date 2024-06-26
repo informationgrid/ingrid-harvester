@@ -34,7 +34,7 @@ pipeline {
 
 def snapshotVersionFromGit() {
     def latestVersion = sh script: 'git describe --tags $(git rev-list --branches=origin/main --tags --max-count=1)', returnStdout: true
-    def (major, minor, patch) = latestVersion.tokenize('.').collect { it.toInteger() }
+    def (major, minor, patch) = latestVersion? latestVersion.tokenize('.').collect { it.toInteger() }: ["0","0","0"]
     def snapshotVersion = "${major}.${minor + 1}.0-SNAPSHOT"
     snapshotVersion
 }
