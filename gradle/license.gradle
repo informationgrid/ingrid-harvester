@@ -1,7 +1,7 @@
 license {
     header = project.file("gradle/check/license-header.txt")
     ext {
-        year = 2023
+        year = 2024
     }
     include("**/*.ts", "**/*.html", "**/*.scss")
     style {
