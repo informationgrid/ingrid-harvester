@@ -489,8 +489,21 @@ export class PostgresUtils extends DatabaseUtils {
 
     private static fix(config: DatabaseConfiguration) {
         let cs = config.connectionString;
-        if (cs && !cs.includes('@')) {
-            config.connectionString = cs.replace('://', `://${config.user}:${config.password}@`);
+        if (cs) {
+            // add credentials to connection string
+            if (config.user && !cs.includes('@')) {
+                cs = cs.replace('://', `://${config.user}:${config.password}@`);
+            }
+            // node-pg has a quirk where it passes sslmode=require as { ssl: true } to node-tls,
+            // which in turn checks hostname and certificate (which sslmode=require should NOT do).
+            // re-create the intended behaviour here
+            if (cs.includes('sslmode=require')) {
+                cs = cs.replace('sslmode=require', '');
+                config.ssl = {
+                    rejectUnauthorized: false
+                };
+            }
+            config.connectionString = cs;
         }
         return config;
     }
