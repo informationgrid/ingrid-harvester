@@ -31,7 +31,7 @@ import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
 const dayjs = require('dayjs');
 dayjs.locale('de');
 
-export class LvrOaiMapper extends LvrMapper<OaiMapper> {
+export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
 
     constructor(baseMapper: OaiMapper) {
         super(baseMapper);
@@ -116,7 +116,7 @@ export class LvrOaiMapper extends LvrMapper<OaiMapper> {
         return null;
     }
 
-    getLicense(): License {
+    getLicense(): License[] {
         let licenses = [];
         this.baseMapper.getResources().forEach(resource => {
             let subLicenses = resource.rights.map(right => ({
@@ -126,7 +126,7 @@ export class LvrOaiMapper extends LvrMapper<OaiMapper> {
             }));
             licenses.push(...subLicenses);
         });
-        return licenses[0];
+        return licenses;
     }
 
     getVector(): object {

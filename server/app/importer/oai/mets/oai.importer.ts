@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -87,7 +87,7 @@ export class OaiImporter extends Importer {
                 await this.harvest();
                 // did the harvesting return results at all?
                 if (this.numIndexDocs == 0 && !this.summary.isIncremental) {
-                    throw new Error('No results during LIDO import');
+                    throw new Error('No results during OAI import');
                 }
                 // ensure that less than X percent of existing datasets are slated for deletion
                 // TODO introduce settings to:
@@ -166,10 +166,10 @@ export class OaiImporter extends Importer {
         let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
         let records = xml.getElementsByTagNameNS(this.xpaths.nsPrefix, this.xpaths.mdRoot);
 
-        let ids = [];
-        for (let i = 0; i < records.length; i++) {
-            ids.push(OaiMapper.select(this.xpaths.idElem, records[i], true));
-        }
+        // let ids = [];
+        // for (let i = 0; i < records.length; i++) {
+        //     ids.push(OaiMapper.select(this.xpaths.idElem, records[i], true));
+        // }
 
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
@@ -217,7 +217,9 @@ export class OaiImporter extends Importer {
     }
 
     async getMapper(settings, record, harvestTime, summary): Promise<OaiMapper> {
-        return new OaiMapper(settings, record, harvestTime, summary);
+        let metsMapper = new OaiMapper(settings, record, harvestTime, summary);
+        await metsMapper.init();
+        return metsMapper;
     }
 
     static createRequestConfig(settings: OaiSettings, resumptionToken?: string): RequestOptions {

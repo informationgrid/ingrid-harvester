@@ -30,24 +30,32 @@ import { KldMapper } from 'importer/kld/kld.mapper';
 import { LvrImporterFactory } from './importer/lvr.importer.factory';
 import { LvrIndexDocument } from './model/index.document';
 import { LvrKldMapper } from './mapper/lvr.kld.mapper';
-import { LvrOaiMapper } from './mapper/lvr.oai.mapper';
-import { OaiMapper } from '../../importer/oai/lido/oai.mapper';
+import { LvrOaiLidoMapper } from './mapper/lvr.oai.lido.mapper';
+import { LvrOaiMetsMapper } from './mapper/lvr.oai.mets.mapper';
+import { OaiMapper as OaiLidoMapper } from '../../importer/oai/lido/oai.mapper';
+import { OaiMapper as OaiMetsMapper } from '../../importer/oai/mets/oai.mapper';
+import { OaiSettings } from '../../importer/oai/oai.settings';
 import { PostgresAggregator } from './persistence/postgres.aggregator';
 import { PostgresAggregator as AbstractPostgresAggregator} from '../../persistence/postgres.aggregator';
 import { PostgresQueries } from './persistence/postgres.queries';
 import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
 
-export class LvrFactory extends ProfileFactory<KldMapper | OaiMapper> {
+export class LvrFactory extends ProfileFactory<KldMapper | OaiLidoMapper | OaiMetsMapper> {
 
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();
     }
 
-    getIndexDocumentFactory(mapper: KldMapper | OaiMapper): IndexDocumentFactory<LvrIndexDocument> {
+    getIndexDocumentFactory(mapper: KldMapper | OaiLidoMapper | OaiMetsMapper): IndexDocumentFactory<LvrIndexDocument> {
         switch (mapper.constructor.name) {
             case 'KldMapper': return new LvrKldMapper(<KldMapper>mapper);
-            case 'OaiMapper': return new LvrOaiMapper(<OaiMapper>mapper);
+            case 'OaiMapper':
+                switch ((mapper.getSettings() as OaiSettings).metadataPrefix?.toLowerCase()) {
+                    case 'lido': return new LvrOaiLidoMapper(<OaiLidoMapper>mapper);
+                    case 'mods': return new LvrOaiMetsMapper(<OaiMetsMapper>mapper);
+                    default: throw new Error('Profile LVR only supports `mods` and `lido` prefixes for OAI-PMH harvester');
+                }
         }
     }
 

@@ -46,9 +46,19 @@ const lido: OaiXPaths = {
     idElem: './lido:lidoRecID'
 };
 
+const mods: OaiXPaths = {
+    prefixMap: {
+        'mods': namespaces.MODS
+    },
+    nsPrefix: namespaces.MODS,
+    mdRoot: 'mods',
+    idElem: './mods:identifier'
+};
+
 export const oaiXPaths: { [key: string]: OaiXPaths } = {
     iso19139,
-    lido
+    lido,
+    mods
 };
 
 export type OaiXPaths = {

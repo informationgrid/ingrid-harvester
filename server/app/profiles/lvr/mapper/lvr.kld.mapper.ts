@@ -91,8 +91,8 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         return this.baseMapper.getMedia();
     }
 
-    getLicense(): License {
-        return this.baseMapper.getLicense();
+    getLicense(): License[] {
+        return [this.baseMapper.getLicense()];
     }
 
     // TODO

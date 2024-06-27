@@ -27,12 +27,13 @@ import { GeometryInformation, DateRange, Keyword, LvrIndexDocument, Media, Relat
 import { IndexDocumentFactory } from '../../../model/index.document.factory';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
-import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
+import { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper';
+import { OaiMapper as OaiMetsMapper } from '../../../importer/oai/mets/oai.mapper';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
 
-export abstract class LvrMapper<M extends OaiMapper | KldMapper> implements IndexDocumentFactory<LvrIndexDocument> {
+export abstract class LvrMapper<M extends OaiLidoMapper | OaiMetsMapper | KldMapper> implements IndexDocumentFactory<LvrIndexDocument> {
 
     protected baseMapper: M;
 
@@ -102,7 +103,7 @@ export abstract class LvrMapper<M extends OaiMapper | KldMapper> implements Inde
 
     abstract getMedia(): Media[];
 
-    abstract getLicense(): License;
+    abstract getLicense(): License[];
 
     abstract getVector(): object;
 

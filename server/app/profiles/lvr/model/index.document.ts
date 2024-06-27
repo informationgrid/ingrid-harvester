@@ -34,7 +34,7 @@ export type LvrIndexDocument = IndexDocument & {
     keywords: Keyword[],
     relation: Relation[],
     media: Media[],
-    license: License,
+    license: License[],
     vector: object,
     extras: {
         original_id: string;

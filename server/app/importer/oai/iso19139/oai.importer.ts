@@ -85,8 +85,8 @@ export class OaiImporter extends Importer {
                 // await this.elastic.finishIndex();
                 observer.next(ImportResult.complete(this.summary));
                 observer.complete();
-
-            } catch (err) {
+            }
+            catch (err) {
                 this.summary.appErrors.push(err.message ? err.message : err);
                 log.error('Error during OAI import', err);
                 observer.next(ImportResult.complete(this.summary, 'Error happened'));
@@ -99,7 +99,6 @@ export class OaiImporter extends Importer {
     }
 
     async harvest() {
-
         while (true) {
             log.debug('Requesting next records');
             let response = await this.requestDelegate.doRequest();
@@ -120,7 +119,8 @@ export class OaiImporter extends Importer {
 
                 log.debug(`Received ${numReturned} records from ${this.settings.providerUrl}`);
                 await this.extractRecords(response, harvestTime)
-            } else {
+            }
+            else {
                 const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
                 log.error(message);
                 this.summary.appErrors.push(message);
@@ -140,6 +140,7 @@ export class OaiImporter extends Importer {
         let promises = [];
         let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
         let records = xml.getElementsByTagNameNS(namespaces.GMD, 'MD_Metadata');
+
         let ids = [];
         for (let i = 0; i < records.length; i++) {
             ids.push(OaiMapper.getCharacterStringContent(records[i], 'fileIdentifier'));
@@ -147,7 +148,6 @@ export class OaiImporter extends Importer {
 
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
-
             const uuid = OaiMapper.getCharacterStringContent(records[i], 'fileIdentifier');
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
@@ -190,7 +190,8 @@ export class OaiImporter extends Importer {
                             }
                         })
                 );
-            } else {
+            }
+            else {
                 this.summary.skippedDocs.push(uuid);
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
@@ -226,7 +227,8 @@ export class OaiImporter extends Importer {
             if (settings.until) {
                 requestConfig.qs.until = settings.until;
             }
-        } else {
+        }
+        else {
             requestConfig.qs = {
                 verb: 'ListRecords',
                 resumptionToken: resumptionToken

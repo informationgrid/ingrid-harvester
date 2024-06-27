@@ -26,7 +26,9 @@ import { Importer } from '../../../importer/importer';
 import { ImporterFactory } from '../../../importer/importer.factory';
 import { KldImporter } from '../../../importer/kld/kld.importer';
 import { KldSettings } from '../../../importer/kld/kld.settings';
-import { OaiImporter } from '../../../importer/oai/lido/oai.importer';
+import { OaiImporter as OaiLidoImporter } from '../../../importer/oai/lido/oai.importer';
+import { OaiImporter as OaiMetsImporter } from '../../../importer/oai/mets/oai.importer';
+import { OaiSettings } from '../../../importer/oai/oai.settings';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -36,7 +38,16 @@ export class LvrImporterFactory extends ImporterFactory {
         let importer: Importer;
         switch (config.type) {
             case 'OAI':
-                importer = new OaiImporter(config);
+                switch ((config as OaiSettings).metadataPrefix?.toLowerCase()) {
+                    case 'lido':
+                        importer = new OaiLidoImporter(config);
+                        break;
+                    case 'mods':
+                        importer = new OaiMetsImporter(config);
+                        break;
+                    default:
+                        throw new Error('Profile LVR only supports `mods` and `lido` prefixes for OAI-PMH harvester');
+                }
                 break;
             case 'KLD':
                 importer = new KldImporter(config as KldSettings);
