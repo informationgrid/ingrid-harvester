@@ -369,7 +369,11 @@ export class ConfigService {
     }
 
     private static getHarvesterConfigFile() {
-        const configDir = process.env.MCLOUD_IMPORTER_CONFIG_DIR;
+        let configDir = process.env.IMPORTER_CONFIG_DIR;
+        if (!configDir) {
+            configDir = process.argv.find(arg => arg.toLowerCase().startsWith('--config_dir=')) ?? '';
+            configDir = configDir.toLowerCase().replace('--config_dir=', '');
+        }
         return configDir
             ? configDir + '/' + this.HARVESTER_CONFIG_FILE
             : this.HARVESTER_CONFIG_FILE;

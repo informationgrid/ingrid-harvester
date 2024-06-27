@@ -10,7 +10,7 @@
     "start-diplanung": "ts-node-dev --poll --ignore-watch mappings.json app/index.ts --profile=diplanung",
     "start-lvr": "ts-node-dev --poll --ignore-watch mappings.json app/index.ts --profile=lvr",
     "start-dev-lvr": "ts-node-dev --inspect --poll --ignore-watch mappings.json app/index.ts --profile=lvr",
-    "start-ingrid": "ts-node-dev --ignore-watch mappings.json app/index.ts --profile=ingrid",
+    "start-ingrid": "ts-node-dev --ignore-watch mappings.json app/index.ts --profile=ingrid --config_dir=./config/ingrid",
     "start-dev-16-inspect": "ts-node-dev --inspect --poll --ignore-watch mappings.json app/index.ts",
     "start-cli-dev": "ts-node app/server-cli.ts",
     "build-with-tests": "tsc --outDir build",
