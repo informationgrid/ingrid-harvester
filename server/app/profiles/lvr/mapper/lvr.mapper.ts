@@ -46,7 +46,7 @@ export abstract class LvrMapper<M extends OaiMapper | KldMapper> implements Inde
             title: this.getTitle(),
             description: this.getDescription(),
             spatial: this.getSpatial(),
-            temporal: this.getTemporal(),
+            temporal: this.getNullForTemporal(this.getTemporal()),
             keywords: this.getKeywords(),
             relation: this.getRelations(),
             media: this.getMedia(),
@@ -77,6 +77,13 @@ export abstract class LvrMapper<M extends OaiMapper | KldMapper> implements Inde
 
     getUrlSafeIdentifier(): string {
         return this.getIdentifier().replace(/\//g, '-');
+    }
+
+    private getNullForTemporal(temporal: DateRange) {
+        if (!temporal?.gte && !temporal?.lte) {
+            return null;
+        }
+        return temporal;
     }
 
     abstract getIdentifier(): string;
