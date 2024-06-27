@@ -24,16 +24,18 @@
 /**
  * A mapper for documents harvested from KuLaDig.
  */
+import * as MiscUtils from '../../utils/misc.utils';
 import { getLogger } from 'log4js';
 import { BaseMapper } from '../../importer/base.mapper';
 import { Contact, Organization, Person } from '../../model/agent';
+import { DateRange } from '../../model/dateRange';
 import { Geometries } from '@turf/helpers';
 import { ImporterSettings } from '../../importer.settings';
 import { KldSettings } from './kld.settings';
 import { License } from '@shared/license.model';
+import { Media, Relation } from '../../profiles/lvr/model/index.document';
 import { ObjectResponse, RelatedObject, Document, getDocumentUrl, RelationType, MediaType } from './kld.api';
 import { Summary } from '../../model/summary';
-import { DateRange, Media, Relation } from '../../profiles/lvr/model/index.document';
 
 export class KldMapper extends BaseMapper {
 
@@ -198,8 +200,8 @@ export class KldMapper extends BaseMapper {
         return millis;
     }
 
-    private parseDateRange(dates: string[]): [number|null, number|null] {
-        const values = dates.map(this.parseDate).filter((date: number|null) => date != null).sort((a: number, b: number) => a - b);
+    private parseDateRange(dates: string[]): [Date|null, Date|null] {
+        const values = dates.map(MiscUtils.normalizeDateTime).filter((date: Date|null) => date != null).sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
         const start = values.length > 0 ? values[0] : null;
         const end = values.length > 0 ? values[values.length-1] : null;
         return [start, end];

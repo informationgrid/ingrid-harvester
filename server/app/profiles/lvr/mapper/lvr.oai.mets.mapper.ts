@@ -24,7 +24,8 @@
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import * as ModsModel from '../../../importer/oai/mets/xmlns/www.loc.gov/mods/v3';
 import 'dayjs/locale/de';
-import { GeometryInformation, DateRange, Keyword, Relation, Media } from '../model/index.document';
+import { DateRange } from '../../../model/dateRange';
+import { GeometryInformation, Keyword, Relation, Media } from '../model/index.document';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
 import { OaiMapper } from '../../../importer/oai/mets/oai.mapper';
@@ -68,7 +69,7 @@ export class LvrOaiMetsMapper extends LvrMapper<OaiMapper> {
 
     // TODO
     getTemporal(): DateRange {
-        let gte: number, lte: number;
+        let gte: Date, lte: Date;
         this.document.originInfo.forEach(info => {
             for (let dateProp of ['dateCreated', 'dateIssued', 'dateModified', 'dateOther', 'dateValid']) {
                 info[dateProp].filter(d => d._exists).forEach(dateNode => {

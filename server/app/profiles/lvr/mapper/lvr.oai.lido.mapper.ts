@@ -23,7 +23,8 @@
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
-import { GeometryInformation, DateRange, Keyword, Relation, Media } from '../model/index.document';
+import { DateRange } from '../../../model/dateRange';
+import { GeometryInformation, Keyword, Relation, Media } from '../model/index.document';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
 import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
@@ -83,10 +84,10 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
     }
 
     getTemporal(): DateRange {
-        let gte: number, lte: number;
+        let gte: Date, lte: Date;
         this.baseMapper.getSubjects().forEach(subject => {
-            gte = gte == null || gte > subject.period.gte.getTime() ? subject.period.gte.getTime() : gte;
-            lte = lte == null || lte < subject.period.lte.getTime() ? subject.period.lte.getTime() : lte;
+            gte = gte == null || gte > subject.period.gte ? subject.period.gte : gte;
+            lte = lte == null || lte < subject.period.lte ? subject.period.lte : lte;
         });
         return { gte, lte };
     }

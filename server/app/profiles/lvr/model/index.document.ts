@@ -66,22 +66,3 @@ export type Relation = {
     type: string,
     score: number
 }
-
-/**
- * Custom date range that allows correct handling of BC dates (e.g. 70 BC)
- *
- * This date range does not use the Date type because serialization via Date.toJSON will produce
- * values for BC dates that cannot be parsed by elasticsearch (e.g. "-05001-12-31T23:06:32.000Z"
- * instead of "-5001-12-31T23:06:32.000Z" which could be parsed)
- */
-export type DateRange = {
-  /**
-   * Lower bound of date range in milliseconds elapsed since midnight, January 1, 1970 GMT (could be negative)
-   */
-  gte?: number,
-
-  /**
-   * Upper bound of date range in milliseconds elapsed since midnight, January 1, 1970 GMT (could be negative)
-   */
-  lte?: number
-}
