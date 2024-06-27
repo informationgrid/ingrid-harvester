@@ -21,10 +21,14 @@
  * ==================================================
  */
 
+import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
 import { createEsId } from '../lvr.utils';
-import { GeometryInformation, DateRange, Keyword, LvrIndexDocument, Media, Relation } from '../model/index.document';
+import { DateRange } from '../../../model/dateRange';
+import { GeometryInformation, Keyword, LvrIndexDocument, Media, Relation } from '../model/index.document';
+import { GeometryObject, Point } from '@turf/helpers';
 import { IndexDocumentFactory } from '../../../model/index.document.factory';
+import { IngridIndexDocument, Spatial } from '../../../model/ingrid.index.document';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
 import { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper';
@@ -42,25 +46,54 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiMetsMapper | KldMap
     }
 
     async create(): Promise<LvrIndexDocument> {
-        let result: LvrIndexDocument = {
-            identifier: this.getUrlSafeIdentifier(),
-            title: this.getTitle(),
-            description: this.getDescription(),
-            spatial: this.getSpatial(),
-            temporal: this.getNullForTemporal(this.getTemporal()),
-            keywords: this.getKeywords(),
-            relation: this.getRelations(),
-            media: this.getMedia(),
-            license: this.getLicense(),
-            vector: this.getVector(),
+        let ingridDocument: IngridIndexDocument = {
+            id: this.getUrlSafeIdentifier(),
+            schema_version: '1.0.0',
+            title: this.getTitle()?.join('\n'),
+            abstract: this.getDescription()?.join('\n'),
+            spatial: this.getIngridSpatial(),
+            temporal: {
+                modified: this.getModified(),
+                issued: this.getIssued(),
+                data_temporal: {
+                    date_range: this.getNullForTemporal(this.getTemporal()),
+                    date_type: null
+                }
+            },
+            keyword: this.getKeywords()?.map(keyword => ({
+                id: first(keyword.id),
+                term: first(keyword.term),
+                url: first(keyword.thesaurus)
+            })),
+            fulltext: this.baseMapper.getHarvestedData(),
+            metadata: {
+                issued: this.getIssued(),
+                modified: this.getModified(),
+                source: this.baseMapper.getMetadataSource()
+            }
+        };
+
+        let result: LvrIndexDocument = {        
+            ...ingridDocument,
+            lvr: {    
+                identifier: this.getIdentifier(),
+                title: this.getTitle(),
+                description: this.getDescription(),
+                spatial: this.getSpatial(),
+                temporal: this.getNullForTemporal(this.getTemporal()),
+                keywords: this.getKeywords(),
+                relation: this.getRelations(),
+                media: this.getMedia(),
+                license: this.getLicense(),
+                vector: this.getVector(),
+            },
             extras: {
                 metadata: {
                     issued: this.getIssued(),
                     modified: this.getModified(),
                     source: this.baseMapper.getMetadataSource(),
                     merged_from: []
-                },
-                original_id: this.getIdentifier()
+                }
             }
         };
 
@@ -87,6 +120,18 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiMetsMapper | KldMap
         return temporal;
     }
 
+    private getIngridSpatial(): Spatial {
+        let spatial: Spatial = {};
+        let geoInfo = this.getSpatial()?.[0];
+        if (geoInfo) {
+            spatial.bbox = GeoJsonUtils.getBbox(geoInfo.geometry);
+            spatial.centroid = geoInfo.centroid;
+            spatial.geometry = geoInfo.geometry;
+            spatial.title = geoInfo.description;
+        }
+        return spatial;
+    }
+
     abstract getIdentifier(): string;
 
     abstract getTitle(): string[];
@@ -110,4 +155,14 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiMetsMapper | KldMap
     abstract getIssued(): Date;
 
     abstract getModified(): Date;
+}
+
+function first(strOrArr: string | string[]): string {
+    if (!strOrArr) {
+        return null;
+    }
+    if (Array.isArray(strOrArr)) {
+        return strOrArr[0];
+    }
+    return strOrArr;
 }

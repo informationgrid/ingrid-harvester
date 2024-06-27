@@ -21,23 +21,24 @@
  * ==================================================
  */
 
+import { DateRange } from '../../../model/dateRange';
 import { Geometries, GeometryCollection, Point } from '@turf/helpers';
 import { IndexDocument } from '../../../model/index.document';
+import { IngridIndexDocument } from '../../../model/ingrid.index.document';
 import { License } from '@shared/license.model';
 
-export type LvrIndexDocument = IndexDocument & {
-    identifier: string,
-    title: string[],
-    description: string[],
-    spatial: GeometryInformation[],
-    temporal: DateRange,
-    keywords: Keyword[],
-    relation: Relation[],
-    media: Media[],
-    license: License[],
-    vector: object,
-    extras: {
-        original_id: string;
+export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
+    lvr: {
+        identifier: string,
+        title: string[],
+        description: string[],
+        spatial: GeometryInformation[],
+        temporal: DateRange,
+        keywords: Keyword[],
+        relation: Relation[],
+        media: Media[],
+        license: License[],
+        vector: object
     }
 };
 

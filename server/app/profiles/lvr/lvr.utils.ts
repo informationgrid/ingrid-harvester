@@ -24,5 +24,5 @@
 import { LvrIndexDocument } from './model/index.document';
 
 export function createEsId(document: LvrIndexDocument): string {
-    return document.identifier;
+    return document.id;
 }
