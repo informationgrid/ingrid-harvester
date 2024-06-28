@@ -4,51 +4,39 @@
     "priority": {
       "type": "short"
     },
-    "completion": {
-      "type": "completion",
-      "analyzer": "german_simple",
-      "search_analyzer": "german_simple"
-    },
-    "identifier": {
+    "id": {
       "type": "keyword"
     },
-    "catalog": {
+    "schema_version": {
+      "type": "keyword"
+    },
+    "title": {
+      "type": "text",
+      "analyzer": "decomp"
+    },
+    "abstract": {
+      "type": "text",
+      "analyzer": "decomp"
+    },
+    "spatial": {
       "properties": {
-        "id": {
-          "type": "keyword"
+        "geometry": {
+          "type": "geo_shape"
         },
-        "identifier": {
-          "type": "keyword"
+        "bbox": {
+          "type": "geo_shape"
         },
-        "description": {
-          "type": "text",
-          "analyzer": "decomp"
+        "centroid": {
+          "type": "geo_point"
         },
-        "homepage": {
-          "type": "keyword"
+        "inside_point": {
+          "type": "geo_point"
         },
-        "publisher": {
-          "properties": {
-            "name": {
-              "type": "text",
-              "fields": {
-                "raw": {
-                  "type": "keyword"
-                }
-              }
-            },
-            "type": {
-              "type": "keyword"
-            },
-            "organization": {
-              "type": "text",
-              "fields": {
-                "raw": {
-                  "type": "keyword"
-                }
-              }
-            }
-          }
+        "location_points": {
+          "type": "geo_point"
+        },
+        "outline": {
+          "type": "geo_shape"
         },
         "title": {
           "type": "text",
@@ -56,72 +44,25 @@
         }
       }
     },
-    "title": {
-      "type": "text",
-      "store": true,
-      "fields": {
-        "decomp_german": {
-          "type": "text",
-          "analyzer": "decomp_german",
-          "search_analyzer": "german_simple"
-        },
-        "decomp_shingles": {
-          "type": "text",
-          "analyzer": "decomp_shingles"
-        },
-        "suggest_shingles": {
-          "type": "text",
-          "analyzer": "suggest_shingles"
-        },
-        "raw": {
-          "type": "keyword",
-          "store": true
-        }
-      }
-    },
-    "description": {
-      "type": "text",
-      "analyzer": "decomp",
-      "search_analyzer": "german_simple",
-      "fields": {
-        "decomp_german": {
-          "type": "text",
-          "analyzer": "decomp_german",
-          "search_analyzer": "german_simple"
-        },
-        "decomp_shingles": {
-          "type": "text",
-          "analyzer": "decomp_shingles"
-        },
-        "suggest_shingles": {
-          "type": "text",
-          "analyzer": "suggest_shingles"
-        }
-      }
-    },
-    "spatial": {
-      "properties": {
-        "address": {
-          "type": "text",
-          "analyzer": "decomp"
-        },
-        "description": {
-          "type": "text",
-          "analyzer": "decomp"
-        },
-        "type": {
-          "type": "keyword"
-        },
-        "centroid": {
-          "type": "geo_point"
-        },
-        "geometry": {
-          "type": "geo_shape"
-        }
-      }
-    },
     "temporal": {
-      "type": "date_range"
+      "properties": {
+        "issued": {
+          "type": "date"
+        },
+        "modified": {
+          "type": "date"
+        },
+        "data_temporal": {
+          "properties": {
+            "date_range": {
+              "type": "date_range"
+            },
+            "date_type": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
     },
     "keywords": {
       "properties": {
@@ -131,57 +72,216 @@
         "term": {
           "type": "keyword"
         },
-        "thesaurus": {
-          "type": "keyword"
-        }
-      }
-    },
-    "relation": {
-      "properties": {
-        "id": {
-          "type": "keyword"
-        },
-        "type": {
-          "type": "keyword"
-        },
-        "score": {
-          "type": "double"
-        }
-      }
-    },
-    "media": {
-      "properties": {
-        "type": {
-          "type": "keyword"
-        },
         "url": {
           "type": "keyword"
+        }
+      }
+    },
+    "fulltext": {
+      "type": "text",
+      "index": false
+    },
+    "metadata": {
+      "properties": {
+        "issued": {
+          "type": "date"
+        },
+        "modified": {
+          "type": "date"
+        },
+        "source": {
+          "properties": {
+            "raw_data_source": {
+                "type": "text",
+                "index": false
+            },
+            "source_base": {
+              "type": "keyword"
+            },
+            "source_type": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "lvr": {
+      "properties": {
+        "identifier": {
+          "type": "keyword"
+        },
+        "catalog": {
+          "properties": {
+            "id": {
+              "type": "keyword"
+            },
+            "identifier": {
+              "type": "keyword"
+            },
+            "description": {
+              "type": "text",
+              "analyzer": "decomp"
+            },
+            "homepage": {
+              "type": "keyword"
+            },
+            "publisher": {
+              "properties": {
+                "name": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "type": {
+                  "type": "keyword"
+                },
+                "organization": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                }
+              }
+            },
+            "title": {
+              "type": "text",
+              "analyzer": "decomp"
+            }
+          }
+        },
+        "title": {
+          "type": "text",
+          "store": true,
+          "fields": {
+            "decomp_german": {
+              "type": "text",
+              "analyzer": "decomp_german",
+              "search_analyzer": "german_simple"
+            },
+            "decomp_shingles": {
+              "type": "text",
+              "analyzer": "decomp_shingles"
+            },
+            "suggest_shingles": {
+              "type": "text",
+              "analyzer": "suggest_shingles"
+            },
+            "raw": {
+              "type": "keyword",
+              "store": true
+            }
+          }
         },
         "description": {
           "type": "text",
-          "analyzer": "decomp"
-        }
-      }
-    },
-    "license": {
-      "properties": {
-        "title": {
-          "type": "keyword"
+          "analyzer": "decomp",
+          "search_analyzer": "german_simple",
+          "fields": {
+            "decomp_german": {
+              "type": "text",
+              "analyzer": "decomp_german",
+              "search_analyzer": "german_simple"
+            },
+            "decomp_shingles": {
+              "type": "text",
+              "analyzer": "decomp_shingles"
+            },
+            "suggest_shingles": {
+              "type": "text",
+              "analyzer": "suggest_shingles"
+            }
+          }
         },
-        "url": {
-          "type": "keyword"
+        "spatial": {
+          "properties": {
+            "address": {
+              "type": "text",
+              "analyzer": "decomp"
+            },
+            "description": {
+              "type": "text",
+              "analyzer": "decomp"
+            },
+            "type": {
+              "type": "keyword"
+            },
+            "centroid": {
+              "type": "geo_point"
+            },
+            "geometry": {
+              "type": "geo_shape"
+            }
+          }
+        },
+        "temporal": {
+          "type": "date_range"
+        },
+        "keywords": {
+          "properties": {
+            "id": {
+              "type": "keyword"
+            },
+            "term": {
+              "type": "keyword"
+            },
+            "thesaurus": {
+              "type": "keyword"
+            }
+          }
+        },
+        "relation": {
+          "properties": {
+            "id": {
+              "type": "keyword"
+            },
+            "type": {
+              "type": "keyword"
+            },
+            "score": {
+              "type": "double"
+            }
+          }
+        },
+        "media": {
+          "properties": {
+            "type": {
+              "type": "keyword"
+            },
+            "url": {
+              "type": "keyword"
+            },
+            "description": {
+              "type": "text",
+              "analyzer": "decomp"
+            }
+          }
+        },
+        "license": {
+          "properties": {
+            "title": {
+              "type": "keyword"
+            },
+            "url": {
+              "type": "keyword"
+            }
+          }
+        },
+        "reference": {
+          "properties": {
+            "id": {
+              "type": "keyword"
+            }
+          }
+        },
+        "vector": {
+          "type": "object"
         }
       }
-    },
-    "reference": {
-      "properties": {
-        "id": {
-          "type": "keyword"
-        }
-      }
-    },
-    "vector": {
-      "type": "object"
     },
     "extras": {
       "properties": {

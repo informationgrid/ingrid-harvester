@@ -38,7 +38,7 @@ export type IngridIndexDocument = {
             date_type?: string
         }
     },
-    keyword?: Keyword[],
+    keywords?: Keyword[],
     fulltext: string,
     metadata: Metadata
 };

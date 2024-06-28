@@ -60,7 +60,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiMetsMapper | KldMap
                     date_type: null
                 }
             },
-            keyword: this.getKeywords()?.map(keyword => ({
+            keywords: this.getKeywords()?.map(keyword => ({
                 id: first(keyword.id),
                 term: first(keyword.term),
                 url: first(keyword.thesaurus)
@@ -77,11 +77,11 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiMetsMapper | KldMap
             ...ingridDocument,
             lvr: {    
                 identifier: this.getIdentifier(),
-                title: this.getTitle(),
-                description: this.getDescription(),
-                spatial: this.getSpatial(),
-                temporal: this.getNullForTemporal(this.getTemporal()),
-                keywords: this.getKeywords(),
+                // title: this.getTitle(),
+                // description: this.getDescription(),
+                // spatial: this.getSpatial(),
+                // temporal: this.getNullForTemporal(this.getTemporal()),
+                // keywords: this.getKeywords(),
                 relation: this.getRelations(),
                 media: this.getMedia(),
                 license: this.getLicense(),

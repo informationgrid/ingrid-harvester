@@ -30,11 +30,11 @@ import { License } from '@shared/license.model';
 export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
     lvr: {
         identifier: string,
-        title: string[],
-        description: string[],
-        spatial: GeometryInformation[],
-        temporal: DateRange,
-        keywords: Keyword[],
+        // title: string[],
+        // description: string[],
+        // spatial: GeometryInformation[],
+        // temporal: DateRange,
+        // keywords: Keyword[],
         relation: Relation[],
         media: Media[],
         license: License[],
