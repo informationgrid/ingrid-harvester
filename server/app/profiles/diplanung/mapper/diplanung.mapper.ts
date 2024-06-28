@@ -43,7 +43,7 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
 
     async create(): Promise<DiplanungIndexDocument> {
         let contactPoint: Contact = await this.getContactPoint() ?? { fn: '' };
-        let result = {
+        let result: DiplanungIndexDocument = {
             // basic information
             contact_point: {
                 fn: contactPoint.fn,
@@ -99,8 +99,7 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
                     modified: null,
                     source: this.baseMapper.getMetadataSource(),
                     merged_from: []
-                },
-                operates_on: this.getOperatesOn()     // only csw
+                }
             },
             issued: this.getIssued(),
             modified: this.getModifiedDate(),
