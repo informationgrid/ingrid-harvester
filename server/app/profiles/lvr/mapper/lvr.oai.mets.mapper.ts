@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -85,20 +85,35 @@ export class LvrOaiMetsMapper extends LvrMapper<OaiMapper> {
     getKeywords(): Keyword[] {
         let keywords: Keyword[] = [];
         this.document.subject.forEach(subject => {
-            subject.geographic.forEach(geographic => {
+            let keywordTypes = [...subject.geographic, ...subject.temporal, ...subject.topic];
+            keywordTypes.filter(subType => subType._exists).forEach(subType => {
                 keywords.push({
-                    id: geographic.valueURI,
-                    term: geographic.content,
-                    thesaurus: geographic.authority
+                    id: this.resolve(subType.valueURI),
+                    term: this.resolve(subType.content),
+                    thesaurus: this.resolve(subType.authority)
                 });
             });
-            subject.topic.forEach(topic => {
-                keywords.push({
-                    id: topic.valueURI,
-                    term: topic.content,
-                    thesaurus: topic.authority
-                });
-            });
+            // subject.geographic.filter(geographic => geographic._exists).forEach(geographic => {
+            //     keywords.push({
+            //         id: this.resolve(geographic.valueURI),
+            //         term: this.resolve(geographic.content),
+            //         thesaurus: this.resolve(geographic.authority)
+            //     });
+            // });
+            // subject.temporal.filter(temporal => temporal._exists).forEach(temporal => {
+            //     keywords.push({
+            //         id: this.resolve(temporal.valueURI),
+            //         term: this.resolve(temporal.content),
+            //         thesaurus: this.resolve(temporal.authority)
+            //     });
+            // });
+            // subject.topic.filter(topic => topic._exists).forEach(topic => {
+            //     keywords.push({
+            //         id: this.resolve(topic.valueURI),
+            //         term: this.resolve(topic.content),
+            //         thesaurus: this.resolve(topic.authority)
+            //     });
+            // });
         });
         return keywords;
     }
@@ -155,5 +170,12 @@ export class LvrOaiMetsMapper extends LvrMapper<OaiMapper> {
         //     }
         // }
         return modified;
+    }
+
+    private resolve(xmlType: any): any {
+        if (Object.keys(xmlType).includes("_exists") && xmlType._exists == false) {
+            return null;
+        }
+        return xmlType;
     }
 }
