@@ -334,7 +334,7 @@ cxml.register('http://www.loc.gov/mods/v3', exports, [
 	['targetAudience', [66], 0],
 	['temporal', [67], 0],
 	['territory', [27], 0],
-	['text', [], 0],
+	['text', [false], 0], // ED: second entry was []
 	['title', [59], 0],
 	['titleInfo', [68], 0],
 	['topic', [60], 0],
@@ -361,27 +361,27 @@ cxml.register('http://www.loc.gov/mods/v3', exports, [
 	['url', [70], 0],
 	['valueURI', [3], 0],
 	['access', [84], 0],
-	['areaType', [], 0],
-	['citySectionType', [], 0],
+	['areaType', [false], 0], // ED: second entry was []
+	['citySectionType', [false], 0], // ED: second entry was []
 	['collection', [72], 0],
 	['encoding', [73], 0],
 	['extent', [22], 0],
 	['invalid', [72], 0],
 	['keyDate', [72], 0],
-	['level', [], 0],
+	['level', [false], 0], // ED: second entry was []
 	['manuscript', [72], 0],
 	['name', [63], 0],
-	['note', [], 0],
+	['note', [false], 0], // ED: second entry was []
 	['note', [45], 0],
-	['otherType', [], 0],
-	['otherType', [], 0],
-	['period', [], 0],
+	['otherType', [false], 0], // ED: second entry was []
+	['otherType', [false], 0], // ED: second entry was []
+	['period', [false], 0], // ED: second entry was []
 	['point', [74], 0],
 	['qualifier', [75], 0],
-	['regionType', [], 0],
+	['regionType', [false], 0], // ED: second entry was []
 	['shareable', [39], 0],
 	['shareable', [39], 0],
-	['stateType', [], 0],
+	['stateType', [false], 0], // ED: second entry was []
 	['supplied', [72], 0],
 	['supplied', [72], 0],
 	['supplied', [72], 0],
@@ -397,7 +397,7 @@ cxml.register('http://www.loc.gov/mods/v3', exports, [
 	['type', [82], 0],
 	['type', [81], 0],
 	['type', [83], 0],
-	['unit', [], 0],
+	['unit', [false], 0], // ED: second entry was []
 	['unitType', [76], 0],
 	['usage', [71], 0],
 	['usage', [71], 0],
