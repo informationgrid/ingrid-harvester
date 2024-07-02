@@ -62,24 +62,16 @@ export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {
         return this.baseMapper.getKeywords();
     }
 
-    // TODO
     getGenres(): string[] {
-        return null;
+        return this.baseMapper.getGenres();
     }
 
     getPersons(): Person[] {
         return this.baseMapper.getNames();
     }
 
-    // TODO
     getMedia(): Media[] {
-        let media: Media[] = [];
-        media.push({
-            type: '',
-            url: '',
-            description: ''
-        });
-        return media;
+        return this.baseMapper.getLocations();
     }
 
     getRelations(): Relation[] {

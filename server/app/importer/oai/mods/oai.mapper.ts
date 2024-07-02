@@ -184,6 +184,16 @@ export class OaiMapper extends BaseMapper {
         return persons;
     }
 
+    getLocations(): Media[] {
+        let locationUrlNodes: Element[] = this.select('./mods:location/mods:url');
+        let media = locationUrlNodes.map(node => ({
+            type: node.getAttribute('access'),
+            url: node.textContent,
+            description: node.getAttribute('access')
+        }));
+        return media;
+    }
+
     getLicenses() {
         let accessConditionNodes = this.select('./mods:accessCondition');
         let licenses = accessConditionNodes.map(node => ({
