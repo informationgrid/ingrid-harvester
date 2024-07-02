@@ -157,8 +157,7 @@ export class OaiMapper extends BaseMapper {
         let relatedItemNodes = this.select('relatedItem');
         let relations = relatedItemNodes.map(node => ({
             id: node.getAttribute('xlink:href'),
-            type: node.getAttribute('type'),
-            score: null
+            type: node.getAttribute('type')
         }));
         return relations;
     }

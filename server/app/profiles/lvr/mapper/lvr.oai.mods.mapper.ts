@@ -63,8 +63,13 @@ export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {
         return this.baseMapper.getKeywords();
     }
 
-    getRelations(): Relation[] {
-        return this.baseMapper.getRelations();
+    // TODO
+    getGenres(): string[] {
+        return null;
+    }
+
+    getPersons(): Person[] {
+        return this.baseMapper.getNames();
     }
 
     // TODO
@@ -78,8 +83,8 @@ export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {
         return media;
     }
 
-    getPersons(): Person[] {
-        return this.baseMapper.getNames();
+    getRelations(): Relation[] {
+        return this.baseMapper.getRelations();
     }
 
     getLicense(): License[] {

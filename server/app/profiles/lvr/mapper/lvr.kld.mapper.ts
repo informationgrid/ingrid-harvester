@@ -84,17 +84,22 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         }));
     }
 
-    getRelations(): Relation[] {
-        return this.baseMapper.getRelations();
+    // TODO
+    getGenres(): string[] {
+        return null;
+    }
+
+    // TODO
+    getPersons(): Person[] {
+        return null;
     }
 
     getMedia(): Media[] {
         return this.baseMapper.getMedia();
     }
 
-    // TODO
-    getPersons(): Person[] {
-        return null;
+    getRelations(): Relation[] {
+        return this.baseMapper.getRelations();
     }
 
     getLicense(): License[] {

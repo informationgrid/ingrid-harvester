@@ -103,12 +103,14 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         return keywords;
     }
 
-    getRelations(): Relation[] {
-        return this.baseMapper.getRelations().map(relation => ({
-            id: relation.id,
-            type: relation.type,
-            score: null
-        }));
+    // TODO
+    getGenres(): string[] {
+        return null;
+    }
+
+    // TODO
+    getPersons(): Person[] {
+        return null;
     }
 
     // TODO
@@ -116,9 +118,11 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         return null;
     }
 
-    // TODO
-    getPersons(): Person[] {
-        return null;
+    getRelations(): Relation[] {
+        return this.baseMapper.getRelations().map(relation => ({
+            id: relation.id,
+            type: relation.type
+        }));
     }
 
     getLicense(): License[] {

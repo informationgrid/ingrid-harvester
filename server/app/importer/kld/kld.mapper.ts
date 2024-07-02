@@ -208,11 +208,9 @@ export class KldMapper extends BaseMapper {
     }
 
     private mapRelatedObject(related: RelatedObject, type: RelationType): Relation {
-        // TODO calculate score
         return {
             id: related.Id,
-            type: this.getEnumKey(RelationType, type).toLowerCase(),
-            score: -1
+            type: this.getEnumKey(RelationType, type).toLowerCase()
         }
     }
 

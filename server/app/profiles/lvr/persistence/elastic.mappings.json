@@ -241,9 +241,6 @@
             },
             "type": {
               "type": "keyword"
-            },
-            "score": {
-              "type": "double"
             }
           }
         },
@@ -298,6 +295,9 @@
               }
             }
           }
+        },
+        "genres": {
+          "type": "keyword"
         },
         "licenses": {
           "properties": {
