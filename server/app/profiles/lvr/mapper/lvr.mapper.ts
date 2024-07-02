@@ -24,11 +24,10 @@
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
 import { createEsId } from '../lvr.utils';
-import { DateRange } from '../../../model/dateRange';
-import { GeometryInformation, Keyword, LvrIndexDocument, Media, Person, Relation, Temporal } from '../model/index.document';
-import { GeometryObject, Point } from '@turf/helpers';
+import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { IndexDocumentFactory } from '../../../model/index.document.factory';
 import { IngridIndexDocument, Spatial } from '../../../model/ingrid.index.document';
+import { Keyword, LvrIndexDocument, Media, Person, Relation } from '../model/index.document';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
 import { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper';

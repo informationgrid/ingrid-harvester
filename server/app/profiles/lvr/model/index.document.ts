@@ -21,8 +21,6 @@
  * ==================================================
  */
 
-import { DateRange } from '../../../model/dateRange';
-import { Geometries, GeometryCollection, Point } from '@turf/helpers';
 import { IndexDocument } from '../../../model/index.document';
 import { IngridIndexDocument } from '../../../model/ingrid.index.document';
 import { License } from '@shared/license.model';
@@ -42,14 +40,6 @@ export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
         licenses: License[],
         vector: object
     }
-};
-
-export type GeometryInformation = {
-    geometry: Geometries | GeometryCollection,
-    centroid: Point,
-    type: string,
-    description: string,
-    address: string
 };
 
 export type Keyword = {
@@ -77,9 +67,4 @@ export type Person = {
 export type Relation = {
     id: string,
     type: string
-};
-
-export type Temporal = {
-    date_range: DateRange,
-    date_type?: string
 };

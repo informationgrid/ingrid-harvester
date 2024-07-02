@@ -21,10 +21,9 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
-import { DateRange } from '../../../model/dateRange';
-import { GeometryInformation, Keyword, Relation, Media, Person, Temporal } from '../model/index.document';
+import { GeometryInformation, Temporal } from '../../../model/index.document';
+import { Keyword, Media, Person, Relation } from '../model/index.document';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
 import { OaiMapper } from '../../../importer/oai/mods/oai.mapper';
@@ -104,11 +103,4 @@ export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {
     getModified(): Date {
         return this.baseMapper.getModified();
     }
-
-    // private resolve(xmlType: any): any {
-    //     if (Object.keys(xmlType).includes("_exists") && xmlType._exists == false) {
-    //         return null;
-    //     }
-    //     return xmlType;
-    // }
 }

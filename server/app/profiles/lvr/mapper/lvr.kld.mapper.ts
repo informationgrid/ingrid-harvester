@@ -23,8 +23,8 @@
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
-import { DateRange } from '../../../model/dateRange';
-import { GeometryInformation, Keyword, Media, Person, Relation, Temporal } from '../model/index.document';
+import { GeometryInformation, Temporal } from '../../../model/index.document';
+import { Keyword, Media, Person, Relation } from '../model/index.document';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';

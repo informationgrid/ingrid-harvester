@@ -23,7 +23,8 @@
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
-import { GeometryInformation, Keyword, Relation, Media, Person, Temporal } from '../model/index.document';
+import { GeometryInformation, Temporal } from '../../../model/index.document';
+import { Keyword, Media, Person, Relation } from '../model/index.document';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
 import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';

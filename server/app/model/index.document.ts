@@ -21,11 +21,14 @@
  * ==================================================
  */
 
+import { DateRange } from './dateRange';
+import { Geometries, GeometryCollection, Point } from '@turf/helpers';
+
 export type IndexDocument = {
     extras: {
         metadata: HarvestingMetadata
     }
-}
+};
 
 export type HarvestingMetadata = {
     harvested?: Date,
@@ -38,7 +41,7 @@ export type HarvestingMetadata = {
     source: MetadataSource,
     merged_from: string[],
     deleted?: Date
-}
+};
 
 export type MetadataSource = {
     source_base: string,
@@ -46,4 +49,17 @@ export type MetadataSource = {
     raw_data_source?: string,
     portal_link?: string,
     attribution?: string
-}
+};
+
+export type GeometryInformation = {
+    geometry: Geometries | GeometryCollection,
+    centroid: Point,
+    type: string,
+    description: string,
+    address: string
+};
+
+export type Temporal = {
+    date_range: DateRange,
+    date_type?: string
+};
