@@ -55,7 +55,8 @@ export class OaiMapper extends BaseMapper {
 
     log = getLogger();
 
-    private readonly record: any;
+    private readonly header: Element;
+    private readonly record: Element;
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
@@ -71,9 +72,10 @@ export class OaiMapper extends BaseMapper {
     };
 
 
-    constructor(settings, record, harvestTime, summary) {
+    constructor(settings, header, record, harvestTime, summary) {
         super();
         this.settings = settings;
+        this.header = header;
         this.record = record;
         this.harvestTime = harvestTime;
         this.summary = summary;
@@ -104,7 +106,6 @@ export class OaiMapper extends BaseMapper {
 
         return abstract;
     }
-
 
     async getDistributions(): Promise<Distribution[]> {
         let dists = [];

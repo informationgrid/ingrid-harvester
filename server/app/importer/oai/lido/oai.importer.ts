@@ -87,7 +87,7 @@ export class OaiImporter extends Importer {
                 await this.harvest();
                 // did the harvesting return results at all?
                 if (this.numIndexDocs == 0 && !this.summary.isIncremental) {
-                    throw new Error('No results during LIDO import');
+                    throw new Error(`No results during OAI/${this.settings.metadataPrefix?.toUpperCase()} import`);
                 }
                 // ensure that less than X percent of existing datasets are slated for deletion
                 // TODO introduce settings to:
@@ -164,16 +164,13 @@ export class OaiImporter extends Importer {
     async extractRecords(getRecordsResponse, harvestTime) {
         let promises = [];
         let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
-        let records = xml.getElementsByTagNameNS(this.xpaths.nsPrefix, this.xpaths.mdRoot);
-
-        let ids = [];
-        for (let i = 0; i < records.length; i++) {
-            ids.push(OaiMapper.select(this.xpaths.idElem, records[i], true));
-        }
+        let records = xml.getElementsByTagName('record');
 
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
-            const uuid = OaiMapper.select(this.xpaths.idElem, records[i], true)?.textContent;
+            let header = records[i].getElementsByTagName('header').item(0);
+            let record = records[i].getElementsByTagNameNS(this.xpaths.nsPrefix, this.xpaths.mdRoot).item(0);
+            const uuid = OaiMapper.select(this.xpaths.idElem, record, true)?.textContent;
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;
@@ -183,10 +180,10 @@ export class OaiImporter extends Importer {
                 log.debug(`Import document ${i + 1} from ${records.length}`);
             }
             if (logRequest.isDebugEnabled()) {
-                logRequest.debug("Record content: ", records[i].toString());
+                logRequest.debug("Record content: ", record.toString());
             }
 
-            let mapper = await this.getMapper(this.settings, records[i], harvestTime, this.summary);
+            let mapper = this.getMapper(this.settings, header, record, harvestTime, this.summary);
 
             let doc: IndexDocument;
             try {
@@ -216,8 +213,8 @@ export class OaiImporter extends Importer {
         await Promise.allSettled(promises).catch(err => log.error('Error indexing OAI record', err));
     }
 
-    async getMapper(settings, record, harvestTime, summary): Promise<OaiMapper> {
-        return new OaiMapper(settings, record, harvestTime, summary);
+    getMapper(settings, header, record, harvestTime, summary): OaiMapper {
+        return new OaiMapper(settings, header, record, harvestTime, summary);
     }
 
     static createRequestConfig(settings: OaiSettings, resumptionToken?: string): RequestOptions {
