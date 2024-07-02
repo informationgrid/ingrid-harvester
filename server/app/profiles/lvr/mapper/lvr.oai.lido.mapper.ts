@@ -23,8 +23,7 @@
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
-import { DateRange } from '../../../model/dateRange';
-import { GeometryInformation, Keyword, Relation, Media } from '../model/index.document';
+import { GeometryInformation, Keyword, Relation, Media, Person, Temporal } from '../model/index.document';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
 import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
@@ -83,13 +82,13 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         return geometryInformations.filter(geometryInformation => geometryInformation.geometry);
     }
 
-    getTemporal(): DateRange {
-        let gte: Date, lte: Date;
-        this.baseMapper.getSubjects().forEach(subject => {
-            gte = gte == null || gte > subject.period.gte ? subject.period.gte : gte;
-            lte = lte == null || lte < subject.period.lte ? subject.period.lte : lte;
-        });
-        return { gte, lte };
+    // TODO
+    getTemporal(): Temporal[] {
+        let tepmorals = this.baseMapper.getSubjects().map(subject => ({
+            date_range: subject.period
+            // date_type: ???
+        }));
+        return tepmorals;
     }
 
     getKeywords(): Keyword[] {
@@ -114,6 +113,11 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
 
     // TODO
     getMedia(): Media[] {
+        return null;
+    }
+
+    // TODO
+    getPersons(): Person[] {
         return null;
     }
 

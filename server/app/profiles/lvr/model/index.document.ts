@@ -35,9 +35,10 @@ export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
         // spatial: GeometryInformation[],
         // temporal: DateRange,
         // keywords: Keyword[],
-        relation: Relation[],
+        relations: Relation[],
         media: Media[],
-        license: License[],
+        persons: Person[],
+        licenses: License[],
         vector: object
     }
 };
@@ -54,16 +55,31 @@ export type Keyword = {
     id: string | string[],
     term: string | string[],
     thesaurus: string | string[]
-}
+};
 
 export type Media = {
     type: string,
     url: string,
     description: string
-}
+};
+
+export type Person = {
+    type: string,
+    role: string,
+    name: {
+        first: string,
+        last: string,
+        display: string
+    }
+};
 
 export type Relation = {
     id: string,
     type: string,
     score: number
-}
+};
+
+export type Temporal = {
+    date_range: DateRange,
+    date_type?: string
+};

@@ -234,7 +234,7 @@
             }
           }
         },
-        "relation": {
+        "relations": {
           "properties": {
             "id": {
               "type": "keyword"
@@ -261,7 +261,45 @@
             }
           }
         },
-        "license": {
+        "persons": {
+          "properties": {
+            "type": {
+              "type": "keyword"
+            },
+            "role": {
+              "type": "keyword"
+            },
+            "name": {
+              "properties": {
+                "first": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "last": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                },
+                "display": {
+                  "type": "text",
+                  "fields": {
+                    "raw": {
+                      "type": "keyword"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "licenses": {
           "properties": {
             "title": {
               "type": "keyword"

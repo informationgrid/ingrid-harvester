@@ -25,7 +25,7 @@ import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
 import { createEsId } from '../lvr.utils';
 import { DateRange } from '../../../model/dateRange';
-import { GeometryInformation, Keyword, LvrIndexDocument, Media, Relation } from '../model/index.document';
+import { GeometryInformation, Keyword, LvrIndexDocument, Media, Person, Relation, Temporal } from '../model/index.document';
 import { GeometryObject, Point } from '@turf/helpers';
 import { IndexDocumentFactory } from '../../../model/index.document.factory';
 import { IngridIndexDocument, Spatial } from '../../../model/ingrid.index.document';
@@ -55,10 +55,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiMetsMapper | KldMap
             temporal: {
                 modified: this.getModified(),
                 issued: this.getIssued(),
-                data_temporal: {
-                    date_range: this.getNullForTemporal(this.getTemporal()),
-                    date_type: null
-                }
+                data_temporal: this.getNullForTemporal(this.getTemporal()?.[0])
             },
             keywords: this.getKeywords()?.map(keyword => ({
                 id: first(keyword.id),
@@ -82,9 +79,10 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiMetsMapper | KldMap
                 // spatial: this.getSpatial(),
                 // temporal: this.getNullForTemporal(this.getTemporal()),
                 // keywords: this.getKeywords(),
-                relation: this.getRelations(),
+                relations: this.getRelations(),
                 media: this.getMedia(),
-                license: this.getLicense(),
+                persons: this.getPersons(),
+                licenses: this.getLicense(),
                 vector: this.getVector(),
             },
             extras: {
@@ -113,9 +111,9 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiMetsMapper | KldMap
         return this.getIdentifier().replace(/\//g, '-');
     }
 
-    private getNullForTemporal(temporal: DateRange) {
-        if (!temporal?.gte && !temporal?.lte) {
-            return null;
+    private getNullForTemporal(temporal: Temporal) {
+        if (!temporal?.date_range?.gte && !temporal?.date_range?.lte) {
+            return { ...temporal, date_range: null };
         }
         return temporal;
     }
@@ -140,13 +138,15 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiMetsMapper | KldMap
 
     abstract getSpatial(): GeometryInformation[];
 
-    abstract getTemporal(): DateRange;
+    abstract getTemporal(): Temporal[];
 
     abstract getKeywords(): Keyword[];
 
     abstract getRelations(): Relation[];
 
     abstract getMedia(): Media[];
+
+    abstract getPersons(): Person[];
 
     abstract getLicense(): License[];
 
