@@ -32,12 +32,12 @@ import { IngridIndexDocument, Spatial } from '../../../model/ingrid.index.docume
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
 import { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper';
-import { OaiMapper as OaiMetsMapper } from '../../../importer/oai/mets/oai.mapper';
+import { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mapper';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
 
-export abstract class LvrMapper<M extends OaiLidoMapper | OaiMetsMapper | KldMapper> implements IndexDocumentFactory<LvrIndexDocument> {
+export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMapper> implements IndexDocumentFactory<LvrIndexDocument> {
 
     protected baseMapper: M;
 

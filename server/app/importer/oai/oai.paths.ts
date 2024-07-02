@@ -52,7 +52,7 @@ const mods: OaiXPaths = {
     },
     nsPrefix: namespaces.MODS,
     mdRoot: 'mods',
-    idElem: './mods:identifier'
+    idElem: './mods:identifier[@type="citekey"]'
 };
 
 export const oaiXPaths: { [key: string]: OaiXPaths } = {

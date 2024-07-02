@@ -21,23 +21,25 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { defaultOAISettings, OaiSettings } from '../oai.settings';
+import * as xpath from 'xpath';
+import * as MiscUtils from '../../utils/misc.utils';
+import { defaultOAISettings, OaiSettings } from './oai.settings';
 import { getLogger } from 'log4js';
-import { oaiXPaths, OaiXPaths } from '../oai.paths';
-import { ConfigService } from '../../../services/config/ConfigService';
+import { oaiXPaths, OaiXPaths } from './oai.paths';
+import { ConfigService } from '../../services/config/ConfigService';
 import { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../../importer';
-import { ImportLogMessage, ImportResult } from '../../../model/import.result';
-import { IndexDocument } from '../../../model/index.document';
-import { MailServer } from '../../../utils/nodemailer.utils';
-import { OaiMapper } from './oai.mapper';
+import { Importer } from '../importer';
+import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import { IndexDocument } from '../../model/index.document';
+import { MailServer } from '../../utils/nodemailer.utils';
+// import { OaiMapper } from './iso19139/oai.mapper';
 import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../../model/entity';
-import { RequestDelegate, RequestOptions } from '../../../utils/http-request.utils';
-import { Summary } from '../../../model/summary';
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RecordEntity } from '../../model/entity';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
+import { Summary } from '../../model/summary';
+import { BaseMapper } from '../../importer/base.mapper';
 
 const log = require('log4js').getLogger(__filename),
     logRequest = getLogger('requests');
@@ -45,13 +47,15 @@ const log = require('log4js').getLogger(__filename),
 export class OaiImporter extends Importer {
 
     protected domParser: DOMParser;
-    private profile: ProfileFactory<OaiMapper>;
+    private profile: ProfileFactory<BaseMapper>;
     private readonly settings: OaiSettings;
     private requestDelegate: RequestDelegate;
     private xpaths: OaiXPaths;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
+
+    private readonly OaiMapper;
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings);
@@ -64,12 +68,14 @@ export class OaiImporter extends Importer {
 
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
-        } else {
+        }
+        else {
             let requestConfig = OaiImporter.createRequestConfig(settings);
             this.requestDelegate = new RequestDelegate(requestConfig);
         }
         this.settings = settings;
         this.xpaths = oaiXPaths[this.settings.metadataPrefix?.toLowerCase()];
+        this.OaiMapper = require(`./${this.settings.metadataPrefix}/oai.mapper`).OaiMapper;
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -170,7 +176,7 @@ export class OaiImporter extends Importer {
             this.summary.numDocs++;
             let header = records[i].getElementsByTagName('header').item(0);
             let record = records[i].getElementsByTagNameNS(this.xpaths.nsPrefix, this.xpaths.mdRoot).item(0);
-            const uuid = OaiMapper.select(this.xpaths.idElem, record, true)?.textContent;
+            const uuid = (xpath.useNamespaces(this.xpaths.prefixMap)(this.xpaths.idElem, record, true) as Node)?.textContent;
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;
@@ -213,8 +219,8 @@ export class OaiImporter extends Importer {
         await Promise.allSettled(promises).catch(err => log.error('Error indexing OAI record', err));
     }
 
-    getMapper(settings, header, record, harvestTime, summary): OaiMapper {
-        return new OaiMapper(settings, header, record, harvestTime, summary);
+    getMapper(settings, header, record, harvestTime, summary) {
+        return new this.OaiMapper(settings, header, record, harvestTime, summary);
     }
 
     static createRequestConfig(settings: OaiSettings, resumptionToken?: string): RequestOptions {

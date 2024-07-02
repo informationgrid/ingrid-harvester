@@ -27,12 +27,12 @@ import { DateRange } from '../../../model/dateRange';
 import { GeometryInformation, Keyword, Relation, Media, Person, Temporal } from '../model/index.document';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
-import { OaiMapper } from '../../../importer/oai/mets/oai.mapper';
+import { OaiMapper } from '../../../importer/oai/mods/oai.mapper';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
 
-export class LvrOaiMetsMapper extends LvrMapper<OaiMapper> {
+export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {
 
     constructor(baseMapper: OaiMapper) {
         super(baseMapper);

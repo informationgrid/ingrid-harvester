@@ -28,7 +28,7 @@ import { ImporterFactory } from '../../../importer/importer.factory';
 import { Harvester } from '@shared/harvester';
 import { McloudCkanImporter } from './mcloud.ckan.importer';
 import { McloudCswImporter } from './mcloud.csw.importer';
-import { OaiImporter } from '../../../importer/oai/iso19139/oai.importer';
+import { OaiImporter } from '../../../importer/oai/oai.importer';
 import { SparqlImporter } from '../../../importer/sparql/sparql.importer';
 
 const log = require('log4js').getLogger(__filename);

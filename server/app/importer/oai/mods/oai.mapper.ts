@@ -107,7 +107,7 @@ export class OaiMapper extends BaseMapper {
         return {
             source_base: this.settings.providerUrl,
             raw_data_source: link,
-            source_type: 'mets'
+            source_type: 'mods'
         };
     }
 
