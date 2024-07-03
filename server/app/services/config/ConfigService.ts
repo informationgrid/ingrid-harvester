@@ -76,14 +76,14 @@ export class ConfigService {
             password: process.env.ELASTIC_PASSWORD ?? "elastic",
             rejectUnauthorized: parseBooleanOrUndefined(process.env.ELASTIC_REJECT_UNAUTHORIZED) ?? true,
             index: process.env.ELASTIC_INDEX ?? "harvester-index",
-            alias: process.env.ELASTIC_ALIAS ?? "mcloud",
+            alias: process.env.ELASTIC_ALIAS ?? "harvester",
             prefix: process.env.ELASTIC_PREFIX ?? '',
             numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS) ?? 1,
             numberOfReplicas: parseIntOrUndefined(process.env.ELASTIC_NUM_REPLICAS) ?? 0
         },
         proxy: process.env.PROXY_URL || null,
         allowAllUnauthorizedSSL: parseBooleanOrUndefined(process.env.ALLOW_ALL_UNAUTHORIZED) ?? false,
-        portalUrl: process.env.PORTAL_URL ?? "https://mcloud.de/",
+        portalUrl: process.env.PORTAL_URL,
         urlCheck:{
             active: false,
             pattern: ''

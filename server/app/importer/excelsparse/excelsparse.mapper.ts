@@ -163,8 +163,7 @@ export class ExcelSparseMapper extends BaseMapper {
     getMetadataSource(): MetadataSource {
         return {
             source_base: this.settings.filePath,
-            source_type: 'excelsparse',
-            attribution: 'mcloud-excel'
+            source_type: 'excelsparse'
         };
     }
 

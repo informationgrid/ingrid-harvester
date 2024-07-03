@@ -23,6 +23,7 @@
 
 import * as nodemailer from 'nodemailer';
 import { ConfigService } from '../services/config/ConfigService';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -49,18 +50,19 @@ export class MailServer {
         return new MailServer();
     }
 
-    send(subject: string, text: string
-    ) {
+    send(subject: string, text: string) {
         let generalSettings = ConfigService.getGeneralSettings();
         if (generalSettings.mail && generalSettings.mail.enabled && generalSettings.mail.from && generalSettings.mail.to) {
-            let tag = '[mcloud] '
-            if(generalSettings.mail.subjectTag) tag = '['+generalSettings.mail.subjectTag+'] ';
+            let tag = `[${ProfileFactoryLoader.get().getProfileName()}] `;
+            if (generalSettings.mail.subjectTag) {
+                tag = `[${generalSettings.mail.subjectTag}] `;
+            }
             let mail: Mail = {
                 from: generalSettings.mail.from,
                 to: generalSettings.mail.to,
                 subject: tag + subject,
                 text: text
-            }
+            };
             this.sendMail(mail).catch(log.error);
         }
     }

@@ -21,12 +21,12 @@
  * ==================================================
  */
 
+import { ingridFactory } from './ingrid/profile.factory';
 import { mcloudFactory } from './mcloud/profile.factory';
 import { BaseMapper } from '../importer/base.mapper';
 import { DiplanungFactory } from './diplanung/profile.factory';
 import { LvrFactory } from './lvr/profile.factory';
 import { ProfileFactory } from './profile.factory';
-import {ingridFactory} from "./ingrid/profile.factory";
 
 const log = require('log4js').getLogger(__filename);
 
