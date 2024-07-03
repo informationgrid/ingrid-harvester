@@ -85,7 +85,7 @@ export class DcatappluImporter extends Importer {
                 if (this.numIndexDocs > 0 || this.summary.isIncremental) {
                     if (this.summary.databaseErrors.length == 0) {
                         await this.database.commitTransaction();
-                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.catalogUrl);
+                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
                     }
                     else {
                         await this.database.rollbackTransaction();
@@ -150,7 +150,7 @@ export class DcatappluImporter extends Importer {
             //         this.requestDelegate.updateConfig({qs: {page: nextPage}});
             //     }
 
-            //     log.debug(`Received ${numReturned} records from ${this.settings.catalogUrl} - Page: ${thisPage}`);
+            //     log.debug(`Received ${numReturned} records from ${this.settings.sourceURL} - Page: ${thisPage}`);
                 await this.extractRecords(response, harvestTime);
             // }
             // else {
@@ -261,7 +261,7 @@ export class DcatappluImporter extends Importer {
                 if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                     let entity: RecordEntity = {
                         identifier: uuid,
-                        source: this.settings.catalogUrl,
+                        source: this.settings.sourceURL,
                         collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
@@ -283,7 +283,7 @@ export class DcatappluImporter extends Importer {
     static createRequestConfig(settings: DcatappluSettings): RequestOptions {
         let requestConfig: RequestOptions = {
             method: "GET",
-            uri: settings.catalogUrl,
+            uri: settings.sourceURL,
             json: true,
             proxy: settings.proxy || null,
             rejectUnauthorized: settings.rejectUnauthorizedSSL,

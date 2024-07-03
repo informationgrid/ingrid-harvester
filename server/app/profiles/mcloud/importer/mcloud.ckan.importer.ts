@@ -140,7 +140,7 @@ export class McloudCkanImporter extends CkanImporter {
                 }
                 let entity: RecordEntity = {
                     identifier: doc.extras.generated_id,
-                    source: this.settings.ckanBaseUrl,
+                    source: this.settings.sourceURL,
                     collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: doc.extras.harvested_data

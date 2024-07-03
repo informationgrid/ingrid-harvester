@@ -99,7 +99,7 @@ export class OaiImporter extends Importer {
                 // TODO introduce settings to:
                 // - send a mail
                 // - fail or continue
-                let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.providerUrl, transactionTimestamp);
+                let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.sourceURL, transactionTimestamp);
                 if (nonFetchedPercentage > ConfigService.getGeneralSettings().harvesting.maxDifference) {
                     throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
                 }
@@ -108,9 +108,9 @@ export class OaiImporter extends Importer {
                     throw new Error();
                 }
 
-                await this.database.deleteNonFetchedDatasets(this.settings.providerUrl, transactionTimestamp);
+                await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
                 await this.database.commitTransaction();
-                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.providerUrl);
+                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
                 observer.next(ImportResult.complete(this.summary));
             }
             catch (err) {
@@ -141,7 +141,7 @@ export class OaiImporter extends Importer {
                 }
 
                 let numReturned = resultsNode.getElementsByTagName('record').length;
-                log.debug(`Received ${numReturned} records from ${this.settings.providerUrl}`);
+                log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
                 await this.extractRecords(response, harvestTime);
 
                 let resumptionTokenNode = resultsNode.getElementsByTagName('resumptionToken')[0];
@@ -204,7 +204,7 @@ export class OaiImporter extends Importer {
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.settings.providerUrl,
+                    source: this.settings.sourceURL,
                     collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
@@ -226,7 +226,7 @@ export class OaiImporter extends Importer {
     static createRequestConfig(settings: OaiSettings, resumptionToken?: string): RequestOptions {
         let requestConfig: RequestOptions = {
             method: "GET",
-            uri: settings.providerUrl,
+            uri: settings.sourceURL,
             json: false,
             headers: RequestDelegate.cswRequestHeaders(),
             proxy: settings.proxy || null,

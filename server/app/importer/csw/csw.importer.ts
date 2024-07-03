@@ -147,7 +147,7 @@ export class CswImporter extends Importer {
 
                     if (this.summary.databaseErrors.length == 0) {
                         await this.database.commitTransaction();
-                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getRecordsUrl);
+                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
                     }
                     else {
                         await this.database.rollbackTransaction();
@@ -208,7 +208,7 @@ export class CswImporter extends Importer {
     }
 
     async harvestServices(): Promise<void> {
-        let datasetIds = await this.database.getDatasetIdentifiers(this.settings.getRecordsUrl);
+        let datasetIds = await this.database.getDatasetIdentifiers(this.settings.sourceURL);
         let numChunks = Math.ceil(datasetIds.length / this.settings.maxServices);
         log.info(`Requesting services for ${datasetIds.length} datasets in ${numChunks} chunks`);
         // 1) create paged request delegates
@@ -238,7 +238,7 @@ export class CswImporter extends Importer {
     async coupleSelf(resolveOgcDistributions: boolean) {
         log.info(`Started self-coupling`);
         // get all datasets
-        let recordEntities: RecordEntity[] = await this.database.getDatasets(this.settings.getRecordsUrl) ?? [];
+        let recordEntities: RecordEntity[] = await this.database.getDatasets(this.settings.sourceURL) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
@@ -252,7 +252,7 @@ export class CswImporter extends Importer {
     async coupleDatasetsServices(resolveOgcDistributions: boolean) {
         log.info(`Started dataset-service coupling`);
         // get all services
-        let serviceEntities: RecordEntity[] = await this.database.getServices(this.settings.getRecordsUrl) ?? [];
+        let serviceEntities: RecordEntity[] = await this.database.getServices(this.settings.sourceURL) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
@@ -386,7 +386,7 @@ export class CswImporter extends Importer {
         let resultsNode = responseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
         if (resultsNode) {
             let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
-            log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
+            log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
             let importedDocuments = await this.extractRecords(response, harvestTime);
             await this.updateRecords(importedDocuments, this.generalInfo['catalog'].id);
             let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
@@ -441,7 +441,7 @@ export class CswImporter extends Importer {
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.settings.getRecordsUrl,
+                    source: this.settings.sourceURL,
                     collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
@@ -480,7 +480,7 @@ export class CswImporter extends Importer {
     static createRequestConfig(settings: CswSettings, request = 'GetRecords'): RequestOptions {
         let requestConfig: RequestOptions = {
             method: settings.httpMethod || "GET",
-            uri: settings.getRecordsUrl,
+            uri: settings.sourceURL,
             json: false,
             headers: RequestDelegate.cswRequestHeaders(),
             proxy: settings.proxy || null,

@@ -40,7 +40,7 @@ export class DcatappluHarvesterComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    this.form.addControl('catalogUrl', new UntypedFormControl(this.getModelField('catalogUrl', '')));
+    this.form.addControl('sourceURL', new UntypedFormControl(this.getModelField('sourceURL', '')));
   }
 
   private getModelField(field: string, defaultValue: any) {

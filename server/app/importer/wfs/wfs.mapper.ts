@@ -112,9 +112,9 @@ export abstract class WfsMapper extends BaseMapper {
 
     // TODO:check
     getMetadataSource(): MetadataSource {
-        let wfsLink = `${this.settings.getFeaturesUrl}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&outputFormat=application/xml&featureId=${this.uuid}`;
+        let wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&outputFormat=application/xml&featureId=${this.uuid}`;
         return {
-            source_base: this.settings.getFeaturesUrl,
+            source_base: this.settings.sourceURL,
             raw_data_source: wfsLink,
             source_type: 'wfs',
             portal_link: this.settings.defaultAttributionLink,

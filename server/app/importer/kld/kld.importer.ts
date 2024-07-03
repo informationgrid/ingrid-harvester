@@ -114,7 +114,7 @@ export class KldImporter extends Importer {
                 // TODO introduce settings to:
                 // - send a mail
                 // - fail or continue
-                let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.providerUrl, transactionTimestamp);
+                let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.sourceURL, transactionTimestamp);
                 if (nonFetchedPercentage > ConfigService.getGeneralSettings().harvesting.maxDifference) {
                     throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
                 }
@@ -123,9 +123,9 @@ export class KldImporter extends Importer {
                     throw new Error();
                 }
 
-                await this.database.deleteNonFetchedDatasets(this.settings.providerUrl, transactionTimestamp);
+                await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
                 await this.database.commitTransaction();
-                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.providerUrl);
+                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
                 observer.next(ImportResult.complete(this.summary));
             }
             catch (err) {
@@ -350,7 +350,7 @@ export class KldImporter extends Importer {
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: id,
-                    source: this.settings.providerUrl,
+                    source: this.settings.sourceURL,
                     collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
@@ -372,7 +372,7 @@ export class KldImporter extends Importer {
     private static createRequestConfig(settings: KldSettings, operation: string, params?: Record<string, any>): RequestOptions {
         const requestConfig: RequestOptions = {
             method: 'GET',
-            uri: settings.providerUrl + operation,
+            uri: settings.sourceURL + operation,
             json: true,
             headers: RequestDelegate.defaultRequestHeaders(),
             proxy: settings.proxy || null,

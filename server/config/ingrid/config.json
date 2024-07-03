@@ -20,7 +20,7 @@
     "maxConcurrent": 6,
     "skipUrlCheckOnHarvest": false,
     "timeout": 60000,
-    "getRecordsUrl": "https://gdk.gdi-de.org/gdi-de/srv/ger/csw",
+    "sourceURL": "https://gdk.gdi-de.org/gdi-de/srv/ger/csw",
     "maxServices": 30,
     "resolveOgcDistributions": true,
     "harvestingMode": "standard",

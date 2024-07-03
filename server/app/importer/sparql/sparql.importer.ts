@@ -56,7 +56,7 @@ export class SparqlImporter extends Importer {
 
     static defaultSettings: SparqlSettings = {
         ...DefaultImporterSettings,
-        endpointUrl: '',
+        sourceURL: '',
         query: '',
         filterTags: [],
         filterThemes: []
@@ -94,7 +94,7 @@ export class SparqlImporter extends Importer {
 
                 if(this.numIndexDocs > 0) {
                     await this.database.commitTransaction();
-                    await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.endpointUrl);
+                    await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
                     // await this.elastic.finishIndex();
                     observer.next(ImportResult.complete(this.summary));
                     observer.complete();
@@ -127,7 +127,7 @@ export class SparqlImporter extends Importer {
 
         let response = "";
 
-        const endpointUrl = this.settings.endpointUrl;
+        const endpointUrl = this.settings.sourceURL;
 
         let fetch = plain_fetch;
 
@@ -223,7 +223,7 @@ export class SparqlImporter extends Importer {
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.settings.endpointUrl,
+                    source: this.settings.sourceURL,
                     collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()

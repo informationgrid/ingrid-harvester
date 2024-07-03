@@ -118,7 +118,7 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
 
 
         // TODO hack for MROK presentation, remove again and improve/refine the if-cascade below
-        if (this.baseMapper.settings.getRecordsUrl == 'https://numis.niedersachsen.de/202/csw') {
+        if (this.baseMapper.settings.sourceURL == 'https://numis.niedersachsen.de/202/csw') {
             return PluPlanType.RAUM_ORDN_PLAN;
         }
 

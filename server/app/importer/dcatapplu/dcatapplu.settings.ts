@@ -24,10 +24,7 @@
 import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
 
 export const defaultDCATAPPLUSettings: DcatappluSettings = {
-    ...DefaultImporterSettings,
-    catalogUrl: ''
+    ...DefaultImporterSettings
 };
 
-export type DcatappluSettings = {
-    catalogUrl: string
-} & ImporterSettings;
+export type DcatappluSettings = ImporterSettings;

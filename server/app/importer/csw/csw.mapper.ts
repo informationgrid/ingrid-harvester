@@ -489,7 +489,7 @@ export class CswMapper extends BaseMapper {
         }, false);
         if (!valid) {
             // Don't index metadata-sets without any of the mandatory keywords
-            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.getRecordsUrl}'.`);
+            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.sourceURL}'.`);
             this.skipped = true;
         }
 
@@ -506,9 +506,9 @@ export class CswMapper extends BaseMapper {
 
     getMetadataSource(): MetadataSource {
         let gmdEncoded = encodeURIComponent(namespaces.GMD);
-        let cswLink = `${this.settings.getRecordsUrl}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
+        let cswLink = `${this.settings.sourceURL}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
         return {
-            source_base: this.settings.getRecordsUrl,
+            source_base: this.settings.sourceURL,
             raw_data_source: cswLink,
             source_type: 'csw',
             portal_link: this.settings.defaultAttributionLink,
@@ -892,7 +892,7 @@ export class CswMapper extends BaseMapper {
     }
 
     getErrorSuffix(uuid, title) {
-        return `Id: '${uuid}', title: '${title}', source: '${this.settings.getRecordsUrl}'.`;
+        return `Id: '${uuid}', title: '${title}', source: '${this.settings.sourceURL}'.`;
     }
 
     getHarvestedData(): string {

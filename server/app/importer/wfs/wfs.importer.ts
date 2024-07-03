@@ -97,7 +97,7 @@ export abstract class WfsImporter extends Importer {
                 if(this.numIndexDocs > 0) {
                     if (this.summary.databaseErrors.length == 0) {
                         await this.database.commitTransaction();
-                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getFeaturesUrl);
+                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
                     }
                     else {
                         await this.database.rollbackTransaction();
@@ -260,7 +260,7 @@ export abstract class WfsImporter extends Importer {
         let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
         let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
         this.totalFeatures = parseInt(hitsResultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
-        log.info(`Found ${this.totalFeatures} features at ${this.settings.getFeaturesUrl}`);
+        log.info(`Found ${this.totalFeatures} features at ${this.settings.sourceURL}`);
 
         while (true) {
             log.info('Requesting next features');
@@ -348,7 +348,7 @@ export abstract class WfsImporter extends Importer {
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.settings.getFeaturesUrl,
+                    source: this.settings.sourceURL,
                     collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
@@ -367,7 +367,7 @@ export abstract class WfsImporter extends Importer {
     static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
         let requestConfig: RequestOptions = {
             method: settings.httpMethod || "GET",
-            uri: settings.getFeaturesUrl,
+            uri: settings.sourceURL,
             json: false,
             headers: RequestDelegate.wfsRequestHeaders(),
             proxy: settings.proxy || null,

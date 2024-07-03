@@ -24,8 +24,6 @@
 import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
 
 export type KldSettings = {
-  // base url of KuLaDig API
-  providerUrl: string,
   // time in milliseconds to wait for the next set of concurrent API requests defined in the maxConcurrent setting
   // NOTE a higher number will result in higher throttling of the request rate
   maxConcurrentTimespan: number,
@@ -33,6 +31,5 @@ export type KldSettings = {
 
 export const defaultKldSettings: Partial<KldSettings> = {
     ...DefaultImporterSettings,
-    providerUrl: '',
     maxConcurrentTimespan: 100,
   };

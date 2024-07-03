@@ -49,7 +49,7 @@ export class CkanImporter extends Importer {
 
     /**
      * Create the importer and initialize with settings.
-     * @param { {ckanBaseUrl, defaultMcloudSubgroup, mapper} }settings
+     * @param { {sourceURL, defaultMcloudSubgroup, mapper} }settings
      */
     constructor(settings) {
         super(settings);
@@ -60,9 +60,9 @@ export class CkanImporter extends Importer {
         settings = MiscUtils.merge(defaultCKANSettings, settings);
 
         // Trim trailing slash
-        let url = settings.ckanBaseUrl;
+        let url = settings.sourceURL;
         if (url.charAt(url.length - 1) === '/') {
-            settings.ckanBaseUrl = url.substring(0, url.length - 1);
+            settings.sourceURL = url.substring(0, url.length - 1);
         }
         this.settings = settings;
 
@@ -82,7 +82,7 @@ export class CkanImporter extends Importer {
     async importDataset(data: CkanMapperData) {
 
         try {
-            log.debug('Processing CKAN dataset: ' + data.source.name + ' from data-source: ' + this.settings.ckanBaseUrl);
+            log.debug('Processing CKAN dataset: ' + data.source.name + ' from data-source: ' + this.settings.sourceURL);
 
             // Execute the mappers
             let mapper = new CkanMapper(this.settings, data);
@@ -118,7 +118,7 @@ export class CkanImporter extends Importer {
         if (!this.settings.dryRun) {
             let entity: RecordEntity = {
                 identifier: sourceID,
-                source: this.settings.ckanBaseUrl,
+                source: this.settings.sourceURL,
                 collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                 dataset: doc,
                 original_document: harvestedData
@@ -145,7 +145,7 @@ export class CkanImporter extends Importer {
             const total = await this.fetchFilterAndIndexDocuments(promises);
 
             if (total === 0) {
-                let warnMessage = `Could not harvest any datasets from ${this.settings.ckanBaseUrl}`;
+                let warnMessage = `Could not harvest any datasets from ${this.settings.sourceURL}`;
                 await this.handleImportError(warnMessage, observer);
             } else {
                 // return this.finishImport(promises, observer);
@@ -194,7 +194,7 @@ export class CkanImporter extends Importer {
                 break;
             }
 
-            log.info(`Received ${results.length} records from ${this.settings.ckanBaseUrl}`);
+            log.info(`Received ${results.length} records from ${this.settings.sourceURL}`);
             total += results.length;
 
             let filteredResults = this.filterDatasets(results);

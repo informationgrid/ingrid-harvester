@@ -40,7 +40,7 @@ export class CkanHarvesterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.form.addControl('ckanBaseUrl', new UntypedFormControl(this.getModelField('ckanBaseUrl', ''), Validators.required));
+    this.form.addControl('sourceURL', new UntypedFormControl(this.getModelField('sourceURL', ''), Validators.required));
     this.form.addControl('markdownAsDescription', new UntypedFormControl(this.getModelField('markdownAsDescription', false)));
     this.form.addControl('defaultLicense', new UntypedFormGroup({
         id: new UntypedFormControl(this.getModelField('defaultLicense.id', '')),

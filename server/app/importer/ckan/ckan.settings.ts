@@ -29,7 +29,6 @@ export type ProviderField = 'maintainer' | 'organization' | 'author';
 
 export const defaultCKANSettings: CkanSettings = {
     ...DefaultImporterSettings,
-    ckanBaseUrl: '',
     filterTags: [],
     filterGroups: [],
     providerPrefix: '',
@@ -42,7 +41,6 @@ export const defaultCKANSettings: CkanSettings = {
 };
 
 export type CkanSettings = {
-    ckanBaseUrl: string,
     filterTags?: string[],
     filterGroups?: string[],
     providerPrefix?: string,
