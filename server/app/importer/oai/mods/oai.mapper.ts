@@ -165,19 +165,20 @@ export class OaiMapper extends BaseMapper {
 
     getGenres(): string[] {
         let genreNodes = this.select('./mods:genre');
-        return Array.from(new Set(genreNodes.map(node => node.textContent)));
+        let genres = genreNodes.map(node => node.textContent).filter(genre => genre);
+        return Array.from(new Set(genres));
     }
 
     getNames(): Person[] {
         let personNodes: Element[] = this.select('./mods:name');
         let persons = personNodes.map(node => ({
             // type: OaiMapper.attr('./http://www.openarchives.org/OAI/2.0/:type', node),
-            type: OaiMapper.select('./@type', node, true)?.textContent,
+            type: node.getAttribute('type'),//OaiMapper.select('./@type', node, true)?.textContent,
             // role: OaiMapper.text('./role/roleTerm[type="text"]', node),
             role: OaiMapper.select('./mods:role/mods:roleTerm[@type="code"]', node, true)?.textContent,
             name: {
-                first: OaiMapper.select('./namePart[@type="given"]', node)?.map(n => n.textContent).join(' '),
-                last: OaiMapper.select('./namePart[@type="family"]', node)?.map(n => n.textContent).join(' '),
+                first: OaiMapper.select('./mods:namePart[@type="given"]', node)?.map(n => n.textContent).join(' '),
+                last: OaiMapper.select('./mods:namePart[@type="family"]', node)?.map(n => n.textContent).join(' '),
                 display: OaiMapper.text('./displayForm', node),
             }
         }));
