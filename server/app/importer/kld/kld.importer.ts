@@ -115,7 +115,7 @@ export class KldImporter extends Importer {
                 // - send a mail
                 // - fail or continue
                 let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.providerUrl, transactionTimestamp);
-                if (nonFetchedPercentage > ConfigService.getGeneralSettings().maxDiff) {
+                if (nonFetchedPercentage > ConfigService.getGeneralSettings().harvesting.maxDifference) {
                     throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
                 }
                 // did fatal errors occur (ie DB or APP errors)?

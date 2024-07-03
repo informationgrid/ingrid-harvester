@@ -113,7 +113,9 @@ export class ConfigService {
             cronPattern: "",
             dir: ""
         },
-        maxDiff: 10
+        harvesting: {
+            maxDifference: 10
+        }
     };
     private static ignoreCaseSort = (a: string, b: string) => {
         return a.toLowerCase().localeCompare(b.toLowerCase());

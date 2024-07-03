@@ -46,7 +46,9 @@ export type GeneralSettings = {
         cronPattern?: string,
         dir?: string
     },
-    maxDiff?: number
+    harvesting: {
+        maxDifference?: number
+    }
 };
 
 export interface ElasticsearchConfiguration {
