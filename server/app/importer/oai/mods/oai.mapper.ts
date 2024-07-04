@@ -78,39 +78,6 @@ export class OaiMapper extends BaseMapper {
     getId(): string {
         return this.record.getAttribute('ID');
     }
-    
-    getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
-    }
-
-    getHarvestedData(): string {
-        return this.record.toString();
-    }
-
-    getHarvestingDate(): Date {
-        return new Date(Date.now());
-    }
-
-    getIssued(): Date {
-        return null;
-    }
-
-    getModified(): Date {
-        return MiscUtils.normalizeDateTime(OaiMapper.select('./*[local-name()="datestamp"]', this.header, true)?.textContent);
-    }
-
-    getMetadataSource(): MetadataSource {
-        let link = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=${this.settings.metadataPrefix}&identifier=oai:www.mycore.de:${this.getId()}`;
-        return {
-            source_base: this.settings.providerUrl,
-            raw_data_source: link,
-            source_type: 'mods'
-        };
-    }
 
     getTitles() {
         let titleNodes: Element[] = this.select('./mods:titleInfo/mods:title[string-length() > 0]');
@@ -203,5 +170,39 @@ export class OaiMapper extends BaseMapper {
             url: node.getAttribute('href')
         }));
         return licenses;
+    }
+
+    getSettings(): ImporterSettings {
+        return this.settings;
+    }
+
+    getSummary(): Summary {
+        return this.summary;
+    }
+
+    getHarvestedData(): string {
+        return this.record.toString();
+    }
+
+    getHarvestingDate(): Date {
+        return new Date(Date.now());
+    }
+
+    // TODO
+    getIssued(): Date {
+        return null;
+    }
+
+    getModified(): Date {
+        return MiscUtils.normalizeDateTime(OaiMapper.select('./*[local-name()="datestamp"]', this.header, true)?.textContent);
+    }
+
+    getMetadataSource(): MetadataSource {
+        let link = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=${this.settings.metadataPrefix}&identifier=oai:www.mycore.de:${this.getId()}`;
+        return {
+            source_base: this.settings.providerUrl,
+            raw_data_source: link,
+            source_type: this.settings.metadataPrefix
+        };
     }
 }
