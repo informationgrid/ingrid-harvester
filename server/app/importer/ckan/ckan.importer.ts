@@ -133,62 +133,27 @@ export class CkanImporter extends Importer {
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
-        let promises = [];
-
         try {
-            // await this.prepareIndex();
-
             // get total number of documents
             let countJson = await this.requestDelegateCount.doRequest();
             this.totalCount = countJson.result.length;
-
-            const total = await this.fetchFilterAndIndexDocuments(promises);
-
-            if (total === 0) {
-                let warnMessage = `Could not harvest any datasets from ${this.settings.sourceURL}`;
-                await this.handleImportError(warnMessage, observer);
-            } else {
-                // return this.finishImport(promises, observer);
-            }
-
-        } catch (err) {
+            await super.exec(observer);
+        }
+        catch (err) {
             await this.handleImportError(err.message, observer);
         }
-    }
-
-    // TODO move implementation from exec() to harvest() so that super.exec can be used
-    protected async harvest(): Promise<number> {
-        return null;
     }
 
     private async handleImportError(message, observer: Observer<ImportLogMessage>) {
         log.error('error:', message);
         this.summary.appErrors.push(message);
         this.sendFinishMessage(observer, message);
-
-        // clean up index
-        // await this.elastic.deleteIndex(this.elastic.indexName)
-        //     .catch(e => log.error(e.message));
     }
 
-    private finishImport(promises: any[], observer: Observer<ImportLogMessage>) {
-        return Promise.all(promises)
-            .then(() => this.postIndexActions())
-            .then(() => this.sendFinishMessage(observer))
-            .catch(err => log.error('Error indexing data', err));
-    }
-
-    private async prepareIndex() {
-        if (this.settings.dryRun) {
-            log.debug('Dry run option enabled. Skipping index creation.');
-        } else {
-            await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
-        }
-    }
-
-    private async fetchFilterAndIndexDocuments(promises: any[]) {
+    protected async harvest(): Promise<number> {
         let total = 0;
         let offset = this.settings.startPosition;
+        let promises = [];
 
         while (true) {
             let now = new Date();
