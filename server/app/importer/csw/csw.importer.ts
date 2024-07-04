@@ -49,8 +49,7 @@ export class CswImporter extends Importer {
 
     protected domParser: DOMParser;
     protected profile: ProfileFactory<CswMapper>;
-    protected readonly settings: CswSettings;
-    private readonly requestDelegate: RequestDelegate;
+    protected settings: CswSettings;
 
     // ServiceType#GetCapabilitiesURL -> { DatasetUUID -> typenames[] }
     private wfsFeatureTypeMap = new Map<string, { [key: string]: string[] }>();
@@ -84,12 +83,6 @@ export class CswImporter extends Importer {
                 log.warn(`Changing type of harvest to "full" because no previous harvest was found for harvester with id ${settings.id}`);
                 settings.isIncremental = false;
             }
-        }
-        if (requestDelegate) {
-            this.requestDelegate = requestDelegate;
-        } else {
-            let requestConfig = CswImporter.createRequestConfig(settings);
-            this.requestDelegate = new RequestDelegate(requestConfig, CswImporter.createPaging(settings));
         }
         this.settings = settings;
     }

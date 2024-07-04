@@ -46,15 +46,15 @@ import { Response } from 'node-fetch';
 import { WfsMapper } from './wfs.mapper';
 import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils';
 
-const log = getLogger(__filename),
-    logRequest = getLogger('requests');
+const log = getLogger(__filename);
+const logRequest = getLogger('requests');
 
 export abstract class WfsImporter extends Importer {
 
     protected domParser: DOMParser;
-    private profile: ProfileFactory<WfsMapper>;
-    private readonly settings: WfsSettings;
-    private readonly requestDelegate: RequestDelegate;
+    protected profile: ProfileFactory<WfsMapper>;
+    protected requestDelegate: RequestDelegate;
+    protected settings: WfsSettings;
 
     private totalFeatures = 0;
     private numIndexDocs = 0;

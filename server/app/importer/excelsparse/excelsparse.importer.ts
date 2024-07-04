@@ -37,8 +37,10 @@ import { Workbook, Worksheet } from 'exceljs';
 const log = require('log4js').getLogger(__filename);
 
 export class ExcelSparseImporter extends Importer {
-    private profile: ProfileFactory<ExcelSparseMapper>;
-    settings: ExcelSparseSettings;
+
+    protected profile: ProfileFactory<ExcelSparseMapper>;
+    protected settings: ExcelSparseSettings;
+
     excelFilepath: string;
     names = {};
     columnMap: Columns;

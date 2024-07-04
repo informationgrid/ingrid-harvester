@@ -38,10 +38,10 @@ import { Summary } from '../../model/summary';
 const log = require('log4js').getLogger(__filename);
 
 export class CkanImporter extends Importer {
-    private profile: ProfileFactory<CkanMapper>;
-    protected readonly settings: CkanSettings;
 
-    private requestDelegate: RequestDelegate;
+    protected profile: ProfileFactory<CkanMapper>;
+    protected requestDelegate: RequestDelegate;
+    protected settings: CkanSettings;
 
     protected numIndexDocs = 0;
     private requestDelegateCount: RequestDelegate;

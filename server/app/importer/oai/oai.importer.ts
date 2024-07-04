@@ -41,15 +41,16 @@ import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils'
 import { Summary } from '../../model/summary';
 import { BaseMapper } from '../../importer/base.mapper';
 
-const log = require('log4js').getLogger(__filename),
-    logRequest = getLogger('requests');
+const log = require('log4js').getLogger(__filename);
+const logRequest = getLogger('requests');
 
 export class OaiImporter extends Importer {
 
     protected domParser: DOMParser;
-    private profile: ProfileFactory<BaseMapper>;
-    private readonly settings: OaiSettings;
-    private requestDelegate: RequestDelegate;
+    protected profile: ProfileFactory<BaseMapper>;
+    protected requestDelegate: RequestDelegate;
+    protected settings: OaiSettings;
+
     private xpaths: OaiXPaths;
 
     private totalRecords = 0;

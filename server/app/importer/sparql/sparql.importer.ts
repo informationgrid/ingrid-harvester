@@ -38,16 +38,15 @@ import { SparqlMapper } from './sparql.mapper';
 import { SparqlSettings } from './sparql.settings';
 import { Summary } from '../../model/summary';
 
+const log = require('log4js').getLogger(__filename);
+const logRequest = getLogger('requests');
 const plain_fetch = require('node-fetch');
-
-const log = require('log4js').getLogger(__filename),
-    logRequest = getLogger('requests'),
-    SimpleClient = require('sparql-http-client/SimpleClient');
+const SimpleClient = require('sparql-http-client/SimpleClient');
 
 export class SparqlImporter extends Importer {
-    private profile: ProfileFactory<SparqlMapper>;
-    private readonly settings: SparqlSettings;
-    private readonly requestDelegate: RequestDelegate;
+
+    protected profile: ProfileFactory<SparqlMapper>;
+    protected settings: SparqlSettings;
 
     private totalRecords = 0;
     private numIndexDocs = 0;

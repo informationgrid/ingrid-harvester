@@ -35,11 +35,12 @@ import { Summary } from '../model/summary';
 
 export abstract class Importer {
 
+    protected filterUtils: FilterUtils;
     protected observer: Observer<ImportLogMessage>;
     protected summary: Summary;
-    protected filterUtils: FilterUtils;
-    database: DatabaseUtils;
-    elastic: ElasticsearchUtils;
+
+    readonly database: DatabaseUtils;
+    readonly elastic: ElasticsearchUtils;
 
     protected constructor(settings: ImporterSettings) {
         this.summary = new Summary(settings);

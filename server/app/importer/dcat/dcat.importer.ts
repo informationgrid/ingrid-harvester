@@ -43,13 +43,12 @@ const logRequest = getLogger('requests');
 export class DcatImporter extends Importer {
 
     protected domParser: DOMParser;
-    private profile: ProfileFactory<DcatMapper>;
-    private readonly settings: DcatSettings;
-    private readonly requestDelegate: RequestDelegate;
+    protected profile: ProfileFactory<DcatMapper>;
+    protected requestDelegate: RequestDelegate;
+    protected settings: DcatSettings;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
-
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings);
