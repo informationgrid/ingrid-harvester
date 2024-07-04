@@ -172,7 +172,7 @@ export class CswImporter extends Importer {
         }
     }
 
-    async harvest(): Promise<void> {
+    protected async harvest(): Promise<number> {
         log.info(`Started requesting records`);
         let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId);
         this.generalInfo['catalog'] = catalog;
@@ -205,6 +205,8 @@ export class CswImporter extends Importer {
         log.info(`Finished requesting records`);
         // 3) persist leftovers
         await this.database.sendBulkData();
+
+        return this.numIndexDocs;
     }
 
     async harvestServices(): Promise<void> {

@@ -122,7 +122,7 @@ export class SparqlImporter extends Importer {
         }
     }
 
-    async harvest() {
+    protected async harvest(): Promise<number> {
         log.debug('Requesting records');
 
         let response = "";
@@ -141,7 +141,7 @@ export class SparqlImporter extends Importer {
         }
 
         const client = new SimpleClient({endpointUrl, fetch});
-        return new Promise<void>((resolve, reject) => client.query.select(this.settings.query).then(result => {
+        return new Promise<number>((resolve, reject) => client.query.select(this.settings.query).then(result => {
             let hadError = result.status >= 400;
 
             result.body.on('data', data => {
@@ -162,7 +162,7 @@ export class SparqlImporter extends Importer {
                         let json = JSON.parse(response);
                         let harvestTime = new Date(Date.now());
                         this.extractRecords(json, harvestTime).then(() =>
-                            resolve());
+                            resolve(this.numIndexDocs));
                     } catch (e) {
                         this.summary.appErrors.push(e.toString());
                         log.error(e);

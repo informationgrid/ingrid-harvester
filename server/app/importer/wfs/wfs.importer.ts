@@ -128,7 +128,7 @@ export abstract class WfsImporter extends Importer {
         }
     }
 
-    async harvest() {
+    protected async harvest(): Promise<number> {
         let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resolveWithFullResponse: true }, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
         let capabilitiesResponse: Response = await capabilitiesRequestDelegate.doRequest();
@@ -294,6 +294,8 @@ export abstract class WfsImporter extends Importer {
         }
         log.info(`Finished requests`);
         await this.database.sendBulkData();
+
+        return this.numIndexDocs;
     }
 
     async extractFeatures(getFeatureResponse, harvestTime) {

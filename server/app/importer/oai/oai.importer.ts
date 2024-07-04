@@ -127,7 +127,7 @@ export class OaiImporter extends Importer {
         }
     }
 
-    async harvest() {
+    protected async harvest(): Promise<number> {
         while (true) {
             try {
                 log.debug('Requesting next records');
@@ -165,6 +165,8 @@ export class OaiImporter extends Importer {
             }
         }
         this.database.sendBulkData();
+
+        return this.numIndexDocs;
     }
 
     async extractRecords(getRecordsResponse, harvestTime) {

@@ -111,7 +111,7 @@ export class DcatappluImporter extends Importer {
         }
     }
 
-    async harvest() {
+    protected async harvest(): Promise<number> {
         // let retries = 0;
 
         // while (true) {
@@ -174,6 +174,8 @@ export class DcatappluImporter extends Importer {
         // }
         // send leftovers
         await this.database.sendBulkData();
+
+        return this.numIndexDocs;
     }
 
     async extractRecords(ogcApiResponse, harvestTime) {

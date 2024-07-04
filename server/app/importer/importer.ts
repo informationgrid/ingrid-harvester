@@ -68,6 +68,8 @@ export abstract class Importer {
 
     abstract exec(observer: Observer<ImportLogMessage>): Promise<void>;
 
+    protected abstract harvest(): Promise<number>;
+
     getSummary(): Summary {
         return this.summary;
     }

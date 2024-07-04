@@ -99,7 +99,7 @@ export class DcatImporter extends Importer {
         }
     }
 
-    async harvest() {
+    protected async harvest(): Promise<number> {
         let retries = 0;
 
         while (true) {
@@ -159,6 +159,8 @@ export class DcatImporter extends Importer {
             if (isLastPage) break;
         }
         await this.database.sendBulkData();
+
+        return this.numIndexDocs;
     }
 
     async extractRecords(getRecordsResponse, harvestTime) {

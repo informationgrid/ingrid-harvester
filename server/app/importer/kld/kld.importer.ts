@@ -142,7 +142,7 @@ export class KldImporter extends Importer {
         }
     }
 
-    protected async harvest(): Promise<void> {
+    protected async harvest(): Promise<number> {
         log.info(`Started requesting records`);
 
         if (STORE_RESPONSES) {
@@ -265,6 +265,8 @@ export class KldImporter extends Importer {
         log.info(`Finished requesting records`);
         // 3) persist leftovers
         await this.database.sendBulkData();
+
+        return this.numIndexDocs;
     }
 
     protected async extractObjectIds(delegate: RequestDelegate, index: number, total: number): Promise<Record<string, string>> {

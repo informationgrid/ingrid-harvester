@@ -193,6 +193,11 @@ export class ExcelImporter extends Importer {
         }
     }
 
+    // TODO move implementation from exec() to harvest() so that super.exec can be used
+    protected async harvest(): Promise<number> {
+        return null;
+    }
+
     private handleIndexDocError(e, mapper) {
         log.error('Error creating index document', e);
         this.summary.appErrors.push(e.toString());

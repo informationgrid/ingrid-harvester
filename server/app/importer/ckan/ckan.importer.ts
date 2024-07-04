@@ -156,6 +156,11 @@ export class CkanImporter extends Importer {
         }
     }
 
+    // TODO move implementation from exec() to harvest() so that super.exec can be used
+    protected async harvest(): Promise<number> {
+        return null;
+    }
+
     private async handleImportError(message, observer: Observer<ImportLogMessage>) {
         log.error('error:', message);
         this.summary.appErrors.push(message);
