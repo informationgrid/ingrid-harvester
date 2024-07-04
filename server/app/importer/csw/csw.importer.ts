@@ -36,6 +36,7 @@ import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { IndexDocument } from '../../model/index.document';
+import { MailServer } from '../../utils/nodemailer.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -122,47 +123,60 @@ export class CswImporter extends Importer {
             await this.harvest();
             log.debug('Skipping finalisation of index for dry run.');
             observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
-            observer.complete();
-        } else {
+        }
+        else {
             try {
-                await this.database.beginTransaction();
+                let transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
-                await this.harvest();
-                if (this.numIndexDocs > 0 || this.summary.isIncremental) {
-                    // self-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
-                    await this.coupleSelf(this.settings.resolveOgcDistributions);
-                    // get services separately (time-intensive)
-                    if (this.settings.harvestingMode == 'separate') {
-                        await this.harvestServices();
+                let numIndexDocs = await this.harvest();
+                // did the harvesting return results at all?
+                if (!this.summary.isIncremental) {
+                    if (numIndexDocs == 0) {
+                        throw new Error(`No results during ${this.settings.type} import`);
                     }
-                    // data-service-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
-                    await this.coupleDatasetsServices(this.settings.resolveOgcDistributions);
+                    // ensure that less than X percent of existing datasets are slated for deletion
+                    // TODO introduce settings to:
+                    // - send a mail
+                    // - fail or continue
+                    let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.sourceURL, transactionTimestamp);
+                    if (nonFetchedPercentage > this.generalConfig.harvesting.maxDifference) {
+                        throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
+                    }
+                }
 
-                    if (this.summary.databaseErrors.length == 0) {
-                        await this.database.commitTransaction();
-                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
-                    }
-                    else {
-                        await this.database.rollbackTransaction();
-                    }
-                    observer.next(ImportResult.complete(this.summary));
-                    observer.complete();
+                // self-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
+                await this.coupleSelf(this.settings.resolveOgcDistributions);
+                // get services separately (time-intensive)
+                if (this.settings.harvestingMode == 'separate') {
+                    await this.harvestServices();
                 }
-                else {
-                    if(this.summary.appErrors.length === 0) {
-                        this.summary.appErrors.push('No Results');
-                    }
-                    log.error('No results during CSW import - Keep old index');
-                    observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
-                    observer.complete();
+                // data-service-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
+                await this.coupleDatasetsServices(this.settings.resolveOgcDistributions);
+
+                // did fatal errors occur (ie DB or APP errors)?
+                if (this.summary.databaseErrors.length > 0 || this.summary.appErrors.length > 0) {
+                    throw new Error();
                 }
-            } catch (err) {
-                this.summary.appErrors.push(err.message ? err.message : err);
-                log.error('Error during CSW import', err);
-                observer.next(ImportResult.complete(this.summary, 'Error happened'));
-                observer.complete();
+
+                await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
+                await this.database.commitTransaction();
+                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
+                observer.next(ImportResult.complete(this.summary));
+            }
+            catch (err) {
+                if (err.message) {
+                    this.summary.appErrors.push(err.message);
+                }
+                await this.database.rollbackTransaction();
+                let msg = this.summary.appErrors.length > 0 ? this.summary.appErrors[0] : this.summary.databaseErrors[0];
+                if (this.generalConfig.mail.enabled) {
+                    MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
+                }
+                log.error(msg);
+                observer.next(ImportResult.complete(this.summary, msg));
             }
         }
+        observer.complete();
     }
 
     protected async harvest(): Promise<number> {
