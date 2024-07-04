@@ -26,13 +26,10 @@ import * as MiscUtils from '../../utils/misc.utils';
 import { defaultOAISettings, OaiSettings } from './oai.settings';
 import { getLogger } from 'log4js';
 import { oaiXPaths, OaiXPaths } from './oai.paths';
-import { ConfigService } from '../../services/config/ConfigService';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { IndexDocument } from '../../model/index.document';
-import { MailServer } from '../../utils/nodemailer.utils';
-// import { OaiMapper } from './iso19139/oai.mapper';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -79,53 +76,9 @@ export class OaiImporter extends Importer {
         this.OaiMapper = require(`./${this.settings.metadataPrefix}/oai.mapper`).OaiMapper;
     }
 
+    // only here for documentation - use the "default" exec function
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
-        if (this.settings.dryRun) {
-            log.debug('Dry run option enabled. Skipping index creation.');
-            await this.harvest();
-            log.debug('Skipping finalisation of index for dry run.');
-            observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
-            observer.complete();
-        }
-        else {
-            try {
-                let transactionTimestamp = await this.database.beginTransaction();
-                // get datasets
-                await this.harvest();
-                // did the harvesting return results at all?
-                if (this.numIndexDocs == 0 && !this.summary.isIncremental) {
-                    throw new Error(`No results during OAI/${this.settings.metadataPrefix?.toUpperCase()} import`);
-                }
-                // ensure that less than X percent of existing datasets are slated for deletion
-                // TODO introduce settings to:
-                // - send a mail
-                // - fail or continue
-                let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.sourceURL, transactionTimestamp);
-                if (nonFetchedPercentage > ConfigService.getGeneralSettings().harvesting.maxDifference) {
-                    throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
-                }
-                // did fatal errors occur (ie DB or APP errors)?
-                if (this.summary.databaseErrors.length > 0 || this.summary.appErrors.length > 0) {
-                    throw new Error();
-                }
-
-                await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
-                await this.database.commitTransaction();
-                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
-                observer.next(ImportResult.complete(this.summary));
-            }
-            catch (err) {
-                if (err.message) {
-                    this.summary.appErrors.push(err.message);
-                }
-                await this.database.rollbackTransaction();
-                let msg = this.summary.appErrors.length > 0 ? this.summary.appErrors[0] : this.summary.databaseErrors[0];
-                // MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
-                log.error(msg);
-                observer.next(ImportResult.complete(this.summary, msg));
-            }
-            observer.complete();
-        }
+        await super.exec(observer);
     }
 
     protected async harvest(): Promise<number> {

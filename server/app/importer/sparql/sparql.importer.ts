@@ -72,53 +72,9 @@ export class SparqlImporter extends Importer {
         this.settings = settings;
     }
 
+    // only here for documentation - use the "default" exec function
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
-        if (this.settings.dryRun) {
-            log.debug('Dry run option enabled. Skipping index creation.');
-            await this.harvest();
-            log.debug('Skipping finalisation of index for dry run.');
-            observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
-            observer.complete();
-        } else {
-            try {
-                // await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
-                await this.database.beginTransaction();
-                await this.harvest().catch(err => {
-                    this.summary.appErrors.push(err.message ? err.message : err);
-                    log.error('Error during SPARQL import', err);
-                    observer.next(ImportResult.complete(this.summary, 'Error happened'));
-                    observer.complete();
-                });
-                await this.database.sendBulkData();
-
-                if(this.numIndexDocs > 0) {
-                    await this.database.commitTransaction();
-                    await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
-                    // await this.elastic.finishIndex();
-                    observer.next(ImportResult.complete(this.summary));
-                    observer.complete();
-                } else {
-                    if(this.summary.appErrors.length === 0) {
-                        this.summary.appErrors.push('No Results');
-                    }
-                    log.error('No results during SPARQL import - Keep old index');
-                    observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
-                    observer.complete();
-
-                    // clean up index
-                    // this.elastic.deleteIndex(this.elastic.indexName);
-                }
-
-            } catch (err) {
-                this.summary.appErrors.push(err.message ? err.message : err);
-                log.error('Error during SPARQL import', err);
-                observer.next(ImportResult.complete(this.summary, 'Error happened'));
-                observer.complete();
-
-                // clean up index
-                // this.elastic.deleteIndex(this.elastic.indexName);
-            }
-        }
+        await super.exec(observer);
     }
 
     protected async harvest(): Promise<number> {
