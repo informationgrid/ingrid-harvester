@@ -23,20 +23,18 @@
 
 import { indexMappings } from './persistence/elastic.mappings';
 import { indexSettings } from './persistence/elastic.settings';
+import { ingridCswMapper } from './mapper/ingrid.csw.mapper';
 import { CswMapper } from '../../importer/csw/csw.mapper';
-import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { ElasticQueries } from './persistence/elastic.queries';
+import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { ImporterFactory } from '../../importer/importer.factory';
 import { IngridImporterFactory } from './importer/ingrid.importer.factory';
+import { IngridIndexDocument } from './model/index.document';
+import { IndexDocumentFactory } from '../../model/index.document.factory';
 import { IndexSettings } from '../../persistence/elastic.setting';
-import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
-import { PostgresQueries } from './persistence/postgres.queries';
+import { PostgresAggregator } from './persistence/postgres.aggregator';
+import { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator';
 import { ProfileFactory } from '../profile.factory';
-import {IndexDocumentFactory} from "../../model/index.document.factory";
-import {IngridIndexDocument} from "./model/index.document";
-import {ingridCswMapper} from "./mapper/ingrid.csw.mapper";
-import {PostgresAggregator as AbstractPostgresAggregator} from "../../persistence/postgres.aggregator";
-import {PostgresAggregator} from "./persistence/postgres.aggregator";
 
 export class ingridFactory extends ProfileFactory<CswMapper> {
 
@@ -54,10 +52,6 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
 
     getImporterFactory(): ImporterFactory {
         return new IngridImporterFactory();
-    }
-
-    getPostgresQueries(): AbstractPostgresQueries {
-        return PostgresQueries.getInstance();
     }
 
     getProfileName(): string {
