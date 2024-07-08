@@ -79,7 +79,7 @@ export class CkanImporter extends Importer {
      * @returns {Promise<*|Promise>}
      * @param data
      */
-    async importDataset(data: CkanMapperData) {
+    async importDataset(data: CkanMapperData): Promise<void> {
 
         try {
             log.debug('Processing CKAN dataset: ' + data.source.name + ' from data-source: ' + this.settings.sourceURL);
@@ -192,7 +192,9 @@ export class CkanImporter extends Importer {
             this.updateRequestMethod(offset);
 
         }
-        await this.postHarvestingHandling(promises)
+        await this.postHarvestingHandling(promises);
+        await this.database.sendBulkData();
+
         return total;
     }
 
