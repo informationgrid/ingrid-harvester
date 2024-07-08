@@ -21,11 +21,7 @@
  * ==================================================
  */
 
-import {IndexDocument} from "../../../model/index.document";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
-import {ingridMapperFactory} from "../mapper/ingrid.mapper.factory";
-import {WfsMapper} from "../../../importer/wfs/wfs.mapper";
-import {IndexDocumentFactory} from "../../../model/index.document.factory";
+import { IndexDocument } from '../../../model/index.document';
 
 export type IngridIndexDocument = IndexDocument & {
     iPlugId: string,
