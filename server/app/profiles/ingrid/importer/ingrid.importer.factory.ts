@@ -21,10 +21,12 @@
  * ==================================================
  */
 
-import { Harvester } from "@shared/harvester";
+import { CswImporter } from '../../../importer/csw/csw.importer';
+import { Harvester } from '@shared/harvester';
 import { Importer } from '../../../importer/importer';
-import {ImporterFactory} from "../../../importer/importer.factory";
-import {CswImporter} from "../../../importer/csw/csw.importer";
+import { ImporterFactory } from '../../../importer/importer.factory';
+
+const log = require('log4js').getLogger(__filename);
 
 export class IngridImporterFactory extends ImporterFactory{
 
@@ -35,7 +37,7 @@ export class IngridImporterFactory extends ImporterFactory{
                 importer = new CswImporter(config);
                 break;
             default: {
-                console.error('Importer not found: ' + config.type);
+                log.error('Importer not found: ' + config.type);
             }
         }
         if (importer) {
