@@ -67,7 +67,7 @@ export function historyChart(chartName, data){
           datasets: 
           [
             {
-              label : "Datensätze",
+              label: "Datensätze",
               data: data.map(entry => entry.numRecords - entry.numSkipped),
               borderColor: 'rgba(57, 140, 50, 0.7)', // green
               backgroundColor: 'rgba(101, 255, 87, 1)',
@@ -76,7 +76,7 @@ export function historyChart(chartName, data){
               yAxisID: 'left-y-axis',
             },
             {
-              label : "Fehler",
+              label: "Fehler",
               data: data.map(entry => entry.numRecordErrors+entry.numAppErrors+entry.numDBErrors+entry.numESErrors),
               borderColor: "rgba(238, 85, 85, 0.5)", // red
               backgroundColor: "rgba(238, 85, 85, 1)",
@@ -85,7 +85,7 @@ export function historyChart(chartName, data){
               yAxisID: 'left-y-axis'
             },
             {
-              label : "Warnungen",
+              label: "Warnungen",
               data: data.map(entry => entry.numWarnings),
               borderColor: "rgba(255, 189, 91, 0.5)", // orange
               backgroundColor: "rgba(255, 189, 91, 1)",
@@ -94,14 +94,14 @@ export function historyChart(chartName, data){
               yAxisID: 'left-y-axis',
             },
             {
-              label : "Dauer (s)",
+              label: "Dauer (s)",
               data: data.map(entry => entry.duration),
               borderColor: "rgba(152, 176, 217, 0.5)", // blue
               backgroundColor: "rgba(111, 190, 255, 1)",
               fill: false,
               cubicInterpolationMode: 'monotone',
               yAxisID: 'right-y-axis',
-              // hidden: true,
+              hidden: true
             }
           ],
         },
@@ -324,7 +324,7 @@ export function indexCheckChart(chartName, data){
         datasets: 
         [
           {
-            label : "Valid",
+            label: "Valid",
             data: data.map(entry => entry.numRecords - entry.numSkipped),
             borderColor: 'rgba(57, 140, 50, 0.7)', // green
             backgroundColor: 'rgba(101, 255, 87, 1)',
@@ -333,7 +333,7 @@ export function indexCheckChart(chartName, data){
             yAxisID: 'left-y-axis',
           },
           {
-            label : "Not Valid",
+            label: "Not Valid",
             data: data.map(entry => entry.numRecordErrors+entry.numAppErrors+entry.numDBErrors+entry.numESErrors),
             borderColor: "rgba(238, 85, 85, 0.5)", // red
             backgroundColor: "rgba(238, 85, 85, 1)",
@@ -342,7 +342,7 @@ export function indexCheckChart(chartName, data){
             yAxisID: 'left-y-axis'
           },
           {
-            label : "Spetial",
+            label: "Spatial",
             data: data.map(entry => entry.numWarnings),
             borderColor: "rgba(255, 189, 91, 0.5)", // orange
             backgroundColor: "rgba(255, 189, 91, 1)",
@@ -351,7 +351,7 @@ export function indexCheckChart(chartName, data){
             yAxisID: 'left-y-axis',
           },
           {
-            label : "Temporal",
+            label: "Temporal",
             data: data.map(entry => entry.duration),
             borderColor: "rgba(152, 176, 217, 0.5)", // blue
             backgroundColor: "rgba(111, 190, 255, 1)",
