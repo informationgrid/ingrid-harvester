@@ -145,7 +145,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     }
 
     getDataType() {
-        return this.baseMapper.getSettings().datatype.split(",") || ["default"];
+        return this.baseMapper.getSettings().datatype?.split(",") ?? ["default"];
     }
 
     getDataSourceName() {
