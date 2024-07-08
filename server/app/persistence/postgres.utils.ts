@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../utils/misc.utils';
 import { BulkResponse, DatabaseUtils } from './database.utils';
 import { Catalog } from '../model/dcatApPlu.model';
 import { Client, Pool, PoolClient, QueryResult } from 'pg';
@@ -300,11 +301,11 @@ export class PostgresUtils extends DatabaseUtils {
                 // we remove catalogs from the entities at this point because we don't want them to persisted into the
                 // dataset in the catalog
                 entities = this.removeCatalogs(entities as RecordEntity[]);
-                result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities)]);
+                result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities, MiscUtils.dateReplacer)]);
             }
             else if ((entities[0] as CouplingEntity).service_id) {
                 entities = this.mergeCouplingEntities(entities as CouplingEntity[]);
-                result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities)]);
+                result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities, MiscUtils.dateReplacer)]);
             }
             else {
                 throw new Error('Unrecognised Entity type');

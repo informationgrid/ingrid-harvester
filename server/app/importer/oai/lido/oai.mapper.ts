@@ -36,7 +36,6 @@ import { OaiSettings } from '../oai.settings';
 import { Summary } from '../../../model/summary';
 import { XPathElementSelect } from '../../../utils/xpath.utils';
 
-
 export class OaiMapper extends BaseMapper {
 
     static select = <XPathElementSelect>xpath.useNamespaces(oaiXPaths.lido.prefixMap);
@@ -51,7 +50,8 @@ export class OaiMapper extends BaseMapper {
 
     log = getLogger();
 
-    private readonly record: any;
+    private readonly header: Element;
+    private readonly record: Element;
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
@@ -59,9 +59,10 @@ export class OaiMapper extends BaseMapper {
     private readonly uuid: string;
     private summary: Summary;
 
-    constructor(settings, record, harvestTime, summary) {
+    constructor(settings, header: Element, record: Element, harvestTime, summary) {
         super();
         this.settings = settings;
+        this.header = header;
         this.record = record;
         this.harvestTime = harvestTime;
         this.summary = summary;
@@ -263,12 +264,22 @@ export class OaiMapper extends BaseMapper {
         return new Date(Date.now());
     }
 
+    // TODO
+    getIssued(): Date {
+        return null;
+    }
+
+    // TODO
+    getModified(): Date {
+        return null;
+    }
+
     getMetadataSource(): MetadataSource {
-        let link = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=lido&identifier=${this.getId()}`;
+        let link = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=${this.settings.metadataPrefix}&identifier=${this.getId()}`;
         return {
             source_base: this.settings.providerUrl,
             raw_data_source: link,
-            source_type: 'lido'
+            source_type: this.settings.metadataPrefix
         };
     }
 }

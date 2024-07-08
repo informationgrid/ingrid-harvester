@@ -21,7 +21,48 @@
  * ==================================================
  */
 
-export interface DateRange {
-    gte?: Date,
-    lte?: Date
+import { DateRange } from './dateRange';
+import { Geometries, GeometryCollection, Point } from '@turf/helpers';
+
+export type IngridIndexDocument = {
+    id: string,
+    schema_version: string,
+    title: string,
+    abstract?: string,
+    spatial?: Spatial,
+    temporal: {
+        modified: Date,
+        issued: Date,
+        data_temporal?: {
+            date_range: DateRange,
+            date_type?: string
+        }
+    },
+    keywords?: Keyword[],
+    fulltext: string,
+    metadata: Metadata
+};
+
+export type Spatial = {
+    geometry?: Geometries | GeometryCollection,
+    bbox?: Geometries | GeometryCollection,
+    centroid?: Point,
+    inside_point?: Point,
+    location_points?: Point,
+    outline?: Geometries | GeometryCollection,
+    title?: string
+};
+
+export type Keyword = {
+    term: string,
+    type?: string,
+    url?: string
 }
+
+export type Metadata = {
+    issued: Date,
+    modified: Date,
+    source: {
+
+    }
+};

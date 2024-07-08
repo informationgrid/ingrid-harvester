@@ -155,6 +155,20 @@ export function normalizeDateTime(datetime: string): Date {
     return null;
 }
 
+/**
+ * This function is to be used as a replacer callback in JSON.stringify.
+ * It replaces the default `Date` ISO serialization with its millisecond timestamp.
+ * This is useful e.g. for negative dates which trip up Elasticsearch.
+ */
+export function dateReplacer(key: string, value: any): any {
+    // when used as a JSON.stringify callback, `this` refers to the to-be-stringified object
+    // we cannot use `value` directly, because `Date` provides an inbuilt serialization via `Date.toJSON()`
+    if (this[key] instanceof Date) {
+        return this[key].valueOf();
+    }
+    return value;
+}
+
 export function isUuid(s: string): boolean {
     if (s == null) {
         return false;

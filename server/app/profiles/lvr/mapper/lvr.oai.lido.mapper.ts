@@ -23,7 +23,8 @@
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
-import { GeometryInformation, DateRange, Keyword, Relation, Media } from '../model/index.document';
+import { GeometryInformation, Temporal } from '../../../model/index.document';
+import { Keyword, Media, Person, Relation } from '../model/index.document';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
 import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
@@ -31,7 +32,7 @@ import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
 const dayjs = require('dayjs');
 dayjs.locale('de');
 
-export class LvrOaiMapper extends LvrMapper<OaiMapper> {
+export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
 
     constructor(baseMapper: OaiMapper) {
         super(baseMapper);
@@ -82,13 +83,13 @@ export class LvrOaiMapper extends LvrMapper<OaiMapper> {
         return geometryInformations.filter(geometryInformation => geometryInformation.geometry);
     }
 
-    getTemporal(): DateRange {
-        let gte: number, lte: number;
-        this.baseMapper.getSubjects().forEach(subject => {
-            gte = gte == null || gte > subject.period.gte.getTime() ? subject.period.gte.getTime() : gte;
-            lte = lte == null || lte < subject.period.lte.getTime() ? subject.period.lte.getTime() : lte;
-        });
-        return { gte, lte };
+    // TODO
+    getTemporal(): Temporal[] {
+        let tepmorals = this.baseMapper.getSubjects().map(subject => ({
+            date_range: subject.period
+            // date_type: ???
+        }));
+        return tepmorals;
     }
 
     getKeywords(): Keyword[] {
@@ -103,12 +104,14 @@ export class LvrOaiMapper extends LvrMapper<OaiMapper> {
         return keywords;
     }
 
-    getRelations(): Relation[] {
-        return this.baseMapper.getRelations().map(relation => ({
-            id: relation.id,
-            type: relation.type,
-            score: null
-        }));
+    // TODO
+    getGenres(): string[] {
+        return null;
+    }
+
+    // TODO
+    getPersons(): Person[] {
+        return null;
     }
 
     // TODO
@@ -116,7 +119,14 @@ export class LvrOaiMapper extends LvrMapper<OaiMapper> {
         return null;
     }
 
-    getLicense(): License {
+    getRelations(): Relation[] {
+        return this.baseMapper.getRelations().map(relation => ({
+            id: relation.id,
+            type: relation.type
+        }));
+    }
+
+    getLicense(): License[] {
         let licenses = [];
         this.baseMapper.getResources().forEach(resource => {
             let subLicenses = resource.rights.map(right => ({
@@ -126,7 +136,7 @@ export class LvrOaiMapper extends LvrMapper<OaiMapper> {
             }));
             licenses.push(...subLicenses);
         });
-        return licenses[0];
+        return licenses;
     }
 
     getVector(): object {

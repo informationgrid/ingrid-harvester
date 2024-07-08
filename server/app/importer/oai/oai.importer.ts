@@ -21,21 +21,25 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { defaultOAISettings, OaiSettings } from '../oai.settings';
+import * as xpath from 'xpath';
+import * as MiscUtils from '../../utils/misc.utils';
+import { defaultOAISettings, OaiSettings } from './oai.settings';
 import { getLogger } from 'log4js';
-import { namespaces } from '../../namespaces';
+import { oaiXPaths, OaiXPaths } from './oai.paths';
+import { ConfigService } from '../../services/config/ConfigService';
 import { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../../importer';
-import { ImportLogMessage, ImportResult } from '../../../model/import.result';
-import { IndexDocument } from '../../../model/index.document';
-import { OaiMapper } from './oai.mapper';
+import { Importer } from '../importer';
+import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import { IndexDocument } from '../../model/index.document';
+import { MailServer } from '../../utils/nodemailer.utils';
+// import { OaiMapper } from './iso19139/oai.mapper';
 import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../../model/entity';
-import { RequestDelegate, RequestOptions } from '../../../utils/http-request.utils';
-import { Summary } from '../../../model/summary';
+import { ProfileFactory } from '../../profiles/profile.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { RecordEntity } from '../../model/entity';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
+import { Summary } from '../../model/summary';
+import { BaseMapper } from '../../importer/base.mapper';
 
 const log = require('log4js').getLogger(__filename),
     logRequest = getLogger('requests');
@@ -43,12 +47,15 @@ const log = require('log4js').getLogger(__filename),
 export class OaiImporter extends Importer {
 
     protected domParser: DOMParser;
-    private profile: ProfileFactory<OaiMapper>;
+    private profile: ProfileFactory<BaseMapper>;
     private readonly settings: OaiSettings;
     private requestDelegate: RequestDelegate;
+    private xpaths: OaiXPaths;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
+
+    private readonly OaiMapper;
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings);
@@ -61,11 +68,14 @@ export class OaiImporter extends Importer {
 
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
-        } else {
+        }
+        else {
             let requestConfig = OaiImporter.createRequestConfig(settings);
             this.requestDelegate = new RequestDelegate(requestConfig);
         }
         this.settings = settings;
+        this.xpaths = oaiXPaths[this.settings.metadataPrefix?.toLowerCase()];
+        this.OaiMapper = require(`./${this.settings.metadataPrefix}/oai.mapper`).OaiMapper;
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -75,62 +85,83 @@ export class OaiImporter extends Importer {
             log.debug('Skipping finalisation of index for dry run.');
             observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
             observer.complete();
-        } else {
+        }
+        else {
             try {
-                // await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
-                await this.database.beginTransaction();
+                let transactionTimestamp = await this.database.beginTransaction();
+                // get datasets
                 await this.harvest();
+                // did the harvesting return results at all?
+                if (this.numIndexDocs == 0 && !this.summary.isIncremental) {
+                    throw new Error(`No results during OAI/${this.settings.metadataPrefix?.toUpperCase()} import`);
+                }
+                // ensure that less than X percent of existing datasets are slated for deletion
+                // TODO introduce settings to:
+                // - send a mail
+                // - fail or continue
+                let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.providerUrl, transactionTimestamp);
+                if (nonFetchedPercentage > ConfigService.getGeneralSettings().maxDiff) {
+                    throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
+                }
+                // did fatal errors occur (ie DB or APP errors)?
+                if (this.summary.databaseErrors.length > 0 || this.summary.appErrors.length > 0) {
+                    throw new Error();
+                }
+
+                await this.database.deleteNonFetchedDatasets(this.settings.providerUrl, transactionTimestamp);
                 await this.database.commitTransaction();
                 await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.providerUrl);
-                // await this.elastic.finishIndex();
                 observer.next(ImportResult.complete(this.summary));
-                observer.complete();
-
-            } catch (err) {
-                this.summary.appErrors.push(err.message ? err.message : err);
-                log.error('Error during OAI import', err);
-                observer.next(ImportResult.complete(this.summary, 'Error happened'));
-                observer.complete();
-
-                // clean up index
-                // this.elastic.deleteIndex(this.elastic.indexName);
             }
+            catch (err) {
+                if (err.message) {
+                    this.summary.appErrors.push(err.message);
+                }
+                await this.database.rollbackTransaction();
+                let msg = this.summary.appErrors.length > 0 ? this.summary.appErrors[0] : this.summary.databaseErrors[0];
+                // MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
+                log.error(msg);
+                observer.next(ImportResult.complete(this.summary, msg));
+            }
+            observer.complete();
         }
     }
 
     async harvest() {
-
         while (true) {
-            log.debug('Requesting next records');
-            let response = await this.requestDelegate.doRequest();
-            let harvestTime = new Date(Date.now());
+            try {
+                log.debug('Requesting next records');
+                let response = await this.requestDelegate.doRequest();
+                let harvestTime = new Date(Date.now());
 
-            let resumptionToken;
-
-            let responseDom = this.domParser.parseFromString(response);
-            let resultsNode = responseDom.getElementsByTagName('ListRecords')[0];
-            if (resultsNode) {
-                let numReturned = resultsNode.getElementsByTagName('record').length;
-
-                let resumptionTokenNode = resultsNode.getElementsByTagName('resumptionToken')[0];
-                if (resumptionTokenNode) {
-                    this.totalRecords = parseInt(resumptionTokenNode.getAttribute('completeListSize'));
-                    resumptionToken = resumptionTokenNode.textContent;
+                let responseDom = this.domParser.parseFromString(response);
+                let resultsNode = responseDom.getElementsByTagName('ListRecords')[0];
+                if (!resultsNode) {
+                    throw new Error('Could not find ListRecords node in response DOM: ' + responseDom?.toString());
                 }
 
+                let numReturned = resultsNode.getElementsByTagName('record').length;
                 log.debug(`Received ${numReturned} records from ${this.settings.providerUrl}`);
-                await this.extractRecords(response, harvestTime)
-            } else {
-                const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
-                log.error(message);
-                this.summary.appErrors.push(message);
-            }
+                await this.extractRecords(response, harvestTime);
 
-            if (resumptionToken) {
+                let resumptionTokenNode = resultsNode.getElementsByTagName('resumptionToken')[0];
+                let resumptionToken;
+                if (resumptionTokenNode) {
+                    this.totalRecords = parseInt(resumptionTokenNode.getAttribute('completeListSize'));
+                    let cursor = resumptionTokenNode.getAttribute('cursor');
+                    resumptionToken = resumptionTokenNode.textContent;
+                    log.info(`Next cursor: ${cursor}/${this.totalRecords}`);
+                }
+                if (!resumptionToken) {
+                    break;
+                }
                 let requestConfig = OaiImporter.createRequestConfig(this.settings, resumptionToken);
                 this.requestDelegate = new RequestDelegate(requestConfig);
-            } else {
-                break;
+            }
+            catch (e) {
+                const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(e.message)}.`;
+                log.error(message);
+                this.summary.appErrors.push(message);
             }
         }
         this.database.sendBulkData();
@@ -139,16 +170,13 @@ export class OaiImporter extends Importer {
     async extractRecords(getRecordsResponse, harvestTime) {
         let promises = [];
         let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
-        let records = xml.getElementsByTagNameNS(namespaces.GMD, 'MD_Metadata');
-        let ids = [];
-        for (let i = 0; i < records.length; i++) {
-            ids.push(OaiMapper.getCharacterStringContent(records[i], 'fileIdentifier'));
-        }
+        let records = xml.getElementsByTagName('record');
 
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
-
-            const uuid = OaiMapper.getCharacterStringContent(records[i], 'fileIdentifier');
+            let header = records[i].getElementsByTagName('header').item(0);
+            let record = records[i].getElementsByTagNameNS(this.xpaths.nsPrefix, this.xpaths.mdRoot).item(0);
+            const uuid = (xpath.useNamespaces(this.xpaths.prefixMap)(this.xpaths.idElem, record, true) as Node)?.textContent;
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;
@@ -158,10 +186,10 @@ export class OaiImporter extends Importer {
                 log.debug(`Import document ${i + 1} from ${records.length}`);
             }
             if (logRequest.isDebugEnabled()) {
-                logRequest.debug("Record content: ", records[i].toString());
+                logRequest.debug("Record content: ", record.toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary);
+            let mapper = this.getMapper(this.settings, header, record, harvestTime, this.summary);
 
             let doc: IndexDocument;
             try {
@@ -181,26 +209,18 @@ export class OaiImporter extends Importer {
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
-                promises.push(
-                    this.database.addEntityToBulk(entity)
-                        .then(response => {
-                            if (!response.queued) {
-                                // numIndexDocs += ElasticsearchUtils.maxBulkSize;
-                                // this.observer.next(ImportResult.running(numIndexDocs, records.length));
-                            }
-                        })
-                );
-            } else {
+                promises.push(this.database.addEntityToBulk(entity));
+            }
+            else {
                 this.summary.skippedDocs.push(uuid);
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
-        await Promise.all(promises)
-            .catch(err => log.error('Error indexing OAI record', err));
+        await Promise.allSettled(promises).catch(err => log.error('Error indexing OAI record', err));
     }
 
-    getMapper(settings, record, harvestTime, summary): OaiMapper {
-        return new OaiMapper(settings, record, harvestTime, summary);
+    getMapper(settings, header, record, harvestTime, summary) {
+        return new this.OaiMapper(settings, header, record, harvestTime, summary);
     }
 
     static createRequestConfig(settings: OaiSettings, resumptionToken?: string): RequestOptions {
@@ -226,7 +246,8 @@ export class OaiImporter extends Importer {
             if (settings.until) {
                 requestConfig.qs.until = settings.until;
             }
-        } else {
+        }
+        else {
             requestConfig.qs = {
                 verb: 'ListRecords',
                 resumptionToken: resumptionToken

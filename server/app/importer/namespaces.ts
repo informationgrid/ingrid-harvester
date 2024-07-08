@@ -39,6 +39,7 @@ export const namespaces = {
     INSPIRE_VS: 'http://inspire.ec.europa.eu/schemas/inspire_vs/1.0',
     LIDO: 'http://www.lido-schema.org',
     LOCN: 'http://www.w3.org/ns/locn#',
+    MODS: 'http://www.loc.gov/mods/v3',
     OGC: 'http://www.opengis.net/ogc',
     ORG: 'http://www.w3.org/ns/org#',
     OWL: 'http://www.w3.org/2002/07/owl#',

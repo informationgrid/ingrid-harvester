@@ -21,11 +21,12 @@
  * ==================================================
  */
 
-import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
-import {OaiSettings} from '../../../../../../server/app/importer/oai/oai.settings';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatChipInputEvent} from '@angular/material/chips';
-import {FormControl, UntypedFormGroup} from '@angular/forms';
+import { oaiXPaths } from '../../../../../../server/app/importer/oai/oai.paths';
+import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { FormControl, UntypedFormGroup } from '@angular/forms';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { OaiSettings } from '../../../../../../server/app/importer/oai/oai.settings';
 
 @Component({
   selector: 'app-oai-harvester',
@@ -39,6 +40,7 @@ export class OaiHarvesterComponent implements OnInit, OnDestroy {
   @Input() rulesTemplate: TemplateRef<any>;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  readonly metadataPrefixes: string[] = Object.keys(oaiXPaths);
 
   constructor() { }
 

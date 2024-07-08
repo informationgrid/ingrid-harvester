@@ -21,81 +21,57 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { Keyword, Media, Person, Relation } from '../model/index.document';
-import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
+import { OaiMapper } from '../../../importer/oai/mods/oai.mapper';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
 
-export class LvrKldMapper extends LvrMapper<KldMapper> {
+export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {
 
-    constructor(baseMapper: KldMapper) {
+    constructor(baseMapper: OaiMapper) {
         super(baseMapper);
     }
 
     getIdentifier(): string {
-        return this.baseMapper.getGeneratedId();
+        return this.baseMapper.getId();
     }
 
     getTitle(): string[] {
-        return [this.baseMapper.getTitle()];
+        return this.baseMapper.getTitles();
     }
 
     getDescription(): string[] {
-        return [this.baseMapper.getDescription()];
+        return this.baseMapper.getDescriptions();
     }
 
+    // TODO
     getSpatial(): GeometryInformation[] {
-        let spatial = this.baseMapper.getSpatial();
-        let geoInfo = {
-            geometry: spatial,
-            centroid: GeoJsonUtils.getCentroid(spatial),
-            type: null,
-            description: null,
-            address: this.baseMapper.getSpatialText()
-        };
-        return [geoInfo];
+        return null;
     }
 
     getTemporal(): Temporal[] {
-        let temporals = this.baseMapper.getTemporal();
-        let temporal: { gte: Date, lte: Date } = { gte: null, lte: null };
-        for (let t of temporals) {
-            if (t.gte && (!temporal.gte || t.gte < temporal.gte)) {
-                temporal.gte = t.gte;
-            }
-            if (t.lte && (!temporal.lte || t.lte > temporal.lte)) {
-                temporal.lte = t.lte;
-            }
-        }
-        return [{ date_range: temporal }];
+        return this.baseMapper.getTemporal();
     }
 
     getKeywords(): Keyword[] {
-        return Object.entries(this.baseMapper.getKeywords()).map(([id, keyword]) => ({
-            id: id,
-            term: keyword,
-            thesaurus: 'WNK'
-        }));
+        return this.baseMapper.getKeywords();
     }
 
-    // TODO
     getGenres(): string[] {
-        return null;
+        return this.baseMapper.getGenres();
     }
 
-    // TODO
     getPersons(): Person[] {
-        return null;
+        return this.baseMapper.getNames();
     }
 
     getMedia(): Media[] {
-        return this.baseMapper.getMedia();
+        return this.baseMapper.getLocations();
     }
 
     getRelations(): Relation[] {
@@ -103,7 +79,7 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
     }
 
     getLicense(): License[] {
-        return [this.baseMapper.getLicense()];
+        return this.baseMapper.getLicenses();
     }
 
     // TODO
@@ -112,10 +88,11 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
     }
 
     getIssued(): Date {
-        return this.baseMapper.getIssued();
+        let issued = null;
+        return issued;
     }
 
     getModified(): Date {
-        return this.baseMapper.getModifiedDate();
+        return this.baseMapper.getModified();
     }
 }
