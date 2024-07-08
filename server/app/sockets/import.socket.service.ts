@@ -95,7 +95,7 @@ export class ImportSocketService {
                     // when less results send mail
                     let importedLastRun = (summaryLastRun) ? summaryLastRun.summary.numDocs - summaryLastRun.summary.skippedDocs.length : 0;
                     let imported = importer.getSummary().numDocs - importer.getSummary().skippedDocs.length;
-                    let maxDiff = (configGeneral.maxDiff) ? configGeneral.maxDiff : 10;
+                    let maxDiff = configGeneral.harvesting.maxDifference ?? 10;
                     if ((importedLastRun - (importedLastRun*maxDiff/100) >= imported) || (imported === 0)) {
                         let subject: string;
                         if (imported === 0)

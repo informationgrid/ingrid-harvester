@@ -25,14 +25,12 @@ import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings
 
 export const defaultOAISettings: OaiSettings = {
     ...DefaultImporterSettings,
-    providerUrl: '',
     eitherKeywords: [],
     metadataPrefix: '',
     set: ''
 };
 
 export type OaiSettings = {
-    providerUrl: string,
     metadataPrefix?: string,
     set?: string,
     from?: Date,

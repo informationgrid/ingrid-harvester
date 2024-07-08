@@ -51,7 +51,7 @@ describe('Import CSW BFG', function () {
         const settings: CswSettings = {
             dryRun: true,
             startPosition: 1,
-            getRecordsUrl: "https://geoportal.bafg.de/csw/api",
+            sourceURL: "https://geoportal.bafg.de/csw/api",
             proxy: null,
             defaultMcloudSubgroup: ["waters"],
             defaultDCATCategory: ["TRAN", "TECH"],

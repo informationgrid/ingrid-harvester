@@ -36,7 +36,6 @@ export type WfsSettings = {
     count: number,
     resultType?: "hits" | "results",
     typename: string,
-    getFeaturesUrl: string,
     eitherKeywords: string[],
     httpMethod: "GET" | "POST",
     featureFilter?: string,
@@ -45,7 +44,6 @@ export type WfsSettings = {
 
 export const defaultWfsSettings: Partial<WfsSettings> = {
     ...DefaultImporterSettings,
-    // getFeaturesUrl: '',
     eitherKeywords: [],
     httpMethod: 'GET',
     resultType: 'results'

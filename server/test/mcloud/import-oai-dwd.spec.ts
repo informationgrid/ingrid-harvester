@@ -58,7 +58,7 @@ describe('Import OAI DWD', function () {
             customCode: null,
             defaultMcloudSubgroup: ["climate"],
             defaultDCATCategory: ["ENVI"],
-            providerUrl: "https://oai.dwd.de/oai/provider",
+            sourceURL: "https://oai.dwd.de/oai/provider",
             set: "mCLOUD",
             defaultAttribution: "DWD",
             defaultAttributionLink: "https://oai.dwd.de/oai/provider?verb=ListRecords&metadataPrefix=iso19139&set=mCLOUD"

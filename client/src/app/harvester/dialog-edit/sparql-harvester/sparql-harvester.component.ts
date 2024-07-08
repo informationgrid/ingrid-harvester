@@ -43,7 +43,7 @@ export class SparqlHarvesterComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    this.form.addControl('endpointUrl', new UntypedFormControl(this.model.endpointUrl));
+    this.form.addControl('sourceURL', new UntypedFormControl(this.model.sourceURL));
     this.form.addControl('query', new UntypedFormControl(this.model.query));
 
     if (!this.model.eitherKeywords) {

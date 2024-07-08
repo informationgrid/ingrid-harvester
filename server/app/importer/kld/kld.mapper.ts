@@ -77,7 +77,7 @@ export class KldMapper extends BaseMapper {
     getDescription(): string {
         const abstract = this.record.Beschreibung;
         if (!abstract) {
-            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.id}\', title: \'${this.getTitle()}\', source: \'${this.settings.providerUrl}\'`;
+            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.id}\', title: \'${this.getTitle()}\', source: \'${this.settings.sourceURL}\'`;
             this.log.warn(msg);
             this.summary.warnings.push(['No description', msg]);
             this.valid = false;
@@ -138,9 +138,9 @@ export class KldMapper extends BaseMapper {
     }
 
     getMetadataSource() {
-        let link = `${this.settings.providerUrl}Objekt/${this.id}`;
+        let link = `${this.settings.sourceURL}Objekt/${this.id}`;
         return {
-            source_base: this.settings.providerUrl,
+            source_base: this.settings.sourceURL,
             raw_data_source: link,
             source_type: 'kld',
             portal_link: this.settings.defaultAttributionLink,

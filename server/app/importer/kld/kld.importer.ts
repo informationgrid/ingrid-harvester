@@ -28,13 +28,11 @@ import { existsSync, mkdirSync, mkdtemp, writeFileSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
 import { BulkResponse } from '../../persistence/elastic.utils';
-import { ConfigService } from '../../services/config/ConfigService';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { IndexDocument } from '../../model/index.document';
 import { KldMapper } from './kld.mapper';
-import { MailServer } from '../../utils/nodemailer.utils';
 import { ObjectListRequestParams, ObjectListResponse, ObjectResponse, PAGE_SIZE } from './kld.api';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
@@ -53,7 +51,7 @@ export class KldImporter extends Importer {
 
     protected domParser: DOMParser;
     protected profile: ProfileFactory<KldMapper>;
-    protected readonly settings: KldSettings;
+    protected settings: KldSettings;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
@@ -93,56 +91,12 @@ export class KldImporter extends Importer {
         this.settings = settings;
     }
 
+    // only here for documentation - use the "default" exec function
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
-        if (this.settings.dryRun) {
-            log.debug('Dry run option enabled. Skipping index creation.');
-            await this.harvest();
-            log.debug('Skipping finalisation of index for dry run.');
-            observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
-            observer.complete();
-        }
-        else {
-            try {
-                let transactionTimestamp = await this.database.beginTransaction();
-                // get datasets
-                await this.harvest();
-                // did the harvesting return results at all?
-                if (this.numIndexDocs == 0 && !this.summary.isIncremental) {
-                    throw new Error('No results during KLD import');
-                }
-                // ensure that less than X percent of existing datasets are slated for deletion
-                // TODO introduce settings to:
-                // - send a mail
-                // - fail or continue
-                let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.providerUrl, transactionTimestamp);
-                if (nonFetchedPercentage > ConfigService.getGeneralSettings().maxDiff) {
-                    throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
-                }
-                // did fatal errors occur (ie DB or APP errors)?
-                if (this.summary.databaseErrors.length > 0 || this.summary.appErrors.length > this.maxRequestErrors) {
-                    throw new Error();
-                }
-
-                await this.database.deleteNonFetchedDatasets(this.settings.providerUrl, transactionTimestamp);
-                await this.database.commitTransaction();
-                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.providerUrl);
-                observer.next(ImportResult.complete(this.summary));
-            }
-            catch (err) {
-                if (err.message) {
-                    this.summary.appErrors.push(err.message);
-                }
-                await this.database.rollbackTransaction();
-                let msg = this.summary.appErrors.length > 0 ? this.summary.appErrors[0] : this.summary.databaseErrors[0];
-                // MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
-                log.error(msg);
-                observer.next(ImportResult.complete(this.summary, msg));
-            }
-            observer.complete();
-        }
+        await super.exec(observer);
     }
 
-    protected async harvest(): Promise<void> {
+    protected async harvest(): Promise<number> {
         log.info(`Started requesting records`);
 
         if (STORE_RESPONSES) {
@@ -260,11 +214,11 @@ export class KldImporter extends Importer {
         }
         await Promise.allSettled(detailRequests);
 
-        // TODO delete objects not contained in the current list?
-
         log.info(`Finished requesting records`);
         // 3) persist leftovers
         await this.database.sendBulkData();
+
+        return this.numIndexDocs;
     }
 
     protected async extractObjectIds(delegate: RequestDelegate, index: number, total: number): Promise<Record<string, string>> {
@@ -350,7 +304,7 @@ export class KldImporter extends Importer {
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: id,
-                    source: this.settings.providerUrl,
+                    source: this.settings.sourceURL,
                     collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
@@ -372,7 +326,7 @@ export class KldImporter extends Importer {
     private static createRequestConfig(settings: KldSettings, operation: string, params?: Record<string, any>): RequestOptions {
         const requestConfig: RequestOptions = {
             method: 'GET',
-            uri: settings.providerUrl + operation,
+            uri: settings.sourceURL + operation,
             json: true,
             headers: RequestDelegate.defaultRequestHeaders(),
             proxy: settings.proxy || null,

@@ -223,7 +223,9 @@ export class ConfigGeneralComponent implements OnInit {
         cronPattern: [settings.indexBackup.cronPattern],
         dir: [settings.indexBackup.dir]
       }),
-      maxDiff: [settings.maxDiff]
+      harvesting: this.formBuilder.group({
+        maxDifference: [settings.harvesting.maxDifference]
+      })
     })
   }
 

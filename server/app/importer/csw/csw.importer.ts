@@ -36,6 +36,7 @@ import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { IndexDocument } from '../../model/index.document';
+import { MailServer } from '../../utils/nodemailer.utils';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -49,8 +50,7 @@ export class CswImporter extends Importer {
 
     protected domParser: DOMParser;
     protected profile: ProfileFactory<CswMapper>;
-    protected readonly settings: CswSettings;
-    private readonly requestDelegate: RequestDelegate;
+    protected settings: CswSettings;
 
     // ServiceType#GetCapabilitiesURL -> { DatasetUUID -> typenames[] }
     private wfsFeatureTypeMap = new Map<string, { [key: string]: string[] }>();
@@ -84,12 +84,6 @@ export class CswImporter extends Importer {
                 log.warn(`Changing type of harvest to "full" because no previous harvest was found for harvester with id ${settings.id}`);
                 settings.isIncremental = false;
             }
-        }
-        if (requestDelegate) {
-            this.requestDelegate = requestDelegate;
-        } else {
-            let requestConfig = CswImporter.createRequestConfig(settings);
-            this.requestDelegate = new RequestDelegate(requestConfig, CswImporter.createPaging(settings));
         }
         this.settings = settings;
     }
@@ -129,50 +123,63 @@ export class CswImporter extends Importer {
             await this.harvest();
             log.debug('Skipping finalisation of index for dry run.');
             observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
-            observer.complete();
-        } else {
+        }
+        else {
             try {
-                await this.database.beginTransaction();
+                let transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
-                await this.harvest();
-                if (this.numIndexDocs > 0 || this.summary.isIncremental) {
-                    // self-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
-                    await this.coupleSelf(this.settings.resolveOgcDistributions);
-                    // get services separately (time-intensive)
-                    if (this.settings.harvestingMode == 'separate') {
-                        await this.harvestServices();
+                let numIndexDocs = await this.harvest();
+                // did the harvesting return results at all?
+                if (!this.summary.isIncremental) {
+                    if (numIndexDocs == 0) {
+                        throw new Error(`No results during ${this.settings.type} import`);
                     }
-                    // data-service-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
-                    await this.coupleDatasetsServices(this.settings.resolveOgcDistributions);
+                    // ensure that less than X percent of existing datasets are slated for deletion
+                    // TODO introduce settings to:
+                    // - send a mail
+                    // - fail or continue
+                    let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.sourceURL, transactionTimestamp);
+                    if (nonFetchedPercentage > this.generalConfig.harvesting.maxDifference) {
+                        throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
+                    }
+                }
 
-                    if (this.summary.databaseErrors.length == 0) {
-                        await this.database.commitTransaction();
-                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getRecordsUrl);
-                    }
-                    else {
-                        await this.database.rollbackTransaction();
-                    }
-                    observer.next(ImportResult.complete(this.summary));
-                    observer.complete();
+                // self-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
+                await this.coupleSelf(this.settings.resolveOgcDistributions);
+                // get services separately (time-intensive)
+                if (this.settings.harvestingMode == 'separate') {
+                    await this.harvestServices();
                 }
-                else {
-                    if(this.summary.appErrors.length === 0) {
-                        this.summary.appErrors.push('No Results');
-                    }
-                    log.error('No results during CSW import - Keep old index');
-                    observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
-                    observer.complete();
+                // data-service-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
+                await this.coupleDatasetsServices(this.settings.resolveOgcDistributions);
+
+                // did fatal errors occur (ie DB or APP errors)?
+                if (this.summary.databaseErrors.length > 0 || this.summary.appErrors.length > 0) {
+                    throw new Error();
                 }
-            } catch (err) {
-                this.summary.appErrors.push(err.message ? err.message : err);
-                log.error('Error during CSW import', err);
-                observer.next(ImportResult.complete(this.summary, 'Error happened'));
-                observer.complete();
+
+                await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
+                await this.database.commitTransaction();
+                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
+                observer.next(ImportResult.complete(this.summary));
+            }
+            catch (err) {
+                if (err.message) {
+                    this.summary.appErrors.push(err.message);
+                }
+                await this.database.rollbackTransaction();
+                let msg = this.summary.appErrors.length > 0 ? this.summary.appErrors[0] : this.summary.databaseErrors[0];
+                if (this.generalConfig.mail.enabled) {
+                    MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
+                }
+                log.error(msg);
+                observer.next(ImportResult.complete(this.summary, msg));
             }
         }
+        observer.complete();
     }
 
-    async harvest(): Promise<void> {
+    protected async harvest(): Promise<number> {
         log.info(`Started requesting records`);
         let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId);
         this.generalInfo['catalog'] = catalog;
@@ -205,10 +212,12 @@ export class CswImporter extends Importer {
         log.info(`Finished requesting records`);
         // 3) persist leftovers
         await this.database.sendBulkData();
+
+        return this.numIndexDocs;
     }
 
     async harvestServices(): Promise<void> {
-        let datasetIds = await this.database.getDatasetIdentifiers(this.settings.getRecordsUrl);
+        let datasetIds = await this.database.getDatasetIdentifiers(this.settings.sourceURL);
         let numChunks = Math.ceil(datasetIds.length / this.settings.maxServices);
         log.info(`Requesting services for ${datasetIds.length} datasets in ${numChunks} chunks`);
         // 1) create paged request delegates
@@ -238,7 +247,7 @@ export class CswImporter extends Importer {
     async coupleSelf(resolveOgcDistributions: boolean) {
         log.info(`Started self-coupling`);
         // get all datasets
-        let recordEntities: RecordEntity[] = await this.database.getDatasets(this.settings.getRecordsUrl) ?? [];
+        let recordEntities: RecordEntity[] = await this.database.getDatasets(this.settings.sourceURL) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
@@ -252,7 +261,7 @@ export class CswImporter extends Importer {
     async coupleDatasetsServices(resolveOgcDistributions: boolean) {
         log.info(`Started dataset-service coupling`);
         // get all services
-        let serviceEntities: RecordEntity[] = await this.database.getServices(this.settings.getRecordsUrl) ?? [];
+        let serviceEntities: RecordEntity[] = await this.database.getServices(this.settings.sourceURL) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
@@ -386,7 +395,7 @@ export class CswImporter extends Importer {
         let resultsNode = responseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
         if (resultsNode) {
             let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
-            log.debug(`Received ${numReturned} records from ${this.settings.getRecordsUrl}`);
+            log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
             let importedDocuments = await this.extractRecords(response, harvestTime);
             await this.updateRecords(importedDocuments, this.generalInfo['catalog'].id);
             let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
@@ -441,7 +450,7 @@ export class CswImporter extends Importer {
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.settings.getRecordsUrl,
+                    source: this.settings.sourceURL,
                     collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
@@ -480,7 +489,7 @@ export class CswImporter extends Importer {
     static createRequestConfig(settings: CswSettings, request = 'GetRecords'): RequestOptions {
         let requestConfig: RequestOptions = {
             method: settings.httpMethod || "GET",
-            uri: settings.getRecordsUrl,
+            uri: settings.sourceURL,
             json: false,
             headers: RequestDelegate.cswRequestHeaders(),
             proxy: settings.proxy || null,

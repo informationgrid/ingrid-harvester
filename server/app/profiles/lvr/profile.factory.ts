@@ -37,8 +37,6 @@ import { OaiMapper as OaiModsMapper } from '../../importer/oai/mods/oai.mapper';
 import { OaiSettings } from '../../importer/oai/oai.settings';
 import { PostgresAggregator } from './persistence/postgres.aggregator';
 import { PostgresAggregator as AbstractPostgresAggregator} from '../../persistence/postgres.aggregator';
-import { PostgresQueries } from './persistence/postgres.queries';
-import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
 
 export class LvrFactory extends ProfileFactory<KldMapper | OaiLidoMapper | OaiModsMapper> {
@@ -73,10 +71,6 @@ export class LvrFactory extends ProfileFactory<KldMapper | OaiLidoMapper | OaiMo
 
     getPostgresAggregator(): AbstractPostgresAggregator<LvrIndexDocument> {
         return new PostgresAggregator();
-    }
-
-    getPostgresQueries(): AbstractPostgresQueries {
-        return PostgresQueries.getInstance();
     }
 
     getProfileName(): string {

@@ -38,6 +38,9 @@ export abstract class ProfileFactory<M extends BaseMapper> {
     abstract getIndexMappings(): any;
     abstract getIndexSettings(): IndexSettings;
     abstract getPostgresAggregator(): PostgresAggregator<IndexDocument>;
-    abstract getPostgresQueries(): PostgresQueries;
     abstract getProfileName(): string;
+
+    getPostgresQueries(): PostgresQueries {
+        return PostgresQueries.getInstance();
+    }
 }

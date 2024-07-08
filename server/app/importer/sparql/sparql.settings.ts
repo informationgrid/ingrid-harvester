@@ -24,7 +24,6 @@
 import {ImporterSettings} from '../../importer.settings';
 
 export type SparqlSettings = {
-    endpointUrl: string,
     query: string,
     filterTags?: string[],
     filterThemes?: string[],

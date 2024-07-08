@@ -65,7 +65,7 @@ describe('Import DCAT AP PLU', function () {
 
         // @ts-ignore
         const settings: DcatappluSettings = {
-            catalogUrl: "http://localhost:8040/examples/input-dcatapplu-transformedData.xml",
+            sourceURL: "http://localhost:8040/examples/input-dcatapplu-transformedData.xml",
             filterTags: null,
             filterThemes: null,
             providerPrefix: null,

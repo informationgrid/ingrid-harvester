@@ -45,7 +45,7 @@ export class OaiHarvesterComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    this.form.addControl('providerUrl', new FormControl<string>(this.model.providerUrl));
+    this.form.addControl('sourceURL', new FormControl<string>(this.model.sourceURL));
     this.form.addControl('metadataPrefix', new FormControl<string>(this.model.metadataPrefix));
     this.form.addControl('set', new FormControl<string>(this.model.set));
     this.form.addControl('from', new FormControl<Date>(this.model.from));

@@ -366,7 +366,7 @@ export class DcatappluMapper extends BaseMapper {
         let dcatLink; //=  DcatappluMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');
         return {
-            source_base: this.settings.catalogUrl,
+            source_base: this.settings.sourceURL,
             raw_data_source: dcatLink,
             source_type: 'dcatapplu',
             portal_link: portalLink,

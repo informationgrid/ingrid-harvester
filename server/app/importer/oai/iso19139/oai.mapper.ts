@@ -98,7 +98,7 @@ export class OaiMapper extends BaseMapper {
     getDescription() {
         let abstract = OaiMapper.getCharacterStringContent(this.idInfo, 'abstract');
         if (!abstract) {
-            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.providerUrl}\'`;
+            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.sourceURL}\'`;
             this.log.warn(msg);
             this.summary.warnings.push(['No description', msg]);
             this.valid = false;
@@ -414,7 +414,7 @@ export class OaiMapper extends BaseMapper {
         }, false);
         if (!valid) {
             // Don't index metadata-sets without any of the mandatory keywords
-            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.providerUrl}'.`);
+            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.sourceURL}'.`);
             this.skipped = true;
         }
 
@@ -430,9 +430,9 @@ export class OaiMapper extends BaseMapper {
     }
 
     getMetadataSource(): MetadataSource {
-        let oaiLink = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=iso19139&identifier=${this.uuid}`;
+        let oaiLink = `${this.settings.sourceURL}?verb=GetRecord&metadataPrefix=iso19139&identifier=${this.uuid}`;
         return {
-            source_base: this.settings.providerUrl,
+            source_base: this.settings.sourceURL,
             raw_data_source: oaiLink,
             source_type: 'oai_iso19139',
             portal_link: this.settings.defaultAttributionLink,
@@ -649,7 +649,7 @@ export class OaiMapper extends BaseMapper {
     }
 
     getErrorSuffix(uuid, title) {
-        return `Id: '${uuid}', title: '${title}', source: '${this.settings.providerUrl}'.`;
+        return `Id: '${uuid}', title: '${title}', source: '${this.settings.sourceURL}'.`;
     }
 
     getHarvestedData(): string {

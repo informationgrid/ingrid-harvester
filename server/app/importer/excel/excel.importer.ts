@@ -37,8 +37,10 @@ import { Workbook, Worksheet } from 'exceljs';
 const log = require('log4js').getLogger(__filename);
 
 export class ExcelImporter extends Importer {
-    private profile: ProfileFactory<ExcelMapper>;
-    settings: ExcelSettings;
+
+    protected profile: ProfileFactory<ExcelMapper>;
+    protected settings: ExcelSettings;
+
     excelFilepath: string;
     names = {};
 
@@ -168,29 +170,30 @@ export class ExcelImporter extends Importer {
             }
 
             log.debug('Waiting for #promises to finish: ' + promises.length);
-            await this.database.beginTransaction();
-            Promise.all(promises)
-                .then(async () => {
-                    await this.database.commitTransaction();
-                    this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.filePath);
-                })
-                .then(() => observer.next(ImportResult.message('Running post operations')))
-                // .then(() => this.elastic.finishIndex())
-                .then( () => {
-                    observer.next(ImportResult.complete(this.summary));
-                    observer.complete();
-                } )
-                .catch(err => log.error('Error importing excel row', err));
-        } catch(error) {
+            let transactionTimestamp = await this.database.beginTransaction();
+            await Promise.allSettled(promises).catch(err => log.error('Error importing excel row', err));
+            await this.database.sendBulkData();
+            await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
+            await this.database.commitTransaction();
+            await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.filePath);
+            observer.next(ImportResult.message('Running post operations'));
+            observer.next(ImportResult.complete(this.summary));
+        }
+        catch(error) {
             log.error('Error reading excel workbook', error);
             this.summary.numErrors++;
             this.summary.appErrors.push('Error reading excel workbook: ' + error);
             observer.next(ImportResult.complete(this.summary));
-            observer.complete();
 
             // clean up index
             // await this.elastic.deleteIndex(this.elastic.indexName);
         }
+        observer.complete();
+    }
+
+    // TODO move implementation from exec() to harvest() so that super.exec can be used
+    protected async harvest(): Promise<number> {
+        return null;
     }
 
     private handleIndexDocError(e, mapper) {

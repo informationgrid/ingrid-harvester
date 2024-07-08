@@ -39,7 +39,7 @@ export class KldHarvesterComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    this.form.addControl('providerUrl', new FormControl<string>(this.model.providerUrl));
+    this.form.addControl('sourceURL', new FormControl<string>(this.model.sourceURL));
     this.form.addControl('maxConcurrentTimespan', new FormControl<number>(this.model.maxConcurrentTimespan));
   }
 

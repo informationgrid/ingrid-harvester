@@ -27,13 +27,11 @@ export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'mai
 
 export const defaultDCATSettings: DcatSettings = {
     ...DefaultImporterSettings,
-    catalogUrl: '',
     filterTags: [],
     filterThemes: []
 };
 
 export type DcatSettings = {
-    catalogUrl: string,
     filterTags?: string[],
     filterThemes?: string[],
     providerPrefix?: string,

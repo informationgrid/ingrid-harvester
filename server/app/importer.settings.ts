@@ -46,7 +46,8 @@ export const DefaultImporterSettings: ImporterSettings = {
     isIncremental: false,
     maxConcurrent: 1,
     skipUrlCheckOnHarvest: false,
-    timeout: 60000
+    timeout: 60000,
+    sourceURL: ''
 };
 
 export type ImporterSettings = {
@@ -90,5 +91,6 @@ export type ImporterSettings = {
         containsDocumentsWithData?: boolean,
         containsDocumentsWithDataBlacklist?: string
     },
-    timeout: number
+    timeout: number,
+    sourceURL: string
 }

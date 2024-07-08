@@ -26,13 +26,10 @@ import * as MiscUtils from '../../utils/misc.utils';
 import { defaultOAISettings, OaiSettings } from './oai.settings';
 import { getLogger } from 'log4js';
 import { oaiXPaths, OaiXPaths } from './oai.paths';
-import { ConfigService } from '../../services/config/ConfigService';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { IndexDocument } from '../../model/index.document';
-import { MailServer } from '../../utils/nodemailer.utils';
-// import { OaiMapper } from './iso19139/oai.mapper';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
@@ -41,15 +38,16 @@ import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils'
 import { Summary } from '../../model/summary';
 import { BaseMapper } from '../../importer/base.mapper';
 
-const log = require('log4js').getLogger(__filename),
-    logRequest = getLogger('requests');
+const log = require('log4js').getLogger(__filename);
+const logRequest = getLogger('requests');
 
 export class OaiImporter extends Importer {
 
     protected domParser: DOMParser;
-    private profile: ProfileFactory<BaseMapper>;
-    private readonly settings: OaiSettings;
-    private requestDelegate: RequestDelegate;
+    protected profile: ProfileFactory<BaseMapper>;
+    protected requestDelegate: RequestDelegate;
+    protected settings: OaiSettings;
+
     private xpaths: OaiXPaths;
 
     private totalRecords = 0;
@@ -78,56 +76,12 @@ export class OaiImporter extends Importer {
         this.OaiMapper = require(`./${this.settings.metadataPrefix}/oai.mapper`).OaiMapper;
     }
 
+    // only here for documentation - use the "default" exec function
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
-        if (this.settings.dryRun) {
-            log.debug('Dry run option enabled. Skipping index creation.');
-            await this.harvest();
-            log.debug('Skipping finalisation of index for dry run.');
-            observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
-            observer.complete();
-        }
-        else {
-            try {
-                let transactionTimestamp = await this.database.beginTransaction();
-                // get datasets
-                await this.harvest();
-                // did the harvesting return results at all?
-                if (this.numIndexDocs == 0 && !this.summary.isIncremental) {
-                    throw new Error(`No results during OAI/${this.settings.metadataPrefix?.toUpperCase()} import`);
-                }
-                // ensure that less than X percent of existing datasets are slated for deletion
-                // TODO introduce settings to:
-                // - send a mail
-                // - fail or continue
-                let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.providerUrl, transactionTimestamp);
-                if (nonFetchedPercentage > ConfigService.getGeneralSettings().maxDiff) {
-                    throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
-                }
-                // did fatal errors occur (ie DB or APP errors)?
-                if (this.summary.databaseErrors.length > 0 || this.summary.appErrors.length > 0) {
-                    throw new Error();
-                }
-
-                await this.database.deleteNonFetchedDatasets(this.settings.providerUrl, transactionTimestamp);
-                await this.database.commitTransaction();
-                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.providerUrl);
-                observer.next(ImportResult.complete(this.summary));
-            }
-            catch (err) {
-                if (err.message) {
-                    this.summary.appErrors.push(err.message);
-                }
-                await this.database.rollbackTransaction();
-                let msg = this.summary.appErrors.length > 0 ? this.summary.appErrors[0] : this.summary.databaseErrors[0];
-                // MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
-                log.error(msg);
-                observer.next(ImportResult.complete(this.summary, msg));
-            }
-            observer.complete();
-        }
+        await super.exec(observer);
     }
 
-    async harvest() {
+    protected async harvest(): Promise<number> {
         while (true) {
             try {
                 log.debug('Requesting next records');
@@ -141,7 +95,7 @@ export class OaiImporter extends Importer {
                 }
 
                 let numReturned = resultsNode.getElementsByTagName('record').length;
-                log.debug(`Received ${numReturned} records from ${this.settings.providerUrl}`);
+                log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
                 await this.extractRecords(response, harvestTime);
 
                 let resumptionTokenNode = resultsNode.getElementsByTagName('resumptionToken')[0];
@@ -165,6 +119,8 @@ export class OaiImporter extends Importer {
             }
         }
         this.database.sendBulkData();
+
+        return this.numIndexDocs;
     }
 
     async extractRecords(getRecordsResponse, harvestTime) {
@@ -204,7 +160,7 @@ export class OaiImporter extends Importer {
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.settings.providerUrl,
+                    source: this.settings.sourceURL,
                     collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
@@ -226,7 +182,7 @@ export class OaiImporter extends Importer {
     static createRequestConfig(settings: OaiSettings, resumptionToken?: string): RequestOptions {
         let requestConfig: RequestOptions = {
             method: "GET",
-            uri: settings.providerUrl,
+            uri: settings.sourceURL,
             json: false,
             headers: RequestDelegate.cswRequestHeaders(),
             proxy: settings.proxy || null,

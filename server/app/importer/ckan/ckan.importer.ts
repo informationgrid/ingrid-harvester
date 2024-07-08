@@ -38,10 +38,10 @@ import { Summary } from '../../model/summary';
 const log = require('log4js').getLogger(__filename);
 
 export class CkanImporter extends Importer {
-    private profile: ProfileFactory<CkanMapper>;
-    protected readonly settings: CkanSettings;
 
-    private requestDelegate: RequestDelegate;
+    protected profile: ProfileFactory<CkanMapper>;
+    protected requestDelegate: RequestDelegate;
+    protected settings: CkanSettings;
 
     protected numIndexDocs = 0;
     private requestDelegateCount: RequestDelegate;
@@ -49,7 +49,7 @@ export class CkanImporter extends Importer {
 
     /**
      * Create the importer and initialize with settings.
-     * @param { {ckanBaseUrl, defaultMcloudSubgroup, mapper} }settings
+     * @param { {sourceURL, defaultMcloudSubgroup, mapper} }settings
      */
     constructor(settings) {
         super(settings);
@@ -60,9 +60,9 @@ export class CkanImporter extends Importer {
         settings = MiscUtils.merge(defaultCKANSettings, settings);
 
         // Trim trailing slash
-        let url = settings.ckanBaseUrl;
+        let url = settings.sourceURL;
         if (url.charAt(url.length - 1) === '/') {
-            settings.ckanBaseUrl = url.substring(0, url.length - 1);
+            settings.sourceURL = url.substring(0, url.length - 1);
         }
         this.settings = settings;
 
@@ -82,7 +82,7 @@ export class CkanImporter extends Importer {
     async importDataset(data: CkanMapperData) {
 
         try {
-            log.debug('Processing CKAN dataset: ' + data.source.name + ' from data-source: ' + this.settings.ckanBaseUrl);
+            log.debug('Processing CKAN dataset: ' + data.source.name + ' from data-source: ' + this.settings.sourceURL);
 
             // Execute the mappers
             let mapper = new CkanMapper(this.settings, data);
@@ -118,7 +118,7 @@ export class CkanImporter extends Importer {
         if (!this.settings.dryRun) {
             let entity: RecordEntity = {
                 identifier: sourceID,
-                source: this.settings.ckanBaseUrl,
+                source: this.settings.sourceURL,
                 collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                 dataset: doc,
                 original_document: harvestedData
@@ -133,25 +133,13 @@ export class CkanImporter extends Importer {
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
-        let promises = [];
-
         try {
-            // await this.prepareIndex();
-
             // get total number of documents
             let countJson = await this.requestDelegateCount.doRequest();
             this.totalCount = countJson.result.length;
-
-            const total = await this.fetchFilterAndIndexDocuments(promises);
-
-            if (total === 0) {
-                let warnMessage = `Could not harvest any datasets from ${this.settings.ckanBaseUrl}`;
-                await this.handleImportError(warnMessage, observer);
-            } else {
-                // return this.finishImport(promises, observer);
-            }
-
-        } catch (err) {
+            await super.exec(observer);
+        }
+        catch (err) {
             await this.handleImportError(err.message, observer);
         }
     }
@@ -160,30 +148,12 @@ export class CkanImporter extends Importer {
         log.error('error:', message);
         this.summary.appErrors.push(message);
         this.sendFinishMessage(observer, message);
-
-        // clean up index
-        // await this.elastic.deleteIndex(this.elastic.indexName)
-        //     .catch(e => log.error(e.message));
     }
 
-    private finishImport(promises: any[], observer: Observer<ImportLogMessage>) {
-        return Promise.all(promises)
-            .then(() => this.postIndexActions())
-            .then(() => this.sendFinishMessage(observer))
-            .catch(err => log.error('Error indexing data', err));
-    }
-
-    private async prepareIndex() {
-        if (this.settings.dryRun) {
-            log.debug('Dry run option enabled. Skipping index creation.');
-        } else {
-            await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
-        }
-    }
-
-    private async fetchFilterAndIndexDocuments(promises: any[]) {
+    protected async harvest(): Promise<number> {
         let total = 0;
         let offset = this.settings.startPosition;
+        let promises = [];
 
         while (true) {
             let now = new Date();
@@ -194,7 +164,7 @@ export class CkanImporter extends Importer {
                 break;
             }
 
-            log.info(`Received ${results.length} records from ${this.settings.ckanBaseUrl}`);
+            log.info(`Received ${results.length} records from ${this.settings.sourceURL}`);
             total += results.length;
 
             let filteredResults = this.filterDatasets(results);

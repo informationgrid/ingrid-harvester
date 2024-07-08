@@ -71,7 +71,7 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.form.addControl('httpMethod', new UntypedFormControl(this.model.httpMethod));
-    this.form.addControl('getFeaturesUrl', new UntypedFormControl(this.model.getFeaturesUrl));
+    this.form.addControl('sourceURL', new UntypedFormControl(this.model.sourceURL));
     this.form.addControl('featuresFilter', new UntypedFormControl(this.model.featureFilter));
     this.form.addControl('version', new UntypedFormControl(this.model.version));
     this.form.addControl('typename', new UntypedFormControl(this.model.typename));

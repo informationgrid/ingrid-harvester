@@ -54,6 +54,8 @@
     "cronPattern": "30 05 * * *",
     "dir": ""
   },
-  "maxDiff": 100,
+  "harvesting": {
+    "maxDifference": 10
+  },
   "cronOffset": 0
 }

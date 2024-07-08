@@ -43,7 +43,7 @@ export class DcatHarvesterComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    this.form.addControl('catalogUrl', new UntypedFormControl(this.getModelField('catalogUrl', '')));
+    this.form.addControl('sourceURL', new UntypedFormControl(this.getModelField('sourceURL', '')));
 
     this.form.addControl('providerPrefix', new UntypedFormControl(this.getModelField('providerPrefix', '')));
     this.form.addControl('dcatProviderField', new UntypedFormControl(this.getModelField('dcatProviderField', 'creator')));

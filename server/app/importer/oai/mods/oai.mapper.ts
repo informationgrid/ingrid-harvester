@@ -198,9 +198,9 @@ export class OaiMapper extends BaseMapper {
     }
 
     getMetadataSource(): MetadataSource {
-        let link = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=${this.settings.metadataPrefix}&identifier=oai:www.mycore.de:${this.getId()}`;
+        let link = `${this.settings.sourceURL}?verb=GetRecord&metadataPrefix=${this.settings.metadataPrefix}&identifier=oai:www.mycore.de:${this.getId()}`;
         return {
-            source_base: this.settings.providerUrl,
+            source_base: this.settings.sourceURL,
             raw_data_source: link,
             source_type: this.settings.metadataPrefix
         };

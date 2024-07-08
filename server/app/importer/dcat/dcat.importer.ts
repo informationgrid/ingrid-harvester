@@ -43,13 +43,12 @@ const logRequest = getLogger('requests');
 export class DcatImporter extends Importer {
 
     protected domParser: DOMParser;
-    private profile: ProfileFactory<DcatMapper>;
-    private readonly settings: DcatSettings;
-    private readonly requestDelegate: RequestDelegate;
+    protected profile: ProfileFactory<DcatMapper>;
+    protected requestDelegate: RequestDelegate;
+    protected settings: DcatSettings;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
-
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings);
@@ -69,37 +68,12 @@ export class DcatImporter extends Importer {
         this.settings = settings;
     }
 
+    // only here for documentation - use the "default" exec function
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
-        if (this.settings.dryRun) {
-            log.debug('Dry run option enabled. Skipping index creation.');
-            await this.harvest();
-            log.debug('Skipping finalisation of index for dry run.');
-            observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
-            observer.complete();
-        } else {
-            try {
-                // await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
-                await this.database.beginTransaction();
-                await this.harvest();
-                await this.database.commitTransaction();
-                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.catalogUrl);
-                // await this.elastic.finishIndex();
-                observer.next(ImportResult.complete(this.summary));
-                observer.complete();
-
-            } catch (err) {
-                this.summary.appErrors.push(err.message ? err.message : err);
-                log.error('Error during DCAT import', err);
-                observer.next(ImportResult.complete(this.summary, 'Error happened'));
-                observer.complete();
-
-                // clean up index
-                // this.elastic.deleteIndex(this.elastic.indexName);
-            }
-        }
+        await super.exec(observer);
     }
 
-    async harvest() {
+    protected async harvest(): Promise<number> {
         let retries = 0;
 
         while (true) {
@@ -137,7 +111,7 @@ export class DcatImporter extends Importer {
                     this.requestDelegate.updateConfig({qs: {page: nextPage}});
                 }
 
-                log.debug(`Received ${numReturned} records from ${this.settings.catalogUrl} - Page: ${thisPage}`);
+                log.debug(`Received ${numReturned} records from ${this.settings.sourceURL} - Page: ${thisPage}`);
                 await this.extractRecords(response, harvestTime)
             }
             else {
@@ -159,6 +133,8 @@ export class DcatImporter extends Importer {
             if (isLastPage) break;
         }
         await this.database.sendBulkData();
+
+        return this.numIndexDocs;
     }
 
     async extractRecords(getRecordsResponse, harvestTime) {
@@ -210,7 +186,7 @@ export class DcatImporter extends Importer {
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.settings.catalogUrl,
+                    source: this.settings.sourceURL,
                     collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
@@ -240,7 +216,7 @@ export class DcatImporter extends Importer {
     static createRequestConfig(settings: DcatSettings): RequestOptions {
         let requestConfig: RequestOptions = {
             method: "GET",
-            uri: settings.catalogUrl,
+            uri: settings.sourceURL,
             json: false,
             proxy: settings.proxy || null,
             rejectUnauthorized: settings.rejectUnauthorizedSSL,

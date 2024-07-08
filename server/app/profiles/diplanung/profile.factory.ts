@@ -38,8 +38,6 @@ import { IndexSettings } from '../../persistence/elastic.setting';
 import { MsWfsMapper } from '../../importer/wfs/ms/ms.wfs.mapper';
 import { PostgresAggregator } from './persistence/postgres.aggregator';
 import { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator';
-import { PostgresQueries } from './persistence/postgres.queries';
-import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
 import { WfsMapper } from '../../importer/wfs/wfs.mapper';
 import { XplanSynWfsMapper } from '../../importer/wfs/xplan/syn/xplan.syn.wfs.mapper';
@@ -77,10 +75,6 @@ export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper
 
     getPostgresAggregator(): AbstractPostgresAggregator<DiplanungIndexDocument> {
         return new PostgresAggregator();
-    }
-
-    getPostgresQueries(): AbstractPostgresQueries {
-        return PostgresQueries.getInstance();
     }
 
     getProfileName(): string {

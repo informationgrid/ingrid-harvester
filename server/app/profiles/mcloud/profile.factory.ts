@@ -41,8 +41,6 @@ import { McloudImporterFactory } from './importer/mcloud.importer.factory';
 import { OaiMapper } from '../../importer/oai/iso19139/oai.mapper';
 import { PostgresAggregator } from './persistence/postgres.aggregator';
 import { PostgresAggregator as AbstractPostgresAggregator} from '../../persistence/postgres.aggregator';
-import { PostgresQueries } from './persistence/postgres.queries';
-import { PostgresQueries as AbstractPostgresQueries } from '../../persistence/postgres.queries';
 import { ProfileFactory } from '../profile.factory';
 import { SparqlMapper } from '../../importer/sparql/sparql.mapper';
 
@@ -77,10 +75,6 @@ export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatM
 
     getPostgresAggregator(): AbstractPostgresAggregator<mcloudIndexDocument> {
         return new PostgresAggregator();
-    }
-
-    getPostgresQueries(): AbstractPostgresQueries {
-        return PostgresQueries.getInstance();
     }
 
     getProfileName(): string {
