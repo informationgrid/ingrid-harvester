@@ -40,7 +40,9 @@ export interface BulkResponse {
 export interface EsOperation {
     operation: 'index' | 'create' | 'update' | 'delete',
     _id: any,
-    document?: any
+    _index?: string,
+    document?: any,
+    _type?: string
 }
 
 export abstract class ElasticsearchUtils {
@@ -124,7 +126,7 @@ export abstract class ElasticsearchUtils {
      *
      * The operations are sent in the same request.
      *
-     * @param boxedOperations 
+     * @param boxedOperations
      */
     abstract addOperationChunksToBulk(boxedOperations: EsOperation[]): Promise<BulkResponse>;
 

@@ -223,7 +223,7 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
             });
             if (response.errors) {
                 response.items.forEach(item => {
-                    let err = item.index.error;
+                    let err = item.index?.error || item.update?.error;
                     if (err) {
                         this.handleError(`Error during indexing on index '${this.indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
                     }
@@ -289,8 +289,8 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
 
     async addOperationChunksToBulk(boxedOperations: EsOperation[]): Promise<BulkResponse> {
         let operationChunk = [];
-        for (let { operation, _id, document } of boxedOperations) {
-            operationChunk.push({ [operation]: { _id } });
+        for (let { operation, _id, _index, document, _type } of boxedOperations) {
+            operationChunk.push({ [operation]: {_index, _id , _type} });
             switch (operation) {
                 case 'index':
                     operationChunk.push(document);

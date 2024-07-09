@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-import { CswImporter } from '../../../importer/csw/csw.importer';
 import { Harvester } from '@shared/harvester';
 import { Importer } from '../../../importer/importer';
 import { ImporterFactory } from '../../../importer/importer.factory';
+import {IngridCswImporter} from "./ingrid.csw.importer";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -34,7 +34,7 @@ export class IngridImporterFactory extends ImporterFactory{
         let importer: Importer;
         switch (config.type) {
             case 'CSW':
-                importer = new CswImporter(config);
+                importer = new IngridCswImporter(config);
                 break;
             default: {
                 log.error('Importer not found: ' + config.type);

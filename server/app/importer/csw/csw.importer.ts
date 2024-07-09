@@ -162,6 +162,8 @@ export class CswImporter extends Importer {
                 await this.database.commitTransaction();
                 await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
                 observer.next(ImportResult.complete(this.summary));
+
+                await this.handlePostHarvesting()
             }
             catch (err) {
                 if (err.message) {
@@ -558,5 +560,8 @@ export class CswImporter extends Importer {
 
     getSummary(): Summary {
         return this.summary;
+    }
+
+    protected handlePostHarvesting() {
     }
 }
