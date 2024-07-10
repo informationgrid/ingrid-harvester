@@ -172,7 +172,7 @@ export class CswImporter extends Importer {
                 if (this.generalConfig.mail.enabled) {
                     MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
                 }
-                log.error(msg);
+                log.error(err);
                 observer.next(ImportResult.complete(this.summary, msg));
             }
         }

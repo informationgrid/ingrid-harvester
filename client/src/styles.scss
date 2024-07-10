@@ -310,14 +310,6 @@ button.button-with-text {
   }
 }
 
-.error {
-  font-size: 12px;
-  padding-left: 16px;
-  letter-spacing: 0.4px;
-  overflow: visible;
-  -webkit-font-smoothing: antialiased;
-}
-
 // prevent hint and error wrappers from overlapping other fields
 .mat-mdc-form-field-bottom-align {
   min-height: 22px;

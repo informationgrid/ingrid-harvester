@@ -137,7 +137,12 @@ export class UrlUtils {
 
             if (!value) {
                 if (Object.values(UrlUtils.formatMapping).indexOf(format) === -1) {
-                    log.warn('Distribution format unknown: ' + format);
+                    if (ConfigService.getGeneralSettings().mappingLogLevel == 'info') {
+                        log.info('Distribution format unknown: ' + format);
+                    }
+                    else {
+                        log.warn('Distribution format unknown: ' + format);
+                    }
                     warnings?.push(['Distribution format unknown', format]);
                 }
                 return format;

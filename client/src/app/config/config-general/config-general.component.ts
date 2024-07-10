@@ -191,6 +191,7 @@ export class ConfigGeneralComponent implements OnInit {
         numberOfReplicas: [settings.elasticsearch.numberOfReplicas]
       }),
       cronOffset: [settings.cronOffset],
+      mappingLogLevel: [settings.mappingLogLevel],
       proxy: [settings.proxy],
       allowAllUnauthorizedSSL: [settings.allowAllUnauthorizedSSL],
       portalUrl: [settings.portalUrl],
