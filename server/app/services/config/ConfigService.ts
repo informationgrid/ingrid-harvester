@@ -81,6 +81,7 @@ export class ConfigService {
             numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS) ?? 1,
             numberOfReplicas: parseIntOrUndefined(process.env.ELASTIC_NUM_REPLICAS) ?? 0
         },
+        mappingLogLevel: 'warn',
         proxy: process.env.PROXY_URL || null,
         allowAllUnauthorizedSSL: parseBooleanOrUndefined(process.env.ALLOW_ALL_UNAUTHORIZED) ?? false,
         portalUrl: process.env.PORTAL_URL,

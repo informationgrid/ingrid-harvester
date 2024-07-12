@@ -27,6 +27,7 @@ export type GeneralSettings = {
     elasticsearch: ElasticsearchConfiguration,
     database: DatabaseConfiguration,
     cronOffset?: number,
+    mappingLogLevel: 'info' | 'warn',
     proxy: string,
     allowAllUnauthorizedSSL: boolean,
     portalUrl?: string,
