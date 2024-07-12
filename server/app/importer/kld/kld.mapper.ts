@@ -102,7 +102,7 @@ export class KldMapper extends BaseMapper {
         if (start && end && start > end) {
             const message = `Inconsistent dates found in object ${this.record.Id}: \
                 Start (${new Date(start).toJSON()}) is greater than end (${new Date(end).toJSON()}).`;
-            this.summary.appErrors.push(message);
+            this.summary.warnings.push(['Inconsistent dates', message]);
         }
         const range = { gte: start, lte: end };
         return [range];
