@@ -45,6 +45,9 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
     }
 
     async create(): Promise<LvrIndexDocument> {
+        // ignore empty date ranges
+        const temporals = this.getTemporal()?.filter((t: Temporal) => t.date_range.gte || t.date_range.lte);
+
         let ingridDocument: IngridIndexDocument = {
             id: this.getUrlSafeIdentifier(),
             schema_version: '1.0.0',
@@ -54,7 +57,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
             temporal: {
                 modified: this.getModified(),
                 issued: this.getIssued(),
-                data_temporal: this.getNullForTemporal(this.getTemporal()?.[0])
+                data_temporal: temporals ? this.getNullForTemporal(temporals[0]) : null
             },
             keywords: this.getKeywords()?.map(keyword => ({
                 id: first(keyword.id),
@@ -69,9 +72,9 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
             }
         };
 
-        let result: LvrIndexDocument = {        
+        let result: LvrIndexDocument = {
             ...ingridDocument,
-            lvr: {    
+            lvr: {
                 identifier: this.getIdentifier(),
                 // title: this.getTitle(),
                 // description: this.getDescription(),
@@ -112,7 +115,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
     }
 
     private getNullForTemporal(temporal: Temporal) {
-        if (!temporal?.date_range?.gte && !temporal?.date_range?.lte) {
+        if ((!temporal?.date_range?.gte || isNaN(temporal?.date_range?.gte.getTime())) && (!temporal?.date_range?.lte || isNaN(temporal?.date_range?.lte.getTime()))) {
             return { ...temporal, date_range: null };
         }
         return temporal;

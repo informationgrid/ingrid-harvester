@@ -35,6 +35,7 @@ import { MetadataSource } from '../../../model/index.document';
 import { OaiSettings } from '../oai.settings';
 import { Summary } from '../../../model/summary';
 import { XPathElementSelect } from '../../../utils/xpath.utils';
+import { normalizeDateTime } from '../../../utils/misc.utils';
 
 export class OaiMapper extends BaseMapper {
 
@@ -92,8 +93,8 @@ export class OaiMapper extends BaseMapper {
             },
             displayDate: OaiMapper.text('./eventDate/displayDate', eventNode),
             period: {
-                gte: new Date(OaiMapper.text('./eventDate/date/earliestDate', eventNode)),
-                lte: new Date(OaiMapper.text('./eventDate/date/latestDate', eventNode))
+                gte: normalizeDateTime(OaiMapper.text('./eventDate/date/earliestDate', eventNode)),
+                lte: normalizeDateTime(OaiMapper.text('./eventDate/date/latestDate', eventNode))
             },
             place: {
                 displayPlace: OaiMapper.text('./eventPlace/displayPlace', eventNode),
@@ -135,13 +136,13 @@ export class OaiMapper extends BaseMapper {
 
     /**
      * Subject Sets
-     * 
+     *
      * Wrapper for display and index elements for one set of subject information.
-     * If an object / work has multiple parts or otherwise has separate, multiple subjects, repeat this element and use 
-     * Extent Subject in the Subject element. This element may also be repeated to distinguish between subjects that 
+     * If an object / work has multiple parts or otherwise has separate, multiple subjects, repeat this element and use
+     * Extent Subject in the Subject element. This element may also be repeated to distinguish between subjects that
      * reflect what an object / work is *of* (description and identification) from what it is *about* (interpretation).
-     * 
-     * @returns 
+     *
+     * @returns
      */
     getSubjects(): Subject[] {
         let subjectNodes = OaiMapper.select('./lido:descriptiveMetadata/lido:objectRelationWrap/lido:subjectWrap/lido:subjectSet/lido:subject', this.record);
@@ -153,8 +154,8 @@ export class OaiMapper extends BaseMapper {
             },
             displayDate: OaiMapper.text('./subjectDate/displayDate', subjectNode),
             period: {
-                gte: new Date(OaiMapper.text('./subjectDate/date/earliestDate', subjectNode)),
-                lte: new Date(OaiMapper.text('./subjectDate/date/latestDate', subjectNode))
+                gte: normalizeDateTime(OaiMapper.text('./subjectDate/date/earliestDate', subjectNode)),
+                lte: normalizeDateTime(OaiMapper.text('./subjectDate/date/latestDate', subjectNode))
             },
             place: {
                 displayPlace: OaiMapper.text('./subjectPlace/displayPlace', subjectNode),
@@ -191,9 +192,9 @@ export class OaiMapper extends BaseMapper {
                 type: idNode.getAttribute('lido:type')
             })),
             info: OaiMapper.select('./lido:recordInfoSet', this.record).map(infoNode => ({
-                created: new Date(OaiMapper.text('./recordMetadataDate[lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/created"]', infoNode)),
+                created: normalizeDateTime(OaiMapper.text('./recordMetadataDate[lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/created"]', infoNode)),
                 link: OaiMapper.text('./recordInfoLink', infoNode),
-                modified: new Date(OaiMapper.text('./recordMetadataDate[lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/modified"]', infoNode)),
+                modified: normalizeDateTime(OaiMapper.text('./recordMetadataDate[lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/modified"]', infoNode)),
                 type: OaiMapper.text('./@type', infoNode)
             })),
             rights: OaiMapper.select('./lido:recordSource/rightsHolder', this.record).map(rightsNode => ({

@@ -183,23 +183,6 @@ export class KldMapper extends BaseMapper {
         return new Promise((resolve) => resolve([publisher]));
     }
 
-    private parseDate(date: string|null): number|null {
-        if (!date) {
-            return null;
-        }
-        let millis = 0;
-        const dateAsNumber = Number(date);
-        if (!isNaN(dateAsNumber)) {
-            // Data.parse does not parse BC years correctly
-            let resultDate = new Date(Date.UTC(1970, 0, 1, 0, 0, 0, 0));
-            millis = resultDate.setFullYear(dateAsNumber);
-        }
-        else {
-            millis = Date.parse(date);
-        }
-        return millis;
-    }
-
     private parseDateRange(dates: string[]): [Date|null, Date|null] {
         const values = dates.map(MiscUtils.normalizeDateTime).filter((date: Date|null) => date != null).sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
         const start = values.length > 0 ? values[0] : null;
