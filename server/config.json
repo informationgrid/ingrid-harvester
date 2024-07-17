@@ -646,7 +646,7 @@
     "rules": {
     },
     "maxConcurrent": 1,
-    "maxConcurrentTimespan": 100,
+    "maxConcurrentTimespan": 250,
     "isIncremental": true,
     "timeout": 60000,
     "sourceURL": "https://www.kuladig.de/api/public/",
