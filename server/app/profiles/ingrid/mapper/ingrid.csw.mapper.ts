@@ -164,7 +164,6 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT01_object() {
-        let codelist = Codelist.getInstance();
         let result = {
             obj_id: this.baseMapper.getGeneratedId(),
             org_obj_id: this.baseMapper.getGeneratedId(),
