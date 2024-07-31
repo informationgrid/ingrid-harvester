@@ -1163,6 +1163,12 @@ export class CswMapper extends BaseMapper {
                 if (uuidref) {
                     operatesOnIds.add(uuidref);
                 }
+                else{
+                    let uuidref = o.getAttribute('uuidref');
+                    if (uuidref) {
+                        operatesOnIds.add(uuidref);
+                    }
+                }
                 let href = o.getAttribute('xlink:href');
                 let uuid = href?.split('/').slice(-1)?.[0];
                 if (MiscUtils.isUuid(uuid)) {

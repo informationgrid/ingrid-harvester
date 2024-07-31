@@ -1,0 +1,109 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>5100</id>
+  <name>Objektklasse 3 - Art des Dienstes</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Suchdienste</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>discovery</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Discovery Service</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Darstellungsdienste</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>view</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>View Service</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Download-Dienste</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>download</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Download Service</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Transformationsdienste</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>transformation</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Transformation Service</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Dienste zum Abrufen von Geodatendiensten</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>invoke</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Invoke Spatial Data Service</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>6</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Sonstige Dienste</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>other</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Other Service</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

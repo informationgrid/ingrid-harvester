@@ -1,0 +1,33 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>7109</id>
+  <name>Datenqualität - Datenüberschuss - Art der Messung</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Rate of excess items</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Rate of excess items</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of duplicate feature instances</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of duplicate feature instances</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

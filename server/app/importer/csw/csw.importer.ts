@@ -145,7 +145,7 @@ export class CswImporter extends Importer {
                 }
 
                 // self-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
-                await this.coupleSelf(this.settings.resolveOgcDistributions);
+                //await this.coupleSelf(this.settings.resolveOgcDistributions);
                 // get services separately (time-intensive)
                 if (this.settings.harvestingMode == 'separate') {
                     await this.harvestServices();

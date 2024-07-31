@@ -38,6 +38,7 @@ import { ProfileFactory } from '../profile.factory';
 
 export class ingridFactory extends ProfileFactory<CswMapper> {
 
+
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();
     }

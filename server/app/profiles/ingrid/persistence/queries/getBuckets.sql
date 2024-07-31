@@ -33,25 +33,26 @@
         )
     WHERE
         anchor.source = $1
-        AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
+--        AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
 )
 UNION
 -- get all services for the datasets of a given source
 (
     SELECT
         ds.id AS anchor_id,
-        service.id AS id,
+        coupling.id AS id,
         ds.source AS source,
-        service.distribution AS dataset,
+        service.dataset AS dataset,
         ds.collection_id AS catalog_id,
-        service.service_type AS service_type,
+        coupling.service_type AS service_type,
         ds.created_on AS issued,
         ds.last_modified AS modified,
         ds.deleted_on AS deleted
-    FROM public.coupling AS service
+    FROM public.coupling AS coupling
     LEFT JOIN public.record AS ds
-    ON
-        ds.identifier = service.dataset_identifier
+    ON ds.identifier = coupling.dataset_identifier
+    LEFT JOIN public.record AS service
+    ON coupling.service_id = service.id::varchar(255)
     WHERE
         ds.source = $1
 )
@@ -70,7 +71,7 @@ UNION
         service.last_modified AS modified
     FROM public.record AS service
     LEFT JOIN (
-        SELECT 
+        SELECT
             secondary.id AS id,
             secondary.identifier AS identifier,
             secondary.source AS source

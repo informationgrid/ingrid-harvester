@@ -26,6 +26,8 @@ import { EsOperation } from '../../../persistence/elastic.utils';
 import { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator';
 import {IngridIndexDocument} from "../model/index.document";
 import {createEsId} from "../ingrid.utils";
+import {DiplanungIndexDocument} from "../../diplanung/model/index.document";
+import {Distribution} from "../../../model/distribution";
 
 export class PostgresAggregator implements AbstractPostgresAggregator<IngridIndexDocument> {
 
@@ -33,6 +35,11 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         let box: EsOperation[] = [];
         // find primary document
         let { document, duplicates } = this.prioritizeAndFilter(bucket);
+
+
+        for (let [id, service] of bucket.operatingServices) {
+            document = this.resolveCoupling(document, service);
+        }
 
         // shortcut - if all documents in the bucket should be deleted, delete the document from ES
         let deleteDocument = true;
@@ -111,6 +118,27 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
     }
 
     private sanitize(document: IngridIndexDocument): IngridIndexDocument {
+        return document;
+    }
+
+    private resolveCoupling(document: IngridIndexDocument, service: any): IngridIndexDocument {
+        if(service && service.hierarchylevel == 'service'){
+            if(service.capabilities_url){
+                document.capabilities_url = service.capabilities_url;
+            }
+            document.refering = {
+                object_reference: {
+                    obj_uuid: service.uuid,
+                    obj_name: service.title,
+                    obj_class: "3",
+                    special_name: "Gekoppelte Daten",
+                    special_ref: "3600",
+                    type: "view",
+                    version: "OGC:WMS 1.3.0"
+                }
+            };
+            document.refering_service_uuid = service.uuid+"@@"+service.title+"@@"+service.capabilities_url;
+        }
         return document;
     }
 

@@ -1,0 +1,33 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>600</id>
+  <name>Einfache Entscheidung</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>0</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Nein</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>no</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Ja</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>yes</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

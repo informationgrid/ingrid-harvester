@@ -1,0 +1,33 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>7126</id>
+  <name>Datenqualität - Genauigkeit nicht-quantitativer Attribute - Art der Messung</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of incorrect attribute values</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of incorrect attribute values</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Rate of incorrect classification for national identifier</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Rate of incorrect classification for national identifier</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

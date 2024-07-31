@@ -1,0 +1,58 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>5153</id>
+  <name>Objektklasse 3 - Version des Dienstes - Downloaddienst</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>OGC:WFS 1.1.0</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>OGC:WFS 1.1.0</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>OGC:WFS 1.1.0</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>OGC:WFS 2.0</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>OGC:WFS 2.0</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>OGC:WFS 2.0</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>predefined ATOM</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>predefined ATOM</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>predefined ATOM</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

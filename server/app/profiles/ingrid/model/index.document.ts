@@ -49,6 +49,8 @@ export type IngridIndexDocument = IndexDocument & {
     idf: string,
     modified: Date,
     capabilities_url: string,
+    refering: any,
+    refering_service_uuid: string,
     additional_html_1: string,
     t04_search: any,
     t0110_avail_format: any,

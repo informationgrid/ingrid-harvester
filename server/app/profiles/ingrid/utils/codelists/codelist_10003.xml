@@ -1,0 +1,291 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>10003</id>
+  <name>BKG-Use constraints</name>
+  <description></description>
+  <defaultEntry>-1</defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>(01) GeoNutzV</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>(01) GeoNutzV</string>
+        </entry>
+      </localisations>
+      <data>{ "id": "geoNutz/20130319", "name": "Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes", "url": "https://sg.geodatenzentrum.de/web_public/gdz/lizenz/geonutzv.pdf", "quelle": "" }</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>(02) WebAtlasDE light</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>(02) WebAtlasDE light</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>(03) Datenlizenz Deutschland Namensnennung 2.0</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>(03) Datenlizenz Deutschland Namensnennung 2.0</string>
+        </entry>
+      </localisations>
+      <data>{ "id": "dl-by-de/2.0", "name": "Datenlizenz Deutschland Namensnennung 2.0", "url": "https://www.govdata.de/dl-de/by-2-0", "quelle": "" }</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>(04) WebAtlasDE</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>(04) WebAtlasDE</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>(05) AdV-Daten – Vertrieb durch ZSGT an jedermann</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>(05) AdV-Daten – Vertrieb durch ZSGT an jedermann</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>6</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>(06) AdV-Daten – Vertrieb durch ZSGT an jedermann und Bereitstellung für Bundesbehörden durch DLZ</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>(06) AdV-Daten – Vertrieb durch ZSGT an jedermann und Bereitstellung für Bundesbehörden durch DLZ</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>7</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>(07) AdV-Daten – Bereitstellung nur für Bundesbehörden auf Grundlage des VGeoBund</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>(07) AdV-Daten – Bereitstellung nur für Bundesbehörden auf Grundlage des VGeoBund</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>8</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>(08) Daten Dritter – Bereitstellung nur für Bundesbehörden</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>(08) Daten Dritter – Bereitstellung nur für Bundesbehörden</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>(09) Bereitstellung nur für Bundesbehörden</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>(09) Bereitstellung nur für Bundesbehörden</string>
+        </entry>
+      </localisations>
+      <data>{ "id": "other-closed", "name": "Andere geschlossene Lizenz", "url": "http://dcat-ap.de/def/licenses/other-closed", "quelle": "" }</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>10</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Template für copyright</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Template für copyright</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>11</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Template für license</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Template für license</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>12</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Template für copyright und license</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Template für copyright und license</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>13</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Template für intellectualPropertyRights</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Template für intellectualPropertyRights</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>14</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Template für restricted</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Template für restricted</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>15</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>(10) Kontakt DLZ</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>(10) Kontakt DLZ</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>16</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>(11) Bereitstellung nur für Bundesbehörden und Landesvermessungseinrichtungen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>(11) Bereitstellung nur für Bundesbehörden und Landesvermessungseinrichtungen</string>
+        </entry>
+      </localisations>
+      <data>{ "id": "other-closed", "name": "Andere geschlossene Lizenz", "url": "http://dcat-ap.de/def/licenses/other-closed", "quelle": "" }</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>17</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>(12) Legal Notice Sentinel Data</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>(12) Legal Notice Sentinel Data</string>
+        </entry>
+      </localisations>
+      <data>{"id":"other-open", "name":"Legal Notice Sentinel Data", "url":"https://sg.geodatenzentrum.de/web_public/Sentinel_Data_Legal_Notice_deu.pdf", "quelle":"© Europäische Union, enthält Copernicus Sentinel-2 Daten [Jahr], verarbeitet durch das Bundesamt für Kartographie und Geodäsie (BKG)"}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>18</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>(13) TopPlusOpen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>(13) TopPlusOpen</string>
+        </entry>
+      </localisations>
+      <data>{ "id": "dl-by-de/2.0", "name": "Datenlizenz Deutschland Namensnennung 2.0", "url": "https://www.govdata.de/dl-de/by-2-0", "quelle": "" }</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>99</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Es gelten keine Bedingungen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>No conditions to access and use</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

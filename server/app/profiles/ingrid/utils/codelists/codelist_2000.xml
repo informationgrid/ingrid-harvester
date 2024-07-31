@@ -1,0 +1,319 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>2000</id>
+  <name>Objekt / Url-Verweis - Typ</name>
+  <description>Im Datafeld wird angegeben, in welchen Objektklassen der jeweilige Verweistyp angeboten wird. Die Objektklassen werden mit ihrer ID angegeben, jeweils durch ein Koma voneinander
+    getrennt.
+    ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.
+
+    Bei der Erzeuung der ISO-Metadaten aus den Katalogdaten wird, wenn vorhanden, immer der Eintrag der ISO-Locale verwendet. Andernfalls wird der Wert der English-Locale herangezogen.
+  </description>
+  <defaultEntry>-1</defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3100</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Methode / Datengrundlage</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Method / Base Data</string>
+        </entry>
+      </localisations>
+      <data>5</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3109</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Objektartenkatalog</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>keyCatalog</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Key Catalog</string>
+        </entry>
+      </localisations>
+      <data>5</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3210</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Basisdaten</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Basic Data</string>
+        </entry>
+      </localisations>
+      <data>3,6</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3345</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Basisdaten</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Basic Data</string>
+        </entry>
+      </localisations>
+      <data>2</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3515</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Herstellungsprozess</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Process of Production</string>
+        </entry>
+      </localisations>
+      <data>1</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3520</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Fachliche Grundlage</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Functional Base</string>
+        </entry>
+      </localisations>
+      <data>1</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3535</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Schlüsselkatalog</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Key Catalog</string>
+        </entry>
+      </localisations>
+      <data>1</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3555</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Symbolkatalog</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Icon Catalog</string>
+        </entry>
+      </localisations>
+      <data>1</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3570</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Datengrundlage</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Base Data</string>
+        </entry>
+      </localisations>
+      <data>1</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5066</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verweis zu Dienst</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>serviceurl</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Link to Service</string>
+        </entry>
+      </localisations>
+      <data>1,3</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9990</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Datendownload</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>download</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Download of data</string>
+        </entry>
+      </localisations>
+      <data>0,1,2,3,4,5,6</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9995</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Nutzungsbedingungen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Use Constraints</string>
+        </entry>
+      </localisations>
+      <data>0,1,2,3,4,5,6</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9999</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>unspezifischer Verweis</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>unspecificurl</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>unspecific Link</string>
+        </entry>
+      </localisations>
+      <data>0,1,2,3,4,5,6</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3600</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Gekoppelte Daten</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>coupledResource</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Coupled Data</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5302</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Information</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Information</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>information</string>
+        </entry>
+      </localisations>
+      <data>0,1,2,3,4,5,6</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5303</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Offline-Zugang</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Offline Access</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>offlineAccess</string>
+        </entry>
+      </localisations>
+      <data>0,1,2,3,4,5,6</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5304</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Bestellung</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Order</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>order</string>
+        </entry>
+      </localisations>
+      <data>0,1,2,3,4,5,6</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5305</id>
+      <description>ACHTUNG: Eventuell gleichlautende Einträge sind für unterschiedliche Klassen vorgesehen und dürfen NICHT gelöscht werden.</description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Suche</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Search</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>search</string>
+        </entry>
+      </localisations>
+      <data>0,1,2,3,4,5,6</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

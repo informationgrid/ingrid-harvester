@@ -94,7 +94,7 @@ export class PostgresUtils extends DatabaseUtils {
     async getStoredData(ids: string[]): Promise<any[]> {
         let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getStoredData, [ids]);
         let dates = [];
-        for (let row of result.rows) {            
+        for (let row of result.rows) {
             dates.push({
                 id: row.extras.generated_id,
                 issued: row.extras.metadata.issued,
@@ -106,12 +106,12 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async getDatasetIdentifiers(source: string): Promise<string[]> {
-        // TODO 
+        // TODO
         // let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiers, [source]);
         // let result: QueryResult<any> = await this.transactionClient.query("SELECT * from public.record WHERE source = $1", [source]);
         let result: QueryResult<any> = await this.transactionClient.query("SELECT identifier from public.record WHERE source = $1 and dataset->'extras'->>'hierarchy_level'!='service'", [source]);
         if (result.rowCount == 0) {
-            return null;
+            return [];
         }
         return result.rows.map(row => row.identifier);
     }
@@ -146,7 +146,7 @@ export class PostgresUtils extends DatabaseUtils {
         if (result.rowCount == 0) {
             return null;
         }
-        return { 
+        return {
             id: result.rows[0].id,
             ...result.rows[0].properties
         };
@@ -173,9 +173,9 @@ export class PostgresUtils extends DatabaseUtils {
 
     /**
      * Push datasets from database to elasticsearch, slower but with all bells and whistles.
-     * 
-     * @param elastic 
-     * @param source 
+     *
+     * @param elastic
+     * @param source
      * @param processBucket
      */
     async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string) {
@@ -249,9 +249,9 @@ export class PostgresUtils extends DatabaseUtils {
 
     /**
      * Infer source type from source URL.
-     * 
-     * @param source 
-     * @returns 
+     *
+     * @param source
+     * @returns
      */
     private getSourceType(dataset: IndexDocument, source: string) {
         source = source.toLowerCase()
@@ -279,7 +279,7 @@ export class PostgresUtils extends DatabaseUtils {
 
     /**
      * Execute a bulk upsert into the PSQL database
-     * 
+     *
      * @param entities the entities to persist (via upsert)
      * @returns BulkResponse containing number of affected rows
      */
@@ -293,7 +293,7 @@ export class PostgresUtils extends DatabaseUtils {
             if ((entities[0] as RecordEntity).collection_id) {
                 // if we have the same entity twice in the same bulk, merge the entity before persisting
                 // this can occur due to the way updates are handled (e.g. in CSW we have to wait for WMS calls to finish)
-                // if we don't merge, we get the following error: 
+                // if we don't merge, we get the following error:
                 // "Ensure that no rows proposed for insertion within the same command have duplicate constrained values."
                 // TODO ideally, we change handling from `Entity` to `Entity.DbOperation`, to only send updates when needed
                 // TODO (instead of full upserts) and handle JSON updates within Postgres

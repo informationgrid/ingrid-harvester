@@ -1,0 +1,20 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>7114</id>
+  <name>Datenqualität - Formatkonsistenz - Art der Messung</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Physical structure conflict rate</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Physical structure conflict rate</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

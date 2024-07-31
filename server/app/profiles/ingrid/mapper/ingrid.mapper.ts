@@ -27,6 +27,8 @@ import {CswMapper} from "../../../importer/csw/csw.mapper";
 import {IndexDocumentFactory} from "../../../model/index.document.factory";
 import {IngridIndexDocument} from "../model/index.document";
 import * as crypto from "crypto";
+import {Distribution} from "../../../model/distribution";
+import {Codelist} from "../utils/codelist";
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
@@ -51,6 +53,20 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             provider: this.getProvider(),
             datatype: this.getDataType(),
             dataSourceName: this.getDataSourceName(),
+            extras: {
+                // harvested_data: mapper.getHarvestedData(),
+                hierarchy_level: this.getHierarchyLevel(),    // only csw
+                metadata: {
+                    harvested: this.baseMapper.getHarvestingDate(),
+                    harvesting_errors: null, // get errors after all operations been done
+                    issued: null,
+                    is_valid: null, // check validity before persisting to ES
+                    modified: null,
+                    source: this.baseMapper.getMetadataSource(),
+                    merged_from: []
+                }
+            },
+            distributions: await this.getDistributions(),
             t0: this.getT0(),
             t1: this.getT1(),
             t01_object: this.getT01_object(),
@@ -74,6 +90,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             t04_search: this.getT04Search(),
             t0110_avail_format: this.getT0110_avail_format(),
             t011_obj_geo: this.getT011_obj_geo(),
+            t011_obj_geo_scale: this.getT011_obj_geo_scale(),
             t011_obj_serv: this.getT011_obj_serv(),
             t011_obj_serv_version: this.getT011_obj_serv_version(),
             t011_obj_serv_op_connpoint: this.getT011_obj_serv_op_connpoint(),
@@ -84,6 +101,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             t011_obj_topic_cat: this.getT011_obj_topic_cat(),
             t0113_dataset_reference: this.getT0113_dataset_reference(),
             t017_url_ref: this.getT017_url_ref(),
+            t021_communication: this.getT021_communication(),
             object_use: this.getObjectUse(),
             object_use_constraint: this.getObjectUseConstraint(),
             object_access: this.getObjectAccess(),
@@ -93,6 +111,12 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         this.executeCustomCode(result);
 
         return result;
+    }
+
+
+
+    getDistributions(): Promise<Distribution[]>{
+        return undefined
     }
 
     getTitle(): string{
@@ -234,6 +258,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     getT011_obj_geo() {
         return undefined;
     }
+    getT011_obj_geo_scale() {
+        return undefined;
+    }
+
 
     getT011_obj_serv() {
         return undefined;
@@ -272,6 +300,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     }
 
     getT017_url_ref() {
+        return undefined;
+    }
+
+    getT021_communication() {
         return undefined;
     }
 
@@ -316,6 +348,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     }
 
     protected transformToIgcDomainId(value, codelist){
+        Codelist.getInstance().getId(codelist, value)
         switch (codelist){
             case "2000": {
                 switch(value){
@@ -330,6 +363,41 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
                     case "search": return "5305";
                 }
                 break;
+            }
+            case "502": {
+                switch(value){
+                    case "creation": return "1";
+                    case "publication": return "2";
+                    case "revision": return "3";
+                }
+            }
+            case "505": {
+                switch (value) {
+                    case "resourceProvider":
+                        return "1";
+                    case "custodian":
+                        return "2";
+                    case "owner":
+                        return "3";
+                    case "user":
+                        return "4";
+                    case "distributor":
+                        return "5";
+                    case "originator":
+                        return "6";
+                    case "pointOfContact":
+                        return "7";
+                    case "principalInvestigator":
+                        return "8";
+                    case "processor":
+                        return "9";
+                    case "publisher":
+                        return "10";
+                    case "author":
+                        return "11";
+                    case "pointOfContactMd":
+                        return "12";
+                }
             }
             case "523": {
                 switch(value){

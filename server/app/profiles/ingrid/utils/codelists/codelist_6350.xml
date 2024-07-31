@@ -1,0 +1,3172 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>6350</id>
+  <name>Priority Dataset</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>445944811</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Air quality management zones and agglomerations</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Air quality management zones and agglomerations</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AirQualityManagementZonesAndAgglomerations-dir-2008-50&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1502089583</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Air quality monitoring networks</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Air quality monitoring networks</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AirQualityMonitoringNetworks-dir-2008-50&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1621456107</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Air quality monitoring stations</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Air quality monitoring stations</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AirQualityMonitoringStationsData-dir-2008-50&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1306744789</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Roads, railways and air transport network</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Roads, railways and air transport network</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/RoadsRailwaysAndTransportNetworks-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-878243373</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Ballungsräume (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>484996076</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Bevölkerung (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Population (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Population-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1233509137</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Area management/restriction/regulation zones and reporting units (strategic noise maps, noise restriction zones)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Area management/restriction/regulation zones and reporting units (strategic noise maps, noise restriction zones)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AreaManagementRestrictionRegulationAndReportingUnits-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-2044106099</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of water bodies</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of water bodies</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfWaterBodies-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-312397286</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of protected areas (Art 6 and 7)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of protected areas (Art 6 and 7)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfProtectedAreas-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-515018330</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Monitoring stations associated to water bodies</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Monitoring stations associated to water bodies</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MonitoringStationsAssociatedWithWaterBodies-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1406824598</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Gebiete mit einem signifikanten Hochwasserrisiko (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Areas of Potential significant flood risk (Floods Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AreasOfPotentialSignificantFloodRisk-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>299753881</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Spatial data of the Preliminary Flood Risk Assessment (PFRA)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Spatial data of the Preliminary Flood Risk Assessment (PFRA)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SpatialDataOfPreliminaryFloodRiskAssessment-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-140576616</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Überflutungsgebiete (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Flooded areas (Floods Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodedAreas-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-201226103</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Risikogebiete (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Flood risk zones (Floods Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodRiskZones-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1727117936</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Management Units and Competent Authority</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Management Units and Competent Authority</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ManagementUnitsAndCompetentAuthority-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1734969928</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Marine reporting units (marine regions and sub-regions including assessment units)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Marine reporting units (marine regions and sub-regions including assessment units)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MarineReportingUnits-dir-2008-56&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2069336092</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Messstellen (Meeresstrategie-Rahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Monitoring stations (Marine Strategy Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MonitoringStations-dir-2008-56&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-906693421</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Water supply zones (Drinking Water Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Water supply zones (Drinking Water Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterSupplyZones-dir-1998-98&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-235517553</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Small water supplies  (Drinking Water Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Small water supplies  (Drinking Water Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SmallWaterSupplies-dir-1998-98&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1637264950</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Bathing areas (Bathing Water Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Bathing areas (Bathing Water Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BathingAreas-dir-2006-7&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1548252717</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Biogeographical regions (Habitats Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Biogeographical regions (Habitats Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BiogeographicalRegions-dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2030816943</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Habitat maps using INSPIRE geographical grid system (Habitats Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Habitat maps using INSPIRE geographical grid system (Habitats Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatMapsUsingINSPIREGeographicalGridSystem-dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>442229060</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of sites (Habitats Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of sites (Habitats Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfSites-dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1449762036</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Biogeographical regions (Birds Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Biogeographical regions (Birds Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BiogeographicalRegions-dir-2009-147&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>624827082</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Habitat maps using INSPIRE geographical grid system  (Birds Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Habitat maps using INSPIRE geographical grid system  (Birds Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatMapsUsingINSPIREGeographicalGridSystem-dir-2009-147&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1376757035</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of sites (Birds Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of sites (Birds Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfSites-dir-2009-147&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1322325251</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Maps of distribution of species using INSPIRE grids</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Maps of distribution of species using INSPIRE grids</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MapsOfDistributionOfSpeciesUsingINSPIREGrids-reg-2014-1143&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>515968882</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Locations of facilities (E-PRTR data reporting)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Locations of facilities (E-PRTR data reporting)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationsOfFacilities-reg-2006-166&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1089195547</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Information related to actual pollutant releases (E-PRTR data reporting)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Information related to actual pollutant releases (E-PRTR data reporting)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/InformationRelatedToActualPollutantReleases-reg-2006-166&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1893891024</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of industrial and agricultural installations (Industrial Emissions Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of industrial and agricultural installations (Industrial Emissions Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfIndustrialAndAgriculturalInstallationsFallingUnderIndustrialEmissionsDirective-dir-2010-75&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>493534082</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of combustion plants  (Industrial Emissions Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of combustion plants  (Industrial Emissions Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfCombustionPlants-dir-2010-75&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-798508788</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of urban agglomerations (Urban Waste-Water Treatment Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of urban agglomerations (Urban Waste-Water Treatment Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfUrbanAgglomerations-dir-1991-271&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1730965570</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of plants (Urban Waste-Water Treatment Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of plants (Urban Waste-Water Treatment Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfPlants-dir-1991-271&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-40144536</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of discharge points linked to Water Framework Directive water body</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of discharge points linked to Water Framework Directive water body</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfDischargePointsLinkedToWaterFrameworkDirectiveWaterBody-dir-1991-271&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1874231278</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Empfindliche Gebiete, weniger empfindliche Gebiete und Einzugsgebiete (Kommunalabwasserrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Sensitive areas, less sensitive areas and catchments (Urban Waste-Water Treatment Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SensitiveAreasLessSensitiveAreasAndCatchments-dir-1991-271&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-420840838</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Nitrates monitoring stations</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Nitrates monitoring stations</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NitratesMonitoringStations-dir-1991-676&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-217130070</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Nitratgefährdete Gebiete (Nitratrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Nitrates vulnerable zones (Nitrates Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NitratesVulnerableZones-dir-1991-676&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>489924842</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of islands and exempted isolated settlements</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of islands and exempted isolated settlements</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfIslandsAndExemptedIsolatedSettlements-dir-1999-31&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-551372446</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of facilities (waste from extractive industries Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of facilities (waste from extractive industries Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfFacilities-dir-2006-21&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1477315210</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of establishments</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of establishments</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfEstablishments-dir-2012-18&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-2104682377</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of boreholes</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of boreholes</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfBoreholes-reco-2014-70&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-439514993</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of planned boreholes</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of planned boreholes</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfPlannedBoreholes-reco-2014-70&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1872829958</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agricultural facilities receiving sludge</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agricultural facilities receiving sludge</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AgriculturalFcilitiesReceivingSludge-dir-1986-278&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-922376431</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of the agricultural sites where sludge is deposited</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of the agricultural sites where sludge is deposited</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfTheAgriculturalSitesWhereSludgeIsDeposited-dir-1986-278&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1463846695</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of storage facilities</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of storage facilities</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfStorageFacilities-reg-2008-1102&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>333800485</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of sites (CDDA)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of sites (CDDA)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfSites-ecdf-32&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1765143046</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Directive 2002/49/EC</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 2002/49/EC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Directive-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-893576530</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of major roads, railways and air transport network</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of major roads, railways and air transport network</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfMajorRoadsRailwaysAndAirTransportNetwork&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-26893280</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of major roads</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of major roads</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfMajorRoads&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1617299447</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of major railways</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of major railways</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfMajorRailways&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1930796654</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Location of major air transport</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location of major air transport</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LocationOfMajorAirTransport&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1991303030</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Environmental noise agglomerations</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Environmental noise agglomerations</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseAgglomerations&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>539129707</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Population distribution</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Population distribution</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PopulationDistribution&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1103926519</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Environmental noise exposed population</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Environmental noise exposed population</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposedPopulation&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1116250791</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Environmental noise exposure data</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Environmental noise exposure data</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposureData&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2110494291</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Major roads noise exposure delineation</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major roads noise exposure delineation</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineation&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-290754487</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Major roads noise exposure delineation (day)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major roads noise exposure delineation (day)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineationDay&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-232728187</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Major roads noise exposure delineation (night)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major roads noise exposure delineation (night)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineationNight&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1702472916</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Major railways noise exposure delineation</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major railways noise exposure delineation</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineation&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-898089432</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Major railways noise exposure delineation (day)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major railways noise exposure delineation (day)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineationDay&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>233941924</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Major railways noise exposure delineation (night)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major railways noise exposure delineation (night)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineationNight&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-344420890</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Major airports noise exposure delineation</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major airports noise exposure delineation</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineation&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>34204630</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Major airports noise exposure delineation (day)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major airports noise exposure delineation (day)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineationDay&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1479629358</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Major airports noise exposure delineation (night)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major airports noise exposure delineation (night)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineationNight&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1017965971</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - roads noise exposure delineation</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - roads noise exposure delineation</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineation&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-539766519</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - roads noise exposure delineation (day)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - roads noise exposure delineation (day)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineationDay&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>984877637</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - roads noise exposure delineation (night)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - roads noise exposure delineation (night)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineationNight&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1453460884</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - railways noise exposure delineation</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - railways noise exposure delineation</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RailwaysNoiseExposureDelineation&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1807014552</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - railways noise exposure delineation (day)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - railways noise exposure delineation (day)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RailwaysNoiseExposureDelineationDay&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1364737308</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - railways noise exposure delineation (night)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - railways noise exposure delineation (night)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RailwaysNoiseExposureDelineationNight&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>837881524</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - aircraft noise exposure delineation</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - aircraft noise exposure delineation</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-AircraftNoiseExposureDelineation&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1021374392</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - aircraft noise exposure delineation (day)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - aircraft noise exposure delineation (day)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-AircraftNoiseExposureDelineationDay&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2016179652</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - aircraft noise exposure delineation (night)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - aircraft noise exposure delineation (night)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-AircraftNoiseExposureDelineationNight&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>907257175</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - industrial noise exposure delineation</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - industrial noise exposure delineation</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-IndustrialNoiseExposureDelineation&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-130624827</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - industrial noise exposure delineation (day)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - industrial noise exposure delineation (day)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-IndustrialNoiseExposureDelineationDay&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-966947583</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - industrial noise exposure delineation (night)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - industrial noise exposure delineation (night)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-IndustrialNoiseExposureDelineationNight&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>423621758</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - noise exposure delineation</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - noise exposure delineation</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-NoiseExposureDelineation&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1501945406</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - noise exposure delineation (day)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - noise exposure delineation (day)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-NoiseExposureDelineationDay&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>269983290</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Agglomerations - noise exposure delineation (night)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - noise exposure delineation (night)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-NoiseExposureDelineationNight&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-449539535</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Directive 1999/31/EC</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 1999/31/EC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-31&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1215128830</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Exempted islands and isolated settlements (Landfill of Waste Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Exempted islands and isolated settlements (Landfill of Waste Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ExemptedIslandsAndIsolatedSettlements-dir-1991-31&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-79852593</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Landfill of waste sites (Landfill of Waste Directive)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Landfill of waste sites (Landfill of Waste Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LandfillOfWasteSites-dir-1991-31&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>171960399</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 2000/60/EG (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 2000/60/EC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>572398202</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Flussgebietseinheiten (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>River basin districts (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/RiverBasinDistricts-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-50265303</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Flussgebietsuntereinheiten (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>River basin districts sub-units (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/RiverBasinDistrictsSubUnits-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1275755545</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Wasserkörper (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Water bodies (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterBodies-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-572844704</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Oberflächenwasserkörper (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Surface water bodies (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SurfaceWaterBodies-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1749274586</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Seen (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Lakes (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Lakes-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1168026115</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Flüsse (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Rivers (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Rivers-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-451767758</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Übergangsgewässer (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Transitional waters (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/TransitionalWaters-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1209997633</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Küstengewässer (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Coastal waters (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/CoastalWaters-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>773951026</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Grundwasserkörper (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Groundwater bodies (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/GroundwaterBodies-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1781928808</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Gewässernetz (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>River network (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/RiverNetwork-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1473914126</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Schutzgebiete (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Protected areas (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectedAreas-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-148734880</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Nitratgefährdete Gebiete – nährstoffsensible Gebiete (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Nitrate vulnerable zones - nutrient sensitive areas (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NitrateVulnerableZones-NutrientSensitiveAreas-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1008798949</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Städtische Abwässer - empfindliche Gebiete - nährstoffsensible Gebiete (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Urban waste water sensitive areas - nutrient sensitive areas (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/UrbanWasteWaterSensitiveAreas-NutrientSensitiveAreas-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>861065201</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Badegewässer (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Bathing waters - recreational waters (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BathingWaters-RecreationalWaters-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1157696362</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Trinkwasserschutzgebiete (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Drinking water protection areas (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DrinkingWaterProtectionAreas-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1546592453</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Wasserabhängige Natura-2000-Gebiete (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Water dependent Natura 2000 sites (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/WaterDependentNatura2000Sites-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>572823362</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Ausgewiesene Gewässer (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Designated waters (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DesignatedWaters-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1322768759</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Schutz wirtschaftlich bedeutender aquatischer Arten – als Muschelgewässer eingestufte Gewässer (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Protection of economically significant aquatic species - shellfish designated waters (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectionOfEconomicallySignificantAquaticSpecies-ShellfishDesignatedWaters-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-44064624</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Schutz wirtschaftlich bedeutender aquatischer Arten – für Süßwasserfische ausgewiesene Gewässer (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Protection of economically significant aquatic species - freshwater fish designated waters (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ProtectionOfEconomicallySignificantAquaticSpecies-FreshwaterFishDesignatedWaters-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1859696778</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Sonstige Schutzgebiete (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Other protected areas (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/OtherProtectedAreas-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2069097789</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Messstellen (Wasserrahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Monitoring stations (Water Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MonitoringStations-dir-2000-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>172019928</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 2002/49/EG (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 2002/49/EC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1293906233</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Hauptverkehrsstraßen, Haupteisenbahnstrecken und Großflughäfen (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major roads, railways and air transport network (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsRailwaysAndAirTransportNetwork-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>939171897</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Hauptverkehrsstraßen (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major roads (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoads-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-851595206</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Haupteisenbahnstrecken (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major railways (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailways-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>594341443</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Großflughäfen (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major air transport (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirTransport-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1807263727</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Ballungsräume - Einwohnerzahl (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - population (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-Population-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-272825818</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Bevölkerung in dicht besiedelten Ortschaften (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Population - densely populated built-up areas (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Population-DenselyPopulatedBuiltUpAreas-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1799900926</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Belastung durch Umgebungslärm (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Environmental noise exposure (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EnvironmentalNoiseExposure-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-403746568</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Hauptverkehrsstraßen (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major roads noise exposure delineation (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineation-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-2139765537</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Hauptverkehrsstraßen - Tag-Abend-Nacht-Lärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major roads noise exposure delineation day-evening-night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineationDEN-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1695504682</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Hauptverkehrsstraßen - Nachtlärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major roads noise exposure delineation - night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRoadsNoiseExposureDelineationNight-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>758296057</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Haupteisenbahnstrecken (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major railways noise exposure delineation (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineation-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1164329922</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Haupteisenbahnstrecken - Tag-Abend-Nacht-Lärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major railways noise exposure delineation day-evening-night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineationDEN-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1508707127</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Haupteisenbahnstrecken - Nachtlärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major railways noise exposure delineation - night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorRailwaysNoiseExposureDelineationNight-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1809939445</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Großflughäfen (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major airports noise exposure delineation (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineation-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-920759060</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Großflughäfen - Tag-Abend-Nacht-Lärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major airports noise exposure delineation day-evening-night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineationDEN-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>634657271</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Großflughäfen - Nachtlärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Major airports noise exposure delineation - night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MajorAirportsNoiseExposureDelineationNight-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-2058893256</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Straßenverkehr in Ballungsräumen (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - roads noise exposure delineation (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineation-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-95222369</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Straßenverkehr in Ballungsräumen - Tag-Abend-Nacht-Lärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - roads noise exposure delineation day-evening-night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineationDEN-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-593532438</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Straßenverkehr in Ballungsräumen - Nachtlärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - roads noise exposure delineation - night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RoadsNoiseExposureDelineationNight-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1492128071</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Schienenverkehr in Ballungsräumen (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - railways noise exposure delineation (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RailwaysNoiseExposureDelineation-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>889963390</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Schienenverkehr in Ballungsräumen - Tag-Abend-Nacht-Lärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - railways noise exposure delineation day-evening-night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RailwaysNoiseExposureDelineationDEN-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1277176841</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Schienenverkehr in Ballungsräumen - Nachtlärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - railways noise exposure delineation - night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-RailwaysNoiseExposureDelineationNight-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1464221657</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Luftverkehr in Ballungsräumen (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - aircraft noise exposure delineation (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-AircraftNoiseExposureDelineation-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>905338462</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Luftverkehr in Ballungsräumen - Tag-Abend-Nacht-Lärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - aircraft noise exposure delineation day-evening-night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-AircraftNoiseExposureDelineationDEN-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1127248151</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Luftverkehr in Ballungsräumen - Nachtlärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - aircraft noise exposure delineation - night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-AircraftNoiseExposureDelineationNight-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-609945092</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Industrieanlagen in Ballungsräumen (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - industrial noise exposure delineation (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-IndustrialNoiseExposureDelineation-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1098206555</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Industrieanlagen in Ballungsräumen - Tag-Abend-Nacht-Lärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - industrial noise exposure delineation day-evening-night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-IndustrialNoiseExposureDelineationDEN-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-464604506</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung durch Industrieanlagen in Ballungsräumen - Nachtlärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations – industrial noise exposure delineation - night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-IndustrialNoiseExposureDelineationNight-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>566806179</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung in Ballungsräumen (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - noise exposure delineation (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-NoiseExposureDelineation-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-2122716332</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung in Ballungsräumen - Tag-Abend-Nacht-Lärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - noise exposure delineation day-evening-night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-NoiseExposureDelineationDEN-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>899921503</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lärmbelastung in Ballungsräumen - Nachtlärmindex (Umgebungslärmrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations - noise exposure delineation - night (Noise Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-NoiseExposureDelineationNight-dir-2002-49&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>172139022</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 2006/21/EG (Bergbauabfallrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 2006/21/EC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2006-21&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1023933682</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Anlagen für die Bewirtschaftung von Abfällen aus der mineralgewinnenden Industrie (Bergbauabfallrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Facilities for managing extractive waste (Extractive Waste Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FacilitiesForManagingExtractiveWaste-dir-2006-21&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>975384200</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 2006/7/EG (Badegewässer-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 2006/7/EC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2006-7&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>176198897</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Badegewässer (Badegewässer-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Bathing water sites (Bathing Water Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BathingWaterSites-dir-2006-7&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>172168936</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 2007/60/EG (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 2007/60/EC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1268322344</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Vorläufige Bewertung des Hochwasserrisikos (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Preliminary flood risk assessment (Floods Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PreliminaryFloodRiskAssessment-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-89025424</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Vorläufige Bewertung des Hochwasserrisikos – beobachtete Ereignisse (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Preliminary flood risk assessment - observed events (Floods Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PreliminaryFloodRiskAssessment-ObservedEvents-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-380801483</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Vorläufige Bewertung des Hochwasserrisikos – mögliche künftige Ereignisse (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Preliminary flood risk assessment - potential future events (Floods Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PreliminaryFloodRiskAssessment-PotentialFutureEvents-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1810667766</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Hochwassergefahrengebiete – Szenario mit geringer Wahrscheinlichkeit (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Flood hazard areas low probability scenario (Floods Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodHazardAreasLowProbabilityScenario-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-92345835</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Hochwassergefahrengebiete – Szenario mit mittlerer Wahrscheinlichkeit (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Flood hazard areas medium probability scenario (Floods Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodHazardAreasMediumProbabilityScenario-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>262029896</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Hochwassergefahrengebiete – Szenario mit hoher Wahrscheinlichkeit (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Flood hazard areas high probability scenario (Floods Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodHazardAreasHighProbabilityScenario-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>185938714</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Hochwasserrisikogebiete – Szenario mit geringer  Wahrscheinlichkeit (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Flood risk zones low probability scenario (Floods Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodRiskZonesLowProbabilityScenario-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1885891953</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Hochwasserrisikogebiete – Szenario mit mittlerer Wahrscheinlichkeit (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Flood risk zones medium probability scenario (Floods Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodRiskZonesMediumProbabilityScenario-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1435036836</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Hochwasserrisikogebiete – Szenario mit hoher  Wahrscheinlichkeit (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Flood risk zones high probability scenario (Floods Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/FloodRiskZonesHighProbabilityScenario-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>13116263</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Managementeinheiten (Hochwasserrisikomanagement-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Management units (Floods Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ManagementUnits-dir-2007-60&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>172198696</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 2008/50/EG (Luftqualitätsrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 2008/50/EC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-50&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1600552074</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Beurteilungsgebiete und Ballungsräume (Luftqualitätsrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Management zones and agglomerations (Air Quality Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ManagementZonesAndAgglomerations-dir-2008-50&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-84537729</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Beurteilungsgebiete (Luftqualitätsrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Management zones (Air Quality Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ManagementZones-dir-2008-50&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-878064605</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Ballungsräume (Luftqualitätsrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations (Air Quality Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-dir-2008-50&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-507589940</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Modellgebiete (Luftqualitätsrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Model areas (Air Quality Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ModelAreas-dir-2008-50&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2069336086</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Überwachungsstationen (Luftqualitätsrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Monitoring stations (Air Quality Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MonitoringStations-dir-2008-50&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1836787945</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Daten zur Messung und Modellierung (Luftqualitätsrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Measurement and modelling data (Air Quality Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MeasurementAndModellingData-dir-2008-50&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>172198702</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 2008/56/EG (Meeresstrategie-Rahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 2008/56/EC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2008-56&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-935515242</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Meeresregionen und -einheiten (Meeresstrategie-Rahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Marine regions and units (Marine Strategy Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MarineRegionsAndUnits-dir-2008-56&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1826935414</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Meeresunterregionen (Meeresstrategie-Rahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Marine sub-regions (Marine Strategy Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MarineSubRegions-dir-2008-56&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1347908756</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Meeresbewertungsstellen (Meeresstrategie-Rahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Marine assessment units (Marine Strategy Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MarineAssessmentUnits-dir-2008-56&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1044112136</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 2009/147/EG (Vogelschutzrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 2009/147/EC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2009-147&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>823331860</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Biogeografische Regionen (Vogelschutzrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Pan-European biogeographical regions (Birds Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PanEuropeanBiogeographicalRegions-dir-2009-147&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1988616648</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verteilung/Vorkommen und Verbreitungsgebiet von Vogelarten (Vogelschutzrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Bird species distribution and range (Birds Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistributionAndRange-dir-2009-147&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-855362354</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verteilung/Vorkommen von Vogelarten (Vogelschutzrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Bird species distribution (Birds Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistribution-dir-2009-147&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-70044987</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verteilung/Vorkommen empfindlicher Vogelarten (Vogelschutzrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Bird species distribution - sensitive (Birds Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdSpeciesDistribution-Sensitive-dir-2009-147&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-925536514</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verbreitungsgebiet von Vogelarten (Vogelschutzrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Birds range (Birds Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdsRange-dir-2009-147&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-507154187</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verbreitungsgebiet empfindlicher Vogelarten (Vogelschutzrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Birds range - sensitive (Birds Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BirdsRange-Sensitive-dir-2009-147&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>223715082</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Vogelschutzgebiete (Vogelschutzrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Natura 2000 sites (Birds Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Natura2000Sites-dir-2009-147&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>172883956</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 2010/75/EU (Industrieemissionsrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 2010/75/EU</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2010-75&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>709314754</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Industrieanlagen – EU-Register (Industrieemissionsrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Industrial sites - EU Registry (Industrial Emissions Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/IndustrialSites-EURegistry-dir-2010-75&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1949269248</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Anlagen (Industrieemissionsrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Installations (Industrial Emissions Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Installations-dir-2010-75&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1130431389</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Großfeuerungsanlagen (Industrieemissionsrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Large combustion plants (Industrial Emissions Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LargeCombustionPlants-dir-2010-75&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>875234259</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Emissionen (Industrieemissionsrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Emissions (Industrial Emissions Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Emissions-dir-2010-75&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>172943355</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 2012/18/EU (Seveso-III-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 2012/18/EU</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-2012-18&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-62567823</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Betriebe mit gefährlichen Stoffen (Seveso-III-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Establishments involving dangerous substances (SEVESO III Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EstablishmentsInvolvingDangerousSubstances-dir-2012-18&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1074835962</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 86/278/EWG (Klärschlammrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 86/278/EEC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1986-278&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>822547565</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Landwirtschaftliche Anlagen, die Schlämme erhalten (Klärschlammrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agricultural facilities receiving sludge (Sewage Sludge Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AgriculturalFacilitiesReceivingSludge-dir-1986-278&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1677648960</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Landwirtschaftliche Betriebe, in denen Schlamm abgelagert wird (Klärschlammrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agricultural sites where sludge is deposited (Sewage Sludge Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/AgriculturalSitesWhereSludgeIsDeposited-dir-1986-278&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1050824423</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 91/271/EWG (Kommunalabwasserrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 91/271/EEC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-271&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>750751614</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Gemeindegebiete (Kommunalabwasserrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agglomerations (Urban Waste Water Treatment Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Agglomerations-dir-1991-271&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-2090879647</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Kommunale Abwasserbehandlungsanlagen (Kommunalabwasserrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Urban waste-water treatment plants (Urban Waste Water Treatment Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/UrbanWasteWaterTreatmentPlants-dir-1991-271&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>633358390</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Einleitstellen in den aufnehmenden Gewässern (Kommunalabwasserrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Discharge points to receiving waters (Urban Waste Water Treatment Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DischargePointsToReceivingWaters-dir-1991-271&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-146668254</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Empfindliche Gebiete (Kommunalabwasserrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Sensitive areas (Urban Waste-Water Treatment Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SensitiveAreas-dir-1991-271&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1456406327</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Weniger empfindliche Gebiete (Kommunalabwasserrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Less sensitive areas (Urban Waste-Water Treatment Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LessSensitiveAreas-dir-1991-271&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1790082711</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Einzugsgebiete empfindlicher Gebiete (Kommunalabwasserrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Sensitive area catchments (Urban Waste-Water Treatment Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SensitiveAreaCatchments-dir-1991-271&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1050820574</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 91/676/EWG (Nitratrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 91/676/EEC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1991-676&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-449509711</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 92/43/EWG (FFH-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 92/43/EEC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1530962900</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Biogeografische Regionen (FFH-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Pan-European biogeographical regions (Habitats Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Pan-EuropeanBiogeographicalRegions-dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1123443833</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verteilung/Vorkommen und Verbreitungsgebiet von Lebensraumtypen und Arten (FFH-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Habitat types and species distribution and range (Habitats Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesAndSpeciesDistributionAndRange-dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1737315118</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verteilung/Vorkommen von Lebensraumtypen (FFH-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Habitat types distribution (Habitats Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesDistribution-dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1799404100</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verteilung/Vorkommen empfindlicher Lebensraumtypen (FFH-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Habitat types distribution - sensitive (Habitats Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesDistributionSensitive-dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1173221745</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verbreitungsgebiet von Lebensraumtypen (FFH-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Habitat types range (Habitats Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/HabitatTypesRange-dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1370391772</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verteilung/Vorkommen von Arten (FFH-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Species distribution (Habitats Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SpeciesDistribution-dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-2013445351</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verteilung/Vorkommen empfindlicher Arten (FFH-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Species distribution sensitive (Habitats Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SpeciesTypesDistributionSensitive-dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1022144679</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verbreitungsgebiet von Arten (FFH-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Species range (Habitats Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SpeciesRange-dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1445805457</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Fauna-Flora-Habitat-Gebiete (FFH-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Natura 2000 sites (Habitats Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Natura2000Sites-dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-449330841</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 98/83/EG (Trinkwasserrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 98/83/EC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1998-83&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1291512807</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Trinkwasserversorgungszonen (Trinkwasserrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Drinking water supply zones (Drinking Water Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DrinkingWaterSupplyZones-dir-1998-83&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1071855318</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Große Wasserversorgungsgebiete (Trinkwasserrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Large water supply zones (Drinking Water Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LargeWaterSupplyZones-dir-1998-83&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-735730014</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Kleine Wasserversorgungsgebiete (Trinkwasserrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Small water supply zones (Drinking Water Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SmallWaterSupplyZones-dir-1998-83&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>564940650</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Trinkwasserentnahmestellen (Trinkwasserrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Drinking water abstraction points (Drinking Water Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/DrinkingWaterAbstractionPoints-dir-1998-83&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1809624340</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Jahresarbeitsprogramm der EUA</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EEA Annual Work Programme</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/EEA-AWP&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1353194171</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Nationale Schutzgebiete - CDDA</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Nationally designated areas - CDDA</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NationallyDesignatedAreasCDDA&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1919697792</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Nationales Recht</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>National legislation</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/national-legislation&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2119644673</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Nationale biogeografische Regionen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>National biogeographical regions</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NationalBiogeographicalRegions&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-922283649</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Nationale biogeografische Regionen (FFH-Richtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>National biogeographical regions (Habitats Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NationalBiogeographicalRegions-dir-1992-43&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-726978054</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Nationale biogeografische Regionen (Vogelschutzrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>National biogeographical regions (Birds Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/NationalBiogeographicalRegions-dir-2009-147&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1582294351</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Empfehlung 2014/70/EU (Hochvolumen-Fracking-Empfehlung)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Recommendation 2014/70/EU</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reco-2014-70&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1027758741</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Bohrungen (Hochvolumen-Fracking-Empfehlung)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Boreholes (Recommendation on hydraulic fracturing)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/Boreholes-reco-2014-70&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1743206498</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Bohrungen mit Hydrofracking (Hochvolumen-Fracking-Empfehlung)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Boreholes for hydraulic fracturing (Recommendation on hydraulic fracturing)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/BoreholesForHydraulicFracturing-reco-2014-70&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-657388833</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verordnung (EU) 2017/852 (Quecksilberverordnung)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Regulation (EU) 2017/852</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reg-2017-852&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-461271025</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Quecksilberlagereinrichtungen (Quecksilber-Verordnung)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Mercury storage facilities (Mercury Regulation)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MercuryStorageFacilities-reg-2017-852&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-686948197</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verordnung (EG) Nr. 166/2006 (E-PRTR Verordnung)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Regulation (EC) 166/2006</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reg-2006-166&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1237462643</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Industrieanlagen – Register der Europäischen Union (Europäisches Schadstofffreisetzungs- und -verbringungsregister)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Industrial sites - EU Registry (European Pollutant Release and Transfer Register)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/IndustrialSites-EURegistry-reg-2006-166&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>726166184</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Betriebseinrichtungen (Europäisches Schadstofffreisetzungs- und -verbringungsregister)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Sites and facilities (European Pollutant Release and Transfer Register)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/SitesAndFacilities-reg-2006-166&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-2083558463</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Schadstofffreisetzungen (Europäisches Schadstofffreisetzungs- und -verbringungsregister)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Actual pollutant releases (European Pollutant Release and Transfer Register)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ActualPollutantReleases-reg-2006-166&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1009682936</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verordnung (EU) Nr. 1143/2014 (Verordnung zu invasiven gebietsfremden Arten)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Regulation (EU) 1143/2014</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/reg-2014-1143&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>320113229</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verteilung invasiver gebietsfremder Arten (Verordnung zu invasiven gebietsfremden Arten)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Invasive alien species distribution (Invasive Alien Species Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/InvasiveAlienSpeciesDistribution-reg-2014-1143&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1925863668</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Messstellen (Nitratrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Monitoring stations (Nitrates Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MonitoringStations-dir-1991-676&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>590566046</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Meeresregionen (Meeresstrategie-Rahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Marine regions (Marine Strategy Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MarineRegions-dir-2008-56&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-1406735174</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Berichtseinheiten für Meeresgebiete (Meeresstrategie-Rahmenrichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Marine reporting units (Marine Strategy Framework Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/MSFDReportingUnits-dir-2008-56&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-449301207</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Richtlinie 1999/31/EG (Deponierichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Directive 1999/31/EC</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/dir-1999-31&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1215367158</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Freigestellte Inseln und isolierte Siedlungsgebiete (Deponierichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Exempted islands and isolated settlements (Landfill of Waste Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/ExemptedIslandsAndIsolatedSettlements-dir-1999-31&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-79614265</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Abfalldeponien (Deponierichtlinie)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Landfill of waste sites (Landfill of Waste Directive)</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/LandfillOfWasteSites-dir-1999-31&quot;}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+  <lastModified>1574073590455</lastModified>
+</de.ingrid.codelists.model.CodeList>

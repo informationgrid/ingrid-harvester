@@ -1,0 +1,33 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>2251</id>
+  <name>Url-Verweis - Intranet/Internet</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Internet</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Internet</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Intranet</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Intranet</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

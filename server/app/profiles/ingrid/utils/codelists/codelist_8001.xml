@@ -1,0 +1,57 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>8001</id>
+  <name>Vorhaben</name>
+  <defaultEntry>-1</defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>10</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Zulassungsverfahren</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>11</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Ausländische Vorhaben</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>12</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Negative Vorprüfungen</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>13</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Raumordnungsverfahren nach ROG mit UVP</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>14</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Linienbestimmungen nach § 16 Bundesfernstraßengesetz oder Landesstraßenrecht</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>
