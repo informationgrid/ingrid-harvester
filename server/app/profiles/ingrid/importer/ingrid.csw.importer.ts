@@ -87,7 +87,7 @@ export class IngridCswImporter extends CswImporter {
                 document: entry,
                 _id: undefined,
                 operation: "index",
-                _type: "info"
+                _type: "_doc"
             }]).then(() => this.elastic.sendBulkOperations()).then(() => this.elastic.flush());
         }
     }
