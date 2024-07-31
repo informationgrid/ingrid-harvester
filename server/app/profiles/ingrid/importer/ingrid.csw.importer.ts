@@ -61,7 +61,7 @@ export class IngridCswImporter extends CswImporter {
                 document: entry,
                 _id: meta.hits?.hits[0]._id,
                 operation: "update",
-                _type: "info"
+                _type: "_doc"
             }]).then(() => this.elastic.sendBulkOperations()).then(() => this.elastic.flush());
         } else {
             let entry = {
