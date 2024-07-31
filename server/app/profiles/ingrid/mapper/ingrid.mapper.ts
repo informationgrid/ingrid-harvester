@@ -348,7 +348,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     }
 
     protected transformToIgcDomainId(value, codelist){
-        Codelist.getInstance().getId(codelist, value)
+        //Codelist.getInstance().getId(codelist, value)
         switch (codelist){
             case "2000": {
                 switch(value){
