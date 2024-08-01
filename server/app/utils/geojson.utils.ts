@@ -74,9 +74,12 @@ const BBOX_GERMANY = buffer({
         [5.98865807458, 54.983104153]]]
 }, 50, {units: 'kilometers'});
 
-export function getBbox(spatial: AllGeoJSON) {
+export function getBbox(spatial: AllGeoJSON): Geometry {
     if (!spatial) {
         return undefined;
+    }
+    if (spatial?.type == 'Point') {
+        return spatial;
     }
     return bboxPolygon(bbox(spatial))?.geometry;
 }

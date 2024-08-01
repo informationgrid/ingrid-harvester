@@ -208,7 +208,7 @@ export class RequestDelegate {
         }
     }
 
-    updateConfig(partialConfig: any): void {
+    updateConfig(partialConfig: Partial<RequestOptions>): void {
         this.config = MiscUtils.merge(this.config, partialConfig);
     }
 

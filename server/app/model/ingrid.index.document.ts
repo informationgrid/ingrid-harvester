@@ -22,7 +22,7 @@
  */
 
 import { DateRange } from './dateRange';
-import { Geometries, GeometryCollection, Point } from '@turf/helpers';
+import { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
 
 export type IngridIndexDocument = {
     id: string,
@@ -45,7 +45,7 @@ export type IngridIndexDocument = {
 
 export type Spatial = {
     geometry?: Geometries | GeometryCollection,
-    bbox?: Geometries | GeometryCollection,
+    bbox?: Geometry,
     centroid?: Point,
     inside_point?: Point,
     location_points?: Point,
