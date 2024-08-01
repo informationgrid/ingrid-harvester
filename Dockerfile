@@ -41,7 +41,7 @@ RUN npm run prod
 #
 # IMAGE: init
 #
-FROM building5/dumb-init:1.2.1 as init
+FROM building5/dumb-init:1.2.1 AS init
 
 
 #
