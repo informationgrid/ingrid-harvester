@@ -86,17 +86,19 @@ export abstract class Importer {
                 let transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
                 let numIndexDocs = await this.harvest();
-                // did the harvesting return results at all?
-                if (numIndexDocs == 0 && !this.summary.isIncremental) {
-                    throw new Error(`No results during ${this.settings.type} import`);
-                }
-                // ensure that less than X percent of existing datasets are slated for deletion
-                // TODO introduce settings to:
-                // - send a mail
-                // - fail or continue
-                let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.sourceURL, transactionTimestamp);
-                if (nonFetchedPercentage > this.generalConfig.harvesting.maxDifference) {
-                    throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
+                if (!this.settings.isIncremental) {
+                    // did the harvesting return results at all?
+                    if (numIndexDocs == 0) {
+                        throw new Error(`No results during ${this.settings.type} import`);
+                    }
+                    // ensure that less than X percent of existing datasets are slated for deletion
+                    // TODO introduce settings to:
+                    // - send a mail
+                    // - fail or continue
+                    let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.sourceURL, transactionTimestamp);
+                    if (nonFetchedPercentage > this.generalConfig.harvesting.maxDifference) {
+                        throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
+                    }
                 }
                 // did fatal errors occur (ie DB or APP errors)?
                 if (this.summary.databaseErrors.length > 0 || this.summary.appErrors.length > 0) {

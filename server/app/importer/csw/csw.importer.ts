@@ -129,8 +129,8 @@ export class CswImporter extends Importer {
                 let transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
                 let numIndexDocs = await this.harvest();
-                // did the harvesting return results at all?
-                if (!this.summary.isIncremental) {
+                if (!this.settings.isIncremental) {
+                    // did the harvesting return results at all?
                     if (numIndexDocs == 0) {
                         throw new Error(`No results during ${this.settings.type} import`);
                     }
