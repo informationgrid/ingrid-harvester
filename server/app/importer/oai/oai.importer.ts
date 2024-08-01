@@ -88,7 +88,7 @@ export class OaiImporter extends Importer {
                 let response = await this.requestDelegate.doRequest();
                 let harvestTime = new Date(Date.now());
 
-                let responseDom = this.domParser.parseFromString(response);
+                let responseDom = this.domParser.parseFromString(response, 'application/xml');
                 let resultsNode = responseDom.getElementsByTagName('ListRecords')[0];
                 if (!resultsNode) {
                     throw new Error('Could not find ListRecords node in response DOM: ' + responseDom?.toString());
@@ -96,14 +96,13 @@ export class OaiImporter extends Importer {
 
                 let numReturned = resultsNode.getElementsByTagName('record').length;
                 log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
-                await this.extractRecords(response, harvestTime);
+                await this.extractRecords(responseDom, harvestTime);
 
                 let resumptionTokenNode = resultsNode.getElementsByTagName('resumptionToken')[0];
-                let resumptionToken;
+                let resumptionToken = resumptionTokenNode?.textContent;
                 if (resumptionTokenNode) {
                     this.totalRecords = parseInt(resumptionTokenNode.getAttribute('completeListSize'));
                     let cursor = resumptionTokenNode.getAttribute('cursor');
-                    resumptionToken = resumptionTokenNode.textContent;
                     log.info(`Next cursor: ${cursor}/${this.totalRecords}`);
                 }
                 if (!resumptionToken) {
@@ -123,10 +122,9 @@ export class OaiImporter extends Importer {
         return this.numIndexDocs;
     }
 
-    async extractRecords(getRecordsResponse, harvestTime) {
+    async extractRecords(xml: Document, harvestTime) {
         let promises = [];
-        let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
-        let records = xml.getElementsByTagName('record');
+        let records: HTMLCollectionOf<Element> = xml.getElementsByTagName('record');
 
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
