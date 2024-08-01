@@ -130,7 +130,7 @@ export class OaiImporter extends Importer {
             this.summary.numDocs++;
             let header = records[i].getElementsByTagName('header').item(0);
             let record = records[i].getElementsByTagNameNS(this.xpaths.nsPrefix, this.xpaths.mdRoot).item(0);
-            const uuid = (xpath.useNamespaces(this.xpaths.prefixMap)(this.xpaths.idElem, record, true) as Node)?.textContent;
+            const uuid = (xpath.useNamespaces(this.xpaths.prefixMap)(this.xpaths.idElem, header, true) as Node)?.textContent;
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;

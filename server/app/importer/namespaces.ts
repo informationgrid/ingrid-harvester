@@ -40,6 +40,7 @@ export const namespaces = {
     LIDO: 'http://www.lido-schema.org',
     LOCN: 'http://www.w3.org/ns/locn#',
     MODS: 'http://www.loc.gov/mods/v3',
+    OAI: 'http://www.openarchives.org/OAI/2.0/',
     OGC: 'http://www.opengis.net/ogc',
     ORG: 'http://www.w3.org/ns/org#',
     OWL: 'http://www.w3.org/2002/07/owl#',
