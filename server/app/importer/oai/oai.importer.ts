@@ -129,12 +129,14 @@ export class OaiImporter extends Importer {
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
             let header = records[i].getElementsByTagName('header').item(0);
-            let record = records[i].getElementsByTagNameNS(this.xpaths.nsPrefix, this.xpaths.mdRoot).item(0);
             const uuid = (xpath.useNamespaces(this.xpaths.prefixMap)(this.xpaths.idElem, header, true) as Node)?.textContent;
-            if (!this.filterUtils.isIdAllowed(uuid)) {
+
+            let isDeleted: boolean = header.attributes.getNamedItem('status')?.textContent == 'deleted';
+            if (!this.filterUtils.isIdAllowed(uuid) || isDeleted) {
                 this.summary.skippedDocs.push(uuid);
                 continue;
             }
+            let record = records[i].getElementsByTagNameNS(this.xpaths.nsPrefix, this.xpaths.mdRoot).item(0);
 
             if (log.isDebugEnabled()) {
                 log.debug(`Import document ${i + 1} from ${records.length}`);
