@@ -320,7 +320,7 @@ export class ElasticQueries implements IElasticQueries {
                 "match_all": {}
             },
             sort: {
-                'timestamp': {"order": "desc"}
+                'timestamp': {"order": "asc"}
             }
         };
     }
@@ -332,7 +332,7 @@ export class ElasticQueries implements IElasticQueries {
                 "match_all": {}
             },
             sort: {
-                'timestamp': {"order": "desc"}
+                'timestamp': {"order": "asc"}
             }
         };
     }
