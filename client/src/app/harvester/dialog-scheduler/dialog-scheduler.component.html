@@ -32,6 +32,7 @@
     activeKeyName="active" 
     cronKeyName="pattern"/>
 
+  @if (harvesterType == 'CSW') {
   <mat-divider class="padding-below"></mat-divider>
 
   <harvester-cronjob-form-field 
@@ -40,6 +41,7 @@
     formKey="incr" 
     activeKeyName="active" 
     cronKeyName="pattern"/>
+  }
 
 </mat-dialog-content>
 

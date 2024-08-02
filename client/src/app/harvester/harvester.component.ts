@@ -101,7 +101,7 @@ export class HarvesterComponent implements OnInit, OnDestroy {
   schedule(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogSchedulerComponent, {
       width: '500px',
-      data: {...harvester.cron}, // {...harvester.cron}
+      data: { harvesterType: harvester.type, cron: harvester.cron },
     });
 
     dialogRef.afterClosed().subscribe(result => {
