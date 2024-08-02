@@ -280,18 +280,25 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.numErrors > 0 || detail.summary.databaseErrors.length > 0 || detail.summary.elasticErrors.length > 0 || detail.summary.appErrors.length > 0;
-    } else {
-      return false;
+      return detail.summary.numErrors > 0
+        || detail.summary.databaseErrors.length > 0
+        || detail.summary.elasticErrors.length > 0
+        || detail.summary.appErrors.length > 0;
     }
+    return false;
   }
 
   hasOnlyWarnings(id: number) {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.warnings.length > 0 && detail.summary.numErrors === 0 && detail.summary.databaseErrors.length === 0 && detail.summary.elasticErrors.length === 0;
+      return detail.summary.warnings.length > 0
+        && detail.summary.numErrors === 0
+        && detail.summary.appErrors.length === 0
+        && detail.summary.databaseErrors.length === 0
+        && detail.summary.elasticErrors.length === 0;
     }
+    return false;
   }
 
   hasAnyProblems(id: number) {
@@ -303,9 +310,8 @@ export class HarvesterComponent implements OnInit, OnDestroy {
         || detail.summary.elasticErrors.length > 0
         || detail.summary.warnings.length > 0
         || detail.summary.appErrors.length > 0;
-    } else {
-      return false;
     }
+    return false;
   }
 
   deleteHarvester(harvester: Harvester) {
