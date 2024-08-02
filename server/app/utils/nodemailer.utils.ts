@@ -63,7 +63,7 @@ export class MailServer {
                 subject: tag + subject,
                 text: text
             };
-            this.sendMail(mail).catch(log.error);
+            this.sendMail(mail).catch(err => log.error(err));
         }
     }
 
