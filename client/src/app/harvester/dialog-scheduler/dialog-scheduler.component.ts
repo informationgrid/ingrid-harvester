@@ -41,6 +41,18 @@ export class DialogSchedulerComponent implements OnInit {
     private formBuilder: UntypedFormBuilder, 
     @Optional() @Inject(MAT_DIALOG_DATA) public cron: { full: CronData, incr: CronData }
   ) {
+    if (!cron) {
+      cron = {
+        "full": {
+          "pattern": "",
+          "active": false
+        },
+        "incr": {
+          "pattern": "",
+          "active": false
+        }
+      };
+    }
 
     this.schedulerForm = this.formBuilder.group({
       full: this.formBuilder.group({
