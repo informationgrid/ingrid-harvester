@@ -17,6 +17,10 @@
                     "type": "shingle",
                     "max_shingle_size": "5",
                     "output_unigrams": true
+                },
+                "taxonomy": {
+                    "type": "synonym",
+                    "synonyms_path": "synonyms/wnk_as_synonyms_normalized.txt"
                 }
             },
             "analyzer": {
@@ -62,6 +66,14 @@
                     "filter": [
                         "lowercase",
                         "suggest_shingle"
+                    ]
+                },
+                "taxonominator": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "filter": [
+                        "lowercase",
+                        "taxonomy"
                     ]
                 }
             }

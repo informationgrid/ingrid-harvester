@@ -70,7 +70,13 @@
           "type": "keyword"
         },
         "term": {
-          "type": "keyword"
+          "type": "text",
+          "analyzer": "taxonominator",
+          "fields": {
+            "raw": {
+                "type": "keyword"
+            }
+          }
         },
         "url": {
           "type": "keyword"
@@ -220,19 +226,6 @@
         },
         "temporal": {
           "type": "date_range"
-        },
-        "keywords": {
-          "properties": {
-            "id": {
-              "type": "keyword"
-            },
-            "term": {
-              "type": "keyword"
-            },
-            "thesaurus": {
-              "type": "keyword"
-            }
-          }
         },
         "relations": {
           "properties": {
