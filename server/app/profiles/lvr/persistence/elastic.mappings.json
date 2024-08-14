@@ -70,11 +70,12 @@
           "type": "keyword"
         },
         "term": {
-          "type": "text",
-          "analyzer": "taxonominator",
+          "type": "keyword",
           "fields": {
-            "raw": {
-                "type": "keyword"
+            "text": {
+              "type": "text",
+              "analyzer": "default",
+              "search_analyzer": "taxonominator"
             }
           }
         },
