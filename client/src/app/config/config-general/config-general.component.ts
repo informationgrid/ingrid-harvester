@@ -156,6 +156,9 @@ export class ConfigGeneralComponent implements OnInit {
           host: "",
           port: 451,
           secure: false,
+          tls: {
+              rejectUnauthorized: true
+          },
           auth: {
             user: "",
             pass: ""
@@ -209,6 +212,9 @@ export class ConfigGeneralComponent implements OnInit {
           host: [settings.mail.mailServer.host],
           port: [settings.mail.mailServer.port],
           secure: [settings.mail.mailServer.secure],
+          tls: this.formBuilder.group({
+            rejectUnauthorized: [settings.mail.mailServer.tls.rejectUnauthorized]
+          }),
           auth: this.formBuilder.group({
             user: [settings.mail.mailServer.auth.user],
             pass: [settings.mail.mailServer.auth.pass]

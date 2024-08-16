@@ -100,6 +100,9 @@ export class ConfigService {
                 host: "localhost",
                 port: 465,
                 secure: false,
+                tls: {
+                    rejectUnauthorized: true
+                },
                 auth: {
                     user: "",
                     pass: ""

@@ -291,10 +291,10 @@
 
     <mat-card class="config-card">
       <mat-card-header class="flex-row gap-20" [formGroup]="configForm.get('mail')">
-        <mat-card-title>Email-Benachrichtigungen</mat-card-title>
+        <mat-card-title>E-Mail-Einstellungen</mat-card-title>
         <div class="center-right">
           <mat-slide-toggle color="accent" [checked]="configForm.get('mail.enabled')"
-            title="Email-Benachrichtigungen an- / ausschalten" formControlName="enabled"
+            title="E-Mail-Benachrichtigungen an- / ausschalten" formControlName="enabled"
             (click)="$event.stopImmediatePropagation()">
           </mat-slide-toggle>
         </div>
@@ -303,20 +303,37 @@
       <mat-card-content>
 
         <div class="flex-row gap-20">
-          <mat-form-field class="flex-80" [formGroup]="configForm.get('mail.mailServer')">
-            <mat-label>Mail-ServerMail-Server</mat-label>
+          <mat-form-field class="flex-20" [formGroup]="configForm.get('harvesting')">
+            <mat-label>Benachrichtigungs-Schwelle:</mat-label>
+            <input matInput type="number" min="1" max="100" style="text-align: right" formControlName="maxDifference">
+            <mat-icon [inline]="true" style="padding-left: 1px; line-height: initial" matSuffix>%</mat-icon>
+          </mat-form-field>
+          <div style="margin-bottom: 20px; align-self: center">
+            <span>Differenz zwischen Anzahl aktuell geharvesteter und bestehender Datensätze</span>
+          </div>
+        </div>
+
+        <h4>Server</h4>
+
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-1" [formGroup]="configForm.get('mail.mailServer')">
+            <mat-label>E-Mail-Server</mat-label>
             <input matInput formControlName="host" required>
           </mat-form-field>
-          <mat-form-field class="flex-20" [formGroup]="configForm.get('mail.mailServer')">
+          <mat-form-field class="flex-10" [formGroup]="configForm.get('mail.mailServer')">
             <mat-label>Port</mat-label>
             <input matInput type="number" formControlName="port" required>
           </mat-form-field>
-        </div>
-
-        <div [formGroup]="configForm.get('mail.mailServer')">
-          <mat-checkbox color="primary" formControlName="secure">
-            Secured Connection
-          </mat-checkbox>
+          <div [formGroup]="configForm.get('mail.mailServer')">
+            <mat-checkbox color="primary" formControlName="secure">
+              Secure Connection
+            </mat-checkbox>
+          </div>
+          <div [formGroup]="configForm.get('mail.mailServer.tls')">
+            <mat-checkbox color="primary" formControlName="rejectUnauthorized">
+              Ungültige TLS Zertifikate abweisen
+            </mat-checkbox>
+          </div>
         </div>
 
         <div class="flex-row gap-20">
@@ -329,7 +346,9 @@
             <input type="password" matInput formControlName="pass">
           </mat-form-field>
         </div>
-        
+
+        <h4>Template</h4>
+
         <div class="flex-row gap-20">
           <mat-form-field class="flex-50" [formGroup]="configForm.get('mail')">
             <mat-label>Absender</mat-label>
@@ -348,16 +367,6 @@
           </mat-form-field>
           <div class="flex-50"></div>
         </div>
-
-        <div class="flex-row gap-20">
-          <mat-form-field class="flex-50" [formGroup]="configForm.get('harvesting')">
-            <mat-label>Benachrichtigungs-Schwelle:</mat-label>
-            <input matInput type="number" min="1" max="100" style="text-align: right" formControlName="maxDifference">
-            <mat-icon [inline]="true" style="padding-left: 1px" matSuffix>%</mat-icon>
-          </mat-form-field>
-          <div class="flex-50"></div>
-        </div>
-
       </mat-card-content>
     </mat-card>
 

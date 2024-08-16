@@ -41,7 +41,7 @@ export class MailServer {
 
     private constructor() {
         let generalSettings = ConfigService.getGeneralSettings();
-        if (generalSettings.mail && generalSettings.mail.mailServer) {
+        if (generalSettings.mail?.mailServer) {
             this.transporter = nodemailer.createTransport(generalSettings.mail.mailServer);
         }
     }

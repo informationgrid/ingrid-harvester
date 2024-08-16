@@ -81,6 +81,9 @@ export interface MailServerConfiguration {
     host: string,
     port: number,
     secure?: boolean,
+    tls: {
+      rejectUnauthorized: boolean
+    },
     auth: {
         user: string,
         pass: string
