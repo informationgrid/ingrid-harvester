@@ -290,6 +290,52 @@
     </mat-card>
 
     <mat-card class="config-card">
+      <mat-card-header class="flex-row gap-20">
+        <mat-card-title>Harvesting Differenzen</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="flex-row gap-20 margin-below">
+          <span>Wenn bereits bestehende Datensätze nicht im laufenden Harvesting vorhanden sind, dann</span>
+        </div>
+
+        <div class="flex-row gap-20 align-items-end" [formGroup]="configForm.get('harvesting.mail')">
+          <div class="margin-below">
+            <mat-slide-toggle color="accent" [checked]="configForm.get('harvesting.mail.enabled')"
+              title="E-Mail-Benachrichtigungen für eingestellte Harvesting-Differenz an-/ausschalten" formControlName="enabled"
+              (click)="$event.stopImmediatePropagation()">
+            </mat-slide-toggle>
+          </div>
+          <div class="margin-below">
+            <span>E-Mail senden ab einer Differenz von</span>
+          </div>
+          <mat-form-field class="flex-30">
+            <mat-label>Benachrichtigungs-Schwelle</mat-label>
+            <input matInput type="number" min="1" max="100" style="text-align: right" formControlName="minDifference">
+            <mat-icon [inline]="true" style="padding-left: 1px; line-height: initial" matSuffix>%</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="flex-row gap-20 align-items-end" [formGroup]="configForm.get('harvesting.cancel')">
+          <div class="margin-below">
+            <mat-slide-toggle color="accent" [checked]="configForm.get('harvesting.cancel.enabled')"
+              title="Harvesting-Abbruch für eingestellte Harvesting-Differenz an-/ausschalten" formControlName="enabled"
+              (click)="$event.stopImmediatePropagation()">
+            </mat-slide-toggle>
+          </div>
+          <div class="margin-below">
+            <span>Harvesting abbrechen ab einer Differenz von</span>
+          </div>
+          <mat-form-field class="flex-30">
+            <mat-label>Abbruchs-Schwelle</mat-label>
+            <input matInput type="number" min="1" max="100" style="text-align: right" formControlName="minDifference">
+            <mat-icon [inline]="true" style="padding-left: 1px; line-height: initial" matSuffix>%</mat-icon>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="config-card">
       <mat-card-header class="flex-row gap-20" [formGroup]="configForm.get('mail')">
         <mat-card-title>E-Mail-Einstellungen</mat-card-title>
         <div class="center-right">
@@ -301,17 +347,6 @@
       </mat-card-header>
 
       <mat-card-content>
-
-        <div class="flex-row gap-20">
-          <mat-form-field class="flex-20" [formGroup]="configForm.get('harvesting')">
-            <mat-label>Benachrichtigungs-Schwelle:</mat-label>
-            <input matInput type="number" min="1" max="100" style="text-align: right" formControlName="maxDifference">
-            <mat-icon [inline]="true" style="padding-left: 1px; line-height: initial" matSuffix>%</mat-icon>
-          </mat-form-field>
-          <div style="margin-bottom: 20px; align-self: center">
-            <span>Differenz zwischen Anzahl aktuell geharvesteter und bestehender Datensätze</span>
-          </div>
-        </div>
 
         <h4>Server</h4>
 

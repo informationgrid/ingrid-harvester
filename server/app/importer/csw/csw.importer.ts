@@ -135,11 +135,13 @@ export class CswImporter extends Importer {
                         throw new Error(`No results during ${this.settings.type} import`);
                     }
                     // ensure that less than X percent of existing datasets are slated for deletion
-                    // TODO introduce settings to:
-                    // - send a mail
-                    // - fail or continue
                     let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.sourceURL, transactionTimestamp);
-                    if (nonFetchedPercentage > this.generalConfig.harvesting.maxDifference) {
+                    let { mail, cancel } = this.generalConfig.harvesting;
+                    if (this.generalConfig.mail.enabled && mail.enabled && nonFetchedPercentage > mail.minDifference) {
+                        let msg = `Not enough coverage of previous results (${nonFetchedPercentage}%)`;
+                        MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
+                    }
+                    if (cancel.enabled && nonFetchedPercentage > cancel.minDifference) {
                         throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
                     }
                 }

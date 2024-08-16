@@ -48,7 +48,14 @@ export type GeneralSettings = {
         dir?: string
     },
     harvesting: {
-        maxDifference?: number
+        mail: {
+            enabled?: boolean,
+            minDifference?: number
+        },
+        cancel: {
+            enabled?: boolean,
+            minDifference?: number
+        }
     }
 };
 

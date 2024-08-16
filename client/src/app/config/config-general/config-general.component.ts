@@ -231,7 +231,14 @@ export class ConfigGeneralComponent implements OnInit {
         dir: [settings.indexBackup.dir]
       }),
       harvesting: this.formBuilder.group({
-        maxDifference: [settings.harvesting.maxDifference]
+        mail: this.formBuilder.group({
+          enabled: [settings.harvesting.mail.enabled],
+          minDifference: [settings.harvesting.mail.minDifference]
+        }),
+        cancel: this.formBuilder.group({
+          enabled: [settings.harvesting.cancel.enabled],
+          minDifference: [settings.harvesting.cancel.minDifference]
+        })
       })
     })
   }

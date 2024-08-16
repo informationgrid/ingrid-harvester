@@ -118,7 +118,14 @@ export class ConfigService {
             dir: ""
         },
         harvesting: {
-            maxDifference: 10
+            mail: {
+                enabled: false,
+                minDifference: 10
+            },
+            cancel: {
+                enabled: false,
+                minDifference: 10
+            }
         }
     };
     private static ignoreCaseSort = (a: string, b: string) => {

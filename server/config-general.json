@@ -55,7 +55,14 @@
     "dir": ""
   },
   "harvesting": {
-    "maxDifference": 10
+    "mail": {
+      "enabled": false,
+      "minDifference": 10
+    },
+    "cancel": {
+      "enabled": false,
+      "minDifference": 10
+    }
   },
   "cronOffset": 0
 }
