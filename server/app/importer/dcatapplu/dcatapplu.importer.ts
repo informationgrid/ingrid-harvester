@@ -150,7 +150,7 @@ export class DcatappluImporter extends Importer {
             let xml = this.domParser.parseFromString(dcatApPluDocument, 'application/xml');
             let rootNode = xml.getElementsByTagNameNS(namespaces.RDF, 'RDF')[0];
             // let records =  DcatappluMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
-            let records =  DcatappluMapper.select('./dcat:Dataset', rootNode);
+            let records =  DcatappluMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
 
             let catalogs = DcatappluMapper.select('./dcat:Catalog', rootNode);
             let catalogAboutsToCatalogs = {};
@@ -181,20 +181,11 @@ export class DcatappluImporter extends Importer {
                 });
             });
 
-            let ids = [];
-            for (let i = 0; i < records.length; i++) {
-                let uuid = DcatappluMapper.select('./dct:identifier', records[i], true).textContent;
-                if(!uuid) {
-                    uuid = DcatappluMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
-                }
-                ids.push(uuid);
-            }
-
             for (let i = 0; i < records.length; i++) {
                 this.summary.numDocs++;
 
                 let uuid = DcatappluMapper.select('./dct:identifier', records[i], true).textContent;
-                if(!uuid) {
+                if (!uuid) {
                     uuid = DcatappluMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
                 }
                 if (!this.filterUtils.isIdAllowed(uuid)) {
@@ -233,7 +224,8 @@ export class DcatappluImporter extends Importer {
                         original_document: mapper.getHarvestedData()
                     };
                     promises.push(this.database.addEntityToBulk(entity));
-                } else {
+                }
+                else {
                     this.summary.skippedDocs.push(uuid);
                 }
                 this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
