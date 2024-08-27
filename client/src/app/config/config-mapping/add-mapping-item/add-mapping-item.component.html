@@ -26,12 +26,13 @@
   <div class="flex-row space-between gap-20" >
     <mat-form-field>
       <mat-label>Quelle</mat-label>
-      <input matInput [(ngModel)]="data.source" required>
+      <input data-cy="mapping-destination" matInput [(ngModel)]="data.source" required>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Ziel</mat-label>
       <input matInput [(ngModel)]="data.target" [matAutocomplete]="auto"
-             (ngModelChange)="filterOptions($event)" required>
+             (ngModelChange)="filterOptions($event)" required
+             data-cy="mapping-destination">
       <mat-autocomplete #auto="matAutocomplete">
         @for (option of filteredOptions; track option) {
 <mat-option [value]="option">
