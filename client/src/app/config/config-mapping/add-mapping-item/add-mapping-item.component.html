@@ -46,5 +46,5 @@
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>Abbrechen</button>
   <div class="flex-space"></div>
-  <button mat-button color="primary" [mat-dialog-close]="data" [disabled]="!data.source || !data.target">Hinzufügen</button>
+  <button data-test="btn-save-mapping"mat-button color="primary" [mat-dialog-close]="data" [disabled]="!data.source || !data.target">Hinzufügen</button>
 </div>
