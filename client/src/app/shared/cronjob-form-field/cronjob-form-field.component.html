@@ -35,7 +35,7 @@
         <mat-form-field class="flex-100">
             <mat-label>Cron Expression</mat-label>
             <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
-            <input matInput placeholder="* * * * *" [formControlName]="cronKeyName" 
+            <input data-test="cron-input" matInput placeholder="* * * * *" [formControlName]="cronKeyName"
             (keyup)="translateCronExpression(cronControl.value)">
             @if (cronControl.value) {
             <button mat-icon-button matSuffix aria-label="Clear" (click)="clearInput()">
