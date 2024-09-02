@@ -49,14 +49,14 @@ export class MonitoringHarvesterComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.draw_chart()
+    this.drawChart()
   }
 
   getHarvesterHistory(): Observable<any> {
     return this.http.get<any>('rest/api/monitoring/harvester');
   }
 
-  public async draw_chart() {
+  public async drawChart() {
     if (!this.chart) {
       this.getHarvesterHistory().toPromise().then((data) => {
         this.chart = historyChart('chart_harvester', data.history)

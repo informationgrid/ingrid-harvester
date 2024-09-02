@@ -39,7 +39,7 @@ export class MonitoringComponent implements OnInit {
     Chart.register(...registerables);
     Chart.defaults.color = 'black'; // Global text color
   }
-  
+
   ngOnInit() {
     this.breakpoint = (window.innerWidth <= 1400) ? 1 : 2;
     this.breakpointCols = (window.innerWidth <= 1400) ? 1 : 2;
@@ -64,7 +64,7 @@ export class MonitoringComponent implements OnInit {
   onTabChange(event) {
 
     if(event.tab.textLabel === 'Harvester Historie'){
-      MonitoringComponent.monitoringHarvesterComponent.draw_chart();
+      MonitoringComponent.monitoringHarvesterComponent.drawChart();
     }
 
     if(event.tab.textLabel === 'IndexCheck'){
