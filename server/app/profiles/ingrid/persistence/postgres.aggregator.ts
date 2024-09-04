@@ -42,8 +42,8 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         }
 
         // shortcut - if all documents in the bucket should be deleted, delete the document from ES
-        let deleteDocument = true;
-        bucket.duplicates.forEach(document => deleteDocument &&= document.extras.metadata.deleted != null);
+        let deleteDocument = document.extras.metadata.deleted != null;
+        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
         if (deleteDocument) {
             return [{ operation: 'delete', _id: createEsId(document) }];
         }

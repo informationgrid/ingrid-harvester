@@ -34,6 +34,14 @@ export class PostgresAggregator implements AbstractPostgresAggregator<mcloudInde
         let box: EsOperation[] = [];
         // find primary document
         let { document, duplicates } = this.prioritizeAndFilter(bucket);
+
+        // shortcut - if all documents in the bucket should be deleted, delete the document from ES
+        let deleteDocument = document.extras.metadata.deleted != null;
+        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
+        if (deleteDocument) {
+            return [{ operation: 'delete', _id: createEsId(document) }];
+        }
+
         // merge service information into dataset
         for (let [id, service] of bucket.operatingServices) {
             document = this.resolveCoupling(document, service);
