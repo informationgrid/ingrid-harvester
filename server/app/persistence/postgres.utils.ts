@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../utils/misc.utils';
 import { BulkResponse, DatabaseUtils } from './database.utils';
 import { Catalog } from '../model/dcatApPlu.model';
 import { Client, Pool, PoolClient, QueryResult } from 'pg';
@@ -93,7 +94,7 @@ export class PostgresUtils extends DatabaseUtils {
     async getStoredData(ids: string[]): Promise<any[]> {
         let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getStoredData, [ids]);
         let dates = [];
-        for (let row of result.rows) {            
+        for (let row of result.rows) {
             dates.push({
                 id: row.extras.generated_id,
                 issued: row.extras.metadata.issued,
@@ -105,12 +106,12 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async getDatasetIdentifiers(source: string): Promise<string[]> {
-        // TODO 
+        // TODO
         // let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiers, [source]);
         // let result: QueryResult<any> = await this.transactionClient.query("SELECT * from public.record WHERE source = $1", [source]);
         let result: QueryResult<any> = await this.transactionClient.query("SELECT identifier from public.record WHERE source = $1 and dataset->'extras'->>'hierarchy_level'!='service'", [source]);
         if (result.rowCount == 0) {
-            return null;
+            return [];
         }
         return result.rows.map(row => row.identifier);
     }
@@ -145,7 +146,7 @@ export class PostgresUtils extends DatabaseUtils {
         if (result.rowCount == 0) {
             return null;
         }
-        return { 
+        return {
             id: result.rows[0].id,
             ...result.rows[0].properties
         };
@@ -162,8 +163,8 @@ export class PostgresUtils extends DatabaseUtils {
 
     async nonFetchedPercentage(source: string, last_modified: Date): Promise<number> {
         let result: QueryResult<any> = await this.transactionClient.query(this.queries.nonFetchedRatio, [source, last_modified]);
-        let { total, nonFetched } = result.rows[0];
-        return nonFetched / total * 100;
+        let { total, nonfetched } = result.rows[0];
+        return nonfetched / total * 100;
     }
 
     async deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void> {
@@ -172,9 +173,9 @@ export class PostgresUtils extends DatabaseUtils {
 
     /**
      * Push datasets from database to elasticsearch, slower but with all bells and whistles.
-     * 
-     * @param elastic 
-     * @param source 
+     *
+     * @param elastic
+     * @param source
      * @param processBucket
      */
     async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string) {
@@ -248,9 +249,9 @@ export class PostgresUtils extends DatabaseUtils {
 
     /**
      * Infer source type from source URL.
-     * 
-     * @param source 
-     * @returns 
+     *
+     * @param source
+     * @returns
      */
     private getSourceType(dataset: IndexDocument, source: string) {
         source = source.toLowerCase()
@@ -278,7 +279,7 @@ export class PostgresUtils extends DatabaseUtils {
 
     /**
      * Execute a bulk upsert into the PSQL database
-     * 
+     *
      * @param entities the entities to persist (via upsert)
      * @returns BulkResponse containing number of affected rows
      */
@@ -292,7 +293,7 @@ export class PostgresUtils extends DatabaseUtils {
             if ((entities[0] as RecordEntity).collection_id) {
                 // if we have the same entity twice in the same bulk, merge the entity before persisting
                 // this can occur due to the way updates are handled (e.g. in CSW we have to wait for WMS calls to finish)
-                // if we don't merge, we get the following error: 
+                // if we don't merge, we get the following error:
                 // "Ensure that no rows proposed for insertion within the same command have duplicate constrained values."
                 // TODO ideally, we change handling from `Entity` to `Entity.DbOperation`, to only send updates when needed
                 // TODO (instead of full upserts) and handle JSON updates within Postgres
@@ -300,11 +301,11 @@ export class PostgresUtils extends DatabaseUtils {
                 // we remove catalogs from the entities at this point because we don't want them to persisted into the
                 // dataset in the catalog
                 entities = this.removeCatalogs(entities as RecordEntity[]);
-                result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities)]);
+                result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities, MiscUtils.dateReplacer)]);
             }
             else if ((entities[0] as CouplingEntity).service_id) {
                 entities = this.mergeCouplingEntities(entities as CouplingEntity[]);
-                result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities)]);
+                result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities, MiscUtils.dateReplacer)]);
             }
             else {
                 throw new Error('Unrecognised Entity type');
@@ -488,22 +489,25 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     private static fix(config: DatabaseConfiguration) {
-        let cs = config.connectionString;
-        if (cs) {
+        if (config.connectionString) {
+            let url = new URL(config.connectionString);
             // add credentials to connection string
-            if (config.user && !cs.includes('@')) {
-                cs = cs.replace('://', `://${config.user}:${config.password}@`);
+            if (config.user && !url.username) {
+                url.username = config.user;
+            }
+            if (config.password && !url.password) {
+                url.password = config.password;
             }
             // node-pg has a quirk where it passes sslmode=require as { ssl: true } to node-tls,
             // which in turn checks hostname and certificate (which sslmode=require should NOT do).
             // re-create the intended behaviour here
-            if (cs.includes('sslmode=require')) {
-                cs = cs.replace('sslmode=require', '');
+            if (url.searchParams.get('sslmode') == 'require') {
+                url.searchParams.delete('sslmode');
                 config.ssl = {
                     rejectUnauthorized: false
                 };
             }
-            config.connectionString = cs;
+            config.connectionString = url.toString();
         }
         return config;
     }

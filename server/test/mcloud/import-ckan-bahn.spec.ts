@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -51,7 +51,7 @@ describe('Import CKAN Bahn', function () {
 
         var settings: CkanSettings = {
             ...defaultCKANSettings,
-            ckanBaseUrl: 'https://data.deutschebahn.com',
+            sourceURL: 'https://data.deutschebahn.com',
             defaultAttribution: 'Deutsche Bahn Datenportal',
             defaultDCATCategory: ['TRAN', 'TECH'],
             defaultMcloudSubgroup: ['railway'],
@@ -92,7 +92,7 @@ describe('Import CKAN Bahn', function () {
     it('should map ckan to index correctly', async () => {
         const mapper = new CkanMapper({
             ...defaultCKANSettings,
-            ckanBaseUrl: 'https://data.deutschebahn.com',
+            sourceURL: 'https://data.deutschebahn.com',
             index: 'xxx',
             markdownAsDescription: false
         }, {

@@ -36,6 +36,33 @@ services:
     networks:
       - ingrid-harvester-network
 
+
+  elastic-7:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.11
+    container_name: ingrid-elastic-7
+    environment:
+      - TZ=Europe/Berlin
+      - cluster.name=ingrid
+      - http.host=0.0.0.0
+      - transport.host=0.0.0.0
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - "ES_JAVA_OPTS=-Xms3072m -Xmx3072m"
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.ml.enabled=false
+      - discovery.type=single-node
+      - ingest.geoip.downloader.enabled=false
+    volumes:
+      - esdata7:/usr/share/elasticsearch/data
+    restart: unless-stopped
+    ports:
+      - 9202:9200
+      - 9302:9300
+    networks:
+      - ingrid-harvester-network
+
+
   elastic-8:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
     container_name: ingrid-elastic-8
@@ -101,8 +128,6 @@ services:
       - /pgdata
     ports:
       - "5432:5432"
-    volumes:
-      - ./postgres/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     environment:
       POSTGRES_USER: ogcrecords
       POSTGRES_PASSWORD: ogcrecords
@@ -110,6 +135,7 @@ services:
 
 volumes:
   esdata6:
+  esdata7:
   esdata8:
 
 networks:

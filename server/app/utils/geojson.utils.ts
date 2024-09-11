@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -74,9 +74,12 @@ const BBOX_GERMANY = buffer({
         [5.98865807458, 54.983104153]]]
 }, 50, {units: 'kilometers'});
 
-export function getBbox(spatial: AllGeoJSON) {
+export function getBbox(spatial: AllGeoJSON): Geometry {
     if (!spatial) {
         return undefined;
+    }
+    if (spatial?.type == 'Point') {
+        return spatial;
     }
     return bboxPolygon(bbox(spatial))?.geometry;
 }

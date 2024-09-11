@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -24,16 +24,18 @@
 /**
  * A mapper for documents harvested from KuLaDig.
  */
+import * as MiscUtils from '../../utils/misc.utils';
 import { getLogger } from 'log4js';
 import { BaseMapper } from '../../importer/base.mapper';
 import { Contact, Organization, Person } from '../../model/agent';
+import { DateRange } from '../../model/dateRange';
 import { Geometries } from '@turf/helpers';
 import { ImporterSettings } from '../../importer.settings';
 import { KldSettings } from './kld.settings';
 import { License } from '@shared/license.model';
+import { Media, Relation } from '../../profiles/lvr/model/index.document';
 import { ObjectResponse, RelatedObject, Document, getDocumentUrl, RelationType, MediaType } from './kld.api';
 import { Summary } from '../../model/summary';
-import { DateRange, Media, Relation } from '../../profiles/lvr/model/index.document';
 
 export class KldMapper extends BaseMapper {
 
@@ -75,7 +77,7 @@ export class KldMapper extends BaseMapper {
     getDescription(): string {
         const abstract = this.record.Beschreibung;
         if (!abstract) {
-            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.id}\', title: \'${this.getTitle()}\', source: \'${this.settings.providerUrl}\'`;
+            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.id}\', title: \'${this.getTitle()}\', source: \'${this.settings.sourceURL}\'`;
             this.log.warn(msg);
             this.summary.warnings.push(['No description', msg]);
             this.valid = false;
@@ -100,7 +102,7 @@ export class KldMapper extends BaseMapper {
         if (start && end && start > end) {
             const message = `Inconsistent dates found in object ${this.record.Id}: \
                 Start (${new Date(start).toJSON()}) is greater than end (${new Date(end).toJSON()}).`;
-            this.summary.appErrors.push(message);
+            this.summary.warnings.push(['Inconsistent dates', message]);
         }
         const range = { gte: start, lte: end };
         return [range];
@@ -136,9 +138,9 @@ export class KldMapper extends BaseMapper {
     }
 
     getMetadataSource() {
-        let link = `${this.settings.providerUrl}Objekt/${this.id}`;
+        let link = `${this.settings.sourceURL}Objekt/${this.id}`;
         return {
-            source_base: this.settings.providerUrl,
+            source_base: this.settings.sourceURL,
             raw_data_source: link,
             source_type: 'kld',
             portal_link: this.settings.defaultAttributionLink,
@@ -181,36 +183,17 @@ export class KldMapper extends BaseMapper {
         return new Promise((resolve) => resolve([publisher]));
     }
 
-    private parseDate(date: string|null): number|null {
-        if (!date) {
-            return null;
-        }
-        let millis = 0;
-        const dateAsNumber = Number(date);
-        if (!isNaN(dateAsNumber)) {
-            // Data.parse does not parse BC years correctly
-            let resultDate = new Date(Date.UTC(1970, 0, 1, 0, 0, 0, 0));
-            millis = resultDate.setFullYear(dateAsNumber);
-        }
-        else {
-            millis = Date.parse(date);
-        }
-        return millis;
-    }
-
-    private parseDateRange(dates: string[]): [number|null, number|null] {
-        const values = dates.map(this.parseDate).filter((date: number|null) => date != null).sort((a: number, b: number) => a - b);
+    private parseDateRange(dates: string[]): [Date|null, Date|null] {
+        const values = dates.map(MiscUtils.normalizeDateTime).filter((date: Date|null) => date != null).sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
         const start = values.length > 0 ? values[0] : null;
         const end = values.length > 0 ? values[values.length-1] : null;
         return [start, end];
     }
 
     private mapRelatedObject(related: RelatedObject, type: RelationType): Relation {
-        // TODO calculate score
         return {
             id: related.Id,
-            type: this.getEnumKey(RelationType, type).toLowerCase(),
-            score: -1
+            type: this.getEnumKey(RelationType, type).toLowerCase()
         }
     }
 

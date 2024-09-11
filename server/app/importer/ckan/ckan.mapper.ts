@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -173,11 +173,11 @@ export class CkanMapper extends BaseMapper {
     getMetadataSource(): MetadataSource {
         // Metadata
         // The harvest source
-        let rawSource = this.settings.ckanBaseUrl + '/api/3/action/package_show?id=' + this.source.name;
-        let portalSource = this.settings.ckanBaseUrl + '/dataset/' + this.source.name;
+        let rawSource = this.settings.sourceURL + '/api/3/action/package_show?id=' + this.source.name;
+        let portalSource = this.settings.sourceURL + '/dataset/' + this.source.name;
 
         return {
-            source_base: this.settings.ckanBaseUrl,
+            source_base: this.settings.sourceURL,
             raw_data_source: rawSource,
             source_type: 'ckan',
             portal_link: portalSource,
@@ -567,7 +567,7 @@ export class CkanMapper extends BaseMapper {
         if (settings.requestType === 'ListWithResources') {
             return {
                 method: 'GET',
-                uri: settings.ckanBaseUrl + '/api/3/action/current_package_list_with_resources',
+                uri: settings.sourceURL + '/api/3/action/current_package_list_with_resources',
                 json: true,
                 headers: RequestDelegate.defaultRequestHeaders(),
                 proxy: settings.proxy || null,
@@ -603,7 +603,7 @@ export class CkanMapper extends BaseMapper {
             }
             return {
                 method: 'GET',
-                uri: settings.ckanBaseUrl + '/api/action/package_search', // See http://docs.ckan.org/en/ckan-2.7.3/api/
+                uri: settings.sourceURL + '/api/action/package_search', // See http://docs.ckan.org/en/ckan-2.7.3/api/
                 json: true,
                 headers: RequestDelegate.defaultRequestHeaders(),
                 proxy: settings.proxy || null,
@@ -618,7 +618,7 @@ export class CkanMapper extends BaseMapper {
     static createRequestConfigCount(settings: CkanSettings): RequestOptions {
         return {
             method: 'GET',
-            uri: settings.ckanBaseUrl + '/api/3/action/package_list', // See http://docs.ckan.org/en/ckan-2.7.3/api/
+            uri: settings.sourceURL + '/api/3/action/package_list', // See http://docs.ckan.org/en/ckan-2.7.3/api/
             json: true,
             headers: RequestDelegate.defaultRequestHeaders(),
             proxy: settings.proxy || null,

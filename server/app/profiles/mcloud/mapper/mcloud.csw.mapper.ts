@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -29,7 +29,7 @@ export class mcloudCswMapper extends mcloudMapper<CswMapper> {
     getDescription() {
         let description = this.baseMapper.getDescription();
         if (!description) {
-            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.getGeneratedId()}\', title: \'${this.getTitle()}\', source: \'${this.baseMapper.getSettings().getRecordsUrl}\'`;
+            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.getGeneratedId()}\', title: \'${this.getTitle()}\', source: \'${this.baseMapper.getSettings().sourceURL}\'`;
             this.baseMapper.log.warn(msg);
             this.baseMapper.getSummary().warnings.push(['No description', msg]);
             this.baseMapper.setValid(false);

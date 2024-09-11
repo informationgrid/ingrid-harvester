@@ -1,0 +1,46 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>2010</id>
+  <name>Adresstyp für spezielle Objektklassen</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3360</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Standort</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Location</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3400</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Projektleiter</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Project Manager</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3410</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Beteiligte</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Participants</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

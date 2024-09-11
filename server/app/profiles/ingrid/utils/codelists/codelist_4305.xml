@@ -1,0 +1,46 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>4305</id>
+  <name>Adresse - Titel</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Dr.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Dr.</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Prof.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Prof.</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Prof. Dr.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Prof. Dr.</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

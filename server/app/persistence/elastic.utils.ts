@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -40,7 +40,9 @@ export interface BulkResponse {
 export interface EsOperation {
     operation: 'index' | 'create' | 'update' | 'delete',
     _id: any,
-    document?: any
+    _index?: string,
+    document?: any,
+    _type?: string
 }
 
 export abstract class ElasticsearchUtils {
@@ -124,7 +126,7 @@ export abstract class ElasticsearchUtils {
      *
      * The operations are sent in the same request.
      *
-     * @param boxedOperations 
+     * @param boxedOperations
      */
     abstract addOperationChunksToBulk(boxedOperations: EsOperation[]): Promise<BulkResponse>;
 

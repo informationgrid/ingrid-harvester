@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -33,11 +33,14 @@ export const namespaces = {
     GMD: 'http://www.isotc211.org/2005/gmd',
     GML: 'http://www.opengis.net/gml',
     GML_3_2: 'http://www.opengis.net/gml/3.2',
+    GMX: 'http://www.isotc211.org/2005/gmx',
     HYDRA: 'http://www.w3.org/ns/hydra/core#',
     INSPIRE_COMMON: 'http://inspire.ec.europa.eu/schemas/common/1.0',
     INSPIRE_VS: 'http://inspire.ec.europa.eu/schemas/inspire_vs/1.0',
     LIDO: 'http://www.lido-schema.org',
     LOCN: 'http://www.w3.org/ns/locn#',
+    MODS: 'http://www.loc.gov/mods/v3',
+    OAI: 'http://www.openarchives.org/OAI/2.0/',
     OGC: 'http://www.opengis.net/ogc',
     ORG: 'http://www.w3.org/ns/org#',
     OWL: 'http://www.w3.org/2002/07/owl#',

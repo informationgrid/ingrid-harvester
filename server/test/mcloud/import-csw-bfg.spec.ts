@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -51,7 +51,7 @@ describe('Import CSW BFG', function () {
         const settings: CswSettings = {
             dryRun: true,
             startPosition: 1,
-            getRecordsUrl: "https://geoportal.bafg.de/csw/api",
+            sourceURL: "https://geoportal.bafg.de/csw/api",
             proxy: null,
             defaultMcloudSubgroup: ["waters"],
             defaultDCATCategory: ["TRAN", "TECH"],

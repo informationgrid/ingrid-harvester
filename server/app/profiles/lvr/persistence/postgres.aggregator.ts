@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -35,8 +35,8 @@ export class PostgresAggregator implements AbstractPostgresAggregator<LvrIndexDo
         let { document, duplicates } = this.prioritizeAndFilter(bucket);
 
         // shortcut - if all documents in the bucket should be deleted, delete the document from ES
-        let deleteDocument = true;
-        bucket.duplicates.forEach(document => deleteDocument &&= document.extras.metadata.deleted != null);
+        let deleteDocument = document.extras.metadata.deleted != null;
+        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
         if (deleteDocument) {
             return [{ operation: 'delete', _id: createEsId(document) }];
         }

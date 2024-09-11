@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -38,17 +38,28 @@ const iso19139: OaiXPaths = {
 
 const lido: OaiXPaths = {
     prefixMap: {
+        'oai': namespaces.OAI,
         'lido': namespaces.LIDO,
         'gml': namespaces.GML
     },
     nsPrefix: namespaces.LIDO,
     mdRoot: 'lido',
-    idElem: './lido:lidoRecID'
+    idElem: './oai:identifier'
+};
+
+const mods: OaiXPaths = {
+    prefixMap: {
+        'mods': namespaces.MODS
+    },
+    nsPrefix: namespaces.MODS,
+    mdRoot: 'mods',
+    idElem: './mods:identifier[@type="citekey"]'
 };
 
 export const oaiXPaths: { [key: string]: OaiXPaths } = {
     iso19139,
-    lido
+    lido,
+    mods
 };
 
 export type OaiXPaths = {

@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -26,7 +26,8 @@ import { Importer } from '../../../importer/importer';
 import { ImporterFactory } from '../../../importer/importer.factory';
 import { KldImporter } from '../../../importer/kld/kld.importer';
 import { KldSettings } from '../../../importer/kld/kld.settings';
-import { OaiImporter } from '../../../importer/oai/lido/oai.importer';
+import { OaiImporter } from '../../../importer/oai/oai.importer';
+import { OaiSettings } from '../../../importer/oai/oai.settings';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -36,7 +37,7 @@ export class LvrImporterFactory extends ImporterFactory {
         let importer: Importer;
         switch (config.type) {
             case 'OAI':
-                importer = new OaiImporter(config);
+                importer = new OaiImporter(config as OaiSettings);
                 break;
             case 'KLD':
                 importer = new KldImporter(config as KldSettings);

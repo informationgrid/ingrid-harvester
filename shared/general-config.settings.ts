@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -27,6 +27,7 @@ export type GeneralSettings = {
     elasticsearch: ElasticsearchConfiguration,
     database: DatabaseConfiguration,
     cronOffset?: number,
+    mappingLogLevel: 'info' | 'warn',
     proxy: string,
     allowAllUnauthorizedSSL: boolean,
     portalUrl?: string,
@@ -46,7 +47,16 @@ export type GeneralSettings = {
         cronPattern?: string,
         dir?: string
     },
-    maxDiff?: number
+    harvesting: {
+        mail: {
+            enabled?: boolean,
+            minDifference?: number
+        },
+        cancel: {
+            enabled?: boolean,
+            minDifference?: number
+        }
+    }
 };
 
 export interface ElasticsearchConfiguration {
@@ -78,6 +88,9 @@ export interface MailServerConfiguration {
     host: string,
     port: number,
     secure?: boolean,
+    tls: {
+      rejectUnauthorized: boolean
+    },
     auth: {
         user: string,
         pass: string

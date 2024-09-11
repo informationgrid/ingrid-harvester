@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -20,6 +20,7 @@
  * limitations under the Licence.
  * ==================================================
  */
+
 import * as fs from 'fs';
 import * as xpath from 'xpath';
 import * as GeoJsonUtils from '../../utils/geojson.utils';
@@ -45,15 +46,15 @@ import { Response } from 'node-fetch';
 import { WfsMapper } from './wfs.mapper';
 import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils';
 
-const log = getLogger(__filename),
-    logRequest = getLogger('requests');
+const log = getLogger(__filename);
+const logRequest = getLogger('requests');
 
 export abstract class WfsImporter extends Importer {
 
     protected domParser: DOMParser;
-    private profile: ProfileFactory<WfsMapper>;
-    private readonly settings: WfsSettings;
-    private readonly requestDelegate: RequestDelegate;
+    protected profile: ProfileFactory<WfsMapper>;
+    protected requestDelegate: RequestDelegate;
+    protected settings: WfsSettings;
 
     private totalFeatures = 0;
     private numIndexDocs = 0;
@@ -81,53 +82,12 @@ export abstract class WfsImporter extends Importer {
         this.settings = settings;
     }
 
+    // only here for documentation - use the "default" exec function
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
-        if (this.settings.dryRun) {
-            log.debug('Dry run option enabled. Skipping index creation.');
-            await this.harvest();
-            log.debug('Skipping finalisation of index for dry run.');
-            observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
-            observer.complete();
-        } else {
-            try {
-                // await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
-                await this.database.beginTransaction();
-                await this.harvest();
-                if(this.numIndexDocs > 0) {
-                    if (this.summary.databaseErrors.length == 0) {
-                        await this.database.commitTransaction();
-                        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.getFeaturesUrl);
-                    }
-                    else {
-                        await this.database.rollbackTransaction();
-                    }
-                    // await this.elastic.finishIndex();
-                    observer.next(ImportResult.complete(this.summary));
-                    observer.complete();
-                } else {
-                    if(this.summary.appErrors.length === 0) {
-                        this.summary.appErrors.push('No Results');
-                    }
-                    log.warn('No results during WFS import - Keep old index');
-                    observer.next(ImportResult.complete(this.summary, 'No Results - Keep old index'));
-                    observer.complete();
-
-                    // clean up index
-                    // this.elastic.deleteIndex(this.elastic.indexName);
-                }
-            } catch (err) {
-                this.summary.appErrors.push(err.message ? err.message : err);
-                log.error('Error during WFS import', err);
-                observer.next(ImportResult.complete(this.summary, 'Error happened'));
-                observer.complete();
-
-                // clean up index
-                // this.elastic.deleteIndex(this.elastic.indexName);
-            }
-        }
+        await super.exec(observer);
     }
 
-    async harvest() {
+    protected async harvest(): Promise<number> {
         let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resolveWithFullResponse: true }, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
         let capabilitiesResponse: Response = await capabilitiesRequestDelegate.doRequest();
@@ -259,7 +219,7 @@ export abstract class WfsImporter extends Importer {
         let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
         let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
         this.totalFeatures = parseInt(hitsResultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
-        log.info(`Found ${this.totalFeatures} features at ${this.settings.getFeaturesUrl}`);
+        log.info(`Found ${this.totalFeatures} features at ${this.settings.sourceURL}`);
 
         while (true) {
             log.info('Requesting next features');
@@ -293,6 +253,8 @@ export abstract class WfsImporter extends Importer {
         }
         log.info(`Finished requests`);
         await this.database.sendBulkData();
+
+        return this.numIndexDocs;
     }
 
     async extractFeatures(getFeatureResponse, harvestTime) {
@@ -347,7 +309,7 @@ export abstract class WfsImporter extends Importer {
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.settings.getFeaturesUrl,
+                    source: this.settings.sourceURL,
                     collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
@@ -366,7 +328,7 @@ export abstract class WfsImporter extends Importer {
     static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
         let requestConfig: RequestOptions = {
             method: settings.httpMethod || "GET",
-            uri: settings.getFeaturesUrl,
+            uri: settings.sourceURL,
             json: false,
             headers: RequestDelegate.wfsRequestHeaders(),
             proxy: settings.proxy || null,

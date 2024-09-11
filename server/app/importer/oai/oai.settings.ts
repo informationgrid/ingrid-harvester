@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -25,14 +25,12 @@ import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings
 
 export const defaultOAISettings: OaiSettings = {
     ...DefaultImporterSettings,
-    providerUrl: '',
     eitherKeywords: [],
     metadataPrefix: '',
     set: ''
 };
 
 export type OaiSettings = {
-    providerUrl: string,
     metadataPrefix?: string,
     set?: string,
     from?: Date,

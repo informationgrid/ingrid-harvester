@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -27,7 +27,6 @@ import { PluPlanState } from '../../model/dcatApPlu.model';
 export type CswSettings = {
     resultType?: 'hits' | 'results',
     pluPlanState?: PluPlanState,
-    getRecordsUrl: string,
     maxServices: number,
     resolveOgcDistributions: boolean,
     harvestingMode: 'standard' | 'separate',
@@ -39,7 +38,6 @@ export type CswSettings = {
 
 export const defaultCSWSettings: Partial<CswSettings> = {
     ...DefaultImporterSettings,
-    getRecordsUrl: '',
     maxServices: 30,
     resolveOgcDistributions: false,
     harvestingMode: 'standard',

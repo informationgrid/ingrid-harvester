@@ -1,0 +1,46 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>7128</id>
+  <name>Datenqualität - Relative Positionsgenauigkeit - Art der Messung</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>mean value of positional uncertainties (1D)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>mean value of positional uncertainties (1D)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>mean value of positional uncertainties (2D)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>mean value of positional uncertainties (2D)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>mean value of positional uncertainties (3D)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>mean value of positional uncertainties (3D)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

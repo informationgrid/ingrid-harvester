@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -24,8 +24,6 @@
 import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
 
 export type KldSettings = {
-  // base url of KuLaDig API
-  providerUrl: string,
   // time in milliseconds to wait for the next set of concurrent API requests defined in the maxConcurrent setting
   // NOTE a higher number will result in higher throttling of the request rate
   maxConcurrentTimespan: number,
@@ -33,6 +31,5 @@ export type KldSettings = {
 
 export const defaultKldSettings: Partial<KldSettings> = {
     ...DefaultImporterSettings,
-    providerUrl: '',
     maxConcurrentTimespan: 100,
   };

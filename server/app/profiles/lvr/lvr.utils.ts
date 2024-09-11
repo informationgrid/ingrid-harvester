@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -24,5 +24,5 @@
 import { LvrIndexDocument } from './model/index.document';
 
 export function createEsId(document: LvrIndexDocument): string {
-    return document.identifier;
+    return document.id;
 }

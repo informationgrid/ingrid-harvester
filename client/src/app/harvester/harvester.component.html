@@ -2,7 +2,7 @@
     ==================================================
     ingrid-harvester
     ==================================================
-    Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
     ==================================================
     Licensed under the EUPL, Version 1.2 or - as soon they will be
     approved by the European Commission - subsequent versions of the
@@ -20,10 +20,10 @@
     limitations under the Licence.
     ==================================================
 -->
+
 @if (harvesterLoaded) {
 <div class="allPageScroll flex-1 flex-col harvester-content">
-    <div class="flex-row fixed-top-right">
-        <div class="flex-1"></div>
+    <div class="flex-row justify-content-end fixed-top-right">
         <button mat-raised-button color="primary" [disabled]="numberOfHarvesters === 0" (click)="importAll()"
             data-test="import-all">
             <mat-icon svgIcon="Harvester" class="inline-valigned"/>
@@ -68,7 +68,7 @@
                 </mat-panel-title>
 
                 @if (harvester.cron?.full?.pattern || harvester.cron?.incr?.pattern) {
-                    <mat-icon inline class="scheduled" style="width: 20px; height: 20px;"  [svgIcon]="harvester.disable || !harvester.cron.full?.active ? 'alarm_off' : 'alarm_on' "/>
+                    <mat-icon data-test="icon-schedule" inline class="scheduled" style="width: 20px; height: 20px;"  [svgIcon]="harvester.disable || !harvester.cron.full?.active ? 'alarm_off' : 'alarm_on' "/>
                 }
                 <mat-slide-toggle color="accent" [checked]="!harvester.disable" class="padding"
                 title="Für Suche und Planung an- / ausschalten" (change)="handleActivation($event, harvester)"

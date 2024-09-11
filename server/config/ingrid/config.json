@@ -1,0 +1,55 @@
+[
+  {
+    "index": "csw_geoportal_de",
+    "priority": 5,
+    "type": "CSW",
+    "maxRecords": 200,
+    "startPosition": 1,
+    "catalogId": "harvester",
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "isIncremental": false,
+    "maxConcurrent": 6,
+    "skipUrlCheckOnHarvest": false,
+    "timeout": 60000,
+    "sourceURL": "https://gdk.gdi-de.org/gdi-de/srv/ger/csw",
+    "maxServices": 30,
+    "resolveOgcDistributions": true,
+    "harvestingMode": "standard",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "resultType": "results",
+    "simplifyTolerance": 0,
+    "id": 18,
+    "description": "geoportal.de",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "recordFilter": "<ogc:Filter>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>subject</ogc:PropertyName>\n\t\t<ogc:Literal>ATKIS</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n</ogc:Filter>",
+    "pluPlanState": "fixed",
+    "disable": false,
+    "cron": {
+      "full": {
+        "pattern": "0 2 * * 1-6",
+        "active": true
+      },
+      "incr": {
+        "pattern": "0 2 * * 0",
+        "active": true
+      }
+    },
+    "iPlugId": "ingrid-harvester",
+    "partner": "bund",
+    "provider": null,
+    "datatype": "default,dsc_csw,csw,metadata,IDF_1.0",
+    "dataSourceName": "Harvester",
+    "boost": null
+  }
+]

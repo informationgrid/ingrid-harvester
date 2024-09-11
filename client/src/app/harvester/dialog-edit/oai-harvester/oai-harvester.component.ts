@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -21,11 +21,12 @@
  * ==================================================
  */
 
-import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
-import {OaiSettings} from '../../../../../../server/app/importer/oai/oai.settings';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatChipInputEvent} from '@angular/material/chips';
-import {FormControl, UntypedFormGroup} from '@angular/forms';
+import { oaiXPaths } from '../../../../../../server/app/importer/oai/oai.paths';
+import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { FormControl, UntypedFormGroup } from '@angular/forms';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { OaiSettings } from '../../../../../../server/app/importer/oai/oai.settings';
 
 @Component({
   selector: 'app-oai-harvester',
@@ -39,11 +40,12 @@ export class OaiHarvesterComponent implements OnInit, OnDestroy {
   @Input() rulesTemplate: TemplateRef<any>;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  readonly metadataPrefixes: string[] = Object.keys(oaiXPaths);
 
   constructor() { }
 
   ngOnInit() {
-    this.form.addControl('providerUrl', new FormControl<string>(this.model.providerUrl));
+    this.form.addControl('sourceURL', new FormControl<string>(this.model.sourceURL));
     this.form.addControl('metadataPrefix', new FormControl<string>(this.model.metadataPrefix));
     this.form.addControl('set', new FormControl<string>(this.model.set));
     this.form.addControl('from', new FormControl<Date>(this.model.from));

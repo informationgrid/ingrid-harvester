@@ -1,0 +1,92 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>2100</id>
+  <name>Pixel Orientation</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>zentral</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>center</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>center</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>links unten</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>lower left</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>lowerLeft</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>rechts unten</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>lower right</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>lowerRight</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>rechts oben</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>upper right</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>upperRight</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>links oben</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>upper left</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>upperLeft</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

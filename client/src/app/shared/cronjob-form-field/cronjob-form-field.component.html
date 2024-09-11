@@ -1,3 +1,26 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
 <div [formGroup]="form.get(formKey)">
     <div class="flex-row gap-20 items-center">
         <h4 class="flex-space">{{title}}:
@@ -9,10 +32,10 @@
             title="Planung an- / ausschalten"></mat-slide-toggle>
     </div>
     <div class="flex-row gap-20 margin-below">
-        <mat-form-field class="flex-100">
+        <mat-form-field data-test="cron-input" class="flex-100">
             <mat-label>Cron Expression</mat-label>
             <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
-            <input matInput placeholder="* * * * *" [formControlName]="cronKeyName" 
+            <input matInput placeholder="* * * * *" [formControlName]="cronKeyName"
             (keyup)="translateCronExpression(cronControl.value)">
             @if (cronControl.value) {
             <button mat-icon-button matSuffix aria-label="Clear" (click)="clearInput()">

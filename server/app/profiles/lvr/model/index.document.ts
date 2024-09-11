@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -21,67 +21,50 @@
  * ==================================================
  */
 
-import { Geometries, GeometryCollection, Point } from '@turf/helpers';
 import { IndexDocument } from '../../../model/index.document';
+import { IngridIndexDocument } from '../../../model/ingrid.index.document';
 import { License } from '@shared/license.model';
 
-export type LvrIndexDocument = IndexDocument & {
-    identifier: string,
-    title: string[],
-    description: string[],
-    spatial: GeometryInformation[],
-    temporal: DateRange,
-    keywords: Keyword[],
-    relation: Relation[],
-    media: Media[],
-    license: License,
-    vector: object,
-    extras: {
-        original_id: string;
+export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
+    lvr: {
+        identifier: string,
+        // title: string[],
+        // description: string[],
+        // spatial: GeometryInformation[],
+        // temporal: DateRange,
+        // keywords: Keyword[],
+        genres: string[],
+        persons: Person[],
+        media: Media[],
+        relations: Relation[],
+        licenses: License[],
+        vector: object
     }
-};
-
-export type GeometryInformation = {
-    geometry: Geometries | GeometryCollection,
-    centroid: Point,
-    type: string,
-    description: string,
-    address: string
 };
 
 export type Keyword = {
     id: string | string[],
     term: string | string[],
     thesaurus: string | string[]
-}
+};
 
 export type Media = {
     type: string,
     url: string,
     description: string
-}
+};
+
+export type Person = {
+    type: string,
+    role: string,
+    name: {
+        first: string,
+        last: string,
+        display: string
+    }
+};
 
 export type Relation = {
     id: string,
-    type: string,
-    score: number
-}
-
-/**
- * Custom date range that allows correct handling of BC dates (e.g. 70 BC)
- *
- * This date range does not use the Date type because serialization via Date.toJSON will produce
- * values for BC dates that cannot be parsed by elasticsearch (e.g. "-05001-12-31T23:06:32.000Z"
- * instead of "-5001-12-31T23:06:32.000Z" which could be parsed)
- */
-export type DateRange = {
-  /**
-   * Lower bound of date range in milliseconds elapsed since midnight, January 1, 1970 GMT (could be negative)
-   */
-  gte?: number,
-
-  /**
-   * Upper bound of date range in milliseconds elapsed since midnight, January 1, 1970 GMT (could be negative)
-   */
-  lte?: number
-}
+    type: string
+};

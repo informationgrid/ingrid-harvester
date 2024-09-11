@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -208,7 +208,7 @@ export class RequestDelegate {
         }
     }
 
-    updateConfig(partialConfig: any): void {
+    updateConfig(partialConfig: Partial<RequestOptions>): void {
         this.config = MiscUtils.merge(this.config, partialConfig);
     }
 
@@ -265,6 +265,7 @@ export class RequestDelegate {
         // and create the signal here directly, then remove the timeout
         config.signal = AbortSignal.timeout(config.timeout ?? DEFAULT_TIMEOUT_MS);
         config.timeout = null;
+        config.compress = false;
         let response = fetch(fullURL, config);
 
         if (config.resolveWithFullResponse) {

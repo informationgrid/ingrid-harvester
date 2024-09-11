@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -195,7 +195,7 @@ mat-card-header {
 .fixed-top-right {
   position: sticky !important;
   top: 20px;
-  right: 40px;
+  margin-right: 40px;
   z-index: 100;
 }
 .fixed-bottom-right {
@@ -308,14 +308,6 @@ button.button-with-text {
   &.primary .mdc-button__label {
     color: #ffffff;
   }
-}
-
-.error {
-  font-size: 12px;
-  padding-left: 16px;
-  letter-spacing: 0.4px;
-  overflow: visible;
-  -webkit-font-smoothing: antialiased;
 }
 
 // prevent hint and error wrappers from overlapping other fields

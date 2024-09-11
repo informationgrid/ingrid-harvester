@@ -1,6 +1,6 @@
 # Installation
 
-The harvester runs two components in a single docker container, `client` and `server`. It depends on an Elasticsearch instance running in a separate container on the same network.
+The InGrid Harvester runs two components in a single docker container: the actual `server` application and the admin `client`. It depends on an Elasticsearch instance and a PostgreSQL installation.
 
 ## General steps
 
@@ -12,9 +12,28 @@ The harvester runs two components in a single docker container, `client` and `se
     Password: readonly
     ```
 
-## Environment variables
+## Configuration
 
-Several general settings can be configured via environment variables. These encompass settings regarding database, elasticsearch and proxy.
+### General notes
+
+* If you want the InGrid Harvester to be accessed at a sub-path (i.e., not directly at root), you have to **both**
+  * set `BASE_URL` to the desired path (environment variable)
+  * set `contextPath` in the client config file to the same value
+* This is in addition to appropriate nginx settings
+
+### Configuration files
+
+| Config file location (project) | Config file location (docker container)                    | Purpose                                         |
+|--------------------------------|------------------------------------------------------------|-------------------------------------------------|
+| server/config.json             | /opt/ingrid/harvester/server/config.json                   | Harvester configuration                         |
+| server/config-general.json     | /opt/ingrid/harvester/server/config-general.json           | General settings (Elasticsearch, Postgres, ...) |
+| client/src/assets/config.json  | /opt/ingrid/harvester/server/app/webapp/assets/config.json | Client settings                                 |
+
+In a docker setup, you probably want to map these files from the host system into the container.
+
+### Environment variables
+
+Several general settings can also be configured via environment variables. These settings take precedence over configuration files.
 
 | Variable                    | Note                                                              |
 |-----------------------------|-------------------------------------------------------------------|
@@ -41,6 +60,7 @@ Several general settings can be configured via environment variables. These enco
 | IMPORTER_PROFILE            | Profile to use for the application: diplanung, mcloud             |
 | BASE_URL                    | Subpath where the Harvester is being served at, if not on `/`     |
 
+
 ## Local development setup
 
 ### Running in a local docker container
@@ -52,7 +72,7 @@ You can use the same setup as outlined in the section `Test setup` below, but wi
 Prerequisites:
 * node.js v16
 * Postgresql >= v14
-* Elasticsearch, supports v6 and v8
+* Elasticsearch >= 6
 
 You may wish to run the server and the client outside of the docker container, for debugging and faster deployment/development purposes. Currently you have to change some files to achieve this, outlined below:
 
@@ -73,6 +93,7 @@ You may wish to run the server and the client outside of the docker container, f
     * via GUI: http://localhost:4200
     * via Elasticsearch API: http://localhost:9200
 
+
 ## Test setup
 
 * `server/config-general.json`: change the value of `elasticsearch.password`
@@ -80,27 +101,17 @@ You may wish to run the server and the client outside of the docker container, f
     ```bash
     sudo docker-compose -f docker-compose.yml up --build -d
     ```
-* If you are setting the harvester up for the first time (i.e., after initializing the Elasticsearch volume), you need to create the appropriate user credentials for Elasticsearch:
-    * `elasticsearch/set-pw-es`: customize all passwords
-        * make sure to use the same password twice, for user and Reenter
-        * make sure to put the same password for the `elastic` user that you chose for `elasticsearch.password`
-    * `elasticsearch/create-users.json`: set a password for the readonly `read_user`
-    * `elasticsearch/setup-access.sh`:
-        * replace `$TOKEN` with a base64 encoded string of the elastic user and its password:
-          ```bash
-          echo -n elastic:$YOUR_ELASTIC_PASSWORD | base64
-          ```
-        * uncomment the file
-        * run it
 * Now you can access the harvester
     * via GUI: http://localhost:8090
     * via Elasticsearch API: http://localhost:9200
         * user: `read_user`
         * password: *the one you set in `elasticsearch/create-users.json`*
 
+
 ## Test setup in a Kubernetes environment
 
 * TODO
+
 
 ## Production setup in a Kubernetes environment
 

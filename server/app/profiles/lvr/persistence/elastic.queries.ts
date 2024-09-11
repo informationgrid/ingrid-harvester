@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -229,7 +229,7 @@ export class ElasticQueries implements IElasticQueries {
                 term: {'base_index': baseIndex}
             },
             sort: {
-                'timestamp': {"order": "desc"}
+                'timestamp': {"order": "asc"}
             }
         };
     }
@@ -248,7 +248,7 @@ export class ElasticQueries implements IElasticQueries {
         }
             },
             sort: {
-                'timestamp': {"order": "desc"}
+                'timestamp': {"order": "asc"}
             }
         };
     }
@@ -320,7 +320,7 @@ export class ElasticQueries implements IElasticQueries {
                 "match_all": {}
             },
             sort: {
-                'timestamp': {"order": "desc"}
+                'timestamp': {"order": "asc"}
             }
         };
     }
@@ -332,7 +332,7 @@ export class ElasticQueries implements IElasticQueries {
                 "match_all": {}
             },
             sort: {
-                'timestamp': {"order": "desc"}
+                'timestamp': {"order": "asc"}
             }
         };
     }

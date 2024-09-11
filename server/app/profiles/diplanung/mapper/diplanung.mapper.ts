@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -43,7 +43,7 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
 
     async create(): Promise<DiplanungIndexDocument> {
         let contactPoint: Contact = await this.getContactPoint() ?? { fn: '' };
-        let result = {
+        let result: DiplanungIndexDocument = {
             // basic information
             contact_point: {
                 fn: contactPoint.fn,
@@ -99,8 +99,7 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
                     modified: null,
                     source: this.baseMapper.getMetadataSource(),
                     merged_from: []
-                },
-                operates_on: this.getOperatesOn()     // only csw
+                }
             },
             issued: this.getIssued(),
             modified: this.getModifiedDate(),

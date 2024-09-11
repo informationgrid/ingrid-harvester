@@ -15,7 +15,7 @@ repositories {
 }
 
 version = 'MANAGED_BY_JGITVER'
-description = 'InGrid mCLOUD Importer'
+description = 'InGrid Harvester'
 
 jgitver {
     nonQualifierBranches = 'master,develop'
@@ -23,7 +23,7 @@ jgitver {
 
 
 task buildRpm(type: Rpm) {
-    packageName 'mcloud-importer'
+    packageName 'ingrid-harvester'
     release '1'
     arch 'noarch'
     os LINUX

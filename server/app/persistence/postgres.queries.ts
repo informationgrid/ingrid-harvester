@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -21,40 +21,39 @@
  * ==================================================
  */
 
-export abstract class PostgresQueries {
+import * as fs from 'fs';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 
-    abstract readonly createCollectionTable: string;
-    abstract readonly createRecordTable: string;
-    abstract readonly createCouplingTable: string;
-    abstract readonly createCollection: string;
-    abstract readonly getCollection: string;
-    abstract readonly bulkUpsert: string;
-    abstract readonly bulkUpsertCoupling: string;
-    abstract readonly nonFetchedRatio: string;
-    abstract readonly deleteRecords: string;
-    abstract readonly getStoredData: string;
-    abstract readonly getDatasets: string;
-    abstract readonly getServices: string;
+export class PostgresQueries {
 
-    /**
-     * Query for retrieving all items for a given source.
-     * "all items" comprise
-     * - datasets of the source
-     * - services operating on these datasets
-     * - duplicates of these datasets
-     * - services operating on the duplicates
-     * 
-     * With each result row representing an item, this query should expose the following columns:
-     * - anchor_id: the ID of the dataset this item is a duplicate of, or is a service to (even by proxy)
-     * - id: the actual ID of this item
-     * - source: the source of this item
-     * - dataset: the dataset json document of this item
-     * - service_type: the type of the service, or `null` if it is a dataset
-     * - issued,
-     * - modified
-     * 
-     * @param source the source of the requested items
-     * @returns a database query to return grouped (by `primary_id`) items of rows representing items
-     */
-    abstract readonly getBuckets: string;
+    private static instance: PostgresQueries;
+
+    private constructor() {
+    }
+
+    public static getInstance() {
+        if (!this.instance) {
+            PostgresQueries.instance = new PostgresQueries();
+        }
+        return PostgresQueries.instance;
+    }
+
+    readonly createCollectionTable = this.readFile('createCollectionTable');
+    readonly createRecordTable = this.readFile('createRecordTable');
+    readonly createCouplingTable = this.readFile('createCouplingTable');
+    readonly createCollection = this.readFile('createCollection');
+    readonly getCollection = this.readFile('getCollection');
+    readonly bulkUpsert = this.readFile('bulkUpsert');
+    readonly bulkUpsertCoupling = this.readFile('bulkUpsertCoupling');
+    readonly nonFetchedRatio = this.readFile('nonFetchedRatio');
+    readonly deleteRecords = this.readFile('deleteRecords');
+    readonly getStoredData = this.readFile('getStoredData');
+    readonly getDatasets = this.readFile('getDatasets');
+    readonly getServices = this.readFile('getServices');
+    readonly getBuckets = this.readFile('getBuckets');
+
+    private readFile(script: string): string {
+        let profile = ProfileFactoryLoader.get().getProfileName();
+        return fs.readFileSync(`app/profiles/${profile}/persistence/queries/${script}.sql`, { encoding: 'utf8', flag: 'r' });
+    }
 }

@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -153,6 +153,20 @@ export function normalizeDateTime(datetime: string): Date {
     }
     log.warn("Could not parse datetime: " + datetime);
     return null;
+}
+
+/**
+ * This function is to be used as a replacer callback in JSON.stringify.
+ * It replaces the default `Date` ISO serialization with its millisecond timestamp.
+ * This is useful e.g. for negative dates which trip up Elasticsearch.
+ */
+export function dateReplacer(key: string, value: any): any {
+    // when used as a JSON.stringify callback, `this` refers to the to-be-stringified object
+    // we cannot use `value` directly, because `Date` provides an inbuilt serialization via `Date.toJSON()`
+    if (this[key] instanceof Date) {
+        return this[key].valueOf();
+    }
+    return value;
 }
 
 export function isUuid(s: string): boolean {

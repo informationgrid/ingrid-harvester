@@ -2,7 +2,7 @@
     ==================================================
     ingrid-harvester
     ==================================================
-    Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
     ==================================================
     Licensed under the EUPL, Version 1.2 or - as soon they will be
     approved by the European Commission - subsequent versions of the
@@ -38,7 +38,7 @@
         </mat-form-field>
         <mat-form-field class="flex-1">
           <mat-label>GetRecords URL</mat-label>
-          <input matInput formControlName="getRecordsUrl" required>
+          <input matInput formControlName="sourceURL" required>
         </mat-form-field>
       </div>
       <div class="flex-row flex-col-mobile gap-20 space-between">
@@ -71,15 +71,15 @@
           <input matInput formControlName="simplifyTolerance" type="number">
         </mat-form-field>
         @if (profile == 'diplanung') {
-<mat-form-field class="flex-1">
-          <mat-label>Planstatus</mat-label>
-          <mat-select formControlName="pluPlanState" required>
-            <mat-option value="unknown">unbekannt</mat-option>
-            <mat-option value="fixed">festgestellt</mat-option>
-            <mat-option value="inPreparation">in Aufstellung</mat-option>
-          </mat-select>
-        </mat-form-field>
-}
+          <mat-form-field class="flex-1">
+            <mat-label>Planstatus</mat-label>
+            <mat-select formControlName="pluPlanState" required>
+              <mat-option value="unknown">unbekannt</mat-option>
+              <mat-option value="fixed">festgestellt</mat-option>
+              <mat-option value="inPreparation">in Aufstellung</mat-option>
+            </mat-select>
+          </mat-form-field>
+        }
       </div>
     </mat-card-content>
   </mat-card>

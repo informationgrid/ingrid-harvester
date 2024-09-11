@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -46,7 +46,8 @@ export const DefaultImporterSettings: ImporterSettings = {
     isIncremental: false,
     maxConcurrent: 1,
     skipUrlCheckOnHarvest: false,
-    timeout: 60000
+    timeout: 60000,
+    sourceURL: ''
 };
 
 export type ImporterSettings = {
@@ -64,6 +65,13 @@ export type ImporterSettings = {
     defaultAttributionLink?: string,
     defaultDCATCategory?: string[],
     defaultMcloudSubgroup?: string[],
+    // Ingrid-PlugDescription
+    iPlugId?: string,
+    partner?: string,
+    provider?: string,
+    datatype?: string,
+    dataSourceName?: string,
+    boost?: number,
     description?: string,
     disable?: boolean,
     dryRun?: boolean,
@@ -83,5 +91,6 @@ export type ImporterSettings = {
         containsDocumentsWithData?: boolean,
         containsDocumentsWithDataBlacklist?: string
     },
-    timeout: number
+    timeout: number,
+    sourceURL: string
 }

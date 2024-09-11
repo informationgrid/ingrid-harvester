@@ -2,7 +2,7 @@
     ==================================================
     ingrid-harvester
     ==================================================
-    Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
     ==================================================
     Licensed under the EUPL, Version 1.2 or - as soon they will be
     approved by the European Commission - subsequent versions of the
@@ -26,12 +26,13 @@
   <div class="flex-row space-between gap-20" >
     <mat-form-field>
       <mat-label>Quelle</mat-label>
-      <input matInput [(ngModel)]="data.source" required>
+      <input data-test="mapping-source" matInput [(ngModel)]="data.source" required>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Ziel</mat-label>
       <input matInput [(ngModel)]="data.target" [matAutocomplete]="auto"
-             (ngModelChange)="filterOptions($event)" required>
+             (ngModelChange)="filterOptions($event)" required
+             data-test="mapping-destination">
       <mat-autocomplete #auto="matAutocomplete">
         @for (option of filteredOptions; track option) {
 <mat-option [value]="option">
@@ -45,5 +46,5 @@
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>Abbrechen</button>
   <div class="flex-space"></div>
-  <button mat-button color="primary" [mat-dialog-close]="data" [disabled]="!data.source || !data.target">Hinzufügen</button>
+  <button data-test="btn-save-mapping"mat-button color="primary" [mat-dialog-close]="data" [disabled]="!data.source || !data.target">Hinzufügen</button>
 </div>

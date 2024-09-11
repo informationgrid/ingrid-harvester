@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -101,7 +101,7 @@ export class HarvesterComponent implements OnInit, OnDestroy {
   schedule(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogSchedulerComponent, {
       width: '500px',
-      data: {...harvester.cron}, // {...harvester.cron}
+      data: { harvesterType: harvester.type, cron: harvester.cron },
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -280,18 +280,25 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.numErrors > 0 || detail.summary.databaseErrors.length > 0 || detail.summary.elasticErrors.length > 0 || detail.summary.appErrors.length > 0;
-    } else {
-      return false;
+      return detail.summary.numErrors > 0
+        || detail.summary.databaseErrors.length > 0
+        || detail.summary.elasticErrors.length > 0
+        || detail.summary.appErrors.length > 0;
     }
+    return false;
   }
 
   hasOnlyWarnings(id: number) {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.warnings.length > 0 && detail.summary.numErrors === 0 && detail.summary.databaseErrors.length === 0 && detail.summary.elasticErrors.length === 0;
+      return detail.summary.warnings.length > 0
+        && detail.summary.numErrors === 0
+        && detail.summary.appErrors.length === 0
+        && detail.summary.databaseErrors.length === 0
+        && detail.summary.elasticErrors.length === 0;
     }
+    return false;
   }
 
   hasAnyProblems(id: number) {
@@ -303,9 +310,8 @@ export class HarvesterComponent implements OnInit, OnDestroy {
         || detail.summary.elasticErrors.length > 0
         || detail.summary.warnings.length > 0
         || detail.summary.appErrors.length > 0;
-    } else {
-      return false;
     }
+    return false;
   }
 
   deleteHarvester(harvester: Harvester) {

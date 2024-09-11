@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -28,13 +28,11 @@ import { existsSync, mkdirSync, mkdtemp, writeFileSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
 import { BulkResponse } from '../../persistence/elastic.utils';
-import { ConfigService } from '../../services/config/ConfigService';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
 import { IndexDocument } from '../../model/index.document';
 import { KldMapper } from './kld.mapper';
-import { MailServer } from '../../utils/nodemailer.utils';
 import { ObjectListRequestParams, ObjectListResponse, ObjectResponse, PAGE_SIZE } from './kld.api';
 import { Observer } from 'rxjs';
 import { ProfileFactory } from '../../profiles/profile.factory';
@@ -53,7 +51,7 @@ export class KldImporter extends Importer {
 
     protected domParser: DOMParser;
     protected profile: ProfileFactory<KldMapper>;
-    protected readonly settings: KldSettings;
+    protected settings: KldSettings;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
@@ -65,7 +63,6 @@ export class KldImporter extends Importer {
     // TODO put into configuration?
     private readonly maxRequestRetries = 3;
     private readonly requestRetryDelay = 3000;
-    private readonly maxRequestErrors  = 3;
 
     constructor(settings: KldSettings) {
         super(settings);
@@ -93,56 +90,17 @@ export class KldImporter extends Importer {
         this.settings = settings;
     }
 
+    // only here for documentation - use the "default" exec function
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
-        if (this.settings.dryRun) {
-            log.debug('Dry run option enabled. Skipping index creation.');
-            await this.harvest();
-            log.debug('Skipping finalisation of index for dry run.');
-            observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
-            observer.complete();
-        }
-        else {
-            try {
-                let transactionTimestamp = await this.database.beginTransaction();
-                // get datasets
-                await this.harvest();
-                // did the harvesting return results at all?
-                if (this.numIndexDocs == 0 && !this.summary.isIncremental) {
-                    throw new Error('No results during KLD import');
-                }
-                // ensure that less than X percent of existing datasets are slated for deletion
-                // TODO introduce settings to:
-                // - send a mail
-                // - fail or continue
-                let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.providerUrl, transactionTimestamp);
-                if (nonFetchedPercentage > ConfigService.getGeneralSettings().maxDiff) {
-                    throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
-                }
-                // did fatal errors occur (ie DB or APP errors)?
-                if (this.summary.databaseErrors.length > 0 || this.summary.appErrors.length > this.maxRequestErrors) {
-                    throw new Error();
-                }
-
-                await this.database.deleteNonFetchedDatasets(this.settings.providerUrl, transactionTimestamp);
-                await this.database.commitTransaction();
-                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.providerUrl);
-                observer.next(ImportResult.complete(this.summary));
-            }
-            catch (err) {
-                if (err.message) {
-                    this.summary.appErrors.push(err.message);
-                }
-                await this.database.rollbackTransaction();
-                let msg = this.summary.appErrors.length > 0 ? this.summary.appErrors[0] : this.summary.databaseErrors[0];
-                // MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
-                log.error(msg);
-                observer.next(ImportResult.complete(this.summary, msg));
-            }
-            observer.complete();
-        }
+        await super.exec(observer);
     }
 
-    protected async harvest(): Promise<void> {
+    /**
+     * Harvest method implementation
+     * NOTE Any error added to summary.appErrors will cause a database transaction rollback!
+     * @returns number
+     */
+    protected async harvest(): Promise<number> {
         log.info(`Started requesting records`);
 
         if (STORE_RESPONSES) {
@@ -160,12 +118,24 @@ export class KldImporter extends Importer {
         }
 
         // collect number of totalRecords up front, so we can harvest concurrently
-        // NOTE we extract the total number of records from the first list request
-        const hitsRequestConfig = KldImporter.createRequestConfig({ ...this.settings, startPosition: 0 }, 'Objekt');
-        const hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
-        const hitsResponse: ObjectListResponse = await hitsRequestDelegate.doRequest();
-        this.totalRecords = this.settings.maxRecords ?? hitsResponse.Gesamtanzahl;
-
+        if (this.settings.maxRecords && !isNaN(this.settings.maxRecords)) {
+          this.totalRecords = this.settings.maxRecords;
+        }
+        else {
+          // extract the total number of records from the first list request
+          const hitsRequestConfig = KldImporter.createRequestConfig({ ...this.settings, startPosition: 0 }, 'Objekt');
+          const hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
+          try {
+              const hitsResponse: ObjectListResponse = await this.requestWithRetries(hitsRequestDelegate);
+              this.totalRecords = hitsResponse.Gesamtanzahl;
+          }
+          catch (e) {
+              const message = `Received empty response when requesting total number of objects. Skipping import.`;
+              log.error(message);
+              this.summary.appErrors.push(message);
+              return 0;
+          }
+        }
         log.info(`Number of records to fetch: ${this.totalRecords}`);
 
         // setup concurrency
@@ -190,13 +160,7 @@ export class KldImporter extends Importer {
             const params: ObjectListRequestParams = { ...defaultListParams, Seite: page };
             const requestDelegate = new RequestDelegate(KldImporter.createRequestConfig(this.settings, 'Objekt', params));
             const request = throttle(() => {
-                try {
-                    return this.extractObjectIds(requestDelegate, page, numPages);
-                } catch (e) {
-                    const message = `Error while extracting ids from page ${page}: ${MiscUtils.truncateErrorMessage(e)}.`;
-                    log.error(`Error while extracting ids from page ${page}`, e);
-                    this.summary.appErrors.push(message);
-                }
+                return this.extractObjectIds(requestDelegate, page, numPages);
             })();
             listRequests.push(request);
             numRequested += PAGE_SIZE;
@@ -233,7 +197,7 @@ export class KldImporter extends Importer {
             const message = `Received less records than expected ${numReceived}/${this.totalRecords}. Skipping import.`;
             log.error(message);
             this.summary.appErrors.push(message);
-            return;
+            return 0;
         }
 
         // wait before doing detail requests
@@ -247,49 +211,46 @@ export class KldImporter extends Importer {
             if (!this.settings.isIncremental || lastUpdateDate < this.minimumUpdateDate) {
                 const requestDelegate = new RequestDelegate(KldImporter.createRequestConfig(this.settings, `Objekt/${ids[i]}`));
                 const request = throttle(() => {
-                    try {
-                        return this.extractObjectDetails(requestDelegate, i, numReceived)
-                    } catch (e) {
-                        const message = `Error while extracting object details ${i}: ${MiscUtils.truncateErrorMessage(e)}.`;
-                        log.error(`Error while extracting object details ${i}`, e);
-                        this.summary.appErrors.push(message);
-                    }
+                    return this.extractObjectDetails(requestDelegate, i, numReceived)
                 })();
                 detailRequests.push(request);
             }
         }
         await Promise.allSettled(detailRequests);
 
-        // TODO delete objects not contained in the current list?
-
         log.info(`Finished requesting records`);
-        // 3) persist leftovers
+
+        // persist leftovers
         await this.database.sendBulkData();
+
+        return this.numIndexDocs;
     }
 
     protected async extractObjectIds(delegate: RequestDelegate, index: number, total: number): Promise<Record<string, string>> {
         const counter = KldImporter.formatCounter(index, total);
         const requestUrl = delegate.getFullURL();
         log.info(`${counter} Requesting record ids from (${requestUrl})`);
+        let ids = {};
         try {
             const response: ObjectListResponse = await this.requestWithRetries<ObjectListResponse>(delegate, (r: ObjectListResponse) => r?.Ergebnis !== undefined);
             if (logRequest.isDebugEnabled()) {
                 logRequest.debug(`${counter} Response content: `, JSON.stringify(response));
             }
-            const ids = response.Ergebnis?.reduce((result: Record<string, string>, obj) => {
+            ids = response.Ergebnis?.reduce((result: Record<string, string>, obj) => {
                 result[obj.Id] = obj.ZuletztGeaendert;
                 return result;
             }, {});
             if (log.isDebugEnabled()) {
                 log.debug(`${counter} Received ${Object.keys(ids).length} record ids from ${requestUrl}`);
             }
-            return ids;
         }
         catch (e) {
+            // add an error if there is a problem when retrieving record ids to abort the import process later
             const message = `Error while fetching ids from ${requestUrl}: ${MiscUtils.truncateErrorMessage(e)}.`;
             log.error(`Error while fetching ids from ${requestUrl}`, e);
             this.summary.appErrors.push(message);
         }
+        return ids;
     }
 
     protected async extractObjectDetails(delegate: RequestDelegate, index: number, total: number): Promise<void> {
@@ -312,9 +273,10 @@ export class KldImporter extends Importer {
             log.info(`${counter} Finished processing record with id "${id}", ${processingTime.toString().padStart(3, ' ')}s`);
         }
         catch (e) {
+            // add a warning only if details for a single record could not be retrieved to avoid aborting the import
             const message = `Error while fetching record details from ${requestUrl}: ${MiscUtils.truncateErrorMessage(e)}.`;
-            log.error(`Error while fetching record details from ${requestUrl}`, e);
-            this.summary.appErrors.push(message);
+            log.warn(`Error while fetching record details from ${requestUrl}`, e);
+            this.summary.warnings.push(['No details', message]);
         }
     }
 
@@ -342,15 +304,15 @@ export class KldImporter extends Importer {
                 doc = await this.profile.getIndexDocumentFactory(mapper).create();
             }
             catch (e) {
-                log.error('Error creating index document', e);
-                this.summary.appErrors.push(e.toString());
+                log.warn('Error creating index document', e);
+                this.summary.warnings.push(['Indexing error', e.toString()]);
                 mapper.skipped = true;
             }
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: id,
-                    source: this.settings.providerUrl,
+                    source: this.settings.sourceURL,
                     collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
@@ -369,31 +331,46 @@ export class KldImporter extends Importer {
         return new KldMapper(settings, record, harvestTime, summary);
     }
 
-    private static createRequestConfig(settings: KldSettings, operation: string, params?: Record<string, any>): RequestOptions {
-        const requestConfig: RequestOptions = {
-            method: 'GET',
-            uri: settings.providerUrl + operation,
-            json: true,
-            headers: RequestDelegate.defaultRequestHeaders(),
-            proxy: settings.proxy || null,
-            timeout: settings.timeout,
-            qs: params,
-        };
-        return requestConfig;
-    }
-
     private static formatCounter(index: number, total: number): string {
       const length = total.toString().length;
       return `[${(index+1).toString().padStart(length, '0')}/${total}]`;
     }
 
-    private static async sleep(milliseconds: number): Promise<void> {
-        return new Promise((resolve) => { setTimeout(resolve, milliseconds); });
+    private static createRequestConfig(settings: KldSettings, operation: string, params?: Record<string, any>): RequestOptions {
+        // NOTE We set resolveWithFullResponse to true to receive the fetch promise from RequestDelegate directly
+        // This allows for handling empty responses and timeouts correctly
+        const requestConfig: RequestOptions = {
+            method: 'GET',
+            uri: settings.sourceURL + operation,
+            json: true,
+            headers: RequestDelegate.defaultRequestHeaders(),
+            proxy: settings.proxy || null,
+            timeout: settings.timeout,
+            qs: params,
+            resolveWithFullResponse: true
+        };
+        return requestConfig;
     }
 
-    private async requestWithRetries<T = ObjectListResponse|ObjectResponse>(delegate: RequestDelegate, success: (response: T) => boolean): Promise<T> {
+    private async requestSingle<T = ObjectListResponse|ObjectResponse>(delegate: RequestDelegate): Promise<T|null> {
+        try {
+            const response: Response = await delegate.doRequest();
+            return response ? await response.json() : null;
+        } catch (e) {
+            // ignore time out errors
+            if (e.name != 'AbortError') {
+                const message = e.message ? e.message : e;
+                this.summary.warnings.push(['Request failure', message]);
+                log.warn('Error during request', e);
+            }
+        }
+        return null;
+    }
+
+    private async requestWithRetries<T = ObjectListResponse|ObjectResponse>(delegate: RequestDelegate,
+            success: (response: T) => boolean=(r) => r != null): Promise<T> {
         let retry = this.maxRequestRetries;
-        let response: T = await delegate.doRequest(this.maxRequestRetries, this.requestRetryDelay);
+        let response: T = await this.requestSingle(delegate);
         do {
             if (response && success(response)) {
                 return response;
@@ -407,16 +384,18 @@ export class KldImporter extends Importer {
                     retry -= 1;
                     log.info(`Retrying request for ${delegate.getFullURL()} (waiting ${this.requestRetryDelay}ms)`);
                     await KldImporter.sleep(this.requestRetryDelay);
-                    try {
-                        response = await delegate.doRequest(this.maxRequestRetries, this.requestRetryDelay);
-                    } catch (e) {
-                        this.summary.appErrors.push(e.message ? e.message : e);
-                        log.error('Error during request', e);
-                    }
+                    response = await this.requestSingle(delegate);
                 }
             }
         } while (retry > 0);
-        throw Error(`Request for ${delegate.getFullURL()} failed with ${this.maxRequestRetries} retries. Last response: ${MiscUtils.truncateErrorMessage(JSON.stringify(response))}`);
+
+        // retries failed
+        const message = `Request for ${delegate.getFullURL()} failed with ${this.maxRequestRetries} retries. Last response: ${MiscUtils.truncateErrorMessage(JSON.stringify(response))}`;
+        throw Error(message);
+    }
+
+    private static async sleep(milliseconds: number): Promise<void> {
+        return new Promise((resolve) => { setTimeout(resolve, milliseconds); });
     }
 
     getSummary(): Summary {

@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -21,12 +21,11 @@
  * ==================================================
  */
 
-import {Component, Inject, OnInit, Optional} from '@angular/core';
-import cronstrue from 'cronstrue/i18n';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {CronData} from '../../../../../server/app/importer.settings';
 import { isValidCron } from 'cron-validator';
-import { FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { CronData } from '../../../../../server/app/importer.settings';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-dialog-scheduler',
@@ -35,21 +34,36 @@ import { FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@an
 })
 export class DialogSchedulerComponent implements OnInit {
 
-  schedulerForm: UntypedFormGroup
+  schedulerForm: UntypedFormGroup;
+
+  harvesterType: string;
 
   constructor(
     private formBuilder: UntypedFormBuilder, 
-    @Optional() @Inject(MAT_DIALOG_DATA) public cron: { full: CronData, incr: CronData }
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: { harvesterType: string, cron: { full: CronData, incr: CronData } }
   ) {
+    if (!data.cron) {
+      data.cron = {
+        "full": {
+          "pattern": "",
+          "active": false
+        },
+        "incr": {
+          "pattern": "",
+          "active": false
+        }
+      };
+    }
 
+    this.harvesterType = data.harvesterType;
     this.schedulerForm = this.formBuilder.group({
       full: this.formBuilder.group({
-        pattern: [cron.full.pattern],
-        active: [cron.full.active]
+        pattern: [data.cron.full.pattern],
+        active: [data.cron.full.active]
       }),
       incr: this.formBuilder.group({
-        pattern: [cron.incr.pattern],
-        active: [cron.incr.active]
+        pattern: [data.cron.incr.pattern],
+        active: [data.cron.incr.active]
       }),
     })
 

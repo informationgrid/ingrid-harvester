@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -71,7 +71,7 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.form.addControl('httpMethod', new UntypedFormControl(this.model.httpMethod));
-    this.form.addControl('getFeaturesUrl', new UntypedFormControl(this.model.getFeaturesUrl));
+    this.form.addControl('sourceURL', new UntypedFormControl(this.model.sourceURL));
     this.form.addControl('featuresFilter', new UntypedFormControl(this.model.featureFilter));
     this.form.addControl('version', new UntypedFormControl(this.model.version));
     this.form.addControl('typename', new UntypedFormControl(this.model.typename));

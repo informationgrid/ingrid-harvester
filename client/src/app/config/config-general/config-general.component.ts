@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -156,6 +156,9 @@ export class ConfigGeneralComponent implements OnInit {
           host: "",
           port: 451,
           secure: false,
+          tls: {
+              rejectUnauthorized: true
+          },
           auth: {
             user: "",
             pass: ""
@@ -191,6 +194,7 @@ export class ConfigGeneralComponent implements OnInit {
         numberOfReplicas: [settings.elasticsearch.numberOfReplicas]
       }),
       cronOffset: [settings.cronOffset],
+      mappingLogLevel: [settings.mappingLogLevel],
       proxy: [settings.proxy],
       allowAllUnauthorizedSSL: [settings.allowAllUnauthorizedSSL],
       portalUrl: [settings.portalUrl],
@@ -208,6 +212,9 @@ export class ConfigGeneralComponent implements OnInit {
           host: [settings.mail.mailServer.host],
           port: [settings.mail.mailServer.port],
           secure: [settings.mail.mailServer.secure],
+          tls: this.formBuilder.group({
+            rejectUnauthorized: [settings.mail.mailServer.tls.rejectUnauthorized]
+          }),
           auth: this.formBuilder.group({
             user: [settings.mail.mailServer.auth.user],
             pass: [settings.mail.mailServer.auth.pass]
@@ -223,7 +230,16 @@ export class ConfigGeneralComponent implements OnInit {
         cronPattern: [settings.indexBackup.cronPattern],
         dir: [settings.indexBackup.dir]
       }),
-      maxDiff: [settings.maxDiff]
+      harvesting: this.formBuilder.group({
+        mail: this.formBuilder.group({
+          enabled: [settings.harvesting.mail.enabled],
+          minDifference: [settings.harvesting.mail.minDifference]
+        }),
+        cancel: this.formBuilder.group({
+          enabled: [settings.harvesting.cancel.enabled],
+          minDifference: [settings.harvesting.cancel.minDifference]
+        })
+      })
     })
   }
 

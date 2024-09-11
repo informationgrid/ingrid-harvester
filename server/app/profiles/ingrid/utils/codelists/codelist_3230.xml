@@ -1,0 +1,46 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>3230</id>
+  <name>System</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Fachinformationssystem</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Expert System</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Metainformationssystem</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Meta Information System</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Geographisches Informationssystem</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Geographic Information System</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

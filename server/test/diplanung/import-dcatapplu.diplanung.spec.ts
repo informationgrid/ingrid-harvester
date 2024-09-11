@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -65,7 +65,7 @@ describe('Import DCAT AP PLU', function () {
 
         // @ts-ignore
         const settings: DcatappluSettings = {
-            catalogUrl: "http://localhost:8040/examples/input-dcatapplu-transformedData.xml",
+            sourceURL: "http://localhost:8040/examples/input-dcatapplu-transformedData.xml",
             filterTags: null,
             filterThemes: null,
             providerPrefix: null,

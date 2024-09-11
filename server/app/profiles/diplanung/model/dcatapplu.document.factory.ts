@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../../utils/misc.utils';
 import { Catalog, ProcessStep, Record } from '../../../model/dcatApPlu.model';
 import { ConfigService } from '../../../services/config/ConfigService';
 import { Contact, Organization, Person } from '../../../model/agent';
@@ -53,15 +54,10 @@ function resource(wrapper: string, variable: any, prefix: string = '') {
 }
 
 function dateAsIsoString(date: Date | string) {
-    if (date == null) {
-        return undefined;
+    if (!(date instanceof Date)) {
+        date = MiscUtils.normalizeDateTime(date);
     }
-    if (date instanceof Date) {
-        return date.toISOString();
-    }
-    else {
-        return date;
-    }
+    return date?.toISOString();
 }
 
 const diplanUriPrefix = 'https://specs.diplanung.de/resource';

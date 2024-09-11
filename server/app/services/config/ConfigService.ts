@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -76,14 +76,15 @@ export class ConfigService {
             password: process.env.ELASTIC_PASSWORD ?? "elastic",
             rejectUnauthorized: parseBooleanOrUndefined(process.env.ELASTIC_REJECT_UNAUTHORIZED) ?? true,
             index: process.env.ELASTIC_INDEX ?? "harvester-index",
-            alias: process.env.ELASTIC_ALIAS ?? "mcloud",
+            alias: process.env.ELASTIC_ALIAS ?? "harvester",
             prefix: process.env.ELASTIC_PREFIX ?? '',
             numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS) ?? 1,
             numberOfReplicas: parseIntOrUndefined(process.env.ELASTIC_NUM_REPLICAS) ?? 0
         },
+        mappingLogLevel: 'warn',
         proxy: process.env.PROXY_URL || null,
         allowAllUnauthorizedSSL: parseBooleanOrUndefined(process.env.ALLOW_ALL_UNAUTHORIZED) ?? false,
-        portalUrl: process.env.PORTAL_URL ?? "https://mcloud.de/",
+        portalUrl: process.env.PORTAL_URL,
         urlCheck:{
             active: false,
             pattern: ''
@@ -99,6 +100,9 @@ export class ConfigService {
                 host: "localhost",
                 port: 465,
                 secure: false,
+                tls: {
+                    rejectUnauthorized: true
+                },
                 auth: {
                     user: "",
                     pass: ""
@@ -113,7 +117,16 @@ export class ConfigService {
             cronPattern: "",
             dir: ""
         },
-        maxDiff: 10
+        harvesting: {
+            mail: {
+                enabled: false,
+                minDifference: 10
+            },
+            cancel: {
+                enabled: false,
+                minDifference: 10
+            }
+        }
     };
     private static ignoreCaseSort = (a: string, b: string) => {
         return a.toLowerCase().localeCompare(b.toLowerCase());
@@ -369,7 +382,11 @@ export class ConfigService {
     }
 
     private static getHarvesterConfigFile() {
-        const configDir = process.env.MCLOUD_IMPORTER_CONFIG_DIR;
+        let configDir = process.env.IMPORTER_CONFIG_DIR;
+        if (!configDir) {
+            configDir = process.argv.find(arg => arg.toLowerCase().startsWith('--config_dir=')) ?? '';
+            configDir = configDir.toLowerCase().replace('--config_dir=', '');
+        }
         return configDir
             ? configDir + '/' + this.HARVESTER_CONFIG_FILE
             : this.HARVESTER_CONFIG_FILE;

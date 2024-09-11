@@ -1,0 +1,20 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>7127</id>
+  <name>Datenqualität - Genauigkeit quantitativer Attribute - Art der Messung</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Attribute value uncertainty at 95 % significance level</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Attribute value uncertainty at 95 % significance level</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

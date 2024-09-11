@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -95,8 +95,9 @@ export class ImportSocketService {
                     // when less results send mail
                     let importedLastRun = (summaryLastRun) ? summaryLastRun.summary.numDocs - summaryLastRun.summary.skippedDocs.length : 0;
                     let imported = importer.getSummary().numDocs - importer.getSummary().skippedDocs.length;
-                    let maxDiff = (configGeneral.maxDiff) ? configGeneral.maxDiff : 10;
-                    if ((importedLastRun - (importedLastRun*maxDiff/100) >= imported) || (imported === 0)) {
+                    let diff = configGeneral.harvesting.mail.minDifference ?? 10;
+                    if (configGeneral.mail.enabled && configGeneral.harvesting.mail.enabled &&
+                            ((importedLastRun - (importedLastRun*diff/100) >= imported) || (imported === 0))) {
                         let subject: string;
                         if (imported === 0)
                             subject = `Importer [${configHarvester.type}] "${configData.description}" ohne Ergebnisse!`;

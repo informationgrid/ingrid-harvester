@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -28,7 +28,7 @@ import * as sinon from "sinon";
 import {TestUtils} from "../utils/test-utils";
 import {IndexDocument} from '../../app/model/index.document';
 import {OaiSettings} from "../../app/importer/oai/oai.settings";
-import {OaiImporter} from "../../app/importer/oai/iso19139/oai.importer";
+import {OaiImporter} from "../../app/importer/oai/oai.importer";
 import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader";
 import {mcloudDocument} from "../../app/profiles/mcloud/model/index.document";
 
@@ -58,7 +58,7 @@ describe('Import OAI DWD', function () {
             customCode: null,
             defaultMcloudSubgroup: ["climate"],
             defaultDCATCategory: ["ENVI"],
-            providerUrl: "https://oai.dwd.de/oai/provider",
+            sourceURL: "https://oai.dwd.de/oai/provider",
             set: "mCLOUD",
             defaultAttribution: "DWD",
             defaultAttributionLink: "https://oai.dwd.de/oai/provider?verb=ListRecords&metadataPrefix=iso19139&set=mCLOUD"

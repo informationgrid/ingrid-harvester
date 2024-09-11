@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -35,7 +35,7 @@ import { MetadataSource } from '../../../model/index.document';
 import { OaiSettings } from '../oai.settings';
 import { Summary } from '../../../model/summary';
 import { XPathElementSelect } from '../../../utils/xpath.utils';
-
+import { normalizeDateTime } from '../../../utils/misc.utils';
 
 export class OaiMapper extends BaseMapper {
 
@@ -51,7 +51,8 @@ export class OaiMapper extends BaseMapper {
 
     log = getLogger();
 
-    private readonly record: any;
+    private readonly header: Element;
+    private readonly record: Element;
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
@@ -59,9 +60,10 @@ export class OaiMapper extends BaseMapper {
     private readonly uuid: string;
     private summary: Summary;
 
-    constructor(settings, record, harvestTime, summary) {
+    constructor(settings, header: Element, record: Element, harvestTime, summary) {
         super();
         this.settings = settings;
+        this.header = header;
         this.record = record;
         this.harvestTime = harvestTime;
         this.summary = summary;
@@ -91,8 +93,8 @@ export class OaiMapper extends BaseMapper {
             },
             displayDate: OaiMapper.text('./eventDate/displayDate', eventNode),
             period: {
-                gte: new Date(OaiMapper.text('./eventDate/date/earliestDate', eventNode)),
-                lte: new Date(OaiMapper.text('./eventDate/date/latestDate', eventNode))
+                gte: normalizeDateTime(OaiMapper.text('./eventDate/date/earliestDate', eventNode)),
+                lte: normalizeDateTime(OaiMapper.text('./eventDate/date/latestDate', eventNode))
             },
             place: {
                 displayPlace: OaiMapper.text('./eventPlace/displayPlace', eventNode),
@@ -134,13 +136,13 @@ export class OaiMapper extends BaseMapper {
 
     /**
      * Subject Sets
-     * 
+     *
      * Wrapper for display and index elements for one set of subject information.
-     * If an object / work has multiple parts or otherwise has separate, multiple subjects, repeat this element and use 
-     * Extent Subject in the Subject element. This element may also be repeated to distinguish between subjects that 
+     * If an object / work has multiple parts or otherwise has separate, multiple subjects, repeat this element and use
+     * Extent Subject in the Subject element. This element may also be repeated to distinguish between subjects that
      * reflect what an object / work is *of* (description and identification) from what it is *about* (interpretation).
-     * 
-     * @returns 
+     *
+     * @returns
      */
     getSubjects(): Subject[] {
         let subjectNodes = OaiMapper.select('./lido:descriptiveMetadata/lido:objectRelationWrap/lido:subjectWrap/lido:subjectSet/lido:subject', this.record);
@@ -152,8 +154,8 @@ export class OaiMapper extends BaseMapper {
             },
             displayDate: OaiMapper.text('./subjectDate/displayDate', subjectNode),
             period: {
-                gte: new Date(OaiMapper.text('./subjectDate/date/earliestDate', subjectNode)),
-                lte: new Date(OaiMapper.text('./subjectDate/date/latestDate', subjectNode))
+                gte: normalizeDateTime(OaiMapper.text('./subjectDate/date/earliestDate', subjectNode)),
+                lte: normalizeDateTime(OaiMapper.text('./subjectDate/date/latestDate', subjectNode))
             },
             place: {
                 displayPlace: OaiMapper.text('./subjectPlace/displayPlace', subjectNode),
@@ -190,9 +192,9 @@ export class OaiMapper extends BaseMapper {
                 type: idNode.getAttribute('lido:type')
             })),
             info: OaiMapper.select('./lido:recordInfoSet', this.record).map(infoNode => ({
-                created: new Date(OaiMapper.text('./recordMetadataDate[lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/created"]', infoNode)),
+                created: normalizeDateTime(OaiMapper.text('./recordMetadataDate[lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/created"]', infoNode)),
                 link: OaiMapper.text('./recordInfoLink', infoNode),
-                modified: new Date(OaiMapper.text('./recordMetadataDate[lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/modified"]', infoNode)),
+                modified: normalizeDateTime(OaiMapper.text('./recordMetadataDate[lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/modified"]', infoNode)),
                 type: OaiMapper.text('./@type', infoNode)
             })),
             rights: OaiMapper.select('./lido:recordSource/rightsHolder', this.record).map(rightsNode => ({
@@ -263,12 +265,22 @@ export class OaiMapper extends BaseMapper {
         return new Date(Date.now());
     }
 
+    // TODO
+    getIssued(): Date {
+        return null;
+    }
+
+    // TODO
+    getModified(): Date {
+        return null;
+    }
+
     getMetadataSource(): MetadataSource {
-        let link = `${this.settings.providerUrl}?verb=GetRecord&metadataPrefix=lido&identifier=${this.getId()}`;
+        let link = `${this.settings.sourceURL}?verb=GetRecord&metadataPrefix=${this.settings.metadataPrefix}&identifier=${this.getId()}`;
         return {
-            source_base: this.settings.providerUrl,
+            source_base: this.settings.sourceURL,
             raw_data_source: link,
-            source_type: 'lido'
+            source_type: this.settings.metadataPrefix
         };
     }
 }

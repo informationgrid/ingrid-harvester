@@ -1,27 +1,4 @@
 /*
- * ==================================================
- * ingrid-harvester
- * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
- * ==================================================
- * Licensed under the EUPL, Version 1.2 or - as soon they will be
- * approved by the European Commission - subsequent versions of the
- * EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the Licence is distributed on an "AS IS" basis,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and
- * limitations under the Licence.
- * ==================================================
- */
-
-/*
  * This is a quite complex query, but runs reasonably fast. It is a UNION of three queries:
  * - get datasets and deduplicated datasets
  * - get services operating on the datasets
@@ -44,11 +21,8 @@
     FROM public.record AS anchor
     LEFT JOIN public.record AS secondary
     ON (
-            anchor.dataset->>'plan_name' = secondary.dataset->>'plan_name'
-            OR (
-                anchor.identifier = secondary.identifier
-                AND anchor.collection_id = secondary.collection_id
-            )
+            anchor.identifier = secondary.identifier
+            AND anchor.collection_id = secondary.collection_id
         )
         AND (
             anchor.source != secondary.source

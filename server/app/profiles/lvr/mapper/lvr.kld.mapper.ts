@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -23,7 +23,8 @@
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
-import { GeometryInformation, DateRange, Keyword, Media, Relation } from '../model/index.document';
+import { GeometryInformation, Temporal } from '../../../model/index.document';
+import { Keyword, Media, Person, Relation } from '../model/index.document';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
@@ -61,9 +62,9 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         return [geoInfo];
     }
 
-    getTemporal(): DateRange {
+    getTemporal(): Temporal[] {
         let temporals = this.baseMapper.getTemporal();
-        let temporal: { gte: number, lte: number } = { gte: null, lte: null };
+        let temporal: { gte: Date, lte: Date } = { gte: null, lte: null };
         for (let t of temporals) {
             if (t.gte && (!temporal.gte || t.gte < temporal.gte)) {
                 temporal.gte = t.gte;
@@ -72,7 +73,7 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
                 temporal.lte = t.lte;
             }
         }
-        return temporal;
+        return [{ date_range: temporal }];
     }
 
     getKeywords(): Keyword[] {
@@ -83,16 +84,26 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         }));
     }
 
-    getRelations(): Relation[] {
-        return this.baseMapper.getRelations();
+    // TODO
+    getGenres(): string[] {
+        return null;
+    }
+
+    // TODO
+    getPersons(): Person[] {
+        return null;
     }
 
     getMedia(): Media[] {
         return this.baseMapper.getMedia();
     }
 
-    getLicense(): License {
-        return this.baseMapper.getLicense();
+    getRelations(): Relation[] {
+        return this.baseMapper.getRelations();
+    }
+
+    getLicense(): License[] {
+        return [this.baseMapper.getLicense()];
     }
 
     // TODO

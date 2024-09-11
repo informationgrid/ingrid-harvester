@@ -5,8 +5,8 @@
     "host": "localhost",
     "port": 5432,
     "database": "metadaten",
-    "user": "ogcrecords",
-    "password": "ogcrecords",
+    "user": "admin",
+    "password": "admin",
     "defaultCatalogIdentifier": "harvester"
   },
   "elasticsearch": {
@@ -21,7 +21,7 @@
     "numberOfShards": 1,
     "numberOfReplicas": 0
   },
-  "proxy": "",
+  "proxy": null,
   "allowAllUnauthorizedSSL": false,
   "portalUrl": "",
   "urlCheck": {
@@ -46,14 +46,23 @@
     },
     "from": "test@example.com",
     "to": "test@example.com",
-    "subjectTag": "mcloud"
+    "subjectTag": "harvester"
   },
   "indexBackup": {
     "active": false,
-    "indexPattern": "mcloud_harvester_statistic|url_check_history|index_check_history",
+    "indexPattern": "harvester_statistic|url_check_history|index_check_history",
     "cronPattern": "30 05 * * *",
     "dir": ""
   },
-  "maxDiff": 100,
+  "harvesting": {
+    "mail": {
+      "enabled": false,
+      "minDifference": 10
+    },
+    "cancel": {
+      "enabled": false,
+      "minDifference": 10
+    }
+  },
   "cronOffset": 0
 }

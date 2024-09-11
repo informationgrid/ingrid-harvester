@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2023 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -211,14 +211,19 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
 
     async bulk(bulkOperations: any[], closeAfterBulk: boolean): Promise<BulkResponse> {
         try {
+            let profile = ProfileFactoryLoader.get();
+            let indexName = this.addPrefixIfNotExists(this.indexName) as string;
+            let isPresent = await this.isIndexPresent(indexName);
+            if (!isPresent){
+                await this.prepareIndex(profile.getIndexMappings(), profile.getIndexSettings())
+            }
             let { body: response } = await this.client.bulk({
                 index: this.indexName,
-                type: this.config.indexType || 'base',
                 body: bulkOperations
             });
             if (response.errors) {
                 response.items.forEach(item => {
-                    let err = item.index.error;
+                    let err = item.index?.error || item.update?.error;
                     if (err) {
                         this.handleError(`Error during indexing on index '${this.indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
                     }
@@ -248,7 +253,6 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
             try {
                 this.client.bulk({
                     index,
-                    type: type,
                     body: data
                 })
                 .then(({ body: response }) => {
@@ -285,8 +289,8 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
 
     async addOperationChunksToBulk(boxedOperations: EsOperation[]): Promise<BulkResponse> {
         let operationChunk = [];
-        for (let { operation, _id, document } of boxedOperations) {
-            operationChunk.push({ [operation]: { _id } });
+        for (let { operation, _id, _index, document, _type } of boxedOperations) {
+            operationChunk.push({ [operation]: {_index, _id , _type} });
             switch (operation) {
                 case 'index':
                     operationChunk.push(document);
@@ -481,7 +485,7 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
 
     async index(index: string, document: object) {
         index = this.addPrefixIfNotExists(index) as string;
-        await this.client.index({ index, type: 'base', body: document });
+        await this.client.index({ index,  body: document });
     }
 
     async deleteByQuery(days: number) {
@@ -503,7 +507,6 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
         index = this.addPrefixIfNotExists(index) as string;
         await this.client.delete({
             index,
-            type: 'base',
             id
         });
     }
