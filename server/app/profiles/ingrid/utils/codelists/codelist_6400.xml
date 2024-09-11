@@ -1,0 +1,189 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>6400</id>
+  <name>Kategorien (Open Data)</name>
+  <defaultEntry>-1</defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel</string>
+        </entry>
+      </localisations>
+      <data>AGRI</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Wirtschaft und Finanzen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Wirtschaft und Finanzen</string>
+        </entry>
+      </localisations>
+      <data>ECON</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Bildung, Kultur und Sport</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Bildung, Kultur und Sport</string>
+        </entry>
+      </localisations>
+      <data>EDUC</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Energie</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Energie</string>
+        </entry>
+      </localisations>
+      <data>ENER</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Umwelt</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Umwelt</string>
+        </entry>
+      </localisations>
+      <data>ENVI</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>6</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Gesundheit</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Gesundheit</string>
+        </entry>
+      </localisations>
+      <data>HEAL</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>7</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Internationale Themen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Internationale Themen</string>
+        </entry>
+      </localisations>
+      <data>INTR</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>8</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Justiz, Rechtssystem und öffentliche Sicherheit</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Justiz, Rechtssystem und öffentliche Sicherheit</string>
+        </entry>
+      </localisations>
+      <data>JUST</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Bevölkerung und Gesellschaft</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Bevölkerung und Gesellschaft</string>
+        </entry>
+      </localisations>
+      <data>SOCI</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>10</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Regierung und öffentlicher Sektor</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Regierung und öffentlicher Sektor</string>
+        </entry>
+      </localisations>
+      <data>GOVE</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>11</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Regionen und Städte</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Regionen und Städte</string>
+        </entry>
+      </localisations>
+      <data>REGI</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>12</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Wissenschaft und Technologie</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Wissenschaft und Technologie</string>
+        </entry>
+      </localisations>
+      <data>TECH</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>13</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verkehr</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Verkehr</string>
+        </entry>
+      </localisations>
+      <data>TRAN</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

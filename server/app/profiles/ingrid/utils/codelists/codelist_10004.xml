@@ -1,0 +1,218 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>10004</id>
+  <name>BKG-Use constraints - long</name>
+  <description> </description>
+  <defaultEntry>-1</defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Diese Daten können geldleistungsfrei gemäß der Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes (GeoNutzV) vom 19. März 2013 (Bundesgesetzblatt Jahrgang 2013 Teil I Nr. 14) genutzt werden, siehe https://sg.geodatenzentrum.de/web_public/gdz/lizenz/geonutzv.pdf. Der Quellenvermerk ist zu beachten.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>This data may be used without restriction and free of charge pursuant to the Ordinance for the Establishment of the Conditions of Use regarding the Provision of Federal Spatial Data (Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes – GeoNutzV) as published on March 19, 2013 (Bundesgesetzblatt Jahrgang 2013 Teil I Nr. 14). For more details see: https://sg.geodatenzentrum.de/web_public/gdz/lizenz/eng/geonutzv.pdf. Please include the required reference to the source when using the data.</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Die Daten sind urheberrechtlich geschützt. Der Datensatz wird geldleistungsfrei mit der Lizenz zur freien Nutzung (https://sg.geodatenzentrum.de/web_public/gdz/lizenz/webatlasde_freie_nutzung.pdf) zur Verfügung gestellt. Der Quellenvermerk ist zu beachten.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>This data is protected by copyright. The data set is made available without restrictions and free of charge under the license ‚Lizenz zur freien Nutzung‘ (https://sg.geodatenzentrum.de/web_public/gdz/lizenz/eng/webatlasde_free_use.pdf). Please include the required reference to the source when using the data.</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Die Daten sind urheberrechtlich geschützt. Der Datensatz wird entgeltfrei mit der Datenlizenz Deutschland Namensnennung 2.0 (https://www.govdata.de/dl-de/by-2-0) zur Verfügung gestellt. Die Verwendung des Datensatzes für die Pflege und Erweiterung der Daten des OpenStreetMap Projektes wird unter Einhaltung der im Ergänzungstext beschriebenen Angaben zur Namensnennung ausdrücklich erlaubt (https://sg.geodatenzentrum.de/web_public/gdz/lizenz/deu/Datenlizenz_Deutschland_Erg%C3%A4nzungstext_Namensnennung.pdf). Der Quellenvermerk ist zu beachten.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>This data is protected by copyright. The data set is made available without restrictions and free of charge under the license ‚Datenlizenz Deutschland – Namensnennung – Version 2.0’ (https://www.govdata.de/dl-de/by-2-0). Please include the required reference to the source when using the data.</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Die Daten sind urheberrechtlich geschützt. Je nach Nutzung werden sie entgeltfrei oder gegen Entgelt zur Verfügung gestellt. Für den Erwerb von Nutzungsrechten wenden Sie sich bitte an die Zentrale Stelle Geotopographie der AdV/Dienstleistungszentrum (DLZ) des Bundesamt für Kartographie und Geodäsie: https://www.bkg.bund.de/DE/Service/Kontakt/kontakt.html. Der Quellenvermerk ist zu beachten.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>This data is protected by copyright. Depending on the proposed use, the data is provided either free of charge or against payment. In order to obtain the rights of use please contact the Central Office for Geotopography of the AdV operated at the Service Centre (DLZ) of the Federal Agency for Cartography and Geodesy: https://www.bkg.bund.de/EN/About-BKG/Service-Center/service-center.html. Please include the required reference to the source when using the data.</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Die Daten sind urheberrechtlich geschützt. Sie werden nur gegen Entgelt abgegeben. Es gelten die Regelungen der Richtlinie über Gebühren für die Bereitstellung und Nutzung von Geobasisdaten der Vermessungsverwaltungen der Länder der Bundesrepublik Deutschland (AdV-Gebührenrichtlinie in ihrer jeweils gültigen Fassung – AdV-GR: https://www.adv-online.de/AdV-Produkte/Bezugsbedingungen/). Für den Erwerb von Nutzungsrechten wenden Sie sich bitte an die Zentrale Stelle Geotopographie der AdV/Dienstleistungszentrum (DLZ) des Bundesamt für Kartographie und Geodäsie: https://www.bkg.bund.de/DE/Service/Kontakt/kontakt.html. Der Quellenvermerk ist zu beachten.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>This data is protected by copyright. It is provided against payment only. The regulations of the Directive on Fees regarding the Provision and Use of Geographic Reference Data of the Surveying Authorities of the Laender of the Federal Republic of Germany apply (AdV Fee Directive in its current version – AdV-GR: https://www.adv-online.de/Products/Terms-of-purchase/). In order to obtain the rights of use please contact the Central Office for Geotopography of the AdV operated at the Service Centre (DLZ) of the Federal Agency for Cartography and Geodesy: https://www.bkg.bund.de/EN/About-BKG/Service-Center/service-center.html. Please include the required reference to the source when using the data.</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>6</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Die Daten sind urheberrechtlich geschützt. Sie werden nur gegen Entgelt abgegeben. Es gelten die Regelungen der Richtlinie über Gebühren für die Bereitstellung und Nutzung von Geobasisdaten der Vermessungsverwaltungen der Länder der Bundesrepublik Deutschland (AdV-Gebührenrichtlinie in ihrer jeweils gültigen Fassung – AdV-GR: https://www.adv-online.de/AdV-Produkte/Bezugsbedingungen/). Bundesbehörden und Nutzungsberechtigten im Sinne des § 4 VGeoBund werden die Daten auf Grundlage des Vertrages über die kontinuierliche Übermittlung von amtlichen digitalen Geobasisdaten der Länder zur Nutzung im Bundesbereich vom 01.07.2019 (VGeoBund) zur Verfügung gestellt. Für den Erwerb von Nutzungsrechten wenden Sie sich bitte an die Zentrale Stelle Geotopographie der AdV/Dienstleistungszentrum (DLZ) des Bundesamt für Kartographie und Geodäsie: https://www.bkg.bund.de/DE/Service/Kontakt/kontakt.html. Der Quellenvermerk ist zu beachten.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>This data is protected by copyright. It is provided against payment only. The regulations of the Directive on Fees regarding the Provision and Use of Geographic Reference Data of the Surveying Authorities of the Laender of the Federal Republic of Germany apply (AdV Fee Directive in its current version – AdV-GR: https://www.adv-online.de/Products/Terms-of-purchase/). In accordance with the Contract on the Continuous Transfer of Authoritative Digital Geodata of the Laender for use within the German Federal Administration as published on July 1, 2019 (VGeoBund), the geodata is made available to federal institutions and beneficiaries within the meaning of § 4 VGeoBund. In order to obtain the rights of use please contact the Central Office for Geotopography of the AdV operated at the Service Centre (DLZ) of the Federal Agency for Cartography and Geodesy: https://www.bkg.bund.de/EN/About-BKG/Service-Center/service-center.html. Please include the required reference to the source when using the data.</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>7</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Die Daten sind urheberrechtlich geschützt. Auf Grundlage des Vertrages über die kontinuierliche Übermittlung von amtlichen digitalen Geobasisdaten der Länder zur Nutzung im Bundesbereich vom 01.07.2019 (VGeoBund) werden die Geodaten Bundesbehörden und Nutzungsberechtigten im Sinne des § 4 VGeoBund zur Verfügung gestellt. Bei Interesse wenden Sie sich bitte an das Dienstleistungszentrum (DLZ) des Bundesamt für Kartographie und Geodäsie: https://www.bkg.bund.de/DE/Service/Kontakt/kontakt.html. Der Quellenvermerk ist zu beachten.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>This data is protected by copyright. In accordance with the Contract on the Continuous Transfer of Authoritative Digital Geodata of the Laender for use within the German Federal Administration as published on July 1, 2019 (VGeoBund), the geodata is made available to federal institutions and beneficiaries within the meaning of § 4 VGeoBund. If you are interested, please contact the Service Center (DLZ) of the Federal Agency for Cartography and Geodesy: https://www.bkg.bund.de/EN/About-BKG/Service-Center/service-center.html. Please include the required reference to the source when using the data.</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>8</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Die Daten sind urheberrechtlich geschützt. Auf Grundlage des Vertrages mit dem Datenanbieter werden die Geodaten je nach vertraglicher Ausgestaltung allen oder ausgewählten Bundesbehörden und weiteren Nutzungsberechtigten (z.Bsp. Zuwendungsempfängern des Bundes) zur Verfügung gestellt. Bei Interesse wenden Sie sich bitte an das Dienstleistungszentrum (DLZ) des Bundesamt für Kartographie und Geodäsie: https://www.bkg.bund.de/DE/Service/Kontakt/kontakt.html. Der Quellenvermerk ist zu beachten.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>This data is protected by copyright. In accordance with the contract concluded with the data provider, the geodata is made available to either some or all of the German federal institutions as well as other beneficiaries (e.g. recipients of grants by the Federal Republic of Germany), as will be layed down in individual contracts. If you are interested, please contact the Service Center (DLZ) of the Federal Agency for Cartography and Geodesy:  https://www.bkg.bund.de/EN/About-BKG/Service-Center/service-center.html. Please include the required reference to the source when using the data.</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Die Daten sind urheberrechtlich geschützt. Diese Daten stehen allen Einrichtungen des Bundes inklusive Zuwendungsempfängern, soweit sie zu 50 v.H. oder mehr vom Bund gefördert werden, zur Verfügung. Bei Interesse wenden Sie sich bitte an das Dienstleistungszentrum (DLZ) des Bundesamt für Kartographie und Geodäsie: https://www.bkg.bund.de/DE/Service/Kontakt/kontakt.html. Der Quellenvermerk ist zu beachten.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>This data is protected by copyright. This data is available to all German federal institutions including grant recipients, provided the share of the Federal Republic of Germany is fifty percent or greater. If you are interested, please contact the Service Center (DLZ) of the Federal Agency for Cartography and Geodesy: https://www.bkg.bund.de/EN/About-BKG/Service-Center/service-center.html. Please include the required reference to the source when using the data.</string>
+        </entry>
+      </localisations>
+      <data></data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>15</id>
+      <description></description>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Wenden Sie sich bitte an das Dienstleistungszentrum (DLZ) des Bundesamt für Kartographie und Geodäsie:  https://www.bkg.bund.de/DE/Service/Kontakt/kontakt.html</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Please contact the Service Center (DLZ) of the Federal Agency for Cartography and Geodesy: https://www.bkg.bund.de/EN/About-BKG/Service-Center/service-center.html</string>
+        </entry>
+      </localisations>
+      <data/>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>16</id>
+      <description/>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Die Daten sind urheberrechtlich geschützt. Diese Daten stehen allen Einrichtungen des Bundes inklusive Zuwendungsempfängern, soweit sie zu 50 v.H. oder mehr vom Bund gefördert werden sowie Landesvermessungseinrichtungen, zur Verfügung. Bei Interesse wenden Sie sich bitte an das Dienstleistungszentrum (DLZ) des Bundesamt für Kartographie und Geodäsie: https://www.bkg.bund.de/DE/Service/Kontakt/kontakt.html. Der Quellenvermerk ist zu beachten.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>This data is protected by copyright. This data is available to the surveying authorities of the Laender of the Federal Republic of Germany as well as to all German federal institutions including grant recipients, provided the share of the Federal Republic of Germany is fifty percent or greater. If you are interested, please contact the Service Center (DLZ) of the Federal Agency for Cartography and Geodesy: https://www.bkg.bund.de/EN/About-BKG/Service-Center/service-center.html. Please include the required reference to the source when using the data.</string>
+        </entry>
+      </localisations>
+      <data/>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>17</id>
+      <description/>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Die Daten sind urheberrechtlich geschützt. Der Datensatz wird entgeltfrei unter folgenden Nutzungsbedingungen zur Verfügung gestellt: Legal notice on the use of Copernicus Sentinel Data and Service Information (https://sg.geodatenzentrum.de/web_public/Sentinel_Data_Legal_Notice_deu.pdf). Der Quellenvermerk ist zu beachten.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>The data are protected by copyright. The data set is made available free of charge under the following terms of use: Legal notice on the use of Copernicus Sentinel Data and Service Information (https://sg.geodatenzentrum.de/web_public/Sentinel_Data_Legal_Notice_deu.pdf). The source note must be observed.</string>
+        </entry>
+      </localisations>
+      <data/>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>18</id>
+      <description/>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Die Daten sind urheberrechtlich geschützt. Die Kartendarstellung und Präsentationsgraphiken werden entgeltfrei mit der Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0) zur Verfügung gestellt. Der Quellenvermerk ist zu beachten.</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>This data is protected by copyright. The map display and presentation graphics are made available without restrictions and free of charge under the license ‚Datenlizenz Deutschland – Namensnennung – Version 2.0’ (https://www.govdata.de/dl-de/by-2-0). Please include the required reference to the source when using the data.</string>
+        </entry>
+      </localisations>
+      <data/>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>99</id>
+      <description/>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Es gelten keine Bedingungen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>No conditions to access and use</string>
+        </entry>
+      </localisations>
+      <data/>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

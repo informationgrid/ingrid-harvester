@@ -1,0 +1,24 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>5151</id>
+  <name>Objektklasse 3 - Version des Dienstes - CSW</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>OGC:CSW 2.0.2</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>OGC:CSW 2.0.2</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>OGC:CSW 2.0.2</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

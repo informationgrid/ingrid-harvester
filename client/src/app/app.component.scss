@@ -1,0 +1,68 @@
+/*
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
+ * ==================================================
+ */
+
+:host {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.user-popup {
+  padding-right: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+}
+
+// Accessibility
+mat-drawer-container {
+  overflow: auto;
+}
+
+:host ::ng-deep mat-drawer-content.mat-drawer-content {
+  display: flex;
+  flex-direction: column;
+
+  // Accessibility
+  min-width: 1024px;
+}
+
+.mat-drawer {
+  border: 0;
+}
+
+.fixed-upper-right {
+  position: fixed;
+  top: 6px;
+  right: 16px;
+  z-index: 200;
+}

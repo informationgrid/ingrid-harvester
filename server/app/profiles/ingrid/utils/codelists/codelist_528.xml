@@ -1,0 +1,160 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>528</id>
+  <name>Vektorformat -Topologieinformation</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Geometrie ohne Topologie</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>geometryOnly</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Geometry without Topology</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Linien</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>topology1D</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Topology 1D</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>geschlossene Linien eben</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>planarGraph</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Planar Graph</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Flächen</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>fullPlanarGraph</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Full Planar Graph</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>geschlossene Linien flächendeckend</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>surfaceGraph</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Surface Graph</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>6</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Flächen flächendeckend</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>fullSurfaceGraph</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Full Surface Graph</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>7</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Körper</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>topology3D</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Topology 3D</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>8</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>3D-Oberfläche</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>fullTopology3D</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Full Topology 3D</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>topologisches Gebilde ohne geometrischen Raumbezug</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>abstract</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>abstract</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

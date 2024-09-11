@@ -1,0 +1,150 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>7115</id>
+  <name>Datenqualität - Topologische Konsistenz - Art der Messung</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of invalid overlaps of surfaces</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of invalid overlaps of surfaces</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of missing connections due to undershoots</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of missing connections due to undershoots</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of missing connections due to overshoots</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of missing connections due to overshoots</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of invalid slivers</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of invalid slivers</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of invalid self-intersect errors</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of invalid self-intersect errors</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>6</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of invalid self-overlap errors</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of invalid self-overlap errors</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>7</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of faulty point-curve connections</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of faulty point-curve connections</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>8</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of missing connections due to crossing of bridge/road</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of missing connections due to crossing of bridge/road</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of watercourse links below threshold length</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of watercourse links below threshold length</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>10</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of closed watercourse links</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of closed watercourse links</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>11</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of multi-part watercourse links</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of multi-part watercourse links</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

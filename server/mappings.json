@@ -1,0 +1,286 @@
+{
+  "ckan_dcat": {
+    "bevoelkerung": "SOCI",
+    "bildung_wissenschaft": [
+      "EDUC",
+      "TECH"
+    ],
+    "geo": null,
+    "gesetze_justiz": "JUST",
+    "gesundheit": "HEAL",
+    "infrastruktur_bauen_wohnen": null,
+    "kultur_freizeit_sport_tourismus": "EDUC",
+    "politik_wahlen": "GOVE",
+    "soziales": "SOCI",
+    "transport_verkehr": "TRAN",
+    "umwelt_klima": "ENVI",
+    "verbraucher": null,
+    "verwaltung": "GOVE",
+    "wirtschaft_arbeit": "ECON"
+  },
+  "format": {
+    "ATOM": [
+      "http://publications.europa.eu/resource/authority/file-type/atom",
+      "atom",
+      "predefined ATOM",
+      "Atom Feed",
+      "AtomFeed",
+      "application/atom+xml",
+      "Atom Implementation of Pre-defined Dataset Download Service",
+      "INSPIRE-ATOM",
+      "WWW:LINK-1.0-http--ATOM"
+    ],
+    "CSV": [
+      "http://publications.europa.eu/resource/authority/file-type/csv",
+      "csv",
+      "text/csv"
+    ],
+    "Dateidownload": [
+      "www:download-1.0-http--download",
+      "download",
+      "WWW:LINK-1.0-http--download",
+      "WWW:DOWNLOAD",
+      "http-get",
+      "WWW:DOWNLOAD-1.0-ftp--download"
+    ],
+    "DBF": [
+      "http://publications.europa.eu/resource/authority/file-type/dbf"
+    ],
+    "DOC": [
+      "http://publications.europa.eu/resource/authority/file-type/doc",
+      "WinWord"
+    ],
+    "DOCX": [
+      "application/docx"
+    ],
+    "DXF": [
+      "DXF",
+      "dxf"
+    ],
+    "Excel": [
+      "application/vnd.ms-excel"
+    ],
+    "GeoDatabase": [
+      "ArcGIS: mdb",
+      "ESRI Geodatabaseformate (*.mdb",
+      "*gdb)",
+      "FileGeodatabase",
+      "WebGIS"
+    ],
+    "GEOJSON": [
+      "http://publications.europa.eu/resource/authority/file-type/geojson",
+      "geojson"
+    ],
+    "GeoTIFF": [
+      "Geotiff (*.tif)",
+      "interner Code:GEOTIFF",
+      "GeoTIF",
+      "geoTIFF"
+    ],
+    "GIF": [
+      "gif"
+    ],
+    "GML": [
+      "http://publications.europa.eu/resource/authority/file-type/gml",
+      "gml",
+      "Geographic Markup Language (GML)",
+      "Geography Markup Language (GML)",
+      "application/gml+xml",
+      "gml+xml",
+      "XML/GML",
+      "[gml]",
+      "Planned Land Use GML Application Schema",
+      "Land Use GML Application Schema"
+    ],
+    "GTFS": [
+      "gtfs"
+    ],
+    "HTML": [
+      "http://publications.europa.eu/resource/authority/file-type/html",
+      "html",
+      "application/html",
+      "htm",
+      "text/hmtl",
+      "text/html",
+      "Text/HTML",
+      "HTML5"
+    ],
+    "Image": [
+      "Image (*.img)"
+    ],
+    "INSPIRE": [
+      "INSPIRE GML gemäß Umsetzungsrichtlinie von 2010",
+      "INSPIRE-XML"
+    ],
+    "JPEG": [
+      "interner Code:JPEG",
+      "Bild .jpg",
+      "jpg",
+      "jpeg",
+      "jpeg/png"
+    ],
+    "JSON": [
+      "http://publications.europa.eu/resource/authority/file-type/json",
+      "json",
+      "JSON (REST Webservice)",
+      "JSON/GeoJSON (REST Webservice)"
+    ],
+    "KML": [
+      "http://publications.europa.eu/resource/authority/file-type/kml",
+      "kml"
+    ],
+    "KMZ": [
+      "http://publications.europa.eu/resource/authority/file-type/kmz",
+      "kmz"
+    ],
+    "PDF": [
+      "http://publications.europa.eu/resource/authority/file-type/pdf",
+      "pdf",
+      "application/pdf"
+    ],
+    "PMF": [
+      "Caigos PMF",
+      "caigos pmf",
+      "PMF (Version: 9.9)"
+    ],
+    "PNG": [
+      "http://publications.europa.eu/resource/authority/file-type/png",
+      "png"
+    ],
+    "Radolan": [
+      "interner Code:Radolan"
+    ],
+    "RSS": [
+      "http://publications.europa.eu/resource/authority/file-type/rss",
+      "WWW:LINK-1.0-http--rss"
+    ],
+    "Shape": [
+      "http://publications.europa.eu/resource/authority/file-type/shp",
+      "shapefile",
+      "shape",
+      "esri shape",
+      "esri shapefile",
+      "gezippte shape",
+      "shp",
+      "application/x-shapefile",
+      "~.shp",
+      "ESRI SHP",
+      "ESRI Shapefiles",
+      "Shapefiles",
+      "ArcView Shapefile (*.shp)",
+      "shapefile (gezippt)",
+      "Shape (.shp)",
+      "Shape-File",
+      "ESRI-Shapefile",
+      "ESRI Shapefile PolylineM",
+      "Esri-Shapefile",
+      "shape-Datei",
+      "Shape (ESRI)",
+      "Shape-Dateien",
+      "ESRI-Shape",
+      "Shape (SHP)"
+    ],
+    "SOAP": [
+      "xml/soap"
+    ],
+    "SOS": [
+      "OGC:SOS-2.0.0-http-get-capabilities",
+      "OGC:SOS-2.0.0-http-get-capabilities"
+    ],
+    "TIFF": [
+      "http://publications.europa.eu/resource/authority/file-type/tiff",
+      "tiff",
+      "interner Code:TIFF (T4)",
+      "tif",
+      "tif unkomprimiert",
+      "tiff/tfw",
+      "TIFF (300 DPI)"
+    ],
+    "TXT": [
+      "http://publications.europa.eu/resource/authority/file-type/txt",
+      "txt"
+    ],
+    "Unbekannt": [
+      "inapplicable",
+      "Sonstiges",
+      "-",
+      "unknown",
+      "no Format"
+    ],
+    "WCS": [
+      "ogc:wcs",
+      "wcs",
+      "OGC:WCS-2.0.1-http-get-capabilities",
+      "OGC:WCS-2.0.1-http-get-capabilities"
+    ],
+    "WFS": [
+      "ogc:wfs",
+      "ogc:wfs-2.0.0-http-get-feature",
+      "http://publications.europa.eu/resource/authority/file-type/WFS_SRVC",
+      "application/vnd.ogc.wfs_xml",
+      "OGC:WFS-2.0.0-http-get-map",
+      "OGC:WFS-2.0.0-http-get-capabilities",
+      "OGC-WFS Web Feature Service",
+      "OGC:WFS-2.0.0-http-get-capabilities",
+      "OGC:WFS-1.0.0-http-get-capabilities",
+      "WFS verfügbar",
+      "wfs_srvc"
+    ],
+    "WMS": [
+      "ogc:wms",
+      "ogc:wms-1.3.0-http-get-map",
+      "ogc:wms-1.3.0-http-get-capabilities",
+      "wms",
+      "view",
+      "http://publications.europa.eu/resource/authority/file-type/WMS_SRVC",
+      "OGC:WMS-http-get-capabilities",
+      "OGC WMS",
+      "OGC:WMS-1.1.1-http-get-capabilities",
+      "application/vnd.ogc.wms_xml",
+      "OGC:WMS-1.3.0-http-get-capabilities",
+      "OGC:WMS-1.1.1-http-get-map",
+      "über WMS",
+      "OGC-WMS Web Map Service",
+      "OGC:WMS-http-get-capabilities",
+      "wms_srvc",
+      "Web Map Service",
+      "OGC:WMS-http-get-map"
+    ],
+    "WWW": [
+      "http",
+      "https",
+      "Internet",
+      "onLine",
+      "www:link-1.0-http--link",
+      "www:link-1.0-http--related",
+      "Web-Dienst"
+    ],
+    "XLS": [
+      "http://publications.europa.eu/resource/authority/file-type/xls",
+      "xls"
+    ],
+    "XLSX": [
+      "http://publications.europa.eu/resource/authority/file-type/xlsx",
+      "xlsx",
+      "application/xlsx"
+    ],
+    "XML": [
+      "http://publications.europa.eu/resource/authority/file-type/xml",
+      "xml",
+      "text/xml"
+    ],
+    "XPlanGML": [
+      "TIFF (300 DPI) / XPlanGML",
+      "TIFF (300 DPI); XPlanGML",
+      "XPlanGML",
+      "XPlan-GML",
+      "XplanGML3.0"
+    ],
+    "ZIP": [
+      "http://publications.europa.eu/resource/authority/file-type/zip",
+      "zip",
+      ".zip",
+      "gzip"
+    ]
+  }
+}

@@ -1,0 +1,86 @@
+/*
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
+ * ==================================================
+ */
+
+@import "../../../variables";
+
+:host {
+  //display: flex;
+  height: 100%;
+}
+
+.tab-padding,
+.tab-padding-no-header {
+  height: 100%;
+  flex: 1;
+  overflow: auto;
+}
+.tab-padding {
+  padding: 40px 56px 26px;
+}
+.tab-padding-no-header {
+  padding: 0 56px;
+
+  .left-side,
+  .main-content {
+    padding-top: 40px;
+    padding-bottom: 26px;
+  }
+}
+
+:host-context(.white) .main-content {
+  background-color: #ffffff;
+}
+
+.header {
+  padding-bottom: 12px;
+}
+
+.left-side {
+  width: 350px;
+  min-width: 350px;
+  line-height: 22px;
+  margin-right: 56px;
+
+  &.page-title,
+  .page-title {
+    height: 110px;
+    margin-top: 0;
+    font-size: 34px;
+    letter-spacing: 0.25px;
+    line-height: 44px;
+    color: $ige-primary;
+  }
+}
+
+.main-header,
+.main-content {
+  max-width: 1260px;
+  margin: 0 auto;
+  width: 100%;
+  //height: 100%;
+  align-items: flex-start;
+}
+
+.main-header {
+  padding-top: 4px;
+}

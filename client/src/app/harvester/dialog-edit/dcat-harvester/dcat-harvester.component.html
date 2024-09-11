@@ -1,0 +1,78 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<form [formGroup]="form">
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Allgemeine DCAT Einstellungen</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div  class="flex-row">
+        <mat-form-field class="flex-1">
+          <mat-label>Catalog URL</mat-label>
+          <input matInput formControlName="sourceURL" required>
+        </mat-form-field>
+      </div>
+      
+      <h4>Bereitgestellt durch</h4>
+      <div class="flex-row gap-20 space-between">
+        <mat-form-field class="flex-1">
+          <mat-label>Präfix</mat-label>
+          <input matInput formControlName="providerPrefix" autocomplete="off">
+        </mat-form-field>
+        <mat-form-field class="flex-1">
+          <mat-label>DCAT-Feld</mat-label>
+          <mat-select formControlName="dcatProviderField">
+            <mat-option value="contactPoint">contactPoint</mat-option>
+            <mat-option value="creator">creator</mat-option>
+            <mat-option value="originator">originator</mat-option>
+            <mat-option value="maintainer">maintainer</mat-option>
+            <mat-option value="publisher">publisher</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+    </mat-card-content>
+  </mat-card>
+  
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Filter und Regeln</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ng-container  class="flex-col" [ngTemplateOutlet]="rulesTemplate"></ng-container>
+      
+      <div class="flex-row gap-20 flex-col-mobile space-between">
+        <app-chip-list [list]="model.filterTags"
+                       placeholder="Filter Tags"
+                       (update)="model.filterTags = $event"></app-chip-list>
+
+
+        <app-chip-list [list]="model.filterThemes"
+                       placeholder="Filter Themes"
+                       (update)="model.filterThemes = $event"></app-chip-list>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>

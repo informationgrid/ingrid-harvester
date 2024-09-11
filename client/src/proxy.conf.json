@@ -1,0 +1,14 @@
+{
+  "/rest/api": {
+    "target": "http://0.0.0.0:8090",
+    "secure": false
+  },
+  "/rest/passport": {
+    "target": "http://0.0.0.0:8090",
+    "secure": false
+  },
+  "/healh": {
+    "target": "http://0.0.0.0:8090",
+    "secure": false
+  }
+}

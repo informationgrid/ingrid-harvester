@@ -1,0 +1,58 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>5152</id>
+  <name>Objektklasse 3 - Version des Dienstes - WMS</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>OGC:WMS 1.1.1</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>OGC:WMS 1.1.1</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>OGC:WMS 1.1.1</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>OGC:WMS 1.3.0</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>OGC:WMS 1.3.0</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>OGC:WMS 1.3.0</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>OGC:WMTS 1.0.0</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>OGC:WMTS 1.0.0</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>OGC:WMTS 1.0.0</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

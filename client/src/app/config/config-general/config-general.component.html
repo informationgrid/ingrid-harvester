@@ -1,0 +1,419 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<page-template label="Konfiguration">
+@if (configForm) {
+<div main-content class="form-wrapper">
+
+  <form [formGroup]="configForm">
+    <!-- <h1>Konfiguration</h1>
+    <mat-card class="config-headline">
+    </mat-card> -->
+
+    <mat-card data-test="config-database" class="config-card" [formGroup]="configForm.get('database')">
+      <mat-card-header>
+        <mat-card-title>Datenbank</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-30">
+            <mat-label>Datenbank</mat-label>
+            <mat-select formControlName="type" required>
+              <mat-option value="postgresql">PostgreSQL</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="flex-70">
+            <mat-label>Verbindungsstring</mat-label>
+            <input matInput type="url" formControlName="connectionString">
+          </mat-form-field>
+        </div>
+
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-80">
+            <mat-label>URL</mat-label>
+            <input matInput type="url" formControlName="host">
+          </mat-form-field>
+          <mat-form-field class="flex-20">
+            <mat-label>Port</mat-label>
+            <input matInput type="number" formControlName="port">
+          </mat-form-field>
+        </div>
+
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-100">
+            <mat-label>Datenbank-Name</mat-label>
+            <input matInput formControlName="database">
+          </mat-form-field>
+        </div>
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-50">
+            <mat-label>Benutzername</mat-label>
+            <input matInput type="text" formControlName="user" required>
+            @if (configForm.get('database.user').hasError('required')) {
+              <mat-error>
+                Dies ist ein Pflichtfeld
+              </mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field class="flex-50">
+            <mat-label>Passwort</mat-label>
+            <input matInput type="password" formControlName="password">
+          </mat-form-field>
+        </div>
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-100">
+            <mat-label>Identifier des Standard-Katalogs</mat-label>
+            <input matInput type="text" formControlName="defaultCatalogIdentifier" required readonly>
+          </mat-form-field>
+        </div>
+        <div class="margin-below flex-row gap-20">
+          <div class="form-buttons">
+            <button mat-flat-button color="primary" (click)="checkDbConnection()" [disabled]="dbConnectionCheck == 'working'"
+              data-test="checkDbConnection">
+              <mat-icon svgIcon="cloud" class="inline-valigned" />
+              Verbindung testen
+            </button>
+          </div>
+          @if (dbConnectionCheck != null) {
+            <div class="inline-flex align-items-center gap-4" >
+              <mat-icon svgIcon={{statusIcon(dbConnectionCheck)}} />
+              <b >{{statusMsg(dbConnectionCheck)}}</b>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="config-card" [formGroup]="configForm.get('elasticsearch')">
+      <mat-card-header>
+        <mat-card-title>Elasticsearch</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-15">
+            <mat-label>Version</mat-label>
+            <mat-select formControlName="version" required>
+              <mat-option value="6">6</mat-option>
+              <mat-option value="7">7</mat-option>
+              <mat-option value="8">8</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="flex-60">
+            <mat-label>Host-URL</mat-label>
+            <input matInput type="url" formControlName="url" required>
+            @if (configForm.get('elasticsearch.url').hasError('required')) {
+              <mat-error>
+                Dies ist ein Pflichtfeld
+              </mat-error>
+            }
+            @if (configForm.get('elasticsearch.url').hasError('elasticUrl')) {
+              <mat-error>
+                Dies ist keine gültige Elasticsearch-URL (Bsp: http://localhost:9200)
+              </mat-error>
+            }
+          </mat-form-field>
+          <mat-checkbox class="flex-25" color="primary" formControlName="rejectUnauthorized">
+            <mat-label>Ungültige TLS Zertifikate abweisen</mat-label>
+          </mat-checkbox>
+        </div>
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-50">
+            <mat-label>Benutzername</mat-label>
+            <input matInput type="text" formControlName="user" required>
+          </mat-form-field>
+          <mat-form-field class="flex-50">
+            <mat-label>Passwort</mat-label>
+            <input matInput type="password" formControlName="password">
+          </mat-form-field>
+        </div>
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-100">
+            <mat-label>Alias-Name</mat-label>
+            <input matInput type="text" formControlName="alias" required>
+            @if (configForm.get('elasticsearch.alias').hasError('whitespace')) {
+              <mat-error>
+                Es dürfen nicht nur Leerzeichen eingegeben sein
+              </mat-error>
+            }
+            @if (configForm.get('elasticsearch.alias').hasError('required')) {
+            <mat-error>
+                Dies ist ein Pflichtfeld
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <h4>Index-Settings (readonly) werden beim Start durch Umgebungsvariablen gesetzt:</h4>
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-35" floatLabel="always">
+            <mat-label>Index-Präfix</mat-label>
+            <input matInput type="text" formControlName="prefix" readonly>
+          </mat-form-field>
+          <mat-form-field class="flex-35">
+            <mat-label>Index-Name</mat-label>
+            <input matInput type="text" formControlName="index" readonly>
+          </mat-form-field>
+          <mat-form-field class="flex-15">
+            <mat-label>Shards</mat-label>
+            <input matInput type="text" formControlName="numberOfShards" readonly>
+          </mat-form-field>
+          <mat-form-field class="flex-15">
+            <mat-label>Replicas</mat-label>
+            <input matInput type="text" formControlName="numberOfReplicas" readonly>
+          </mat-form-field>
+        </div>
+
+        <div class="margin-below flex-row gap-20">
+          <div class="form-buttons">
+            <button mat-flat-button color="primary" (click)="checkEsConnection()" [disabled]="esConnectionCheck == 'working'"
+              data-test="checkEsConnection">
+              <mat-icon svgIcon="cloud" class="inline-valigned" />
+              Verbindung testen
+            </button>
+          </div>
+          @if (esConnectionCheck != null) {
+            <div class="inline-flex align-items-center gap-4">
+              <mat-icon svgIcon={{statusIcon(esConnectionCheck)}} color={{statusColor(esConnectionCheck)}} class="inline-valigned" />
+              <b>{{statusMsg(esConnectionCheck)}}</b>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="config-card">
+      <mat-card-header>
+        <mat-card-title>Zusätzliche Einstellungen</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-50">
+            <mat-label>Offset Cron-Jobs in Minuten</mat-label>
+            <input matInput type="number" formControlName="cronOffset">
+          </mat-form-field>
+          <mat-form-field class="flex-50">
+            <mat-label>Log-Level für fehlende Format-Mappings</mat-label>
+            <mat-select formControlName="mappingLogLevel" required>
+              <mat-option value="info">INFO</mat-option>
+              <mat-option value="warn">WARNING</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-70">
+            <mat-label>Proxy URL</mat-label>
+            <input matInput formControlName="proxy">
+          </mat-form-field>
+          <mat-checkbox class="flex-30" color="primary" formControlName="allowAllUnauthorizedSSL">
+            <mat-label>Unauthorisierte Verbindungen über Proxy erlauben</mat-label>
+          </mat-checkbox>
+        </div>
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-1">
+            <mat-label>Portal URL</mat-label>
+            <input matInput formControlName="portalUrl">
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="config-card">
+      <mat-card-header>
+        <mat-card-title>Checks</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <harvester-cronjob-form-field
+          title="Url Check"
+          [form]="configForm"
+          formKey="urlCheck"
+          activeKeyName="active"
+          cronKeyName="pattern" />
+        <harvester-cronjob-form-field
+          title="Index Check"
+          [form]="configForm"
+          formKey="indexCheck"
+          activeKeyName="active"
+          cronKeyName="pattern" />
+      </mat-card-content>
+    </mat-card>
+
+
+    <mat-card class="config-card" [formGroup]="configForm.get('indexBackup')">
+      <mat-card-header>
+        <mat-card-title>Index-Backup</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <harvester-cronjob-form-field
+          title="Index-Backup"
+          [form]="configForm"
+          formKey="indexBackup"
+          activeKeyName="active"
+          cronKeyName="cronPattern"/>
+
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-100">
+            <mat-label>Index (RegExp)</mat-label>
+            <input matInput formControlName="indexPattern">
+          </mat-form-field>
+        </div>
+
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-100">
+            <mat-label>Verzeichnis</mat-label>
+            <input matInput formControlName="dir"
+              [required]="configForm.get('indexBackup.active').value">
+          </mat-form-field>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="config-card">
+      <mat-card-header class="flex-row gap-20">
+        <mat-card-title>Harvesting Differenzen</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="flex-row gap-20 margin-below">
+          <span>Wenn bereits bestehende Datensätze nicht im laufenden Harvesting vorhanden sind, dann</span>
+        </div>
+
+        <div class="flex-row gap-20 align-items-end" [formGroup]="configForm.get('harvesting.mail')">
+          <div class="margin-below">
+            <mat-slide-toggle color="accent" [checked]="configForm.get('harvesting.mail.enabled')"
+              title="E-Mail-Benachrichtigungen für eingestellte Harvesting-Differenz an-/ausschalten" formControlName="enabled"
+              (click)="$event.stopImmediatePropagation()">
+            </mat-slide-toggle>
+          </div>
+          <div class="margin-below">
+            <span>E-Mail senden ab einer Differenz von</span>
+          </div>
+          <mat-form-field class="flex-30">
+            <mat-label>Benachrichtigungs-Schwelle</mat-label>
+            <input matInput type="number" min="1" max="100" style="text-align: right" formControlName="minDifference">
+            <mat-icon [inline]="true" style="padding-left: 1px; line-height: initial" matSuffix>%</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="flex-row gap-20 align-items-end" [formGroup]="configForm.get('harvesting.cancel')">
+          <div class="margin-below">
+            <mat-slide-toggle color="accent" [checked]="configForm.get('harvesting.cancel.enabled')"
+              title="Harvesting-Abbruch für eingestellte Harvesting-Differenz an-/ausschalten" formControlName="enabled"
+              (click)="$event.stopImmediatePropagation()">
+            </mat-slide-toggle>
+          </div>
+          <div class="margin-below">
+            <span>Harvesting abbrechen ab einer Differenz von</span>
+          </div>
+          <mat-form-field class="flex-30">
+            <mat-label>Abbruchs-Schwelle</mat-label>
+            <input matInput type="number" min="1" max="100" style="text-align: right" formControlName="minDifference">
+            <mat-icon [inline]="true" style="padding-left: 1px; line-height: initial" matSuffix>%</mat-icon>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="config-card">
+      <mat-card-header class="flex-row gap-20" [formGroup]="configForm.get('mail')">
+        <mat-card-title>E-Mail-Einstellungen</mat-card-title>
+        <div class="center-right">
+          <mat-slide-toggle color="accent" [checked]="configForm.get('mail.enabled')"
+            title="E-Mail-Benachrichtigungen an- / ausschalten" formControlName="enabled"
+            (click)="$event.stopImmediatePropagation()">
+          </mat-slide-toggle>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+
+        <h4>Server</h4>
+
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-1" [formGroup]="configForm.get('mail.mailServer')">
+            <mat-label>E-Mail-Server</mat-label>
+            <input matInput formControlName="host" required>
+          </mat-form-field>
+          <mat-form-field class="flex-10" [formGroup]="configForm.get('mail.mailServer')">
+            <mat-label>Port</mat-label>
+            <input matInput type="number" formControlName="port" required>
+          </mat-form-field>
+          <div [formGroup]="configForm.get('mail.mailServer')">
+            <mat-checkbox color="primary" formControlName="secure">
+              Secure Connection
+            </mat-checkbox>
+          </div>
+          <div [formGroup]="configForm.get('mail.mailServer.tls')">
+            <mat-checkbox color="primary" formControlName="rejectUnauthorized">
+              Ungültige TLS Zertifikate abweisen
+            </mat-checkbox>
+          </div>
+        </div>
+
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-50" [formGroup]="configForm.get('mail.mailServer.auth')">
+            <mat-label>User</mat-label>
+            <input matInput formControlName="user">
+          </mat-form-field>
+          <mat-form-field class="flex-50" [formGroup]="configForm.get('mail.mailServer.auth')">
+            <mat-label>Passwort</mat-label>
+            <input type="password" matInput formControlName="pass">
+          </mat-form-field>
+        </div>
+
+        <h4>Template</h4>
+
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-50" [formGroup]="configForm.get('mail')">
+            <mat-label>Absender</mat-label>
+            <input matInput formControlName="from" required>
+          </mat-form-field>
+          <mat-form-field class="flex-50" [formGroup]="configForm.get('mail')">
+            <mat-label>Empfänger</mat-label>
+            <input matInput formControlName="to" required>
+          </mat-form-field>
+        </div>
+
+        <div class="flex-row gap-20">
+          <mat-form-field class="flex-50" [formGroup]="configForm.get('mail')">
+            <mat-label>Betreff-Tag</mat-label>
+            <input matInput formControlName="subjectTag">
+          </mat-form-field>
+          <div class="flex-50"></div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </form>
+
+  <div class="config-card">
+    <button mat-button (click)="reset()" data-test="reset">Zurücksetzen</button>
+    <button mat-raised-button class="fixed-bottom-right" color="primary" (click)="save()" [disabled]="!configForm.valid"
+      data-test="save">Speichern
+    </button>
+  </div>
+</div>
+}
+
+</page-template>

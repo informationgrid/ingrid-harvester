@@ -1,0 +1,57 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<div [formGroup]="form.get(formKey)">
+    <div class="flex-row gap-20 items-center">
+        <h4 class="flex-space">{{title}}:
+            <span class="config-info-field">{{cronTranslation}}</span>
+        </h4>
+        <mat-slide-toggle color="accent" [checked]="toggleControl.value"
+            (change)="handleToggleSwitch()"
+            [formControlName]="activeKeyName"
+            title="Planung an- / ausschalten"></mat-slide-toggle>
+    </div>
+    <div class="flex-row gap-20 margin-below">
+        <mat-form-field data-test="cron-input" class="flex-100">
+            <mat-label>Cron Expression</mat-label>
+            <mat-hint align="start">Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag</mat-hint>
+            <input matInput placeholder="* * * * *" [formControlName]="cronKeyName"
+            (keyup)="translateCronExpression(cronControl.value)">
+            @if (cronControl.value) {
+            <button mat-icon-button matSuffix aria-label="Clear" (click)="clearInput()">
+                <mat-icon svgIcon="close" />
+            </button>
+            }
+            <mat-icon matSuffix svgIcon="info" (click)="showInfo = !showInfo" class="info-icon" />
+        </mat-form-field>
+    </div>
+</div>
+
+@if (showInfo) {
+    <div class="info config-info-field margin-below">
+        <div><span>*/5 * * * *</span> Alle 5 Minuten</div>
+        <div><span>45 8 * * *</span> Täglich um 8:45 Uhr</div>
+        <div><span>0 6-18/2 * * *</span> Täglich zwischen 6 und 18 Uhr, alle 2h</div>
+        <div><span>30 4 1 * 0,6</span> Um 4:30 Uhr am 1. Tag jeden Monats, Sa und So</div>
+    </div>
+}

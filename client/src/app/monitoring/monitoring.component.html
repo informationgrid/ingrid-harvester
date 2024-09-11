@@ -1,0 +1,65 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<!-- <mat-tab-group animationDuration="0ms" (selectedTabChange)="onTabChange($event)">
+  <mat-tab label="UrlCheck">
+    <app-monitoring-urlcheck></app-monitoring-urlcheck>
+  </mat-tab>
+  <mat-tab label="IndexCheck">
+    <app-monitoring-indexcheck></app-monitoring-indexcheck>
+  </mat-tab>
+  <mat-tab label="Harvester Historie">
+    <app-monitoring-harvester></app-monitoring-harvester>
+  </mat-tab>
+</mat-tab-group> -->
+
+
+<div
+    *transloco="let t; read: 'dashboard'"
+    class="allPageScroll flex-1 flex-col"
+>
+  <div class="welcome" data-cy="welcome-message">
+      <div class="greetings">{{ t("welcome") }}</div>
+      @for (message of messages$ | async; track message) {
+          <div class="message">
+              <span>{{ message.text }}</span>
+          </div>
+      }
+  </div>
+
+  <div class="dashboard-content">
+
+    <mat-grid-list [cols]="breakpoint" rowHeight="1:1" [gutterSize]="'32px'" style="margin: 32px" (window:resize)="onResize($event)">
+      <mat-grid-tile [colspan]="breakpointCols">
+        <app-monitoring-harvester style="width: 100%; height: 100%;"></app-monitoring-harvester>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <app-monitoring-urlcheck style="width: 100%; height: 100%;"></app-monitoring-urlcheck>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <app-monitoring-indexcheck style="width: 100%; height: 100%;"></app-monitoring-indexcheck>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+  </div>
+</div>

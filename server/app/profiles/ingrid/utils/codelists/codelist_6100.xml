@@ -1,0 +1,449 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>6100</id>
+  <name>INSPIRE-Themen</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>101</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Koordinatenreferenzsysteme</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Coordinate reference systems</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>102</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Geografische Gittersysteme</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Geographical grid systems</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>103</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Geografische Bezeichnungen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Geographical names</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>104</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verwaltungseinheiten</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Administrative units</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>105</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Adressen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Addresses</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>106</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Flurstücke/Grundstücke (Katasterparzellen)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Cadastral parcels</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>107</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verkehrsnetze</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Transport networks</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>108</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Gewässernetz</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Hydrography</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>109</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Schutzgebiete</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Protected sites</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>201</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Höhe</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Elevation</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>202</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Bodenbedeckung</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Land cover</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>203</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Orthofotografie</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Orthoimagery</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>204</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Geologie</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Geology</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>301</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Statistische Einheiten</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Statistical units</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>302</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Gebäude</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Buildings</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>303</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Boden</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Soil</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>304</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Bodennutzung</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Land use</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>305</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Gesundheit und Sicherheit</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Human health and safety</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>306</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Versorgungswirtschaft und staatliche Dienste</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Utility and governmental services</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>307</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Umweltüberwachung</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Environmental monitoring facilities</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>308</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Produktions- und Industrieanlagen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Production and industrial facilities</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>309</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Landwirtschaftliche Anlagen und Aquakulturanlagen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Agricultural and aquaculture facilities</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>310</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verteilung der Bevölkerung — Demografie</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Population distribution — demography</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>311</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Bewirtschaftungsgebiete/Schutzgebiete/geregelte Gebiete und Berichterstattungseinheiten</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Area management/restriction/regulation zones and reporting units</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>312</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Gebiete mit naturbedingten Risiken</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Natural risk zones</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>313</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Atmosphärische Bedingungen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Atmospheric conditions</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>314</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Meteorologisch-geografische Kennwerte</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Meteorological geographical features</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>315</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Ozeanografisch-geografische Kennwerte</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Oceanographic geographical features</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>316</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Meeresregionen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Sea regions</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>317</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Biogeografische Regionen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Bio-geographical regions</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>318</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lebensräume und Biotope</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Habitats and biotopes</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>319</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Verteilung der Arten</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Species distribution</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>320</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Energiequellen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Energy resources</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>321</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Mineralische Bodenschätze</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Mineral resources</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

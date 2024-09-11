@@ -1,0 +1,16 @@
+license {
+    header = project.file("gradle/check/license-header.txt")
+    ext {
+        year = 2024
+    }
+    include("**/*.ts", "**/*.html", "**/*.scss")
+    style {
+        ts = 'BLOCK_COMMENT'
+        scss = 'BLOCK_COMMENT'
+    }
+    tasks {
+        directory {
+            files.from('server/app/', 'server/test/', 'client/src/','shared/')
+        }
+    }
+}

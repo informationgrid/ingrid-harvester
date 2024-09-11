@@ -1,0 +1,50 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<h1 mat-dialog-title>Mapping hinzufügen</h1>
+<mat-dialog-content>
+  <div class="flex-row space-between gap-20" >
+    <mat-form-field>
+      <mat-label>Quelle</mat-label>
+      <input data-test="mapping-source" matInput [(ngModel)]="data.source" required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Ziel</mat-label>
+      <input matInput [(ngModel)]="data.target" [matAutocomplete]="auto"
+             (ngModelChange)="filterOptions($event)" required
+             data-test="mapping-destination">
+      <mat-autocomplete #auto="matAutocomplete">
+        @for (option of filteredOptions; track option) {
+<mat-option [value]="option">
+          {{option}}
+        </mat-option>
+}
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Abbrechen</button>
+  <div class="flex-space"></div>
+  <button data-test="btn-save-mapping"mat-button color="primary" [mat-dialog-close]="data" [disabled]="!data.source || !data.target">Hinzufügen</button>
+</div>

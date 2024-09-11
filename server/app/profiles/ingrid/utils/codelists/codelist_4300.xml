@@ -1,0 +1,33 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>4300</id>
+  <name>Adresse - Anrede</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Frau</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Ms</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Herr</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Mr</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

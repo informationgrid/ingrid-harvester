@@ -1,0 +1,55 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<page-template label="Mapping (Datenformate)">
+  <div main-content class="margin-below">
+    @for (type of types | async; track type) {
+      <mat-list dense class="list-hover mapping-card">
+            <h3 matSubheader>{{type.name}}</h3>
+            @for (item of type.items; track item) {
+              <mat-list-item>
+                <button mat-icon-button matListItemIcon color="warn" (click)="deleteItem(type.name, item)" class="mapping-delete-button" >
+                  <mat-icon svgIcon="Delete"/>
+                </button>
+                <!-- <mat-icon matListItemIcon svgIcon="Delete" (click)="deleteItem(type.name, item)" /> -->
+                <!-- <button mat-icon-button color="warn" (click)="deleteItem(type.name, item)" >
+                  <mat-icon matListItemIcon svgIcon="Delete"/>
+                </button> -->
+                <span matListItemTitle>{{item}}</span>
+              </mat-list-item>
+            }
+        </mat-list>
+      }
+    <div class="big-button-container">
+
+      <button mat-flat-button
+              color="primary"
+              (click)="addItem()"
+              class="fixed-bottom-right"
+              id="btnAddMapping">
+        <mat-icon  svgIcon="Add" aria-label="Add Mapping" ></mat-icon>
+        Hinzufügen
+      </button>
+    </div>
+  </div>
+</page-template>

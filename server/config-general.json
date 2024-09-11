@@ -1,0 +1,68 @@
+{
+  "database": {
+    "type": "postgresql",
+    "connectionString": "",
+    "host": "localhost",
+    "port": 5432,
+    "database": "metadaten",
+    "user": "admin",
+    "password": "admin",
+    "defaultCatalogIdentifier": "harvester"
+  },
+  "elasticsearch": {
+    "url": "http://localhost:9200",
+    "version": "8",
+    "user": "elastic",
+    "password": "elastic",
+    "rejectUnauthorized": true,
+    "index": "harvester-index",
+    "alias": "harvester",
+    "prefix": "",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0
+  },
+  "proxy": null,
+  "allowAllUnauthorizedSSL": false,
+  "portalUrl": "",
+  "urlCheck": {
+    "active": false,
+    "pattern": "30 04 * * *"
+  },
+  "indexCheck": {
+    "active": false,
+    "pattern": "10 04 * * *"
+  },
+  "sessionSecret": "mysecretkey",
+  "mail": {
+    "enabled": false,
+    "mailServer": {
+      "host": "localhost",
+      "port": 465,
+      "secure": false,
+      "auth": {
+        "user": "",
+        "pass": ""
+      }
+    },
+    "from": "test@example.com",
+    "to": "test@example.com",
+    "subjectTag": "harvester"
+  },
+  "indexBackup": {
+    "active": false,
+    "indexPattern": "harvester_statistic|url_check_history|index_check_history",
+    "cronPattern": "30 05 * * *",
+    "dir": ""
+  },
+  "harvesting": {
+    "mail": {
+      "enabled": false,
+      "minDifference": 10
+    },
+    "cancel": {
+      "enabled": false,
+      "minDifference": 10
+    }
+  },
+  "cronOffset": 0
+}

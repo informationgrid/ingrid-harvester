@@ -1,0 +1,144 @@
+/*
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
+ * ==================================================
+ */
+
+:host {
+  display: flex;
+  overflow: hidden;
+  flex: 1; // IE 11
+}
+.allPageScroll {
+  overflow-y: auto;
+}
+.harvester-content {
+  padding-top: 30px;
+  flex: 1;
+}
+
+mat-expansion-panel {
+  margin-bottom: 20px;
+}
+
+mat-expansion-panel-header {
+  padding: 0 !important;
+}
+
+.mat-mdc-slide-toggle {
+  // height: 48px;
+  padding: 0 20px;
+}
+
+::ng-deep mat-slide-toggle .mat-mdc-slide-toggle-thumb-container {
+  cursor: pointer;
+}
+
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  align-items: center;
+  flex-grow: 0;
+  margin-right: 0;
+}
+
+.material-icons.inline-valigned {
+  font-size: inherit;
+  line-height: inherit;
+  vertical-align: middle;
+  height: auto;
+  width: auto;
+  margin-bottom: 0.15em;
+}
+
+.success {
+  color: #5dc57b;
+}
+
+.warn {
+  color: #ff0000;
+}
+.warning {
+  color: #ff9e00;
+}
+
+.flex-space {
+  flex: 1 1 auto;
+}
+
+// mat-action-row {
+//   padding-left: 8px;
+// }
+
+.lastExecution, .nextExecution {
+  color: #d2d2d2;
+}
+
+.lastExecution {
+  float: left;
+}
+
+.nextExecution, #btnAddHarvester {
+  float: right;
+}
+
+mat-spinner {
+  margin: 0 0 0 10px;
+}
+
+.no-harvester {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  mat-spinner {
+    display: inline-block;
+  }
+}
+
+.scheduled {
+  align-self: center;
+  padding-right: 10px;
+}
+
+::ng-deep h4 {
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
+
+.harvester-button-col-span-1-mobile { @media screen and (max-width: 1199px) { grid-column: span 1 / span 1; } }
+.harvester-button-custom-grid-cols-mobile { @media screen and (max-width: 1199px) { grid-template-columns: 1fr } }
+
+.harvester-list {
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  max-width: var(--max-width-panel);
+}
+
+.panel-header-icon {
+  width: 24px;
+  height: 24px;
+}

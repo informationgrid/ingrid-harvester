@@ -1,0 +1,95 @@
+/*
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
+ * ==================================================
+ */
+
+:host {
+  display: flex;
+  justify-content: center;
+  margin: 100px 0px;
+}
+
+.login-container {
+  width: 600px;
+  padding: 56px 90px 24px;
+}
+
+.login-title {
+  font-size: 48px;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #28225B;
+  align-items: center;
+  letter-spacing: 0.5px;
+  word-break: break-word;
+}
+.login-subtitle {
+  font-size: 28px;
+  display: inline-flex;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+  min-width: 300px;
+}
+
+/*
+ TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.
+ */
+mat-card-title,
+mat-card-content {
+  // display: flex;
+  // width: 100% !important;
+  // justify-content: center;
+  padding: 0;
+}
+
+
+mat-form-field {
+  height: 56px;
+  overflow: visible;
+}
+
+.error {
+  padding: 16px;
+  color: white;
+  background-color: red;
+}
+
+.button {
+  // display: flex;
+  // width: 100%;
+  height: 48px;
+  // justify-content: flex-end;
+}
+
+input:-internal-autofill-selected {
+  background-color: #5dc57b !important;
+}
+
+.forgetPassword {
+  text-align: center;
+  padding: 56px 0 4px;
+}
+
+.card-title {
+  padding-top: 32px
+}

@@ -1,0 +1,57 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<mat-tab-group [animationDuration]="'0ms'" [dynamicHeight]="false" mat-align-tabs="center" [selectedIndex]="getInitialIndex()">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span [matBadge]="appErrors.length" [matBadgeColor]="appErrors.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Fehler</span>
+    </ng-template>
+    <cdk-virtual-scroll-viewport class="logContainer" itemSize="20" minBufferPx="500" maxBufferPx="500">
+      <div *cdkVirtualFor="let error of appErrors">{{error}}</div>
+    </cdk-virtual-scroll-viewport>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span [matBadge]="databaseErrors.length" [matBadgeColor]="databaseErrors.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Datenbank-Fehler</span>
+    </ng-template>
+    <cdk-virtual-scroll-viewport class="logContainer" itemSize="20" minBufferPx="500" maxBufferPx="500">
+      <div *cdkVirtualFor="let error of databaseErrors">{{error}}</div>
+    </cdk-virtual-scroll-viewport>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span [matBadge]="elasticsearchErrors.length" [matBadgeColor]="elasticsearchErrors.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Elasticsearch-Fehler</span>
+    </ng-template>
+    <cdk-virtual-scroll-viewport class="logContainer" itemSize="20" minBufferPx="500" maxBufferPx="500">
+      <div *cdkVirtualFor="let error of elasticsearchErrors">{{error}}</div>
+    </cdk-virtual-scroll-viewport>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span [matBadge]="appWarnings.length" [matBadgeColor]="appWarnings.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Warnungen</span>
+    </ng-template>
+    <cdk-virtual-scroll-viewport class="logContainer" itemSize="20" minBufferPx="500" maxBufferPx="500">
+      <div *cdkVirtualFor="let warning of appWarnings">{{warning[0]}}: {{warning[1]}}</div>
+    </cdk-virtual-scroll-viewport>
+  </mat-tab>
+</mat-tab-group>

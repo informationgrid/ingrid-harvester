@@ -1,0 +1,92 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<div class="flex flex-row h-full" >
+    <div class=" list-hover flex-30 margin  " >
+      <div class="flex  flex-row padding">
+        <h2 matHeader class="flex-1">Existierende Indizes</h2>
+        <input type="file" #indexUpload id="indexUpload" name="harvesterUpload" (change)="importIndex(this.indexUpload.files)" accept="json/*.json" style="display:none;" />
+        <button mat-flat-button id="importIndex" color="primary" (click)="this.indexUpload.click()" data-test="importIndex">Importieren</button>
+      </div>
+      <mat-list class="items-left scroll padding" >
+      @for (index of indices | async; track index) {
+        <mat-list-item  class="index-list-item">
+          <div matListItemTitle class="flex flex-col">
+            <span class="flex-1">
+              Index: <b>{{ index.name }}</b>
+            </span>
+            <button class="right indices-options-button" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Mehr Optionen für diesen Index">
+              <mat-icon svgIcon="Options"/>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="exportIndex(index.name)">
+                <mat-icon svgIcon="Download"/>
+                <span>Exportieren</span>
+              </button>
+              <button mat-menu-item (click)="deleteIndex(index.name)">
+                <mat-icon svgIcon="Delete"/>
+                <span>Löschen</span>
+              </button>
+            </mat-menu>
+          </div>
+          <div matListItemLine>
+            <span>
+              Dokumente: {{index.numDocs}}
+            </span>
+            <div class="right flex gap-20">
+              <!-- <button mat-stroked-button color="primary" class="margin" (click)="exportIndex(index.name)" data-test="exportIndex">Export</button> -->
+              <button mat-stroked-button color="primary" class="margin" (click)="sendSearchRequest(index.name)" >Vorschau</button>
+            </div>
+          </div>
+        </mat-list-item>
+      }
+    </mat-list>
+    </div>
+
+    <mat-card class="flex-70 margin">
+      <mat-card-header>
+        <mat-card-title>Vorschau</mat-card-title>
+          <div class="search-box">
+            <input type="text" matInput placeholder="Suche" (keydown.enter)="searchForStringInPreview($event.target.value)">
+            @if (searchHits.length > 0) {
+              <mat-icon svgIcon="expand_less" (click)="scrollToSearchHit('previous')" class="link-text"/>
+              <mat-icon svgIcon="expand_more" (click)="scrollToSearchHit('next')" class="link-text"/>
+              <span>{{searchHitsCount}} / {{searchHits.length}}</span>
+            }
+            @else if (searchHits.length == 0 && searchString != "") {
+              <div>0 Treffer</div>
+            }
+            @else {
+              <div></div>
+            }
+          </div>
+      </mat-card-header>
+      <mat-card-content class="items">
+        <cdk-virtual-scroll-viewport [itemSize]="20" [minBufferPx]="500" [maxBufferPx]="500" class="viewport">
+          <!-- <pre>{{searchResult | async | json}}</pre> -->
+          <div *cdkVirtualFor="let line of searchResultLines">{{line}}</div>
+        </cdk-virtual-scroll-viewport>
+      </mat-card-content>
+    </mat-card>
+
+</div>

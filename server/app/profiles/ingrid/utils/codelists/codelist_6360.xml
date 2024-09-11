@@ -1,0 +1,78 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>6360</id>
+  <name>Spatial Scope</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-673152846</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>National</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>National</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/SpatialScope/national&quot;, &quot;thesaurusTitle&quot;: &quot;Spatial scope&quot;, &quot;thesaurusId&quot;: &quot;http://inspire.ec.europa.eu/metadata-codelist/SpatialScope&quot; }</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>885989663</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Regional</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Regional</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/SpatialScope/regional&quot;, &quot;thesaurusTitle&quot;: &quot;Spatial scope&quot;, &quot;thesaurusId&quot;: &quot;http://inspire.ec.europa.eu/metadata-codelist/SpatialScope&quot; }</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>-522787733</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Lokal</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Local</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/SpatialScope/local&quot;, &quot;thesaurusTitle&quot;: &quot;Spatial scope&quot;, &quot;thesaurusId&quot;: &quot;http://inspire.ec.europa.eu/metadata-codelist/SpatialScope&quot; }</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>827891363</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Global</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Global</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/SpatialScope/global&quot;, &quot;thesaurusTitle&quot;: &quot;Spatial scope&quot;, &quot;thesaurusId&quot;: &quot;http://inspire.ec.europa.eu/metadata-codelist/SpatialScope&quot; }</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1339931727</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Europäisch</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>European</string>
+        </entry>
+      </localisations>
+      <data>{&quot;url&quot;:&quot;http://inspire.ec.europa.eu/metadata-codelist/SpatialScope/european&quot;, &quot;thesaurusTitle&quot;: &quot;Spatial scope&quot;, &quot;thesaurusId&quot;: &quot;http://inspire.ec.europa.eu/metadata-codelist/SpatialScope&quot; }</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+  <lastModified>1574346418043</lastModified>
+</de.ingrid.codelists.model.CodeList>

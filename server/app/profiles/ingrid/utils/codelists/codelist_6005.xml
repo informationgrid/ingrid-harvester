@@ -1,0 +1,63 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>6005</id>
+  <name>Konformität - Spezifikation der Konformität (INSPIRE)</name>
+  <description>Das Datum der jeweiligen Spezifikation wird aus dem &lt;Data&gt;-Feld ausgelesen, bitte in folgender Form eingeben:
+    JJJJ-MM-TT</description>
+  <defaultEntry>12</defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>10</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>VERORDNUNG (EG) Nr. 976/2009 - INSPIRE Durchführungsbestimmung Netzdienste</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>VERORDNUNG (EG) Nr. 976/2009 DER KOMMISSION vom 19. Oktober 2009 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Netzdienste</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>COMMISSION REGULATION (EC) No 976/2009 of 19 October 2009 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards the Network Services</string>
+        </entry>
+      </localisations>
+      <data>2009-10-20</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>11</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>VERORDNUNG (EG) Nr. 1205/2008 - INSPIRE Durchführungsbestimmung Metadaten</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>VERORDNUNG (EG) Nr. 1205/2008 DER KOMMISSION vom 3. Dezember 2008 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich Metadaten</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>COMMISSION REGULATION (EC) No 1205/2008 of 3 December 2008 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards metadata</string>
+        </entry>
+      </localisations>
+      <data>2009-12-15</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>12</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>VERORDNUNG (EG) Nr. 1089/2010 - INSPIRE Durchführungsbestimmung Interoperabilität von Geodatensätzen und -diensten</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</string>
+        </entry>
+      </localisations>
+      <data>2010-12-08</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

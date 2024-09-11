@@ -1,0 +1,41 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>525</id>
+  <name>Objektklasse 1 - Datensatz/Datenserie</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Datensatz</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>dataset</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Dataset</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>6</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Datenserie</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>series</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Dataseries</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

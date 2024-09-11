@@ -1,0 +1,46 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>601</id>
+  <name>Operationsrichtung</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Eingabe</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Input</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Ausgabe</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Output</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry> 
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Ein- und Ausgabe</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>In- and Output</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

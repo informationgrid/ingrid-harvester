@@ -1,0 +1,108 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<form [formGroup]="form">
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>CSW Einstellungen</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="flex-row flex-col-mobile gap-20 space-between">
+        <mat-form-field class="flex-20 flex-100-mobile">
+          <mat-label>HTTP Methode</mat-label>
+          <mat-select formControlName="httpMethod" required>
+            <mat-option value="GET">GET</mat-option>
+            <mat-option value="POST">POST</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="flex-1">
+          <mat-label>GetRecords URL</mat-label>
+          <input matInput formControlName="sourceURL" required>
+        </mat-form-field>
+      </div>
+      <div class="flex-row flex-col-mobile gap-20 space-between">
+        <mat-form-field class="flex-1 ">
+          <mat-label>Anzahl paralleler Abfragen</mat-label>
+          <input matInput type="number" min="1" formControlName="maxConcurrent">
+        </mat-form-field>
+        <mat-form-field class="flex-1">
+          <mat-label>Harvesting Modus</mat-label>
+          <mat-select formControlName="harvestingMode" required>
+            <mat-option value="standard">Standard</mat-option>
+            <mat-option value="separate">Separat (langsam)</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="flex-1">
+          <mat-label>Max. Dienste pro Anfrage</mat-label>
+          <input matInput formControlName="maxServices" type="number" [disabled]="profile == 'diplanung'">
+        </mat-form-field>
+      </div>
+      <div class="flex-row flex-col-mobile gap-20 space-between">
+        <mat-form-field class="flex-1">
+          <mat-label>WFS/WMS auflösen</mat-label>
+          <mat-select formControlName="resolveOgcDistributions" required>
+            <mat-option [value]="false">Nein</mat-option>
+            <mat-option [value]="true">Ja (langsam)</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="flex-1">
+          <mat-label>Toleranz: Polygone vereinfachen</mat-label>
+          <input matInput formControlName="simplifyTolerance" type="number">
+        </mat-form-field>
+        @if (profile == 'diplanung') {
+          <mat-form-field class="flex-1">
+            <mat-label>Planstatus</mat-label>
+            <mat-select formControlName="pluPlanState" required>
+              <mat-option value="unknown">unbekannt</mat-option>
+              <mat-option value="fixed">festgestellt</mat-option>
+              <mat-option value="inPreparation">in Aufstellung</mat-option>
+            </mat-select>
+          </mat-form-field>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Filter und Regeln</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ng-container class="flex-col" [ngTemplateOutlet]="rulesTemplate"></ng-container>
+      
+      <div class="flex-col">
+        <mat-form-field>
+          <mat-label>Record Filter</mat-label>
+          <textarea matInput rows="6" class="code" formControlName="recordFilter"></textarea>
+        </mat-form-field>
+        
+        <app-chip-list 
+        [list]="model.eitherKeywords"
+        placeholder="Either keywords"
+        (update)="model.eitherKeywords = $event"></app-chip-list>  
+        
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>

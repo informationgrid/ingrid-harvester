@@ -1,0 +1,57 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<h2 mat-dialog-title>Ausführung planen</h2>
+
+<mat-dialog-content>
+
+  <harvester-cronjob-form-field 
+    title="Komplettes Harvesting" 
+    [form]="schedulerForm" 
+    formKey="full" 
+    activeKeyName="active" 
+    cronKeyName="pattern"/>
+
+  @if (harvesterType == 'CSW') {
+  <mat-divider class="padding-below"></mat-divider>
+
+  <harvester-cronjob-form-field 
+    title="Inkrementelles Harvesting" 
+    [form]="schedulerForm" 
+    formKey="incr" 
+    activeKeyName="active" 
+    cronKeyName="pattern"/>
+  }
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Abbrechen</button>
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+  <div class="flex-space"></div>
+  <button mat-button color="primary"
+    [mat-dialog-close]="schedulerForm || null"
+    [disabled]="!schedulerForm.valid"
+    data-test="dlg-schedule">Aktualisieren</button>
+
+</mat-dialog-actions>

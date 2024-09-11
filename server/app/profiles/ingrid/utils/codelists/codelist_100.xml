@@ -1,0 +1,683 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>100</id>
+  <name>Raumbezugssystem</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3068</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 3068: DHDN / Soldner Berlin</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 3068: DHDN / Soldner Berlin</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4178</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 4178: Pulkovo 1942(83) / geographisch</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 4178: Pulkovo 1942(83) / geographisch</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4230</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 4230: ED50 / geographisch</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 4230: ED50 / geographisch</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4258</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 4258: ETRS89 / geographisch</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 4258: ETRS89 / geographisch</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4284</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 4284: Pulkovo 1942 / geographisch</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 4284: Pulkovo 1942 / geographisch</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4314</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 4314: DHDN / geographisch</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 4314: DHDN / geographisch</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>84</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>CRS 84: CRS 84 / mathematisch</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>CRS 84: CRS 84 / mathematisch</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3857</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 3857: WGS 84 / Pseudo-Mercator</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 3857: WGS 84 / Pseudo-Mercator</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4326</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 4326: WGS 84 / geographisch</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 4326: WGS 84 / geographisch</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4327</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 4327: WGS 84 / geographisch</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 4327: WGS 84 / geographisch</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>23031</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 23031: ED50 / UTM Zone 31N</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 23031: ED50 / UTM Zone 31N</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>23032</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 23032: ED50 / UTM Zone 32N</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 23032: ED50 / UTM Zone 32N</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>23033</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 23033: ED50 / UTM Zone 33N</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 23033: ED50 / UTM Zone 33N</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>25831</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 25831: ETRS89 / UTM Zone 31N</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 25831: ETRS89 / UTM Zone 31N</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>25832</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 25832: ETRS89 / UTM Zone 32N</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 25832: ETRS89 / UTM Zone 32N</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>25833</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 25833: ETRS89 / UTM Zone 33N</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 25833: ETRS89 / UTM Zone 33N</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3044</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 3044: ETRS89 / UTM Zone 32N (N-E)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 3044: ETRS89 / UTM Zone 32N (N-E)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3045</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 3045: ETRS89 / UTM Zone 33N (N-E)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 3045: ETRS89 / UTM Zone 33N (N-E)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4647</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 4647: ETRS89 / UTM Zone 32N (zE-N)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 4647: ETRS89 / UTM Zone 32N (zE-N)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5243</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 5243: ETRS89 / LCC Deutschland (E-N)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 5243: ETRS89 / LCC Germany (E-N)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5650</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 5650: ETRS89 / UTM Zone 33N (zE-N)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 5650: ETRS89 / UTM Zone 33N (zE-N)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>25834</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 25834: ETRS89 / UTM Zone 34N</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 25834: ETRS89 / UTM Zone 34N</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3034</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 3034: ETRS89 / LCC Europa</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 3034: ETRS89 / LCC Europe</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4839</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 4839: ETRS89 / LCC Deutschland (N-E)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 4839: ETRS89 / LCC Germany (N-E)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4937</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 4937: ETRS89 / geographisch 3D</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 4937: ETRS89 / geographic 3D</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3035</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 3035: ETRS89 / LAEA Europa</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 3035: ETRS89 / LAEA Europe</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>28462</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 28462: Pulkovo 1942 / Gauss-Krüger 2N</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 28462: Pulkovo 1942 / Gauss-Krüger 2N</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>28463</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 28463: Pulkovo 1942 / Gauss-Krüger 3N</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 28463: Pulkovo 1942 / Gauss-Krüger 3N</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>31466</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 31466: DHDN / Gauss-Krüger Zone 2</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 31466: DHDN / Gauss-Krüger Zone 2</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>31467</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 31467: DHDN / Gauss-Krüger Zone 3</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 31467: DHDN / Gauss-Krüger Zone 3</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>31468</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 31468: DHDN / Gauss-Krüger Zone 4</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 31468: DHDN / Gauss-Krüger Zone 4</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>31469</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 31469: DHDN / Gauss-Krüger Zone 5</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 31469: DHDN / Gauss-Krüger Zone 5</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5676</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 5676: DHDN / Gauss-Krüger Zone 2 (E-N)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 5676: DHDN / Gauss-Krüger Zone 2 (E-N)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5677</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 5677: DHDN / Gauss-Krüger Zone 3 (E-N)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 5677: DHDN / Gauss-Krüger Zone 3 (E-N)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5678</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 5678: DHDN / Gauss-Krüger Zone 4 (E-N)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 5678: DHDN / Gauss-Krüger Zone 4 (E-N)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5679</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 5679: DHDN / Gauss-Krüger Zone 5 (E-N)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 5679: DHDN / Gauss-Krüger Zone 5 (E-N)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>32631</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 32631: WGS 84 / UTM Zone 31N</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 32631: WGS 84 / UTM Zone 31N</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>32632</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 32632: WGS 84 / UTM Zone 32N</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 32632: WGS 84 / UTM Zone 32N</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>32633</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>EPSG 32633: WGS 84 / UTM Zone 33N</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>EPSG 32633: WGS 84 / UTM Zone 33N</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9000001</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_42/83 / GK_3</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_42/83 / GK_3</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9000002</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_DHDN / GK_3</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_DHDN / GK_3</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9000003</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_ETRS89 / UTM</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_ETRS89 / UTM</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9000005</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_PD/83 / GK_3</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_PD/83 / GK_3</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9000006</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_RD/83 / GK_3</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_RD/83 / GK_3</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9000007</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_DHDN / GK_3_RDN</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_DHDN / GK_3_RDN</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9000008</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_DHDN / GK_3_RP101</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_DHDN / GK_3_RP101</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9000009</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_DHDN / GK_3_RP180</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_DHDN / GK_3_RP180</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9000010</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_DHDN / GK_3_NW177</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_DHDN / GK_3_NW177</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9000011</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_DHDN / GK_3_HE100</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_DHDN / GK_3_HE100</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9000012</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_DHDN / GK_3_BW100</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_DHDN / GK_3_BW100</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9000013</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_PD/83 / GK_9-15, Bezug 12. Meridian (BY)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_PD/83 / GK_9-15, Bezug 12. Meridian (BY)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9000014</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>WGS84 / LCC Deutschland (E-N)</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>WGS84 / LCC Germany (E-N)</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

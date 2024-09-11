@@ -1,0 +1,46 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>7112</id>
+  <name>Datenqualität - Konzeptionelle Konsistenz - Art der Messung</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Number of invalid overlaps of surfaces</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Number of invalid overlaps of surfaces</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Conceptual Schema compliance</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Conceptual Schema compliance</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Compliance rate with the rules of the conceptual schema</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Compliance rate with the rules of the conceptual schema</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

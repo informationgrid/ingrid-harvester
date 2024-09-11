@@ -1,0 +1,133 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>6010</id>
+  <name>Zugriffsbeschränkungen</name>
+  <defaultEntry>1</defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Es gelten keine Zugriffsbeschränkungen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>no limitations to public access</string>
+        </entry>
+      </localisations>
+      <data>{"url":"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations","de":"Es gelten keine Zugriffsbeschränkungen", "en":"no limitations to public access"}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>aufgrund der Vertraulichkeit der Verfahren von Behörden</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>the confidentiality of the proceedings of public authorities</string>
+        </entry>
+      </localisations>
+      <data>{"url":"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1a","de":"Öffentlicher Zugriff beschränkt entsprechend Artikel 13(1)(a) der INSPIRE-Richtlinie: a) aufgrund nachteiliger Auswirkungen auf die Vertraulichkeit der Verfahren von Behörden","en":"public access limited according to Article 13(1)(a) of the INSPIRE Directive: a) due to adverse effects on the confidentiality of the proceedings of public authorities, where such confidentiality is provided for by law"}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>aufgrund internationaler Beziehungen, der öffentliche Sicherheit oder der Landesverteidigung</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>international relations, public security or national defence</string>
+        </entry>
+      </localisations>
+      <data>{"url":"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1b","de":"Öffentlicher Zugriff beschränkt entsprechend Artikel 13(1)(b) der INSPIRE-Richtlinie: b) aufgrund nachteiliger Auswirkungen auf internationale Beziehungen, die öffentliche Sicherheit oder die Landesverteidigung","en":"public access limited according to Article 13(1)(b) of the INSPIRE Directive: b) due to adverse effects on international relations, public security or national defence."}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>4</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>aufgrund laufender Gerichtsverfahren</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>the course of justice</string>
+        </entry>
+      </localisations>
+      <data>{"url":"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1c","de":"Öffentlicher Zugriff beschränkt entsprechend Artikel 13(1)(c) der INSPIRE-Richtlinie: c) aufgrund nachteiliger Auswirkungen auf laufende Gerichtsverfahren","en":"public access limited according to Article 13(1)(c) of the INSPIRE Directive: c) due to adverse effects on the course of justice"}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>aufgrund der Vertraulichkeit von Geschäfts- oder Betriebsinformationen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>the confidentiality of commercial or industrial information</string>
+        </entry>
+      </localisations>
+      <data>{"url":"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1d","de":"Öffentlicher Zugriff beschränkt entsprechend Artikel 13(1)(d) der INSPIRE-Richtlinie: d) aufgrund nachteiliger Auswirkungen auf die Vertraulichkeit von Geschäfts- oder Betriebsinformationen","en":"public access limited according to Article 13(1)(d) of the INSPIRE Directive: d) due to adverse effects on the confidentiality of commercial or industrial information"}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>6</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>aufgrund der Rechte des geistigen Eigentums</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>intellectual property rights</string>
+        </entry>
+      </localisations>
+      <data>{"url":"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1e","de":"Öffentlicher Zugriff beschränkt entsprechend Artikel 13(1)(e) der INSPIRE-Richtlinie: e) aufgrund nachteiliger Auswirkungen auf die Rechte des geistigen Eigentums","en":"public access limited according to Article 13(1)(e) of the INSPIRE Directive: e) due to adverse effects on intellectual property rights"}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>7</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>aufgrund der Vertraulichkeit personenbezogener Daten</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>the confidentiality of personal data and/or files</string>
+        </entry>
+      </localisations>
+      <data>{"url":"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1f","de":"Öffentlicher Zugriff beschränkt entsprechend Artikel 13(1)(f) der INSPIRE-Richtlinie: f) aufgrund nachteiliger Auswirkungen auf die Vertraulichkeit personenbezogener Daten","en":"public access limited according to Article 13(1)(f) of the INSPIRE Directive: f) due to adverse effects on the confidentiality of personal data"}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>8</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>aufgrund des Schutzes einer Person</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>the interests or protection of any person</string>
+        </entry>
+      </localisations>
+      <data>{"url":"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1g","de":"Öffentlicher Zugriff beschränkt entsprechend Artikel 13(1)(g) der INSPIRE-Richtlinie: g) aufgrund nachteiliger Auswirkungen auf den Schutz einer Person","en":"public access limited according to Article 13(1)(g) of the INSPIRE Directive: g) due to adverse effects on the interests or protection of any person"}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>9</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>aufgrund des Schutzes von Umweltbereichen</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>the protection of the environment</string>
+        </entry>
+      </localisations>
+      <data>{"url":"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1h","de":"Öffentlicher Zugriff beschränkt entsprechend Artikel 13(1)(h) der INSPIRE-Richtlinie: h) aufgrund nachteiliger Auswirkungen auf den Schutz von Umweltbereichen","en":"public access limited according to Article 13(1)(h) of the INSPIRE Directive: h) due to adverse effects on the protection of the environment"}</data>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

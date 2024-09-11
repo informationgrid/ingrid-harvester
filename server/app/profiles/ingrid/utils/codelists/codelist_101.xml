@@ -1,0 +1,176 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>101</id>
+  <name>Vertikaldatum</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5105</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Baltic Sea</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Baltic Sea</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>5129</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>European Vertical Reference Frame 2000</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>European Vertical Reference Frame 2000</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>7837</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_DHHN2016_NH</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_DHHN2016_NH</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>900002</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_AMST / NH</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_AMST / NH</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>900003</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_AMST / NOH</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_AMST / NOH</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>900004</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_KRON / NH</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_KRON / NH</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>900005</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_DHHN12_NOH</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_DHHN12_NOH</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>900006</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_DHHN12_RP120</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_DHHN12_RP120</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>900007</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_DHHN85_NOH</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_DHHN85_NOH</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>900008</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>DE_DHHN92_NH</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>DE_DHHN92_NH</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>900009</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Horizont 74_NOH</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Horizont 74_NOH</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>900010</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Höhe über GRS80 Ellipsoid</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Höhe über GRS80 Ellipsoid</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>900011</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Mittelwasser</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Mean Sea Level</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

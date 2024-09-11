@@ -1,0 +1,58 @@
+<de.ingrid.codelists.model.CodeList>
+  <id>5300</id>
+  <name>Objektklasse 6 - Art des Dienstes</name>
+  <defaultEntry></defaultEntry>
+  <entries>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>1</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Informationssystem</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>information system</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Information System</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>2</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>nicht geographischer Dienst</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>non geographic service</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Non Geographic Service</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+    <de.ingrid.codelists.model.CodeListEntry>
+      <id>3</id>
+      <localisations>
+        <entry>
+          <string>de</string>
+          <string>Anwendung</string>
+        </entry>
+        <entry>
+          <string>iso</string>
+          <string>application</string>
+        </entry>
+        <entry>
+          <string>en</string>
+          <string>Application</string>
+        </entry>
+      </localisations>
+    </de.ingrid.codelists.model.CodeListEntry>
+  </entries>
+</de.ingrid.codelists.model.CodeList>

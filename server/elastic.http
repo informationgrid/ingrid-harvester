@@ -1,0 +1,135 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection) or
+# paste cURL into the file and request will be converted to HTTP Request format.
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+
+### Send POST request with json body
+POST http://localhost:9200/mcloud/_search
+Content-Type: application/json
+
+{
+  "size": 1,
+  "aggregations": {
+    "tags": {
+      "terms": {
+        "field": "extras.subgroups"
+      }
+    }
+  }
+}
+
+### Send POST request with json body
+POST http://localhost:9200/_search
+Content-Type: application/json
+
+{
+  "size": 0,
+  "indices": ["mcloud"]
+}
+
+###
+POST http://localhost:9200/mcloud/_search
+Content-Type: application/json
+
+{
+  "size": 0,
+  "aggregations": {
+    "tags": {
+      "terms": {
+        "field": "extras.generated_id"
+      }
+    }
+  }
+}
+
+###
+POST http://localhost:9200/mcloud/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "term": {
+      "extras.generated_id": "haltestellen"
+    }
+  }
+}
+
+###
+POST http://localhost:9200/mcloud/_search
+Content-Type: application/json
+
+{
+  "size": 0,
+  "aggregations": {
+    "duplicates": {
+      "terms": {
+        "field": "title.raw",
+        "min_doc_count": 2
+      },
+      "aggregations": {
+        "duplicates": {
+          "top_hits": {
+            "sort": [
+              {
+                "modified": {
+                  "order": "desc"
+                }
+              }
+            ],
+            "_source": {
+              "include": [
+                "title",
+                "distribution",
+                "modified"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+###
+POST http://localhost:9200/test*/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "title": {
+              "query": "Mein Dokument",
+              "minimum_should_match": "2<1%"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+###
+POST http://localhost:9200/test*/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "more_like_this": {
+      "fields": [
+        "title"
+      ],
+      "like": "Mein Dokument",
+      "min_doc_freq": 1,
+      "min_term_freq": 1,
+      "max_query_terms": 12
+    }
+  }
+}
+
+###
