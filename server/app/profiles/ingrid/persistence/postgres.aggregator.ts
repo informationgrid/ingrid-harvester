@@ -26,8 +26,6 @@ import { EsOperation } from '../../../persistence/elastic.utils';
 import { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator';
 import {IngridIndexDocument} from "../model/index.document";
 import {createEsId} from "../ingrid.utils";
-import {DiplanungIndexDocument} from "../../diplanung/model/index.document";
-import {Distribution} from "../../../model/distribution";
 
 export class PostgresAggregator implements AbstractPostgresAggregator<IngridIndexDocument> {
 
