@@ -341,7 +341,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_serv() {
-
+        let serviceType = CswMapper.select("./srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName", this.baseMapper.idInfo, true)?.textContent;
+        if(this.hasValue(serviceType))
+            return {
+                "type": serviceType
+            }
+        return undefined;
     }
 
     getT011_obj_serv_version() {
