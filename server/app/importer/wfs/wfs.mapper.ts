@@ -163,10 +163,14 @@ export abstract class WfsMapper extends BaseMapper {
 
     abstract getPluPlanTypeFine(): string;
 
+    // Source of mapping -> https://www.dev.diplanung.de/DefaultCollection/EfA%20DiPlanung/_workitems/edit/20548
     getPluProcedureState(): PluProcedureState {
         switch (this.getPluPlanState()) {
-            case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
+            case PluPlanState.SIMULIERT: return PluProcedureState.SIMULIERT;
             case PluPlanState.IN_AUFST: return PluProcedureState.LAUFEND;
+            case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
+            case PluPlanState.GANZ_AUFGEHOBEN: return PluProcedureState.GANZ_AUFGEHOBEN;
+            case PluPlanState.EINGESTELLT: return PluProcedureState.EINGESTELLT;
             default: return PluProcedureState.UNBEKANNT;
         }
     }

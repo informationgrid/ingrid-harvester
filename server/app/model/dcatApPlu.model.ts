@@ -76,9 +76,11 @@ export enum PluProcedureType {
  * Codeliste für übergeordneten Status eines Verfahrens (5.2)
  */
 export enum PluProcedureState {
-    GEPLANT = 'planned',            // geplant
+    SIMULIERT = 'planned',            // geplant
     LAUFEND = 'ongoing',            // laufend
     ABGESCHLOSSEN = 'completed',    // abgeschlossen
+    GANZ_AUFGEHOBEN = 'completelyCanceled', // ganz aufgehoben
+    EINGESTELLT = 'discontinued', // eingestellt
     UNBEKANNT = 'unknown'
 }
 
@@ -86,8 +88,11 @@ export enum PluProcedureState {
  * Codeliste für Status eines Plans (5.3)
  */
 export enum PluPlanState {
+    SIMULIERT = 'planned', // simmuliert
     IN_AUFST = 'inPreparation', // in Aufstellung
     FESTGES = 'fixed',          // festgestellt
+    GANZ_AUFGEHOBEN = 'completelyReversed', // ganz aufgehoben
+    EINGESTELLT = 'discontinued', // eingestellt
     UNBEKANNT = 'unknown'
 }
 

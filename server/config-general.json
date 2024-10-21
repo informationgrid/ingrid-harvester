@@ -5,8 +5,8 @@
     "host": "localhost",
     "port": 5432,
     "database": "metadaten",
-    "user": "admin",
-    "password": "admin",
+    "user": "ogcrecords",
+    "password": "ogcrecords",
     "defaultCatalogIdentifier": "harvester"
   },
   "elasticsearch": {
@@ -21,6 +21,7 @@
     "numberOfShards": 1,
     "numberOfReplicas": 0
   },
+  "mappingLogLevel": "warn",
   "proxy": null,
   "allowAllUnauthorizedSSL": false,
   "portalUrl": "",
@@ -39,6 +40,9 @@
       "host": "localhost",
       "port": 465,
       "secure": false,
+      "tls": {
+        "rejectUnauthorized": true
+      },
       "auth": {
         "user": "",
         "pass": ""

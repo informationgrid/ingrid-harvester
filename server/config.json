@@ -5,6 +5,7 @@
     "type": "CSW",
     "maxRecords": 200,
     "startPosition": 1,
+    "catalogId": "harvester",
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
@@ -43,7 +44,13 @@
         "pattern": "0 2 * * 0",
         "active": true
       }
-    }
+    },
+    "iPlugId": null,
+    "partner": null,
+    "provider": null,
+    "datatype": null,
+    "dataSourceName": null,
+    "boost": null
   },
   {
     "index": "wfs_syn_hh_xplanung",
@@ -71,7 +78,7 @@
     "featuresFilter": null,
     "version": "2.0.0",
     "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
-    "disable": true,
+    "disable": false,
     "cron": {
       "full": {
         "pattern": "9 2 * * *",
@@ -611,6 +618,7 @@
     "type": "OAI",
     "maxRecords": 200,
     "startPosition": 1,
+    "catalogId": "harvester",
     "customCode": null,
     "defaultMcloudSubgroup": null,
     "defaultDCATCategory": null,
@@ -641,15 +649,24 @@
     "priority": null,
     "type": "KLD",
     "maxRecords": null,
+    "startPosition": 0,
+    "catalogId": "harvester",
+    "customCode": "",
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
     "rules": {
+      "containsDocumentsWithData": false
     },
-    "maxConcurrent": 1,
-    "maxConcurrentTimespan": 250,
     "isIncremental": true,
+    "maxConcurrent": 1,
+    "skipUrlCheckOnHarvest": false,
     "timeout": 60000,
     "sourceURL": "https://www.kuladig.de/api/public/",
+    "maxConcurrentTimespan": 250,
     "id": 23,
     "description": "KuLaDig (Kultur. Landschaft. Digital.)"
   }

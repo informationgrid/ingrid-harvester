@@ -75,33 +75,36 @@
             <mat-label>Planstatus</mat-label>
             <mat-select formControlName="pluPlanState" required>
               <mat-option value="unknown">unbekannt</mat-option>
+              <mat-option value="discontinued">eingestellt</mat-option>
+              <mat-option value="completelyReversed">ganz aufgehoben</mat-option>
               <mat-option value="fixed">festgestellt</mat-option>
               <mat-option value="inPreparation">in Aufstellung</mat-option>
+              <mat-option value="planned">simuliert</mat-option>
             </mat-select>
           </mat-form-field>
         }
       </div>
     </mat-card-content>
   </mat-card>
-  
+
   <mat-card>
     <mat-card-header>
       <mat-card-title>Filter und Regeln</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <ng-container class="flex-col" [ngTemplateOutlet]="rulesTemplate"></ng-container>
-      
+
       <div class="flex-col">
         <mat-form-field>
           <mat-label>Record Filter</mat-label>
           <textarea matInput rows="6" class="code" formControlName="recordFilter"></textarea>
         </mat-form-field>
-        
-        <app-chip-list 
+
+        <app-chip-list
         [list]="model.eitherKeywords"
         placeholder="Either keywords"
-        (update)="model.eitherKeywords = $event"></app-chip-list>  
-        
+        (update)="model.eitherKeywords = $event"></app-chip-list>
+
       </div>
     </mat-card-content>
   </mat-card>
