@@ -142,6 +142,8 @@
       "type": "date"
     },
     "process_steps": {
+      "type": "nested",
+      "dynamic": false,
       "properties": {
         "distributions": {
           "properties": {
