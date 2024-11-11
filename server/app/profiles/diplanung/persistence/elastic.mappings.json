@@ -136,7 +136,14 @@
       "type": "keyword"
     },
     "procedure_period": {
-      "type": "date_range"
+      "properties": {
+        "gte": {
+          "type": "date"
+        },
+        "lte": {
+          "type": "date"
+        }
+      }
     },
     "procedure_start_date": {
       "type": "date"
@@ -177,7 +184,14 @@
               "type": "long"
             },
             "temporal": {
-              "type": "date_range"
+              "properties": {
+                "gte": {
+                  "type": "date"
+                },
+                "lte": {
+                  "type": "date"
+                }
+              }
             },
             "pluDocType": {
               "type": "keyword"
@@ -197,7 +211,14 @@
           "type": "keyword"
         },
         "temporal": {
-          "type": "date_range"
+          "properties": {
+            "gte": {
+              "type": "date"
+            },
+            "lte": {
+              "type": "date"
+            }
+          }
         },
         "title": {
           "type": "text",
@@ -374,7 +395,14 @@
           "type": "long"
         },
         "temporal": {
-          "type": "date_range"
+          "properties": {
+            "gte": {
+              "type": "date"
+            },
+            "lte": {
+              "type": "date"
+            }
+          }
         },
         "pluDocType": {
           "type": "keyword"
@@ -388,7 +416,14 @@
       }
     },
     "development_freeze_period": {
-      "type": "date_range"
+      "properties": {
+        "gte": {
+          "type": "date"
+        },
+        "lte": {
+          "type": "date"
+        }
+      }
     },
     "centroid": {
       "type": "geo_point"
