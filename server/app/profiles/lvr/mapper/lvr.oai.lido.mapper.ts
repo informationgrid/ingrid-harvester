@@ -139,8 +139,38 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         return licenses;
     }
 
+    // TODO
     getVector(): object {
         return null;
+    }
+
+    /**
+     * See https://redmine.wemove.com/issues/5010
+     */
+    getSource(): string {
+        switch (this.baseMapper.getMetadataSource().source_base) {
+            case 'https://oamh-lvr.digicult-verbund.de/cv/sprache_lvr_13tHztt9gZr':
+                return 'digiCULT (Sprache)';
+            case 'https://oamh-lvr.digicult-verbund.de/cv/hgrojzOf7tF53kH0a0j':
+                return 'digiCULT (Alltagskulturen)';
+            case 'https://oamh-lvr.digicult-verbund.de/cv/hH0a0jrojzOgtF5j7u':
+                let conceptIdNodes = OaiMapper.select('./lido:descriptiveMetadata/lido:objectClassificationWrap/lido:classificationWrap/lido:classification/lido:conceptID', this.baseMapper.record);
+                let conceptIds = conceptIdNodes?.map(conceptIdNode => conceptIdNode.textContent) ?? [];
+                let relationIds = this.getRelations()?.map(relation => relation.id) ?? [];
+                if (relationIds.includes('DE-2086/lido/62b99d31aff930.75966699')
+                        || conceptIds.includes('http://digicult.vocnet.org/portal/p0330')) {
+                    return 'digiCULT (Preußen)';
+                }
+                else if (relationIds.includes('DE-2086/lido/57a2eb58249101.94114332')
+                    || conceptIds.includes('http://digicult.vocnet.org/portal/p0326')) {
+                    return 'digiCULT (Geschichte)';
+                }
+                // console.log("NO PORTAL: " + this.getIdentifier());
+                // TODO filter out?
+                return 'digiCULT';
+            default:
+                return undefined;
+        }
     }
 
     getIssued(): Date {
