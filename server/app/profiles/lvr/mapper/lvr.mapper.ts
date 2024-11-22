@@ -87,6 +87,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
                 relations: this.getRelations(),
                 licenses: this.getLicense(),
                 vector: this.getVector(),
+                source: this.getSource()
             },
             extras: {
                 metadata: {
@@ -156,6 +157,8 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
     abstract getLicense(): License[];
 
     abstract getVector(): object;
+
+    abstract getSource(): string;
 
     abstract getIssued(): Date;
 
