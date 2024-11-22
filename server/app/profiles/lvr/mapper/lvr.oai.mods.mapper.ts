@@ -87,6 +87,12 @@ export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {
         return null;
     }
 
+    getSource(): string {
+        // TODO
+        let portal = undefined;
+        return portal;
+    }
+
     getIssued(): Date {
         let issued = null;
         return issued;

@@ -312,6 +312,9 @@
         },
         "vector": {
           "type": "object"
+        },
+        "source": {
+          "type": "keyword"
         }
       }
     },

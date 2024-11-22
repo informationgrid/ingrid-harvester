@@ -52,7 +52,7 @@ export class OaiMapper extends BaseMapper {
     log = getLogger();
 
     private readonly header: Element;
-    private readonly record: Element;
+    public readonly record: Element;
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
