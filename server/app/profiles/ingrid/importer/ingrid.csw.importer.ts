@@ -56,14 +56,17 @@ export class IngridCswImporter extends CswImporter {
             entry.plugdescription.dataType = this.settings.datatype?.split(",");
             entry.plugdescription.partner = this.settings.partner?.split(",");
 
-            this.elastic.addOperationChunksToBulk([{
+            await this.elastic.addOperationChunksToBulk([{
                 _index: "ingrid_meta",
                 document: entry,
                 _id: meta.hits?.hits[0]._id,
                 operation: "update",
                 _type: "_doc"
-            }]).then(() => this.elastic.sendBulkOperations()).then(() => this.elastic.flush());
-        } else {
+            }]);
+            await this.elastic.sendBulkOperations();
+            await this.elastic.flush();
+        }
+        else {
             let entry = {
                 "plugId": this.settings.iPlugId,
                 "indexId": "harvester-index",
@@ -82,13 +85,15 @@ export class IngridCswImporter extends CswImporter {
                 },
                 "active": false
             }
-            this.elastic.addOperationChunksToBulk([{
+            await this.elastic.addOperationChunksToBulk([{
                 _index: "ingrid_meta",
                 document: entry,
                 _id: undefined,
                 operation: "index",
                 _type: "_doc"
-            }]).then(() => this.elastic.sendBulkOperations()).then(() => this.elastic.flush());
+            }]);
+            await this.elastic.sendBulkOperations();
+            await this.elastic.flush();
         }
     }
 

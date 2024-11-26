@@ -188,6 +188,10 @@ export abstract class ElasticsearchUtils {
 
     abstract ping(): Promise<boolean>;
 
+    async close(): Promise<void> {
+        await this.client.close();
+    };
+
     // abstract health(status?: 'green' | 'GREEN' | 'yellow' | 'YELLOW' | 'red' | 'RED'): Promise<any>;
     async health(status: 'green' | 'yellow' | 'red' = 'yellow'): Promise<any> {
         return (<{ health: Function }>this.client.cluster).health({ wait_for_status: status });

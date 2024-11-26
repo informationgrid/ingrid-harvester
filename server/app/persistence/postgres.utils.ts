@@ -239,7 +239,7 @@ export class PostgresUtils extends DatabaseUtils {
             await elastic.addOperationChunksToBulk(operationChunks);
         }
         // send remainder of bulk data
-        elastic.sendBulkOperations(true);
+        elastic.sendBulkOperations(false);
         log.debug('Connection released');
         client.release();
         let stop = Date.now();
