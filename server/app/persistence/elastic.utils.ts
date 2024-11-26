@@ -182,6 +182,8 @@ export abstract class ElasticsearchUtils {
 
     abstract index(index: string, document: object): Promise<void>;
 
+    abstract update(index: string, id: string, document: object): Promise<void>;
+
     abstract deleteByQuery(days: number): Promise<void>;
 
     abstract deleteDocument(index: string, id: string): Promise<void>;

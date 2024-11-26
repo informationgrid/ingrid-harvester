@@ -486,6 +486,13 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
     async index(index: string, document: object) {
         index = this.addPrefixIfNotExists(index) as string;
         await this.client.index({ index, document });
+        await this.flush();
+    }
+
+    async update(index: string, id: string, document: object) {
+        index = this.addPrefixIfNotExists(index) as string;
+        await this.client.update({ index, id, doc: document });
+        await this.flush();
     }
 
     async deleteByQuery(days: number) {
