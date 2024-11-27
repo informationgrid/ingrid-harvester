@@ -191,14 +191,21 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         };
         let temporal = this.baseMapper.getTemporal();
         if(temporal) {
-            if (this.hasValue(temporal[0].gte?.toString()) && this.hasValue(temporal[0].lte?.toString())){
+            let hasStart = this.hasValue(temporal[0].gte?.toString());
+            let hasEnd = this.hasValue(temporal[0].lte?.toString());
+            if (hasStart && hasEnd){
                 if (temporal[0].gte.toString() == temporal[0].lte.toString()) result.time_type = "am"
                 else result.time_type = "von"
             }
-            else if (this.hasValue(temporal[0].gte?.toString()) && !this.hasValue(temporal[0].lte?.toString())){
-                result.time_type = "seit"
+            else if (hasStart && !hasEnd){
+                if (temporal[0].lte === undefined) {
+                    result.time_type = "seit";
+                }
+                else if (temporal[0].lte === null) {
+                    result.time_type = "seitX";
+                }
             }
-            else if (!this.hasValue(temporal[0].gte?.toString()) && this.hasValue(temporal[0].lte?.toString())){
+            else if (!hasStart && hasEnd){
                 result.time_type = "bis"
             }
             result.time_from = temporal[0].gte ? this.formatDate(temporal[0].gte) : "00000000"
