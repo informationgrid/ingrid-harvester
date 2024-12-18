@@ -85,11 +85,11 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
 
     // TODO
     getTemporal(): Temporal[] {
-        let tepmorals = this.baseMapper.getSubjects().map(subject => ({
+        let temporals = this.baseMapper.getSubjects().map(subject => ({
             date_range: subject.period
             // date_type: ???
         }));
-        return tepmorals;
+        return temporals;
     }
 
     getKeywords(): Keyword[] {
@@ -114,9 +114,18 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         return null;
     }
 
-    // TODO
     getMedia(): Media[] {
-        return null;
+        let media = [];
+        for (let resource of this.baseMapper.getResources()) {
+            for (let link of resource.links) {
+                media.push({
+                    type: link.format,
+                    url: link.url,
+                    description: resource.description
+                });
+            }
+        }
+        return media;
     }
 
     getRelations(): Relation[] {
