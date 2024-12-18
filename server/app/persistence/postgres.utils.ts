@@ -241,6 +241,7 @@ export class PostgresUtils extends DatabaseUtils {
         // send remainder of bulk data
         elastic.sendBulkOperations(false);
         log.debug('Connection released');
+        cursor.close();
         client.release();
         let stop = Date.now();
         log.info(`Processed ${numDatasets} datasets and ${numBuckets} buckets`);
