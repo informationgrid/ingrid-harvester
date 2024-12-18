@@ -160,7 +160,9 @@ export class CswImporter extends Importer {
                     throw new Error();
                 }
 
-                await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
+                if (!this.settings.isIncremental) {
+                    await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
+                }
                 await this.database.commitTransaction();
                 await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
                 await this.handlePostHarvesting();
