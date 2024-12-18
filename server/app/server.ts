@@ -143,6 +143,7 @@ export class Server {
         let profile = ProfileFactoryLoader.get();
         let indexConfig: IndexConfiguration = ConfigService.getGeneralSettings().elasticsearch;
         let elastic = ElasticsearchFactory.getElasticUtils(indexConfig, new Summary({ index: '', isIncremental: false, maxConcurrent: 0, type: '' }));
+        await profile.configure(elastic);
         await elastic.prepareIndex(profile.getIndexMappings(), profile.getIndexSettings(), true);
         await elastic.addAlias(indexConfig.prefix + indexConfig.index, indexConfig.alias);
         log.info('Server initialized');

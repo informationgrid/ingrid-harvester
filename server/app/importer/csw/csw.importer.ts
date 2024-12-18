@@ -163,9 +163,8 @@ export class CswImporter extends Importer {
                 await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
                 await this.database.commitTransaction();
                 await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
+                await this.handlePostHarvesting();
                 observer.next(ImportResult.complete(this.summary));
-
-                await this.handlePostHarvesting()
             }
             catch (err) {
                 if (err.message) {
@@ -564,6 +563,6 @@ export class CswImporter extends Importer {
         return this.summary;
     }
 
-    protected handlePostHarvesting() {
+    protected async handlePostHarvesting() {
     }
 }

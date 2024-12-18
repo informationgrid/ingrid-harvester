@@ -25,6 +25,7 @@ import { indexMappings } from './persistence/elastic.mappings';
 import { indexSettings } from './persistence/elastic.settings';
 import { ingridCswMapper } from './mapper/ingrid.csw.mapper';
 import { CswMapper } from '../../importer/csw/csw.mapper';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils';
 import { ElasticQueries } from './persistence/elastic.queries';
 import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { ImporterFactory } from '../../importer/importer.factory';
@@ -38,6 +39,15 @@ import { ProfileFactory } from '../profile.factory';
 
 export class ingridFactory extends ProfileFactory<CswMapper> {
 
+    async configure(elastic: ElasticsearchUtils) {
+        const ingridMeta = 'ingrid_meta';
+        let isIngridMeta = await elastic.isIndexPresent(ingridMeta);
+        if (!isIngridMeta) {
+            const mappings = require('./persistence/ingrid-meta-mapping.json');
+            const settings = require('./persistence/ingrid-meta-settings.json');
+            await elastic.prepareIndexWithName(ingridMeta, mappings, settings);
+        }
+    }
 
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();

@@ -182,11 +182,17 @@ export abstract class ElasticsearchUtils {
 
     abstract index(index: string, document: object): Promise<void>;
 
+    abstract update(index: string, id: string, document: object): Promise<void>;
+
     abstract deleteByQuery(days: number): Promise<void>;
 
     abstract deleteDocument(index: string, id: string): Promise<void>;
 
     abstract ping(): Promise<boolean>;
+
+    async close(): Promise<void> {
+        await this.client.close();
+    };
 
     // abstract health(status?: 'green' | 'GREEN' | 'yellow' | 'YELLOW' | 'red' | 'RED'): Promise<any>;
     async health(status: 'green' | 'yellow' | 'red' = 'yellow'): Promise<any> {

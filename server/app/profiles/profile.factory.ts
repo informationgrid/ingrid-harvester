@@ -22,6 +22,7 @@
  */
 
 import { BaseMapper } from '../importer/base.mapper';
+import { ElasticsearchUtils } from '../persistence/elastic.utils';
 import { ElasticQueries } from '../persistence/elastic.queries';
 import { ImporterFactory } from '../importer/importer.factory';
 import { IndexDocument } from '../model/index.document';
@@ -31,6 +32,11 @@ import { PostgresAggregator } from '../persistence/postgres.aggregator';
 import { PostgresQueries } from '../persistence/postgres.queries';
 
 export abstract class ProfileFactory<M extends BaseMapper> {
+
+    /**
+     * Set up profile specific environment.
+     */
+    async configure(elastic: ElasticsearchUtils) {};
 
     abstract getElasticQueries(): ElasticQueries;
     abstract getImporterFactory(): ImporterFactory;
