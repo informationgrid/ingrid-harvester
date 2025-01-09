@@ -103,6 +103,7 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
             },
             issued: this.getIssued(),
             modified: this.getModifiedDate(),
+            procedure_import_date: this.getProcedureImportDate(),
         };
 
         result.extras.metadata.merged_from.push(createEsId(result));
@@ -172,6 +173,8 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
     abstract getIssued(): Date;
 
     abstract getModifiedDate(): Date;
+
+    abstract getProcedureImportDate(): Date;
 
     getHierarchyLevel() {
         return undefined;

@@ -165,6 +165,10 @@ export class FisWfsMapper extends WfsMapper {
         return undefined;
     }
 
+    getProcedureImportDate(): Date {
+        return undefined;
+    }
+
     private getPeriod(startXpath: string, endXpath: string): DateRange {
         let period: DateRange;
         let start = this.getTextContent(startXpath);

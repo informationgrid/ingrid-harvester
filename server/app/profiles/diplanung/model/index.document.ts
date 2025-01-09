@@ -62,6 +62,7 @@ export type DiplanungIndexDocument = IndexDocument & {
     // optional
     issued: Date,
     modified: Date,
+    procedure_import_date: Date,
     relation: string,
     notification: string,
     procedure_start_date: Date, // deprecated

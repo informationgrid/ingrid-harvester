@@ -184,6 +184,10 @@ export class XplanWfsMapper extends WfsMapper {
         return MiscUtils.normalizeDateTime(issued);
     }
 
+    getProcedureImportDate(): Date {
+        return undefined;
+    }
+
     getHarvestingDate(): Date {
         return new Date(Date.now());
     }

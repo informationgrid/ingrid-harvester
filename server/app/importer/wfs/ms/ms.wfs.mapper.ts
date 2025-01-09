@@ -170,6 +170,10 @@ export class MsWfsMapper extends WfsMapper {
         return MiscUtils.normalizeDateTime(modified);
     }
 
+    getProcedureImportDate(): Date {
+        return undefined;
+    }
+
     getHarvestingDate(): Date {
         return new Date(Date.now());
     }
