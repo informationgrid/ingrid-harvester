@@ -62,9 +62,9 @@ export type DiplanungIndexDocument = IndexDocument & {
     // optional
     issued: Date,
     modified: Date,
-    procedure_import_date: Date,
     relation: string,
     notification: string,
+    procedure_import_date: Date,
     procedure_start_date: Date, // deprecated
     development_freeze_period: DateRange,
     maintainers: Person[] | Organization[],
@@ -73,7 +73,7 @@ export type DiplanungIndexDocument = IndexDocument & {
     spatial_text: string,
     // additional information and metadata
     catalog: Catalog,
-    plan_or_procedure_start_date: Date,
+    plan_or_procedure_start_date: Date, // deprecated
     extras: {
         hierarchy_level: string
     }

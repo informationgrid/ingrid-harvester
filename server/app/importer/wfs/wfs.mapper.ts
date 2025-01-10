@@ -130,7 +130,9 @@ export abstract class WfsMapper extends BaseMapper {
         // return new Date(this.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.feature, true).textContent);
     }
 
-    abstract getProcedureImportDate(): Date;
+    getProcedureImportDate(): Date {
+        return undefined;
+    }
 
     abstract getBoundingBox(): Geometry;
 
