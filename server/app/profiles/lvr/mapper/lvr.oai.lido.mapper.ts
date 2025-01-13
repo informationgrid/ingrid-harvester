@@ -127,33 +127,48 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
 
         let media = [];
         for (let resource of this.baseMapper.getResources()) {
-            if (resource.type == 'digitales Bild') {
-                let fullURL = findFirstURL(resource.links, ['image_master', 'image_overview', 'image_thumbnail', 'http://terminology.lido-schema.org/resourceRepresentation_type/provided_image']);
-                let thumbnailURL = findFirstURL(resource.links, ['image_overview', 'image_thumbnail', 'image_master', 'http://terminology.lido-schema.org/resourceRepresentation_type/provided_image']);
-                media.push({
-                    type: 'image',
-                    url: fullURL,
-                    thumbnail: thumbnailURL,
-                    description: resource.description
-                });
-            }
-            else if (resource.type == 'Video') {
-                let fullURL = findFirstURL(resource.links, ['http://terminology.lido-schema.org/resourceRepresentation_type/provided_video']);
-                let thumbnailURL = findFirstURL(resource.links, ['image_overview', 'image_thumbnail', 'image_master']);
-                media.push({
-                    type: 'video',
-                    url: fullURL,
-                    thumbnail: thumbnailURL,
-                    description: resource.description
-                });
-            }
-            else {
-                for (let link of resource.links) {
+            switch (resource.type) {
+                case 'digitales Bild': {
+                    let fullURL = findFirstURL(resource.links, ['image_master', 'image_overview', 'image_thumbnail', 'http://terminology.lido-schema.org/resourceRepresentation_type/provided_image']);
+                    let thumbnailURL = findFirstURL(resource.links, ['image_overview', 'image_thumbnail', 'image_master', 'http://terminology.lido-schema.org/resourceRepresentation_type/provided_image']);
                     media.push({
-                        type: link.format,
-                        url: link.url,
+                        type: 'image',
+                        url: fullURL,
+                        thumbnail: thumbnailURL,
                         description: resource.description
                     });
+                    break;
+                }
+                case 'Video': {
+                    let fullURL = findFirstURL(resource.links, ['http://terminology.lido-schema.org/resourceRepresentation_type/provided_video']);
+                    let thumbnailURL = findFirstURL(resource.links, ['image_overview', 'image_thumbnail', 'image_master']);
+                    media.push({
+                        type: 'video',
+                        url: fullURL,
+                        thumbnail: thumbnailURL,
+                        description: resource.description
+                    });
+                    break;
+                }
+                case 'Text': {
+                    let fullURL = resource.links.find(link => link.format == 'http://terminology.lido-schema.org/lido00481')?.url ?? '';
+                    let thumbnailURL = findFirstURL(resource.links, ['image_overview', 'image_thumbnail']);
+                    media.push({
+                        type: 'document',
+                        url: fullURL,
+                        thumbnail: thumbnailURL,
+                        description: resource.description
+                    });
+                    break;
+                }
+                default: {
+                    for (let link of resource.links) {
+                        media.push({
+                            type: link.format,
+                            url: link.url,
+                            description: resource.description
+                        });
+                    }
                 }
             }
         }
