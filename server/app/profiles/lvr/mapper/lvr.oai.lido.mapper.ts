@@ -129,7 +129,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         for (let resource of this.baseMapper.getResources()) {
             if (resource.type == 'digitales Bild') {
                 let fullURL = findFirstURL(resource.links, ['image_master', 'image_overview', 'image_thumbnail']);
-                let thumbnailURL = findFirstURL(resource.links, ['image_thumbnail', 'image_overview', 'image_master']);
+                let thumbnailURL = findFirstURL(resource.links, ['image_overview', 'image_thumbnail', 'image_master']);
                 media.push({
                     type: 'image',
                     url: fullURL,
