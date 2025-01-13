@@ -21,13 +21,14 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
-import 'dayjs/locale/de';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import { Keyword, Media, Person, Relation } from '../model/index.document';
 import { License } from '@shared/license.model';
-import { LvrMapper } from './lvr.mapper';
+import 'dayjs/locale/de';
+import { Link } from '../../../importer/oai/lido/lido.model';
 import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
+import { GeometryInformation, Temporal } from '../../../model/index.document';
+import * as GeoJsonUtils from '../../../utils/geojson.utils';
+import { Keyword, Media, Person, Relation } from '../model/index.document';
+import { LvrMapper } from './lvr.mapper';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
@@ -115,14 +116,35 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
     }
 
     getMedia(): Media[] {
+
+        const findFirstURL = (links: Link[], attributes: string[]) => {
+            let url = '';
+            for (let i = 0; i < attributes.length && !url; i++) {
+                url = links.find(link => link.format == attributes[i])?.url ?? '';
+            }
+            return url;
+        };
+
         let media = [];
         for (let resource of this.baseMapper.getResources()) {
-            for (let link of resource.links) {
+            if (resource.type == 'digitales Bild') {
+                let fullURL = findFirstURL(resource.links, ['image_master', 'image_overview', 'image_thumbnail']);
+                let thumbnailURL = findFirstURL(resource.links, ['image_thumbnail', 'image_overview', 'image_master']);
                 media.push({
-                    type: link.format,
-                    url: link.url,
+                    type: 'image',
+                    url: fullURL,
+                    thumbnail: thumbnailURL,
                     description: resource.description
                 });
+            }
+            else {
+                for (let link of resource.links) {
+                    media.push({
+                        type: link.format,
+                        url: link.url,
+                        description: resource.description
+                    });
+                }
             }
         }
         return media;

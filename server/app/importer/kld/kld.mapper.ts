@@ -201,6 +201,7 @@ export class KldMapper extends BaseMapper {
         return {
             type: this.getEnumKey(MediaType, document.Medientyp).toLowerCase(),
             url: getDocumentUrl(this.takeFirstNonEmpty(document, ['DownloadToken', 'Thumbnail3Token', 'Thumbnail2Token', 'Thumbnail1Token'])),
+            thumbnail: getDocumentUrl(this.takeFirstNonEmpty(document, ['Thumbnail2Token', 'Thumbnail3Token', 'Thumbnail1Token'])),
             description: this.takeFirstNonEmpty(document, ['Ueberschrift', 'Beschreibung', 'AlternativeBeschreibung'])
         }
     }

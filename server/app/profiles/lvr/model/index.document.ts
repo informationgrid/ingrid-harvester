@@ -52,6 +52,7 @@ export type Keyword = {
 export type Media = {
     type: string,
     url: string,
+    thumbnail?: string,
     description: string
 };
 

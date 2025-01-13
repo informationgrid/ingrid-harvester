@@ -246,6 +246,9 @@
             "url": {
               "type": "keyword"
             },
+            "thumbnail": {
+              "type": "keyword"
+            },
             "description": {
               "type": "text",
               "analyzer": "decomp"
