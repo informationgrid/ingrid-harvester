@@ -128,10 +128,20 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         let media = [];
         for (let resource of this.baseMapper.getResources()) {
             if (resource.type == 'digitales Bild') {
-                let fullURL = findFirstURL(resource.links, ['image_master', 'image_overview', 'image_thumbnail']);
-                let thumbnailURL = findFirstURL(resource.links, ['image_overview', 'image_thumbnail', 'image_master']);
+                let fullURL = findFirstURL(resource.links, ['image_master', 'image_overview', 'image_thumbnail', 'http://terminology.lido-schema.org/resourceRepresentation_type/provided_image']);
+                let thumbnailURL = findFirstURL(resource.links, ['image_overview', 'image_thumbnail', 'image_master', 'http://terminology.lido-schema.org/resourceRepresentation_type/provided_image']);
                 media.push({
                     type: 'image',
+                    url: fullURL,
+                    thumbnail: thumbnailURL,
+                    description: resource.description
+                });
+            }
+            else if (resource.type == 'Video') {
+                let fullURL = findFirstURL(resource.links, ['http://terminology.lido-schema.org/resourceRepresentation_type/provided_video']);
+                let thumbnailURL = findFirstURL(resource.links, ['image_overview', 'image_thumbnail', 'image_master']);
+                media.push({
+                    type: 'video',
                     url: fullURL,
                     thumbnail: thumbnailURL,
                     description: resource.description
