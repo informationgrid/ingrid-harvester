@@ -21,13 +21,14 @@
  * ==================================================
  */
 
-import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
-import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
-import { ConfigService } from '../services/config/ConfigService';
 import { Harvester } from '@shared/harvester';
-import { HistoryService } from '../services/statistic/HistoryService';
+import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
+import { ConfigService } from '../services/config/ConfigService';
 import { IndexService } from '../services/IndexService';
 import { ScheduleService } from '../services/ScheduleService';
+import { HistoryService } from '../services/statistic/HistoryService';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -55,6 +56,11 @@ export class HarvesterCtrl {
     @Post('/:id')
     updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Harvester) {
         const updatedID = ConfigService.update(+id, config);
+
+        let profile = ProfileFactoryLoader.get();
+        if (profile.getProfileName() == 'ingrid') {
+            profile.createCatalogIfNotExist(config.catalogId);
+        }
 
         let mode: 'full' | 'incr' = config.isIncremental ? 'incr' : 'full';
         if (config.disable) {

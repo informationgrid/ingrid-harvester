@@ -84,7 +84,7 @@ export class AddOrEditCatalogComponent implements OnInit {
    * @param control 
    * @returns 
    */
-  private static identifierValidator(control: FormControl) {
+  public static identifierValidator(control: FormControl) {
     const value: string = control.value;
     let isValid = true;
     isValid &&= !['"', '*', '+', '/', '\\', '|', '?', '#', '>', '<', ':', ' '].some(c => value.includes(c));

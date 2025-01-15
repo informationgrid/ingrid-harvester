@@ -342,8 +342,7 @@ export class ConfigService {
                 await this.getEsUtils().prepareIndexWithName(
                     catalog.identifier, profile.getIndexMappings(), profile.getIndexSettings(), true);
             }
-
-            return catalogPromise;
+            return profile.createCatalogIfNotExist(catalog);
         }
     }
 

@@ -172,7 +172,8 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(DialogEditComponent, {
       data: JSON.parse(JSON.stringify(harvester)),
       width: '950px',
-      disableClose: true
+      disableClose: true,
+      autoFocus: ''
     });
 
     dialogRef.afterClosed().subscribe((result: Harvester) => {

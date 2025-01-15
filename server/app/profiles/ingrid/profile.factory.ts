@@ -25,7 +25,9 @@ import { CswMapper } from '../../importer/csw/csw.mapper';
 import { ImporterFactory } from '../../importer/importer.factory';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { IndexDocumentFactory } from '../../model/index.document.factory';
+import { DatabaseFactory } from '../../persistence/database.factory';
 import { DatabaseUtils } from '../../persistence/database.utils';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory';
 import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { IndexSettings } from '../../persistence/elastic.setting';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils';
@@ -50,18 +52,7 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
         // create collections/catalogs and indices that occur in the configured harvesters, if they not already exist
         const catalogIdentifiers = new Set(ConfigService.get().map(harvester => harvester.catalogId));
         for (let identifier of catalogIdentifiers) {
-            let catalog: Catalog = {
-                description: `${identifier} (automatically created)`,
-                identifier: identifier,
-                publisher: undefined,
-                title: `${identifier} (automatically created)`
-            };
-            log.info(`Ensuring existence of DB entry for catalog "${identifier}"`);
-            await database.createCatalog(catalog);
-            log.info(`Ensuring existence of index for catalog "${identifier}"`);
-            if (!await elastic.isIndexPresent(identifier)) {
-                await elastic.prepareIndexWithName(identifier, this.getIndexMappings(), this.getIndexSettings());
-            }
+            this.createCatalogIfNotExist(identifier, database, elastic);
         }
 
         // create ingrid_meta index
@@ -73,6 +64,28 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
             await elastic.prepareIndexWithName(ingridMeta, mappings, settings);
         }
         return null;
+    }
+
+    async createCatalogIfNotExist(catalog: string | Catalog, database?: DatabaseUtils, elastic?: ElasticsearchUtils): Promise<Catalog> {
+        const { database: dbConfig, elasticsearch: esConfig } = ConfigService.getGeneralSettings();
+        database ??= DatabaseFactory.getDatabaseUtils(dbConfig, null);
+        elastic ??= ElasticsearchFactory.getElasticUtils(esConfig, null);
+
+        if (typeof(catalog) == 'string') {
+            catalog = {
+                description: `${catalog} (automatically created)`,
+                identifier: catalog,
+                publisher: undefined,
+                title: `${catalog} (automatically created)`
+            };
+        }
+        log.info(`Ensuring existence of DB entry for catalog "${catalog.identifier}"`);
+        let catalogPromise = await database.createCatalog(catalog);
+        log.info(`Ensuring existence of index for catalog "${catalog.identifier}"`);
+        if (!await elastic.isIndexPresent(catalog.identifier)) {
+            await elastic.prepareIndexWithName(catalog.identifier, this.getIndexMappings(), this.getIndexSettings());
+        }
+        return catalogPromise;
     }
 
     getElasticQueries(): AbstractElasticQueries {

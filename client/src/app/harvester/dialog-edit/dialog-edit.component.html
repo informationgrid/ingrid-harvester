@@ -51,6 +51,20 @@
               </mat-select>
             </mat-form-field>
 
+            <mat-form-field class="col-span-3 col-span-6-mobile">
+              <mat-label>Katalog-Identifier</mat-label>
+              <input type="text"
+                placeholder="Eingeben oder auswählen"
+                matInput
+                formControlName="catalogId"
+                [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete">
+                @for (catalog of catalogs | async; track catalog.id) {
+                  <mat-option value="{{catalog.identifier}}">{{catalog.title}}</mat-option>
+                }
+              </mat-autocomplete>
+            </mat-form-field>
+
             <mat-form-field class="col-span-4 col-span-9-mobile">
               <mat-label>Beschreibung</mat-label>
               <input matInput formControlName="description" required>
@@ -61,6 +75,11 @@
               <input matInput type="number" formControlName="priority">
             </mat-form-field>
           </div>
+          @if (harvesterForm.get('catalogId').hasError('naming-rules')) {
+            <mat-error>
+              {{harvesterForm.get('catalogId').getError('naming-rules')}}
+            </mat-error>
+          }
         </mat-card-content>
       </mat-card>
 
@@ -158,21 +177,13 @@
         </mat-card-header>
         <mat-card-content>
           <div class="flex-row flex-col-mobile gap-20 space-between">
-            <mat-form-field class="flex-40">
+            <mat-form-field class="flex-60">
               <mat-label>Max. Datensätze pro Anfrage</mat-label>
               <input matInput type="number" min="1" max="10000" minlength="1" formControlName="maxRecords">
             </mat-form-field>
-            <mat-form-field class="flex-20">
+            <mat-form-field class="flex-40">
               <mat-label>Start Datensatz</mat-label>
               <input matInput type="number" min="0" formControlName="startPosition">
-            </mat-form-field>
-            <mat-form-field class="flex-40">
-              <mat-label>Katalog-Identifier</mat-label>
-              <mat-select formControlName="catalogId" required>
-                @for (catalog of catalogs | async; track catalog.id) {
-                  <mat-option value="{{catalog.identifier}}">{{catalog.title}}</mat-option>
-                }
-              </mat-select>
             </mat-form-field>
           </div>
         </mat-card-content>
