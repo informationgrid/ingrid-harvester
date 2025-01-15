@@ -21,11 +21,12 @@
  * ==================================================
  */
 
-import { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
 import { MappingItem } from '@shared/mapping.model';
 import { Observable } from 'rxjs';
+import { Catalog } from '../../../../server/app/model/dcatApPlu.model';
 
 export interface MappingDistribution {
   name: string;
@@ -46,6 +47,33 @@ export class ConfigService {
 
   getProfileName(): Observable<string> {
     return this.http.get('rest/api/config/profile', { responseType: 'text' });
+  }
+
+  getCatalogs(): Observable<Catalog[]> {
+    return this.http.get<Catalog[]>('rest/api/config/catalogs');
+  }
+
+  getCatalogSizes(): Observable<any[]> {
+    console.log('CALLED getCatalogSizes()');
+    let a = this.http.get<any[]>('rest/api/config/catalogsizes');
+    let b = this.http.get<any[]>('rest/api/config/catalogs');
+    console.log(a);
+    console.log(b);
+    a.pipe();
+    b.pipe();
+    console.log('CALLED getCatalogSizes() 2');
+    return a;
+  }
+
+  addOrEditCatalog(catalog: Catalog) {
+    return this.http.post<any>('rest/api/config/catalogs', catalog);
+  }
+
+  removeCatalog(catalog: Catalog, target: string) {
+    const options = { params: new HttpParams()
+      .set('target', target)
+    };
+    return this.http.delete(`rest/api/config/catalogs/${catalog.id}`, options);
   }
 
   getMapping(): Observable<MappingDistribution[]> {

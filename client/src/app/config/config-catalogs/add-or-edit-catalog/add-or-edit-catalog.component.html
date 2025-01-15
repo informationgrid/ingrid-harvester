@@ -1,0 +1,55 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<h1 mat-dialog-title>Katalog {{catalog.id == null ? 'hinzufügen' : 'editieren'}}</h1>
+<mat-dialog-content>
+  <div class="form-wrapper">
+    <div class="flex-row gap-20 space-above">
+      <mat-form-field class="flex-70">
+        <mat-label>Titel</mat-label>
+        <input matInput type="text" [(ngModel)]="catalog.title" required>
+      </mat-form-field>
+      <mat-form-field class="flex-30">
+        <mat-label>Identifier</mat-label>
+        <input matInput type="text" [(ngModel)]="catalog.identifier" [readonly]="catalog.id != null" required>
+      </mat-form-field>
+    </div>
+    <div class="flex-row gap-20">
+      <mat-form-field class="flex-100">
+        <mat-label>Beschreibung</mat-label>
+        <input matInput type="text" [(ngModel)]="catalog.description" required>
+      </mat-form-field>
+    </div>
+    <div class="flex-row gap-20">
+      <mat-form-field class="flex-1">
+        <mat-label>Herausgeber</mat-label>
+        <input matInput type="text" [(ngModel)]="$any(catalog.publisher).name">
+      </mat-form-field>
+    </div>
+  </div>
+</mat-dialog-content>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Abbrechen</button>
+  <div class="flex-space"></div>
+  <button data-test="btn-save-catalog"mat-button color="primary" [mat-dialog-close]="catalog" [disabled]="!catalog.identifier || !catalog.title">Katalog speichern</button>
+</div>

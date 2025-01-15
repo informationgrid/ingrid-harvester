@@ -21,11 +21,12 @@
  * ==================================================
  */
 
-import { RouterModule } from "@angular/router";
-import { ConfigComponent } from "./config.component";
-import { ConfigGeneralComponent } from "./config-general/config-general.component";
-import { ConfigMappingComponent } from "./config-mapping/config-mapping.component";
-import { ConfigImportExportComponent } from "./config-import-export/config-import-export.component";
+import { RouterModule } from '@angular/router';
+import { ConfigCatalogsComponent } from './config-catalogs/config-catalogs.component';
+import { ConfigGeneralComponent } from './config-general/config-general.component';
+import { ConfigImportExportComponent } from './config-import-export/config-import-export.component';
+import { ConfigMappingComponent } from './config-mapping/config-mapping.component';
+import { ConfigComponent } from './config.component';
 
 export const routing = RouterModule.forChild([
   {
@@ -43,6 +44,13 @@ export const routing = RouterModule.forChild([
         data: {
           title: "Konfiguration",
           tabIdentifier: "general",
+        },
+      },
+      {
+        path: "catalogs",
+        component: ConfigCatalogsComponent,
+        data: {
+          title: "Katalogverwaltung",
         },
       },
       {

@@ -15,12 +15,13 @@
     "user": "elastic",
     "password": "",
     "rejectUnauthorized": true,
-    "index": "ige-harvester",
     "alias": "ige",
     "prefix": "",
+    "index": "ige-harvester",
     "numberOfShards": 1,
     "numberOfReplicas": 0
   },
+  "cronOffset": 0,
   "mappingLogLevel": "warn",
   "proxy": null,
   "allowAllUnauthorizedSSL": false,
@@ -33,7 +34,6 @@
     "active": false,
     "pattern": "10 04 * * *"
   },
-  "sessionSecret": "mysecretkey",
   "mail": {
     "enabled": false,
     "mailServer": {
@@ -67,6 +67,5 @@
       "enabled": false,
       "minDifference": 10
     }
-  },
-  "cronOffset": 0
+  }
 }

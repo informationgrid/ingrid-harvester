@@ -21,19 +21,19 @@
  * ==================================================
  */
 
+import { DatabaseConfiguration } from '@shared/general-config.settings';
+import { Client, Pool, PoolClient, QueryResult } from 'pg';
+import { Catalog } from '../model/dcatApPlu.model';
+import { Distribution } from '../model/distribution';
+import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
+import { IndexDocument } from '../model/index.document';
+import { Summary } from '../model/summary';
+import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import * as MiscUtils from '../utils/misc.utils';
 import { BulkResponse, DatabaseUtils } from './database.utils';
-import { Catalog } from '../model/dcatApPlu.model';
-import { Client, Pool, PoolClient, QueryResult } from 'pg';
-import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
-import { DatabaseConfiguration } from '@shared/general-config.settings';
-import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory';
-import { Distribution } from '../model/distribution';
 import { ElasticsearchUtils } from './elastic.utils';
-import { IndexDocument } from '../model/index.document';
 import { PostgresQueries } from './postgres.queries';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import { Summary } from '../model/summary';
 
 const log = require('log4js').getLogger(__filename);
 const Cursor = require('pg-cursor');
@@ -116,8 +116,13 @@ export class PostgresUtils extends DatabaseUtils {
         return result.rows.map(row => row.identifier);
     }
 
-    async getDatasets(source: string): Promise<RecordEntity[]> {
-        let result: QueryResult<any> = await this.transactionClient.query(this.queries.getDatasets, [source]);
+    client(useTransaction: boolean) {
+        return useTransaction ? this.transactionClient : PostgresUtils.pool;
+    }
+
+    async getDatasets(source: string | number, useTransaction: boolean = true): Promise<RecordEntity[]> {
+        let query = typeof source == "number" ? this.queries.getDatasetsByCollection : this.queries.getDatasetsBySource;
+        let result: QueryResult<any> = await this.client(useTransaction).query(query, [source]);
         if (result.rowCount == 0) {
             return null;
         }
@@ -132,8 +137,25 @@ export class PostgresUtils extends DatabaseUtils {
         return result.rows;
     }
 
+    async getCatalogSizes(useTransaction: boolean = true): Promise<{ collection_id: number, count: number }[]> {
+        let result: QueryResult<any> = await this.client(useTransaction).query(this.queries.getCollectionSizes);
+        if (result.rowCount == 0) {
+            return null;
+        }
+        return result.rows;
+    }
+
+    async listCatalogs(): Promise<Catalog[]> {
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.listCollections);
+        if (result.rowCount == 0) {
+            return [];
+        }
+        let catalogs: Catalog[] = result.rows.map(row => ({ id: row.id, ...row.properties }));
+        return catalogs;
+    }
+
     async createCatalog(catalog: Catalog): Promise<Catalog> {
-        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCollection, [catalog.identifier, catalog, null, DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCollection, [catalog.identifier, catalog, null, await DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
         if (result.rowCount != 1) {
             return null;
         }
@@ -152,13 +174,24 @@ export class PostgresUtils extends DatabaseUtils {
         };
     }
 
-    async getCatalogs(): Promise<any[]> {
-        let result: QueryResult<any> = await PostgresUtils.pool.query('SELECT * FROM public.collection');
-        if (result.rowCount == 0) {
-            return [];
+    async updateCatalog(catalog: Catalog): Promise<Catalog> {
+        // don't persist ID within catalog json
+        delete catalog['id'];
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.updateCollection,
+            [catalog.identifier, catalog, null, await DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
+        if (result.rowCount != 1) {
+            return null;
         }
-        let catalogs: any[] = result.rows.map(row => ({ id: row.id, ...row.properties }));
-        return catalogs;
+        catalog.id = result.rows[0].id;
+        return catalog;
+    }
+
+    async deleteCatalog(catalogId: number): Promise<Catalog> {
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.deleteCollection, [catalogId]);
+        if (result.rowCount != 1) {
+            return null;
+        }
+        return null;
     }
 
     async nonFetchedPercentage(source: string, last_modified: Date): Promise<number> {
@@ -186,9 +219,10 @@ export class PostgresUtils extends DatabaseUtils {
         // TODO we also need to store SOURCE_TYPE in postgres and subsequently fetch it here (B.source_type)
         // @myself: next time, when you want me to do something in the future, specify WHY that should be done...
 
-        let catalogs = (await this.getCatalogs()).reduce((map, catalog: Catalog) => (map[catalog.id] = catalog, map), {});
+        let catalogs = (await this.listCatalogs()).reduce((map, catalog: Catalog) => (map[catalog.id] = catalog, map), {});
 
         const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
+        // const totalRows = client.query(this.queries.getBuckets, [source]);
         let currentId: string | number;
         let currentBucket: Bucket<any>;
         const maxRows = 100;
@@ -196,6 +230,7 @@ export class PostgresUtils extends DatabaseUtils {
         let numDatasets = 0;
         let numBuckets = 0;
         while (rows.length > 0) {
+            log.info(`PQ->ES: Processing rows ${numDatasets} - ${numDatasets + rows.length}`);
             for (let row of rows) {
                 numDatasets += 1;
                 if (row.anchor_id != currentId) {

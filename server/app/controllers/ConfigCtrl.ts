@@ -21,15 +21,16 @@
  * ==================================================
  */
 
-import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
-import { BodyParams, Controller, Delete, Get, Post, QueryParams, UseAuth } from '@tsed/common';
-import { ConfigService } from '../services/config/ConfigService';
 import { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
+import { MappingDistribution, MappingItem } from '@shared/mapping.model';
+import { BodyParams, Controller, Delete, Get, PathParams, Post, QueryParams, UseAuth } from '@tsed/common';
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
+import { Catalog } from '../model/dcatApPlu.model';
 import { DatabaseFactory } from '../persistence/database.factory';
 import { ElasticsearchFactory } from '../persistence/elastic.factory';
 import { ElasticsearchUtils } from '../persistence/elastic.utils';
-import { MappingDistribution, MappingItem } from '@shared/mapping.model';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
+import { ConfigService } from '../services/config/ConfigService';
 import { ScheduleService } from '../services/ScheduleService';
 
 const log = require('log4js').getLogger(__filename);
@@ -72,9 +73,7 @@ export class ConfigCtrl {
 
     @Get('/general')
     getGeneralConfig(): GeneralSettings {
-
         return ConfigService.getGeneralSettings();
-
     }
 
     @Post('/general')
@@ -83,28 +82,42 @@ export class ConfigCtrl {
             ConfigService.setGeneralConfig(body);
             this.scheduleService.initialize();
         }
+    }
 
+    @Get('/catalogs')
+    async getCatalogs(): Promise<Catalog[]> {
+        return await ConfigService.getCatalogs();
+    }
+
+    @Get('/catalogsizes')
+    async getCatalogSizes(): Promise<any[]> {
+        return await ConfigService.getCatalogSizes();
+    }
+
+    @Post('/catalogs')
+    async addOrEditCatalog(@BodyParams() catalog: Catalog): Promise<void> {
+        await ConfigService.addOrEditCatalog(catalog);
+    }
+
+    @Delete('/catalogs/:id')
+    deleteCatalog(@PathParams('id') catalogId: number,
+            @QueryParams('target') target: string) {
+        ConfigService.removeCatalog(catalogId, target);
     }
 
     @Get('/mapping/distribution')
     getMappingDistribution(): MappingDistribution[] {
-
         return ConfigService.getMappingDistribution();
-
     }
 
     @Get('/mapping/filecontent')
     getMappingFile(): any {
-
         return ConfigService.getMappingFileContent();
-
     }
 
     @Post('/mapping/distribution')
     addMappingDistribution(@BodyParams() item: MappingItem): void {
-
         ConfigService.addMappingDistribution(item);
-
     }
 
     @Post('/mapping/filecontent')
@@ -117,9 +130,6 @@ export class ConfigCtrl {
     deleteMappingDistribution(
         @QueryParams('source') source: string,
         @QueryParams('target') target: string): void {
-
         ConfigService.removeMappingDistribution({source, target});
-
     }
-
 }

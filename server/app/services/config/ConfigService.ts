@@ -21,18 +21,20 @@
  * ==================================================
  */
 
+import { GeneralSettings } from '@shared/general-config.settings';
+import { Harvester } from '@shared/harvester';
+import { MappingDistribution, MappingItem } from '@shared/mapping.model';
 import * as fs from 'fs';
-import * as MiscUtils from '../../utils/misc.utils';
+import { getLogger } from 'log4js';
 import { defaultCKANSettings } from '../../importer/ckan/ckan.settings';
 import { defaultCSWSettings } from '../../importer/csw/csw.settings';
 import { defaultDCATSettings } from '../../importer/dcat/dcat.settings';
 import { defaultExcelSettings } from '../../importer/excel/excel.settings';
 import { defaultKldSettings } from '../../importer/kld/kld.settings';
 import { defaultOAISettings } from '../../importer/oai/oai.settings';
-import { getLogger } from 'log4js';
-import { GeneralSettings } from '@shared/general-config.settings';
-import { Harvester } from '@shared/harvester';
-import { MappingDistribution, MappingItem } from '@shared/mapping.model';
+import { Catalog } from '../../model/dcatApPlu.model';
+import { DatabaseFactory } from '../../persistence/database.factory';
+import * as MiscUtils from '../../utils/misc.utils';
 import { UrlUtils } from '../../utils/url.utils';
 
 const log = getLogger();
@@ -307,10 +309,51 @@ export class ConfigService {
         fs.writeFileSync(this.GENERAL_CONFIG_FILE, JSON.stringify(config, null, 2));
     }
 
+    private static getDbUtils() {
+        let generalConfig = ConfigService.getGeneralSettings();
+        return DatabaseFactory.getDatabaseUtils(generalConfig.database, null);
+    }
+
+    static async getCatalogSizes(): Promise<any[]> {
+        return await ConfigService.getDbUtils().getCatalogSizes(false);
+    }
+
+    static async getCatalogs(): Promise<Catalog[]> {
+        return await ConfigService.getDbUtils().listCatalogs();
+    }
+
+    static async addOrEditCatalog(catalog: Catalog) {
+        if (catalog.id) {
+            return await ConfigService.getDbUtils().updateCatalog(catalog);
+        }
+        else {
+            return await ConfigService.getDbUtils().createCatalog(catalog);
+        }
+    }
+
+    static async removeCatalog(catalogId: number, datasetTarget: string) {
+        let numDatasets = (await ConfigService.getDbUtils().getDatasets(catalogId, false))?.length;
+        if (!numDatasets) {
+            await ConfigService.getDbUtils().deleteCatalog(catalogId);
+            return;
+        }
+        throw new Error("Not implemented");
+        // if no target is specified, delete datasets
+        if (!datasetTarget) {
+            // TODO delete datasets from postgres, then deduplicate all affected sources
+        }
+        // otherwise, move them to target
+        else {
+            // let target = getCatalog(datasetTarget);
+            // if (!target) {
+            //     throw new Error();
+            // }
+            // // TODO change catalog for datasets in postgres, then deduplicate all affected sources
+        }
+    }
+
     static getMappingDistribution(): MappingDistribution[] {
-
         return this.mappingDistribution;
-
     }
 
     static addMappingDistribution(item: MappingItem): void {
