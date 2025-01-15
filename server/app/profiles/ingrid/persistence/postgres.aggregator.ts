@@ -34,7 +34,6 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         // find primary document
         let { document, duplicates } = this.prioritizeAndFilter(bucket);
 
-
         for (let [id, service] of bucket.operatingServices) {
             document = this.resolveCoupling(document, service);
         }
@@ -76,18 +75,6 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         document: IngridIndexDocument,
         duplicates: Map<string | number, IngridIndexDocument>
     } {
-        // initialize records map
-        let records: Map<string, Map<string | number, IngridIndexDocument>> = new Map<string, Map<string | number, IngridIndexDocument>>();
-        for (let [id, document] of bucket.duplicates) {
-            let sourceType = document.extras.metadata.source.source_type;
-            let sourceMap = records.get(sourceType);
-            if (sourceMap == null) {
-                sourceMap = new Map<string | number, IngridIndexDocument>();
-                records.set(sourceType, sourceMap);
-            }
-            sourceMap.set(id, document);
-        }
-
         let mainDocument: IngridIndexDocument;
         let duplicates: Map<string | number, IngridIndexDocument> = new Map<string | number, IngridIndexDocument>();
 
@@ -139,5 +126,4 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         }
         return document;
     }
-
 }

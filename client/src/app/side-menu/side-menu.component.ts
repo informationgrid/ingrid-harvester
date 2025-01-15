@@ -65,7 +65,6 @@ export class SideMenuComponent {
   ) {}
 
   ngOnInit() {
-    console.log(this.menuItems)
     this.router.events.subscribe((event) => this.handleCurrentRoute(event));
 
     // // display the drawer if the user has at least one catalog assigned

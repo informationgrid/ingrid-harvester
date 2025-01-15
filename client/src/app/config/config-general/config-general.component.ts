@@ -42,8 +42,6 @@ export class ConfigGeneralComponent implements OnInit {
 
   profile: string;
 
-  form;
-
   constructor(
     private formBuilder: UntypedFormBuilder, 
     private configService: ConfigService, 
