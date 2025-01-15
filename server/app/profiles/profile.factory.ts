@@ -22,21 +22,38 @@
  */
 
 import { BaseMapper } from '../importer/base.mapper';
-import { ElasticsearchUtils } from '../persistence/elastic.utils';
-import { ElasticQueries } from '../persistence/elastic.queries';
 import { ImporterFactory } from '../importer/importer.factory';
 import { IndexDocument } from '../model/index.document';
 import { IndexDocumentFactory } from '../model/index.document.factory';
+import { DatabaseFactory } from '../persistence/database.factory';
+import { DatabaseUtils } from '../persistence/database.utils';
+import { ElasticsearchFactory } from '../persistence/elastic.factory';
+import { ElasticQueries } from '../persistence/elastic.queries';
 import { IndexSettings } from '../persistence/elastic.setting';
+import { ElasticsearchUtils } from '../persistence/elastic.utils';
 import { PostgresAggregator } from '../persistence/postgres.aggregator';
 import { PostgresQueries } from '../persistence/postgres.queries';
+import { ConfigService } from '../services/config/ConfigService';
 
 export abstract class ProfileFactory<M extends BaseMapper> {
 
     /**
      * Set up profile specific environment.
      */
-    async configure(elastic: ElasticsearchUtils) {};
+    async init(): Promise<{ database: DatabaseUtils, elastic: ElasticsearchUtils }> {
+        const { database: dbConfig, elasticsearch: esConfig } = ConfigService.getGeneralSettings();
+        let database = DatabaseFactory.getDatabaseUtils(dbConfig, null);
+        let elastic = ElasticsearchFactory.getElasticUtils(esConfig, null);
+
+        // try to initialize the ES index if it does not exist
+        await elastic.prepareIndex(this.getIndexMappings(), this.getIndexSettings(), true);
+        await elastic.addAlias(esConfig.prefix + esConfig.index, esConfig.alias);
+
+        // try to initialize the DB tables if they do not exist
+        await database.init();
+
+        return { database, elastic };
+    };
 
     abstract getElasticQueries(): ElasticQueries;
     abstract getImporterFactory(): ImporterFactory;
