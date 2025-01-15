@@ -274,7 +274,7 @@ export class PostgresUtils extends DatabaseUtils {
             await elastic.addOperationChunksToBulk(operationChunks);
         }
         // send remainder of bulk data
-        elastic.sendBulkOperations(false);
+        await elastic.sendBulkOperations();
         log.debug('Connection released');
         cursor.close();
         client.release();
@@ -398,7 +398,7 @@ export class PostgresUtils extends DatabaseUtils {
         return entities;
     }
 
-    addEntityToBulk(entity: Entity): Promise<BulkResponse> {
+    async addEntityToBulk(entity: Entity): Promise<BulkResponse> {
         if ((entity as RecordEntity).collection_id) {
             this._bulkData.push(entity as RecordEntity);
             // send data to database if limit is reached
