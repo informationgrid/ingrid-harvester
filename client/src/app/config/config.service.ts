@@ -58,7 +58,7 @@ export class ConfigService {
   }
 
   addOrEditCatalog(catalog: Catalog) {
-    return this.http.post<any>('rest/api/config/catalogs', catalog);
+    return this.http.post<Catalog>('rest/api/config/catalogs', catalog);
   }
 
   enableCatalog(catalog: Catalog, enable: boolean) {
