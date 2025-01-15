@@ -81,8 +81,7 @@ export class IndexService {
     private async getIndexFromHarvesterID(id: number): Promise<string> {
         const harvester = ConfigService.get().find(h => h.id === id);
 
-        let profile = ProfileFactoryLoader.get();
-        let index = profile.getProfileName() == 'ingrid' ? harvester.catalogId : this.elasticUtils.indexName;
+        let index = ProfileFactoryLoader.get().useIndexPerCatalog() ? harvester.catalogId : this.elasticUtils.indexName;
         let indices = await this.elasticUtils.getIndicesFromBasename(index);
 
         // if multiple indices, then there might be an indexing process

@@ -58,7 +58,7 @@ export class HarvesterCtrl {
         const updatedID = ConfigService.update(+id, config);
 
         let profile = ProfileFactoryLoader.get();
-        if (profile.getProfileName() == 'ingrid') {
+        if (profile.useIndexPerCatalog()) {
             profile.createCatalogIfNotExist(config.catalogId);
         }
 

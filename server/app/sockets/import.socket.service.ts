@@ -92,7 +92,7 @@ export class ImportSocketService {
                     this.summaryService.update(response);
                     let statisticUtils = new StatisticUtils(configGeneral);
                     let elastic = ElasticsearchFactory.getElasticUtils(configGeneral.elasticsearch, null);
-                    let index = profile.getProfileName() == 'ingrid' ? configHarvester.catalogId : elastic.indexName;
+                    let index = profile.useIndexPerCatalog() ? configHarvester.catalogId : elastic.indexName;
                     statisticUtils.saveSummary(response, index);
 
                     // when less results send mail

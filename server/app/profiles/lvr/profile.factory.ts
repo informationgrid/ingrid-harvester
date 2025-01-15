@@ -76,4 +76,8 @@ export class LvrFactory extends ProfileFactory<KldMapper | OaiLidoMapper | OaiMo
     getProfileName(): string {
         return 'lvr';
     }
+
+    useIndexPerCatalog(): boolean {
+        return false;
+    }
 }

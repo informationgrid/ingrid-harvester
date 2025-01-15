@@ -80,4 +80,8 @@ export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper
     getProfileName(): string {
         return 'diplanung';
     }
+
+    useIndexPerCatalog(): boolean {
+        return false;
+    }
 }

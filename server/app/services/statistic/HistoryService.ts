@@ -62,7 +62,7 @@ export class HistoryService {
         if (!indexExists) {
             await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
         }
-        let index = ProfileFactoryLoader.get().getProfileName() == 'ingrid' ? harvester.catalogId : this.elasticUtils.indexName;
+        let index = ProfileFactoryLoader.get().useIndexPerCatalog() ? harvester.catalogId : this.elasticUtils.indexName;
         let history = await this.elasticUtils.getHistory(this.elasticQueries.findHistory(index));
         return {
             harvester: harvester.description,

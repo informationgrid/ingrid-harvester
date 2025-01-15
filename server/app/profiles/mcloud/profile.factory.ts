@@ -80,4 +80,8 @@ export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatM
     getProfileName(): string {
         return 'mcloud';
     }
+
+    useIndexPerCatalog(): boolean {
+        return false;
+    }
 }

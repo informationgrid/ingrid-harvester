@@ -345,7 +345,7 @@ export class ConfigService {
 
             // for ingrid, create a new index when a new catalog is created
             let profile = ProfileFactoryLoader.get();
-            if (profile.getProfileName() == 'ingrid') {
+            if (profile.useIndexPerCatalog()) {
                 await this.getEsUtils().prepareIndexWithName(
                     catalog.identifier, profile.getIndexMappings(), profile.getIndexSettings(), true);
             }

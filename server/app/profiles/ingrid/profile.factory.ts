@@ -117,4 +117,8 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
     getPostgresAggregator(): AbstractPostgresAggregator<IngridIndexDocument> {
         return new PostgresAggregator();
     }
+
+    useIndexPerCatalog(): boolean {
+        return true;
+    }
 }
