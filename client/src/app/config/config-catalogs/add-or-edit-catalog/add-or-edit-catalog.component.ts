@@ -48,7 +48,7 @@ export class AddOrEditCatalogComponent implements OnInit {
       };
     }
     else {
-      this.catalog = this.data;
+      this.catalog = structuredClone(this.data);
     }
   }
 }
