@@ -173,7 +173,11 @@
             </mat-form-field>
             <mat-form-field class="flex-40">
               <mat-label>Katalog-Identifier</mat-label>
-              <input matInput formControlName="catalogId" required>
+              <mat-select formControlName="catalogId" required>
+                @for (catalog of catalogs | async; track catalog.id) {
+                  <mat-option value="{{catalog.identifier}}">{{catalog.title}}</mat-option>
+                }
+              </mat-select>
             </mat-form-field>
           </div>
         </mat-card-content>

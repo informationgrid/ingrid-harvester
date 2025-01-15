@@ -40,6 +40,8 @@ export class DialogEditComponent implements OnInit {
 
   profile: string;
 
+  catalogs = this.configService.getCatalogs();
+
   constructor(@Inject(MAT_DIALOG_DATA) public harvester: Harvester,
               public dialogRef: MatDialogRef<DialogEditComponent>,
               private formBuilder: UntypedFormBuilder,
