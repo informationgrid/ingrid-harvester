@@ -69,9 +69,10 @@ export class ConfigService {
   }
 
   removeCatalog(catalog: Catalog, target: string) {
-    const options = { params: new HttpParams()
-      .set('target', target)
-    };
+    const options = { params: new HttpParams() };
+    if (target) {
+      options.params = options.params.set('target', target);
+    }
     return this.http.delete(`rest/api/config/catalogs/${catalog.identifier}`, options);
   }
 

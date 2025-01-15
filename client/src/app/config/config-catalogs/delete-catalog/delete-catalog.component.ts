@@ -37,7 +37,7 @@ export class DeleteCatalogComponent implements OnDestroy, OnInit {
   catalogsWrapper: Observable<any[]>;
   count: number;
   move: boolean = false;
-  target: number = null;
+  target: string = null;
   countSubscription: Subscription;
 
   constructor(@Inject(MAT_DIALOG_DATA) private data: { catalog: Catalog, catalogsWrapper: Observable<any[]> }) { }

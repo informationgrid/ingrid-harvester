@@ -38,7 +38,9 @@
         <mat-label>Ziel-Katalog</mat-label>
         <mat-select [(ngModel)]="target" [required]="move" [disabled]="!move">
           @for (wrapper of catalogsWrapper | async; track wrapper.catalog.identifier) {
-            <mat-option value="{{wrapper.catalog.id}}">{{wrapper.catalog.title}}</mat-option>
+            @if (wrapper.catalog.identifier != catalog.identifier) {
+              <mat-option value="{{wrapper.catalog.identifier}}">{{wrapper.catalog.title}}</mat-option>
+            }
           }
         </mat-select>
       </mat-form-field>
