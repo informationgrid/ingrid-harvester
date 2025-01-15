@@ -385,7 +385,6 @@ export class ConfigService {
         if (ProfileFactoryLoader.get().useIndexPerCatalog()) {
             let elastic = this.getEsUtils();
             await elastic.deleteIndex(catalogIdentifier);
-            await elastic.removeAlias(catalogIdentifier, this.getGeneralSettings().elasticsearch.alias);
         }
     }
 
