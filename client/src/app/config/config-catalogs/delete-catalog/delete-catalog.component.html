@@ -30,7 +30,10 @@
     <div class="flex-row gap-10 space-between">
       <mat-radio-group [(ngModel)]="move" class="flex-col gap-0">
         <mat-radio-button [value]="false">Datensätze löschen</mat-radio-button>
-        <mat-radio-button [value]="true">Datensätze verschieben nach:</mat-radio-button>
+        <!--
+          disabled because of buggy `moveDatasets` in `postgres.utils.ts`
+        -->
+        <mat-radio-button [value]="true" [disabled]="true">Datensätze verschieben nach:</mat-radio-button>
       </mat-radio-group>
     </div>
     <div class="flex-row gap-10 space-between catalog-select">

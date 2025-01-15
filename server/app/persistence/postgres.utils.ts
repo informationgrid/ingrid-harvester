@@ -134,7 +134,17 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async moveDatasets(catalogId: number, targetCatalogId: number): Promise<void> {
-        await PostgresUtils.pool.query(this.queries.moveRecords, [catalogId, targetCatalogId]);
+        // TODO this results in an error if there is already another dataset with the same identifier,collection_id,source
+        // TODO thus, a simple SQL UPDATE does not suffice
+        // when a solution is implemented:
+        // * the try/catch parentheses can be removed
+        // * the [disabled] attribute in the `mat-radio-button` in `delete-catalog.component.html` can be removed
+        try {
+            await PostgresUtils.pool.query(this.queries.moveRecords, [catalogId, targetCatalogId]);
+        }
+        catch (e) {
+            throw e;
+        }
     }
 
     async getServices(source: string): Promise<RecordEntity[]> {
