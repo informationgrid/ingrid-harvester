@@ -34,6 +34,8 @@ import { defaultKldSettings } from '../../importer/kld/kld.settings';
 import { defaultOAISettings } from '../../importer/oai/oai.settings';
 import { Catalog } from '../../model/dcatApPlu.model';
 import { DatabaseFactory } from '../../persistence/database.factory';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import * as MiscUtils from '../../utils/misc.utils';
 import { UrlUtils } from '../../utils/url.utils';
 
@@ -314,6 +316,11 @@ export class ConfigService {
         return DatabaseFactory.getDatabaseUtils(generalConfig.database, null);
     }
 
+    private static getEsUtils() {
+        let generalConfig = ConfigService.getGeneralSettings();
+        return ElasticsearchFactory.getElasticUtils(generalConfig.elasticsearch, null);
+    }
+
     static async getCatalogSizes(): Promise<any[]> {
         return await ConfigService.getDbUtils().getCatalogSizes(false);
     }
@@ -327,7 +334,16 @@ export class ConfigService {
             return await ConfigService.getDbUtils().updateCatalog(catalog);
         }
         else {
-            return await ConfigService.getDbUtils().createCatalog(catalog);
+            let catalogPromise = await ConfigService.getDbUtils().createCatalog(catalog);
+
+            // for ingrid, create a new index when a new catalog is created
+            let profile = ProfileFactoryLoader.get();
+            if (profile.getProfileName() == 'ingrid') {
+                await this.getEsUtils().prepareIndexWithName(
+                    catalog.identifier, profile.getIndexMappings(), profile.getIndexSettings(), true);
+            }
+
+            return catalogPromise;
         }
     }
 
@@ -338,6 +354,7 @@ export class ConfigService {
             return;
         }
         throw new Error("Not implemented");
+        // TODO for ingrid, remove index
         // if no target is specified, delete datasets
         if (!datasetTarget) {
             // TODO delete datasets from postgres, then deduplicate all affected sources
