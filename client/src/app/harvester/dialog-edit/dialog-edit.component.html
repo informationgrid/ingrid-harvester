@@ -92,7 +92,7 @@
           <div class="flex-row gap-20 space-between">
             <mat-form-field class="flex-1">
               <mat-label>iPlugId</mat-label>
-              <input matInput formControlName="iPlugId">
+              <input matInput formControlName="iPlugId" required>
             </mat-form-field>
 
             <mat-form-field class="flex-1">
@@ -179,7 +179,7 @@
           <div class="flex-row flex-col-mobile gap-20 space-between">
             <mat-form-field class="flex-60">
               <mat-label>Max. Datensätze pro Anfrage</mat-label>
-              <input matInput type="number" min="1" max="10000" minlength="1" formControlName="maxRecords">
+              <input matInput type="number" min="1" max="10000" minlength="1" formControlName="maxRecords" required>
             </mat-form-field>
             <mat-form-field class="flex-40">
               <mat-label>Start Datensatz</mat-label>

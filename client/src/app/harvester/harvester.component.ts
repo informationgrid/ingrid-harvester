@@ -172,7 +172,7 @@ export class HarvesterComponent implements OnInit, OnDestroy {
       data: JSON.parse(JSON.stringify(harvester)),
       width: '950px',
       disableClose: true,
-      autoFocus: ''
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe((result: Harvester) => {
