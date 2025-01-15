@@ -76,7 +76,7 @@ export class StatisticUtils {
                 duration: logMessage.duration,
                 warnings: Array.from(warnings.entries()).map(entry => ({ message: entry[0], count: entry[1] })),
                 errors: Array.from(errors.entries()).map(entry => ({ message: entry[0], count: entry[1] }))
-        }, baseIndex+"_"+timestamp.toISOString(), StatisticUtils.maxBulkSize);
+        }, baseIndex, StatisticUtils.maxBulkSize);
 
         try {
             await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);

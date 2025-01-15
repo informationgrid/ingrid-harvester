@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-import {Component, Inject, OnInit} from '@angular/core';
-import {Harvester} from '@shared/harvester';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Harvester } from '@shared/harvester';
 import { ConfigService } from '../../config/config.service';
 
 @Component({
@@ -63,7 +63,6 @@ export class DialogEditComponent implements OnInit {
       type: [{value: harvester.type, disabled: harvester.id !== -1}, Validators.required],
       description: [harvester.description, Validators.required],
       priority: [harvester.priority],
-      index: [harvester.index],
       iPlugId: [harvester.iPlugId],
       partner: [harvester.partner],
       provider: [harvester.provider],
