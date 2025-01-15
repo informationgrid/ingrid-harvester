@@ -25,6 +25,11 @@ mat-dialog-content {
     padding-top: 16px !important;
 }
 
+mat-error {
+    padding-top: 0;
+    margin-bottom: 20px;
+}
+
 input[readonly] {
     cursor: default;
     color: #0009 !important;

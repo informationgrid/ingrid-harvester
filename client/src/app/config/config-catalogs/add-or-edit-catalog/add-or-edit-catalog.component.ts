@@ -22,7 +22,9 @@
  */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { of } from 'rxjs';
 import { Catalog } from '../../../../../../server/app/model/dcatApPlu.model';
 
 @Component({
@@ -34,7 +36,12 @@ export class AddOrEditCatalogComponent implements OnInit {
 
   catalog: Catalog;
 
-  constructor(@Inject(MAT_DIALOG_DATA) private data: Catalog) { }
+  catalogForm: FormGroup;
+
+  constructor(@Inject(MAT_DIALOG_DATA) private data: Catalog,
+      public dialogRef: MatDialogRef<AddOrEditCatalogComponent>, private formBuilder: FormBuilder) {
+    this.buildForm(data);
+  }
 
   ngOnInit() {
     if (this.data == null) {
@@ -50,5 +57,40 @@ export class AddOrEditCatalogComponent implements OnInit {
     else {
       this.catalog = structuredClone(this.data);
     }
+  }
+
+  private buildForm(catalog: Catalog) {
+    this.catalogForm = this.formBuilder.group({
+      description: [catalog?.description, Validators.required],
+      identifier: [catalog?.identifier, Validators.required, AddOrEditCatalogComponent.identifierValidator],
+      publisher: this.formBuilder.group({
+        name: [catalog?.publisher?.['name']],
+      }),
+      title: [catalog?.title, Validators.required]
+    });
+  }
+
+  submit(value: any) {
+    const result = {
+      ...this.catalog,
+      ...value
+    };
+    this.dialogRef.close(result);
+  }
+
+  /**
+   * Check for valid ES index name
+   * 
+   * @param control 
+   * @returns 
+   */
+  private static identifierValidator(control: FormControl) {
+    const value: string = control.value;
+    let isValid = true;
+    isValid &&= !['"', '*', '+', '/', '\\', '|', '?', '#', '>', '<', ':', ' '].some(c => value.includes(c));
+    isValid &&= !value.startsWith('_') && !value.startsWith('-');
+    isValid &&= value == value.toLowerCase();
+    isValid &&= value.length <= 255;
+    return of(isValid ? null : { 'naming-rules': `Identifier "${value}" ist kein gültiger Elasticsearch Indexname` });
   }
 }
