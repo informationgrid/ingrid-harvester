@@ -23,6 +23,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { combineLatest, map, Observable } from 'rxjs';
 import { Catalog } from '../../../../../server/app/model/dcatApPlu.model';
 import { ConfigService } from '../config.service';
@@ -63,6 +64,10 @@ export class ConfigCatalogsComponent implements OnInit {
         this.configService.addOrEditCatalog(result).subscribe(() => this.updateData());
       }
     });
+  }
+
+  toggleCatalogStatus($event: MatSlideToggleChange, catalog: Catalog) {
+    this.configService.enableCatalog(catalog, !catalog['isEnabled']).subscribe(() => this.updateData());
   }
 
   deleteCatalog(catalog: Catalog) {

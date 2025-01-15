@@ -93,6 +93,13 @@ export abstract class ElasticsearchUtils {
     abstract addAlias(index: string, alias: string): Promise<any>;
 
     /**
+     * Get the list of aliases the specified index is part of.
+     * 
+     * @param {string} index 
+     */
+    abstract listAliases(index: string): Promise<string[]>;
+
+    /**
      * Remove the specified alias from an index.
      *
      * @param {string} index

@@ -26,14 +26,20 @@
     <mat-list class="list-hover catalog-card">
       @for (wrapper of catalogsWrapper | async; track wrapper.catalog.identifier) {
         <mat-list-item>
+          <mat-slide-toggle matListItemIcon color="accent" [checked]="wrapper.catalog.isEnabled"
+              title="Für Suche an- / ausschalten" (change)="toggleCatalogStatus($event, wrapper.catalog)"
+              (click)="$event.stopImmediatePropagation()">
+          </mat-slide-toggle>
+          <button mat-icon-button matListItemIcon color="info" class="catalog-config-button"
+              title="Ändern" (click)="addOrEditCatalog(wrapper.catalog)">
+            <mat-icon svgIcon="Edit" />
+          </button>
+          <button mat-icon-button matListItemIcon color="warn" class="catalog-config-button"
+              title="Löschen" (click)="deleteCatalog(wrapper.catalog)">
+            <mat-icon svgIcon="Delete" />
+          </button>
           <span matListItemTitle>{{wrapper.catalog.title}} ({{wrapper.count}} Metadatensätze)</span>
           <span matListItemLine>{{wrapper.catalog.description}}</span>
-          <button mat-icon-button matListItemIcon color="info" (click)="addOrEditCatalog(wrapper.catalog)" class="catalog-edit-button" >
-            <mat-icon svgIcon="Edit"/>
-          </button>
-          <button mat-icon-button matListItemIcon color="warn" (click)="deleteCatalog(wrapper.catalog)" class="catalog-delete-button" >
-            <mat-icon svgIcon="Delete"/>
-          </button>
         </mat-list-item>
       }
     </mat-list>

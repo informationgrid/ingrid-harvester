@@ -43,3 +43,23 @@ input[readonly] {
   cursor: default;
   color: #0009 !important;
 }
+
+mat-list-item {
+  gap: 12px;
+}
+
+mat-slide-toggle {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 40px !important;
+}
+
+button {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.catalog-config-button {
+  height: 32px;
+  width: 32px;
+}

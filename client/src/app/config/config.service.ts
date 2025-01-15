@@ -61,6 +61,13 @@ export class ConfigService {
     return this.http.post<any>('rest/api/config/catalogs', catalog);
   }
 
+  enableCatalog(catalog: Catalog, enable: boolean) {
+    const options = { params: new HttpParams()
+      .set('enable', enable)
+    };
+    return this.http.put<Catalog>(`rest/api/config/catalogs/${catalog.identifier}`, null, options);
+  }
+
   removeCatalog(catalog: Catalog, target: string) {
     const options = { params: new HttpParams()
       .set('target', target)

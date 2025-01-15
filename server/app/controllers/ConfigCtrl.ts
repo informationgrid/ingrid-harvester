@@ -23,7 +23,7 @@
 
 import { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
 import { MappingDistribution, MappingItem } from '@shared/mapping.model';
-import { BodyParams, Controller, Delete, Get, PathParams, Post, QueryParams, UseAuth } from '@tsed/common';
+import { BodyParams, Controller, Delete, Get, PathParams, Post, Put, QueryParams, UseAuth } from '@tsed/common';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
 import { Catalog } from '../model/dcatApPlu.model';
 import { DatabaseFactory } from '../persistence/database.factory';
@@ -97,6 +97,12 @@ export class ConfigCtrl {
     @Post('/catalogs')
     async addOrEditCatalog(@BodyParams() catalog: Catalog): Promise<void> {
         await ConfigService.addOrEditCatalog(catalog);
+    }
+
+    @Put('/catalogs/:id')
+    async enableCatalog(@PathParams('id') catalogIdentifier: string,
+            @QueryParams('enable') enable: boolean) {
+        await ConfigService.enableCatalog(catalogIdentifier, enable);
     }
 
     @Delete('/catalogs/:id')

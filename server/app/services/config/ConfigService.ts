@@ -326,7 +326,14 @@ export class ConfigService {
     }
 
     static async getCatalogs(): Promise<Catalog[]> {
-        return await ConfigService.getDbUtils().listCatalogs();
+        let catalogs = await ConfigService.getDbUtils().listCatalogs();
+        let esUtils = ConfigService.getEsUtils();
+        let alias = ConfigService.getGeneralSettings().elasticsearch.alias;
+        for (let catalog of catalogs) {
+            let aliases = await esUtils.listAliases(catalog.identifier);
+            catalog['isEnabled'] = aliases.includes(alias);
+        }
+        return catalogs;
     }
 
     static async addOrEditCatalog(catalog: Catalog) {
@@ -343,6 +350,16 @@ export class ConfigService {
                     catalog.identifier, profile.getIndexMappings(), profile.getIndexSettings(), true);
             }
             return profile.createCatalogIfNotExist(catalog);
+        }
+    }
+
+    static async enableCatalog(catalogIdentifier: string, enable: boolean) {
+        let alias = ConfigService.getGeneralSettings().elasticsearch.alias;
+        if (enable) {
+            await this.getEsUtils().addAlias(catalogIdentifier, alias);
+        }
+        else {
+            await this.getEsUtils().removeAlias(catalogIdentifier, alias);
         }
     }
 

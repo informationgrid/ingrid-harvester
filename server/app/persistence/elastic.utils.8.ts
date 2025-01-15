@@ -158,6 +158,14 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
         });
     }
 
+    async listAliases(index: string): Promise<string[]> {
+        index = this.addPrefixIfNotExists(index) as string;
+        let response = await this.client.indices.getAlias({
+            index
+        });
+        return Object.keys(response);
+    }
+
     async removeAlias(index: string, alias: string): Promise<any> {
         index = this.addPrefixIfNotExists(index) as string;
         return await this.client.indices.deleteAlias({
