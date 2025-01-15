@@ -372,7 +372,7 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
     }
 
     private handleError(message: string, error: any) {
-        this.summary.elasticErrors?.push(message);
+        this.summary?.elasticErrors?.push(message);
         log.error(message, error);
     }
 
