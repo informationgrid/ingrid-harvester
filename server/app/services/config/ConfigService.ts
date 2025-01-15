@@ -368,7 +368,7 @@ export class ConfigService {
         let { id: catalogId } = await database.getCatalog(catalogIdentifier);
         // if no target is specified, delete datasets
         if (!datasetTarget) {
-            database.deleteDatasets(catalogId);
+            await database.deleteDatasets(catalogId);
         }
         // otherwise, move them to target
         else {
@@ -376,7 +376,7 @@ export class ConfigService {
             if (!targetCatalog) {
                 throw new Error(`Target catalog ${datasetTarget} could not be found.`);
             }
-            database.moveDatasets(catalogId, targetCatalog.id) ;
+            await database.moveDatasets(catalogId, targetCatalog.id) ;
         }
         // TODO then deduplicate all affected sources
         // then delete catalog from DB

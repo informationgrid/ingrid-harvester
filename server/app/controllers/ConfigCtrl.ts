@@ -106,9 +106,9 @@ export class ConfigCtrl {
     }
 
     @Delete('/catalogs/:id')
-    deleteCatalog(@PathParams('id') catalogIdentifier: string,
+    async deleteCatalog(@PathParams('id') catalogIdentifier: string,
             @QueryParams('target') target: string) {
-        ConfigService.removeCatalog(catalogIdentifier, target);
+        await ConfigService.removeCatalog(catalogIdentifier, target);
     }
 
     @Get('/mapping/distribution')
