@@ -84,6 +84,7 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
         log.info(`Ensuring existence of index for catalog "${catalog.identifier}"`);
         if (!await elastic.isIndexPresent(catalog.identifier)) {
             await elastic.prepareIndexWithName(catalog.identifier, this.getIndexMappings(), this.getIndexSettings());
+            await elastic.addAlias(catalog.identifier, esConfig.alias);
         }
         return catalogPromise;
     }
