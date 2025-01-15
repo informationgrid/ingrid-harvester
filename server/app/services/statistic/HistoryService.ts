@@ -39,10 +39,10 @@ export class HistoryService {
     private indexSettings: IndexSettings;
 
     constructor() {
-		this.initialize();
-	}
+        this.initialize();
+    }
 
-	initialize() {
+    initialize() {
         let config = {
             ...ConfigService.getGeneralSettings().elasticsearch,
             includeTimestamp: true,

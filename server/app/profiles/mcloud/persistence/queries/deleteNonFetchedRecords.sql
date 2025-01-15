@@ -6,7 +6,7 @@ SET deleted_on = $2
 WHERE
     source = $1
     AND $2::timestamptz > created_on
-	AND (
+    AND (
         last_modified IS NULL
         OR $2::timestamptz > last_modified
     )

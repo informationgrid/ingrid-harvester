@@ -77,7 +77,6 @@ export class ConfigCatalogsComponent implements OnInit {
         catalogsWrapper: this.catalogsWrapper
       }
     }).afterClosed().subscribe(result => {
-      console.log('A ' + result);
       if (result) {
         this.configService.removeCatalog(catalog, result.target).subscribe(() => this.updateData());
       }

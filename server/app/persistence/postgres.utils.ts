@@ -203,7 +203,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void> {
-        await this.transactionClient.query(this.queries.deleteRecords, [source, last_modified]);
+        await this.transactionClient.query(this.queries.deleteNonFetchedRecords, [source, last_modified]);
     }
 
     /**
