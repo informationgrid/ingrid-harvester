@@ -130,11 +130,11 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async deleteDatasets(catalogId: number): Promise<void> {
-        await this.transactionClient.query(this.queries.deleteRecords, [catalogId]);
+        await PostgresUtils.pool.query(this.queries.deleteRecords, [catalogId]);
     }
 
     async moveDatasets(catalogId: number, targetCatalogId: number): Promise<void> {
-        await this.transactionClient.query(this.queries.moveRecords, [catalogId, targetCatalogId]);
+        await PostgresUtils.pool.query(this.queries.moveRecords, [catalogId, targetCatalogId]);
     }
 
     async getServices(source: string): Promise<RecordEntity[]> {
