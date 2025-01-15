@@ -72,7 +72,7 @@ export class ConfigService {
     const options = { params: new HttpParams()
       .set('target', target)
     };
-    return this.http.delete(`rest/api/config/catalogs/${catalog.id}`, options);
+    return this.http.delete(`rest/api/config/catalogs/${catalog.identifier}`, options);
   }
 
   getMapping(): Observable<MappingDistribution[]> {

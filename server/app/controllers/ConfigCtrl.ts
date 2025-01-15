@@ -106,9 +106,9 @@ export class ConfigCtrl {
     }
 
     @Delete('/catalogs/:id')
-    deleteCatalog(@PathParams('id') catalogId: number,
+    deleteCatalog(@PathParams('id') catalogIdentifier: string,
             @QueryParams('target') target: string) {
-        ConfigService.removeCatalog(catalogId, target);
+        ConfigService.removeCatalog(catalogIdentifier, target);
     }
 
     @Get('/mapping/distribution')

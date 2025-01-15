@@ -363,25 +363,29 @@ export class ConfigService {
         }
     }
 
-    static async removeCatalog(catalogId: number, datasetTarget: string) {
-        let numDatasets = (await ConfigService.getDbUtils().getDatasets(catalogId, false))?.length;
-        if (!numDatasets) {
-            await ConfigService.getDbUtils().deleteCatalog(catalogId);
-            return;
-        }
-        throw new Error("Not implemented");
-        // TODO for ingrid, remove index
+    static async removeCatalog(catalogIdentifier: string, datasetTarget: string) {
+        let database = this.getDbUtils();
+        let { id: catalogId } = await database.getCatalog(catalogIdentifier);
         // if no target is specified, delete datasets
         if (!datasetTarget) {
-            // TODO delete datasets from postgres, then deduplicate all affected sources
+            database.deleteDatasets(catalogId);
         }
         // otherwise, move them to target
         else {
-            // let target = getCatalog(datasetTarget);
-            // if (!target) {
-            //     throw new Error();
-            // }
-            // // TODO change catalog for datasets in postgres, then deduplicate all affected sources
+            let targetCatalog = await database.getCatalog(datasetTarget);
+            if (!targetCatalog) {
+                throw new Error(`Target catalog ${datasetTarget} could not be found.`);
+            }
+            database.moveDatasets(catalogId, targetCatalog.id) ;
+        }
+        // TODO then deduplicate all affected sources
+        // then delete catalog from DB
+        await database.deleteCatalog(catalogId);
+        // at last, delete index from ES if applicable
+        if (ProfileFactoryLoader.get().useIndexPerCatalog()) {
+            let elastic = this.getEsUtils();
+            await elastic.deleteIndex(catalogIdentifier);
+            await elastic.removeAlias(catalogIdentifier, this.getGeneralSettings().elasticsearch.alias);
         }
     }
 
