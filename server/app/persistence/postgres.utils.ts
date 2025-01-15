@@ -146,6 +146,8 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async listCatalogs(): Promise<Catalog[]> {
+        // TODO maybe move this to somewhere more sensible
+        await this.init();
         let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.listCollections);
         if (result.rowCount == 0) {
             return [];
