@@ -60,22 +60,22 @@ export class ImportSocketService {
     @Input('runImport')
     @Emit('/log')
     async runImport(id: number, isIncremental?: boolean): Promise<void> {
-        let lastExecution = new Date();
-        let configGeneral = ConfigService.getGeneralSettings();
-        let configData = ConfigService.get().filter(config => config.id === id)[0];
-        //configData.deduplicationAlias = configData.index + 'dedup';
-
-        let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });
-
-        let profile = ProfileFactoryLoader.get();
-        if (profile.useIndexPerCatalog()) {
-            profile.createCatalogIfNotExist(configHarvester.catalogId);
-        }
-        let importer = await profile.getImporterFactory().get(configHarvester);
-        let mode = isIncremental ? 'incr' : 'full';
-        this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
-
         try {
+            let lastExecution = new Date();
+            let configGeneral = ConfigService.getGeneralSettings();
+            let configData = ConfigService.get().filter(config => config.id === id)[0];
+            //configData.deduplicationAlias = configData.index + 'dedup';
+
+            let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });
+
+            let profile = ProfileFactoryLoader.get();
+            if (profile.useIndexPerCatalog()) {
+                profile.createCatalogIfNotExist(configHarvester.catalogId);
+            }
+            let importer = await profile.getImporterFactory().get(configHarvester);
+            let mode = isIncremental ? 'incr' : 'full';
+            this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
+
             importer.run.subscribe(response => {
                 response.id = id;
                 response.lastExecution = lastExecution;
