@@ -54,15 +54,7 @@ export class ConfigService {
   }
 
   getCatalogSizes(): Observable<any[]> {
-    console.log('CALLED getCatalogSizes()');
-    let a = this.http.get<any[]>('rest/api/config/catalogsizes');
-    let b = this.http.get<any[]>('rest/api/config/catalogs');
-    console.log(a);
-    console.log(b);
-    a.pipe();
-    b.pipe();
-    console.log('CALLED getCatalogSizes() 2');
-    return a;
+    return this.http.get<any[]>('rest/api/config/catalogsizes');
   }
 
   addOrEditCatalog(catalog: Catalog) {

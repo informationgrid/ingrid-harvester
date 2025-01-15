@@ -24,21 +24,7 @@
 <page-template label="Katalogverwaltung">
   <div main-content class="margin-below">
     <mat-list class="list-hover catalog-card">
-      @for (catalog of catalogs | async; track catalog) {
-        <mat-list-item>
-          <span matListItemTitle>{{catalog.title}}
-             <!-- ({{numDatasets[catalog.id]}} Metadatensätze) -->
-            </span>
-          <span matListItemLine>{{catalog.description}}</span>
-          <button mat-icon-button matListItemIcon color="info" (click)="addOrEditCatalog(catalog)" class="catalog-edit-button" >
-            <mat-icon svgIcon="Edit"/>
-          </button>
-          <button mat-icon-button matListItemIcon color="warn" (click)="deleteCatalog(catalog)" class="catalog-delete-button" >
-            <mat-icon svgIcon="Delete"/>
-          </button>
-        </mat-list-item>
-      }
-      <!-- @for (wrapper of counts2 | async; track wrapper.catalog.identifier) {
+      @for (wrapper of catalogsWrapper | async; track wrapper.catalog.identifier) {
         <mat-list-item>
           <span matListItemTitle>{{wrapper.catalog.title}} ({{wrapper.count}} Metadatensätze)</span>
           <span matListItemLine>{{wrapper.catalog.description}}</span>
@@ -49,7 +35,7 @@
             <mat-icon svgIcon="Delete"/>
           </button>
         </mat-list-item>
-      } -->
+      }
     </mat-list>
     <div class="big-button-container">
       <button mat-flat-button

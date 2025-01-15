@@ -21,8 +21,9 @@
  * ==================================================
  */
 
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Observable, Subscription } from 'rxjs';
 import { Catalog } from '../../../../../../server/app/model/dcatApPlu.model';
 
 @Component({
@@ -30,25 +31,30 @@ import { Catalog } from '../../../../../../server/app/model/dcatApPlu.model';
   templateUrl: './delete-catalog.component.html',
   styleUrls: ['./delete-catalog.component.scss']
 })
-export class DeleteCatalogComponent implements OnInit {
+export class DeleteCatalogComponent implements OnDestroy, OnInit {
 
   catalog: Catalog;
+  catalogsWrapper: Observable<any[]>;
+  count: number;
+  move: boolean = false;
+  target: number = null;
+  countSubscription: Subscription;
 
-  constructor(@Inject(MAT_DIALOG_DATA) private data: Catalog) { }
+  constructor(@Inject(MAT_DIALOG_DATA) private data: { catalog: Catalog, catalogsWrapper: Observable<any[]> }) { }
 
   ngOnInit() {
-    if (this.data == null) {
-      this.catalog = {
-        description: '',
-        identifier: null,
-        publisher: {
-          name: '',
-        },
-        title: ''
-      };
-    }
-    else {
-      this.catalog = this.data;
-    }
+    this.catalog = this.data.catalog;
+    this.catalogsWrapper = this.data.catalogsWrapper;
+    this.countSubscription = this.catalogsWrapper.subscribe((wrapper) => {
+      this.count = wrapper.find(({ catalog, count }) => catalog.id == this.catalog.id)['count'] ?? 0;
+    });
+  }
+
+  resolveTarget() {
+    return { target: this.move ? this.target : null };
+  }
+
+  ngOnDestroy() {
+    this.countSubscription.unsubscribe();
   }
 }

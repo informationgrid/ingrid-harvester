@@ -142,7 +142,7 @@ export class PostgresUtils extends DatabaseUtils {
         if (result.rowCount == 0) {
             return null;
         }
-        return result.rows;
+        return result.rows.reduce((val, { collection_id, count }) => ({ [collection_id]: count, ...val }), {});
     }
 
     async listCatalogs(): Promise<Catalog[]> {
@@ -151,7 +151,7 @@ export class PostgresUtils extends DatabaseUtils {
             return [];
         }
         let catalogs: Catalog[] = result.rows.map(row => ({ id: row.id, ...row.properties }));
-        return catalogs;
+        return catalogs.sort((c1, c2) => c1.title < c2.title ? -1 : c1.title > c2.title ? 1 : 0);
     }
 
     async createCatalog(catalog: Catalog): Promise<Catalog> {
