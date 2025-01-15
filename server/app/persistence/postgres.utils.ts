@@ -524,10 +524,15 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async commitTransaction() {
-        log.debug('Transaction: commit');
-        await this.transactionClient.query('COMMIT');
-        this.transactionClient.release();
-        this.transactionClient = null;
+        if (this.transactionClient) {
+            log.debug('Transaction: commit');
+            await this.transactionClient.query('COMMIT');
+            this.transactionClient.release();
+            this.transactionClient = null;
+        }
+        else {
+            log.warn('Cannot commit transaction: no open transaction found')
+        }
     }
 
     async rollbackTransaction() {
@@ -536,6 +541,9 @@ export class PostgresUtils extends DatabaseUtils {
             await this.transactionClient.query('ROLLBACK');
             this.transactionClient.release();
             this.transactionClient = null;
+        }
+        else {
+            log.warn('Cannot rollback transaction: no open transaction found')
         }
     }
 

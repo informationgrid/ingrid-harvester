@@ -99,14 +99,14 @@ export class ConfigCtrl {
         await ConfigService.addOrEditCatalog(catalog);
     }
 
-    @Put('/catalogs/:id')
-    async enableCatalog(@PathParams('id') catalogIdentifier: string,
+    @Put('/catalogs/:identifier')
+    async enableCatalog(@PathParams('identifier') catalogIdentifier: string,
             @QueryParams('enable') enable: boolean) {
         await ConfigService.enableCatalog(catalogIdentifier, enable);
     }
 
-    @Delete('/catalogs/:id')
-    async deleteCatalog(@PathParams('id') catalogIdentifier: string,
+    @Delete('/catalogs/:identifier')
+    async deleteCatalog(@PathParams('identifier') catalogIdentifier: string,
             @QueryParams('target') target: string) {
         await ConfigService.removeCatalog(catalogIdentifier, target);
     }
