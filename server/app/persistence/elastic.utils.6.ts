@@ -164,10 +164,11 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
 
     async listAliases(index: string): Promise<string[]> {
         index = this.addPrefixIfNotExists(index) as string;
-        let { body: response } = await this.client.indices.getAlias({
-            index
+        let { body: response } = await this.client.cat.aliases({
+            format: 'json'
         });
-        return Object.keys(response[index]['aliases']);
+        let aliases = response.filter(entry => entry.index == index).map(entry => entry.alias);
+        return aliases; 
     }
 
     async removeAlias(index: string, alias: string): Promise<any> {
