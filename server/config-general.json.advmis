@@ -1,0 +1,71 @@
+{
+  "database": {
+    "type": "postgresql",
+    "connectionString": "",
+    "host": "localhost",
+    "port": 5432,
+    "database": "ogcrecords",
+    "user": "ogcrecords",
+    "password": "ogcrecords",
+    "defaultCatalogIdentifier": "harvester"
+  },
+  "elasticsearch": {
+    "url": "http://localhost:9200",
+    "version": "7",
+    "user": "elastic",
+    "password": "",
+    "rejectUnauthorized": true,
+    "alias": "ige",
+    "prefix": "",
+    "index": "ige-harvester",
+    "numberOfShards": 1,
+    "numberOfReplicas": 0
+  },
+  "cronOffset": 0,
+  "mappingLogLevel": "warn",
+  "proxy": null,
+  "allowAllUnauthorizedSSL": false,
+  "portalUrl": "",
+  "urlCheck": {
+    "active": false,
+    "pattern": "30 04 * * *"
+  },
+  "indexCheck": {
+    "active": false,
+    "pattern": "10 04 * * *"
+  },
+  "mail": {
+    "enabled": false,
+    "mailServer": {
+      "host": "localhost",
+      "port": 465,
+      "secure": false,
+      "tls": {
+        "rejectUnauthorized": true
+      },
+      "auth": {
+        "user": "",
+        "pass": ""
+      }
+    },
+    "from": "test@example.com",
+    "to": "test@example.com",
+    "subjectTag": "harvester"
+  },
+  "indexBackup": {
+    "active": false,
+    "indexPattern": "harvester_statistic|url_check_history|index_check_history",
+    "cronPattern": "30 05 * * *",
+    "dir": ""
+  },
+  "harvesting": {
+    "mail": {
+      "enabled": false,
+      "minDifference": 10
+    },
+    "cancel": {
+      "enabled": false,
+      "minDifference": 10
+    }
+  }
+}

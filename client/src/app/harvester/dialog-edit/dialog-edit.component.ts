@@ -21,10 +21,11 @@
  * ==================================================
  */
 
-import {Component, Inject, OnInit} from '@angular/core';
-import {Harvester} from '@shared/harvester';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Harvester } from '@shared/harvester';
+import { AddOrEditCatalogComponent } from '../../config/config-catalogs/add-or-edit-catalog/add-or-edit-catalog.component';
 import { ConfigService } from '../../config/config.service';
 
 @Component({
@@ -39,6 +40,8 @@ export class DialogEditComponent implements OnInit {
   harvesterForm: UntypedFormGroup;
 
   profile: string;
+
+  catalogs = this.configService.getCatalogs();
 
   constructor(@Inject(MAT_DIALOG_DATA) public harvester: Harvester,
               public dialogRef: MatDialogRef<DialogEditComponent>,
@@ -61,7 +64,6 @@ export class DialogEditComponent implements OnInit {
       type: [{value: harvester.type, disabled: harvester.id !== -1}, Validators.required],
       description: [harvester.description, Validators.required],
       priority: [harvester.priority],
-      index: [harvester.index],
       iPlugId: [harvester.iPlugId],
       partner: [harvester.partner],
       provider: [harvester.provider],
@@ -74,7 +76,7 @@ export class DialogEditComponent implements OnInit {
       defaultAttributionLink: [harvester.defaultAttributionLink],
       maxRecords: [harvester.maxRecords, Validators.min(1)],
       startPosition: [harvester.startPosition, Validators.min(0)],
-      catalogId: [harvester.catalogId, Validators.required],
+      catalogId: [harvester.catalogId, Validators.required, AddOrEditCatalogComponent.identifierValidator],
       customCode: [harvester.customCode],
       rules: this.formBuilder.group({
         containsDocumentsWithData: [harvester.rules.containsDocumentsWithData],

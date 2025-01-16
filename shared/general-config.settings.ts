@@ -35,10 +35,10 @@ export type GeneralSettings = {
     indexCheck?: CronData,
     sessionSecret: string,
     mail?: {
-    	enabled?: boolean,
+        enabled?: boolean,
         mailServer?: MailServerConfiguration,
-		from?: string,
-    	to?: string,
+        from?: string,
+        to?: string,
         subjectTag?: string
     },
     indexBackup?: {

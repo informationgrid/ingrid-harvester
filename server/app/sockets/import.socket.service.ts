@@ -21,17 +21,18 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../utils/misc.utils';
+import { Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession } from '@tsed/socketio';
+import { CronJob } from 'cron';
+import { getLogger } from 'log4js';
 import * as SocketIO from 'socket.io';
-import {Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession} from '@tsed/socketio';
-import {ConfigService} from '../services/config/ConfigService';
-import {SummaryService} from '../services/config/SummaryService';
-import {CronJob} from 'cron';
-import {getLogger} from 'log4js';
-import {MailServer} from "../utils/nodemailer.utils";
-import {ImportLogMessage} from "../model/import.result";
-import {StatisticUtils} from "../statistic/statistic.utils";
-import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
+import { ImportLogMessage } from '../model/import.result';
+import { ElasticsearchFactory } from '../persistence/elastic.factory';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
+import { ConfigService } from '../services/config/ConfigService';
+import { SummaryService } from '../services/config/SummaryService';
+import { StatisticUtils } from '../statistic/statistic.utils';
+import * as MiscUtils from '../utils/misc.utils';
+import { MailServer } from '../utils/nodemailer.utils';
 
 @SocketService('/import')
 export class ImportSocketService {
@@ -67,6 +68,9 @@ export class ImportSocketService {
         let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });
 
         let profile = ProfileFactoryLoader.get();
+        if (profile.useIndexPerCatalog()) {
+            profile.createCatalogIfNotExist(configHarvester.catalogId);
+        }
         let importer = await profile.getImporterFactory().get(configHarvester);
         let mode = isIncremental ? 'incr' : 'full';
         this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
@@ -90,7 +94,9 @@ export class ImportSocketService {
                     importer.getSummary().print(this.log);
                     this.summaryService.update(response);
                     let statisticUtils = new StatisticUtils(configGeneral);
-                    statisticUtils.saveSummary(response, configHarvester.index);
+                    let elastic = ElasticsearchFactory.getElasticUtils(configGeneral.elasticsearch, null);
+                    let index = profile.useIndexPerCatalog() ? configHarvester.catalogId : elastic.indexName;
+                    statisticUtils.saveSummary(response, index);
 
                     // when less results send mail
                     let importedLastRun = (summaryLastRun) ? summaryLastRun.summary.numDocs - summaryLastRun.summary.skippedDocs.length : 0;

@@ -1,0 +1,57 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<h1 mat-dialog-title>Katalog löschen</h1>
+<mat-dialog-content>
+  <div class="form-wrapper">
+    <p>
+      Katalog "<b>{{catalog.title}}</b>" hat <b>{{count}}<!--{{(catalogsWrapper | async)[catalog]}}--></b> Datensätze.<br>
+    </p>
+    <div class="flex-row gap-10 space-between">
+      <mat-radio-group [(ngModel)]="move" class="flex-col gap-0">
+        <mat-radio-button [value]="false">Datensätze löschen</mat-radio-button>
+        <!--
+          disabled because of buggy `moveDatasets` in `postgres.utils.ts`
+        -->
+        <mat-radio-button [value]="true" [disabled]="true">Datensätze verschieben nach:</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="flex-row gap-10 space-between catalog-select">
+      <mat-form-field class="flex-1">
+        <mat-label>Ziel-Katalog</mat-label>
+        <mat-select [(ngModel)]="target" [required]="move" [disabled]="!move">
+          @for (wrapper of catalogsWrapper | async; track wrapper.catalog.identifier) {
+            @if (wrapper.catalog.identifier != catalog.identifier) {
+              <mat-option value="{{wrapper.catalog.identifier}}">{{wrapper.catalog.title}}</mat-option>
+            }
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</mat-dialog-content>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Abbrechen</button>
+  <div class="flex-space"></div>
+  <button data-test="btn-delete-catalog" mat-button color="primary" [mat-dialog-close]="resolveTarget()" [disabled]="move && target == null">Katalog löschen</button>
+</div>

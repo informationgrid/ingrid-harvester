@@ -21,18 +21,22 @@
  * ==================================================
  */
 
+import { GeneralSettings } from '@shared/general-config.settings';
+import { Harvester } from '@shared/harvester';
+import { MappingDistribution, MappingItem } from '@shared/mapping.model';
 import * as fs from 'fs';
-import * as MiscUtils from '../../utils/misc.utils';
+import { getLogger } from 'log4js';
 import { defaultCKANSettings } from '../../importer/ckan/ckan.settings';
 import { defaultCSWSettings } from '../../importer/csw/csw.settings';
 import { defaultDCATSettings } from '../../importer/dcat/dcat.settings';
 import { defaultExcelSettings } from '../../importer/excel/excel.settings';
 import { defaultKldSettings } from '../../importer/kld/kld.settings';
 import { defaultOAISettings } from '../../importer/oai/oai.settings';
-import { getLogger } from 'log4js';
-import { GeneralSettings } from '@shared/general-config.settings';
-import { Harvester } from '@shared/harvester';
-import { MappingDistribution, MappingItem } from '@shared/mapping.model';
+import { Catalog } from '../../model/dcatApPlu.model';
+import { DatabaseFactory } from '../../persistence/database.factory';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import * as MiscUtils from '../../utils/misc.utils';
 import { UrlUtils } from '../../utils/url.utils';
 
 const log = getLogger();
@@ -307,10 +311,85 @@ export class ConfigService {
         fs.writeFileSync(this.GENERAL_CONFIG_FILE, JSON.stringify(config, null, 2));
     }
 
+    private static getDbUtils() {
+        let generalConfig = ConfigService.getGeneralSettings();
+        return DatabaseFactory.getDatabaseUtils(generalConfig.database, null);
+    }
+
+    private static getEsUtils() {
+        let generalConfig = ConfigService.getGeneralSettings();
+        return ElasticsearchFactory.getElasticUtils(generalConfig.elasticsearch, null);
+    }
+
+    static async getCatalogSizes(): Promise<any[]> {
+        return await ConfigService.getDbUtils().getCatalogSizes(false);
+    }
+
+    static async getCatalogs(): Promise<Catalog[]> {
+        let catalogs = await ConfigService.getDbUtils().listCatalogs();
+        let esUtils = ConfigService.getEsUtils();
+        let alias = ConfigService.getGeneralSettings().elasticsearch.alias;
+        for (let catalog of catalogs) {
+            let aliases = await esUtils.listAliases(catalog.identifier);
+            catalog['isEnabled'] = aliases.includes(alias);
+        }
+        return catalogs;
+    }
+
+    static async addOrEditCatalog(catalog: Catalog) {
+        if (catalog.id) {
+            return await ConfigService.getDbUtils().updateCatalog(catalog);
+        }
+        else {
+            let catalogPromise = await ConfigService.getDbUtils().createCatalog(catalog);
+
+            // for ingrid, create a new index when a new catalog is created
+            let profile = ProfileFactoryLoader.get();
+            if (profile.useIndexPerCatalog()) {
+                await this.getEsUtils().prepareIndexWithName(
+                    catalog.identifier, profile.getIndexMappings(), profile.getIndexSettings(), true);
+            }
+            return profile.createCatalogIfNotExist(catalog);
+        }
+    }
+
+    static async enableCatalog(catalogIdentifier: string, enable: boolean) {
+        let alias = ConfigService.getGeneralSettings().elasticsearch.alias;
+        if (enable) {
+            await this.getEsUtils().addAlias(catalogIdentifier, alias);
+        }
+        else {
+            await this.getEsUtils().removeAlias(catalogIdentifier, alias);
+        }
+    }
+
+    static async removeCatalog(catalogIdentifier: string, datasetTarget: string) {
+        let database = this.getDbUtils();
+        let { id: catalogId } = await database.getCatalog(catalogIdentifier);
+        // if no target is specified, delete datasets
+        if (!datasetTarget) {
+            await database.deleteDatasets(catalogId);
+        }
+        // otherwise, move them to target
+        else {
+            let targetCatalog = await database.getCatalog(datasetTarget);
+            if (!targetCatalog) {
+                throw new Error(`Target catalog ${datasetTarget} could not be found.`);
+            }
+            await database.moveDatasets(catalogId, targetCatalog.id) ;
+        }
+        // TODO then deduplicate all affected sources
+        // then delete catalog from DB
+        await database.deleteCatalog(catalogId);
+        // at last, delete index from ES if applicable
+        if (ProfileFactoryLoader.get().useIndexPerCatalog()) {
+            let elastic = this.getEsUtils();
+            await elastic.deleteIndex(catalogIdentifier);
+        }
+    }
+
     static getMappingDistribution(): MappingDistribution[] {
-
         return this.mappingDistribution;
-
     }
 
     static addMappingDistribution(item: MappingItem): void {

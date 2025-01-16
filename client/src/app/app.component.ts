@@ -62,37 +62,18 @@ export class AppComponent implements OnInit {
   }
 
   private loadIcons() {
-    // useful tool for merging SVG files: merge-svg-files via npm
-    this.registry.addSvgIconSet(
-      this.domSanitizer.bypassSecurityTrustResourceUrl(
-        "assets/icons/icon-navigation.svg",
-      ),
-    );
-    this.registry.addSvgIconSet(
-      this.domSanitizer.bypassSecurityTrustResourceUrl(
-        "assets/icons/icon-doc-types.svg",
-      ),
-    );
-    this.registry.addSvgIconSet(
-      this.domSanitizer.bypassSecurityTrustResourceUrl(
-        "assets/icons/icon-toolbar.svg",
-      ),
-    );
-    this.registry.addSvgIconSet(
-      this.domSanitizer.bypassSecurityTrustResourceUrl(
-        "assets/icons/icon-general.svg",
-      ),
-    );
-    this.registry.addSvgIconSet(
-      this.domSanitizer.bypassSecurityTrustResourceUrl(
-        "assets/icons/icon-button.svg",
-      ),
-    );
-    this.registry.addSvgIconSet(
-      this.domSanitizer.bypassSecurityTrustResourceUrl(
-        "assets/images/banner.svg",
-      ),
-    );
+    let paths = [
+      "assets/icons/icon-navigation.svg",
+      "assets/icons/icon-doc-types.svg",
+      "assets/icons/icon-toolbar.svg",
+      "assets/icons/icon-general.svg",
+      "assets/icons/icon-button.svg",
+      "assets/images/banner.svg",
+    ];
+    for (let path of paths) {
+      // useful tool for merging SVG files: merge-svg-files via npm
+      this.registry.addSvgIconSet(this.domSanitizer.bypassSecurityTrustResourceUrl(path));
+    }
   }
 
   ngOnInit(): void {

@@ -21,15 +21,15 @@
  * ==================================================
  */
 
-import { elasticsearchMapping } from '../../statistic/statistic.mapping';
-import { ConfigService } from '../config/ConfigService';
-import { ElasticQueries } from '../../persistence/elastic.queries';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils';
-import { IndexSettings } from '../../persistence/elastic.setting';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
 import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory';
+import { ElasticQueries } from '../../persistence/elastic.queries';
+import { IndexSettings } from '../../persistence/elastic.setting';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { elasticsearchMapping } from '../../statistic/statistic.mapping';
+import { ConfigService } from '../config/ConfigService';
 
 @Service()
 export class HistoryService {
@@ -39,10 +39,10 @@ export class HistoryService {
     private indexSettings: IndexSettings;
 
     constructor() {
-		this.initialize();
-	}
+        this.initialize();
+    }
 
-	initialize() {
+    initialize() {
         let config = {
             ...ConfigService.getGeneralSettings().elasticsearch,
             includeTimestamp: true,
@@ -62,7 +62,8 @@ export class HistoryService {
         if (!indexExists) {
             await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
         }
-        let history = await this.elasticUtils.getHistory(this.elasticQueries.findHistory(harvester.index));
+        let index = ProfileFactoryLoader.get().useIndexPerCatalog() ? harvester.catalogId : this.elasticUtils.indexName;
+        let history = await this.elasticUtils.getHistory(this.elasticQueries.findHistory(index));
         return {
             harvester: harvester.description,
             ...history

@@ -41,14 +41,21 @@ export class PostgresQueries {
     readonly createCollectionTable = this.readFile('createCollectionTable');
     readonly createRecordTable = this.readFile('createRecordTable');
     readonly createCouplingTable = this.readFile('createCouplingTable');
+    readonly getCollectionSizes = this.readFile('getCollectionSizes');
+    readonly listCollections = this.readFile('listCollections');
     readonly createCollection = this.readFile('createCollection');
     readonly getCollection = this.readFile('getCollection');
+    readonly updateCollection = this.readFile('updateCollection');
+    readonly deleteCollection = this.readFile('deleteCollection');
     readonly bulkUpsert = this.readFile('bulkUpsert');
     readonly bulkUpsertCoupling = this.readFile('bulkUpsertCoupling');
     readonly nonFetchedRatio = this.readFile('nonFetchedRatio');
+    readonly moveRecords = this.readFile('moveRecords');
     readonly deleteRecords = this.readFile('deleteRecords');
+    readonly deleteNonFetchedRecords = this.readFile('deleteNonFetchedRecords');
     readonly getStoredData = this.readFile('getStoredData');
-    readonly getDatasets = this.readFile('getDatasets');
+    readonly getDatasetsBySource = this.readFile('getDatasetsBySource');
+    readonly getDatasetsByCollection = this.readFile('getDatasetsByCollection');
     readonly getServices = this.readFile('getServices');
     readonly getBuckets = this.readFile('getBuckets');
 

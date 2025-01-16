@@ -21,33 +21,31 @@
  * ==================================================
  */
 
-import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {ConfigComponent} from './config.component';
-import {MatButtonModule} from "@angular/material/button";
-import {Router, RouterModule, Routes} from '@angular/router';
-import {SharedModule} from '../shared/shared.module';
-import {ReactiveFormsModule} from '@angular/forms';
-import {MatTabsModule} from "@angular/material/tabs";
-import { ConfigMappingComponent } from './config-mapping/config-mapping.component';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
+import { TranslocoModule } from '@ngneat/transloco';
+import { CronjobFormFieldComponent } from '../shared/cronjob-form-field/cronjob-form-field.component';
+import { PageTemplateModule } from '../shared/page-template/page-template.module';
+import { SharedModule } from '../shared/shared.module';
+import { AddOrEditCatalogComponent } from './config-catalogs/add-or-edit-catalog/add-or-edit-catalog.component';
+import { ConfigCatalogsComponent } from './config-catalogs/config-catalogs.component';
+import { DeleteCatalogComponent } from './config-catalogs/delete-catalog/delete-catalog.component';
 import { ConfigGeneralComponent } from './config-general/config-general.component';
 import { ConfigImportExportComponent } from './config-import-export/config-import-export.component';
-import {MatListModule} from "@angular/material/list";
-import {MatIconModule} from "@angular/material/icon";
 import { AddMappingItemComponent } from './config-mapping/add-mapping-item/add-mapping-item.component';
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {MatSlideToggleModule} from "@angular/material/slide-toggle";
-import {MatCardModule} from "@angular/material/card";
-import {MatCheckboxModule} from "@angular/material/checkbox";
-import { routing } from "./config.routing";
-import { TranslocoModule, TranslocoService } from "@ngneat/transloco";
-import { ConfigLoader } from '../app.module';
-import { ConfigService } from '../config.service';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { UnauthorizedInterceptor } from '../security/unauthorized.interceptor';
-import { AuthenticationService } from '../security/authentication.service';
-import { PageTemplateModule } from "../shared/page-template/page-template.module"
-import { CronjobFormFieldComponent } from '../shared/cronjob-form-field/cronjob-form-field.component'
+import { ConfigMappingComponent } from './config-mapping/config-mapping.component';
+import { ConfigComponent } from './config.component';
+import { routing } from './config.routing';
 
 @NgModule({
     declarations: [
@@ -55,7 +53,10 @@ import { CronjobFormFieldComponent } from '../shared/cronjob-form-field/cronjob-
         ConfigMappingComponent, 
         ConfigGeneralComponent, 
         ConfigImportExportComponent, 
-        AddMappingItemComponent
+        ConfigCatalogsComponent, 
+        AddMappingItemComponent,
+        AddOrEditCatalogComponent,
+        DeleteCatalogComponent
     ],
     imports: [
         CommonModule,
@@ -69,6 +70,7 @@ import { CronjobFormFieldComponent } from '../shared/cronjob-form-field/cronjob-
         MatSlideToggleModule,
         MatCardModule,
         MatCheckboxModule,
+        MatRadioModule,
         routing,
         TranslocoModule,
         PageTemplateModule,

@@ -21,14 +21,15 @@
  * ==================================================
  */
 
+import { Index } from '@shared/index.model';
+import { Service } from '@tsed/di';
 import * as fs from "fs";
-import { BulkResponse, ElasticsearchUtils} from '../persistence/elastic.utils';
-import { ConfigService} from './config/ConfigService';
+import { Summary } from '../model/summary';
 import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { Index} from '@shared/index.model';
 import { IndexConfiguration } from '../persistence/elastic.setting';
-import { Service} from '@tsed/di';
-import { Summary} from '../model/summary';
+import { BulkResponse, ElasticsearchUtils } from '../persistence/elastic.utils';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
+import { ConfigService } from './config/ConfigService';
 
 const log = require('log4js').getLogger(__filename);
 const path = require('path');
@@ -79,7 +80,9 @@ export class IndexService {
 
     private async getIndexFromHarvesterID(id: number): Promise<string> {
         const harvester = ConfigService.get().find(h => h.id === id);
-        let indices = await this.elasticUtils.getIndicesFromBasename(harvester.index);
+
+        let index = ProfileFactoryLoader.get().useIndexPerCatalog() ? harvester.catalogId : this.elasticUtils.indexName;
+        let indices = await this.elasticUtils.getIndicesFromBasename(index);
 
         // if multiple indices, then there might be an indexing process
         // we should be able to ignore adding an alias, since it should happen automatically after indexing

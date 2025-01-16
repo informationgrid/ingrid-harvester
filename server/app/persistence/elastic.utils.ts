@@ -53,7 +53,7 @@ export abstract class ElasticsearchUtils {
     public static maxBulkSize: number = 50;
     public elasticQueries: ElasticQueries;
     public indexName: string;
-    public _bulkOperationChunks: any[][];
+    public _bulkOperationChunks: object;//any[][];
 
     constructor(readonly config: IndexConfiguration) {
     }
@@ -91,6 +91,13 @@ export abstract class ElasticsearchUtils {
      * @param {string} alias
      */
     abstract addAlias(index: string, alias: string): Promise<any>;
+
+    /**
+     * Get the list of aliases the specified index is part of.
+     * 
+     * @param {string} index 
+     */
+    abstract listAliases(index: string): Promise<string[]>;
 
     /**
      * Remove the specified alias from an index.
@@ -141,11 +148,11 @@ export abstract class ElasticsearchUtils {
     abstract addDocToBulk(doc, id: string | number, maxBulkSize?: number): Promise<BulkResponse>;
 
     /**
-     * Send all collected bulk data if any.
+     * Send all collected bulk data for an index if specified, for all otherwise .
      *
-     * @param {boolean} closeAfterBulk
+     * @param {string} index
      */
-    abstract sendBulkOperations(closeAfterBulk?: boolean): Promise<BulkResponse>;
+    abstract sendBulkOperations(index?: string): Promise<BulkResponse | void>;
 
     /**
      * Searches the index for documents with the given ids and copies a set of the issued

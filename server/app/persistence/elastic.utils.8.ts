@@ -135,7 +135,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
 
         try {
             await this.client.cluster.health({ wait_for_status: 'yellow' });
-            await this.sendBulkOperations(false);
+            await this.sendBulkOperations();
             if (closeIndex) {
                 // await this.deleteOldIndices(this.config.index, this.indexName);
                 // if (this.config.addAlias) {
@@ -156,6 +156,15 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
             index,
             name: alias
         });
+    }
+
+    async listAliases(index: string): Promise<string[]> {
+        index = this.addPrefixIfNotExists(index) as string;
+        let response = await this.client.cat.aliases({
+            format: 'json'
+        });
+        let aliases = response.filter(entry => entry.index == index).map(entry => entry.alias);
+        return aliases; 
     }
 
     async removeAlias(index: string, alias: string): Promise<any> {
@@ -238,7 +247,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
         }
     }
 
-    bulkWithIndexName(index: string, type, data, closeAfterBulk): Promise<BulkResponse> {
+    async bulkWithIndexName(index: string, type, data, closeAfterBulk): Promise<BulkResponse> {
         index = this.addPrefixIfNotExists(index) as string;
         return new Promise((resolve, reject) => {
             try {
@@ -281,7 +290,20 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
 
     async addOperationChunksToBulk(boxedOperations: EsOperation[]): Promise<BulkResponse> {
         let operationChunk = [];
-        for (let { operation, _id, document } of boxedOperations) {
+        let index: string;
+        for (let { operation, _id, _index, document } of boxedOperations) {
+            if (!_index) {
+                // use standard index (this.indexName) if no index was given
+                _index = this.indexName;
+            }
+            if (!index) {
+                // set index for this box of operations if not already set
+                index = _index;
+            }
+            if (index != _index) {
+                // a box of operations must target the same index
+                throw new Error(`Different indices in the same ES boxedOperations chunk (${index}, ${_index})`)
+            }
             operationChunk.push({ [operation]: { _id } });
             switch (operation) {
                 case 'index':
@@ -298,11 +320,15 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
                     break;
             }
         }
-        this._bulkOperationChunks.push(operationChunk);
+        if (!(index in this._bulkOperationChunks)) {
+            this._bulkOperationChunks[index] = [];
+        }
+        this._bulkOperationChunks[index].push(operationChunk);
 
-        if (this._bulkOperationChunks.length >= ElasticsearchUtils.maxBulkSize) {
-            return this.sendBulkOperations();
-        } else {
+        if (this._bulkOperationChunks[index].length >= ElasticsearchUtils.maxBulkSize) {
+            return this.sendBulkOperations(index);
+        }
+        else {
             return new Promise(resolve => resolve({
                 queued: true
             }));
@@ -313,30 +339,42 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
         return this.addOperationChunksToBulk([{ operation: 'index', _id: id, document }]);
     }
 
-    sendBulkOperations(closeAfterBulk?: boolean): Promise<BulkResponse> {
-        if (this._bulkOperationChunks.length > 0) {
-            let bulkOperations = this._bulkOperationChunks.flat(1);
-            log.debug('Sending BULK message with ' + this._bulkOperationChunks.length + ' operation chunks to ' + this.indexName);
-            let promise = this.bulk(bulkOperations, closeAfterBulk);
-            this._bulkOperationChunks = [];
-            return promise;
+    async sendBulkOperations(index?: string): Promise<BulkResponse> {
+        let promises: Promise<BulkResponse>[] = [];
+        let indices = index != null ? [index] : Object.keys(this._bulkOperationChunks);
+        for (let idx of indices) {
+            let bulkOperationChunksPerIndex = this._bulkOperationChunks[idx];
+            if (bulkOperationChunksPerIndex.length > 0) {
+                log.debug('Sending BULK message with ' + bulkOperationChunksPerIndex.length + ' operation chunks to ' + idx);
+                let promise = this.bulkWithIndexName(idx, null, bulkOperationChunksPerIndex.flat(1), false);
+                this._bulkOperationChunks[idx] = [];
+                promises.push(promise);
+            }
+            else {
+                promises.push(new Promise(resolve => resolve({
+                    queued: true
+                })));
+            }
         }
-        return new Promise(resolve => resolve({
-            queued: true
-        }));
+        if (promises.length == 1) {
+            return promises[0];
+        }
+        Promise.all(promises);
     }
 
     private handleError(message: string, error: any) {
-        this.summary.elasticErrors?.push(message);
+        this.summary?.elasticErrors?.push(message);
         log.error(message, error);
     }
 
     async deleteIndex(indicesToDelete: string | string[]): Promise<any> {
-        indicesToDelete = this.addPrefixIfNotExists(indicesToDelete);
-        log.debug('Deleting indices: ' + indicesToDelete);
-        return await this.client.indices.delete({
-            index: indicesToDelete
-        });
+        if (indicesToDelete) {
+            indicesToDelete = this.addPrefixIfNotExists(indicesToDelete);
+            log.debug('Deleting indices: ' + indicesToDelete);
+            return await this.client.indices.delete({
+                index: indicesToDelete
+            });
+        }
     }
 
     async search(index: string | string[], body?: object, size?: number): Promise<{ hits: any }> {

@@ -21,16 +21,13 @@
  * ==================================================
  */
 
-import * as path from 'path';
 import { $log, Configuration, PlatformAcceptMimesMiddleware, PlatformApplication, PlatformLogMiddleware } from '@tsed/common';
-import { addLayout, configure } from 'log4js';
-import { jsonLayout } from './utils/log4js.json.layout';
-import { ConfigService } from './services/config/ConfigService';
-import { ElasticsearchFactory } from './persistence/elastic.factory';
-import { IndexConfiguration } from './persistence/elastic.setting';
 import { Inject } from '@tsed/di';
+import { addLayout, configure } from 'log4js';
+import * as path from 'path';
 import { ProfileFactoryLoader } from './profiles/profile.factory.loader';
-import { Summary } from './model/summary';
+import { ConfigService } from './services/config/ConfigService';
+import { jsonLayout } from './utils/log4js.json.layout';
 
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -139,13 +136,9 @@ export class Server {
     }
 
     async $onReady() {
-        // try to initialize the ES index if it does not exist
-        let profile = ProfileFactoryLoader.get();
-        let indexConfig: IndexConfiguration = ConfigService.getGeneralSettings().elasticsearch;
-        let elastic = ElasticsearchFactory.getElasticUtils(indexConfig, new Summary({ index: '', isIncremental: false, maxConcurrent: 0, type: '' }));
-        await profile.configure(elastic);
-        await elastic.prepareIndex(profile.getIndexMappings(), profile.getIndexSettings(), true);
-        await elastic.addAlias(indexConfig.prefix + indexConfig.index, indexConfig.alias);
+        log.info('Setting up profile');
+        const profile = ProfileFactoryLoader.get();
+        await profile.init();
         log.info('Server initialized');
     }
 
