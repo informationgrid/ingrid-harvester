@@ -61,6 +61,10 @@ export class PostgresQueries {
 
     private readFile(script: string): string {
         let profile = ProfileFactoryLoader.get().getProfileName();
-        return fs.readFileSync(`app/profiles/${profile}/persistence/queries/${script}.sql`, { encoding: 'utf8', flag: 'r' });
+        // use from profile if file exists there
+        // otherwise, use default from `queries` dir
+        let profileQueryPath = `app/profiles/${profile}/persistence/queries/${script}.sql`;
+        let queryPath = fs.existsSync(profileQueryPath) ? profileQueryPath : `app/persistence/queries/${script}.sql`;
+        return fs.readFileSync(queryPath, { encoding: 'utf8', flag: 'r' });
     }
 }
