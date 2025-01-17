@@ -1,14 +1,13 @@
 [
   {
-    "index": "oai",
-    "priority": null,
-    "type": "OAI",
+    "index": "csw_geoportal_de",
+    "priority": 5,
+    "type": "CSW",
     "maxRecords": 200,
     "startPosition": 1,
-    "catalogId": "digicult",
     "customCode": null,
-    "defaultMcloudSubgroup": null,
-    "defaultDCATCategory": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
@@ -17,30 +16,594 @@
       "containsDocumentsWithData": null
     },
     "isIncremental": false,
-    "maxConcurrent": 1,
+    "maxConcurrent": 6,
     "skipUrlCheckOnHarvest": false,
     "timeout": 60000,
-    "sourceURL": "https://oamh-lvr.digicult-verbund.de/cv/sprache_lvr_13tHztt9gZr",
+    "sourceURL": "https://gdk.gdi-de.org/gdi-de/srv/ger/csw",
+    "maxServices": 30,
+    "resolveOgcDistributions": true,
+    "harvestingMode": "standard",
     "eitherKeywords": [],
-    "metadataPrefix": "lido",
-    "set": "",
-    "id": 20,
-    "description": "digiCULT (Sprache)",
+    "httpMethod": "POST",
+    "resultType": "results",
+    "simplifyTolerance": 0,
+    "id": 18,
+    "description": "geoportal.de",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
-    "disable": false,
+    "recordFilter": "<ogc:Filter>\n    <ogc:And>\n        <ogc:Or>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bauleitplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bauleitpläne</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Bebauungsplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>B-Plan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Flächennutzungsplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>FNP</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnungsprogramm</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumordnungsverfahren</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Raumverträglichkeit</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Regionalplan</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Regionalplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesplanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesentwicklung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Landesraumordnungsprogramm</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Milieuschutzgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Milieugebiet</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungssatzungsgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungssatzung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungsverordnung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Erhaltungsverordnungsgebiete</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>städtebauliche Satzungen</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>§ 172 BauGB Städtebauliche Förderung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Beteiligung der Öffentlichkeit</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>Öffentlichkeitsbeteiligung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>XPlanung</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n            <ogc:PropertyIsEqualTo>\n                <ogc:PropertyName>Subject</ogc:PropertyName>\n                <ogc:Literal>XPlanGML</ogc:Literal>\n            </ogc:PropertyIsEqualTo>\n        </ogc:Or>\n        <ogc:PropertyIsLike escapeChar=\"\\\" singleChar=\"?\" wildCard=\"*\">\n            <ogc:PropertyName>AnyText</ogc:PropertyName>\n            <ogc:Literal>*Hamburg*</ogc:Literal>\n        </ogc:PropertyIsLike>\n    </ogc:And>\n</ogc:Filter>",
+    "pluPlanState": "fixed",
+    "disable": true,
     "cron": {
       "full": {
-        "pattern": "0 2 * * 0-6",
+        "pattern": "0 2 * * 1-6",
         "active": true
       },
       "incr": {
         "pattern": "0 2 * * 0",
+        "active": true
+      }
+    }
+  },
+  {
+    "index": "wfs_syn_hh_xplanung",
+    "priority": 0,
+    "type": "WFS.XPLAN.SYN",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "hh",
+    "pluPlanState": "fixed",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://hh.xplanungsplattform.de/xplansyn-wfs/services/xplansynwfs",
+    "id": 1,
+    "description": "XPlanung Hamburg (festgesetzt)",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "9 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
         "active": false
       }
     },
-    "from": "",
-    "until": ""
+    "maxConcurrent": null,
+    "contactCswUrl": "https://metaver.de/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&id=EBA4BF12-3ED2-4305-9B67-8E689FE8C445",
+    "contactMetadata": null
+  },
+  {
+    "index": "wfs_syn_hh_xplanung_pre",
+    "priority": 0,
+    "type": "WFS.XPLAN.SYN",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "hh",
+    "pluPlanState": "inPreparation",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://hh.xplanungsplattform.de/xplansyn-wfs/services/xplansynwfspre",
+    "id": 2,
+    "description": "XPlanung Hamburg (in Aufstellung)",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "12 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    },
+    "maxConcurrent": null,
+    "contactCswUrl": "https://metaver.de/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&id=EBA4BF12-3ED2-4305-9B67-8E689FE8C445",
+    "contactMetadata": null
+  },
+  {
+    "index": "wfs_syn_hb_xplanung",
+    "priority": 0,
+    "type": "WFS.XPLAN.SYN",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "hb",
+    "pluPlanState": "fixed",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://hb.xplanungsplattform.de/xplansyn-wfs/services/xplansynwfs",
+    "id": 3,
+    "description": "XPlanung Bremen (festgesetzt)",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "42 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    },
+    "maxConcurrent": null
+  },
+  {
+    "index": "wfs_ni_plandigital",
+    "priority": 0,
+    "type": "WFS.MS",
+    "maxRecords": 3000,
+    "startPosition": 0,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "ni",
+    "pluPlanState": "fixed",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://testportal-plandigital.de/ows/fplaene",
+    "id": 19,
+    "description": "PlanDigital Niedersachsen FP (festgesetzt)",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "ms:fp_plan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "45 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    },
+    "maxConcurrent": null
+  },
+  {
+    "index": "wfs_xplanung_freiburg_de_30",
+    "priority": 0,
+    "type": "WFS.XPLAN",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "bw",
+    "pluPlanState": "fixed",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://xplanung.freiburg.de/xplan-wfs/services/wfs30",
+    "id": 9,
+    "description": "xplanung.freiburg.de v30",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "1.1.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "15 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    }
+  },
+  {
+    "index": "wfs_xplanung_freiburg_de_40",
+    "priority": 0,
+    "type": "WFS.XPLAN",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "bw",
+    "pluPlanState": "fixed",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://xplanung.freiburg.de/xplan-wfs/services/wfs40",
+    "id": 10,
+    "description": "xplanung.freiburg.de v40",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "18 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    }
+  },
+  {
+    "index": "wfs_xplanung_freiburg_de_41",
+    "priority": 0,
+    "type": "WFS.XPLAN",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "bw",
+    "pluPlanState": "fixed",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://xplanung.freiburg.de/xplan-wfs/services/wfs41",
+    "id": 11,
+    "description": "xplanung.freiburg.de v41",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "21 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    }
+  },
+  {
+    "index": "wfs_xplanung_freiburg_de_50",
+    "priority": 0,
+    "type": "WFS.XPLAN",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "bw",
+    "pluPlanState": "fixed",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://xplanung.freiburg.de/xplan-wfs/services/wfs50",
+    "id": 12,
+    "description": "xplanung.freiburg.de v50",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "24 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    }
+  },
+  {
+    "index": "wfs_xplanung_freiburg_de_51",
+    "priority": 0,
+    "type": "WFS.XPLAN",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "bw",
+    "pluPlanState": "fixed",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://xplanung.freiburg.de/xplan-wfs/services/wfs51",
+    "id": 13,
+    "description": "xplanung.freiburg.de v51",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "27 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    }
+  },
+  {
+    "index": "wfs_xplanung_freiburg_de_52",
+    "priority": 0,
+    "type": "WFS.XPLAN",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "bw",
+    "pluPlanState": "fixed",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://xplanung.freiburg.de/xplan-wfs/services/wfs52",
+    "id": 14,
+    "description": "xplanung.freiburg.de v52",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "30 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    }
+  },
+  {
+    "index": "wfs_xplanung_freiburg_de_53",
+    "priority": 0,
+    "type": "WFS.XPLAN",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "bw",
+    "pluPlanState": "fixed",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://xplanung.freiburg.de/xplan-wfs/services/wfs53",
+    "id": 15,
+    "description": "xplanung.freiburg.de v53",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "33 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    }
+  },
+  {
+    "index": "wfs_xplanung_freiburg_de_54",
+    "priority": 0,
+    "type": "WFS.XPLAN",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "bw",
+    "pluPlanState": "fixed",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://xplanung.freiburg.de/xplan-wfs/services/wfs54",
+    "id": 16,
+    "description": "xplanung.freiburg.de v54",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "36 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    }
+  },
+  {
+    "index": "wfs_berliner_umringe",
+    "priority": 0,
+    "type": "WFS.FIS",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": "doc.spatial_text = `Berlin ${doc.spatial_text}`;",
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "be",
+    "pluPlanState": null,
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://fbinter.stadt-berlin.de/fb/wfs/data/senstadt/sach_bplan",
+    "id": 17,
+    "description": "Berliner Umringe",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "1.1.0",
+    "typename": "fis:sach_bplan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "39 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    },
+    "maxConcurrent": null
+  },
+  {
+    "index": "wfs_syn_sh_xplanung",
+    "priority": 0,
+    "type": "WFS.XPLAN.SYN",
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "catalogId": "sh",
+    "pluPlanState": "fixed",
+    "eitherKeywords": [],
+    "httpMethod": "GET",
+    "resultType": "results",
+    "sourceURL": "https://sh.xplanungsplattform.de/xplansyn-wfs/services/xplansynwfs",
+    "id": 20,
+    "description": "XPlanung Schleswig-Holstein (festgesetzt)",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "featuresFilter": null,
+    "version": "2.0.0",
+    "typename": "xplan:BP_Plan,xplan:FP_Plan,xplan:RP_Plan,xplan:SO_Plan",
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "48 2 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    },
+    "maxConcurrent": null
+  },
+  {
+    "id": 21,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "type": "DCATAPPLU",
+    "description": "BeteiligungsDB",
+    "priority": null,
+    "index": "beteiligungsdb",
+    "defaultDCATCategory": null,
+    "defaultMcloudSubgroup": null,
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "maxRecords": null,
+    "startPosition": null,
+    "customCode": null,
+    "sourceURL": "https://beteiligungsdb.develop.diplanung.de/collections/1/items"
   },
   {
     "index": "oai",
@@ -48,7 +611,6 @@
     "type": "OAI",
     "maxRecords": 200,
     "startPosition": 1,
-    "catalogId": "digicult",
     "customCode": null,
     "defaultMcloudSubgroup": null,
     "defaultDCATCategory": null,
@@ -67,104 +629,28 @@
     "eitherKeywords": [],
     "metadataPrefix": "lido",
     "set": "",
-    "id": 21,
-    "description": "digiCULT (Geschichte/Preußen)",
-    "defaultAttribution": null,
-    "defaultAttributionLink": null,
-    "disable": false,
-    "cron": {
-      "full": {
-        "pattern": "20 2 * * 0-6",
-        "active": true
-      },
-      "incr": {
-        "pattern": "20 2 * * 0",
-        "active": false
-      }
-    },
-    "from": "",
-    "until": ""
-  },
-  {
-    "index": "oai",
-    "priority": null,
-    "type": "OAI",
-    "maxRecords": 200,
-    "startPosition": 1,
-    "catalogId": "digicult",
-    "customCode": null,
-    "defaultMcloudSubgroup": null,
-    "defaultDCATCategory": null,
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": null
-    },
-    "isIncremental": false,
-    "maxConcurrent": 1,
-    "skipUrlCheckOnHarvest": false,
-    "timeout": 60000,
-    "sourceURL": "https://oamh-lvr.digicult-verbund.de/cv/hgrojzOf7tF53kH0a0j",
-    "eitherKeywords": [],
-    "metadataPrefix": "lido",
-    "set": "",
     "id": 22,
-    "description": "digiCULT (Alltagskulturen)",
+    "description": "digicult",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
-    "disable": false,
-    "cron": {
-      "full": {
-        "pattern": "40 2 * * 0-6",
-        "active": true
-      },
-      "incr": {
-        "pattern": "40 2 * * 0",
-        "active": false
-      }
-    },
-    "from": "",
-    "until": ""
+    "from": "2024-01-01T00:00:00",
+    "until": "2024-02-01T00:00:00"
   },
   {
     "index": "kuladig",
     "priority": null,
     "type": "KLD",
     "maxRecords": null,
-    "startPosition": 0,
-    "catalogId": "kuladig",
-    "customCode": "",
-    "defaultMcloudSubgroup": [],
-    "defaultDCATCategory": [],
-    "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
-      "containsDocumentsWithData": false
     },
-    "isIncremental": false,
     "maxConcurrent": 1,
-    "skipUrlCheckOnHarvest": false,
+    "maxConcurrentTimespan": 250,
+    "isIncremental": true,
     "timeout": 60000,
     "sourceURL": "https://www.kuladig.de/api/public/",
-    "maxConcurrentTimespan": 100,
     "id": 23,
-    "description": "KuLaDig (Kultur. Landschaft. Digital.)",
-    "defaultAttribution": null,
-    "defaultAttributionLink": null,
-    "disable": false,
-    "cron": {
-      "full": {
-        "pattern": "0 3 * * 0-6",
-        "active": true
-      },
-      "incr": {
-        "pattern": "0 3 * * 0",
-        "active": false
-      }
-    }
+    "description": "KuLaDig (Kultur. Landschaft. Digital.)"
   }
 ]
