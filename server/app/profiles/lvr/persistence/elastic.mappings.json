@@ -12,11 +12,23 @@
     },
     "title": {
       "type": "text",
-      "analyzer": "decomp"
+      "analyzer": "decomp",
+      "fields": {
+        "suggest_shingles": {
+          "type": "text",
+          "analyzer": "suggest_shingles"
+        }
+      }
     },
     "abstract": {
       "type": "text",
-      "analyzer": "decomp"
+      "analyzer": "decomp",
+      "fields": {
+        "suggest_shingles": {
+          "type": "text",
+          "analyzer": "suggest_shingles"
+        }
+      }
     },
     "spatial": {
       "properties": {
