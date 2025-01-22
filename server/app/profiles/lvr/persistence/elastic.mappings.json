@@ -12,21 +12,29 @@
     },
     "title": {
       "type": "text",
-      "analyzer": "decomp",
+      "analyzer": "decomp_german",
       "fields": {
         "suggest_shingles": {
           "type": "text",
           "analyzer": "suggest_shingles"
+        },
+        "decomp": {
+          "type": "text",
+          "analyzer": "decomp"
         }
       }
     },
     "abstract": {
       "type": "text",
-      "analyzer": "decomp",
+      "analyzer": "decomp_german",
       "fields": {
         "suggest_shingles": {
           "type": "text",
           "analyzer": "suggest_shingles"
+        },
+        "decomp": {
+          "type": "text",
+          "analyzer": "decomp"
         }
       }
     },
@@ -52,7 +60,7 @@
         },
         "title": {
           "type": "text",
-          "analyzer": "decomp"
+          "analyzer": "decomp_german"
         }
       }
     },
@@ -139,7 +147,7 @@
             },
             "description": {
               "type": "text",
-              "analyzer": "decomp"
+              "analyzer": "decomp_german"
             },
             "homepage": {
               "type": "keyword"
@@ -169,7 +177,7 @@
             },
             "title": {
               "type": "text",
-              "analyzer": "decomp"
+              "analyzer": "decomp_german"
             }
           }
         },
@@ -196,7 +204,7 @@
             },
             "description": {
               "type": "text",
-              "analyzer": "decomp"
+              "analyzer": "decomp_german"
             }
           }
         },
