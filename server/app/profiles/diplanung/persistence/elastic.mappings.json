@@ -56,7 +56,7 @@
         "modified": {
           "type": "date"
         },
-        "procedure_import_date ": {
+        "procedure_import_date": {
           "type": "date"
         },
         "publisher": {
