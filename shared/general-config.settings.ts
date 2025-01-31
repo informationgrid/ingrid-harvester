@@ -80,8 +80,7 @@ export interface DatabaseConfiguration {
     port?: number,
     database?: string,
     user?: string,
-    password?: string,
-    defaultCatalogIdentifier: string
+    password?: string
 }
 
 export interface MailServerConfiguration {

@@ -6,8 +6,7 @@
     "port": 5432,
     "database": "metadaten",
     "user": "admin",
-    "password": "admin",
-    "defaultCatalogIdentifier": "harvester"
+    "password": "admin"
   },
   "elasticsearch": {
     "url": "http://localhost:9200",

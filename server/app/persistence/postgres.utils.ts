@@ -69,18 +69,6 @@ export class PostgresUtils extends DatabaseUtils {
 
     async init(): Promise<void> {
         await this.createTables();
-        this.defaultCatalog = await this.getCatalog(this.configuration.defaultCatalogIdentifier);
-        if (!this.defaultCatalog) {
-            let catalog: Catalog = {
-                description: 'Globaler Katalog',
-                identifier: this.configuration.defaultCatalogIdentifier,
-                publisher: {
-                    name: ''
-                },
-                title: 'Globaler Katalog'
-            };
-            this.defaultCatalog = await this.createCatalog(catalog);
-        }
     }
 
     async createTables() {

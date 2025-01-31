@@ -40,7 +40,6 @@ export abstract class DatabaseUtils {
     
     public _bulkData: RecordEntity[];
     public _bulkCouples: CouplingEntity[];
-    public defaultCatalog: Catalog;
 
     abstract init(): Promise<void>;
 

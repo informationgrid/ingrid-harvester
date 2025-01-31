@@ -71,7 +71,6 @@ export class ConfigService {
             database: process.env.DB_NAME,
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
-            defaultCatalogIdentifier: process.env.DEFAULT_CATALOG ?? 'harvester'
         },
         elasticsearch: {
             url: process.env.ELASTIC_URL ?? "http://elastic:9200",
@@ -190,7 +189,6 @@ export class ConfigService {
                 database: process.env.DB_NAME,
                 user: process.env.DB_USER,
                 password: process.env.DB_PASSWORD,
-                defaultCatalogIdentifier: process.env.DEFAULT_CATALOG
             },
             elasticsearch: {
                 url: process.env.ELASTIC_URL,
