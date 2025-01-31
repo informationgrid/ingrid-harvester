@@ -99,29 +99,32 @@ export class ImportSocketService {
                     statisticUtils.saveSummary(response, index);
 
                     // when less results send mail
-                    let importedLastRun = (summaryLastRun) ? summaryLastRun.summary.numDocs - summaryLastRun.summary.skippedDocs.length : 0;
-                    let imported = importer.getSummary().numDocs - importer.getSummary().skippedDocs.length;
-                    let diff = configGeneral.harvesting.mail.minDifference ?? 10;
-                    if (configGeneral.mail.enabled && configGeneral.harvesting.mail.enabled &&
-                            ((importedLastRun - (importedLastRun*diff/100) >= imported) || (imported === 0))) {
-                        let subject: string;
-                        if (imported === 0)
-                            subject = `Importer [${configHarvester.type}] "${configData.description}" ohne Ergebnisse!`;
-                        else
-                            subject = `Importer [${configHarvester.type}] "${configData.description}" mit weniger Ergebnissen!`;
-                        let text = `Current Run:\n`
-                            + importer.getSummary().toString();
-                        if (summaryLastRun) {
-                            text += `\n\n`
-                                + `Last Run (`+summaryLastRun.lastExecution+`):\n`
-                                + summaryLastRun.summary.toString();
+                    if (!isIncremental && configGeneral.mail.enabled && configGeneral.harvesting.mail.enabled) {
+                        let importedLastRun = (summaryLastRun) ? summaryLastRun.summary.numDocs - summaryLastRun.summary.skippedDocs.length : 0;
+                        let imported = importer.getSummary().numDocs - importer.getSummary().skippedDocs.length;
+                        let diff = configGeneral.harvesting.mail.minDifference ?? 10;
+                        if (importedLastRun * (100 - diff) / 100 >= imported) {
+                            let subject: string;
+                            if (imported === 0)
+                                subject = `Importer [${configHarvester.type}] "${configData.description}" ohne Ergebnisse!`;
+                            else
+                                subject = `Importer [${configHarvester.type}] "${configData.description}" mit weniger Ergebnissen!`;
+                            let text = `Current Run:\n`
+                                + importer.getSummary().toString();
+                            if (summaryLastRun) {
+                                text += `\n\n`
+                                    + `Last Run (`+summaryLastRun.lastExecution+`):\n`
+                                    + summaryLastRun.summary.toString();
+                            }
+                            MailServer.getInstance().send(subject, text);
                         }
-                        MailServer.getInstance().send(subject, text);
                     }
                 }
             }, error => {
                 this.log.error('There was an error: ', error);
-                MailServer.getInstance().send(`Importer [${configHarvester.type}] ${configData.description} failed`, error.toString());
+                if (configGeneral.mail.enabled) {
+                    MailServer.getInstance().send(`Importer [${configHarvester.type}] ${configData.description} failed`, error.toString());
+                }
             });
         }
         catch (e) {
