@@ -24,7 +24,6 @@
 import {ingridMapper} from "./ingrid.mapper";
 import {CswMapper} from "../../../importer/csw/csw.mapper";
 import {Distribution} from "../../../model/distribution";
-import {Codelist} from "../utils/codelist";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -488,6 +487,20 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     }
 
+    isHvd(): boolean {
+        let isOpendata = this.baseMapper.getKeywords()?.some(keyword => ['opendata', 'opendataident'].includes(keyword));
+        if (isOpendata) {
+            let descriptiveKeywordsElems = CswMapper.select('./gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords', this.baseMapper.idInfo);
+            for (let descriptiveKeywordsElem of descriptiveKeywordsElems) {
+                let thesaurusName = CswMapper.select('./gmd:thesaurusName/gmd:CI_Citation/gmd:title/*[self::gco:CharacterString or self::gmx:Anchor]', descriptiveKeywordsElem, true)?.textContent;
+                let keywords = CswMapper.select('./gmd:keyword', descriptiveKeywordsElem);
+                if (thesaurusName?.toLowerCase()?.startsWith('high-value') && keywords?.length > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     private getSingleEntryOrArray(result){
         if (result.length > 1) return result;

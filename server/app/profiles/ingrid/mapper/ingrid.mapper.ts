@@ -44,7 +44,6 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         this.baseMapper = baseMapper;
     }
 
-
     async create() : Promise<any> {
         let result = await {
             iPlugId: this.getIPlugId(),
@@ -105,6 +104,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             object_use: this.getObjectUse(),
             object_use_constraint: this.getObjectUseConstraint(),
             object_access: this.getObjectAccess(),
+            is_hvd: this.isHvd(),
             sort_hash: this.getSortHash()
         };
 
@@ -112,8 +112,6 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
 
         return result;
     }
-
-
 
     getDistributions(): Promise<Distribution[]>{
         return undefined
@@ -130,7 +128,6 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     getAccessRights(): string[]{
         return this.baseMapper.getAccessRights();
     }
-
 
     getGeneratedId(): string{
         return this.baseMapper.getGeneratedId()
@@ -258,10 +255,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     getT011_obj_geo() {
         return undefined;
     }
+
     getT011_obj_geo_scale() {
         return undefined;
     }
-
 
     getT011_obj_serv() {
         return undefined;
@@ -319,6 +316,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return undefined;
     }
 
+    isHvd(): boolean {
+        return undefined;
+    }
+
     getSortHash() {
         return crypto.createHash('sha1').update(this.getTitle(), 'binary').digest('hex')
     }
@@ -352,5 +353,3 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return id
     }
 }
-
-
