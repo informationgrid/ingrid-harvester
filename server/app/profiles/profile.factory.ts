@@ -75,16 +75,22 @@ export abstract class ProfileFactory<M extends BaseMapper> {
         return await database.createCatalog(catalog);
     }
 
-    abstract getElasticQueries(): ElasticQueries;
-    abstract getImporterFactory(): ImporterFactory;
-    abstract getIndexDocumentFactory(mapper: M): IndexDocumentFactory<IndexDocument>;
-    abstract getIndexMappings(): any;
-    abstract getIndexSettings(): IndexSettings;
-    abstract getPostgresAggregator(): PostgresAggregator<IndexDocument>;
-    abstract getProfileName(): string;
-    abstract useIndexPerCatalog(): boolean;
+    getIndexMappings(): any {
+        return require(`./${this.getProfileName()}/persistence/elastic.mappings.json`);
+    }
+
+    getIndexSettings(): IndexSettings {
+        return require(`./${this.getProfileName()}/persistence/elastic.settings.json`);
+    }
 
     getPostgresQueries(): PostgresQueries {
         return PostgresQueries.getInstance();
     }
+
+    abstract getElasticQueries(): ElasticQueries;
+    abstract getImporterFactory(): ImporterFactory;
+    abstract getIndexDocumentFactory(mapper: M): IndexDocumentFactory<IndexDocument>;
+    abstract getPostgresAggregator(): PostgresAggregator<IndexDocument>;
+    abstract getProfileName(): string;
+    abstract useIndexPerCatalog(): boolean;
 }

@@ -37,9 +37,7 @@ import { ProfileFactory } from '../profile.factory';
 import { IngridImporterFactory } from './importer/ingrid.importer.factory';
 import { ingridCswMapper } from './mapper/ingrid.csw.mapper';
 import { IngridIndexDocument } from './model/index.document';
-import { indexMappings } from './persistence/elastic.mappings';
 import { ElasticQueries } from './persistence/elastic.queries';
-import { indexSettings } from './persistence/elastic.settings';
 import { PostgresAggregator } from './persistence/postgres.aggregator';
 
 const log = require('log4js').getLogger(__filename);
@@ -91,14 +89,6 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
 
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();
-    }
-
-    getIndexMappings(): any {
-        return indexMappings;
-    }
-
-    getIndexSettings(): IndexSettings {
-        return indexSettings;
     }
 
     getImporterFactory(): ImporterFactory {
