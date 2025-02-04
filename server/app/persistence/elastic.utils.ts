@@ -169,7 +169,7 @@ export abstract class ElasticsearchUtils {
 
     abstract deleteIndex(indicesToDelete: string | string[]): Promise<any>;
 
-    abstract search(index: string | string[], body?: object, size?: number): Promise<{ hits: any, aggregations?: any }>;
+    abstract search(index: string | string[], body?: object, usePrefix?: boolean): Promise<{ hits: any, aggregations?: any }>;
 
     abstract get(index: string, id: string): Promise<any>;
 

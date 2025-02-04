@@ -32,12 +32,14 @@ const log = require('log4js').getLogger(__filename);
 
 export class IngridCswImporter extends CswImporter {
 
+    private readonly INGRID_META = 'ingrid_meta';
+
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings, requestDelegate)
     }
 
     protected async handlePostHarvesting() {
-        let meta = await this.elastic.search("ingrid_meta",
+        let meta = await this.elastic.search(this.INGRID_META,
             {
                 "query": {
                     "term": {
@@ -46,7 +48,7 @@ export class IngridCswImporter extends CswImporter {
                         }
                     }
                 }
-            });
+            }, false);
         if (meta.hits?.total?.value > 0) {
             let entry = meta.hits?.hits[0]._source;
 
@@ -55,7 +57,7 @@ export class IngridCswImporter extends CswImporter {
             entry.plugdescription.dataType = this.settings.datatype?.split(",");
             entry.plugdescription.partner = this.settings.partner?.split(",");
 
-            await this.elastic.update('ingrid_meta', meta.hits?.hits[0]._id, entry, false);
+            await this.elastic.update(this.INGRID_META, meta.hits?.hits[0]._id, entry, false);
         }
         else {
             let { prefix, index } = ConfigService.getGeneralSettings().elasticsearch;
@@ -78,7 +80,7 @@ export class IngridCswImporter extends CswImporter {
                 },
                 "active": false
             }
-            await this.elastic.index('ingrid_meta', entry, false);
+            await this.elastic.index(this.INGRID_META, entry, false);
         }
     }
 

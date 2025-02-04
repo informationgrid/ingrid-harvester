@@ -385,12 +385,13 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
         }
     }
 
-    async search(index: string | string[], body?: object, size?: number): Promise<{ hits: any }> {
-        index = this.addPrefixIfNotExists(index);
+    async search(index: string | string[], body: object, usePrefix: boolean = true): Promise<{ hits: any }> {
+        if (usePrefix) {
+            index = this.addPrefixIfNotExists(index);
+        }
         let { body: response } = await this.client.search({
             index,
-            body,
-            size
+            body
         });
         return { hits: [], ...response };
     }
