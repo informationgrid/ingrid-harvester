@@ -490,7 +490,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     isHvd(): boolean {
         let isOpendata = this.baseMapper.getKeywords()?.some(keyword => ['opendata', 'opendataident'].includes(keyword));
         if (isOpendata) {
-            let descriptiveKeywordsElems = CswMapper.select('./gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords', this.baseMapper.idInfo);
+            let descriptiveKeywordsElems = CswMapper.select('./*/gmd:descriptiveKeywords/gmd:MD_Keywords', this.baseMapper.idInfo);
             for (let descriptiveKeywordsElem of descriptiveKeywordsElems) {
                 let thesaurusName = CswMapper.select('./gmd:thesaurusName/gmd:CI_Citation/gmd:title/*[self::gco:CharacterString or self::gmx:Anchor]', descriptiveKeywordsElem, true)?.textContent;
                 let keywords = CswMapper.select('./gmd:keyword', descriptiveKeywordsElem);
