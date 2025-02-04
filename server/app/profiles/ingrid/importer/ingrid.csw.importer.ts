@@ -55,11 +55,11 @@ export class IngridCswImporter extends CswImporter {
             entry.plugdescription.dataType = this.settings.datatype?.split(",");
             entry.plugdescription.partner = this.settings.partner?.split(",");
 
-            await this.elastic.update('ingrid_meta', meta.hits?.hits[0]._id, entry);
+            await this.elastic.update('ingrid_meta', meta.hits?.hits[0]._id, entry, false);
         }
         else {
             let { prefix, index } = ConfigService.getGeneralSettings().elasticsearch;
-            let indexId = prefix ?? '' + index;
+            let indexId = (prefix ?? '') + index;
             let entry = {
                 "plugId": this.settings.iPlugId,
                 "indexId": indexId,
@@ -78,7 +78,7 @@ export class IngridCswImporter extends CswImporter {
                 },
                 "active": false
             }
-            await this.elastic.index('ingrid_meta', entry);
+            await this.elastic.index('ingrid_meta', entry, false);
         }
     }
 

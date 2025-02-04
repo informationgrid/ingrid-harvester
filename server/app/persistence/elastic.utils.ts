@@ -187,9 +187,9 @@ export abstract class ElasticsearchUtils {
 
     abstract isIndexPresent(index: string): Promise<boolean>;
 
-    abstract index(index: string, document: object): Promise<void>;
+    abstract index(index: string, document: object, usePrefix: boolean): Promise<void>;
 
-    abstract update(index: string, id: string, document: object): Promise<void>;
+    abstract update(index: string, id: string, document: object, usePrefix: boolean): Promise<void>;
 
     abstract deleteByQuery(days: number): Promise<void>;
 
