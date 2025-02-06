@@ -121,7 +121,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return this.baseMapper.getTitle();
     }
 
-    getModifiedDate(): Date{
+    getModifiedDate(): string{
         return this.formatDate(this.baseMapper.getModifiedDate());
     }
 
@@ -338,7 +338,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         }
     }
 
-    protected formatDate(date){
+    protected formatDate(date: Date){
+        if (!date) {
+            return null;
+        }
         return date.getFullYear()
             +(date.getMonth()+1).toString().padStart(2, "0")
             +date.getDate().toString().padStart(2, "0")

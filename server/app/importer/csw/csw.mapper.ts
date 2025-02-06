@@ -516,7 +516,7 @@ export class CswMapper extends BaseMapper {
         };
     }
 
-    getModifiedDate() {
+    getModifiedDate(): Date {
         let modified = CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true)?.textContent;
         return modified ? new Date(modified) : undefined;
     }
@@ -659,6 +659,9 @@ export class CswMapper extends BaseMapper {
         if (!dateNode) {
             dateNode = CswMapper.select('./gml:' + beginOrEnd + '/*/gml:timePosition|./gml32:' + beginOrEnd + '/*/gml32:timePosition', node, true);
         }
+        if (!dateNode) {
+            return null;
+        }
         try {
             if (dateNode.hasAttribute('indeterminatePosition')) {
                 let indeterminatePosition = dateNode.getAttribute('indeterminatePosition');
@@ -680,7 +683,8 @@ export class CswMapper extends BaseMapper {
                 }
             }
         } catch (e) {
-            this.log.error(`Cannot extract time range.`, e);
+            // this.log.error(`Cannot extract time range.`, e);
+            this.summary.warnings.push([`Could not extract time range for ${this.uuid}.`]);
         }
     }
 
