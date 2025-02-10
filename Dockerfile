@@ -1,7 +1,7 @@
 #
 # IMAGE: build server
 #
-FROM node:20.15.1-alpine3.20 AS build-server
+FROM node:20.18.2-alpine3.21 AS build-server
 LABEL stage=build
 
 # install build dependencies
@@ -21,7 +21,7 @@ RUN npm run build
 #
 # IMAGE: build client
 #
-FROM node:20.15.1-alpine3.20 AS build-client
+FROM node:20.18.2-alpine3.21 AS build-client
 LABEL stage=build
 
 # install build dependencies
@@ -47,7 +47,7 @@ FROM building5/dumb-init:1.2.1 AS init
 #
 # IMAGE: final
 #
-FROM node:20.15.1-alpine3.20 AS final
+FROM node:20.18.2-alpine3.21 AS final
 
 # copy init
 COPY --from=init /dumb-init /usr/local/bin/
