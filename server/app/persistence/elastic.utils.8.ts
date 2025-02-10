@@ -242,36 +242,30 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
 
     async bulkWithIndexName(index: string, type, data): Promise<BulkResponse> {
         index = this.addPrefixIfNotExists(index) as string;
-        return new Promise((resolve, reject) => {
-            try {
-                this.client.bulk({
-                    index,
-                    // type: type,
-                    operations: data
-                })
-                .then(response => {
-                    if (response.errors) {
-                        response.items.forEach(item => {
-                            let err = item.index?.error;
-                            if (err) {
-                                this.handleError(`Error during indexing on index '${index}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
-                            }
-                        });
+        try {
+            let response = await this.client.bulk({
+                index,
+                operations: data
+            });
+            if (response.errors) {
+                response.items.forEach(item => {
+                    let e = item.index?.error;
+                    if (e) {
+                        this.handleError(`Error during indexing on index '${index}' for item.id '${item.index._id}': ${JSON.stringify(e)}`, e);
+                        throw e;
                     }
-                    log.debug('Bulk finished of data #items: ' + data.length / 2);
-                    resolve({
-                        queued: false,
-                        response: response
-                    });
-                })
-                .catch(err => {
-                    this.handleError('Error occurred during bulkWithIndexName index of #items: ' + data.length / 2, err);
-                    reject(err);
                 });
-            } catch (e) {
-                this.handleError('Error during bulk indexing of #items: ' + data.length / 2, e);
             }
-        });
+            log.debug('Bulk finished of data #items: ' + data.length / 2);
+            return {
+                queued: false,
+                response: response
+            };
+        }
+        catch (e) {
+            this.handleError('Error during bulk indexing of #items: ' + data.length / 2, e);
+            Promise.reject(e);
+        }
     }
 
     async addOperationChunksToBulk(boxedOperations: EsOperation[]): Promise<BulkResponse> {
