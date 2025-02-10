@@ -245,7 +245,8 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
         try {
             let response = await this.client.bulk({
                 index,
-                operations: data
+                operations: data,
+                timeout: '2m'
             });
             if (response.errors) {
                 response.items.forEach(item => {
