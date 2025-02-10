@@ -180,12 +180,12 @@ export class IndexService {
                 let data = [];
                 bulkData.forEach(entry => data.push(entry));
                 bulkData = [];
-                promise = promise.then(() => this.elasticUtils.bulkWithIndexName(json.index, type, data, false));
+                promise = promise.then(() => this.elasticUtils.bulkWithIndexName(json.index, type, data));
 
             }
         });
         return await promise
-            .then(() => this.elasticUtils.bulkWithIndexName(json.index, type, bulkData, false))
+            .then(() => this.elasticUtils.bulkWithIndexName(json.index, type, bulkData))
             .then(() => this.elasticUtils.health('yellow'));
     }
 }

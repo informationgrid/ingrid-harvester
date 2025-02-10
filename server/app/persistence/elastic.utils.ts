@@ -121,11 +121,10 @@ export abstract class ElasticsearchUtils {
      * Index data in batches
      *
      * @param {object} data
-     * @param {boolean} closeAfterBulk
      */
-    abstract bulk(data: object, closeAfterBulk: boolean): Promise<BulkResponse>;
+    abstract bulk(data: object): Promise<BulkResponse>;
 
-    abstract bulkWithIndexName(index: string, type, data, closeAfterBulk: boolean): Promise<BulkResponse>;
+    abstract bulkWithIndexName(index: string, type, data): Promise<BulkResponse>;
 
     /**
      * Add multiple operations to the bulk array which will be sent to the elasticsearch node

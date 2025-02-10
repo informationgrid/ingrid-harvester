@@ -218,7 +218,7 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
             });
     }
 
-    async bulk(bulkOperations: any[], closeAfterBulk: boolean): Promise<BulkResponse> {
+    async bulk(bulkOperations: any[]): Promise<BulkResponse> {
         try {
             let profile = ProfileFactoryLoader.get();
             let indexName = this.addPrefixIfNotExists(this.indexName) as string;
@@ -239,10 +239,6 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
                     }
                 });
             }
-            if (closeAfterBulk) {
-                log.debug('Closing client connection to Elasticsearch');
-                this.client.close();
-            }
             log.debug('Bulk finished of #operations + #docs: ' + bulkOperations.length);
             return {
                 queued: false,
@@ -250,14 +246,11 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
             };
         }
         catch (e) {
-            if (closeAfterBulk) {
-                this.client.close();
-            }
             this.handleError('Error during bulk #operations + #docs: ' + bulkOperations.length, e);
         }
     }
 
-    async bulkWithIndexName(index: string, type, data, closeAfterBulk): Promise<BulkResponse> {
+    async bulkWithIndexName(index: string, type, data): Promise<BulkResponse> {
         index = this.addPrefixIfNotExists(index) as string;
         return new Promise((resolve, reject) => {
             try {
@@ -275,10 +268,6 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
                             }
                         });
                     }
-                    if (closeAfterBulk) {
-                        log.debug('Closing client connection to Elasticsearch');
-                        this.client.close();
-                    }
                     log.debug('Bulk finished of data #items: ' + data.length / 2);
                     resolve({
                         queued: false,
@@ -287,9 +276,6 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
                 })
                 .catch(err => {
                     this.handleError('Error occurred during bulkWithIndexName index of #items: ' + data.length / 2, err);
-                    if (closeAfterBulk) {
-                        this.client.close();
-                    }
                     reject(err);
                 });
             } catch (e) {
@@ -365,7 +351,7 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
             if (bulkOperationChunksPerIndex.length > 0) {
                 log.debug('Sending BULK message with ' + bulkOperationChunksPerIndex.length + ' operation chunks to ' + idx);
                 let promise = throttle(() => {
-                    return this.bulkWithIndexName(idx, null, bulkOperationChunksPerIndex.flat(1), false);
+                    return this.bulkWithIndexName(idx, null, bulkOperationChunksPerIndex.flat(1));
                 })();
                 this._bulkOperationChunks[idx] = [];
                 promises.push(promise);
