@@ -323,23 +323,13 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
     }
 
     async sendBulkOperations(index?: string): Promise<BulkResponse> {
-
-        // setup concurrency
-        const pThrottle = (await import('p-throttle')).default; // use dynamic import because this module is ESM-only
-        const throttle = pThrottle({
-            limit: 10,
-            interval: 1000,
-        });
-
         let promises: Promise<BulkResponse>[] = [];
         let indices = index != null ? [index] : Object.keys(this._bulkOperationChunks);
         for (let idx of indices) {
             let bulkOperationChunksPerIndex = this._bulkOperationChunks[idx];
             if (bulkOperationChunksPerIndex.length > 0) {
                 log.debug('Sending BULK message with ' + bulkOperationChunksPerIndex.length + ' operation chunks to ' + idx);
-                let promise = throttle(() => {
-                    return this.bulkWithIndexName(idx, null, bulkOperationChunksPerIndex.flat(1));
-                })();
+                let promise = this.bulkWithIndexName(idx, null, bulkOperationChunksPerIndex.flat(1));
                 this._bulkOperationChunks[idx] = [];
                 promises.push(promise);
             }
