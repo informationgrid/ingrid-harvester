@@ -38,13 +38,15 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
         super(config);
         this.summary = summary;
 
+        // timeout is set to 0 as per recommendation (NodeJS ES 8.x uses UndiciConnection)
+        // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/timeout-best-practices.html
         this.client = new Client({
             node: config.url,
             auth: {
                 username: config.user,
                 password: config.password
             },
-            requestTimeout: 30000,
+            requestTimeout: 0,
             tls: {
                 rejectUnauthorized: config.rejectUnauthorized
             }

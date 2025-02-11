@@ -38,13 +38,15 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
         super(config);
         this.summary = summary;
 
+        // timeout is set to 86400000 as per recommendation (NodeJS ES 7.x uses HttpConnection)
+        // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/timeout-best-practices.html
         this.client = new Client({
             node: config.url,
             auth: {
                 username: config.user,
                 password: config.password
             },
-            requestTimeout: 30000,
+            requestTimeout: 86400000,
             ssl: {
                 rejectUnauthorized: config.rejectUnauthorized
             }
