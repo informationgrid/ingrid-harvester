@@ -231,6 +231,10 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
         return undefined;
     }
 
+    getProcedureImportDate(): Date {
+        return undefined;
+    }
+
     // _getSpatial(): object {
     //     // TODO
     //     // let polygon = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_BoundingPolygon', this.idInfo);

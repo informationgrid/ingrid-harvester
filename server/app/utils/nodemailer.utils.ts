@@ -51,15 +51,15 @@ export class MailServer {
     }
 
     send(subject: string, text: string) {
-        let generalSettings = ConfigService.getGeneralSettings();
-        if (generalSettings.mail && generalSettings.mail.enabled && generalSettings.mail.from && generalSettings.mail.to) {
+        let { mail: mailConfig } = ConfigService.getGeneralSettings();
+        if (mailConfig?.enabled && mailConfig?.from && mailConfig?.to) {
             let tag = `[${ProfileFactoryLoader.get().getProfileName()}] `;
-            if (generalSettings.mail.subjectTag) {
-                tag = `[${generalSettings.mail.subjectTag}] `;
+            if (mailConfig.subjectTag) {
+                tag = `[${mailConfig.subjectTag}] `;
             }
             let mail: Mail = {
-                from: generalSettings.mail.from,
-                to: generalSettings.mail.to,
+                from: mailConfig.from,
+                to: mailConfig.to,
                 subject: tag + subject,
                 text: text
             };

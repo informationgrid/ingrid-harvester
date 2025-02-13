@@ -516,7 +516,7 @@ export class CswMapper extends BaseMapper {
         };
     }
 
-    getModifiedDate() {
+    getModifiedDate(): Date {
         let modified = CswMapper.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.record, true)?.textContent;
         return modified ? new Date(modified) : undefined;
     }
@@ -633,8 +633,8 @@ export class CswMapper extends BaseMapper {
 
             if (begin || end) {
                 result.push({
-                    gte: begin ? begin : undefined,
-                    lte: end ? end : undefined
+                    gte: begin,
+                    lte: end
                 });
             }
         }
@@ -659,8 +659,21 @@ export class CswMapper extends BaseMapper {
         if (!dateNode) {
             dateNode = CswMapper.select('./gml:' + beginOrEnd + '/*/gml:timePosition|./gml32:' + beginOrEnd + '/*/gml32:timePosition', node, true);
         }
+        if (!dateNode) {
+            return null;
+        }
         try {
-            if (!dateNode.hasAttribute('indeterminatePosition')) {
+            if (dateNode.hasAttribute('indeterminatePosition')) {
+                let indeterminatePosition = dateNode.getAttribute('indeterminatePosition');
+                // indeterminatePosition is handled differently in profile-specific mappers
+                if (indeterminatePosition == 'now') {
+                    return null;
+                }
+                else if (indeterminatePosition == 'unknown') {
+                    return undefined;
+                }
+            }
+            else {
                 let text = dateNode.textContent;
                 let date = new Date(Date.parse(text));
                 if (date) {
@@ -670,7 +683,8 @@ export class CswMapper extends BaseMapper {
                 }
             }
         } catch (e) {
-            this.log.error(`Cannot extract time range.`, e);
+            // this.log.error(`Cannot extract time range.`, e);
+            this.summary.warnings.push([`Could not extract time range for ${this.uuid}.`]);
         }
     }
 

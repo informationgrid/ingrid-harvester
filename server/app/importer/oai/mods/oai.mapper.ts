@@ -49,10 +49,6 @@ export class OaiMapper extends BaseMapper {
         return this.select(path.replace(/\/(?!@)/g, '/mods:'), parent, true)?.textContent;
     }
 
-    static attr(path: string, parent: Node): string {
-        return this.select(path.replace(/\/(?!@)/g, '/mods:'), parent, true)?.textContent;
-    }
-
     log = getLogger();
 
     private readonly header: Element;
@@ -139,8 +135,7 @@ export class OaiMapper extends BaseMapper {
     getNames(): Person[] {
         let personNodes: Element[] = this.select('./mods:name');
         let persons = personNodes.map(node => ({
-            // type: OaiMapper.attr('./http://www.openarchives.org/OAI/2.0/:type', node),
-            type: node.getAttribute('type'),//OaiMapper.select('./@type', node, true)?.textContent,
+            type: node.getAttribute('oai:type'),
             // role: OaiMapper.text('./role/roleTerm[type="text"]', node),
             role: OaiMapper.select('./mods:role/mods:roleTerm[@type="code"]', node, true)?.textContent,
             name: {

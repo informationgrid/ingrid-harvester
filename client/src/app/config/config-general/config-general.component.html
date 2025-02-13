@@ -80,12 +80,6 @@
             <input matInput type="password" formControlName="password">
           </mat-form-field>
         </div>
-        <div class="flex-row gap-20">
-          <mat-form-field class="flex-100">
-            <mat-label>Identifier des Standard-Katalogs</mat-label>
-            <input matInput type="text" formControlName="defaultCatalogIdentifier" required readonly>
-          </mat-form-field>
-        </div>
         <div class="margin-below flex-row gap-20">
           <div class="form-buttons">
             <button mat-flat-button color="primary" (click)="checkDbConnection()" [disabled]="dbConnectionCheck == 'working'"

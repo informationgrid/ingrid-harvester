@@ -70,9 +70,6 @@
                 @if (harvester.cron?.full?.pattern || harvester.cron?.incr?.pattern) {
                     <mat-icon data-test="icon-schedule" inline class="scheduled" style="width: 20px; height: 20px;"  [svgIcon]="harvester.disable || !harvester.cron.full?.active ? 'alarm_off' : 'alarm_on' "/>
                 }
-                <mat-slide-toggle color="accent" [checked]="!harvester.disable" class="padding"
-                title="Für Suche und Planung an- / ausschalten" (change)="handleActivation($event, harvester)"
-                (click)="$event.stopImmediatePropagation()"></mat-slide-toggle>
 
             </mat-expansion-panel-header>
 

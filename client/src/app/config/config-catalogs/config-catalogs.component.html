@@ -1,0 +1,57 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<page-template label="Katalogverwaltung">
+  <div main-content class="margin-below">
+    <mat-list class="list-hover catalog-card">
+      @for (wrapper of catalogsWrapper | async; track wrapper.catalog.identifier) {
+        <mat-list-item>
+          <mat-slide-toggle matListItemIcon color="accent" [checked]="wrapper.catalog.isEnabled"
+              title="Für Suche an- / ausschalten" (change)="toggleCatalogStatus($event, wrapper.catalog)"
+              (click)="$event.stopImmediatePropagation()">
+          </mat-slide-toggle>
+          <button mat-icon-button matListItemIcon color="info" class="catalog-config-button"
+              title="Ändern" (click)="addOrEditCatalog(wrapper.catalog)">
+            <mat-icon svgIcon="Edit" />
+          </button>
+          <button mat-icon-button matListItemIcon color="warn" class="catalog-config-button"
+              title="Löschen" (click)="deleteCatalog(wrapper.catalog)">
+            <mat-icon svgIcon="Delete" />
+          </button>
+          <span matListItemTitle>{{wrapper.catalog.title}} ({{wrapper.count}} Metadatensätze)</span>
+          <span matListItemLine>{{wrapper.catalog.description}}</span>
+        </mat-list-item>
+      }
+    </mat-list>
+    <div class="big-button-container">
+      <button mat-flat-button
+              color="primary"
+              (click)="addOrEditCatalog(null)"
+              class="fixed-bottom-right"
+              id="btnAddCatalog">
+        <mat-icon  svgIcon="Add" aria-label="Add Catalog" ></mat-icon>
+        Hinzufügen
+      </button>
+    </div>
+  </div>
+</page-template>

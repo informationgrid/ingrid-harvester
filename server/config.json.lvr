@@ -1,0 +1,170 @@
+[
+  {
+    "index": "oai",
+    "priority": null,
+    "type": "OAI",
+    "maxRecords": 200,
+    "startPosition": 1,
+    "catalogId": "digicult",
+    "customCode": null,
+    "defaultMcloudSubgroup": null,
+    "defaultDCATCategory": null,
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "isIncremental": false,
+    "maxConcurrent": 1,
+    "skipUrlCheckOnHarvest": false,
+    "timeout": 60000,
+    "sourceURL": "https://oamh-lvr.digicult-verbund.de/cv/sprache_lvr_13tHztt9gZr",
+    "eitherKeywords": [],
+    "metadataPrefix": "lido",
+    "set": "",
+    "id": 20,
+    "description": "digiCULT (Sprache)",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "disable": false,
+    "cron": {
+      "full": {
+        "pattern": "0 2 * * 0-6",
+        "active": true
+      },
+      "incr": {
+        "pattern": "0 2 * * 0",
+        "active": false
+      }
+    },
+    "from": "",
+    "until": ""
+  },
+  {
+    "index": "oai",
+    "priority": null,
+    "type": "OAI",
+    "maxRecords": 200,
+    "startPosition": 1,
+    "catalogId": "digicult",
+    "customCode": null,
+    "defaultMcloudSubgroup": null,
+    "defaultDCATCategory": null,
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "isIncremental": false,
+    "maxConcurrent": 1,
+    "skipUrlCheckOnHarvest": false,
+    "timeout": 60000,
+    "sourceURL": "https://oamh-lvr.digicult-verbund.de/cv/hH0a0jrojzOgtF5j7u",
+    "eitherKeywords": [],
+    "metadataPrefix": "lido",
+    "set": "",
+    "id": 21,
+    "description": "digiCULT Geschichte/Preußen",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "disable": false,
+    "cron": {
+      "full": {
+        "pattern": "20 2 * * 0-6",
+        "active": true
+      },
+      "incr": {
+        "pattern": "20 2 * * 0",
+        "active": false
+      }
+    },
+    "from": "",
+    "until": ""
+  },
+  {
+    "index": "oai",
+    "priority": null,
+    "type": "OAI",
+    "maxRecords": 200,
+    "startPosition": 1,
+    "catalogId": "digicult",
+    "customCode": null,
+    "defaultMcloudSubgroup": null,
+    "defaultDCATCategory": null,
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "isIncremental": false,
+    "maxConcurrent": 1,
+    "skipUrlCheckOnHarvest": false,
+    "timeout": 60000,
+    "sourceURL": "https://oamh-lvr.digicult-verbund.de/cv/hgrojzOf7tF53kH0a0j",
+    "eitherKeywords": [],
+    "metadataPrefix": "lido",
+    "set": "",
+    "id": 22,
+    "description": "digiCULT (Alltagskulturen)",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "disable": false,
+    "cron": {
+      "full": {
+        "pattern": "40 2 * * 0-6",
+        "active": true
+      },
+      "incr": {
+        "pattern": "40 2 * * 0",
+        "active": false
+      }
+    },
+    "from": "",
+    "until": ""
+  },
+  {
+    "index": "kuladig",
+    "priority": null,
+    "type": "KLD",
+    "maxRecords": null,
+    "startPosition": 0,
+    "catalogId": "kuladig",
+    "customCode": "",
+    "defaultMcloudSubgroup": [],
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": false
+    },
+    "isIncremental": false,
+    "maxConcurrent": 1,
+    "skipUrlCheckOnHarvest": false,
+    "timeout": 60000,
+    "sourceURL": "https://www.kuladig.de/api/public/",
+    "maxConcurrentTimespan": 100,
+    "id": 23,
+    "description": "KuLaDig (Kultur. Landschaft. Digital.)",
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "disable": false,
+    "cron": {
+      "full": {
+        "pattern": "0 3 * * 0-6",
+        "active": true
+      },
+      "incr": {
+        "pattern": "0 3 * * 0",
+        "active": false
+      }
+    }
+  }
+]

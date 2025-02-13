@@ -38,7 +38,8 @@ export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
         media: Media[],
         relations: Relation[],
         licenses: License[],
-        vector: object
+        vector: object,
+        source: string
     }
 };
 
@@ -51,6 +52,7 @@ export type Keyword = {
 export type Media = {
     type: string,
     url: string,
+    thumbnail?: string,
     description: string
 };
 

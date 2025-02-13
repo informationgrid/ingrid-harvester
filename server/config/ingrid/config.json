@@ -22,7 +22,7 @@
     "timeout": 60000,
     "sourceURL": "https://gdk.gdi-de.org/gdi-de/srv/ger/csw",
     "maxServices": 30,
-    "resolveOgcDistributions": true,
+    "resolveOgcDistributions": false,
     "harvestingMode": "standard",
     "eitherKeywords": [],
     "httpMethod": "POST",
@@ -32,7 +32,7 @@
     "description": "geoportal.de",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
-    "recordFilter": "<ogc:Filter>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>subject</ogc:PropertyName>\n\t\t<ogc:Literal>ATKIS</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n</ogc:Filter>",
+    "recordFilter": "<ogc:Filter>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>identifier</ogc:PropertyName>\n\t\t<ogc:Literal>1BFC8279-364D-47FF-B59B-C7D37C5A6BB8</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n</ogc:Filter>",
     "pluPlanState": "fixed",
     "disable": false,
     "cron": {

@@ -43,7 +43,6 @@ Several general settings can also be configured via environment variables. These
 | DB_NAME                     |                                                                   |
 | DB_USER                     |                                                                   |
 | DB_PASSWORD                 |                                                                   |
-| DEFAULT_CATALOG             | The default catalog to be used if a harvester doesn't specify one |
 | ELASTIC_URL                 |                                                                   |
 | ELASTIC_VERSION             | Major version (6, 7, or 8)                                        |
 | ELASTIC_USER                |                                                                   |

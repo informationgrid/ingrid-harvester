@@ -76,17 +76,13 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
             ...ingridDocument,
             lvr: {
                 identifier: this.getIdentifier(),
-                // title: this.getTitle(),
-                // description: this.getDescription(),
-                // spatial: this.getSpatial(),
-                // temporal: this.getNullForTemporal(this.getTemporal()),
-                // keywords: this.getKeywords(),
                 genres: this.getGenres(),
                 persons: this.getPersons(),
                 media: this.getMedia(),
                 relations: this.getRelations(),
                 licenses: this.getLicense(),
                 vector: this.getVector(),
+                source: this.getSource()
             },
             extras: {
                 metadata: {
@@ -156,6 +152,8 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
     abstract getLicense(): License[];
 
     abstract getVector(): object;
+
+    abstract getSource(): string;
 
     abstract getIssued(): Date;
 

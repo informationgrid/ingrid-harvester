@@ -144,4 +144,8 @@ export class DiplanungWfsMapper extends DiplanungMapper<WfsMapper> {
     getModifiedDate(): Date {
         return this.baseMapper.getModifiedDate();
     }
+
+    getProcedureImportDate(): Date {
+        return this.baseMapper.getProcedureImportDate();
+    }
 }

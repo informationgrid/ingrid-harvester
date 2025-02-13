@@ -1,7 +1,7 @@
 {
     "index": {
-		"max_ngram_diff": 5,
-		"max_shingle_diff": 6,
+        "max_ngram_diff": 5,
+        "max_shingle_diff": 6,
         "analysis": {
             "filter": {
                 "decomp": {

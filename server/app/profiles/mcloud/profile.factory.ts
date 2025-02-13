@@ -36,7 +36,6 @@ import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elas
 import { ExcelMapper } from '../../importer/excel/excel.mapper';
 import { ImporterFactory } from '../../importer/importer.factory';
 import { IndexDocumentFactory } from '../../model/index.document.factory';
-import { IndexSettings } from '../../persistence/elastic.setting';
 import { McloudImporterFactory } from './importer/mcloud.importer.factory';
 import { OaiMapper } from '../../importer/oai/iso19139/oai.mapper';
 import { PostgresAggregator } from './persistence/postgres.aggregator';
@@ -61,14 +60,6 @@ export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatM
         }
     }
 
-    getIndexMappings(): any {
-        return require('./persistence/elastic.mappings.json');
-    }
-
-    getIndexSettings(): IndexSettings {
-        return require('./persistence/elastic.settings.json');;
-    }
-
     getImporterFactory(): ImporterFactory {
         return new McloudImporterFactory();
     }
@@ -79,5 +70,9 @@ export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatM
 
     getProfileName(): string {
         return 'mcloud';
+    }
+
+    useIndexPerCatalog(): boolean {
+        return false;
     }
 }

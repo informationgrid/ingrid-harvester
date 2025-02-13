@@ -66,7 +66,7 @@ export class Codelist {
             for (let localisation of localisations) {
                 let string =  Codelist.select("./string", localisation);
                 if(string[0].textContent === "iso"){
-                    list[string[1].textContent] = entry;
+                    list[string[1].textContent] = entryId;
                 }
             }
         }

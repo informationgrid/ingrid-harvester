@@ -53,7 +53,7 @@ export abstract class ElasticsearchUtils {
     public static maxBulkSize: number = 50;
     public elasticQueries: ElasticQueries;
     public indexName: string;
-    public _bulkOperationChunks: any[][];
+    public _bulkOperationChunks: object;//any[][];
 
     constructor(readonly config: IndexConfiguration) {
     }
@@ -93,6 +93,13 @@ export abstract class ElasticsearchUtils {
     abstract addAlias(index: string, alias: string): Promise<any>;
 
     /**
+     * Get the list of aliases the specified index is part of.
+     * 
+     * @param {string} index 
+     */
+    abstract listAliases(index: string): Promise<string[]>;
+
+    /**
      * Remove the specified alias from an index.
      *
      * @param {string} index
@@ -114,11 +121,10 @@ export abstract class ElasticsearchUtils {
      * Index data in batches
      *
      * @param {object} data
-     * @param {boolean} closeAfterBulk
      */
-    abstract bulk(data: object, closeAfterBulk: boolean): Promise<BulkResponse>;
+    abstract bulk(data: object): Promise<BulkResponse>;
 
-    abstract bulkWithIndexName(index: string, type, data, closeAfterBulk: boolean): Promise<BulkResponse>;
+    abstract bulkWithIndexName(index: string, type, data): Promise<BulkResponse>;
 
     /**
      * Add multiple operations to the bulk array which will be sent to the elasticsearch node
@@ -141,11 +147,11 @@ export abstract class ElasticsearchUtils {
     abstract addDocToBulk(doc, id: string | number, maxBulkSize?: number): Promise<BulkResponse>;
 
     /**
-     * Send all collected bulk data if any.
+     * Send all collected bulk data for an index if specified, for all otherwise .
      *
-     * @param {boolean} closeAfterBulk
+     * @param {string} index
      */
-    abstract sendBulkOperations(closeAfterBulk?: boolean): Promise<BulkResponse>;
+    abstract sendBulkOperations(index?: string): Promise<BulkResponse | void>;
 
     /**
      * Searches the index for documents with the given ids and copies a set of the issued
@@ -162,7 +168,7 @@ export abstract class ElasticsearchUtils {
 
     abstract deleteIndex(indicesToDelete: string | string[]): Promise<any>;
 
-    abstract search(index: string | string[], body?: object, size?: number): Promise<{ hits: any, aggregations?: any }>;
+    abstract search(index: string | string[], body?: object, usePrefix?: boolean): Promise<{ hits: any, aggregations?: any }>;
 
     abstract get(index: string, id: string): Promise<any>;
 
@@ -180,13 +186,19 @@ export abstract class ElasticsearchUtils {
 
     abstract isIndexPresent(index: string): Promise<boolean>;
 
-    abstract index(index: string, document: object): Promise<void>;
+    abstract index(index: string, document: object, usePrefix: boolean): Promise<void>;
+
+    abstract update(index: string, id: string, document: object, usePrefix: boolean): Promise<void>;
 
     abstract deleteByQuery(days: number): Promise<void>;
 
     abstract deleteDocument(index: string, id: string): Promise<void>;
 
     abstract ping(): Promise<boolean>;
+
+    async close(): Promise<void> {
+        await this.client.close();
+    };
 
     // abstract health(status?: 'green' | 'GREEN' | 'yellow' | 'YELLOW' | 'red' | 'RED'): Promise<any>;
     async health(status: 'green' | 'yellow' | 'red' = 'yellow'): Promise<any> {

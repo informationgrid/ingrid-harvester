@@ -71,7 +71,7 @@ export abstract class Importer {
 
     run: Observable<ImportLogMessage> = new Observable<ImportLogMessage>(observer => {
         this.observer = observer;
-        this.exec(observer);
+        this.exec(observer).then(() => this.elastic.close());
     });
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {

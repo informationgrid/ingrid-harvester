@@ -6,8 +6,7 @@
     "port": 5432,
     "database": "metadaten",
     "user": "admin",
-    "password": "admin",
-    "defaultCatalogIdentifier": "harvester"
+    "password": "admin"
   },
   "elasticsearch": {
     "url": "http://localhost:9200",
@@ -21,6 +20,7 @@
     "numberOfShards": 1,
     "numberOfReplicas": 0
   },
+  "mappingLogLevel": "info",
   "proxy": null,
   "allowAllUnauthorizedSSL": false,
   "portalUrl": "",
@@ -39,6 +39,9 @@
       "host": "localhost",
       "port": 465,
       "secure": false,
+      "tls": {
+        "rejectUnauthorized": true
+      },
       "auth": {
         "user": "",
         "pass": ""

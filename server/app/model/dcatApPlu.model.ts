@@ -60,9 +60,9 @@ export interface Record {
  */
 export enum PluProcedureType {
     NORM_VERF = 'regular',                  // normales Verfahren
-    VEREINF_VERF = 'simplified', 	        // vereinfachtes Verfahren
-    BEBAU_PLAN_INNEN = 'innerDevPlan',	    // Bebauungsplan der Innenentwicklung
-    EINBEZ_AUSSEN_BESCHLEU = 'outdoorArea',	// Einbeziehung von Außenbereichsflächen in das beschleunigte Verfahren
+    VEREINF_VERF = 'simplified',            // vereinfachtes Verfahren
+    BEBAU_PLAN_INNEN = 'innerDevPlan',      // Bebauungsplan der Innenentwicklung
+    EINBEZ_AUSSEN_BESCHLEU = 'outdoorArea', // Einbeziehung von Außenbereichsflächen in das beschleunigte Verfahren
     AEND = 'revision',                      // Änderung
     TEIL_FORT = 'partialExtrapolation',     // Teilfortschreibung
     NEU_AUFST = 'newPreparation',           // Neuaufstellung
@@ -112,10 +112,10 @@ export enum PluPlanType {
  */
 export enum PluProcessStepType {
     FRUEHZ_BEH_BETEIL = 'earlyInvolveAuth',     // Frühzeitige Behördenbeteiligung
-    FRUEHZ_OEFFTL_BETEIL = 'earlyPublicPart', 	// Frühzeitige Öffentlichkeitsbeteiligung
+    FRUEHZ_OEFFTL_BETEIL = 'earlyPublicPart',   // Frühzeitige Öffentlichkeitsbeteiligung
     BETEIL_OEFFTL_TRAEGER = 'publicAgencies',   // Beteiligung der Träger öffentlicher Belange
-    OEFFTL_AUSL = 'publicDisclosure', 	        // Öffentliche Auslegung
-    INTERN_BEARB = 'internal', 	                // Interne Bearbeitung
+    OEFFTL_AUSL = 'publicDisclosure',           // Öffentliche Auslegung
+    INTERN_BEARB = 'internal',                  // Interne Bearbeitung
     ABGESCHLOSSEN = 'completed',                // Abgeschlossen
     UNBEKANNT = 'unknown'
 }
@@ -125,8 +125,8 @@ export enum PluProcessStepType {
  */
 export enum PluDocType {
     AUSLEG_INFO = 'announcement',       // Auslegungsinformationen
-    ERLAEUT_BER = 'explanatoryReport', 	// Erläuterungsbericht
-    PLAN_ZEICHN = 'planDrawing',	    // Planzeichnung
+    ERLAEUT_BER = 'explanatoryReport',  // Erläuterungsbericht
+    PLAN_ZEICHN = 'planDrawing',        // Planzeichnung
     UNBEKANNT = 'unknown'
     // TODO not finalized yet
 }

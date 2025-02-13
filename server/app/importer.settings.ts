@@ -27,7 +27,6 @@ export interface CronData {
 }
 
 export const DefaultImporterSettings: ImporterSettings = {
-    index: '',
     priority: null,
     type: '',
     maxRecords: 100,
@@ -51,7 +50,6 @@ export const DefaultImporterSettings: ImporterSettings = {
 };
 
 export type ImporterSettings = {
-    index: string,
     priority?: number,
     blacklistedIds?: string[],
     catalogId: string,

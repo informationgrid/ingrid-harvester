@@ -21,13 +21,11 @@
  * ==================================================
  */
 
-import { Bucket } from '../../../persistence/postgres.utils';
 import { EsOperation } from '../../../persistence/elastic.utils';
 import { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator';
-import {IngridIndexDocument} from "../model/index.document";
-import {createEsId} from "../ingrid.utils";
-import {DiplanungIndexDocument} from "../../diplanung/model/index.document";
-import {Distribution} from "../../../model/distribution";
+import { Bucket } from '../../../persistence/postgres.utils';
+import { createEsId } from '../ingrid.utils';
+import { IngridIndexDocument } from '../model/index.document';
 
 export class PostgresAggregator implements AbstractPostgresAggregator<IngridIndexDocument> {
 
@@ -35,7 +33,6 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         let box: EsOperation[] = [];
         // find primary document
         let { document, duplicates } = this.prioritizeAndFilter(bucket);
-
 
         for (let [id, service] of bucket.operatingServices) {
             document = this.resolveCoupling(document, service);
@@ -45,7 +42,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         let deleteDocument = document.extras.metadata.deleted != null;
         bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
         if (deleteDocument) {
-            return [{ operation: 'delete', _id: createEsId(document) }];
+            return [{ operation: 'delete', _index: document['catalog'].identifier, _id: createEsId(document) }];
         }
 
         // // merge service information into dataset
@@ -61,16 +58,16 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
             document.extras.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
-                box.push({ operation: 'delete', _id: old_id });
+                box.push({ operation: 'delete', _index: document['catalog'].identifier, _id: old_id });
             }
             // remove data with duplicate _id if it differs from the newly created id
             if (duplicate_id != document_id) {
-                box.push({ operation: 'delete', _id: duplicate_id });
+                box.push({ operation: 'delete', _index: document['catalog'].identifier, _id: duplicate_id });
             }
         }
         document = this.sanitize(document);
         // document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
-        box.push({ operation: 'index', _id: createEsId(document), document });
+        box.push({ operation: 'index', _index: document['catalog'].identifier, _id: createEsId(document), document });
         return box;
     }
 
@@ -78,18 +75,6 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         document: IngridIndexDocument,
         duplicates: Map<string | number, IngridIndexDocument>
     } {
-        // initialize records map
-        let records: Map<string, Map<string | number, IngridIndexDocument>> = new Map<string, Map<string | number, IngridIndexDocument>>();
-        for (let [id, document] of bucket.duplicates) {
-            let sourceType = document.extras.metadata.source.source_type;
-            let sourceMap = records.get(sourceType);
-            if (sourceMap == null) {
-                sourceMap = new Map<string | number, IngridIndexDocument>();
-                records.set(sourceType, sourceMap);
-            }
-            sourceMap.set(id, document);
-        }
-
         let mainDocument: IngridIndexDocument;
         let duplicates: Map<string | number, IngridIndexDocument> = new Map<string | number, IngridIndexDocument>();
 
@@ -141,5 +126,4 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         }
         return document;
     }
-
 }

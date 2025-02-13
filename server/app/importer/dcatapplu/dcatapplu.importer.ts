@@ -202,7 +202,17 @@ export class DcatappluImporter extends Importer {
 
                 let rdfAboutAttribute = DcatappluMapper.select('./@rdf:about', records[i], true)?.textContent;
                 let catalogId = datasetAboutsToCatalogAbouts[rdfAboutAttribute];
-                let catalog = catalogAboutsToCatalogs[catalogId] ?? this.database.defaultCatalog;
+                let catalog = catalogAboutsToCatalogs[catalogId] ?? this.database.getCatalog(this.generalConfig.elasticsearch.index);
+                if (!catalog) {
+                    catalog = await this.database.createCatalog({
+                        description: 'Globaler Katalog',
+                        identifier: this.generalConfig.elasticsearch.index,
+                        publisher: {
+                            name: ''
+                        },
+                        title: 'Globaler Katalog'
+                    });
+                }
                 let mapper = this.getMapper(this.settings, records[i], catalog, rootNode, harvestTime, this.summary);
 
                 let doc: IndexDocument;
