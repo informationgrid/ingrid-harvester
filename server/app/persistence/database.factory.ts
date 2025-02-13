@@ -33,7 +33,7 @@ export class DatabaseFactory {
             case 'postgresql':
                 return new PostgresUtils(configuration, summary);
             default: 
-                throw new Error('Only PostgreSQL ist supported; [' + configuration.type + '] was specified');
+                throw new Error('Only PostgreSQL is supported; [' + configuration.type + '] was specified');
         }
     }
 
@@ -42,7 +42,7 @@ export class DatabaseFactory {
             case 'postgresql':
                 return PostgresUtils.ping(configuration);
             default: 
-                throw new Error('Only PostgreSQL ist supported; [' + configuration?.type + '] was specified');
+                throw new Error('Only PostgreSQL is supported; [' + configuration?.type + '] was specified');
         }
     }
 }

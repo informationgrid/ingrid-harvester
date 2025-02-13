@@ -21,14 +21,15 @@
  * ==================================================
  */
 
+import { Index } from '@shared/index.model';
+import { Service } from '@tsed/di';
 import * as fs from "fs";
-import { BulkResponse, ElasticsearchUtils} from '../persistence/elastic.utils';
-import { ConfigService} from './config/ConfigService';
+import { Summary } from '../model/summary';
 import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { Index} from '@shared/index.model';
 import { IndexConfiguration } from '../persistence/elastic.setting';
-import { Service} from '@tsed/di';
-import { Summary} from '../model/summary';
+import { BulkResponse, ElasticsearchUtils } from '../persistence/elastic.utils';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
+import { ConfigService } from './config/ConfigService';
 
 const log = require('log4js').getLogger(__filename);
 const path = require('path');
@@ -79,7 +80,9 @@ export class IndexService {
 
     private async getIndexFromHarvesterID(id: number): Promise<string> {
         const harvester = ConfigService.get().find(h => h.id === id);
-        let indices = await this.elasticUtils.getIndicesFromBasename(harvester.index);
+
+        let index = ProfileFactoryLoader.get().useIndexPerCatalog() ? harvester.catalogId : this.elasticUtils.indexName;
+        let indices = await this.elasticUtils.getIndicesFromBasename(index);
 
         // if multiple indices, then there might be an indexing process
         // we should be able to ignore adding an alias, since it should happen automatically after indexing
@@ -92,7 +95,10 @@ export class IndexService {
     }
 
     async getIndices(): Promise<Index[]> {
-        return await this.elasticUtils.getIndicesFromBasename('');
+        let indices = await this.elasticUtils.getIndicesFromBasename('');
+        let systemIndices = ['harvester_statistic', 'url_check_history', 'index_check_history', 'ingrid_meta']
+            .map(i => this.elasticUtils.config.prefix + i);
+        return indices.filter(index => !systemIndices.includes(index.name));
     }
 
     deleteIndex(name: string) {
@@ -174,12 +180,12 @@ export class IndexService {
                 let data = [];
                 bulkData.forEach(entry => data.push(entry));
                 bulkData = [];
-                promise = promise.then(() => this.elasticUtils.bulkWithIndexName(json.index, type, data, false));
+                promise = promise.then(() => this.elasticUtils.bulkWithIndexName(json.index, type, data));
 
             }
         });
         return await promise
-            .then(() => this.elasticUtils.bulkWithIndexName(json.index, type, bulkData, false))
+            .then(() => this.elasticUtils.bulkWithIndexName(json.index, type, bulkData))
             .then(() => this.elasticUtils.health('yellow'));
     }
 }

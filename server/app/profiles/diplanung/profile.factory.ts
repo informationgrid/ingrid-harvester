@@ -34,7 +34,6 @@ import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper
 import { FisWfsMapper } from '../../importer/wfs/fis/fis.wfs.mapper';
 import { ImporterFactory } from '../../importer/importer.factory';
 import { IndexDocumentFactory } from '../../model/index.document.factory';
-import { IndexSettings } from '../../persistence/elastic.setting';
 import { MsWfsMapper } from '../../importer/wfs/ms/ms.wfs.mapper';
 import { PostgresAggregator } from './persistence/postgres.aggregator';
 import { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator';
@@ -61,14 +60,6 @@ export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper
         }
     }
 
-    getIndexMappings(): any {
-        return require('./persistence/elastic.mappings.json');
-    }
-
-    getIndexSettings(): IndexSettings {
-        return require('./persistence/elastic.settings.json');;
-    }
-
     getImporterFactory(): ImporterFactory {
         return new DiplanungImporterFactory();
     }
@@ -79,5 +70,9 @@ export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper
 
     getProfileName(): string {
         return 'diplanung';
+    }
+
+    useIndexPerCatalog(): boolean {
+        return false;
     }
 }

@@ -111,6 +111,10 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         return null;
     }
 
+    getSource(): string {
+        return 'KuLaDig';
+    }
+
     getIssued(): Date {
         return this.baseMapper.getIssued();
     }

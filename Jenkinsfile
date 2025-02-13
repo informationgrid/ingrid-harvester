@@ -12,29 +12,56 @@ pipeline {
     }
 
     stages {
-        stage('Build Image') {
+        stage('Build and Push Image') {
+            when {
+                branch 'main'
+            }
             steps {
                 script {
-                    version = snapshotVersionFromGit()
+                    (version, snapshotVersion) = versionsFromGit()
+                    echo "VERSION:" + version
                     dockerImage = docker.build registry + ":" + version
-                    dockerImageLatest = docker.build registry + ":latest"
+                    dockerImage.push()
                 }
             }
         }
-        stage('Push Image') {
+        stage('Build and Push Develop Image') {
+            when {
+                branch 'develop'
+            }
             steps {
                 script {
-                    dockerImage.push()
+                    (version, snapshotVersion) = versionsFromGit()
+                    dockerImageSnapshot = docker.build registry + ":" + snapshotVersion
+                    dockerImageSnapshot.push()
+                    dockerImageLatest = docker.build registry + ":latest"
                     dockerImageLatest.push()
+                }
+            }
+        }
+        stage('Build and Push Branch Image') {
+            when {
+                not {
+                    anyOf {
+                        branch 'main'
+                        branch 'develop'
+                    }
+                }
+            }
+            steps {
+                script {
+                    dockerImageBranch = docker.build registry + ":" + env.BRANCH_NAME
+                    dockerImageBranch.push()
                 }
             }
         }
     }
 }
 
-def snapshotVersionFromGit() {
+def versionsFromGit() {
     def latestVersion = sh script: 'git describe --tags $(git rev-list --branches=origin/main --tags --max-count=1)', returnStdout: true
-    def (major, minor, patch) = latestVersion? latestVersion.tokenize('.').collect { it.toInteger() }: ["0","0","0"]
+    latestVersion = latestVersion ? latestVersion.trim() : "0.0.0"
+    def (major, minor, patch) = latestVersion.tokenize('.').collect { it.toInteger() }
     def snapshotVersion = "${major}.${minor + 1}.0-SNAPSHOT"
-    snapshotVersion
+    return [latestVersion, snapshotVersion]
 }

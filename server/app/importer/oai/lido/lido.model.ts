@@ -105,6 +105,7 @@ export interface Resource {
     description: string,
     // descriptionType: string,
     id: string,
+    links: Link[],
     rights: Right[],
     source: Source,
     type: string

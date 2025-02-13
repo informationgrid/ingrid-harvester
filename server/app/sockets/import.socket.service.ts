@@ -21,17 +21,18 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../utils/misc.utils';
+import { Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession } from '@tsed/socketio';
+import { CronJob } from 'cron';
+import { getLogger } from 'log4js';
 import * as SocketIO from 'socket.io';
-import {Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession} from '@tsed/socketio';
-import {ConfigService} from '../services/config/ConfigService';
-import {SummaryService} from '../services/config/SummaryService';
-import {CronJob} from 'cron';
-import {getLogger} from 'log4js';
-import {MailServer} from "../utils/nodemailer.utils";
-import {ImportLogMessage} from "../model/import.result";
-import {StatisticUtils} from "../statistic/statistic.utils";
-import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
+import { ImportLogMessage } from '../model/import.result';
+import { ElasticsearchFactory } from '../persistence/elastic.factory';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
+import { ConfigService } from '../services/config/ConfigService';
+import { SummaryService } from '../services/config/SummaryService';
+import { StatisticUtils } from '../statistic/statistic.utils';
+import * as MiscUtils from '../utils/misc.utils';
+import { MailServer } from '../utils/nodemailer.utils';
 
 @SocketService('/import')
 export class ImportSocketService {
@@ -59,19 +60,22 @@ export class ImportSocketService {
     @Input('runImport')
     @Emit('/log')
     async runImport(id: number, isIncremental?: boolean): Promise<void> {
-        let lastExecution = new Date();
-        let configGeneral = ConfigService.getGeneralSettings();
-        let configData = ConfigService.get().filter(config => config.id === id)[0];
-        //configData.deduplicationAlias = configData.index + 'dedup';
-
-        let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });
-
-        let profile = ProfileFactoryLoader.get();
-        let importer = await profile.getImporterFactory().get(configHarvester);
-        let mode = isIncremental ? 'incr' : 'full';
-        this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
-
         try {
+            let lastExecution = new Date();
+            let configGeneral = ConfigService.getGeneralSettings();
+            let configData = ConfigService.get().filter(config => config.id === id)[0];
+            //configData.deduplicationAlias = configData.index + 'dedup';
+
+            let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });
+
+            let profile = ProfileFactoryLoader.get();
+            if (profile.useIndexPerCatalog()) {
+                profile.createCatalogIfNotExist(configHarvester.catalogId);
+            }
+            let importer = await profile.getImporterFactory().get(configHarvester);
+            let mode = isIncremental ? 'incr' : 'full';
+            this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
+
             importer.run.subscribe(response => {
                 response.id = id;
                 response.lastExecution = lastExecution;
@@ -90,32 +94,37 @@ export class ImportSocketService {
                     importer.getSummary().print(this.log);
                     this.summaryService.update(response);
                     let statisticUtils = new StatisticUtils(configGeneral);
-                    statisticUtils.saveSummary(response, configHarvester.index);
+                    let elastic = ElasticsearchFactory.getElasticUtils(configGeneral.elasticsearch, null);
+                    let index = profile.useIndexPerCatalog() ? configHarvester.catalogId : elastic.indexName;
+                    statisticUtils.saveSummary(response, index);
 
                     // when less results send mail
-                    let importedLastRun = (summaryLastRun) ? summaryLastRun.summary.numDocs - summaryLastRun.summary.skippedDocs.length : 0;
-                    let imported = importer.getSummary().numDocs - importer.getSummary().skippedDocs.length;
-                    let diff = configGeneral.harvesting.mail.minDifference ?? 10;
-                    if (configGeneral.mail.enabled && configGeneral.harvesting.mail.enabled &&
-                            ((importedLastRun - (importedLastRun*diff/100) >= imported) || (imported === 0))) {
-                        let subject: string;
-                        if (imported === 0)
-                            subject = `Importer [${configHarvester.type}] "${configData.description}" ohne Ergebnisse!`;
-                        else
-                            subject = `Importer [${configHarvester.type}] "${configData.description}" mit weniger Ergebnissen!`;
-                        let text = `Current Run:\n`
-                            + importer.getSummary().toString();
-                        if (summaryLastRun) {
-                            text += `\n\n`
-                                + `Last Run (`+summaryLastRun.lastExecution+`):\n`
-                                + summaryLastRun.summary.toString();
+                    if (!isIncremental && configGeneral.mail.enabled && configGeneral.harvesting.mail.enabled) {
+                        let importedLastRun = (summaryLastRun) ? summaryLastRun.summary.numDocs - summaryLastRun.summary.skippedDocs.length : 0;
+                        let imported = importer.getSummary().numDocs - importer.getSummary().skippedDocs.length;
+                        let diff = configGeneral.harvesting.mail.minDifference ?? 10;
+                        if (importedLastRun * (100 - diff) / 100 >= imported) {
+                            let subject: string;
+                            if (imported === 0)
+                                subject = `Importer [${configHarvester.type}] "${configData.description}" ohne Ergebnisse!`;
+                            else
+                                subject = `Importer [${configHarvester.type}] "${configData.description}" mit weniger Ergebnissen!`;
+                            let text = `Current Run:\n`
+                                + importer.getSummary().toString();
+                            if (summaryLastRun) {
+                                text += `\n\n`
+                                    + `Last Run (`+summaryLastRun.lastExecution+`):\n`
+                                    + summaryLastRun.summary.toString();
+                            }
+                            MailServer.getInstance().send(subject, text);
                         }
-                        MailServer.getInstance().send(subject, text);
                     }
                 }
             }, error => {
                 this.log.error('There was an error: ', error);
-                MailServer.getInstance().send(`Importer [${configHarvester.type}] ${configData.description} failed`, error.toString());
+                if (configGeneral.mail.enabled) {
+                    MailServer.getInstance().send(`Importer [${configHarvester.type}] ${configData.description} failed`, error.toString());
+                }
             });
         }
         catch (e) {

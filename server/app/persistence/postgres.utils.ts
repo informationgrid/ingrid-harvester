@@ -21,19 +21,19 @@
  * ==================================================
  */
 
+import { DatabaseConfiguration } from '@shared/general-config.settings';
+import { Client, Pool, PoolClient, QueryResult } from 'pg';
+import { Catalog } from '../model/dcatApPlu.model';
+import { Distribution } from '../model/distribution';
+import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
+import { IndexDocument } from '../model/index.document';
+import { Summary } from '../model/summary';
+import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
 import * as MiscUtils from '../utils/misc.utils';
 import { BulkResponse, DatabaseUtils } from './database.utils';
-import { Catalog } from '../model/dcatApPlu.model';
-import { Client, Pool, PoolClient, QueryResult } from 'pg';
-import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
-import { DatabaseConfiguration } from '@shared/general-config.settings';
-import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory';
-import { Distribution } from '../model/distribution';
 import { ElasticsearchUtils } from './elastic.utils';
-import { IndexDocument } from '../model/index.document';
 import { PostgresQueries } from './postgres.queries';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import { Summary } from '../model/summary';
 
 const log = require('log4js').getLogger(__filename);
 const Cursor = require('pg-cursor');
@@ -69,18 +69,6 @@ export class PostgresUtils extends DatabaseUtils {
 
     async init(): Promise<void> {
         await this.createTables();
-        this.defaultCatalog = await this.getCatalog(this.configuration.defaultCatalogIdentifier);
-        if (!this.defaultCatalog) {
-            let catalog: Catalog = {
-                description: 'Globaler Katalog',
-                identifier: this.configuration.defaultCatalogIdentifier,
-                publisher: {
-                    name: ''
-                },
-                title: 'Globaler Katalog'
-            };
-            this.defaultCatalog = await this.createCatalog(catalog);
-        }
     }
 
     async createTables() {
@@ -116,12 +104,35 @@ export class PostgresUtils extends DatabaseUtils {
         return result.rows.map(row => row.identifier);
     }
 
-    async getDatasets(source: string): Promise<RecordEntity[]> {
-        let result: QueryResult<any> = await this.transactionClient.query(this.queries.getDatasets, [source]);
+    client(useTransaction: boolean) {
+        return useTransaction ? this.transactionClient : PostgresUtils.pool;
+    }
+
+    async getDatasets(source: string | number, useTransaction: boolean = true): Promise<RecordEntity[]> {
+        let query = typeof source == "number" ? this.queries.getDatasetsByCollection : this.queries.getDatasetsBySource;
+        let result: QueryResult<any> = await this.client(useTransaction).query(query, [source]);
         if (result.rowCount == 0) {
             return null;
         }
         return result.rows;
+    }
+
+    async deleteDatasets(catalogId: number): Promise<void> {
+        await PostgresUtils.pool.query(this.queries.deleteRecords, [catalogId]);
+    }
+
+    async moveDatasets(catalogId: number, targetCatalogId: number): Promise<void> {
+        // TODO this results in an error if there is already another dataset with the same identifier,collection_id,source
+        // TODO thus, a simple SQL UPDATE does not suffice
+        // when a solution is implemented:
+        // * the try/catch parentheses can be removed
+        // * the [disabled] attribute in the `mat-radio-button` in `delete-catalog.component.html` can be removed
+        try {
+            await PostgresUtils.pool.query(this.queries.moveRecords, [catalogId, targetCatalogId]);
+        }
+        catch (e) {
+            throw e;
+        }
     }
 
     async getServices(source: string): Promise<RecordEntity[]> {
@@ -132,8 +143,27 @@ export class PostgresUtils extends DatabaseUtils {
         return result.rows;
     }
 
+    async getCatalogSizes(useTransaction: boolean = true): Promise<{ collection_id: number, count: number }[]> {
+        let result: QueryResult<any> = await this.client(useTransaction).query(this.queries.getCollectionSizes);
+        if (result.rowCount == 0) {
+            return null;
+        }
+        return result.rows.reduce((val, { collection_id, count }) => ({ [collection_id]: count, ...val }), {});
+    }
+
+    async listCatalogs(): Promise<Catalog[]> {
+        // TODO maybe move this to somewhere more sensible
+        await this.init();
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.listCollections);
+        if (result.rowCount == 0) {
+            return [];
+        }
+        let catalogs: Catalog[] = result.rows.map(row => ({ id: row.id, ...row.properties }));
+        return catalogs.sort((c1, c2) => c1.title < c2.title ? -1 : c1.title > c2.title ? 1 : 0);
+    }
+
     async createCatalog(catalog: Catalog): Promise<Catalog> {
-        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCollection, [catalog.identifier, catalog, null, DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCollection, [catalog.identifier, catalog, null, await DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
         if (result.rowCount != 1) {
             return null;
         }
@@ -152,13 +182,24 @@ export class PostgresUtils extends DatabaseUtils {
         };
     }
 
-    async getCatalogs(): Promise<any[]> {
-        let result: QueryResult<any> = await PostgresUtils.pool.query('SELECT * FROM public.collection');
-        if (result.rowCount == 0) {
-            return [];
+    async updateCatalog(catalog: Catalog): Promise<Catalog> {
+        // don't persist ID within catalog json
+        delete catalog['id'];
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.updateCollection,
+            [catalog.identifier, catalog, null, await DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
+        if (result.rowCount != 1) {
+            return null;
         }
-        let catalogs: any[] = result.rows.map(row => ({ id: row.id, ...row.properties }));
-        return catalogs;
+        catalog.id = result.rows[0].id;
+        return catalog;
+    }
+
+    async deleteCatalog(catalogId: number): Promise<Catalog> {
+        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.deleteCollection, [catalogId]);
+        if (result.rowCount != 1) {
+            return null;
+        }
+        return null;
     }
 
     async nonFetchedPercentage(source: string, last_modified: Date): Promise<number> {
@@ -168,7 +209,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void> {
-        await this.transactionClient.query(this.queries.deleteRecords, [source, last_modified]);
+        await this.transactionClient.query(this.queries.deleteNonFetchedRecords, [source, last_modified]);
     }
 
     /**
@@ -186,9 +227,10 @@ export class PostgresUtils extends DatabaseUtils {
         // TODO we also need to store SOURCE_TYPE in postgres and subsequently fetch it here (B.source_type)
         // @myself: next time, when you want me to do something in the future, specify WHY that should be done...
 
-        let catalogs = (await this.getCatalogs()).reduce((map, catalog: Catalog) => (map[catalog.id] = catalog, map), {});
+        let catalogs = (await this.listCatalogs()).reduce((map, catalog: Catalog) => (map[catalog.id] = catalog, map), {});
 
         const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
+        // const totalRows = client.query(this.queries.getBuckets, [source]);
         let currentId: string | number;
         let currentBucket: Bucket<any>;
         const maxRows = 100;
@@ -196,6 +238,7 @@ export class PostgresUtils extends DatabaseUtils {
         let numDatasets = 0;
         let numBuckets = 0;
         while (rows.length > 0) {
+            log.info(`PQ->ES: Processing rows ${numDatasets} - ${numDatasets + rows.length}`);
             for (let row of rows) {
                 numDatasets += 1;
                 if (row.anchor_id != currentId) {
@@ -239,8 +282,9 @@ export class PostgresUtils extends DatabaseUtils {
             await elastic.addOperationChunksToBulk(operationChunks);
         }
         // send remainder of bulk data
-        elastic.sendBulkOperations(true);
+        await elastic.sendBulkOperations();
         log.debug('Connection released');
+        cursor.close();
         client.release();
         let stop = Date.now();
         log.info(`Processed ${numDatasets} datasets and ${numBuckets} buckets`);
@@ -362,7 +406,7 @@ export class PostgresUtils extends DatabaseUtils {
         return entities;
     }
 
-    addEntityToBulk(entity: Entity): Promise<BulkResponse> {
+    async addEntityToBulk(entity: Entity): Promise<BulkResponse> {
         if ((entity as RecordEntity).collection_id) {
             this._bulkData.push(entity as RecordEntity);
             // send data to database if limit is reached
@@ -468,10 +512,15 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async commitTransaction() {
-        log.debug('Transaction: commit');
-        await this.transactionClient.query('COMMIT');
-        this.transactionClient.release();
-        this.transactionClient = null;
+        if (this.transactionClient) {
+            log.debug('Transaction: commit');
+            await this.transactionClient.query('COMMIT');
+            this.transactionClient.release();
+            this.transactionClient = null;
+        }
+        else {
+            log.warn('Cannot commit transaction: no open transaction found')
+        }
     }
 
     async rollbackTransaction() {
@@ -480,6 +529,9 @@ export class PostgresUtils extends DatabaseUtils {
             await this.transactionClient.query('ROLLBACK');
             this.transactionClient.release();
             this.transactionClient = null;
+        }
+        else {
+            log.warn('Cannot rollback transaction: no open transaction found')
         }
     }
 

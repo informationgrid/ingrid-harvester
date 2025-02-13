@@ -25,7 +25,6 @@ import { ElasticQueries } from './persistence/elastic.queries';
 import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { ImporterFactory } from '../../importer/importer.factory';
 import { IndexDocumentFactory } from 'model/index.document.factory';
-import { IndexSettings } from '../../persistence/elastic.setting';
 import { KldMapper } from 'importer/kld/kld.mapper';
 import { LvrImporterFactory } from './importer/lvr.importer.factory';
 import { LvrIndexDocument } from './model/index.document';
@@ -57,14 +56,6 @@ export class LvrFactory extends ProfileFactory<KldMapper | OaiLidoMapper | OaiMo
         }
     }
 
-    getIndexMappings(): any {
-        return require('./persistence/elastic.mappings.json');
-    }
-
-    getIndexSettings(): IndexSettings {
-        return require('./persistence/elastic.settings.json');;
-    }
-
     getImporterFactory(): ImporterFactory {
         return new LvrImporterFactory();
     }
@@ -75,5 +66,9 @@ export class LvrFactory extends ProfileFactory<KldMapper | OaiLidoMapper | OaiMo
 
     getProfileName(): string {
         return 'lvr';
+    }
+
+    useIndexPerCatalog(): boolean {
+        return false;
     }
 }

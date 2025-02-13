@@ -42,8 +42,6 @@ export class ConfigGeneralComponent implements OnInit {
 
   profile: string;
 
-  form;
-
   constructor(
     private formBuilder: UntypedFormBuilder, 
     private configService: ConfigService, 
@@ -178,8 +176,7 @@ export class ConfigGeneralComponent implements OnInit {
         port: [settings.database.port],
         database: [settings.database.database],
         user: [settings.database.user],
-        password: [settings.database.password],
-        defaultCatalogIdentifier: [settings.database.defaultCatalogIdentifier]
+        password: [settings.database.password]
       }),
       elasticsearch: this.formBuilder.group({
         url: [settings.elasticsearch.url, Validators.required],

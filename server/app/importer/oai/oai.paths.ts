@@ -49,6 +49,7 @@ const lido: OaiXPaths = {
 
 const mods: OaiXPaths = {
     prefixMap: {
+        'oai': namespaces.OAI,
         'mods': namespaces.MODS
     },
     nsPrefix: namespaces.MODS,

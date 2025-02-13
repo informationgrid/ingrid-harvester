@@ -144,4 +144,8 @@ export class DiplanungDcatappluMapper extends DiplanungMapper<DcatappluMapper> {
     getModifiedDate(): Date {
         return this.baseMapper.getModifiedDate();
     }
+
+    getProcedureImportDate(): Date {
+        return this.baseMapper.getProcedureImportDate();
+    }
 }

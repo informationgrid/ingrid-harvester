@@ -21,8 +21,10 @@
  * ==================================================
  */
 
+import * as xpath from 'xpath';
 import * as MiscUtils from '../../utils/misc.utils';
 import * as ServiceUtils from '../../utils/service.utils';
+import * as XpathUtils from '../../utils/xpath.utils';
 import { defaultCSWSettings, CswSettings } from './csw.settings';
 import { getLogger } from 'log4js';
 import { namespaces } from '../../importer/namespaces';
@@ -64,57 +66,30 @@ export class CswImporter extends Importer {
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings);
-
         this.profile = ProfileFactoryLoader.get();
         this.domParser = MiscUtils.getDomParser();
-
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultCSWSettings, settings);
-
-        // if we are looking for incremental updates, add a date filter to the existing record filter
-        if (settings.isIncremental) {
-            let sumser: SummaryService = new SummaryService();
-            let summary: ImportLogMessage = sumser.get(settings.id);
-            // only change the record filter (i.e. do an incremental harvest)
-            // if there exists a previous run
-            if (summary) {
-                settings.recordFilter = this.addModifiedFilter(settings.recordFilter, new Date(summary.lastExecution));
-            }
-            else {
-                log.warn(`Changing type of harvest to "full" because no previous harvest was found for harvester with id ${settings.id}`);
-                settings.isIncremental = false;
-            }
-        }
-        this.settings = settings;
+        this.settings = MiscUtils.merge(defaultCSWSettings, settings);
     }
 
-    private addModifiedFilter(recordFilter: string, lastRunDate: Date): string {
-        let incrementalFilter = this.domParser.parseFromString(`<ogc:PropertyIsGreaterThanOrEqualTo><ogc:PropertyName>Modified</ogc:PropertyName><ogc:Literal>${lastRunDate.toISOString()}</ogc:Literal></ogc:PropertyIsGreaterThanOrEqualTo>`);
-        if (recordFilter != '') {
-            recordFilter = recordFilter.replace('<ogc:Filter>', '<ogc:And>');
-            recordFilter = recordFilter.replace('</ogc:Filter>', '</ogc:And>');
-            let andElem = this.domParser.parseFromString(recordFilter);
-            andElem.documentElement.appendChild(incrementalFilter);
-            incrementalFilter = andElem;
-        }
-        let modifiedFilter = this.domParser.parseFromString('<ogc:Filter/>');
-        modifiedFilter.documentElement.appendChild(incrementalFilter);
-        return modifiedFilter.toString().replace(' xmlns:ogc=""', '');
-    }
-
-    private addDatasetFilter(recordFilter: string) {
-        let datasetFilter = '<ogc:PropertyIsEqualTo><ogc:PropertyName>Type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsEqualTo>';
-        let filter = '<ogc:Filter>';
-        if (recordFilter != '') {
-            filter += recordFilter.replace('<ogc:Filter>', '<ogc:And>').replace('</ogc:Filter>', '');
-            filter += datasetFilter;
-            filter += '</ogc:And>';
+    private appendFilter(newFilter: string): string {
+        if (!this.settings.recordFilter) {
+            return `<ogc:Filter>${newFilter}</ogc:Filter>`;
         }
         else {
-            filter += datasetFilter;
+            const parseXml = (s: string) => this.domParser.parseFromString(s);
+            const select = <XpathUtils.XPathElementSelect>xpath.useNamespaces({ 'ogc': namespaces.OGC });
+            try {
+                let recordFilterElem = select('/ogc:Filter/*', parseXml(this.settings.recordFilter), true);
+                let filterElem = parseXml('<ogc:Filter/>').documentElement;
+                let contentElem = filterElem.appendChild(parseXml('<ogc:And/>').documentElement);
+                contentElem.appendChild(parseXml(newFilter));
+                contentElem.appendChild(recordFilterElem);
+                return filterElem.toString();
+            }
+            catch (e) {
+                throw Error('No valid Filter element defined.');
+            }
         }
-        filter += '</ogc:Filter>';
-        return filter;
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -127,6 +102,19 @@ export class CswImporter extends Importer {
         else {
             try {
                 let transactionTimestamp = await this.database.beginTransaction();
+                // configure for incremental harvesting
+                if (this.settings.isIncremental) {
+                    // only change the record filter (i.e. do an incremental harvest) if a previous run exists
+                    let lastHarvestingDate = new SummaryService().get(this.settings.id)?.lastExecution;
+                    if (lastHarvestingDate) {
+                        let lastModifiedFilter = `<ogc:PropertyIsGreaterThanOrEqualTo><ogc:PropertyName>Modified</ogc:PropertyName><ogc:Literal>${new Date(lastHarvestingDate).toISOString()}</ogc:Literal></ogc:PropertyIsGreaterThanOrEqualTo>`;
+                        this.settings.recordFilter = this.appendFilter(lastModifiedFilter);
+                    }
+                    else {
+                        log.warn(`Changing type of harvesting to "full" because no previous harvesting was found for harvester with id ${this.settings.id}`);
+                        this.settings.isIncremental = false;
+                    }
+                }
                 // get datasets
                 let numIndexDocs = await this.harvest();
                 if (!this.settings.isIncremental) {
@@ -160,12 +148,13 @@ export class CswImporter extends Importer {
                     throw new Error();
                 }
 
-                await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
+                if (!this.settings.isIncremental) {
+                    await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
+                }
                 await this.database.commitTransaction();
                 await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
+                await this.handlePostHarvesting();
                 observer.next(ImportResult.complete(this.summary));
-
-                await this.handlePostHarvesting()
             }
             catch (err) {
                 if (err.message) {
@@ -188,22 +177,33 @@ export class CswImporter extends Importer {
         let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId);
         this.generalInfo['catalog'] = catalog;
 
+        if (this.settings.harvestingMode == 'separate') {
+            let datasetFilter = '<ogc:PropertyIsEqualTo><ogc:PropertyName>Type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsEqualTo>';
+            this.settings.recordFilter = this.appendFilter(datasetFilter);
+        }
         // collect number of totalRecords up front, so we can harvest concurrently
-        let recordFilter = this.settings.harvestingMode == 'separate'
-            ? this.addDatasetFilter(this.settings.recordFilter)
-            : this.settings.recordFilter;
-        let hitsRequestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter, resultType: 'hits', startPosition: 1, maxRecords: 1 });
+        let hitsRequestConfig = CswImporter.createRequestConfig({
+            ...this.settings,
+            recordFilter: this.settings.recordFilter,
+            resultType: 'hits',
+            startPosition: 1,
+            maxRecords: 1
+        });
         let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
         let hitsResponse = await hitsRequestDelegate.doRequest();
         let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
         let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
+        if (!hitsResultsNode) {
+            throw new Error(hitsResponse);
+        }
         this.totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
         log.info(`Number of records to fetch: ${this.totalRecords}`);
 
         // 1) create paged request delegates
         let delegates = [];
-        for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords; startPosition += this.settings.maxRecords) {
-            let requestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter, startPosition });
+        // TODO this is still not correct?
+        for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
+            let requestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter: this.settings.recordFilter, startPosition });
             delegates.push(new RequestDelegate(requestConfig, CswImporter.createPaging({
                 startPosition: startPosition,
                 maxRecords: this.settings.maxRecords
@@ -564,6 +564,6 @@ export class CswImporter extends Importer {
         return this.summary;
     }
 
-    protected handlePostHarvesting() {
+    protected async handlePostHarvesting() {
     }
 }

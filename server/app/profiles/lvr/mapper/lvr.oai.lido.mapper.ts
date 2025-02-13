@@ -21,13 +21,14 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
-import 'dayjs/locale/de';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import { Keyword, Media, Person, Relation } from '../model/index.document';
 import { License } from '@shared/license.model';
-import { LvrMapper } from './lvr.mapper';
+import 'dayjs/locale/de';
+import { Link } from '../../../importer/oai/lido/lido.model';
 import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
+import { GeometryInformation, Temporal } from '../../../model/index.document';
+import * as GeoJsonUtils from '../../../utils/geojson.utils';
+import { Keyword, Media, Person, Relation } from '../model/index.document';
+import { LvrMapper } from './lvr.mapper';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
@@ -85,11 +86,11 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
 
     // TODO
     getTemporal(): Temporal[] {
-        let tepmorals = this.baseMapper.getSubjects().map(subject => ({
+        let temporals = this.baseMapper.getSubjects().map(subject => ({
             date_range: subject.period
             // date_type: ???
         }));
-        return tepmorals;
+        return temporals;
     }
 
     getKeywords(): Keyword[] {
@@ -114,9 +115,64 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         return null;
     }
 
-    // TODO
     getMedia(): Media[] {
-        return null;
+
+        const findFirstURL = (links: Link[], attributes: string[]) => {
+            let url = '';
+            for (let i = 0; i < attributes.length && !url; i++) {
+                url = links.find(link => link.format == attributes[i])?.url ?? '';
+            }
+            return url;
+        };
+
+        let media = [];
+        for (let resource of this.baseMapper.getResources()) {
+            switch (resource.type) {
+                case 'digitales Bild': {
+                    let fullURL = findFirstURL(resource.links, ['image_master', 'image_overview', 'image_thumbnail', 'http://terminology.lido-schema.org/resourceRepresentation_type/provided_image']);
+                    let thumbnailURL = findFirstURL(resource.links, ['image_overview', 'image_thumbnail', 'image_master', 'http://terminology.lido-schema.org/resourceRepresentation_type/provided_image']);
+                    media.push({
+                        type: 'image',
+                        url: fullURL,
+                        thumbnail: thumbnailURL,
+                        description: resource.description
+                    });
+                    break;
+                }
+                case 'Video': {
+                    let fullURL = findFirstURL(resource.links, ['http://terminology.lido-schema.org/resourceRepresentation_type/provided_video']);
+                    let thumbnailURL = findFirstURL(resource.links, ['image_overview', 'image_thumbnail', 'image_master']);
+                    media.push({
+                        type: 'video',
+                        url: fullURL,
+                        thumbnail: thumbnailURL,
+                        description: resource.description
+                    });
+                    break;
+                }
+                case 'Text': {
+                    let fullURL = resource.links.find(link => link.format == 'http://terminology.lido-schema.org/lido00481')?.url ?? '';
+                    let thumbnailURL = findFirstURL(resource.links, ['image_overview', 'image_thumbnail']);
+                    media.push({
+                        type: 'document',
+                        url: fullURL,
+                        thumbnail: thumbnailURL,
+                        description: resource.description
+                    });
+                    break;
+                }
+                default: {
+                    for (let link of resource.links) {
+                        media.push({
+                            type: link.format,
+                            url: link.url,
+                            description: resource.description
+                        });
+                    }
+                }
+            }
+        }
+        return media;
     }
 
     getRelations(): Relation[] {
@@ -139,8 +195,38 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         return licenses;
     }
 
+    // TODO
     getVector(): object {
         return null;
+    }
+
+    /**
+     * See https://redmine.wemove.com/issues/5010
+     */
+    getSource(): string {
+        switch (this.baseMapper.getMetadataSource().source_base) {
+            case 'https://oamh-lvr.digicult-verbund.de/cv/sprache_lvr_13tHztt9gZr':
+                return 'digiCULT (Sprache)';
+            case 'https://oamh-lvr.digicult-verbund.de/cv/hgrojzOf7tF53kH0a0j':
+                return 'digiCULT (Alltagskulturen)';
+            case 'https://oamh-lvr.digicult-verbund.de/cv/hH0a0jrojzOgtF5j7u':
+                let conceptIdNodes = OaiMapper.select('./lido:descriptiveMetadata/lido:objectClassificationWrap/lido:classificationWrap/lido:classification/lido:conceptID', this.baseMapper.record);
+                let conceptIds = conceptIdNodes?.map(conceptIdNode => conceptIdNode.textContent) ?? [];
+                let relationIds = this.getRelations()?.map(relation => relation.id) ?? [];
+                if (relationIds.includes('DE-2086/lido/62b99d31aff930.75966699')
+                        || conceptIds.includes('http://digicult.vocnet.org/portal/p0330')) {
+                    return 'digiCULT (Preußen)';
+                }
+                else if (relationIds.includes('DE-2086/lido/57a2eb58249101.94114332')
+                    || conceptIds.includes('http://digicult.vocnet.org/portal/p0326')) {
+                    return 'digiCULT (Geschichte)';
+                }
+                // console.log("NO PORTAL: " + this.getIdentifier());
+                // TODO filter out?
+                return 'digiCULT';
+            default:
+                return undefined;
+        }
     }
 
     getIssued(): Date {

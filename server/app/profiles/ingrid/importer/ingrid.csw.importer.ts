@@ -23,22 +23,23 @@
 
 import * as MiscUtils from '../../../utils/misc.utils';
 import { Bucket } from '../../../persistence/postgres.utils';
+import { ConfigService } from '../../../services/config/ConfigService';
 import { CswImporter } from '../../../importer/csw/csw.importer';
 import { EsOperation } from '../../../persistence/elastic.utils';
 import { RequestDelegate } from '../../../utils/http-request.utils';
-import {ProfileFactoryLoader} from "../../profile.factory.loader";
-import {ElasticsearchFactory} from "../../../persistence/elastic.factory";
 
 const log = require('log4js').getLogger(__filename);
 
 export class IngridCswImporter extends CswImporter {
+
+    private readonly INGRID_META = 'ingrid_meta';
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings, requestDelegate)
     }
 
     protected async handlePostHarvesting() {
-        let meta = await this.elastic.search("ingrid_meta",
+        let meta = await this.elastic.search(this.INGRID_META,
             {
                 "query": {
                     "term": {
@@ -47,7 +48,7 @@ export class IngridCswImporter extends CswImporter {
                         }
                     }
                 }
-            });
+            }, false);
         if (meta.hits?.total?.value > 0) {
             let entry = meta.hits?.hits[0]._source;
 
@@ -56,20 +57,17 @@ export class IngridCswImporter extends CswImporter {
             entry.plugdescription.dataType = this.settings.datatype?.split(",");
             entry.plugdescription.partner = this.settings.partner?.split(",");
 
-            this.elastic.addOperationChunksToBulk([{
-                _index: "ingrid_meta",
-                document: entry,
-                _id: meta.hits?.hits[0]._id,
-                operation: "update",
-                _type: "_doc"
-            }]).then(() => this.elastic.sendBulkOperations()).then(() => this.elastic.flush());
-        } else {
+            await this.elastic.update(this.INGRID_META, meta.hits?.hits[0]._id, entry, false);
+        }
+        else {
+            let { prefix, index } = ConfigService.getGeneralSettings().elasticsearch;
+            let indexId = (prefix ?? '') + index;
             let entry = {
                 "plugId": this.settings.iPlugId,
-                "indexId": "harvester-index",
+                "indexId": indexId,
                 "iPlugName": "Harvester",
                 "lastIndexed": new Date(Date.now()).toISOString(),
-                "linkedIndex": "harvester-index",
+                "linkedIndex": indexId,
                 "plugdescription": {
                     "provider": this.settings.provider?.split(","),
                     "dataType": this.settings.datatype?.split(","),
@@ -82,13 +80,7 @@ export class IngridCswImporter extends CswImporter {
                 },
                 "active": false
             }
-            this.elastic.addOperationChunksToBulk([{
-                _index: "ingrid_meta",
-                document: entry,
-                _id: undefined,
-                operation: "index",
-                _type: "_doc"
-            }]).then(() => this.elastic.sendBulkOperations()).then(() => this.elastic.flush());
+            await this.elastic.index(this.INGRID_META, entry, false);
         }
     }
 

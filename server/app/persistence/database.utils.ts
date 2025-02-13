@@ -40,7 +40,6 @@ export abstract class DatabaseUtils {
     
     public _bulkData: RecordEntity[];
     public _bulkCouples: CouplingEntity[];
-    public defaultCatalog: Catalog;
 
     abstract init(): Promise<void>;
 
@@ -84,13 +83,29 @@ export abstract class DatabaseUtils {
 
     abstract getDatasetIdentifiers(source: string): Promise<string[]>;
 
-    abstract getDatasets(source: string): Promise<RecordEntity[]>;
+    /**
+     * Retrieve all datasets pertaining to either a specified source or a specified collection (id)
+     * @param source if a string, search as a source - if a number, search as a collection
+     */
+    abstract getDatasets(source: string | number, useTransaction?: boolean): Promise<RecordEntity[]>;
+
+    abstract deleteDatasets(catalogId: number): Promise<void>;
+
+    abstract moveDatasets(catalogId: number, targetCatalogId: number): Promise<void>;
 
     abstract getServices(source: string): Promise<RecordEntity[]>;
+
+    abstract getCatalogSizes(useTransaction: boolean): Promise<any[]>;
+
+    abstract listCatalogs(): Promise<Catalog[]>;
 
     abstract createCatalog(catalog: Catalog): Promise<Catalog>;
 
     abstract getCatalog(catalogIdentifier: string): Promise<Catalog>;
+
+    abstract updateCatalog(catalog: Catalog): Promise<Catalog>;
+
+    abstract deleteCatalog(catalogId: number): Promise<Catalog>;
 
     abstract ping(): Promise<boolean>;
 

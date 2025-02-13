@@ -24,7 +24,6 @@
 import {ingridMapper} from "./ingrid.mapper";
 import {CswMapper} from "../../../importer/csw/csw.mapper";
 import {Distribution} from "../../../model/distribution";
-import {Codelist} from "../utils/codelist";
 
 const log = require('log4js').getLogger(__filename);
 
@@ -191,14 +190,21 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         };
         let temporal = this.baseMapper.getTemporal();
         if(temporal) {
-            if (this.hasValue(temporal[0].gte?.toString()) && this.hasValue(temporal[0].lte?.toString())){
+            let hasStart = this.hasValue(temporal[0].gte?.toString());
+            let hasEnd = this.hasValue(temporal[0].lte?.toString());
+            if (hasStart && hasEnd){
                 if (temporal[0].gte.toString() == temporal[0].lte.toString()) result.time_type = "am"
                 else result.time_type = "von"
             }
-            else if (this.hasValue(temporal[0].gte?.toString()) && !this.hasValue(temporal[0].lte?.toString())){
-                result.time_type = "seit"
+            else if (hasStart && !hasEnd){
+                if (temporal[0].lte === undefined) {
+                    result.time_type = "seit";
+                }
+                else if (temporal[0].lte === null) {
+                    result.time_type = "seitX";
+                }
             }
-            else if (!this.hasValue(temporal[0].gte?.toString()) && this.hasValue(temporal[0].lte?.toString())){
+            else if (!hasStart && hasEnd){
                 result.time_type = "bis"
             }
             result.time_from = temporal[0].gte ? this.formatDate(temporal[0].gte) : "00000000"
@@ -341,7 +347,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_serv() {
-
+        let serviceType = CswMapper.select("./srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName", this.baseMapper.idInfo, true)?.textContent;
+        if(this.hasValue(serviceType))
+            return {
+                "type": serviceType
+            }
+        return undefined;
     }
 
     getT011_obj_serv_version() {
@@ -476,6 +487,20 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     }
 
+    isHvd(): boolean {
+        let isOpendata = this.baseMapper.getKeywords()?.some(keyword => ['opendata', 'opendataident'].includes(keyword));
+        if (isOpendata) {
+            let descriptiveKeywordsElems = CswMapper.select('./*/gmd:descriptiveKeywords/gmd:MD_Keywords', this.baseMapper.idInfo);
+            for (let descriptiveKeywordsElem of descriptiveKeywordsElems) {
+                let thesaurusName = CswMapper.select('./gmd:thesaurusName/gmd:CI_Citation/gmd:title/*[self::gco:CharacterString or self::gmx:Anchor]', descriptiveKeywordsElem, true)?.textContent;
+                let keywords = CswMapper.select('./gmd:keyword', descriptiveKeywordsElem);
+                if (thesaurusName?.toLowerCase()?.startsWith('high-value') && keywords?.length > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     private getSingleEntryOrArray(result){
         if (result.length > 1) return result;

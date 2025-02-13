@@ -362,6 +362,11 @@ export class DcatappluMapper extends BaseMapper {
         return modified ? MiscUtils.normalizeDateTime(modified.textContent) : undefined;
     }
 
+    getProcedureImportDate(): Date {
+        let procedureImportDate = DcatappluMapper.select('./plu:procedureImportDate', this.record, true);
+        return procedureImportDate ? MiscUtils.normalizeDateTime(procedureImportDate.textContent) : undefined;
+    }
+
     getMetadataSource(): MetadataSource {
         let dcatLink; //=  DcatappluMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');

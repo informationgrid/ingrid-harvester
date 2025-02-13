@@ -44,7 +44,6 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         this.baseMapper = baseMapper;
     }
 
-
     async create() : Promise<any> {
         let result = await {
             iPlugId: this.getIPlugId(),
@@ -105,6 +104,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             object_use: this.getObjectUse(),
             object_use_constraint: this.getObjectUseConstraint(),
             object_access: this.getObjectAccess(),
+            is_hvd: this.isHvd(),
             sort_hash: this.getSortHash()
         };
 
@@ -112,8 +112,6 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
 
         return result;
     }
-
-
 
     getDistributions(): Promise<Distribution[]>{
         return undefined
@@ -123,14 +121,13 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return this.baseMapper.getTitle();
     }
 
-    getModifiedDate(): Date{
+    getModifiedDate(): string{
         return this.formatDate(this.baseMapper.getModifiedDate());
     }
 
     getAccessRights(): string[]{
         return this.baseMapper.getAccessRights();
     }
-
 
     getGeneratedId(): string{
         return this.baseMapper.getGeneratedId()
@@ -258,10 +255,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     getT011_obj_geo() {
         return undefined;
     }
+
     getT011_obj_geo_scale() {
         return undefined;
     }
-
 
     getT011_obj_serv() {
         return undefined;
@@ -319,6 +316,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return undefined;
     }
 
+    isHvd(): boolean {
+        return undefined;
+    }
+
     getSortHash() {
         return crypto.createHash('sha1').update(this.getTitle(), 'binary').digest('hex')
     }
@@ -337,7 +338,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         }
     }
 
-    protected formatDate(date){
+    protected formatDate(date: Date){
+        if (!date) {
+            return null;
+        }
         return date.getFullYear()
             +(date.getMonth()+1).toString().padStart(2, "0")
             +date.getDate().toString().padStart(2, "0")
@@ -348,71 +352,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     }
 
     protected transformToIgcDomainId(value, codelist){
-        //Codelist.getInstance().getId(codelist, value)
-        switch (codelist){
-            case "2000": {
-                switch(value){
-                    case "keyCatalog": return "3100";
-                    case "serviceurl": return "5066";
-                    case "download": return "9990";
-                    case "unspecificurl": return "9999";
-                    case "coupledResource": return "3600";
-                    case "information": return "5302";
-                    case "offlineAccess": return "5303";
-                    case "order": return "5304";
-                    case "search": return "5305";
-                }
-                break;
-            }
-            case "502": {
-                switch(value){
-                    case "creation": return "1";
-                    case "publication": return "2";
-                    case "revision": return "3";
-                }
-            }
-            case "505": {
-                switch (value) {
-                    case "resourceProvider":
-                        return "1";
-                    case "custodian":
-                        return "2";
-                    case "owner":
-                        return "3";
-                    case "user":
-                        return "4";
-                    case "distributor":
-                        return "5";
-                    case "originator":
-                        return "6";
-                    case "pointOfContact":
-                        return "7";
-                    case "principalInvestigator":
-                        return "8";
-                    case "processor":
-                        return "9";
-                    case "publisher":
-                        return "10";
-                    case "author":
-                        return "11";
-                    case "pointOfContactMd":
-                        return "12";
-                }
-            }
-            case "523": {
-                switch(value){
-                    case "completed": return "1";
-                    case "historicalArchive": return "2";
-                    case "obsolete": return "3";
-                    case "onGoing": return "4";
-                    case "planned": return "5";
-                    case "required": return "6";
-                    case "underDevelopment": return "7";
-                }
-            }
-        }
-        return undefined
+        var id = Codelist.getInstance().getId(codelist, value)
+        return id
     }
 }
-
-

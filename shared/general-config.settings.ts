@@ -35,10 +35,10 @@ export type GeneralSettings = {
     indexCheck?: CronData,
     sessionSecret: string,
     mail?: {
-    	enabled?: boolean,
+        enabled?: boolean,
         mailServer?: MailServerConfiguration,
-		from?: string,
-    	to?: string,
+        from?: string,
+        to?: string,
         subjectTag?: string
     },
     indexBackup?: {
@@ -80,8 +80,7 @@ export interface DatabaseConfiguration {
     port?: number,
     database?: string,
     user?: string,
-    password?: string,
-    defaultCatalogIdentifier: string
+    password?: string
 }
 
 export interface MailServerConfiguration {

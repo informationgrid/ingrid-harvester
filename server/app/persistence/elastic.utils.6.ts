@@ -38,13 +38,15 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
         super(config);
         this.summary = summary;
 
+        // timeout is set to 86400000 as per recommendation (NodeJS ES 6.x uses HttpConnection)
+        // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/timeout-best-practices.html
         this.client = new Client({
             node: config.url,
             auth: {
                 username: config.user,
                 password: config.password
             },
-            requestTimeout: 30000,
+            requestTimeout: 86400000,
             ssl: {
                 rejectUnauthorized: config.rejectUnauthorized
             }
@@ -139,7 +141,7 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
 
         try {
             await this.client.cluster.health({ wait_for_status: 'yellow' });
-            await this.sendBulkOperations(false);
+            await this.sendBulkOperations();
             if (closeIndex) {
                 // await this.deleteOldIndices(this.config.index, this.indexName);
                 // if (this.config.addAlias) {
@@ -160,6 +162,15 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
             index,
             name: alias
         });
+    }
+
+    async listAliases(index: string): Promise<string[]> {
+        index = this.addPrefixIfNotExists(index) as string;
+        let { body: response } = await this.client.cat.aliases({
+            format: 'json'
+        });
+        let aliases = response.filter(entry => entry.index == index).map(entry => entry.alias);
+        return aliases; 
     }
 
     async removeAlias(index: string, alias: string): Promise<any> {
@@ -209,8 +220,14 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
             });
     }
 
-    async bulk(bulkOperations: any[], closeAfterBulk: boolean): Promise<BulkResponse> {
+    async bulk(bulkOperations: any[]): Promise<BulkResponse> {
         try {
+            let profile = ProfileFactoryLoader.get();
+            let indexName = this.addPrefixIfNotExists(this.indexName) as string;
+            let isPresent = await this.isIndexPresent(indexName);
+            if (!isPresent){
+                await this.prepareIndex(profile.getIndexMappings(), profile.getIndexSettings())
+            }
             let { body: response } = await this.client.bulk({
                 index: this.indexName,
                 type: this.config.indexType || 'base',
@@ -218,15 +235,11 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
             });
             if (response.errors) {
                 response.items.forEach(item => {
-                    let err = item.index.error;
+                    let err = item.index?.error || item.update?.error;
                     if (err) {
                         this.handleError(`Error during indexing on index '${this.indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
                     }
                 });
-            }
-            if (closeAfterBulk) {
-                log.debug('Closing client connection to Elasticsearch');
-                this.client.close();
             }
             log.debug('Bulk finished of #operations + #docs: ' + bulkOperations.length);
             return {
@@ -235,58 +248,56 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
             };
         }
         catch (e) {
-            if (closeAfterBulk) {
-                this.client.close();
-            }
             this.handleError('Error during bulk #operations + #docs: ' + bulkOperations.length, e);
         }
     }
 
-    bulkWithIndexName(index: string, type, data, closeAfterBulk): Promise<BulkResponse> {
+    async bulkWithIndexName(index: string, type, data): Promise<BulkResponse> {
         index = this.addPrefixIfNotExists(index) as string;
-        return new Promise((resolve, reject) => {
-            try {
-                this.client.bulk({
-                    index,
-                    type: type,
-                    body: data
-                })
-                .then(({ body: response }) => {
-                    if (response.errors) {
-                        response.items.forEach(item => {
-                            let err = item.index.error;
-                            if (err) {
-                                this.handleError(`Error during indexing on index '${index}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
-                            }
-                        });
+        try {
+            let { body: response } = await this.client.bulk({
+                index,
+                type: type,
+                body: data
+            });
+            if (response.errors) {
+                response.items.forEach(item => {
+                    let e = item.index?.error;
+                    if (e) {
+                        this.handleError(`Error during indexing on index '${index}' for item.id '${item.index._id}': ${JSON.stringify(e)}`, e);
+                        throw e;
                     }
-                    if (closeAfterBulk) {
-                        log.debug('Closing client connection to Elasticsearch');
-                        this.client.close();
-                    }
-                    log.debug('Bulk finished of data #items: ' + data.length / 2);
-                    resolve({
-                        queued: false,
-                        response: response
-                    });
-                })
-                .catch(err => {
-                    this.handleError('Error occurred during bulkWithIndexName index of #items: ' + data.length / 2, err);
-                    if (closeAfterBulk) {
-                        this.client.close();
-                    }
-                    reject(err);
                 });
-            } catch (e) {
-                this.handleError('Error during bulk indexing of #items: ' + data.length / 2, e);
             }
-        });
+            log.debug('Bulk finished of data #items: ' + data.length / 2);
+            return {
+                queued: false,
+                response: response
+            };
+        }
+        catch (e) {
+            this.handleError('Error during bulk indexing of #items: ' + data.length / 2, e);
+            Promise.reject(e);
+        }
     }
 
     async addOperationChunksToBulk(boxedOperations: EsOperation[]): Promise<BulkResponse> {
         let operationChunk = [];
-        for (let { operation, _id, document } of boxedOperations) {
-            operationChunk.push({ [operation]: { _id } });
+        let index: string;
+        for (let { operation, _id, _index, document, _type } of boxedOperations) {
+            if (!_index) {
+                // use standard index (this.indexName) if no index was given
+                _index = this.indexName;
+            }
+            if (!index) {
+                // set index for this box of operations if not already set
+                index = _index;
+            }
+            if (index != _index) {
+                // a box of operations must target the same index
+                throw new Error(`Different indices in the same ES boxedOperations chunk (${index}, ${_index})`)
+            }
+            operationChunk.push({ [operation]: {_index, _id , _type} });
             switch (operation) {
                 case 'index':
                     operationChunk.push(document);
@@ -302,11 +313,15 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
                     break;
             }
         }
-        this._bulkOperationChunks.push(operationChunk);
+        if (!(index in this._bulkOperationChunks)) {
+            this._bulkOperationChunks[index] = [];
+        }
+        this._bulkOperationChunks[index].push(operationChunk);
 
-        if (this._bulkOperationChunks.length >= ElasticsearchUtils.maxBulkSize) {
-            return this.sendBulkOperations();
-        } else {
+        if (this._bulkOperationChunks[index].length >= ElasticsearchUtils.maxBulkSize) {
+            return this.sendBulkOperations(index);
+        }
+        else {
             return new Promise(resolve => resolve({
                 queued: true
             }));
@@ -317,21 +332,31 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
         return this.addOperationChunksToBulk([{ operation: 'index', _id: id, document }]);
     }
 
-    sendBulkOperations(closeAfterBulk?: boolean): Promise<BulkResponse> {
-        if (this._bulkOperationChunks.length > 0) {
-            let bulkOperations = this._bulkOperationChunks.flat(1);
-            log.debug('Sending BULK message with ' + this._bulkOperationChunks.length + ' operation chunks to ' + this.indexName);
-            let promise = this.bulk(bulkOperations, closeAfterBulk);
-            this._bulkOperationChunks = [];
-            return promise;
+    async sendBulkOperations(index?: string): Promise<BulkResponse> {
+        let promises: Promise<BulkResponse>[] = [];
+        let indices = index != null ? [index] : Object.keys(this._bulkOperationChunks);
+        for (let idx of indices) {
+            let bulkOperationChunksPerIndex = this._bulkOperationChunks[idx];
+            if (bulkOperationChunksPerIndex.length > 0) {
+                log.debug('Sending BULK message with ' + bulkOperationChunksPerIndex.length + ' operation chunks to ' + idx);
+                let promise = this.bulkWithIndexName(idx, null, bulkOperationChunksPerIndex.flat(1));
+                this._bulkOperationChunks[idx] = [];
+                promises.push(promise);
+            }
+            else {
+                promises.push(new Promise(resolve => resolve({
+                    queued: true
+                })));
+            }
         }
-        return new Promise(resolve => resolve({
-            queued: true
-        }));
+        if (promises.length == 1) {
+            return promises[0];
+        }
+        Promise.all(promises);
     }
 
     private handleError(message: string, error: any) {
-        this.summary.elasticErrors?.push(message);
+        this.summary?.elasticErrors?.push(message);
         log.error(message, error);
     }
 
@@ -345,12 +370,13 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
         }
     }
 
-    async search(index: string | string[], body?: object, size?: number): Promise<{ hits: any }> {
-        index = this.addPrefixIfNotExists(index);
+    async search(index: string | string[], body: object = {}, usePrefix: boolean = true): Promise<{ hits: any }> {
+        if (usePrefix) {
+            index = this.addPrefixIfNotExists(index);
+        }
         let { body: response } = await this.client.search({
             index,
-            body,
-            size
+            body
         });
         return response;
     }
@@ -479,9 +505,20 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
         }
     }
 
-    async index(index: string, document: object) {
-        index = this.addPrefixIfNotExists(index) as string;
+    async index(index: string, document: object, usePrefix: boolean = true) {
+        if (usePrefix) {
+            index = this.addPrefixIfNotExists(index) as string;
+        }
         await this.client.index({ index, type: 'base', body: document });
+        await this.flush();
+    }
+
+    async update(index: string, id: string, document: object, usePrefix: boolean = true) {
+        if (usePrefix) {
+            index = this.addPrefixIfNotExists(index) as string;
+        }
+        await this.client.update({ index, type: 'base', id, body: { doc: document }});
+        await this.flush();
     }
 
     async deleteByQuery(days: number) {

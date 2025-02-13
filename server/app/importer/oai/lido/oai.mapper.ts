@@ -45,14 +45,10 @@ export class OaiMapper extends BaseMapper {
         return this.select(path.replace(/\/(?!@)/g, '/lido:'), parent, true)?.textContent;
     }
 
-    static attr(path: string, parent: Node): string {
-        return this.select(path.replace(/\/(?!@)/g, '/lido:'), parent, true)?.textContent;
-    }
-
     log = getLogger();
 
     private readonly header: Element;
-    private readonly record: Element;
+    public readonly record: Element;
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
@@ -231,18 +227,18 @@ export class OaiMapper extends BaseMapper {
         let resources: Resource[] = resourceNodes.map(resourceNode => ({
             description: OaiMapper.text('./resourceDescription', resourceNode),
             id: OaiMapper.text('./resourceID', resourceNode),
-            links: OaiMapper.select('./resourceRepresentation', resourceNode).map(representationNode => ({
-                format: OaiMapper.attr('./@type', representationNode),
+            links: OaiMapper.select('./lido:resourceRepresentation', resourceNode).map(representationNode => ({
+                format: representationNode.getAttribute('lido:type'),
                 url: OaiMapper.text('./linkResource', representationNode)
             })),
-            rights: OaiMapper.select('./rightsResource', resourceNode).map(rightsNode => ({
+            rights: OaiMapper.select('./lido:rightsResource', resourceNode).map(rightsNode => ({
                 holder: OaiMapper.text('./rightsHolder/legalBodyName/appellationValue', rightsNode),
                 licenseURL: OaiMapper.text('./rightsType/conceptID', rightsNode),
                 licenseName: OaiMapper.text('./rightsType/term', rightsNode)
             })),
             source: {
                 name: OaiMapper.text('./resourceSource/legalBodyName/appellationValue', resourceNode),
-                type: OaiMapper.attr('./@type', resourceNode)
+                type: resourceNode.getAttribute('lido:type')
             },
             type: OaiMapper.text('./resourceType/term', resourceNode)
         }));
