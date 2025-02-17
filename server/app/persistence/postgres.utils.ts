@@ -30,7 +30,6 @@ import { IndexDocument } from '../model/index.document';
 import { Summary } from '../model/summary';
 import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import * as MiscUtils from '../utils/misc.utils';
 import { BulkResponse, DatabaseUtils } from './database.utils';
 import { ElasticsearchUtils } from './elastic.utils';
 import { PostgresQueries } from './postgres.queries';
@@ -345,11 +344,11 @@ export class PostgresUtils extends DatabaseUtils {
                 // we remove catalogs from the entities at this point because we don't want them to persisted into the
                 // dataset in the catalog
                 entities = this.removeCatalogs(entities as RecordEntity[]);
-                result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities, MiscUtils.dateReplacer)]);
+                result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities, ProfileFactoryLoader.get().dateReplacer)]);
             }
             else if ((entities[0] as CouplingEntity).service_id) {
                 entities = this.mergeCouplingEntities(entities as CouplingEntity[]);
-                result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities, MiscUtils.dateReplacer)]);
+                result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities, ProfileFactoryLoader.get().dateReplacer)]);
             }
             else {
                 throw new Error('Unrecognised Entity type');

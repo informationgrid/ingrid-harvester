@@ -35,6 +35,7 @@ import { ElasticsearchUtils } from '../persistence/elastic.utils';
 import { PostgresAggregator } from '../persistence/postgres.aggregator';
 import { PostgresQueries } from '../persistence/postgres.queries';
 import { ConfigService } from '../services/config/ConfigService';
+import * as MiscUtils from '../utils/misc.utils';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -73,6 +74,10 @@ export abstract class ProfileFactory<M extends BaseMapper> {
         }
         log.info(`Ensuring existence of DB entry for catalog "${catalog.identifier}"`);
         return await database.createCatalog(catalog);
+    }
+
+    dateReplacer(key: string, value: any): any {
+        return MiscUtils.dateReplacer;
     }
 
     getIndexMappings(): any {
