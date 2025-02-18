@@ -316,17 +316,13 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getT011_obj_geo() {
         let lineage = CswMapper.select("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage", this.baseMapper.record, true);
-        if(lineage){
-            let special_base = CswMapper.select("./gmd:statement/gco:CharacterString", lineage, true)?.textContent;
-            let data_base = CswMapper.select("./gmd:source/gmd:LI_Source/gmd:description/gco:CharacterString", lineage, true)?.textContent;
-            let method = CswMapper.select("./gmd:processStep/gmd:LI_ProcessStep/gmd:description/gco:CharacterString", lineage, true)?.textContent;
-            let datasource_uuid = CswMapper.select("./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:code/gco:CharacterString", this.baseMapper.idInfo, true)?.textContent;
-
+        if (lineage) {
             return {
-                special_base,
-                data_base,
-                method,
-                datasource_uuid
+                special_base: CswMapper.select("./gmd:statement/gco:CharacterString", lineage, true)?.textContent,
+                data_base: CswMapper.select("./gmd:source/gmd:LI_Source/gmd:description/gco:CharacterString", lineage, true)?.textContent,
+                method: CswMapper.select("./gmd:processStep/gmd:LI_ProcessStep/gmd:description/gco:CharacterString", lineage, true)?.textContent,
+                datasource_uuid: CswMapper.select("./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString", this.baseMapper.idInfo, true)?.textContent,
+                referencesystem_id: this.getReferenceSystem()
             }
         }
         return undefined;
