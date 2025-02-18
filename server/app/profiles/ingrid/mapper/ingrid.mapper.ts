@@ -106,6 +106,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             object_use_constraint: this.getObjectUseConstraint(),
             object_access: this.getObjectAccess(),
             is_hvd: this.isHvd(),
+            spatial_system: this.getSpatialSystem(),
             sort_hash: this.getSortHash()
         };
 
@@ -322,6 +323,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     }
 
     isHvd(): boolean {
+        return undefined;
+    }
+
+    getSpatialSystem() {
         return undefined;
     }
 
