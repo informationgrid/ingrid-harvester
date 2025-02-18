@@ -64,10 +64,6 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return this.baseMapper.getDescription();
     }
 
-    getContent() {
-
-    }
-
     getLocation() {
         let result = [];
 

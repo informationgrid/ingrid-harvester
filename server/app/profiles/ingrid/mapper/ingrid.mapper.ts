@@ -77,13 +77,11 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             boost: this.getBoost(),
             title: this.getTitle(),
             summary: this.getSummary(),
-            content: this.getContent(),
             location: this.getLocation(),
             x1: this.getX1(),
             x2: this.getX2(),
             y1: this.getY1(),
             y2: this.getY2(),
-            idf: this.getIDF(),
             modified: this.getModifiedDate(),
             capabilities_url: this.getCapabilitiesURL(),
             additional_html_1: this.getAdditionalHTML(),
@@ -110,6 +108,9 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             spatial_system: this.getSpatialSystem(),
             sort_hash: this.getSortHash()
         };
+        result['content'] = this.getContent(result);
+        // add "idf" at the end, so it does not get included in the "content" array
+        result['idf'] = this.getIDF();
 
         this.executeCustomCode(result);
 
@@ -216,8 +217,20 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return undefined;
     }
 
-    getContent() {
-        return undefined;
+    getContent(resultObj) {
+        const values = [];
+        const traverse = obj => {
+            if (obj == null) {
+                return;
+            }
+            if (typeof obj !== 'object') {
+                values.push(obj);
+                return;
+            }        
+            Object.values(obj).forEach(traverse);
+        };
+        traverse(resultObj);
+        return values;
     }
 
     getLocation() {
