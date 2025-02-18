@@ -77,13 +77,13 @@ export class CswImporter extends Importer {
         }
         else {
             const parseXml = (s: string) => this.domParser.parseFromString(s);
-            const select = <XpathUtils.XPathElementSelect>xpath.useNamespaces({ 'ogc': namespaces.OGC });
             try {
-                let recordFilterElem = select('/ogc:Filter/*', parseXml(this.settings.recordFilter), true);
+                let recordFilterElem = parseXml(this.settings.recordFilter).getElementsByTagName('ogc:Filter')[0];
+                let filterChildElem = XpathUtils.firstElementChild(recordFilterElem);
                 let filterElem = parseXml('<ogc:Filter/>').documentElement;
                 let contentElem = filterElem.appendChild(parseXml('<ogc:And/>').documentElement);
                 contentElem.appendChild(parseXml(newFilter));
-                contentElem.appendChild(recordFilterElem);
+                contentElem.appendChild(filterChildElem);
                 return filterElem.toString();
             }
             catch (e) {
@@ -229,11 +229,11 @@ export class CswImporter extends Importer {
         for (let i = 0; i < datasetIds.length; i+= this.settings.maxServices) {
             // add ID filter
             const chunk = datasetIds.slice(i, i + this.settings.maxServices);
-            let recordFilter = '<ogc:Filter><ogc:Or>';
+            let recordFilter = '<ogc:Filter>' + (chunk.length > 1 ? '<ogc:Or>' : '');
             for (let identifier of chunk) {
                 recordFilter += `<ogc:PropertyIsEqualTo><ogc:PropertyName>OperatesOn</ogc:PropertyName><ogc:Literal>${identifier}</ogc:Literal></ogc:PropertyIsEqualTo>\n`;
             }
-            recordFilter += '</ogc:Or></ogc:Filter>';
+            recordFilter +=  (chunk.length > 1 ? '</ogc:Or>' : '') + '</ogc:Filter>';
             delegates.push(new RequestDelegate(
                 CswImporter.createRequestConfig({ ...this.settings, recordFilter }),
                 CswImporter.createPaging({ startPosition: this.settings.startPosition })
