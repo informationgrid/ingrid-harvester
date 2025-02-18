@@ -98,6 +98,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             t011_obj_serv_operation: this.getT011_obj_serv_operation(),
             t011_obj_serv_op_platform: this.getT011_obj_serv_op_platform(),
             t011_obj_topic_cat: this.getT011_obj_topic_cat(),
+            t012_obj_adr: this.getT012_obj_adr(),
             t0113_dataset_reference: this.getT0113_dataset_reference(),
             t017_url_ref: this.getT017_url_ref(),
             t021_communication: this.getT021_communication(),
@@ -289,6 +290,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     }
 
     getT011_obj_topic_cat() {
+        return undefined;
+    }
+
+    getT012_obj_adr() {
         return undefined;
     }
 

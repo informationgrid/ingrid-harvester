@@ -386,6 +386,14 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         }));
     }
 
+    getT012_obj_adr() {
+        let roles = CswMapper.select(".//gmd:CI_ResponsibleParty", this.baseMapper.record);
+        return roles.map(roleNode => ({
+            special_ref: "0", // explicitly set to 0
+            typ: this.transformToIgcDomainId(CswMapper.select("./gmd:role/gmd:CI_RoleCode/@codeListValue", roleNode, true)?.textContent, "505")
+        }));
+    }
+
     getT0113_dataset_reference() {
 
     }
