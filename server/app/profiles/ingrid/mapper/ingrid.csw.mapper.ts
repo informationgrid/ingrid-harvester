@@ -380,7 +380,10 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_topic_cat() {
-
+        let topicCategoryNodes = CswMapper.select("./gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode", this.baseMapper.idInfo);
+        return topicCategoryNodes?.map(topicCategoryNode => ({
+            topic_category: this.transformToIgcDomainId(topicCategoryNode.textContent, "527")
+        }));
     }
 
     getT0113_dataset_reference() {
