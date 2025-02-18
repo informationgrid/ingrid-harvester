@@ -50,6 +50,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             uuid: this.getGeneratedId(),
             partner: this.getPartner(),
             provider: this.getProvider(),
+            organisation: this.getOrganisation(),
             datatype: this.getDataType(),
             dataSourceName: this.getDataSourceName(),
             extras: {
@@ -165,6 +166,11 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
 
     getProvider() {
         return this.baseMapper.getSettings().provider;
+    }
+
+    getOrganisation() {
+        let organisation = this.transformToIgcDomainId(this.baseMapper.getSettings().provider, "111");
+        return organisation;
     }
 
     getDataType() {

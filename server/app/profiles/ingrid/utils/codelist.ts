@@ -47,6 +47,7 @@ export class Codelist {
 
     private lists = {}
     init () {
+        this.readList("codelist_111.xml", "ident", "name");
         this.readList("codelist_502.xml");
         this.readList("codelist_505.xml");
         this.readList("codelist_523.xml");
