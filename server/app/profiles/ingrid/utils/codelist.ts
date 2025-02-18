@@ -50,6 +50,8 @@ export class Codelist {
         this.readList("codelist_111.xml", "ident", "name");
         this.readList("codelist_502.xml");
         this.readList("codelist_505.xml");
+        this.readList("codelist_510.xml");
+        this.readList("codelist_518.xml");
         this.readList("codelist_523.xml");
         this.readList("codelist_527.xml");
         this.readList("codelist_2000.xml");

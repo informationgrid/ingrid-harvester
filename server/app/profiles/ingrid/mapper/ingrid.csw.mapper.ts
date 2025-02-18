@@ -170,10 +170,10 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             info_note: CswMapper.select("./gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString", this.baseMapper.idInfo, true)?.textContent,
             loc_descr: CswMapper.select("./gmd:MD_DataIdentification/gmd:EX_Extent/gmd:description/gco:CharacterString", this.baseMapper.idInfo, true)?.textContent,
             dataset_alternate_name: this.getAlternateTitle(),
-            dataset_character_set: undefined,
+            dataset_character_set: this.transformToIgcDomainId(CswMapper.select("./gmd:MD_DataIdentification/gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", this.baseMapper.idInfo, true)?.textContent, "510"),
             dataset_usage: CswMapper.select("./gmd:MD_DataIdentification/gmd:resourceSpecificUsage/gmd:MD_Usage/gmd:specificUsage/gco:CharacterString", this.baseMapper.idInfo, true)?.textContent,
             data_language_code: undefined,
-            metadata_character_set: undefined,
+            metadata_character_set: this.transformToIgcDomainId(CswMapper.select("./gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", this.baseMapper.record, true)?.textContent, "510"),
             metadata_standard_name: CswMapper.select("./gmd:metadataStandardName/gco:CharacterString", this.baseMapper.record, true)?.textContent,
             metadata_standard_version: CswMapper.select("./gmd:metadataStandardVersion/gco:CharacterString", this.baseMapper.record, true)?.textContent,
             metadata_language_code: undefined,
@@ -186,7 +186,9 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             time_status: this.transformToIgcDomainId(CswMapper.select("./gmd:status/gmd:MD_ProgressCode/@codeListValue", this.baseMapper.idInfo, true)?.textContent,"523"),
             time_type: undefined,
             time_from: undefined,
-            time_to: undefined
+            time_to: undefined,
+            time_descr: CswMapper.select("./gmd:MD_DataIdentification/gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceNote/gco:CharacterString", this.baseMapper.idInfo, true)?.textContent,
+            time_period: this.transformToIgcDomainId(CswMapper.select("./gmd:MD_DataIdentification/gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode/@codeListValue", this.baseMapper.idInfo, true)?.textContent,"518")
         };
         let temporal = this.baseMapper.getTemporal();
         if(temporal) {
