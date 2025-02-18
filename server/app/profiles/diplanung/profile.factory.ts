@@ -44,7 +44,7 @@ import { XplanWfsMapper } from '../../importer/wfs/xplan/xplan.wfs.mapper';
 
 export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper | ExcelSparseMapper | WfsMapper> {
 
-    dateReplacer(key: string, value: any): any {
+    dateReplacer = (key: string, value: any): any => {
         // when used as a JSON.stringify callback, `this` refers to the to-be-stringified object
         // we cannot use `value` directly, because `Date` provides an inbuilt serialization via `Date.toJSON()`
         // DIPLANUNG: we use seconds instead of milliseconds! this is the same as in the OGC API for RECORDS
@@ -52,7 +52,7 @@ export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper
             return Math.floor(this[key].valueOf() / 1000);
         }
         return value;
-    }
+    };
 
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();

@@ -76,9 +76,7 @@ export abstract class ProfileFactory<M extends BaseMapper> {
         return await database.createCatalog(catalog);
     }
 
-    dateReplacer(key: string, value: any): any {
-        return MiscUtils.dateReplacer;
-    }
+    dateReplacer = MiscUtils.dateReplacer;
 
     getIndexMappings(): any {
         return require(`./${this.getProfileName()}/persistence/elastic.mappings.json`);
