@@ -493,21 +493,30 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getObjectUse() {
-        return undefined;
+        let result = [];
+        let constraints = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useLimitation]/gco:CharacterString", this.baseMapper.idInfo);
+        for(let constraint of constraints){
+            result.push(constraint.textContent);
+        }
+        return result.length ? {terms_of_use_value: result} : undefined;
     }
 
     getObjectUseConstraint() {
-        let result = []
-        let constraints = CswMapper.select(".//gmd:resourceConstraints//gmd:otherConstraints[../gmd:useConstraints]/gmx:Anchor | .//gmd:resourceConstraints//gmd:otherConstraints[../gmd:useConstraints]/gco:CharacterString", this.baseMapper.idInfo);
+        let result = [];
+        let constraints = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useConstraints]/gmx:Anchor | ./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useConstraints]/gco:CharacterString", this.baseMapper.idInfo);
         for(let constraint of constraints){
             result.push(constraint.textContent);
         }
         return result.length ? {license_value: result} : undefined;
-
     }
 
     getObjectAccess() {
-
+        let restrictionValue = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:accessConstraints]/gco:CharacterString", this.baseMapper.idInfo, true)?.textContent;
+        return {
+            restriction_key: this.transformToIgcDomainId(restrictionValue, "6010") ?? "-1",
+            restriction_value: restrictionValue,
+            terms_of_use: CswMapper.select("./*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation/gco:CharacterString", this.baseMapper.idInfo, true)?.textContent
+        };
     }
 
     isHvd(): boolean {
