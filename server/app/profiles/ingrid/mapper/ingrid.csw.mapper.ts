@@ -179,7 +179,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             vertical_extent_vdatum: undefined,
             ordering_instructions: undefined,
             mod_time: this.getModifiedDate(),
-            time_status: this.transformToIgcDomainId(CswMapper.select("./gmd:status/gmd:MD_ProgressCode/@codeListValue", this.baseMapper.idInfo, true)?.textContent,"523"),
+            time_status: this.transformToIgcDomainId(CswMapper.select("./gmd:MD_DataIdentification/gmd:status/gmd:MD_ProgressCode/@codeListValue", this.baseMapper.idInfo, true)?.textContent,"523"),
             time_type: undefined,
             time_from: undefined,
             time_to: undefined,
