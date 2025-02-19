@@ -404,10 +404,13 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getT0113_dataset_reference() {
         let dates = CswMapper.select("./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date", this.baseMapper.idInfo);
-        return dates.map(dateNode => ({
-            reference_date: this.formatDate(new Date(Date.parse(CswMapper.select("./gmd:date/gco:Date", dateNode, true)?.textContent))),
-            type: this.transformToIgcDomainId(CswMapper.select("./gmd:dateType/gmd:CI_DateTypeCode/@codeListValue", dateNode, true)?.textContent, "502")
-        }));
+        return dates.map(dateNode => {
+            let date = CswMapper.select("./gmd:date/gco:Date|./gmd:date/gco:DateTime", dateNode, true)?.textContent;
+            return {
+                reference_date: date ? this.formatDate(new Date(Date.parse(date))) : null,
+                type: this.transformToIgcDomainId(CswMapper.select("./gmd:dateType/gmd:CI_DateTypeCode/@codeListValue", dateNode, true)?.textContent, "502")
+            };
+        });
     }
 
     getT017_url_ref() {
