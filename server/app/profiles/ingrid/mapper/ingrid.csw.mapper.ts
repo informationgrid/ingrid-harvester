@@ -359,7 +359,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_serv_version() {
-
+        let serviceTypeVersion = CswMapper.select("./srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString", this.baseMapper.idInfo, true)?.textContent;
+        if(this.hasValue(serviceTypeVersion))
+            return {
+                "version_value": serviceTypeVersion
+            }
+        return undefined;
     }
 
     getT011_obj_serv_op_connpoint() {
