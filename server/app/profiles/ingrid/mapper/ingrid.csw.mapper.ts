@@ -134,7 +134,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getCapabilitiesURL() {
-        return CswMapper.select("./srv:SV_ServiceIdentification[./srv:serviceType/gco:LocalName/text() = 'WMS' or ./srv:serviceType/gco:LocalName/text() = 'view']//srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString[text() = 'GetCapabilities']/../../srv:connectPoint//gmd:URL", this.baseMapper.idInfo, true)?.textContent;
+        return CswMapper.select(`./srv:SV_ServiceIdentification[
+                ./srv:serviceType/gco:LocalName/text() = 'WMS'
+                or ./srv:serviceType/gco:LocalName/text() = 'view'
+                or ./srv:serviceType/gco:LocalName/text() = 'WFS'
+                or ./srv:serviceType/gco:LocalName/text() = 'download'
+            ]//srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString[text() = 'GetCapabilities']/../../srv:connectPoint//gmd:URL`, this.baseMapper.idInfo, true)?.textContent;
     }
 
     getAdditionalHTML() {

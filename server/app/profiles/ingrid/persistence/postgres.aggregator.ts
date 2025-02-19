@@ -109,20 +109,22 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
     private resolveCoupling(document: IngridIndexDocument, service: any): IngridIndexDocument {
         if(service && service.hierarchylevel == 'service'){
             if(service.capabilities_url){
-                document.capabilities_url = service.capabilities_url;
+                document.capabilities_url ??= [];
+                document.capabilities_url.push(service.capabilities_url);
             }
-            document.refering = {
-                object_reference: {
-                    obj_uuid: service.uuid,
-                    obj_name: service.title,
-                    obj_class: "3",
-                    special_name: "Gekoppelte Daten",
-                    special_ref: "3600",
-                    type: "view",
-                    version: "OGC:WMS 1.3.0"
-                }
-            };
-            document.refering_service_uuid = service.uuid+"@@"+service.title+"@@"+service.capabilities_url;
+            document.refering ??= { object_reference: [] };
+            document.refering.object_reference ??= [];
+            document.refering.object_reference.push({
+                obj_uuid: service.uuid,
+                obj_name: service.title,
+                obj_class: "3",
+                special_name: "Gekoppelte Daten",
+                special_ref: "3600",
+                type: service.t011_obj_serv?.type,
+                version: service.t011_obj_serv_version?.version_value
+            });
+            document.refering_service_uuid ??= [];
+            document.refering_service_uuid.push(service.uuid+"@@"+service.title+"@@"+service.capabilities_url+"@@"+document.t011_obj_geo.datasource_uuid);
         }
         return document;
     }
