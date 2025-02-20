@@ -6,7 +6,7 @@
  * They are all identified by the `anchor_id` which is the id of the "original" dataset
  */
 
--- get all datasets of a given source, and all their duplicates from other sources (determined by dataset->>'plan_name')
+-- get all datasets of a given source, and all their duplicates from other sources
 (
     SELECT
         anchor.id AS anchor_id,
@@ -21,11 +21,8 @@
     FROM public.record AS anchor
     LEFT JOIN public.record AS secondary
     ON (
-            anchor.dataset->>'plan_name' = secondary.dataset->>'plan_name'
-            OR (
-                anchor.identifier = secondary.identifier
-                AND anchor.collection_id = secondary.collection_id
-            )
+            anchor.identifier = secondary.identifier
+            AND anchor.collection_id = secondary.collection_id
         )
         AND (
             anchor.source != secondary.source
