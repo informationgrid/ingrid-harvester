@@ -373,7 +373,13 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_serv_op_connpoint() {
-
+        let opMetadataNodes = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.baseMapper.idInfo);
+        if (!opMetadataNodes) {
+            return null;
+        }
+        return opMetadataNodes.map(opMetadataNode => ({
+            connect_point: CswMapper.select('./srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL', opMetadataNode, true)?.textContent
+        }));
     }
 
     getT011_obj_serv_op_depends() {
@@ -385,11 +391,25 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_serv_operation() {
-
+        let opMetadataNodes = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.baseMapper.idInfo);
+        if (!opMetadataNodes) {
+            return null;
+        }
+        return opMetadataNodes.map(opMetadataNode => ({
+            name: CswMapper.select('./srv:operationName/gco:CharacterString', opMetadataNode, true)?.textContent,
+            descr: CswMapper.select('./srv:operationDescription/gco:CharacterString', opMetadataNode, true)?.textContent,
+            invocation_name: CswMapper.select('./srv:invocationName/gco:CharacterString', opMetadataNode, true)?.textContent
+        }));
     }
 
     getT011_obj_serv_op_platform() {
-
+        let opMetadataNodes = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.baseMapper.idInfo);
+        if (!opMetadataNodes) {
+            return null;
+        }
+        return opMetadataNodes.map(opMetadataNode => ({
+            platform: CswMapper.select('./srv:DCP/srv:DCPList/@codeListValue', opMetadataNode, true)?.textContent
+        }));
     }
 
     getT011_obj_topic_cat() {
