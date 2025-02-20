@@ -254,7 +254,7 @@ export class PostgresUtils extends DatabaseUtils {
                         operatingServices: new Map<string | number, Distribution>()
                     };
                 }
-                // add service distribution to current bucket
+                // add service/additional distribution to current bucket
                 if (row.service_type != null) {
                     currentBucket.operatingServices.set(row.id, row.dataset);
                 }

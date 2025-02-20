@@ -35,7 +35,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         let { document, duplicates } = this.prioritizeAndFilter(bucket);
 
         for (let [id, service] of bucket.operatingServices) {
-            document = this.resolveCoupling(document, service);
+            this.resolveCoupling(document, service);
         }
 
         // shortcut - if all documents in the bucket should be deleted, delete the document from ES
@@ -45,10 +45,6 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
             return [{ operation: 'delete', _index: document['catalog'].identifier, _id: createEsId(document) }];
         }
 
-        // // merge service information into dataset
-        // for (let [id, service] of bucket.operatingServices) {
-        //     document = this.resolveCoupling(document, service);
-        // }
         // deduplication
         for (let [id, duplicate] of duplicates) {
             let old_id = createEsId(document);
@@ -106,26 +102,51 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         return document;
     }
 
-    private resolveCoupling(document: IngridIndexDocument, service: any): IngridIndexDocument {
-        if(service && service.hierarchylevel == 'service'){
-            if(service.capabilities_url){
-                document.capabilities_url ??= [];
-                document.capabilities_url.push(service.capabilities_url);
+    private resolveCoupling(document: IngridIndexDocument, additionalDoc: any) {
+        if (additionalDoc) {
+            if (additionalDoc.hierarchylevel == 'service') {
+                // add service information to document (dataset)
+                if (additionalDoc.capabilities_url) {
+                    document.capabilities_url ??= [];
+                    document.capabilities_url.push(additionalDoc.capabilities_url);
+                }
+                document.refering ??= { object_reference: [] };
+                document.refering.object_reference ??= [];
+                document.refering.object_reference.push({
+                    obj_uuid: additionalDoc.uuid,
+                    obj_name: additionalDoc.title,
+                    obj_class: "3",
+                    special_name: "Gekoppelte Daten",
+                    special_ref: "3600",
+                    type: additionalDoc.t011_obj_serv?.type,
+                    version: additionalDoc.t011_obj_serv_version?.version_value
+                });
+                document.refering_service_uuid ??= [];
+                document.refering_service_uuid.push(additionalDoc.uuid+"@@"+additionalDoc.title+"@@"+additionalDoc.capabilities_url+"@@"+document.t011_obj_geo.datasource_uuid);
             }
-            document.refering ??= { object_reference: [] };
-            document.refering.object_reference ??= [];
-            document.refering.object_reference.push({
-                obj_uuid: service.uuid,
-                obj_name: service.title,
-                obj_class: "3",
-                special_name: "Gekoppelte Daten",
-                special_ref: "3600",
-                type: service.t011_obj_serv?.type,
-                version: service.t011_obj_serv_version?.version_value
-            });
-            document.refering_service_uuid ??= [];
-            document.refering_service_uuid.push(service.uuid+"@@"+service.title+"@@"+service.capabilities_url+"@@"+document.t011_obj_geo.datasource_uuid);
+            else {
+                // add dataset information to document (service)
+                if (additionalDoc.capabilities_url) {
+                    document.capabilities_url ??= [];
+                    document.capabilities_url.push(additionalDoc.capabilities_url);
+                }
+                document.object_reference ??= [];
+                document.object_reference.push({
+                    obj_uuid: additionalDoc.uuid,
+                    obj_to_uuid: additionalDoc.uuid,
+                    obj_name: additionalDoc.title,
+                    obj_class: "1",
+                    special_name: "Gekoppelte Daten",
+                    special_ref: "3345"
+                });
+                if (!document.object_reference.some(obj_ref => obj_ref.special_ref == "3600")) {
+                    document.object_reference.push({
+                        obj_uuid: additionalDoc.uuid,
+                        obj_to_uuid: additionalDoc.uuid,
+                        special_ref: "3600"
+                    });
+                }
+            }
         }
-        return document;
     }
 }

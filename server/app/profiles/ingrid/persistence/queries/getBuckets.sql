@@ -53,6 +53,25 @@ UNION
     WHERE
         ds.source = $1
 )
+UNION
+-- get all datasets for the services of a given source
+(
+    SELECT
+        coupling.service_id::integer AS anchor_id,
+        ds.id AS id,-- ????
+        ds.source AS source,
+        ds.dataset AS dataset,
+        ds.collection_id AS catalog_id,
+        'dataset' AS service_type,
+        ds.created_on AS issued,
+        ds.last_modified AS modified,
+        ds.deleted_on AS deleted
+    FROM public.coupling AS coupling
+    LEFT JOIN public.record AS ds
+    ON coupling.dataset_identifier = ds.identifier
+    WHERE
+        ds.source = $1
+)
 /*
 -- TODO below query takes ages - improve it
 UNION

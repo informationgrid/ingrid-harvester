@@ -68,5 +68,6 @@ export type IngridIndexDocument = IndexDocument & {
     object_use: string
     object_use_constraint: string,
     object_access: string,
+    object_reference: any[],
     sort_hash: string
 }
