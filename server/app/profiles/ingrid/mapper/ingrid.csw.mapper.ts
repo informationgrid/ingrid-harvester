@@ -301,11 +301,11 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT0110_avail_format() {
-        let result = [],
-            formats = CswMapper.select("./gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format", this.baseMapper.record);
+        let result = [];
+        let formats = CswMapper.select("./gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format", this.baseMapper.record);
         for(let format of formats){
             result.push({
-                "name": CswMapper.select("./gmd:name/gco:CharacterString", format, true)?.textContent,
+                name: CswMapper.select("./gmd:name/gco:CharacterString", format, true)?.textContent,
                 version: CswMapper.select("./gmd:version/gco:CharacterString", format, true)?.textContent,
                 file_decompression_technique: CswMapper.select("./gmd:fileDecompressionTechnique/gco:CharacterString", format, true)?.textContent,
                 specification: CswMapper.select("./gmd:specification/gco:CharacterString", format, true)?.textContent
@@ -358,7 +358,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         let serviceType = CswMapper.select("./srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName", this.baseMapper.idInfo, true)?.textContent;
         if(this.hasValue(serviceType))
             return {
-                "type": serviceType
+                type: serviceType
             }
         return undefined;
     }
@@ -367,7 +367,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         let serviceTypeVersion = CswMapper.select("./srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString", this.baseMapper.idInfo, true)?.textContent;
         if(this.hasValue(serviceTypeVersion))
             return {
-                "version_value": serviceTypeVersion
+                version_value: serviceTypeVersion
             }
         return undefined;
     }
@@ -459,10 +459,10 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
                     }
 
                     result.push({
-                        "url_link" : urlLink,
-                        "content": content,
-                        "descr": descr,
-                        "special_ref": specialRef
+                        url_link : urlLink,
+                        content: content,
+                        descr: descr,
+                        special_ref: specialRef
                     });
                 }
             }
@@ -481,8 +481,8 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             if (this.hasValue(entries)) {
                 for (let j=0; j<entries.length; j++ ) {
                     results.push({
-                        "comm_type": "Telefon",
-                        "comm_value": entries[j].textContent
+                        comm_type: "Telefon",
+                        comm_value: entries[j].textContent
                     })
                 }
             }
@@ -491,8 +491,8 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             if (this.hasValue(entries)) {
                 for (let j=0; j<entries.length; j++ ) {
                     results.push({
-                        "comm_type": "Fax",
-                        "comm_value": entries[j].textContent
+                        comm_type: "Fax",
+                        comm_value: entries[j].textContent
                     })
                 }
             }
@@ -501,8 +501,8 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             if (this.hasValue(entries)) {
                 for (let j=0; j<entries.length; j++ ) {
                     results.push({
-                        "comm_type": "Email",
-                        "comm_value": entries[j].textContent
+                        comm_type: "Email",
+                        comm_value: entries[j].textContent
                     })
                 }
             }
@@ -511,8 +511,8 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             if (this.hasValue(entries)) {
                 for (let j=0; j<entries.length; j++ ) {
                     results.push({
-                        "comm_type": "URL",
-                        "comm_value": entries[j].textContent
+                        comm_type: "URL",
+                        comm_value: entries[j].textContent
                     })
                 }
             }
