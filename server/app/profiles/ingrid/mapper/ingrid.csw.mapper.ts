@@ -349,18 +349,11 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getT011_obj_geo_scale() {
         let resolutions = CswMapper.select("./gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution", this.baseMapper.idInfo)
-        for(let i = 0; i < resolutions.length; i++) {
-            let scale =  CswMapper.select("./gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer", resolutions[i], true)?.textContent;
-            let resolution_ground =  CswMapper.select("./gmd:distance/gmd:Distance[@uom='meter']", resolutions[i], true)?.textContent;
-            let resolution_scan =  CswMapper.select("./gmd:distance/gmd:Distance[@uom='dpi']", resolutions[i], true)?.textContent;
-
-            return {
-                scale,
-                resolution_ground,
-                resolution_scan
-            }
-        }
-        return undefined;
+        return resolutions?.map(resolutionNode => ({
+            scale: CswMapper.select("./gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer", resolutionNode, true)?.textContent,
+            resolution_ground: CswMapper.select("./gmd:distance/gmd:Distance[@uom='meter']", resolutionNode, true)?.textContent,
+            resolution_scan: CswMapper.select("./gmd:distance/gmd:Distance[@uom='dpi']", resolutionNode, true)?.textContent
+        }));
     }
 
     getT011_obj_serv() {
