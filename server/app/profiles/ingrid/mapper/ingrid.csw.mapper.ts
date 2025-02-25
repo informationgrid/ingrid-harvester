@@ -317,13 +317,20 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getT011_obj_geo() {
         let lineage = CswMapper.select("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage", this.baseMapper.record, true);
+        let report = CswMapper.select("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report", this.baseMapper.record, true);
         if (lineage) {
             return {
                 special_base: CswMapper.select("./gmd:statement/gco:CharacterString", lineage, true)?.textContent,
                 data_base: CswMapper.select("./gmd:source/gmd:LI_Source/gmd:description/gco:CharacterString", lineage, true)?.textContent,
                 method: CswMapper.select("./gmd:processStep/gmd:LI_ProcessStep/gmd:description/gco:CharacterString", lineage, true)?.textContent,
-                datasource_uuid: CswMapper.select("./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString", this.baseMapper.idInfo, true)?.textContent,
-                referencesystem_id: this.getReferenceSystem()
+                datasource_uuid: CswMapper.select("./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString", this.baseMapper.idInfo, true)?.textContent,
+                referencesystem_id: this.getReferenceSystem(),
+                rec_exact: CswMapper.select("./gmd:DQ_RelativeInternalPositionalAccuracy/gmd:DQ_QuantitativeResult/gmd:value/gco:Record", report, true)?.textContent,
+                rec_grade: CswMapper.select("./gmd:DQ_CompletenessCommission/gmd:DQ_QuantitativeResult/gmd:value/gco:Record", report, true)?.textContent,
+                hierarchy_level: this.transformGeneric(CswMapper.select('./gmd:hierarchyLevelName/gmd:MD_ScopeCode/@codeListValue', this.baseMapper.record, true)?.textContent, {"dataset":"5", "series":"6"}, false),
+                vector_topology_level: this.transformToIgcDomainId(CswMapper.select("./gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:topologyLevel/gmd:MD_TopologyLevelCode/@codeListValue", this.baseMapper.record, true)?.textContent, "528"),
+                pos_accuracy_vertical: CswMapper.select("./gmd:DQ_RelativeInternalPositionalAccuracy[gmd:measureDescription/gco:CharacterString='vertical']/gmd:DQ_QuantitativeResult/gmd:value/gmd:Record", report, true)?.textContent,
+                keyc_incl_w_dataset: this.transformGeneric(CswMapper.select("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:includedWithDataset/gco:Boolean", this.baseMapper.record, true)?.textContent, {"true":"1", "false":"0"}, false)
             }
         }
         return undefined;
