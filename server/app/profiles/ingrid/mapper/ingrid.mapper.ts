@@ -394,4 +394,8 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         var id = Codelist.getInstance().getId(codelist, value)
         return id
     }
+
+    protected transformGeneric(value, map, defaultValue) {
+        return map[value] ?? defaultValue;
+    }
 }

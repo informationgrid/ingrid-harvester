@@ -401,7 +401,14 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_serv_op_para() {
-
+        let svParameter = CswMapper.select("./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:parameters/srv:SV_Parameter/", this.baseMapper.idInfo, true);
+        return {
+            name: CswMapper.select("./srv:name", svParameter, true)?.textContent,
+            direction: CswMapper.select("./srv:direction/srv:SV_ParameterDirection", svParameter, true)?.textContent,
+            descr: CswMapper.select("./gmd:description/gco:CharacterString", svParameter, true)?.textContent,
+            optional: this.transformGeneric(CswMapper.select("./srv:optionality/gco:CharacterString", svParameter, true)?.textContent, {"optional":"1", "mandatory":"0"}, false),
+            repeatability: this.transformGeneric(CswMapper.select("./srv:repeatability/gco:Boolean", svParameter, true)?.textContent, {"true":"1", "false":"0"}, false)
+        };
     }
 
     getT011_obj_serv_operation() {
