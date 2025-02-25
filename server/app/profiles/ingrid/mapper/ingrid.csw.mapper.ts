@@ -182,7 +182,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             vertical_extent_maximum: CswMapper.select("./*/gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue/gco:Real", this.baseMapper.idInfo, true)?.textContent,
             vertical_extent_unit: this.transformToIgcDomainId(CswMapper.select("./*/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/gml:verticalCRS/gml:verticalCS/gml:VerticalCS/gml:axis/gml:CoordinateSystemAxis/@uom", this.baseMapper.idInfo, true)?.textContent, "102"),
             vertical_extent_vdatum: this.transformToIgcDomainId(CswMapper.select("./*/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/gml:verticalCRS/gml:verticalDatum/gml:VerticalDatum/gml:identifier", this.baseMapper.idInfo, true)?.textContent, "101"),
-            ordering_instructions: undefined,
+            ordering_instructions: CswMapper.select("./gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributionOrderProcess/gmd:MD_StandardOrderProcess/gmd:orderingInstructions/gco:CharacterString", this.baseMapper.record, true)?.textContent,
             mod_time: this.getModifiedDate(),
             time_status: this.transformToIgcDomainId(CswMapper.select("./gmd:MD_DataIdentification/gmd:status/gmd:MD_ProgressCode/@codeListValue", this.baseMapper.idInfo, true)?.textContent,"523"),
             time_type: undefined,
