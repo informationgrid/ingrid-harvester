@@ -583,6 +583,15 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return false;
     }
 
+    private getReferenceSystem() {
+        let code = CswMapper.select('./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString', this.baseMapper.record, true)?.textContent;
+        if (code) {
+            let codeSpace = CswMapper.select('./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString', this.baseMapper.record, true)?.textContent;
+            return codeSpace ? `${codeSpace}:${code}` : code;
+        }
+        return null;
+    }
+
     getSpatialSystem() {
         return {
             referencesystem_value: this.getReferenceSystem()
