@@ -338,6 +338,15 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         }));
     }
 
+    getT011_obj_geo_symc() {
+        let pcCitations = CswMapper.select("./gmd:portrayalCatalogueInfo/gmd:MD_PortrayalCatalogueReference/gmd:portrayalCatalogueCitation/gmd:CI_Citation", this.baseMapper.record); 
+        return pcCitations?.map(citationNode => ({
+            symbol_cat: CswMapper.select("./gmd:title/gco:CharacterString", citationNode, true)?.textContent,
+            symbol_date: this.formatDate(new Date(Date.parse(CswMapper.select("./gmd:date/gmd:CI_Date/gmd:date/gco:Date", citationNode, true)?.textContent))),
+            edition: CswMapper.select("./gmd:edition/gco:CharacterString", citationNode, true)?.textContent
+        }));
+    }
+
     getT011_obj_geo_scale() {
         let resolutions = CswMapper.select("./gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution", this.baseMapper.idInfo)
         for(let i = 0; i < resolutions.length; i++) {
