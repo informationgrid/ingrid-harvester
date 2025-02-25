@@ -92,6 +92,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             t011_obj_geo_symc: this.getT011_obj_geo_symc(),
             t011_obj_geo_scale: this.getT011_obj_geo_scale(),
             t011_obj_geo_spatial_rep: this.getT011_obj_geo_spatial_rep(),
+            t011_obj_geo_vector: this.getT011_obj_geo_vector(),
             t011_obj_serv: this.getT011_obj_serv(),
             t011_obj_serv_version: this.getT011_obj_serv_version(),
             t011_obj_serv_op_connpoint: this.getT011_obj_serv_op_connpoint(),
@@ -293,6 +294,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     }
 
     getT011_obj_geo_spatial_rep() {
+        return undefined;
+    }
+
+    getT011_obj_geo_vector() {
         return undefined;
     }
 

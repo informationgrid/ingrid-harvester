@@ -362,6 +362,14 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         };
     }
 
+    getT011_obj_geo_vector() {
+        let geometricObjects = CswMapper.select("./*/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects", this.baseMapper.idInfo);
+        return geometricObjects?.map(geometricObject => ({
+            geometric_object_type: this.transformToIgcDomainId(CswMapper.select("./gmd:geometricObjectType/gmd:MD_GeometricObjectTypeCode/@codeListValue", geometricObject, true)?.textContent, "515"),
+            geometric_object_count: CswMapper.select("./gmd:geometricObjectCount/gco:Integer", geometricObject, true)?.textContent
+        }));
+    }
+
     getT011_obj_serv() {
         let serviceType = CswMapper.select("./srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName", this.baseMapper.idInfo, true)?.textContent;
         if(this.hasValue(serviceType))
