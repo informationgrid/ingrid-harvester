@@ -329,13 +329,13 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return undefined;
     }
 
-    private getReferenceSystem() {
-        let code = CswMapper.select('./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString', this.baseMapper.record, true)?.textContent;
-        if (code) {
-            let codeSpace = CswMapper.select('./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString', this.baseMapper.record, true)?.textContent;
-            return codeSpace ? `${codeSpace}:${code}` : code;
-        }
-        return null;
+    getT011_obj_geo_keyc() {
+        let fcCitations = CswMapper.select("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/gmd:CI_Citation", this.baseMapper.record); 
+        return fcCitations?.map(citationNode => ({
+            symbol_cat: CswMapper.select("./gmd:title/gco:CharacterString", citationNode, true)?.textContent,
+            symbol_date: this.formatDate(new Date(Date.parse(CswMapper.select("./gmd:date/gmd:CI_Date/gmd:date/gco:Date", citationNode, true)?.textContent))),
+            edition: CswMapper.select("./gmd:edition/gco:CharacterString", citationNode, true)?.textContent
+        }));
     }
 
     getT011_obj_geo_scale() {
