@@ -392,7 +392,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_serv_op_depends() {
-
+        let dependsOn = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:dependsOn/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString', this.baseMapper.idInfo, true)?.textContent;
+        if(this.hasValue(dependsOn))
+            return {
+                depends_on: dependsOn
+            }
+        return undefined;
     }
 
     getT011_obj_serv_op_para() {
