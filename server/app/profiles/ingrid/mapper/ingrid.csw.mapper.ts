@@ -356,6 +356,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         }));
     }
 
+    getT011_obj_geo_spatial_rep() {
+        return {
+            type: this.transformToIgcDomainId(CswMapper.select("./gmd:MD_DataIdentification/gmd:spatialRepresentationType/MD_SpatialRepresentationTypeCode/@codeListValue", this.baseMapper.idInfo, true)?.textContent, "526")
+        };
+    }
+
     getT011_obj_serv() {
         let serviceType = CswMapper.select("./srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName", this.baseMapper.idInfo, true)?.textContent;
         if(this.hasValue(serviceType))
