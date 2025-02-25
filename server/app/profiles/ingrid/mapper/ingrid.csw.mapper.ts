@@ -370,6 +370,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         }));
     }
 
+    getT011_obj_geo_supplinfo() {
+        return {
+            feature_type: CswMapper.select("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName", this.baseMapper.record, true)?.textContent
+        };
+    }
+
     getT011_obj_serv() {
         let serviceType = CswMapper.select("./srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName", this.baseMapper.idInfo, true)?.textContent;
         if(this.hasValue(serviceType))
