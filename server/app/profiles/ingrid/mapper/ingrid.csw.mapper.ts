@@ -99,13 +99,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return this.getSingleEntryOrArray(result);
     }
 
-    getLongLatBoundname(orientation: string){
+    private getLongLatBoundname(orientation: string){
         if(orientation === "east" || orientation === "west")
             return orientation+"BoundLongitude";
         else
             return orientation+"BoundLatitude";
     }
-
 
     getX1() {
         return this.getGeoBound("west");
@@ -131,12 +130,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getCapabilitiesURL() {
-        return CswMapper.select(`./srv:SV_ServiceIdentification[
+        return this.text(`./srv:SV_ServiceIdentification[
                 ./srv:serviceType/gco:LocalName/text() = 'WMS'
                 or ./srv:serviceType/gco:LocalName/text() = 'view'
                 or ./srv:serviceType/gco:LocalName/text() = 'WFS'
                 or ./srv:serviceType/gco:LocalName/text() = 'download'
-            ]//srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString[text() = 'GetCapabilities']/../../srv:connectPoint//gmd:URL`, this.baseMapper.idInfo, true)?.textContent;
+            ]//srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString[text() = 'GetCapabilities']/../../srv:connectPoint//gmd:URL`, this.baseMapper.idInfo);
     }
 
     getAdditionalHTML() {
@@ -179,12 +178,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             vertical_extent_vdatum: this.transformToIgcDomainId(this.text("./*/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/gml:verticalCRS/gml:verticalDatum/gml:VerticalDatum/gml:identifier", this.baseMapper.idInfo), "101"),
             ordering_instructions: this.text("./gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributionOrderProcess/gmd:MD_StandardOrderProcess/gmd:orderingInstructions/gco:CharacterString", this.baseMapper.record),
             mod_time: this.getModifiedDate(),
-            time_status: this.transformToIgcDomainId(this.text("./gmd:MD_DataIdentification/gmd:status/gmd:MD_ProgressCode/@codeListValue", this.baseMapper.idInfo),"523"),
+            time_status: this.transformToIgcDomainId(this.text("./gmd:MD_DataIdentification/gmd:status/gmd:MD_ProgressCode/@codeListValue", this.baseMapper.idInfo), "523"),
             time_type: undefined,
             time_from: undefined,
             time_to: undefined,
             time_descr: this.text("./gmd:MD_DataIdentification/gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceNote/gco:CharacterString", this.baseMapper.idInfo),
-            time_period: this.transformToIgcDomainId(this.text("./gmd:MD_DataIdentification/gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode/@codeListValue", this.baseMapper.idInfo),"518")
+            time_period: this.transformToIgcDomainId(this.text("./gmd:MD_DataIdentification/gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode/@codeListValue", this.baseMapper.idInfo), "518")
         };
         let temporal = this.baseMapper.getTemporal()?.[0];
         if (temporal) {
@@ -242,56 +241,26 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getT04Search() {
         let result = [];
-
-        let usedKeywords = "";
+        const addKeywords = (xpath: string, type: string) => {
+            let keywords = CswMapper.select(xpath, this.baseMapper.idInfo);
+            keywords?.forEach(keyword => {
+                let value = keyword.textContent?.trim();
+                if (this.hasValue(value) && !result.some(r => r.searchterm === value)) {
+                    result.push({
+                        searchterm: value,
+                        type: type,
+                    });
+                }
+            });
+        };
         // check for INSPIRE themes
-        let keywords = CswMapper.select(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='GEMET - INSPIRE themes, version 1.0']/keyword/gco:CharacterString", this.baseMapper.idInfo);
-        for(let keyword of keywords){
-            let value = keyword.textContent.trim();
-            if(this.hasValue(value) && usedKeywords.indexOf(value) == -1) {
-                result.push({
-                    searchterm: value,
-                    type: "I"
-                })
-                usedKeywords+=value+";"
-            }
-        }
+        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='GEMET - INSPIRE themes, version 1.0']/keyword/gco:CharacterString", "I");
         // check for GEMET keywords
-        keywords = CswMapper.select(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='GEMET - Concepts, version 2.1']/keyword/gco:CharacterString", this.baseMapper.idInfo);
-        for(let keyword of keywords){
-            let value = keyword.textContent.trim();
-            if(this.hasValue(value) && usedKeywords.indexOf(value) == -1) {
-                result.push({
-                    searchterm: value,
-                    type: "G"
-                })
-                usedKeywords+=value+";"
-            }
-        }
+        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='GEMET - Concepts, version 2.1']/keyword/gco:CharacterString", "G");
         // check for UMTHES keywords
-        keywords = CswMapper.select(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='UMTHES Thesaurus']/keyword/gco:CharacterString", this.baseMapper.idInfo);
-        for(let keyword of keywords){
-            let value = keyword.textContent.trim();
-            if(this.hasValue(value) && usedKeywords.indexOf(value) == -1) {
-                result.push({
-                    searchterm: value,
-                    type: "T"
-                })
-                usedKeywords+=value+";"
-            }
-        }
+        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='UMTHES Thesaurus']/keyword/gco:CharacterString", "T");
         // check for other keywords
-        keywords = CswMapper.select(".//gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString", this.baseMapper.idInfo);
-        for(let keyword of keywords){
-            let value = keyword.textContent.trim();
-            if(this.hasValue(value) && usedKeywords.indexOf(value) == -1) {
-                result.push({
-                    searchterm: value,
-                    type: "F"
-                })
-                usedKeywords+=value+";"
-            }
-        }
+        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString", "F");
         return this.getSingleEntryOrArray(result);
     }
 
@@ -329,28 +298,28 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getT011_obj_geo_keyc() {
         let fcCitations = CswMapper.select("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/gmd:CI_Citation", this.baseMapper.record);
-        return fcCitations?.map(citationNode => ({
-            symbol_cat: this.text("./gmd:title/gco:CharacterString", citationNode),
-            symbol_date: this.formatDate(new Date(Date.parse(this.text("./gmd:date/gmd:CI_Date/gmd:date/gco:Date", citationNode)))),
-            edition: this.text("./gmd:edition/gco:CharacterString", citationNode)
+        return fcCitations?.map(citation => ({
+            symbol_cat: this.text("./gmd:title/gco:CharacterString", citation),
+            symbol_date: this.formatDate(new Date(Date.parse(this.text("./gmd:date/gmd:CI_Date/gmd:date/gco:Date", citation)))),
+            edition: this.text("./gmd:edition/gco:CharacterString", citation)
         }));
     }
 
     getT011_obj_geo_symc() {
         let pcCitations = CswMapper.select("./gmd:portrayalCatalogueInfo/gmd:MD_PortrayalCatalogueReference/gmd:portrayalCatalogueCitation/gmd:CI_Citation", this.baseMapper.record);
-        return pcCitations?.map(citationNode => ({
-            symbol_cat: this.text("./gmd:title/gco:CharacterString", citationNode),
-            symbol_date: this.formatDate(new Date(Date.parse(this.text("./gmd:date/gmd:CI_Date/gmd:date/gco:Date", citationNode)))),
-            edition: this.text("./gmd:edition/gco:CharacterString", citationNode)
+        return pcCitations?.map(citation => ({
+            symbol_cat: this.text("./gmd:title/gco:CharacterString", citation),
+            symbol_date: this.formatDate(new Date(Date.parse(this.text("./gmd:date/gmd:CI_Date/gmd:date/gco:Date", citation)))),
+            edition: this.text("./gmd:edition/gco:CharacterString", citation)
         }));
     }
 
     getT011_obj_geo_scale() {
         let resolutions = CswMapper.select("./gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution", this.baseMapper.idInfo)
-        return resolutions?.map(resolutionNode => ({
-            scale: this.text("./gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer", resolutionNode),
-            resolution_ground: this.text("./gmd:distance/gmd:Distance[@uom='meter']", resolutionNode),
-            resolution_scan: this.text("./gmd:distance/gmd:Distance[@uom='dpi']", resolutionNode)
+        return resolutions?.map(resolution => ({
+            scale: this.text("./gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer", resolution),
+            resolution_ground: this.text("./gmd:distance/gmd:Distance[@uom='meter']", resolution),
+            resolution_scan: this.text("./gmd:distance/gmd:Distance[@uom='dpi']", resolution)
         }));
     }
 
@@ -384,30 +353,19 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getT011_obj_serv_version() {
         let serviceTypeVersion = this.text("./srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString", this.baseMapper.idInfo);
-        if(this.hasValue(serviceTypeVersion))
-            return {
-                version_value: serviceTypeVersion
-            }
-        return undefined;
+        return this.hasValue(serviceTypeVersion) ? { version_value: serviceTypeVersion } : undefined;
     }
 
     getT011_obj_serv_op_connpoint() {
-        let opMetadataNodes = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.baseMapper.idInfo);
-        if (!opMetadataNodes) {
-            return null;
-        }
-        return opMetadataNodes.map(opMetadataNode => ({
-            connect_point: this.text("./srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL", opMetadataNode)
+        let operationsMetadata = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.baseMapper.idInfo);
+        return operationsMetadata?.map(operationMetadata => ({
+            connect_point: this.text("./srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL", operationMetadata)
         }));
     }
 
     getT011_obj_serv_op_depends() {
         let dependsOn = this.text("./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:dependsOn/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString", this.baseMapper.idInfo);
-        if(this.hasValue(dependsOn))
-            return {
-                depends_on: dependsOn
-            }
-        return undefined;
+        return this.hasValue(dependsOn) ? { depends_on: dependsOn } : undefined;
     }
 
     getT011_obj_serv_op_para() {
@@ -422,31 +380,25 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_serv_operation() {
-        let opMetadataNodes = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.baseMapper.idInfo);
-        if (!opMetadataNodes) {
-            return null;
-        }
-        return opMetadataNodes.map(opMetadataNode => ({
-            name: this.text("./srv:operationName/gco:CharacterString", opMetadataNode),
-            descr: this.text("./srv:operationDescription/gco:CharacterString", opMetadataNode),
-            invocation_name: this.text("./srv:invocationName/gco:CharacterString", opMetadataNode)
+        let operationsMetadata = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.baseMapper.idInfo);
+        return operationsMetadata?.map(operationMetadata => ({
+            name: this.text("./srv:operationName/gco:CharacterString", operationMetadata),
+            descr: this.text("./srv:operationDescription/gco:CharacterString", operationMetadata),
+            invocation_name: this.text("./srv:invocationName/gco:CharacterString", operationMetadata)
         }));
     }
 
     getT011_obj_serv_op_platform() {
-        let opMetadataNodes = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.baseMapper.idInfo);
-        if (!opMetadataNodes) {
-            return null;
-        }
-        return opMetadataNodes.map(opMetadataNode => ({
-            platform: this.text("./srv:DCP/srv:DCPList/@codeListValue", opMetadataNode)
+        let operationsMetadata = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.baseMapper.idInfo);
+        return operationsMetadata?.map(operationMetadata => ({
+            platform: this.text("./srv:DCP/srv:DCPList/@codeListValue", operationMetadata)
         }));
     }
 
     getT011_obj_topic_cat() {
-        let topicCategoryNodes = CswMapper.select("./gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode", this.baseMapper.idInfo);
-        return topicCategoryNodes?.map(topicCategoryNode => ({
-            topic_category: this.transformToIgcDomainId(topicCategoryNode.textContent, "527")
+        let topicCategories = CswMapper.select("./gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode", this.baseMapper.idInfo);
+        return topicCategories?.map(topicCategory => ({
+            topic_category: this.transformToIgcDomainId(topicCategory.textContent, "527")
         }));
     }
 
@@ -470,84 +422,36 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT017_url_ref() {
-        let result = []
         let onlineResources = CswMapper.select("./gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource", this.baseMapper.record);
-        if (this.hasValue(onlineResources)) {
-            for (let onlineResource of onlineResources) {
-
-                // map CI_OnlineResource
-                let urlLink = this.text("gmd:linkage/gmd:URL", onlineResource) || "";
-                let content = this.text("gmd:name/gco:CharacterString", onlineResource) || "";
-                let descr = this.text("gmd:description/gco:CharacterString", onlineResource) || "";
-                let codeListValue = this.text("gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue", onlineResource) || "";
-                let specialRef = "";
-
-                if(this.hasValue(urlLink)) {
-                    if(this.hasValue(codeListValue)) {
-                        if(this.transformToIgcDomainId(codeListValue, "2000")) {
-                            specialRef = this.transformToIgcDomainId(codeListValue, "2000");
-                        }
-                    }
-
-                    result.push({
-                        url_link : urlLink,
-                        content: content,
-                        descr: descr,
-                        special_ref: specialRef
-                    });
-                }
-            }
-        }
-        return result;
+        let result = onlineResources?.map(onlineResource => ({
+            url_link : this.text("./gmd:linkage/gmd:URL", onlineResource),
+            content: this.text("./gmd:name/gco:CharacterString", onlineResource) ?? "",
+            descr: this.text("./gmd:description/gco:CharacterString", onlineResource) ?? "",
+            special_ref: this.transformToIgcDomainId(this.text("gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue", onlineResource), "2000") ?? ""
+        }));
+        return result.filter(resource => this.hasValue(resource.url_link));
     }
 
     getT021_communication(): any[] {
         let results = [];
-
         let contacts = CswMapper.select(".//*/gmd:CI_ResponsibleParty", this.baseMapper.record);
-        for (let i = 0; i < contacts.length; i++) {
-            // map communication Data
-            // phone
-            let entries = CswMapper.select("./gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString", contacts[i]);
-            if (this.hasValue(entries)) {
-                for (let j=0; j<entries.length; j++ ) {
-                    results.push({
-                        comm_type: "Telefon",
-                        comm_value: entries[j].textContent
-                    })
-                }
-            }
-            // fax
-            entries = CswMapper.select("./gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:facsimile/gco:CharacterString", contacts[i]);
-            if (this.hasValue(entries)) {
-                for (let j=0; j<entries.length; j++ ) {
-                    results.push({
-                        comm_type: "Fax",
-                        comm_value: entries[j].textContent
-                    })
-                }
-            }
-            // email
-            entries = CswMapper.select("./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString", contacts[i]);
-            if (this.hasValue(entries)) {
-                for (let j=0; j<entries.length; j++ ) {
-                    results.push({
-                        comm_type: "Email",
-                        comm_value: entries[j].textContent
-                    })
-                }
-            }
-            // url
-            entries = CswMapper.select("./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL", contacts[i]);
-            if (this.hasValue(entries)) {
-                for (let j=0; j<entries.length; j++ ) {
-                    results.push({
-                        comm_type: "URL",
-                        comm_value: entries[j].textContent
-                    })
-                }
-            }
-        }
+        contacts?.forEach(contact => {
+            const extractEntries = (path: string, commType: string) => {
+                CswMapper.select(path, contact)?.forEach(entry => {
+                    const commValue = entry.textContent;
+                    if (this.hasValue(commValue)) {
+                        results.push({
+                            comm_type: commType,
+                            comm_value: commValue,
+                        });
+                    }
+                });
+            };
+            extractEntries("./gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:voice/gco:CharacterString", "Telefon");
+            extractEntries("./gmd:contactInfo/gmd:CI_Contact/gmd:phone/gmd:CI_Telephone/gmd:facsimile/gco:CharacterString", "Fax");
+            extractEntries("./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString", "Email");
+            extractEntries("./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL", "URL");
+        });
         return results;
     }
 
@@ -635,5 +539,3 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return CswMapper.select(path, node, true)?.textContent;
     }
 }
-
-
