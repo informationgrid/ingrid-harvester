@@ -44,7 +44,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         this.baseMapper = baseMapper;
     }
 
-    async create() : Promise<any> {
+    async create() : Promise<IngridIndexDocument> {
         let result = await {
             iPlugId: this.getIPlugId(),
             uuid: this.getGeneratedId(),
@@ -111,11 +111,13 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             object_access: this.getObjectAccess(),
             is_hvd: this.isHvd(),
             spatial_system: this.getSpatialSystem(),
-            sort_hash: this.getSortHash()
+            sort_hash: this.getSortHash(),
+            content: null, // assigned after
+            idf: null // assigned after
         };
-        result['content'] = this.getContent(result);
+        result.content = this.getContent(result);
         // add "idf" at the end, so it does not get included in the "content" array
-        result['idf'] = this.getIDF();
+        result.idf = this.getIDF();
 
         this.executeCustomCode(result);
 
