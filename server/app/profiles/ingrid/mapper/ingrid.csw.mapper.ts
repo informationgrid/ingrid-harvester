@@ -124,7 +124,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getIDF() {
         let idf = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.portalu.de/IDF/1.0\">\n  <head/>\n  <body>\n";
-        idf += this.baseMapper.record.toString().replace("<gmd:MD_Metadata", "<idf:idfMdMetadata xmlns:idf=\"http://www.portalu.de/IDF/1.0\" ").replace("</gmd:MD_Metadata>", "</idf:idfMdMetadata>").replace("/gmd:CI_ResponsibleParty/g", "idf:idfResponsibleParty")
+        idf += this.baseMapper.record.toString().replace("<gmd:MD_Metadata", "<idf:idfMdMetadata xmlns:idf=\"http://www.portalu.de/IDF/1.0\" ").replace("</gmd:MD_Metadata>", "</idf:idfMdMetadata>").replaceAll("gmd:CI_ResponsibleParty", "idf:idfResponsibleParty");
         idf += "\n  </body>\n</html>\n";
         return idf;
     }
