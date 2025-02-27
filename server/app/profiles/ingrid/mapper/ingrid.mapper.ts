@@ -44,12 +44,13 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         this.baseMapper = baseMapper;
     }
 
-    async create() : Promise<any> {
+    async create() : Promise<IngridIndexDocument> {
         let result = await {
             iPlugId: this.getIPlugId(),
             uuid: this.getGeneratedId(),
             partner: this.getPartner(),
             provider: this.getProvider(),
+            organisation: this.getOrganisation(),
             datatype: this.getDataType(),
             dataSourceName: this.getDataSourceName(),
             extras: {
@@ -76,20 +77,23 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             boost: this.getBoost(),
             title: this.getTitle(),
             summary: this.getSummary(),
-            content: this.getContent(),
             location: this.getLocation(),
             x1: this.getX1(),
             x2: this.getX2(),
             y1: this.getY1(),
             y2: this.getY2(),
-            idf: this.getIDF(),
             modified: this.getModifiedDate(),
             capabilities_url: this.getCapabilitiesURL(),
             additional_html_1: this.getAdditionalHTML(),
             t04_search: this.getT04Search(),
             t0110_avail_format: this.getT0110_avail_format(),
             t011_obj_geo: this.getT011_obj_geo(),
+            t011_obj_geo_keyc: this.getT011_obj_geo_keyc(),
+            t011_obj_geo_symc: this.getT011_obj_geo_symc(),
             t011_obj_geo_scale: this.getT011_obj_geo_scale(),
+            t011_obj_geo_spatial_rep: this.getT011_obj_geo_spatial_rep(),
+            t011_obj_geo_vector: this.getT011_obj_geo_vector(),
+            t011_obj_geo_supplinfo: this.getT011_obj_geo_supplinfo(),
             t011_obj_serv: this.getT011_obj_serv(),
             t011_obj_serv_version: this.getT011_obj_serv_version(),
             t011_obj_serv_op_connpoint: this.getT011_obj_serv_op_connpoint(),
@@ -98,6 +102,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             t011_obj_serv_operation: this.getT011_obj_serv_operation(),
             t011_obj_serv_op_platform: this.getT011_obj_serv_op_platform(),
             t011_obj_topic_cat: this.getT011_obj_topic_cat(),
+            t012_obj_adr: this.getT012_obj_adr(),
             t0113_dataset_reference: this.getT0113_dataset_reference(),
             t017_url_ref: this.getT017_url_ref(),
             t021_communication: this.getT021_communication(),
@@ -105,8 +110,14 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             object_use_constraint: this.getObjectUseConstraint(),
             object_access: this.getObjectAccess(),
             is_hvd: this.isHvd(),
-            sort_hash: this.getSortHash()
+            spatial_system: this.getSpatialSystem(),
+            sort_hash: this.getSortHash(),
+            content: null, // assigned after
+            idf: null // assigned after
         };
+        result.content = this.getContent(result);
+        // add "idf" at the end, so it does not get included in the "content" array
+        result.idf = this.getIDF();
 
         this.executeCustomCode(result);
 
@@ -165,6 +176,11 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return this.baseMapper.getSettings().provider;
     }
 
+    getOrganisation() {
+        let organisation = this.transformToIgcDomainId(this.baseMapper.getSettings().provider, "111");
+        return organisation;
+    }
+
     getDataType() {
         return this.baseMapper.getSettings().datatype?.split(",") ?? ["default"];
     }
@@ -208,8 +224,20 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return undefined;
     }
 
-    getContent() {
-        return undefined;
+    getContent(resultObj) {
+        const values = [];
+        const traverse = obj => {
+            if (obj == null) {
+                return;
+            }
+            if (typeof obj !== 'object') {
+                values.push(obj);
+                return;
+            }        
+            Object.values(obj).forEach(traverse);
+        };
+        traverse(resultObj);
+        return values;
     }
 
     getLocation() {
@@ -256,7 +284,27 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return undefined;
     }
 
+    getT011_obj_geo_keyc() {
+        return undefined;
+    }
+
+    getT011_obj_geo_symc() {
+        return undefined;
+    }
+
     getT011_obj_geo_scale() {
+        return undefined;
+    }
+
+    getT011_obj_geo_spatial_rep() {
+        return undefined;
+    }
+
+    getT011_obj_geo_vector() {
+        return undefined;
+    }
+
+    getT011_obj_geo_supplinfo() {
         return undefined;
     }
 
@@ -292,6 +340,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return undefined;
     }
 
+    getT012_obj_adr() {
+        return undefined;
+    }
+
     getT0113_dataset_reference() {
         return undefined;
     }
@@ -317,6 +369,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     }
 
     isHvd(): boolean {
+        return undefined;
+    }
+
+    getSpatialSystem() {
         return undefined;
     }
 
@@ -354,5 +410,9 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     protected transformToIgcDomainId(value, codelist){
         var id = Codelist.getInstance().getId(codelist, value)
         return id
+    }
+
+    protected transformGeneric(value, map, defaultValue) {
+        return map[value] ?? defaultValue;
     }
 }
