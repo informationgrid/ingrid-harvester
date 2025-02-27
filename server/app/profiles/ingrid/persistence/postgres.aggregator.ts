@@ -108,7 +108,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
                 // add service information to document (dataset)
                 if (additionalDoc.capabilities_url) {
                     document.capabilities_url ??= [];
-                    document.capabilities_url.push(additionalDoc.capabilities_url);
+                    document.capabilities_url.push(...additionalDoc.capabilities_url);
                 }
                 document.refering ??= { object_reference: [] };
                 document.refering.object_reference ??= [];
@@ -128,7 +128,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
                 // add dataset information to document (service)
                 if (additionalDoc.capabilities_url) {
                     document.capabilities_url ??= [];
-                    document.capabilities_url.push(additionalDoc.capabilities_url);
+                    document.capabilities_url.push(...additionalDoc.capabilities_url);
                 }
                 document.object_reference ??= [];
                 document.object_reference.push({
