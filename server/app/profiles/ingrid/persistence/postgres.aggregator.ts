@@ -123,6 +123,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
                 });
                 document.refering_service_uuid ??= [];
                 document.refering_service_uuid.push(additionalDoc.uuid+"@@"+additionalDoc.title+"@@"+additionalDoc.capabilities_url+"@@"+document.t011_obj_geo.datasource_uuid);
+                document.idf = this.addCrossReference(document.idf, additionalDoc);
             }
             else {
                 // add dataset information to document (service)
@@ -146,7 +147,31 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
                         special_ref: "3600"
                     });
                 }
+                document.idf = this.addCrossReference(document.idf, additionalDoc);
             }
         }
+    }
+
+    addCrossReference(idf: string, additionalDoc: IngridIndexDocument): string {
+        let direction = additionalDoc.hierarchylevel == 'service' ? 'IN' : 'OUT';
+        // let objectType = additionalDoc.hierarchylevel == 'service' ? 3 : 1;
+        let crossReference = `
+<idf:crossReference direction="${direction}" orig-uuid="${additionalDoc.uuid}" uuid="${additionalDoc.uuid}">
+    <idf:objectName>${additionalDoc.title}</idf:objectName>
+    <idf:attachedToField entry-id="3600" list-id="2000">Gekoppelte Daten</idf:attachedToField>
+    <idf:objectType>${additionalDoc.t01_object.obj_class}</idf:objectType>
+    <idf:description>${additionalDoc.summary}</idf:description>`;
+        if (additionalDoc.hierarchylevel == 'service') {
+            let idx = additionalDoc.t011_obj_serv_operation?.findIndex(op => op.name?.toLowerCase() == 'getcapabilities');
+            crossReference += `
+    <idf:serviceType>${additionalDoc.t011_obj_serv?.type ?? ""}</idf:serviceType>
+    <idf:serviceVersion>${additionalDoc.t011_obj_serv_version?.version_value ?? ""}</idf:serviceVersion>
+    <idf:serviceOperation>${additionalDoc.t011_obj_serv_operation?.[idx]?.name ?? ""}</idf:serviceOperation>
+    <idf:serviceUrl>${additionalDoc.t011_obj_serv_op_connpoint?.[idx]?.connect_point ?? ""}</idf:serviceUrl>`;
+        }
+        crossReference += `
+    <idf:graphicOverview/>
+</idf:crossReference>`;
+        return idf.replace('</idf:idfMdMetadata>', `${crossReference}\n</idf:idfMdMetadata>`);
     }
 }
