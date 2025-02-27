@@ -278,22 +278,30 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     getT011_obj_geo() {
         let lineage = CswMapper.select("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage", this.baseMapper.record, true);
         let report = CswMapper.select("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report", this.baseMapper.record, true);
+        let result: any = {
+            datasource_uuid: this.text("./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString", this.baseMapper.idInfo),
+            referencesystem_id: this.getReferenceSystem(),
+            hierarchy_level: this.transformGeneric(this.text("./gmd:hierarchyLevelName/gmd:MD_ScopeCode/@codeListValue", this.baseMapper.record), {"dataset":"5", "series":"6"}, false),
+            vector_topology_level: this.transformToIgcDomainId(this.text("./gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:topologyLevel/gmd:MD_TopologyLevelCode/@codeListValue", this.baseMapper.record), "528"),
+            keyc_incl_w_dataset: this.transformGeneric(this.text("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:includedWithDataset/gco:Boolean", this.baseMapper.record), {"true":"1", "false":"0"}, false)
+        };
         if (lineage) {
-            return {
+            result = {
+                ...result,
                 special_base: this.text("./gmd:statement/gco:CharacterString", lineage),
                 data_base: this.text("./gmd:source/gmd:LI_Source/gmd:description/gco:CharacterString", lineage),
                 method: this.text("./gmd:processStep/gmd:LI_ProcessStep/gmd:description/gco:CharacterString", lineage),
-                datasource_uuid: this.text("./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString", this.baseMapper.idInfo),
-                referencesystem_id: this.getReferenceSystem(),
+            };
+        }
+        if (report) {
+            result = {
+                ...result,
                 rec_exact: this.text("./gmd:DQ_RelativeInternalPositionalAccuracy/gmd:DQ_QuantitativeResult/gmd:value/gco:Record", report),
                 rec_grade: this.text("./gmd:DQ_CompletenessCommission/gmd:DQ_QuantitativeResult/gmd:value/gco:Record", report),
-                hierarchy_level: this.transformGeneric(this.text("./gmd:hierarchyLevelName/gmd:MD_ScopeCode/@codeListValue", this.baseMapper.record), {"dataset":"5", "series":"6"}, false),
-                vector_topology_level: this.transformToIgcDomainId(this.text("./gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:topologyLevel/gmd:MD_TopologyLevelCode/@codeListValue", this.baseMapper.record), "528"),
                 pos_accuracy_vertical: this.text("./gmd:DQ_RelativeInternalPositionalAccuracy[gmd:measureDescription/gco:CharacterString='vertical']/gmd:DQ_QuantitativeResult/gmd:value/gmd:Record", report),
-                keyc_incl_w_dataset: this.transformGeneric(this.text("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:includedWithDataset/gco:Boolean", this.baseMapper.record), {"true":"1", "false":"0"}, false)
-            }
+            };
         }
-        return undefined;
+        return result;
     }
 
     getT011_obj_geo_keyc() {
@@ -369,7 +377,10 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_serv_op_para() {
-        let svParameter = CswMapper.select("./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:parameters/srv:SV_Parameter/", this.baseMapper.idInfo, true);
+        let svParameter = CswMapper.select("./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:parameters/srv:SV_Parameter", this.baseMapper.idInfo, true);
+        if (!svParameter) {
+            return undefined;
+        }
         return {
             name: this.text("./srv:name", svParameter),
             direction: this.text("./srv:direction/srv:SV_ParameterDirection", svParameter),
