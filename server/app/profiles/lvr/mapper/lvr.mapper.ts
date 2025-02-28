@@ -27,6 +27,7 @@ import { createEsId } from '../lvr.utils';
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { IndexDocumentFactory } from '../../../model/index.document.factory';
 import { IngridIndexDocument, Spatial } from '../../../model/ingrid.index.document';
+import { JsonMapper } from '../../../importer/json/json.mapper';
 import { Keyword, LvrIndexDocument, Media, Person, Relation } from '../model/index.document';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
@@ -36,7 +37,7 @@ import { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mappe
 const dayjs = require('dayjs');
 dayjs.locale('de');
 
-export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMapper> implements IndexDocumentFactory<LvrIndexDocument> {
+export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMapper | JsonMapper> implements IndexDocumentFactory<LvrIndexDocument> {
 
     protected baseMapper: M;
 
