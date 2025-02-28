@@ -153,7 +153,7 @@ export class CswImporter extends Importer {
                 }
                 await this.database.commitTransaction();
                 await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
-                await this.handlePostHarvesting();
+                await this.postHarvestingHandling();
                 observer.next(ImportResult.complete(this.summary));
             }
             catch (err) {
@@ -386,7 +386,7 @@ export class CswImporter extends Importer {
         }
     }
 
-    protected async postHarvestingHandling(){
+    protected async postHarvestingHandling() {
         // For Profile specific Handling
     }
 
@@ -562,8 +562,5 @@ export class CswImporter extends Importer {
 
     getSummary(): Summary {
         return this.summary;
-    }
-
-    protected async handlePostHarvesting() {
     }
 }

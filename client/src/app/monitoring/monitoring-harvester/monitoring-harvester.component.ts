@@ -21,16 +21,13 @@
  * ==================================================
  */
 
-import {Component, OnInit} from '@angular/core';
-import {MonitoringService} from "../monitoring.service";
-import {MatDialog} from "@angular/material/dialog";
-import {Chart, registerables} from 'chart.js';
-import {Observable} from "rxjs";
-import {HttpClient} from "@angular/common/http";
-import {MonitoringComponent} from "../monitoring.component";
-import {MonitoringUrlcheckDetailComponent} from "../monitoring-urlcheck/monitoring-urlcheck-detail/monitoring-urlcheck-detail.component";
-import { historyChart } from 'src/app/charts/reuseableChart';
-import { formatDateAndTime, formatDay } from 'src/app/utils/dateUtils';
+import { historyChart } from '../../charts/reuseableChart';
+import { Chart } from 'chart.js';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { MonitoringService } from '../monitoring.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-monitoring-harvester',

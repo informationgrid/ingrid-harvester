@@ -38,7 +38,7 @@ export class IngridCswImporter extends CswImporter {
         super(settings, requestDelegate)
     }
 
-    protected async handlePostHarvesting() {
+    protected async postHarvestingHandling() {
         let meta = await this.elastic.search(this.INGRID_META,
             {
                 "query": {
