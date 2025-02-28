@@ -24,8 +24,10 @@
 import { ElasticQueries } from './persistence/elastic.queries';
 import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { ImporterFactory } from '../../importer/importer.factory';
-import { IndexDocumentFactory } from 'model/index.document.factory';
-import { KldMapper } from 'importer/kld/kld.mapper';
+import { IndexDocumentFactory } from '../../model/index.document.factory';
+import { JsonMapper } from '.../../importer/json/json.mapper';
+import { KldMapper } from '../../importer/kld/kld.mapper';
+import { LvrClickRheinMapper } from './mapper/lvr.clickrhein.mapper';
 import { LvrImporterFactory } from './importer/lvr.importer.factory';
 import { LvrIndexDocument } from './model/index.document';
 import { LvrKldMapper } from './mapper/lvr.kld.mapper';
@@ -38,14 +40,15 @@ import { PostgresAggregator } from './persistence/postgres.aggregator';
 import { PostgresAggregator as AbstractPostgresAggregator} from '../../persistence/postgres.aggregator';
 import { ProfileFactory } from '../profile.factory';
 
-export class LvrFactory extends ProfileFactory<KldMapper | OaiLidoMapper | OaiModsMapper> {
+export class LvrFactory extends ProfileFactory<JsonMapper | KldMapper | OaiLidoMapper | OaiModsMapper> {
 
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();
     }
 
-    getIndexDocumentFactory(mapper: KldMapper | OaiLidoMapper | OaiModsMapper): IndexDocumentFactory<LvrIndexDocument> {
+    getIndexDocumentFactory(mapper: JsonMapper | KldMapper | OaiLidoMapper | OaiModsMapper): IndexDocumentFactory<LvrIndexDocument> {
         switch (mapper.constructor.name) {
+            case 'JsonMapper': return new LvrClickRheinMapper(<JsonMapper>mapper);
             case 'KldMapper': return new LvrKldMapper(<KldMapper>mapper);
             case 'OaiMapper':
                 switch ((mapper.getSettings() as OaiSettings).metadataPrefix?.toLowerCase()) {
