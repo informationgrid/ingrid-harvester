@@ -61,7 +61,7 @@ export class IngridCswImporter extends CswImporter {
         }
         else {
             let { prefix, index } = ConfigService.getGeneralSettings().elasticsearch;
-            let indexId = (prefix ?? '') + index;
+            let indexId = (prefix ?? '') + this.settings.catalogId;
             let entry = {
                 "plugId": this.settings.iPlugId,
                 "indexId": indexId,
