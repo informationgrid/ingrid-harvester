@@ -281,7 +281,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         let report = CswMapper.select("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report", this.baseMapper.record, true);
         let result: any = {
             datasource_uuid: this.text("./*/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString", this.baseMapper.idInfo),
-            referencesystem_id: this.getReferenceSystem(),
+            referencesystem_id: this.getReferenceSystems(),
             hierarchy_level: this.transformGeneric(this.text("./gmd:hierarchyLevelName/gmd:MD_ScopeCode/@codeListValue", this.baseMapper.record), {"dataset":"5", "series":"6"}, false),
             vector_topology_level: this.transformToIgcDomainId(this.text("./gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:topologyLevel/gmd:MD_TopologyLevelCode/@codeListValue", this.baseMapper.record), "528"),
             keyc_incl_w_dataset: this.transformGeneric(this.text("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:includedWithDataset/gco:Boolean", this.baseMapper.record), {"true":"1", "false":"0"}, false)
@@ -339,7 +339,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_geo_vector() {
-        let geometricObjects = CswMapper.select("./*/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects", this.baseMapper.idInfo);
+        let geometricObjects = CswMapper.select("./gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects", this.baseMapper.record);
         return geometricObjects?.map(geometricObject => ({
             geometric_object_type: this.transformToIgcDomainId(this.text("./gmd:geometricObjectType/gmd:MD_GeometricObjectTypeCode/@codeListValue", geometricObject), "515"),
             geometric_object_count: this.text("./gmd:geometricObjectCount/gco:Integer", geometricObject)
@@ -361,8 +361,11 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_serv_version() {
-        let serviceTypeVersion = this.text("./srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString", this.baseMapper.idInfo);
-        return this.hasValue(serviceTypeVersion) ? { version_value: serviceTypeVersion } : undefined;
+        let serviceTypeVersions = CswMapper.select("./srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString", this.baseMapper.idInfo);
+        if (serviceTypeVersions) {
+            return { version_value: serviceTypeVersions?.map(serviceTypeVersion => serviceTypeVersion.textContent)?.join(", ") };
+        }
+        return undefined;
     }
 
     getT011_obj_serv_op_connpoint() {
@@ -480,10 +483,10 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getObjectAccess() {
-        let restrictionValue = this.text("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:accessConstraints]/gco:CharacterString", this.baseMapper.idInfo);
+        let restrictionValues = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:accessConstraints]/gco:CharacterString", this.baseMapper.idInfo);
         return {
-            restriction_key: this.transformToIgcDomainId(restrictionValue, "6010") ?? "-1",
-            restriction_value: restrictionValue,
+            restriction_key: restrictionValues?.map(restrictionValue => this.transformToIgcDomainId(restrictionValue.textContent, "6010") ?? "-1"),
+            restriction_value: restrictionValues?.map(restrictionValue => restrictionValue.textContent),
             terms_of_use: this.text("./*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation/gco:CharacterString", this.baseMapper.idInfo)
         };
     }
@@ -503,18 +506,18 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return false;
     }
 
-    private getReferenceSystem() {
-        let code = this.text("./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString", this.baseMapper.record);
-        if (code) {
-            let codeSpace = this.text("./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString", this.baseMapper.record);
+    private getReferenceSystems(): string[] {
+        let rsIdentifiers = CswMapper.select("./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier", this.baseMapper.record);
+        return rsIdentifiers?.map(rsIdentifier => {
+            let code = this.text("./gmd:code/gco:CharacterString", rsIdentifier);
+            let codeSpace = this.text("../gmd:codeSpace/gco:CharacterString", rsIdentifier);
             return codeSpace ? `${codeSpace}:${code}` : code;
-        }
-        return null;
+        });
     }
 
     getSpatialSystem() {
         return {
-            referencesystem_value: this.getReferenceSystem()
+            referencesystem_value: this.getReferenceSystems()
         };
     }
 

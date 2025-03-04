@@ -114,6 +114,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
                 document.refering.object_reference ??= [];
                 document.refering.object_reference.push({
                     obj_uuid: additionalDoc.uuid,
+                    obj_to_uuid: additionalDoc.uuid,
                     obj_name: additionalDoc.title,
                     obj_class: "3",
                     special_name: "Gekoppelte Daten",
@@ -138,13 +139,20 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
                     obj_name: additionalDoc.title,
                     obj_class: "1",
                     special_name: "Gekoppelte Daten",
-                    special_ref: "3345"
+                    special_ref: "3345",
+                    type: additionalDoc.t011_obj_serv?.type,
+                    version: additionalDoc.t011_obj_serv_version?.version_value
                 });
                 if (!document.object_reference.some(obj_ref => obj_ref.special_ref == "3600")) {
                     document.object_reference.push({
                         obj_uuid: additionalDoc.uuid,
                         obj_to_uuid: additionalDoc.uuid,
-                        special_ref: "3600"
+                        obj_name: "",
+                        obj_class: "",
+                        special_name: "",
+                        special_ref: "3600",
+                        type: "",
+                        version: ""
                     });
                 }
                 document.idf = this.addCrossReference(document.idf, additionalDoc);
@@ -169,8 +177,17 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
     <idf:serviceOperation>${additionalDoc.t011_obj_serv_operation?.[idx]?.name ?? ""}</idf:serviceOperation>
     <idf:serviceUrl>${additionalDoc.t011_obj_serv_op_connpoint?.[idx]?.connect_point ?? ""}</idf:serviceUrl>`;
         }
+        let addHtml = Array.isArray(additionalDoc.additional_html_1) ? additionalDoc.additional_html_1[0] : additionalDoc.additional_html_1;
+        let browseGraphic = addHtml?.match(/<img src=["'](.*?)["'].*/)?.[1];
+        if (browseGraphic) {
+            crossReference += `
+    <idf:graphicOverview>${browseGraphic}</idf:graphicOverview>`
+        }
+        else {
+            crossReference += `
+    <idf:graphicOverview/>`
+        }
         crossReference += `
-    <idf:graphicOverview/>
 </idf:crossReference>`;
         return idf.replace('</idf:idfMdMetadata>', `${crossReference}\n</idf:idfMdMetadata>`);
     }
