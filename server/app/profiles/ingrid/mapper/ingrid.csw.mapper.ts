@@ -339,7 +339,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_geo_vector() {
-        let geometricObjects = CswMapper.select("./*/gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects", this.baseMapper.idInfo);
+        let geometricObjects = CswMapper.select("./gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects", this.baseMapper.record);
         return geometricObjects?.map(geometricObject => ({
             geometric_object_type: this.transformToIgcDomainId(this.text("./gmd:geometricObjectType/gmd:MD_GeometricObjectTypeCode/@codeListValue", geometricObject), "515"),
             geometric_object_count: this.text("./gmd:geometricObjectCount/gco:Integer", geometricObject)
