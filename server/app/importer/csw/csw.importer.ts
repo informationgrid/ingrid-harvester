@@ -392,17 +392,20 @@ export class CswImporter extends Importer {
 
     async handleHarvest(delegate: RequestDelegate): Promise<void> {
         log.info('Requesting next records, starting at', delegate.getStartRecordIndex());
+        let harvestStart = Date.now();
         let response = await delegate.doRequest();
-        let harvestTime = new Date(Date.now());
+        let requestingTime = Math.floor((Date.now() - harvestStart) / 1000);
+        log.info(`Finished requesting batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, ${requestingTime.toString().padStart(3, ' ')}s`);
+        let processingStart = Date.now();
 
         let responseDom = this.domParser.parseFromString(response);
         let resultsNode = responseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
         if (resultsNode) {
             let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
             log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
-            let importedDocuments = await this.extractRecords(response, harvestTime);
+            let importedDocuments = await this.extractRecords(response, processingStart);
             await this.updateRecords(importedDocuments, this.generalInfo['catalog'].id);
-            let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
+            let processingTime = Math.floor((Date.now() - processingStart) / 1000);
             log.info(`Finished processing batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, ${processingTime.toString().padStart(3, ' ')}s`);
         }
         else {
