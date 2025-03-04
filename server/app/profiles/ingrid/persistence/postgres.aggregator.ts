@@ -189,6 +189,6 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         }
         crossReference += `
 </idf:crossReference>`;
-        return idf.replace('</idf:idfMdMetadata>', `${crossReference}\n</idf:idfMdMetadata>`);
+        return idf.replace('</idf:idfMdMetadata>', `${crossReference.replaceAll("&", "&amp;")}\n</idf:idfMdMetadata>`);
     }
 }
