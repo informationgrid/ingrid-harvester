@@ -480,10 +480,10 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getObjectAccess() {
-        let restrictionValue = this.text("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:accessConstraints]/gco:CharacterString", this.baseMapper.idInfo);
+        let restrictionValues = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:accessConstraints]/gco:CharacterString", this.baseMapper.idInfo);
         return {
-            restriction_key: this.transformToIgcDomainId(restrictionValue, "6010") ?? "-1",
-            restriction_value: restrictionValue,
+            restriction_key: restrictionValues?.map(restrictionValue => this.transformToIgcDomainId(restrictionValue.textContent, "6010") ?? "-1"),
+            restriction_value: restrictionValues?.map(restrictionValue => restrictionValue.textContent),
             terms_of_use: this.text("./*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation/gco:CharacterString", this.baseMapper.idInfo)
         };
     }
