@@ -281,7 +281,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         let report = CswMapper.select("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report", this.baseMapper.record, true);
         let result: any = {
             datasource_uuid: this.text("./*/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString", this.baseMapper.idInfo),
-            referencesystem_id: this.getReferenceSystem(),
+            referencesystem_id: this.getReferenceSystems(),
             hierarchy_level: this.transformGeneric(this.text("./gmd:hierarchyLevelName/gmd:MD_ScopeCode/@codeListValue", this.baseMapper.record), {"dataset":"5", "series":"6"}, false),
             vector_topology_level: this.transformToIgcDomainId(this.text("./gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:topologyLevel/gmd:MD_TopologyLevelCode/@codeListValue", this.baseMapper.record), "528"),
             keyc_incl_w_dataset: this.transformGeneric(this.text("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:includedWithDataset/gco:Boolean", this.baseMapper.record), {"true":"1", "false":"0"}, false)
@@ -503,18 +503,18 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return false;
     }
 
-    private getReferenceSystem() {
-        let code = this.text("./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString", this.baseMapper.record);
-        if (code) {
-            let codeSpace = this.text("./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString", this.baseMapper.record);
+    private getReferenceSystems(): string[] {
+        let rsIdentifiers = CswMapper.select("./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier", this.baseMapper.record);
+        return rsIdentifiers?.map(rsIdentifier => {
+            let code = this.text("./gmd:code/gco:CharacterString", rsIdentifier);
+            let codeSpace = this.text("../gmd:codeSpace/gco:CharacterString", rsIdentifier);
             return codeSpace ? `${codeSpace}:${code}` : code;
-        }
-        return null;
+        });
     }
 
     getSpatialSystem() {
         return {
-            referencesystem_value: this.getReferenceSystem()
+            referencesystem_value: this.getReferenceSystems()
         };
     }
 
