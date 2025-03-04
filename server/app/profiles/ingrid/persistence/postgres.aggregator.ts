@@ -169,8 +169,17 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
     <idf:serviceOperation>${additionalDoc.t011_obj_serv_operation?.[idx]?.name ?? ""}</idf:serviceOperation>
     <idf:serviceUrl>${additionalDoc.t011_obj_serv_op_connpoint?.[idx]?.connect_point ?? ""}</idf:serviceUrl>`;
         }
+        let addHtml = Array.isArray(additionalDoc.additional_html_1) ? additionalDoc.additional_html_1[0] : additionalDoc.additional_html_1;
+        let browseGraphic = addHtml?.match(/<img src=["'](.*?)["'].*/)?.[1];
+        if (browseGraphic) {
+            crossReference += `
+    <idf:graphicOverview>${browseGraphic}</idf:graphicOverview>`
+        }
+        else {
+            crossReference += `
+    <idf:graphicOverview/>`
+        }
         crossReference += `
-    <idf:graphicOverview/>
 </idf:crossReference>`;
         return idf.replace('</idf:idfMdMetadata>', `${crossReference}\n</idf:idfMdMetadata>`);
     }
