@@ -103,64 +103,34 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
     }
 
     private resolveCoupling(document: IngridIndexDocument, additionalDoc: any) {
-        if (additionalDoc) {
-            if (additionalDoc.hierarchylevel == 'service') {
-                // add service information to document (dataset)
-                if (additionalDoc.capabilities_url) {
-                    document.capabilities_url ??= [];
-                    document.capabilities_url.push(...additionalDoc.capabilities_url);
-                }
-                document.refering ??= { object_reference: [] };
-                document.refering.object_reference ??= [];
-                document.refering.object_reference.push({
-                    obj_uuid: additionalDoc.uuid,
-                    obj_to_uuid: additionalDoc.uuid,
-                    obj_name: additionalDoc.title,
-                    obj_class: "3",
-                    special_name: "Gekoppelte Daten",
-                    special_ref: "3600",
-                    type: additionalDoc.t011_obj_serv?.type,
-                    version: additionalDoc.t011_obj_serv_version?.version_value
-                });
-                document.refering_service_uuid ??= [];
-                document.refering_service_uuid.push(additionalDoc.uuid+"@@"+additionalDoc.title+"@@"+additionalDoc.capabilities_url+"@@"+document.t011_obj_geo.datasource_uuid);
-                document.idf = this.addCrossReference(document.idf, additionalDoc);
-            }
-            else {
-                // add dataset information to document (service)
-                if (additionalDoc.capabilities_url) {
-                    document.capabilities_url ??= [];
-                    document.capabilities_url.push(...additionalDoc.capabilities_url);
-                }
-                document.object_reference ??= [];
-                document.object_reference.push({
-                    obj_uuid: additionalDoc.uuid,
-                    obj_to_uuid: additionalDoc.uuid,
-                    obj_name: additionalDoc.title,
-                    obj_class: "1",
-                    special_name: "Gekoppelte Daten",
-                    special_ref: "3345",
-                    type: additionalDoc.t011_obj_serv?.type,
-                    version: additionalDoc.t011_obj_serv_version?.version_value
-                });
-                if (!document.object_reference.some(obj_ref => obj_ref.special_ref == "3600")) {
-                    document.object_reference.push({
-                        obj_uuid: additionalDoc.uuid,
-                        obj_to_uuid: additionalDoc.uuid,
-                        obj_name: "",
-                        obj_class: "",
-                        special_name: "",
-                        special_ref: "3600",
-                        type: "",
-                        version: ""
-                    });
-                }
-                document.idf = this.addCrossReference(document.idf, additionalDoc);
+        if (!additionalDoc) {
+            return;
+        }
+
+        if (additionalDoc.capabilities_url) {
+            document.capabilities_url ??= [];
+            document.capabilities_url.push(...additionalDoc.capabilities_url);
+        }
+        document.idf = this.addCrossReference(document.idf, additionalDoc);
+        if (additionalDoc.hierarchylevel == 'service') {
+            // add service information to document (dataset)
+            document.refering ??= { object_reference: [] };
+            document.refering.object_reference ??= [];
+            document.refering.object_reference.push(this.createObjRef(additionalDoc, "3600"));
+            document.refering_service_uuid ??= [];
+            document.refering_service_uuid.push(additionalDoc.uuid+"@@"+additionalDoc.title+"@@"+additionalDoc.capabilities_url+"@@"+document.t011_obj_geo.datasource_uuid);
+        }
+        else {
+            // add dataset information to document (service)
+            document.object_reference ??= [];
+            document.object_reference.push(this.createObjRef(additionalDoc, "3345"));
+            if (!document.object_reference.some(obj_ref => obj_ref.special_ref == "3600")) {
+                document.object_reference.push(this.createObjRef(additionalDoc, "3600", true));
             }
         }
     }
 
-    addCrossReference(idf: string, additionalDoc: IngridIndexDocument): string {
+    private addCrossReference(idf: string, additionalDoc: IngridIndexDocument): string {
         let direction = additionalDoc.hierarchylevel == 'service' ? 'IN' : 'OUT';
         // let objectType = additionalDoc.hierarchylevel == 'service' ? 3 : 1;
         let crossReference = `
@@ -190,5 +160,18 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         crossReference += `
 </idf:crossReference>`;
         return idf.replace('</idf:idfMdMetadata>', `${crossReference.replaceAll("&", "&amp;")}\n</idf:idfMdMetadata>`);
+    }
+
+    private createObjRef(doc: IngridIndexDocument, special_ref: string, skeletonOnly: boolean = false) {
+        return {
+            obj_uuid: doc.uuid,
+            obj_to_uuid: doc.uuid,
+            obj_name: skeletonOnly ? "" : doc.title ?? "",
+            obj_class: skeletonOnly ? "" : doc.hierarchylevel == 'service' ? "3" : "1",
+            special_name: skeletonOnly ? "" : "Gekoppelte Daten",
+            special_ref: special_ref,
+            type: skeletonOnly ? "" : doc.t011_obj_serv?.type ?? "",
+            version: skeletonOnly ? "" : doc.t011_obj_serv_version?.version_value ?? ""
+        }
     }
 }
