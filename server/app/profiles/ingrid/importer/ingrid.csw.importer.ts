@@ -50,6 +50,7 @@ export class IngridCswImporter extends CswImporter {
             let entry = meta.hits?.hits[0]._source;
 
             entry.lastIndexed = new Date(Date.now()).toISOString();
+            entry.plugdescription.dataSourceName = this.settings.dataSourceName;
             entry.plugdescription.provider = this.settings.provider?.split(",");
             entry.plugdescription.dataType = this.settings.datatype?.split(",");
             entry.plugdescription.partner = this.settings.partner?.split(",");
@@ -66,6 +67,7 @@ export class IngridCswImporter extends CswImporter {
                 "lastIndexed": new Date(Date.now()).toISOString(),
                 "linkedIndex": indexId,
                 "plugdescription": {
+                    "dataSourceName": this.settings.dataSourceName,
                     "provider": this.settings.provider?.split(","),
                     "dataType": this.settings.datatype?.split(","),
                     "partner": this.settings.partner?.split(","),
