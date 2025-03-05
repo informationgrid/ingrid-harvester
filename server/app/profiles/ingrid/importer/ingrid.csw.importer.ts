@@ -23,20 +23,19 @@
 
 import { ConfigService } from '../../../services/config/ConfigService';
 import { CswImporter } from '../../../importer/csw/csw.importer';
+import { INGRID_META_INDEX } from '../profile.factory';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 
 const log = require('log4js').getLogger(__filename);
 
 export class IngridCswImporter extends CswImporter {
 
-    private readonly INGRID_META = 'ingrid_meta';
-
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings, requestDelegate)
     }
 
     protected async postHarvestingHandling() {
-        let meta = await this.elastic.search(this.INGRID_META,
+        let meta = await this.elastic.search(INGRID_META_INDEX,
             {
                 "query": {
                     "term": {
@@ -50,11 +49,12 @@ export class IngridCswImporter extends CswImporter {
             let entry = meta.hits?.hits[0]._source;
 
             entry.lastIndexed = new Date(Date.now()).toISOString();
+            entry.plugdescription.dataSourceName = this.settings.dataSourceName;
             entry.plugdescription.provider = this.settings.provider?.split(",");
             entry.plugdescription.dataType = this.settings.datatype?.split(",");
             entry.plugdescription.partner = this.settings.partner?.split(",");
 
-            await this.elastic.update(this.INGRID_META, meta.hits?.hits[0]._id, entry, false);
+            await this.elastic.update(INGRID_META_INDEX, meta.hits?.hits[0]._id, entry, false);
         }
         else {
             let { prefix, index } = ConfigService.getGeneralSettings().elasticsearch;
@@ -66,6 +66,7 @@ export class IngridCswImporter extends CswImporter {
                 "lastIndexed": new Date(Date.now()).toISOString(),
                 "linkedIndex": indexId,
                 "plugdescription": {
+                    "dataSourceName": this.settings.dataSourceName,
                     "provider": this.settings.provider?.split(","),
                     "dataType": this.settings.datatype?.split(","),
                     "partner": this.settings.partner?.split(","),
@@ -77,7 +78,7 @@ export class IngridCswImporter extends CswImporter {
                 },
                 "active": false
             }
-            await this.elastic.index(this.INGRID_META, entry, false);
+            await this.elastic.index(INGRID_META_INDEX, entry, false);
         }
     }
 }
