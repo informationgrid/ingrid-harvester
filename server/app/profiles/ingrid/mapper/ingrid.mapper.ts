@@ -132,8 +132,8 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return this.baseMapper.getTitle();
     }
 
-    getModifiedDate(): string{
-        return this.formatDate(this.baseMapper.getModifiedDate());
+    getModifiedDate(): Date {
+        return this.baseMapper.getModifiedDate();
     }
 
     getAccessRights(): string[]{

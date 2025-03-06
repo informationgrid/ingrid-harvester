@@ -48,7 +48,7 @@ export type IngridIndexDocument = IndexDocument & {
     y1: number[],
     y2: number[],
     idf: string,
-    modified: string,
+    modified: Date,
     capabilities_url: string[],
     refering?: any,
     refering_service_uuid?: string[],
