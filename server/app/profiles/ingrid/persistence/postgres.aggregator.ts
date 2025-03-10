@@ -33,6 +33,9 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         let box: EsOperation[] = [];
         // find primary document
         let { document, duplicates } = this.prioritizeAndFilter(bucket);
+        if (!document) {
+            return null;
+        }
 
         for (let [id, service] of bucket.operatingServices) {
             this.resolveCoupling(document, service);

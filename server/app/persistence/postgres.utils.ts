@@ -246,7 +246,9 @@ export class PostgresUtils extends DatabaseUtils {
                     currentId = row.anchor_id;
                     if (currentBucket) {
                         let operationChunks = await pgAggregator.processBucket(currentBucket);
-                        await elastic.addOperationChunksToBulk(operationChunks);
+                        if (operationChunks) {
+                            await elastic.addOperationChunksToBulk(operationChunks);
+                        }
                     }
                     currentBucket = {
                         anchor_id: row.anchor_id,
@@ -278,7 +280,9 @@ export class PostgresUtils extends DatabaseUtils {
         // process last bucket
         if (currentBucket) {
             let operationChunks = await pgAggregator.processBucket(currentBucket);
-            await elastic.addOperationChunksToBulk(operationChunks);
+            if (operationChunks) {
+                await elastic.addOperationChunksToBulk(operationChunks);
+            }
         }
         // send remainder of bulk data
         await elastic.sendBulkOperations();
