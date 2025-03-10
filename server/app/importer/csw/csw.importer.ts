@@ -53,6 +53,7 @@ export class CswImporter extends Importer {
     protected domParser: DOMParser;
     protected profile: ProfileFactory<CswMapper>;
     protected settings: CswSettings;
+    protected getRecordsURL: string;
 
     // ServiceType#GetCapabilitiesURL -> { DatasetUUID -> typenames[] }
     private wfsFeatureTypeMap = new Map<string, { [key: string]: string[] }>();
@@ -180,6 +181,15 @@ export class CswImporter extends Importer {
         if (this.settings.harvestingMode == 'separate') {
             let datasetFilter = '<ogc:PropertyIsEqualTo><ogc:PropertyName>Type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsEqualTo>';
             this.settings.recordFilter = this.appendFilter(datasetFilter);
+        }
+        // obtain GetRecords URL from GetCapabilities
+        let getCapabilitiesConfig = this.createRequestConfig(null, 'GetCapabilities');
+        let getCapabilitiesDelegate = new RequestDelegate(getCapabilitiesConfig);
+        let getCapabilitiesResponse = await getCapabilitiesDelegate.doRequest();
+        let getCapabilitiesResponseDom = this.domParser.parseFromString(getCapabilitiesResponse);
+        this.getRecordsURL = CswMapper.select('./ows:OperationsMetadata/ows:Operation[@name="GetRecords"]/ows:DCP/ows:HTTP/ows:Post[ows:Constraint/ows:Value="XML"]/@xlink:href', XpathUtils.firstElementChild(getCapabilitiesResponseDom), true)?.textContent;
+        if (!this.getRecordsURL) {
+            throw new Error(getCapabilitiesResponse);
         }
         // collect number of totalRecords up front, so we can harvest concurrently
         let hitsRequestConfig = this.createRequestConfig({
@@ -505,6 +515,7 @@ export class CswImporter extends Importer {
 
         if (settings.httpMethod === "POST") {
             if (request === 'GetRecords') {
+                requestConfig.uri = this.getRecordsURL;
                 requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
                 <GetRecords xmlns="${namespaces.CSW}"
                             xmlns:gmd="${namespaces.GMD}"
@@ -528,8 +539,10 @@ export class CswImporter extends Importer {
                     </Query>
                 </GetRecords>`;
             }
-            else {
-                // TODO send GetCapabilities post request
+            else if (request == 'GetCapabilities') {
+                requestConfig.qs ??= {};
+                requestConfig.qs['service'] ??= 'CSW';
+                requestConfig.qs['request'] ??= 'GetCapabilities';
             }
         } else {
             requestConfig.qs = <CswParameters>{

@@ -58,7 +58,8 @@ export class CswMapper extends BaseMapper {
         'gmx': namespaces.GMX,
         'ows': namespaces.OWS,
         'plu': namespaces.PLU,
-        'srv': namespaces.SRV
+        'srv': namespaces.SRV,
+        'xlink': namespaces.XLINK
     });
 
     log = getLogger();
