@@ -26,9 +26,10 @@ import { CswSettings } from '../server/app/importer/csw/csw.settings';
 import { DcatSettings } from '../server/app/importer/dcat/dcat.settings';
 import { ExcelSettings } from '../server/app/importer/excel/excel.settings';
 import { ExcelSparseSettings } from '../server/app/importer/excelsparse/excelsparse.settings';
+import { JsonSettings } from '../server/app/importer/json/json.settings';
 import { KldSettings } from '../server/app/importer/kld/kld.settings';
 import { OaiSettings } from '../server/app/importer/oai/oai.settings';
 import { SparqlSettings } from '../server/app/importer/sparql/sparql.settings';
 import { WfsSettings } from '../server/app/importer/wfs/wfs.settings';
 
-export type Harvester = CkanSettings | CswSettings | DcatSettings | ExcelSettings | ExcelSparseSettings | OaiSettings | SparqlSettings | WfsSettings | KldSettings;
+export type Harvester = CkanSettings | CswSettings | DcatSettings | ExcelSettings | ExcelSparseSettings | JsonSettings | KldSettings | OaiSettings | SparqlSettings | WfsSettings;

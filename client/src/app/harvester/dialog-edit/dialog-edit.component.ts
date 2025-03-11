@@ -92,6 +92,8 @@ export class DialogEditComponent implements OnInit {
       ...this.harvester,
       ...value
     };
+    // remove temporary properties (starting with '_')
+    Object.keys(result).filter(key => key.startsWith('_')).forEach(key => delete result[key]);  
     this.dialogRef.close(result);
   }
 

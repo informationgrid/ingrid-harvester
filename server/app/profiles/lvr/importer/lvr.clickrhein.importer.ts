@@ -40,7 +40,7 @@ export class LvrClickRheinImporter extends JsonImporter {
     }
 
     protected async preHarvestingHandling() {
-        const requestConfig = JsonImporter.createRequestConfig({ ...this.settings, sourceURL: this.settings.metaURL });
+        const requestConfig = JsonImporter.createRequestConfig({ ...this.settings, sourceURL: this.settings.additionalSettings['metaURL'] });
         const requestDelegate = new RequestDelegate(requestConfig);
         let response = await requestDelegate.doRequest();
         Object.entries(response).forEach(([category, values]) => {

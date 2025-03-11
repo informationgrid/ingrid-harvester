@@ -25,5 +25,5 @@ import { ImporterSettings } from '../../importer.settings';
 
 export type JsonSettings = {
     idProperty: string,
-    metaURL?: string
+    additionalSettings: Record<string, string>
 } & ImporterSettings;
