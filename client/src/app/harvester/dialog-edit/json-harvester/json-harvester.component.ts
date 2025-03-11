@@ -22,8 +22,9 @@
  */
 
 import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { FormControl, UntypedFormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, UntypedFormGroup } from '@angular/forms';
 import { JsonSettings } from '../../../../../../server/app/importer/json/json.settings';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-json-harvester',
@@ -36,14 +37,69 @@ export class JsonHarvesterComponent implements OnInit, OnDestroy {
   @Input() model: JsonSettings;
   @Input() rulesTemplate: TemplateRef<any>;
 
-  constructor() { }
+  private settingsArraySubscription: Subscription;
+
+  constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.form.addControl('sourceURL', new FormControl<string>(this.model.sourceURL));
     this.form.addControl('idProperty', new FormControl<string>(this.model.idProperty));
-    this.form.addControl('metaURL', new FormControl<string>(this.model.metaURL));
+    this.form.addControl('_settingsArray', this.formBuilder.array([], [JsonHarvesterComponent.noDuplicateKeysValidator, JsonHarvesterComponent.noEmptyKeysValidator]));
+
+    if (this.model.additionalSettings) {
+      Object.entries(this.model.additionalSettings).forEach(([key, value]) => this.addSetting(key, value));
+    }
+    this.settingsArraySubscription = this.settingsArray.valueChanges.subscribe(() => this.sync());
+  }
+
+  get settingsArray() {
+    return this.form.controls["_settingsArray"] as FormArray;
+  }
+
+  addSetting(key?: string, value?: string) {
+    const setting = this.formBuilder.group({
+        key: [key ?? ''],
+        value: [value ?? '']
+    });
+    this.settingsArray.push(setting);
+  }
+
+  removeSetting(idx: number) {
+    this.settingsArray.removeAt(idx);
+  }
+
+  sync() {
+    this.model.additionalSettings = this.settingsArray.controls.reduce((map, control) => {
+      const group = control as FormGroup;
+      map[group.value.key] = group.value.value;
+      return map;
+    }, {});
   }
 
   ngOnDestroy(): void {
+    if (this.settingsArraySubscription) {
+      this.settingsArraySubscription.unsubscribe();
+    }
+  }
+
+  private static noDuplicateKeysValidator(control: FormArray) {
+    const settingsArray = control.value;
+    let found = [];
+    for (let entry of settingsArray) {
+      if (found.includes(entry.key)) {
+        return { 'naming-rules': `Die Eigenschaft ${entry.key} ist mehrfach definiert` };
+      }
+      found.push(entry.key);
+    }
+    return null;
+  }
+
+  private static noEmptyKeysValidator(control: FormArray) {
+    const settingsArray = control.value;
+    let emptyPropIdx = settingsArray.findIndex(entry => !entry.key?.trim());
+    if (emptyPropIdx >= 0) {
+      return { 'naming-rules': `Die Eigenschaft an Stelle ${emptyPropIdx} hat keinen Namen` };
+    }
+    return null;
   }
 }
