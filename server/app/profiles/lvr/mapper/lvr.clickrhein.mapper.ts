@@ -121,11 +121,20 @@ export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
     }
 
     getMedia(): Media[] {
-        let baseURL = this.baseMapper.getSettings().sourceURL.substring(0, this.baseMapper.getSettings().sourceURL.indexOf('/', 8));
+        let { sourceURL, additionalSettings } = this.baseMapper.getSettings();
+        let baseURL = sourceURL.substring(0, sourceURL.indexOf('/', 8));
+        const queryParam = (mediaType) => {
+            switch (mediaType) {
+                case 'audio': return '';
+                case 'image': return `&width=${additionalSettings['imageWidth'] ?? 1920}`;
+                case 'video': return '';
+                default: return '';
+            }
+        }
         return this.baseMapper.record['media']?.map(entry => ({
             type: entry.media_type,
-            url: baseURL + entry.url,
-            thumbnail: baseURL + entry.url,
+            url: baseURL + entry.download_url + queryParam(entry.media_type),
+            thumbnail: baseURL + entry.url + `&width=${additionalSettings['thumbnailWidth'] ?? 480}`,
             description: entry.description
         }));
     }
