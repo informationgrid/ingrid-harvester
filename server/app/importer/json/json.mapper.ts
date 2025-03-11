@@ -50,7 +50,7 @@ export class JsonMapper extends BaseMapper {
         super.init();
     }
 
-    getSettings(): ImporterSettings {
+    getSettings(): JsonSettings {
         return this.settings;
     }
 
