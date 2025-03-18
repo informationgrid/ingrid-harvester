@@ -182,9 +182,7 @@ export class CswImporter extends Importer {
             this.settings.recordFilter = this.appendFilter(datasetFilter);
         }
         // collect number of totalRecords up front, so we can harvest concurrently
-        let hitsRequestConfig = CswImporter.createRequestConfig({
-            ...this.settings,
-            recordFilter: this.settings.recordFilter,
+        let hitsRequestConfig = this.createRequestConfig({
             resultType: 'hits',
             startPosition: 1,
             maxRecords: 1
@@ -203,7 +201,7 @@ export class CswImporter extends Importer {
         let delegates = [];
         // TODO this is still not correct?
         for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
-            let requestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter: this.settings.recordFilter, startPosition });
+            let requestConfig = this.createRequestConfig({ startPosition });
             delegates.push(new RequestDelegate(requestConfig, CswImporter.createPaging({
                 startPosition: startPosition,
                 maxRecords: this.settings.maxRecords
@@ -235,7 +233,7 @@ export class CswImporter extends Importer {
             }
             recordFilter +=  (chunk.length > 1 ? '</ogc:Or>' : '') + '</ogc:Filter>';
             delegates.push(new RequestDelegate(
-                CswImporter.createRequestConfig({ ...this.settings, recordFilter }),
+                this.createRequestConfig({ recordFilter }),
                 CswImporter.createPaging({ startPosition: this.settings.startPosition })
             ));
         }
@@ -493,7 +491,11 @@ export class CswImporter extends Importer {
         return new CswMapper(settings, record, harvestTime, summary, generalInfo);
     }
 
-    static createRequestConfig(settings: CswSettings, request = 'GetRecords'): RequestOptions {
+    protected createRequestConfig(additionalSettings: Partial<CswSettings> = null, request = 'GetRecords'): RequestOptions {
+        let settings = {
+            ...this.settings,
+            ...additionalSettings
+        }
         let requestConfig: RequestOptions = {
             method: settings.httpMethod || "GET",
             uri: settings.sourceURL,

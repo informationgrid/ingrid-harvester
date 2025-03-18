@@ -50,9 +50,9 @@ export class IngridCswImporter extends CswImporter {
 
             entry.lastIndexed = new Date(Date.now()).toISOString();
             entry.plugdescription.dataSourceName = this.settings.dataSourceName;
-            entry.plugdescription.provider = this.settings.provider?.split(",");
-            entry.plugdescription.dataType = this.settings.datatype?.split(",");
-            entry.plugdescription.partner = this.settings.partner?.split(",");
+            entry.plugdescription.provider = this.settings.provider?.split(",")?.map(p => p.trim());
+            entry.plugdescription.dataType = this.settings.datatype?.split(",")?.map(d => d.trim());
+            entry.plugdescription.partner = this.settings.partner?.split(",")?.map(p => p.trim());
 
             await this.elastic.update(INGRID_META_INDEX, meta.hits?.hits[0]._id, entry, false);
         }
@@ -67,14 +67,16 @@ export class IngridCswImporter extends CswImporter {
                 "linkedIndex": indexId,
                 "plugdescription": {
                     "dataSourceName": this.settings.dataSourceName,
-                    "provider": this.settings.provider?.split(","),
-                    "dataType": this.settings.datatype?.split(","),
-                    "partner": this.settings.partner?.split(","),
+                    "provider": this.settings.provider?.split(",")?.map(p => p.trim()),
+                    "dataType": this.settings.datatype?.split(",")?.map(d => d.trim()),
+                    "partner": this.settings.partner?.split(",")?.map(p => p.trim()),
                     "ranking": [
                         "score"
                     ],
                     "iPlugClass": "de.ingrid.iplug.csw.dsc.CswDscSearchPlug",
-                    "fields": []
+                    "fields": [],
+                    "proxyServiceURL": indexId,
+                    "useRemoteElasticsearch": true
                 },
                 "active": false
             }
