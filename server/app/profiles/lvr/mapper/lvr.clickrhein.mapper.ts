@@ -23,9 +23,10 @@
 
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { JsonMapper } from '../../../importer/json/json.mapper';
-import { Keyword, Media, Person, Relation } from '../model/index.document';
+import { Keyword } from '../../../model/ingrid.index.document';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
+import { Media, Person, Relation } from '../model/index.document';
 
 export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
 
@@ -104,7 +105,7 @@ export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
                     keywords.push({
                         id: null,
                         term: keyword,
-                        thesaurus: null
+                        source: null
                     });
                 }
             }

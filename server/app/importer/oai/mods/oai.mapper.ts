@@ -31,7 +31,8 @@ import { oaiXPaths } from '../oai.paths';
 import { BaseMapper } from '../../base.mapper';
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { ImporterSettings } from '../../../importer.settings';
-import { Keyword, Media, Person, Relation } from '../../../profiles/lvr/model/index.document';
+import { Keyword } from '../../../model/ingrid.index.document';
+import { Media, Person, Relation } from '../../../profiles/lvr/model/index.document';
 import { MetadataSource } from '../../../model/index.document';
 import { OaiSettings } from '../oai.settings';
 import { Summary } from '../../../model/summary';
@@ -112,7 +113,7 @@ export class OaiMapper extends BaseMapper {
         let keywords = topicNodes?.map(node => ({
             id: node.getAttribute('valueURI'),
             term: node.textContent,
-            thesaurus: node.getAttribute('authority')
+            source: node.getAttribute('authority')
         }));
         return keywords;
     }

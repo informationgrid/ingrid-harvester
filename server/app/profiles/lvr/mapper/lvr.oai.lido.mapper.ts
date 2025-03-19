@@ -27,8 +27,10 @@ import { Link } from '../../../importer/oai/lido/lido.model';
 import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
-import { Keyword, Media, Person, Relation } from '../model/index.document';
+import { Keyword } from '../../../model/ingrid.index.document';
 import { LvrMapper } from './lvr.mapper';
+import { Media, Person, Relation } from '../model/index.document';
+import { substringAfterLast, substringBeforeLast } from '../lvr.utils';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
@@ -96,10 +98,11 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
     getKeywords(): Keyword[] {
         let keywords: Keyword[] = [];
         this.baseMapper.getSubjects().forEach(subject => {
+            let url = subject.keyword.conceptIds.map(conceptId => conceptId.id)?.[0]
             keywords.push({
-                id: subject.keyword.conceptIds.map(conceptId => conceptId.id),
-                term: subject.keyword.terms,
-                thesaurus: subject.keyword.conceptIds.map(conceptId => conceptId.source)
+                id: substringAfterLast(url, '/'),
+                term: subject.keyword.terms?.[0],
+                source: substringBeforeLast(url, '/')
             });
         });
         return keywords;

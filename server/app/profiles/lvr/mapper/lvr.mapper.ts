@@ -26,11 +26,11 @@ import 'dayjs/locale/de';
 import { createEsId } from '../lvr.utils';
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { IndexDocumentFactory } from '../../../model/index.document.factory';
-import { IngridIndexDocument, Spatial } from '../../../model/ingrid.index.document';
+import { IngridIndexDocument, Keyword, Spatial } from '../../../model/ingrid.index.document';
 import { JsonMapper } from '../../../importer/json/json.mapper';
-import { Keyword, LvrIndexDocument, Media, Person, Relation } from '../model/index.document';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
+import { LvrIndexDocument, Media, Person, Relation } from '../model/index.document';
 import { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper';
 import { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mapper';
 
@@ -60,11 +60,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
                 issued: this.getIssued(),
                 data_temporal: temporals ? this.getNullForTemporal(temporals[0]) : null
             },
-            keywords: this.getKeywords()?.map(keyword => ({
-                id: first(keyword.id),
-                term: first(keyword.term),
-                url: first(keyword.thesaurus)
-            })),
+            keywords: this.getKeywords(),
             fulltext: this.baseMapper.getHarvestedData(),
             metadata: {
                 issued: this.getIssued(),

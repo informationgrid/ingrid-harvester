@@ -55,8 +55,8 @@ export type Spatial = {
 
 export type Keyword = {
     term: string,
-    type?: string,
-    url?: string
+    id?: string,
+    source?: string
 }
 
 export type Metadata = {
