@@ -53,7 +53,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
             id: this.getUrlSafeIdentifier(),
             schema_version: '1.0.0',
             title: this.getTitle()?.join('\n'),
-            abstract: this.getDescription()?.join('\n'),
+            description: this.getDescription()?.join('\n'),
             spatial: this.getIngridSpatial(),
             temporal: {
                 modified: this.getModified(),
