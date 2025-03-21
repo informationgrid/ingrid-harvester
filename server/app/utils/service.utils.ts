@@ -176,7 +176,14 @@ export function cleanDistribution(distribution: Distribution): Distribution {
         }
     }
     // compute score for WFS and WMS distributions
-    let url = new URL(distribution.accessURL.toLowerCase());
+    let url: URL;
+    try {
+        url = new URL(distribution.accessURL.toLowerCase());
+    }
+    catch (e) {
+        // if the URL cannot be parsed, just return the original distribution
+        return distribution;
+    }
     Object.keys(serviceScore).forEach((serviceType) => {
         serviceScore[serviceType] += MiscUtils.isIncludedI(serviceType, distribution.format) ? 2 : 0;
         serviceScore[serviceType] += MiscUtils.isIncludedI(serviceType, [url.pathname]) ? 1 : 0;
