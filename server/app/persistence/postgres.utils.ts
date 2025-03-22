@@ -30,7 +30,6 @@ import { IndexDocument } from '../model/index.document';
 import { Summary } from '../model/summary';
 import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import * as MiscUtils from '../utils/misc.utils';
 import { BulkResponse, DatabaseUtils } from './database.utils';
 import { ElasticsearchUtils } from './elastic.utils';
 import { PostgresQueries } from './postgres.queries';
@@ -247,7 +246,9 @@ export class PostgresUtils extends DatabaseUtils {
                     currentId = row.anchor_id;
                     if (currentBucket) {
                         let operationChunks = await pgAggregator.processBucket(currentBucket);
-                        await elastic.addOperationChunksToBulk(operationChunks);
+                        if (operationChunks) {
+                            await elastic.addOperationChunksToBulk(operationChunks);
+                        }
                     }
                     currentBucket = {
                         anchor_id: row.anchor_id,
@@ -255,7 +256,7 @@ export class PostgresUtils extends DatabaseUtils {
                         operatingServices: new Map<string | number, Distribution>()
                     };
                 }
-                // add service distribution to current bucket
+                // add service/additional distribution to current bucket
                 if (row.service_type != null) {
                     currentBucket.operatingServices.set(row.id, row.dataset);
                 }
@@ -279,7 +280,9 @@ export class PostgresUtils extends DatabaseUtils {
         // process last bucket
         if (currentBucket) {
             let operationChunks = await pgAggregator.processBucket(currentBucket);
-            await elastic.addOperationChunksToBulk(operationChunks);
+            if (operationChunks) {
+                await elastic.addOperationChunksToBulk(operationChunks);
+            }
         }
         // send remainder of bulk data
         await elastic.sendBulkOperations();
@@ -345,11 +348,11 @@ export class PostgresUtils extends DatabaseUtils {
                 // we remove catalogs from the entities at this point because we don't want them to persisted into the
                 // dataset in the catalog
                 entities = this.removeCatalogs(entities as RecordEntity[]);
-                result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities, MiscUtils.dateReplacer)]);
+                result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities, ProfileFactoryLoader.get().dateReplacer)]);
             }
             else if ((entities[0] as CouplingEntity).service_id) {
                 entities = this.mergeCouplingEntities(entities as CouplingEntity[]);
-                result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities, MiscUtils.dateReplacer)]);
+                result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities, ProfileFactoryLoader.get().dateReplacer)]);
             }
             else {
                 throw new Error('Unrecognised Entity type');

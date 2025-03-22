@@ -327,7 +327,7 @@ export class KldImporter extends Importer {
         await Promise.allSettled(promises).catch(e => log.error('Error persisting record', e));
     }
 
-    protected getMapper(settings: KldSettings, record: ObjectResponse, harvestTime: Date, summary: Summary): KldMapper {
+    getMapper(settings: KldSettings, record: ObjectResponse, harvestTime: Date, summary: Summary): KldMapper {
         return new KldMapper(settings, record, harvestTime, summary);
     }
 

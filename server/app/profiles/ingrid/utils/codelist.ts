@@ -47,28 +47,36 @@ export class Codelist {
 
     private lists = {}
     init () {
+        this.readList("codelist_101.xml");
+        this.readList("codelist_102.xml");
+        this.readList("codelist_111.xml", "ident", "name");
         this.readList("codelist_502.xml");
         this.readList("codelist_505.xml");
+        this.readList("codelist_510.xml");
+        this.readList("codelist_515.xml");
+        this.readList("codelist_518.xml");
         this.readList("codelist_523.xml");
+        this.readList("codelist_526.xml");
+        this.readList("codelist_527.xml");
+        this.readList("codelist_528.xml");
         this.readList("codelist_2000.xml");
+        this.readList("codelist_6010.xml");
     }
 
-    private async readList(file) {
+    private readList(file: string, indexKey: string = 'iso', valueKey: string = 'id') {
         let list = {};
-        let raw = await this.readFile(file);
+        let raw = this.readFile(file);
         let xml = this.domParser.parseFromString(raw, 'application/xml');
         let codelistId = Codelist.select("/de.ingrid.codelists.model.CodeList/id", xml, true)?.textContent;
-        console.log("CODELIST ID: "+codelistId);
         let entries = Codelist.select("/de.ingrid.codelists.model.CodeList/entries/de.ingrid.codelists.model.CodeListEntry", xml)
         for (let entry of entries) {
             let entryId = Codelist.select("./id", entry, true).textContent;
-            let localisations = Codelist.select("./localisations/entry", entry);
-            for (let localisation of localisations) {
-                let string =  Codelist.select("./string", localisation);
-                if(string[0].textContent === "iso"){
-                    list[string[1].textContent] = entryId;
-                }
-            }
+            let localisations = Codelist.select("./localisations/entry", entry).reduce((map, entry) => {
+                let string =  Codelist.select("./string", entry);
+                map[string[0].textContent] = string[1].textContent;
+                return map;
+            }, {});
+            list[localisations[indexKey]] = valueKey === 'id' ? entryId : localisations[valueKey];
         }
         this.lists[codelistId] = list;
     }

@@ -26,17 +26,18 @@ import 'dayjs/locale/de';
 import { createEsId } from '../lvr.utils';
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { IndexDocumentFactory } from '../../../model/index.document.factory';
-import { IngridIndexDocument, Spatial } from '../../../model/ingrid.index.document';
-import { Keyword, LvrIndexDocument, Media, Person, Relation } from '../model/index.document';
+import { IngridIndexDocument, Keyword, Spatial } from '../../../model/ingrid.index.document';
+import { JsonMapper } from '../../../importer/json/json.mapper';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
+import { LvrIndexDocument, Media, Person, Relation } from '../model/index.document';
 import { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper';
 import { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mapper';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
 
-export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMapper> implements IndexDocumentFactory<LvrIndexDocument> {
+export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMapper | JsonMapper> implements IndexDocumentFactory<LvrIndexDocument> {
 
     protected baseMapper: M;
 
@@ -52,18 +53,14 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
             id: this.getUrlSafeIdentifier(),
             schema_version: '1.0.0',
             title: this.getTitle()?.join('\n'),
-            abstract: this.getDescription()?.join('\n'),
+            description: this.getDescription()?.join('\n'),
             spatial: this.getIngridSpatial(),
             temporal: {
                 modified: this.getModified(),
                 issued: this.getIssued(),
                 data_temporal: temporals ? this.getNullForTemporal(temporals[0]) : null
             },
-            keywords: this.getKeywords()?.map(keyword => ({
-                id: first(keyword.id),
-                term: first(keyword.term),
-                url: first(keyword.thesaurus)
-            })),
+            keywords: this.getKeywords(),
             fulltext: this.baseMapper.getHarvestedData(),
             metadata: {
                 issued: this.getIssued(),

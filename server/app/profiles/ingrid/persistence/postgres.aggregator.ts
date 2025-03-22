@@ -33,9 +33,12 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         let box: EsOperation[] = [];
         // find primary document
         let { document, duplicates } = this.prioritizeAndFilter(bucket);
+        if (!document) {
+            return null;
+        }
 
         for (let [id, service] of bucket.operatingServices) {
-            document = this.resolveCoupling(document, service);
+            this.resolveCoupling(document, service);
         }
 
         // shortcut - if all documents in the bucket should be deleted, delete the document from ES
@@ -45,10 +48,6 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
             return [{ operation: 'delete', _index: document['catalog'].identifier, _id: createEsId(document) }];
         }
 
-        // // merge service information into dataset
-        // for (let [id, service] of bucket.operatingServices) {
-        //     document = this.resolveCoupling(document, service);
-        // }
         // deduplication
         for (let [id, duplicate] of duplicates) {
             let old_id = createEsId(document);
@@ -106,24 +105,76 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         return document;
     }
 
-    private resolveCoupling(document: IngridIndexDocument, service: any): IngridIndexDocument {
-        if(service && service.hierarchylevel == 'service'){
-            if(service.capabilities_url){
-                document.capabilities_url = service.capabilities_url;
-            }
-            document.refering = {
-                object_reference: {
-                    obj_uuid: service.uuid,
-                    obj_name: service.title,
-                    obj_class: "3",
-                    special_name: "Gekoppelte Daten",
-                    special_ref: "3600",
-                    type: "view",
-                    version: "OGC:WMS 1.3.0"
-                }
-            };
-            document.refering_service_uuid = service.uuid+"@@"+service.title+"@@"+service.capabilities_url;
+    private resolveCoupling(document: IngridIndexDocument, additionalDoc: any) {
+        if (!additionalDoc) {
+            return;
         }
-        return document;
+
+        if (additionalDoc.capabilities_url) {
+            document.capabilities_url ??= [];
+            document.capabilities_url.push(...additionalDoc.capabilities_url);
+        }
+        document.idf = this.addCrossReference(document.idf, additionalDoc);
+        if (additionalDoc.hierarchylevel == 'service') {
+            // add service information to document (dataset)
+            document.refering ??= { object_reference: [] };
+            document.refering.object_reference ??= [];
+            document.refering.object_reference.push(this.createObjRef(additionalDoc, "3600"));
+            document.refering_service_uuid ??= [];
+            document.refering_service_uuid.push(additionalDoc.uuid+"@@"+additionalDoc.title+"@@"+additionalDoc.capabilities_url+"@@"+document.t011_obj_geo.datasource_uuid);
+        }
+        else {
+            // add dataset information to document (service)
+            document.object_reference ??= [];
+            document.object_reference.push(this.createObjRef(additionalDoc, "3345"));
+            if (!document.object_reference.some(obj_ref => obj_ref.special_ref == "3600")) {
+                document.object_reference.push(this.createObjRef(additionalDoc, "3600", true));
+            }
+        }
+    }
+
+    private addCrossReference(idf: string, additionalDoc: IngridIndexDocument): string {
+        let direction = additionalDoc.hierarchylevel == 'service' ? 'IN' : 'OUT';
+        // let objectType = additionalDoc.hierarchylevel == 'service' ? 3 : 1;
+        let crossReference = `
+<idf:crossReference direction="${direction}" orig-uuid="${additionalDoc.uuid}" uuid="${additionalDoc.uuid}">
+    <idf:objectName>${additionalDoc.title}</idf:objectName>
+    <idf:attachedToField entry-id="3600" list-id="2000">Gekoppelte Daten</idf:attachedToField>
+    <idf:objectType>${additionalDoc.t01_object.obj_class}</idf:objectType>
+    <idf:description>${additionalDoc.summary}</idf:description>`;
+        if (additionalDoc.hierarchylevel == 'service') {
+            let idx = additionalDoc.t011_obj_serv_operation?.findIndex(op => op.name?.toLowerCase() == 'getcapabilities');
+            crossReference += `
+    <idf:serviceType>${additionalDoc.t011_obj_serv?.type ?? ""}</idf:serviceType>
+    <idf:serviceVersion>${additionalDoc.t011_obj_serv_version?.version_value ?? ""}</idf:serviceVersion>
+    <idf:serviceOperation>${additionalDoc.t011_obj_serv_operation?.[idx]?.name ?? ""}</idf:serviceOperation>
+    <idf:serviceUrl>${additionalDoc.t011_obj_serv_op_connpoint?.[idx]?.connect_point ?? ""}</idf:serviceUrl>`;
+        }
+        let addHtml = Array.isArray(additionalDoc.additional_html_1) ? additionalDoc.additional_html_1[0] : additionalDoc.additional_html_1;
+        let browseGraphic = addHtml?.match(/<img src=["'](.*?)["'].*/)?.[1];
+        if (browseGraphic) {
+            crossReference += `
+    <idf:graphicOverview>${browseGraphic}</idf:graphicOverview>`
+        }
+        else {
+            crossReference += `
+    <idf:graphicOverview/>`
+        }
+        crossReference += `
+</idf:crossReference>`;
+        return idf.replace('</idf:idfMdMetadata>', `${crossReference.replaceAll("&", "&amp;")}\n</idf:idfMdMetadata>`);
+    }
+
+    private createObjRef(doc: IngridIndexDocument, special_ref: string, skeletonOnly: boolean = false) {
+        return {
+            obj_uuid: doc.uuid,
+            obj_to_uuid: doc.uuid,
+            obj_name: skeletonOnly ? "" : doc.title ?? "",
+            obj_class: skeletonOnly ? "" : doc.hierarchylevel == 'service' ? "3" : "1",
+            special_name: skeletonOnly ? "" : "Gekoppelte Daten",
+            special_ref: special_ref,
+            type: skeletonOnly ? "" : doc.t011_obj_serv?.type ?? "",
+            version: skeletonOnly ? "" : doc.t011_obj_serv_version?.version_value ?? ""
+        }
     }
 }

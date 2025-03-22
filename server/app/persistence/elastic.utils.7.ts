@@ -263,7 +263,6 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
                     let e = item.index?.error;
                     if (e) {
                         this.handleError(`Error during indexing on index '${index}' for item.id '${item.index._id}': ${JSON.stringify(e)}`, e);
-                        throw e;
                     }
                 });
             }
@@ -275,7 +274,6 @@ export class ElasticsearchUtils7 extends ElasticsearchUtils {
         }
         catch (e) {
             this.handleError('Error during bulk indexing of #items: ' + data.length / 2, e);
-            Promise.reject(e);
         }
     }
 

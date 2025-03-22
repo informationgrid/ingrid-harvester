@@ -21,28 +21,27 @@
  * ==================================================
  */
 
-import { LvrIndexDocument } from './model/index.document';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { JsonHarvesterComponent } from './json-harvester.component';
 
-export function createEsId(document: LvrIndexDocument): string {
-    return document.id;
-}
+describe('JsonHarvesterComponent', () => {
+  let component: JsonHarvesterComponent;
+  let fixture: ComponentFixture<JsonHarvesterComponent>;
 
-export function substringBeforeLast(s: string, delim: string) {
-    if (s == null) {
-        return null;
-    }
-    if (delim == null) {
-        return s;
-    }
-    return s.substring(0, s.lastIndexOf(delim));
-}
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ JsonHarvesterComponent ]
+    })
+    .compileComponents();
+  }));
 
-export function substringAfterLast(s: string, delim: string) {
-    if (s == null) {
-        return null;
-    }
-    if (delim == null) {
-        return s;
-    }
-    return s.substring(s.lastIndexOf(delim));
-}
+  beforeEach(() => {
+    fixture = TestBed.createComponent(JsonHarvesterComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
