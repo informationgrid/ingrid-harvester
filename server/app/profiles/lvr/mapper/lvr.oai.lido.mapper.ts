@@ -233,26 +233,10 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
     }
 
     getIssued(): Date {
-        let issued = null;
-        for (let info of this.baseMapper.getRecord().info) {
-            // TODO which to use? "lido record" or "source record"
-            if (info.type == 'lido record') {
-                issued = info.created;
-                break;
-            }
-        }
-        return issued;
+        return this.baseMapper.getRecord().infos?.find(info => info.type == 'lido record')?.created;
     }
 
     getModified(): Date {
-        let modified = null;
-        for (let info of this.baseMapper.getRecord().info) {
-            // TODO which to use? "lido record" or "source record"
-            if (info.type == 'lido record') {
-                modified = info.modified;
-                break;
-            }
-        }
-        return modified;
+        return this.baseMapper.getRecord().infos?.find(info => info.type == 'lido record')?.modified;
     }
 }
