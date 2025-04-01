@@ -30,7 +30,7 @@ import { IngridIndexDocument, Keyword, Spatial } from '../../../model/ingrid.ind
 import { JsonMapper } from '../../../importer/json/json.mapper';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
-import { LvrIndexDocument, Media, Person, Relation } from '../model/index.document';
+import { LvrIndexDocument, Media, Person, Relation, Source } from '../model/index.document';
 import { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper';
 import { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mapper';
 
@@ -79,7 +79,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
                 relations: this.getRelations(),
                 licenses: this.getLicense(),
                 vector: this.getVector(),
-                source: this.getSource()
+                source: await this.getSource()
             },
             extras: {
                 metadata: {
@@ -150,7 +150,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
 
     abstract getVector(): object;
 
-    abstract getSource(): string;
+    abstract getSource(): Promise<Source>;
 
     abstract getIssued(): Date;
 

@@ -270,7 +270,14 @@
           "type": "object"
         },
         "source": {
-          "type": "keyword"
+          "properties": {
+            "id": {
+              "type": "keyword"
+            },
+            "displayURL": {
+              "type": "keyword"
+            }
+          }
         }
       }
     },

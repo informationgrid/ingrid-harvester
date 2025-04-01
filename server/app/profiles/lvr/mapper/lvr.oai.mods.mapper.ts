@@ -26,7 +26,7 @@ import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { Keyword } from '../../../model/ingrid.index.document';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
-import { Media, Person, Relation } from '../model/index.document';
+import { Media, Person, Relation, Source } from '../model/index.document';
 import { OaiMapper } from '../../../importer/oai/mods/oai.mapper';
 
 const dayjs = require('dayjs');
@@ -88,10 +88,12 @@ export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {
         return null;
     }
 
-    getSource(): string {
-        // TODO
-        let portal = undefined;
-        return portal;
+    // TODO
+    async getSource(): Promise<Source> {
+        return {
+            id: null,
+            displayURL: null
+        };
     }
 
     getIssued(): Date {

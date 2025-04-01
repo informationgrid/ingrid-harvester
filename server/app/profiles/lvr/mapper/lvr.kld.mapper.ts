@@ -28,7 +28,7 @@ import { Keyword } from '../../../model/ingrid.index.document';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
-import { Media, Person, Relation } from '../model/index.document';
+import { Media, Person, Relation, Source } from '../model/index.document';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
@@ -112,8 +112,11 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         return null;
     }
 
-    getSource(): string {
-        return 'KuLaDig';
+    async getSource(): Promise<Source> {
+        return {
+            id: 'KuLaDig',
+            displayURL: `https://www.kuladig.de/Objektansicht/${this.getIdentifier()}`
+        };
     }
 
     getIssued(): Date {

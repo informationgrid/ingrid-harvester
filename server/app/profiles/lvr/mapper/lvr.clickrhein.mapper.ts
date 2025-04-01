@@ -26,7 +26,7 @@ import { JsonMapper } from '../../../importer/json/json.mapper';
 import { Keyword } from '../../../model/ingrid.index.document';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
-import { Media, Person, Relation } from '../model/index.document';
+import { Media, Person, Relation, Source } from '../model/index.document';
 
 export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
 
@@ -153,8 +153,11 @@ export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
         return null;
     }
 
-    getSource(): string {
-        return 'ClickRhein';
+    async getSource(): Promise<Source> {
+        return {
+            id: 'ClickRhein',
+            displayURL: null
+        };
     }
 
     // TODO
