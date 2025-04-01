@@ -50,7 +50,9 @@ export class UrlUtils {
     /**
      * Rudimentary checks for URL validity. This method extracts the request
      * URI from the given configuration, and returns
-     * - this URI unmodified if it contains the substring '://'
+     * - this URI unmodified if it contains the substring '://' if `fullCheck` = true
+     * - this URI unmodified if it contains the substring '://' if a GET request to the resulting URI
+     *   returns a status code of 200
      * - this URI prefixed with 'https://' if a GET request to the resulting URI
      *   returns a status code of 200
      * - this URI prefixed with 'http://' if a GET request to the resulting URI
@@ -62,31 +64,31 @@ export class UrlUtils {
      * or the uri prefixed with 'https://' or 'http://' if these are reachable,
      * or undefined otherwise
      */
-    static async urlWithProtocolFor(requestConfig: RequestOptions, skip = false): Promise<string> {
+    static async urlWithProtocolFor(requestConfig: RequestOptions, skip = false, fullCheck = false): Promise<string> {
         let url = <string>requestConfig.uri;
-
-        if (url && url.trim()) {
-            // we assume that an URL which contains '://' also has a protocol and is valid
-            if (url.includes('://') || skip) {
-                return url;
+        if (skip) {
+            return url;
+        }
+        if (url?.trim()) {
+            // we assume that an URL which contains '://' also has a protocol
+            if (url.includes('://')) {
+                if (!fullCheck || await UrlUtils.checkUrlWithProtocol(requestConfig)) {
+                    return url;
+                }
             }
-
-            // if URL is just a domain name with no protocol then first check if 'https://' works
-            let urlToCheck = `https://${url}`;
-            requestConfig.uri = urlToCheck;
-            if (await UrlUtils.checkUrlWithProtocol(requestConfig)) {
-                return urlToCheck;
-            }
-
-            // otherwise try with 'http://'
-            urlToCheck = `http://${url}`;
-            requestConfig.uri = urlToCheck;
-            if (await UrlUtils.checkUrlWithProtocol(requestConfig)) {
-                return urlToCheck;
+            else {
+                // if URL is just a domain name with no protocol then first check if 'https://' works
+                requestConfig.uri = `https://${url}`;
+                if (await UrlUtils.checkUrlWithProtocol(requestConfig)) {
+                    return requestConfig.uri;
+                }
+                // otherwise try with 'http://'
+                requestConfig.uri = `http://${url}`;
+                if (await UrlUtils.checkUrlWithProtocol(requestConfig)) {
+                    return requestConfig.uri;
+                }
             }
         }
-
-        // By doing nothing return undefined if we reach here
         return undefined;
     }
 
