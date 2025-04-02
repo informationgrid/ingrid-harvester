@@ -110,7 +110,7 @@ export class UrlUtils {
         }
         requestConfig.method = 'HEAD';
         requestConfig.resolveWithFullResponse = true;
-        requestConfig.timeout ??= 2000;
+        requestConfig.timeout ??= 4000;
 
         let found = false;
         try {
