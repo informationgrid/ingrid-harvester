@@ -57,7 +57,10 @@ export class PostgresUtils extends DatabaseUtils {
         this.configuration = PostgresUtils.fix(configuration);
 
         if (!PostgresUtils.pool) {
-            PostgresUtils.pool = new Pool(configuration);
+            PostgresUtils.pool = new Pool({
+                ...this.configuration,
+                idleTimeoutMillis: 300000 // 5min
+            });
         }
 
         this._bulkData = [];
