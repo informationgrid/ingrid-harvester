@@ -108,14 +108,15 @@ export class UrlUtils {
         if (generalConfig.allowAllUnauthorizedSSL) {
             requestConfig.rejectUnauthorized = false;
         }
+        requestConfig.method = 'HEAD';
+        requestConfig.resolveWithFullResponse = true;
+        requestConfig.timeout ??= 2000;
 
         let found = false;
         try {
-            let delegate = new RequestDelegate(MiscUtils.merge(requestConfig, { resolveWithFullResponse: true }));
+            let delegate = new RequestDelegate(requestConfig);
             let response: Response = await delegate.doRequest();
             found = response?.status === 200;
-            UrlUtils.cache[<string>requestConfig.uri] = found;
-            return found;
         }
         catch (err) {
             let message = err.message;
@@ -123,8 +124,9 @@ export class UrlUtils {
             if (!message.includes('ERR_TLS_CERT_ALTNAME_INVALID') && !message.includes('ENOTFOUND')) {
                 log.warn(`Error occured while testing URL '${requestConfig.uri}'. Original error message was: ${message}`);
             }
-            UrlUtils.cache[<string>requestConfig.uri] = false;
         }
+        UrlUtils.cache[<string>requestConfig.uri] = found;
+        return found;
     }
 
     /**
