@@ -24,7 +24,7 @@
         }
       }
     },
-    "abstract": {
+    "description": {
       "type": "text",
       "analyzer": "decomp_german",
       "fields": {
