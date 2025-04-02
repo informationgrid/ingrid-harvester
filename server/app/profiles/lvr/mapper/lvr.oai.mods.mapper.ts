@@ -92,7 +92,7 @@ export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {
     async getSource(): Promise<Source> {
         return {
             id: null,
-            displayURL: null
+            display_url: null
         };
     }
 

@@ -274,7 +274,7 @@
             "id": {
               "type": "keyword"
             },
-            "displayURL": {
+            "display_url": {
               "type": "keyword"
             }
           }

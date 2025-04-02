@@ -67,5 +67,5 @@ export type Relation = {
 
 export type Source = {
     id: string,
-    displayURL: string
+    display_url: string
 };

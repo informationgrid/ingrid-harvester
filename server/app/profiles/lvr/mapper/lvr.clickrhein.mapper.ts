@@ -156,7 +156,7 @@ export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
     async getSource(): Promise<Source> {
         return {
             id: 'ClickRhein',
-            displayURL: null
+            display_url: null
         };
     }
 

@@ -29,6 +29,7 @@ import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
 import { Media, Person, Relation, Source } from '../model/index.document';
+import { UrlUtils } from '../../../utils/url.utils';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
@@ -113,9 +114,12 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
     }
 
     async getSource(): Promise<Source> {
+        let requestConfig = {
+            uri: `https://www.kuladig.de/Objektansicht/${this.getIdentifier()}`
+        };
         return {
             id: 'KuLaDig',
-            displayURL: `https://www.kuladig.de/Objektansicht/${this.getIdentifier()}`
+            display_url: await UrlUtils.urlWithProtocolFor(requestConfig, this.baseMapper.getSettings().skipUrlCheckOnHarvest, true)
         };
     }
 
