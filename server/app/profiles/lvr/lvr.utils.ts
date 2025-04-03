@@ -44,5 +44,9 @@ export function substringAfterLast(s: string, delim: string) {
     if (delim == null) {
         return s;
     }
-    return s.substring(s.lastIndexOf(delim));
+    let lastIdx = s.lastIndexOf(delim);
+    if (lastIdx == -1) {
+      return '';
+    }
+    return s.substring(lastIdx + delim.length);
 }

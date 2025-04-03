@@ -167,7 +167,7 @@ export class OaiMapper extends BaseMapper {
                     source: conceptIdNode.getAttribute('lido:source'),
                     type: conceptIdNode.getAttribute('lido:type')
                 })),
-                terms: OaiMapper.select('./lido:subjectConcept/lido:term', subjectNode).map(termNode => termNode.textContent)
+                terms: OaiMapper.select('./lido:subjectConcept/lido:term[@xml:lang="de"]', subjectNode).map(termNode => termNode.textContent)
             }
         }));
         return subjects;
