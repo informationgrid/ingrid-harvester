@@ -119,7 +119,9 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         };
         return {
             id: 'KuLaDig',
-            display_url: await UrlUtils.urlWithProtocolFor(requestConfig, this.baseMapper.getSettings().skipUrlCheckOnHarvest, true)
+            // trust the URL creation here
+            // display_url: await UrlUtils.urlWithProtocolFor(requestConfig, this.baseMapper.getSettings().skipUrlCheckOnHarvest, true)
+            display_url: requestConfig.uri
         };
     }
 
