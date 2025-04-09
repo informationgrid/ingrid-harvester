@@ -21,18 +21,13 @@
  * ==================================================
  */
 
-import {Component, OnInit} from '@angular/core';
-import {MonitoringService} from '../monitoring.service';
-import {HarvesterService} from '../../harvester/harvester.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-
-import {Chart, registerables} from 'chart.js';
-import {Observable} from "rxjs";
-import {MatDialog} from "@angular/material/dialog";
-import {HttpClient} from "@angular/common/http";
-import {MonitoringUrlcheckDetailComponent} from "./monitoring-urlcheck-detail/monitoring-urlcheck-detail.component";
-import { urlCheckChart } from 'src/app/charts/reuseableChart';
-import { formatDateAndTime } from 'src/app/utils/dateUtils';
+import { urlCheckChart } from '../../charts/reuseableChart';
+import { Chart } from 'chart.js';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { MonitoringUrlcheckDetailComponent } from './monitoring-urlcheck-detail/monitoring-urlcheck-detail.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-monitoring-urlcheck',

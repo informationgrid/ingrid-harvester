@@ -42,6 +42,8 @@ import { PostgresAggregator } from './persistence/postgres.aggregator';
 
 const log = require('log4js').getLogger(__filename);
 
+export const INGRID_META_INDEX = 'ingrid_meta';
+
 export class ingridFactory extends ProfileFactory<CswMapper> {
 
     async init(): Promise<{ database: DatabaseUtils, elastic: ElasticsearchUtils }> {
@@ -54,12 +56,11 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
         }
 
         // create ingrid_meta index
-        const ingridMeta = 'ingrid_meta';
-        let isIngridMeta = await elastic.isIndexPresent(ingridMeta);
+        let isIngridMeta = await elastic.isIndexPresent(INGRID_META_INDEX);
         if (!isIngridMeta) {
             const mappings = require('./persistence/ingrid-meta-mapping.json');
             const settings = require('./persistence/ingrid-meta-settings.json');
-            await elastic.prepareIndexWithName(ingridMeta, mappings, settings);
+            await elastic.prepareIndexWithName(INGRID_META_INDEX, mappings, settings);
         }
         return null;
     }

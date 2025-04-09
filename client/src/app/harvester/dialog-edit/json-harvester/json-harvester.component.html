@@ -1,0 +1,62 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<form [formGroup]="form">
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Allgemeine JSON Einstellungen</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="flex-row gap-20 space-between">
+        <mat-form-field class="flex-80">
+          <mat-label>Provider URL</mat-label>
+          <input matInput formControlName="sourceURL" required>
+        </mat-form-field>
+        <mat-form-field class="flex-20">
+          <mat-label>ID-Eigenschaftsname</mat-label>
+          <input matInput formControlName="idProperty" required>
+        </mat-form-field>
+      </div>
+      <div>
+        <h4>Zusätzliche Eigenschaften:</h4>
+        @for (setting of settingsArray.controls; track $index) {
+          <div class="flex-row gap-10 align-center" [formGroup]="setting">
+            <mat-form-field class="flex-50">
+              <mat-label>Eigenschaft</mat-label>
+              <input matInput formControlName="key">
+            </mat-form-field>
+            <mat-form-field class="flex-50">
+              <mat-label>Wert</mat-label>
+              <input matInput formControlName="value">
+            </mat-form-field>
+            <button mat-icon-button color="warn" (click)="removeSetting($index)">
+              <mat-icon svgIcon="Delete" />
+            </button>
+          </div>
+        }
+        <button mat-raised-button color="primary" (click)="addSetting()">Eigenschaft hinzufügen</button>
+       </div>
+    </mat-card-content>
+  </mat-card>
+</form>

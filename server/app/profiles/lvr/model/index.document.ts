@@ -43,12 +43,6 @@ export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
     }
 };
 
-export type Keyword = {
-    id: string | string[],
-    term: string | string[],
-    thesaurus: string | string[]
-};
-
 export type Media = {
     type: string,
     url: string,

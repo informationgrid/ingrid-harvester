@@ -21,25 +21,21 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { Bucket } from '../../../persistence/postgres.utils';
 import { ConfigService } from '../../../services/config/ConfigService';
 import { CswImporter } from '../../../importer/csw/csw.importer';
-import { EsOperation } from '../../../persistence/elastic.utils';
+import { INGRID_META_INDEX } from '../profile.factory';
 import { RequestDelegate } from '../../../utils/http-request.utils';
 
 const log = require('log4js').getLogger(__filename);
 
 export class IngridCswImporter extends CswImporter {
 
-    private readonly INGRID_META = 'ingrid_meta';
-
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings, requestDelegate)
     }
 
-    protected async handlePostHarvesting() {
-        let meta = await this.elastic.search(this.INGRID_META,
+    protected async postHarvestingHandling() {
+        let meta = await this.elastic.search(INGRID_META_INDEX,
             {
                 "query": {
                     "term": {
@@ -53,15 +49,16 @@ export class IngridCswImporter extends CswImporter {
             let entry = meta.hits?.hits[0]._source;
 
             entry.lastIndexed = new Date(Date.now()).toISOString();
-            entry.plugdescription.provider = this.settings.provider?.split(",");
-            entry.plugdescription.dataType = this.settings.datatype?.split(",");
-            entry.plugdescription.partner = this.settings.partner?.split(",");
+            entry.plugdescription.dataSourceName = this.settings.dataSourceName;
+            entry.plugdescription.provider = this.settings.provider?.split(",")?.map(p => p.trim());
+            entry.plugdescription.dataType = this.settings.datatype?.split(",")?.map(d => d.trim());
+            entry.plugdescription.partner = this.settings.partner?.split(",")?.map(p => p.trim());
 
-            await this.elastic.update(this.INGRID_META, meta.hits?.hits[0]._id, entry, false);
+            await this.elastic.update(INGRID_META_INDEX, meta.hits?.hits[0]._id, entry, false);
         }
         else {
             let { prefix, index } = ConfigService.getGeneralSettings().elasticsearch;
-            let indexId = (prefix ?? '') + index;
+            let indexId = (prefix ?? '') + this.settings.catalogId;
             let entry = {
                 "plugId": this.settings.iPlugId,
                 "indexId": indexId,
@@ -69,101 +66,21 @@ export class IngridCswImporter extends CswImporter {
                 "lastIndexed": new Date(Date.now()).toISOString(),
                 "linkedIndex": indexId,
                 "plugdescription": {
-                    "provider": this.settings.provider?.split(","),
-                    "dataType": this.settings.datatype?.split(","),
-                    "partner": this.settings.partner?.split(","),
+                    "dataSourceName": this.settings.dataSourceName,
+                    "provider": this.settings.provider?.split(",")?.map(p => p.trim()),
+                    "dataType": this.settings.datatype?.split(",")?.map(d => d.trim()),
+                    "partner": this.settings.partner?.split(",")?.map(p => p.trim()),
                     "ranking": [
                         "score"
                     ],
                     "iPlugClass": "de.ingrid.iplug.csw.dsc.CswDscSearchPlug",
-                    "fields": []
+                    "fields": [],
+                    "proxyServiceURL": indexId,
+                    "useRemoteElasticsearch": true
                 },
                 "active": false
             }
-            await this.elastic.index(this.INGRID_META, entry, false);
+            await this.elastic.index(INGRID_META_INDEX, entry, false);
         }
-    }
-
-    protected async processBucket(bucket: Bucket<any>): Promise<EsOperation[]> {
-        let box: EsOperation[] = [];
-        // find primary document
-        let { primary_id, document, duplicates } = this.prioritize(bucket);
-        // data-service-coupling
-        for (let [id, service] of bucket.operatingServices) {
-            document = this.resolveCoupling(document, service);
-            box.push({ operation: 'delete', _id: id });
-        }
-        // deduplication
-        for (let [id, duplicate] of duplicates) {
-            document = this.deduplicate(document, duplicate);
-            box.push({ operation: 'delete', _id: id });
-        }
-        document = this.updateDataset(document);
-        box.push({ operation: 'index', _id: primary_id, document });
-        return box;
-    }
-
-    private prioritize(bucket: Bucket<any>): {
-        primary_id: string | number,
-        document: any,
-        duplicates: Map<string | number, any>
-    } {
-        let candidates = [];
-        let reserveCandidate: string | number;
-        for (let [id, document] of bucket.duplicates) {
-            if (document.extras.metadata.source.source_base?.endsWith('csw')) {
-                candidates.push(id);
-            }
-            if (id == bucket.anchor_id) {
-                reserveCandidate = id;
-            }
-        }
-        if (candidates.includes(reserveCandidate)) {
-            candidates = [reserveCandidate];
-        }
-        else {
-            candidates.push(reserveCandidate);
-        }
-
-        let document = bucket.duplicates.get(candidates[0]);
-        let duplicates = bucket.duplicates;
-        duplicates.delete(candidates[0]);
-        return { primary_id: candidates[0], document, duplicates };
-    }
-
-    /**
-     * Resolve data-service coupling. For a given dataset and a given service, merge the service's distributions into
-     * the dataset's.
-     *
-     * @param document the dataset whose distributions should be extended
-     * @param service the service whose distributions should be moved to the dataset
-     * @returns the augmented dataset
-     */
-    private resolveCoupling(document: any, service: any): any {
-        let distributions = {};
-        for (let dist of document.distributions) {
-            distributions[MiscUtils.createDistHash(dist)] = dist;
-        }
-        for (let dist of service.distributions) {
-            distributions[MiscUtils.createDistHash(dist)] = dist;
-        }
-        return { ...document, distributions: Object.values(distributions) };
-    }
-
-    /**
-     * Deduplicate datasets across the whole database. For a given dataset and a given duplicate, merge specified
-     * properties of the duplicate into the dataset.
-     *
-     * @param document
-     * @param duplicate
-     * @returns the augmented dataset
-     */
-    private deduplicate(document: any, duplicate: any): any {
-        return document;
-    }
-
-    private updateDataset(document: any): any {
-        log.debug(`Updating dataset ${document.identifier} (${document.extras.metadata.source.source_base})`);
-        return document;
     }
 }

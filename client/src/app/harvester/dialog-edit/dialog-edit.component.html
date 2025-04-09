@@ -41,6 +41,7 @@
                 <mat-option value="DCATAPPLU">DCATAPPLU</mat-option>
                 <mat-option value="EXCEL">EXCEL</mat-option>
                 <mat-option value="EXCEL_SPARSE">EXCEL (SPARSE)</mat-option>
+                <mat-option value="JSON">JSON</mat-option>
                 <mat-option value="KLD">KLD</mat-option>
                 <mat-option value="OAI">OAI</mat-option>
                 <mat-option value="SPARQL">SPARQL</mat-option>
@@ -241,6 +242,15 @@
           [rulesTemplate]="rules"
           class="flex-column">
         </app-excel-sparse-harvester>
+      }
+
+      @if (harvesterForm.get('type').value === 'JSON') {
+        <app-json-harvester
+          [form]="harvesterForm"
+          [model]="harvester"
+          [rulesTemplate]="rules"
+          class="flex-column">
+        </app-json-harvester>
       }
 
       @if (harvesterForm.get('type').value?.endsWith('KLD')) {
