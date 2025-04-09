@@ -545,7 +545,11 @@ export class CswImporter extends Importer {
                 requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
                 <GetCapabilities xmlns="${namespaces.CSW}"
                             xmlns:ows="${namespaces.OWS}"
-                            service="CSW"/>`;
+                            service="CSW">
+                    <ows:AcceptVersions>
+                        <ows:Version>2.0.2</ows:Version>
+                    </ows:AcceptVersions>
+                </GetCapabilities>`;
             }
         } else {
             requestConfig.qs = <CswParameters>{
