@@ -42,6 +42,7 @@
                 <mat-option value="DCATAPPLU">DCATAPPLU</mat-option>
                 <mat-option value="EXCEL">EXCEL</mat-option>
                 <mat-option value="EXCEL_SPARSE">EXCEL (SPARSE)</mat-option>
+                <mat-option value="JSON">JSON</mat-option>
                 <mat-option value="KLD">KLD</mat-option>
                 <mat-option value="OAI">OAI</mat-option>
                 <mat-option value="SPARQL">SPARQL</mat-option>
@@ -96,9 +97,8 @@
           <div class="flex-row gap-20 space-between">
             <mat-form-field class="flex-1">
               <mat-label>iPlugId</mat-label>
-              <input matInput formControlName="iPlugId" required>
+              <input matInput formControlName="iPlugId" [value]="harvesterForm.get('catalogId').value" required readonly>
             </mat-form-field>
-
             <mat-form-field class="flex-1">
               <mat-label>Partner</mat-label>
               <input matInput formControlName="partner">
@@ -245,6 +245,15 @@
           [rulesTemplate]="rules"
           class="flex-column">
         </app-excel-sparse-harvester>
+      }
+
+      @if (harvesterForm.get('type').value === 'JSON') {
+        <app-json-harvester
+          [form]="harvesterForm"
+          [model]="harvester"
+          [rulesTemplate]="rules"
+          class="flex-column">
+        </app-json-harvester>
       }
 
       @if (harvesterForm.get('type').value?.endsWith('KLD')) {

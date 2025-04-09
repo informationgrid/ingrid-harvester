@@ -155,6 +155,10 @@
         "t04_search.searchterm": {
             "type": "keyword",
             "store": true
+        },    
+        "t011_obj_geo.keyc_incl_w_dataset": {
+            "type": "keyword",
+            "store": true
         },
         "t011_obj_serv.type": {
             "type": "text",
@@ -165,6 +169,14 @@
             "store": true
         },
         "t011_obj_serv_version.version_value": {
+            "type": "keyword",
+            "store": true
+        },
+        "t011_obj_serv_op_para.optional": {
+            "type": "keyword",
+            "store": true
+        },
+        "t011_obj_serv_op_para.repeatability": {
             "type": "keyword",
             "store": true
         },

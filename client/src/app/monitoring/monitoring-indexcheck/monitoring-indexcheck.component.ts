@@ -21,18 +21,13 @@
  * ==================================================
  */
 
-import {Component, OnInit} from '@angular/core';
-import {MonitoringService} from '../monitoring.service';
-import {HarvesterService} from '../../harvester/harvester.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-
-import {Chart, registerables} from 'chart.js';
-import {Observable} from "rxjs";
-import {MatDialog} from "@angular/material/dialog";
-import {HttpClient} from "@angular/common/http";
-import {MonitoringIndexCheckDetailComponent} from "./monitoring-indexcheck-detail/monitoring-indexcheck-detail.component";
-import {MonitoringComponent} from "../monitoring.component";
-import { indexCheckChart } from 'src/app/charts/reuseableChart';
+import { indexCheckChart } from '../../charts/reuseableChart';
+import { Chart } from 'chart.js';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { MonitoringIndexCheckDetailComponent } from './monitoring-indexcheck-detail/monitoring-indexcheck-detail.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-monitoring-indexcheck',

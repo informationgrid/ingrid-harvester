@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import * as xpath from 'xpath';
 import * as MiscUtils from '../../utils/misc.utils';
 import * as ServiceUtils from '../../utils/service.utils';
 import * as XpathUtils from '../../utils/xpath.utils';
@@ -53,6 +52,7 @@ export class CswImporter extends Importer {
     protected domParser: DOMParser;
     protected profile: ProfileFactory<CswMapper>;
     protected settings: CswSettings;
+    protected getRecordsURL: string;
 
     // ServiceType#GetCapabilitiesURL -> { DatasetUUID -> typenames[] }
     private wfsFeatureTypeMap = new Map<string, { [key: string]: string[] }>();
@@ -77,13 +77,13 @@ export class CswImporter extends Importer {
         }
         else {
             const parseXml = (s: string) => this.domParser.parseFromString(s);
-            const select = <XpathUtils.XPathElementSelect>xpath.useNamespaces({ 'ogc': namespaces.OGC });
             try {
-                let recordFilterElem = select('/ogc:Filter/*', parseXml(this.settings.recordFilter), true);
+                let recordFilterElem = parseXml(this.settings.recordFilter).getElementsByTagName('ogc:Filter')[0];
+                let filterChildElem = XpathUtils.firstElementChild(recordFilterElem);
                 let filterElem = parseXml('<ogc:Filter/>').documentElement;
                 let contentElem = filterElem.appendChild(parseXml('<ogc:And/>').documentElement);
                 contentElem.appendChild(parseXml(newFilter));
-                contentElem.appendChild(recordFilterElem);
+                contentElem.appendChild(filterChildElem);
                 return filterElem.toString();
             }
             catch (e) {
@@ -153,7 +153,7 @@ export class CswImporter extends Importer {
                 }
                 await this.database.commitTransaction();
                 await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
-                await this.handlePostHarvesting();
+                await this.postHarvestingHandling();
                 observer.next(ImportResult.complete(this.summary));
             }
             catch (err) {
@@ -181,10 +181,17 @@ export class CswImporter extends Importer {
             let datasetFilter = '<ogc:PropertyIsEqualTo><ogc:PropertyName>Type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsEqualTo>';
             this.settings.recordFilter = this.appendFilter(datasetFilter);
         }
+        // obtain GetRecords URL from GetCapabilities
+        let getCapabilitiesConfig = this.createRequestConfig(null, 'GetCapabilities');
+        let getCapabilitiesDelegate = new RequestDelegate(getCapabilitiesConfig);
+        let getCapabilitiesResponse = await getCapabilitiesDelegate.doRequest();
+        let getCapabilitiesResponseDom = this.domParser.parseFromString(getCapabilitiesResponse);
+        this.getRecordsURL = CswMapper.select('./ows:OperationsMetadata/ows:Operation[@name="GetRecords"]/ows:DCP/ows:HTTP/ows:Post/@xlink:href', XpathUtils.firstElementChild(getCapabilitiesResponseDom), true)?.textContent;
+        if (!this.getRecordsURL) {
+            throw new Error(getCapabilitiesResponse);
+        }
         // collect number of totalRecords up front, so we can harvest concurrently
-        let hitsRequestConfig = CswImporter.createRequestConfig({
-            ...this.settings,
-            recordFilter: this.settings.recordFilter,
+        let hitsRequestConfig = this.createRequestConfig({
             resultType: 'hits',
             startPosition: 1,
             maxRecords: 1
@@ -203,7 +210,7 @@ export class CswImporter extends Importer {
         let delegates = [];
         // TODO this is still not correct?
         for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
-            let requestConfig = CswImporter.createRequestConfig({ ...this.settings, recordFilter: this.settings.recordFilter, startPosition });
+            let requestConfig = this.createRequestConfig({ startPosition });
             delegates.push(new RequestDelegate(requestConfig, CswImporter.createPaging({
                 startPosition: startPosition,
                 maxRecords: this.settings.maxRecords
@@ -229,13 +236,13 @@ export class CswImporter extends Importer {
         for (let i = 0; i < datasetIds.length; i+= this.settings.maxServices) {
             // add ID filter
             const chunk = datasetIds.slice(i, i + this.settings.maxServices);
-            let recordFilter = '<ogc:Filter><ogc:Or>';
+            let recordFilter = '<ogc:Filter>' + (chunk.length > 1 ? '<ogc:Or>' : '');
             for (let identifier of chunk) {
                 recordFilter += `<ogc:PropertyIsEqualTo><ogc:PropertyName>OperatesOn</ogc:PropertyName><ogc:Literal>${identifier}</ogc:Literal></ogc:PropertyIsEqualTo>\n`;
             }
-            recordFilter += '</ogc:Or></ogc:Filter>';
+            recordFilter +=  (chunk.length > 1 ? '</ogc:Or>' : '') + '</ogc:Filter>';
             delegates.push(new RequestDelegate(
-                CswImporter.createRequestConfig({ ...this.settings, recordFilter }),
+                this.createRequestConfig({ recordFilter }),
                 CswImporter.createPaging({ startPosition: this.settings.startPosition })
             ));
         }
@@ -386,23 +393,26 @@ export class CswImporter extends Importer {
         }
     }
 
-    protected async postHarvestingHandling(){
+    protected async postHarvestingHandling() {
         // For Profile specific Handling
     }
 
     async handleHarvest(delegate: RequestDelegate): Promise<void> {
         log.info('Requesting next records, starting at', delegate.getStartRecordIndex());
+        let harvestStart = Date.now();
         let response = await delegate.doRequest();
-        let harvestTime = new Date(Date.now());
+        let requestingTime = Math.floor((Date.now() - harvestStart) / 1000);
+        log.info(`Finished requesting batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, ${requestingTime.toString().padStart(3, ' ')}s`);
+        let processingStart = Date.now();
 
         let responseDom = this.domParser.parseFromString(response);
         let resultsNode = responseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
         if (resultsNode) {
             let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
             log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
-            let importedDocuments = await this.extractRecords(response, harvestTime);
+            let importedDocuments = await this.extractRecords(response, processingStart);
             await this.updateRecords(importedDocuments, this.generalInfo['catalog'].id);
-            let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
+            let processingTime = Math.floor((Date.now() - processingStart) / 1000);
             log.info(`Finished processing batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, ${processingTime.toString().padStart(3, ' ')}s`);
         }
         else {
@@ -490,7 +500,11 @@ export class CswImporter extends Importer {
         return new CswMapper(settings, record, harvestTime, summary, generalInfo);
     }
 
-    static createRequestConfig(settings: CswSettings, request = 'GetRecords'): RequestOptions {
+    protected createRequestConfig(additionalSettings: Partial<CswSettings> = null, request = 'GetRecords'): RequestOptions {
+        let settings = {
+            ...this.settings,
+            ...additionalSettings
+        }
         let requestConfig: RequestOptions = {
             method: settings.httpMethod || "GET",
             uri: settings.sourceURL,
@@ -503,6 +517,7 @@ export class CswImporter extends Importer {
 
         if (settings.httpMethod === "POST") {
             if (request === 'GetRecords') {
+                requestConfig.uri = this.getRecordsURL;
                 requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
                 <GetRecords xmlns="${namespaces.CSW}"
                             xmlns:gmd="${namespaces.GMD}"
@@ -526,8 +541,15 @@ export class CswImporter extends Importer {
                     </Query>
                 </GetRecords>`;
             }
-            else {
-                // TODO send GetCapabilities post request
+            else if (request == 'GetCapabilities') {
+                requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
+                <GetCapabilities xmlns="${namespaces.CSW}"
+                            xmlns:ows="${namespaces.OWS}"
+                            service="CSW">
+                    <ows:AcceptVersions>
+                        <ows:Version>2.0.2</ows:Version>
+                    </ows:AcceptVersions>
+                </GetCapabilities>`;
             }
         } else {
             requestConfig.qs = <CswParameters>{
@@ -547,6 +569,11 @@ export class CswImporter extends Importer {
             if (request === 'GetRecords' && settings.recordFilter) {
                 requestConfig.qs.constraint = settings.recordFilter;
             }
+            else if (request == 'GetCapabilities') {
+                requestConfig.qs ??= {};
+                requestConfig.qs['service'] ??= 'CSW';
+                requestConfig.qs['request'] ??= 'GetCapabilities';
+            }
         }
 
         return requestConfig;
@@ -562,8 +589,5 @@ export class CswImporter extends Importer {
 
     getSummary(): Summary {
         return this.summary;
-    }
-
-    protected async handlePostHarvesting() {
     }
 }

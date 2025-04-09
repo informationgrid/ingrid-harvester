@@ -66,7 +66,8 @@ export class DialogEditComponent implements OnInit {
       type: [{value: harvester.type, disabled: harvester.id !== -1}, Validators.required],
       description: [harvester.description, Validators.required],
       priority: [harvester.priority],
-      iPlugId: [harvester.iPlugId],
+      // iPlugId: [harvester.iPlugId],
+      iPlugId: [harvester.catalogId], // use harvester catalogId also as iPlugId
       partner: [harvester.partner],
       provider: [harvester.provider],
       datatype: [harvester.datatype],
@@ -94,6 +95,8 @@ export class DialogEditComponent implements OnInit {
       ...this.harvester,
       ...value
     };
+    // remove temporary properties (starting with '_')
+    Object.keys(result).filter(key => key.startsWith('_')).forEach(key => delete result[key]);  
     this.dialogRef.close(result);
   }
 

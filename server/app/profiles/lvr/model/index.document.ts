@@ -39,14 +39,8 @@ export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
         relations: Relation[],
         licenses: License[],
         vector: object,
-        source: string
+        source: Source
     }
-};
-
-export type Keyword = {
-    id: string | string[],
-    term: string | string[],
-    thesaurus: string | string[]
 };
 
 export type Media = {
@@ -69,4 +63,9 @@ export type Person = {
 export type Relation = {
     id: string,
     type: string
+};
+
+export type Source = {
+    id: string,
+    display_url: string
 };

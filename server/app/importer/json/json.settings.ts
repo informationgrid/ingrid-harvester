@@ -21,32 +21,9 @@
  * ==================================================
  */
 
-import { LvrIndexDocument } from './model/index.document';
+import { ImporterSettings } from '../../importer.settings';
 
-export function createEsId(document: LvrIndexDocument): string {
-    return document.id;
-}
-
-export function substringBeforeLast(s: string, delim: string) {
-    if (s == null) {
-        return null;
-    }
-    if (delim == null) {
-        return s;
-    }
-    return s.substring(0, s.lastIndexOf(delim));
-}
-
-export function substringAfterLast(s: string, delim: string) {
-    if (s == null) {
-        return null;
-    }
-    if (delim == null) {
-        return s;
-    }
-    let lastIdx = s.lastIndexOf(delim);
-    if (lastIdx == -1) {
-      return '';
-    }
-    return s.substring(lastIdx + delim.length);
-}
+export type JsonSettings = {
+    idProperty: string,
+    additionalSettings: Record<string, string>
+} & ImporterSettings;

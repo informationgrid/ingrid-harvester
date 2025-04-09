@@ -6,7 +6,7 @@
  * They are all identified by the `anchor_id` which is the id of the "original" dataset
  */
 
--- get all datasets of a given source, and all their duplicates from other sources (determined by dataset->>'plan_name')
+-- get all datasets of a given source, and all their duplicates from other sources
 (
     SELECT
         anchor.id AS anchor_id,
@@ -21,11 +21,8 @@
     FROM public.record AS anchor
     LEFT JOIN public.record AS secondary
     ON (
-            anchor.dataset->>'plan_name' = secondary.dataset->>'plan_name'
-            OR (
-                anchor.identifier = secondary.identifier
-                AND anchor.collection_id = secondary.collection_id
-            )
+            anchor.identifier = secondary.identifier
+            AND anchor.collection_id = secondary.collection_id
         )
         AND (
             anchor.source != secondary.source
@@ -53,6 +50,25 @@ UNION
     ON ds.identifier = coupling.dataset_identifier
     LEFT JOIN public.record AS service
     ON coupling.service_id = service.id::varchar(255)
+    WHERE
+        ds.source = $1
+)
+UNION
+-- get all datasets for the services of a given source
+(
+    SELECT
+        coupling.service_id::integer AS anchor_id,
+        ds.id AS id,-- ????
+        ds.source AS source,
+        ds.dataset AS dataset,
+        ds.collection_id AS catalog_id,
+        'dataset' AS service_type,
+        ds.created_on AS issued,
+        ds.last_modified AS modified,
+        ds.deleted_on AS deleted
+    FROM public.coupling AS coupling
+    LEFT JOIN public.record AS ds
+    ON coupling.dataset_identifier = ds.identifier
     WHERE
         ds.source = $1
 )

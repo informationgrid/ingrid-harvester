@@ -24,8 +24,10 @@
 import { Harvester } from '@shared/harvester';
 import { Importer } from '../../../importer/importer';
 import { ImporterFactory } from '../../../importer/importer.factory';
+import { JsonSettings } from '../../../importer/json/json.settings';
 import { KldImporter } from '../../../importer/kld/kld.importer';
 import { KldSettings } from '../../../importer/kld/kld.settings';
+import { LvrClickRheinImporter } from './lvr.clickrhein.importer';
 import { OaiImporter } from '../../../importer/oai/oai.importer';
 import { OaiSettings } from '../../../importer/oai/oai.settings';
 
@@ -36,11 +38,14 @@ export class LvrImporterFactory extends ImporterFactory {
     public async get(config: Harvester): Promise<Importer> {
         let importer: Importer;
         switch (config.type) {
-            case 'OAI':
-                importer = new OaiImporter(config as OaiSettings);
+            case 'JSON':
+                importer = new LvrClickRheinImporter(config as JsonSettings);
                 break;
             case 'KLD':
                 importer = new KldImporter(config as KldSettings);
+                break;
+            case 'OAI':
+                importer = new OaiImporter(config as OaiSettings);
                 break;
             default: {
                 log.error('Importer not found: ' + config.type);

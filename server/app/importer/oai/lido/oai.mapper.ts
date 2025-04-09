@@ -42,7 +42,9 @@ export class OaiMapper extends BaseMapper {
     static select = <XPathElementSelect>xpath.useNamespaces(oaiXPaths.lido.prefixMap);
 
     static text(path: string, parent: Node): string {
-        return this.select(path.replace(/\/(?!@)/g, '/lido:'), parent, true)?.textContent;
+        path = path.replace(/\/@/g, '/@lido:');
+        path = path.replace(/\/(?!@)/g, '/lido:');
+        return OaiMapper.select(path, parent, true)?.textContent;
     }
 
     log = getLogger();
@@ -165,7 +167,7 @@ export class OaiMapper extends BaseMapper {
                     source: conceptIdNode.getAttribute('lido:source'),
                     type: conceptIdNode.getAttribute('lido:type')
                 })),
-                terms: OaiMapper.select('./lido:subjectConcept/lido:term', subjectNode).map(termNode => termNode.textContent)
+                terms: OaiMapper.select('./lido:subjectConcept/lido:term[@xml:lang="de"]', subjectNode).map(termNode => termNode.textContent)
             }
         }));
         return subjects;
@@ -182,23 +184,23 @@ export class OaiMapper extends BaseMapper {
     getRecord(): Record {
         let recordNode = OaiMapper.select('./lido:administrativeMetadata/lido:recordWrap', this.record, true);
         return {
-            ids: OaiMapper.select('./lido:recordID', this.record).map(idNode => ({
+            ids: OaiMapper.select('./lido:recordID', recordNode).map(idNode => ({
                 id: idNode.textContent,
                 source: idNode.getAttribute('lido:source'),
                 type: idNode.getAttribute('lido:type')
             })),
-            info: OaiMapper.select('./lido:recordInfoSet', this.record).map(infoNode => ({
-                created: normalizeDateTime(OaiMapper.text('./recordMetadataDate[lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/created"]', infoNode)),
+            infos: OaiMapper.select('./lido:recordInfoSet', recordNode).map(infoNode => ({
+                created: normalizeDateTime(OaiMapper.select('./lido:recordMetadataDate[@lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/created"]', infoNode, true)?.textContent),
                 link: OaiMapper.text('./recordInfoLink', infoNode),
-                modified: normalizeDateTime(OaiMapper.text('./recordMetadataDate[lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/modified"]', infoNode)),
+                modified: normalizeDateTime(OaiMapper.select('./lido:recordMetadataDate[@lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/modified"]', infoNode, true)?.textContent),
                 type: OaiMapper.text('./@type', infoNode)
             })),
-            rights: OaiMapper.select('./lido:recordSource/rightsHolder', this.record).map(rightsNode => ({
+            rights: OaiMapper.select('./lido:recordSource/rightsHolder', recordNode).map(rightsNode => ({
                 holder: OaiMapper.text('./legalBodyName/appellationValue', rightsNode),
                 licenseName: OaiMapper.text('./legalBodyName/', rightsNode),
                 licenseURL: OaiMapper.text('./legalBodyWeblink', rightsNode)
             })),
-            sources: OaiMapper.select('./lido:recordSource', this.record).map(sourceNode => ({
+            sources: OaiMapper.select('./lido:recordSource', recordNode).map(sourceNode => ({
                 name: OaiMapper.text('./legalBodyName/appellationValue', sourceNode),
                 url: OaiMapper.text('./legalBodyWeblink', sourceNode),
             })),
