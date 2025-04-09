@@ -27,6 +27,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Harvester } from '@shared/harvester';
 import { AddOrEditCatalogComponent } from '../../config/config-catalogs/add-or-edit-catalog/add-or-edit-catalog.component';
 import { ConfigService } from '../../config/config.service';
+import {ContextHelpService} from "../../services/contextHelp.service";
 
 @Component({
   selector: 'app-dialog-edit',
@@ -45,6 +46,7 @@ export class DialogEditComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public harvester: Harvester,
               public dialogRef: MatDialogRef<DialogEditComponent>,
+              private contextHelpService: ContextHelpService,
               private formBuilder: UntypedFormBuilder,
               private configService: ConfigService) {
       if (harvester.id !== -1) {
@@ -108,5 +110,11 @@ export class DialogEditComponent implements OnInit {
     if (field.value !== text.toLowerCase()) {
       field.setValue(text.toLowerCase());
     }
+  }
+
+  async getContextHelp(name: string) {
+    await this.contextHelpService.get(name).subscribe((markdownContent) => {
+      console.log("markdownContent", markdownContent)
+    });
   }
 }
