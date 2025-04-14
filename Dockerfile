@@ -39,18 +39,12 @@ RUN npm run prod
 
 
 #
-# IMAGE: init
-#
-FROM building5/dumb-init:1.2.1 AS init
-
-
-#
 # IMAGE: final
 #
 FROM node:20.18.2-alpine3.21 AS final
 
-# copy init
-COPY --from=init /dumb-init /usr/local/bin/
+# copy dumb-init
+COPY --from=building5/dumb-init:1.2.1 /dumb-init /usr/local/bin/
 
 # install production dependencies (also: remove large, unused, and not-asked-for-at-all ExcelJS map files)
 WORKDIR /opt/ingrid/harvester/server
