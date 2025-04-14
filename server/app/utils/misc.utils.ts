@@ -239,3 +239,27 @@ export function isMaybeDownloadUrl(url: string): boolean {
     let ext = getFileExtension(url);
     return ['jpeg', 'jpg', 'pdf', 'zip'].includes(ext) || url.toLowerCase().indexOf('service=wfs') > -1;
 }
+
+export function substringBeforeLast(s: string, delim: string) {
+    if (s == null) {
+        return null;
+    }
+    if (delim == null) {
+        return s;
+    }
+    return s.substring(0, s.lastIndexOf(delim));
+}
+
+export function substringAfterLast(s: string, delim: string) {
+    if (s == null) {
+        return null;
+    }
+    if (delim == null) {
+        return s;
+    }
+    let lastIdx = s.lastIndexOf(delim);
+    if (lastIdx == -1) {
+      return '';
+    }
+    return s.substring(lastIdx + delim.length);
+}

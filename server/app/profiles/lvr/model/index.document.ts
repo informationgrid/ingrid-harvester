@@ -44,7 +44,7 @@ export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
 };
 
 export type Media = {
-    type: string,
+    type: 'image' | 'audio' | 'video' | 'document' | '',//string,
     url: string,
     thumbnail?: string,
     description: string

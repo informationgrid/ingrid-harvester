@@ -199,6 +199,7 @@ export class KldMapper extends BaseMapper {
 
     private mapDocument(document: Document): Media {
         return {
+            // @ts-expect-error MediaType ensures that Media.type will be correctly typed
             type: this.getEnumKey(MediaType, document.Medientyp).toLowerCase(),
             url: getDocumentUrl(this.takeFirstNonEmpty(document, ['DownloadToken', 'Thumbnail3Token', 'Thumbnail2Token', 'Thumbnail1Token'])),
             thumbnail: getDocumentUrl(this.takeFirstNonEmpty(document, ['Thumbnail2Token', 'Thumbnail3Token', 'Thumbnail1Token'])),

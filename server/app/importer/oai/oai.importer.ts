@@ -129,7 +129,7 @@ export class OaiImporter extends Importer {
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
             let header = records[i].getElementsByTagName('header').item(0);
-            const uuid = (xpath.useNamespaces(this.xpaths.prefixMap)(this.xpaths.idElem, header, true) as Node)?.textContent;
+            const uuid = MiscUtils.substringAfterLast((xpath.useNamespaces(this.xpaths.prefixMap)(this.xpaths.idElem, header, true) as Node)?.textContent, ':');
 
             let isDeleted: boolean = header.attributes.getNamedItem('status')?.textContent == 'deleted';
             if (!this.filterUtils.isIdAllowed(uuid) || isDeleted) {

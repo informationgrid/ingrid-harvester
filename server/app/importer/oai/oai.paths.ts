@@ -49,12 +49,13 @@ const lido: OaiXPaths = {
 
 const mods: OaiXPaths = {
     prefixMap: {
+        'mods': namespaces.MODS,
         'oai': namespaces.OAI,
-        'mods': namespaces.MODS
+        'xlink': namespaces.XLINK
     },
     nsPrefix: namespaces.MODS,
     mdRoot: 'mods',
-    idElem: './mods:identifier[@type="citekey"]'
+    idElem: './oai:identifier[@type="citekey"]|./oai:identifier'
 };
 
 export const oaiXPaths: { [key: string]: OaiXPaths } = {

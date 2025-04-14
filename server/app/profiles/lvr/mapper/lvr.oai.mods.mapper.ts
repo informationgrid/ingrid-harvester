@@ -88,11 +88,10 @@ export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {
         return null;
     }
 
-    // TODO
     async getSource(): Promise<Source> {
         return {
-            id: null,
-            display_url: null
+            id: 'RheinPublika',
+            display_url: OaiMapper.select('./mods:identifier[@type="uri"]', this.baseMapper.record, true)?.textContent
         };
     }
 

@@ -53,7 +53,7 @@ export class OaiMapper extends BaseMapper {
     log = getLogger();
 
     private readonly header: Element;
-    private readonly record: Element;
+    public readonly record: Element;
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
@@ -82,8 +82,10 @@ export class OaiMapper extends BaseMapper {
     }
 
     getDescriptions() {
-        let abstractNodes: Element[] = this.select('./mods:abstract[string-length() > 0]');
-        return abstractNodes?.map(node => node.textContent);
+        // let abstractNodes: Element[] = this.select('./mods:abstract[string-length() > 0]');
+        // return abstractNodes?.map(node => node.textContent);
+        let subTitleNodes: Element[] = this.select('./mods:titleInfo/mods:subTitle[string-length() > 0]');
+         return subTitleNodes?.map(node => node.textContent);
     }
 
     // TODO
@@ -119,7 +121,7 @@ export class OaiMapper extends BaseMapper {
     }
 
     getRelations(): Relation[] {
-        let relatedItemNodes = this.select('relatedItem');
+        let relatedItemNodes = this.select('./mods:relatedItem');
         let relations = relatedItemNodes.map(node => ({
             id: node.getAttribute('xlink:href'),
             type: node.getAttribute('type')
@@ -136,7 +138,7 @@ export class OaiMapper extends BaseMapper {
     getNames(): Person[] {
         let personNodes: Element[] = this.select('./mods:name');
         let persons = personNodes.map(node => ({
-            type: node.getAttribute('oai:type'),
+            type: node.getAttribute('type') ?? node.getAttribute('oai:type'),
             // role: OaiMapper.text('./role/roleTerm[type="text"]', node),
             role: OaiMapper.select('./mods:role/mods:roleTerm[@type="code"]', node, true)?.textContent,
             name: {
@@ -149,11 +151,21 @@ export class OaiMapper extends BaseMapper {
     }
 
     getLocations(): Media[] {
-        let locationUrlNodes: Element[] = this.select('./mods:location/mods:url');
-        let media = locationUrlNodes.map(node => ({
-            type: node.getAttribute('access'),
-            url: node.textContent,
-            description: node.getAttribute('access')
+        const getMediaType = (obj: string) => {
+            // TODO extend ?
+            if (obj?.includes('MCRZipServlet') || obj.includes('MCRFileNodeServlet')) {
+                return 'document' as const;
+            }
+            return null;
+        };
+        let locationNodes: Element[] = this.select('./mods:location');
+        let media = locationNodes.map(location => ({
+            type: getMediaType(OaiMapper.text('./url[@access="raw object"]', location)),
+            // TODO decide which one
+            url: OaiMapper.text('./url[@access="object in context"]', location),
+            // url: OaiMapper.text('./url[@access="raw object"]', location),
+            description: '',
+            thumbnail: OaiMapper.text('./url[@access="preview"]', location)
         }));
         return media;
     }
@@ -163,7 +175,7 @@ export class OaiMapper extends BaseMapper {
         let licenses = accessConditionNodes.map(node => ({
             id: null,
             title: node.getAttribute('type'),
-            url: node.getAttribute('href')
+            url: node.getAttribute('xlink:href')
         }));
         return licenses;
     }

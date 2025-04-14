@@ -30,7 +30,7 @@ import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import { Keyword } from '../../../model/ingrid.index.document';
 import { LvrMapper } from './lvr.mapper';
 import { Media, Person, Relation, Source } from '../model/index.document';
-import { substringAfterLast, substringBeforeLast } from '../lvr.utils';
+import * as MiscUtils from '../../../utils/misc.utils';
 import { UrlUtils } from '../../../utils/url.utils';
 
 const dayjs = require('dayjs');
@@ -101,9 +101,9 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         this.baseMapper.getSubjects().forEach(subject => {
             let url = subject.keyword.conceptIds.map(conceptId => conceptId.id)?.[0]
             keywords.push({
-                id: substringAfterLast(url, '/'),
+                id: MiscUtils.substringAfterLast(url, '/'),
                 term: subject.keyword.terms?.[0],
-                source: substringBeforeLast(url, '/')
+                source: MiscUtils.substringBeforeLast(url, '/')
             });
         });
         return keywords;
