@@ -24,7 +24,7 @@
 <form [formGroup]="form">
 
   <mat-card>
-    <mat-card-header>
+    <mat-card-header contextHelp="source_type">
       <mat-card-title>CSW Einstellungen</mat-card-title>
     </mat-card-header>
     <mat-card-content>
@@ -43,7 +43,7 @@
       </div>
       <div class="flex-row flex-col-mobile gap-20 space-between">
         <mat-form-field class="flex-1 ">
-          <mat-label>Anzahl paralleler Abfragen</mat-label>
+          <mat-label contextHelp="source_type" >Anzahl paralleler Abfragen</mat-label>
           <input matInput type="number" min="1" formControlName="maxConcurrent" required>
         </mat-form-field>
         <mat-form-field class="flex-1">
@@ -83,25 +83,25 @@
       </div>
     </mat-card-content>
   </mat-card>
-  
+
   <mat-card>
     <mat-card-header>
       <mat-card-title>Filter und Regeln</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <ng-container class="flex-col" [ngTemplateOutlet]="rulesTemplate"></ng-container>
-      
+
       <div class="flex-col">
         <mat-form-field>
           <mat-label>Record Filter</mat-label>
           <textarea matInput rows="6" class="code" formControlName="recordFilter"></textarea>
         </mat-form-field>
-        
-        <app-chip-list 
+
+        <app-chip-list
         [list]="model.eitherKeywords"
         placeholder="Either keywords"
-        (update)="model.eitherKeywords = $event"></app-chip-list>  
-        
+        (update)="model.eitherKeywords = $event"></app-chip-list>
+
       </div>
     </mat-card-content>
   </mat-card>

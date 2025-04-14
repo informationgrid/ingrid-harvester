@@ -30,7 +30,6 @@
         <mat-card-content>
           <div class="grid grid-cols-12 gap-20">
             <mat-form-field class="col-span-3 col-span-6-mobile">
-              <mat-icon matSuffix svgIcon="info" (click)="getContextHelp('source_type')" />
               <mat-label>Typ</mat-label>
               <mat-select formControlName="type" required>
                 <mat-option value="CKAN">CKAN</mat-option>
@@ -54,7 +53,6 @@
             </mat-form-field>
 
             <mat-form-field class="col-span-3 col-span-6-mobile">
-              <mat-icon matSuffix svgIcon="info" (click)="getContextHelp('catalogId')" />
               <mat-label>Katalog-Identifier</mat-label>
               <input type="text"
                 placeholder="Eingeben oder auswählen"
@@ -69,13 +67,11 @@
             </mat-form-field>
 
             <mat-form-field class="col-span-4 col-span-9-mobile">
-              <mat-icon matSuffix svgIcon="info" (click)="getContextHelp('description')" />
               <mat-label>Beschreibung</mat-label>
               <input matInput formControlName="description" required>
             </mat-form-field>
 
             <mat-form-field class="col-span-2 col-span-3-mobile">
-              <mat-icon matSuffix svgIcon="info" (click)="getContextHelp('priority')" />
               <mat-label>Priorität</mat-label>
               <input matInput type="number" formControlName="priority">
             </mat-form-field>

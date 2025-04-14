@@ -61,6 +61,7 @@ import { DialogLogComponent } from './dialog-log/dialog-log.component';
 import { DialogSchedulerComponent } from './dialog-scheduler/dialog-scheduler.component';
 import { HarvesterComponent } from './harvester.component';
 import { ImporterDetailComponent } from './importer-detail/importer-detail.component';
+import {CardHelpDirective} from "../shared/context-help/card-help.directive";
 
 const harvesterRoutes: Routes = [
   {
@@ -111,7 +112,8 @@ const harvesterRoutes: Routes = [
         MatBadgeModule,
         ScrollingModule,
         CronjobFormFieldComponent,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        CardHelpDirective
     ],
     exports: [
         HarvesterComponent
