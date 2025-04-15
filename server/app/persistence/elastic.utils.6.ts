@@ -220,38 +220,6 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
             });
     }
 
-    async bulk(bulkOperations: any[]): Promise<BulkResponse> {
-        try {
-            let profile = ProfileFactoryLoader.get();
-            let indexName = this.addPrefixIfNotExists(this.indexName) as string;
-            let isPresent = await this.isIndexPresent(indexName);
-            if (!isPresent){
-                await this.prepareIndex(profile.getIndexMappings(), profile.getIndexSettings())
-            }
-            let { body: response } = await this.client.bulk({
-                index: this.indexName,
-                type: this.config.indexType || 'base',
-                body: bulkOperations
-            });
-            if (response.errors) {
-                response.items.forEach(item => {
-                    let err = item.index?.error || item.update?.error;
-                    if (err) {
-                        this.handleError(`Error during indexing on index '${this.indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
-                    }
-                });
-            }
-            log.debug('Bulk finished of #operations + #docs: ' + bulkOperations.length);
-            return {
-                queued: false,
-                response: response
-            };
-        }
-        catch (e) {
-            this.handleError('Error during bulk #operations + #docs: ' + bulkOperations.length, e);
-        }
-    }
-
     async bulkWithIndexName(index: string, type, data): Promise<BulkResponse> {
         index = this.addPrefixIfNotExists(index) as string;
         try {

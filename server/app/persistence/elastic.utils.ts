@@ -122,8 +122,6 @@ export abstract class ElasticsearchUtils {
      *
      * @param {object} data
      */
-    abstract bulk(data: object): Promise<BulkResponse>;
-
     abstract bulkWithIndexName(index: string, type, data): Promise<BulkResponse>;
 
     /**
