@@ -1,5 +1,5 @@
 ---
-id: csw_settings
+id: harvester_csw_settings
 profile: ingrid
 title: CSW Einstellungen
 ---
@@ -36,14 +36,14 @@ Bestimmt das Verfahren zur Datenerfassung:
 # Max. Dienste pro Anfrage
 
 Nur im Modus *Separat* relevant. Gibt die maximale Anzahl an Diensten an, die in einer Abfrage verarbeitet werden.
+
 **Beispielwert:** `30`
 
 # WFS/WMS auflösen (Pflichtfeld)
 
 Steuert, ob enthaltene WFS- oder WMS-Dienste aufgelöst werden.
 
-**Beispielwert:** 
-`ja (langsam)`
+**Beispielwert:** `ja (langsam)`
 
 # Toleranz: Polygon vereinfachen	
 
@@ -55,5 +55,4 @@ Optional. Ermöglicht die Vereinfachung sehr detaillierter Geometrien, um die Da
 
 Filteroption für Datensätze nach Planungsstatus. Relevanz insbesondere für Profile mit planungsbezogenen Anforderungen.
 
-**Beispielwert:**
-`festgestellt`
+**Beispielwert:** `festgestellt`

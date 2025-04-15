@@ -9,7 +9,7 @@ import {ContextHelpButtonComponent} from "./context-help-button/context-help-but
 import {ContextHelpService} from "../../services/contextHelp.service";
 
 @Directive({
-  selector: 'mat-card-header[contextHelp],mat-label[contextHelp]',
+  selector: 'mat-card-header[contextHelp],mat-label[contextHelp],h2[contextHelp],div[contextHelp]',
   standalone: true
 })
 export class ContextHelpDirective implements OnInit {
@@ -30,17 +30,28 @@ export class ContextHelpDirective implements OnInit {
 
 
     if (element.tagName === 'MAT-CARD-HEADER') {
-      // Handle card header help icon injection
       element.appendChild(ref.location.nativeElement);
       const cardTitle = element.querySelector('mat-card-title');
       if (this.helpKey && cardTitle) {
         cardTitle.addEventListener('click', () => this.showHelp());
         cardTitle.classList.add('title-with-context-help')
       }
+    } else if (element.tagName === 'DIV') {
+      element.appendChild(ref.location.nativeElement);
+      if (this.helpKey) {
+        element.addEventListener('click', () => this.showHelp());
+        element.classList.add('title-with-context-help')
+      }
+    } else if (element.tagName === 'H2') {
+      element.parentNode.insertBefore(ref.location.nativeElement, element);
+      if (this.helpKey) {
+        element.addEventListener('click', () => this.showHelp());
+        element.classList.add('title-with-context-help')
+      }
     } else if (element.tagName === 'MAT-LABEL') {
-      // Handle form field help icon injection
       element.appendChild(ref.location.nativeElement);
     }
+
   }
 
   showHelp() {

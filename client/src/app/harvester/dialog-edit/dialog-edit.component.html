@@ -21,7 +21,10 @@
     ==================================================
 -->
 
-<h2 mat-dialog-title>{{dialogTitle}}</h2>
+<div contextHelp="harvester_type_settings">
+  <h2 mat-dialog-title >{{dialogTitle}}</h2>
+</div>
+
 
 <mat-dialog-content>
   <div class="form-wrapper">
@@ -172,7 +175,7 @@
       }
 
       <mat-card>
-        <mat-card-header>
+        <mat-card-header contextHelp="harvester_general_settings">
           <mat-card-title>Allgemeine Einstellungen</mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -334,7 +337,7 @@
       </ng-template>
 
       <mat-card>
-        <mat-card-header>
+        <mat-card-header contextHelp="harvester_extra_settings">
           <mat-card-title>Weitere Einstellungen</mat-card-title>
         </mat-card-header>
         <mat-card-content>
