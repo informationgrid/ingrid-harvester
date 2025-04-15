@@ -25,6 +25,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Harvester } from '@shared/harvester';
+import { Subject, takeUntil } from 'rxjs';
 import { AddOrEditCatalogComponent } from '../../config/config-catalogs/add-or-edit-catalog/add-or-edit-catalog.component';
 import { ConfigService } from '../../config/config.service';
 
@@ -43,6 +44,8 @@ export class DialogEditComponent implements OnInit {
 
   catalogs = this.configService.getCatalogs();
 
+  private ngUnsubscribe = new Subject<void>();
+
   constructor(@Inject(MAT_DIALOG_DATA) public harvester: Harvester,
               public dialogRef: MatDialogRef<DialogEditComponent>,
               private formBuilder: UntypedFormBuilder,
@@ -54,8 +57,16 @@ export class DialogEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.configService.getProfileName().subscribe(data => {
-      this.profile = data;
+    this.configService.getProfileName()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(data => {
+        this.profile = data;
+    });
+    // use harvester catalogId also as iPlugId
+    this.harvesterForm.get('catalogId')?.valueChanges
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(value => {
+        this.harvesterForm.patchValue({ iPlugId: value });
     });
   }
 
@@ -64,8 +75,7 @@ export class DialogEditComponent implements OnInit {
       type: [{value: harvester.type, disabled: harvester.id !== -1}, Validators.required],
       description: [harvester.description, Validators.required],
       priority: [harvester.priority],
-      // iPlugId: [harvester.iPlugId],
-      iPlugId: [harvester.catalogId], // use harvester catalogId also as iPlugId
+      iPlugId: [harvester.iPlugId],
       partner: [harvester.partner],
       provider: [harvester.provider],
       datatype: [harvester.datatype],
@@ -111,5 +121,10 @@ export class DialogEditComponent implements OnInit {
     if (field.value !== text.toLowerCase()) {
       field.setValue(text.toLowerCase());
     }
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }
