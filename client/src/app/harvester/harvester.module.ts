@@ -61,7 +61,7 @@ import { DialogLogComponent } from './dialog-log/dialog-log.component';
 import { DialogSchedulerComponent } from './dialog-scheduler/dialog-scheduler.component';
 import { HarvesterComponent } from './harvester.component';
 import { ImporterDetailComponent } from './importer-detail/importer-detail.component';
-import {CardHelpDirective} from "../shared/context-help/card-help.directive";
+import {ContextHelpDirective} from "../shared/context-help/context-help.directive";
 
 const harvesterRoutes: Routes = [
   {
@@ -113,7 +113,7 @@ const harvesterRoutes: Routes = [
         ScrollingModule,
         CronjobFormFieldComponent,
         MatAutocompleteModule,
-        CardHelpDirective
+        ContextHelpDirective
     ],
     exports: [
         HarvesterComponent

@@ -2,13 +2,15 @@ import {Component, Input} from '@angular/core';
 import {MatIcon} from "@angular/material/icon";
 import {MatPrefix} from "@angular/material/form-field";
 import {ContextHelpService} from "../../../services/contextHelp.service";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-context-help-button',
   standalone: true,
   imports: [
     MatIcon,
-    MatPrefix
+    MatPrefix,
+    MatTooltip
   ],
   templateUrl: './context-help-button.component.html',
   styleUrl: './context-help-button.component.scss'
@@ -20,8 +22,7 @@ export class ContextHelpButtonComponent {
   }
 
   showHelp() {
-    this.contextHelpService.get(this.helpKey).subscribe((markdownContent) => {
-      console.log("markdownContent", markdownContent)
-    });
+    this.contextHelpService.show(this.helpKey)
+
   }
 }

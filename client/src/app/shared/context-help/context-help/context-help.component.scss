@@ -1,0 +1,53 @@
+@use "src/variables" as vars;
+
+.mat-mdc-dialog-content {
+  resize: both;
+  padding-top: 0;
+  color: vars.$ige-text-color;
+  white-space: normal !important;
+  min-width: 250px;
+  p {
+    color: vars.$ige-text-color;
+  }
+}
+
+  .initialWidth {
+    width: 800px;
+  }
+
+  .context-help-title-wrapper {
+    padding: 8px 8px 20px;
+    cursor: move;
+
+    h1 {
+      color: vars.$ige-primary;
+      margin: unset;
+      padding: unset;
+      font-size: 16px;
+      font-weight: normal;
+
+      &:before {
+        display: none;
+      }
+    }
+  }
+
+
+  .context-help-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #f3f3f3;
+    svg {
+      fill: rgb(0 0 0 / 60%);
+    }
+  }
+  .info-close-icon {
+    svg {
+      fill: rgb(0 0 0 / 0%);
+      &:hover {
+        fill: rgb(0 0 0 / 60%);
+      }
+    }
+  }
+

@@ -1,8 +1,13 @@
   <mat-icon
   matPrefix
-  svgIcon="info"
-  aria-label="Kontexthilfe anzeigen"
+  svgIcon="info-context-help"
+  aria-label="Eingabehilfe"
   class="context-help-icon"
   (click)="showHelp()"
+  (keydown.enter)="showHelp()"
+  tabindex="0"
+  role="button"
+  aria-hidden="false"
+  aria-haspopup="dialog"
+  matTooltip="Eingabehilfe"
 ></mat-icon>
-<!--<mat-icon matSuffix svgIcon="info" (click)="getContextHelp('catalogId')" />-->

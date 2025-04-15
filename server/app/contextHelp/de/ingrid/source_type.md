@@ -1,9 +1,10 @@
 ---
-# ID des GUI Elements
 id: sourceType
 profile: ingrid
-# title, used as window title
 title: Typ der Datenquelle
 ---
+## Aufgabe
 Typ der Datenquelle (verfügbaren Typen sind profilabhängig)
-Beispielwert: `CSW`
+
+## Beispielwert: 
+```CSW```
