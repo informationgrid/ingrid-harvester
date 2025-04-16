@@ -6,6 +6,10 @@ title: Konfiguration von Elasticsearch
 
 # Elasticsearch
 
+Elasticsearch ist für den Harvester unabdingbar. 
+
+Prüfen Sie die Verbindung mit dem Button **VERBINDUNG TESTEN**.
+
 | Formular-Feld               | Beschreibung                                                      |
 |-----------------------------|-------------------------------------------------------------------|
 | Version                     | Version der installierten Elasticsearch Instanz  <br>Beispielwert: `8` |
@@ -18,6 +22,3 @@ title: Konfiguration von Elasticsearch
 | Index-Name                  | Readonly, siehe Umgebungsvariable `ELASTIC_INDEX`                 |
 | Shards                      | Readonly, siehe Umgebungsvariable `ELASTIC_NUM_SHARDS`            |
 | Replicas                    | Readonly, siehe Umgebungsvariable `ELASTIC_NUM_REPLICAS`          |
-
-**Info:** 
-Um die Verbindung zu Elasticsearch zu prüfen, klicken Sie auf den Button `VERBINDUNG TESTEN`. 
