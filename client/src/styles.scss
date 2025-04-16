@@ -1648,3 +1648,11 @@ div.title-with-context-help {
     opacity: 1;
   }
 }
+.context-help-icon {
+  cursor: pointer;
+  svg {
+    border-radius: 50%;
+    background-color: #f3f3f3;
+    fill: rgb(0 0 0 / 60%);
+  }
+}

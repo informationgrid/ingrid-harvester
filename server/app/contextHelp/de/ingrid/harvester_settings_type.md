@@ -13,7 +13,7 @@ Grundlegende Einstellungen zur Konfiguration eines Harvesters und zur Zuordnung 
 Typ der angebundenen Datenquelle.  
 Verfügbare Typen sind abhängig vom gewählten Profil und können dem Dropdown entnommen werden.
 
-# Indexname (Pflichtfeld)
+# Katalog-Identifier (Pflichtfeld)
 
 Name des Elasticsearch-Index, in dem die erfassten Datensätze gespeichert werden sollen.
 
@@ -21,7 +21,7 @@ Name des Elasticsearch-Index, in dem die erfassten Datensätze gespeichert werde
 
 # Beschreibung (Pflichtfeld)
 
-Freitext zur Beschreibung des Harvesters. z. B. Name oder Zweck der Datenquelle.
+Freitext zur Beschreibung des Harvesters. z. B. Name der Datenquelle.
 
 **Beispiel:** `data-server.de`
 

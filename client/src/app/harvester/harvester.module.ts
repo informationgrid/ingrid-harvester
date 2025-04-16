@@ -62,6 +62,7 @@ import { DialogSchedulerComponent } from './dialog-scheduler/dialog-scheduler.co
 import { HarvesterComponent } from './harvester.component';
 import { ImporterDetailComponent } from './importer-detail/importer-detail.component';
 import {ContextHelpDirective} from "../shared/context-help/context-help.directive";
+import {MatTooltip} from "@angular/material/tooltip";
 
 const harvesterRoutes: Routes = [
   {
@@ -91,30 +92,31 @@ const harvesterRoutes: Routes = [
         ImporterDetailComponent,
         ChipListComponent
     ],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(harvesterRoutes),
-        SharedModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatCardModule,
-        MatExpansionModule,
-        MatIconModule,
-        MatListModule,
-        MatSnackBarModule,
-        MatSlideToggleModule,
-        MatProgressBarModule,
-        MatProgressSpinnerModule,
-        MatChipsModule,
-        MatTabsModule,
-        ReactiveFormsModule,
-        MatCheckboxModule,
-        MatBadgeModule,
-        ScrollingModule,
-        CronjobFormFieldComponent,
-        MatAutocompleteModule,
-        ContextHelpDirective
-    ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(harvesterRoutes),
+    SharedModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatCardModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatListModule,
+    MatSnackBarModule,
+    MatSlideToggleModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatChipsModule,
+    MatTabsModule,
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    MatBadgeModule,
+    ScrollingModule,
+    CronjobFormFieldComponent,
+    MatAutocompleteModule,
+    ContextHelpDirective,
+    MatTooltip
+  ],
     exports: [
         HarvesterComponent
     ]
