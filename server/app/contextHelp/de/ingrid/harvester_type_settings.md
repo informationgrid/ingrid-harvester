@@ -11,9 +11,7 @@ Grundlegende Einstellungen zur Konfiguration eines Harvesters und zur Zuordnung 
 # Typ (Pflichtfeld)
 
 Typ der angebundenen Datenquelle.  
-Verfügbare Typen sind abhängig vom gewählten Profil.
-
-**Beispiel:** `CSW`
+Verfügbare Typen sind abhängig vom gewählten Profil und können dem Dropdown entnommen werden.
 
 # Indexname (Pflichtfeld)
 
