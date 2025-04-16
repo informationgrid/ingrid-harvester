@@ -31,7 +31,7 @@
     </mat-card> -->
 
     <mat-card data-test="config-database" class="config-card" [formGroup]="configForm.get('database')">
-      <mat-card-header>
+      <mat-card-header contextHelp="config_database">
         <mat-card-title>Datenbank</mat-card-title>
       </mat-card-header>
       <mat-card-content>
@@ -99,7 +99,7 @@
     </mat-card>
 
     <mat-card class="config-card" [formGroup]="configForm.get('elasticsearch')">
-      <mat-card-header>
+      <mat-card-header contextHelp="config_elasticsearch">
         <mat-card-title>Elasticsearch</mat-card-title>
       </mat-card-header>
       <mat-card-content>
@@ -195,7 +195,7 @@
     </mat-card>
 
     <mat-card class="config-card">
-      <mat-card-header>
+      <mat-card-header contextHelp="config_additional_settings">
         <mat-card-title>Zusätzliche Einstellungen</mat-card-title>
       </mat-card-header>
       <mat-card-content>
@@ -231,10 +231,9 @@
     </mat-card>
 
     <mat-card class="config-card">
-      <mat-card-header>
+      <mat-card-header contextHelp="config_checks">
         <mat-card-title>Checks</mat-card-title>
       </mat-card-header>
-
       <mat-card-content>
         <harvester-cronjob-form-field
           title="Url Check"
@@ -253,7 +252,7 @@
 
 
     <mat-card class="config-card" [formGroup]="configForm.get('indexBackup')">
-      <mat-card-header>
+      <mat-card-header contextHelp="config_index_backup">
         <mat-card-title>Index-Backup</mat-card-title>
       </mat-card-header>
 
@@ -284,7 +283,7 @@
     </mat-card>
 
     <mat-card class="config-card">
-      <mat-card-header class="flex-row gap-20">
+      <mat-card-header contextHelp="config_harvesting_differences" class="flex-row gap-20">
         <mat-card-title>Harvesting Differenzen</mat-card-title>
       </mat-card-header>
 
@@ -330,7 +329,7 @@
     </mat-card>
 
     <mat-card class="config-card">
-      <mat-card-header class="flex-row gap-20" [formGroup]="configForm.get('mail')">
+      <mat-card-header contextHelp="config_email" class="flex-row gap-20" [formGroup]="configForm.get('mail')">
         <mat-card-title>E-Mail-Einstellungen</mat-card-title>
         <div class="center-right">
           <mat-slide-toggle color="accent" [checked]="configForm.get('mail.enabled')"
