@@ -28,6 +28,7 @@
         <input type="file" #indexUpload id="indexUpload" name="harvesterUpload" (change)="importIndex(this.indexUpload.files)" accept="json/*.json" style="display:none;" />
         <button mat-flat-button id="importIndex" color="primary" (click)="this.indexUpload.click()" data-test="importIndex">Importieren</button>
       </div>
+      <article contextHelp="about_indices"></article>
       <mat-list class="items-left scroll padding" >
       @for (index of indices | async; track index) {
         <mat-list-item  class="index-list-item">

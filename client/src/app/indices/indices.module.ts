@@ -32,6 +32,8 @@ import {SharedModule} from '../shared/shared.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { PageTemplateModule } from '../shared/page-template/page-template.module';
 import { MatMenuModule } from '@angular/material/menu';
+import {ContextHelpDirective} from "../shared/context-help/context-help.directive";
+import {MatTooltip} from "@angular/material/tooltip";
 
 const routes: Routes = [
   {
@@ -51,7 +53,9 @@ const routes: Routes = [
     SharedModule,
     ScrollingModule,
     PageTemplateModule,
-    MatMenuModule
+    MatMenuModule,
+    ContextHelpDirective,
+    MatTooltip
   ]
 })
 export class IndicesModule {

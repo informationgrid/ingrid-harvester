@@ -9,7 +9,7 @@ import {ContextHelpButtonComponent} from "./context-help-button/context-help-but
 import {ContextHelpService} from "../../services/contextHelp.service";
 
 @Directive({
-  selector: 'mat-card-header[contextHelp],mat-label[contextHelp],h2[contextHelp],div[contextHelp],mat-icon[contextHelp]',
+  selector: 'mat-card-header[contextHelp],mat-label[contextHelp],h2[contextHelp],div[contextHelp],mat-icon[contextHelp],article[contextHelp]',
   standalone: true
 })
 export class ContextHelpDirective implements OnInit {
@@ -65,6 +65,15 @@ export class ContextHelpDirective implements OnInit {
       const contextHelpButton = this.viewContainerRef.createComponent(ContextHelpButtonComponent);
       contextHelpButton.instance.helpKey = this.helpKey;
       element.appendChild(contextHelpButton.location.nativeElement);
+    } else if (element.tagName === 'ARTICLE') {
+      // const contextAsHtml = this.getContextAsHtml()
+      // element.appendChild(contextAsHtml)
+      this.contextHelpService.get(this.helpKey).subscribe(response => {
+        const helpHtml = response.htmlContent;
+        const container = document.createElement('div');
+        container.innerHTML = helpHtml;
+        element.appendChild(container);
+      });
     }
 
   }
@@ -72,4 +81,5 @@ export class ContextHelpDirective implements OnInit {
   showHelp() {
     this.contextHelpService.show(this.helpKey)
   }
+
 }

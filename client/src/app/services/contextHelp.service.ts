@@ -45,6 +45,18 @@ export class ContextHelpService {
   ) {
   }
 
+  get(markdownFileName: string) {
+    const locale = 'de',
+      profile = "ingrid";
+
+    return this.http.get<{
+      title: string,
+      id: string,
+      profile: string,
+      htmlContent: string
+    }>(`/rest/api/help/${locale}/${profile}/${markdownFileName}`);
+  }
+
   show(markdownFileName: string) {
     const locale = 'de',
         profile = "ingrid";
