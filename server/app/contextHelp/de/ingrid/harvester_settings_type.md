@@ -1,5 +1,5 @@
 ---
-id: harvester_type_settings
+id: harvester_settings_type
 profile: ingrid
 title: Harvester Basis Angaben
 ---

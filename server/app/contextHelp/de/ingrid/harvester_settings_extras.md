@@ -1,5 +1,5 @@
 ---
-id: csw_additional_settings  
+id: harvester_settings_extras  
 profile: ingrid  
 title: Weitere Einstellungen  
 ---

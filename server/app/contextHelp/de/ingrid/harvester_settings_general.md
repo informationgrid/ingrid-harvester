@@ -1,5 +1,5 @@
 ---
-id: harvester_general_settings  
+id: harvester_settings_general
 profile: ingrid  
 title: Allgemeine Einstellungen  
 ---
