@@ -63,6 +63,7 @@ import { HarvesterComponent } from './harvester.component';
 import { ImporterDetailComponent } from './importer-detail/importer-detail.component';
 import {ContextHelpDirective} from "../shared/context-help/context-help.directive";
 import {MatTooltip} from "@angular/material/tooltip";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 
 const harvesterRoutes: Routes = [
   {
@@ -115,7 +116,9 @@ const harvesterRoutes: Routes = [
     CronjobFormFieldComponent,
     MatAutocompleteModule,
     ContextHelpDirective,
-    MatTooltip
+    MatTooltip,
+    MatGridList,
+    MatGridTile
   ],
     exports: [
         HarvesterComponent

@@ -9,7 +9,7 @@ import {ContextHelpButtonComponent} from "./context-help-button/context-help-but
 import {ContextHelpService} from "../../services/contextHelp.service";
 
 @Directive({
-  selector: 'mat-card-header[contextHelp],mat-label[contextHelp],h2[contextHelp],div[contextHelp],mat-icon[contextHelp],article[contextHelp]',
+  selector: 'mat-card-header[contextHelp],mat-label[contextHelp],h2[contextHelp],div[contextHelp],mat-icon[contextHelp],article[contextHelp],button[contextHelp]',
   standalone: true
 })
 export class ContextHelpDirective implements OnInit {
@@ -73,6 +73,11 @@ export class ContextHelpDirective implements OnInit {
         const container = document.createElement('div');
         container.innerHTML = helpHtml;
         element.appendChild(container);
+      });
+    } else if (element.tagName === 'BUTTON') {
+      element.addEventListener('click', () => this.showHelp());
+      element.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (event.key === 'Enter') this.showHelp();
       });
     }
 

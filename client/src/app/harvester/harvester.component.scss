@@ -20,6 +20,7 @@
  * limitations under the Licence.
  * ==================================================
  */
+@use "src/variables" as vars;
 
 :host {
   display: flex;
@@ -135,7 +136,7 @@ mat-spinner {
   margin-top: 20px;
   margin-bottom: 20px;
   box-sizing: border-box;
-  max-width: var(--max-width-panel);
+  max-width: vars.$max-width-panel;
 }
 
 .panel-header-icon {
