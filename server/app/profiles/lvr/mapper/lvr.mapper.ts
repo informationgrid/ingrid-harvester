@@ -108,7 +108,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
     }
 
     private getNullForTemporal(temporal: Temporal) {
-        if ((!temporal?.date_range?.gte || isNaN(temporal?.date_range?.gte.getTime())) && (!temporal?.date_range?.lte || isNaN(temporal?.date_range?.lte.getTime()))) {
+        if (!temporal?.date_range?.gte && !temporal?.date_range?.lte) {
             return { ...temporal, date_range: null };
         }
         return temporal;

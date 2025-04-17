@@ -69,3 +69,8 @@ export type Source = {
     id: string,
     display_url: string
 };
+
+export type LvrDateRange = {
+    gte?: string | Date,
+    lte?: string | Date
+}

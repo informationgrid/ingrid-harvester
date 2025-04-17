@@ -33,7 +33,7 @@ import { Geometries } from '@turf/helpers';
 import { ImporterSettings } from '../../importer.settings';
 import { KldSettings } from './kld.settings';
 import { License } from '@shared/license.model';
-import { Media, Relation } from '../../profiles/lvr/model/index.document';
+import { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document';
 import { ObjectResponse, RelatedObject, Document, getDocumentUrl, RelationType, MediaType } from './kld.api';
 import { Summary } from '../../model/summary';
 
@@ -93,10 +93,10 @@ export class KldMapper extends BaseMapper {
         return this.record.Adresse;
     }
 
-    getTemporal(): DateRange[] {
+    getTemporal(): LvrDateRange[] {
         // extract maximum range from AnfangVon, AnfangBis to EndeVon, EndeBis
-        const [startStart, startEnd] = this.parseDateRange([this.record.AnfangVon, this.record.AnfangBis]);
-        const [endStart, endEnd] = this.parseDateRange([this.record.EndeVon, this.record.EndeBis]);
+        const { gte: startStart, lte: startEnd } = this.parseDateRange([this.record.AnfangVon, this.record.AnfangBis]);
+        const { gte: endStart, lte: endEnd } = this.parseDateRange([this.record.EndeVon, this.record.EndeBis]);
         const start = startStart ?? endStart
         const end = endEnd ?? (endStart ?? startEnd)
         if (start && end && start > end) {
@@ -183,11 +183,15 @@ export class KldMapper extends BaseMapper {
         return new Promise((resolve) => resolve([publisher]));
     }
 
-    private parseDateRange(dates: string[]): [Date|null, Date|null] {
-        const values = dates.map(MiscUtils.normalizeDateTime).filter((date: Date|null) => date != null).sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
+    private parseDateRange(dates: string[]): LvrDateRange {
+        const parseLvrTime = (dateStr: string) => {
+            let m = dateStr?.toString().match(/^(-?)(\d{0,4})$/);
+            return m?.length > 2 ?  m[1] + m[2].padStart(4, '0') :  MiscUtils.normalizeDateTime(dateStr);
+        };
+        const values = dates.map(parseLvrTime).filter(date => date != null);//.sort((a, b) => a.valueOf() - b.valueOf());
         const start = values.length > 0 ? values[0] : null;
         const end = values.length > 0 ? values[values.length-1] : null;
-        return [start, end];
+        return { gte: start, lte: end };
     }
 
     private mapRelatedObject(related: RelatedObject, type: RelationType): Relation {
