@@ -185,8 +185,11 @@ export class KldMapper extends BaseMapper {
 
     private parseDateRange(dates: string[]): LvrDateRange {
         const parseLvrTime = (dateStr: string) => {
-            let m = dateStr?.toString().match(/^(-?)(\d{0,4})$/);
-            return m?.length > 2 ?  m[1] + m[2].padStart(4, '0') :  MiscUtils.normalizeDateTime(dateStr);
+            if (dateStr == '0') {
+                return null;
+            }
+            let m = dateStr?.toString().match(/^(-?)(\d{0,5})$/);
+            return m?.length > 2 ? m[1] + m[2].padStart(4, '0') : MiscUtils.normalizeDateTime(dateStr);
         };
         const values = dates.map(parseLvrTime).filter(date => date != null);//.sort((a, b) => a.valueOf() - b.valueOf());
         const start = values.length > 0 ? values[0] : null;
