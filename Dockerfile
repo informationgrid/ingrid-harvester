@@ -43,8 +43,8 @@ RUN npm run prod
 #
 FROM node:20.18.2-alpine3.21 AS final
 
-# copy dumb-init
-COPY --from=building5/dumb-init:1.2.1 /dumb-init /usr/local/bin/
+# install tini
+RUN apk add --no-cache tini
 
 # install production dependencies (also: remove large, unused, and not-asked-for-at-all ExcelJS map files)
 WORKDIR /opt/ingrid/harvester/server
@@ -61,5 +61,5 @@ EXPOSE 8090
 USER node
 
 WORKDIR /opt/ingrid/harvester/server
-ENTRYPOINT ["dumb-init", "--"]
+ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "app/index.js"]
