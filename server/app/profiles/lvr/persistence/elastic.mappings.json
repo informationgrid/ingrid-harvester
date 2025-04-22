@@ -75,7 +75,8 @@
         "data_temporal": {
           "properties": {
             "date_range": {
-              "type": "date_range"
+              "type": "date_range",
+              "format": "date_optional_time||epoch_millis"
             },
             "date_type": {
               "type": "keyword"
