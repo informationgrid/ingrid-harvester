@@ -1,6 +1,4 @@
 ---
-id: harvester_field_type
-profile: ingrid
 title: Typ der Datenquelle
 ---
 

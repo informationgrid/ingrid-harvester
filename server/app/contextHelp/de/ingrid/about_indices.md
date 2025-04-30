@@ -1,6 +1,4 @@
 ---
-id: about_indices
-profile: ingrid
 title: Existierende Indizes
 ---
 

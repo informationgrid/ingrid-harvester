@@ -1,6 +1,4 @@
 ---
-id: about_import_export
-profile: ingrid
 title: Import/Export
 ---
 

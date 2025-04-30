@@ -1,9 +1,11 @@
 import {Controller, Get, PathParams, UseAuth} from "@tsed/common";
 import { Returns, Summary } from "@tsed/schema";
-import * as fs from "fs/promises";
+import * as fs from "fs";
 import * as path from "path";
 import {AuthMiddleware} from "../middlewares/auth/AuthMiddleware";
 import { marked } from "marked";
+import {ConfigService} from "../services/config/ConfigService";
+import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
 const matter = require('gray-matter');
 
 const BASE_HELP_DIR = path.join(__dirname, "../contextHelp");
@@ -19,14 +21,14 @@ interface ContextHelpResult {
 @UseAuth(AuthMiddleware)
 export class ContextHelpCtrl {
 
-    @Get("/:locale/:profile/:field")
+    @Get("/:locale/:field")
     @Summary("Get context help markdown for a form field")
     @Returns(200, String)
     async getHelp(
-        @PathParams("profile") profile: string,
         @PathParams("locale") locale: string,
         @PathParams("field") field: string
     ): Promise<ContextHelpResult> {
+        const profile = ProfileFactoryLoader.get().getProfileName();
         const pathsToTry = [
             path.join(BASE_HELP_DIR, locale, profile, `${field}.md`),
             path.join(BASE_HELP_DIR, locale, "ingrid", `${field}.md`) // fallback
@@ -42,8 +44,8 @@ export class ContextHelpCtrl {
         }
 
         for (const filePath of pathsToTry) {
-            try {
-                const markdownContent = await fs.readFile(filePath, "utf-8");
+            if(fs.existsSync(filePath)) {
+                const markdownContent = fs.readFileSync(filePath, { encoding: 'utf8', flag: 'r' });
                 const { data, content } = matter(markdownContent)
                 const htmlContent = renderMarkdownFile(content)
                 return {
@@ -52,8 +54,6 @@ export class ContextHelpCtrl {
                     profile: data.profile,
                     htmlContent: htmlContent
                 };
-            } catch {
-                // continue to next fallback
             }
         }
 

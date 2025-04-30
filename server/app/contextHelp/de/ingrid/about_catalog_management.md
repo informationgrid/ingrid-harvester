@@ -1,6 +1,4 @@
 ---
-id: about_catalog_management
-profile: ingrid
 title: Katalogverwaltung
 ---
 

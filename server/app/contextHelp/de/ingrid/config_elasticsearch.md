@@ -1,6 +1,4 @@
 ---
-id: config_elasticsearch
-profile: ingrid
 title: Konfiguration von Elasticsearch
 ---
 

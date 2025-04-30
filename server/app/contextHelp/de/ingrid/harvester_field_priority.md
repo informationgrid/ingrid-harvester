@@ -1,8 +1,4 @@
 ---
-# ID des GUI Elements
-id: harvester_field_priority
-profile: ingrid
-# title, used as window title
 title: Priorität
 ---
 

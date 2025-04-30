@@ -1,6 +1,4 @@
 ---
-id: config_email
-profile: ingrid
 title: Konfiguration von E-Mail-Einstellungen
 ---
 

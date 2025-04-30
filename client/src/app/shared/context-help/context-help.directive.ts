@@ -9,7 +9,7 @@ import {ContextHelpButtonComponent} from "./context-help-button/context-help-but
 import {ContextHelpService} from "../../services/contextHelp.service";
 
 @Directive({
-  selector: 'mat-card-header[contextHelp],mat-label[contextHelp],h2[contextHelp],div[contextHelp],mat-icon[contextHelp],article[contextHelp],button[contextHelp]',
+  selector: 'mat-card-header[contextHelp],mat-label[contextHelp],h2[contextHelp],div[contextHelp],mat-icon[contextHelp],aside[contextHelp],button[contextHelp]',
   standalone: true
 })
 export class ContextHelpDirective implements OnInit {
@@ -27,9 +27,9 @@ export class ContextHelpDirective implements OnInit {
 
     if (element.tagName === 'MAT-ICON') {
       element.classList.add('context-help-icon')
-      element.addEventListener('click', () => this.showHelp());
+      element.addEventListener('click', (event: MouseEvent) => this.showHelp(event));
       element.addEventListener('keydown', (event: KeyboardEvent) => {
-        if (event.key === 'Enter') this.showHelp();
+        if (event.key === 'Enter') this.showHelp(event);
       });
       element.setAttribute('tabindex', '0');
       element.setAttribute('role', 'button');
@@ -42,7 +42,7 @@ export class ContextHelpDirective implements OnInit {
       element.appendChild(contextHelpButton.location.nativeElement);
       const cardTitle = element.querySelector('mat-card-title');
       if (this.helpKey && cardTitle) {
-        cardTitle.addEventListener('click', () => this.showHelp());
+        cardTitle.addEventListener('click', (event: MouseEvent) => this.showHelp(event));
         cardTitle.classList.add('title-with-context-help')
       }
     } else if (element.tagName === 'DIV') {
@@ -50,7 +50,7 @@ export class ContextHelpDirective implements OnInit {
       contextHelpButton.instance.helpKey = this.helpKey;
       element.appendChild(contextHelpButton.location.nativeElement);
       if (this.helpKey) {
-        element.addEventListener('click', () => this.showHelp());
+        element.addEventListener('click', (event: MouseEvent) => this.showHelp(event));
         element.classList.add('title-with-context-help')
       }
     } else if (element.tagName === 'H2') {
@@ -58,14 +58,14 @@ export class ContextHelpDirective implements OnInit {
       contextHelpButton.instance.helpKey = this.helpKey;
       element.parentNode.insertBefore(contextHelpButton.location.nativeElement, element);
       if (this.helpKey) {
-        element.addEventListener('click', () => this.showHelp());
+        element.addEventListener('click', (event: MouseEvent) => this.showHelp(event));
         element.classList.add('title-with-context-help')
       }
     } else if (element.tagName === 'MAT-LABEL') {
       const contextHelpButton = this.viewContainerRef.createComponent(ContextHelpButtonComponent);
       contextHelpButton.instance.helpKey = this.helpKey;
       element.appendChild(contextHelpButton.location.nativeElement);
-    } else if (element.tagName === 'ARTICLE') {
+    } else if (element.tagName === 'ASIDE') {
       // const contextAsHtml = this.getContextAsHtml()
       // element.appendChild(contextAsHtml)
       this.contextHelpService.get(this.helpKey).subscribe(response => {
@@ -75,16 +75,17 @@ export class ContextHelpDirective implements OnInit {
         element.appendChild(container);
       });
     } else if (element.tagName === 'BUTTON') {
-      element.addEventListener('click', () => this.showHelp());
+      element.addEventListener('click', (event: MouseEvent) => this.showHelp(event));
       element.addEventListener('keydown', (event: KeyboardEvent) => {
-        if (event.key === 'Enter') this.showHelp();
+        if (event.key === 'Enter') this.showHelp(event);
       });
     }
 
   }
 
-  showHelp() {
-    this.contextHelpService.show(this.helpKey)
+  showHelp(event: Event) {
+    this.contextHelpService.show(this.helpKey);
+    event.stopImmediatePropagation();
   }
 
 }

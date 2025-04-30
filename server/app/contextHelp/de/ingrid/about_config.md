@@ -1,6 +1,4 @@
 ---
-id: about_config
-profile: ingrid
 title: Konfiguration
 ---
 

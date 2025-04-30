@@ -10,9 +10,7 @@ export class ContextHelpService {
   private currentDialog: MatDialogRef<ContextHelpComponent, any>;
 
   private static contextDialogHeight = 400;
-  private static contextDialogMaxHeight = 600;
   private static contextDialogWidth = 500;
-  private static contextDialogMaxWidth = 800;
 
   private static getLeftPosition(infoElement: HTMLElement) {
     const leftPosition =
@@ -46,27 +44,18 @@ export class ContextHelpService {
   }
 
   get(markdownFileName: string) {
-    const locale = 'de',
-      profile = "ingrid";
+    const locale = 'de';
 
     return this.http.get<{
       title: string,
       id: string,
       profile: string,
       htmlContent: string
-    }>(`/rest/api/help/${locale}/${profile}/${markdownFileName}`);
+    }>(`/rest/api/help/${locale}/${markdownFileName}`);
   }
 
   show(markdownFileName: string) {
-    const locale = 'de',
-        profile = "ingrid";
-
-    this.http.get<{
-      title: string,
-      id: string,
-      profile: string,
-      htmlContent: string
-    }>(`/rest/api/help/${locale}/${profile}/${markdownFileName}`).subscribe( response => {
+    this.get(markdownFileName).subscribe( response => {
       const helpText = response.htmlContent
       this.showContextHelpPopup(response.title, helpText)
     });

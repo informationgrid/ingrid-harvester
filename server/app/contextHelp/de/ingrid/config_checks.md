@@ -1,6 +1,4 @@
 ---
-id: config_checks
-profile: ingrid
 title: Konfiguration von Checks
 ---
 

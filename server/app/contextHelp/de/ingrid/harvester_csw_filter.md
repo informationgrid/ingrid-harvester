@@ -1,6 +1,4 @@
 ---
-id: harvester_csw_filter
-profile: ingrid  
 title: Filter und Regeln  
 ---
 

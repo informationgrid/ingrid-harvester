@@ -1,6 +1,4 @@
 ---
-id: config_index_backup
-profile: ingrid
 title: Konfiguration von Index-Backup
 ---
 

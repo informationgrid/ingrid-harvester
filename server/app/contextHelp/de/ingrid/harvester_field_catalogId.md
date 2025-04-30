@@ -1,8 +1,4 @@
 ---
-# ID des GUI Elements
-id: harvester_field_catalogId
-profile: ingrid
-# title, used as window title
 title: Katalog-Identifier
 ---
 

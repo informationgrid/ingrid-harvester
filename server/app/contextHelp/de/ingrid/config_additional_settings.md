@@ -1,6 +1,4 @@
 ---
-id: config_additional_settings
-profile: ingrid
 title: Konfiguration zusätzlicher Einstellungen
 ---
 

@@ -1,6 +1,4 @@
 ---
-id: about_mapping
-profile: ingrid
 title: Mappings (Datenformate)
 ---
 

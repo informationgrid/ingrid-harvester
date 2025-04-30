@@ -1,6 +1,4 @@
 ---
-id: config_database
-profile: ingrid
 title: Konfiguration der Datenbank
 ---
 

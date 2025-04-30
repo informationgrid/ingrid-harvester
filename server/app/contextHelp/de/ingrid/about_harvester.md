@@ -1,6 +1,4 @@
 ---
-id: about_harvester
-profile: ingrid
 title: Harvester
 ---
 

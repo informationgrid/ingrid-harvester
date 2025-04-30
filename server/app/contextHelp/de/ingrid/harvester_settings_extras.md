@@ -1,6 +1,4 @@
 ---
-id: harvester_settings_extras  
-profile: ingrid  
 title: Weitere Einstellungen  
 ---
 

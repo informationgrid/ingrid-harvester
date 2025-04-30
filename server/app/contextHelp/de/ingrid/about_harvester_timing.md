@@ -1,6 +1,4 @@
 ---
-id: about_harvester_timing
-profile: ingrid
 title: Ausführung planen
 ---
 

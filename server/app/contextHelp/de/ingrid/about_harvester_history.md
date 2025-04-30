@@ -1,6 +1,4 @@
 ---
-id: about_harvester_history
-profile: ingrid
 title: Harvester Historie
 ---
 

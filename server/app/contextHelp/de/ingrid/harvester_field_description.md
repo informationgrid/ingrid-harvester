@@ -1,8 +1,4 @@
 ---
-# ID des GUI Elements
-id: harvester_field_description
-profile: ingrid
-# title, used as window title
 title: Beschreibung
 ---
 

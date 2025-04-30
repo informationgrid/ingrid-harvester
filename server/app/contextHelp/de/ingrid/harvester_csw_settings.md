@@ -1,6 +1,4 @@
 ---
-id: harvester_csw_settings
-profile: ingrid
 title: CSW Einstellungen
 ---
 # CSW Einstellungen
