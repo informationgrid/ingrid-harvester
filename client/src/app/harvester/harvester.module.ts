@@ -64,6 +64,7 @@ import { ImporterDetailComponent } from './importer-detail/importer-detail.compo
 import {ContextHelpDirective} from "../shared/context-help/context-help.directive";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {ContextHelpButtonComponent} from "../shared/context-help/context-help-button/context-help-button.component";
 
 const harvesterRoutes: Routes = [
   {
@@ -93,33 +94,34 @@ const harvesterRoutes: Routes = [
         ImporterDetailComponent,
         ChipListComponent
     ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(harvesterRoutes),
-    SharedModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatCardModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatListModule,
-    MatSnackBarModule,
-    MatSlideToggleModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatChipsModule,
-    MatTabsModule,
-    ReactiveFormsModule,
-    MatCheckboxModule,
-    MatBadgeModule,
-    ScrollingModule,
-    CronjobFormFieldComponent,
-    MatAutocompleteModule,
-    ContextHelpDirective,
-    MatTooltip,
-    MatGridList,
-    MatGridTile
-  ],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(harvesterRoutes),
+        SharedModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatCardModule,
+        MatExpansionModule,
+        MatIconModule,
+        MatListModule,
+        MatSnackBarModule,
+        MatSlideToggleModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule,
+        MatChipsModule,
+        MatTabsModule,
+        ReactiveFormsModule,
+        MatCheckboxModule,
+        MatBadgeModule,
+        ScrollingModule,
+        CronjobFormFieldComponent,
+        MatAutocompleteModule,
+        ContextHelpDirective,
+        MatTooltip,
+        MatGridList,
+        MatGridTile,
+        ContextHelpButtonComponent
+    ],
     exports: [
         HarvesterComponent
     ]

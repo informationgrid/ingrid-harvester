@@ -31,9 +31,12 @@
         </button>
     </div>
 
-    <h1 class="harvester-list config-headline">Harvester</h1>
+    <h1 class="harvester-list config-headline pointer" (click)="pageContextHelpIsVisible=!pageContextHelpIsVisible" (keydown.enter)="pageContextHelpIsVisible=!pageContextHelpIsVisible">
+      Harvester
+      <app-context-help-button/>
+    </h1>
 
-    <mat-card appearance="raised" class="harvester-list">
+    <mat-card appearance="raised" [className]="pageContextHelpIsVisible ? 'harvester-list' : 'hidden'">
       <mat-card-content >
         <aside contextHelp="about_harvester" ></aside>
         <mat-grid-list cols="2" rowHeight="60px">

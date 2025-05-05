@@ -46,6 +46,8 @@ import { SocketService } from './socket.service';
 })
 export class HarvesterComponent implements OnInit, OnDestroy {
 
+  pageContextHelpIsVisible: boolean = false;
+
   harvesters: { [x: string]: Harvester[] } = {};
 
   importDetail: { [x: number]: ImportLogMessage } = {};
@@ -59,7 +61,7 @@ export class HarvesterComponent implements OnInit, OnDestroy {
               private snackBar: MatSnackBar,
               private harvesterService: HarvesterService,
               private socketService: SocketService,
-              private formBuilder: UntypedFormBuilder, 
+              private formBuilder: UntypedFormBuilder,
               ) {
   }
 
