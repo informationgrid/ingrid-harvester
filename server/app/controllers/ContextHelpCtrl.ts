@@ -4,7 +4,6 @@ import * as fs from "fs";
 import * as path from "path";
 import {AuthMiddleware} from "../middlewares/auth/AuthMiddleware";
 import { marked } from "marked";
-import {ConfigService} from "../services/config/ConfigService";
 import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
 const matter = require('gray-matter');
 
@@ -21,17 +20,17 @@ interface ContextHelpResult {
 @UseAuth(AuthMiddleware)
 export class ContextHelpCtrl {
 
-    @Get("/:locale/:field")
-    @Summary("Get context help markdown for a form field")
+    @Get("/:locale/:contextHelpId")
+    @Summary("Get context help")
     @Returns(200, String)
     async getHelp(
         @PathParams("locale") locale: string,
-        @PathParams("field") field: string
+        @PathParams("contextHelpId") contextHelpId: string
     ): Promise<ContextHelpResult> {
         const profile = ProfileFactoryLoader.get().getProfileName();
         const pathsToTry = [
-            path.join(BASE_HELP_DIR, locale, profile, `${field}.md`),
-            path.join(BASE_HELP_DIR, locale, "ingrid", `${field}.md`) // fallback
+            path.join(BASE_HELP_DIR, locale, profile, `${contextHelpId}.md`),
+            path.join(BASE_HELP_DIR, locale, "ingrid", `${contextHelpId}.md`) // fallback
         ];
 
         function renderMarkdownFile(content: string): string {
@@ -46,8 +45,8 @@ export class ContextHelpCtrl {
         for (const filePath of pathsToTry) {
             if(fs.existsSync(filePath)) {
                 const markdownContent = fs.readFileSync(filePath, { encoding: 'utf8', flag: 'r' });
-                const { data, content } = matter(markdownContent)
-                const htmlContent = renderMarkdownFile(content)
+                const { data, content } = matter(markdownContent);
+                const htmlContent = renderMarkdownFile(content);
                 return {
                     title: data.title,
                     id: data.id,

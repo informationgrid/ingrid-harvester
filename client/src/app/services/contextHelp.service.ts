@@ -7,7 +7,7 @@ import {ContextHelpComponent} from "../shared/context-help/context-help/context-
   providedIn: 'root'
 })
 export class ContextHelpService {
-  private currentDialog: MatDialogRef<ContextHelpComponent, any>;
+  private currentDialog: MatDialogRef<ContextHelpComponent>;
 
   private static contextDialogHeight = 400;
   private static contextDialogWidth = 500;
@@ -55,9 +55,11 @@ export class ContextHelpService {
   }
 
   show(markdownFileName: string) {
-    this.get(markdownFileName).subscribe( response => {
-      const helpText = response.htmlContent
-      this.showContextHelpPopup(response.title, helpText)
+    this.get(markdownFileName).subscribe({
+      next: (response) => this.showContextHelpPopup(response.title, response.htmlContent),
+      error: () =>   this.showContextHelpPopup(
+            "Kontext Fehler",
+            `<p>Dokument für die Kontexthilfe <b>${markdownFileName}</b> wurde nicht gefunden.</p>`)
     });
   }
 
