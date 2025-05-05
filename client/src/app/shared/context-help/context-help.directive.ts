@@ -9,7 +9,7 @@ import {ContextHelpButtonComponent} from "./context-help-button/context-help-but
 import {ContextHelpService} from "../../services/contextHelp.service";
 
 @Directive({
-  selector: 'mat-card-header[contextHelp],h2[contextHelp],mat-icon[contextHelp],aside[contextHelp],button[contextHelp]',
+  selector: 'button[contextHelp],mat-icon[contextHelp],mat-card-header[contextHelp],h2[contextHelp],aside[contextHelp]',
   standalone: true
 })
 export class ContextHelpDirective implements OnInit {
@@ -25,34 +25,25 @@ export class ContextHelpDirective implements OnInit {
     if (!this.helpKey) return;
     const element = this.el.nativeElement as HTMLElement;
 
-    if (element.tagName === 'MAT-ICON') {
+    if (element.tagName === 'BUTTON') {
+      this.addEventListenerToElement(element);
+    } else if (element.tagName === 'MAT-ICON') {
+      this.addEventListenerToElement(element);
       element.classList.add('context-help-icon')
-      element.addEventListener('click', (event: MouseEvent) => this.showHelp(event));
-      element.addEventListener('keydown', (event: KeyboardEvent) => {
-        if (event.key === 'Enter') this.showHelp(event);
-      });
       element.setAttribute('tabindex', '0');
       element.setAttribute('role', 'button');
       element.setAttribute('aria-label', 'Eingabehilfe');
       element.setAttribute('aria-hidden', 'false');
       element.setAttribute('aria-haspopup', 'dialog');
     } else if (element.tagName === 'MAT-CARD-HEADER') {
-      const contextHelpButton = this.viewContainerRef.createComponent(ContextHelpButtonComponent);
-      contextHelpButton.instance.helpKey = this.helpKey;
-      element.appendChild(contextHelpButton.location.nativeElement);
+      this.addEventListenerToElement(element);
+      this.prependIconComponentToElement(element);
       const cardTitle = element.querySelector('mat-card-title');
-      if (this.helpKey && cardTitle) {
-        cardTitle.addEventListener('click', (event: MouseEvent) => this.showHelp(event));
-        cardTitle.classList.add('title-with-context-help')
-      }
+      cardTitle?.classList.add('title-with-context-help');
     } else if (element.tagName === 'H2') {
-      const contextHelpButton = this.viewContainerRef.createComponent(ContextHelpButtonComponent);
-      contextHelpButton.instance.helpKey = this.helpKey;
-      element.prepend(contextHelpButton.location.nativeElement);
-      if (this.helpKey) {
-        element.addEventListener('click', (event: MouseEvent) => this.showHelp(event));
-        element.classList.add('title-with-context-help')
-      }
+      this.addEventListenerToElement(element);
+      this.prependIconComponentToElement(element);
+      element.classList.add('title-with-context-help');
     } else if (element.tagName === 'ASIDE') {
       this.contextHelpService.get(this.helpKey).subscribe(response => {
         const helpHtml = response.htmlContent;
@@ -60,13 +51,20 @@ export class ContextHelpDirective implements OnInit {
         container.innerHTML = helpHtml;
         element.appendChild(container);
       });
-    } else if (element.tagName === 'BUTTON') {
-      element.addEventListener('click', (event: MouseEvent) => this.showHelp(event));
-      element.addEventListener('keydown', (event: KeyboardEvent) => {
-        if (event.key === 'Enter') this.showHelp(event);
-      });
     }
+  }
 
+  prependIconComponentToElement(element: HTMLElement) {
+    const contextHelpIcon = this.viewContainerRef.createComponent(ContextHelpButtonComponent);
+    contextHelpIcon.instance.helpKey = this.helpKey;
+    element.prepend(contextHelpIcon.location.nativeElement);
+  }
+
+  addEventListenerToElement(element: HTMLElement) {
+    element.addEventListener('click', (event: MouseEvent) => this.showHelp(event));
+    element.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (event.key === 'Enter') this.showHelp(event);
+    });
   }
 
   showHelp(event: Event) {
