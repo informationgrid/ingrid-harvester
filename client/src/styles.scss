@@ -1630,19 +1630,17 @@ mat-card-header {
     }
   }
 }
-div.title-with-context-help {
-  padding-left: 16px;
+h2.title-with-context-help {
+  padding-left: 40px;
   app-context-help-button {
-    margin-top: -40px;
-    position: fixed;
-    margin-left: -8px;
+    position: absolute;
+    margin-left: -32px;
+    margin-top: 16px;
     opacity: 0;
   }
   cursor: pointer;
   &:hover {
-    h1, h2 {
       color: #196ea2 !important;
-    }
   }
   &:hover app-context-help-button{
     opacity: 1;

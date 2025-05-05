@@ -9,7 +9,7 @@ import {ContextHelpButtonComponent} from "./context-help-button/context-help-but
 import {ContextHelpService} from "../../services/contextHelp.service";
 
 @Directive({
-  selector: 'mat-card-header[contextHelp],mat-label[contextHelp],h2[contextHelp],div[contextHelp],mat-icon[contextHelp],aside[contextHelp],button[contextHelp]',
+  selector: 'mat-card-header[contextHelp],h2[contextHelp],mat-icon[contextHelp],aside[contextHelp],button[contextHelp]',
   standalone: true
 })
 export class ContextHelpDirective implements OnInit {
@@ -45,29 +45,15 @@ export class ContextHelpDirective implements OnInit {
         cardTitle.addEventListener('click', (event: MouseEvent) => this.showHelp(event));
         cardTitle.classList.add('title-with-context-help')
       }
-    } else if (element.tagName === 'DIV') {
-      const contextHelpButton = this.viewContainerRef.createComponent(ContextHelpButtonComponent);
-      contextHelpButton.instance.helpKey = this.helpKey;
-      element.appendChild(contextHelpButton.location.nativeElement);
-      if (this.helpKey) {
-        element.addEventListener('click', (event: MouseEvent) => this.showHelp(event));
-        element.classList.add('title-with-context-help')
-      }
     } else if (element.tagName === 'H2') {
       const contextHelpButton = this.viewContainerRef.createComponent(ContextHelpButtonComponent);
       contextHelpButton.instance.helpKey = this.helpKey;
-      element.parentNode.insertBefore(contextHelpButton.location.nativeElement, element);
+      element.prepend(contextHelpButton.location.nativeElement);
       if (this.helpKey) {
         element.addEventListener('click', (event: MouseEvent) => this.showHelp(event));
         element.classList.add('title-with-context-help')
       }
-    } else if (element.tagName === 'MAT-LABEL') {
-      const contextHelpButton = this.viewContainerRef.createComponent(ContextHelpButtonComponent);
-      contextHelpButton.instance.helpKey = this.helpKey;
-      element.appendChild(contextHelpButton.location.nativeElement);
     } else if (element.tagName === 'ASIDE') {
-      // const contextAsHtml = this.getContextAsHtml()
-      // element.appendChild(contextAsHtml)
       this.contextHelpService.get(this.helpKey).subscribe(response => {
         const helpHtml = response.htmlContent;
         const container = document.createElement('div');
