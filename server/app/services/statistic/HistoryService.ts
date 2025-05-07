@@ -57,11 +57,8 @@ export class HistoryService {
     }
 
     async getHistory(id: number): Promise<any> {
+        await this.ensureIndexExists();
         const harvester = ConfigService.get().find(h => h.id === id);
-        let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
-        if (!indexExists) {
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
-        }
         let index = ProfileFactoryLoader.get().useIndexPerCatalog() ? harvester.catalogId : this.elasticUtils.indexName;
         let history = await this.elasticUtils.getHistory(this.elasticQueries.findHistory(index));
         return {
@@ -70,9 +67,17 @@ export class HistoryService {
         }
     }
 
+    async ensureIndexExists() {
+        let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
+        if (!indexExists) {
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
+        }
+    }
+
     private SUM = (accumulator, currentValue) => accumulator + currentValue;
 
     async getHistoryAll(): Promise<any> {
+        await this.ensureIndexExists();
         let { history } = await this.elasticUtils.getHistory(this.elasticQueries.findHistories(), 1000);
 
         let dates = [];

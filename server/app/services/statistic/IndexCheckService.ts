@@ -60,11 +60,15 @@ export class IndexCheckService {
     }
 
     async getHistory() {
+        await this.ensureIndexExists();
+        return this.elasticUtils.getHistory(this.elasticQueries.getIndexCheckHistory());
+    }
+
+    async ensureIndexExists() {
         let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
         if (!indexExists) {
             await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
         }
-        return this.elasticUtils.getHistory(this.elasticQueries.getIndexCheckHistory());
     }
 
     async start() {
