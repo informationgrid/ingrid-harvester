@@ -26,6 +26,8 @@
 // Import material theming functions
 // @import '@angular/material/theming';
 
+$max-width-panel: 1000px;
+
 // Copy the palettes from your selected theme (usually theme.scss).
 $app-primary: mat.define-palette(mat.$grey-palette);
 $app-accent:  mat.define-palette(mat.$light-blue-palette);

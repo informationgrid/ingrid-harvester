@@ -61,6 +61,10 @@ import { DialogLogComponent } from './dialog-log/dialog-log.component';
 import { DialogSchedulerComponent } from './dialog-scheduler/dialog-scheduler.component';
 import { HarvesterComponent } from './harvester.component';
 import { ImporterDetailComponent } from './importer-detail/importer-detail.component';
+import {ContextHelpDirective} from "../shared/context-help/context-help.directive";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {ContextHelpButtonComponent} from "../shared/context-help/context-help-button/context-help-button.component";
 
 const harvesterRoutes: Routes = [
   {
@@ -111,7 +115,12 @@ const harvesterRoutes: Routes = [
         MatBadgeModule,
         ScrollingModule,
         CronjobFormFieldComponent,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        ContextHelpDirective,
+        MatTooltip,
+        MatGridList,
+        MatGridTile,
+        ContextHelpButtonComponent
     ],
     exports: [
         HarvesterComponent

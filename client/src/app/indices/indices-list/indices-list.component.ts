@@ -38,6 +38,8 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 })
 export class IndicesListComponent implements OnInit {
 
+  pageContextHelpIsVisible: boolean = false;
+
   @ViewChild(CdkVirtualScrollViewport, {static: false})
   viewPort: CdkVirtualScrollViewport;
 
@@ -123,19 +125,19 @@ export class IndicesListComponent implements OnInit {
     if(this.searchHits.length > 0) {
       this.scrollToSearchHit("next");
     }
-    
+
   }
 
   scrollToSearchHit(direction: String) {
     if (direction == "next") {
-      this.searchHitsCount++; 
-      if (this.searchHitsCount >= this.searchHits.length + 1) { 
+      this.searchHitsCount++;
+      if (this.searchHitsCount >= this.searchHits.length + 1) {
         this.searchHitsCount = 1;
       }
-    } 
-    if (direction == "previous") { 
-      this.searchHitsCount--; 
-      if (this.searchHitsCount <= 0) { 
+    }
+    if (direction == "previous") {
+      this.searchHitsCount--;
+      if (this.searchHitsCount <= 0) {
         this.searchHitsCount = this.searchHits.length;
       }
     }

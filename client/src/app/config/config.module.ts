@@ -46,14 +46,15 @@ import { AddMappingItemComponent } from './config-mapping/add-mapping-item/add-m
 import { ConfigMappingComponent } from './config-mapping/config-mapping.component';
 import { ConfigComponent } from './config.component';
 import { routing } from './config.routing';
+import {ContextHelpDirective} from "../shared/context-help/context-help.directive";
 
 @NgModule({
     declarations: [
-        ConfigComponent, 
-        ConfigMappingComponent, 
-        ConfigGeneralComponent, 
-        ConfigImportExportComponent, 
-        ConfigCatalogsComponent, 
+        ConfigComponent,
+        ConfigMappingComponent,
+        ConfigGeneralComponent,
+        ConfigImportExportComponent,
+        ConfigCatalogsComponent,
         AddMappingItemComponent,
         AddOrEditCatalogComponent,
         DeleteCatalogComponent
@@ -74,7 +75,8 @@ import { routing } from './config.routing';
         routing,
         TranslocoModule,
         PageTemplateModule,
-        CronjobFormFieldComponent
+        CronjobFormFieldComponent,
+        ContextHelpDirective
     ],
     exports: [
         ConfigComponent

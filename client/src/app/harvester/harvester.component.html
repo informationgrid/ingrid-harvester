@@ -31,9 +31,39 @@
         </button>
     </div>
 
-    <h1 class="harvester-list config-headline">Harvester</h1>
+    <h1 class="harvester-list config-headline pointer" (click)="pageContextHelpIsVisible=!pageContextHelpIsVisible" (keydown.enter)="pageContextHelpIsVisible=!pageContextHelpIsVisible">
+      Harvester
+      <app-context-help-button/>
+    </h1>
 
-    @for (item of harvesters | keyvalue; track item) {
+    <mat-card appearance="raised" [className]="pageContextHelpIsVisible ? 'harvester-list' : 'hidden'">
+      <mat-card-content >
+        <aside contextHelp="about_harvester" ></aside>
+        <mat-grid-list cols="2" rowHeight="60px">
+          <mat-grid-tile colspan="2">
+            <b>Hilfestellungen zu den Themen:</b>
+          </mat-grid-tile>
+          <mat-grid-tile>
+            <mat-card-actions>
+              <button mat-stroked-button contextHelp="about_harvester_timing">
+                <mat-icon svgIcon="Schedule"/>
+                Ausführung planen
+              </button>
+            </mat-card-actions>
+          </mat-grid-tile>
+          <mat-grid-tile>
+            <mat-card-actions>
+              <button mat-stroked-button contextHelp="about_harvester_history">
+                <mat-icon svgIcon="Timeline"/>
+                Historie anzeigen
+              </button>
+            </mat-card-actions>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </mat-card-content>
+    </mat-card>
+
+  @for (item of harvesters | keyvalue; track item) {
     <div class="harvester-list">
 
         <h3>{{item.key}}</h3>
