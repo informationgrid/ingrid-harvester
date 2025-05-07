@@ -24,10 +24,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MonitoringHarvesterComponent } from './monitoring-harvester.component';
+import {ContextHelpDirective} from "../../shared/context-help/context-help.directive";
+import {MatButton} from "@angular/material/button";
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 
 @NgModule({
   declarations: [MonitoringHarvesterComponent],
-  imports: [CommonModule],
+  imports: [CommonModule, ContextHelpDirective, MatButton, MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle],
   exports: [MonitoringHarvesterComponent] // Export it if you want to use it outside this module
 })
 export class MonitoringHarvesterModule { }

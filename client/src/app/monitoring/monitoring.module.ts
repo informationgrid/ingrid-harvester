@@ -44,6 +44,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import { TranslocoModule } from "@ngneat/transloco";
+import {ContextHelpDirective} from "../shared/context-help/context-help.directive";
+import {PageTemplateModule} from "../shared/page-template/page-template.module";
 
 const configRoutes: Routes = [
   {
@@ -54,25 +56,27 @@ const configRoutes: Routes = [
 
 @NgModule({
     declarations: [MonitoringComponent, MonitoringHarvesterComponent, MonitoringUrlCheckComponent, MonitoringUrlcheckDetailComponent, MonitoringIndexCheckComponent, MonitoringIndexCheckDetailComponent],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(configRoutes),
-        SharedModule,
-        MatButtonModule,
-        ReactiveFormsModule,
-        MatTabsModule,
-        MatListModule,
-        MatIconModule,
-        MatAutocompleteModule,
-        MatSlideToggleModule,
-        MatCardModule,
-        MatCheckboxModule,
-        MatExpansionModule,
-        ScrollingModule,
-        MatGridList,
-        MatGridTile,
-        TranslocoModule,
-    ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(configRoutes),
+    SharedModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatTabsModule,
+    MatListModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    MatSlideToggleModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatExpansionModule,
+    ScrollingModule,
+    MatGridList,
+    MatGridTile,
+    TranslocoModule,
+    ContextHelpDirective,
+    PageTemplateModule,
+  ],
     exports: [
         MonitoringComponent
     ]

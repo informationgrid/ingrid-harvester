@@ -21,33 +21,11 @@
     ==================================================
 -->
 
-<!-- <mat-tab-group animationDuration="0ms" (selectedTabChange)="onTabChange($event)">
-  <mat-tab label="UrlCheck">
-    <app-monitoring-urlcheck></app-monitoring-urlcheck>
-  </mat-tab>
-  <mat-tab label="IndexCheck">
-    <app-monitoring-indexcheck></app-monitoring-indexcheck>
-  </mat-tab>
-  <mat-tab label="Harvester Historie">
-    <app-monitoring-harvester></app-monitoring-harvester>
-  </mat-tab>
-</mat-tab-group> -->
+<page-template label="Übersicht">
 
+  <aside left-side contextHelp="about_monitoring"></aside>
 
-<div
-    *transloco="let t; read: 'dashboard'"
-    class="allPageScroll flex-1 flex-col"
->
-  <div class="welcome" data-cy="welcome-message">
-      <div class="greetings">{{ t("welcome") }}</div>
-      @for (message of messages$ | async; track message) {
-          <div class="message">
-              <span>{{ message.text }}</span>
-          </div>
-      }
-  </div>
-
-  <div class="dashboard-content">
+  <div main-content class="allPageScroll flex-1 flex-col">
 
     <mat-grid-list [cols]="breakpoint" rowHeight="1:1" [gutterSize]="'32px'" style="margin: 32px" (window:resize)="onResize($event)">
       <mat-grid-tile [colspan]="breakpointCols">
@@ -62,4 +40,5 @@
     </mat-grid-list>
 
   </div>
-</div>
+
+</page-template>
