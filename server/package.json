@@ -14,7 +14,7 @@
     "start-cli-dev": "ts-node app/server-cli.ts",
     "build-with-tests": "tsc --outDir build",
     "build": "tsc --outDir build -p ./tsconfig.build.json",
-    "postbuild": "copyfiles './*.json' 'app/**/*.json' 'app/**/*.sql' 'app/**/*.xml' build/server",
+    "postbuild": "copyfiles './*.json' 'app/**/*.json' 'app/**/*.sql' 'app/**/*.xml' 'app/**/*.md' build/server",
     "install-production": "NODE_ENV=production npm ci",
     "test": "mocha -r ts-node/register test/**/*.ts  --profile=mcloud",
     "test-jenkins": "mocha -r ts-node/register test/mcloud/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml  --profile=mcloud",
