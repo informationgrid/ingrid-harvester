@@ -51,7 +51,7 @@ export class ContextHelpService {
       id: string,
       profile: string,
       htmlContent: string
-    }>(`/rest/api/help/${locale}/${markdownFileName}`);
+    }>(`rest/api/help/${locale}/${markdownFileName}`);
   }
 
   show(markdownFileName: string) {
