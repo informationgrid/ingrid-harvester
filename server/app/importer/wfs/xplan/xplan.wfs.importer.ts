@@ -30,7 +30,7 @@ import { XplanWfsMapper } from './xplan.wfs.mapper';
 
 export class XplanWfsImporter extends WfsImporter {
 
-    constructor(settings: Harvester, requestDelegate?: RequestDelegate) {
+    constructor(settings: Harvester) {
         super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
     }
 

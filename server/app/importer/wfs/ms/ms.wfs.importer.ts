@@ -32,7 +32,7 @@ export class MsWfsImporter extends WfsImporter {
 
     protected supportsPaging: boolean = true;
 
-    constructor(settings: Harvester, requestDelegate?: RequestDelegate) {
+    constructor(settings: Harvester) {
         super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
     }
 

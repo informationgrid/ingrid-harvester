@@ -64,22 +64,14 @@ export abstract class WfsImporter extends Importer {
 
     protected supportsPaging: boolean = false;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(settings: WfsSettings) {
         super(settings);
-
         this.profile = ProfileFactoryLoader.get();
         this.domParser = MiscUtils.getDomParser();
-
         // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultWfsSettings, settings);
-
-        if (requestDelegate) {
-            this.requestDelegate = requestDelegate;
-        } else {
-            let requestConfig = WfsImporter.createRequestConfig(settings);
-            this.requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(settings));
-        }
-        this.settings = settings;
+        this.settings = MiscUtils.merge(defaultWfsSettings, settings);
+        let requestConfig = WfsImporter.createRequestConfig(this.settings);
+        this.requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(settings));
     }
 
     // only here for documentation - use the "default" exec function

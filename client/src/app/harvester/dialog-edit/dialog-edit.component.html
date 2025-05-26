@@ -284,34 +284,10 @@
         </app-sparql-harvester>
       }
 
-      @if (harvesterForm.get('type').value === 'WFS.FIS') {
-        <app-wfs-harvester
-          [form]="harvesterForm"
-          [model]="harvester"
-          [rulesTemplate]="rules"
-          class="flex-column">
-        </app-wfs-harvester>
-      }
-
-      @if (harvesterForm.get('type').value === 'WFS.MS') {
-        <app-wfs-harvester
-          [form]="harvesterForm"
-          [model]="harvester"
-          [rulesTemplate]="rules"
-          class="flex-column">
-        </app-wfs-harvester>
-      }
-
-      @if (harvesterForm.get('type').value === 'WFS.XPLAN') {
-        <app-wfs-harvester
-          [form]="harvesterForm"
-          [model]="harvester"
-          [rulesTemplate]="rules"
-          class="flex-column">
-        </app-wfs-harvester>
-      }
-
-      @if (harvesterForm.get('type').value === 'WFS.XPLAN.SYN') {
+      @if (harvesterForm.get('type').value === 'WFS.FIS'
+            || harvesterForm.get('type').value === 'WFS.MS'
+            || harvesterForm.get('type').value === 'WFS.XPLAN'
+            || harvesterForm.get('type').value === 'WFS.XPLAN.SYN') {
         <app-wfs-harvester
           [form]="harvesterForm"
           [model]="harvester"

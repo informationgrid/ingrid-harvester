@@ -30,7 +30,7 @@ import { WfsMapper } from '../wfs.mapper';
 
 export class FisWfsImporter extends WfsImporter {
 
-    constructor(settings: Harvester, requestDelegate?: RequestDelegate) {
+    constructor(settings: Harvester) {
         super(MiscUtils.merge(settings, { memberElement: 'gml:featureMember'}));
     }
 
