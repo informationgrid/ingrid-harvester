@@ -50,11 +50,6 @@ export class XplanWfsMapper extends WfsMapper {
         return distributions;
     }
 
-    getTitle(): string {
-        let title = this.getTextContent('./*/xplan:name')?.trim();
-        return title ?? undefined;
-    }
-
     getPlanName(): string {
         let planName = this.getTextContent('./*/xplan:planName')?.trim();
         return planName ?? undefined;
@@ -182,9 +177,5 @@ export class XplanWfsMapper extends WfsMapper {
     getIssued(): Date {
         let issued = this.getTextContent('./*/xplan:technHerstellDatum');
         return MiscUtils.normalizeDateTime(issued);
-    }
-
-    getHarvestingDate(): Date {
-        return new Date(Date.now());
     }
 }

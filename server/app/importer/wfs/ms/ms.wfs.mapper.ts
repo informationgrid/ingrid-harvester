@@ -59,11 +59,6 @@ export class MsWfsMapper extends WfsMapper {
         return distributions;
     }
 
-    getTitle(): string {
-        let title = this.getTextContent('./*/ms:name')?.trim();
-        return title ?? undefined;
-    }
-
     getPlanName(): string {
         let planName = this.getTextContent('./*/ms:plan_name')?.trim();
         return planName ?? undefined;
@@ -168,9 +163,5 @@ export class MsWfsMapper extends WfsMapper {
     getModifiedDate(): Date {
         let modified = this.getTextContent('./*/ms:updated_at');
         return MiscUtils.normalizeDateTime(modified);
-    }
-
-    getHarvestingDate(): Date {
-        return new Date(Date.now());
     }
 }

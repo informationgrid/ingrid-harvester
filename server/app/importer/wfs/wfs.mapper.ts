@@ -98,11 +98,18 @@ export abstract class WfsMapper extends BaseMapper {
         return undefined
     }
 
-    abstract getTitle(): string;
+    getTitle(): string {
+        let title = this.getTextContent('./*/*[local-name()="name"]')?.trim();
+        return title ?? undefined;
+    }
 
-    abstract getDescription(): string;
+    getDescription(): string {
+        return undefined;
+    }
 
-    abstract getDistributions(): Promise<Distribution[]>;
+    getDistributions(): Promise<Distribution[]> {
+        return undefined;
+    }
 
     abstract getPlanName(): string;
 
@@ -122,7 +129,9 @@ export abstract class WfsMapper extends BaseMapper {
         };
     }
 
-    abstract getIssued(): Date;
+    getIssued(): Date {
+        return undefined;
+    }
 
     // TODO
     getModifiedDate(): Date {
@@ -134,11 +143,24 @@ export abstract class WfsMapper extends BaseMapper {
         return undefined;
     }
 
-    abstract getBoundingBox(): Geometry;
+    getBoundingBox(): Geometry {
+        let envelope = this.select('./*/gml:boundedBy/gml:Envelope', this.feature, true);
+        if (envelope) {
+            let lowerCorner = this.select('./gml:lowerCorner', envelope, true)?.textContent;
+            let upperCorner = this.select('./gml:upperCorner', envelope, true)?.textContent;
+            let crs = (<Element>envelope).getAttribute('srsName') || this.fetched['defaultCrs'];
+            return GeoJsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
+        }
+        return null;
+    }
 
-    abstract getSpatial(): Geometry | GeometryCollection;
+    getSpatial(): Geometry | GeometryCollection {
+        return undefined;
+    }
 
-    abstract getSpatialText(): string;
+    getSpatialText(): string {
+        return undefined;
+    }
 
     getCentroid(): Point {
         let spatial = this.getSpatial() ?? this.getBoundingBox();
