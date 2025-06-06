@@ -42,7 +42,7 @@
           <input type="text" matInput autocomplete="username" formControlName="username">
         </mat-form-field>
       </p>
-      
+
       <p>
         <mat-form-field>
           <mat-label>Passwort</mat-label>
@@ -57,7 +57,15 @@
 }
 
       <button mat-flat-button color="primary" id="btnSubmit" type="submit" data-test="login" class="w-full button">Login</button>
-      
+
+      <div class="mt-4 text-center">
+        <p>oder</p>
+      </div>
+
+      <button mat-flat-button color="accent" id="btnKeycloak" type="button" (click)="loginWithKeycloak()" class="w-full button mt-2">
+        Mit Keycloak anmelden
+      </button>
+
       <div class="forgetPassword">
         <p></p>
       </div>

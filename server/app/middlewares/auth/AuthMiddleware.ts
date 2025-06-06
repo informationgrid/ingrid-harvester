@@ -1,4 +1,5 @@
 /*
+/!*
  * ==================================================
  * ingrid-harvester
  * ==================================================
@@ -19,7 +20,7 @@
  * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  * ==================================================
- */
+ *!/
 
 import { Context, Middleware, MiddlewareMethods, Req} from '@tsed/common';
 import { Unauthorized } from '@tsed/exceptions';
@@ -37,5 +38,31 @@ export class AuthMiddleware implements MiddlewareMethods {
         if (!request.isAuthenticated()) {
             throw new Unauthorized("Unauthorized");
         }
+    }
+}
+*/
+import {Context, MiddlewareMethods, Inject, Middleware} from "@tsed/common";
+import {KeycloakService} from "../../services/keycloak/KeycloakService";
+import {KeycloakAuthOptions} from "../../decorators/KeycloakAuthOptions";
+import {KeycloakMiddleware} from "../KeycloakMiddleware";
+import {Unauthorized} from "@tsed/exceptions";
+
+@Middleware()
+export class AuthMiddleware implements MiddlewareMethods {
+    @Inject()
+    protected keycloakService: KeycloakService;
+
+    public use(@Context() ctx: Context) {
+        const options: KeycloakAuthOptions = ctx.endpoint.store.get(KeycloakMiddleware);
+        const keycloak = this.keycloakService.getKeycloakInstance();
+
+        if (ctx.getRequest().kauth.grant) {
+            this.keycloakService.setToken(ctx.getRequest().kauth.grant.access_token);
+            return
+        } else {
+        }
+            throw new Unauthorized("Unauthorized");
+
+        // return keycloak.protect(options?.role);
     }
 }

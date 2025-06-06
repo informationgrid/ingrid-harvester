@@ -23,7 +23,7 @@
 
 import {Input, Component, Output, EventEmitter, OnInit} from '@angular/core';
 import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
-import {AuthenticationService} from './authentication.service';
+import {AuthenticationService, AuthMethod} from './authentication.service';
 import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 
@@ -43,11 +43,16 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Initialize Keycloak
+    this.authService.initKeycloak().catch(error => {
+      console.error('Error initializing Keycloak', error);
+    });
+
     this.authService.currentUser.subscribe(user => {
       if (user) {
         this.router.navigate(['/']);
       }
-    })
+    });
   }
 
   submit() {
@@ -62,5 +67,24 @@ export class LoginComponent implements OnInit {
         }
       });
     }
+  }
+
+  loginWithKeycloak() {
+    this.showErrorMessage = false;
+    this.authService.login(null, null, AuthMethod.KEYCLOAK).subscribe(
+      response => {
+        if (response) {
+          console.log('Keycloak login successful', response);
+          this.router.navigate(['/']);
+        } else {
+          console.error('Keycloak login failed');
+          this.showErrorMessage = true;
+        }
+      },
+      error => {
+        console.error('Error during Keycloak login', error);
+        this.showErrorMessage = true;
+      }
+    );
   }
 }

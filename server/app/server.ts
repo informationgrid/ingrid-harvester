@@ -28,7 +28,7 @@ import * as path from 'path';
 import { ProfileFactoryLoader } from './profiles/profile.factory.loader';
 import { ConfigService } from './services/config/ConfigService';
 import { jsonLayout } from './utils/log4js.json.layout';
-
+import {KeycloakService} from "./services/keycloak/KeycloakService";
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const serverConfig = require('../server-config.json');
@@ -75,6 +75,8 @@ const baseURL = process.env.BASE_URL ?? '/';
     acceptMimes: ['application/json'],
     passport: {},
     statics: {
+        // '/keycloak.js': [{
+        //     root: `./keycloak.js`}],
         [createRelativePath(baseURL)]: `${rootDir}/webapp`,
         [createRelativePath(baseURL, '*')]: `${rootDir}/webapp/index.html`
     },
@@ -89,6 +91,9 @@ export class Server {
 
     @Inject()
     app: PlatformApplication;
+
+    @Inject()
+    protected keycloakService: KeycloakService;
 
     @Configuration()
     settings: Configuration;
@@ -127,10 +132,12 @@ export class Server {
                     secure: false,
                     maxAge: null
                 },
-                store: new MemoryStore({
-                    checkPeriod: 86400000 // prune expired entries every 24h
-                })
+                store: this.keycloakService.getMemoryStore()
+                // store: new MemoryStore({
+                //     checkPeriod: 86400000 // prune expired entries every 24h
+                // })
             }));
+        this.app.use(this.keycloakService.getKeycloakInstance().middleware());
 
         return null;
     }

@@ -17,6 +17,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "sourceMap": true,
+            "optimization": false,
             "outputPath": "dist/webapp",
             "index": "src/index.html",
             "main": "src/main.ts",

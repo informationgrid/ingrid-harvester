@@ -41,11 +41,12 @@ import {LoginComponent} from './security/login.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '@angular/material/form-field';
-import { MAT_CARD_CONFIG } from '@angular/material/card'; 
+import { MAT_CARD_CONFIG } from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {AuthenticationService} from './security/authentication.service';
+import {KeycloakService} from './security/keycloak.service';
 import { SideMenuComponent } from './side-menu/side-menu.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslocoService } from "@ngneat/transloco";
@@ -62,6 +63,12 @@ export function ConfigLoader(
   return () => {
     return configService.load('assets/' + environment.configFile)
       .subscribe();
+  };
+}
+
+export function initializeKeycloak(authService: AuthenticationService) {
+  return () => {
+    return authService.initKeycloak();
   };
 }
 
@@ -101,13 +108,19 @@ const appRoutes: Routes = routes
         TranslocoService,
       ],
       multi: true
+    }, {
+      provide: APP_INITIALIZER,
+      useFactory: initializeKeycloak,
+      deps: [AuthenticationService],
+      multi: true
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: UnauthorizedInterceptor,
       deps: [
-        Router, 
+        Router,
         AuthenticationService,
+        KeycloakService
       ],
       multi: true
     },
