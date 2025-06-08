@@ -53,22 +53,19 @@ import { TranslocoService } from "@ngneat/transloco";
 import { TranslocoRootModule } from "./transloco-root.module";
 import { MainHeaderComponent } from "./main-header/main-header.component";
 import { routes } from "./app.router";
+import { KeycloakAngularModule, KeycloakService as KeycloakAngularService } from 'keycloak-angular';
 
 registerLocaleData(localeDe);
 
 export function ConfigLoader(
   configService: ConfigService,
-  translocoService: TranslocoService,
+  authService: AuthenticationService
 ) {
   return () => {
     return configService.load('assets/' + environment.configFile)
-      .subscribe();
-  };
-}
-
-export function initializeKeycloak(authService: AuthenticationService) {
-  return () => {
-    return authService.initKeycloak();
+      .subscribe(() => {
+        return authService.initKeycloak();
+      });
   };
 }
 
@@ -95,6 +92,7 @@ const appRoutes: Routes = routes
     MatButtonModule,
     MatTooltipModule,
     TranslocoRootModule,
+    KeycloakAngularModule,
   ],
   providers: [
     {
@@ -105,13 +103,8 @@ const appRoutes: Routes = routes
       useFactory: ConfigLoader,
       deps: [
         ConfigService,
-        TranslocoService,
+        AuthenticationService
       ],
-      multi: true
-    }, {
-      provide: APP_INITIALIZER,
-      useFactory: initializeKeycloak,
-      deps: [AuthenticationService],
       multi: true
     },
     {
@@ -126,6 +119,8 @@ const appRoutes: Routes = routes
     },
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline', floatLabel: 'auto'}},
     {provide: MAT_CARD_CONFIG, useValue: {appearance: 'raised'}},
+    KeycloakAngularService,
+    KeycloakService
   ],
   bootstrap: [AppComponent]
 })

@@ -44,9 +44,9 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     // Initialize Keycloak
-    this.authService.initKeycloak().catch(error => {
+    /*this.authService.initKeycloak().catch(error => {
       console.error('Error initializing Keycloak', error);
-    });
+    });*/
 
     this.authService.currentUser.subscribe(user => {
       if (user) {

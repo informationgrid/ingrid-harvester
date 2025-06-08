@@ -21,16 +21,15 @@
  * ==================================================
  */
 
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, from, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import Keycloak from 'keycloak-js';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, from, Observable, of} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+import {KeycloakOptions, KeycloakService as KeycloakAngularService} from 'keycloak-angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class KeycloakService {
-  private keycloak: Keycloak | null = null;
   private authenticated = new BehaviorSubject<boolean>(false);
   private keycloakConfig = {
     url: 'http://localhost:8080', // Replace with your Keycloak server URL
@@ -38,35 +37,37 @@ export class KeycloakService {
     clientId: 'harvester' // Replace with your client ID
   };
 
-  constructor() {}
+  constructor(private keycloakAngular: KeycloakAngularService) {
+  }
 
   init(): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      this.keycloak = new Keycloak(this.keycloakConfig);
-
-      this.keycloak.init({
+    const options: KeycloakOptions = {
+      config: this.keycloakConfig,
+      initOptions: {
         onLoad: 'check-sso',
         silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
-        checkLoginIframe: false
-      })
+        // checkLoginIframe: false
+      },
+      enableBearerInterceptor: false // We'll handle this manually in the UnauthorizedInterceptor
+    };
+
+    return this.keycloakAngular.init(options)
       .then(authenticated => {
-        debugger
         this.authenticated.next(authenticated);
-        resolve(authenticated);
+        return authenticated;
       })
       .catch(error => {
         console.error('Failed to initialize Keycloak', error);
-        reject(error);
+        return false;
       });
-    });
   }
 
   login(): Promise<void> {
-    return this.keycloak?.login() || Promise.reject('Keycloak not initialized');
+    return this.keycloakAngular.login();
   }
 
   logout(): Promise<void> {
-    return this.keycloak?.logout() || Promise.reject('Keycloak not initialized');
+    return this.keycloakAngular.logout();
   }
 
   isAuthenticated(): Observable<boolean> {
@@ -74,8 +75,7 @@ export class KeycloakService {
   }
 
   getToken(): Observable<string> {
-    return from(this.updateToken(30)).pipe(
-      map(() => this.keycloak?.token || ''),
+    return from(this.keycloakAngular.getToken()).pipe(
       catchError(error => {
         console.error('Failed to get token', error);
         return of('');
@@ -84,10 +84,12 @@ export class KeycloakService {
   }
 
   getUsername(): string {
-    return this.keycloak?.tokenParsed?.preferred_username || '';
-  }
-
-  private updateToken(minValidity: number): Promise<boolean> {
-    return this.keycloak?.updateToken(minValidity) || Promise.reject('Keycloak not initialized');
+    try {
+      const userProfile = this.keycloakAngular.getKeycloakInstance().tokenParsed;
+      return userProfile?.preferred_username || '';
+    } catch (error) {
+      console.error('Error getting username', error);
+      return '';
+    }
   }
 }
