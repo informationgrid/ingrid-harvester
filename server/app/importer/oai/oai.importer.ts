@@ -46,7 +46,7 @@ export class OaiImporter extends Importer {
     protected domParser: DOMParser;
     protected profile: ProfileFactory<BaseMapper>;
     protected requestDelegate: RequestDelegate;
-    protected settings: OaiSettings;
+    declare protected settings: OaiSettings;
 
     private xpaths: OaiXPaths;
 

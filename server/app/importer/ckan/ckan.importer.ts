@@ -41,7 +41,7 @@ export class CkanImporter extends Importer {
 
     protected profile: ProfileFactory<CkanMapper>;
     protected requestDelegate: RequestDelegate;
-    protected settings: CkanSettings;
+    declare protected settings: CkanSettings;
 
     protected numIndexDocs = 0;
     private requestDelegateCount: RequestDelegate;

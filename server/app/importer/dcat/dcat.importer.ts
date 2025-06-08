@@ -45,7 +45,7 @@ export class DcatImporter extends Importer {
     protected domParser: DOMParser;
     protected profile: ProfileFactory<DcatMapper>;
     protected requestDelegate: RequestDelegate;
-    protected settings: DcatSettings;
+    declare protected settings: DcatSettings;
 
     private totalRecords = 0;
     private numIndexDocs = 0;

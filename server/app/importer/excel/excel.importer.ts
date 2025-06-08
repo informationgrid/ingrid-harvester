@@ -39,7 +39,7 @@ const log = require('log4js').getLogger(__filename);
 export class ExcelImporter extends Importer {
 
     protected profile: ProfileFactory<ExcelMapper>;
-    protected settings: ExcelSettings;
+    declare protected settings: ExcelSettings;
 
     excelFilepath: string;
     names = {};

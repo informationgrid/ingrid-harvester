@@ -42,7 +42,7 @@ const logRequest = getLogger('requests');
 export class JsonImporter extends Importer {
 
     protected profile: ProfileFactory<JsonMapper>;
-    protected settings: JsonSettings;
+    declare protected settings: JsonSettings;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
@@ -81,7 +81,7 @@ export class JsonImporter extends Importer {
         if (numReturned) {
             log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
             await this.extractRecords(response, harvestTime);
-            
+
             let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
             log.info(`Finished processing ${numReturned} records in ${processingTime} seconds`);
         }

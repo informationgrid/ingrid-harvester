@@ -54,7 +54,7 @@ export abstract class WfsImporter extends Importer {
     protected domParser: DOMParser;
     protected profile: ProfileFactory<WfsMapper>;
     protected requestDelegate: RequestDelegate;
-    protected settings: WfsSettings;
+    declare protected settings: WfsSettings;
 
     private totalFeatures = 0;
     private numIndexDocs = 0;
@@ -131,7 +131,7 @@ export abstract class WfsImporter extends Importer {
         // role -> contact
         let contacts: Map<string, Contact> = new Map();
         if (this.settings.contactCswUrl) {
-            let response = await RequestDelegate.doRequest({ 
+            let response = await RequestDelegate.doRequest({
                 uri: this.settings.contactCswUrl,
                 accept: 'text/xml',
                 ...getProxyConfig()
@@ -276,7 +276,7 @@ export abstract class WfsImporter extends Importer {
         if (envelope) {
             let lowerCorner = select('./gml:lowerCorner', envelope, true)?.textContent;
             let upperCorner = select('./gml:upperCorner', envelope, true)?.textContent;
-            let crs = (<Element>envelope).getAttribute('srsName') || this.generalInfo['defaultCrs'];            
+            let crs = (<Element>envelope).getAttribute('srsName') || this.generalInfo['defaultCrs'];
             this.generalInfo['boundingBox'] = GeoJsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
         }
 

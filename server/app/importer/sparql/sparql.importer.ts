@@ -46,7 +46,7 @@ const SimpleClient = require('sparql-http-client/SimpleClient');
 export class SparqlImporter extends Importer {
 
     protected profile: ProfileFactory<SparqlMapper>;
-    protected settings: SparqlSettings;
+    declare protected settings: SparqlSettings;
 
     private totalRecords = 0;
     private numIndexDocs = 0;

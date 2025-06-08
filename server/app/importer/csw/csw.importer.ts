@@ -51,7 +51,7 @@ export class CswImporter extends Importer {
 
     protected domParser: DOMParser;
     protected profile: ProfileFactory<CswMapper>;
-    protected settings: CswSettings;
+    declare protected settings: CswSettings;
     protected getRecordsURL: string;
 
     // ServiceType#GetCapabilitiesURL -> { DatasetUUID -> typenames[] }

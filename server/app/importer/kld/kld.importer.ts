@@ -51,7 +51,7 @@ export class KldImporter extends Importer {
 
     protected domParser: DOMParser;
     protected profile: ProfileFactory<KldMapper>;
-    protected settings: KldSettings;
+    declare protected settings: KldSettings;
 
     private totalRecords = 0;
     private numIndexDocs = 0;

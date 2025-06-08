@@ -39,7 +39,7 @@ const log = require('log4js').getLogger(__filename);
 export class ExcelSparseImporter extends Importer {
 
     protected profile: ProfileFactory<ExcelSparseMapper>;
-    protected settings: ExcelSparseSettings;
+    declare protected settings: ExcelSparseSettings;
 
     excelFilepath: string;
     names = {};

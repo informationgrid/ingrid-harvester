@@ -32,7 +32,7 @@ const log = require('log4js').getLogger(__filename);
 
 export class ElasticsearchUtils8 extends ElasticsearchUtils {
 
-    protected client: Client;
+    declare protected client: Client;
 
     constructor(config: IndexConfiguration, summary: Summary) {
         super(config);
@@ -166,7 +166,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
             format: 'json'
         });
         let aliases = response.filter(entry => entry.index == index).map(entry => entry.alias);
-        return aliases; 
+        return aliases;
     }
 
     async removeAlias(index: string, alias: string): Promise<any> {

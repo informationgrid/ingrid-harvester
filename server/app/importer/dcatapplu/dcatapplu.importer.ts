@@ -46,7 +46,7 @@ export class DcatappluImporter extends Importer {
     protected domParser: DOMParser;
     protected profile: ProfileFactory<DcatappluMapper>;
     protected requestDelegate: RequestDelegate;
-    protected settings: DcatappluSettings;
+    declare protected settings: DcatappluSettings;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
