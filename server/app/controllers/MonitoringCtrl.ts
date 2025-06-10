@@ -21,18 +21,19 @@
  * ==================================================
  */
 
-import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
-import { BodyParams, Controller, Get, UseAuth } from '@tsed/common';
-import { HistoryService } from "../services/statistic/HistoryService";
-import { IndexCheckService } from "../services/statistic/IndexCheckService";
-import { UrlCheckService } from "../services/statistic/UrlCheckService";
-import {KeycloakMiddleware} from "../middlewares/KeycloakMiddleware";
-import {KeycloakAuth} from "../decorators/KeycloakAuthOptions";
+import {AuthMiddleware} from '../middlewares/auth/AuthMiddleware';
+import {BodyParams, Controller, Get, UseAuth} from '@tsed/common';
+import {HistoryService} from "../services/statistic/HistoryService";
+import {IndexCheckService} from "../services/statistic/IndexCheckService";
+import {UrlCheckService} from "../services/statistic/UrlCheckService";
+import {getLogger} from "log4js";
 
 @Controller('/api/monitoring')
 @UseAuth(AuthMiddleware)
 // @UseAuth(KeycloakMiddleware)
 export class MonitoringCtrl {
+
+    log = getLogger();
 
     constructor(private urlCheckService: UrlCheckService,
                 private indexCheckService: IndexCheckService,
@@ -55,9 +56,15 @@ export class MonitoringCtrl {
 
     @Get('/harvester')
     // @KeycloakAuth({role: "realm:harv-user"})
-    getAllHarvesterHistory(@BodyParams() request: any) {
-        // re-initialize in case settings have changed
-        this.historyService.initialize();
-        return this.historyService.getHistoryAll();
+    async getAllHarvesterHistory(@BodyParams() request: any) {
+        try {
+            // re-initialize in case settings have changed
+            this.historyService.initialize();
+            return await this.historyService.getHistoryAll();
+        } catch (e) {
+            if (e.message && e.message.includes("index_not_found_exception")) {
+                this.log.info("harvester_statistic index not found");
+            } else this.log.error(e);
+        }
     }
 }
