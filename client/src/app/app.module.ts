@@ -62,10 +62,13 @@ export function ConfigLoader(
   authService: AuthenticationService
 ) {
   return () => {
-    return configService.load('assets/' + environment.configFile)
-      .subscribe(() => {
-        return authService.initKeycloak();
-      });
+    return new Promise(resolve => {
+      configService.load('assets/' + environment.configFile)
+        .subscribe(async () => {
+          let result = await authService.initKeycloak();
+          resolve( result);
+        });
+    })
   };
 }
 

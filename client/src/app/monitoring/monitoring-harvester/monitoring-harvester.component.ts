@@ -55,8 +55,10 @@ export class MonitoringHarvesterComponent implements OnInit {
 
   public async drawChart() {
     if (!this.chart) {
-      this.getHarvesterHistory().toPromise().then((data) => {
-        this.chart = historyChart('chart_harvester', data.history)
+      this.getHarvesterHistory().subscribe((data) => {
+        if (data) {
+          this.chart = historyChart('chart_harvester', data.history)
+        }
       });
     } else {
     }
