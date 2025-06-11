@@ -23,20 +23,11 @@
 
 import * as MiscUtils from '../../../utils/misc.utils';
 import { Harvester } from '@shared/harvester';
-import { MsWfsMapper } from './ms.wfs.mapper';
-import { RequestDelegate } from '../../../utils/http-request.utils';
-import { WfsImporter } from '../wfs.importer';
-import { WfsMapper } from '../wfs.mapper';
+import { WfsImporter } from '../../../importer/wfs/wfs.importer';
 
-export class MsWfsImporter extends WfsImporter {
-
-    protected supportsPaging: boolean = true;
+export class FisWfsImporter extends WfsImporter {
 
     constructor(settings: Harvester) {
-        super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
-    }
-
-    getMapper(settings: Harvester, feature, harvestTime, summary, generalInfo): WfsMapper {
-        return new MsWfsMapper(settings, feature, harvestTime, summary, generalInfo);
+        super(MiscUtils.merge(settings, { memberElement: 'gml:featureMember'}));
     }
 }

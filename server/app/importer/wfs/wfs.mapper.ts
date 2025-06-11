@@ -37,25 +37,19 @@ import { Summary } from '../../model/summary';
 import { WfsSettings } from './wfs.settings';
 import { XPathNodeSelect } from '../../utils/xpath.utils';
 
-export abstract class WfsMapper extends BaseMapper {
+export class WfsMapper extends BaseMapper {
 
     log = getLogger();
 
-    protected readonly feature: Node & Element;
-    private harvestTime: any;
+    readonly feature: Node & Element;
+    readonly fetched: any;
+    readonly settings: WfsSettings;
+    readonly uuid: string;
 
-    private settings: WfsSettings;
-    protected readonly uuid: string;
+    private harvestTime: any;
     private summary: Summary;
 
-    protected fetched: any = {
-        boundingBox: null,
-        contactPoint: null,
-        keywords: {},
-        themes: null
-    };
-
-    protected select: XPathNodeSelect;
+    select: XPathNodeSelect;
 
     constructor(settings, feature, harvestTime, summary, generalInfo) {
         super();
@@ -63,7 +57,13 @@ export abstract class WfsMapper extends BaseMapper {
         this.feature = feature;
         this.harvestTime = harvestTime;
         this.summary = summary;
-        this.fetched = {...this.fetched, ...generalInfo};
+        this.fetched = {
+            boundingBox: null,
+            contactPoint: null,
+            keywords: {},
+            themes: null,
+            ...generalInfo
+        };
         this.select = (...args: any[]) => {
             try {
                 return generalInfo['select'](...args);
@@ -111,8 +111,6 @@ export abstract class WfsMapper extends BaseMapper {
         return undefined;
     }
 
-    abstract getPlanName(): string;
-
     getGeneratedId(): string {
         return this.uuid;
     }
@@ -137,10 +135,6 @@ export abstract class WfsMapper extends BaseMapper {
     getModifiedDate(): Date {
         return undefined;
         // return new Date(this.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.feature, true).textContent);
-    }
-
-    getProcedureImportDate(): Date {
-        return undefined;
     }
 
     getBoundingBox(): Geometry {
@@ -175,38 +169,6 @@ export abstract class WfsMapper extends BaseMapper {
         return this.fetched.catalog;
     }
 
-    getPluDevelopmentFreezePeriod(): DateRange {
-        return undefined;
-    }
-
-    abstract getPluDocType(code: string): PluDocType;
-
-    getPluPlanState(): PluPlanState {
-        return this.settings.pluPlanState;
-    }
-
-    abstract getPluPlanType(): PluPlanType;
-
-    abstract getPluPlanTypeFine(): string;
-
-    getPluProcedureState(): PluProcedureState {
-        switch (this.getPluPlanState()) {
-            case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
-            case PluPlanState.IN_AUFST: return PluProcedureState.LAUFEND;
-            default: return PluProcedureState.UNBEKANNT;
-        }
-    }
-
-    abstract getPluProcedureType(): PluProcedureType;
-
-    abstract getPluProcessSteps(): ProcessStep[];
-
-    abstract getPluProcedurePeriod(): DateRange;
-
-    getAdmsIdentifier(): string {
-        return undefined;
-    }
-
     getHarvestedData(): string {
         return this.feature.toString();
     }
@@ -238,11 +200,11 @@ export abstract class WfsMapper extends BaseMapper {
         return config;
     }
 
-    protected getTextContent(xpathStr: string, searchNode: Node = this.feature) {
+    getTextContent(xpathStr: string, searchNode: Node = this.feature) {
         return (<Element>this.select(xpathStr, searchNode, true))?.textContent;
     }
 
-    protected getTypename(toLowerCase: boolean = true): string {
+    getTypename(toLowerCase: boolean = true): string {
         let typename = (<Element>this.select('./*', this.feature, true))?.localName;
         return toLowerCase ? typename.toLowerCase() : typename;
     }

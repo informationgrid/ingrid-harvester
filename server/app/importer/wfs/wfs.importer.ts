@@ -49,11 +49,10 @@ import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils';
 const log = getLogger(__filename);
 const logRequest = getLogger('requests');
 
-export abstract class WfsImporter extends Importer {
+export class WfsImporter extends Importer {
 
     protected domParser: DOMParser;
     protected profile: ProfileFactory<WfsMapper>;
-    protected requestDelegate: RequestDelegate;
     protected settings: WfsSettings;
 
     private totalFeatures = 0;
@@ -70,8 +69,6 @@ export abstract class WfsImporter extends Importer {
         this.domParser = MiscUtils.getDomParser();
         // merge default settings with configured ones
         this.settings = MiscUtils.merge(defaultWfsSettings, settings);
-        let requestConfig = WfsImporter.createRequestConfig(this.settings);
-        this.requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(settings));
     }
 
     // only here for documentation - use the "default" exec function
@@ -249,9 +246,8 @@ export abstract class WfsImporter extends Importer {
         return this.numIndexDocs;
     }
 
-    async extractFeatures(getFeatureResponse, harvestTime) {
+    async extractFeatures(xml: Document, harvestTime) {
         let promises = [];
-        let xml = this.domParser.parseFromString(getFeatureResponse, 'application/xml');
 
         // extend nsmap with the namespaces from the FeatureCollection response
         // this.nsMap = { ...XPathUtils.getNsMap(xml), ...XPathUtils.getExtendedNsMap(xml) };
@@ -315,7 +311,9 @@ export abstract class WfsImporter extends Importer {
         await Promise.all(promises).catch(err => log.error('Error indexing WFS record', err));
     }
 
-    abstract getMapper(settings, feature, harvestTime, summary, generalInfo): WfsMapper;
+    getMapper(settings, feature, harvestTime, summary, generalInfo): WfsMapper {
+        return new WfsMapper(settings, feature, harvestTime, summary, generalInfo);
+    }
 
     static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
         let requestConfig: RequestOptions = {
