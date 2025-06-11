@@ -27,6 +27,7 @@ import { Keyword } from '../../../model/ingrid.index.document';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
 import { Media, Person, Relation, Source } from '../model/index.document';
+import { UrlUtils } from '../../../utils/url.utils';
 
 export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
 
@@ -154,9 +155,12 @@ export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
     }
 
     async getSource(): Promise<Source> {
+        let requestConfig = {
+            uri: `https://click-rhein.lvr.de/detail/discovery/${this.getIdentifier()}`
+        };
         return {
             id: 'ClickRhein',
-            display_url: null
+            display_url: await UrlUtils.urlWithProtocolFor(requestConfig, this.baseMapper.getSettings().skipUrlCheckOnHarvest, true)
         };
     }
 
