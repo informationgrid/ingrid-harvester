@@ -56,6 +56,7 @@ export const namespaces = {
     VOID: 'http://rdfs.org/ns/void#',
     WMS: 'http://www.opengis.net/wms',
     XLINK: 'http://www.w3.org/1999/xlink',
+    XML: 'http://www.w3.org/XML/1998/namespace',
     XSD: 'http://www.w3.org/2001/XMLSchema',
     XSI: 'http://www.w3.org/2001/XMLSchema-instance',
 };
