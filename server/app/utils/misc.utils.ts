@@ -250,7 +250,7 @@ export function substringBeforeLast(s: string, delim: string) {
     return s.substring(0, s.lastIndexOf(delim));
 }
 
-export function substringAfterLast(s: string, delim: string) {
+export function substringAfterLast(s: string, delim: string, fullFallback: boolean = false) {
     if (s == null) {
         return null;
     }
@@ -259,7 +259,12 @@ export function substringAfterLast(s: string, delim: string) {
     }
     let lastIdx = s.lastIndexOf(delim);
     if (lastIdx == -1) {
-      return '';
+        if (fullFallback) {
+            return s;
+        }
+        else {
+            return '';
+        }
     }
     return s.substring(lastIdx + delim.length);
 }
