@@ -123,11 +123,8 @@ export class KldMapper extends BaseMapper {
         return relations;
     }
 
-    getMedia(): Media[] {
-        let media: Media[] = [];
-
-        media = media.concat(this.record.Dokumente.map((d: Document) => this.mapDocument(d)));
-        return media;
+    async getMedia(): Promise<Media[]> {
+        return await Promise.all(this.record.Dokumente.map((d: Document) => this.mapDocument(d)));
     }
 
     getLicense(): License {
@@ -204,13 +201,15 @@ export class KldMapper extends BaseMapper {
         }
     }
 
-    private mapDocument(document: Document): Media {
+    private async mapDocument(document: Document): Promise<Media> {
+        let mediaURL = getDocumentUrl(this.takeFirstNonEmpty(document, ['DownloadToken', 'Thumbnail3Token', 'Thumbnail2Token', 'Thumbnail1Token']));
         return {
             // @ts-expect-error MediaType ensures that Media.type will be correctly typed
             type: this.getEnumKey(MediaType, document.Medientyp).toLowerCase(),
-            url: getDocumentUrl(this.takeFirstNonEmpty(document, ['DownloadToken', 'Thumbnail3Token', 'Thumbnail2Token', 'Thumbnail1Token'])),
+            url: mediaURL,
             thumbnail: getDocumentUrl(this.takeFirstNonEmpty(document, ['Thumbnail2Token', 'Thumbnail3Token', 'Thumbnail1Token'])),
-            description: this.takeFirstNonEmpty(document, ['Ueberschrift', 'Beschreibung', 'AlternativeBeschreibung'])
+            description: this.takeFirstNonEmpty(document, ['Ueberschrift', 'Beschreibung', 'AlternativeBeschreibung']),
+            dimensions: await MiscUtils.getImageDimensionsFromURL(mediaURL)
         }
     }
 

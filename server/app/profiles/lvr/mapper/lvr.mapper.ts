@@ -78,7 +78,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
                 identifier: this.getIdentifier(),
                 genres: this.getGenres(),
                 persons: this.getPersons(),
-                media: this.getMedia(),
+                media: await this.getMedia(),
                 relations: this.getRelations(),
                 licenses: this.getLicense(),
                 vector: this.getVector(),
@@ -145,7 +145,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
 
     abstract getPersons(): Person[];
 
-    abstract getMedia(): Media[];
+    abstract getMedia(): Promise<Media[]>;
 
     abstract getRelations(): Relation[];
 

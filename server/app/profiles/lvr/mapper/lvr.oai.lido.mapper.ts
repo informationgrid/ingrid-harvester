@@ -119,7 +119,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         return null;
     }
 
-    getMedia(): Media[] {
+    async getMedia(): Promise<Media[]> {
 
         const findFirstURL = (links: Link[], attributes: string[]) => {
             let url = '';
@@ -129,7 +129,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
             return url;
         };
 
-        let media = [];
+        let media: Media[] = [];
         for (let resource of this.baseMapper.getResources()) {
             switch (resource.type) {
                 case 'digitales Bild': {
@@ -139,7 +139,8 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
                         type: 'image',
                         url: fullURL,
                         thumbnail: thumbnailURL,
-                        description: resource.description
+                        description: resource.description,
+                        dimensions: await MiscUtils.getImageDimensionsFromURL(fullURL)
                     });
                     break;
                 }
@@ -177,7 +178,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
                 }
             }
         }
-        return media;
+        return await Promise.all(media);
     }
 
     getRelations(): Relation[] {
@@ -224,7 +225,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
                         return 'digiCULT (Preußen)';
                     }
                     else if (relationIds.includes('DE-2086/lido/57a2eb58249101.94114332')
-                        || conceptIds.includes('http://digicult.vocnet.org/portal/p0326')) {
+                            || conceptIds.includes('http://digicult.vocnet.org/portal/p0326')) {
                         return 'digiCULT (Geschichte)';
                     }
                     // console.log("NO PORTAL: " + this.getIdentifier());

@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../../utils/misc.utils';
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { JsonMapper } from '../../../importer/json/json.mapper';
 import { Keyword } from '../../../model/ingrid.index.document';
@@ -122,7 +123,7 @@ export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
         return null;
     }
 
-    getMedia(): Media[] {
+    async getMedia(): Promise<Media[]> {
         let { sourceURL, additionalSettings } = this.baseMapper.getSettings();
         let baseURL = sourceURL.substring(0, sourceURL.indexOf('/', 8));
         const queryParam = (mediaType) => {
@@ -133,11 +134,18 @@ export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
                 default: return '';
             }
         }
-        return this.baseMapper.record['media']?.map(entry => ({
-            type: entry.media_type,
-            url: baseURL + entry.download_url + queryParam(entry.media_type),
-            thumbnail: baseURL + entry.url + `&width=${additionalSettings['thumbnailWidth'] ?? 480}`,
-            description: entry.description
+        return await Promise.all(this.baseMapper.record['media']?.map(async entry => {
+            let mediaURL = baseURL + entry.download_url + queryParam(entry.media_type);
+            let media: Media = {
+                type: entry.media_type,
+                url: mediaURL,
+                thumbnail: baseURL + entry.url + `&width=${additionalSettings['thumbnailWidth'] ?? 480}`,
+                description: entry.description
+            }
+            if (entry.media_type == 'image') {
+                media.dimensions = await MiscUtils.getImageDimensionsFromURL(mediaURL);
+            }
+            return media;
         }));
     }
 

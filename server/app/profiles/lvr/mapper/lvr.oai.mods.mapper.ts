@@ -71,7 +71,7 @@ export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {
         return this.baseMapper.getNames();
     }
 
-    getMedia(): Media[] {
+    async getMedia(): Promise<Media[]> {
         return this.baseMapper.getLocations();
     }
 
