@@ -209,6 +209,16 @@
             "description": {
               "type": "text",
               "analyzer": "decomp_german"
+            },
+            "dimensions": {
+              "properties": {
+                "width": {
+                  "type": "integer"
+                },
+                "height": {
+                  "type": "integer"
+                }
+              }
             }
           }
         },
