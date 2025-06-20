@@ -168,6 +168,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
                 default: {
                     for (let link of resource.links) {
                         media.push({
+                            // @ts-expect-error TODO investigate this case
                             type: link.format,
                             url: link.url,
                             description: resource.description

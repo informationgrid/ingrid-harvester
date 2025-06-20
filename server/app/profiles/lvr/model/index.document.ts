@@ -45,12 +45,14 @@ export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
 };
 
 export type Media = {
-    type: 'image' | 'audio' | 'video' | 'document' | '',//string,
+    type: MediaType,//string,
     url: string,
     thumbnail?: string,
     description: string,
     dimensions?: Dimensions
 };
+
+export type MediaType = 'image' | 'audio' | 'video' | 'document' | '';
 
 export type Person = {
     type: string,

@@ -32,7 +32,7 @@ import { BaseMapper } from '../../base.mapper';
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { ImporterSettings } from '../../../importer.settings';
 import { Keyword } from '../../../model/ingrid.index.document';
-import { Media, Person, Relation } from '../../../profiles/lvr/model/index.document';
+import { Media, MediaType, Person, Relation } from '../../../profiles/lvr/model/index.document';
 import { MetadataSource } from '../../../model/index.document';
 import { OaiSettings } from '../oai.settings';
 import { Summary } from '../../../model/summary';
@@ -154,9 +154,9 @@ export class OaiMapper extends BaseMapper {
         const getMediaType = (obj: string) => {
             // TODO extend ?
             if (obj?.includes('MCRZipServlet') || obj.includes('MCRFileNodeServlet')) {
-                return 'document' as const;
+                return 'document' as MediaType;
             }
-            return null;
+            return '' as MediaType;
         };
         let locationNodes: Element[] = this.select('./mods:location');
         let media = locationNodes.map(location => ({
