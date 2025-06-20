@@ -24,7 +24,6 @@
 'use strict';
 
 import * as fs from 'fs';
-import * as MiscUtils from './misc.utils';
 import fetch from 'node-fetch';
 import { ConfigService } from '../services/config/ConfigService';
 import { RequestDelegate, RequestOptions } from './http-request.utils';

@@ -194,7 +194,7 @@ export class OaiImporter extends Importer {
             requestConfig.qs = {
                 verb: 'ListRecords',
                 metadataPrefix: settings.metadataPrefix,
-                set: settings.set
+                set: settings.set ?? ''
             };
             if (settings.from) {
                 requestConfig.qs.from = settings.from;
