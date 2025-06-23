@@ -97,7 +97,7 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         return null;
     }
 
-    getMedia(): Media[] {
+    async getMedia(): Promise<Media[]> {
         return this.baseMapper.getMedia();
     }
 
