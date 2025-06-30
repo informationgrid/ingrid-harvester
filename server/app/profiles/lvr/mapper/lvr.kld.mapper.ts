@@ -23,6 +23,7 @@
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
+import { convertBBCode } from '../lvr.utils';
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { Keyword } from '../../../model/ingrid.index.document';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
@@ -48,7 +49,8 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
     }
 
     getDescription(): string[] {
-        return [this.baseMapper.getDescription()];
+        let description = convertBBCode(this.baseMapper.getDescription());
+        return [description];
     }
 
     getSpatial(): GeometryInformation[] {
