@@ -27,10 +27,10 @@ import {HistoryService} from "../services/statistic/HistoryService";
 import {IndexCheckService} from "../services/statistic/IndexCheckService";
 import {UrlCheckService} from "../services/statistic/UrlCheckService";
 import {getLogger} from "log4js";
+import {KeycloakAuth} from "../decorators/KeycloakAuthOptions";
 
 @Controller('/api/monitoring')
 @UseAuth(AuthMiddleware)
-// @UseAuth(KeycloakMiddleware)
 export class MonitoringCtrl {
 
     log = getLogger();
@@ -55,7 +55,7 @@ export class MonitoringCtrl {
     }
 
     @Get('/harvester')
-    // @KeycloakAuth({role: "realm:harv-user"})
+    @KeycloakAuth({role: "realm:harvester-admin"})
     async getAllHarvesterHistory(@BodyParams() request: any) {
         try {
             // re-initialize in case settings have changed

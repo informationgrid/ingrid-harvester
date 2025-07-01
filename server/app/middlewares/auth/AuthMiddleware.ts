@@ -35,8 +35,8 @@ export class AuthMiddleware implements MiddlewareMethods {
         let grant = ctx.getRequest().kauth.grant;
         if (grant) {
             this.keycloakService.setToken(grant.access_token);
-            return
-            // return keycloak.protect(options?.role);
+            // return
+            return this.keycloakService.getKeycloakInstance().protect();
         } else {
             //retrieve Options passed to the Authenticated() decorators.
             const options = ctx.endpoint.store.get(AuthMiddleware) || {};

@@ -2,7 +2,9 @@
   "realm": "InGrid",
   "auth-server-url": "http://localhost:8080",
   "ssl-required": "none",
-  "resource": "harvester",
-  "public-client": true,
+  "resource": "harvester-backend",
+  "credentials": {
+    "secret": ""
+  },
   "confidential-port": 0
 }
