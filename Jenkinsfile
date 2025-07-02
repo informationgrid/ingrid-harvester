@@ -66,7 +66,7 @@ pipeline {
             }
             steps {
                 script {
-                    dockerImageBranch = docker.build registry + ":" + env.BRANCH_NAME
+                    dockerImageBranch = docker.build registry + ":" + determineVersion()
                     dockerImageBranch.push()
                 }
             }
@@ -84,7 +84,8 @@ pipeline {
                     try {
 
                         sh """
-                            docker cp server/build/server ${containerId}:/files &&
+                            docker cp server ${containerId}:/server &&
+                            docker cp client/dist/webapp ${containerId}:/client &&
                             docker cp rpm/ingrid-harvester.spec ${containerId}:/root/rpmbuild/SPECS/ingrid-harvester.spec &&
                             docker cp rpm/. ${containerId}:/rpm &&
                             docker cp \$RPM_PUBLIC_KEY ${containerId}:/public.key &&
@@ -97,13 +98,13 @@ pipeline {
                             "
                         """
 
-                        sh "docker cp ${containerId}:/root/rpmbuild/RPMS/noarch ./build/rpms"
+                        sh "docker cp ${containerId}:/root/rpmbuild/RPMS/noarch ./rpms"
 
                     } finally {
                         sh "docker rm -f ${containerId}"
                     }
 
-                    archiveArtifacts artifacts: 'build/rpms/ingrid-harvester-*.rpm', fingerprint: true
+                    archiveArtifacts artifacts: 'rpms/ingrid-harvester-*.rpm', fingerprint: true
                 }
             }
         }
@@ -113,14 +114,13 @@ pipeline {
             steps {
                 script {
                     def repoType = env.TAG_NAME ? "rpm-ingrid-releases" : "rpm-ingrid-snapshots"
-                    sh "mv build/reports/bom.json build/reports/ingrid-harvester-${determineVersion()}.bom.json"
-                    // Test comment
+//                    sh "mv build/reports/bom.json build/reports/ingrid-harvester-${determineVersion()}.bom.json"
 
                     withCredentials([usernamePassword(credentialsId: '9623a365-d592-47eb-9029-a2de40453f68', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         sh '''
-                            curl -f --user $USERNAME:$PASSWORD --upload-file build/rpms/*.rpm https://nexus.informationgrid.eu/repository/''' + repoType + '''/
-                            curl -f --user $USERNAME:$PASSWORD --upload-file build/reports/*.bom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
+                            curl -f --user $USERNAME:$PASSWORD --upload-file rpms/*.rpm https://nexus.informationgrid.eu/repository/''' + repoType + '''/
                         '''
+//                            curl -f --user $USERNAME:$PASSWORD --upload-file build/reports/*.bom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
                     }
                 }
             }
@@ -165,5 +165,6 @@ def determineVersion() {
 
 def shouldBuildDevOrRelease() {
     // If no tag is being built OR it is the first build of a tag
-    return !buildingTag() || (buildingTag() && currentBuild.number == 1)
+    boolean isTag = env.TAG_NAME != null && env.TAG_NAME.trim() != ''
+    return !isTag || (isTag && currentBuild.number == 1)
 }
