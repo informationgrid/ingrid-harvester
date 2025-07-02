@@ -43,6 +43,8 @@ RUN npm run prod
 #
 FROM node:20.18.2-alpine3.21 AS final
 
+ENV IMPORTER_PROFILE=ingrid
+
 # install tini
 RUN apk add --no-cache tini
 
