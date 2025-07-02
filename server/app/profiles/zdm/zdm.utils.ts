@@ -21,33 +21,11 @@
  * ==================================================
  */
 
-import { Contact, Organization, Person } from '../../model/agent';
-import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
-import { PluPlanState } from '../../model/dcatApPlu.model';
+import { v5 as uuidv5 } from 'uuid';
+import { ZdmIndexDocument } from './model/index.document';
 
-export type WfsSettings = {
-    version: '2.0.0' | '1.1.0',
-    memberElement: string,
-    catalogId: string,
-    pluPlanState?: PluPlanState,
-    contactCswUrl?: string,
-    contactMetadata?: Contact,
-    maintainer?: Person | Organization;
-    count: number,
-    resultType?: 'hits' | 'results',
-    typename?: string,
-    featureLimit: number,
-    harvestTypes: boolean,
-    eitherKeywords: string[],
-    httpMethod: 'GET' | 'POST',
-    featureFilter?: string,
-    resolveWithFullResponse?: boolean
-} & ImporterSettings;
+const UUID_NAMESPACE = 'b5d8aadf-d03f-452a-8d91-3a6a7f3b1203';
 
-export const defaultWfsSettings: Partial<WfsSettings> = {
-    ...DefaultImporterSettings,
-    eitherKeywords: [],
-    httpMethod: 'GET',
-    resultType: 'results',
-    memberElement: 'wfs:member'
-};
+export function createEsId(document: ZdmIndexDocument): string {
+    return uuidv5(document.t01_object.obj_id, UUID_NAMESPACE);
+}

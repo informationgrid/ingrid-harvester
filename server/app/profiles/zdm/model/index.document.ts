@@ -21,33 +21,24 @@
  * ==================================================
  */
 
-import { Contact, Organization, Person } from '../../model/agent';
-import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
-import { PluPlanState } from '../../model/dcatApPlu.model';
+import { IndexDocument } from '../../../model/index.document';
 
-export type WfsSettings = {
-    version: '2.0.0' | '1.1.0',
-    memberElement: string,
-    catalogId: string,
-    pluPlanState?: PluPlanState,
-    contactCswUrl?: string,
-    contactMetadata?: Contact,
-    maintainer?: Person | Organization;
-    count: number,
-    resultType?: 'hits' | 'results',
-    typename?: string,
-    featureLimit: number,
-    harvestTypes: boolean,
-    eitherKeywords: string[],
-    httpMethod: 'GET' | 'POST',
-    featureFilter?: string,
-    resolveWithFullResponse?: boolean
-} & ImporterSettings;
-
-export const defaultWfsSettings: Partial<WfsSettings> = {
-    ...DefaultImporterSettings,
-    eitherKeywords: [],
-    httpMethod: 'GET',
-    resultType: 'results',
-    memberElement: 'wfs:member'
-};
+// general: https://github.com/informationgrid/ingrid-iplug-wfs-dsc/blob/master/src/main/resources/mapping/zdm-wfs-1.1.0_to_lucene-igc.js
+// idf: https://github.com/informationgrid/ingrid-iplug-wfs-dsc/blob/master/src/main/resources/mapping/zdm-wfs-1.1.0_to_idf.js
+export type ZdmIndexDocument = IndexDocument & {
+    t01_object: {
+        obj_id: string
+    },
+    title: string,
+    summary: string,
+    x1: number,
+    x2: number,
+    y1: number,
+    y2: number,
+    additional_html_1: string,
+    idf: string,
+    is_feature_type: boolean,
+    typename: string,
+    number_of_features?: number,
+    [key: string]: any  // remaining properties
+}

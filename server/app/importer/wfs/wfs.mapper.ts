@@ -23,11 +23,10 @@
 
 import * as GeoJsonUtils from '../../utils/geojson.utils';
 import { getLogger } from 'log4js';
-import { Catalog, PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../model/dcatApPlu.model';
 import { throwError } from 'rxjs';
 import { BaseMapper } from '../base.mapper';
+import { Catalog } from '../../model/dcatApPlu.model';
 import { Contact, Organization, Person } from '../../model/agent';
-import { DateRange } from '../../model/dateRange';
 import { Distribution } from '../../model/distribution';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { ImporterSettings } from '../../importer.settings';
@@ -73,7 +72,8 @@ export class WfsMapper extends BaseMapper {
                 return undefined;
             }
         };
-        this.uuid = this.getTextContent(`./*/@gml:id`);
+        let path = this.isFeatureType() ? './wfs:Name' : './*/@gml:id';
+        this.uuid = this.getTextContent(path);
 
         super.init();
     }
@@ -99,12 +99,22 @@ export class WfsMapper extends BaseMapper {
     }
 
     getTitle(): string {
-        let title = this.getTextContent('./*/*[local-name()="name"]')?.trim();
-        return title ?? undefined;
+        return this.fetched.title;
+        // if (this.isFeatureType()) {
+        //     return this.select('./wfs:Title', this.featureOrFeatureType, true)?.textContent;
+        // }
+        // else {
+        //     return this.getTextContent('./*/*[local-name()="name"]|./*/@gml:id')?.trim();
+        // }
     }
 
     getDescription(): string {
-        return undefined;
+        if (this.isFeatureType()) {
+            return this.select('./wfs:Abstract', this.featureOrFeatureType, true)?.textContent;
+        }
+        else {
+            return undefined;
+        }
     }
 
     getDistributions(): Promise<Distribution[]> {
@@ -113,6 +123,10 @@ export class WfsMapper extends BaseMapper {
 
     isFeatureType(): boolean {
         return this.featureOrFeatureType.localName == 'FeatureType';
+    }
+
+    getNumberOfFeatures(): number {
+        return this.fetched.numFeatures;
     }
 
     getGeneratedId(): string {

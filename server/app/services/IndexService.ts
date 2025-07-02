@@ -98,7 +98,7 @@ export class IndexService {
         let indices = await this.elasticUtils.getIndicesFromBasename('');
         let systemIndices = ['harvester_statistic', 'url_check_history', 'index_check_history', 'ingrid_meta']
             .map(i => this.elasticUtils.config.prefix + i);
-        return indices.filter(index => !systemIndices.includes(index.name));
+        return indices.filter(index => !systemIndices.includes(index.name) && !index.name.startsWith('.'));
     }
 
     deleteIndex(name: string) {

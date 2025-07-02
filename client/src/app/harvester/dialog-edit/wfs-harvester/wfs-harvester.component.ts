@@ -90,6 +90,9 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
     this.form.addControl('contactCswUrl', new UntypedFormControl(this.model.contactCswUrl));
     this.form.addControl('contactMetadata', new UntypedFormControl(this.model.contactMetadata && JSON.stringify(this.model.contactMetadata, null, 4), WfsHarvesterComponent.ContactValidator));
     this.form.addControl('maintainer', new UntypedFormControl(this.model.maintainer && JSON.stringify(this.model.maintainer, null, 4), WfsHarvesterComponent.MaintainerValidator));
+    // zdm
+    this.form.addControl('featureLimit', new UntypedFormControl(this.model.featureLimit));
+    // this.form.addControl('harvestTypes', new UntypedFormControl(this.model.harvestTypes));
 
     // this is intended to set the model.contactMetadata to a JS object,
     // but the change gets overwritten somewhere on the way to harvester.component.ts

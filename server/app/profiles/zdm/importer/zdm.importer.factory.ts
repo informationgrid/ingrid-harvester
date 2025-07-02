@@ -21,33 +21,29 @@
  * ==================================================
  */
 
-import { Contact, Organization, Person } from '../../model/agent';
-import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
-import { PluPlanState } from '../../model/dcatApPlu.model';
+import { Harvester } from '@shared/harvester';
+import { Importer } from '../../../importer/importer';
+import { ImporterFactory } from '../../../importer/importer.factory';
+import { WfsSettings } from '../../../importer/wfs/wfs.settings';
+import { ZdmWfsImporter } from './zdm.wfs.importer';
 
-export type WfsSettings = {
-    version: '2.0.0' | '1.1.0',
-    memberElement: string,
-    catalogId: string,
-    pluPlanState?: PluPlanState,
-    contactCswUrl?: string,
-    contactMetadata?: Contact,
-    maintainer?: Person | Organization;
-    count: number,
-    resultType?: 'hits' | 'results',
-    typename?: string,
-    featureLimit: number,
-    harvestTypes: boolean,
-    eitherKeywords: string[],
-    httpMethod: 'GET' | 'POST',
-    featureFilter?: string,
-    resolveWithFullResponse?: boolean
-} & ImporterSettings;
+const log = require('log4js').getLogger(__filename);
 
-export const defaultWfsSettings: Partial<WfsSettings> = {
-    ...DefaultImporterSettings,
-    eitherKeywords: [],
-    httpMethod: 'GET',
-    resultType: 'results',
-    memberElement: 'wfs:member'
-};
+export class ZdmImporterFactory extends ImporterFactory{
+
+    public async get(config: Harvester): Promise<Importer> {
+        let importer: Importer;
+        switch (config.type) {
+            case 'WFS':
+                importer = new ZdmWfsImporter(config as WfsSettings);
+                break;
+            default: {
+                log.error('Importer not found: ' + config.type);
+            }
+        }
+        if (importer) {
+            await importer.database.init();
+        }
+        return importer;
+    }
+}
