@@ -23,8 +23,9 @@
 
 import { AbstractControl, UntypedFormControl, UntypedFormGroup, ValidationErrors } from '@angular/forms';
 import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { ConfigService } from '../../../config/config.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-// import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { WfsSettings } from '../../../../../../server/app/importer/wfs/wfs.settings';
 
 @Component({
@@ -37,6 +38,10 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
   @Input() form: UntypedFormGroup;
   @Input() model: WfsSettings;
   @Input() rulesTemplate: TemplateRef<any>;
+
+  profile: string;
+
+  private ngUnsubscribe = new Subject<void>();
 
   private static ContactValidator(control: AbstractControl): ValidationErrors | null {
     if (!control.value?.trim()) {
@@ -67,14 +72,20 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   // private contactMetadataSubscription: Subscription;
 
-  constructor() { }
+  constructor(private configService: ConfigService) { }
 
   ngOnInit() {
+    this.configService.getProfileName()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(data => {
+        this.profile = data;
+    });
     this.form.addControl('httpMethod', new UntypedFormControl(this.model.httpMethod));
     this.form.addControl('sourceURL', new UntypedFormControl(this.model.sourceURL));
     this.form.addControl('featuresFilter', new UntypedFormControl(this.model.featureFilter));
     this.form.addControl('version', new UntypedFormControl(this.model.version));
     this.form.addControl('typename', new UntypedFormControl(this.model.typename));
+    // diplanung
     this.form.addControl('pluPlanState', new UntypedFormControl(this.model.pluPlanState));
     this.form.addControl('contactCswUrl', new UntypedFormControl(this.model.contactCswUrl));
     this.form.addControl('contactMetadata', new UntypedFormControl(this.model.contactMetadata && JSON.stringify(this.model.contactMetadata, null, 4), WfsHarvesterComponent.ContactValidator));

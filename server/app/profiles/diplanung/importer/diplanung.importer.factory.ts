@@ -23,11 +23,12 @@
 
 import { DcatappluImporter } from '../../../importer/dcatapplu/dcatapplu.importer';
 import { DiplanungCswImporter } from './diplanung.csw.importer';
+import { DiplanungWfsImporter } from './diplanung.wfs.importer';
 import { Harvester } from '@shared/harvester';
 import { Importer } from '../../../importer/importer';
 import { ImporterFactory } from '../../../importer/importer.factory';
 import { WfsImporter } from '../../../importer/wfs/wfs.importer';
-import { WfsSettings } from 'importer/wfs/wfs.settings';
+import { WfsSettings } from '../../../importer/wfs/wfs.settings';
 
 const log = require('log4js').getLogger(__filename);
 
@@ -46,7 +47,7 @@ export class DiplanungImporterFactory extends ImporterFactory {
             case 'WFS.MS': 
             case 'WFS.XPLAN': 
             case 'WFS.XPLAN.SYN': 
-                importer = new WfsImporter(config as WfsSettings);
+                importer = new DiplanungWfsImporter(config as WfsSettings);
                 break;
             default: {
                 log.error('Importer not found: ' + config.type);

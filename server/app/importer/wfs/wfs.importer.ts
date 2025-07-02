@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import * as fs from 'fs';
 import * as xpath from 'xpath';
 import * as GeoJsonUtils from '../../utils/geojson.utils';
 import * as MiscUtils from '../../utils/misc.utils';
@@ -29,11 +28,8 @@ import { decode } from 'iconv-lite';
 import { defaultWfsSettings, WfsSettings } from './wfs.settings';
 import { firstElementChild, getExtendedNsMap, getNsMap, XPathNodeSelect } from '../../utils/xpath.utils';
 import { getLogger } from 'log4js';
-import { getProxyConfig } from '../../utils/service.utils';
 import { namespaces } from '../../importer/namespaces';
 import { Catalog } from '../../model/dcatApPlu.model';
-import { Contact, Organization, Person } from '../../model/agent';
-import { CswMapper } from '../../importer/csw/csw.mapper';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer';
 import { ImportLogMessage, ImportResult } from '../../model/import.result';
@@ -55,11 +51,11 @@ export class WfsImporter extends Importer {
     protected profile: ProfileFactory<WfsMapper>;
     protected settings: WfsSettings;
 
-    private totalFeatures = 0;
+    private numItems = 0;
     private numIndexDocs = 0;
 
     private generalInfo: object = {};
-    private nsMap: {};
+    protected nsMap: {};
 
     protected supportsPaging: boolean = false;
 
@@ -100,103 +96,7 @@ export class WfsImporter extends Importer {
             throw new Error(`Could not retrieve WFS_Capabilities from ${capabilitiesRequestDelegate.getFullURL()}: ${responseBody}`);
         }
 
-        // default CRS
-        let featureTypes = select('/*[local-name()="WFS_Capabilities"]/*[local-name()="FeatureTypeList"]/*[local-name()="FeatureType"]', capabilitiesResponseDom);
-        for (let featureType of featureTypes) {
-            let typename = select('./*[local-name()="Name"]', featureType, true).textContent;
-            if (!this.settings.typename.split(',').includes(typename)) {
-                continue;
-            }
-            let defaultCrs = select('./*[local-name()="DefaultCRS" or local-name()="DefaultSRS"]', featureType, true)?.textContent;
-            this.generalInfo['defaultCrs'] = defaultCrs.replace('urn:ogc:def:crs:EPSG::', '').replace('EPSG:', '');
-            break;
-        }
-
-        // Regionalschlüssel
-        const rs_data = fs.readFileSync('app/importer/regionalschluessel.json', { encoding: 'utf8', flag: 'r' });
-        this.generalInfo['regionalschluessel'] = JSON.parse(rs_data);
-
-        // general metadata contacts
-        // role -> contact
-        let contacts: Map<string, Contact> = new Map();
-        if (this.settings.contactCswUrl) {
-            let response = await RequestDelegate.doRequest({ 
-                uri: this.settings.contactCswUrl,
-                accept: 'text/xml',
-                ...getProxyConfig()
-            });
-            let responseDom = this.domParser.parseFromString(response);
-            let metadata = CswMapper.select('./csw:GetRecordByIdResponse/gmd:MD_Metadata', responseDom, true);
-            let xpaths = [
-                // for now, only use gmd:contact as pointOfContact (the sparsely populated entry of the two listed below)
-                './gmd:contact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue="pointOfContact"]',
-                // './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue="pointOfContact"]',
-                './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue="custodian"]'
-            ];
-            for (let xpath of xpaths) {
-                let pointOfContact = CswMapper.select(xpath, metadata, true);
-                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode', pointOfContact, true).getAttribute('codeListValue');
-                let contactInfo = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact', pointOfContact, true);
-                let address = CswMapper.select('./gmd:address/gmd:CI_Address', contactInfo, true);
-                let contact = {
-                    fn: CswMapper.getCharacterStringContent(pointOfContact, 'individualName'),
-                    hasCountryName: CswMapper.getCharacterStringContent(address, 'country'),
-                    hasLocality: CswMapper.getCharacterStringContent(address, 'city'),
-                    hasPostalCode: CswMapper.getCharacterStringContent(address, 'postalCode'),
-                    hasRegion: CswMapper.getCharacterStringContent(address, 'administrativeArea'),
-                    hasStreetAddress: CswMapper.getCharacterStringContent(contactInfo, 'deliveryPoint'),
-                    hasEmail: CswMapper.getCharacterStringContent(address, 'electronicMailAddress'),
-                    hasOrganizationName: CswMapper.getCharacterStringContent(pointOfContact, 'organisationName'),
-                    hasTelephone: CswMapper.getCharacterStringContent(contactInfo, 'phone/gmd:CI_Telephone/gmd:voice'),
-                    hasURL: CswMapper.getCharacterStringContent(contactInfo, 'onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL')
-                };
-                Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
-                if (!contact.fn?.trim()) {
-                    contact.fn = contact.hasOrganizationName;
-                }
-                contacts.set(role, contact);
-            }
-        }
-
-        // general contact
-        let pointOfContact: Contact = contacts.get('pointOfContact');
-        // fallbacks
-        if (!pointOfContact?.fn?.trim()) {
-            if (this.settings.contactMetadata) {
-                pointOfContact = this.settings.contactMetadata;
-            }
-            else {
-                pointOfContact = {
-                    fn: ''
-                };
-            }
-        }
-        this.generalInfo['contactPoint'] = pointOfContact;
-
-        // general maintainer
-        let maintainer: Person | Organization = { organization: contacts.get('custodian')?.hasOrganizationName };
-        // fallbacks
-        if (!maintainer.organization?.trim()) {
-            if (contacts.get('custodian')?.fn?.trim()) {
-                maintainer = { name: contacts.get('custodian')?.fn };
-            }
-            else if (pointOfContact.hasOrganizationName?.trim()) {
-                maintainer = { organization: pointOfContact.hasOrganizationName };
-            }
-            else if (pointOfContact.fn?.trim()) {
-                maintainer = { name: pointOfContact.fn };
-            }
-            else if (this.settings.maintainer?.['name'] || this.settings.maintainer?.['organization']) {
-                maintainer = this.settings.maintainer;
-            }
-            else {
-                maintainer = {
-                    name: '',
-                    type: ''
-                };
-            }
-        }
-        this.generalInfo['maintainer'] = maintainer;
+        this.generalInfo = await this.prepareImport(this.generalInfo, capabilitiesResponseDom, select);
 
         // retrieve catalog info from database
         let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId);
@@ -244,6 +144,16 @@ export class WfsImporter extends Importer {
         await this.database.sendBulkData();
 
         return this.numIndexDocs;
+    }
+
+    /**
+     * generalInfo might need to be adapted to a specific profile; this can be done here
+     * 
+     * @param generalInfo 
+     * @returns 
+     */
+    async prepareImport(generalInfo: any, capabilitiesDom: Node, select: XPathNodeSelect) {
+        return generalInfo;
     }
 
     async extractFeatures(xml: Document, harvestTime) {
@@ -306,7 +216,7 @@ export class WfsImporter extends Importer {
             } else {
                 this.summary.skippedDocs.push(uuid);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalFeatures));
+            this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems));
         }
         await Promise.all(promises).catch(err => log.error('Error indexing WFS record', err));
     }

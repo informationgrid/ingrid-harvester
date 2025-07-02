@@ -47,6 +47,7 @@
                 <mat-option value="KLD">KLD</mat-option>
                 <mat-option value="OAI">OAI</mat-option>
                 <mat-option value="SPARQL">SPARQL</mat-option>
+                <mat-option value="WFS">WFS</mat-option>
                 <mat-option value="WFS.FIS">WFS (FIS)</mat-option>
                 <mat-option value="WFS.MS">WFS (MS)</mat-option>
                 <mat-option value="WFS.XPLAN">WFS (XPLAN)</mat-option>
@@ -284,10 +285,7 @@
         </app-sparql-harvester>
       }
 
-      @if (harvesterForm.get('type').value === 'WFS.FIS'
-            || harvesterForm.get('type').value === 'WFS.MS'
-            || harvesterForm.get('type').value === 'WFS.XPLAN'
-            || harvesterForm.get('type').value === 'WFS.XPLAN.SYN') {
+      @if (harvesterForm.get('type').value?.startsWith('WFS')) {
         <app-wfs-harvester
           [form]="harvesterForm"
           [model]="harvester"

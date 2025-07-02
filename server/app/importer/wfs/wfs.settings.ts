@@ -26,18 +26,18 @@ import { DefaultImporterSettings, ImporterSettings } from '../../importer.settin
 import { PluPlanState } from '../../model/dcatApPlu.model';
 
 export type WfsSettings = {
-    version: "2.0.0" | "1.1.0",
+    version: '2.0.0' | '1.1.0',
     memberElement: string,
     catalogId: string,
-    pluPlanState: PluPlanState,
+    pluPlanState?: PluPlanState,
     contactCswUrl?: string,
     contactMetadata?: Contact,
     maintainer?: Person | Organization;
     count: number,
-    resultType?: "hits" | "results",
-    typename: string,
+    resultType?: 'hits' | 'results',
+    typename?: string,
     eitherKeywords: string[],
-    httpMethod: "GET" | "POST",
+    httpMethod: 'GET' | 'POST',
     featureFilter?: string,
     resolveWithFullResponse?: boolean
 } & ImporterSettings;
