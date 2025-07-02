@@ -38,7 +38,7 @@ export class XplanWfsMapper extends DiplanungWfsMapper {
 
     async getDistributions(): Promise<Distribution[]> {
         let distributions = [];
-        for (let elem of this.baseMapper.select('./*/xplan:externeReferenz/xplan:XP_SpezExterneReferenz', this.baseMapper.feature)) {
+        for (let elem of this.baseMapper.select('./*/xplan:externeReferenz/xplan:XP_SpezExterneReferenz', this.baseMapper.featureOrFeatureType)) {
             let distribution: Distribution = {
                 accessURL: this.baseMapper.getTextContent('./xplan:referenzURL', elem),
                 description: this.baseMapper.getTextContent('./xplan:art', elem),
@@ -56,7 +56,7 @@ export class XplanWfsMapper extends DiplanungWfsMapper {
     }
 
     getBoundingBox(): Geometry {
-        let envelope = this.baseMapper.select('./*/gml:boundedBy/gml:Envelope', this.baseMapper.feature, true);
+        let envelope = this.baseMapper.select('./*/gml:boundedBy/gml:Envelope', this.baseMapper.featureOrFeatureType, true);
         if (envelope) {
             let lowerCorner = this.baseMapper.getTextContent('./gml:lowerCorner', envelope);
             let upperCorner = this.baseMapper.getTextContent('./gml:upperCorner', envelope);
@@ -66,14 +66,14 @@ export class XplanWfsMapper extends DiplanungWfsMapper {
             }
         }
         // if spatial exists, create bbox from it
-        else if (this.baseMapper.select('./*/xplan:raeumlicherGeltungsbereich', this.baseMapper.feature, true)) {
+        else if (this.baseMapper.select('./*/xplan:raeumlicherGeltungsbereich', this.baseMapper.featureOrFeatureType, true)) {
             return GeoJsonUtils.getBbox(this.getSpatial());
         }
         return undefined;
     }
 
     getSpatial(): Geometry | Geometries {
-        let spatialContainer = this.baseMapper.select('./*/xplan:raeumlicherGeltungsbereich/*', this.baseMapper.feature, true);
+        let spatialContainer = this.baseMapper.select('./*/xplan:raeumlicherGeltungsbereich/*', this.baseMapper.featureOrFeatureType, true);
         if (!spatialContainer) {
             // use bounding box as fallback
             return this.getBoundingBox();
@@ -91,7 +91,7 @@ export class XplanWfsMapper extends DiplanungWfsMapper {
      */
     // TODO check
     getSpatialText(): string {
-        let xpGemeinde = this.baseMapper.select('./*/xplan:gemeinde/xplan:XP_Gemeinde', this.baseMapper.feature, true);
+        let xpGemeinde = this.baseMapper.select('./*/xplan:gemeinde/xplan:XP_Gemeinde', this.baseMapper.featureOrFeatureType, true);
         if (xpGemeinde) {
             let rs = this.baseMapper.getTextContent('./xplan:rs', xpGemeinde);
             if (!rs) {

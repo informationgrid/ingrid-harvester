@@ -65,7 +65,7 @@ export class MsWfsMapper extends DiplanungWfsMapper {
     }
 
     getBoundingBox(): Geometry {
-        let envelope = this.baseMapper.select('./*/gml:boundedBy/gml:Envelope', this.baseMapper.feature, true);
+        let envelope = this.baseMapper.select('./*/gml:boundedBy/gml:Envelope', this.baseMapper.featureOrFeatureType, true);
         if (envelope) {
             let lowerCorner = this.baseMapper.getTextContent('./gml:lowerCorner', envelope);
             let upperCorner = this.baseMapper.getTextContent('./gml:upperCorner', envelope);
@@ -75,14 +75,14 @@ export class MsWfsMapper extends DiplanungWfsMapper {
             }
         }
         // if spatial exists, create bbox from it
-        else if (this.baseMapper.select('./*/ms:msGeometry', this.baseMapper.feature, true)) {
+        else if (this.baseMapper.select('./*/ms:msGeometry', this.baseMapper.featureOrFeatureType, true)) {
             return GeoJsonUtils.getBbox(this.getSpatial());
         }
         return undefined;
     }
 
     getSpatial(): Geometry | Geometries {
-        let spatialContainer = this.baseMapper.select('./*/ms:msGeometry/*', this.baseMapper.feature, true);
+        let spatialContainer = this.baseMapper.select('./*/ms:msGeometry/*', this.baseMapper.featureOrFeatureType, true);
         if (!spatialContainer) {
             // use bounding box as fallback
             return this.getBoundingBox();

@@ -56,7 +56,7 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
 
     private getSpecificDistributions(tagName: string, tagDescription: string): Distribution[] {
         let distributions = [];
-        let externalReferences = this.baseMapper.select(`./*/xplan:${tagName}`, this.baseMapper.feature, true)?.textContent ?? '';
+        let externalReferences = this.baseMapper.select(`./*/xplan:${tagName}`, this.baseMapper.featureOrFeatureType, true)?.textContent ?? '';
         let externalReferencesIt = externalReferences.matchAll(/\[(?<accessURL>.*?) \| (?<description>.*?)\]/g);
         for (let reference of externalReferencesIt) {
             let { accessURL, description } = reference.groups;
@@ -95,7 +95,7 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
      * @returns
      */
     getSpatialText(): string {
-        let xpgemeinde = this.baseMapper.select('./*/xplan:gemeinde', this.baseMapper.feature, true)?.textContent;
+        let xpgemeinde = this.baseMapper.select('./*/xplan:gemeinde', this.baseMapper.featureOrFeatureType, true)?.textContent;
         if (xpgemeinde) {
             let { ags, gemeinde, ortsteil } = xpgemeinde.match(/^\[Gemeindeschlüssel: (?<ags>.*?)\s?(?:\|\s?Gemeinde: (?<gemeinde>.*?))?\s?(?:\|\s?Ortsteil: (?<ortsteil>.*?))?\]$/)?.groups ?? {};
             if (ags) {

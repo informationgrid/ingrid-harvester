@@ -37,7 +37,7 @@ export class FisWfsMapper extends DiplanungWfsMapper {
 
     async getDistributions(): Promise<Distribution[]> {
         let distributions = [];
-        for (let elem of this.baseMapper.select('./*/fis:*[local-name()="SCAN_WWW" or local-name()="GRUND_WWW"]', this.baseMapper.feature)) {
+        for (let elem of this.baseMapper.select('./*/fis:*[local-name()="SCAN_WWW" or local-name()="GRUND_WWW"]', this.baseMapper.featureOrFeatureType)) {
             let distribution: Distribution = { accessURL: elem.textContent };
             if (MiscUtils.isMaybeDownloadUrl(distribution.accessURL)) {
                 distribution.downloadURL = distribution.accessURL;
@@ -58,7 +58,7 @@ export class FisWfsMapper extends DiplanungWfsMapper {
 
     getBoundingBox(): Geometry {
         // if spatial exists, create bbox from it
-        if (this.baseMapper.select('./*/fis:SHAPE_25833', this.baseMapper.feature, true)) {
+        if (this.baseMapper.select('./*/fis:SHAPE_25833', this.baseMapper.featureOrFeatureType, true)) {
             return GeoJsonUtils.getBbox(this.getSpatial());
         }
         // otherwise, use the general bbox defined at the start of the WFS response
@@ -68,7 +68,7 @@ export class FisWfsMapper extends DiplanungWfsMapper {
     }
 
     getSpatial(): Geometry | Geometries {
-        let spatialContainer = this.baseMapper.select('./*/fis:SHAPE_25833/*', this.baseMapper.feature, true);
+        let spatialContainer = this.baseMapper.select('./*/fis:SHAPE_25833/*', this.baseMapper.featureOrFeatureType, true);
         if (!spatialContainer) {
             // use bounding box as fallback
             this.baseMapper.log.debug(`${this.baseMapper.uuid}: no geometry found, using bounding box instead`);

@@ -41,7 +41,7 @@ export class WfsMapper extends BaseMapper {
 
     log = getLogger();
 
-    readonly feature: Node & Element;
+    readonly featureOrFeatureType: Node & Element;
     readonly fetched: any;
     readonly settings: WfsSettings;
     readonly uuid: string;
@@ -51,10 +51,10 @@ export class WfsMapper extends BaseMapper {
 
     select: XPathNodeSelect;
 
-    constructor(settings, feature, harvestTime, summary, generalInfo) {
+    constructor(settings, featureOrFeatureType, harvestTime, summary, generalInfo) {
         super();
         this.settings = settings;
-        this.feature = feature;
+        this.featureOrFeatureType = featureOrFeatureType;
         this.harvestTime = harvestTime;
         this.summary = summary;
         this.fetched = {
@@ -111,6 +111,10 @@ export class WfsMapper extends BaseMapper {
         return undefined;
     }
 
+    isFeatureType(): boolean {
+        return this.featureOrFeatureType.localName == 'FeatureType';
+    }
+
     getGeneratedId(): string {
         return this.uuid;
     }
@@ -138,14 +142,31 @@ export class WfsMapper extends BaseMapper {
     }
 
     getBoundingBox(): Geometry {
-        let envelope = this.select('./*/gml:boundedBy/gml:Envelope', this.feature, true);
-        if (envelope) {
-            let lowerCorner = this.select('./gml:lowerCorner', envelope, true)?.textContent;
-            let upperCorner = this.select('./gml:upperCorner', envelope, true)?.textContent;
-            let crs = (<Element>envelope).getAttribute('srsName') || this.fetched['defaultCrs'];
-            return GeoJsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
+        let obbox = this.getOriginalBoundingBox();
+        return GeoJsonUtils.getBoundingBox(obbox.lowerCorner, obbox.upperCorner, obbox.crs);
+    }
+
+    getOriginalBoundingBox(): Record<string, string> {
+        let lowerCorner: string, upperCorner: string, crs: string;
+        if (this.isFeatureType()) {
+            let bbox = this.select('./ows:WGS84BoundingBox', this.featureOrFeatureType, true);
+            if (!bbox) {
+                return null;
+            }
+            lowerCorner = this.select('./ows:LowerCorner', bbox, true)?.textContent;
+            upperCorner = this.select('./ows:UpperCorner', bbox, true)?.textContent;
+            crs = 'WGS84';
         }
-        return null;
+        else {
+            let bbox = this.select('./*/gml:boundedBy/gml:Envelope', this.featureOrFeatureType, true);
+            if (!bbox) {
+                return null;
+            }
+            lowerCorner = this.select('./gml:lowerCorner', bbox, true)?.textContent;
+            upperCorner = this.select('./gml:upperCorner', bbox, true)?.textContent;
+            crs = (<Element>bbox).getAttribute('srsName') || this.fetched['defaultCrs'];
+        }
+        return { lowerCorner, upperCorner, crs };
     }
 
     getSpatial(): Geometry | GeometryCollection {
@@ -170,7 +191,7 @@ export class WfsMapper extends BaseMapper {
     }
 
     getHarvestedData(): string {
-        return this.feature.toString();
+        return this.featureOrFeatureType.toString();
     }
 
     getHarvestingDate(): Date {
@@ -200,12 +221,18 @@ export class WfsMapper extends BaseMapper {
         return config;
     }
 
-    getTextContent(xpathStr: string, searchNode: Node = this.feature) {
-        return (<Element>this.select(xpathStr, searchNode, true))?.textContent;
+    getTextContent(xpathStr: string, searchNode: Node = this.featureOrFeatureType) {
+        return this.select(xpathStr, searchNode, true)?.textContent;
     }
 
     getTypename(toLowerCase: boolean = true): string {
-        let typename = (<Element>this.select('./*', this.feature, true))?.localName;
+        let typename: string;
+        if (this.isFeatureType()) {
+            typename = this.select('./wfs:Name', this.featureOrFeatureType, true)?.textContent;
+        }
+        else {
+            typename = (this.select('./*', this.featureOrFeatureType, true) as Element)?.localName;
+        }
         return toLowerCase ? typename.toLowerCase() : typename;
     }
 
