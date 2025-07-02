@@ -59,7 +59,17 @@ const proj4jsMappings = require('../importer/proj4.json');
 
 // prepare proj4js
 proj4.defs(Object.entries(proj4jsMappings));
-const transformer: Function = (crs: string) => (x: number, y: number) => proj4(crs, 'WGS84').forward([x, y]);
+const transformer: Function = (crs: string) => (x: number, y: number) => project(x, y, normalizeCRS(crs), 'WGS84');
+const normalizeCRS = (crs: string) => {
+    if (crs == 'WGS84') {
+        return crs;
+    }
+    crs = crs.replace('urn:ogc:def:crs:EPSG::', '').replace('EPSG:', '');
+    if (!/^\d+$/.test(crs)) {
+        throw Error(`CRS is not a valid EPSG identifier: ${crs}`);
+    }
+    return crs;
+}
 
 /**
  * Bounding box around Germany (+ 50km buffer zone for leniency)
@@ -74,6 +84,10 @@ const BBOX_GERMANY = buffer({
         [5.98865807458, 54.983104153]]]
 }, 50, {units: 'kilometers'});
 
+export function project(x: number, y: number, sourceCRS: string, targetCRS: string) {
+    return proj4(sourceCRS, targetCRS).forward([x, y]);
+}
+
 export function getBbox(spatial: AllGeoJSON): Geometry {
     if (!spatial) {
         return undefined;
@@ -81,7 +95,10 @@ export function getBbox(spatial: AllGeoJSON): Geometry {
     if (spatial?.type == 'Point') {
         return spatial;
     }
-    return bboxPolygon(bbox(spatial))?.geometry;
+    let boundingBox = bbox(spatial);
+    let polygon = bboxPolygon(boundingBox)?.geometry;
+    polygon.bbox = boundingBox;
+    return polygon;
 }
 
 export function within(spatial: number[] | Point | Geometry | GeometryCollection, bbox: Geometry): boolean {
@@ -234,29 +251,32 @@ export function projectFeatureCollection(featureCollection: FeatureCollection, s
     return projectedFeatureCollection;
 }
 
-export function getBoundingBox(lowerCorner: string, upperCorner: string, crs?: string) {
+export function getBoundingBox(lowerCorner: string, upperCorner: string, crs?: string): Geometry {
     const transformCoords = transformer(crs);
     let [west, south] = transformCoords(...lowerCorner.trim().split(' ').map(parseFloat));
     let [east, north] = transformCoords(...upperCorner.trim().split(' ').map(parseFloat));
 
+    let boundingBox: Geometry;
     if (west === east && north === south) {
-        return {
-            'type': 'point',
-            'coordinates': [west, north]
+        boundingBox = {
+            type: 'Point',
+            coordinates: [west, north]
         };
     }
     else if (west === east || north === south) {
-        return {
-            'type': 'linestring',
-            'coordinates': [[west, north], [east, south]]
+        boundingBox = {
+            type: 'Linestring',
+            coordinates: [[west, north], [east, south]]
         };
     }
     else {
-        return {
-            'type': 'Polygon',
-            'coordinates': [[[west, north], [west, south], [east, south], [east, north], [west, north]]]
+        boundingBox = {
+            type: 'Polygon',
+            coordinates: [[[west, north], [west, south], [east, south], [east, north], [west, north]]]
         };
     }
+    boundingBox.bbox = bbox(boundingBox);
+    return boundingBox;
 }
 
 export function parse(_: Node, opts: { crs?: any, stride?: number } = { crs: null, stride: 2 }, nsMap: { [ name: string ]: string; }): Geometries {
