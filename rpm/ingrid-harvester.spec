@@ -26,10 +26,10 @@ InGrid API
 rm -Rf %{buildroot}*
 
 mkdir -p %{target}
-cp -r /server/build/server %{target}
-find /server -maxdepth 1 -type f -exec cp {} %{target}/server \;
-cp -r /server/node_modules %{target}/server/node_modules
-cp -r /client %{target}/server/app/webapp
+cp -r /server/build/server/* %{target}
+find /server -maxdepth 1 -type f -exec cp {} %{target} \;
+cp -r /server/node_modules %{target}/node_modules
+cp -r /client %{target}/app/webapp
 
 
 # Copy over the systemd unit file
