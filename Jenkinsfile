@@ -76,6 +76,7 @@ pipeline {
             when { expression { return shouldBuildDevOrRelease() } }
             steps {
                 script {
+                    sh 'if [ -d build ]; then rm -rf build; fi'
                     sh "sed -i 's/^Version:.*/Version: ${determineVersion()}/' rpm/ingrid-harvester.spec"
                     sh "sed -i 's/^Release:.*/Release: ${env.TAG_NAME ? '1' : 'dev'}/' rpm/ingrid-harvester.spec"
 
@@ -98,13 +99,13 @@ pipeline {
                             "
                         """
 
-                        sh "docker cp ${containerId}:/root/rpmbuild/RPMS/noarch ./rpms"
+                        sh "docker cp ${containerId}:/root/rpmbuild/RPMS/noarch ./build"
 
                     } finally {
                         sh "docker rm -f ${containerId}"
                     }
 
-                    archiveArtifacts artifacts: 'rpms/ingrid-harvester-*.rpm', fingerprint: true
+                    archiveArtifacts artifacts: 'build/ingrid-harvester-*.rpm', fingerprint: true
                 }
             }
         }
@@ -118,7 +119,7 @@ pipeline {
 
                     withCredentials([usernamePassword(credentialsId: '9623a365-d592-47eb-9029-a2de40453f68', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         sh '''
-                            curl -f --user $USERNAME:$PASSWORD --upload-file rpms/*.rpm https://nexus.informationgrid.eu/repository/''' + repoType + '''/
+                            curl -f --user $USERNAME:$PASSWORD --upload-file build/*.rpm https://nexus.informationgrid.eu/repository/''' + repoType + '''/
                         '''
 //                            curl -f --user $USERNAME:$PASSWORD --upload-file build/reports/*.bom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
                     }
