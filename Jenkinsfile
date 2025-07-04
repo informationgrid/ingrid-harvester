@@ -46,7 +46,8 @@ pipeline {
                         env.VERSION = BRANCH_NAME.replaceAll('/', '-')
                     }
                     echo "VERSION: ${env.VERSION}"
-                    dockerImage = docker.build registry + ":" + env.VERSION
+
+                    dockerImage = docker.build(registry + ":" + env.VERSION, "--pull .")
                     dockerImage.push()
                 }
             }

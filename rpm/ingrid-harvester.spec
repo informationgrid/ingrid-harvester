@@ -28,7 +28,7 @@ rm -Rf %{buildroot}*
 mkdir -p %{target}
 ls -al /server/build/server/
 cp -r /server/build/server/* %{target}
-find /server -maxdepth 1 -type f -not -name "package*.json" -not -name "*.gradle" -exec cp {} %{target} \;
+# find /server -maxdepth 1 -type f -not -name "package*.json" -not -name "*.gradle" -exec cp {} %{target} \;
 cp -r /server/node_modules %{target}/node_modules
 cp -r /client %{target}/app/webapp
 ls -al %{target}
