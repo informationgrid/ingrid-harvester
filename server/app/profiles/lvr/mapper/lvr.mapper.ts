@@ -24,18 +24,20 @@
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
 import { createEsId } from '../lvr.utils';
+import { v5 as uuidv5 } from 'uuid';
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { IndexDocumentFactory } from '../../../model/index.document.factory';
 import { IngridIndexDocument, Keyword, Spatial } from '../../../model/ingrid.index.document';
 import { JsonMapper } from '../../../importer/json/json.mapper';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
-import { LvrIndexDocument, Media, Person, Relation } from '../model/index.document';
+import { LvrIndexDocument, Media, Person, Relation, Source } from '../model/index.document';
 import { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper';
 import { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mapper';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
+const UUID_NAMESPACE = '0afd6f59-d498-4da3-8919-1890d718d69e'; // randomly generated using uuid.v4
 
 export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMapper | JsonMapper> implements IndexDocumentFactory<LvrIndexDocument> {
 
@@ -51,7 +53,8 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
 
         let ingridDocument: IngridIndexDocument = {
             id: this.getUrlSafeIdentifier(),
-            schema_version: '1.0.0',
+            sort_uuid: this.getGeneratedUUID(),
+            schema_version: '0.0.2-SNAPSHOT',
             title: this.getTitle()?.join('\n'),
             description: this.getDescription()?.join('\n'),
             spatial: this.getIngridSpatial(),
@@ -75,11 +78,11 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
                 identifier: this.getIdentifier(),
                 genres: this.getGenres(),
                 persons: this.getPersons(),
-                media: this.getMedia(),
+                media: await this.getMedia(),
                 relations: this.getRelations(),
                 licenses: this.getLicense(),
                 vector: this.getVector(),
-                source: this.getSource()
+                source: await this.getSource()
             },
             extras: {
                 metadata: {
@@ -108,7 +111,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
     }
 
     private getNullForTemporal(temporal: Temporal) {
-        if ((!temporal?.date_range?.gte || isNaN(temporal?.date_range?.gte.getTime())) && (!temporal?.date_range?.lte || isNaN(temporal?.date_range?.lte.getTime()))) {
+        if (!temporal?.date_range?.gte && !temporal?.date_range?.lte) {
             return { ...temporal, date_range: null };
         }
         return temporal;
@@ -142,7 +145,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
 
     abstract getPersons(): Person[];
 
-    abstract getMedia(): Media[];
+    abstract getMedia(): Promise<Media[]>;
 
     abstract getRelations(): Relation[];
 
@@ -150,11 +153,15 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
 
     abstract getVector(): object;
 
-    abstract getSource(): string;
+    abstract getSource(): Promise<Source>;
 
     abstract getIssued(): Date;
 
     abstract getModified(): Date;
+
+    getGeneratedUUID(): string {
+        return uuidv5(this.getUrlSafeIdentifier(), UUID_NAMESPACE);
+    }
 }
 
 function first(strOrArr: string | string[]): string {

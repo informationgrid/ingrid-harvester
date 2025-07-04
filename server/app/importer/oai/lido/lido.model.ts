@@ -72,7 +72,7 @@ export interface Place {
 
 export interface Record {
     ids: LidoId[],
-    info: Info[],
+    infos: Info[],
     rights: Right[],
     sources: Source[],
     type: string

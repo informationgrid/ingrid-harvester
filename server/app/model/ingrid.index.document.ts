@@ -40,6 +40,7 @@ export type IngridIndexDocument = {
     },
     keywords?: Keyword[],
     fulltext: string,
+    sort_uuid: string,
     metadata: Metadata
 };
 

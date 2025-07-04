@@ -33,7 +33,7 @@
 --        AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
 )
 UNION
--- get all services for the datasets of a given source
+-- get all services for the datasets of a given source (the services should also be of the same source)
 (
     SELECT
         ds.id AS anchor_id,
@@ -50,8 +50,8 @@ UNION
     ON ds.identifier = coupling.dataset_identifier
     LEFT JOIN public.record AS service
     ON coupling.service_id = service.id::varchar(255)
-    WHERE
-        ds.source = $1
+    WHERE ds.source = $1
+        AND service.source = $1
 )
 UNION
 -- get all datasets for the services of a given source

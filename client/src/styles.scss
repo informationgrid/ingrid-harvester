@@ -49,28 +49,28 @@
 .flex-wrap-mobile { @media only screen and (max-width: 599px) { flex-wrap: wrap; } }  // Switch from flex-row to flex-col on mobile.
 
 .flex-1 { flex: 1 }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-5 { flex: 1 1 100%; max-width: 5%; }  
-.flex-10 { flex: 1 1 100%; max-width: 10%; }  
-.flex-15 { flex: 1 1 100%; max-width: 15%; }  
-.flex-20 { flex: 1 1 100%; max-width: 20%; }  
-.flex-25 { flex: 1 1 100%; max-width: 25%; }  
-.flex-30 { flex: 1 1 100%; max-width: 30%; }  
-.flex-35 { flex: 1 1 100%; max-width: 35%; }  
-.flex-40 { flex: 1 1 100%; max-width: 40%; }  
-.flex-45 { flex: 1 1 100%; max-width: 45%; }  
-.flex-50 { flex: 1 1 100%; max-width: 50%; }  
-.flex-55 { flex: 1 1 100%; max-width: 55%; }  
-.flex-60 { flex: 1 1 100%; max-width: 60%; }  
-.flex-65 { flex: 1 1 100%; max-width: 65%; }  
-.flex-70 { flex: 1 1 100%; max-width: 70%; }  
-.flex-75 { flex: 1 1 100%; max-width: 75%; }  
-.flex-80 { flex: 1 1 100%; max-width: 80%; }  
-.flex-85 { flex: 1 1 100%; max-width: 85%; }  
-.flex-90 { flex: 1 1 100%; max-width: 90%; }  
-.flex-95 { flex: 1 1 100%; max-width: 95%; }  
-.flex-100 { flex: 1 1 100%; max-width: 100%; }  
+.flex-5 { flex: 1 1 100%; max-width: 5%; }
+.flex-10 { flex: 1 1 100%; max-width: 10%; }
+.flex-15 { flex: 1 1 100%; max-width: 15%; }
+.flex-20 { flex: 1 1 100%; max-width: 20%; }
+.flex-25 { flex: 1 1 100%; max-width: 25%; }
+.flex-30 { flex: 1 1 100%; max-width: 30%; }
+.flex-35 { flex: 1 1 100%; max-width: 35%; }
+.flex-40 { flex: 1 1 100%; max-width: 40%; }
+.flex-45 { flex: 1 1 100%; max-width: 45%; }
+.flex-50 { flex: 1 1 100%; max-width: 50%; }
+.flex-55 { flex: 1 1 100%; max-width: 55%; }
+.flex-60 { flex: 1 1 100%; max-width: 60%; }
+.flex-65 { flex: 1 1 100%; max-width: 65%; }
+.flex-70 { flex: 1 1 100%; max-width: 70%; }
+.flex-75 { flex: 1 1 100%; max-width: 75%; }
+.flex-80 { flex: 1 1 100%; max-width: 80%; }
+.flex-85 { flex: 1 1 100%; max-width: 85%; }
+.flex-90 { flex: 1 1 100%; max-width: 90%; }
+.flex-95 { flex: 1 1 100%; max-width: 95%; }
+.flex-100 { flex: 1 1 100%; max-width: 100%; }
 .flex-grow { flex-grow: 1; }
-.flex-wrap { flex-wrap: wrap; } 
+.flex-wrap { flex-wrap: wrap; }
 .flex-space {
   flex: 1 1 auto;
 }
@@ -217,10 +217,10 @@ mat-card-header {
 .no-padding{
   padding: 0 !important;
 }
-.margin {  
+.margin {
   margin: 16px;
 }
-.padding {  
+.padding {
   padding: 16px !important;
 }
 .padding-small {
@@ -1612,4 +1612,51 @@ table.big-font {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+mat-card-header {
+  app-context-help-button {
+    position: absolute;
+    margin-left: -30px;
+    opacity: 0;
+  }
+  &:hover app-context-help-button{
+    opacity: 1;
+  }
+  .title-with-context-help {
+    cursor: pointer;
+    &:hover {
+      color: #196ea2;
+    }
+  }
+}
+h2.title-with-context-help {
+  padding-left: 40px;
+  app-context-help-button {
+    position: absolute;
+    margin-left: -32px;
+    margin-top: 16px;
+    opacity: 0;
+  }
+  cursor: pointer;
+  &:hover {
+      color: #196ea2 !important;
+  }
+  &:hover app-context-help-button{
+    opacity: 1;
+  }
+}
+.context-help-icon {
+  cursor: pointer;
+  svg {
+    border-radius: 50%;
+    background-color: #f3f3f3;
+    fill: rgb(0 0 0 / 60%);
+  }
+}
+.hidden {
+  display: none;
+}
+.pointer {
+  cursor: pointer;
 }

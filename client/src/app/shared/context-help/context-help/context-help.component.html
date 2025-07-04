@@ -1,0 +1,37 @@
+<div cdkDrag cdkDragRootElement=".cdk-overlay-pane" #contextHelpContainer>
+  <div
+    cdkDragHandle
+    class="context-help-title-wrapper flex-row align-items-center gap-12"
+  >
+    <div class="infoIcon">
+      <mat-icon
+        svgIcon="info-context-help"
+        class="context-help-icon"
+      ></mat-icon>
+    </div>
+
+    <h1 mat-dialog-title>
+      {{ title }}
+    </h1>
+
+    <div class="flex-1"></div>
+
+    <button
+      mat-icon-button
+      mat-dialog-close
+      aria-label="Eingabehilfe schließen"
+    >
+      <mat-icon
+        svgIcon="close"
+        class="info-close-icon"
+      ></mat-icon>
+    </button>
+  </div>
+
+  <div
+    mat-dialog-content
+    [innerHTML]="description"
+    [class.initialWidth]="notResized"
+    class="context-help-content"
+  ></div>
+</div>

@@ -168,12 +168,12 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return this.baseMapper.getSettings().iPlugId;
     }
 
-    getPartner() {
-        return this.baseMapper.getSettings().partner;
+    getPartner(): string[] {
+        return this.baseMapper.getSettings().partner?.split(",")?.map(p => p.trim());
     }
 
-    getProvider() {
-        return this.baseMapper.getSettings().provider;
+    getProvider(): string[] {
+        return this.baseMapper.getSettings().provider?.split(",")?.map(p => p.trim());
     }
 
     getOrganisation() {
@@ -181,8 +181,8 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return organisation;
     }
 
-    getDataType() {
-        return this.baseMapper.getSettings().datatype?.split(",") ?? ["default"];
+    getDataType(): string[] {
+        return this.baseMapper.getSettings().datatype?.split(",")?.map(p => p.trim()) ?? ["default"];
     }
 
     getDataSourceName() {

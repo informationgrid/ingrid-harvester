@@ -56,9 +56,6 @@
         "modified": {
           "type": "date"
         },
-        "procedure_import_date": {
-          "type": "date"
-        },
         "publisher": {
           "properties": {
             "name": {
@@ -131,6 +128,12 @@
     },
     "plan_type_fine": {
       "type": "keyword"
+    },
+    "objectives_in_preparation": {
+      "type": "keyword"
+    },
+    "procedure_import_date": {
+      "type": "date"
     },
     "procedure_state": {
       "type": "keyword"

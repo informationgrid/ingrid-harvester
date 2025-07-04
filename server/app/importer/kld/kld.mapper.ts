@@ -33,7 +33,7 @@ import { Geometries } from '@turf/helpers';
 import { ImporterSettings } from '../../importer.settings';
 import { KldSettings } from './kld.settings';
 import { License } from '@shared/license.model';
-import { Media, Relation } from '../../profiles/lvr/model/index.document';
+import { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document';
 import { ObjectResponse, RelatedObject, Document, getDocumentUrl, RelationType, MediaType } from './kld.api';
 import { Summary } from '../../model/summary';
 
@@ -93,10 +93,10 @@ export class KldMapper extends BaseMapper {
         return this.record.Adresse;
     }
 
-    getTemporal(): DateRange[] {
+    getTemporal(): LvrDateRange[] {
         // extract maximum range from AnfangVon, AnfangBis to EndeVon, EndeBis
-        const [startStart, startEnd] = this.parseDateRange([this.record.AnfangVon, this.record.AnfangBis]);
-        const [endStart, endEnd] = this.parseDateRange([this.record.EndeVon, this.record.EndeBis]);
+        const { gte: startStart, lte: startEnd } = this.parseDateRange([this.record.AnfangVon, this.record.AnfangBis]);
+        const { gte: endStart, lte: endEnd } = this.parseDateRange([this.record.EndeVon, this.record.EndeBis]);
         const start = startStart ?? endStart
         const end = endEnd ?? (endStart ?? startEnd)
         if (start && end && start > end) {
@@ -123,11 +123,8 @@ export class KldMapper extends BaseMapper {
         return relations;
     }
 
-    getMedia(): Media[] {
-        let media: Media[] = [];
-
-        media = media.concat(this.record.Dokumente.map((d: Document) => this.mapDocument(d)));
-        return media;
+    async getMedia(): Promise<Media[]> {
+        return await Promise.all(this.record.Dokumente.map((d: Document) => this.mapDocument(d)));
     }
 
     getLicense(): License {
@@ -183,11 +180,18 @@ export class KldMapper extends BaseMapper {
         return new Promise((resolve) => resolve([publisher]));
     }
 
-    private parseDateRange(dates: string[]): [Date|null, Date|null] {
-        const values = dates.map(MiscUtils.normalizeDateTime).filter((date: Date|null) => date != null).sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
+    private parseDateRange(dates: string[]): LvrDateRange {
+        const parseLvrTime = (dateStr: string) => {
+            if (dateStr == '0') {
+                return null;
+            }
+            let m = dateStr?.toString().match(/^(-?)(\d{0,5})$/);
+            return m?.length > 2 ? m[1] + m[2].padStart(4, '0') : MiscUtils.normalizeDateTime(dateStr);
+        };
+        const values = dates.map(parseLvrTime).filter(date => date != null);//.sort((a, b) => a.valueOf() - b.valueOf());
         const start = values.length > 0 ? values[0] : null;
         const end = values.length > 0 ? values[values.length-1] : null;
-        return [start, end];
+        return { gte: start, lte: end };
     }
 
     private mapRelatedObject(related: RelatedObject, type: RelationType): Relation {
@@ -197,12 +201,15 @@ export class KldMapper extends BaseMapper {
         }
     }
 
-    private mapDocument(document: Document): Media {
+    private async mapDocument(document: Document): Promise<Media> {
+        let mediaURL = getDocumentUrl(this.takeFirstNonEmpty(document, ['DownloadToken', 'Thumbnail3Token', 'Thumbnail2Token', 'Thumbnail1Token']));
         return {
+            // @ts-expect-error MediaType ensures that Media.type will be correctly typed
             type: this.getEnumKey(MediaType, document.Medientyp).toLowerCase(),
-            url: getDocumentUrl(this.takeFirstNonEmpty(document, ['DownloadToken', 'Thumbnail3Token', 'Thumbnail2Token', 'Thumbnail1Token'])),
+            url: mediaURL,
             thumbnail: getDocumentUrl(this.takeFirstNonEmpty(document, ['Thumbnail2Token', 'Thumbnail3Token', 'Thumbnail1Token'])),
-            description: this.takeFirstNonEmpty(document, ['Ueberschrift', 'Beschreibung', 'AlternativeBeschreibung'])
+            description: this.takeFirstNonEmpty(document, ['Ueberschrift', 'Beschreibung', 'AlternativeBeschreibung']),
+            dimensions: await MiscUtils.getImageDimensionsFromURL(mediaURL)
         }
     }
 

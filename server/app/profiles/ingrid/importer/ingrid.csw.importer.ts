@@ -75,7 +75,7 @@ export class IngridCswImporter extends CswImporter {
                     ],
                     "iPlugClass": "de.ingrid.iplug.csw.dsc.CswDscSearchPlug",
                     "fields": [],
-                    "proxyServiceURL": indexId,
+                    "proxyServiceUrl": this.settings.iPlugId,
                     "useRemoteElasticsearch": true
                 },
                 "active": false

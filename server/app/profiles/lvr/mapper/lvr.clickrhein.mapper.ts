@@ -21,12 +21,14 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../../utils/misc.utils';
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { JsonMapper } from '../../../importer/json/json.mapper';
 import { Keyword } from '../../../model/ingrid.index.document';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
-import { Media, Person, Relation } from '../model/index.document';
+import { Media, Person, Relation, Source } from '../model/index.document';
+import { UrlUtils } from '../../../utils/url.utils';
 
 export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
 
@@ -121,7 +123,7 @@ export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
         return null;
     }
 
-    getMedia(): Media[] {
+    async getMedia(): Promise<Media[]> {
         let { sourceURL, additionalSettings } = this.baseMapper.getSettings();
         let baseURL = sourceURL.substring(0, sourceURL.indexOf('/', 8));
         const queryParam = (mediaType) => {
@@ -132,11 +134,18 @@ export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
                 default: return '';
             }
         }
-        return this.baseMapper.record['media']?.map(entry => ({
-            type: entry.media_type,
-            url: baseURL + entry.download_url + queryParam(entry.media_type),
-            thumbnail: baseURL + entry.url + `&width=${additionalSettings['thumbnailWidth'] ?? 480}`,
-            description: entry.description
+        return await Promise.all(this.baseMapper.record['media']?.map(async entry => {
+            let mediaURL = baseURL + entry.download_url + queryParam(entry.media_type);
+            let media: Media = {
+                type: entry.media_type,
+                url: mediaURL,
+                thumbnail: baseURL + entry.url + `&width=${additionalSettings['thumbnailWidth'] ?? 480}`,
+                description: entry.description
+            }
+            if (entry.media_type == 'image') {
+                media.dimensions = await MiscUtils.getImageDimensionsFromURL(mediaURL);
+            }
+            return media;
         }));
     }
 
@@ -153,8 +162,14 @@ export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
         return null;
     }
 
-    getSource(): string {
-        return 'ClickRhein';
+    async getSource(): Promise<Source> {
+        let requestConfig = {
+            uri: `https://click-rhein.lvr.de/detail/discovery/${this.getIdentifier()}`
+        };
+        return {
+            id: 'ClickRhein',
+            display_url: await UrlUtils.urlWithProtocolFor(requestConfig, this.baseMapper.getSettings().skipUrlCheckOnHarvest, true)
+        };
     }
 
     // TODO

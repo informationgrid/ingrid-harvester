@@ -32,6 +32,9 @@ import {SharedModule} from '../shared/shared.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { PageTemplateModule } from '../shared/page-template/page-template.module';
 import { MatMenuModule } from '@angular/material/menu';
+import {ContextHelpDirective} from "../shared/context-help/context-help.directive";
+import {MatTooltip} from "@angular/material/tooltip";
+import {ContextHelpButtonComponent} from "../shared/context-help/context-help-button/context-help-button.component";
 
 const routes: Routes = [
   {
@@ -42,17 +45,20 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [IndicesListComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    MatListModule,
-    MatIconModule,
-    MatCardModule,
-    SharedModule,
-    ScrollingModule,
-    PageTemplateModule,
-    MatMenuModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        MatListModule,
+        MatIconModule,
+        MatCardModule,
+        SharedModule,
+        ScrollingModule,
+        PageTemplateModule,
+        MatMenuModule,
+        ContextHelpDirective,
+        MatTooltip,
+        ContextHelpButtonComponent
+    ]
 })
 export class IndicesModule {
 }

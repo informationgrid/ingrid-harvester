@@ -24,10 +24,14 @@
 <div class="flex flex-row h-full" >
     <div class=" list-hover flex-30 margin  " >
       <div class="flex  flex-row padding">
-        <h2 matHeader class="flex-1">Existierende Indizes</h2>
+        <h2 class="flex-1 pointer" (click)="pageContextHelpIsVisible=!pageContextHelpIsVisible" (keydown.enter)="pageContextHelpIsVisible=!pageContextHelpIsVisible">
+          Existierende Indizes
+          <app-context-help-button/>
+        </h2>
         <input type="file" #indexUpload id="indexUpload" name="harvesterUpload" (change)="importIndex(this.indexUpload.files)" accept="json/*.json" style="display:none;" />
         <button mat-flat-button id="importIndex" color="primary" (click)="this.indexUpload.click()" data-test="importIndex">Importieren</button>
       </div>
+      <aside contextHelp="about_indices" [className]="pageContextHelpIsVisible ? '' : 'hidden'"></aside>
       <mat-list class="items-left scroll padding" >
       @for (index of indices | async; track index) {
         <mat-list-item  class="index-list-item">

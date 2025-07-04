@@ -26,8 +26,8 @@ import { IndexDocument } from '../../../model/index.document';
 export type IngridIndexDocument = IndexDocument & {
     iPlugId: string,
     uuid: string,
-    partner: string,
-    provider: string,
+    partner: string[],
+    provider: string[],
     organisation: string,
     datatype: string[],
     dataSourceName: string,

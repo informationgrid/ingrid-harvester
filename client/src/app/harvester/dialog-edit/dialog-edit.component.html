@@ -21,7 +21,8 @@
     ==================================================
 -->
 
-<h2 mat-dialog-title>{{dialogTitle}}</h2>
+<h2 mat-dialog-title contextHelp="harvester_settings_type" >{{dialogTitle}}</h2>
+
 
 <mat-dialog-content>
   <div class="form-wrapper">
@@ -30,6 +31,7 @@
         <mat-card-content>
           <div class="grid grid-cols-12 gap-20">
             <mat-form-field class="col-span-3 col-span-6-mobile">
+              <mat-icon matSuffix matTooltip="Eingabehilfe" svgIcon="info-context-help"  contextHelp="harvester_field_type"/>
               <mat-label>Typ</mat-label>
               <mat-select formControlName="type" required>
                 <mat-option value="CKAN">CKAN</mat-option>
@@ -53,6 +55,7 @@
             </mat-form-field>
 
             <mat-form-field class="col-span-3 col-span-6-mobile">
+              <mat-icon matSuffix matTooltip="Eingabehilfe" svgIcon="info-context-help"  contextHelp="harvester_field_catalogId"/>
               <mat-label>Katalog-Identifier</mat-label>
               <input type="text"
                 placeholder="Eingeben oder auswählen"
@@ -67,11 +70,13 @@
             </mat-form-field>
 
             <mat-form-field class="col-span-4 col-span-9-mobile">
+              <mat-icon matSuffix matTooltip="Eingabehilfe" svgIcon="info-context-help"  contextHelp="harvester_field_description"/>
               <mat-label>Beschreibung</mat-label>
               <input matInput formControlName="description" required>
             </mat-form-field>
 
             <mat-form-field class="col-span-2 col-span-3-mobile">
+              <mat-icon matSuffix matTooltip="Eingabehilfe" svgIcon="info-context-help"  contextHelp="harvester_field_priority"/>
               <mat-label>Priorität</mat-label>
               <input matInput type="number" formControlName="priority">
             </mat-form-field>
@@ -93,9 +98,8 @@
           <div class="flex-row gap-20 space-between">
             <mat-form-field class="flex-1">
               <mat-label>iPlugId</mat-label>
-              <input matInput formControlName="iPlugId" required>
+              <input matInput formControlName="iPlugId" readonly>
             </mat-form-field>
-
             <mat-form-field class="flex-1">
               <mat-label>Partner</mat-label>
               <input matInput formControlName="partner">
@@ -173,7 +177,7 @@
       }
 
       <mat-card>
-        <mat-card-header>
+        <mat-card-header contextHelp="harvester_settings_general">
           <mat-card-title>Allgemeine Einstellungen</mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -335,7 +339,7 @@
       </ng-template>
 
       <mat-card>
-        <mat-card-header>
+        <mat-card-header contextHelp="harvester_settings_extras">
           <mat-card-title>Weitere Einstellungen</mat-card-title>
         </mat-card-header>
         <mat-card-content>

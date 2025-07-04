@@ -24,7 +24,7 @@
 <form [formGroup]="form">
 
   <mat-card>
-    <mat-card-header>
+    <mat-card-header contextHelp="harvester_csw_settings">
       <mat-card-title>CSW Einstellungen</mat-card-title>
     </mat-card-header>
     <mat-card-content>
@@ -83,25 +83,25 @@
       </div>
     </mat-card-content>
   </mat-card>
-  
+
   <mat-card>
-    <mat-card-header>
+    <mat-card-header contextHelp="harvester_csw_filter">
       <mat-card-title>Filter und Regeln</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <ng-container class="flex-col" [ngTemplateOutlet]="rulesTemplate"></ng-container>
-      
+
       <div class="flex-col">
         <mat-form-field>
           <mat-label>Record Filter</mat-label>
           <textarea matInput rows="6" class="code" formControlName="recordFilter"></textarea>
         </mat-form-field>
-        
-        <app-chip-list 
+
+        <app-chip-list
         [list]="model.eitherKeywords"
         placeholder="Either keywords"
-        (update)="model.eitherKeywords = $event"></app-chip-list>  
-        
+        (update)="model.eitherKeywords = $event"></app-chip-list>
+
       </div>
     </mat-card-content>
   </mat-card>

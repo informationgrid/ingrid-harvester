@@ -23,12 +23,13 @@
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
+import { convertBBCode } from '../lvr.utils';
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { Keyword } from '../../../model/ingrid.index.document';
 import { KldMapper } from '../../../importer/kld/kld.mapper';
 import { License } from '@shared/license.model';
 import { LvrMapper } from './lvr.mapper';
-import { Media, Person, Relation } from '../model/index.document';
+import { LvrDateRange, Media, Person, Relation, Source } from '../model/index.document';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
@@ -48,7 +49,8 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
     }
 
     getDescription(): string[] {
-        return [this.baseMapper.getDescription()];
+        let description = convertBBCode(this.baseMapper.getDescription());
+        return [description];
     }
 
     getSpatial(): GeometryInformation[] {
@@ -65,7 +67,7 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
 
     getTemporal(): Temporal[] {
         let temporals = this.baseMapper.getTemporal();
-        let temporal: { gte: Date, lte: Date } = { gte: null, lte: null };
+        let temporal: LvrDateRange = { gte: null, lte: null };
         for (let t of temporals) {
             if (t.gte && (!temporal.gte || t.gte < temporal.gte)) {
                 temporal.gte = t.gte;
@@ -74,6 +76,8 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
                 temporal.lte = t.lte;
             }
         }
+        // @ts-expect-error `date_range` should be DateRange, but we type it as LvrDateRange in LVR
+        // this is a hacky solution, but far less intrusive than plumbing DateRange
         return [{ date_range: temporal }];
     }
 
@@ -95,7 +99,7 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         return null;
     }
 
-    getMedia(): Media[] {
+    async getMedia(): Promise<Media[]> {
         return this.baseMapper.getMedia();
     }
 
@@ -112,8 +116,16 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         return null;
     }
 
-    getSource(): string {
-        return 'KuLaDig';
+    async getSource(): Promise<Source> {
+        let requestConfig = {
+            uri: `https://www.kuladig.de/Objektansicht/${this.getIdentifier()}`
+        };
+        return {
+            id: 'KuLaDig',
+            // trust the URL creation here
+            // display_url: await UrlUtils.urlWithProtocolFor(requestConfig, this.baseMapper.getSettings().skipUrlCheckOnHarvest, true)
+            display_url: requestConfig.uri
+        };
     }
 
     getIssued(): Date {

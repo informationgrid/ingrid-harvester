@@ -216,32 +216,6 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
             });
     }
 
-    async bulk(bulkOperations: any[]): Promise<BulkResponse> {
-        try {
-            let response = await this.client.bulk({
-                index: this.indexName,
-                // type: this.config.indexType || 'base',
-                operations: bulkOperations
-            });
-            if (response.errors) {
-                response.items.forEach(item => {
-                    let err = item.index?.error;
-                    if (err) {
-                        this.handleError(`Error during indexing on index '${this.indexName}' for item.id '${item.index._id}': ${JSON.stringify(err)}`, err);
-                    }
-                });
-            }
-            log.debug('Bulk finished of #operations + #docs: ' + bulkOperations.length);
-            return {
-                queued: false,
-                response: response
-            };
-        }
-        catch (e) {
-            this.handleError('Error during bulk #operations + #docs: ' + bulkOperations.length, e);
-        }
-    }
-
     async bulkWithIndexName(index: string, type, data): Promise<BulkResponse> {
         index = this.addPrefixIfNotExists(index) as string;
         try {

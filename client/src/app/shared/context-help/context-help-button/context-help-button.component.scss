@@ -1,0 +1,11 @@
+.context-help-icon {
+  display: inline-flex;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #f3f3f3;
+  svg {
+    fill: rgb(0 0 0 / 60%);
+  }
+}

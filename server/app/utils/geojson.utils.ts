@@ -25,7 +25,7 @@
  * Copyright (c) 2018, parse-gml-polygon authors
  *
  * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above 
+ * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
  *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
@@ -55,7 +55,9 @@ import { AllGeoJSON, Feature, FeatureCollection, Geometries, Geometry, GeometryC
 
 const deepEqual = require('deep-equal');
 const proj4 = require('proj4');
-const proj4jsMappings = require('../importer/proj4.json');
+const path = require('path');
+const proj4jsMappings = require(path.resolve(process.cwd(), 'proj4.json'));
+
 
 // prepare proj4js
 proj4.defs(Object.entries(proj4jsMappings));
@@ -67,7 +69,7 @@ const transformer: Function = (crs: string) => (x: number, y: number) => proj4(c
 const BBOX_GERMANY = buffer({
     'type': 'Polygon',
     'coordinates': [[
-        [5.98865807458, 54.983104153], 
+        [5.98865807458, 54.983104153],
         [5.98865807458, 47.3024876979],
         [15.0169958839, 47.3024876979],
         [15.0169958839, 54.983104153],
@@ -157,8 +159,8 @@ export function flatten(geometryCollection: GeometryCollection, tolerance: numbe
 
 /**
  * Check if the centroid of the given geometry is within Germany. If not, flip the geometry and check again.
- * 
- * @param spatial 
+ *
+ * @param spatial
  * @returns spatial if centroid within Germany; flipped spatial if flipped centroid within Germany; null else
  */
 export function sanitize(spatial: Geometry | GeometryCollection): Geometry | GeometryCollection {
@@ -189,9 +191,9 @@ export function transformCollection(featureCollection: FeatureCollection) {
 /**
  * Forked from https://github.com/DoFabien/proj-geojson
  * under MIT license
- * 
- * @param spatial 
- * @param targetSystem 
+ *
+ * @param spatial
+ * @param targetSystem
  */
 export function projectFeatureCollection(featureCollection: FeatureCollection, sourceCrs: string) {
     // Point
@@ -199,7 +201,7 @@ export function projectFeatureCollection(featureCollection: FeatureCollection, s
 
     // Linestring, MultiPoint?
     const projectRing = (points: any[]) => points.map(point => projectPoint(...point));
-    
+
     // MultiLinestring, Polygon
     const projectRings = (rings) => rings.map(ring => projectRing(ring));
 

@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import * as xpath from 'xpath';
 import * as MiscUtils from '../../utils/misc.utils';
 import * as ServiceUtils from '../../utils/service.utils';
 import * as XpathUtils from '../../utils/xpath.utils';
@@ -187,7 +186,7 @@ export class CswImporter extends Importer {
         let getCapabilitiesDelegate = new RequestDelegate(getCapabilitiesConfig);
         let getCapabilitiesResponse = await getCapabilitiesDelegate.doRequest();
         let getCapabilitiesResponseDom = this.domParser.parseFromString(getCapabilitiesResponse);
-        this.getRecordsURL = CswMapper.select('./ows:OperationsMetadata/ows:Operation[@name="GetRecords"]/ows:DCP/ows:HTTP/ows:Post[ows:Constraint/ows:Value="XML"]/@xlink:href', XpathUtils.firstElementChild(getCapabilitiesResponseDom), true)?.textContent;
+        this.getRecordsURL = CswMapper.select('./ows:OperationsMetadata/ows:Operation[@name="GetRecords"]/ows:DCP/ows:HTTP/ows:Post/@xlink:href', XpathUtils.firstElementChild(getCapabilitiesResponseDom), true)?.textContent;
         if (!this.getRecordsURL) {
             throw new Error(getCapabilitiesResponse);
         }
@@ -543,9 +542,14 @@ export class CswImporter extends Importer {
                 </GetRecords>`;
             }
             else if (request == 'GetCapabilities') {
-                requestConfig.qs ??= {};
-                requestConfig.qs['service'] ??= 'CSW';
-                requestConfig.qs['request'] ??= 'GetCapabilities';
+                requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
+                <GetCapabilities xmlns="${namespaces.CSW}"
+                            xmlns:ows="${namespaces.OWS}"
+                            service="CSW">
+                    <ows:AcceptVersions>
+                        <ows:Version>2.0.2</ows:Version>
+                    </ows:AcceptVersions>
+                </GetCapabilities>`;
             }
         } else {
             requestConfig.qs = <CswParameters>{
@@ -564,6 +568,11 @@ export class CswImporter extends Importer {
             };
             if (request === 'GetRecords' && settings.recordFilter) {
                 requestConfig.qs.constraint = settings.recordFilter;
+            }
+            else if (request == 'GetCapabilities') {
+                requestConfig.qs ??= {};
+                requestConfig.qs['service'] ??= 'CSW';
+                requestConfig.qs['request'] ??= 'GetCapabilities';
             }
         }
 

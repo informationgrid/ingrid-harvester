@@ -29,8 +29,9 @@ import { GeometryInformation, Temporal } from '../../../model/index.document';
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import { Keyword } from '../../../model/ingrid.index.document';
 import { LvrMapper } from './lvr.mapper';
-import { Media, Person, Relation } from '../model/index.document';
-import { substringAfterLast, substringBeforeLast } from '../lvr.utils';
+import { Media, Person, Relation, Source } from '../model/index.document';
+import * as MiscUtils from '../../../utils/misc.utils';
+import { UrlUtils } from '../../../utils/url.utils';
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
@@ -100,9 +101,9 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         this.baseMapper.getSubjects().forEach(subject => {
             let url = subject.keyword.conceptIds.map(conceptId => conceptId.id)?.[0]
             keywords.push({
-                id: substringAfterLast(url, '/'),
+                id: MiscUtils.substringAfterLast(url, '/'),
                 term: subject.keyword.terms?.[0],
-                source: substringBeforeLast(url, '/')
+                source: MiscUtils.substringBeforeLast(url, '/')
             });
         });
         return keywords;
@@ -118,7 +119,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         return null;
     }
 
-    getMedia(): Media[] {
+    async getMedia(): Promise<Media[]> {
 
         const findFirstURL = (links: Link[], attributes: string[]) => {
             let url = '';
@@ -128,7 +129,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
             return url;
         };
 
-        let media = [];
+        let media: Media[] = [];
         for (let resource of this.baseMapper.getResources()) {
             switch (resource.type) {
                 case 'digitales Bild': {
@@ -138,7 +139,8 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
                         type: 'image',
                         url: fullURL,
                         thumbnail: thumbnailURL,
-                        description: resource.description
+                        description: resource.description,
+                        dimensions: await MiscUtils.getImageDimensionsFromURL(fullURL)
                     });
                     break;
                 }
@@ -167,6 +169,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
                 default: {
                     for (let link of resource.links) {
                         media.push({
+                            // @ts-expect-error TODO investigate this case
                             type: link.format,
                             url: link.url,
                             description: resource.description
@@ -175,7 +178,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
                 }
             }
         }
-        return media;
+        return await Promise.all(media);
     }
 
     getRelations(): Relation[] {
@@ -206,53 +209,46 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
     /**
      * See https://redmine.wemove.com/issues/5010
      */
-    getSource(): string {
-        switch (this.baseMapper.getMetadataSource().source_base) {
-            case 'https://oamh-lvr.digicult-verbund.de/cv/sprache_lvr_13tHztt9gZr':
-                return 'digiCULT (Sprache)';
-            case 'https://oamh-lvr.digicult-verbund.de/cv/hgrojzOf7tF53kH0a0j':
-                return 'digiCULT (Alltagskulturen)';
-            case 'https://oamh-lvr.digicult-verbund.de/cv/hH0a0jrojzOgtF5j7u':
-                let conceptIdNodes = OaiMapper.select('./lido:descriptiveMetadata/lido:objectClassificationWrap/lido:classificationWrap/lido:classification/lido:conceptID', this.baseMapper.record);
-                let conceptIds = conceptIdNodes?.map(conceptIdNode => conceptIdNode.textContent) ?? [];
-                let relationIds = this.getRelations()?.map(relation => relation.id) ?? [];
-                if (relationIds.includes('DE-2086/lido/62b99d31aff930.75966699')
-                        || conceptIds.includes('http://digicult.vocnet.org/portal/p0330')) {
-                    return 'digiCULT (Preußen)';
-                }
-                else if (relationIds.includes('DE-2086/lido/57a2eb58249101.94114332')
-                    || conceptIds.includes('http://digicult.vocnet.org/portal/p0326')) {
-                    return 'digiCULT (Geschichte)';
-                }
-                // console.log("NO PORTAL: " + this.getIdentifier());
-                // TODO filter out?
-                return 'digiCULT';
-            default:
-                return undefined;
-        }
+    async getSource(): Promise<Source> {
+        const getSourceId = () => {
+            switch (this.baseMapper.getMetadataSource().source_base) {
+                case 'https://oamh-lvr.digicult-verbund.de/cv/sprache_lvr_13tHztt9gZr':
+                    return 'digiCULT (Sprache)';
+                case 'https://oamh-lvr.digicult-verbund.de/cv/hgrojzOf7tF53kH0a0j':
+                    return 'digiCULT (Alltagskulturen)';
+                case 'https://oamh-lvr.digicult-verbund.de/cv/hH0a0jrojzOgtF5j7u':
+                    let conceptIdNodes = OaiMapper.select('./lido:descriptiveMetadata/lido:objectClassificationWrap/lido:classificationWrap/lido:classification/lido:conceptID', this.baseMapper.record);
+                    let conceptIds = conceptIdNodes?.map(conceptIdNode => conceptIdNode.textContent) ?? [];
+                    let relationIds = this.getRelations()?.map(relation => relation.id) ?? [];
+                    if (relationIds.includes('DE-2086/lido/62b99d31aff930.75966699')
+                            || conceptIds.includes('http://digicult.vocnet.org/portal/p0330')) {
+                        return 'digiCULT (Preußen)';
+                    }
+                    else if (relationIds.includes('DE-2086/lido/57a2eb58249101.94114332')
+                            || conceptIds.includes('http://digicult.vocnet.org/portal/p0326')) {
+                        return 'digiCULT (Geschichte)';
+                    }
+                    // console.log("NO PORTAL: " + this.getIdentifier());
+                    // TODO filter out?
+                    return 'digiCULT';
+                default:
+                    return undefined;
+            }
+        };
+        let requestConfig = {
+            uri: this.baseMapper.getRecord().infos?.find(info => info.type == 'lido record')?.link
+        };
+        return {
+            id: getSourceId(),
+            display_url: await UrlUtils.urlWithProtocolFor(requestConfig, this.baseMapper.getSettings().skipUrlCheckOnHarvest, true)
+        };
     }
 
     getIssued(): Date {
-        let issued = null;
-        for (let info of this.baseMapper.getRecord().info) {
-            // TODO which to use? "lido record" or "source record"
-            if (info.type == 'lido record') {
-                issued = info.created;
-                break;
-            }
-        }
-        return issued;
+        return this.baseMapper.getRecord().infos?.find(info => info.type == 'lido record')?.created;
     }
 
     getModified(): Date {
-        let modified = null;
-        for (let info of this.baseMapper.getRecord().info) {
-            // TODO which to use? "lido record" or "source record"
-            if (info.type == 'lido record') {
-                modified = info.modified;
-                break;
-            }
-        }
-        return modified;
+        return this.baseMapper.getRecord().infos?.find(info => info.type == 'lido record')?.modified;
     }
 }

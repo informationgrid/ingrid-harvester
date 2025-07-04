@@ -24,7 +24,7 @@
         }
       }
     },
-    "abstract": {
+    "description": {
       "type": "text",
       "analyzer": "decomp_german",
       "fields": {
@@ -75,7 +75,8 @@
         "data_temporal": {
           "properties": {
             "date_range": {
-              "type": "date_range"
+              "type": "date_range",
+              "format": "date_optional_time||epoch_millis"
             },
             "date_type": {
               "type": "keyword"
@@ -107,6 +108,9 @@
     "fulltext": {
       "type": "text",
       "index": false
+    },
+    "sort_uuid": {
+      "type": "keyword"
     },
     "metadata": {
       "properties": {
@@ -205,6 +209,16 @@
             "description": {
               "type": "text",
               "analyzer": "decomp_german"
+            },
+            "dimensions": {
+              "properties": {
+                "width": {
+                  "type": "integer"
+                },
+                "height": {
+                  "type": "integer"
+                }
+              }
             }
           }
         },
@@ -270,7 +284,14 @@
           "type": "object"
         },
         "source": {
-          "type": "keyword"
+          "properties": {
+            "id": {
+              "type": "keyword"
+            },
+            "display_url": {
+              "type": "keyword"
+            }
+          }
         }
       }
     },
