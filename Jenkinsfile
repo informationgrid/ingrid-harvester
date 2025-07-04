@@ -23,51 +23,31 @@ pipeline {
                 }
             }
             steps {
+                sh 'if [ -d build ]; then rm -rf build; fi'
                 sh "cd client && npm ci && npm run prod"
                 sh "cd server && npm ci && npm run build"
+                sh "mkdir -p build/reports"
+                sh "apk add --no-cache jq"
+                sh "npm install -g @cyclonedx/cyclonedx-npm"
+                sh "cd client && cyclonedx-npm --output-file ../build/reports/client-bom.json"
+                sh "cd server && cyclonedx-npm --output-file ../build/reports/server-bom.json"
+                sh "jq -s 'add' build/reports/client-bom.json build/reports/server-bom.json > build/reports/bom.json"
             }
         }
 
         stage('Build and Push Image') {
-            when {
-                branch 'main'
-            }
             steps {
                 script {
-                    (version, snapshotVersion) = versionsFromGit()
-                    echo "VERSION:" + version
-                    dockerImage = docker.build registry + ":" + version
-                    dockerImage.push()
-                }
-            }
-        }
-        stage('Build and Push Develop Image') {
-            when {
-                branch 'develop'
-            }
-            steps {
-                script {
-                    (version, snapshotVersion) = versionsFromGit()
-                    dockerImageSnapshot = docker.build registry + ":" + snapshotVersion
-                    dockerImageSnapshot.push()
-                    dockerImageLatest = docker.build registry + ":latest"
-                    dockerImageLatest.push()
-                }
-            }
-        }
-        stage('Build and Push Branch Image') {
-            when {
-                not {
-                    anyOf {
-                        branch 'main'
-                        branch 'develop'
+                    if (env.TAG_NAME) {
+                        env.VERSION = env.TAG_NAME
+                    } else if (BRANCH_NAME == 'main') {
+                        env.VERSION = 'latest'
+                    } else {
+                        env.VERSION = BRANCH_NAME.replaceAll('/', '-')
                     }
-                }
-            }
-            steps {
-                script {
-                    dockerImageBranch = docker.build registry + ":" + determineVersion()
-                    dockerImageBranch.push()
+                    echo "VERSION: ${env.VERSION}"
+                    dockerImage = docker.build registry + ":" + env.VERSION
+                    dockerImage.push()
                 }
             }
         }
@@ -76,7 +56,6 @@ pipeline {
             when { expression { return shouldBuildDevOrRelease() } }
             steps {
                 script {
-                    sh 'if [ -d build ]; then rm -rf build; fi'
                     sh "sed -i 's/^Version:.*/Version: ${determineVersion()}/' rpm/ingrid-harvester.spec"
                     sh "sed -i 's/^Release:.*/Release: ${env.TAG_NAME ? '1' : 'dev'}/' rpm/ingrid-harvester.spec"
 
@@ -99,13 +78,13 @@ pipeline {
                             "
                         """
 
-                        sh "docker cp ${containerId}:/root/rpmbuild/RPMS/noarch ./build"
+                        sh "docker cp ${containerId}:/root/rpmbuild/RPMS/noarch ./build/rpms"
 
                     } finally {
                         sh "docker rm -f ${containerId}"
                     }
 
-                    archiveArtifacts artifacts: 'build/ingrid-harvester-*.rpm', fingerprint: true
+                    archiveArtifacts artifacts: 'build/rpms/ingrid-harvester-*.rpm', fingerprint: true
                 }
             }
         }
@@ -115,13 +94,13 @@ pipeline {
             steps {
                 script {
                     def repoType = env.TAG_NAME ? "rpm-ingrid-releases" : "rpm-ingrid-snapshots"
-//                    sh "mv build/reports/bom.json build/reports/ingrid-harvester-${determineVersion()}.bom.json"
+                    sh "mv build/reports/bom.json build/reports/ingrid-harvester-${determineVersion()}.bom.json"
 
                     withCredentials([usernamePassword(credentialsId: '9623a365-d592-47eb-9029-a2de40453f68', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         sh '''
-                            curl -f --user $USERNAME:$PASSWORD --upload-file build/*.rpm https://nexus.informationgrid.eu/repository/''' + repoType + '''/
+                            curl -f --user $USERNAME:$PASSWORD --upload-file build/rpms/*.rpm https://nexus.informationgrid.eu/repository/''' + repoType + '''/
+                            curl -f --user $USERNAME:$PASSWORD --upload-file build/reports/*.bom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
                         '''
-//                            curl -f --user $USERNAME:$PASSWORD --upload-file build/reports/*.bom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
                     }
                 }
             }
