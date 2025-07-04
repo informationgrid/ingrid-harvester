@@ -50,18 +50,6 @@ if [ -f "/etc/systemd/system/ingrid-harvester.service" ]; then
   service ingrid-harvester stop
 fi
 
-# Delete old files and libs
-#for dir in %{install_root}/%{ingrid_name}/conf \
-#    %{install_root}/%{ingrid_name}/lib \
-#    %{install_root}/%{ingrid_name}/logs; do
-#
-## Don't use `test' here. If the last directory doesn't exist, then a non-zero
-## exit code from test will cause the installation to fail.
-#    if [ -d "$dir" ]; then
-#        rm -Rf "$dir"/*
-#    fi
-#done
-
 ################################################################################
 %preun
 if [ -f "/etc/systemd/system/ingrid-harvester.service" ]; then
