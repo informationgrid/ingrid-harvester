@@ -1,7 +1,9 @@
+ARG NODE_BASE_IMAGE="node:20-alpine"
+
 #
 # IMAGE: build server
 #
-FROM node:20.18.2-alpine3.21 AS build-server
+FROM ${NODE_BASE_IMAGE} AS build-server
 LABEL stage=build
 
 # install build dependencies
@@ -21,7 +23,7 @@ RUN npm run build
 #
 # IMAGE: build client
 #
-FROM node:20.18.2-alpine3.21 AS build-client
+FROM ${NODE_BASE_IMAGE} AS build-client
 LABEL stage=build
 
 # install build dependencies
@@ -41,7 +43,7 @@ RUN npm run prod
 #
 # IMAGE: final
 #
-FROM node:20.18.2-alpine3.21 AS final
+FROM ${NODE_BASE_IMAGE} AS final
 
 ENV IMPORTER_PROFILE=ingrid
 
