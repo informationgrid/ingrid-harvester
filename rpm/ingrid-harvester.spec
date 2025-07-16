@@ -7,7 +7,6 @@ License:                    Proprietary
 URL:                        https://www.wemove.com/
 BuildArch:                  noarch
 AutoReqProv:                no
-Requires:                   nodejs >= 20
 
 %define target              %{buildroot}/opt/ingrid/ingrid-harvester
 %define systemd_dir         /usr/lib/systemd/system
