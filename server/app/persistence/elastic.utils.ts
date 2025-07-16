@@ -24,6 +24,7 @@
 import { Client as Client6 } from 'elasticsearch6';
 import { Client as Client7 } from 'elasticsearch7';
 import { Client as Client8 } from 'elasticsearch8';
+import { Client as Client9 } from 'elasticsearch9';
 import { ElasticQueries } from './elastic.queries';
 import { Index } from '@shared/index.model';
 import { IndexConfiguration, IndexSettings } from './elastic.setting';
@@ -47,7 +48,7 @@ export interface EsOperation {
 
 export abstract class ElasticsearchUtils {
 
-    protected client: Client6 | Client7 | Client8;
+    protected client: Client6 | Client7 | Client8 | Client9;
     protected summary: Summary;
 
     public static maxBulkSize: number = 50;

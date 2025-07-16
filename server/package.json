@@ -54,6 +54,7 @@
     "elasticsearch6": "npm:@elastic/elasticsearch@^6.8.7",
     "elasticsearch7": "npm:@elastic/elasticsearch@^7.17.0",
     "elasticsearch8": "npm:@elastic/elasticsearch@^8.5.0",
+    "elasticsearch9": "npm:@elastic/elasticsearch@^9.0.3",
     "exceljs": "^4.3.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",

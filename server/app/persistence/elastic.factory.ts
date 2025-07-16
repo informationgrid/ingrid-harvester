@@ -25,6 +25,7 @@ import { ElasticsearchUtils } from './elastic.utils';
 import { ElasticsearchUtils6 } from './elastic.utils.6';
 import { ElasticsearchUtils7 } from './elastic.utils.7';
 import { ElasticsearchUtils8 } from './elastic.utils.8';
+import { ElasticsearchUtils9 } from "./elastic.utils.9";
 import { IndexConfiguration } from './elastic.setting';
 import { Summary } from '../model/summary';
 
@@ -38,6 +39,8 @@ export class ElasticsearchFactory {
                 return new ElasticsearchUtils7(config, summary);
             case '8':
                 return new ElasticsearchUtils8(config, summary);
+            case '9':
+                return new ElasticsearchUtils9(config, summary);
             default: 
                 throw new Error('Only ES versions 6 and 8 are supported; [' + config.version + '] was specified');
         }
