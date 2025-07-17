@@ -47,12 +47,12 @@ export class IdfDocument {
         return this.mapper.select(path, parent, single);
     }
 
-    createIdf(): string {
+    createIdf(idx?: number): string {
         if (this.mapper.isFeatureType()) {
             return this.createFeatureTypeIdf();
         }
         else {
-            return this.createFeatureIdf();
+            return this.createFeatureIdf(idx);
         }
     }
 
@@ -196,7 +196,7 @@ export class IdfDocument {
         return this.document.toString();
     }
 
-    createFeatureIdf(): string {
+    createFeatureIdf(idx: number): string {
         let resultColumn = this.document.createElement("div");
         resultColumn.setAttribute("class", "row columns");
         var result = this.addOutputWithAttributes(resultColumn, "div", ["class"], ["sub-section"]);
@@ -225,7 +225,8 @@ export class IdfDocument {
 
         // add the map preview
         result = this.addOutputWithAttributes(resultColumn, "div", ["class"], ["sub-section"]);
-        this.addOutput(result, "div", this.getMapPreview(this.mapper.uuid));
+        let name = this.mapper.getTypename() + '_' + idx;
+        this.addOutput(result, "div", this.getMapPreview(name));
 
         // // add details (content of all child nodes)
         // var detailNodes = recordNode.getChildNodes();
@@ -511,7 +512,7 @@ export class IdfDocument {
                 if (content.nodeType != 1) { //Node.ELEMENT_NODE
                     continue;
                 }
-                var contentName = MiscUtils.substringAfterLast(content.nodeName, ':');
+                var contentName = (content as Element).getAttribute('name');
                 if (this.hasValue(contentName)) {
                     var contentEntry = this.addOutputWithAttributes(result, "span", ["class"], ["list_entry"]);
                     // contentEntry.appendChild(this.document.createTextNode(contentName.getTextContent()))
@@ -560,8 +561,6 @@ export class IdfDocument {
     // }
 
     getMapPreview(name) {
-        name = name.replace('.', '_');
-        let sanitizedName = name.replace('')
         let title = this.mapper.isFeatureType() ? this.mapper.getTitle() : this.mapper.getGeneratedId();
         let bbox = this.mapper.getBoundingBox()?.bbox;
         // let isWGS84 = this.mapper.isFeatureType();

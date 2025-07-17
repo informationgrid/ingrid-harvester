@@ -98,7 +98,7 @@ export class ZdmWfsMapper extends ZdmMapper<WfsMapper> {
 
     getIdf(): string {
         let idfDocument = new IdfDocument(this.baseMapper);
-        return idfDocument.createIdf();
+        return idfDocument.createIdf(this.baseMapper.fetched.idx);
     }
 
     getModifiedDate(): Date{

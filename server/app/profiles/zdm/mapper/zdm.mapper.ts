@@ -102,7 +102,7 @@ export abstract class ZdmMapper<M extends WfsMapper> implements IndexDocumentFac
 
     abstract getAdditionalHtml(): string;
 
-    abstract getIdf(): string;
+    abstract getIdf(idx?: number): string;
 
     getTitle(): string{
         return this.baseMapper.getTitle();

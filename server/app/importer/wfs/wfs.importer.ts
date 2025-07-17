@@ -255,6 +255,7 @@ export class WfsImporter extends Importer {
                 logRequest.debug("Record content: ", features[i].toString());
             }
 
+            this.generalInfo['idx'] = i;
             let mapper = this.getMapper(this.settings, features[i], harvestTime, this.summary, this.generalInfo);
 
             let doc: any = await this.profile.getIndexDocumentFactory(mapper).create().catch(e => {
