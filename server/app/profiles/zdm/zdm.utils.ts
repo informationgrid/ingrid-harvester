@@ -27,5 +27,9 @@ import { ZdmIndexDocument } from './model/index.document';
 const UUID_NAMESPACE = 'b5d8aadf-d03f-452a-8d91-3a6a7f3b1203';
 
 export function createEsId(document: ZdmIndexDocument): string {
-    return uuidv5(document.t01_object.obj_id, UUID_NAMESPACE);
+    return uuidv5(ensureSlash(document.extras.metadata.source.source_base) + document.t01_object.obj_id, UUID_NAMESPACE);
+}
+
+function ensureSlash(s: string): string {
+    return s.endsWith('/') ? s : `${s}/`;
 }
