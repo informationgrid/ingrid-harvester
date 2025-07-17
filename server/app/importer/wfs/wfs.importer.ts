@@ -123,11 +123,12 @@ export class WfsImporter extends Importer {
 
             // if harvesting FeatureTypes, do it here (to include the feature names)
             if (this.settings.harvestTypes) {
-                this.extractFeatureType(featureTypeName, featureTypes[featureTypeName], numFeatures);
+                await this.extractFeatureType(featureTypeName, featureTypes[featureTypeName], numFeatures);
             }
             // skip harvesting features if numFeatures is above limit
             if (this.settings.featureLimit && numFeatures > this.settings.featureLimit) {
                 log.info(`This exceeds the limit of ${this.settings.featureLimit} features; skipping feature harvesting`);
+                continue;
             }
             while (true) {
                 log.info(`Requesting next features for FeatureType ${featureTypeName}`);
