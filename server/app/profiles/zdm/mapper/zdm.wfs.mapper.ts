@@ -67,21 +67,6 @@ export class ZdmWfsMapper extends ZdmMapper<WfsMapper> {
     //     }
     // }
 
-    getAttributes(): string[] {
-        let attributes = [];
-        // TODO get from https://www.kuestendaten.de/DE/dynamisch/kuestendaten_ogc/bs?SERVICE=WFS&VERSION=1.1.0&REQUEST=DescribeFeatureType
-        // if (this.isFeatureType()) {
-        //     let children = this.baseMapper.featureOrFeatureType.childNodes;
-        //     for (let i = 0; i < children.length; i++) {
-        //         let child = children[i];
-        //         if (child.nodeType === 1) { // 1 == Node.ELEMENT_NODE
-        //             attributes.push(child.nodeName);
-        //         }
-        //     }
-        // }
-        return attributes;
-    }
-
     getAdditionalHtml(): string {
         let bbox = this.getBoundingBox()?.bbox;
         if (!bbox) {

@@ -41,6 +41,7 @@ export class WfsMapper extends BaseMapper {
     log = getLogger();
 
     readonly featureOrFeatureType: Node & Element;
+    readonly featureTypeDescription: Node & Element;
     readonly fetched: any;
     readonly settings: WfsSettings;
     readonly uuid: string;
@@ -54,6 +55,7 @@ export class WfsMapper extends BaseMapper {
         super();
         this.settings = settings;
         this.featureOrFeatureType = featureOrFeatureType;
+        this.featureTypeDescription = generalInfo['featureTypeDescription'];
         this.harvestTime = harvestTime;
         this.summary = summary;
         this.fetched = {

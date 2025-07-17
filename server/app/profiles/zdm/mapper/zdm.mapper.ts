@@ -51,7 +51,6 @@ export abstract class ZdmMapper<M extends WfsMapper> implements IndexDocumentFac
             is_feature_type: this.isFeatureType(),
             typename: this.getFeatureTypeName(),
             number_of_features: this.getNumberOfFeatures(),
-            feature_attributes: this.getAttributes(),
 
             // dataSourceName: this.getDataSourceName(),
             partner: [
@@ -100,8 +99,6 @@ export abstract class ZdmMapper<M extends WfsMapper> implements IndexDocumentFac
     getNumberOfFeatures(): number {
         return this.isFeatureType() ? this.baseMapper.getNumberOfFeatures() : null;
     }
-
-    abstract getAttributes(): string[];
 
     abstract getAdditionalHtml(): string;
 

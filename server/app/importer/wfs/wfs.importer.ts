@@ -120,10 +120,11 @@ export class WfsImporter extends Importer {
         for (let featureTypeName in featureTypes) {
             let numFeatures = await this.getNumFeatures(featureTypeName);
             log.info(`Found ${numFeatures} features at ${this.settings.sourceURL} for FeatureType ${featureTypeName}`);
+            let featureTypeDescriptionNode = await this.getTypeDescription(featureTypeName);
 
             // if harvesting FeatureTypes, do it here (to include the feature names)
             if (this.settings.harvestTypes) {
-                await this.extractFeatureType(featureTypeName, featureTypes[featureTypeName], numFeatures);
+                await this.extractFeatureType(featureTypeName, featureTypes[featureTypeName], featureTypeDescriptionNode, numFeatures);
             }
             // skip harvesting features if numFeatures is above limit
             if (this.settings.featureLimit && numFeatures > this.settings.featureLimit) {
@@ -183,11 +184,12 @@ export class WfsImporter extends Importer {
         return generalInfo;
     }
 
-    async extractFeatureType(featureTypeName: string, featureTypeNode: Node, numFeatures: number) {
+    async extractFeatureType(featureTypeName: string, featureTypeNode: Node, featureTypeDescriptionNode: Node, numFeatures: number) {
         let select = <XPathNodeSelect>xpath.useNamespaces(this.nsMap);
         this.generalInfo['select'] = select;
         this.generalInfo['numFeatures'] = numFeatures;
         this.generalInfo['title'] = select('./wfs:Title', featureTypeNode, true)?.textContent;
+        this.generalInfo['featureTypeDescription'] = featureTypeDescriptionNode;
         let mapper = this.getFeatureTypeMapper(this.settings, featureTypeNode, Date.now(), this.summary, this.generalInfo);
         let doc: any = await this.profile.getIndexDocumentFactory(mapper).create().catch(e => {
             log.error('Error creating index document', e);
@@ -206,6 +208,9 @@ export class WfsImporter extends Importer {
         }
         else {
             this.summary.skippedDocs.push(featureTypeName);
+        }
+        if (this.settings.harvestTypes) {
+            this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems));
         }
     }
 
@@ -270,8 +275,10 @@ export class WfsImporter extends Importer {
             } else {
                 this.summary.skippedDocs.push(uuid);
             }
-            // TODO disable if also (i.e.mainly) harvesting FeatureTypes
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems));
+            // disable updating feature count if harvesting FeatureTypes
+            if (!this.settings.harvestTypes) {
+                this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems));
+            }
         }
         await Promise.all(promises).catch(err => log.error('Error indexing WFS record', err));
     }
@@ -295,6 +302,15 @@ export class WfsImporter extends Importer {
         let responseDom = await this.getDom(requestDelegate);
         let resultsNode = responseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
         return parseInt(resultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
+    }
+
+    async getTypeDescription(featureTypeName: string): Promise<Node> {
+        let requestDelegate = new RequestDelegate(WfsImporter.createRequestConfig({
+            ...this.settings,
+            typename: featureTypeName
+        }, 'DescribeFeatureType'));
+        let responseDom = await this.getDom(requestDelegate);
+        return responseDom.documentElement;
     }
 
     static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {

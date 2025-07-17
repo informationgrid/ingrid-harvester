@@ -117,7 +117,7 @@ export class IdfDocument {
             this.addOutput(result, "p", summary);
         }
 
-        var detailNodes = this.mapper.select("//*/*[local-name()='extension'][@base='gml:AbstractFeatureType']/*[local-name()='sequence']/*[local-name()='element']", this.mapper.featureOrFeatureType);
+        var detailNodes = this.mapper.select("//*/*[local-name()='extension'][@base='gml:AbstractFeatureType']/*[local-name()='sequence']/*[local-name()='element']", this.mapper.featureTypeDescription);
         if(detailNodes.length > 0) {
             var detailNavContentSection = this.addOutputWithAttributes(detailNavContent, "div", ["class"], ["section"]);
             this.addOutputWithAttributes(detailNavContentSection, "a", ["class", "id"], ["anchor", "detail_details"]);
@@ -132,6 +132,7 @@ export class IdfDocument {
             this.addOutputWithAttributes(detailNavContentSection, "a", ["class", "id"], ["anchor", "detail_features"]);
             this.addOutput(detailNavContentSection, "h3", "Features");
             var resultColumn = this.addOutputWithAttributes(detailNavContentSection, "div", ["class"], ["row columns"]);
+            // NOTE: the below section is filled in server/app/profiles/zdm/persistence/postgres.aggregator.ts
         //     for (var j=0; j<features.length; j++) {
         //     //     var recordNode = features.get(j).getOriginalResponse().get(0);
         //     //     var result = this.addOutputWithAttributes(resultColumn, "div", ["class"], ["sub-section"]);
