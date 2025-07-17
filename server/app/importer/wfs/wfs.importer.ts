@@ -113,19 +113,12 @@ export class WfsImporter extends Importer {
                 featureTypes[typename] = featureType;
             }
         }
-        log.info(`Processing ${Object.keys(featureTypes).length} FeatureTypes after filtering`);
+        let numFeatureTypes = Object.keys(featureTypes).length;
+        log.info(`Processing ${numFeatureTypes} FeatureTypes after filtering`);
 
         // for each FeatureType, get all Features
         for (let featureTypeName in featureTypes) {
-            let requestDelegate = new RequestDelegate(WfsImporter.createRequestConfig({
-                ...this.settings,
-                typename: featureTypeName,
-                maxRecords: undefined,
-                resultType: 'hits'
-            }));
-            let hitsResponseDom = await this.getDom(requestDelegate);
-            let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
-            let numFeatures = parseInt(hitsResultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
+            let numFeatures = await this.getNumFeatures(featureTypeName);
             log.info(`Found ${numFeatures} features at ${this.settings.sourceURL} for FeatureType ${featureTypeName}`);
 
             // if harvesting FeatureTypes, do it here (to include the feature names)
@@ -289,6 +282,18 @@ export class WfsImporter extends Importer {
 
     getMapper(settings, feature, harvestTime, summary, generalInfo): WfsMapper {
         return new WfsMapper(settings, feature, harvestTime, summary, generalInfo);
+    }
+
+    async getNumFeatures(featureTypeName: string): Promise<number> {
+        let requestDelegate = new RequestDelegate(WfsImporter.createRequestConfig({
+            ...this.settings,
+            typename: featureTypeName,
+            maxRecords: undefined,
+            resultType: 'hits'
+        }));
+        let responseDom = await this.getDom(requestDelegate);
+        let resultsNode = responseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
+        return parseInt(resultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
     }
 
     static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
