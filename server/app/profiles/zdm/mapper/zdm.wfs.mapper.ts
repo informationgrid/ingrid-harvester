@@ -22,12 +22,11 @@
  */
 
 import * as GeojsonUtils from '../../../utils/geojson.utils';
+import { IdfGenerator } from './idf.generator';
 import { MetadataSource } from '../../../model/index.document';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 import { ZdmMapper } from './zdm.mapper';
 import { ZdmIndexDocument } from '../model/index.document';
-import { IdfDocument } from './document_helper';
-import { Geometry } from '@turf/helpers';
 
 export class ZdmWfsMapper extends ZdmMapper<WfsMapper> {
 
@@ -97,8 +96,8 @@ export class ZdmWfsMapper extends ZdmMapper<WfsMapper> {
     }
 
     getIdf(): string {
-        let idfDocument = new IdfDocument(this.baseMapper);
-        return idfDocument.createIdf(this.baseMapper.fetched.idx);
+        let idfGenerator = new IdfGenerator(this.baseMapper);
+        return idfGenerator.createIdf(this.baseMapper.fetched.idx);
     }
 
     getModifiedDate(): Date{
