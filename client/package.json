@@ -9,7 +9,6 @@
     "update": "ng update @angular/cli @angular/core --allow-dirty",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
     "cypress": "cypress open",
     "cy:run": "node scripts/cypress.js"
   },
@@ -66,7 +65,6 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
-    "protractor": "~7.0.0",
     "ts-node": "~10.9.2",
     "typescript": "~5.3.3"
   },
