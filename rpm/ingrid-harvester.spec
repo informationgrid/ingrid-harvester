@@ -25,16 +25,13 @@ InGrid API
 rm -Rf %{buildroot}*
 
 mkdir -p %{target}
-ls -al /server/build/server/
-cp -r /server/build/server/* %{target}
-# find /server -maxdepth 1 -type f -not -name "package*.json" -not -name "*.gradle" -exec cp {} %{target} \;
-cp -r /server/node_modules %{target}/node_modules
-cp -r /client %{target}/app/webapp
+ls -al ${WORKSPACE}/build
+cp -r ${WORKSPACE}/build/* %{target}
 ls -al %{target}
 
 # Copy over the systemd unit file
 mkdir -p %{buildroot}%{systemd_dir}
-cp /rpm/%{ingrid_unit_name} %{buildroot}%{systemd_dir}
+cp ${WORKSPACE}/rpm/%{ingrid_unit_name} %{buildroot}%{systemd_dir}
 
 %files
 %defattr(0644,ingrid,ingrid,0755)

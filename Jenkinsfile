@@ -15,28 +15,9 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
-            agent {
-                docker {
-                    image 'node:20.18.2-alpine3.21'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh 'if [ -d build ]; then rm -rf build; fi'
-                sh "cd client && npm ci && npm run prod"
-                sh "cd server && npm ci && npm run build"
-                sh "mkdir -p build/reports"
-                sh "apk add --no-cache jq"
-                sh "npm install -g @cyclonedx/cyclonedx-npm"
-                sh "cd client && cyclonedx-npm --output-file ../build/reports/client-bom.json"
-                sh "cd server && cyclonedx-npm --output-file ../build/reports/server-bom.json"
-                sh "jq -s 'add' build/reports/client-bom.json build/reports/server-bom.json > build/reports/bom.json"
-            }
-        }
-
         stage('Build and Push Image') {
             steps {
+                sh 'if [ -d build ]; then rm -rf build; fi'
                 script {
                     if (env.TAG_NAME) {
                         env.VERSION = env.TAG_NAME
@@ -48,44 +29,66 @@ pipeline {
                     echo "VERSION: ${env.VERSION}"
 
                     dockerImage = docker.build(registry + ":" + env.VERSION, "--pull .")
-                    dockerImage.push()
+
+                    if (shouldBuildDockerImage()) {
+                        dockerImage.push()
+                    }
+
+                    // copy compiled app into workspace to be used by RPM task
+                    dockerImage.inside {
+                        sh "cp -r /opt/ingrid/harvester/ ${WORKSPACE}/build"
+                    }
                 }
             }
         }
 
         stage('Build RPM') {
             when { expression { return shouldBuildDevOrRelease() } }
+            agent {
+                docker {
+                    image 'docker-registry.wemove.com/ingrid-rpmbuilder-jdk21-improved'
+                    reuseNode true
+                }
+            }
             steps {
                 script {
                     sh "sed -i 's/^Version:.*/Version: ${determineVersion()}/' rpm/ingrid-harvester.spec"
-                    sh "sed -i 's/^Release:.*/Release: ${env.TAG_NAME ? '1' : 'dev'}/' rpm/ingrid-harvester.spec"
+                    sh "sed -i 's/^Release:.*/Release: ${determineRpmReleasePart()}/' rpm/ingrid-harvester.spec"
 
-                    def containerId = sh(script: "docker run -d -e RPM_SIGN_PASSPHRASE=\$RPM_SIGN_PASSPHRASE --entrypoint=\"\" docker-registry.wemove.com/ingrid-rpmbuilder-jdk21-improved tail -f /dev/null", returnStdout: true).trim()
+                    // Prepare build
+                    sh "mkdir -p ./build/rpms /root/rpmbuild/SPECS"
+                    sh "cp ${WORKSPACE}/rpm/ingrid-harvester.spec /root/rpmbuild/SPECS/ingrid-harvester.spec"
 
-                    try {
+                    // Build and sign RPM
+                    sh """
+                        rpmbuild -bb /root/rpmbuild/SPECS/ingrid-harvester.spec &&
+                        gpg --batch --import $RPM_PUBLIC_KEY &&
+                        gpg --batch --import $RPM_PRIVATE_KEY &&
+                        expect /rpm-sign.exp /root/rpmbuild/RPMS/noarch/*.rpm
+                    """
 
-                        sh """
-                            docker cp server ${containerId}:/server &&
-                            docker cp client/dist/webapp ${containerId}:/client &&
-                            docker cp rpm/ingrid-harvester.spec ${containerId}:/root/rpmbuild/SPECS/ingrid-harvester.spec &&
-                            docker cp rpm/. ${containerId}:/rpm &&
-                            docker cp \$RPM_PUBLIC_KEY ${containerId}:/public.key &&
-                            docker cp \$RPM_PRIVATE_KEY ${containerId}:/private.key &&
-                            docker exec ${containerId} bash -c "
-                            rpmbuild -bb /root/rpmbuild/SPECS/ingrid-harvester.spec &&
-                            gpg --batch --import public.key &&
-                            gpg --batch --import private.key &&
-                            expect /rpm-sign.exp /root/rpmbuild/RPMS/noarch/*.rpm
-                            "
-                        """
+                    // Copy built RPMs back to workspace
+                    sh "cp -r /root/rpmbuild/RPMS/noarch/* ${WORKSPACE}/build/rpms/"
 
-                        sh "docker cp ${containerId}:/root/rpmbuild/RPMS/noarch ./build/rpms"
+                    archiveArtifacts artifacts: "build/rpms/ingrid-harvester-*.rpm", fingerprint: true
+                }
+            }
+        }
 
-                    } finally {
-                        sh "docker rm -f ${containerId}"
-                    }
+        stage('Build SBOM') {
+            when { expression { return shouldBuildDevOrRelease() } }
+            steps {
+                echo 'Generating Software Bill of Materials (SBOM)'
 
-                    archiveArtifacts artifacts: 'build/rpms/ingrid-harvester-*.rpm', fingerprint: true
+                script {
+                    def imageToScan = "docker-registry.wemove.com/ingrid-harvester:${env.VERSION}"
+                    def sbomFilename = "ingrid-harvester-${determineVersion()}-sbom.json"
+
+                    sh """
+                        docker run --rm --pull=always --volumes-from jenkins anchore/syft:latest ${imageToScan} --output cyclonedx-json=${WORKSPACE}/build/${sbomFilename}
+                    """
+                    // Archive the SBOM file as an artifact
+                    archiveArtifacts artifacts: "build/${sbomFilename}", fingerprint: true
                 }
             }
         }
@@ -95,12 +98,11 @@ pipeline {
             steps {
                 script {
                     def repoType = env.TAG_NAME ? "rpm-ingrid-releases" : "rpm-ingrid-snapshots"
-                    sh "mv build/reports/bom.json build/reports/ingrid-harvester-${determineVersion()}.bom.json"
 
                     withCredentials([usernamePassword(credentialsId: '9623a365-d592-47eb-9029-a2de40453f68', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         sh '''
                             curl -f --user $USERNAME:$PASSWORD --upload-file build/rpms/*.rpm https://nexus.informationgrid.eu/repository/''' + repoType + '''/
-                            curl -f --user $USERNAME:$PASSWORD --upload-file build/reports/*.bom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
+                            curl -f --user $USERNAME:$PASSWORD --upload-file build/*-sbom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
                         '''
                     }
                 }
@@ -109,13 +111,6 @@ pipeline {
     }
 }
 
-def versionsFromGit() {
-    def latestVersion = sh script: 'git describe --tags $(git rev-list --branches=origin/main --tags --max-count=1)', returnStdout: true
-    latestVersion = latestVersion ? latestVersion.trim() : "0.0.0"
-    def (major, minor, patch) = latestVersion.tokenize('.').collect { it.toInteger() }
-    def snapshotVersion = "${major}.${minor + 1}.0-SNAPSHOT"
-    return [latestVersion, snapshotVersion]
-}
 
 def getCronParams() {
     String tagTimestamp = env.TAG_TIMESTAMP
@@ -138,9 +133,24 @@ def getCronParams() {
 
 def determineVersion() {
     if (env.TAG_NAME) {
+        if (env.TAG_NAME.startsWith("RPM-")) { // e.g. RPM-8.0.0-0.1SNAPSHOT
+            def lastDashIndex = env.TAG_NAME.lastIndexOf("-")
+            return env.TAG_NAME.substring(4, lastDashIndex)
+        }
         return env.TAG_NAME
     } else {
         return env.BRANCH_NAME.replaceAll('/', '_')
+    }
+}
+
+def determineRpmReleasePart() {
+    if (env.TAG_NAME) {
+        if (env.TAG_NAME.startsWith("RPM-")) {
+            return env.TAG_NAME.substring(env.TAG_NAME.lastIndexOf("-") + 1)
+        }
+        return '1'
+    } else {
+        return 'dev'
     }
 }
 
@@ -148,4 +158,10 @@ def shouldBuildDevOrRelease() {
     // If no tag is being built OR it is the first build of a tag
     boolean isTag = env.TAG_NAME != null && env.TAG_NAME.trim() != ''
     return !isTag || (isTag && currentBuild.number == 1)
+}
+
+def shouldBuildDockerImage() {
+    if (env.TAG_NAME && env.TAG_NAME.startsWith("RPM-")) {
+        return false
+    } else return true
 }
