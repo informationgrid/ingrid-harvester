@@ -58,6 +58,7 @@ const ALLOWED_BBCODE_TAGS = {
             content: node.content
         }
     },
+    id: (node: TagNode) => null,
     author: (node: TagNode) => node.content,
     right: (node: TagNode) => ({
         tag: 'span',
@@ -85,7 +86,7 @@ const presetKuladig = presetHTML5.extend((tags) => ({
 export function convertBBCode(text: string, convertNewlines: boolean = true): string {
     text = bbobHTML(text, presetKuladig(), { onlyAllowTags: Object.keys(ALLOWED_BBCODE_TAGS) });
     if (convertNewlines) {
-        text.replaceAll('\r\n', '\n').replaceAll('\r', '\n').replaceAll('\n', '<br>');
+        text = text.replaceAll('\r\n', '\n').replaceAll('\r', '\n').replaceAll('\n', '<br>');
     }
     return text;
 }
