@@ -28,3 +28,7 @@
     max-width: var(--max-width-panel);
     width: 100%;
 }
+
+label {
+  pointer-events: none;
+}
