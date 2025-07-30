@@ -21,49 +21,7 @@
  * ==================================================
  */
 
-import { DateRange } from './dateRange';
-import { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
-
-export type IngridIndexDocument = {
-    id: string,
-    schema_version: string,
-    title: string,
-    description?: string,
-    spatial?: Spatial,
-    temporal: {
-        modified: Date,
-        issued: Date,
-        data_temporal?: {
-            date_range: DateRange,
-            date_type?: string
-        }
-    },
-    keywords?: Keyword[],
-    fulltext: string,
-    sort_uuid: string,
-    metadata: Metadata
-};
-
-export type Spatial = {
-    geometry?: Geometries | GeometryCollection,
-    bbox?: Geometry,
-    centroid?: Point,
-    inside_point?: Point,
-    location_points?: Point,
-    outline?: Geometries | GeometryCollection,
-    title?: string
-};
-
-export type Keyword = {
-    term: string,
-    id?: string,
-    source?: string
+export interface Dimensions {
+    width: number,
+    height: number
 }
-
-export type Metadata = {
-    issued: Date,
-    modified: Date,
-    source: {
-
-    }
-};

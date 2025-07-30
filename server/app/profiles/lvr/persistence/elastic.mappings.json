@@ -109,6 +109,9 @@
       "type": "text",
       "index": false
     },
+    "sort_uuid": {
+      "type": "keyword"
+    },
     "metadata": {
       "properties": {
         "issued": {
@@ -206,6 +209,16 @@
             "description": {
               "type": "text",
               "analyzer": "decomp_german"
+            },
+            "dimensions": {
+              "properties": {
+                "width": {
+                  "type": "integer"
+                },
+                "height": {
+                  "type": "integer"
+                }
+              }
             }
           }
         },

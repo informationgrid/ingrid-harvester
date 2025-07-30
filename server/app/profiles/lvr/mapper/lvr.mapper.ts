@@ -24,6 +24,7 @@
 import * as GeoJsonUtils from '../../../utils/geojson.utils';
 import 'dayjs/locale/de';
 import { createEsId } from '../lvr.utils';
+import { v5 as uuidv5 } from 'uuid';
 import { GeometryInformation, Temporal } from '../../../model/index.document';
 import { IndexDocumentFactory } from '../../../model/index.document.factory';
 import { IngridIndexDocument, Keyword, Spatial } from '../../../model/ingrid.index.document';
@@ -36,6 +37,7 @@ import { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mappe
 
 const dayjs = require('dayjs');
 dayjs.locale('de');
+const UUID_NAMESPACE = '0afd6f59-d498-4da3-8919-1890d718d69e'; // randomly generated using uuid.v4
 
 export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMapper | JsonMapper> implements IndexDocumentFactory<LvrIndexDocument> {
 
@@ -51,7 +53,8 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
 
         let ingridDocument: IngridIndexDocument = {
             id: this.getUrlSafeIdentifier(),
-            schema_version: '1.0.0',
+            sort_uuid: this.getGeneratedUUID(),
+            schema_version: '0.0.2-SNAPSHOT',
             title: this.getTitle()?.join('\n'),
             description: this.getDescription()?.join('\n'),
             spatial: this.getIngridSpatial(),
@@ -75,7 +78,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
                 identifier: this.getIdentifier(),
                 genres: this.getGenres(),
                 persons: this.getPersons(),
-                media: this.getMedia(),
+                media: await this.getMedia(),
                 relations: this.getRelations(),
                 licenses: this.getLicense(),
                 vector: this.getVector(),
@@ -142,7 +145,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
 
     abstract getPersons(): Person[];
 
-    abstract getMedia(): Media[];
+    abstract getMedia(): Promise<Media[]>;
 
     abstract getRelations(): Relation[];
 
@@ -155,6 +158,10 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
     abstract getIssued(): Date;
 
     abstract getModified(): Date;
+
+    getGeneratedUUID(): string {
+        return uuidv5(this.getUrlSafeIdentifier(), UUID_NAMESPACE);
+    }
 }
 
 function first(strOrArr: string | string[]): string {

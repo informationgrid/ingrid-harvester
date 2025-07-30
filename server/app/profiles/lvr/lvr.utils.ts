@@ -21,8 +21,68 @@
  * ==================================================
  */
 
+import bbobHTML from '@bbob/html';
+import presetHTML5 from '@bbob/preset-html5';
 import { LvrIndexDocument } from './model/index.document';
+import { TagNode } from "@bbob/plugin-helper";
 
 export function createEsId(document: LvrIndexDocument): string {
     return document.id;
+}
+
+/**
+ * - null-values denote default handling
+ * - non-listed tags are passed through
+ */
+const ALLOWED_BBCODE_TAGS = {
+    b: (node: TagNode) => ({
+        tag: 'strong',
+        content: node.content,
+    }),
+    url: null,
+    i: (node: TagNode) => ({
+        tag: 'i',
+        content: node.content,
+    }),
+    list: null,
+    a: (node: TagNode) => ({
+        tag: 'a',
+        attrs: {
+            href: `#${Object.values(node.attrs)[0]}`
+        },
+        content: node.content
+    }),
+    id: (node: TagNode) => ({
+        tag: 'a',
+        attrs: {
+            id: `${node.attrs['TOP']}`
+        },
+        content: node.content
+    }),
+    author: (node: TagNode) => node.content,
+    right: (node: TagNode) => ({
+        tag: 'span',
+        attrs: {
+            class: 'right'
+        },
+        content: node.content,
+    }),
+    td: null,
+    tr: null,
+    center: null,
+    u: null,
+    sup: null, 
+    table: null,
+    sub: null,
+    '*': null,
+    h1: null
+};
+
+export function convertBBCode(text: string, convertNewlines: boolean = true): string {
+    const presetKuladig = presetHTML5.extend((tags) => ({
+        ...tags, // keep original tag handlers from html5Preset
+        ...Object.fromEntries(Object.entries(ALLOWED_BBCODE_TAGS).filter(([key, value]) => value !== null))
+    }));
+    text = bbobHTML(text, presetKuladig(), { onlyAllowTags: Object.keys(ALLOWED_BBCODE_TAGS) });
+    return text.replaceAll('\r\n', '\n').replaceAll('\r', '\n').replaceAll('\n', '<br>');
 }

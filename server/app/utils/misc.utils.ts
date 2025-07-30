@@ -24,6 +24,8 @@
 'use strict';
 
 import { cloneDeep, merge as lodashMerge, trim } from 'lodash';
+import { imageSize } from 'image-size';
+import { Dimensions } from '../model/dimensions';
 import { Distribution } from '../model/distribution';
 import { DOMParser } from '@xmldom/xmldom';
 
@@ -156,6 +158,58 @@ export function normalizeDateTime(datetime: string): Date {
 }
 
 /**
+ * Partially download an image from a URL and extract its dimensions (width and height)
+ * 
+ * @param url the URL from which to fetch the image
+ * @returns width an height of the image if 
+ */
+export async function getImageDimensionsFromURL(url: string): Promise<Dimensions> {
+    try {
+        let response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to download image: HTTP status code ${response.status}`);
+        }
+        let reader = response.body.getReader();
+        let chunks: Uint8Array[] = [];
+        while (true) {
+            let { value, done } = await reader.read();
+            if (done) {
+                throw new Error('Could not determine image dimensions from the downloaded data');
+            }
+            if (value) {
+                chunks.push(value);
+                let buffer = Buffer.concat(chunks);
+                try {
+                    let dimensions = imageSize(buffer);
+                    reader.cancel();
+                    return {
+                        width: dimensions.width,
+                        height: dimensions.height
+                    };
+                }
+                catch (error) {
+                    if (error.message.includes('not enough data')) {
+                        // continue receiving data
+                    }
+                    else if (error.message.includes('exceeded buffer limits')) {
+                        // continue receiving data
+                    }
+                    else {
+                        reader.cancel();
+                        throw error;
+                    }
+                }
+            }
+        }
+    }
+    catch (e) {
+        // throw new Error(`Error getting image dimensions from ${url}: ${e.message}`);
+        log.warn(`${e} for URL ${url}`);
+        return null;
+    }
+}
+
+/**
  * This function is to be used as a replacer callback in JSON.stringify.
  * It replaces the default `Date` ISO serialization with its millisecond timestamp.
  * This is useful e.g. for negative dates which trip up Elasticsearch.
@@ -250,7 +304,7 @@ export function substringBeforeLast(s: string, delim: string) {
     return s.substring(0, s.lastIndexOf(delim));
 }
 
-export function substringAfterLast(s: string, delim: string) {
+export function substringAfterLast(s: string, delim: string, fullFallback: boolean = false) {
     if (s == null) {
         return null;
     }
@@ -259,7 +313,12 @@ export function substringAfterLast(s: string, delim: string) {
     }
     let lastIdx = s.lastIndexOf(delim);
     if (lastIdx == -1) {
-      return '';
+        if (fullFallback) {
+            return s;
+        }
+        else {
+            return '';
+        }
     }
     return s.substring(lastIdx + delim.length);
 }

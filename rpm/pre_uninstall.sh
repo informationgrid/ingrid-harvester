@@ -1,5 +1,5 @@
 if [ "$1" = "0" ]; then
-  systemctl stop mcloud-importer
-  systemctl disable mcloud-importer
+  systemctl stop ingrid-harvester
+  systemctl disable ingrid-harvester
 fi
 exit 0

@@ -1,57 +1,108 @@
 #!groovy
 pipeline {
     agent any
+    triggers{ cron( getCronParams() ) }
 
     environment {
         registry = "docker-registry.wemove.com/ingrid-harvester"
+        RPM_PUBLIC_KEY  = credentials('ingrid-rpm-public')
+        RPM_PRIVATE_KEY = credentials('ingrid-rpm-private')
+        RPM_SIGN_PASSPHRASE = credentials('ingrid-rpm-passphrase')
     }
 
     options {
         buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
-        gitLabConnection('GitLab (wemove)')
     }
 
     stages {
-        stage('Build and Push Image') {
-            when {
-                branch 'main'
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:20.18.2-alpine3.21'
+                    reuseNode true
+                }
             }
             steps {
+                sh 'if [ -d build ]; then rm -rf build; fi'
+                sh "cd client && npm ci && npm run prod"
+                sh "cd server && npm ci && npm run build"
+                sh "mkdir -p build/reports"
+                sh "apk add --no-cache jq"
+                sh "npm install -g @cyclonedx/cyclonedx-npm"
+                sh "cd client && cyclonedx-npm --output-file ../build/reports/client-bom.json"
+                sh "cd server && cyclonedx-npm --output-file ../build/reports/server-bom.json"
+                sh "jq -s 'add' build/reports/client-bom.json build/reports/server-bom.json > build/reports/bom.json"
+            }
+        }
+
+        stage('Build and Push Image') {
+            steps {
                 script {
-                    (version, snapshotVersion) = versionsFromGit()
-                    echo "VERSION:" + version
-                    dockerImage = docker.build registry + ":" + version
+                    if (env.TAG_NAME) {
+                        env.VERSION = env.TAG_NAME
+                    } else if (BRANCH_NAME == 'main') {
+                        env.VERSION = 'latest'
+                    } else {
+                        env.VERSION = BRANCH_NAME.replaceAll('/', '-')
+                    }
+                    echo "VERSION: ${env.VERSION}"
+
+                    dockerImage = docker.build(registry + ":" + env.VERSION, "--pull .")
                     dockerImage.push()
                 }
             }
         }
-        stage('Build and Push Develop Image') {
-            when {
-                branch 'develop'
-            }
+
+        stage('Build RPM') {
+            when { expression { return shouldBuildDevOrRelease() } }
             steps {
                 script {
-                    (version, snapshotVersion) = versionsFromGit()
-                    dockerImageSnapshot = docker.build registry + ":" + snapshotVersion
-                    dockerImageSnapshot.push()
-                    dockerImageLatest = docker.build registry + ":latest"
-                    dockerImageLatest.push()
+                    sh "sed -i 's/^Version:.*/Version: ${determineVersion()}/' rpm/ingrid-harvester.spec"
+                    sh "sed -i 's/^Release:.*/Release: ${env.TAG_NAME ? '1' : 'dev'}/' rpm/ingrid-harvester.spec"
+
+                    def containerId = sh(script: "docker run -d -e RPM_SIGN_PASSPHRASE=\$RPM_SIGN_PASSPHRASE --entrypoint=\"\" docker-registry.wemove.com/ingrid-rpmbuilder-jdk21-improved tail -f /dev/null", returnStdout: true).trim()
+
+                    try {
+
+                        sh """
+                            docker cp server ${containerId}:/server &&
+                            docker cp client/dist/webapp ${containerId}:/client &&
+                            docker cp rpm/ingrid-harvester.spec ${containerId}:/root/rpmbuild/SPECS/ingrid-harvester.spec &&
+                            docker cp rpm/. ${containerId}:/rpm &&
+                            docker cp \$RPM_PUBLIC_KEY ${containerId}:/public.key &&
+                            docker cp \$RPM_PRIVATE_KEY ${containerId}:/private.key &&
+                            docker exec ${containerId} bash -c "
+                            rpmbuild -bb /root/rpmbuild/SPECS/ingrid-harvester.spec &&
+                            gpg --batch --import public.key &&
+                            gpg --batch --import private.key &&
+                            expect /rpm-sign.exp /root/rpmbuild/RPMS/noarch/*.rpm
+                            "
+                        """
+
+                        sh "docker cp ${containerId}:/root/rpmbuild/RPMS/noarch ./build/rpms"
+
+                    } finally {
+                        sh "docker rm -f ${containerId}"
+                    }
+
+                    archiveArtifacts artifacts: 'build/rpms/ingrid-harvester-*.rpm', fingerprint: true
                 }
             }
         }
-        stage('Build and Push Branch Image') {
-            when {
-                not {
-                    anyOf {
-                        branch 'main'
-                        branch 'develop'
-                    }
-                }
-            }
+
+        stage('Deploy RPM') {
+            when { expression { return shouldBuildDevOrRelease() } }
             steps {
                 script {
-                    dockerImageBranch = docker.build registry + ":" + env.BRANCH_NAME
-                    dockerImageBranch.push()
+                    def repoType = env.TAG_NAME ? "rpm-ingrid-releases" : "rpm-ingrid-snapshots"
+                    sh "mv build/reports/bom.json build/reports/ingrid-harvester-${determineVersion()}.bom.json"
+
+                    withCredentials([usernamePassword(credentialsId: '9623a365-d592-47eb-9029-a2de40453f68', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                        sh '''
+                            curl -f --user $USERNAME:$PASSWORD --upload-file build/rpms/*.rpm https://nexus.informationgrid.eu/repository/''' + repoType + '''/
+                            curl -f --user $USERNAME:$PASSWORD --upload-file build/reports/*.bom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
+                        '''
+                    }
                 }
             }
         }
@@ -64,4 +115,37 @@ def versionsFromGit() {
     def (major, minor, patch) = latestVersion.tokenize('.').collect { it.toInteger() }
     def snapshotVersion = "${major}.${minor + 1}.0-SNAPSHOT"
     return [latestVersion, snapshotVersion]
+}
+
+def getCronParams() {
+    String tagTimestamp = env.TAG_TIMESTAMP
+    long diffInDays = 0
+    if (tagTimestamp != null) {
+        long diff = "${currentBuild.startTimeInMillis}".toLong() - "${tagTimestamp}".toLong()
+        diffInDays = diff / (1000 * 60 * 60 * 24)
+        echo "Days since release: ${diffInDays}"
+    }
+
+    def versionMatcher = /\d\.\d\.\d(.\d)?/
+    if( env.TAG_NAME ==~ versionMatcher && diffInDays < 180) {
+        // every Sunday between midnight and 6am
+        return 'H H(0-6) * * 0'
+    }
+    else {
+        return ''
+    }
+}
+
+def determineVersion() {
+    if (env.TAG_NAME) {
+        return env.TAG_NAME
+    } else {
+        return env.BRANCH_NAME.replaceAll('/', '_')
+    }
+}
+
+def shouldBuildDevOrRelease() {
+    // If no tag is being built OR it is the first build of a tag
+    boolean isTag = env.TAG_NAME != null && env.TAG_NAME.trim() != ''
+    return !isTag || (isTag && currentBuild.number == 1)
 }

@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { Dimensions } from '../../../model/dimensions';
 import { IndexDocument } from '../../../model/index.document';
 import { IngridIndexDocument } from '../../../model/ingrid.index.document';
 import { License } from '@shared/license.model';
@@ -44,11 +45,14 @@ export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
 };
 
 export type Media = {
-    type: 'image' | 'audio' | 'video' | 'document' | '',//string,
+    type: MediaType,//string,
     url: string,
     thumbnail?: string,
-    description: string
+    description: string,
+    dimensions?: Dimensions
 };
+
+export type MediaType = 'image' | 'audio' | 'video' | 'document' | '';
 
 export type Person = {
     type: string,

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import * as Passport from 'passport';
+import passport from 'passport';
 import { AfterRoutesInit, BeforeRoutesInit, Inject, PlatformApplication, PlatformConfiguration, Service } from '@tsed/common';
 import { IUser } from '../../model/User';
 import { NotFound } from '@tsed/exceptions';
@@ -36,18 +36,18 @@ export class PassportLocalService implements BeforeRoutesInit, AfterRoutesInit {
                 @Inject(PlatformApplication) private expressApplication: PlatformApplication) {
 
         // used to serialize the user for the session
-        Passport.serializeUser(PassportLocalService.serialize);
+        passport.serializeUser(PassportLocalService.serialize);
 
         // used to deserialize the user
-        Passport.deserializeUser(this.deserialize.bind(this));
+        passport.deserializeUser(this.deserialize.bind(this));
     }
 
     $beforeRoutesInit() {
         const options: any = this.serverSettings.get('passport') || {} as any;
         const { userProperty, pauseStream } = options;
 
-        this.expressApplication.use(Passport.initialize({userProperty}));
-        this.expressApplication.use(Passport.session({pauseStream}));
+        this.expressApplication.use(passport.initialize({userProperty}));
+        this.expressApplication.use(passport.session({pauseStream}));
     }
 
     $afterRoutesInit() {
@@ -81,7 +81,7 @@ export class PassportLocalService implements BeforeRoutesInit, AfterRoutesInit {
     // by default, if there was no name, it would just be called 'local'
 
     public initializeLogin() {
-        Passport.use('login', new Strategy({
+        passport.use('login', new Strategy({
             passReqToCallback: true // allows us to pass back the entire request to the callback
         }, (req, username, password, done) => {
             this.login(username, password)
