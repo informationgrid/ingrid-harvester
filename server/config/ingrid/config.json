@@ -5,7 +5,7 @@
     "type": "CSW",
     "maxRecords": 200,
     "startPosition": 1,
-    "catalogId": "harvester",
+    "catalogId": "harvester-index",
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
