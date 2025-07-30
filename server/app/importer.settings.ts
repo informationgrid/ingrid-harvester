@@ -31,7 +31,7 @@ export const DefaultImporterSettings: ImporterSettings = {
     type: '',
     maxRecords: 100,
     startPosition: 0,
-    catalogId: 'harvester',
+    catalogId: 'harvester-index',
     customCode: '',
     defaultMcloudSubgroup: [],
     defaultDCATCategory: [],

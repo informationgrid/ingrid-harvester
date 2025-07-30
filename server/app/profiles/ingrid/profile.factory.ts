@@ -50,7 +50,7 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
         const { database, elastic } = await super.init();
 
         // create collections/catalogs and indices that occur in the configured harvesters, if they not already exist
-        const catalogIdentifiers = new Set(ConfigService.get().map(harvester => harvester.catalogId));
+        const catalogIdentifiers = new Set(ConfigService.get().map(harvester => harvester.catalogId).filter(id => id != null));
         for (let identifier of catalogIdentifiers) {
             await this.createCatalogIfNotExist(identifier, database, elastic);
         }

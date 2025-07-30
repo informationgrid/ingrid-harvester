@@ -45,20 +45,20 @@ const ALLOWED_BBCODE_TAGS = {
         content: node.content,
     }),
     list: null,
-    a: (node: TagNode) => ({
-        tag: 'a',
-        attrs: {
-            href: `#${Object.values(node.attrs)[0]}`
-        },
-        content: node.content
-    }),
-    id: (node: TagNode) => ({
-        tag: 'a',
-        attrs: {
-            id: `${node.attrs['TOP']}`
-        },
-        content: node.content
-    }),
+    a: (node: TagNode) => {
+        // remove "nach oben"-Links: https://redmine.wemove.com/issues/5377#note-6
+        if (Object.values(node.attrs)[0] == 'TOP') {
+            return null;
+        }
+        return {
+            tag: 'a',
+            attrs: {
+                href: `#${Object.values(node.attrs)[0]}`
+            },
+            content: node.content
+        }
+    },
+    id: (node: TagNode) => null,
     author: (node: TagNode) => node.content,
     right: (node: TagNode) => ({
         tag: 'span',
@@ -78,11 +78,15 @@ const ALLOWED_BBCODE_TAGS = {
     h1: null
 };
 
+const presetKuladig = presetHTML5.extend((tags) => ({
+    ...tags, // keep original tag handlers from html5Preset
+    ...Object.fromEntries(Object.entries(ALLOWED_BBCODE_TAGS).filter(([key, value]) => value !== null))
+}));
+
 export function convertBBCode(text: string, convertNewlines: boolean = true): string {
-    const presetKuladig = presetHTML5.extend((tags) => ({
-        ...tags, // keep original tag handlers from html5Preset
-        ...Object.fromEntries(Object.entries(ALLOWED_BBCODE_TAGS).filter(([key, value]) => value !== null))
-    }));
     text = bbobHTML(text, presetKuladig(), { onlyAllowTags: Object.keys(ALLOWED_BBCODE_TAGS) });
-    return text.replaceAll('\r\n', '\n').replaceAll('\r', '\n').replaceAll('\n', '<br>');
+    if (convertNewlines) {
+        text = text.replaceAll('\r\n', '\n').replaceAll('\r', '\n').replaceAll('\n', '<br>');
+    }
+    return text;
 }
