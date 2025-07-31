@@ -211,6 +211,9 @@ mat-card-header {
 .text-bottom{
   vertical-align: bottom !important;
 }
+.font-normal {
+  font-weight: normal;
+}
 .no-margin{
   margin: 0 !important;
 }
@@ -219,6 +222,12 @@ mat-card-header {
 }
 .margin {
   margin: 16px;
+}
+.mt-0 {
+  margin-top: 0;
+}
+.mb-24 {
+  margin-bottom: 24px;
 }
 .padding {
   padding: 16px !important;
@@ -1617,10 +1626,18 @@ table.big-font {
 mat-card-header {
   app-context-help-button {
     position: absolute;
+    margin-top: 3px;
     margin-left: -30px;
-    opacity: 0;
+
+    [tabindex="0"] {
+      opacity: 0;
+    }
+
+    [tabindex="0"]:focus-visible {
+      opacity: 1;
+    }
   }
-  &:hover app-context-help-button{
+  &:hover app-context-help-button [tabindex="0"] {
     opacity: 1;
   }
   .title-with-context-help {
