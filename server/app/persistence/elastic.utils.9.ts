@@ -107,7 +107,7 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
             }
             catch(err) {
                 let message = 'Error occurred creating index ' + indexName;
-                if (err.message.indexOf('index_already_exists_exception') !== -1) {
+                if ((err.meta?.body as any)?.error?.type === 'resource_already_exists_exception') {
                     message = 'Index ' + indexName + ' not created, since it already exists.';
                 }
                 this.handleError(message, err);
