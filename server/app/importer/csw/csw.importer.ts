@@ -175,6 +175,9 @@ export class CswImporter extends Importer {
     protected async harvest(): Promise<number> {
         log.info(`Started requesting records`);
         let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId);
+        if (catalog == null) {
+            throw new Error(`Catalog with identifier '${this.settings.catalogId}' not found.`)
+        }
         this.generalInfo['catalog'] = catalog;
 
         if (this.settings.harvestingMode == 'separate') {
