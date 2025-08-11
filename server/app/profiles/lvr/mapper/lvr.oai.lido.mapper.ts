@@ -194,7 +194,8 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
             let subLicenses = resource.rights.map(right => ({
                 id: resource.id,
                 title: right.licenseName,
-                url: right.licenseURL
+                url: right.licenseURL,
+                holder: right.holder
             }));
             licenses.push(...subLicenses);
         });

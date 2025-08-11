@@ -270,6 +270,9 @@
             },
             "url": {
               "type": "keyword"
+            },
+            "holder": {
+              "type": "text"
             }
           }
         },
