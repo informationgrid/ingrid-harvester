@@ -29,7 +29,7 @@ import { ZdmIndexDocument } from '../model/index.document';
 
 export abstract class ZdmMapper<M extends WfsMapper> implements IndexDocumentFactory<ZdmIndexDocument> {
 
-    protected baseMapper: M;
+    readonly baseMapper: M;
 
     constructor(baseMapper: M) {
         this.baseMapper = baseMapper;
@@ -51,22 +51,13 @@ export abstract class ZdmMapper<M extends WfsMapper> implements IndexDocumentFac
             is_feature_type: this.isFeatureType(),
             typename: this.getFeatureTypeName(),
             number_of_features: this.getNumberOfFeatures(),
-
-            // dataSourceName: this.getDataSourceName(),
-            partner: [
-                "bund"
-            ],
-            datatype: [
-                "default",
-                "metadata",
-                "IDF_1.0",
-                "dsc_wfs",
-                "wfs"
-            ],
-            provider: [
-                "bu_kug"
-            ],
-
+            dataSourceName: this.baseMapper.settings.dataSourceName,
+            partner: this.baseMapper.settings.partner?.split(","),
+            datatype: this.baseMapper.settings.datatype?.split(","),
+            provider: this.baseMapper.settings.provider?.split(","),
+            iPlugId: this.baseMapper.settings.iPlugId,
+            organisation: this.baseMapper.settings.description,
+            map_iframe: this.getMapIFrame(250),
             idf: this.getIdf(), // will be augmented during aggregation, in `server/app/profiles/zdm/persistence/postgres.aggregator.ts`
             extras: {
                 metadata: {
@@ -85,15 +76,12 @@ export abstract class ZdmMapper<M extends WfsMapper> implements IndexDocumentFac
         return result;
     }
 
-    // returns child features if this is a featuretype, else null
-    abstract getFeatures(): ZdmIndexDocument[];
-
     isFeatureType(): boolean {
         return this.baseMapper.isFeatureType();
     }
 
     getFeatureTypeName(): string {
-        return this.baseMapper.getTypename(false);
+        return this.baseMapper.getTypename();
     }
 
     getNumberOfFeatures(): number {
@@ -102,15 +90,24 @@ export abstract class ZdmMapper<M extends WfsMapper> implements IndexDocumentFac
 
     abstract getAdditionalHtml(): string;
 
+    getMapIFrame(height: number): string {
+        let mapLink = '';
+        let serviceURL = encodeURIComponent(`${this.getMetadataSource().source_base}?SERVICE=WFS&VERSION=${this.baseMapper.settings.version}&`);
+        mapLink += '/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=';
+        mapLink += 'WFS%7C%7C' + encodeURIComponent(this.getTitle().replaceAll(',','') + ' (WFS)') + '%7C%7C' + serviceURL + '%7C%7C' + this.getFeatureTypeName();
+        mapLink += '%2C';
+        let wmsURL = serviceURL.split('%3F')[0];
+        mapLink += 'WMS%7C%7C' + encodeURIComponent(this.getTitle().replaceAll(',','') + ' (WMS)') + '%7C%7C' + wmsURL + '%3F%7C%7C' + this.getFeatureTypeName() + '%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F';
+        return '<iframe src="' + mapLink + '" height="' + height + '" frameborder="0" style="border:0"></iframe>';
+    }
+
     abstract getIdf(idx?: number): string;
 
     getTitle(): string{
         return this.baseMapper.getTitle();
     }
 
-    getDescription(): string{
-        return this.baseMapper.getDescription() + ` - ${this.getNumberOfFeatures()} Feature(s)`;
-    }
+    abstract getDescription(): string;
 
     getBoundingBox(): Geometry {
         return this.baseMapper.getBoundingBox();

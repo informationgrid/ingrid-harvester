@@ -27,7 +27,7 @@ export abstract class IdfGenerator {
 
     abstract createIdf(): string;
 
-    addOutput(parent: Element, elementName, textContent) {
+    addOutput(parent: Element, elementName: string, textContent?: string) {
         var element = this.document.createElement(elementName);
         if (textContent != undefined) {
             element.appendChild(this.document.createTextNode(textContent));

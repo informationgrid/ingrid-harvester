@@ -63,7 +63,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<ZdmIndexDo
         duplicates.forEach(featureDocument => 
             features.push(featureDocument.idf)
         );
-        document.idf = document.idf.replace('<div class="row columns"/></div>', features.join('\n'));
+        document.idf = document.idf.replace('<h2>Features:</h2>', '<h2>Features:</h2>\n' + features.join('\n'));
         document = this.sanitize(document);
         // document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
         box.push({ operation: 'index', _id: createEsId(document), document });

@@ -25,8 +25,8 @@ import * as GeojsonUtils from '../../../utils/geojson.utils';
 import { IdfGenerator } from './idf.generator';
 import { MetadataSource } from '../../../model/index.document';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
-import { ZdmMapper } from './zdm.mapper';
 import { ZdmIndexDocument } from '../model/index.document';
+import { ZdmMapper } from './zdm.mapper';
 
 export class ZdmWfsMapper extends ZdmMapper<WfsMapper> {
 
@@ -34,69 +34,43 @@ export class ZdmWfsMapper extends ZdmMapper<WfsMapper> {
         super(baseMapper);
     }
 
-    // getName(): string {
-    //     return this.baseMapper.select('./wfs:Name', this.baseMapper.featureOrFeatureType, true)?.textContent;
-    // }
-
-    // getTitle(): string {
-    //     return this.baseMapper.select('./wfs:Title', this.baseMapper.featureOrFeatureType, true)?.textContent;
-    // }
-
-    // getDescription(): string {
-    //     return this.baseMapper.select('./wfs:Abstract', this.baseMapper.featureOrFeatureType, true)?.textContent;
-    // }
-
-    // returns child features if this is a featuretype, else null
-    getFeatures(): ZdmIndexDocument[] {
-        return [];
+    getDescription(): string {
+        var summary = this.baseMapper.select('./wfs:Abstract', this.baseMapper.featureOrFeatureType, true)?.textContent;
+        var name = this.baseMapper.getTypename();
+        var portal = "Küstendaten";
+        var featureSummary = "WebFeatureService (WFS) " + portal + ", FeatureType: " + name + "<br>";
+        featureSummary += "Dieser FeatureType umfasst <b>" + this.baseMapper.getNumberOfFeatures() + "</b> Feature(s).<br>";
+        if(summary) {
+            featureSummary += summary + "<br>";
+        }
+        return featureSummary;
     }
-
-    // getBoundingBox(): Geometry {
-    //     if (this.isFeatureType()) {
-    //         const select = this.baseMapper.select;
-    //         // let srs = select('./wfs:DefaultSRS', this.baseMapper.featureOrFeatureType, true)?.textContent;
-    //         let srs = 'WGS84';
-    //         let bbox = select('./ows:WGS84BoundingBox', this.baseMapper.featureOrFeatureType, true);
-    //         let lowerCorner = select('./ows:LowerCorner', bbox, true)?.textContent;
-    //         let upperCorner = select('./ows:UpperCorner', bbox, true)?.textContent;
-    //         return GeojsonUtils.getBoundingBox(lowerCorner, upperCorner, srs);
-    //     }
-    //     else {
-    //         return this.baseMapper.getBoundingBox();
-    //     }
-    // }
 
     getAdditionalHtml(): string {
         let bbox = this.getBoundingBox()?.bbox;
         if (!bbox) {
             return null;
         }
-        // Latitude first (Breitengrad = y), longitude second (Laengengrad = x)
-        var S = Number(bbox[1]); // SOUTH y1
-        var E = Number(bbox[2]); // EAST, x2
-
-        // transform "WGS 84 (EPSG:4326)" to "ETRS89 / UTM zone 32N (EPSG:25832)"
-        // var transfCoords = CoordTransformUtil.getInstance().transform(
-        //         E, S,
-        //         CoordTransformUtil.getInstance().getCoordTypeByEPSGCode("25832"),
-        //         CoordTransformUtil.getInstance().getCoordTypeByEPSGCode("4326"));
-        let transfCoords = GeojsonUtils.project(E, S, 'WGS84', '25832')
-        var E_4326 = transfCoords[0];
-        var S_4326 = transfCoords[1];
-
-        // lowerCorner and upperCorner have same coordinates !? -> BBOX is a POINT !
-        var BBOX = "" + (E_4326 - 0.048) + "," + (S_4326 - 0.012) + "," + (E_4326 + 0.048) + "," + (S_4326 + 0.012);
+        let [ x1, y1, x2, y2 ] = bbox;
+        if (x1 === x2 && y1 === y2) {
+            x1 -= 0.012;
+            y1 -= 0.048;
+            x2 += 0.012;
+            y2 += 0.048;
+        }
+        [ x1, y1 ] = GeojsonUtils.project(x1, y1, 'WGS84', '25832');
+        [ x2, y2 ] = GeojsonUtils.project(x2, y2, 'WGS84', '25832');
+        var BBOX = "" + x1 + "," + y1 + "," + x2 + "," + y2;
 
         var addHtml = "" +
-            "<div style=\"background-image: url(https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=CRS:84&amp;BBOX=" + BBOX +
-            "&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=480&amp;HEIGHT=120); left: 0px; top: 0px; width: 480px; height: 120px; margin: 10px 0 0 0;\">" +
-            "</div>";
+            "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=" + BBOX +
+            "&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200";
 
         return addHtml;
     }
 
     getIdf(): string {
-        let idfGenerator = new IdfGenerator(this.baseMapper);
+        let idfGenerator = new IdfGenerator(this);
         return idfGenerator.createIdf(this.baseMapper.fetched.idx);
     }
 

@@ -241,7 +241,7 @@ export class WfsMapper extends BaseMapper {
         return this.select(xpathStr, searchNode, true)?.textContent;
     }
 
-    getTypename(toLowerCase: boolean = true): string {
+    getTypename(toLowerCase: boolean = false): string {
         let typename: string;
         if (this.isFeatureType()) {
             typename = this.select('./wfs:Name', this.featureOrFeatureType, true)?.textContent;
