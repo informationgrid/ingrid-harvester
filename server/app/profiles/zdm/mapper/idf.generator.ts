@@ -109,7 +109,7 @@ export class IdfGenerator extends AbstractIdfGenerator {
         let idfBody = this.document.getElementsByTagName('body')[0];
 
         // add the title
-        this.addOutput(idfBody, "h4", `${this.mapper.getFeatureTypeName()}.${idx}`);
+        this.addOutput(idfBody, "h4", this.mapper.getGeneratedId());
 
         //add the summary
         this.addOutput(idfBody, "p", this.getFeatureSummary());
