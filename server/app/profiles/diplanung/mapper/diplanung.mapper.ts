@@ -66,13 +66,11 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
             // plan and procedure information
             development_freeze_period: this.getPluDevelopmentFreezePeriod(),
             plan_name: this.getPluPlanName(),
-            plan_or_procedure_start_date: this.getPluProcedurePeriod()?.gte, // deprecated
             plan_state: this.getPluPlanState(),
             plan_type: this.getPluPlanType(),
             plan_type_fine: this.getPluPlanTypeFine(),
             procedure_import_date: this.getProcedureImportDate(),
             procedure_state: this.getPluProcedureState(),
-            procedure_start_date: this.getPluProcedurePeriod()?.gte, // deprecated
             procedure_period: this.getPluProcedurePeriod(),
             procedure_type: this.getPluProcedureType(),
             process_steps: this.getPluProcessSteps(),

@@ -32,7 +32,7 @@ export const overwriteFields = [
     // spatial fields
     'bounding_box', 'centroid', 'spatial',
     // PLU fields
-    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_start_date', 'procedure_state', 'procedure_type'
+    'plan_state', 'plan_type', 'plan_type_fine', 'procedure_state', 'procedure_type'
 ];
 
 export class ElasticQueries implements IElasticQueries {

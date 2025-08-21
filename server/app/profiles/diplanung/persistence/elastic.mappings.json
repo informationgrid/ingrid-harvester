@@ -117,9 +117,6 @@
         }
       }
     },
-    "plan_or_procedure_start_date": {
-      "type": "date"
-    },
     "plan_state": {
       "type": "keyword"
     },
@@ -150,9 +147,6 @@
           "type": "date"
         }
       }
-    },
-    "procedure_start_date": {
-      "type": "date"
     },
     "process_steps": {
       "type": "nested",

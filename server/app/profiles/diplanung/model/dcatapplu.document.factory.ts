@@ -93,7 +93,6 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
                 <dct:title>${esc(document.title)}</dct:title>
                 <plu:planState rdf:resource="${diplanUriPrefix}/planState#${document.plan_state}"/>
                 <plu:procedureState rdf:resource="${diplanUriPrefix}/procedureState#${document.procedure_state}"/>
-                ${optional('plu:procedureStartDate', dateAsIsoString(document.procedure_start_date))}
                 <dct:spatial>
                     <dct:Location>
                         ${DcatApPluDocumentFactory.xmlSpatial('dcat:bbox', document.bounding_box)}
