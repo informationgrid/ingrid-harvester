@@ -139,7 +139,7 @@ def determineVersion() {
         }
         return env.TAG_NAME
     } else {
-        return env.BRANCH_NAME.replaceAll('/', '_')
+        return env.BRANCH_NAME.replaceAll('/', '_').replaceAll('-', '_')
     }
 }
 
