@@ -61,7 +61,7 @@ export function ConfigLoader(
 ) {
   return () => {
     return configService.load('assets/' + environment.configFile)
-      .subscribe();
+      // .subscribe();
   };
 }
 

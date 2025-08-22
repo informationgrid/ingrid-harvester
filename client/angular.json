@@ -40,7 +40,11 @@
               "includePaths": [
                 "."
               ]
-            }
+            },
+            "allowedCommonJsDependencies": [
+              "cron-validator",
+              "cronstrue/i18n"
+            ]
           },
           "configurations": {
             "production": {
