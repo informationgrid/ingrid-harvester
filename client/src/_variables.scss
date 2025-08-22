@@ -29,16 +29,16 @@
 $max-width-panel: 1000px;
 
 // Copy the palettes from your selected theme (usually theme.scss).
-$app-primary: mat.define-palette(mat.$grey-palette);
-$app-accent:  mat.define-palette(mat.$light-blue-palette);
-$app-warn:    mat.define-palette(mat.$amber-palette);
-$app-error:    mat.define-palette(mat.$pink-palette);
+$app-primary: mat.m2-define-palette(mat.$m2-grey-palette);
+$app-accent:  mat.m2-define-palette(mat.$m2-light-blue-palette);
+$app-warn:    mat.m2-define-palette(mat.$m2-amber-palette);
+$app-error:    mat.m2-define-palette(mat.$m2-pink-palette);
 
 // Create your Sass color vars (will be available in all the project)
-$primary: mat.get-color-from-palette($app-primary);
-$accent: mat.get-color-from-palette($app-accent);
-$warn: mat.get-color-from-palette($app-warn, 'darker');
-$error: mat.get-color-from-palette($app-error);
+$primary: mat.m2-get-color-from-palette($app-primary);
+$accent: mat.m2-get-color-from-palette($app-accent);
+$warn: mat.m2-get-color-from-palette($app-warn, 'darker');
+$error: mat.m2-get-color-from-palette($app-error);
 
 
 $ige-primary: #196ea2; /* Middle blue, i.e. title */
