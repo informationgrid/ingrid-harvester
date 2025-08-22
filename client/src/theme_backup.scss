@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+@use "sass:map";
 @use '@angular/material' as mat;
 
 // @import '@angular/material/theming';
@@ -127,8 +128,8 @@ input.custom-autofill {
 
 @mixin importer-components-theme($theme) {
   // Extract the palettes you need from the theme definition.
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
 
   // Define any styles affected by the theme.
   .active-link {

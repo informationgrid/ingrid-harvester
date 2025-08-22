@@ -21,7 +21,8 @@
  * ==================================================
  */
 
-@import "../../_variables";
+@use "sass:color";
+@use "../../_variables";
 
 :host {
   overflow-y: hidden;
@@ -29,7 +30,7 @@
 }
 
 .header-row {
-  color: $ige-secondary;
+  color: variables.$ige-secondary;
 }
 
 .center-header {
@@ -40,7 +41,7 @@
 }
 
 .header-info {
-  color: $ige-secondary;
+  color: variables.$ige-secondary;
   line-height: 32px;
   font-size: 12px;
   padding-right: 12px;
@@ -50,16 +51,16 @@
   text-overflow: fade;
 
   &.single {
-    color: $ige-text-color;
+    color: variables.$ige-text-color;
 
     button {
-      color: $ige-text-color;
+      color: variables.$ige-text-color;
     }
   }
 }
 
 .menu-item {
-  color: $ige-secondary;
+  color: variables.$ige-secondary;
 }
 
 .catalog-button {
@@ -121,7 +122,7 @@
 
 .main-page-title {
   font-weight: normal;
-  color: $ige-primary !important;
+  color: variables.$ige-primary !important;
   padding-left: 20px;
   font-size: 1.25rem;
 }
@@ -136,18 +137,18 @@
   width: 32px;
   font-size: 14px;
   line-height: 24px;
-  background-color: $ige-background;
-  color: $ige-primary;
+  background-color: variables.$ige-background;
+  color: variables.$ige-primary;
   margin-left: 12px;
   font-weight: 500;
   font-family: "Roboto";
 
   &[aria-expanded="true"] {
-    background-color: $ige-primary;
+    background-color: variables.$ige-primary;
     color: #ffffff;
 
     &:hover {
-      background-color: lighten($ige-primary, 8%);
+      background-color: color.adjust(variables.$ige-primary, $lightness: 8%);
     }
 
     ::ng-deep path {
@@ -158,7 +159,7 @@
 
 .user-popup-header {
   color: #ffffff;
-  background-color: $ige-primary;
+  background-color: variables.$ige-primary;
   //margin-top: -8px;
   padding: 20px;
 }
@@ -166,12 +167,12 @@
 .user-popup-footer {
   min-height: 40px;
   justify-content: center;
-  border-top: 1px solid $ige-background-bar;
+  border-top: 1px solid variables.$ige-background-bar;
 
   .label {
     font-size: 14px;
     font-weight: 500;
-    color: $ige-secondary;
+    color: variables.$ige-secondary;
     text-transform: uppercase;
     letter-spacing: 1.25px;
   }
@@ -203,7 +204,7 @@ mat-card-title {
 }
 
 .popup-leading {
-  color: $ige-hint-color;
+  color: variables.$ige-hint-color;
   font-size: 14px;
   min-height: 48px;
   padding: 16px 16px 0;

@@ -27,7 +27,7 @@
 
 
 
-@import "../../../src/_variables";
+@use "../../../src/_variables";
 
 :host {
   overflow: hidden;
@@ -38,7 +38,7 @@
   background-color: #ffffff;
   box-shadow: 0 2px 2px -2px #808080;
   margin-bottom: 1px;
-  color: $ige-primary;
+  color: variables.$ige-primary;
   letter-spacing: 0.74px;
   z-index: 1000;
 
@@ -55,8 +55,8 @@
 
     span {
       flex: 1 1 auto;
-      background-color: $ige-mark-color;
-      color: $ige-primary;
+      background-color: variables.$ige-mark-color;
+      color: variables.$ige-primary;
       padding: 16px 0;
     }
   }
