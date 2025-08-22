@@ -29,7 +29,7 @@ describe('MonitoringService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: MonitoringService = TestBed.get(MonitoringService);
+    const service: MonitoringService = TestBed.inject(MonitoringService);
     expect(service).toBeTruthy();
   });
 });
