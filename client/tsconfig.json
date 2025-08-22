@@ -4,6 +4,7 @@
     "baseUrl": ".",
     "outDir": "./dist/out-tsc",
     "declaration": false,
+    "esModuleInterop": true,
     "module": "es2020",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
