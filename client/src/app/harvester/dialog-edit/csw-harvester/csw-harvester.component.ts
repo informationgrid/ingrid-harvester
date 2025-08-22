@@ -29,9 +29,10 @@ import { FormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
-  selector: 'app-csw-harvester',
-  templateUrl: './csw-harvester.component.html',
-  styleUrls: ['./csw-harvester.component.scss']
+    selector: 'app-csw-harvester',
+    templateUrl: './csw-harvester.component.html',
+    styleUrls: ['./csw-harvester.component.scss'],
+    standalone: false
 })
 export class CswHarvesterComponent implements OnInit, OnDestroy {
 

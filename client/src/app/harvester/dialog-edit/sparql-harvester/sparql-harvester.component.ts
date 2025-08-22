@@ -28,9 +28,10 @@ import {MatChipInputEvent} from '@angular/material/chips';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({
-  selector: 'app-sparql-harvester',
-  templateUrl: './sparql-harvester.component.html',
-  styleUrls: ['./sparql-harvester.component.scss']
+    selector: 'app-sparql-harvester',
+    templateUrl: './sparql-harvester.component.html',
+    styleUrls: ['./sparql-harvester.component.scss'],
+    standalone: false
 })
 export class SparqlHarvesterComponent implements OnInit, OnDestroy {
 

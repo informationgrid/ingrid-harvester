@@ -32,9 +32,10 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 
 @Component({
-  selector: 'app-monitoring-urlcheck-detail',
-  templateUrl: './monitoring-urlcheck-detail.component.html',
-  styleUrls: ['./monitoring-urlcheck-detail.component.scss']
+    selector: 'app-monitoring-urlcheck-detail',
+    templateUrl: './monitoring-urlcheck-detail.component.html',
+    styleUrls: ['./monitoring-urlcheck-detail.component.scss'],
+    standalone: false
 })
 export class MonitoringUrlcheckDetailComponent implements OnInit {
 

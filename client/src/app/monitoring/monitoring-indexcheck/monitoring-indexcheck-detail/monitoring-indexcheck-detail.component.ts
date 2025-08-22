@@ -31,9 +31,10 @@ import {ConfigService} from "../../../config/config.service";
 
 
 @Component({
-  selector: 'app-monitoring-indexcheck-detail',
-  templateUrl: './monitoring-indexcheck-detail.component.html',
-  styleUrls: ['./monitoring-indexcheck-detail.component.scss']
+    selector: 'app-monitoring-indexcheck-detail',
+    templateUrl: './monitoring-indexcheck-detail.component.html',
+    styleUrls: ['./monitoring-indexcheck-detail.component.scss'],
+    standalone: false
 })
 export class MonitoringIndexCheckDetailComponent implements OnInit {
 

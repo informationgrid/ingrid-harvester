@@ -33,22 +33,21 @@ import { isValidCron } from 'cron-validator';
 import cronstrue from 'cronstrue/i18n';
 
 @Component({
-  selector: 'harvester-cronjob-form-field',
-  templateUrl: './cronjob-form-field.component.html',
-  styleUrl: './cronjob-form-field.component.scss',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatSlideToggleModule, 
-    MatFormFieldModule,
-    MatIconModule,
-    MatLabel,
-    FormsModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'harvester-cronjob-form-field',
+    templateUrl: './cronjob-form-field.component.html',
+    styleUrl: './cronjob-form-field.component.scss',
+    imports: [
+        CommonModule,
+        MatSlideToggleModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatLabel,
+        FormsModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatButtonModule
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CronjobFormFieldComponent {
   @Input() title: string;

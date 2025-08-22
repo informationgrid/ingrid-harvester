@@ -28,9 +28,10 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { WfsSettings } from '../../../../../../server/app/importer/wfs/wfs.settings';
 
 @Component({
-  selector: 'app-wfs-harvester',
-  templateUrl: './wfs-harvester.component.html',
-  styleUrls: ['./wfs-harvester.component.scss']
+    selector: 'app-wfs-harvester',
+    templateUrl: './wfs-harvester.component.html',
+    styleUrls: ['./wfs-harvester.component.scss'],
+    standalone: false
 })
 export class WfsHarvesterComponent implements OnInit, OnDestroy {
 

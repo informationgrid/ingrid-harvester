@@ -28,9 +28,10 @@ import {MatChipInputEvent} from '@angular/material/chips';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({
-  selector: 'app-dcat-harvester',
-  templateUrl: './dcat-harvester.component.html',
-  styleUrls: ['./dcat-harvester.component.scss']
+    selector: 'app-dcat-harvester',
+    templateUrl: './dcat-harvester.component.html',
+    styleUrls: ['./dcat-harvester.component.scss'],
+    standalone: false
 })
 export class DcatHarvesterComponent implements OnInit, OnDestroy {
 

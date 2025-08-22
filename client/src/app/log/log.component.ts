@@ -26,9 +26,10 @@ import {LogService} from './log.service';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 
 @Component({
-  selector: 'app-log',
-  templateUrl: './log.component.html',
-  styleUrls: ['./log.component.scss']
+    selector: 'app-log',
+    templateUrl: './log.component.html',
+    styleUrls: ['./log.component.scss'],
+    standalone: false
 })
 export class LogComponent implements OnInit {
   logdata = [];

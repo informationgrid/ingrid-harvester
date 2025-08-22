@@ -27,9 +27,10 @@ import {MonitoringIndexCheckComponent} from "./monitoring-indexcheck/monitoring-
 import { Chart, registerables } from 'chart.js';
 
 @Component({
-  selector: 'app-monitoring',
-  templateUrl: './monitoring.component.html',
-  styleUrls: ['./monitoring.component.scss']
+    selector: 'app-monitoring',
+    templateUrl: './monitoring.component.html',
+    styleUrls: ['./monitoring.component.scss'],
+    standalone: false
 })
 export class MonitoringComponent implements OnInit {
 

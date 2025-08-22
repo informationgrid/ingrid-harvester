@@ -5,15 +5,14 @@ import {ContextHelpService} from "../../../services/contextHelp.service";
 import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
-  selector: 'app-context-help-button',
-  standalone: true,
-  imports: [
-    MatIcon,
-    MatTooltip,
-    MatSuffix
-  ],
-  templateUrl: './context-help-button.component.html',
-  styleUrl: './context-help-button.component.scss'
+    selector: 'app-context-help-button',
+    imports: [
+        MatIcon,
+        MatTooltip,
+        MatSuffix
+    ],
+    templateUrl: './context-help-button.component.html',
+    styleUrl: './context-help-button.component.scss'
 })
 export class ContextHelpButtonComponent {
   @Input() helpKey = '';

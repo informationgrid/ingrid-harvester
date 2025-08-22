@@ -23,7 +23,7 @@
 
 import {BrowserModule} from '@angular/platform-browser';
 import {Router, RouterModule, Routes} from '@angular/router';
-import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
+import { LOCALE_ID, NgModule, inject, provideAppInitializer } from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {MatIconModule} from '@angular/material/icon';
@@ -88,15 +88,10 @@ const appRoutes: Routes = routes
         {
             provide: LOCALE_ID,
             useValue: 'de'
-        }, {
-            provide: APP_INITIALIZER,
-            useFactory: ConfigLoader,
-            deps: [
-                ConfigService,
-                TranslocoService,
-            ],
-            multi: true
-        },
+        }, provideAppInitializer(() => {
+        const initializerFn = (ConfigLoader)(inject(ConfigService), inject(TranslocoService));
+        return initializerFn();
+      }),
         {
             provide: HTTP_INTERCEPTORS,
             useClass: UnauthorizedInterceptor,

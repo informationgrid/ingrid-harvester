@@ -25,9 +25,10 @@ import { Component, EventEmitter, Output } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 
 @Component({
-  selector: 'ige-main-header',
-  templateUrl: './main-header.component.html',
-  styleUrl: './main-header.component.scss'
+    selector: 'ige-main-header',
+    templateUrl: './main-header.component.html',
+    styleUrl: './main-header.component.scss',
+    standalone: false
 })
 export class MainHeaderComponent {
   @Output() onLogout = new EventEmitter<void>();

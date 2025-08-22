@@ -27,9 +27,10 @@ import { Observable, Subscription } from 'rxjs';
 import { Catalog } from '../../../../../../server/app/model/dcatApPlu.model';
 
 @Component({
-  selector: 'app-delete-catalog',
-  templateUrl: './delete-catalog.component.html',
-  styleUrls: ['./delete-catalog.component.scss']
+    selector: 'app-delete-catalog',
+    templateUrl: './delete-catalog.component.html',
+    styleUrls: ['./delete-catalog.component.scss'],
+    standalone: false
 })
 export class DeleteCatalogComponent implements OnDestroy, OnInit {
 

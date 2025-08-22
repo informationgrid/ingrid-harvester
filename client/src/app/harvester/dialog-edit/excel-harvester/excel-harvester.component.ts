@@ -25,9 +25,10 @@ import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 
 @Component({
-  selector: 'app-excel-harvester',
-  templateUrl: './excel-harvester.component.html',
-  styleUrls: ['./excel-harvester.component.scss']
+    selector: 'app-excel-harvester',
+    templateUrl: './excel-harvester.component.html',
+    styleUrls: ['./excel-harvester.component.scss'],
+    standalone: false
 })
 export class ExcelHarvesterComponent implements OnInit, OnDestroy {
 
