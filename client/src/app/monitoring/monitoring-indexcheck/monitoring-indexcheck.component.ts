@@ -30,9 +30,10 @@ import { MonitoringIndexCheckDetailComponent } from './monitoring-indexcheck-det
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-monitoring-indexcheck',
-  templateUrl: './monitoring-indexcheck.component.html',
-  styleUrls: ['./monitoring-indexcheck.component.scss']
+    selector: 'app-monitoring-indexcheck',
+    templateUrl: './monitoring-indexcheck.component.html',
+    styleUrls: ['./monitoring-indexcheck.component.scss'],
+    standalone: false
 })
 export class MonitoringIndexCheckComponent implements OnInit {
 

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormsModule, UntypedFormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -33,13 +33,11 @@ import { isValidCron } from 'cron-validator';
 import cronstrue from 'cronstrue/i18n';
 
 @Component({
-  selector: 'harvester-cronjob-form-field',
-  templateUrl: './cronjob-form-field.component.html',
-  styleUrl: './cronjob-form-field.component.scss',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatSlideToggleModule, 
+    selector: 'harvester-cronjob-form-field',
+    templateUrl: './cronjob-form-field.component.html',
+    styleUrl: './cronjob-form-field.component.scss',
+    imports: [
+    MatSlideToggleModule,
     MatFormFieldModule,
     MatIconModule,
     MatLabel,
@@ -47,8 +45,8 @@ import cronstrue from 'cronstrue/i18n';
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CronjobFormFieldComponent {
   @Input() title: string;

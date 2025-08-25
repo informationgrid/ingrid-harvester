@@ -29,9 +29,10 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { OaiSettings } from '../../../../../../server/app/importer/oai/oai.settings';
 
 @Component({
-  selector: 'app-oai-harvester',
-  templateUrl: './oai-harvester.component.html',
-  styleUrls: ['./oai-harvester.component.scss']
+    selector: 'app-oai-harvester',
+    templateUrl: './oai-harvester.component.html',
+    styleUrls: ['./oai-harvester.component.scss'],
+    standalone: false
 })
 export class OaiHarvesterComponent implements OnInit, OnDestroy {
 

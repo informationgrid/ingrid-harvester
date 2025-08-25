@@ -23,7 +23,7 @@
 
 import {BrowserModule} from '@angular/platform-browser';
 import {Router, RouterModule, Routes} from '@angular/router';
-import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
+import { LOCALE_ID, NgModule, inject, provideAppInitializer } from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {MatIconModule} from '@angular/material/icon';
@@ -32,7 +32,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {registerLocaleData} from '@angular/common';
 import localeDe from '@angular/common/locales/de';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ConfigService} from './config.service';
 import {environment} from '../environments/environment';
@@ -61,60 +61,49 @@ export function ConfigLoader(
 ) {
   return () => {
     return configService.load('assets/' + environment.configFile)
-      .subscribe();
+      // .subscribe();
   };
 }
 
 const appRoutes: Routes = routes
 
-@NgModule({
-  declarations: [
-    AppComponent, LoginComponent, SideMenuComponent, MainHeaderComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    RouterModule.forRoot(appRoutes),
-    ReactiveFormsModule,
-    HttpClientModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatSnackBarModule,
-    MatListModule,
-    MatIconModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatTooltipModule,
-    TranslocoRootModule,
-  ],
-  providers: [
-    {
-      provide: LOCALE_ID,
-      useValue: 'de'
-    }, {
-      provide: APP_INITIALIZER,
-      useFactory: ConfigLoader,
-      deps: [
-        ConfigService,
-        TranslocoService,
-      ],
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: UnauthorizedInterceptor,
-      deps: [
-        Router, 
-        AuthenticationService,
-      ],
-      multi: true
-    },
-    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline', floatLabel: 'auto'}},
-    {provide: MAT_CARD_CONFIG, useValue: {appearance: 'raised'}},
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent, LoginComponent, SideMenuComponent, MainHeaderComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        RouterModule.forRoot(appRoutes),
+        ReactiveFormsModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        MatSnackBarModule,
+        MatListModule,
+        MatIconModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatTooltipModule,
+        TranslocoRootModule], providers: [
+        {
+            provide: LOCALE_ID,
+            useValue: 'de'
+        }, provideAppInitializer(() => {
+        const initializerFn = (ConfigLoader)(inject(ConfigService), inject(TranslocoService));
+        return initializerFn();
+      }),
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: UnauthorizedInterceptor,
+            deps: [
+                Router,
+                AuthenticationService,
+            ],
+            multi: true
+        },
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline', floatLabel: 'auto' } },
+        { provide: MAT_CARD_CONFIG, useValue: { appearance: 'raised' } },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {
 }

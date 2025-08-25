@@ -1,105 +1,98 @@
 <!--
-    ==================================================
-    ingrid-harvester
-    ==================================================
-    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
-    ==================================================
-    Licensed under the EUPL, Version 1.2 or - as soon they will be
-    approved by the European Commission - subsequent versions of the
-    EUPL (the "Licence");
+==================================================
+ingrid-harvester
+==================================================
+Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+==================================================
+Licensed under the EUPL, Version 1.2 or - as soon they will be
+approved by the European Commission - subsequent versions of the
+EUPL (the "Licence");
 
-    You may not use this work except in compliance with the Licence.
-    You may obtain a copy of the Licence at:
+You may not use this work except in compliance with the Licence.
+You may obtain a copy of the Licence at:
 
-    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the Licence is distributed on an "AS IS" basis,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the Licence for the specific language governing permissions and
-    limitations under the Licence.
-    ==================================================
+Unless required by applicable law or agreed to in writing, software
+distributed under the Licence is distributed on an "AS IS" basis,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the Licence for the specific language governing permissions and
+limitations under the Licence.
+==================================================
 -->
 
 @if (data) {
 
 
-    @if (!data.complete) {
+  @if (!data.complete) {
 
-        Import läuft
-        <mat-progress-bar
-                [value]="getProgressValue()">
-        </mat-progress-bar>
-        <div class="progress-description align-center">
-            @if (data.progress) {
-              <span>
-                {{data.progress.current}} / {{data.progress.total}} ({{data.duration | number:'1.0-0'}}s)
-              </span>
-            }
-            <div>{{data.message}}</div>
-        </div>
-    
-}
+    Import läuft
+    <mat-progress-bar
+      [value]="getProgressValue()">
+    </mat-progress-bar>
+    <div class="progress-description align-center">
+      @if (data.progress) {
+        <span>
+          {{data.progress.current}} / {{data.progress.total}} ({{data.duration | number:'1.0-0'}}s)
+        </span>
+      }
+      <div>{{data.message}}</div>
+    </div>
 
-      <ng-container *ngIf="data.complete">
+  }
 
-
-        <div class="flex-row space-around info-cards">
-            <mat-card>
-                <mat-card-header>
-                    <div mat-card-avatar class="numberCircle" data-test="num-docs">{{data.summary?.numDocs - data.summary?.skippedDocs.length}}</div>
-                    <mat-card-title>Dokumente</mat-card-title>
-                    <mat-card-subtitle>{{data.summary?.skippedDocs.length}} übersprungen</mat-card-subtitle>
-                </mat-card-header>
-            </mat-card>
-
-            <mat-card (click)="showLog.next()" class="clickable">
-                <mat-card-header>
-                    <div mat-card-avatar class="numberCircle" data-test="num-errors"
-                         [class.error]="data.summary?.numErrors > 0 || data.summary?.databaseErrors.length > 0 || data.summary?.elasticErrors.length > 0 || data.summary?.appErrors.length > 0">
-                      {{data.summary?.numErrors + data.summary?.databaseErrors.length + data.summary?.elasticErrors.length + data.summary?.appErrors.length}}
-                    </div>
-                    <mat-card-title>Fehler</mat-card-title>
-                </mat-card-header>
-            </mat-card>
-
-            <mat-card (click)="showLog.next()" class="clickable">
-                <mat-card-header>
-                    <div mat-card-avatar class="numberCircle" data-test="num-warnings"
-                         [class.warning]="data.summary?.warnings?.length > 0">
-                      {{data.summary?.warnings?.length}}
-                    </div>
-                    <mat-card-title>Warnungen</mat-card-title>
-                </mat-card-header>
-            </mat-card>
-        </div>
-
-        <mat-list>
-            <mat-list-item>
-                <mat-icon matListItemIcon svgIcon="available"/>
-                <span matListItemTitle>Letzte Ausführung</span>
-                <span matListItemLine data-test="last-execution"> {{data.lastExecution | date:'short'}} {{ data.summary?.isIncremental ? '(inkrementell)' : '' }}</span>
-              </mat-list-item>
-              <mat-list-item>
-                <mat-icon matListItemIcon svgIcon="timer"/>
-                <span matListItemTitle>Dauer der Ausführung</span>
-                <span matListItemLine data-test="duration"> {{data.duration * 1000 | date:'HH:mm:ss':'UTC'}}</span>
-              </mat-list-item>
-              <mat-list-item >
-                <mat-icon matListItemIcon svgIcon="upcoming"/>
-                <!-- <mat-icon mat-list-icon>snooze</mat-icon> -->
-                <span matListItemTitle>Nächste Ausführung</span>
-                @if (!cronActive) {
-                  <span matListItemLine data-test="next-execution" [title]="'Wenn aktiviert, dann: ' + (data.nextExecution | date:'short')"> deaktiviert </span>
-                }
-                @if (cronActive) {
-                  <span matListItemLine data-test="next-execution"> {{data.nextExecution | date:'short'}} </span>
-                }
-            </mat-list-item>
-        </mat-list>
-
-    
-      </ng-container>
+  @if (data.complete) {
+    <div class="flex-row space-around info-cards">
+      <mat-card>
+        <mat-card-header>
+          <div mat-card-avatar class="numberCircle" data-test="num-docs">{{data.summary?.numDocs - data.summary?.skippedDocs.length}}</div>
+          <mat-card-title>Dokumente</mat-card-title>
+          <mat-card-subtitle>{{data.summary?.skippedDocs.length}} übersprungen</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+      <mat-card (click)="showLog.next()" class="clickable">
+        <mat-card-header>
+          <div mat-card-avatar class="numberCircle" data-test="num-errors"
+            [class.error]="data.summary?.numErrors > 0 || data.summary?.databaseErrors.length > 0 || data.summary?.elasticErrors.length > 0 || data.summary?.appErrors.length > 0">
+            {{data.summary?.numErrors + data.summary?.databaseErrors.length + data.summary?.elasticErrors.length + data.summary?.appErrors.length}}
+          </div>
+          <mat-card-title>Fehler</mat-card-title>
+        </mat-card-header>
+      </mat-card>
+      <mat-card (click)="showLog.next()" class="clickable">
+        <mat-card-header>
+          <div mat-card-avatar class="numberCircle" data-test="num-warnings"
+            [class.warning]="data.summary?.warnings?.length > 0">
+            {{data.summary?.warnings?.length}}
+          </div>
+          <mat-card-title>Warnungen</mat-card-title>
+        </mat-card-header>
+      </mat-card>
+    </div>
+    <mat-list>
+      <mat-list-item>
+        <mat-icon matListItemIcon svgIcon="available"/>
+        <span matListItemTitle>Letzte Ausführung</span>
+        <span matListItemLine data-test="last-execution"> {{data.lastExecution | date:'short'}} {{ data.summary?.isIncremental ? '(inkrementell)' : '' }}</span>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon svgIcon="timer"/>
+        <span matListItemTitle>Dauer der Ausführung</span>
+        <span matListItemLine data-test="duration"> {{data.duration * 1000 | date:'HH:mm:ss':'UTC'}}</span>
+      </mat-list-item>
+      <mat-list-item >
+        <mat-icon matListItemIcon svgIcon="upcoming"/>
+        <!-- <mat-icon mat-list-icon>snooze</mat-icon> -->
+        <span matListItemTitle>Nächste Ausführung</span>
+        @if (!cronActive) {
+          <span matListItemLine data-test="next-execution" [title]="'Wenn aktiviert, dann: ' + (data.nextExecution | date:'short')"> deaktiviert </span>
+        }
+        @if (cronActive) {
+          <span matListItemLine data-test="next-execution"> {{data.nextExecution | date:'short'}} </span>
+        }
+      </mat-list-item>
+    </mat-list>
+  }
 
 
 }

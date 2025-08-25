@@ -30,9 +30,10 @@ import { MonitoringService } from '../monitoring.service';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-monitoring-harvester',
-  templateUrl: './monitoring-harvester.component.html',
-  styleUrls: ['./monitoring-harvester.component.scss']
+    selector: 'app-monitoring-harvester',
+    templateUrl: './monitoring-harvester.component.html',
+    styleUrls: ['./monitoring-harvester.component.scss'],
+    standalone: false
 })
 export class MonitoringHarvesterComponent implements OnInit {
 

@@ -27,9 +27,10 @@ import { JsonSettings } from '../../../../../../server/app/importer/json/json.se
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-json-harvester',
-  templateUrl: './json-harvester.component.html',
-  styleUrls: ['./json-harvester.component.scss']
+    selector: 'app-json-harvester',
+    templateUrl: './json-harvester.component.html',
+    styleUrls: ['./json-harvester.component.scss'],
+    standalone: false
 })
 export class JsonHarvesterComponent implements OnInit, OnDestroy {
 

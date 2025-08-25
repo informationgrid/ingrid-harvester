@@ -28,9 +28,10 @@ import {AddMappingItemComponent} from "./add-mapping-item/add-mapping-item.compo
 import {map, tap} from "rxjs/operators";
 
 @Component({
-  selector: 'app-config-mapping',
-  templateUrl: './config-mapping.component.html',
-  styleUrls: ['./config-mapping.component.scss']
+    selector: 'app-config-mapping',
+    templateUrl: './config-mapping.component.html',
+    styleUrls: ['./config-mapping.component.scss'],
+    standalone: false
 })
 export class ConfigMappingComponent implements OnInit {
 

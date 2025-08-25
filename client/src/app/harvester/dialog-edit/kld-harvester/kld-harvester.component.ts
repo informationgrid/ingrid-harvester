@@ -26,9 +26,10 @@ import { FormControl, UntypedFormGroup } from '@angular/forms';
 import { KldSettings } from '../../../../../../server/app/importer/kld/kld.settings';
 
 @Component({
-  selector: 'app-kld-harvester',
-  templateUrl: './kld-harvester.component.html',
-  styleUrls: ['./kld-harvester.component.scss']
+    selector: 'app-kld-harvester',
+    templateUrl: './kld-harvester.component.html',
+    styleUrls: ['./kld-harvester.component.scss'],
+    standalone: false
 })
 export class KldHarvesterComponent implements OnInit, OnDestroy {
 

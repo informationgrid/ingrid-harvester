@@ -26,9 +26,10 @@ import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {DefaultCatalogSettings, ExcelSparseSettings} from '../../../../../../server/app/importer/excelsparse/excelsparse.settings';
 
 @Component({
-  selector: 'app-excel-sparse-harvester',
-  templateUrl: './excel-sparse-harvester.component.html',
-  styleUrls: ['./excel-sparse-harvester.component.scss']
+    selector: 'app-excel-sparse-harvester',
+    templateUrl: './excel-sparse-harvester.component.html',
+    styleUrls: ['./excel-sparse-harvester.component.scss'],
+    standalone: false
 })
 export class ExcelSparseHarvesterComponent implements OnInit, OnDestroy {
 

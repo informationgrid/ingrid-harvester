@@ -30,9 +30,10 @@ import { UntypedFormBuilder } from '@angular/forms';
 
 
 @Component({
-  selector: 'app-dialog-history',
-  templateUrl: './dialog-history.component.html',
-  styleUrls: ['./dialog-history.component.scss']
+    selector: 'app-dialog-history',
+    templateUrl: './dialog-history.component.html',
+    styleUrls: ['./dialog-history.component.scss'],
+    standalone: false
 })
 export class DialogHistoryComponent implements OnInit, AfterViewInit {
 

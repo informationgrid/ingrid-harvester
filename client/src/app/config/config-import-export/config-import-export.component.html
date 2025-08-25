@@ -29,20 +29,20 @@
         <div class="flex-col gap-16">
           <div class="flex-row gap-20 baseline">
             <label for="configUpload" class="flex-15">Konfiguration</label>
-            <input type="file" #configUpload id="configUpload" name="configUpload" (change)="importGeneralConfig(this.configUpload.files)" accept="json/*.json" style="display:none;" />
-            <button mat-stroked-button color="primary" class="flex-20" (click)="this.configUpload.click()" data-test="importConfigGeneral">Import</button>
+            <input type="file" #configUpload id="configUpload" name="configUpload" (change)="importGeneralConfig(configUpload.files)" accept="json/*.json" style="display:none;" />
+            <button mat-stroked-button color="primary" class="flex-20" (click)="configUpload.click()" data-test="importConfigGeneral">Import</button>
             <button mat-flat-button color="primary" class="flex-20" (click)="exportGeneralConfig()" data-test="exportConfigGeneral">Export</button>
           </div>
           <div class="flex-row gap-20 baseline">
             <label for="mappingUpload" class="flex-15">Mapping</label>
-            <input type="file" #mappingUpload id="mappingUpload" name="mappingUpload" (change)="importMappings(this.mappingUpload.files)" accept="json/*.json" style="display:none;" />
-            <button mat-stroked-button color="primary" class="flex-20" (click)="this.mappingUpload.click()" data-test="importMapping">Import</button>
+            <input type="file" #mappingUpload id="mappingUpload" name="mappingUpload" (change)="importMappings(mappingUpload.files)" accept="json/*.json" style="display:none;" />
+            <button mat-stroked-button color="primary" class="flex-20" (click)="mappingUpload.click()" data-test="importMapping">Import</button>
             <button mat-flat-button color="primary" class="flex-20" (click)="exportMappingConfig()" data-test="exportMapping">Export</button>
           </div>
           <div class="flex-row gap-20 baseline">
             <label for="harvesterUpload" class="flex-15">Harvester</label>
-            <input type="file" #harvesterUpload id="harvesterUpload" name="harvesterUpload" (change)="importHarvester(this.harvesterUpload.files)" accept="json/*.json" style="display:none;" />
-            <button mat-stroked-button color="primary" class="flex-20" (click)="this.harvesterUpload.click()" data-test="importHarvester">Import</button>
+            <input type="file" #harvesterUpload id="harvesterUpload" name="harvesterUpload" (change)="importHarvester(harvesterUpload.files)" accept="json/*.json" style="display:none;" />
+            <button mat-stroked-button color="primary" class="flex-20" (click)="harvesterUpload.click()" data-test="importHarvester">Import</button>
             <button mat-flat-button color="primary" class="flex-20" (click)="exportHarvesterConfig()" data-test="exportHarvester">Export</button>
           </div>
           <div class="flex-row gap-20 baseline">

@@ -23,7 +23,7 @@
 
 // Import _variables.css to the component's sass file where you want to use it.
 // @import "src/variables";
-@import "../../../_variables.scss";
+@use "../../../_variables.scss";
 
 .align-center {
   text-align: center;
@@ -51,11 +51,11 @@
   box-sizing: content-box;
 }
 .error {
-  background-color: $error;
+  background-color: variables.$error;
   color: white;
 }
 .warning {
-  background-color: $warn;
+  background-color: variables.$warn;
   color: white;
 }
 

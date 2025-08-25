@@ -25,9 +25,10 @@ import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {ImportLogMessage} from "../../../../../server/app/model/import.result";
 
 @Component({
-  selector: 'app-importer-detail',
-  templateUrl: './importer-detail.component.html',
-  styleUrls: ['./importer-detail.component.scss']
+    selector: 'app-importer-detail',
+    templateUrl: './importer-detail.component.html',
+    styleUrls: ['./importer-detail.component.scss'],
+    standalone: false
 })
 export class ImporterDetailComponent implements OnInit {
 

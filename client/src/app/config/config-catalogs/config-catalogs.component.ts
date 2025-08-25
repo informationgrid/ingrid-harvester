@@ -31,9 +31,10 @@ import { AddOrEditCatalogComponent } from './add-or-edit-catalog/add-or-edit-cat
 import { DeleteCatalogComponent } from './delete-catalog/delete-catalog.component';
 
 @Component({
-  selector: 'app-config-catalogs',
-  templateUrl: './config-catalogs.component.html',
-  styleUrls: ['./config-catalogs.component.scss']
+    selector: 'app-config-catalogs',
+    templateUrl: './config-catalogs.component.html',
+    styleUrls: ['./config-catalogs.component.scss'],
+    standalone: false
 })
 export class ConfigCatalogsComponent implements OnInit {
 
