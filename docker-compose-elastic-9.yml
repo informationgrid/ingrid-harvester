@@ -1,0 +1,85 @@
+services:
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.0.3
+    container_name: elastic
+    environment:
+      - cluster.name=elastic
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - xpack.security.enabled=true
+      - discovery.type=single-node
+      - network.host=0.0.0.0
+      - network.publish_host=127.0.0.1
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    restart: unless-stopped
+    healthcheck:
+      test: curl -s -u elastic:${ELASTIC_PASSWORD} http://elastic:9200 | grep -q "tagline"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - harvester-network
+
+  kibana-setup:
+    image: curlimages/curl:8.14.1
+    container_name: ingrid-kibana-setup
+    command: >
+      sh -c '
+        echo "Setting kibana_system password";
+        until curl -s -u "elastic:${ELASTIC_PASSWORD}" -X PUT -H "Content-Type: application/json" ${ELASTIC_URL}/_security/user/kibana_system/_password -d "{\"password\":\"${ELASTIC_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
+        echo "Password has been set up.";
+      '
+    depends_on:
+      elastic:
+        condition: service_healthy
+    networks:
+      - harvester-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:9.0.3
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elastic:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+    depends_on:
+      elastic:
+        condition: service_healthy
+    networks:
+      - harvester-network
+
+  postgres:
+    image: postgres:14.4-alpine
+    container_name: postgresql
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${SPRING_DATASOURCE_USER}
+      - POSTGRES_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - POSTGRES_DB=${SPRING_DATASOURCE_DATABASE}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - harvester-network
+
+volumes:
+  esdata:
+  postgresdata:
+
+networks:
+  harvester-network:
+    name: harvester-network
