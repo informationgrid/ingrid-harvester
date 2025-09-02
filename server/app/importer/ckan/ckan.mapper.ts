@@ -25,6 +25,7 @@
  * A mapper for CKAN documents.
  */
 import { getLogger } from 'log4js';
+import { marked } from 'marked';
 import { throwError } from 'rxjs';
 import { BaseMapper } from '../base.mapper.js';
 import { CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestOptions, RequestPaging } from '../../utils/http-request.utils.js';
@@ -40,7 +41,6 @@ import { Organization, Person } from '../../model/agent.js';
 import { Summary } from '../../model/summary.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import mapping from "../../../mappings.json" with { type: "json" };
-const markdown = require('markdown').markdown;
 
 export interface CkanMapperData {
     harvestTime: Date;
@@ -101,7 +101,7 @@ export class CkanMapper extends BaseMapper {
 
     getDescription() {
         if (this.source.notes) {
-            return this.settings.markdownAsDescription ? markdown.toHTML(this.source.notes) : this.source.notes;
+            return this.settings.markdownAsDescription ? marked(this.source.notes, { async: false }) : this.source.notes;
         } else {
             return undefined;
         }
@@ -432,7 +432,7 @@ export class CkanMapper extends BaseMapper {
         if (this.source.description) {
             subsections.push({
                 title: 'Langbeschreibung',
-                description: markdown.toHTML(this.source.description)
+                description: marked(this.source.description, { async: false })
             });
         }
 

@@ -34,7 +34,7 @@ export class ContextHelpCtrl {
 
         function renderMarkdownFile(content: string): string {
             try {
-                return <string>marked(content);
+                return marked(content, { async: false });
             } catch (e) {
                 console.error("Failed to parse markdown", e);
                 return "<p>Error rendering help content</p>";
