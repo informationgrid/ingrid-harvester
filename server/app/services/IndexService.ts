@@ -31,11 +31,11 @@ import { IndexConfiguration } from '../persistence/elastic.setting.js';
 import { BulkResponse, ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from './config/ConfigService.js';
+import { Readable } from 'stream';
 import path from "path";
 import zlib from "zlib";
 
 const log = getLogger(import.meta.filename);
-const Readable = require('stream').Readable
 
 @Service()
 export class IndexService {

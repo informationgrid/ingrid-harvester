@@ -40,6 +40,8 @@ import { ingridCswMapper } from './mapper/ingrid.csw.mapper.js';
 import { IngridIndexDocument } from './model/index.document.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
 import { PostgresAggregator } from './persistence/postgres.aggregator.js';
+import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
+import settings from './persistence/ingrid-meta-settings.json' with { type: 'json' };
 
 const log = getLogger(import.meta.filename);
 
@@ -59,9 +61,7 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
         // create ingrid_meta index
         let isIngridMeta = await elastic.isIndexPresent(INGRID_META_INDEX);
         if (!isIngridMeta) {
-            const mappings = require('./persistence/ingrid-meta-mapping.json');
-            const settings = require('./persistence/ingrid-meta-settings.json');
-            await elastic.prepareIndexWithName(INGRID_META_INDEX, mappings, settings);
+            await elastic.prepareIndexWithName(INGRID_META_INDEX, mappings, settings as any);
         }
         return null;
     }

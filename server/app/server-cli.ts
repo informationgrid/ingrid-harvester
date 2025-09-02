@@ -29,10 +29,10 @@ import { ConfigService } from './services/config/ConfigService.js';
 import { ImportLogMessage } from './model/import.result.js';
 import { ProfileFactoryLoader} from './profiles/profile.factory.loader.js';
 import { Summary } from './model/summary.js';
+import process from 'node:process'; 
 
 let config = ConfigService.get(),
     configGeneral = ConfigService.getGeneralSettings(),
-    process = require('process'),
     log = getLogger(),
     logSummary = getLogger('summary');
 

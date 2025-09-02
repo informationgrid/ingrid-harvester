@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { createRequire } from 'module';
 import { getLogger } from 'log4js';
 import { BaseMapper } from '../importer/base.mapper.js';
 import { ImporterFactory } from '../importer/importer.factory.js';
@@ -80,10 +81,12 @@ export abstract class ProfileFactory<M extends BaseMapper> {
     dateReplacer = MiscUtils.dateReplacer;
 
     getIndexMappings(): any {
+        const require = createRequire(import.meta.url);
         return require(`./${this.getProfileName()}/persistence/elastic.mappings.json`);
     }
 
     getIndexSettings(): IndexSettings {
+        const require = createRequire(import.meta.url);
         return require(`./${this.getProfileName()}/persistence/elastic.settings.json`);
     }
 

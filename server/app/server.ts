@@ -30,13 +30,14 @@ import { ConfigService } from './services/config/ConfigService.js';
 import { jsonLayout } from './utils/log4js.json.layout.js';
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import createMemoryStore from 'memorystore';
 import serverConfig from "../server-config.json" with { type: "json" };
 import methodOverride from "method-override";
 import compress from "compression";
 import session from "express-session";
 
 const rootDir = __dirname;
-const MemoryStore = require('memorystore')(session);
+const MemoryStore = createMemoryStore(session);
 
 const log = getLogger(import.meta.filename);
 

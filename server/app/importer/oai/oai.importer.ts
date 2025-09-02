@@ -23,6 +23,7 @@
 
 import * as xpath from 'xpath';
 import * as MiscUtils from '../../utils/misc.utils.js';
+import { createRequire } from 'module';
 import { defaultOAISettings, OaiSettings } from './oai.settings.js';
 import { getLogger } from 'log4js';
 import { oaiXPaths, OaiXPaths } from './oai.paths.js';
@@ -73,6 +74,7 @@ export class OaiImporter extends Importer {
         }
         this.settings = settings;
         this.xpaths = oaiXPaths[this.settings.metadataPrefix?.toLowerCase()];
+        const require = createRequire(import.meta.url);
         this.OaiMapper = require(`./${this.settings.metadataPrefix}/oai.mapper`).OaiMapper;
     }
 

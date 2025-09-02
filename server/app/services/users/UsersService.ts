@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { v4 as uuidv4 } from 'uuid';
 import {Service} from "@tsed/common";
 import {MemoryStorage} from "../storage/MemoryStorage.js";
 import {IUser} from "../../model/User.js";
@@ -69,7 +70,7 @@ export class UsersService {
      * @returns {{id: any, name: string}}
      */
     async create(user: IUser) {
-        user._id = require("node-uuid").v4();
+        user._id = uuidv4();
         const users = this.memoryStorage.get<IUser[]>("users");
 
         users.push(user);

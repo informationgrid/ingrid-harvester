@@ -27,10 +27,11 @@ import { imageSize } from 'image-size';
 import { Dimensions } from '../model/dimensions.js';
 import { Distribution } from '../model/distribution.js';
 import { DOMParser } from '@xmldom/xmldom';
+import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import dayjs from "dayjs";
 
 const log = getLogger(import.meta.filename);
-dayjs.extend(require('dayjs/plugin/customParseFormat'));
+dayjs.extend(customParseFormat);
 
 const CUSTOM_DATE_TIME_FORMATS = ["YYYY-MM-DDZ"];
 const MAX_MSG_LENGTH = 4096;
