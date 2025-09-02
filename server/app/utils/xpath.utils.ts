@@ -21,8 +21,6 @@
  * ==================================================
  */
 
-'use strict';
-
 import * as MiscUtils from './misc.utils';
 
 /**

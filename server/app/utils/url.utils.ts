@@ -21,8 +21,6 @@
  * ==================================================
  */
 
-'use strict';
-
 import * as fs from 'fs';
 import fetch from 'node-fetch';
 import { ConfigService } from '../services/config/ConfigService';

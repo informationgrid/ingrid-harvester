@@ -21,8 +21,6 @@
  * ==================================================
  */
 
-'use strict';
-
 import { cloneDeep, merge as lodashMerge, trim } from 'lodash';
 import { imageSize } from 'image-size';
 import { Dimensions } from '../model/dimensions';
