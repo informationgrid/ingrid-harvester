@@ -25,7 +25,7 @@ import * as fs from 'fs';
 import * as xpath from 'xpath';
 import * as GeoJsonUtils from '../../utils/geojson.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
-import { decode } from 'iconv-lite';
+import iconv from 'iconv-lite';
 import { defaultWfsSettings, WfsSettings } from './wfs.settings.js';
 import { firstElementChild, getExtendedNsMap, getNsMap, XPathNodeSelect } from '../../utils/xpath.utils.js';
 import log4js from 'log4js';
@@ -98,7 +98,7 @@ export abstract class WfsImporter extends Importer {
             responseBody = responseBody.toString();
         }
         else {
-            responseBody = decode(responseBody, charset);
+            responseBody = iconv.decode(responseBody, charset);
         }
         let capabilitiesResponseDom = this.domParser.parseFromString(responseBody);
 
