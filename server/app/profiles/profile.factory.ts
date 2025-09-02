@@ -21,21 +21,21 @@
  * ==================================================
  */
 
-import { BaseMapper } from '../importer/base.mapper';
-import { ImporterFactory } from '../importer/importer.factory';
-import { Catalog } from '../model/dcatApPlu.model';
-import { IndexDocument } from '../model/index.document';
-import { IndexDocumentFactory } from '../model/index.document.factory';
-import { DatabaseFactory } from '../persistence/database.factory';
-import { DatabaseUtils } from '../persistence/database.utils';
-import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { ElasticQueries } from '../persistence/elastic.queries';
-import { IndexSettings } from '../persistence/elastic.setting';
-import { ElasticsearchUtils } from '../persistence/elastic.utils';
-import { PostgresAggregator } from '../persistence/postgres.aggregator';
-import { PostgresQueries } from '../persistence/postgres.queries';
-import { ConfigService } from '../services/config/ConfigService';
-import * as MiscUtils from '../utils/misc.utils';
+import { BaseMapper } from '../importer/base.mapper.js';
+import { ImporterFactory } from '../importer/importer.factory.js';
+import { Catalog } from '../model/dcatApPlu.model.js';
+import { IndexDocument } from '../model/index.document.js';
+import { IndexDocumentFactory } from '../model/index.document.factory.js';
+import { DatabaseFactory } from '../persistence/database.factory.js';
+import { DatabaseUtils } from '../persistence/database.utils.js';
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import { ElasticQueries } from '../persistence/elastic.queries.js';
+import { IndexSettings } from '../persistence/elastic.setting.js';
+import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import { PostgresAggregator } from '../persistence/postgres.aggregator.js';
+import { PostgresQueries } from '../persistence/postgres.queries.js';
+import { ConfigService } from '../services/config/ConfigService.js';
+import * as MiscUtils from '../utils/misc.utils.js';
 
 const log = require('log4js').getLogger(__filename);
 

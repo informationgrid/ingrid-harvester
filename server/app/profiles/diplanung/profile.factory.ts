@@ -21,26 +21,26 @@
  * ==================================================
  */
 
-import { CswMapper } from '../../importer/csw/csw.mapper';
-import { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper';
-import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper';
-import { DiplanungDcatappluMapper } from './mapper/diplanung.dcatapplu.mapper';
-import { DiplanungImporterFactory } from './importer/diplanung.importer.factory';
-import { DiplanungIndexDocument } from './model/index.document';
-import { DiplanungWfsMapper } from './mapper/diplanung.wfs.mapper';
-import { ElasticQueries } from './persistence/elastic.queries';
-import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
-import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper';
-import { FisWfsMapper } from '../../importer/wfs/fis/fis.wfs.mapper';
-import { ImporterFactory } from '../../importer/importer.factory';
-import { IndexDocumentFactory } from '../../model/index.document.factory';
-import { MsWfsMapper } from '../../importer/wfs/ms/ms.wfs.mapper';
-import { PostgresAggregator } from './persistence/postgres.aggregator';
-import { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator';
-import { ProfileFactory } from '../profile.factory';
-import { WfsMapper } from '../../importer/wfs/wfs.mapper';
-import { XplanSynWfsMapper } from '../../importer/wfs/xplan/syn/xplan.syn.wfs.mapper';
-import { XplanWfsMapper } from '../../importer/wfs/xplan/xplan.wfs.mapper';
+import { CswMapper } from '../../importer/csw/csw.mapper.js';
+import { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper.js';
+import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper.js';
+import { DiplanungDcatappluMapper } from './mapper/diplanung.dcatapplu.mapper.js';
+import { DiplanungImporterFactory } from './importer/diplanung.importer.factory.js';
+import { DiplanungIndexDocument } from './model/index.document.js';
+import { DiplanungWfsMapper } from './mapper/diplanung.wfs.mapper.js';
+import { ElasticQueries } from './persistence/elastic.queries.js';
+import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
+import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper.js';
+import { FisWfsMapper } from '../../importer/wfs/fis/fis.wfs.mapper.js';
+import { ImporterFactory } from '../../importer/importer.factory.js';
+import { IndexDocumentFactory } from '../../model/index.document.factory.js';
+import { MsWfsMapper } from '../../importer/wfs/ms/ms.wfs.mapper.js';
+import { PostgresAggregator } from './persistence/postgres.aggregator.js';
+import { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
+import { ProfileFactory } from '../profile.factory.js';
+import { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
+import { XplanSynWfsMapper } from '../../importer/wfs/xplan/syn/xplan.syn.wfs.mapper.js';
+import { XplanWfsMapper } from '../../importer/wfs/xplan/xplan.wfs.mapper.js';
 
 export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper | ExcelSparseMapper | WfsMapper> {
 

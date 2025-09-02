@@ -21,12 +21,12 @@
  * ==================================================
  */
 
-import { BulkResponse, ElasticsearchUtils, EsOperation } from './elastic.utils';
+import { BulkResponse, ElasticsearchUtils, EsOperation } from './elastic.utils.js';
 import { Client } from 'elasticsearch7';
 import { Index } from '@shared/index.model';
-import { IndexConfiguration, IndexSettings } from './elastic.setting';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import { Summary } from '../model/summary';
+import { IndexConfiguration, IndexSettings } from './elastic.setting.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import { Summary } from '../model/summary.js';
 
 const log = require('log4js').getLogger(__filename);
 

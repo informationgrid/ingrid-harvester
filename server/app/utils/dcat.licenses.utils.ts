@@ -24,9 +24,9 @@
 import * as fs from 'fs';
 import * as xpath from 'xpath';
 import { getLogger } from 'log4js';
-import { namespaces } from '../importer/namespaces';
+import { namespaces } from '../importer/namespaces.js';
 import { License } from '@shared/license.model';
-import { XPathElementSelect } from './xpath.utils';
+import { XPathElementSelect } from './xpath.utils.js';
 
 export class DcatLicensesUtils {
 

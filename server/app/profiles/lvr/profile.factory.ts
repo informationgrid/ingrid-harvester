@@ -21,24 +21,24 @@
  * ==================================================
  */
 
-import { ElasticQueries } from './persistence/elastic.queries';
-import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
-import { ImporterFactory } from '../../importer/importer.factory';
-import { IndexDocumentFactory } from '../../model/index.document.factory';
+import { ElasticQueries } from './persistence/elastic.queries.js';
+import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
+import { ImporterFactory } from '../../importer/importer.factory.js';
+import { IndexDocumentFactory } from '../../model/index.document.factory.js';
 import { JsonMapper } from '.../../importer/json/json.mapper';
-import { KldMapper } from '../../importer/kld/kld.mapper';
-import { LvrClickRheinMapper } from './mapper/lvr.clickrhein.mapper';
-import { LvrImporterFactory } from './importer/lvr.importer.factory';
-import { LvrIndexDocument } from './model/index.document';
-import { LvrKldMapper } from './mapper/lvr.kld.mapper';
-import { LvrOaiLidoMapper } from './mapper/lvr.oai.lido.mapper';
-import { LvrOaiModsMapper } from './mapper/lvr.oai.mods.mapper';
-import { OaiMapper as OaiLidoMapper } from '../../importer/oai/lido/oai.mapper';
-import { OaiMapper as OaiModsMapper } from '../../importer/oai/mods/oai.mapper';
-import { OaiSettings } from '../../importer/oai/oai.settings';
-import { PostgresAggregator } from './persistence/postgres.aggregator';
-import { PostgresAggregator as AbstractPostgresAggregator} from '../../persistence/postgres.aggregator';
-import { ProfileFactory } from '../profile.factory';
+import { KldMapper } from '../../importer/kld/kld.mapper.js';
+import { LvrClickRheinMapper } from './mapper/lvr.clickrhein.mapper.js';
+import { LvrImporterFactory } from './importer/lvr.importer.factory.js';
+import { LvrIndexDocument } from './model/index.document.js';
+import { LvrKldMapper } from './mapper/lvr.kld.mapper.js';
+import { LvrOaiLidoMapper } from './mapper/lvr.oai.lido.mapper.js';
+import { LvrOaiModsMapper } from './mapper/lvr.oai.mods.mapper.js';
+import { OaiMapper as OaiLidoMapper } from '../../importer/oai/lido/oai.mapper.js';
+import { OaiMapper as OaiModsMapper } from '../../importer/oai/mods/oai.mapper.js';
+import { OaiSettings } from '../../importer/oai/oai.settings.js';
+import { PostgresAggregator } from './persistence/postgres.aggregator.js';
+import { PostgresAggregator as AbstractPostgresAggregator} from '../../persistence/postgres.aggregator.js';
+import { ProfileFactory } from '../profile.factory.js';
 
 export class LvrFactory extends ProfileFactory<JsonMapper | KldMapper | OaiLidoMapper | OaiModsMapper> {
 

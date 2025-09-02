@@ -26,17 +26,17 @@
  */
 import { getLogger } from 'log4js';
 import { throwError } from 'rxjs';
-import { BaseMapper } from '../base.mapper';
-import { DateRange } from '../../model/dateRange';
-import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils';
-import { Distribution } from '../../model/distribution';
-import { ImporterSettings } from '../../importer.settings';
+import { BaseMapper } from '../base.mapper.js';
+import { DateRange } from '../../model/dateRange.js';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
+import { Distribution } from '../../model/distribution.js';
+import { ImporterSettings } from '../../importer.settings.js';
 import { License } from '@shared/license.model';
-import { MetadataSource } from '../../model/index.document';
-import { Person } from '../../model/agent';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { SparqlSettings } from './sparql.settings';
-import { Summary } from '../../model/summary';
+import { MetadataSource } from '../../model/index.document.js';
+import { Person } from '../../model/agent.js';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.js';
+import { SparqlSettings } from './sparql.settings.js';
+import { Summary } from '../../model/summary.js';
 
 export class SparqlMapper extends BaseMapper {
 

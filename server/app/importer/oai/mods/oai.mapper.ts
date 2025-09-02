@@ -25,18 +25,18 @@
  * A mapper for METS/MODS XML documents harvested over OAI.
  */
 import * as xpath from 'xpath';
-import * as MiscUtils from '../../../utils/misc.utils';
+import * as MiscUtils from '../../../utils/misc.utils.js';
 import { getLogger } from 'log4js';
-import { oaiXPaths } from '../oai.paths';
-import { BaseMapper } from '../../base.mapper';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import { ImporterSettings } from '../../../importer.settings';
-import { Keyword } from '../../../model/ingrid.index.document';
-import { Media, MediaType, Person, Relation } from '../../../profiles/lvr/model/index.document';
-import { MetadataSource } from '../../../model/index.document';
-import { OaiSettings } from '../oai.settings';
-import { Summary } from '../../../model/summary';
-import { XPathElementSelect } from '../../../utils/xpath.utils';
+import { oaiXPaths } from '../oai.paths.js';
+import { BaseMapper } from '../../base.mapper.js';
+import { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import { ImporterSettings } from '../../../importer.settings.js';
+import { Keyword } from '../../../model/ingrid.index.document.js';
+import { Media, MediaType, Person, Relation } from '../../../profiles/lvr/model/index.document.js';
+import { MetadataSource } from '../../../model/index.document.js';
+import { OaiSettings } from '../oai.settings.js';
+import { Summary } from '../../../model/summary.js';
+import { XPathElementSelect } from '../../../utils/xpath.utils.js';
 
 export class OaiMapper extends BaseMapper {
 

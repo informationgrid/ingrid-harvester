@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-import { Agent, Contact, Organization, Person } from '../../../model/agent';
-import { DateRange } from '../../../model/dateRange';
-import { Distribution } from '../../../model/distribution';
-import { IndexDocument, MetadataSource } from '../../../model/index.document';
+import { Agent, Contact, Organization, Person } from '../../../model/agent.js';
+import { DateRange } from '../../../model/dateRange.js';
+import { Distribution } from '../../../model/distribution.js';
+import { IndexDocument, MetadataSource } from '../../../model/index.document.js';
 import { License } from '@shared/license.model';
 
 export type mcloudIndexDocument = IndexDocument & {

@@ -25,17 +25,17 @@ import { $log, Configuration, PlatformAcceptMimesMiddleware, PlatformApplication
 import { Inject } from '@tsed/di';
 import { addLayout, configure } from 'log4js';
 import * as path from 'path';
-import { ProfileFactoryLoader } from './profiles/profile.factory.loader';
-import { ConfigService } from './services/config/ConfigService';
-import { jsonLayout } from './utils/log4js.json.layout';
+import { ProfileFactoryLoader } from './profiles/profile.factory.loader.js';
+import { ConfigService } from './services/config/ConfigService.js';
+import { jsonLayout } from './utils/log4js.json.layout.js';
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
+import serverConfig from "../server-config.json" with { type: "json" };
+import methodOverride from "method-override";
+import compress from "compression";
+import session from "express-session";
 
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const serverConfig = require('../server-config.json');
-const methodOverride = require('method-override');
-const compress = require("compression");
 const rootDir = __dirname;
-const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
 
 const log = require('log4js').getLogger(__filename);

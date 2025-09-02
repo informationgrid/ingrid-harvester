@@ -22,7 +22,7 @@
  */
 
 import * as fs from 'fs';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 
 export class PostgresQueries {
 

@@ -21,19 +21,19 @@
  * ==================================================
  */
 
-import { mcloudIndexDocument } from '../model/index.document';
-import { Agent, Contact, Organization, Person } from '../../../model/agent';
-import { CkanMapper } from '../../../importer/ckan/ckan.mapper';
-import { CswMapper } from '../../../importer/csw/csw.mapper';
-import { DateRange } from '../../../model/dateRange';
-import { DcatMapper } from '../../../importer/dcat/dcat.mapper';
-import { Distribution } from '../../../model/distribution';
-import { ExcelMapper } from '../../../importer/excel/excel.mapper';
-import { IndexDocumentFactory } from '../../../model/index.document.factory';
+import { mcloudIndexDocument } from '../model/index.document.js';
+import { Agent, Contact, Organization, Person } from '../../../model/agent.js';
+import { CkanMapper } from '../../../importer/ckan/ckan.mapper.js';
+import { CswMapper } from '../../../importer/csw/csw.mapper.js';
+import { DateRange } from '../../../model/dateRange.js';
+import { DcatMapper } from '../../../importer/dcat/dcat.mapper.js';
+import { Distribution } from '../../../model/distribution.js';
+import { ExcelMapper } from '../../../importer/excel/excel.mapper.js';
+import { IndexDocumentFactory } from '../../../model/index.document.factory.js';
 import { License } from '@shared/license.model';
-import { MetadataSource } from '../../../model/index.document';
-import { OaiMapper } from '../../../importer/oai/iso19139/oai.mapper';
-import { SparqlMapper } from '../../../importer/sparql/sparql.mapper';
+import { MetadataSource } from '../../../model/index.document.js';
+import { OaiMapper } from '../../../importer/oai/iso19139/oai.mapper.js';
+import { SparqlMapper } from '../../../importer/sparql/sparql.mapper.js';
 
 export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper> implements IndexDocumentFactory<mcloudIndexDocument> {
 

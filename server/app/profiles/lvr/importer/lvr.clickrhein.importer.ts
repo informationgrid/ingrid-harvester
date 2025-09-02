@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import { JsonImporter } from '../../../importer/json/json.importer';
-import { JsonMapper } from '../../../importer/json/json.mapper';
-import { JsonSettings } from '../../../importer/json/json.settings';
-import { RequestDelegate } from '../../../utils/http-request.utils';
-import { Summary } from '../../../model/summary';
+import { JsonImporter } from '../../../importer/json/json.importer.js';
+import { JsonMapper } from '../../../importer/json/json.mapper.js';
+import { JsonSettings } from '../../../importer/json/json.settings.js';
+import { RequestDelegate } from '../../../utils/http-request.utils.js';
+import { Summary } from '../../../model/summary.js';
 
 export class LvrClickRheinImporter extends JsonImporter {
 

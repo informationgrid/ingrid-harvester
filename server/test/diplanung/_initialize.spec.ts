@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import {Summary} from '../../app/model/summary';
-import {IndexConfiguration} from '../../app/persistence/elastic.setting';
-import { ElasticsearchFactory } from '../../app/persistence/elastic.factory';
+import {Summary} from '../../app/model/summary.js';
+import {IndexConfiguration} from '../../app/persistence/elastic.setting.js';
+import { ElasticsearchFactory } from '../../app/persistence/elastic.factory.js';
 
 
 describe('Initialize Elasticsearch', function () {

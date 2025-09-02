@@ -38,7 +38,7 @@
  */
 
 import * as xpath from 'xpath';
-import * as MiscUtils from './misc.utils';
+import * as MiscUtils from './misc.utils.js';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import booleanWithin from '@turf/boolean-within';
@@ -46,16 +46,15 @@ import buffer from '@turf/buffer';
 import centroid from '@turf/centroid';
 import combine from '@turf/combine';
 // import flatten from '@turf/flatten';
-const turfFlatten = require('@turf/flatten');
 import flip from '@turf/flip';
 import rewind from '@turf/rewind';
 import simplify from '@turf/simplify';
-import { firstElementChild } from './xpath.utils';
+import { firstElementChild } from './xpath.utils.js';
 import { AllGeoJSON, Feature, FeatureCollection, Geometries, Geometry, GeometryCollection, MultiPoint, MultiLineString, MultiPolygon, Point } from '@turf/helpers';
-
-const deepEqual = require('deep-equal');
-const proj4 = require('proj4');
-const path = require('path');
+import turfFlatten from "@turf/flatten";
+import deepEqual from "deep-equal";
+import proj4 from "proj4";
+import path from "path";
 const proj4jsMappings = require(path.resolve(process.cwd(), 'proj4.json'));
 
 

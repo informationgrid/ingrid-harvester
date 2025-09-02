@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import {ingridMapper} from "./ingrid.mapper";
-import {ingridCswMapper} from "./ingrid.csw.mapper";
+import {ingridMapper} from "./ingrid.mapper.js";
+import {ingridCswMapper} from "./ingrid.csw.mapper.js";
 
 export class ingridMapperFactory {
     static getMapper(mapper) : ingridMapper<any> {

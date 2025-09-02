@@ -22,8 +22,8 @@
  */
 
 import * as nodemailer from 'nodemailer';
-import { ConfigService } from '../services/config/ConfigService';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
+import { ConfigService } from '../services/config/ConfigService.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 
 const log = require('log4js').getLogger(__filename);
 

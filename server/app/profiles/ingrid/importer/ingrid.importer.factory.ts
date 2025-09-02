@@ -22,9 +22,9 @@
  */
 
 import { Harvester } from '@shared/harvester';
-import { Importer } from '../../../importer/importer';
-import { ImporterFactory } from '../../../importer/importer.factory';
-import {IngridCswImporter} from "./ingrid.csw.importer";
+import { Importer } from '../../../importer/importer.js';
+import { ImporterFactory } from '../../../importer/importer.factory.js';
+import {IngridCswImporter} from "./ingrid.csw.importer.js";
 
 const log = require('log4js').getLogger(__filename);
 

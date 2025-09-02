@@ -21,17 +21,17 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils';
-import { defaultExcelSettings, ExcelSettings } from './excel.settings';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils';
-import { ExcelMapper } from './excel.mapper';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { defaultExcelSettings, ExcelSettings } from './excel.settings.js';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import { ExcelMapper } from './excel.mapper.js';
+import { Importer } from '../importer.js';
+import { ImportLogMessage, ImportResult } from '../../model/import.result.js';
 import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { Summary } from '../../model/summary';
+import { ProfileFactory } from '../../profiles/profile.factory.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import { RecordEntity } from '../../model/entity.js';
+import { Summary } from '../../model/summary.js';
 import { Workbook, Worksheet } from 'exceljs';
 
 const log = require('log4js').getLogger(__filename);

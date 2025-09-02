@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { IndexDocument } from '../../../model/index.document';
+import { IndexDocument } from '../../../model/index.document.js';
 
 export type IngridIndexDocument = IndexDocument & {
     iPlugId: string,

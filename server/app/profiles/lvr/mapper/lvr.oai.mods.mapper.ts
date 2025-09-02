@@ -21,15 +21,14 @@
  * ==================================================
  */
 
-import 'dayjs/locale/de';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import { Keyword } from '../../../model/ingrid.index.document';
+import 'dayjs/locale/de.js';
+import { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import { Keyword } from '../../../model/ingrid.index.document.js';
 import { License } from '@shared/license.model';
-import { LvrMapper } from './lvr.mapper';
-import { Media, Person, Relation, Source } from '../model/index.document';
-import { OaiMapper } from '../../../importer/oai/mods/oai.mapper';
-
-const dayjs = require('dayjs');
+import { LvrMapper } from './lvr.mapper.js';
+import { Media, Person, Relation, Source } from '../model/index.document.js';
+import { OaiMapper } from '../../../importer/oai/mods/oai.mapper.js';
+import dayjs from "dayjs";
 dayjs.locale('de');
 
 export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {

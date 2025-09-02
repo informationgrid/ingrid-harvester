@@ -21,13 +21,13 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { generateXplanWmsDistributions } from '../diplanung.utils';
-import { CswImporter } from '../../../importer/csw/csw.importer';
-import { DiplanungIndexDocument } from '../model/index.document';
-import { Distribution } from '../../../model/distribution';
-import { PluPlanType } from '../../../model/dcatApPlu.model';
-import { RecordEntity } from '../../../model/entity';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import { generateXplanWmsDistributions } from '../diplanung.utils.js';
+import { CswImporter } from '../../../importer/csw/csw.importer.js';
+import { DiplanungIndexDocument } from '../model/index.document.js';
+import { Distribution } from '../../../model/distribution.js';
+import { PluPlanType } from '../../../model/dcatApPlu.model.js';
+import { RecordEntity } from '../../../model/entity.js';
 // import { RequestDelegate } from '../../../utils/http-request.utils';
 // import { WmsXPath } from './wms.xpath';
 

@@ -22,14 +22,14 @@
  */
 
 import { Harvester } from '@shared/harvester';
-import { Importer } from '../../../importer/importer';
-import { ImporterFactory } from '../../../importer/importer.factory';
-import { JsonSettings } from '../../../importer/json/json.settings';
-import { KldImporter } from '../../../importer/kld/kld.importer';
-import { KldSettings } from '../../../importer/kld/kld.settings';
-import { LvrClickRheinImporter } from './lvr.clickrhein.importer';
-import { OaiImporter } from '../../../importer/oai/oai.importer';
-import { OaiSettings } from '../../../importer/oai/oai.settings';
+import { Importer } from '../../../importer/importer.js';
+import { ImporterFactory } from '../../../importer/importer.factory.js';
+import { JsonSettings } from '../../../importer/json/json.settings.js';
+import { KldImporter } from '../../../importer/kld/kld.importer.js';
+import { KldSettings } from '../../../importer/kld/kld.settings.js';
+import { LvrClickRheinImporter } from './lvr.clickrhein.importer.js';
+import { OaiImporter } from '../../../importer/oai/oai.importer.js';
+import { OaiSettings } from '../../../importer/oai/oai.settings.js';
 
 const log = require('log4js').getLogger(__filename);
 

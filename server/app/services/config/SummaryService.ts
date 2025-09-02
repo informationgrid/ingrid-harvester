@@ -22,10 +22,10 @@
  */
 
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'fs';
-import {ImportLogMessage} from '../../model/import.result';
+import {ImportLogMessage} from '../../model/import.result.js';
 import {Service} from '@tsed/di';
 import {CronJob} from 'cron';
-import {ConfigService} from './ConfigService';
+import {ConfigService} from './ConfigService.js';
 
 /**
  * This service handles access to a file which contains the last import summary

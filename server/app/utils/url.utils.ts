@@ -23,8 +23,8 @@
 
 import * as fs from 'fs';
 import fetch from 'node-fetch';
-import { ConfigService } from '../services/config/ConfigService';
-import { RequestDelegate, RequestOptions } from './http-request.utils';
+import { ConfigService } from '../services/config/ConfigService.js';
+import { RequestDelegate, RequestOptions } from './http-request.utils.js';
 
 const log = require('log4js').getLogger(__filename);
 

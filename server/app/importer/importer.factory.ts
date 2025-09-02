@@ -22,9 +22,9 @@
  */
 
 import { Harvester } from '@shared/harvester';
-import { Importer } from './importer';
+import { Importer } from './importer.js';
 
-export * from "./importer"
+export * from "./importer.js"
 
 export abstract class ImporterFactory {
 

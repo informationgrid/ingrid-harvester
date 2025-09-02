@@ -21,15 +21,15 @@
  * ==================================================
  */
 
-import {Summary} from '../../app/model/summary';
+import {Summary} from '../../app/model/summary.js';
 import {expect} from 'chai';
 import {configure} from 'log4js';
-import {doc1, doc2, doc3, doc5, doc6} from '../data/docs.deduplication';
+import {doc1, doc2, doc3, doc5, doc6} from '../data/docs.deduplication.js';
 import {indexMappings} from '../../app/profiles/mcloud/persistence/elastic.mappings';
 import {indexSettings} from '../../app/profiles/mcloud/persistence/elastic.settings';
-import {IndexConfiguration} from '../../app/persistence/elastic.setting';
-import { ElasticsearchFactory } from '../../app/persistence/elastic.factory';
-import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader";
+import {IndexConfiguration} from '../../app/persistence/elastic.setting.js';
+import { ElasticsearchFactory } from '../../app/persistence/elastic.factory.js';
+import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader.js";
 
 configure('./test/log4js-test.json');
 

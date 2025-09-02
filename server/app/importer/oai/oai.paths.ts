@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { namespaces } from '../../importer/namespaces';
+import { namespaces } from '../../importer/namespaces.js';
 
 const iso19139: OaiXPaths = {
     prefixMap: {

@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import { Bucket } from './postgres.utils';
-import { EsOperation } from './elastic.utils';
-import { IndexDocument } from '../model/index.document';
+import { Bucket } from './postgres.utils.js';
+import { EsOperation } from './elastic.utils.js';
+import { IndexDocument } from '../model/index.document.js';
 
 export interface PostgresAggregator<I extends IndexDocument> {
     processBucket(bucket: Bucket<I>): Promise<EsOperation[]>;

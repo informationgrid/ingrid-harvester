@@ -21,15 +21,15 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../utils/misc.utils';
-import { elasticsearchMapping} from './statistic.mapping';
-import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { ElasticsearchUtils } from '../persistence/elastic.utils';
+import * as MiscUtils from '../utils/misc.utils.js';
+import { elasticsearchMapping} from './statistic.mapping.js';
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { GeneralSettings } from '@shared/general-config.settings';
-import { ImportLogMessage} from '../model/import.result';
-import { IndexSettings } from '../persistence/elastic.setting';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import { Summary} from '../model/summary';
+import { ImportLogMessage} from '../model/import.result.js';
+import { IndexSettings } from '../persistence/elastic.setting.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import { Summary} from '../model/summary.js';
 
 const log = require('log4js').getLogger(__filename);
 

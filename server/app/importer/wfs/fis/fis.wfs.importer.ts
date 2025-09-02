@@ -21,12 +21,12 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { FisWfsMapper } from './fis.wfs.mapper';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import { FisWfsMapper } from './fis.wfs.mapper.js';
 import { Harvester } from '@shared/harvester';
-import { RequestDelegate } from '../../../utils/http-request.utils';
-import { WfsImporter } from '../wfs.importer';
-import { WfsMapper } from '../wfs.mapper';
+import { RequestDelegate } from '../../../utils/http-request.utils.js';
+import { WfsImporter } from '../wfs.importer.js';
+import { WfsMapper } from '../wfs.mapper.js';
 
 export class FisWfsImporter extends WfsImporter {
 

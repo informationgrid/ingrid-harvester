@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { DateRange } from '../../../model/dateRange';
+import { DateRange } from '../../../model/dateRange.js';
 import { Geometries } from '@turf/helpers';
 
 export interface Actor {

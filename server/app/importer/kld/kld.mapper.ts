@@ -24,18 +24,18 @@
 /**
  * A mapper for documents harvested from KuLaDig.
  */
-import * as MiscUtils from '../../utils/misc.utils';
+import * as MiscUtils from '../../utils/misc.utils.js';
 import { getLogger } from 'log4js';
-import { BaseMapper } from '../../importer/base.mapper';
-import { Contact, Organization, Person } from '../../model/agent';
-import { DateRange } from '../../model/dateRange';
+import { BaseMapper } from '../../importer/base.mapper.js';
+import { Contact, Organization, Person } from '../../model/agent.js';
+import { DateRange } from '../../model/dateRange.js';
 import { Geometries } from '@turf/helpers';
-import { ImporterSettings } from '../../importer.settings';
-import { KldSettings } from './kld.settings';
+import { ImporterSettings } from '../../importer.settings.js';
+import { KldSettings } from './kld.settings.js';
 import { License } from '@shared/license.model';
-import { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document';
-import { ObjectResponse, RelatedObject, Document, getDocumentUrl, RelationType, MediaType } from './kld.api';
-import { Summary } from '../../model/summary';
+import { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
+import { ObjectResponse, RelatedObject, Document, getDocumentUrl, RelationType, MediaType } from './kld.api.js';
+import { Summary } from '../../model/summary.js';
 
 export class KldMapper extends BaseMapper {
 

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {ImporterSettings} from "../importer.settings";
+import {ImporterSettings} from "../importer.settings.js";
 
 const log = require('log4js').getLogger( __filename );
 

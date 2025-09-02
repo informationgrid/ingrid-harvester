@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import {mcloudMapper} from "./mcloud.mapper";
-import {DcatMapper} from "../../../importer/dcat/dcat.mapper";
+import {mcloudMapper} from "./mcloud.mapper.js";
+import {DcatMapper} from "../../../importer/dcat/dcat.mapper.js";
 
 export class mcloudDcatMapper extends mcloudMapper<DcatMapper> {
     getCategories(): string[] {

@@ -21,12 +21,12 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../../utils/misc.utils';
+import * as MiscUtils from '../../../../utils/misc.utils.js';
 import { Harvester } from '@shared/harvester';
-import { RequestDelegate } from '../../../../utils/http-request.utils';
-import { XplanSynWfsMapper } from './xplan.syn.wfs.mapper';
-import { XplanWfsImporter } from '../xplan.wfs.importer';
-import { XplanWfsMapper } from '../xplan.wfs.mapper';
+import { RequestDelegate } from '../../../../utils/http-request.utils.js';
+import { XplanSynWfsMapper } from './xplan.syn.wfs.mapper.js';
+import { XplanWfsImporter } from '../xplan.wfs.importer.js';
+import { XplanWfsMapper } from '../xplan.wfs.mapper.js';
 
 export class XplanSynWfsImporter extends XplanWfsImporter {
 

@@ -21,13 +21,12 @@
  * ==================================================
  */
 
-import 'dayjs/locale/de';
-import { ImporterSettings } from '../importer.settings';
+import 'dayjs/locale/de.js';
+import { ImporterSettings } from '../importer.settings.js';
 import { Logger } from 'log4js';
-import { MetadataSource } from '../model/index.document';
-import { Summary } from '../model/summary';
-
-const dayjs = require('dayjs');
+import { MetadataSource } from '../model/index.document.js';
+import { Summary } from '../model/summary.js';
+import dayjs from "dayjs";
 dayjs.locale('de');
 
 export abstract class BaseMapper {

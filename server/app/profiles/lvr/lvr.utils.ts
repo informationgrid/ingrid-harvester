@@ -23,7 +23,7 @@
 
 import bbobHTML from '@bbob/html';
 import presetHTML5 from '@bbob/preset-html5';
-import { LvrIndexDocument } from './model/index.document';
+import { LvrIndexDocument } from './model/index.document.js';
 import { TagNode } from "@bbob/plugin-helper";
 
 export function createEsId(document: LvrIndexDocument): string {

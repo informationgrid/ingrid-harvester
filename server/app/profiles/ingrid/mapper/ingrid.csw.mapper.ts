@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import {ingridMapper} from "./ingrid.mapper";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
-import {Distribution} from "../../../model/distribution";
+import {ingridMapper} from "./ingrid.mapper.js";
+import {CswMapper} from "../../../importer/csw/csw.mapper.js";
+import {Distribution} from "../../../model/distribution.js";
 
 const log = require('log4js').getLogger(__filename);
 

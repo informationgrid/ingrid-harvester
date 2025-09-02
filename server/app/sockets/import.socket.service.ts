@@ -25,14 +25,14 @@ import { Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession } fro
 import { CronJob } from 'cron';
 import { getLogger } from 'log4js';
 import * as SocketIO from 'socket.io';
-import { ImportLogMessage } from '../model/import.result';
-import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import { ConfigService } from '../services/config/ConfigService';
-import { SummaryService } from '../services/config/SummaryService';
-import { StatisticUtils } from '../statistic/statistic.utils';
-import * as MiscUtils from '../utils/misc.utils';
-import { MailServer } from '../utils/nodemailer.utils';
+import { ImportLogMessage } from '../model/import.result.js';
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import { ConfigService } from '../services/config/ConfigService.js';
+import { SummaryService } from '../services/config/SummaryService.js';
+import { StatisticUtils } from '../statistic/statistic.utils.js';
+import * as MiscUtils from '../utils/misc.utils.js';
+import { MailServer } from '../utils/nodemailer.utils.js';
 
 @SocketService('/import')
 export class ImportSocketService {

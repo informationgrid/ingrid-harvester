@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { mcloudIndexDocument } from './model/index.document';
+import { mcloudIndexDocument } from './model/index.document.js';
 
 export function createEsId(document: mcloudIndexDocument): string {
     return document.extras.generated_id;

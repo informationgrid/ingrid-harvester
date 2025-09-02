@@ -25,10 +25,10 @@ import { Client as Client6 } from 'elasticsearch6';
 import { Client as Client7 } from 'elasticsearch7';
 import { Client as Client8 } from 'elasticsearch8';
 import { Client as Client9 } from 'elasticsearch9';
-import { ElasticQueries } from './elastic.queries';
+import { ElasticQueries } from './elastic.queries.js';
 import { Index } from '@shared/index.model';
-import { IndexConfiguration, IndexSettings } from './elastic.setting';
-import { Summary } from '../model/summary';
+import { IndexConfiguration, IndexSettings } from './elastic.setting.js';
+import { Summary } from '../model/summary.js';
 
 export interface BulkResponse {
     queued: boolean;

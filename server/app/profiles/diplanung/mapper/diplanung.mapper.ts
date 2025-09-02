@@ -21,17 +21,17 @@
  * ==================================================
  */
 
-import { createEsId } from '../diplanung.utils';
-import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
-import { Contact, Organization, Person } from '../../../model/agent';
-import { CswMapper } from '../../../importer/csw/csw.mapper';
-import { DateRange } from '../../../model/dateRange';
-import { DiplanungIndexDocument } from '../model/index.document';
-import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper';
-import { Distribution } from '../../../model/distribution';
+import { createEsId } from '../diplanung.utils.js';
+import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import { Contact, Organization, Person } from '../../../model/agent.js';
+import { CswMapper } from '../../../importer/csw/csw.mapper.js';
+import { DateRange } from '../../../model/dateRange.js';
+import { DiplanungIndexDocument } from '../model/index.document.js';
+import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper.js';
+import { Distribution } from '../../../model/distribution.js';
 import { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
-import { IndexDocumentFactory } from '../../../model/index.document.factory';
-import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
+import { IndexDocumentFactory } from '../../../model/index.document.factory.js';
+import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 
 export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | WfsMapper> implements IndexDocumentFactory<DiplanungIndexDocument> {
 

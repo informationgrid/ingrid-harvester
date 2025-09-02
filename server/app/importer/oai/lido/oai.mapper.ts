@@ -25,17 +25,17 @@
  * A mapper for LIDO XML documents harvested over OAI.
  */
 import * as xpath from 'xpath';
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
+import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { getLogger } from 'log4js';
-import { oaiXPaths } from '../oai.paths';
-import { BaseMapper } from '../../base.mapper';
-import { Event, Record, Relation, Repository, Resource, Subject } from './lido.model';
-import { ImporterSettings } from '../../../importer.settings';
-import { MetadataSource } from '../../../model/index.document';
-import { OaiSettings } from '../oai.settings';
-import { Summary } from '../../../model/summary';
-import { XPathElementSelect } from '../../../utils/xpath.utils';
-import { normalizeDateTime } from '../../../utils/misc.utils';
+import { oaiXPaths } from '../oai.paths.js';
+import { BaseMapper } from '../../base.mapper.js';
+import { Event, Record, Relation, Repository, Resource, Subject } from './lido.model.js';
+import { ImporterSettings } from '../../../importer.settings.js';
+import { MetadataSource } from '../../../model/index.document.js';
+import { OaiSettings } from '../oai.settings.js';
+import { Summary } from '../../../model/summary.js';
+import { XPathElementSelect } from '../../../utils/xpath.utils.js';
+import { normalizeDateTime } from '../../../utils/misc.utils.js';
 
 export class OaiMapper extends BaseMapper {
 

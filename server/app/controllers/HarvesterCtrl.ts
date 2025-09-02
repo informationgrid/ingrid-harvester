@@ -23,12 +23,12 @@
 
 import { Harvester } from '@shared/harvester';
 import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
-import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import { ConfigService } from '../services/config/ConfigService';
-import { IndexService } from '../services/IndexService';
-import { ScheduleService } from '../services/ScheduleService';
-import { HistoryService } from '../services/statistic/HistoryService';
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import { ConfigService } from '../services/config/ConfigService.js';
+import { IndexService } from '../services/IndexService.js';
+import { ScheduleService } from '../services/ScheduleService.js';
+import { HistoryService } from '../services/statistic/HistoryService.js';
 
 const log = require('log4js').getLogger(__filename);
 

@@ -21,17 +21,16 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
-import 'dayjs/locale/de';
-import { convertBBCode } from '../lvr.utils';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import { Keyword } from '../../../model/ingrid.index.document';
-import { KldMapper } from '../../../importer/kld/kld.mapper';
+import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
+import 'dayjs/locale/de.js';
+import { convertBBCode } from '../lvr.utils.js';
+import { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import { Keyword } from '../../../model/ingrid.index.document.js';
+import { KldMapper } from '../../../importer/kld/kld.mapper.js';
 import { License } from '@shared/license.model';
-import { LvrMapper } from './lvr.mapper';
-import { LvrDateRange, Media, Person, Relation, Source } from '../model/index.document';
-
-const dayjs = require('dayjs');
+import { LvrMapper } from './lvr.mapper.js';
+import { LvrDateRange, Media, Person, Relation, Source } from '../model/index.document.js';
+import dayjs from "dayjs";
 dayjs.locale('de');
 
 export class LvrKldMapper extends LvrMapper<KldMapper> {

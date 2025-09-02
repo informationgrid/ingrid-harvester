@@ -23,19 +23,19 @@
 
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { Client, Pool, PoolClient, QueryResult } from 'pg';
-import { Catalog } from '../model/dcatApPlu.model';
-import { Distribution } from '../model/distribution';
-import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
-import { IndexDocument } from '../model/index.document';
-import { Summary } from '../model/summary';
-import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import { BulkResponse, DatabaseUtils } from './database.utils';
-import { ElasticsearchUtils } from './elastic.utils';
-import { PostgresQueries } from './postgres.queries';
+import { Catalog } from '../model/dcatApPlu.model.js';
+import { Distribution } from '../model/distribution.js';
+import { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
+import { IndexDocument } from '../model/index.document.js';
+import { Summary } from '../model/summary.js';
+import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import { BulkResponse, DatabaseUtils } from './database.utils.js';
+import { ElasticsearchUtils } from './elastic.utils.js';
+import { PostgresQueries } from './postgres.queries.js';
+import Cursor from "pg-cursor";
 
 const log = require('log4js').getLogger(__filename);
-const Cursor = require('pg-cursor');
 
 /**
  * Contains a primary dataset, a list of duplicates, and a list of services operating on the primary dataset.

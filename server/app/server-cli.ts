@@ -23,12 +23,12 @@
 
 import { addLayout, configure, getLogger } from 'log4js';
 import { concat, Observable } from 'rxjs';
-import { jsonLayout } from './utils/log4js.json.layout';
-import { merge } from './utils/misc.utils';
-import { ConfigService } from './services/config/ConfigService';
-import { ImportLogMessage } from './model/import.result';
-import { ProfileFactoryLoader} from './profiles/profile.factory.loader';
-import { Summary } from './model/summary';
+import { jsonLayout } from './utils/log4js.json.layout.js';
+import { merge } from './utils/misc.utils.js';
+import { ConfigService } from './services/config/ConfigService.js';
+import { ImportLogMessage } from './model/import.result.js';
+import { ProfileFactoryLoader} from './profiles/profile.factory.loader.js';
+import { Summary } from './model/summary.js';
 
 let config = ConfigService.get(),
     configGeneral = ConfigService.getGeneralSettings(),

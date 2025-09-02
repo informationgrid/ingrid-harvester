@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
-import { DateRange } from '../../../model/dateRange';
-import { Distribution } from '../../../model/distribution';
-import { IndexDocument } from '../../../model/index.document';
-import { Organization, Person } from '../../../model/agent';
+import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import { DateRange } from '../../../model/dateRange.js';
+import { Distribution } from '../../../model/distribution.js';
+import { IndexDocument } from '../../../model/index.document.js';
+import { Organization, Person } from '../../../model/agent.js';
 
 export type DiplanungIndexDocument = IndexDocument & {
     // mandatory

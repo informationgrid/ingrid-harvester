@@ -22,18 +22,17 @@
  */
 
 import { License } from '@shared/license.model';
-import 'dayjs/locale/de';
-import { Link } from '../../../importer/oai/lido/lido.model';
-import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
-import { Keyword } from '../../../model/ingrid.index.document';
-import { LvrMapper } from './lvr.mapper';
-import { Media, Person, Relation, Source } from '../model/index.document';
-import * as MiscUtils from '../../../utils/misc.utils';
-import { UrlUtils } from '../../../utils/url.utils';
-
-const dayjs = require('dayjs');
+import 'dayjs/locale/de.js';
+import { Link } from '../../../importer/oai/lido/lido.model.js';
+import { OaiMapper } from '../../../importer/oai/lido/oai.mapper.js';
+import { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
+import { Keyword } from '../../../model/ingrid.index.document.js';
+import { LvrMapper } from './lvr.mapper.js';
+import { Media, Person, Relation, Source } from '../model/index.document.js';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import { UrlUtils } from '../../../utils/url.utils.js';
+import dayjs from "dayjs";
 dayjs.locale('de');
 
 export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {

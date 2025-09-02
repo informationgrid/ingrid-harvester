@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {Summary} from './summary';
+import {Summary} from './summary.js';
 
 export interface ImportLogMessage {
     id?: number;

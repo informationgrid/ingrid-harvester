@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { Controller, Get, PathParams, UseAuth } from '@tsed/common';
-import { IndexService } from '../services/IndexService';
+import { IndexService } from '../services/IndexService.js';
 
 @Controller("/api/search")
 @UseAuth(AuthMiddleware)

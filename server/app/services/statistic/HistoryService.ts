@@ -22,14 +22,14 @@
  */
 
 import { Service } from '@tsed/di';
-import { Summary } from '../../model/summary';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory';
-import { ElasticQueries } from '../../persistence/elastic.queries';
-import { IndexSettings } from '../../persistence/elastic.setting';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { elasticsearchMapping } from '../../statistic/statistic.mapping';
-import { ConfigService } from '../config/ConfigService';
+import { Summary } from '../../model/summary.js';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
+import { ElasticQueries } from '../../persistence/elastic.queries.js';
+import { IndexSettings } from '../../persistence/elastic.setting.js';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import { elasticsearchMapping } from '../../statistic/statistic.mapping.js';
+import { ConfigService } from '../config/ConfigService.js';
 
 @Service()
 export class HistoryService {

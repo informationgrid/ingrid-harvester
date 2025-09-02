@@ -21,14 +21,14 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import { JsonMapper } from '../../../importer/json/json.mapper';
-import { Keyword } from '../../../model/ingrid.index.document';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import { JsonMapper } from '../../../importer/json/json.mapper.js';
+import { Keyword } from '../../../model/ingrid.index.document.js';
 import { License } from '@shared/license.model';
-import { LvrMapper } from './lvr.mapper';
-import { Media, Person, Relation, Source } from '../model/index.document';
-import { UrlUtils } from '../../../utils/url.utils';
+import { LvrMapper } from './lvr.mapper.js';
+import { Media, Person, Relation, Source } from '../model/index.document.js';
+import { UrlUtils } from '../../../utils/url.utils.js';
 
 export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
 

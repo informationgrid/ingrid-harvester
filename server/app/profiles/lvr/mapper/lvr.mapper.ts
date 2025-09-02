@@ -21,21 +21,20 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
-import 'dayjs/locale/de';
-import { createEsId } from '../lvr.utils';
+import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
+import 'dayjs/locale/de.js';
+import { createEsId } from '../lvr.utils.js';
 import { v5 as uuidv5 } from 'uuid';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import { IndexDocumentFactory } from '../../../model/index.document.factory';
-import { IngridIndexDocument, Keyword, Spatial } from '../../../model/ingrid.index.document';
-import { JsonMapper } from '../../../importer/json/json.mapper';
-import { KldMapper } from '../../../importer/kld/kld.mapper';
+import { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import { IndexDocumentFactory } from '../../../model/index.document.factory.js';
+import { IngridIndexDocument, Keyword, Spatial } from '../../../model/ingrid.index.document.js';
+import { JsonMapper } from '../../../importer/json/json.mapper.js';
+import { KldMapper } from '../../../importer/kld/kld.mapper.js';
 import { License } from '@shared/license.model';
-import { LvrIndexDocument, Media, Person, Relation, Source } from '../model/index.document';
-import { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper';
-import { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mapper';
-
-const dayjs = require('dayjs');
+import { LvrIndexDocument, Media, Person, Relation, Source } from '../model/index.document.js';
+import { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper.js';
+import { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mapper.js';
+import dayjs from "dayjs";
 dayjs.locale('de');
 const UUID_NAMESPACE = '0afd6f59-d498-4da3-8919-1890d718d69e'; // randomly generated using uuid.v4
 

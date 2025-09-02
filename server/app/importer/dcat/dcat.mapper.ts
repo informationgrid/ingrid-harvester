@@ -26,22 +26,22 @@
  */
 import * as xpath from 'xpath';
 import { getLogger } from 'log4js';
-import { namespaces } from '../../importer/namespaces';
+import { namespaces } from '../../importer/namespaces.js';
 import { throwError } from 'rxjs';
-import { BaseMapper } from '../base.mapper';
-import { Contact, Person } from '../../model/agent';
-import { DateRange } from '../../model/dateRange';
-import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils';
-import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
-import { DcatSettings } from './dcat.settings';
-import { Distribution } from '../../model/distribution';
-import { ImporterSettings } from '../../importer.settings';
+import { BaseMapper } from '../base.mapper.js';
+import { Contact, Person } from '../../model/agent.js';
+import { DateRange } from '../../model/dateRange.js';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
+import { DcatSettings } from './dcat.settings.js';
+import { Distribution } from '../../model/distribution.js';
+import { ImporterSettings } from '../../importer.settings.js';
 import { License } from '@shared/license.model';
-import { MetadataSource } from '../../model/index.document';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
-import { UrlUtils } from '../../utils/url.utils';
-import { XPathElementSelect } from '../../utils/xpath.utils';
+import { MetadataSource } from '../../model/index.document.js';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.js';
+import { Summary } from '../../model/summary.js';
+import { UrlUtils } from '../../utils/url.utils.js';
+import { XPathElementSelect } from '../../utils/xpath.utils.js';
 
 export class DcatMapper extends BaseMapper {
 

@@ -22,8 +22,8 @@
  */
 
 import { expect } from 'chai';
-import { RequestDelegate, RequestOptions } from '../../app/utils/http-request.utils';
-import { UrlUtils } from '../../app/utils/url.utils';
+import { RequestDelegate, RequestOptions } from '../../app/utils/http-request.utils.js';
+import { UrlUtils } from '../../app/utils/url.utils.js';
 
 describe('validateUrl()', function () {
 

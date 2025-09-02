@@ -22,20 +22,19 @@
  */
 
 import fetch, { RequestInit } from 'node-fetch';
-import { elasticsearchMapping } from '../../statistic/url_check.mapping';
+import { elasticsearchMapping } from '../../statistic/url_check.mapping.js';
 import { Agent } from 'https';
-import { ConfigService } from '../config/ConfigService';
-import { ElasticQueries } from '../../persistence/elastic.queries';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils';
-import { IndexSettings } from '../../persistence/elastic.setting';
+import { ConfigService } from '../config/ConfigService.js';
+import { ElasticQueries } from '../../persistence/elastic.queries.js';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import { IndexSettings } from '../../persistence/elastic.setting.js';
 import { GeneralSettings } from '@shared/general-config.settings';
 import { HttpsProxyAgent } from 'https-proxy-agent';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Service } from '@tsed/di';
-import { Summary } from '../../model/summary';
-
-const dayjs = require('dayjs');
+import { Summary } from '../../model/summary.js';
+import dayjs from "dayjs";
 const log = require('log4js').getLogger(__filename);
 
 @Service()

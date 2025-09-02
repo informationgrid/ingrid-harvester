@@ -22,9 +22,9 @@
  */
 
 import { DatabaseConfiguration } from '@shared/general-config.settings';
-import { DatabaseUtils } from './database.utils';
-import { PostgresUtils } from './postgres.utils';
-import { Summary } from '../model/summary';
+import { DatabaseUtils } from './database.utils.js';
+import { PostgresUtils } from './postgres.utils.js';
+import { Summary } from '../model/summary.js';
 
 export class DatabaseFactory {
 

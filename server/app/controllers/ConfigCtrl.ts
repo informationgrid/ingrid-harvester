@@ -24,14 +24,14 @@
 import { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
 import { MappingDistribution, MappingItem } from '@shared/mapping.model';
 import { BodyParams, Controller, Delete, Get, PathParams, Post, Put, QueryParams, UseAuth } from '@tsed/common';
-import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
-import { Catalog } from '../model/dcatApPlu.model';
-import { DatabaseFactory } from '../persistence/database.factory';
-import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { ElasticsearchUtils } from '../persistence/elastic.utils';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import { ConfigService } from '../services/config/ConfigService';
-import { ScheduleService } from '../services/ScheduleService';
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
+import { Catalog } from '../model/dcatApPlu.model.js';
+import { DatabaseFactory } from '../persistence/database.factory.js';
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import { ConfigService } from '../services/config/ConfigService.js';
+import { ScheduleService } from '../services/ScheduleService.js';
 
 const log = require('log4js').getLogger(__filename);
 

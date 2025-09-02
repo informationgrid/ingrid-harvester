@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import { createRelativePath, Server } from './server';
+import { createRelativePath, Server } from './server.js';
 import { importProviders } from '@tsed/components-scan';
-import { HealthCtrl } from './controllers/HealthCtrl';
+import { HealthCtrl } from './controllers/HealthCtrl.js';
 import { PlatformExpress } from '@tsed/platform-express';
 
 const log = require('log4js').getLogger(__filename);

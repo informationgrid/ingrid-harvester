@@ -24,16 +24,16 @@
 import { Index } from '@shared/index.model';
 import { Service } from '@tsed/di';
 import * as fs from "fs";
-import { Summary } from '../model/summary';
-import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { IndexConfiguration } from '../persistence/elastic.setting';
-import { BulkResponse, ElasticsearchUtils } from '../persistence/elastic.utils';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import { ConfigService } from './config/ConfigService';
+import { Summary } from '../model/summary.js';
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import { IndexConfiguration } from '../persistence/elastic.setting.js';
+import { BulkResponse, ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import { ConfigService } from './config/ConfigService.js';
+import path from "path";
+import zlib from "zlib";
 
 const log = require('log4js').getLogger(__filename);
-const path = require('path');
-const zlib = require('zlib');
 const Readable = require('stream').Readable
 
 @Service()

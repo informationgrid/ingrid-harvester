@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import {mcloudMapper} from "./mcloud.mapper";
-import {SparqlMapper} from "../../../importer/sparql/sparql.mapper";
+import {mcloudMapper} from "./mcloud.mapper.js";
+import {SparqlMapper} from "../../../importer/sparql/sparql.mapper.js";
 
 export class mcloudSparqlMapper extends mcloudMapper<SparqlMapper> {
     getCategories(): string[] {

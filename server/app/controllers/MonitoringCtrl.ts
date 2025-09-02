@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware';
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { BodyParams, Controller, Get, UseAuth } from '@tsed/common';
-import { HistoryService } from "../services/statistic/HistoryService";
-import { IndexCheckService } from "../services/statistic/IndexCheckService";
-import { UrlCheckService } from "../services/statistic/UrlCheckService";
+import { HistoryService } from "../services/statistic/HistoryService.js";
+import { IndexCheckService } from "../services/statistic/IndexCheckService.js";
+import { UrlCheckService } from "../services/statistic/UrlCheckService.js";
 
 @Controller('/api/monitoring')
 @UseAuth(AuthMiddleware)

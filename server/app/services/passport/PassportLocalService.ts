@@ -23,10 +23,10 @@
 
 import passport from 'passport';
 import { AfterRoutesInit, BeforeRoutesInit, Inject, PlatformApplication, PlatformConfiguration, Service } from '@tsed/common';
-import { IUser } from '../../model/User';
+import { IUser } from '../../model/User.js';
 import { NotFound } from '@tsed/exceptions';
 import { Strategy } from 'passport-local';
-import { UsersService } from '../users/UsersService';
+import { UsersService } from '../users/UsersService.js';
 
 @Service()
 export class PassportLocalService implements BeforeRoutesInit, AfterRoutesInit {

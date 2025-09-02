@@ -25,21 +25,21 @@
  * A mapper for ISO-XML documents harvested over CSW.
  */
 import * as xpath from 'xpath';
-import * as MiscUtils from '../../utils/misc.utils';
+import * as MiscUtils from '../../utils/misc.utils.js';
 import { getLogger } from 'log4js';
-import { namespaces } from '../../importer/namespaces';
+import { namespaces } from '../../importer/namespaces.js';
 import { throwError } from 'rxjs';
-import { Agent, Contact } from '../../model/agent';
-import { BaseMapper } from '../base.mapper';
-import { DateRange } from '../../model/dateRange';
-import { DcatappluSettings } from './dcatapplu.settings';
-import { Distribution } from '../../model/distribution';
+import { Agent, Contact } from '../../model/agent.js';
+import { BaseMapper } from '../base.mapper.js';
+import { DateRange } from '../../model/dateRange.js';
+import { DcatappluSettings } from './dcatapplu.settings.js';
+import { Distribution } from '../../model/distribution.js';
 import { Geometry, Point } from '@turf/helpers';
-import { ImporterSettings } from '../../importer.settings';
-import { MetadataSource } from '../../model/index.document';
-import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep, PluProcessStepType, Catalog } from '../../model/dcatApPlu.model';
-import { Summary } from '../../model/summary';
-import { XPathElementSelect } from '../../utils/xpath.utils';
+import { ImporterSettings } from '../../importer.settings.js';
+import { MetadataSource } from '../../model/index.document.js';
+import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep, PluProcessStepType, Catalog } from '../../model/dcatApPlu.model.js';
+import { Summary } from '../../model/summary.js';
+import { XPathElementSelect } from '../../utils/xpath.utils.js';
 
 export class DcatappluMapper extends BaseMapper {
 

@@ -21,27 +21,27 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils';
+import * as MiscUtils from '../../utils/misc.utils.js';
 import { getLogger } from 'log4js';
-import { ConfigService } from '../../services/config/ConfigService';
-import { DefaultImporterSettings } from '../../importer.settings';
+import { ConfigService } from '../../services/config/ConfigService.js';
+import { DefaultImporterSettings } from '../../importer.settings.js';
 import { HttpsProxyAgent } from 'https-proxy-agent';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { IndexDocument } from '../../model/index.document';
+import { Importer } from '../importer.js';
+import { ImportLogMessage, ImportResult } from '../../model/import.result.js';
+import { IndexDocument } from '../../model/index.document.js';
 import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { RequestDelegate } from '../../utils/http-request.utils';
-import { SparqlMapper } from './sparql.mapper';
-import { SparqlSettings } from './sparql.settings';
-import { Summary } from '../../model/summary';
+import { ProfileFactory } from '../../profiles/profile.factory.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import { RecordEntity } from '../../model/entity.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import { SparqlMapper } from './sparql.mapper.js';
+import { SparqlSettings } from './sparql.settings.js';
+import { Summary } from '../../model/summary.js';
+import plain_fetch from "node-fetch";
+import SimpleClient from "sparql-http-client/SimpleClient.js";
 
 const log = require('log4js').getLogger(__filename);
 const logRequest = getLogger('requests');
-const plain_fetch = require('node-fetch');
-const SimpleClient = require('sparql-http-client/SimpleClient');
 
 export class SparqlImporter extends Importer {
 

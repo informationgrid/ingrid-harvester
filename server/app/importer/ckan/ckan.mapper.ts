@@ -26,21 +26,20 @@
  */
 import { getLogger } from 'log4js';
 import { throwError } from 'rxjs';
-import { BaseMapper } from '../base.mapper';
-import { CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestOptions, RequestPaging } from '../../utils/http-request.utils';
-import { CkanSettings } from './ckan.settings';
-import { DateRange } from '../../model/dateRange';
-import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils';
-import { DcatMapper } from '../../importer/dcat/dcat.mapper';
-import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
-import { Distribution } from '../../model/distribution';
+import { BaseMapper } from '../base.mapper.js';
+import { CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestOptions, RequestPaging } from '../../utils/http-request.utils.js';
+import { CkanSettings } from './ckan.settings.js';
+import { DateRange } from '../../model/dateRange.js';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
+import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
+import { Distribution } from '../../model/distribution.js';
 import { License } from '@shared/license.model';
-import { MetadataSource } from '../../model/index.document';
-import { Organization, Person } from '../../model/agent';
-import { Summary } from '../../model/summary';
-import { UrlUtils } from '../../utils/url.utils';
-
-const mapping = require('../../../mappings.json');
+import { MetadataSource } from '../../model/index.document.js';
+import { Organization, Person } from '../../model/agent.js';
+import { Summary } from '../../model/summary.js';
+import { UrlUtils } from '../../utils/url.utils.js';
+import mapping from "../../../mappings.json" with { type: "json" };
 const markdown = require('markdown').markdown;
 
 export interface CkanMapperData {

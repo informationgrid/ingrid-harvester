@@ -22,19 +22,19 @@
  */
 
 import { getLogger } from 'log4js';
-import { BaseMapper } from '../base.mapper';
-import { DateRange } from '../../model/dateRange';
-import { DcatMapper } from '../../importer/dcat/dcat.mapper';
-import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
-import { Distribution } from '../../model/distribution';
-import { ExcelSettings } from './excel.settings';
-import { ImporterSettings } from '../../importer.settings';
+import { BaseMapper } from '../base.mapper.js';
+import { DateRange } from '../../model/dateRange.js';
+import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
+import { Distribution } from '../../model/distribution.js';
+import { ExcelSettings } from './excel.settings.js';
+import { ImporterSettings } from '../../importer.settings.js';
 import { License } from '@shared/license.model';
-import { MetadataSource } from '../../model/index.document';
-import { Organization, Person } from '../../model/agent';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
-import { UrlUtils } from '../../utils/url.utils';
+import { MetadataSource } from '../../model/index.document.js';
+import { Organization, Person } from '../../model/agent.js';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.js';
+import { Summary } from '../../model/summary.js';
+import { UrlUtils } from '../../utils/url.utils.js';
 
 export class ExcelMapper extends BaseMapper {
 

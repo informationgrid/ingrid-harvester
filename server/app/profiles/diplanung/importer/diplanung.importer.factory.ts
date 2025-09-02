@@ -21,16 +21,16 @@
  * ==================================================
  */
 
-import { DcatappluImporter } from '../../../importer/dcatapplu/dcatapplu.importer';
-import { DiplanungCswImporter } from './diplanung.csw.importer';
-import { ExcelSparseImporter } from '../../../importer/excelsparse/excelsparse.importer';
-import { FisWfsImporter } from '../../../importer/wfs/fis/fis.wfs.importer';
+import { DcatappluImporter } from '../../../importer/dcatapplu/dcatapplu.importer.js';
+import { DiplanungCswImporter } from './diplanung.csw.importer.js';
+import { ExcelSparseImporter } from '../../../importer/excelsparse/excelsparse.importer.js';
+import { FisWfsImporter } from '../../../importer/wfs/fis/fis.wfs.importer.js';
 import { Harvester } from '@shared/harvester';
-import { Importer } from '../../../importer/importer';
-import { ImporterFactory } from '../../../importer/importer.factory';
-import { MsWfsImporter } from '../../../importer/wfs/ms/ms.wfs.importer';
-import { XplanSynWfsImporter } from '../../../importer/wfs/xplan/syn/xplan.syn.wfs.importer';
-import { XplanWfsImporter } from '../../../importer/wfs/xplan/xplan.wfs.importer';
+import { Importer } from '../../../importer/importer.js';
+import { ImporterFactory } from '../../../importer/importer.factory.js';
+import { MsWfsImporter } from '../../../importer/wfs/ms/ms.wfs.importer.js';
+import { XplanSynWfsImporter } from '../../../importer/wfs/xplan/syn/xplan.syn.wfs.importer.js';
+import { XplanWfsImporter } from '../../../importer/wfs/xplan/xplan.wfs.importer.js';
 
 const log = require('log4js').getLogger(__filename);
 

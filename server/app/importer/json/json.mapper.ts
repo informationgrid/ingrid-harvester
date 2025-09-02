@@ -22,11 +22,11 @@
  */
 
 import { getLogger } from 'log4js';
-import { BaseMapper } from '../base.mapper';
-import { ImporterSettings } from '../../importer.settings';
-import { MetadataSource } from '../../model/index.document';
-import { JsonSettings } from './json.settings';
-import { Summary } from '../../model/summary';
+import { BaseMapper } from '../base.mapper.js';
+import { ImporterSettings } from '../../importer.settings.js';
+import { MetadataSource } from '../../model/index.document.js';
+import { JsonSettings } from './json.settings.js';
+import { Summary } from '../../model/summary.js';
 
 export class JsonMapper extends BaseMapper {
 

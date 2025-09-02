@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {ImporterSettings} from '../../importer.settings';
+import {ImporterSettings} from '../../importer.settings.js';
 
 export type SparqlSettings = {
     query: string,

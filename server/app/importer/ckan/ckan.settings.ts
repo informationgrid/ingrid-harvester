@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
+import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings.js';
 import {License} from '@shared/license.model';
 
 export type ProviderField = 'maintainer' | 'organization' | 'author';

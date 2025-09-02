@@ -26,13 +26,12 @@ import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
 import { configure, getLogger } from "log4js";
 import { isomorphic } from 'rdf-isomorphic';
-import { DcatappluImporter } from '../../app/importer/dcatapplu/dcatapplu.importer';
-import { DcatappluSettings } from '../../app/importer/dcatapplu/dcatapplu.settings';
-import { DiPlanungDocument } from "../../app/profiles/diplanung/model/index.document";
+import { DcatappluImporter } from '../../app/importer/dcatapplu/dcatapplu.importer.js';
+import { DcatappluSettings } from '../../app/importer/dcatapplu/dcatapplu.settings.js';
+import { DiPlanungDocument } from "../../app/profiles/diplanung/model/index.document.js";
 import { RdfXmlParser } from 'rdfxml-streaming-parser';
-import { TestUtils } from "../utils/test-utils";
-
-const fs = require('fs');
+import { TestUtils } from "../utils/test-utils.js";
+import fs from "fs";
 var Readable = require('node:stream').Readable;
 
 let log = getLogger();

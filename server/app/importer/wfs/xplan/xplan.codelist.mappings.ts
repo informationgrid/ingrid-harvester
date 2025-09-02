@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { PluDocType, PluPlanType, PluProcedureType } from '../../../model/dcatApPlu.model';
+import { PluDocType, PluPlanType, PluProcedureType } from '../../../model/dcatApPlu.model.js';
 
 /**
  * Structure:

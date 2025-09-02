@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../../utils/misc.utils';
-import { generateXplanWmsDistributions } from '../../../../profiles/diplanung/diplanung.utils';
-import { Distribution} from '../../../../model/distribution';
-import { PluDocType } from '../../../../model/dcatApPlu.model';
-import { XplanWfsMapper } from '../xplan.wfs.mapper';
+import * as MiscUtils from '../../../../utils/misc.utils.js';
+import { generateXplanWmsDistributions } from '../../../../profiles/diplanung/diplanung.utils.js';
+import { Distribution} from '../../../../model/distribution.js';
+import { PluDocType } from '../../../../model/dcatApPlu.model.js';
+import { XplanWfsMapper } from '../xplan.wfs.mapper.js';
 
 
 const distributionTags = {

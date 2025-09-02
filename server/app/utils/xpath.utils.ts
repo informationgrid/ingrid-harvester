@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import * as MiscUtils from './misc.utils';
+import * as MiscUtils from './misc.utils.js';
 
 /**
  *  This is an adhoc replacement for node.firstElementChild because xmldom does not support it.

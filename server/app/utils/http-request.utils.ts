@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import * as MiscUtils from './misc.utils';
+import * as MiscUtils from './misc.utils.js';
 import fetch, { HeadersInit, RequestInit, Response } from 'node-fetch';
 import { getLogger } from 'log4js';
 import { Agent } from 'https';

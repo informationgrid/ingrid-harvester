@@ -22,21 +22,21 @@
  */
 
 import * as xpath from 'xpath';
-import * as MiscUtils from '../../utils/misc.utils';
-import { defaultOAISettings, OaiSettings } from './oai.settings';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { defaultOAISettings, OaiSettings } from './oai.settings.js';
 import { getLogger } from 'log4js';
-import { oaiXPaths, OaiXPaths } from './oai.paths';
+import { oaiXPaths, OaiXPaths } from './oai.paths.js';
 import { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { IndexDocument } from '../../model/index.document';
+import { Importer } from '../importer.js';
+import { ImportLogMessage, ImportResult } from '../../model/import.result.js';
+import { IndexDocument } from '../../model/index.document.js';
 import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
-import { BaseMapper } from '../../importer/base.mapper';
+import { ProfileFactory } from '../../profiles/profile.factory.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import { RecordEntity } from '../../model/entity.js';
+import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.js';
+import { Summary } from '../../model/summary.js';
+import { BaseMapper } from '../../importer/base.mapper.js';
 
 const log = require('log4js').getLogger(__filename);
 const logRequest = getLogger('requests');
