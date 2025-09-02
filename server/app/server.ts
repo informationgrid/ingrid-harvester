@@ -36,7 +36,7 @@ import methodOverride from "method-override";
 import compress from "compression";
 import session from "express-session";
 
-const rootDir = __dirname;
+const rootDir = import.meta.dirname;
 const MemoryStore = createMemoryStore(session);
 
 const log = log4js.getLogger(import.meta.filename);

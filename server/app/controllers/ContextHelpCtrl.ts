@@ -6,7 +6,7 @@ import {AuthMiddleware} from "../middlewares/auth/AuthMiddleware.js";
 import { marked } from "marked";
 import {ProfileFactoryLoader} from "../profiles/profile.factory.loader.js";
 import matter from "gray-matter";
-const BASE_HELP_DIR = path.join(__dirname, "../contextHelp");
+const BASE_HELP_DIR = path.join(import.meta.dirname, "../contextHelp");
 
 interface ContextHelpResult {
     id?: string,

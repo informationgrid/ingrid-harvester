@@ -34,13 +34,13 @@ async function bootstrap() {
     try {
         const scannedProviders = await importProviders({
             mount: {
-                [createRelativePath(baseURL, 'rest')]: [`${__dirname}/controllers/**/*.ts`],
+                [createRelativePath(baseURL, 'rest')]: [`${import.meta.dirname}/controllers/**/*.ts`],
                 [createRelativePath(baseURL)]: [ HealthCtrl ]
             },
             componentsScan: [
-                `${__dirname}/middlewares/**/*.ts`,
-                `${__dirname}/services/**/*.ts`,
-                `${__dirname}/converters/**/*.ts`
+                `${import.meta.dirname}/middlewares/**/*.ts`,
+                `${import.meta.dirname}/services/**/*.ts`,
+                `${import.meta.dirname}/converters/**/*.ts`
             ]        
         });
         const platform = await PlatformExpress.bootstrap(Server, {
