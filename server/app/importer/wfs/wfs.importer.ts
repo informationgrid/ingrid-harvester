@@ -28,7 +28,7 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import { decode } from 'iconv-lite';
 import { defaultWfsSettings, WfsSettings } from './wfs.settings.js';
 import { firstElementChild, getExtendedNsMap, getNsMap, XPathNodeSelect } from '../../utils/xpath.utils.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { getProxyConfig } from '../../utils/service.utils.js';
 import { namespaces } from '../../importer/namespaces.js';
 import { Catalog } from '../../model/dcatApPlu.model.js';
@@ -46,8 +46,8 @@ import { Response } from 'node-fetch';
 import { WfsMapper } from './wfs.mapper.js';
 import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils.js';
 
-const log = getLogger(__filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
 export abstract class WfsImporter extends Importer {
 

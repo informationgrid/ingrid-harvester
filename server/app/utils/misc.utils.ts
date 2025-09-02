@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { cloneDeep, merge as lodashMerge, trim } from 'lodash-es';
 import { imageSize } from 'image-size';
 import { Dimensions } from '../model/dimensions.js';
@@ -30,7 +30,7 @@ import { DOMParser } from '@xmldom/xmldom';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import dayjs from "dayjs";
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 dayjs.extend(customParseFormat);
 
 const CUSTOM_DATE_TIME_FORMATS = ["YYYY-MM-DDZ"];

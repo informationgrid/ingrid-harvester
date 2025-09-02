@@ -24,7 +24,7 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import { BaseMapper } from '../base.mapper.js';
 import { DateRange } from '../../model/dateRange.js';
@@ -40,7 +40,7 @@ import { Summary } from '../../model/summary.js';
 
 export class SparqlMapper extends BaseMapper {
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly record: any;
     private readonly catalogPage: any;

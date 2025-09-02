@@ -26,7 +26,7 @@
  */
 import * as xpath from 'xpath';
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { oaiXPaths } from '../oai.paths.js';
 import { BaseMapper } from '../../base.mapper.js';
 import { Event, Record, Relation, Repository, Resource, Subject } from './lido.model.js';
@@ -47,7 +47,7 @@ export class OaiMapper extends BaseMapper {
         return OaiMapper.select(path, parent, true)?.textContent;
     }
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly header: Element;
     public readonly record: Element;

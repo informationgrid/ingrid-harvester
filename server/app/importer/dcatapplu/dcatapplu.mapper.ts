@@ -26,7 +26,7 @@
  */
 import * as xpath from 'xpath';
 import * as MiscUtils from '../../utils/misc.utils.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { namespaces } from '../../importer/namespaces.js';
 import { throwError } from 'rxjs';
 import { Agent, Contact } from '../../model/agent.js';
@@ -60,7 +60,7 @@ export class DcatappluMapper extends BaseMapper {
         'vcard': namespaces.VCARD
     });
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly record: any;
     private readonly catalogPage: any;

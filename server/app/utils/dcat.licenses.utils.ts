@@ -23,7 +23,7 @@
 
 import * as fs from 'fs';
 import * as xpath from 'xpath';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { namespaces } from '../importer/namespaces.js';
 import { DOMParser } from '@xmldom/xmldom';
 import { License } from '@shared/license.model';
@@ -31,7 +31,7 @@ import { XPathElementSelect } from './xpath.utils.js';
 
 export class DcatLicensesUtils {
 
-    private static log = getLogger();
+    private static log = log4js.getLogger();
 
     private static licenses: License[];
 

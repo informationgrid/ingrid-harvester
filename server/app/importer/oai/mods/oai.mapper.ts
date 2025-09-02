@@ -26,7 +26,7 @@
  */
 import * as xpath from 'xpath';
 import * as MiscUtils from '../../../utils/misc.utils.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { oaiXPaths } from '../oai.paths.js';
 import { BaseMapper } from '../../base.mapper.js';
 import { GeometryInformation, Temporal } from '../../../model/index.document.js';
@@ -50,7 +50,7 @@ export class OaiMapper extends BaseMapper {
         return this.select(path.replace(/\/(?!@)/g, '/mods:'), parent, true)?.textContent;
     }
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly header: Element;
     public readonly record: Element;

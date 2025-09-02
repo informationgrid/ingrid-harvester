@@ -25,7 +25,7 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import * as ServiceUtils from '../../utils/service.utils.js';
 import * as XpathUtils from '../../utils/xpath.utils.js';
 import { defaultCSWSettings, CswSettings } from './csw.settings.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { namespaces } from '../../importer/namespaces.js';
 import { BulkResponse } from '../../persistence/elastic.utils.js';
 import { Catalog } from '../../model/dcatApPlu.model.js';
@@ -44,8 +44,8 @@ import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Summary } from '../../model/summary.js';
 import { SummaryService } from '../../services/config/SummaryService.js';
 
-const log = getLogger(__filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
 export class CswImporter extends Importer {
 

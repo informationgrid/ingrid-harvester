@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { BulkResponse, ElasticsearchUtils, EsOperation } from './elastic.utils.js';
 import { Client } from 'elasticsearch9';
 import { Index } from '@shared/index.model';
@@ -29,7 +29,7 @@ import { IndexConfiguration, IndexSettings } from './elastic.setting.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { Summary } from '../model/summary.js';
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class ElasticsearchUtils9 extends ElasticsearchUtils {
 

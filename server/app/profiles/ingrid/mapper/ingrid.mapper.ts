@@ -22,7 +22,7 @@
  */
 
 import 'dayjs/locale/de.js';
-import {getLogger} from "log4js";
+import log4js from 'log4js';
 import {CswMapper} from "../../../importer/csw/csw.mapper.js";
 import {IndexDocumentFactory} from "../../../model/index.document.factory.js";
 import {IngridIndexDocument} from "../model/index.document.js";
@@ -36,7 +36,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
 
     protected baseMapper: M;
 
-    private _log = getLogger();
+    private _log = log4js.getLogger();
 
     private blacklistedFormats: string[] = [];
     constructor(baseMapper: M) {

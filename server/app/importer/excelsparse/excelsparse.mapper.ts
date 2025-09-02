@@ -22,7 +22,7 @@
  */
 
 import * as MiscUtils from '../../utils/misc.utils.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { BaseMapper } from '../base.mapper.js';
 import { Catalog } from '../../model/dcatApPlu.model.js';
 import { Columns } from './excelsparse.importer.js';
@@ -38,7 +38,7 @@ import { UrlUtils } from '../../utils/url.utils.js';
 
 export class ExcelSparseMapper extends BaseMapper {
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     data;
     id;

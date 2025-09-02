@@ -23,11 +23,11 @@
 
 import * as MiscUtils from './misc.utils.js';
 import fetch, { HeadersInit, RequestInit, Response } from 'node-fetch';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { Agent } from 'https';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
-const log = getLogger('requests');
+const log = log4js.getLogger('requests');
 
 /**
  * HTTP parameters configuration for CSW harvesters.

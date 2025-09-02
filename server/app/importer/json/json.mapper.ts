@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { BaseMapper } from '../base.mapper.js';
 import { ImporterSettings } from '../../importer.settings.js';
 import { MetadataSource } from '../../model/index.document.js';
@@ -30,7 +30,7 @@ import { Summary } from '../../model/summary.js';
 
 export class JsonMapper extends BaseMapper {
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     readonly record: object;
     readonly id: string;

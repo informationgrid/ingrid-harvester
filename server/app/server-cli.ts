@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { addLayout, configure, getLogger } from 'log4js';
+import log4js from 'log4js';
 import { concat, Observable } from 'rxjs';
 import { jsonLayout } from './utils/log4js.json.layout.js';
 import { merge } from './utils/misc.utils.js';
@@ -33,12 +33,12 @@ import process from 'node:process';
 
 let config = ConfigService.get(),
     configGeneral = ConfigService.getGeneralSettings(),
-    log = getLogger(),
-    logSummary = getLogger('summary');
+    log = log4js.getLogger(),
+    logSummary = log4js.getLogger('summary');
 
-addLayout("json", jsonLayout);
+log4js.addLayout("json", jsonLayout);
 const isDev = process.env.NODE_ENV != 'production';
-configure(`./log4js${isDev ? '-dev' : ''}.json`);
+log4js.configure(`./log4js${isDev ? '-dev' : ''}.json`);
 
 const start = new Date();
 let runAsync = false;

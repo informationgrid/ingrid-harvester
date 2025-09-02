@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { CswMapper } from '../../importer/csw/csw.mapper.js';
 import { ImporterFactory } from '../../importer/importer.factory.js';
 import { Catalog } from '../../model/dcatApPlu.model.js';
@@ -43,7 +43,7 @@ import { PostgresAggregator } from './persistence/postgres.aggregator.js';
 import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
 import settings from './persistence/ingrid-meta-settings.json' with { type: 'json' };
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export const INGRID_META_INDEX = 'ingrid_meta';
 

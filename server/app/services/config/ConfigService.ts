@@ -25,7 +25,7 @@ import { GeneralSettings } from '@shared/general-config.settings';
 import { Harvester } from '@shared/harvester';
 import { MappingDistribution, MappingItem } from '@shared/mapping.model';
 import * as fs from 'fs';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { defaultCKANSettings } from '../../importer/ckan/ckan.settings.js';
 import { defaultCSWSettings } from '../../importer/csw/csw.settings.js';
 import { defaultDCATSettings } from '../../importer/dcat/dcat.settings.js';
@@ -39,7 +39,7 @@ import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 
-const log = getLogger();
+const log = log4js.getLogger();
 
 function parseIntOrUndefined(n: string): number {
     let parsedN = parseInt(n);

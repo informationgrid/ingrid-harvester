@@ -22,7 +22,7 @@
  */
 
 import * as MiscUtils from '../../utils/misc.utils.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { namespaces } from '../../importer/namespaces.js';
 import { DcatMapper } from './dcat.mapper.js';
 import { DcatSettings, defaultDCATSettings } from './dcat.settings.js';
@@ -37,8 +37,8 @@ import { RecordEntity } from '../../model/entity.js';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.js';
 import { Summary } from '../../model/summary.js';
 
-const log = getLogger(__filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
 export class DcatImporter extends Importer {
 

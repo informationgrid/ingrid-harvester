@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { DatabaseConfiguration } from '@shared/general-config.settings';
 import { Client, Pool, PoolClient, QueryResult } from 'pg';
 import { Catalog } from '../model/dcatApPlu.model.js';
@@ -36,7 +36,7 @@ import { ElasticsearchUtils } from './elastic.utils.js';
 import { PostgresQueries } from './postgres.queries.js';
 import Cursor from "pg-cursor";
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 
 /**
  * Contains a primary dataset, a list of duplicates, and a list of services operating on the primary dataset.

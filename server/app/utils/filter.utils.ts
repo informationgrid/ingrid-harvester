@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import {ImporterSettings} from "../importer.settings.js";
 
-const log = getLogger( __filename );
+const log = log4js.getLogger(import.meta.filename);
 
 export class FilterUtils {
 

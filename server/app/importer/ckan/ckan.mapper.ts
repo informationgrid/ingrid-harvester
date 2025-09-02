@@ -24,7 +24,7 @@
 /**
  * A mapper for CKAN documents.
  */
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { marked } from 'marked';
 import { throwError } from 'rxjs';
 import { BaseMapper } from '../base.mapper.js';
@@ -65,7 +65,7 @@ export class CkanMapper extends BaseMapper {
         gb: 10000000000,
     };
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly source: any;
     private readonly data: CkanMapperData;

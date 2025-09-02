@@ -25,7 +25,7 @@
  * A mapper for documents harvested from KuLaDig.
  */
 import * as MiscUtils from '../../utils/misc.utils.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { BaseMapper } from '../../importer/base.mapper.js';
 import { Contact, Organization, Person } from '../../model/agent.js';
 import { DateRange } from '../../model/dateRange.js';
@@ -39,7 +39,7 @@ import { Summary } from '../../model/summary.js';
 
 export class KldMapper extends BaseMapper {
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly record: ObjectResponse;
     private readonly id: string;

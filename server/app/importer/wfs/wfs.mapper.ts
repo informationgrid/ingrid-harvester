@@ -22,7 +22,7 @@
  */
 
 import * as GeoJsonUtils from '../../utils/geojson.utils.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { Catalog, PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../model/dcatApPlu.model.js';
 import { throwError } from 'rxjs';
 import { BaseMapper } from '../base.mapper.js';
@@ -39,7 +39,7 @@ import { XPathNodeSelect } from '../../utils/xpath.utils.js';
 
 export abstract class WfsMapper extends BaseMapper {
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     protected readonly feature: Node & Element;
     private harvestTime: any;

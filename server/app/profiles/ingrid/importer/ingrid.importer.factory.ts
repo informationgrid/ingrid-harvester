@@ -21,13 +21,13 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { Harvester } from '@shared/harvester';
 import { Importer } from '../../../importer/importer.js';
 import { ImporterFactory } from '../../../importer/importer.factory.js';
 import {IngridCswImporter} from "./ingrid.csw.importer.js";
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class IngridImporterFactory extends ImporterFactory{
 

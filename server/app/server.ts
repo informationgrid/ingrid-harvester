@@ -23,7 +23,7 @@
 
 import { $log, Configuration, PlatformAcceptMimesMiddleware, PlatformApplication, PlatformLogMiddleware } from '@tsed/common';
 import { Inject } from '@tsed/di';
-import { addLayout, configure, getLogger } from 'log4js';
+import log4js from 'log4js';
 import * as path from 'path';
 import { ProfileFactoryLoader } from './profiles/profile.factory.loader.js';
 import { ConfigService } from './services/config/ConfigService.js';
@@ -39,12 +39,12 @@ import session from "express-session";
 const rootDir = __dirname;
 const MemoryStore = createMemoryStore(session);
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 
 const isProduction = process.env.NODE_ENV == 'production';
-addLayout("json", jsonLayout);
+log4js.addLayout("json", jsonLayout);
 if (isProduction) {
-    configure('./log4js.json');
+    log4js.configure('./log4js.json');
     $log.appenders.set("stdout", {
         type: "stdout",
         levels: ["info", "debug"],
@@ -61,7 +61,7 @@ if (isProduction) {
     });
 }
 else {
-    configure('./log4js-dev.json');
+    log4js.configure('./log4js-dev.json');
 }
 
 const baseURL = process.env.BASE_URL ?? '/';

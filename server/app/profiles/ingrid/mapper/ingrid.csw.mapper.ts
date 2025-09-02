@@ -21,12 +21,12 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import {ingridMapper} from "./ingrid.mapper.js";
 import {CswMapper} from "../../../importer/csw/csw.mapper.js";
 import {Distribution} from "../../../model/distribution.js";
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class ingridCswMapper extends ingridMapper<CswMapper> {
 

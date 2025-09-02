@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { BaseMapper } from '../base.mapper.js';
 import { DateRange } from '../../model/dateRange.js';
 import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
@@ -38,7 +38,7 @@ import { UrlUtils } from '../../utils/url.utils.js';
 
 export class ExcelMapper extends BaseMapper {
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     data;
     id;

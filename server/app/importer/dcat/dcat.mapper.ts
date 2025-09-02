@@ -25,7 +25,7 @@
  * A mapper for ISO-XML documents harvested over CSW.
  */
 import * as xpath from 'xpath';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { namespaces } from '../../importer/namespaces.js';
 import { throwError } from 'rxjs';
 import { BaseMapper } from '../base.mapper.js';
@@ -136,7 +136,7 @@ export class DcatMapper extends BaseMapper {
         themes: null
     };
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     constructor(settings, record, catalogPage, harvestTime, summary) {
         super();

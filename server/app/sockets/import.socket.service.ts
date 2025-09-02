@@ -23,7 +23,7 @@
 
 import { Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession } from '@tsed/socketio';
 import { CronJob } from 'cron';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import * as SocketIO from 'socket.io';
 import { ImportLogMessage } from '../model/import.result.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
@@ -38,7 +38,7 @@ import { MailServer } from '../utils/nodemailer.utils.js';
 export class ImportSocketService {
     @Nsp nsp: Namespace;
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     constructor(private summaryService: SummaryService) {
     }

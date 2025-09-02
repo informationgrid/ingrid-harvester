@@ -22,7 +22,7 @@
  */
 
 import * as MiscUtils from '../../../utils/misc.utils.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { generateXplanWmsDistributions } from '../diplanung.utils.js';
 import { CswImporter } from '../../../importer/csw/csw.importer.js';
 import { DiplanungIndexDocument } from '../model/index.document.js';
@@ -32,7 +32,7 @@ import { RecordEntity } from '../../../model/entity.js';
 // import { RequestDelegate } from '../../../utils/http-request.utils';
 // import { WmsXPath } from './wms.xpath';
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 const WMS_PARAMS = ['service', 'request', 'version'];
 
 export class DiplanungCswImporter extends CswImporter {

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { elasticsearchMapping } from '../../statistic/index_check.mapping.js';
 import { ConfigService } from '../config/ConfigService.js';
 import { ElasticQueries } from '../../persistence/elastic.queries.js';
@@ -33,7 +33,7 @@ import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary.js';
 import dayjs from "dayjs";
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 
 @Service()
 export class IndexCheckService {

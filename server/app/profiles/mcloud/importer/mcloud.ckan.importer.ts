@@ -21,14 +21,14 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { v5 as uuidv5 } from 'uuid';
 import { CkanImporter } from '../../../importer/ckan/ckan.importer.js';
 import { CkanMapper } from '../../../importer/ckan/ckan.mapper.js';
 import { DatabaseUtils } from '../../../persistence/database.utils.js';
 import { RecordEntity } from '../../../model/entity.js';
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 const UUID_NAMESPACE = '6891a617-ab3b-4060-847f-61e31d6ccf6f';
 
 export class McloudCkanImporter extends CkanImporter {

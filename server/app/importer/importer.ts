@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import { DatabaseUtils } from '../persistence/database.utils.js';
@@ -36,7 +36,7 @@ import { MailServer } from '../utils/nodemailer.utils.js';
 import { Observable, Observer } from 'rxjs';
 import { Summary } from '../model/summary.js';
 
-const log = getLogger(__filename)
+const log = log4js.getLogger(import.meta.filename)
 
 export abstract class Importer {
 

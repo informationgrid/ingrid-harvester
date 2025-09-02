@@ -23,7 +23,7 @@
 
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { defaultKldSettings, KldSettings } from './kld.settings.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { existsSync, mkdirSync, mkdtemp, writeFileSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
@@ -42,8 +42,8 @@ import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.
 import { Summary } from '../../model/summary.js';
 import { SummaryService } from '../../services/config/SummaryService.js';
 
-const log = getLogger(__filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
 const STORE_RESPONSES: boolean = false;
 

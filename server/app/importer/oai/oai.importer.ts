@@ -25,7 +25,7 @@ import * as xpath from 'xpath';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { createRequire } from 'module';
 import { defaultOAISettings, OaiSettings } from './oai.settings.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { oaiXPaths, OaiXPaths } from './oai.paths.js';
 import { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer.js';
@@ -39,8 +39,8 @@ import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.
 import { Summary } from '../../model/summary.js';
 import { BaseMapper } from '../../importer/base.mapper.js';
 
-const log = getLogger(import.meta.filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
 export class OaiImporter extends Importer {
 

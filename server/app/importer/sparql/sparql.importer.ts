@@ -22,7 +22,7 @@
  */
 
 import * as MiscUtils from '../../utils/misc.utils.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { DefaultImporterSettings } from '../../importer.settings.js';
 import { HttpsProxyAgent } from 'https-proxy-agent';
@@ -40,8 +40,8 @@ import { Summary } from '../../model/summary.js';
 import plain_fetch from "node-fetch";
 import SimpleClient from "sparql-http-client/SimpleClient.js";
 
-const log = getLogger(import.meta.filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
 export class SparqlImporter extends Importer {
 

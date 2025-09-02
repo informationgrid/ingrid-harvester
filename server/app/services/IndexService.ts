@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { Index } from '@shared/index.model';
 import { Service } from '@tsed/di';
 import * as fs from "fs";
@@ -35,7 +35,7 @@ import { Readable } from 'stream';
 import path from "path";
 import zlib from "zlib";
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 
 @Service()
 export class IndexService {

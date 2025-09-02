@@ -23,11 +23,11 @@
 
 import * as fs from 'fs';
 import fetch from 'node-fetch';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { RequestDelegate, RequestOptions } from './http-request.utils.js';
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class UrlUtils {
 

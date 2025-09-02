@@ -22,7 +22,7 @@
  */
 
 import * as MiscUtils from '../../utils/misc.utils.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { defaultExcelSparseSettings, ExcelSparseSettings } from './excelsparse.settings.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ExcelSparseMapper } from './excelsparse.mapper.js';
@@ -35,7 +35,7 @@ import { RecordEntity } from '../../model/entity.js';
 import { Summary } from '../../model/summary.js';
 import { Workbook, Worksheet } from 'exceljs';
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class ExcelSparseImporter extends Importer {
 

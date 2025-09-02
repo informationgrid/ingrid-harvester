@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { BodyParams, Controller, Get, PathParams, Post, QueryParams, UseAuth} from '@tsed/common';
 import { ConfigService } from '../services/config/ConfigService.js';
@@ -34,7 +34,7 @@ import { ScheduleService } from '../services/ScheduleService.js';
 import { SummaryService } from '../services/config/SummaryService.js';
 import { UrlCheckService } from '../services/statistic/UrlCheckService.js';
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 
 @Controller('/api')
 @UseAuth(AuthMiddleware)

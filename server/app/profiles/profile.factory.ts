@@ -22,7 +22,7 @@
  */
 
 import { createRequire } from 'module';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { BaseMapper } from '../importer/base.mapper.js';
 import { ImporterFactory } from '../importer/importer.factory.js';
 import { Catalog } from '../model/dcatApPlu.model.js';
@@ -39,7 +39,7 @@ import { PostgresQueries } from '../persistence/postgres.queries.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import * as MiscUtils from '../utils/misc.utils.js';
 
-const log = getLogger(import.meta.filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export abstract class ProfileFactory<M extends BaseMapper> {
 

@@ -25,7 +25,7 @@
  * A mapper for ISO-XML documents harvested over CSW.
  */
 import * as xpath from 'xpath';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { namespaces } from '../../namespaces.js';
 import { throwError } from 'rxjs';
 import { Agent, Contact, Organization, Person } from '../../../model/agent.js';
@@ -53,7 +53,7 @@ export class OaiMapper extends BaseMapper {
         'srv': namespaces.SRV
     });
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly header: Element;
     private readonly record: Element;

@@ -22,7 +22,7 @@
  */
 
 import * as MiscUtils from '../../utils/misc.utils.js';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import { BulkResponse } from '../../persistence/elastic.utils.js';
 import { Importer } from '../importer.js';
 import { ImportLogMessage, ImportResult } from '../../model/import.result.js';
@@ -36,8 +36,8 @@ import { RecordEntity } from '../../model/entity.js';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.js';
 import { Summary } from '../../model/summary.js';
 
-const log = getLogger(__filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
 export class JsonImporter extends Importer {
 
