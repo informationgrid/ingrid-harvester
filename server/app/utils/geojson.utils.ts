@@ -54,8 +54,7 @@ import { AllGeoJSON, Feature, FeatureCollection, Geometries, Geometry, GeometryC
 import turfFlatten from "@turf/flatten";
 import deepEqual from "deep-equal";
 import proj4 from "proj4";
-import path from "path";
-const proj4jsMappings = require(path.resolve(process.cwd(), 'proj4.json'));
+import proj4jsMappings from '../../proj4.json' with { type: 'json' };
 
 
 // prepare proj4js
