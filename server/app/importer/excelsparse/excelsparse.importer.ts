@@ -33,7 +33,7 @@ import { ProfileFactory } from '../../profiles/profile.factory.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { RecordEntity } from '../../model/entity.js';
 import { Summary } from '../../model/summary.js';
-import { Workbook, Worksheet } from 'exceljs';
+import exceljs from 'exceljs';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -77,7 +77,7 @@ export class ExcelSparseImporter extends Importer {
             KONTAKT_EMAIL_2: null
         };
 
-        let workbook = new Workbook();
+        let workbook = new exceljs.Workbook();
 
         let promises = [];
         try {
@@ -203,7 +203,7 @@ export class ExcelSparseImporter extends Importer {
         return candidate;
     }
 
-    private prepareExcelRows(worksheet: Worksheet) {
+    private prepareExcelRows(worksheet: exceljs.Worksheet) {
         let workUnits = [];
 
         worksheet.eachRow((row, rowNumber) => {
