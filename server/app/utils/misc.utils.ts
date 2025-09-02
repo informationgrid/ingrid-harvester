@@ -22,7 +22,7 @@
  */
 
 import { getLogger } from 'log4js';
-import { cloneDeep, merge as lodashMerge, trim } from 'lodash';
+import { cloneDeep, merge as lodashMerge, trim } from 'lodash-es';
 import { imageSize } from 'image-size';
 import { Dimensions } from '../model/dimensions.js';
 import { Distribution } from '../model/distribution.js';

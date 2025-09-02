@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { uniqBy } from 'lodash';
+import { uniqBy } from 'lodash-es';
 import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
 import { Contact, Organization, Person } from '../../../model/agent.js';
 import { CswMapper } from '../../../importer/csw/csw.mapper.js';
