@@ -22,6 +22,7 @@
  */
 
 import * as MiscUtils from '../utils/misc.utils.js';
+import { getLogger } from 'log4js';
 import { elasticsearchMapping} from './statistic.mapping.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
@@ -31,7 +32,7 @@ import { IndexSettings } from '../persistence/elastic.setting.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { Summary} from '../model/summary.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 
 export class StatisticUtils {
 

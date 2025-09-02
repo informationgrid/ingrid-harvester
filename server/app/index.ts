@@ -22,11 +22,12 @@
  */
 
 import { createRelativePath, Server } from './server.js';
+import { getLogger } from 'log4js';
 import { importProviders } from '@tsed/components-scan';
 import { HealthCtrl } from './controllers/HealthCtrl.js';
 import { PlatformExpress } from '@tsed/platform-express';
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 
 async function bootstrap() {
     let baseURL = process.env.BASE_URL ?? '/';

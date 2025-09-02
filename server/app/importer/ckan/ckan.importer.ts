@@ -22,6 +22,7 @@
  */
 
 import * as MiscUtils from '../../utils/misc.utils.js';
+import { getLogger } from 'log4js';
 import { CkanMapper, CkanMapperData } from './ckan.mapper.js';
 import { CkanSettings, defaultCKANSettings } from './ckan.settings.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
@@ -35,7 +36,7 @@ import { RecordEntity } from '../../model/entity.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { Summary } from '../../model/summary.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 
 export class CkanImporter extends Importer {
 

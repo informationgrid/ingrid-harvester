@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { getLogger } from 'log4js';
 import {Service} from '@tsed/di';
 import {ConfigService} from './config/ConfigService.js';
 import {ImportSocketService} from '../sockets/import.socket.service.js';
@@ -30,7 +31,7 @@ import {UrlCheckService} from "./statistic/UrlCheckService.js";
 import {IndexCheckService} from "./statistic/IndexCheckService.js";
 import {IndexService} from "./IndexService.js";
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 
 @Service()
 export class ScheduleService {

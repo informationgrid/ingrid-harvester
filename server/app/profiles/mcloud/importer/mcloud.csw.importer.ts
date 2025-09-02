@@ -22,12 +22,13 @@
  */
 
 import * as MiscUtils from '../../../utils/misc.utils.js';
+import { getLogger } from 'log4js';
 import { Bucket } from '../../../persistence/postgres.utils.js';
 import { CswImporter } from '../../../importer/csw/csw.importer.js';
 import { EsOperation } from '../../../persistence/elastic.utils.js';
 import { RequestDelegate } from '../../../utils/http-request.utils.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 
 export class McloudCswImporter extends CswImporter {
 

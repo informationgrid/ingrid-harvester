@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { getLogger } from 'log4js';
 import { Index } from '@shared/index.model';
 import { Service } from '@tsed/di';
 import * as fs from "fs";
@@ -33,7 +34,7 @@ import { ConfigService } from './config/ConfigService.js';
 import path from "path";
 import zlib from "zlib";
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 const Readable = require('stream').Readable
 
 @Service()

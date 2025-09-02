@@ -38,7 +38,7 @@ import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.
 import { Summary } from '../../model/summary.js';
 import { BaseMapper } from '../../importer/base.mapper.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 const logRequest = getLogger('requests');
 
 export class OaiImporter extends Importer {

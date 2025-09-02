@@ -21,13 +21,15 @@
  * ==================================================
  */
 
+import { getLogger } from 'log4js';
 import { cloneDeep, merge as lodashMerge, trim } from 'lodash';
 import { imageSize } from 'image-size';
 import { Dimensions } from '../model/dimensions.js';
 import { Distribution } from '../model/distribution.js';
 import { DOMParser } from '@xmldom/xmldom';
 import dayjs from "dayjs";
-const log = require('log4js').getLogger(__filename);
+
+const log = getLogger(import.meta.filename);
 dayjs.extend(require('dayjs/plugin/customParseFormat'));
 
 const CUSTOM_DATE_TIME_FORMATS = ["YYYY-MM-DDZ"];

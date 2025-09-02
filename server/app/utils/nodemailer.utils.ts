@@ -22,10 +22,11 @@
  */
 
 import * as nodemailer from 'nodemailer';
+import { getLogger } from 'log4js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 
 export interface Mail {
     from: string,

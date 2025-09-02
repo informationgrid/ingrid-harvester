@@ -23,7 +23,7 @@
 
 import { $log, Configuration, PlatformAcceptMimesMiddleware, PlatformApplication, PlatformLogMiddleware } from '@tsed/common';
 import { Inject } from '@tsed/di';
-import { addLayout, configure } from 'log4js';
+import { addLayout, configure, getLogger } from 'log4js';
 import * as path from 'path';
 import { ProfileFactoryLoader } from './profiles/profile.factory.loader.js';
 import { ConfigService } from './services/config/ConfigService.js';
@@ -38,7 +38,7 @@ import session from "express-session";
 const rootDir = __dirname;
 const MemoryStore = require('memorystore')(session);
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 
 const isProduction = process.env.NODE_ENV == 'production';
 addLayout("json", jsonLayout);

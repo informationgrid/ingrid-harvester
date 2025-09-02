@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { getLogger } from 'log4js';
 import { DcatappluImporter } from '../../../importer/dcatapplu/dcatapplu.importer.js';
 import { DiplanungCswImporter } from './diplanung.csw.importer.js';
 import { ExcelSparseImporter } from '../../../importer/excelsparse/excelsparse.importer.js';
@@ -32,7 +33,7 @@ import { MsWfsImporter } from '../../../importer/wfs/ms/ms.wfs.importer.js';
 import { XplanSynWfsImporter } from '../../../importer/wfs/xplan/syn/xplan.syn.wfs.importer.js';
 import { XplanWfsImporter } from '../../../importer/wfs/xplan/xplan.wfs.importer.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 
 export class DiplanungImporterFactory extends ImporterFactory {
 

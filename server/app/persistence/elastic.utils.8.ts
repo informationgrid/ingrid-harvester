@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { getLogger } from 'log4js';
 import { BulkResponse, ElasticsearchUtils, EsOperation } from './elastic.utils.js';
 import { Client } from 'elasticsearch8';
 import { Index } from '@shared/index.model';
@@ -28,7 +29,7 @@ import { IndexConfiguration, IndexSettings } from './elastic.setting.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { Summary } from '../model/summary.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 
 export class ElasticsearchUtils8 extends ElasticsearchUtils {
 

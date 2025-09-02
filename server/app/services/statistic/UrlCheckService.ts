@@ -22,6 +22,7 @@
  */
 
 import fetch, { RequestInit } from 'node-fetch';
+import { getLogger } from 'log4js';
 import { elasticsearchMapping } from '../../statistic/url_check.mapping.js';
 import { Agent } from 'https';
 import { ConfigService } from '../config/ConfigService.js';
@@ -35,7 +36,8 @@ import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary.js';
 import dayjs from "dayjs";
-const log = require('log4js').getLogger(__filename);
+
+const log = getLogger(import.meta.filename);
 
 @Service()
 export class UrlCheckService {

@@ -40,7 +40,7 @@ import { Summary } from '../../model/summary.js';
 import plain_fetch from "node-fetch";
 import SimpleClient from "sparql-http-client/SimpleClient.js";
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 const logRequest = getLogger('requests');
 
 export class SparqlImporter extends Importer {

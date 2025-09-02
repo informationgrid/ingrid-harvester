@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { getLogger } from 'log4js';
 import { DcatImporter } from '../../../importer/dcat/dcat.importer.js';
 import { ExcelImporter } from '../../../importer/excel/excel.importer.js';
 import { Importer } from '../../../importer/importer.js';
@@ -31,7 +32,7 @@ import { McloudCswImporter } from './mcloud.csw.importer.js';
 import { OaiImporter } from '../../../importer/oai/oai.importer.js';
 import { SparqlImporter } from '../../../importer/sparql/sparql.importer.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 
 export class McloudImporterFactory extends ImporterFactory{
 

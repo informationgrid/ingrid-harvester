@@ -22,6 +22,7 @@
  */
 
 import * as MiscUtils from '../../utils/misc.utils.js';
+import { getLogger } from 'log4js';
 import { defaultExcelSettings, ExcelSettings } from './excel.settings.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ExcelMapper } from './excel.mapper.js';
@@ -34,7 +35,7 @@ import { RecordEntity } from '../../model/entity.js';
 import { Summary } from '../../model/summary.js';
 import { Workbook, Worksheet } from 'exceljs';
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 
 export class ExcelImporter extends Importer {
 

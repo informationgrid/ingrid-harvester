@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { getLogger } from 'log4js';
 import { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
 import { MappingDistribution, MappingItem } from '@shared/mapping.model';
 import { BodyParams, Controller, Delete, Get, PathParams, Post, Put, QueryParams, UseAuth } from '@tsed/common';
@@ -33,7 +34,7 @@ import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { ScheduleService } from '../services/ScheduleService.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 
 @Controller("/api/config")
 @UseAuth(AuthMiddleware)

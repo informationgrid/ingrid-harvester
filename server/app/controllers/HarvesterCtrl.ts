@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { getLogger } from 'log4js';
 import { Harvester } from '@shared/harvester';
 import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
@@ -30,7 +31,7 @@ import { IndexService } from '../services/IndexService.js';
 import { ScheduleService } from '../services/ScheduleService.js';
 import { HistoryService } from '../services/statistic/HistoryService.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = getLogger(import.meta.filename);
 
 @Controller('/api/harvester')
 @UseAuth(AuthMiddleware)
