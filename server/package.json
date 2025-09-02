@@ -2,7 +2,8 @@
   "name": "ingrid-harvester",
   "version": "0.0.0",
   "description": "",
-  "main": "server/server.ts",
+  "type": "module",
+  "exports": "./app/index.js",
   "scripts": {
     "start": "NODE_ENV=production ts-node -r tsconfig-paths/register --transpile-only app/index.ts",
     "start-cli": "pm2 start ./app/server-cli.js --no-autorestart",
