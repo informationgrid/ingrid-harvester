@@ -32,7 +32,7 @@ import { DateRange } from '../../model/dateRange.js';
 import { Geometries } from '@turf/helpers';
 import { ImporterSettings } from '../../importer.settings.js';
 import { KldSettings } from './kld.settings.js';
-import { License } from '@shared/license.model';
+import { License } from '@shared/license.model.js';
 import { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
 import { ObjectResponse, RelatedObject, Document, getDocumentUrl, RelationType, MediaType } from './kld.api.js';
 import { Summary } from '../../model/summary.js';

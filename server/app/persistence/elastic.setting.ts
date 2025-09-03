@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { ElasticsearchConfiguration } from '@shared/general-config.settings';
+import { ElasticsearchConfiguration } from '@shared/general-config.settings.js';
 
 export interface IndexConfiguration extends ElasticsearchConfiguration {
     dryRun?: boolean,

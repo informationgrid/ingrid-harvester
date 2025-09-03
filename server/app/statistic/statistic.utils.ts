@@ -26,7 +26,7 @@ import log4js from 'log4js';
 import { elasticsearchMapping} from './statistic.mapping.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
-import { GeneralSettings } from '@shared/general-config.settings';
+import { GeneralSettings } from '@shared/general-config.settings.js';
 import { ImportLogMessage} from '../model/import.result.js';
 import { IndexSettings } from '../persistence/elastic.setting.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';

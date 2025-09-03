@@ -23,7 +23,7 @@
 
 import { Catalog } from '../model/dcatApPlu.model.js';
 import { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
-import { DatabaseConfiguration } from '@shared/general-config.settings';
+import { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import { ElasticsearchUtils } from './elastic.utils.js';
 import { Summary } from '../model/summary.js';
 

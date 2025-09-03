@@ -27,7 +27,7 @@ import { convertBBCode } from '../lvr.utils.js';
 import { GeometryInformation, Temporal } from '../../../model/index.document.js';
 import { Keyword } from '../../../model/ingrid.index.document.js';
 import { KldMapper } from '../../../importer/kld/kld.mapper.js';
-import { License } from '@shared/license.model';
+import { License } from '@shared/license.model.js';
 import { LvrMapper } from './lvr.mapper.js';
 import { LvrDateRange, Media, Person, Relation, Source } from '../model/index.document.js';
 import dayjs from "dayjs";

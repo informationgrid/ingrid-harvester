@@ -30,7 +30,7 @@ import { IndexDocumentFactory } from '../../../model/index.document.factory.js';
 import { IngridIndexDocument, Keyword, Spatial } from '../../../model/ingrid.index.document.js';
 import { JsonMapper } from '../../../importer/json/json.mapper.js';
 import { KldMapper } from '../../../importer/kld/kld.mapper.js';
-import { License } from '@shared/license.model';
+import { License } from '@shared/license.model.js';
 import { LvrIndexDocument, Media, Person, Relation, Source } from '../model/index.document.js';
 import { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper.js';
 import { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mapper.js';

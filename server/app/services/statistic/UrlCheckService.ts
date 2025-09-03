@@ -30,7 +30,7 @@ import { ElasticQueries } from '../../persistence/elastic.queries.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { IndexSettings } from '../../persistence/elastic.setting.js';
-import { GeneralSettings } from '@shared/general-config.settings';
+import { GeneralSettings } from '@shared/general-config.settings.js';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Service } from '@tsed/di';

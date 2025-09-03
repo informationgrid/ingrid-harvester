@@ -28,7 +28,7 @@ import { DatabaseUtils } from '../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { FilterUtils } from '../utils/filter.utils.js';
-import { GeneralSettings } from '@shared/general-config.settings';
+import { GeneralSettings } from '@shared/general-config.settings.js';
 import { ImporterSettings } from '../importer.settings.js';
 import { ImportLogMessage, ImportResult } from '../model/import.result.js';
 import { IndexConfiguration } from '../persistence/elastic.setting.js';

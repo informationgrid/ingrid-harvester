@@ -24,7 +24,7 @@
 import 'dayjs/locale/de.js';
 import { GeometryInformation, Temporal } from '../../../model/index.document.js';
 import { Keyword } from '../../../model/ingrid.index.document.js';
-import { License } from '@shared/license.model';
+import { License } from '@shared/license.model.js';
 import { LvrMapper } from './lvr.mapper.js';
 import { Media, Person, Relation, Source } from '../model/index.document.js';
 import { OaiMapper } from '../../../importer/oai/mods/oai.mapper.js';

@@ -30,7 +30,7 @@ import { DcatMapper } from '../../../importer/dcat/dcat.mapper.js';
 import { Distribution } from '../../../model/distribution.js';
 import { ExcelMapper } from '../../../importer/excel/excel.mapper.js';
 import { IndexDocumentFactory } from '../../../model/index.document.factory.js';
-import { License } from '@shared/license.model';
+import { License } from '@shared/license.model.js';
 import { MetadataSource } from '../../../model/index.document.js';
 import { OaiMapper } from '../../../importer/oai/iso19139/oai.mapper.js';
 import { SparqlMapper } from '../../../importer/sparql/sparql.mapper.js';

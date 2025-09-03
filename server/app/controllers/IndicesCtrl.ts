@@ -23,7 +23,7 @@
 
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
-import { Index } from '@shared/index.model';
+import { Index } from '@shared/index.model.js';
 import { IndexService } from '../services/IndexService.js';
 
 @Controller('/api/indices')

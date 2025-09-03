@@ -36,7 +36,7 @@ import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import { DcatSettings } from './dcat.settings.js';
 import { Distribution } from '../../model/distribution.js';
 import { ImporterSettings } from '../../importer.settings.js';
-import { License } from '@shared/license.model';
+import { License } from '@shared/license.model.js';
 import { MetadataSource } from '../../model/index.document.js';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.js';
 import { Summary } from '../../model/summary.js';

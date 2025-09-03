@@ -22,7 +22,7 @@
  */
 
 import log4js from 'log4js';
-import { Index } from '@shared/index.model';
+import { Index } from '@shared/index.model.js';
 import { Service } from '@tsed/di';
 import * as fs from "fs";
 import { Summary } from '../model/summary.js';

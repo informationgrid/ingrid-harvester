@@ -23,7 +23,7 @@
 
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import { FisWfsMapper } from './fis.wfs.mapper.js';
-import { Harvester } from '@shared/harvester';
+import { Harvester } from '@shared/harvester.js';
 import { RequestDelegate } from '../../../utils/http-request.utils.js';
 import { WfsImporter } from '../wfs.importer.js';
 import { WfsMapper } from '../wfs.mapper.js';

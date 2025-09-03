@@ -25,7 +25,7 @@ import { Agent, Contact, Organization, Person } from '../../../model/agent.js';
 import { DateRange } from '../../../model/dateRange.js';
 import { Distribution } from '../../../model/distribution.js';
 import { IndexDocument, MetadataSource } from '../../../model/index.document.js';
-import { License } from '@shared/license.model';
+import { License } from '@shared/license.model.js';
 
 export type mcloudIndexDocument = IndexDocument & {
     priority: number,

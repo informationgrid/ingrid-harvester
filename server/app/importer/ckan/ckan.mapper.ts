@@ -35,7 +35,7 @@ import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import { Distribution } from '../../model/distribution.js';
-import { License } from '@shared/license.model';
+import { License } from '@shared/license.model.js';
 import { MetadataSource } from '../../model/index.document.js';
 import { Organization, Person } from '../../model/agent.js';
 import { Summary } from '../../model/summary.js';

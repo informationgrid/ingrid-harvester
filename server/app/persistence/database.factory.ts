@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { DatabaseConfiguration } from '@shared/general-config.settings';
+import { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import { DatabaseUtils } from './database.utils.js';
 import { PostgresUtils } from './postgres.utils.js';
 import { Summary } from '../model/summary.js';

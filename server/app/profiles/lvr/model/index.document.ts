@@ -24,7 +24,7 @@
 import { Dimensions } from '../../../model/dimensions.js';
 import { IndexDocument } from '../../../model/index.document.js';
 import { IngridIndexDocument } from '../../../model/ingrid.index.document.js';
-import { License } from '@shared/license.model';
+import { License } from '@shared/license.model.js';
 
 export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
     lvr: {

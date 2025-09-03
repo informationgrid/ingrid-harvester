@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import { GeneralSettings } from '@shared/general-config.settings';
-import { Harvester } from '@shared/harvester';
-import { MappingDistribution, MappingItem } from '@shared/mapping.model';
+import { GeneralSettings } from '@shared/general-config.settings.js';
+import { Harvester } from '@shared/harvester.js';
+import { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import * as fs from 'fs';
 import log4js from 'log4js';
 import { defaultCKANSettings } from '../../importer/ckan/ckan.settings.js';

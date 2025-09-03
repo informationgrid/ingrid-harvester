@@ -22,7 +22,7 @@
  */
 
 import log4js from 'log4js';
-import { Harvester } from '@shared/harvester';
+import { Harvester } from '@shared/harvester.js';
 import { Importer } from '../../../importer/importer.js';
 import { ImporterFactory } from '../../../importer/importer.factory.js';
 import { JsonSettings } from '../../../importer/json/json.settings.js';

@@ -26,7 +26,7 @@ import { Client as Client7 } from 'elasticsearch7';
 import { Client as Client8 } from 'elasticsearch8';
 import { Client as Client9 } from 'elasticsearch9';
 import { ElasticQueries } from './elastic.queries.js';
-import { Index } from '@shared/index.model';
+import { Index } from '@shared/index.model.js';
 import { IndexConfiguration, IndexSettings } from './elastic.setting.js';
 import { Summary } from '../model/summary.js';
 

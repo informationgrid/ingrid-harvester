@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { License } from '@shared/license.model';
+import { License } from '@shared/license.model.js';
 import 'dayjs/locale/de.js';
 import { Link } from '../../../importer/oai/lido/lido.model.js';
 import { OaiMapper } from '../../../importer/oai/lido/oai.mapper.js';

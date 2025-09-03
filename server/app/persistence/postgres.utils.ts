@@ -22,7 +22,7 @@
  */
 
 import log4js from 'log4js';
-import { DatabaseConfiguration } from '@shared/general-config.settings';
+import { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import pg from 'pg';
 import { Catalog } from '../model/dcatApPlu.model.js';
 import { Distribution } from '../model/distribution.js';

@@ -40,7 +40,7 @@ import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import { Distribution } from '../../model/distribution.js';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
-import { License } from '@shared/license.model';
+import { License } from '@shared/license.model.js';
 import { MetadataSource } from '../../model/index.document.js';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.js';
 import { Summary } from '../../model/summary.js';

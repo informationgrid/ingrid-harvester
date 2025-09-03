@@ -25,7 +25,7 @@ import { ElasticQueries } from './persistence/elastic.queries.js';
 import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
 import { ImporterFactory } from '../../importer/importer.factory.js';
 import { IndexDocumentFactory } from '../../model/index.document.factory.js';
-import { JsonMapper } from '.../../importer/json/json.mapper';
+import { JsonMapper } from '.../../importer/json/json.mapper.js';
 import { KldMapper } from '../../importer/kld/kld.mapper.js';
 import { LvrClickRheinMapper } from './mapper/lvr.clickrhein.mapper.js';
 import { LvrImporterFactory } from './importer/lvr.importer.factory.js';

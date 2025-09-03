@@ -31,7 +31,7 @@ import { DateRange } from '../../model/dateRange.js';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import { Distribution } from '../../model/distribution.js';
 import { ImporterSettings } from '../../importer.settings.js';
-import { License } from '@shared/license.model';
+import { License } from '@shared/license.model.js';
 import { MetadataSource } from '../../model/index.document.js';
 import { Person } from '../../model/agent.js';
 import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.js';
