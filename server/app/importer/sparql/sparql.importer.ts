@@ -84,14 +84,12 @@ export class SparqlImporter extends Importer {
 
         const endpointUrl = this.settings.sourceURL;
 
-        let fetch = plain_fetch;
+        let fetch: any = plain_fetch;
 
-        if(this.generalSettings.proxy){
+        if (this.generalSettings.proxy){
             let proxyAgent = new HttpsProxyAgent(this.generalSettings.proxy);
             proxyAgent.options.rejectUnauthorized = !this.generalSettings.allowAllUnauthorizedSSL;
-            fetch = function(url, options){
-                return plain_fetch(url, {...options, agent: proxyAgent})
-            }
+            fetch = (url, options) => plain_fetch(url, {...options, agent: proxyAgent});
             fetch.Headers = plain_fetch.Headers;
         }
 
